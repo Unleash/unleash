@@ -707,7 +707,7 @@ export class AccessService {
 
     /*
         This method is intended to give a predicable way to fetch
-        pre-defined roles defined in the RoleName enum. This method
+        predefined roles defined in the RoleName enum. This method
         should not be used to fetch custom root or project roles.
     */
     async getPredefinedRole(roleName: RoleName): Promise<IRole> {
@@ -715,7 +715,7 @@ export class AccessService {
         const role = roles.find((r) => r.name === roleName);
         if (!role) {
             throw new BadDataError(
-                `Could not find pre-defined role with name ${RoleName}`,
+                `Could not find predefined role with name ${RoleName}`,
             );
         }
         return role;

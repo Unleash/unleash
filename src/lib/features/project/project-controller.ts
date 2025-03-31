@@ -10,7 +10,7 @@ import {
     serializeDates,
 } from '../../types';
 import ProjectFeaturesController from '../feature-toggle/feature-toggle-controller';
-import EnvironmentsController from '../project-environments/environments';
+import ProjectEnvironmentsController from '../project-environments/project-environments-controller';
 import ProjectHealthReport from '../../routes/admin-api/project/health-report';
 import type ProjectService from './project-service';
 import VariantsController from '../../routes/admin-api/project/variants';
@@ -230,7 +230,10 @@ export default class ProjectController extends Controller {
             ).router,
         );
         this.use('/', new DependentFeaturesController(config, services).router);
-        this.use('/', new EnvironmentsController(config, services).router);
+        this.use(
+            '/',
+            new ProjectEnvironmentsController(config, services).router,
+        );
         this.use('/', new ProjectHealthReport(config, services).router);
         this.use('/', new VariantsController(config, services).router);
         this.use('/', new ProjectApiTokenController(config, services).router);

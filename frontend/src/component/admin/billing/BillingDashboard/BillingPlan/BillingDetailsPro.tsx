@@ -52,8 +52,7 @@ export const BillingDetailsPro = ({
     const freeAssigned = Math.min(eligibleUsers.length, seats);
     const paidAssigned = eligibleUsers.length - freeAssigned;
     const paidAssignedPrice = seatPrice * paidAssigned;
-    const includedTraffic = BILLING_INCLUDED_REQUESTS;
-    const overageCost = useOverageCost(includedTraffic);
+    const overageCost = useOverageCost(BILLING_INCLUDED_REQUESTS);
 
     const totalCost = planPrice + paidAssignedPrice + overageCost;
 

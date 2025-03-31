@@ -13,7 +13,7 @@ import VideoContent from '@site/src/components/VideoContent.jsx';
 ## Overview
 
 Change requests allow you to require an additional approval step before any changes can be made in an environment. This functionality supports the "four-eyes principle", ensuring compliance in industries with strict legal or regulatory requirements.
- 
+
 Change requests also allow you to group changes and [apply them at a specific point in time](#scheduled-change-requests).
 
 Change requests can be enabled on a per-project and per-environment basis. This allows you to differentiate your configurations across different environments, such as production and development.
@@ -78,7 +78,7 @@ Alternatively, you can use constraints or segments with the `DATE_AFTER` [operat
 ### Scheduling errors
 
 Unleash suspends a scheduled change request if:
-- The change request includes updates to a flag that has been archived or a strategy that has been deleted. 
+- The change request includes updates to a flag that has been archived or a strategy that has been deleted.
 - The change request includes a strategy, segment, or variant that has been updated.
 - The user who scheduled a change request is deleted from the users list before the scheduled time.
 
@@ -103,6 +103,21 @@ Changes to project [segments](/reference/segments), unlike global segments, also
 While change requests are environment-specific, project segments are not. For this reason, Unleash allows you to attach segment changes to any environment where change requests are enabled. By default, Unleash selects the first available environment with change requests enabled, prioritizing [production](/reference/environments#environment-types) environments.
 
 Only Admin users can bypass the change request process for project segments through API calls.
+
+## Global environment change requests
+
+:::note Availability
+
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `6.10+`
+
+:::
+
+Global environment change requests let you preconfigure required approvals at the environment level. When configured, all new projects automatically inherit these approval requirements for the specified environments.
+
+Depending on your needs, global environment change requests can be used in two ways:
+
+* **Defaults**: Set global defaults for approvals per environment, but allow project owners and users with [project update permissions](/reference/rbac#projects) to override them for individual projects.
+* **Enforcement**: Set mandatory global approval requirements per environment. To fully enforce these global settings, ensure that the project has no owners or users with project update permissions, preventing any modifications at the project level.
 
 ## Change request preview
 

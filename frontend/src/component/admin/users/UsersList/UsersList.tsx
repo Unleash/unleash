@@ -58,7 +58,6 @@ const UsersList = () => {
     }>({
         open: false,
     });
-    const userAccessUIEnabled = useUiFlag('userAccessUIEnabled');
     const showUserDeviceCount = useUiFlag('showUserDeviceCount');
     const showSSOUpgrade = isOss() && users.length > 3;
 
@@ -218,15 +217,9 @@ const UsersList = () => {
                         onEdit={() => {
                             navigate(`/admin/users/${user.id}/edit`);
                         }}
-                        onViewAccess={
-                            userAccessUIEnabled
-                                ? () => {
-                                      navigate(
-                                          `/admin/users/${user.id}/access`,
-                                      );
-                                  }
-                                : undefined
-                        }
+                        onViewAccess={() => {
+                            navigate(`/admin/users/${user.id}/access`);
+                        }}
                         onChangePassword={openPwDialog(user)}
                         onResetPassword={openResetPwDialog(user)}
                         onDelete={openDelDialog(user)}
@@ -250,7 +243,7 @@ const UsersList = () => {
                 searchable: true,
             },
         ],
-        [roles, navigate, isBillingUsers, userAccessUIEnabled],
+        [roles, navigate, isBillingUsers],
     );
 
     const initialState = useMemo(() => {

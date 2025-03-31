@@ -42,7 +42,7 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     minHeight: 'unset',
     ':focus-within': {
-        backgroundColor: 'unset',
+        backgroundColor: 'inherit',
     },
 }));
 

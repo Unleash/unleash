@@ -8,7 +8,6 @@ export const deprecatedSearchEventsSchema = {
         Search for events by type, project, feature, free-text query,
         or a combination thereof. Pass an empty object to fetch all events.
     `,
-    required: [],
     properties: {
         type: {
             type: 'string',

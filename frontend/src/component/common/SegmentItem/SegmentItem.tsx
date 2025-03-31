@@ -14,7 +14,7 @@ import {
     ConstraintListItem,
     ConstraintsList,
 } from 'component/common/ConstraintsList/ConstraintsList';
-import { ConstraintAccordionViewHeaderInfo } from '../NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionViewHeader/ConstraintAccordionViewHeaderInfo';
+import { ConstraintAccordionView } from '../NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
 
 type SegmentItemProps = {
     segment: Partial<ISegment>;
@@ -87,17 +87,10 @@ export const SegmentItem: FC<SegmentItemProps> = ({
             return (
                 <ConstraintsList>
                     {segment.constraints.map((constraint, index) => (
-                        <ConstraintListItem
+                        <ConstraintAccordionView
                             key={`${objectId(constraint)}-${index}`}
-                        >
-                            <ConstraintAccordionViewHeaderInfo
-                                constraint={constraint}
-                                expanded={isOpen}
-                                allowExpand={(shouldExpand) =>
-                                    setIsOpen(shouldExpand)
-                                }
-                            />
-                        </ConstraintListItem>
+                            constraint={constraint}
+                        />
                     ))}
                 </ConstraintsList>
             );

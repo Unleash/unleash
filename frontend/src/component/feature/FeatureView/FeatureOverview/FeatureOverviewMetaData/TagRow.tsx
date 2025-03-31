@@ -16,6 +16,7 @@ import { StyledMetaDataItem } from './FeatureOverviewMetaData';
 import { AddTagButton } from './AddTagButton';
 import { Tag } from 'component/common/Tag/Tag';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { formatTag } from 'utils/format-tag';
 
 const StyledLabel = styled('span')(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -107,7 +108,7 @@ export const TagRow = ({ feature }: IFeatureOverviewSidePanelTagsProps) => {
                     <StyledTagContainer>
                         {tags.map((tag) => (
                             <TagItem
-                                key={`${tag.type}:${tag.value}`}
+                                key={formatTag(tag)}
                                 tag={tag}
                                 canUpdateTags={canUpdateTags}
                                 onTagRemove={(tag) => {
@@ -162,7 +163,7 @@ interface ITagItemProps {
 
 const TagItem = ({ tag, canUpdateTags, onTagRemove }: ITagItemProps) => {
     const isTagTypeColorEnabled = useUiFlag('tagTypeColor');
-    const tagLabel = `${tag.type}:${tag.value}`;
+    const tagLabel = formatTag(tag);
     const isOverflowing = tagLabel.length > 25;
     const deleteIcon = (
         <Tooltip title='Remove tag' arrow>

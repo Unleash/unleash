@@ -2,6 +2,7 @@ import { styled } from '@mui/material';
 import { Chip } from '@mui/material';
 import type { TagSchema } from 'openapi';
 import type { ReactElement } from 'react';
+import { formatTag } from 'utils/format-tag';
 
 const StyledChip = styled(Chip)<{ $color?: string }>(({ theme, $color }) => ({
     borderRadius: theme.spacing(2),
@@ -43,7 +44,7 @@ export const Tag = ({
     deleteIcon,
     maxLength = 30,
 }: ITagProps) => {
-    const fullLabel = `${tag.type}:${tag.value}`;
+    const fullLabel = formatTag(tag);
     const isOverflowing = fullLabel.length > maxLength;
     const showColorDot = tag.color && tag.color !== '#FFFFFF';
 

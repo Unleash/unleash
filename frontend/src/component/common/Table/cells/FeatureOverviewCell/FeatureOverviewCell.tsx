@@ -18,6 +18,7 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { getLocalizedDateString } from '../../../util';
 import { Tag } from 'component/common/Tag/Tag';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { formatTag } from 'utils/format-tag';
 
 interface IFeatureNameCellProps {
     row: {
@@ -175,7 +176,7 @@ interface ITagItemProps {
 
 const TagItem: FC<ITagItemProps> = ({ tag, onClick }) => {
     const isTagTypeColorEnabled = useUiFlag('tagTypeColor');
-    const tagFullText = `${tag.type}:${tag.value}`;
+    const tagFullText = formatTag(tag);
 
     if (isTagTypeColorEnabled) {
         const tagComponent = (
@@ -217,19 +218,22 @@ const RestTags: FC<{
 
     return (
         <HtmlTooltip
-            title={tags.map((tag) => (
-                <Box
-                    sx={{ cursor: 'pointer' }}
-                    onClick={() => onClick(`${tag.type}:${tag.value}`)}
-                    key={`${tag.type}:${tag.value}`}
-                >
-                    {isTagTypeColorEnabled ? (
-                        <Tag tag={tag} maxLength={30} />
-                    ) : (
-                        `${tag.type}:${tag.value}`
-                    )}
-                </Box>
-            ))}
+            title={tags.map((tag) => {
+                const formattedTag = formatTag(tag);
+                return (
+                    <Box
+                        sx={{ cursor: 'pointer' }}
+                        onClick={() => onClick(formattedTag)}
+                        key={formattedTag}
+                    >
+                        {isTagTypeColorEnabled ? (
+                            <Tag tag={tag} maxLength={30} />
+                        ) : (
+                            formattedTag
+                        )}
+                    </Box>
+                );
+            })}
         >
             <CustomTagButton
                 sx={{
@@ -256,7 +260,7 @@ const Tags: FC<{
     const [tag1, tag2, tag3, ...restTags] = tags;
 
     const handleTagClick = (tag: TagSchema) => {
-        onClick(`${tag.type}:${tag.value}`);
+        onClick(formatTag(tag));
     };
 
     return (

@@ -104,7 +104,7 @@
   },
   "overrides": [
     {
-      "include": ["!frontend/**"],
+      "include": ["src/**"],
       "linter": {
         "rules": {
           "correctness": {

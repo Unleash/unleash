@@ -112,14 +112,12 @@ export const ConstraintItemHeader: FC<ConstraintItemHeaderProps> = ({
                     ) : null}
                 </StyledOperatorGroup>
                 <div>
-                    <div>
-                        <ValuesList
-                            values={items}
-                            onSetTruncated={onSetTruncated}
-                            tooltips={tooltips}
-                        />
-                        {viewMore}
-                    </div>
+                    <ValuesList
+                        values={items}
+                        onSetTruncated={onSetTruncated}
+                        tooltips={tooltips}
+                    />
+                    {viewMore}
                 </div>
             </StyledConstraintContainer>
         </StrategyEvaluationItem>

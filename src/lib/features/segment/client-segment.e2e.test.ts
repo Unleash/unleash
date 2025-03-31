@@ -153,6 +153,7 @@ const mockFeatureToggle = () => {
 };
 
 const mockConstraints = (): IConstraint[] => {
+    // @ts-expect-error missing required fields caseInsensitive and inverted
     return Array.from({ length: 5 }).map(() => ({
         values: ['x', 'y', 'z'],
         operator: 'IN',
@@ -224,6 +225,7 @@ afterEach(async () => {
 
 test('should validate segment constraint values limit', async () => {
     const constraints: IConstraint[] = [
+        // @ts-expect-error missing required fields caseInsensitive and inverted
         {
             contextName: randomId(),
             operator: 'IN',
@@ -240,11 +242,13 @@ test('should validate segment constraint values limit', async () => {
 
 test('should validate segment constraint values limit with multiple constraints', async () => {
     const constraints: IConstraint[] = [
+        // @ts-expect-error missing required fields caseInsensitive and inverted
         {
             contextName: randomId(),
             operator: 'IN',
             values: mockConstraintValues(DEFAULT_SEGMENT_VALUES_LIMIT),
         },
+        // @ts-expect-error missing required fields caseInsensitive and inverted
         {
             contextName: randomId(),
             operator: 'IN',

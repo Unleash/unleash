@@ -2,6 +2,7 @@ import { validateSchema } from '../validate';
 import type { ConstraintSchema } from './constraint-schema';
 
 test('constraintSchema', () => {
+    // @ts-expect-error missing required fields caseInsensitive and inverted
     const data: ConstraintSchema = {
         contextName: 'a',
         operator: 'NUM_LTE',

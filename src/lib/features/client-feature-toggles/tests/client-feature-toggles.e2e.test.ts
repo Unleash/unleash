@@ -65,6 +65,8 @@ const getApiClientResponse = (project = 'default') => [
                         contextName: 'userId',
                         operator: 'IN',
                         values: ['123'],
+                        caseInsensitive: false,
+                        inverted: false,
                     },
                 ],
                 parameters: {},

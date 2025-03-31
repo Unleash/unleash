@@ -26,9 +26,10 @@ export const tagTypeSchema = {
         color: {
             type: 'string',
             nullable: true,
-            description: 'The hexadecimal color code for the tag type.',
+            description:
+                'The color for the tag type. Can be either a hex color code (e.g. #FFFFFF) or a theme color reference (e.g. primary.main)',
             example: '#FFFFFF',
-            pattern: '^#[0-9A-Fa-f]{6}$',
+            pattern: '^(#[0-9A-Fa-f]{6}|[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)*)$',
         },
     },
     components: {},

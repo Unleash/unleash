@@ -7,7 +7,7 @@ export const tagTypeSchema = Joi.object()
         description: Joi.string().allow(''),
         icon: Joi.string().allow(null).allow(''),
         color: Joi.string()
-            .pattern(/^#[0-9A-Fa-f]{6}$/)
+            .pattern(/^(#[0-9A-Fa-f]{6}|[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*)$/)
             .allow(null)
             .allow(''),
     })

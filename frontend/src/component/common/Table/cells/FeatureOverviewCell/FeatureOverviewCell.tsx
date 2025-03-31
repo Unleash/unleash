@@ -436,29 +436,44 @@ const SecondaryFeatureInfo: FC<{
     );
 };
 
-export const FeatureOverviewCell = (
-    onTagClick: (tag: string) => void,
-    onFlagTypeClick: (type: string) => void,
-): FC<IFeatureNameCellProps> => {
+const FeatureOverviewCell = ({
+    row,
+}: IFeatureNameCellProps & {
+    onTagClick: (tag: string) => void;
+    onFlagTypeClick: (type: string) => void;
+}): JSX.Element => {
     const { searchQuery } = useSearchHighlightContext();
-    return ({ row }) => {
-        return (
-            <Container>
-                <PrimaryFeatureInfo
-                    project={row.original.project || ''}
-                    feature={row.original.name}
-                    archivedAt={row.original.archivedAt}
-                    searchQuery={searchQuery}
-                    type={row.original.type || ''}
-                    dependencyType={row.original.dependencyType || ''}
-                    onTypeClick={onFlagTypeClick}
-                />
-                <SecondaryFeatureInfo
-                    description={row.original.description || ''}
-                    searchQuery={searchQuery}
-                />
-                <Tags tags={row.original.tags} onClick={onTagClick} />
-            </Container>
-        );
-    };
+    const { archivedAt, project, name } = row.original;
+
+    return (
+        <Container>
+            <PrimaryFeatureInfo
+                project={project || ''}
+                feature={name}
+                archivedAt={archivedAt}
+                searchQuery={searchQuery}
+                type={row.original.type || ''}
+                dependencyType={row.original.dependencyType || ''}
+                onTypeClick={() => {}}
+            />
+            <SecondaryFeatureInfo
+                description={row.original.description || ''}
+                searchQuery={searchQuery}
+            />
+            <Tags tags={row.original.tags} onClick={() => {}} />
+        </Container>
+    );
 };
+
+export const createFeatureOverviewCell =
+    (
+        onTagClick: (tag: string) => void,
+        onFlagTypeClick: (type: string) => void,
+    ): FC<IFeatureNameCellProps> =>
+    ({ row }) => (
+        <FeatureOverviewCell
+            row={row}
+            onTagClick={onTagClick}
+            onFlagTypeClick={onFlagTypeClick}
+        />
+    );

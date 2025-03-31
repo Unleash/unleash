@@ -423,6 +423,20 @@ export function registerPrometheusMetrics(
     });
 
     dbMetrics.registerGaugeDbMetric({
+        name: 'custom_strategies_total',
+        help: 'Number of custom strategies',
+        query: () => instanceStatsService.customStrategiesCount(),
+        map: (result) => ({ value: result }),
+    });
+
+    dbMetrics.registerGaugeDbMetric({
+        name: 'custom_strategies_in_use_total',
+        help: 'Number of custom strategies in use',
+        query: () => instanceStatsService.customStrategiesInUseCount(),
+        map: (result) => ({ value: result }),
+    });
+
+    dbMetrics.registerGaugeDbMetric({
         name: 'client_apps_total',
         help: 'Number of registered client apps aggregated by range by last seen',
         labelNames: ['range'],

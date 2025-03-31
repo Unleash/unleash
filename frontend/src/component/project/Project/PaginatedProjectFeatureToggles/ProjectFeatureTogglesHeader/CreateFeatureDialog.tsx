@@ -30,6 +30,7 @@ import type { ITag } from 'interfaces/tags';
 import { ToggleConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/ToggleConfigButton';
 import { useFlagLimits } from './useFlagLimits';
 import { useFeatureCreatedFeedback } from './hooks/useFeatureCreatedFeedback';
+import { formatTag } from 'utils/format-tag';
 
 interface ICreateFeatureDialogProps {
     open: boolean;
@@ -295,7 +296,7 @@ const CreateFeatureDialogContent = ({
                                 description={configButtonData.tags.text}
                                 selectedOptions={tags}
                                 options={allTags.map((tag) => ({
-                                    label: `${tag.type}:${tag.value}`,
+                                    label: formatTag(tag),
                                     value: tag,
                                 }))}
                                 onChange={setTags}

@@ -1,4 +1,4 @@
-import { useMemo, useState, type FC } from 'react';
+import { useId, useMemo, useState, type FC } from 'react';
 import { Link } from 'react-router-dom';
 import type { ISegment } from 'interfaces/segment';
 import {
@@ -26,7 +26,6 @@ type SegmentItemProps = {
 
 const StyledConstraintListItem = styled(ConstraintListItem)(() => ({
     padding: 0,
-    overflow: 'hidden',
 }));
 
 const StyledAccordion = styled(Accordion)(() => ({
@@ -42,6 +41,9 @@ const StyledAccordion = styled(Accordion)(() => ({
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     minHeight: 'unset',
+    ':focus-within': {
+        backgroundColor: 'unset',
+    },
 }));
 
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
@@ -78,6 +80,7 @@ export const SegmentItem: FC<SegmentItemProps> = ({
     constraintList,
 }) => {
     const [isOpen, setIsOpen] = useState(isExpanded || false);
+    const segmentDetailsId = useId();
 
     const constraints = useMemo(() => {
         if (constraintList) {
@@ -111,7 +114,11 @@ export const SegmentItem: FC<SegmentItemProps> = ({
                 disableGutters
                 TransitionProps={{ mountOnEnter: true, unmountOnExit: true }}
             >
-                <StyledAccordionSummary id={`segment-accordion-${segment.id}`}>
+                <StyledAccordionSummary
+                    id={`segment-accordion-${segment.id}`}
+                    tabIndex={-1}
+                    aria-controls={segmentDetailsId}
+                >
                     <StrategyEvaluationItem type='Segment'>
                         <StyledLink to={`/segments/edit/${segment.id}`}>
                             {segment.name}
@@ -121,6 +128,7 @@ export const SegmentItem: FC<SegmentItemProps> = ({
                     {!isExpanded ? (
                         <StyledActionsContainer>
                             <StyledButton
+                                aria-controls={segmentDetailsId}
                                 size='small'
                                 variant='outlined'
                                 onClick={() => setIsOpen((value) => !value)}

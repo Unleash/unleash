@@ -30,4 +30,7 @@ export interface IEnvironmentStore extends Store<IEnvironment, string> {
         projectId: string,
         query?: Object,
     ): Promise<IProjectEnvironment[]>;
+    getChangeRequestEnvironments(
+        environments: string[],
+    ): Promise<{ name: string; requiredApprovals: number }[]>;
 }

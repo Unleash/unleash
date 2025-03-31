@@ -16,9 +16,6 @@ exports.down = function (db, cb) {
         `
         ALTER TABLE tag_types
         ALTER COLUMN color TYPE VARCHAR(10);
-        
-        UPDATE tag_types
-        SET color = '#FFFFFF';
         `,
         cb,
     );

@@ -78,6 +78,8 @@ const mapSegmentSchemaToISegment = (
     index?: number,
 ): ISegment => ({
     ...segment,
+    description: segment.description || undefined, // transforms null to undefined
+    project: segment.project || undefined, // transforms null to undefined
     name: segment.name || `test-segment ${index ?? 'unnumbered'}`,
     createdAt: new Date(),
 });
@@ -116,11 +118,13 @@ export const seedDatabaseForPlaygroundTest = async (
 
             // create feature
             const toggle = await database.stores.featureToggleStore.create(
-                feature.project,
+                feature.project!,
                 {
                     ...feature,
                     createdAt: undefined,
-                    variants: null,
+                    variants: undefined,
+                    description: feature.description || undefined, // transforms null to undefined
+                    impressionData: feature.impressionData || undefined, // transforms null to undefined
                     createdByUserId: 9999,
                 },
             );
@@ -133,7 +137,7 @@ export const seedDatabaseForPlaygroundTest = async (
             );
 
             await database.stores.featureToggleStore.saveVariants(
-                feature.project,
+                feature.project!,
                 feature.name,
                 [
                     ...(feature.variants ?? []).map((variant) => ({
@@ -791,7 +795,7 @@ describe('the playground service (e2e)', () => {
                             unmappedFeature.strategies?.forEach(
                                 (unmappedStrategy) => {
                                     const mappedStrategySegments: PlaygroundSegmentSchema[] =
-                                        strategies[unmappedStrategy.id]
+                                        strategies[unmappedStrategy.id!]
                                             .segments;
 
                                     const unmappedSegments =
@@ -808,7 +812,7 @@ describe('the playground service (e2e)', () => {
                                     ).toEqual([...unmappedSegments].sort());
 
                                     switch (
-                                        strategies[unmappedStrategy.id].result
+                                        strategies[unmappedStrategy.id!].result
                                     ) {
                                         case true:
                                             // If a strategy is considered true, _all_ segments
@@ -928,6 +932,7 @@ describe('the playground service (e2e)', () => {
                     fc.context(),
                     async (featsAndSegments, context, ctx) => {
                         const serviceFeatures = await insertAndEvaluateFeatures(
+                            // @ts-expect-error property types don't match
                             {
                                 ...featsAndSegments,
                                 context,
@@ -975,16 +980,18 @@ describe('the playground service (e2e)', () => {
                                 ...feature,
                                 // use a constraint that will never be true
                                 strategies: [
-                                    ...feature.strategies.map((strategy) => ({
-                                        ...strategy,
-                                        constraints: [
-                                            {
-                                                contextName: 'appName',
-                                                operator: 'IN' as const,
-                                                values: [uuid],
-                                            },
-                                        ],
-                                    })),
+                                    ...(feature.strategies ?? []).map(
+                                        (strategy) => ({
+                                            ...strategy,
+                                            constraints: [
+                                                {
+                                                    contextName: 'appName',
+                                                    operator: 'IN' as const,
+                                                    values: [uuid],
+                                                },
+                                            ],
+                                        }),
+                                    ),
                                     { name: 'my-custom-strategy' },
                                 ],
                             })),
@@ -992,6 +999,7 @@ describe('the playground service (e2e)', () => {
                     generateContext(),
                     async (featsAndSegments, context) => {
                         const serviceFeatures = await insertAndEvaluateFeatures(
+                            // @ts-expect-error property types don't match
                             {
                                 ...featsAndSegments,
                                 context,

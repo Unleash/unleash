@@ -236,10 +236,14 @@ test('Should get all events of type', async () => {
     );
     const featureCreatedEvents = await eventStore.deprecatedSearchEvents({
         type: FEATURE_CREATED,
+        limit: 100,
+        offset: 0,
     });
     expect(featureCreatedEvents).toHaveLength(3);
     const featureDeletedEvents = await eventStore.deprecatedSearchEvents({
         type: FEATURE_DELETED,
+        limit: 100,
+        offset: 0,
     });
     expect(featureDeletedEvents).toHaveLength(3);
 });

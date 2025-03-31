@@ -78,10 +78,10 @@ const mapSegmentSchemaToISegment = (
     index?: number,
 ): ISegment => ({
     ...segment,
-    description: segment.description || undefined, // transforms null to undefined
-    project: segment.project || undefined, // transforms null to undefined
     name: segment.name || `test-segment ${index ?? 'unnumbered'}`,
     createdAt: new Date(),
+    description: '',
+    project: undefined,
 });
 
 export const seedDatabaseForPlaygroundTest = async (
@@ -122,9 +122,9 @@ export const seedDatabaseForPlaygroundTest = async (
                 {
                     ...feature,
                     createdAt: undefined,
-                    variants: undefined,
-                    description: feature.description || undefined, // transforms null to undefined
-                    impressionData: feature.impressionData || undefined, // transforms null to undefined
+                    variants: [],
+                    description: undefined,
+                    impressionData: false,
                     createdByUserId: 9999,
                 },
             );
@@ -980,18 +980,16 @@ describe('the playground service (e2e)', () => {
                                 ...feature,
                                 // use a constraint that will never be true
                                 strategies: [
-                                    ...(feature.strategies ?? []).map(
-                                        (strategy) => ({
-                                            ...strategy,
-                                            constraints: [
-                                                {
-                                                    contextName: 'appName',
-                                                    operator: 'IN' as const,
-                                                    values: [uuid],
-                                                },
-                                            ],
-                                        }),
-                                    ),
+                                    ...feature.strategies!.map((strategy) => ({
+                                        ...strategy,
+                                        constraints: [
+                                            {
+                                                contextName: 'appName',
+                                                operator: 'IN' as const,
+                                                values: [uuid],
+                                            },
+                                        ],
+                                    })),
                                     { name: 'my-custom-strategy' },
                                 ],
                             })),

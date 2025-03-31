@@ -47,7 +47,7 @@ export class UiObservabilityController extends Controller {
     }
 
     async recordUiError(req: Request, res: Response): Promise<void> {
-        this.logger.error(
+        this.logger.warn(
             `UI Observability Error: ${req.body.errorMessage}`,
             req.body.errorStack,
         );

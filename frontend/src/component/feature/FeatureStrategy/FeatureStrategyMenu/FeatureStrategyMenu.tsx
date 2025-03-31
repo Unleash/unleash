@@ -20,6 +20,7 @@ import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePla
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUiFlag } from 'hooks/useUiFlag';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFeatureStrategyMenuProps {
     label: string;
@@ -33,9 +34,9 @@ interface IFeatureStrategyMenuProps {
 }
 
 const StyledStrategyMenu = styled('div')(({ theme }) => ({
-    flexShrink: 0,
     display: 'flex',
     flexFlow: 'row',
+    justifyContent: 'flex-end',
     gap: theme.spacing(1),
 }));
 
@@ -57,6 +58,7 @@ export const FeatureStrategyMenu = ({
     disableReason,
 }: IFeatureStrategyMenuProps) => {
     const [anchor, setAnchor] = useState<Element>();
+    const [onlyReleasePlans, setOnlyReleasePlans] = useState<boolean>(false);
     const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
     const [selectedTemplate, setSelectedTemplate] =
@@ -71,13 +73,11 @@ export const FeatureStrategyMenu = ({
         usePendingChangeRequests(projectId);
     const { refetch } = useReleasePlans(projectId, featureId, environmentId);
     const { addReleasePlanToFeature } = useReleasePlansApi();
-    const releasePlanChangeRequestsEnabled = useUiFlag(
-        'releasePlanChangeRequests',
-    );
-
+    const { isOss } = useUiConfig();
+    const releasePlansEnabled = useUiFlag('releasePlans');
+    const displayReleasePlanButton = !isOss() && releasePlansEnabled;
     const crProtected =
-        releasePlanChangeRequestsEnabled &&
-        isChangeRequestConfigured(environmentId);
+        releasePlansEnabled && isChangeRequestConfigured(environmentId);
 
     const onClose = () => {
         setAnchor(undefined);
@@ -93,6 +93,12 @@ export const FeatureStrategyMenu = ({
     };
 
     const openMoreStrategies = (event: React.SyntheticEvent) => {
+        setOnlyReleasePlans(false);
+        setAnchor(event.currentTarget);
+    };
+
+    const openReleasePlans = (event: React.SyntheticEvent) => {
+        setOnlyReleasePlans(true);
         setAnchor(event.currentTarget);
     };
 
@@ -154,6 +160,25 @@ export const FeatureStrategyMenu = ({
 
     return (
         <StyledStrategyMenu onClick={(event) => event.stopPropagation()}>
+            {displayReleasePlanButton ? (
+                <PermissionButton
+                    data-testid='ADD_TEMPLATE_BUTTON'
+                    permission={CREATE_FEATURE_STRATEGY}
+                    projectId={projectId}
+                    environmentId={environmentId}
+                    onClick={openReleasePlans}
+                    aria-labelledby={popoverId}
+                    variant='outlined'
+                    sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
+                    disabled={Boolean(disableReason)}
+                    tooltipProps={{
+                        title: disableReason ? disableReason : undefined,
+                    }}
+                >
+                    Use template
+                </PermissionButton>
+            ) : null}
+
             <PermissionButton
                 data-testid='ADD_STRATEGY_BUTTON'
                 permission={CREATE_FEATURE_STRATEGY}
@@ -191,6 +216,10 @@ export const FeatureStrategyMenu = ({
                 anchorEl={anchor}
                 onClose={onClose}
                 onClick={onClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
                 PaperProps={{
                     sx: (theme) => ({
                         paddingBottom: theme.spacing(1),
@@ -201,6 +230,7 @@ export const FeatureStrategyMenu = ({
                     projectId={projectId}
                     featureId={featureId}
                     environmentId={environmentId}
+                    onlyReleasePlans={onlyReleasePlans}
                     onAddReleasePlan={(template) => {
                         setSelectedTemplate(template);
                         setAddReleasePlanOpen(true);

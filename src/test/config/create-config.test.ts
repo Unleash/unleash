@@ -61,8 +61,8 @@ test('should allow setting pool size', () => {
         disableMigration: false,
     };
     const config = createConfig({ db });
-    expect(config.db.pool.min).toBe(min);
-    expect(config.db.pool.max).toBe(max);
+    expect(config.db.pool!.min).toBe(min);
+    expect(config.db.pool!.max).toBe(max);
     expect(config.db.driver).toBe('postgres');
 });
 

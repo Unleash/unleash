@@ -41,8 +41,10 @@ const FrontendNetworkTrafficUsage: FC = () => {
                     <StyledBox>
                         <TopRow>
                             <Box>
-                                Frontend traffic is determined by the total SDK
-                                requests to the Frontend API
+                                <Alert severity='info' icon={false}>
+                                    Frontend traffic is determined by the total
+                                    SDK requests to the Frontend API
+                                </Alert>
                             </Box>
                             <PeriodSelector
                                 selectedPeriod={chartDataSelection}

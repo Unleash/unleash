@@ -29,7 +29,7 @@ interface IProjectEnvironmentParams {
     environment: string;
 }
 
-export default class EnvironmentsController extends Controller {
+export default class ProjectEnvironmentsController extends Controller {
     private logger: Logger;
 
     private environmentService: WithTransactional<EnvironmentService>;

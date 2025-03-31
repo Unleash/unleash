@@ -15,7 +15,6 @@ import SettingService from './setting-service';
 import FakeSettingStore from '../../test/fixtures/fake-setting-store';
 import { extractAuditInfoFromUser } from '../util';
 import { createFakeEventsService } from '../features';
-
 const config: IUnleashConfig = createTestConfig();
 
 const systemUser = new User({ id: -1, username: 'system' });
@@ -189,9 +188,6 @@ describe('Default admin initialization', () => {
 
         process.env.UNLEASH_DEFAULT_ADMIN_USERNAME = CUSTOM_ADMIN_USERNAME;
         process.env.UNLEASH_DEFAULT_ADMIN_PASSWORD = CUSTOM_ADMIN_PASSWORD;
-
-        const createTestConfig =
-            require('../../test/config/test-config').createTestConfig;
 
         const config = createTestConfig();
 

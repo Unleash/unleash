@@ -6,11 +6,11 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import {
     BILLING_PAYG_DEFAULT_MINIMUM_SEATS,
-    BILLING_PAYG_USER_PRICE,
-    BILLING_PLAN_PRICES,
+    BILLING_PAYG_SEAT_PRICE,
+    BILLING_PRO_BASE_PRICE,
     BILLING_PRO_DEFAULT_INCLUDED_SEATS,
 } from 'component/admin/billing/BillingDashboard/BillingPlan/BillingPlan';
-import { InstancePlan } from 'interfaces/instance';
+import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 
 const StyledDemoDialog = styled(DemoDialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -91,6 +91,12 @@ interface IDemoDialogPlansProps {
 export const DemoDialogPlans = ({ open, onClose }: IDemoDialogPlansProps) => {
     const { trackEvent } = usePlausibleTracker();
     const isEnterprisePaygEnabled = useUiFlag('enterprise-payg');
+    const { instanceStatus } = useInstanceStatus();
+
+    const paygSeatPrice =
+        instanceStatus?.prices?.payg?.seat ?? BILLING_PAYG_SEAT_PRICE;
+    const proBasePrice =
+        instanceStatus?.prices?.pro?.base ?? BILLING_PRO_BASE_PRICE;
 
     return (
         <StyledDemoDialog open={open} onClose={onClose}>
@@ -139,7 +145,7 @@ export const DemoDialogPlans = ({ open, onClose }: IDemoDialogPlansProps) => {
                         </Typography>
                         <div>
                             <Typography variant='h6' fontWeight='normal'>
-                                ${BILLING_PAYG_USER_PRICE} per user/month
+                                ${paygSeatPrice} per user/month
                             </Typography>
                             <Typography variant='body2'>
                                 {BILLING_PAYG_DEFAULT_MINIMUM_SEATS} users
@@ -174,7 +180,7 @@ export const DemoDialogPlans = ({ open, onClose }: IDemoDialogPlansProps) => {
                         </Typography>
                         <div>
                             <Typography variant='h6' fontWeight='normal'>
-                                ${BILLING_PLAN_PRICES[InstancePlan.PRO]}/month
+                                ${proBasePrice}/month
                             </Typography>
                             <Typography variant='body2'>
                                 includes {BILLING_PRO_DEFAULT_INCLUDED_SEATS}{' '}

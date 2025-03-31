@@ -7,6 +7,7 @@ import {
     Filters,
     type IFilterItem,
 } from 'component/filter/Filters/Filters';
+import { formatTag } from 'utils/format-tag';
 
 interface IFeatureToggleFiltersProps {
     state: FilterItemParamHolder;
@@ -44,8 +45,8 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
             value: segment.name,
         }));
         const tagsOptions = (tags || []).map((tag) => ({
-            label: `${tag.type}:${tag.value}`,
-            value: `${tag.type}:${tag.value}`,
+            label: formatTag(tag),
+            value: formatTag(tag),
         }));
 
         const hasMultipleProjects = projectsOptions.length > 1;

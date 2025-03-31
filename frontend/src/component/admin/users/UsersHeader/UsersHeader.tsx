@@ -23,8 +23,12 @@ const StyledElement = styled(Box)(({ theme }) => ({
 }));
 
 export const UsersHeader = () => {
-    const { isOss } = useUiConfig();
-    const licensedUsersEnabled = !isOss();
+    const {
+        isEnterprise,
+        uiConfig: { billing },
+    } = useUiConfig();
+
+    const licensedUsersEnabled = isEnterprise() && billing !== 'pay-as-you-go';
 
     return (
         <StyledContainer>

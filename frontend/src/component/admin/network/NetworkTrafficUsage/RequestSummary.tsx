@@ -88,7 +88,6 @@ export const RequestSummary: FC<Props> = ({
                                         : 'error'
                                     : 'neutral'
                             }
-                            tabIndex={-1}
                         >
                             {usageTotal.toLocaleString(
                                 locationSettings.locale ?? 'en-US',

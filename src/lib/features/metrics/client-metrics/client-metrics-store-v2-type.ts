@@ -20,7 +20,7 @@ export interface IClientMetricsEnvVariant extends IClientMetricsEnvKey {
 
 export interface IClientMetricsStoreV2
     extends Store<IClientMetricsEnv, IClientMetricsEnvKey> {
-    batchInsertMetrics(metrics: IClientMetricsEnv[]): Promise<void>;
+    batchInsertMetrics(metrics: IClientMetricsEnv[] | undefined): Promise<void>;
     getMetricsForFeatureToggle(
         featureName: string,
         hoursBack?: number,

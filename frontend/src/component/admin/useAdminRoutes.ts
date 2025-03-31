@@ -1,5 +1,5 @@
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { adminRoutes } from './adminRoutes';
+import { adminRoutes } from './oldAdminRoutes';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { filterAdminRoutes } from './filterAdminRoutes';
 import { filterByConfig, mapRouteLink } from 'component/common/util';

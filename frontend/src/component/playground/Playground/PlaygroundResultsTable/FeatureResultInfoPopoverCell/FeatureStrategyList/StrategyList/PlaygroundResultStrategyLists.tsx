@@ -1,33 +1,13 @@
-import { Alert, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import type {
     PlaygroundStrategySchema,
     PlaygroundRequestSchema,
 } from 'openapi';
-import {
-    StyledContentList,
-    StyledListItem,
-} from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/EnvironmentAccordionBody';
-import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
+
 import { FeatureStrategyItem } from './StrategyItem/FeatureStrategyItem';
-
-const StyledAlertWrapper = styled('div')(({ theme }) => ({
-    display: 'flex',
-    padding: `0, 4px`,
-    flexDirection: 'column',
-    borderRadius: theme.shape.borderRadiusMedium,
-    border: `1px solid ${theme.palette.warning.border}`,
-}));
-
-const StyledListWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(1, 0.5),
-}));
-
-const StyledAlert = styled(Alert)(({ theme }) => ({
-    border: '0!important',
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-    borderBottom: `1px solid ${theme.palette.warning.border}!important`,
-}));
+import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
+import { StrategyList } from 'component/common/StrategyList/StrategyList';
+import { StrategyListItem } from 'component/common/StrategyList/StrategyListItem';
 
 interface PlaygroundResultStrategyListProps {
     strategies: PlaygroundStrategySchema[];
@@ -50,7 +30,7 @@ const StyledListTitleDescription = styled('p')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
 }));
 
-const RestyledContentList = styled(StyledContentList)(({ theme }) => ({
+const StyledStrategyList = styled(StrategyList)(({ theme }) => ({
     marginInline: `calc(var(--popover-inline-padding) * -1)`,
     borderTop: `1px solid ${theme.palette.divider}`,
     '> li:last-of-type': {
@@ -82,17 +62,17 @@ export const PlaygroundResultStrategyLists = ({
                     </StyledListTitleDescription>
                 ) : null}
             </StyledHeaderGroup>
-            <RestyledContentList>
+            <StyledStrategyList>
                 {strategies?.map((strategy, index) => (
-                    <StyledListItem key={strategy.id}>
+                    <StrategyListItem key={strategy.id}>
                         {index > 0 ? <StrategySeparator /> : ''}
                         <FeatureStrategyItem
                             strategy={strategy}
                             input={input}
                         />
-                    </StyledListItem>
+                    </StrategyListItem>
                 ))}
-            </RestyledContentList>
+            </StyledStrategyList>
         </div>
     );
 };

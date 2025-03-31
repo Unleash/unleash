@@ -1,5 +1,6 @@
 import { Children, isValidElement, type FC, type ReactNode } from 'react';
 import { styled } from '@mui/material';
+import { ConstraintSeparator } from './ConstraintSeparator/ConstraintSeparator';
 
 const StyledList = styled('ul')(({ theme }) => ({
     display: 'flex',
@@ -10,30 +11,20 @@ const StyledList = styled('ul')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const StyledListItem = styled('li')(({ theme }) => ({
+export const ConstraintListItem = styled('div')(({ theme }) => ({
     position: 'relative',
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
     background: theme.palette.background.default,
-    padding: theme.spacing(2, 3),
+    padding: theme.spacing(1.5, 2),
     display: 'flex',
     flexFlow: 'column',
-    gap: theme.spacing(2),
+    gap: theme.spacing(1),
 }));
 
-const StyledAnd = styled('div')(({ theme }) => ({
-    position: 'absolute',
-    top: theme.spacing(-0.5),
-    left: theme.spacing(2),
-    transform: 'translateY(-50%)',
-    padding: theme.spacing(0.75, 1),
-    lineHeight: 1,
-    fontSize: theme.fontSizes.smallerBody,
-    color: theme.palette.text.primary,
-    background: theme.palette.background.application,
-    borderRadius: theme.shape.borderRadiusLarge,
-    zIndex: theme.zIndex.fab,
-}));
+const StyledListItem = styled('li')({
+    position: 'relative',
+});
 
 export const ConstraintsList: FC<{ children: ReactNode }> = ({ children }) => {
     const result: ReactNode[] = [];
@@ -42,9 +33,7 @@ export const ConstraintsList: FC<{ children: ReactNode }> = ({ children }) => {
             result.push(
                 <StyledListItem key={index}>
                     {index > 0 ? (
-                        <StyledAnd role='separator' key={`${index}-divider`}>
-                            AND
-                        </StyledAnd>
+                        <ConstraintSeparator key={`${index}-divider`} />
                     ) : null}
                     {child}
                 </StyledListItem>,

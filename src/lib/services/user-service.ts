@@ -229,8 +229,11 @@ class UserService {
 
     async getUser(id: number): Promise<IUserWithRootRole> {
         const user = await this.store.get(id);
+        if (user === undefined) {
+            throw new NotFoundError(`Could not find user with id ${id}`);
+        }
         const rootRole = await this.accessService.getRootRoleForUser(id);
-        return { ...user, rootRole: rootRole.id };
+        return { ...user, id, rootRole: rootRole.id };
     }
 
     async search(query: string): Promise<IUser[]> {
@@ -416,7 +419,7 @@ class UserService {
     async loginUser(
         usernameOrEmail: string,
         password: string,
-        device?: { userAgent: string; ip: string },
+        device?: { userAgent?: string; ip: string },
     ): Promise<IUser> {
         const settings = await this.settingService.get<SimpleAuthSettings>(
             simpleAuthSettingsKey,
@@ -581,7 +584,7 @@ class UserService {
         return {
             token,
             createdBy,
-            email: user.email,
+            email: user.email!,
             name: user.name,
             id: user.id,
             role: {
@@ -632,7 +635,7 @@ class UserService {
 
         const resetLink = await this.resetTokenService.createResetPasswordUrl(
             receiver.id,
-            user.username || user.email,
+            user.username || user.email || SYSTEM_USER_AUDIT.username,
         );
 
         this.passwordResetTimeouts[receiver.id] = setTimeout(() => {
@@ -640,8 +643,8 @@ class UserService {
         }, 1000 * 60); // 1 minute
 
         await this.emailService.sendResetMail(
-            receiver.name,
-            receiver.email,
+            receiver.name!,
+            receiverEmail,
             resetLink.toString(),
         );
         return resetLink;

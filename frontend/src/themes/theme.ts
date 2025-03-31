@@ -281,7 +281,7 @@ const theme = {
             // A400: '#A6000E',
             // A700: '#A6000E',
         },
-        variants: colors.variants,
+        variants: colors.lightVariants,
 
         /**
          * Dashboard and charts

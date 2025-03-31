@@ -71,14 +71,20 @@ export default class EnvironmentService {
     }
 
     async get(name: string): Promise<IEnvironment> {
-        return this.environmentStore.get(name);
+        const env = await this.environmentStore.get(name);
+        if (env === undefined) {
+            throw new NotFoundError(
+                `Could not find environment with name ${name}`,
+            );
+        }
+        return env;
     }
 
     async getProjectEnvironments(
         projectId: string,
     ): Promise<IProjectsAvailableOnEnvironment[]> {
         // This function produces an object for every environment, in that object is a boolean
-        // describing whether or not that environment is enabled - aka not deprecated
+        // describing whether that environment is enabled - aka not deprecated
         const environments =
             await this.projectStore.getEnvironmentsForProject(projectId);
         const environmentsOnProject = new Set(

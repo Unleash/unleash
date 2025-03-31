@@ -1,8 +1,8 @@
 import type { Request, Response } from 'express';
-import Controller from '../controller';
+import Controller from '../../routes/controller';
 import type { IUnleashServices } from '../../types/services';
 import type { IUnleashConfig } from '../../types/option';
-import type EnvironmentService from '../../features/project-environments/environment-service';
+import type EnvironmentService from '../project-environments/environment-service';
 import type { Logger } from '../../logger';
 import { ADMIN, NONE } from '../../types/permissions';
 import type { OpenApiService } from '../../services/openapi-service';

@@ -1,7 +1,6 @@
 import type React from 'react';
 import { forwardRef, Fragment, useImperativeHandle } from 'react';
-import { styled, Tooltip } from '@mui/material';
-import HelpOutline from '@mui/icons-material/HelpOutline';
+import { styled } from '@mui/material';
 import type { IConstraint } from 'interfaces/strategy';
 import produce from 'immer';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
@@ -13,6 +12,8 @@ import {
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import { NewConstraintAccordion } from 'component/common/NewConstraintAccordion/NewConstraintAccordion';
+import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export interface IConstraintAccordionListProps {
     constraints: IConstraint[];
@@ -42,30 +43,6 @@ const StyledContainer = styled('div')({
     display: 'flex',
     flexDirection: 'column',
 });
-
-const StyledHelpWrapper = styled(Tooltip)(({ theme }) => ({
-    marginLeft: theme.spacing(0.75),
-    height: theme.spacing(1.5),
-}));
-
-const StyledHelp = styled(HelpOutline)(({ theme }) => ({
-    fill: theme.palette.action.active,
-    [theme.breakpoints.down(860)]: {
-        display: 'none',
-    },
-}));
-
-const StyledConstraintLabel = styled('p')(({ theme }) => ({
-    marginBottom: theme.spacing(1),
-    color: theme.palette.text.secondary,
-}));
-
-const StyledAddCustomLabel = styled('div')(({ theme }) => ({
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-    color: theme.palette.text.primary,
-    display: 'flex',
-}));
 
 export const useConstraintAccordionList = (
     setConstraints:
@@ -108,6 +85,7 @@ export const NewConstraintAccordionList = forwardRef<
     IConstraintList
 >(({ constraints, setConstraints, state }, ref) => {
     const { context } = useUnleashContext();
+    const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
 
     const onEdit =
         setConstraints &&
@@ -162,6 +140,28 @@ export const NewConstraintAccordionList = forwardRef<
 
     if (context.length === 0) {
         return null;
+    }
+
+    if (flagOverviewRedesign) {
+        return (
+            <StyledContainer id={constraintAccordionListId}>
+                <ConstraintsList>
+                    {constraints.map((constraint, index) => (
+                        <NewConstraintAccordion
+                            key={constraint[constraintId]}
+                            constraint={constraint}
+                            onEdit={onEdit?.bind(null, constraint)}
+                            onCancel={onCancel.bind(null, index)}
+                            onDelete={onRemove?.bind(null, index)}
+                            onSave={onSave?.bind(null, index)}
+                            onAutoSave={onAutoSave?.(constraint[constraintId])}
+                            editing={Boolean(state.get(constraint)?.editing)}
+                            compact
+                        />
+                    ))}
+                </ConstraintsList>
+            </StyledContainer>
+        );
     }
 
     return (

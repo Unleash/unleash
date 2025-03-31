@@ -453,6 +453,7 @@ describe('offline client', () => {
         const client = await offlineUnleashClient({
             features: [
                 {
+                    // @ts-expect-error: hostnames is incompatible with index signature | undefined is not assignable to type string
                     strategies,
                     // impressionData: false,
                     enabled: true,

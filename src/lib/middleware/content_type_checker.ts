@@ -19,7 +19,10 @@ export default function requireContentType(
     }
     return (req, res, next) => {
         const contentType = req.header('Content-Type');
-        if (is(contentType, acceptedContentTypes)) {
+        if (
+            contentType !== undefined &&
+            is(contentType, acceptedContentTypes)
+        ) {
             next();
         } else {
             const error = new ContentTypeError(

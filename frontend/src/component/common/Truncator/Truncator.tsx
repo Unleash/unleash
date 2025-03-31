@@ -25,13 +25,14 @@ const StyledTruncatorContainer = styled(Box, {
 
 type OverridableTooltipProps = Omit<TooltipProps, 'children'>;
 
-interface ITruncatorProps extends BoxProps {
+export type TruncatorProps = {
     lines?: number;
     title?: string;
     arrow?: boolean;
     tooltipProps?: OverridableTooltipProps;
     children: React.ReactNode;
-}
+    onSetTruncated?: (isTruncated: boolean) => void;
+} & BoxProps;
 
 export const Truncator = ({
     lines = 1,
@@ -40,8 +41,9 @@ export const Truncator = ({
     tooltipProps,
     children,
     component = 'span',
+    onSetTruncated,
     ...props
-}: ITruncatorProps) => {
+}: TruncatorProps) => {
     const [isTruncated, setIsTruncated] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
@@ -50,7 +52,6 @@ export const Truncator = ({
             setIsTruncated(ref.current.scrollHeight > ref.current.offsetHeight);
         }
     };
-
     useEffect(() => {
         const resizeObserver = new ResizeObserver(checkTruncation);
         if (ref.current) {
@@ -58,6 +59,10 @@ export const Truncator = ({
         }
         return () => resizeObserver.disconnect();
     }, [title, children]);
+
+    useEffect(() => {
+        onSetTruncated?.(isTruncated);
+    }, [isTruncated]);
 
     const overridableTooltipProps: OverridableTooltipProps = {
         title,

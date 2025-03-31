@@ -464,7 +464,10 @@ class EventStore implements IEventStore {
     }
 
     async deprecatedSearchEvents(
-        search: DeprecatedSearchEventsSchema = {},
+        search: DeprecatedSearchEventsSchema = {
+            limit: 100,
+            offset: 0,
+        },
     ): Promise<IEvent[]> {
         let query = this.db
             .select(EVENT_COLUMNS)

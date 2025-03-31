@@ -1,5 +1,9 @@
 import { Button, styled, Typography, List } from '@mui/material';
-import { OtherLinksList } from '../NavigationSidebar/NavigationList';
+import {
+    EnterprisePlanBadge,
+    OtherLinksList,
+    useShowBadge,
+} from '../NavigationSidebar/NavigationList';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import StopRoundedIcon from '@mui/icons-material/StopRounded';
 import { AdminListItem, AdminSubListItem, MenuGroup } from './AdminListItem';
@@ -11,17 +15,20 @@ import { filterByConfig } from 'component/common/util';
 import { filterAdminRoutes } from 'component/admin/filterAdminRoutes';
 import { adminGroups, adminRoutes } from 'component/admin/adminRoutes';
 import type { ReactNode } from 'react';
+import type { INavigationMenuItem } from 'interfaces/route';
 
 interface IMenuLinkItem {
     href: string;
     text: string;
     icon: ReactNode;
+    menuMode?: INavigationMenuItem['menu']['mode'];
 }
 
 interface IMenuItem {
     href: string;
     text: string;
     items?: IMenuLinkItem[];
+    menuMode?: INavigationMenuItem['menu']['mode'];
 }
 
 const SettingsHeader = styled(Typography)(({ theme }) => ({
@@ -98,6 +105,7 @@ export const AdminNavigationItems = ({
     const isActiveItem = (item?: string) =>
         item !== undefined && location.pathname === item;
     const location = useLocation();
+    const showBadge = useShowBadge();
 
     const routes = adminRoutes
         .filter(filterByConfig(uiConfig))
@@ -123,12 +131,14 @@ export const AdminNavigationItems = ({
                     href: route.path,
                     text: route.title,
                     icon: <StopRoundedIcon />,
+                    menuMode: route?.menu?.mode,
                 });
             }
             if (!route.group) {
                 acc[route.path] = {
                     href: route.path,
                     text: route.title,
+                    menuMode: route?.menu?.mode,
                 };
             }
             return acc;
@@ -164,6 +174,11 @@ export const AdminNavigationItems = ({
                                     selected={isActiveItem(subItem.href)}
                                     onClick={onClick}
                                     key={subItem.href}
+                                    badge={
+                                        showBadge(subItem.menuMode) ? (
+                                            <EnterprisePlanBadge />
+                                        ) : null
+                                    }
                                 >
                                     <StyledStopRoundedIcon />
                                 </AdminSubListItem>
@@ -178,6 +193,11 @@ export const AdminNavigationItems = ({
                         selected={isActiveItem(item.href)}
                         onClick={onClick}
                         key={item.href}
+                        badge={
+                            showBadge(item.menuMode) ? (
+                                <EnterprisePlanBadge />
+                            ) : null
+                        }
                     >
                         <IconRenderer path={item.href} active={false} />
                     </AdminListItem>

@@ -33,7 +33,7 @@ const StyledBadgeContainer = styled('div')(({ theme }) => ({
     display: 'flex',
 }));
 
-const EnterprisePlanBadge = () => (
+export const EnterprisePlanBadge = () => (
     <Tooltip title='This is an Enterprise feature'>
         <StyledBadgeContainer>
             <EnterpriseBadge />
@@ -41,7 +41,7 @@ const EnterprisePlanBadge = () => (
     </Tooltip>
 );
 
-const useShowBadge = () => {
+export const useShowBadge = () => {
     const { isPro } = useUiConfig();
 
     const showBadge = useCallback(

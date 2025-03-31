@@ -76,11 +76,13 @@ describe('Strategy limits', () => {
 
         await expect(
             addStrategy([
+                // @ts-expect-error missing required fields caseInsensitive and inverted
                 {
                     values: ['1'],
                     operator: 'IN',
                     contextName: 'accountId',
                 },
+                // @ts-expect-error missing required fields caseInsensitive and inverted
                 {
                     values: ['2'],
                     operator: 'IN',
@@ -104,16 +106,19 @@ describe('Strategy limits', () => {
             } as unknown as IUnleashConfig);
 
         const constraints: IConstraint[] = [
+            // @ts-expect-error missing required fields caseInsensitive and inverted
             {
                 values: ['1'],
                 operator: 'IN',
                 contextName: 'appName',
             },
+            // @ts-expect-error missing required fields caseInsensitive and inverted
             {
                 values: ['2'],
                 operator: 'IN',
                 contextName: 'appName',
             },
+            // @ts-expect-error missing required fields caseInsensitive and inverted
             {
                 values: ['3'],
                 operator: 'IN',
@@ -189,6 +194,7 @@ describe('Strategy limits', () => {
         });
         await expect(() =>
             addStrategyWithConstraints([
+                // @ts-expect-error missing required fields caseInsensitive and inverted
                 {
                     contextName: 'userId',
                     operator: 'IN',

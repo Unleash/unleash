@@ -643,13 +643,14 @@ describe('Playground API E2E', () => {
             const customContextFieldName = 'customField';
             const customContextValue = 'customValue';
 
-            const features = [
+            const features: ClientFeatureSchema[] = [
                 {
                     project: 'any-project',
                     strategies: [
                         {
                             name: 'default',
                             constraints: [
+                                // @ts-expect-error missing required fields caseInsensitive and inverted
                                 {
                                     contextName: customContextFieldName,
                                     operator: 'IN' as const,

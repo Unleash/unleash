@@ -24,6 +24,7 @@ test('featureSchema', () => {
                         id: 'a',
                         name: 'a',
                         constraints: [
+                            // @ts-expect-error missing required fields caseInsensitive and inverted
                             {
                                 contextName: 'a',
                                 operator: 'IN',

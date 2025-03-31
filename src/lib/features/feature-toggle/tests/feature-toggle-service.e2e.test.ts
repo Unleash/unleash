@@ -43,6 +43,8 @@ const mockConstraints = (): IConstraint[] => {
         values: ['x', 'y', 'z'],
         operator: 'IN',
         contextName: 'a',
+        caseInsensitive: true,
+        inverted: false,
     }));
 };
 
@@ -846,7 +848,13 @@ test('Should enable disabled strategies on feature environment enabled', async (
     const config: Omit<FeatureStrategySchema, 'id'> = {
         name: 'default',
         constraints: [
-            { contextName: 'userId', operator: 'IN', values: ['1', '1'] },
+            {
+                contextName: 'userId',
+                operator: 'IN',
+                values: ['1', '1'],
+                caseInsensitive: false,
+                inverted: false,
+            },
         ],
         parameters: { param: 'a' },
         variants: [

@@ -499,6 +499,8 @@ export class InstanceStatsService {
         return this.memorize('deprecatedFilteredCountFeaturesExported', () =>
             this.eventStore.deprecatedFilteredCount({
                 type: FEATURES_EXPORTED,
+                limit: 100,
+                offset: 0,
             }),
         );
     }
@@ -507,6 +509,8 @@ export class InstanceStatsService {
         return this.memorize('deprecatedFilteredCountFeaturesImported', () =>
             this.eventStore.deprecatedFilteredCount({
                 type: FEATURES_IMPORTED,
+                limit: 100,
+                offset: 0,
             }),
         );
     }

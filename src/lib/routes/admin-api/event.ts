@@ -158,6 +158,8 @@ export default class EventController extends Controller {
         if (project) {
             eventList = await this.eventService.deprecatedSearchEvents({
                 project,
+                limit: 100,
+                offset: 0,
             });
         } else {
             eventList = await this.eventService.getEvents();
@@ -184,6 +186,8 @@ export default class EventController extends Controller {
         const feature = req.params.featureName;
         const eventList = await this.eventService.deprecatedSearchEvents({
             feature,
+            limit: 100,
+            offset: 0,
         });
 
         const response = {

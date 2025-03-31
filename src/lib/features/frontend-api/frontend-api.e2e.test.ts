@@ -12,7 +12,6 @@ import {
 } from '../../types/models/api-token';
 import { startOfHour } from 'date-fns';
 import {
-    type IConstraint,
     type IStrategyConfig,
     SYSTEM_USER_AUDIT,
     TEST_AUDIT_USER,
@@ -521,6 +520,7 @@ test('should filter features by constraints', async () => {
             {
                 name: 'default',
                 constraints: [
+                    // @ts-expect-error missing required fields caseInsensitive and inverted
                     { contextName: 'appName', operator: 'IN', values: ['a'] },
                 ],
                 parameters: {},
@@ -534,6 +534,7 @@ test('should filter features by constraints', async () => {
             {
                 name: 'default',
                 constraints: [
+                    // @ts-expect-error missing required fields caseInsensitive and inverted
                     {
                         contextName: 'appName',
                         operator: 'IN',
@@ -575,6 +576,7 @@ test('should be able to set environment as a context variable', async () => {
             {
                 name: 'default',
                 constraints: [
+                    // @ts-expect-error missing required fields caseInsensitive and inverted
                     {
                         contextName: 'environment',
                         operator: 'IN',
@@ -850,12 +852,14 @@ test('should filter features by segment', async () => {
         enabled: true,
         strategies: [{ name: 'default', parameters: {} }],
     });
-    const constraintA: IConstraint = {
+    // @ts-expect-error missing required fields caseInsensitive and inverted
+    const constraintA: ConstraintSchema = {
         operator: 'IN',
         contextName: 'appName',
         values: ['a'],
     };
-    const constraintB: IConstraint = {
+    // @ts-expect-error missing required fields caseInsensitive and inverted
+    const constraintB: ConstraintSchema = {
         operator: 'IN',
         contextName: 'appName',
         values: ['b'],
@@ -1294,6 +1298,7 @@ test('should return enabled feature flags based on context using POST', async ()
             {
                 name: 'default',
                 constraints: [
+                    // @ts-expect-error missing required fields caseInsensitive and inverted
                     {
                         contextName: 'userId',
                         operator: 'IN',

@@ -29,6 +29,8 @@ test('Trying to get events by name if db fails should yield empty list', async (
     const store = new EventStore(db, getLogger);
     const events = await store.deprecatedSearchEvents({
         type: 'application-created',
+        limit: 100,
+        offset: 0,
     });
     expect(events).toBeTruthy();
     expect(events.length).toBe(0);

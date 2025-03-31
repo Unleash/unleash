@@ -73,6 +73,7 @@ export class Strategy {
                     ...constraint,
                     value: constraint?.value?.toString() ?? undefined,
                     result: this.checkConstraint(constraint, context),
+                    caseInsensitive: constraint.caseInsensitive ?? false,
                 });
             }
         }

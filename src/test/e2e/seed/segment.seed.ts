@@ -71,6 +71,7 @@ const mockFeatureToggle = (
 };
 
 const seedConstraints = (spec: ISeedSegmentSpec): IConstraint[] => {
+    // @ts-expect-error constraint is missing required fields caseInsensitive and inverted
     return Array.from({ length: spec.constraintsPerSegment }).map(() => ({
         values: Array.from({ length: spec.valuesPerConstraint }).map(() =>
             randomId().substring(0, 16),

@@ -1609,8 +1609,8 @@ __metadata:
   linkType: hard
 
 "@slack/web-api@npm:^7.3.4":
-  version: 7.9.0
-  resolution: "@slack/web-api@npm:7.9.0"
+  version: 7.9.1
+  resolution: "@slack/web-api@npm:7.9.1"
   dependencies:
     "@slack/logger": "npm:^4.0.0"
     "@slack/types": "npm:^2.9.0"
@@ -1624,7 +1624,7 @@ __metadata:
     p-queue: "npm:^6"
     p-retry: "npm:^4"
     retry: "npm:^0.13.1"
-  checksum: 10c0/10960a65bddac7abc980264610face6287da3e3ffb59ce17c69b010102292560e05978a94ef0940f3478ba7e7c65c29609f17a8bc26cf3f59be23d83a61c77ab
+  checksum: 10c0/76d5d935518f3c2ab9eea720c0736f5722ac6c3244f4b1ba29aa3f3525803ecc00662209c8a1cce2c2a94ec71d607c05f5f6a24456dd3e60fa65b3fe0c7b9820
   languageName: node
   linkType: hard
 

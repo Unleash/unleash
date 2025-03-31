@@ -22,9 +22,11 @@ export const useEventLogFilters = (
 ) => {
     const { projects } = projectsHook();
     const { features } = featuresHook({});
+    // biome-ignore lint/correctness/useHookAtTopLevel: // FIXME: linter
     const { eventCreators } = useEventCreators();
-
+    // biome-ignore lint/correctness/useHookAtTopLevel: // FIXME: linter
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
+    // biome-ignore lint/correctness/useHookAtTopLevel: // FIXME: linter
     useEffect(() => {
         const projectOptions =
             projects?.map((project: ProjectSchema) => ({
@@ -127,16 +129,19 @@ type LogType = 'flag' | 'project' | 'global';
 const useEventLogFiltersFromLogType = (logType: LogType) => {
     switch (logType) {
         case 'flag':
+            // biome-ignore lint/correctness/useHookAtTopLevel: // FIXME: linter
             return useEventLogFilters(
                 () => ({ projects: [] }),
                 () => ({ features: [] }),
             );
         case 'project':
+            // biome-ignore lint/correctness/useHookAtTopLevel: // FIXME: linter
             return useEventLogFilters(
                 () => ({ projects: [] }),
                 useFeatureSearch,
             );
         case 'global':
+            // biome-ignore lint/correctness/useHookAtTopLevel: // FIXME: linter
             return useEventLogFilters(useProjects, useFeatureSearch);
     }
 };

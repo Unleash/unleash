@@ -436,14 +436,12 @@ const SecondaryFeatureInfo: FC<{
     );
 };
 
-export const FeatureOverviewCell =
-    (
-        onTagClick: (tag: string) => void,
-        onFlagTypeClick: (type: string) => void,
-    ): FC<IFeatureNameCellProps> =>
-    ({ row }) => {
-        const { searchQuery } = useSearchHighlightContext();
-
+export const FeatureOverviewCell = (
+    onTagClick: (tag: string) => void,
+    onFlagTypeClick: (type: string) => void,
+): FC<IFeatureNameCellProps> => {
+    const { searchQuery } = useSearchHighlightContext();
+    return ({ row }) => {
         return (
             <Container>
                 <PrimaryFeatureInfo
@@ -463,3 +461,4 @@ export const FeatureOverviewCell =
             </Container>
         );
     };
+};

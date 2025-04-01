@@ -169,9 +169,8 @@ export const RecentlyVisitedFeatureButton = ({
     featureId: string;
     onClick: () => void;
 }) => {
+    const { trackEvent } = usePlausibleTracker();
     const onItemClick = () => {
-        const { trackEvent } = usePlausibleTracker();
-
         trackEvent('command-bar', {
             props: {
                 eventType: `click`,

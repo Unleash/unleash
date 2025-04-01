@@ -1,8 +1,9 @@
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { useContext, useState } from 'react';
-import { Chip, styled, Tooltip } from '@mui/material';
+import { styled, Tooltip, Chip } from '@mui/material';
 import useFeatureTags from 'hooks/api/getters/useFeatureTags/useFeatureTags';
 import DeleteTagIcon from '@mui/icons-material/Cancel';
+import ClearIcon from '@mui/icons-material/Clear';
 import { ManageTagsDialog } from 'component/feature/FeatureView/FeatureOverview/ManageTagsDialog/ManageTagsDialog';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';
@@ -13,6 +14,9 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { StyledMetaDataItem } from './FeatureOverviewMetaData';
 import { AddTagButton } from './AddTagButton';
+import { Tag } from 'component/common/Tag/Tag';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { formatTag } from 'utils/format-tag';
 
 const StyledLabel = styled('span')(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -56,7 +60,6 @@ interface IFeatureOverviewSidePanelTagsProps {
 export const TagRow = ({ feature }: IFeatureOverviewSidePanelTagsProps) => {
     const { tags, refetch } = useFeatureTags(feature.name);
     const { deleteTagFromFeature } = useFeatureApi();
-
     const [manageTagsOpen, setManageTagsOpen] = useState(false);
     const [removeTagOpen, setRemoveTagOpen] = useState(false);
     const [selectedTag, setSelectedTag] = useState<ITag>();
@@ -103,49 +106,17 @@ export const TagRow = ({ feature }: IFeatureOverviewSidePanelTagsProps) => {
                 <StyledTagRow>
                     <StyledLabel>Tags:</StyledLabel>
                     <StyledTagContainer>
-                        {tags.map((tag) => {
-                            const tagLabel = `${tag.type}:${tag.value}`;
-                            const isOverflowing = tagLabel.length > 25;
-                            return (
-                                <StyledTag
-                                    key={tagLabel}
-                                    label={
-                                        <Tooltip
-                                            key={tagLabel}
-                                            title={
-                                                isOverflowing ? tagLabel : ''
-                                            }
-                                            arrow
-                                        >
-                                            <span>
-                                                {tagLabel.substring(0, 25)}
-                                                {isOverflowing ? (
-                                                    <StyledEllipsis>
-                                                        …
-                                                    </StyledEllipsis>
-                                                ) : (
-                                                    ''
-                                                )}
-                                            </span>
-                                        </Tooltip>
-                                    }
-                                    size='small'
-                                    deleteIcon={
-                                        <Tooltip title='Remove tag' arrow>
-                                            <DeleteTagIcon />
-                                        </Tooltip>
-                                    }
-                                    onDelete={
-                                        canUpdateTags
-                                            ? () => {
-                                                  setRemoveTagOpen(true);
-                                                  setSelectedTag(tag);
-                                              }
-                                            : undefined
-                                    }
-                                />
-                            );
-                        })}
+                        {tags.map((tag) => (
+                            <TagItem
+                                key={formatTag(tag)}
+                                tag={tag}
+                                canUpdateTags={canUpdateTags}
+                                onTagRemove={(tag) => {
+                                    setRemoveTagOpen(true);
+                                    setSelectedTag(tag);
+                                }}
+                            />
+                        ))}
                         {canUpdateTags ? (
                             <AddTagButton
                                 project={feature.project}
@@ -181,5 +152,68 @@ export const TagRow = ({ feature }: IFeatureOverviewSidePanelTagsProps) => {
                 </strong>
             </Dialogue>
         </>
+    );
+};
+
+interface ITagItemProps {
+    tag: ITag;
+    canUpdateTags: boolean;
+    onTagRemove: (tag: ITag) => void;
+}
+
+const TagItem = ({ tag, canUpdateTags, onTagRemove }: ITagItemProps) => {
+    const isTagTypeColorEnabled = useUiFlag('tagTypeColor');
+    const tagLabel = formatTag(tag);
+    const isOverflowing = tagLabel.length > 25;
+    const deleteIcon = (
+        <Tooltip title='Remove tag' arrow>
+            <DeleteTagIcon />
+        </Tooltip>
+    );
+    const onDelete = canUpdateTags ? () => onTagRemove(tag) : undefined;
+
+    if (isTagTypeColorEnabled) {
+        const deleteIcon = (
+            <Tooltip title='Remove tag' arrow>
+                <ClearIcon sx={{ height: '20px', width: '20px' }} />
+            </Tooltip>
+        );
+
+        return (
+            <Tooltip key={tagLabel} title={isOverflowing ? tagLabel : ''} arrow>
+                <span>
+                    <Tag
+                        tag={tag}
+                        onDelete={onDelete}
+                        deleteIcon={deleteIcon}
+                    />
+                </span>
+            </Tooltip>
+        );
+    }
+
+    return (
+        <StyledTag
+            key={tagLabel}
+            label={
+                <Tooltip
+                    key={tagLabel}
+                    title={isOverflowing ? tagLabel : ''}
+                    arrow
+                >
+                    <span>
+                        {tagLabel.substring(0, 25)}
+                        {isOverflowing ? (
+                            <StyledEllipsis>…</StyledEllipsis>
+                        ) : (
+                            ''
+                        )}
+                    </span>
+                </Tooltip>
+            }
+            size='small'
+            deleteIcon={deleteIcon}
+            onDelete={onDelete}
+        />
     );
 };

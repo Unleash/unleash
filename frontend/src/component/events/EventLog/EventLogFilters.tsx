@@ -6,24 +6,15 @@ import {
 } from 'component/filter/Filters/Filters';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
-import {
-    EventSchemaType,
-    type FeatureSearchResponseSchema,
-    type SearchFeaturesParams,
-} from 'openapi';
+import { EventSchemaType, type FeatureSearchResponseSchema } from 'openapi';
 import type { ProjectSchema } from 'openapi';
 import { useEventCreators } from 'hooks/api/getters/useEventCreators/useEventCreators';
 
 export const useEventLogFilters = (
-    projectsHook: () => { projects: ProjectSchema[] },
-    featuresHook: (params: SearchFeaturesParams) => {
-        features: FeatureSearchResponseSchema[];
-    },
+    projects: ProjectSchema[],
+    features: FeatureSearchResponseSchema[],
 ) => {
-    const { projects } = projectsHook();
-    const { features } = featuresHook({});
     const { eventCreators } = useEventCreators();
-
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
     useEffect(() => {
         const projectOptions =
@@ -124,22 +115,6 @@ export const useEventLogFilters = (
 };
 
 type LogType = 'flag' | 'project' | 'global';
-const useEventLogFiltersFromLogType = (logType: LogType) => {
-    switch (logType) {
-        case 'flag':
-            return useEventLogFilters(
-                () => ({ projects: [] }),
-                () => ({ features: [] }),
-            );
-        case 'project':
-            return useEventLogFilters(
-                () => ({ projects: [] }),
-                useFeatureSearch,
-            );
-        case 'global':
-            return useEventLogFilters(useProjects, useFeatureSearch);
-    }
-};
 
 type EventLogFiltersProps = {
     logType: LogType;
@@ -154,7 +129,14 @@ export const EventLogFilters: FC<EventLogFiltersProps> = ({
     state,
     onChange,
 }) => {
-    const availableFilters = useEventLogFiltersFromLogType(logType);
+    const { features } = useFeatureSearch({});
+    const { projects } = useProjects();
+    const featuresToFilter = logType !== 'flag' ? features : [];
+    const projectsToFilter = logType === 'global' ? projects : [];
+    const availableFilters = useEventLogFilters(
+        projectsToFilter,
+        featuresToFilter,
+    );
 
     return (
         <Filters

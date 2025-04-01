@@ -9,10 +9,6 @@ import { BILLING_TRAFFIC_PRICE } from './BillingPlan';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 
 export const useOverageCost = (includedTraffic: number) => {
-    if (!includedTraffic) {
-        return 0;
-    }
-
     const now = new Date();
     const formatDate = (date: Date) => format(date, 'yyyy-MM-dd');
     const from = formatDate(startOfMonth(now));

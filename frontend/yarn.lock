@@ -10175,7 +10175,7 @@ __metadata:
     typescript: "npm:5.4.5"
     use-query-params: "npm:^2.2.1"
     vanilla-jsoneditor: "npm:^0.23.0"
-    vite: "npm:5.4.14"
+    vite: "npm:5.4.16"
     vite-plugin-env-compatible: "npm:2.0.1"
     vite-plugin-svgr: "npm:3.3.0"
     vite-tsconfig-paths: "npm:4.3.2"
@@ -10448,9 +10448,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:5.4.14":
-  version: 5.4.14
-  resolution: "vite@npm:5.4.14"
+"vite@npm:5.4.16":
+  version: 5.4.16
+  resolution: "vite@npm:5.4.16"
   dependencies:
     esbuild: "npm:^0.21.3"
     fsevents: "npm:~2.3.3"
@@ -10487,7 +10487,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10c0/8842933bd70ca6a98489a0bb9c8464bec373de00f9a97c8c7a4e64b24d15c88bfaa8c1acb38a68c3e5eb49072ffbccb146842c2d4edcdd036a9802964cffe3d1
+  checksum: 10c0/10faad2614c24a4ff65a680acfe9f71a90eba6c291ecf2d98919eb72c16d7d39b40e54e859d6a48c139a497829c3546cd2ae95be31f1a4145cba560d3d6e1b12
   languageName: node
   linkType: hard
 

@@ -13,7 +13,6 @@ export type IFlagKey =
     | 'responseTimeWithAppNameKillSwitch'
     | 'maintenanceMode'
     | 'messageBanner'
-    | 'caseInsensitiveInOperators'
     | 'strictSchemaValidation'
     | 'personalAccessTokensKillSwitch'
     | 'migrationLock'
@@ -36,7 +35,6 @@ export type IFlagKey =
     | 'estimateTrafficDataCost'
     | 'useMemoizedActiveTokens'
     | 'queryMissingTokens'
-    | 'userAccessUIEnabled'
     | 'disableUpdateMaxRevisionId'
     | 'disablePublishUnannouncedEvents'
     | 'outdatedSdksBanner'
@@ -102,10 +100,6 @@ const flags: IFlags = {
                 process.env.UNLEASH_EXPERIMENTAL_MESSAGE_BANNER_PAYLOAD ?? '',
         },
     },
-    caseInsensitiveInOperators: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CASE_INSENSITIVE_IN_OPERATORS,
-        false,
-    ),
     strictSchemaValidation: parseEnvVarBoolean(
         process.env.UNLEASH_STRICT_SCHEMA_VALIDTION,
         false,
@@ -195,10 +189,6 @@ const flags: IFlags = {
     ),
     estimateTrafficDataCost: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ESTIMATE_TRAFFIC_DATA_COST,
-        false,
-    ),
-    userAccessUIEnabled: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_USER_ACCESS_UI_ENABLED,
         false,
     ),
     disableUpdateMaxRevisionId: parseEnvVarBoolean(

@@ -38,10 +38,10 @@ interface IProjectStatsProps {
 }
 
 export const ProjectInsightsStats = ({ stats }: IProjectStatsProps) => {
+    const projectId = useRequiredPathParam('projectId');
     if (Object.keys(stats).length === 0) {
         return null;
     }
-    const projectId = useRequiredPathParam('projectId');
 
     const {
         avgTimeToProdCurrentWindow,

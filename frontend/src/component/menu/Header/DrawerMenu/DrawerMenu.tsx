@@ -8,8 +8,8 @@ import theme from 'themes/theme';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { MobileNavigationSidebar } from 'component/layout/MainLayout/NavigationSidebar/NavigationSidebar';
 import { NewInUnleash } from 'component/layout/MainLayout/NavigationSidebar/NewInUnleash/NewInUnleash';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { AdminMobileNavigation } from 'component/layout/MainLayout/AdminMenu/AdminNavigationItems';
+import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 
 const StyledDrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -33,9 +33,7 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
     open = false,
     toggleDrawer,
 }) => {
-    const newAdminUIEnabled = useUiFlag('adminNavUI');
-    const showOnlyAdminMenu =
-        newAdminUIEnabled && location.pathname.indexOf('/admin') === 0;
+    const showOnlyAdminMenu = useNewAdminMenu();
     const onClick = () => {
         toggleDrawer();
     };

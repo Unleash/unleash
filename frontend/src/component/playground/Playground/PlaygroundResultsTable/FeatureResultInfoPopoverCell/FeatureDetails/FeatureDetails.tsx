@@ -117,13 +117,11 @@ export const FeatureDetails = ({
                     <p>
                         {feature?.strategies?.result !== 'unknown' ? (
                             <PlaygroundResultChip
-                                tabindex={-1}
                                 enabled={feature.isEnabled}
                                 label={feature.isEnabled ? 'True' : 'False'}
                             />
                         ) : (
                             <PlaygroundResultChip
-                                tabindex={-1}
                                 enabled='unknown'
                                 label={'Unknown'}
                                 showIcon={false}

@@ -6,22 +6,27 @@ import { AdminListItem, AdminSubListItem, MenuGroup } from './AdminListItem';
 import { IconRenderer } from './AdminMenuIcons';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { filterByConfig } from 'component/common/util';
 import { filterAdminRoutes } from 'component/admin/filterAdminRoutes';
 import { adminGroups, adminRoutes } from 'component/admin/adminRoutes';
 import type { ReactNode } from 'react';
+import type { INavigationMenuItem } from 'interfaces/route';
+import { useShowBadge } from 'component/layout/components/EnterprisePlanBadge/useShowBadge';
+import { EnterprisePlanBadge } from 'component/layout/components/EnterprisePlanBadge/EnterprisePlanBadge';
 
 interface IMenuLinkItem {
     href: string;
     text: string;
     icon: ReactNode;
+    menuMode?: INavigationMenuItem['menu']['mode'];
 }
 
 interface IMenuItem {
     href: string;
     text: string;
     items?: IMenuLinkItem[];
+    menuMode?: INavigationMenuItem['menu']['mode'];
 }
 
 const SettingsHeader = styled(Typography)(({ theme }) => ({
@@ -43,9 +48,12 @@ const StyledStopRoundedIcon = styled(StopRoundedIcon)(({ theme }) => ({
 }));
 
 export const DashboardLink = () => {
+    const navigate = useNavigate();
     return (
         <StyledButton
-            href='/personal'
+            onClick={() => {
+                navigate(`/personal`);
+            }}
             rel='noreferrer'
             startIcon={<ArrowBackIcon />}
         >
@@ -95,6 +103,7 @@ export const AdminNavigationItems = ({
     const isActiveItem = (item?: string) =>
         item !== undefined && location.pathname === item;
     const location = useLocation();
+    const showBadge = useShowBadge();
 
     const routes = adminRoutes
         .filter(filterByConfig(uiConfig))
@@ -120,12 +129,14 @@ export const AdminNavigationItems = ({
                     href: route.path,
                     text: route.title,
                     icon: <StopRoundedIcon />,
+                    menuMode: route?.menu?.mode,
                 });
             }
             if (!route.group) {
                 acc[route.path] = {
                     href: route.path,
                     text: route.title,
+                    menuMode: route?.menu?.mode,
                 };
             }
             return acc;
@@ -161,6 +172,11 @@ export const AdminNavigationItems = ({
                                     selected={isActiveItem(subItem.href)}
                                     onClick={onClick}
                                     key={subItem.href}
+                                    badge={
+                                        showBadge(subItem.menuMode) ? (
+                                            <EnterprisePlanBadge />
+                                        ) : null
+                                    }
                                 >
                                     <StyledStopRoundedIcon />
                                 </AdminSubListItem>
@@ -175,6 +191,11 @@ export const AdminNavigationItems = ({
                         selected={isActiveItem(item.href)}
                         onClick={onClick}
                         key={item.href}
+                        badge={
+                            showBadge(item.menuMode) ? (
+                                <EnterprisePlanBadge />
+                            ) : null
+                        }
                     >
                         <IconRenderer path={item.href} active={false} />
                     </AdminListItem>

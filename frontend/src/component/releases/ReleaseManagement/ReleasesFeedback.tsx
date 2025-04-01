@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
 import { Card } from 'component/common/Card/Card';
+import { RELEASE_TEMPLATE_FEEDBACK } from 'constants/links';
 import { Link } from 'react-router-dom';
 
 const StyledCardLink = styled(Link)(({ theme }) => ({
@@ -11,9 +12,6 @@ const StyledCardLink = styled(Link)(({ theme }) => ({
     },
 }));
 
-const feedbackLink =
-    'https://docs.google.com/forms/d/1ElbScYxbAhFcjQWgRinifoymYHeuXzqIoQXfpUVYGR8/preview';
-
 export const ReleasesFeedback: React.FC<{
     title: string;
     children: React.ReactNode;
@@ -24,7 +22,7 @@ export const ReleasesFeedback: React.FC<{
             title={title}
             footer={
                 <StyledCardLink
-                    to={feedbackLink}
+                    to={RELEASE_TEMPLATE_FEEDBACK}
                     target='_blank'
                     rel='noreferrer'
                 >

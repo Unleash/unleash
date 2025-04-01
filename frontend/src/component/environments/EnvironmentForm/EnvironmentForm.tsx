@@ -116,8 +116,8 @@ const EnvironmentForm: React.FC<IEnvironmentForm> = ({
                 {globalChangeRequestConfigEnabled ? (
                     <>
                         <StyledInputDescription sx={{ mt: 2 }}>
-                            Would you like to pre-define change requests for
-                            this environment?
+                            Would you like to predefine change requests for this
+                            environment?
                         </StyledInputDescription>
                         <ChangeRequestSelector
                             onChange={setRequiredApprovals}

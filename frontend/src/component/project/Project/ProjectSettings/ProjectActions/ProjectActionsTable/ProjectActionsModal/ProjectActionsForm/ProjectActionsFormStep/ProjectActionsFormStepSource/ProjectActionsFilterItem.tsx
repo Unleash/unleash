@@ -14,7 +14,6 @@ import {
     type Operator,
     allOperators,
     dateOperators,
-    inOperators,
     stringOperators,
 } from 'constants/operators';
 import { useEffect, useState } from 'react';
@@ -24,7 +23,6 @@ import { CaseSensitiveButton } from 'component/common/NewConstraintAccordion/Con
 import { InvertedOperatorButton } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/StyledToggleButton/InvertedOperatorButton/InvertedOperatorButton';
 import { ResolveInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/ResolveInput/ResolveInput';
 import { useConstraintInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledDeleteButton = styled(IconButton)({
     marginRight: '-6px',
@@ -136,8 +134,6 @@ export const ProjectActionsFilterItem = ({
     const [showCaseSensitiveButton, setShowCaseSensitiveButton] =
         useState(false);
 
-    const caseInsensitiveInOperators = useUiFlag('caseInsensitiveInOperators');
-
     const validOperators = allOperators.filter(
         (operator) => !oneOf(dateOperators, operator),
     );
@@ -167,21 +163,15 @@ export const ProjectActionsFilterItem = ({
     }, [value, error]);
 
     useEffect(() => {
-        if (
-            oneOf(stringOperators, operator) ||
-            (oneOf(inOperators, operator) && caseInsensitiveInOperators)
-        ) {
+        if (oneOf(stringOperators, operator)) {
             setShowCaseSensitiveButton(true);
         } else {
             setShowCaseSensitiveButton(false);
         }
-    }, [operator, caseInsensitiveInOperators]);
+    }, [operator]);
 
     const onOperatorChange = (operator: Operator) => {
-        if (
-            oneOf(stringOperators, operator) ||
-            (oneOf(inOperators, operator) && caseInsensitiveInOperators)
-        ) {
+        if (oneOf(stringOperators, operator)) {
             setShowCaseSensitiveButton(true);
         } else {
             setShowCaseSensitiveButton(false);

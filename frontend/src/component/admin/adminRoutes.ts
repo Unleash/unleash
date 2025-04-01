@@ -136,18 +136,28 @@ export const adminRoutes: INavigationMenuItem[] = [
         title: 'Connected edges',
         menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
         group: 'network',
+        flag: 'edgeObservability',
     },
     {
         path: '/admin/network/backend-connections',
         title: 'Backend connections',
         menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
         group: 'network',
+        flag: 'consumptionModel',
     },
     {
         path: '/admin/network/frontend-data-usage',
         title: 'Frontend data usage',
         menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
         group: 'network',
+        flag: 'consumptionModel',
+    },
+    {
+        path: '/admin/network/data-usage',
+        title: 'Data usage',
+        menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
+        group: 'network',
+        notFlag: 'consumptionModel',
     },
 
     // Instance configuration

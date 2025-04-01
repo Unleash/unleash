@@ -1,10 +1,21 @@
-import { Box, Button, Grid, Paper, styled, Typography } from '@mui/material';
+import {
+    Box,
+    Button,
+    Grid,
+    Paper,
+    styled,
+    Typography,
+    useMediaQuery,
+    useTheme,
+} from '@mui/material';
 import { useInstanceStats } from 'hooks/api/getters/useInstanceStats/useInstanceStats';
-import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import { formatAssetPath } from 'utils/formatPath';
 import easyToDeploy from 'assets/img/easyToDeploy.png';
+import { useNavigate } from 'react-router-dom';
+
+const UI_SWITCH_WIDGET_RATIO_BREAKPOINT = 1505;
 
 const StyledContainer = styled(Grid)(({ theme }) => ({
     display: 'flex',
@@ -20,6 +31,12 @@ const StyledInstanceWidget = styled(Paper)(({ theme }) => ({
     color: 'white',
     backgroundColor: theme.palette.web.main,
     overflow: 'hidden',
+    [theme.breakpoints.down(UI_SWITCH_WIDGET_RATIO_BREAKPOINT)]: {
+        height: theme.spacing(24),
+    },
+    [theme.breakpoints.down(800)]: {
+        height: theme.spacing(30),
+    },
 }));
 
 const StyledWidget = styled(Paper)(({ theme }) => ({
@@ -42,6 +59,9 @@ const StyledHeader = styled(Typography)(({ theme }) => ({
 
 const StyledLicenseSection = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(6),
+    [theme.breakpoints.down(UI_SWITCH_WIDGET_RATIO_BREAKPOINT)]: {
+        marginBottom: theme.spacing(2),
+    },
 }));
 
 const StyledParagraph = styled(Typography)(({ theme }) => ({
@@ -52,6 +72,13 @@ const StyledParagraph = styled(Typography)(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
     justifyContent: 'space-between',
+    [theme.breakpoints.down(UI_SWITCH_WIDGET_RATIO_BREAKPOINT)]: {
+        maxWidth: theme.spacing(65),
+    },
+    [theme.breakpoints.down(800)]: {
+        flexDirection: 'column',
+        justifyContent: 'start',
+    },
 }));
 
 const StyledParamName = styled('div')(({ theme }) => ({
@@ -116,6 +143,10 @@ const ImageContainer = styled('div')(({ theme }) => ({
     justifyContent: 'flex-end',
     marginTop: theme.spacing(-6),
     marginRight: theme.spacing(-10),
+    [theme.breakpoints.down(UI_SWITCH_WIDGET_RATIO_BREAKPOINT)]: {
+        marginTop: theme.spacing(-22),
+        marginRight: theme.spacing(-12),
+    },
 }));
 
 const StyledImg = styled('img')(({ theme }) => ({
@@ -169,6 +200,8 @@ const InstanceStatsWidget = ({
     projects,
     environments,
 }: IInstanceStatsWidgetProps) => {
+    const navigate = useNavigate();
+
     return (
         <StyledWidget>
             <InstanceStatsHeader>Instance statistics</InstanceStatsHeader>
@@ -200,10 +233,11 @@ const InstanceStatsWidget = ({
             </StyledGridContainer>
             <StyledLinkContainer>
                 <Button
-                    href='/admin/instance'
                     rel='noreferrer'
-                    target='_blank'
                     endIcon={<ArrowOutwardIcon />}
+                    onClick={() => {
+                        navigate('/admin/instance');
+                    }}
                 >
                     View all instance statistics
                 </Button>
@@ -214,6 +248,12 @@ const InstanceStatsWidget = ({
 
 export const AdminHome = () => {
     const stats = useInstanceStats();
+    const theme = useTheme();
+    const isBreakpoint = useMediaQuery(
+        theme.breakpoints.down(UI_SWITCH_WIDGET_RATIO_BREAKPOINT),
+    );
+    const breakpointedInstanceStatsWidgetSize = isBreakpoint ? 12 : 7;
+    const breakpointedInstanceWidgetSize = isBreakpoint ? 12 : 5;
     const { isOss, isPro, isEnterprise } = useUiConfig();
     const plan = isOss()
         ? 'Open source'
@@ -222,12 +262,16 @@ export const AdminHome = () => {
           : isEnterprise()
             ? 'Enterprise'
             : 'Unknown';
-    const { instanceStatus } = useInstanceStatus();
     return (
         <StyledContainer>
             {stats && !stats.loading && (
                 <Grid container spacing={3}>
-                    <Grid item md={5} sm={12} xs={12}>
+                    <Grid
+                        item
+                        md={breakpointedInstanceWidgetSize}
+                        sm={12}
+                        xs={12}
+                    >
                         <InstanceWidget
                             plan={plan}
                             instanceId={stats.stats?.instanceId ?? 'unknown'}
@@ -236,7 +280,12 @@ export const AdminHome = () => {
                             }
                         />
                     </Grid>
-                    <Grid item md={7} sm={12} xs={12}>
+                    <Grid
+                        item
+                        md={breakpointedInstanceStatsWidgetSize}
+                        sm={12}
+                        xs={12}
+                    >
                         <InstanceStatsWidget
                             environments={stats.stats?.environments ?? 0}
                             featureToggles={stats.stats?.featureToggles ?? 0}

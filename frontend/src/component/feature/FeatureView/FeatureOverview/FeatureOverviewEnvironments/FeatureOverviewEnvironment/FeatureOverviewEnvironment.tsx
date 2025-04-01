@@ -8,12 +8,17 @@ import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { UpgradeChangeRequests } from './UpgradeChangeRequests/UpgradeChangeRequests';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { EnvironmentHeader } from './EnvironmentHeader/EnvironmentHeader';
+import {
+    environmentAccordionSummaryClassName,
+    EnvironmentHeader,
+} from './EnvironmentHeader/EnvironmentHeader';
 import FeatureOverviewEnvironmentMetrics from './EnvironmentHeader/FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics';
 import { FeatureOverviewEnvironmentToggle } from './EnvironmentHeader/FeatureOverviewEnvironmentToggle/FeatureOverviewEnvironmentToggle';
 import { useState } from 'react';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import { EnvironmentAccordionBody as NewEnvironmentAccordionBody } from './EnvironmentAccordionBody/EnvironmentAccordionBody';
+import { Box } from '@mui/material';
+import { ReleaseTemplatesFeedback } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/ReleaseTemplatesFeedback/ReleaseTemplatesFeedback';
 
 const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -24,11 +29,8 @@ const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     boxShadow: 'none',
     background: 'none',
-    '&&& .MuiAccordionSummary-root': {
-        borderRadius: theme.shape.borderRadiusLarge,
-        pointerEvents: 'auto',
-        opacity: 1,
-        backgroundColor: theme.palette.background.paper,
+    [`&:has(.${environmentAccordionSummaryClassName}:focus-visible)`]: {
+        background: theme.palette.table.headerHover,
     },
 }));
 
@@ -44,7 +46,6 @@ const StyledAccordionFooter = styled('footer')(({ theme }) => ({
     padding: theme.spacing(2, 3, 3),
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'flex-end',
     gap: theme.spacing(2),
 }));
 
@@ -84,7 +85,6 @@ export const FeatureOverviewEnvironment = ({
                 TransitionProps={{ mountOnEnter: true, unmountOnExit: true }}
                 data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${environment.name}`}
                 expanded={isOpen && hasActivations}
-                disabled={!hasActivations}
                 onChange={() => {
                     const state = isOpen ? !isOpen : hasActivations;
                     onToggleEnvOpen(state);
@@ -126,12 +126,17 @@ export const FeatureOverviewEnvironment = ({
                         />
                     </StyledEnvironmentAccordionContainer>
                     <StyledAccordionFooter>
-                        <FeatureStrategyMenu
-                            label='Add strategy'
-                            projectId={projectId}
-                            featureId={featureId}
-                            environmentId={environment.name}
-                        />
+                        <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                            <ReleaseTemplatesFeedback />
+                            <Box ml='auto'>
+                                <FeatureStrategyMenu
+                                    label='Add strategy'
+                                    projectId={projectId}
+                                    featureId={featureId}
+                                    environmentId={environment.name}
+                                />
+                            </Box>
+                        </Box>
                         {isOss() && environment?.type === 'production' ? (
                             <UpgradeChangeRequests />
                         ) : null}

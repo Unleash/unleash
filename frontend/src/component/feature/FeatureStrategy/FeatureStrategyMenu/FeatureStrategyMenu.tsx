@@ -34,9 +34,9 @@ interface IFeatureStrategyMenuProps {
 }
 
 const StyledStrategyMenu = styled('div')(({ theme }) => ({
-    flexShrink: 0,
     display: 'flex',
     flexFlow: 'row',
+    justifyContent: 'flex-end',
     gap: theme.spacing(1),
 }));
 
@@ -161,24 +161,22 @@ export const FeatureStrategyMenu = ({
     return (
         <StyledStrategyMenu onClick={(event) => event.stopPropagation()}>
             {displayReleasePlanButton ? (
-                <>
-                    <PermissionButton
-                        data-testid='ADD_TEMPLATE_BUTTON'
-                        permission={CREATE_FEATURE_STRATEGY}
-                        projectId={projectId}
-                        environmentId={environmentId}
-                        onClick={openReleasePlans}
-                        aria-labelledby={popoverId}
-                        variant='outlined'
-                        sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
-                        disabled={Boolean(disableReason)}
-                        tooltipProps={{
-                            title: disableReason ? disableReason : undefined,
-                        }}
-                    >
-                        Use template
-                    </PermissionButton>
-                </>
+                <PermissionButton
+                    data-testid='ADD_TEMPLATE_BUTTON'
+                    permission={CREATE_FEATURE_STRATEGY}
+                    projectId={projectId}
+                    environmentId={environmentId}
+                    onClick={openReleasePlans}
+                    aria-labelledby={popoverId}
+                    variant='outlined'
+                    sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
+                    disabled={Boolean(disableReason)}
+                    tooltipProps={{
+                        title: disableReason ? disableReason : undefined,
+                    }}
+                >
+                    Use template
+                </PermissionButton>
             ) : null}
 
             <PermissionButton
@@ -218,6 +216,10 @@ export const FeatureStrategyMenu = ({
                 anchorEl={anchor}
                 onClose={onClose}
                 onClick={onClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
                 PaperProps={{
                     sx: (theme) => ({
                         paddingBottom: theme.spacing(1),

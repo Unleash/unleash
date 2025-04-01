@@ -78,10 +78,19 @@ test('Can manage required approvals', async () => {
     const groupRetrieved = (await service.getAll()).find(
         (env) => env.name === 'approval_env',
     );
+    const changeRequestEnvs =
+        await db.stores.environmentStore.getChangeRequestEnvironments([
+            'approval_env',
+            'default',
+            'other',
+        ]);
 
     expect(retrieved).toEqual(created);
     expect(updated).toEqual({ ...created, requiredApprovals: 2 });
     expect(groupRetrieved).toMatchObject({ ...created, requiredApprovals: 2 });
+    expect(changeRequestEnvs).toEqual([
+        { name: 'approval_env', requiredApprovals: 2 },
+    ]);
 });
 
 test('Can connect environment to project', async () => {

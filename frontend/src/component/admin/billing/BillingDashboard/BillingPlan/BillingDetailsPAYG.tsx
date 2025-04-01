@@ -45,8 +45,7 @@ export const BillingDetailsPAYG = ({
     const billableUsers = Math.max(eligibleUsers.length, minSeats);
     const usersCost = seatPrice * billableUsers;
 
-    const includedTraffic = BILLING_INCLUDED_REQUESTS;
-    const overageCost = useOverageCost(includedTraffic);
+    const overageCost = useOverageCost(BILLING_INCLUDED_REQUESTS);
 
     const totalCost = usersCost + overageCost;
 

@@ -140,6 +140,23 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
         return Promise.resolve(this.environments);
     }
 
+    async getChangeRequestEnvironments(
+        environments: string[],
+    ): Promise<{ name: string; requiredApprovals: number }[]> {
+        const filteredEnvironments = this.environments
+            .filter(
+                (env) =>
+                    environments.includes(env.name) &&
+                    env.requiredApprovals &&
+                    env.requiredApprovals > 0,
+            )
+            .map((env) => ({
+                name: env.name,
+                requiredApprovals: env.requiredApprovals || 1,
+            }));
+        return Promise.resolve(filteredEnvironments);
+    }
+
     async getProjectEnvironments(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         projectId: string,

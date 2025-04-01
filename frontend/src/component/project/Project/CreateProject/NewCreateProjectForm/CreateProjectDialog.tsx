@@ -213,17 +213,6 @@ export const CreateProjectDialog = ({
     const globalChangeRequestConfigEnabled = useUiFlag(
         'globalChangeRequestConfig',
     );
-    useEffect(() => {
-        if (!globalChangeRequestConfigEnabled) return;
-        activeEnvironments.forEach((environment) => {
-            if (Number.isInteger(environment.requiredApprovals)) {
-                updateProjectChangeRequestConfig.enableChangeRequests(
-                    environment.name,
-                    Number(environment.requiredApprovals),
-                );
-            }
-        });
-    }, [JSON.stringify(activeEnvironments)]);
 
     const numberOfConfiguredChangeRequestEnvironments = Object.keys(
         projectChangeRequestConfiguration,
@@ -241,7 +230,26 @@ export const CreateProjectDialog = ({
             : activeEnvironments.filter((env) =>
                   projectEnvironments.has(env.name),
               )
-    ).map(({ name, type }) => ({ name, type }));
+    ).map(({ name, type, requiredApprovals }) => ({
+        name,
+        type,
+        requiredApprovals,
+        configurable: globalChangeRequestConfigEnabled
+            ? !Number.isInteger(requiredApprovals)
+            : true,
+    }));
+
+    useEffect(() => {
+        if (!globalChangeRequestConfigEnabled) return;
+        availableChangeRequestEnvironments.forEach((environment) => {
+            if (Number.isInteger(environment.requiredApprovals)) {
+                updateProjectChangeRequestConfig.enableChangeRequests(
+                    environment.name,
+                    Number(environment.requiredApprovals),
+                );
+            }
+        });
+    }, [JSON.stringify(availableChangeRequestEnvironments)]);
 
     return (
         <StyledDialog open={open} onClose={onClose}>

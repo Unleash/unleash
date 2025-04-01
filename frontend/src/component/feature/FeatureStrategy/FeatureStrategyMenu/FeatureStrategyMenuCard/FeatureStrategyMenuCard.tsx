@@ -43,7 +43,7 @@ const StyledDescription = styled('div')(({ theme }) => ({
 }));
 
 const StyledContentContainer = styled('div')(() => ({
-    overflow: 'hidden', // Ensure content doesn't overflow
+    overflow: 'hidden',
     width: '100%',
 }));
 

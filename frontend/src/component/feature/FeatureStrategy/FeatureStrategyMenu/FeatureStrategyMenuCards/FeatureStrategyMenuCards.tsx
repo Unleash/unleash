@@ -40,7 +40,6 @@ const GridSection = styled(Box)(({ theme }) => ({
     width: '100%',
 }));
 
-// Card wrapper to ensure consistent sizing in the grid
 const CardWrapper = styled(Box)(() => ({
     width: '100%',
     minWidth: 0,

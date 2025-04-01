@@ -11,7 +11,6 @@ import type {
     IUnleashStores,
 } from '../../../types';
 import { randomId } from '../../../util';
-import type { ConstraintSchema } from '../../../openapi/spec';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -296,8 +295,7 @@ describe('max metrics collection', () => {
         });
     });
 
-    const bigConstraint = (maxValueCount: number): ConstraintSchema => {
-        // @ts-expect-error missing required fields caseInsensitive and inverted
+    const bigConstraint = (maxValueCount: number) => {
         return {
             values: Array.from({ length: maxValueCount }, (_, i) =>
                 i.toString(),
@@ -348,7 +346,6 @@ describe('max metrics collection', () => {
             strategyWithConstraints(flagA.name, bigConstraint(maxValueCount)),
         );
         await featureStrategiesStore.createStrategyFeatureEnv(
-            // @ts-expect-error missing required fields caseInsensitive and inverted
             strategyWithConstraints(flagB.name, {
                 operator: 'IN',
                 contextName: 'appName',
@@ -393,13 +390,11 @@ describe('max metrics collection', () => {
             environment: 'default',
             featureName: flagA.name,
             constraints: [
-                // @ts-expect-error missing required fields caseInsensitive and inverted
                 {
                     values: ['blah'],
                     operator: 'IN',
                     contextName: 'appName',
                 },
-                // @ts-expect-error missing required fields caseInsensitive and inverted
                 {
                     values: ['blah'],
                     operator: 'IN',

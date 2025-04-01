@@ -932,7 +932,6 @@ describe('the playground service (e2e)', () => {
                     fc.context(),
                     async (featsAndSegments, context, ctx) => {
                         const serviceFeatures = await insertAndEvaluateFeatures(
-                            // @ts-expect-error property types don't match
                             {
                                 ...featsAndSegments,
                                 context,
@@ -997,7 +996,6 @@ describe('the playground service (e2e)', () => {
                     generateContext(),
                     async (featsAndSegments, context) => {
                         const serviceFeatures = await insertAndEvaluateFeatures(
-                            // @ts-expect-error property types don't match
                             {
                                 ...featsAndSegments,
                                 context,

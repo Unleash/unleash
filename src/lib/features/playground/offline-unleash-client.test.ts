@@ -75,7 +75,6 @@ describe('offline client', () => {
                         {
                             name: 'default',
                             constraints: [
-                                // @ts-expect-error missing required fields caseInsensitive and inverted
                                 {
                                     contextName: 'appName',
                                     operator: 'IN',

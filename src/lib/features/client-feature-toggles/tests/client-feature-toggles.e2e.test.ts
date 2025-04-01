@@ -65,8 +65,6 @@ const getApiClientResponse = (project = 'default') => [
                         contextName: 'userId',
                         operator: 'IN',
                         values: ['123'],
-                        caseInsensitive: false,
-                        inverted: false,
                     },
                 ],
                 parameters: {},
@@ -137,13 +135,7 @@ const setupFeatures = async (
         {
             name: 'default',
             constraints: [
-                {
-                    contextName: 'userId',
-                    operator: 'IN',
-                    values: ['123'],
-                    caseInsensitive: false,
-                    inverted: false,
-                },
+                { contextName: 'userId', operator: 'IN', values: ['123'] },
             ],
             parameters: {},
         },

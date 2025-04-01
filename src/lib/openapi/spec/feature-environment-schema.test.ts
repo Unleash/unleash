@@ -9,10 +9,7 @@ test('featureEnvironmentSchema', () => {
             {
                 id: '',
                 name: '',
-                constraints: [
-                    // @ts-expect-error missing required fields caseInsensitive and inverted
-                    { contextName: '', operator: 'IN' },
-                ],
+                constraints: [{ contextName: '', operator: 'IN' }],
                 parameters: { a: '' },
             },
         ],

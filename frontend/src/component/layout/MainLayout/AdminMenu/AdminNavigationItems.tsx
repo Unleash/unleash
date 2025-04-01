@@ -1,9 +1,5 @@
 import { Button, styled, Typography, List } from '@mui/material';
-import {
-    EnterprisePlanBadge,
-    OtherLinksList,
-    useShowBadge,
-} from '../NavigationSidebar/NavigationList';
+import { OtherLinksList } from '../NavigationSidebar/NavigationList';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import StopRoundedIcon from '@mui/icons-material/StopRounded';
 import { AdminListItem, AdminSubListItem, MenuGroup } from './AdminListItem';
@@ -16,6 +12,8 @@ import { filterAdminRoutes } from 'component/admin/filterAdminRoutes';
 import { adminGroups, adminRoutes } from 'component/admin/adminRoutes';
 import type { ReactNode } from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
+import { useShowBadge } from 'component/layout/components/EnterprisePlanBadge/useShowBadge';
+import { EnterprisePlanBadge } from 'component/layout/components/EnterprisePlanBadge/EnterprisePlanBadge';
 
 interface IMenuLinkItem {
     href: string;

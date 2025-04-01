@@ -1,5 +1,5 @@
 import type React from 'react';
-import { type FC, useCallback } from 'react';
+import type { FC } from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
 import type { NavigationMode } from './NavigationMode';
 import { ShowAdmin } from './ShowHide';
@@ -9,10 +9,9 @@ import {
     MiniListItem,
     SignOutItem,
 } from './ListItems';
-import { Box, List, styled, Tooltip, Typography } from '@mui/material';
+import { Box, List, Typography } from '@mui/material';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { IconRenderer } from './IconRenderer';
-import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import SearchIcon from '@mui/icons-material/Search';
 import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
@@ -27,35 +26,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import SettingsIcon from '@mui/icons-material/Settings';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-
-const StyledBadgeContainer = styled('div')(({ theme }) => ({
-    paddingLeft: theme.spacing(2),
-    display: 'flex',
-}));
-
-export const EnterprisePlanBadge = () => (
-    <Tooltip title='This is an Enterprise feature'>
-        <StyledBadgeContainer>
-            <EnterpriseBadge />
-        </StyledBadgeContainer>
-    </Tooltip>
-);
-
-export const useShowBadge = () => {
-    const { isPro } = useUiConfig();
-
-    const showBadge = useCallback(
-        (mode?: INavigationMenuItem['menu']['mode']) => {
-            return !!(
-                isPro() &&
-                !mode?.includes('pro') &&
-                mode?.includes('enterprise')
-            );
-        },
-        [isPro],
-    );
-    return showBadge;
-};
+import { useShowBadge } from 'component/layout/components/EnterprisePlanBadge/useShowBadge';
+import { EnterprisePlanBadge } from 'component/layout/components/EnterprisePlanBadge/EnterprisePlanBadge';
 
 export const SecondaryNavigationList: FC<{
     routes: INavigationMenuItem[];

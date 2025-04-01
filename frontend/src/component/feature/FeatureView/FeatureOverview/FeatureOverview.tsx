@@ -60,7 +60,6 @@ export const FeatureOverview = () => {
 
     const dragTooltipSplashId = 'strategy-drag-tooltip';
     const shouldShowStrategyDragTooltip = !splash?.[dragTooltipSplashId];
-
     const toggleShowTooltip = (envIsOpen: boolean) => {
         setShowTooltip(
             !hasClosedTooltip && shouldShowStrategyDragTooltip && envIsOpen,

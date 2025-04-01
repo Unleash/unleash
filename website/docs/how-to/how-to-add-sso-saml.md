@@ -72,7 +72,7 @@ Click the “View Setup Instructions” to get the necessary configuration requi
 
 ### Step 4: Configure SAML 2.0 provider in Unleash {#step-4}
 
-Go back to Unleash Admin Dashboard and navigate to `Admin Menu -> Single-Sign-On -> SAML`. Fill in the values captured
+Go back to Unleash Admin Dashboard and navigate to **Admin settings > Single sign-on > SAML**. Fill in the values captured
 in the _"Get the Okta Setup Instructions"_ step.
 
 You may also choose to “Auto-create users”. This will make Unleash automatically create new users on the fly the first
@@ -152,7 +152,7 @@ provided with the ability to view setup instructions and now you should be provi
 
 ### Step 3: Configure Single-Sign-Out in Unleash
 
-Go back to Unleash Admin Dashboard and navigate to `Admin Menu -> Single-Sign-On -> SAML`. Fill in the values captured in the "Single Logout URL" from Okta.
+Go back to Unleash Admin Dashboard and navigate to **Admin settings > Single sign-on > SAML**. Fill in the values captured in the "Single Logout URL" from Okta.
 
 In the "Service Provide X.509 Certificate" field you should insert the value of your private key (`private-pem`). This is required in order to make Unleash able
 to sign logout requests.

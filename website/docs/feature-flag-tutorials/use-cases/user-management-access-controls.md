@@ -23,7 +23,7 @@ To ensure proper user authentication and reduce risk exposure, Unleash provides 
 
 Unleash supports any SSO option through OpenID Connect or SAML 2.0, including identity providers like Okta, Microsoft Entra ID, and Keycloak to create a unified authentication process.
 
-To configure SSO for feature flags, navigate to **Admin > Single sign-on** in the Unleash Admin UI.
+To configure SSO for feature flags, navigate to **Admin settings > Single sign-on** in the Unleash Admin UI.
 
 ![In Unleash's Single Sign-On page, there are four tabs to set up Open ID Connect, SAML 2.0, traditional passwords, and SCIM.](/img/use-case-user-mgmt-saml.png)
 
@@ -72,9 +72,9 @@ This automation creates an access control system that adapts in real-time to org
 
 [Role-based access control](/reference/rbac) makes feature flag management a strategic governance tool. Consider a scenario in which a junior developer should never be able to modify critical feature flags in the authentication system within a banking platform. RBAC makes this granular control seamless. We recommend carefully delegating administrative privileges to users based on the needs of their roles within projects and the organization, a concept known as the principle of least privilege.
 
-In the Unleash Admin UI, go to **Admin > Roles** to view, create, and manage user roles.
+In the Unleash Admin UI, go to **Admin settings > User administration > Users** to view, create, and manage user's roles.
 
-![Manage all user roles in the Unleash Admin UI.](/img/use-case-user-mgmt-root-roles.png)
+![Manage user's roles in the Unleash Admin UI.](/img/use-case-user-mgmt-root-roles.png)
 
 We have 5 [predefined roles](/reference/rbac#predefined-roles) within our RBAC framework at Unleash.
 
@@ -107,7 +107,7 @@ For example, customize root permissions to perform CRUD operations for:
 -   Segments
 -   Context fields
 
-In the Unleash Admin UI, go to **Admin > Roles** and click **New root role**. In the form, select each permission you want the custom root role to have in the dropdowns and click **Add role**.
+In the Unleash Admin UI, go to **Admin settings > User administration > Roor roles** and click **New root role**. In the form, select each permission you want the custom root role to have in the dropdowns and click **Add role**.
 
 ![In the "New root role" form, name your role, add a description, and select permissions in each dropdown section in the form.](/img/use-case-user-mgmt-custom-role.png)
 

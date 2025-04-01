@@ -9,7 +9,7 @@ title: How to add new users to your Unleash instance
 :::
     
 
-You can add new users to Unleash in `Admin > Users`.
+You can add new users to Unleash in **Admin settings > User administration > Users**.
 
 1. From the top-line menu – click on the “Settings Wheel” then click on “Users”.
     ![A visual representation of the current step: the Unleash Admin UI with the steps highlighted.](/img/user_admin_list_button.png)

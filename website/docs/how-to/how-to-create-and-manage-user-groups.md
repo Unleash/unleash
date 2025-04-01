@@ -30,25 +30,15 @@ This guide takes you through how to use user groups to manage permissions on you
 
 ## Managing users within a group
 
-1. Navigate to groups by using the admin menu (the gear icon) and selecting the groups option.
-
-![The Unleash Admin UI with the steps highlighted to navigate to groups.](/img/create-ug-step-1.png)
+1. Go to **Admin settings > User management > Groups.**
 
 2. Select the card of the group you want to edit.
 
-![The manage groups with a pointer to a group card.](/img/edit-ug-step-2.png)
-
 3. Remove users by using the remove user button (displayed as a bin).
-
-![The manage group page with the remove user button highlighted.](/img/remove-user-from-group-step-1.png)
 
 4. Confirm the remove.
 
-![The manage group page with the confirm user removal dialog shown.](/img/remove-user-from-group-step-2.png)
-
 5. Add users by selecting the add button.
-
-![The groups page shown with the add user button highlighted.](/img/add-user-to-group-step-1.png)
 
 6. Find the user you'd like to add to the group and select them.
 

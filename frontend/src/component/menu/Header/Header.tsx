@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
+import { type Theme, useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import {
     AppBar,
@@ -16,7 +16,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
-import { ReactComponent as CelebatoryUnleashLogo } from 'assets/img/unleashHoliday.svg';
 
 import { DrawerMenu } from './DrawerMenu/DrawerMenu';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -28,6 +27,10 @@ import { Notifications } from 'component/common/Notifications/Notifications';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { CommandBar } from 'component/commandBar/CommandBar';
+import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
+import { ReactComponent as CelebratoryUnleashLogo } from 'assets/img/unleashHoliday.svg';
+import { ReactComponent as CelebratoryUnleashLogoWhite } from 'assets/img/unleashHolidayDark.svg';
+import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.application,
@@ -68,11 +71,13 @@ const StyledNav = styled('nav')({
     flexGrow: 1,
 });
 
-const StyledUnleashLogoWhite = styled(UnleashLogoWhite)({ width: '150px' });
+const StyledCelebratoryLogo = styled(CelebratoryUnleashLogo)({
+    height: '50px',
+});
 
-const StyledUnleashLogo = styled(UnleashLogo)({ width: '150px' });
+const StyledUnleashLogoWhite = styled(UnleashLogoWhite)({ height: '50px' });
 
-const StyledCelebatoryLogo = styled(CelebatoryUnleashLogo)({ width: '150px' });
+const StyledUnleashLogo = styled(UnleashLogo)({ height: '50px' });
 
 const StyledLink = styled(Link)(({ theme }) => focusable(theme));
 
@@ -99,7 +104,12 @@ const Header = () => {
     const smallScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
-    const celebatoryUnleash = useUiFlag('celebrateUnleash');
+    const celebratoryUnleash = useUiFlag('celebrateUnleash');
+    const headerLogo = (theme: Theme) => ({
+        height: '50px',
+        marginLeft: theme.spacing(1.5),
+    });
+    const adminMenu = useNewAdminMenu();
 
     if (smallScreen) {
         return (
@@ -131,6 +141,40 @@ const Header = () => {
         <HeaderComponent position='static'>
             <ContainerComponent>
                 <StyledNav>
+                    <ConditionallyRender
+                        condition={adminMenu}
+                        show={
+                            <StyledLink
+                                to='/personal'
+                                sx={headerLogo}
+                                aria-label='Home'
+                            >
+                                <ThemeMode
+                                    darkmode={
+                                        <ConditionallyRender
+                                            condition={celebratoryUnleash}
+                                            show={
+                                                <CelebratoryUnleashLogoWhite />
+                                            }
+                                            elseShow={
+                                                <StyledUnleashLogoWhite aria-label='Unleash logo' />
+                                            }
+                                        />
+                                    }
+                                    lightmode={
+                                        <ConditionallyRender
+                                            condition={celebratoryUnleash}
+                                            show={<StyledCelebratoryLogo />}
+                                            elseShow={
+                                                <StyledUnleashLogo aria-label='Unleash logo' />
+                                            }
+                                        />
+                                    }
+                                />
+                            </StyledLink>
+                        }
+                    />
+
                     <StyledUserContainer>
                         <CommandBar />
                         <Divider

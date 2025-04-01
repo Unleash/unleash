@@ -436,7 +436,7 @@ const SecondaryFeatureInfo: FC<{
     );
 };
 
-export const FeatureOverviewCell =
+export const createFeatureOverviewCell =
     (
         onTagClick: (tag: string) => void,
         onFlagTypeClick: (type: string) => void,

@@ -89,13 +89,13 @@ export const EnvironmentAccordionBody = ({
         }
     }, []);
 
-    if (!featureEnvironment) {
-        return null;
-    }
-
     const pageSize = 20;
     const { page, pages, setPageIndex, pageIndex } =
         usePagination<IFeatureStrategy>(strategies, pageSize);
+
+    if (!featureEnvironment) {
+        return null;
+    }
 
     const onReorder = async (payload: { id: string; sortOrder: number }[]) => {
         try {

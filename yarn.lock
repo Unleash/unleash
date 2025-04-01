@@ -1608,7 +1608,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@slack/web-api@npm:^7.3.4":
+"@slack/web-api@npm:^7.9.1":
   version: 7.9.1
   resolution: "@slack/web-api@npm:7.9.1"
   dependencies:
@@ -9334,7 +9334,7 @@ __metadata:
     "@babel/core": "npm:7.26.10"
     "@biomejs/biome": "npm:^1.9.4"
     "@cyclonedx/yarn-plugin-cyclonedx": "npm:^2.0.0"
-    "@slack/web-api": "npm:^7.3.4"
+    "@slack/web-api": "npm:^7.9.1"
     "@swc/core": "npm:1.11.8"
     "@swc/jest": "npm:0.2.37"
     "@types/bcryptjs": "npm:2.4.6"

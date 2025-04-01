@@ -11,7 +11,7 @@ import { TagTypeSelect } from './TagTypeSelect';
 import { type TagOption, TagsInput } from './TagsInput';
 import useTags from 'hooks/api/getters/useTags/useTags';
 import useTagTypes from 'hooks/api/getters/useTagTypes/useTagTypes';
-import type { ITag, ITagType } from 'interfaces/tags';
+import type { ITagType } from 'interfaces/tags';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import type { TagSchema } from 'openapi';

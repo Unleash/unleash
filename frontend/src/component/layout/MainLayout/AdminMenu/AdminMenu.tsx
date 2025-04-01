@@ -9,7 +9,6 @@ const breakpointLgMinusPaddingAdmin = 1550;
 const breakpointXlMinusPadding = 1512;
 const breakpointXlAdmin = 1812;
 const breakpointXxl = 1856;
-const breakpointXxlAdmin = 2156;
 
 const MainLayoutContent = styled(Grid)(({ theme }) => ({
     minWidth: 0, // this is a fix for overflowing flex
@@ -73,13 +72,6 @@ const StyledAdminMainGrid = styled(Grid)(({ theme }) => ({
     margin: '0 auto',
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
-    [theme.breakpoints.up(breakpointXxlAdmin)]: {
-        width: '100%',
-    },
-    [theme.breakpoints.down(breakpointXxlAdmin)]: {
-        marginLeft: 0,
-        marginRight: 0,
-    },
     [theme.breakpoints.down('lg')]: {
         maxWidth: `${breakpointLgMinusPaddingAdmin}px`,
         paddingLeft: theme.spacing(1),

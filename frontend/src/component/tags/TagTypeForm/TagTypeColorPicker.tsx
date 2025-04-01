@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { styled, Box, useTheme } from '@mui/material';
+import { lightTheme } from 'themes/theme';
 
 interface ITagTypeColorPickerProps {
     selectedColor: string;
@@ -55,27 +56,33 @@ export const TagTypeColorPicker: FC<ITagTypeColorPickerProps> = ({
         color || '#FFFFFF';
 
     const colorOptions: IColorOption[] = [
-        { name: 'White', value: theme.palette.common.white },
+        {
+            name: 'White',
+            value: getColorWithFallback(lightTheme.palette.common.white),
+        },
         {
             name: 'Green',
-            value: getColorWithFallback(theme.palette.success.border),
+            value: getColorWithFallback(lightTheme.palette.success.main),
         },
         {
             name: 'Yellow',
-            value: getColorWithFallback(theme.palette.warning.border),
+            value: getColorWithFallback(lightTheme.palette.warning.main),
         },
-        { name: 'Red', value: theme.palette.error.main },
+        {
+            name: 'Red',
+            value: getColorWithFallback(lightTheme.palette.error.main),
+        },
         {
             name: 'Blue',
-            value: getColorWithFallback(theme.palette.info.border),
+            value: getColorWithFallback(lightTheme.palette.info.main),
         },
         {
             name: 'Purple',
-            value: getColorWithFallback(theme.palette.secondary.border),
+            value: getColorWithFallback(lightTheme.palette.secondary.main),
         },
         {
             name: 'Gray',
-            value: getColorWithFallback(theme.palette.neutral.border),
+            value: getColorWithFallback(lightTheme.palette.neutral.main),
         },
     ];
 

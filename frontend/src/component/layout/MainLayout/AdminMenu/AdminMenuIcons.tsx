@@ -5,7 +5,7 @@ import EventNoteIcon from '@mui/icons-material/EventNote';
 import BillingIcon from '@mui/icons-material/CreditCardOutlined';
 import PeopleOutlineRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
 import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
-import CloudIcon from '@mui/icons-material/Cloud';
+import SingleSignOnIcon from '@mui/icons-material/AssignmentOutlined';
 import HubOutlinedIcon from '@mui/icons-material/HubOutlined';
 import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
 import EmptyIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
@@ -16,7 +16,7 @@ const icons: Record<string, typeof SvgIcon> = {
     users: PeopleOutlineRoundedIcon,
     '/admin/service-accounts': LaptopIcon,
     access: KeyRoundedIcon,
-    sso: CloudIcon,
+    sso: SingleSignOnIcon,
     network: HubOutlinedIcon,
     instance: BuildOutlinedIcon,
     '/admin/billing': BillingIcon,

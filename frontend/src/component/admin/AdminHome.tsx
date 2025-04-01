@@ -5,6 +5,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import { formatAssetPath } from 'utils/formatPath';
 import easyToDeploy from 'assets/img/easyToDeploy.png';
+import { useNavigate } from 'react-router-dom';
 
 const StyledContainer = styled(Grid)(({ theme }) => ({
     display: 'flex',
@@ -169,6 +170,8 @@ const InstanceStatsWidget = ({
     projects,
     environments,
 }: IInstanceStatsWidgetProps) => {
+    const navigate = useNavigate();
+
     return (
         <StyledWidget>
             <InstanceStatsHeader>Instance statistics</InstanceStatsHeader>
@@ -200,10 +203,11 @@ const InstanceStatsWidget = ({
             </StyledGridContainer>
             <StyledLinkContainer>
                 <Button
-                    href='/admin/instance'
                     rel='noreferrer'
-                    target='_blank'
                     endIcon={<ArrowOutwardIcon />}
+                    onClick={() => {
+                        navigate('/admin/instance');
+                    }}
                 >
                     View all instance statistics
                 </Button>

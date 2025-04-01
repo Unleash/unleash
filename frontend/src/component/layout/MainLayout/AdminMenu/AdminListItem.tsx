@@ -64,6 +64,7 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     '&:hover': {
         backgroundColor: theme.palette.action.hover,
     },
+    paddingRight: theme.spacing(1.5),
 }));
 
 interface IMenuGroupProps {

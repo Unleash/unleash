@@ -11,7 +11,8 @@
         "noUnsafeOptionalChaining": "off",
         "useExhaustiveDependencies": "off",
         "noUnusedImports": "warn",
-        "useJsxKeyInIterable": "off"
+        "useJsxKeyInIterable": "off",
+        "useHookAtTopLevel": "error"
       },
       "complexity": {
         "noBannedTypes": "off",
@@ -100,5 +101,17 @@
     "formatter": {
       "indentWidth": 2
     }
-  }
+  },
+  "overrides": [
+    {
+      "include": ["src/**"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "useHookAtTopLevel": "off"
+          }
+        }
+      }
+    }
+  ]
 }

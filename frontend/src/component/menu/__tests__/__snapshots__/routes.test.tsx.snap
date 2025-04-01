@@ -12,7 +12,9 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "menu": {},
+    "menu": {
+      "primary": true,
+    },
     "path": "/personal",
     "title": "Dashboard",
     "type": "protected",
@@ -90,7 +92,9 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "menu": {},
+    "menu": {
+      "primary": true,
+    },
     "path": "/projects",
     "title": "Projects",
     "type": "protected",
@@ -104,7 +108,9 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "menu": {},
+    "menu": {
+      "primary": true,
+    },
     "path": "/search",
     "title": "Search",
     "type": "protected",
@@ -119,7 +125,9 @@ exports[`returns all baseRoutes 1`] = `
       },
     },
     "hidden": false,
-    "menu": {},
+    "menu": {
+      "primary": true,
+    },
     "path": "/playground",
     "title": "Playground",
     "type": "protected",
@@ -127,7 +135,9 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "enterprise": true,
-    "menu": {},
+    "menu": {
+      "primary": true,
+    },
     "path": "/insights",
     "title": "Insights",
     "type": "protected",
@@ -258,8 +268,8 @@ exports[`returns all baseRoutes 1`] = `
         "enterprise",
       ],
     },
-    "path": "/release-management",
-    "title": "Release management",
+    "path": "/release-templates",
+    "title": "Release templates",
     "type": "protected",
   },
   {
@@ -271,9 +281,9 @@ exports[`returns all baseRoutes 1`] = `
         "enterprise",
       ],
     },
-    "parent": "/release-management",
-    "path": "/release-management/create-template",
-    "title": "Create release plan template",
+    "parent": "/release-templates",
+    "path": "/release-templates/create-template",
+    "title": "Create release template",
     "type": "protected",
   },
   {
@@ -285,9 +295,9 @@ exports[`returns all baseRoutes 1`] = `
         "enterprise",
       ],
     },
-    "parent": "/release-management",
-    "path": "/release-management/edit/:templateId",
-    "title": "Edit release plan template",
+    "parent": "/release-templates",
+    "path": "/release-templates/edit/:templateId",
+    "title": "Edit release template",
     "type": "protected",
   },
   {

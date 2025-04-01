@@ -1,5 +1,5 @@
-const joi = require('joi');
-const { nameType } = require('../routes/util');
+import { nameType } from '../routes/util';
+import joi from 'joi';
 
 const strategySchema = joi
     .object()

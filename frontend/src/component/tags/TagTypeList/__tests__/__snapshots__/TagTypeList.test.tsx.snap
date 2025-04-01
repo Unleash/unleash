@@ -266,29 +266,33 @@ exports[`renders an empty list correctly 1`] = `
                 role="cell"
               >
                 <div
-                  className="css-1prhjm6"
+                  className="MuiBox-root css-70qvj9"
                 >
                   <div
-                    className="css-u8cmsa"
+                    className="css-1prhjm6"
                   >
-                    <span
-                      className="css-697v50"
-                      data-loading={true}
-                      style={
-                        {
-                          "WebkitLineClamp": 1,
-                          "lineClamp": 1,
+                    <div
+                      className="css-u8cmsa"
+                    >
+                      <span
+                        className="css-697v50"
+                        data-loading={true}
+                        style={
+                          {
+                            "WebkitLineClamp": 1,
+                            "lineClamp": 1,
+                          }
                         }
-                      }
-                    >
-                      Tag type name
-                    </span>
-                    <span
-                      className="css-1121jr7"
-                      data-loading={true}
-                    >
-                      Tag type description when loading
-                    </span>
+                      >
+                        Tag type name
+                      </span>
+                      <span
+                        className="css-1121jr7"
+                        data-loading={true}
+                      >
+                        Tag type description when loading
+                      </span>
+                    </div>
                   </div>
                 </div>
               </td>
@@ -436,29 +440,33 @@ exports[`renders an empty list correctly 1`] = `
                 role="cell"
               >
                 <div
-                  className="css-1prhjm6"
+                  className="MuiBox-root css-70qvj9"
                 >
                   <div
-                    className="css-u8cmsa"
+                    className="css-1prhjm6"
                   >
-                    <span
-                      className="css-697v50"
-                      data-loading={true}
-                      style={
-                        {
-                          "WebkitLineClamp": 1,
-                          "lineClamp": 1,
+                    <div
+                      className="css-u8cmsa"
+                    >
+                      <span
+                        className="css-697v50"
+                        data-loading={true}
+                        style={
+                          {
+                            "WebkitLineClamp": 1,
+                            "lineClamp": 1,
+                          }
                         }
-                      }
-                    >
-                      Tag type name
-                    </span>
-                    <span
-                      className="css-1121jr7"
-                      data-loading={true}
-                    >
-                      Tag type description when loading
-                    </span>
+                      >
+                        Tag type name
+                      </span>
+                      <span
+                        className="css-1121jr7"
+                        data-loading={true}
+                      >
+                        Tag type description when loading
+                      </span>
+                    </div>
                   </div>
                 </div>
               </td>
@@ -606,29 +614,33 @@ exports[`renders an empty list correctly 1`] = `
                 role="cell"
               >
                 <div
-                  className="css-1prhjm6"
+                  className="MuiBox-root css-70qvj9"
                 >
                   <div
-                    className="css-u8cmsa"
+                    className="css-1prhjm6"
                   >
-                    <span
-                      className="css-697v50"
-                      data-loading={true}
-                      style={
-                        {
-                          "WebkitLineClamp": 1,
-                          "lineClamp": 1,
+                    <div
+                      className="css-u8cmsa"
+                    >
+                      <span
+                        className="css-697v50"
+                        data-loading={true}
+                        style={
+                          {
+                            "WebkitLineClamp": 1,
+                            "lineClamp": 1,
+                          }
                         }
-                      }
-                    >
-                      Tag type name
-                    </span>
-                    <span
-                      className="css-1121jr7"
-                      data-loading={true}
-                    >
-                      Tag type description when loading
-                    </span>
+                      >
+                        Tag type name
+                      </span>
+                      <span
+                        className="css-1121jr7"
+                        data-loading={true}
+                      >
+                        Tag type description when loading
+                      </span>
+                    </div>
                   </div>
                 </div>
               </td>
@@ -776,29 +788,33 @@ exports[`renders an empty list correctly 1`] = `
                 role="cell"
               >
                 <div
-                  className="css-1prhjm6"
+                  className="MuiBox-root css-70qvj9"
                 >
                   <div
-                    className="css-u8cmsa"
+                    className="css-1prhjm6"
                   >
-                    <span
-                      className="css-697v50"
-                      data-loading={true}
-                      style={
-                        {
-                          "WebkitLineClamp": 1,
-                          "lineClamp": 1,
+                    <div
+                      className="css-u8cmsa"
+                    >
+                      <span
+                        className="css-697v50"
+                        data-loading={true}
+                        style={
+                          {
+                            "WebkitLineClamp": 1,
+                            "lineClamp": 1,
+                          }
                         }
-                      }
-                    >
-                      Tag type name
-                    </span>
-                    <span
-                      className="css-1121jr7"
-                      data-loading={true}
-                    >
-                      Tag type description when loading
-                    </span>
+                      >
+                        Tag type name
+                      </span>
+                      <span
+                        className="css-1121jr7"
+                        data-loading={true}
+                      >
+                        Tag type description when loading
+                      </span>
+                    </div>
                   </div>
                 </div>
               </td>
@@ -946,29 +962,33 @@ exports[`renders an empty list correctly 1`] = `
                 role="cell"
               >
                 <div
-                  className="css-1prhjm6"
+                  className="MuiBox-root css-70qvj9"
                 >
                   <div
-                    className="css-u8cmsa"
+                    className="css-1prhjm6"
                   >
-                    <span
-                      className="css-697v50"
-                      data-loading={true}
-                      style={
-                        {
-                          "WebkitLineClamp": 1,
-                          "lineClamp": 1,
+                    <div
+                      className="css-u8cmsa"
+                    >
+                      <span
+                        className="css-697v50"
+                        data-loading={true}
+                        style={
+                          {
+                            "WebkitLineClamp": 1,
+                            "lineClamp": 1,
+                          }
                         }
-                      }
-                    >
-                      Tag type name
-                    </span>
-                    <span
-                      className="css-1121jr7"
-                      data-loading={true}
-                    >
-                      Tag type description when loading
-                    </span>
+                      >
+                        Tag type name
+                      </span>
+                      <span
+                        className="css-1121jr7"
+                        data-loading={true}
+                      >
+                        Tag type description when loading
+                      </span>
+                    </div>
                   </div>
                 </div>
               </td>

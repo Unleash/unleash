@@ -119,9 +119,7 @@ export const ReleasePlan = ({
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
 
-    const releasePlanChangeRequestsEnabled = useUiFlag(
-        'releasePlanChangeRequests',
-    );
+    const releasePlansEnabled = useUiFlag('releasePlans');
 
     const onAddRemovePlanChangesConfirm = async () => {
         await addChange(projectId, environment, {
@@ -163,10 +161,7 @@ export const ReleasePlan = ({
     };
 
     const confirmRemoveReleasePlan = () => {
-        if (
-            releasePlanChangeRequestsEnabled &&
-            isChangeRequestConfigured(environment)
-        ) {
+        if (releasePlansEnabled && isChangeRequestConfigured(environment)) {
             setChangeRequestDialogRemoveOpen(true);
         } else {
             setRemoveOpen(true);
@@ -201,10 +196,7 @@ export const ReleasePlan = ({
     };
 
     const onStartMilestone = async (milestone: IReleasePlanMilestone) => {
-        if (
-            releasePlanChangeRequestsEnabled &&
-            isChangeRequestConfigured(environment)
-        ) {
+        if (releasePlansEnabled && isChangeRequestConfigured(environment)) {
             setMilestoneForChangeRequestDialog(milestone);
             setChangeRequestDialogStartMilestoneOpen(true);
         } else {

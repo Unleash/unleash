@@ -13,7 +13,6 @@ export type IFlagKey =
     | 'responseTimeWithAppNameKillSwitch'
     | 'maintenanceMode'
     | 'messageBanner'
-    | 'caseInsensitiveInOperators'
     | 'strictSchemaValidation'
     | 'personalAccessTokensKillSwitch'
     | 'migrationLock'
@@ -36,7 +35,6 @@ export type IFlagKey =
     | 'estimateTrafficDataCost'
     | 'useMemoizedActiveTokens'
     | 'queryMissingTokens'
-    | 'userAccessUIEnabled'
     | 'disableUpdateMaxRevisionId'
     | 'disablePublishUnannouncedEvents'
     | 'outdatedSdksBanner'
@@ -50,7 +48,6 @@ export type IFlagKey =
     | 'originMiddlewareRequestLogging'
     | 'webhookDomainLogging'
     | 'releasePlans'
-    | 'releasePlanChangeRequests'
     | 'productivityReportEmail'
     | 'productivityReportUnsubscribers'
     | 'enterprise-payg'
@@ -65,7 +62,9 @@ export type IFlagKey =
     | 'teamsIntegrationChangeRequests'
     | 'edgeObservability'
     | 'simplifyDisableFeature'
-    | 'adminNavUI';
+    | 'adminNavUI'
+    | 'tagTypeColor'
+    | 'globalChangeRequestConfig';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -101,10 +100,6 @@ const flags: IFlags = {
                 process.env.UNLEASH_EXPERIMENTAL_MESSAGE_BANNER_PAYLOAD ?? '',
         },
     },
-    caseInsensitiveInOperators: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CASE_INSENSITIVE_IN_OPERATORS,
-        false,
-    ),
     strictSchemaValidation: parseEnvVarBoolean(
         process.env.UNLEASH_STRICT_SCHEMA_VALIDTION,
         false,
@@ -196,10 +191,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_ESTIMATE_TRAFFIC_DATA_COST,
         false,
     ),
-    userAccessUIEnabled: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_USER_ACCESS_UI_ENABLED,
-        false,
-    ),
     disableUpdateMaxRevisionId: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_SCHEDULED_CACHES,
         false,
@@ -251,10 +242,6 @@ const flags: IFlags = {
     ),
     releasePlans: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_RELEASE_PLANS,
-        false,
-    ),
-    releasePlanChangeRequests: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_RELEASE_PLAN_CHANGE_REQUESTS,
         false,
     ),
     productivityReportEmail: parseEnvVarBoolean(
@@ -312,6 +299,14 @@ const flags: IFlags = {
     ),
     adminNavUI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ADMIN_NAV_UI,
+        false,
+    ),
+    tagTypeColor: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_TAG_TYPE_COLOR,
+        false,
+    ),
+    globalChangeRequestConfig: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_GLOBAL_CHANGE_REQUEST_CONFIG,
         false,
     ),
 };

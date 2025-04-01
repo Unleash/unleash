@@ -131,7 +131,7 @@ const PremiumFeatures = {
     releaseManagement: {
         plan: FeaturePlan.ENTERPRISE,
         url: '',
-        label: 'Release management',
+        label: 'Release templates',
     },
 };
 

@@ -24,9 +24,7 @@ import { StartMilestoneChangeRequestDialog } from './ChangeRequest/StartMileston
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Truncator } from 'component/common/Truncator/Truncator';
 
-const StyledContainer = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'readonly',
-})<{ readonly?: boolean }>(({ theme, readonly }) => ({
+const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
     paddingTop: theme.spacing(0),
     background: 'inherit',
@@ -122,9 +120,7 @@ export const ReleasePlan = ({
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
 
-    const releasePlanChangeRequestsEnabled = useUiFlag(
-        'releasePlanChangeRequests',
-    );
+    const releasePlansEnabled = useUiFlag('releasePlans');
 
     const onAddRemovePlanChangesConfirm = async () => {
         await addChange(projectId, environment, {
@@ -166,10 +162,7 @@ export const ReleasePlan = ({
     };
 
     const confirmRemoveReleasePlan = () => {
-        if (
-            releasePlanChangeRequestsEnabled &&
-            isChangeRequestConfigured(environment)
-        ) {
+        if (releasePlansEnabled && isChangeRequestConfigured(environment)) {
             setChangeRequestDialogRemoveOpen(true);
         } else {
             setRemoveOpen(true);
@@ -204,10 +197,7 @@ export const ReleasePlan = ({
     };
 
     const onStartMilestone = async (milestone: IReleasePlanMilestone) => {
-        if (
-            releasePlanChangeRequestsEnabled &&
-            isChangeRequestConfigured(environment)
-        ) {
+        if (releasePlansEnabled && isChangeRequestConfigured(environment)) {
             setMilestoneForChangeRequestDialog(milestone);
             setChangeRequestDialogStartMilestoneOpen(true);
         } else {
@@ -243,7 +233,7 @@ export const ReleasePlan = ({
     );
 
     return (
-        <StyledContainer readonly={readonly}>
+        <StyledContainer>
             <StyledHeader>
                 <StyledHeaderGroup>
                     <StyledHeaderTitleLabel>

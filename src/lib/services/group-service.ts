@@ -30,6 +30,7 @@ import type { IUser } from '../types/user';
 import type EventService from '../features/events/event-service';
 import { SSO_SYNC_USER } from '../db/group-store';
 import type { IGroupWithProjectRoles } from '../types/stores/access-store';
+import { NotFoundError } from '../error';
 
 const setsAreEqual = (firstSet, secondSet) =>
     firstSet.size === secondSet.size &&
@@ -95,6 +96,9 @@ export class GroupService {
 
     async getGroup(id: number): Promise<IGroupModel> {
         const group = await this.groupStore.get(id);
+        if (group === undefined) {
+            throw new NotFoundError(`Could not find group with id ${id}`);
+        }
         const groupUsers = await this.groupStore.getAllUsersByGroups([id]);
         const users = await this.accountStore.getAllWithId(
             groupUsers.map((u) => u.userId),
@@ -104,7 +108,7 @@ export class GroupService {
 
     async isScimGroup(id: number): Promise<boolean> {
         const group = await this.groupStore.get(id);
-        return Boolean(group.scimId);
+        return Boolean(group?.scimId);
     }
 
     async createGroup(
@@ -208,6 +212,10 @@ export class GroupService {
     async deleteGroup(id: number, auditUser: IAuditUser): Promise<void> {
         const group = await this.groupStore.get(id);
 
+        if (group === undefined) {
+            /// Group was already deleted, or never existed, do nothing
+            return;
+        }
         const existingUsers = await this.groupStore.getAllUsersByGroups([
             group.id,
         ]);

@@ -187,7 +187,7 @@ test('all tags are listed in the root "tags" list', async () => {
     // dictionary of all invalid tags found in the spec
     let invalidTags = {};
     for (const [path, data] of Object.entries(spec.paths)) {
-        for (const [operation, opData] of Object.entries(data)) {
+        for (const [operation, opData] of Object.entries(data!)) {
             // ensure that the list of tags for every operation is a subset of
             // the list of tags defined on the root level
 
@@ -218,7 +218,7 @@ test('all tags are listed in the root "tags" list', async () => {
     if (Object.keys(invalidTags).length) {
         // create a human-readable list of invalid tags per operation
         const msgs = Object.entries(invalidTags).flatMap(([path, data]) =>
-            Object.entries(data).map(
+            Object.entries(data!).map(
                 ([operation, opData]) =>
                     `${operation.toUpperCase()} ${path} (operation id: ${
                         opData.operationId
@@ -247,7 +247,7 @@ test('all API operations have non-empty summaries and descriptions', async () =>
         .expect(200);
 
     const anomalies = Object.entries(spec.paths).flatMap(([path, data]) => {
-        return Object.entries(data)
+        return Object.entries(data!)
             .map(([verb, operationDescription]) => {
                 if (
                     operationDescription.summary &&
@@ -260,6 +260,7 @@ test('all API operations have non-empty summaries and descriptions', async () =>
             })
             .filter(Boolean)
             .map(
+                // @ts-expect-error - requesting an iterator where none could be found
                 ([verb, operationId]) =>
                     `${verb.toUpperCase()} ${path} (operation ID: ${operationId})`,
             );

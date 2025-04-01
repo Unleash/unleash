@@ -33,6 +33,7 @@ export const validateSchema = <S = SchemaId>(
     schema: S,
     data: unknown,
 ): ISchemaValidationErrors<S> | undefined => {
+    // @ts-expect-error we validate that we have an $id field, AJV apparently does not think this is enough to be willing to validate.
     if (!ajv.validate(schema, data)) {
         return {
             schema,

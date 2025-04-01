@@ -261,7 +261,11 @@ export default class ProjectService {
     }
 
     async getProject(id: string): Promise<IProject> {
-        return this.projectStore.get(id);
+        const project = await this.projectStore.get(id);
+        if (project === undefined) {
+            throw new NotFoundError(`Could not find project with id ${id}`);
+        }
+        return Promise.resolve(project);
     }
 
     private validateAndProcessFeatureNamingPattern = (
@@ -342,6 +346,27 @@ export default class ProjectService {
         return generateUniqueId();
     }
 
+    async getAllChangeRequestEnvironments(
+        newProject: CreateProject,
+    ): Promise<CreateProject['changeRequestEnvironments']> {
+        const predefinedChangeRequestEnvironments =
+            await this.environmentStore.getChangeRequestEnvironments(
+                newProject.environments || [],
+            );
+        const userSelectedChangeRequestEnvironments =
+            newProject.changeRequestEnvironments || [];
+        const allChangeRequestEnvironments = [
+            ...userSelectedChangeRequestEnvironments.filter(
+                (userEnv) =>
+                    !predefinedChangeRequestEnvironments.find(
+                        (predefinedEnv) => predefinedEnv.name === userEnv.name,
+                    ),
+            ),
+            ...predefinedChangeRequestEnvironments,
+        ];
+        return allChangeRequestEnvironments;
+    }
+
     async createProject(
         newProject: CreateProject,
         user: IUser,
@@ -394,12 +419,25 @@ export default class ProjectService {
                 await this.validateEnvironmentsExist(
                     newProject.changeRequestEnvironments.map((env) => env.name),
                 );
-                const changeRequestEnvironments =
-                    await enableChangeRequestsForSpecifiedEnvironments(
-                        newProject.changeRequestEnvironments,
-                    );
+                const globalChangeRequestConfigEnabled =
+                    this.flagResolver.isEnabled('globalChangeRequestConfig');
+                if (globalChangeRequestConfigEnabled) {
+                    const allChangeRequestEnvironments =
+                        await this.getAllChangeRequestEnvironments(newProject);
+                    const changeRequestEnvironments =
+                        await enableChangeRequestsForSpecifiedEnvironments(
+                            allChangeRequestEnvironments,
+                        );
 
-                data.changeRequestEnvironments = changeRequestEnvironments;
+                    data.changeRequestEnvironments = changeRequestEnvironments;
+                } else {
+                    const changeRequestEnvironments =
+                        await enableChangeRequestsForSpecifiedEnvironments(
+                            newProject.changeRequestEnvironments,
+                        );
+
+                    data.changeRequestEnvironments = changeRequestEnvironments;
+                }
             } else {
                 data.changeRequestEnvironments = [];
             }
@@ -503,7 +541,9 @@ export default class ProjectService {
         auditUser: IAuditUser,
     ): Promise<any> {
         const feature = await this.featureToggleStore.get(featureName);
-
+        if (feature === undefined) {
+            throw new NotFoundError(`Could not find feature ${featureName}`);
+        }
         if (feature.project !== currentProjectId) {
             throw new PermissionError(MOVE_FEATURE_TOGGLE);
         }
@@ -676,7 +716,7 @@ export default class ProjectService {
                     roleId,
                     userId,
                     roleName: role.name,
-                    email: user.email,
+                    email: user?.email,
                 },
             }),
         );
@@ -1374,7 +1414,11 @@ export default class ProjectService {
                 : Promise.resolve(false),
             this.projectStatsStore.getProjectStats(projectId),
         ]);
-
+        if (project === undefined) {
+            throw new NotFoundError(
+                `Could not find project with id ${projectId}`,
+            );
+        }
         return {
             stats: projectStats,
             name: project.name,
@@ -1425,6 +1469,12 @@ export default class ProjectService {
             this.projectStatsStore.getProjectStats(projectId),
             this.onboardingReadModel.getOnboardingStatusForProject(projectId),
         ]);
+
+        if (project === undefined) {
+            throw new NotFoundError(
+                `Could not find project with id: ${projectId}`,
+            );
+        }
 
         return {
             stats: projectStats,

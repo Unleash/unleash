@@ -74,11 +74,6 @@ const LegacyFeatureResultInfoPopoverCell = ({
     );
 };
 
-const DetailsPadding = styled('div')(({ theme }) => ({
-    paddingInline: `var(--popover-inline-padding, ${theme.spacing(4)})`,
-    paddingTop: theme.spacing(2.5),
-}));
-
 export const NewFeatureResultInfoPopoverCell = ({
     feature,
     input,
@@ -102,6 +97,8 @@ export const NewFeatureResultInfoPopoverCell = ({
                 PaperProps={{
                     sx: (theme) => ({
                         '--popover-inline-padding': theme.spacing(4),
+                        paddingInline: 'var(--popover-inline-padding)',
+                        paddingBlock: theme.spacing(3),
                         display: 'flex',
                         flexDirection: 'column',
                         width: 728,
@@ -122,13 +119,11 @@ export const NewFeatureResultInfoPopoverCell = ({
                     horizontal: 'left',
                 }}
             >
-                <DetailsPadding>
-                    <FeatureDetails
-                        feature={feature}
-                        input={input}
-                        onClose={() => setOpen(false)}
-                    />
-                </DetailsPadding>
+                <FeatureDetails
+                    feature={feature}
+                    input={input}
+                    onClose={() => setOpen(false)}
+                />
                 <PlaygroundResultFeatureStrategyList
                     feature={feature}
                     input={input}

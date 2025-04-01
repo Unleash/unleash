@@ -8,6 +8,7 @@ import type { PlaygroundStrategySchema } from 'openapi';
 import { Badge } from '../Badge/Badge';
 import { Link } from 'react-router-dom';
 import { Truncator } from '../Truncator/Truncator';
+import { disabledStrategyClassName } from './disabled-strategy-utils';
 
 type StrategyItemContainerProps = {
     strategyHeaderLevel?: 1 | 2 | 3 | 4 | 5 | 6;
@@ -87,11 +88,16 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
             : ({ children }) => <> {children} </>;
 
     return (
-        <Box sx={{ position: 'relative' }}>
+        <Box
+            className={strategy.disabled ? disabledStrategyClassName : ''}
+            sx={{ position: 'relative' }}
+        >
             <StyledContainer style={style} className={className}>
                 <StyledHeader disabled={Boolean(strategy?.disabled)}>
                     {onDragStart ? (
                         <DragIcon
+                            tabIndex={-1}
+                            className='strategy-drag-handle'
                             draggable
                             disableRipple
                             size='small'
@@ -136,9 +142,6 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
                             </StyledHeaderContainer>
                         </StrategyHeaderLink>
 
-                        {strategy.disabled ? (
-                            <Badge color='disabled'>Disabled</Badge>
-                        ) : null}
                         {headerItemsLeft}
                     </StyledHeaderInner>
                     <Box
@@ -148,6 +151,9 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
                             alignItems: 'center',
                         }}
                     >
+                        {strategy.disabled ? (
+                            <Badge color='warning'>Strategy disabled</Badge>
+                        ) : null}
                         {headerItemsRight}
                     </Box>
                 </StyledHeader>

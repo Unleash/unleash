@@ -1,11 +1,17 @@
 import { useMemo } from 'react';
-import { parseParameterStrings } from 'utils/parseParameter';
 import { StrategyEvaluationItem } from 'component/common/ConstraintsList/StrategyEvaluationItem/StrategyEvaluationItem';
 import type { FeatureStrategySchema } from 'openapi';
 import { RolloutParameter } from '../RolloutParameter/RolloutParameter';
+import { ValuesList } from 'component/common/ConstraintsList/ValuesList/ValuesList';
+import { parseParameterStrings } from 'utils/parseParameter';
 
 export const useStrategyParameters = (
-    strategy: Partial<FeatureStrategySchema>,
+    strategy: Partial<
+        Pick<
+            FeatureStrategySchema,
+            'name' | 'constraints' | 'variants' | 'parameters'
+        >
+    >,
     displayGroupId?: boolean,
 ) => {
     const { constraints, variants } = strategy;
@@ -31,11 +37,9 @@ export const useStrategyParameters = (
 
         if (['userids', 'hostnames', 'ips'].includes(type)) {
             return (
-                <StrategyEvaluationItem
-                    key={key}
-                    type={key}
-                    values={parseParameterStrings(value)}
-                />
+                <StrategyEvaluationItem key={key} type={key}>
+                    <ValuesList values={parseParameterStrings(value)} />
+                </StrategyEvaluationItem>
             );
         }
 

@@ -8,8 +8,6 @@ import { Box } from '@mui/material';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { StrategyItem } from './StrategyItem/StrategyItem';
 
-const onDragNoOp = () => () => {};
-
 type StrategyDraggableItemProps = {
     headerItemsRight: ReactNode;
     strategy: IFeatureStrategy;
@@ -30,9 +28,9 @@ export const StrategyDraggableItem = ({
     strategy,
     index,
     isDragging,
-    onDragStartRef = onDragNoOp,
-    onDragOver = onDragNoOp,
-    onDragEnd = onDragNoOp,
+    onDragStartRef,
+    onDragOver,
+    onDragEnd,
     headerItemsRight,
 }: StrategyDraggableItemProps) => {
     const ref = useRef<HTMLDivElement>(null);
@@ -41,13 +39,13 @@ export const StrategyDraggableItem = ({
         <Box
             key={strategy.id}
             ref={ref}
-            onDragOver={onDragOver(ref, index)}
+            onDragOver={onDragOver?.(ref, index)}
             sx={{ opacity: isDragging ? '0.5' : '1' }}
         >
             <StrategyItem
                 headerItemsRight={headerItemsRight}
                 strategy={strategy}
-                onDragStart={onDragStartRef(ref, index)}
+                onDragStart={onDragStartRef?.(ref, index)}
                 onDragEnd={onDragEnd}
             />
         </Box>

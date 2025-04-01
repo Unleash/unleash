@@ -40,7 +40,6 @@ process.nextTick(async () => {
                         embedProxyFrontend: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
-                        userAccessUIEnabled: true,
                         outdatedSdksBanner: true,
                         disableShowContextFieldSelectionValues: false,
                         feedbackPosting: true,
@@ -50,7 +49,6 @@ process.nextTick(async () => {
                         originMiddlewareRequestLogging: true,
                         webhookDomainLogging: true,
                         releasePlans: false,
-                        releasePlanChangeRequests: false,
                         showUserDeviceCount: true,
                         flagOverviewRedesign: true,
                         deltaApi: true,
@@ -59,6 +57,7 @@ process.nextTick(async () => {
                         teamsIntegrationChangeRequests: true,
                         simplifyDisableFeature: true,
                         adminNavUI: true,
+                        tagTypeColor: true,
                     },
                 },
                 authentication: {

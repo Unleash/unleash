@@ -68,7 +68,7 @@ export const routes: IRoute[] = [
         title: 'Dashboard',
         component: PersonalDashboard,
         type: 'protected',
-        menu: {},
+        menu: { primary: true },
     },
 
     // Project
@@ -127,7 +127,7 @@ export const routes: IRoute[] = [
         title: 'Projects',
         component: ProjectList,
         type: 'protected',
-        menu: {},
+        menu: { primary: true },
     },
     {
         path: '/projects-archive',
@@ -143,7 +143,7 @@ export const routes: IRoute[] = [
         title: 'Search',
         component: FeatureToggleListTable,
         type: 'protected',
-        menu: {},
+        menu: { primary: true },
     },
 
     // Playground
@@ -153,7 +153,7 @@ export const routes: IRoute[] = [
         component: LazyPlayground,
         hidden: false,
         type: 'protected',
-        menu: {},
+        menu: { primary: true },
     },
 
     // Insights
@@ -162,7 +162,7 @@ export const routes: IRoute[] = [
         title: 'Insights',
         component: Insights,
         type: 'protected',
-        menu: {},
+        menu: { primary: true },
         enterprise: true,
     },
 
@@ -283,17 +283,17 @@ export const routes: IRoute[] = [
 
     // Release management/plans
     {
-        path: '/release-management',
-        title: 'Release management',
+        path: '/release-templates',
+        title: 'Release templates',
         component: ReleaseManagement,
         type: 'protected',
         menu: { main: true, mode: ['enterprise'] },
         flag: 'releasePlans',
     },
     {
-        path: '/release-management/create-template',
-        title: 'Create release plan template',
-        parent: '/release-management',
+        path: '/release-templates/create-template',
+        title: 'Create release template',
+        parent: '/release-templates',
         component: CreateReleasePlanTemplate,
         type: 'protected',
         menu: { mode: ['enterprise'] },
@@ -301,9 +301,9 @@ export const routes: IRoute[] = [
         enterprise: true,
     },
     {
-        path: '/release-management/edit/:templateId',
-        title: 'Edit release plan template',
-        parent: '/release-management',
+        path: '/release-templates/edit/:templateId',
+        title: 'Edit release template',
+        parent: '/release-templates',
         component: EditReleasePlanTemplate,
         type: 'protected',
         menu: { mode: ['enterprise'] },
@@ -535,4 +535,7 @@ const getCondensedRoutes = (routes: IRoute[]): INavigationMenuItem[] => {
 export const baseRoutes = routes.filter((route) => !route.hidden);
 export const getNavRoutes = () => {
     return getCondensedRoutes(baseRoutes.filter((route) => route.menu.main));
+};
+export const getPrimaryRoutes = () => {
+    return getCondensedRoutes(baseRoutes.filter((route) => route.menu.primary));
 };

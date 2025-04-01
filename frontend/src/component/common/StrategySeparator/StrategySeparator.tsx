@@ -1,4 +1,5 @@
 import { styled } from '@mui/material';
+import { disabledStrategyClassName } from '../StrategyItemContainer/disabled-strategy-utils';
 
 const Chip = styled('div')(({ theme }) => ({
     padding: theme.spacing(0.75, 1),
@@ -11,6 +12,12 @@ const Chip = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
     backgroundColor: theme.palette.secondary.border,
     left: theme.spacing(4),
+
+    // if the strategy it's applying to is disabled
+    [`&:has(+ * .${disabledStrategyClassName}, + .${disabledStrategyClassName})`]:
+        {
+            filter: 'grayscale(.8)',
+        },
 }));
 
 export const StrategySeparator = () => {

@@ -25,7 +25,7 @@ interface ISlackAddonParameters {
 export default class SlackAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
-    flagResolver: IFlagResolver;
+    declare flagResolver: IFlagResolver;
 
     constructor(args: IAddonConfig) {
         super(slackDefinition, args);

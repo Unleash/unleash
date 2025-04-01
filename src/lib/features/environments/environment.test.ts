@@ -1,10 +1,10 @@
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
+import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
+import getLogger from '../../../test/fixtures/no-logger';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import { DEFAULT_ENV } from '../../../../lib/util/constants';
+} from '../../../test/e2e/helpers/test-helper';
+import { DEFAULT_ENV } from '../../util/constants';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -44,6 +44,7 @@ test('Can list all existing environments', async () => {
                 sortOrder: 1,
                 type: 'production',
                 protected: true,
+                requiredApprovals: null,
                 projectCount: 1,
                 apiTokenCount: 0,
                 enabledToggleCount: 0,

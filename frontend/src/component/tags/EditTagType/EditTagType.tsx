@@ -21,12 +21,15 @@ const EditTagType = () => {
     const {
         tagName,
         tagDesc,
+        color,
         setTagName,
         setTagDesc,
+        setColor,
         getTagPayload,
         errors,
         clearErrors,
-    } = useTagTypeForm(tagType?.name, tagType?.description);
+        isTagTypeColorEnabled,
+    } = useTagTypeForm(tagType?.name, tagType?.description, tagType?.color);
     const { updateTagType, loading } = useTagTypesApi();
 
     const handleSubmit = async (e: Event) => {
@@ -72,11 +75,14 @@ const EditTagType = () => {
                 handleSubmit={handleSubmit}
                 handleCancel={handleCancel}
                 tagName={tagName}
-                setTagName={setTagName}
                 tagDesc={tagDesc}
+                color={color}
+                setTagName={setTagName}
                 setTagDesc={setTagDesc}
+                setColor={setColor}
                 mode='Edit'
                 clearErrors={clearErrors}
+                isTagTypeColorEnabled={isTagTypeColorEnabled}
             >
                 <UpdateButton permission={UPDATE_TAG_TYPE} />
             </TagForm>

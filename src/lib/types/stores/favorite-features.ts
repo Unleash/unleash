@@ -10,5 +10,5 @@ export interface IFavoriteFeaturesStore
     extends Store<IFavoriteFeature, IFavoriteFeatureKey> {
     addFavoriteFeature(
         favorite: IFavoriteFeatureKey,
-    ): Promise<IFavoriteFeature>;
+    ): Promise<IFavoriteFeature | undefined>;
 }

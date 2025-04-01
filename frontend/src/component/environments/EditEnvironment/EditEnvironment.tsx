@@ -12,6 +12,7 @@ import useEnvironmentForm from '../hooks/useEnvironmentForm';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { GO_BACK } from 'constants/navigate';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const EditEnvironment = () => {
     const { uiConfig } = useUiConfig();
@@ -21,14 +22,30 @@ const EditEnvironment = () => {
     const { updateEnvironment } = useEnvironmentApi();
 
     const navigate = useNavigate();
-    const { name, type, setName, setType, errors, clearErrors } =
-        useEnvironmentForm(environment.name, environment.type);
+    const {
+        name,
+        type,
+        setName,
+        setType,
+        requiredApprovals,
+        setRequiredApprovals,
+        errors,
+        clearErrors,
+    } = useEnvironmentForm(
+        environment.name,
+        environment.type,
+        environment.requiredApprovals,
+    );
     const { refetch } = usePermissions();
+    const globalChangeRequestConfigEnabled = useUiFlag(
+        'globalChangeRequestConfig',
+    );
 
     const editPayload = () => {
         return {
             type,
             sortOrder: environment.sortOrder,
+            ...(globalChangeRequestConfigEnabled ? { requiredApprovals } : {}),
         };
     };
 
@@ -84,6 +101,8 @@ const EditEnvironment = () => {
                 type={type}
                 setName={setName}
                 setType={setType}
+                requiredApprovals={requiredApprovals}
+                setRequiredApprovals={setRequiredApprovals}
                 mode='Edit'
                 errors={errors}
                 clearErrors={clearErrors}

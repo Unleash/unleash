@@ -3444,7 +3444,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:^2.25.0":
+"date-fns@npm:^2.30.0":
   version: 2.30.0
   resolution: "date-fns@npm:2.30.0"
   dependencies:
@@ -9373,7 +9373,7 @@ __metadata:
     copyfiles: "npm:2.4.1"
     cors: "npm:^2.8.5"
     coveralls: "npm:3.1.1"
-    date-fns: "npm:^2.25.0"
+    date-fns: "npm:^2.30.0"
     db-migrate: "npm:0.11.14"
     db-migrate-pg: "npm:1.5.2"
     db-migrate-shared: "npm:1.2.0"

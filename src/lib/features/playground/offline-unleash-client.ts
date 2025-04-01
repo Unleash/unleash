@@ -47,7 +47,6 @@ export const mapFeatureForClient = (
                 strategy.constraints?.map((constraint) => ({
                     values: [],
                     ...constraint,
-                    inverted: constraint.inverted ?? false,
                     operator: constraint.operator as unknown as Operator,
                 })) || [],
         })),

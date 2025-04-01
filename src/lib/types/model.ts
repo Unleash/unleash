@@ -5,7 +5,6 @@ import type { IUser } from './user';
 import type { ALL_OPERATORS } from '../util';
 import type { IProjectStats } from '../features/project/project-service';
 import type {
-    ConstraintSchema,
     CreateFeatureStrategySchema,
     ProjectOverviewSchema,
 } from '../openapi';
@@ -18,11 +17,14 @@ import type { EventEmitter } from 'events';
 
 export type Operator = (typeof ALL_OPERATORS)[number];
 
-/**
- * "type alias" to open api schema
- * @deprecated use ConstraintSchema from openapi schema instead
- */
-export interface IConstraint extends ConstraintSchema {}
+export interface IConstraint {
+    contextName: string;
+    operator: Operator;
+    values?: string[];
+    value?: string;
+    inverted?: boolean;
+    caseInsensitive?: boolean;
+}
 export enum WeightType {
     VARIABLE = 'variable',
     FIX = 'fix',

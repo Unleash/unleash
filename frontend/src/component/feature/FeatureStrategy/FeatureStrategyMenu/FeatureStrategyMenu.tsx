@@ -21,6 +21,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { OldFeatureStrategyMenuCards } from './FeatureStrategyMenuCards/OldFeatureStrategyMenuCards';
 
 interface IFeatureStrategyMenuProps {
     label: string;
@@ -75,6 +76,7 @@ export const FeatureStrategyMenu = ({
     const { addReleasePlanToFeature } = useReleasePlansApi();
     const { isOss } = useUiConfig();
     const releasePlansEnabled = useUiFlag('releasePlans');
+    const newStrategyDropdownEnabled = useUiFlag('newStrategyDropdown');
     const displayReleasePlanButton = !isOss() && releasePlansEnabled;
     const crProtected =
         releasePlansEnabled && isChangeRequestConfigured(environmentId);
@@ -223,19 +225,36 @@ export const FeatureStrategyMenu = ({
                 PaperProps={{
                     sx: (theme) => ({
                         paddingBottom: theme.spacing(1),
+                        width: 'auto',
+                        maxWidth: '95vw',
+                        overflow: 'hidden',
                     }),
                 }}
             >
-                <FeatureStrategyMenuCards
-                    projectId={projectId}
-                    featureId={featureId}
-                    environmentId={environmentId}
-                    onlyReleasePlans={onlyReleasePlans}
-                    onAddReleasePlan={(template) => {
-                        setSelectedTemplate(template);
-                        setAddReleasePlanOpen(true);
-                    }}
-                />
+                {newStrategyDropdownEnabled ? (
+                    <FeatureStrategyMenuCards
+                        projectId={projectId}
+                        featureId={featureId}
+                        environmentId={environmentId}
+                        onlyReleasePlans={onlyReleasePlans}
+                        onAddReleasePlan={(template) => {
+                            setSelectedTemplate(template);
+                            setAddReleasePlanOpen(true);
+                        }}
+                        onClose={onClose}
+                    />
+                ) : (
+                    <OldFeatureStrategyMenuCards
+                        projectId={projectId}
+                        featureId={featureId}
+                        environmentId={environmentId}
+                        onlyReleasePlans={onlyReleasePlans}
+                        onAddReleasePlan={(template) => {
+                            setSelectedTemplate(template);
+                            setAddReleasePlanOpen(true);
+                        }}
+                    />
+                )}
             </Popover>
             {selectedTemplate && (
                 <ReleasePlanAddDialog

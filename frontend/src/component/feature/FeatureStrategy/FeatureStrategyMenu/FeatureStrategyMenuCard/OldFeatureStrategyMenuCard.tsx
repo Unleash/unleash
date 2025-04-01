@@ -6,7 +6,7 @@ import {
 } from 'utils/strategyNames';
 import { formatCreateStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { styled, Tooltip } from '@mui/material';
+import { styled } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IFeatureStrategyMenuCardProps {
@@ -34,30 +34,17 @@ const StyledIcon = styled('div')(({ theme }) => ({
 }));
 
 const StyledDescription = styled('div')(({ theme }) => ({
-    fontSize: theme.typography.body2.fontSize,
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    width: '100%',
-    boxSizing: 'border-box',
-}));
-
-const StyledContentContainer = styled('div')(() => ({
-    overflow: 'hidden', // Ensure content doesn't overflow
-    width: '100%',
+    fontSize: theme.fontSizes.smallBody,
 }));
 
 const StyledName = styled(StringTruncator)(({ theme }) => ({
-    fontWeight: theme.typography.fontWeightBold,
-    display: 'block',
-    marginBottom: theme.spacing(0.5),
+    fontWeight: theme.fontWeight.bold,
 }));
 
 const StyledCard = styled(Link)(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: '2.5rem 1fr',
-    width: '100%',
-    maxWidth: '30rem',
+    gridTemplateColumns: '3rem 1fr',
+    width: '20rem',
     padding: theme.spacing(2),
     color: 'inherit',
     textDecoration: 'inherit',
@@ -66,13 +53,12 @@ const StyledCard = styled(Link)(({ theme }) => ({
     borderStyle: 'solid',
     borderColor: theme.palette.divider,
     borderRadius: theme.spacing(1),
-    overflow: 'hidden',
     '&:hover, &:focus': {
         borderColor: theme.palette.primary.main,
     },
 }));
 
-export const FeatureStrategyMenuCard = ({
+export const OldFeatureStrategyMenuCard = ({
     projectId,
     featureId,
     environmentId,
@@ -104,18 +90,14 @@ export const FeatureStrategyMenuCard = ({
             <StyledIcon>
                 <StrategyIcon />
             </StyledIcon>
-            <StyledContentContainer>
+            <div>
                 <StyledName
                     text={strategy.displayName || strategyName}
                     maxWidth='200'
                     maxLength={25}
                 />
-                <Tooltip title={strategy.description} arrow placement='top'>
-                    <StyledDescription>
-                        {strategy.description}
-                    </StyledDescription>
-                </Tooltip>
-            </StyledContentContainer>
+                <StyledDescription>{strategy.description}</StyledDescription>
+            </div>
         </StyledCard>
     );
 };

@@ -31,6 +31,12 @@ const StyledInstanceWidget = styled(Paper)(({ theme }) => ({
     color: 'white',
     backgroundColor: theme.palette.web.main,
     overflow: 'hidden',
+    [theme.breakpoints.down(UI_SWITCH_WIDGET_RATIO_BREAKPOINT)]: {
+        height: theme.spacing(24),
+    },
+    [theme.breakpoints.down(800)]: {
+        height: theme.spacing(30),
+    },
 }));
 
 const StyledWidget = styled(Paper)(({ theme }) => ({
@@ -53,6 +59,9 @@ const StyledHeader = styled(Typography)(({ theme }) => ({
 
 const StyledLicenseSection = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(6),
+    [theme.breakpoints.down(UI_SWITCH_WIDGET_RATIO_BREAKPOINT)]: {
+        marginBottom: theme.spacing(2),
+    },
 }));
 
 const StyledParagraph = styled(Typography)(({ theme }) => ({
@@ -63,6 +72,13 @@ const StyledParagraph = styled(Typography)(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
     justifyContent: 'space-between',
+    [theme.breakpoints.down(UI_SWITCH_WIDGET_RATIO_BREAKPOINT)]: {
+        maxWidth: theme.spacing(65),
+    },
+    [theme.breakpoints.down(800)]: {
+        flexDirection: 'column',
+        justifyContent: 'start',
+    },
 }));
 
 const StyledParamName = styled('div')(({ theme }) => ({
@@ -86,10 +102,6 @@ const StyledGridContainer = styled(Grid)(({ theme }) => ({
     gap: theme.spacing(2),
     justifyContent: 'space-between',
     marginBottom: theme.spacing(7),
-    [theme.breakpoints.down(UI_SWITCH_WIDGET_RATIO_BREAKPOINT)]: {
-        gap: theme.spacing(1),
-        marginBottom: theme.spacing(0),
-    },
 }));
 
 const StyledGridItem = styled(Grid)(({ theme }) => ({
@@ -131,6 +143,10 @@ const ImageContainer = styled('div')(({ theme }) => ({
     justifyContent: 'flex-end',
     marginTop: theme.spacing(-6),
     marginRight: theme.spacing(-10),
+    [theme.breakpoints.down(UI_SWITCH_WIDGET_RATIO_BREAKPOINT)]: {
+        marginTop: theme.spacing(-22),
+        marginRight: theme.spacing(-12),
+    },
 }));
 
 const StyledImg = styled('img')(({ theme }) => ({
@@ -236,8 +252,8 @@ export const AdminHome = () => {
     const isBreakpoint = useMediaQuery(
         theme.breakpoints.down(UI_SWITCH_WIDGET_RATIO_BREAKPOINT),
     );
-    const breakpointedInstanceStatsWidgetSize = isBreakpoint ? 5 : 7;
-    const breakpointedInstanceWidgetSize = isBreakpoint ? 7 : 5;
+    const breakpointedInstanceStatsWidgetSize = isBreakpoint ? 12 : 7;
+    const breakpointedInstanceWidgetSize = isBreakpoint ? 12 : 5;
     const { isOss, isPro, isEnterprise } = useUiConfig();
     const plan = isOss()
         ? 'Open source'

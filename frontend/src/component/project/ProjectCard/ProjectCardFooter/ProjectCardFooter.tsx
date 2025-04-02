@@ -5,6 +5,7 @@ import {
     ProjectOwners,
     type IProjectOwnersProps,
 } from './ProjectOwners/ProjectOwners';
+import type { ProjectSchemaOwners } from 'openapi';
 
 interface IProjectCardFooterProps {
     id?: string;
@@ -34,7 +35,7 @@ export const ProjectCardFooter: FC<IProjectCardFooterProps> = ({
     owners,
     disabled = false,
 }) => {
-    const ownersWithoutSystem = owners?.filter(
+    const ownersWithoutSystem: ProjectSchemaOwners | undefined = owners?.filter(
         (owner) => owner.ownerType !== 'system',
     );
     return (

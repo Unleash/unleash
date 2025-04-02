@@ -228,7 +228,6 @@ export const FeatureStrategyMenu = ({
                 }}
                 PaperProps={{
                     sx: (theme) => ({
-                        paddingBottom: theme.spacing(0),
                         width: 'auto',
                         maxWidth: '95vw',
                         maxHeight: '80vh',

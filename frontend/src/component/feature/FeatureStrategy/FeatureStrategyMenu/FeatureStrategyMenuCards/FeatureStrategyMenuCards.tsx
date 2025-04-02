@@ -34,7 +34,7 @@ const GridContainer = styled(Box)(() => ({
 
 const GridSection = styled(Box)(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+    gridTemplateColumns: 'repeat(2, 1fr)',
     gap: theme.spacing(1.5),
     padding: theme.spacing(0, 2),
     width: '100%',
@@ -55,6 +55,7 @@ const TitleRow = styled(Box)(({ theme }) => ({
 const TitleText = styled(Typography)(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,
     fontWeight: theme.typography.fontWeightBold,
+    margin: 0,
 }));
 
 export const FeatureStrategyMenuCards = ({
@@ -87,7 +88,7 @@ export const FeatureStrategyMenuCards = ({
     return (
         <GridContainer>
             <TitleRow>
-                <TitleText>
+                <TitleText variant='h2'>
                     {onlyReleasePlans ? 'Select template' : 'Select strategy'}
                 </TitleText>
                 {onClose && (

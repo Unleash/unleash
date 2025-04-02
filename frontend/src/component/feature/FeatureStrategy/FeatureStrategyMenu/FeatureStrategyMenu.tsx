@@ -222,14 +222,21 @@ export const FeatureStrategyMenu = ({
                     vertical: 'bottom',
                     horizontal: 'left',
                 }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
                 PaperProps={{
                     sx: (theme) => ({
-                        paddingBottom: theme.spacing(1),
+                        paddingBottom: theme.spacing(0),
                         width: 'auto',
                         maxWidth: '95vw',
-                        overflow: 'hidden',
+                        maxHeight: '80vh',
+                        display: 'flex',
+                        flexDirection: 'column',
                     }),
                 }}
+                disableScrollLock={true}
             >
                 {newStrategyDropdownEnabled ? (
                     <FeatureStrategyMenuCards

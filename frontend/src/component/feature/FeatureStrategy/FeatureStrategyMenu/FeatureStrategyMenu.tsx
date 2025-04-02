@@ -231,7 +231,7 @@ export const FeatureStrategyMenu = ({
                     }),
                 }}
             >
-                {newStrategyDropdownEnabled ? (
+                {!newStrategyDropdownEnabled ? (
                     <FeatureStrategyMenuCards
                         projectId={projectId}
                         featureId={featureId}

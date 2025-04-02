@@ -6,8 +6,9 @@ import {
 } from 'utils/strategyNames';
 import { formatCreateStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { styled, Tooltip } from '@mui/material';
+import { styled } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { Truncator } from 'component/common/Truncator/Truncator';
 
 interface IFeatureStrategyMenuCardProps {
     projectId: string;
@@ -31,15 +32,6 @@ const StyledIcon = styled('div')(({ theme }) => ({
         marginLeft: '-.75rem',
         color: theme.palette.primary.main,
     },
-}));
-
-const StyledDescription = styled('div')(({ theme }) => ({
-    fontSize: theme.typography.body2.fontSize,
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    width: '100%',
-    boxSizing: 'border-box',
 }));
 
 const StyledContentContainer = styled('div')(() => ({
@@ -110,11 +102,17 @@ export const FeatureStrategyMenuCard = ({
                     maxWidth='200'
                     maxLength={25}
                 />
-                <Tooltip title={strategy.description} arrow placement='top'>
-                    <StyledDescription>
-                        {strategy.description}
-                    </StyledDescription>
-                </Tooltip>
+                <Truncator
+                    lines={1}
+                    title={strategy.description}
+                    arrow
+                    sx={{
+                        fontSize: (theme) => theme.typography.body2.fontSize,
+                        width: '100%',
+                    }}
+                >
+                    {strategy.description}
+                </Truncator>
             </StyledContentContainer>
         </StyledCard>
     );

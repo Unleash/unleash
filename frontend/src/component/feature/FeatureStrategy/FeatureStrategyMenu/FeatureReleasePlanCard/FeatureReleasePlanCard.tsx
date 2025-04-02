@@ -1,7 +1,8 @@
 import { getFeatureStrategyIcon } from 'utils/strategyNames';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { Button, styled, Tooltip } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
+import { Truncator } from 'component/common/Truncator/Truncator';
 
 const StyledIcon = styled('div')(({ theme }) => ({
     width: theme.spacing(4),
@@ -14,16 +15,6 @@ const StyledIcon = styled('div')(({ theme }) => ({
         marginLeft: '-.75rem',
         color: theme.palette.primary.main,
     },
-}));
-
-const StyledDescription = styled('div')(({ theme }) => ({
-    fontSize: theme.typography.body2.fontSize,
-    fontWeight: theme.typography.fontWeightMedium,
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    width: '100%',
-    boxSizing: 'border-box',
 }));
 
 const StyledContentContainer = styled('div')(() => ({
@@ -75,9 +66,19 @@ export const FeatureReleasePlanCard = ({
             </StyledIcon>
             <StyledContentContainer>
                 <StyledName text={name} maxWidth='200' maxLength={25} />
-                <Tooltip title={description} arrow placement='top'>
-                    <StyledDescription>{description}</StyledDescription>
-                </Tooltip>
+                <Truncator
+                    lines={1}
+                    title={description}
+                    arrow
+                    sx={{
+                        fontSize: (theme) => theme.typography.body2.fontSize,
+                        fontWeight: (theme) =>
+                            theme.typography.fontWeightRegular,
+                        width: '100%',
+                    }}
+                >
+                    {description}
+                </Truncator>
             </StyledContentContainer>
         </StyledCard>
     );

@@ -9,6 +9,8 @@ type Props = {
     owners: ProjectSchemaOwners;
 };
 
+const avatarHeight = 3.5;
+
 const Wrapper = styled('div')(({ theme }) => ({
     width: '100%',
     display: 'flex',
@@ -21,7 +23,7 @@ const InfoSection = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
     alignItems: 'center',
-    minHeight: theme.spacing(3.5),
+    minHeight: theme.spacing(avatarHeight),
 }));
 
 const Roles = styled('ul')(({ theme }) => ({
@@ -44,9 +46,10 @@ const RoleBadge = styled(Badge)({
     whitespace: 'nowrap',
 });
 
-const StyledAvatarGroup = styled(AvatarGroupFromOwners)({
+const StyledAvatarGroup = styled(AvatarGroupFromOwners)(({ theme }) => ({
     width: 'max-content',
-});
+    height: theme.spacing(avatarHeight),
+}));
 
 export const RoleAndOwnerInfo = ({ roles, owners }: Props) => {
     const firstRoles = roles.slice(0, 3);

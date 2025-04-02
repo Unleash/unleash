@@ -190,6 +190,8 @@ When designing a scalable feature flag system, one of the most effective strateg
 
 By decoupling read and write operations, you gain the flexibility to scale horizontally based on the unique demands of your application. For example, if read traffic increases, you can add more servers or containers to handle the load without needing to scale the write operations.
 
+### The benefits of decoupling
+
 The benefits of decoupling read and write operations extend beyond just scalability; let's look at a few others:
 - **More efficient caching**: You can optimize your flag caching for read operations to reduce latency while keeping write operations consistent.
 - **Granular access control**: You can apply different security measures and access controls to the two APIs, reducing the risk of accidental or unauthorized changes.
@@ -202,6 +204,8 @@ The benefits of decoupling read and write operations extend beyond just scalabil
 Minimizing the size of feature flag payloads is a critical aspect of maintaining the efficiency and performance of a feature flag system. Payload size can vary based on targeting rule complexity. For example, targeting based on individual user IDs may work with small user bases but becomes inefficient as the user base grows.
 
 Avoid storing large user lists directly in the feature flag configuration, which can lead to scaling issues. Instead, categorize users into logical groups at a higher layer (for example, by subscription plan or location) and use group identifiers for targeting within the feature flag system. 
+
+### The benefits of small payloads
 
 Keeping the feature flag payload small results in:
 
@@ -219,7 +223,7 @@ For more insights into reducing payload size, visit our [Best practices for usin
 
 Feature flagging solutions are indispensable tools in modern software development, enabling teams to manage feature releases and experiment with new functionality. However, one aspect that is absolutely non-negotiable in any feature flag solution is the need to ensure a consistent user experience. Feature flagging solutions must prioritize consistency and guarantee the same user experience every time, especially with percentage-based gradual rollouts.
 
-Strategies for consistency in percentage-based gradual rollouts:
+### Strategies for consistency in percentage-based gradual rollouts
 
 - **User hashing**: Assign users to consistent groups using a secure hashing algorithm based on unique identifiers like user IDs or emails. This ensures that the same user consistently falls into the same group.
 - **Segmentation control**: Provide controls within the feature flagging tool to allow developers to [segment](/reference/segments) users logically by criteria like location, subscription type, or other relevant factors, ensuring similar experiences for users within the same segment.
@@ -230,6 +234,8 @@ Strategies for consistency in percentage-based gradual rollouts:
 ## 11. Optimize for developer experience
 
 [Developer experience](https://www.opslevel.com/resources/devex-series-part-1-what-is-devex) is a critical factor to consider when implementing a feature flag solution. A positive developer experience enhances the efficiency of the development process and contributes to the overall success and effectiveness of feature flagging. One key aspect of developer experience is ensuring the testability of the SDK and providing tools for developers to understand how and why feature flags are evaluated.
+
+### Developer experience strategies for feature flags
 
 To ensure a good developer experience, you should provide the following:
 - **Simplified testing and debugging**: A testable SDK enables developers to quickly test and iterate on features, speeding up development cycles. Developers can toggle flags, simulate conditions, and observe results without significant code changes or redeployments. This makes it easier to identify and fix issues by examining flag configurations and logging decisions.
@@ -242,7 +248,7 @@ To ensure a good developer experience, you should provide the following:
 
 ## Additional resources
 
-Thank you for reading. Our motivation for writing these principles is to share what we've learned building a large-scale feature flag solution with other architects and engineers solving similar challenges. Unleash is open-source, and so are these principles.
+Thank you for reading. Our motivation for writing these principles is to share what we've learned building a [large-scale feature flag solution](https://www.getunleash.io/enterprise-feature-management-platform) with other architects and engineers solving similar challenges. [Unleash is open-source](https://www.getunleash.io/open-source), and so are these principles.
 Have something to contribute? [Open a PR](https://github.com/Unleash/unleash/pulls) or [discussion](https://github.com/orgs/Unleash/discussions) on our GitHub.
 
 To learn more about Unleash architecture and implementation basics, check out this webinar: 

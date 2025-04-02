@@ -14,7 +14,7 @@ on:
       version:
         description: What version number would you like to use? The version number should be **without** a leading `v`, e.g. `5.7.1` or `6.2.4`.
       bump-main:
-        description: Only check it if you're releasing from a branch and you want to backport the version to main
+        description: I'm releasing from a branch and want the version number backported to main
         required: true
         type: boolean
         default: false

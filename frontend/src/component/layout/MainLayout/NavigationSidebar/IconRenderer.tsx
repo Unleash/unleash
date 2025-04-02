@@ -1,3 +1,4 @@
+import type { ComponentProps, FC } from 'react';
 import EmptyIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
 import type SvgIcon from '@mui/material/SvgIcon/SvgIcon';
 import ApplicationsIcon from '@mui/icons-material/AppsOutlined';
@@ -29,10 +30,14 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
 import PersonalDashboardIcon from '@mui/icons-material/DashboardOutlined';
-import type { FC } from 'react';
+import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
+import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
 
 // TODO: move to routes
-const icons: Record<string, typeof SvgIcon> = {
+const icons: Record<
+    string,
+    typeof SvgIcon | FC<ComponentProps<typeof SvgIcon>>
+> = {
     '/search': SearchIcon,
     '/applications': ApplicationsIcon,
     '/context': ContextFieldsIcon,
@@ -60,6 +65,8 @@ const icons: Record<string, typeof SvgIcon> = {
     '/history': EventLogIcon,
     '/release-templates': FactCheckOutlinedIcon,
     '/personal': PersonalDashboardIcon,
+    '/projects': ProjectIcon,
+    '/playground': PlaygroundIcon,
     GitHub: GitHubIcon,
     Documentation: LibraryBooksIcon,
 };

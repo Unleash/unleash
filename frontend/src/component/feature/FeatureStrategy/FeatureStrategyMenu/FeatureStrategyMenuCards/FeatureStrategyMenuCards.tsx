@@ -44,9 +44,9 @@ const GridContainer = styled(Box)(() => ({
 
 const ScrollableContent = styled(Box)(({ theme }) => ({
     width: '100%',
-    maxHeight: '70vh', // Limit maximum height to 70% of viewport height
-    overflowY: 'auto', // Enable vertical scrolling
-    padding: theme.spacing(0, 0, 1, 0), // Add some bottom padding
+    maxHeight: '70vh',
+    overflowY: 'auto',
+    padding: theme.spacing(0, 0, 1, 0),
 }));
 
 const GridSection = styled(Box)(({ theme }) => ({

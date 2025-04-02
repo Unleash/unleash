@@ -35,6 +35,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     '&:before': {
         opacity: '0',
     },
+    overflow: 'hidden',
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({

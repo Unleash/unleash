@@ -74,6 +74,11 @@ You can assign the following root permissions:
 
 #### Authentication permissions
 
+:::note Availability
+
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `6.9+`
+
+:::
 | Permission Name     | Description                        |
 |---------------------|------------------------------------|
 | Change authentication settings | Update authentication settings, such as for [single sign-on (SSO)](./sso). |
@@ -87,6 +92,12 @@ You can assign the following root permissions:
 | Delete context fields | Delete context fields. |
 
 #### Instance maintenance permissions
+
+:::note Availability
+
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `6.9+`
+
+:::
 
 | Permission Name     | Description                        |
 |---------------------|------------------------------------|
@@ -110,6 +121,12 @@ You can assign the following root permissions:
 | Create projects | Create [projects](./projects). |
 
 #### Release template permissions
+
+:::note Availability
+
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `6.8+ in BETA`
+
+:::
 
 | Permission Name | Description               |
 |-----------------|---------------------------|
@@ -239,6 +256,19 @@ This multi-role assignment feature can be particularly beneficial in complex pro
 group needs to wear multiple hats. For example, a team member could serve as both a developer and a quality assurance
 tester. By combining roles, you simplify the access management process, eliminating the need to create a new, custom
 role that encapsulates the needed permissions.
+
+## View a user's roles and permissions
+
+:::note Availability
+
+**Version**: `6.9+`
+
+:::
+
+The access overview page helps administrators see exactly what a user can do in Unleash and which roles grant those permissions. You can explore permissions at the root level or for specific environments and projects.
+
+To view a user’s permissions, go to **Admin > Users**. Select a user and click **Access overview**.
+
 
 ## User groups
 

@@ -25,7 +25,7 @@ import {
 } from '@mui/material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
-import { useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
 import ProjectFlags from './ProjectFlags';
@@ -126,15 +126,18 @@ const ProjectStatus = () => {
     const [projectStatusOpen, setProjectStatusOpen] = useState(
         searchParams.has('project-status'),
     );
-    const toggleStatusModal = (open: boolean) => () => {
-        if (open) {
-            searchParams.set('project-status', '');
-        } else {
-            searchParams.delete('project-status');
-        }
-        setSearchParams(searchParams);
-        setProjectStatusOpen(open);
-    };
+    const toggleStatusModal = useCallback(
+        (open: boolean) => () => {
+            if (open) {
+                searchParams.set('project-status', '');
+            } else {
+                searchParams.delete('project-status');
+            }
+            setSearchParams(searchParams);
+            setProjectStatusOpen(open);
+        },
+        [searchParams],
+    );
 
     return (
         <>

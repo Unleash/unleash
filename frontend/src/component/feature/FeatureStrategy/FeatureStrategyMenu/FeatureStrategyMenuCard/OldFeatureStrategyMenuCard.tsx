@@ -8,7 +8,6 @@ import { formatCreateStrategyPath } from 'component/feature/FeatureStrategy/Feat
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { styled } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { Truncator } from 'component/common/Truncator/Truncator';
 
 interface IFeatureStrategyMenuCardProps {
     projectId: string;
@@ -34,22 +33,18 @@ const StyledIcon = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledContentContainer = styled('div')(() => ({
-    overflow: 'hidden',
-    width: '100%',
+const StyledDescription = styled('div')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
 }));
 
 const StyledName = styled(StringTruncator)(({ theme }) => ({
-    fontWeight: theme.typography.fontWeightBold,
-    display: 'block',
-    marginBottom: theme.spacing(0.5),
+    fontWeight: theme.fontWeight.bold,
 }));
 
 const StyledCard = styled(Link)(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: '2.5rem 1fr',
-    width: '100%',
-    maxWidth: '30rem',
+    gridTemplateColumns: '3rem 1fr',
+    width: '20rem',
     padding: theme.spacing(2),
     color: 'inherit',
     textDecoration: 'inherit',
@@ -58,13 +53,12 @@ const StyledCard = styled(Link)(({ theme }) => ({
     borderStyle: 'solid',
     borderColor: theme.palette.divider,
     borderRadius: theme.spacing(1),
-    overflow: 'hidden',
     '&:hover, &:focus': {
         borderColor: theme.palette.primary.main,
     },
 }));
 
-export const FeatureStrategyMenuCard = ({
+export const OldFeatureStrategyMenuCard = ({
     projectId,
     featureId,
     environmentId,
@@ -96,24 +90,14 @@ export const FeatureStrategyMenuCard = ({
             <StyledIcon>
                 <StrategyIcon />
             </StyledIcon>
-            <StyledContentContainer>
+            <div>
                 <StyledName
                     text={strategy.displayName || strategyName}
                     maxWidth='200'
                     maxLength={25}
                 />
-                <Truncator
-                    lines={1}
-                    title={strategy.description}
-                    arrow
-                    sx={{
-                        fontSize: (theme) => theme.typography.body2.fontSize,
-                        width: '100%',
-                    }}
-                >
-                    {strategy.description}
-                </Truncator>
-            </StyledContentContainer>
+                <StyledDescription>{strategy.description}</StyledDescription>
+            </div>
         </StyledCard>
     );
 };

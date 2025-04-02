@@ -58,6 +58,7 @@ process.nextTick(async () => {
                         simplifyDisableFeature: true,
                         adminNavUI: true,
                         tagTypeColor: true,
+                        newStrategyDropdown: true,
                     },
                 },
                 authentication: {

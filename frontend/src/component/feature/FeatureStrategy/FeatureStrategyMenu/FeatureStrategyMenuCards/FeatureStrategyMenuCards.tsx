@@ -1,4 +1,4 @@
-import { Link, List, ListItem, styled, Typography } from '@mui/material';
+import { Link, styled, Typography, Box, IconButton } from '@mui/material';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -6,6 +6,7 @@ import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplat
 import { FeatureReleasePlanCard } from '../FeatureReleasePlanCard/FeatureReleasePlanCard';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { useNavigate } from 'react-router-dom';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface IFeatureStrategyMenuCardsProps {
     projectId: string;
@@ -13,11 +14,13 @@ interface IFeatureStrategyMenuCardsProps {
     environmentId: string;
     onlyReleasePlans: boolean;
     onAddReleasePlan: (template: IReleasePlanTemplate) => void;
+    onClose?: () => void;
 }
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     padding: theme.spacing(1, 2),
+    width: '100%',
 }));
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -25,12 +28,43 @@ const StyledLink = styled(Link)(({ theme }) => ({
     cursor: 'pointer',
 })) as typeof Link;
 
+const GridContainer = styled(Box)(() => ({
+    width: '100%',
+}));
+
+const GridSection = styled(Box)(({ theme }) => ({
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: theme.spacing(1.5),
+    padding: theme.spacing(0, 2),
+    width: '100%',
+}));
+
+const CardWrapper = styled(Box)(() => ({
+    width: '100%',
+    minWidth: 0,
+}));
+
+const TitleRow = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: theme.spacing(1, 2),
+}));
+
+const TitleText = styled(Typography)(({ theme }) => ({
+    fontSize: theme.typography.body1.fontSize,
+    fontWeight: theme.typography.fontWeightBold,
+    margin: 0,
+}));
+
 export const FeatureStrategyMenuCards = ({
     projectId,
     featureId,
     environmentId,
     onlyReleasePlans,
     onAddReleasePlan,
+    onClose,
 }: IFeatureStrategyMenuCardsProps) => {
     const { strategies } = useStrategies();
     const { templates } = useReleasePlanTemplates();
@@ -52,21 +86,38 @@ export const FeatureStrategyMenuCards = ({
             'This is the default strategy defined for this environment in the project',
     };
     return (
-        <List dense>
+        <GridContainer>
+            <TitleRow>
+                <TitleText variant='h2'>
+                    {onlyReleasePlans ? 'Select template' : 'Select strategy'}
+                </TitleText>
+                {onClose && (
+                    <IconButton
+                        size='small'
+                        onClick={onClose}
+                        edge='end'
+                        aria-label='close'
+                    >
+                        <CloseIcon fontSize='small' />
+                    </IconButton>
+                )}
+            </TitleRow>
             {allStrategies ? (
                 <>
                     <StyledTypography color='textSecondary'>
                         Default strategy for {environmentId} environment
                     </StyledTypography>
-                    <ListItem key={defaultStrategy.name}>
-                        <FeatureStrategyMenuCard
-                            projectId={projectId}
-                            featureId={featureId}
-                            environmentId={environmentId}
-                            strategy={defaultStrategy}
-                            defaultStrategy={true}
-                        />
-                    </ListItem>
+                    <GridSection>
+                        <CardWrapper key={defaultStrategy.name}>
+                            <FeatureStrategyMenuCard
+                                projectId={projectId}
+                                featureId={featureId}
+                                environmentId={environmentId}
+                                strategy={defaultStrategy}
+                                defaultStrategy={true}
+                            />
+                        </CardWrapper>
+                    </GridSection>
                 </>
             ) : null}
             <ConditionallyRender
@@ -76,14 +127,18 @@ export const FeatureStrategyMenuCards = ({
                         <StyledTypography color='textSecondary'>
                             Release templates
                         </StyledTypography>
-                        {templates.map((template) => (
-                            <ListItem key={template.id}>
-                                <FeatureReleasePlanCard
-                                    template={template}
-                                    onClick={() => onAddReleasePlan(template)}
-                                />
-                            </ListItem>
-                        ))}
+                        <GridSection>
+                            {templates.map((template) => (
+                                <CardWrapper key={template.id}>
+                                    <FeatureReleasePlanCard
+                                        template={template}
+                                        onClick={() =>
+                                            onAddReleasePlan(template)
+                                        }
+                                    />
+                                </CardWrapper>
+                            ))}
+                        </GridSection>
                     </>
                 }
             />
@@ -118,16 +173,18 @@ export const FeatureStrategyMenuCards = ({
                     <StyledTypography color='textSecondary'>
                         Predefined strategy types
                     </StyledTypography>
-                    {preDefinedStrategies.map((strategy) => (
-                        <ListItem key={strategy.name}>
-                            <FeatureStrategyMenuCard
-                                projectId={projectId}
-                                featureId={featureId}
-                                environmentId={environmentId}
-                                strategy={strategy}
-                            />
-                        </ListItem>
-                    ))}
+                    <GridSection>
+                        {preDefinedStrategies.map((strategy) => (
+                            <CardWrapper key={strategy.name}>
+                                <FeatureStrategyMenuCard
+                                    projectId={projectId}
+                                    featureId={featureId}
+                                    environmentId={environmentId}
+                                    strategy={strategy}
+                                />
+                            </CardWrapper>
+                        ))}
+                    </GridSection>
                     <ConditionallyRender
                         condition={customStrategies.length > 0}
                         show={
@@ -135,21 +192,23 @@ export const FeatureStrategyMenuCards = ({
                                 <StyledTypography color='textSecondary'>
                                     Custom strategies
                                 </StyledTypography>
-                                {customStrategies.map((strategy) => (
-                                    <ListItem key={strategy.name}>
-                                        <FeatureStrategyMenuCard
-                                            projectId={projectId}
-                                            featureId={featureId}
-                                            environmentId={environmentId}
-                                            strategy={strategy}
-                                        />
-                                    </ListItem>
-                                ))}
+                                <GridSection>
+                                    {customStrategies.map((strategy) => (
+                                        <CardWrapper key={strategy.name}>
+                                            <FeatureStrategyMenuCard
+                                                projectId={projectId}
+                                                featureId={featureId}
+                                                environmentId={environmentId}
+                                                strategy={strategy}
+                                            />
+                                        </CardWrapper>
+                                    ))}
+                                </GridSection>
                             </>
                         }
                     />
                 </>
             ) : null}
-        </List>
+        </GridContainer>
     );
 };

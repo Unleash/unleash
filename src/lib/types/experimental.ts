@@ -64,7 +64,8 @@ export type IFlagKey =
     | 'simplifyDisableFeature'
     | 'adminNavUI'
     | 'tagTypeColor'
-    | 'globalChangeRequestConfig';
+    | 'globalChangeRequestConfig'
+    | 'newStrategyDropdown';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -307,6 +308,10 @@ const flags: IFlags = {
     ),
     globalChangeRequestConfig: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_GLOBAL_CHANGE_REQUEST_CONFIG,
+        false,
+    ),
+    newStrategyDropdown: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_STRATEGY_DROPDOWN,
         false,
     ),
 };

@@ -2,7 +2,6 @@ import { getFeatureStrategyIcon } from 'utils/strategyNames';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { Button, styled } from '@mui/material';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
-import { Truncator } from 'component/common/Truncator/Truncator';
 
 const StyledIcon = styled('div')(({ theme }) => ({
     width: theme.spacing(4),
@@ -17,22 +16,19 @@ const StyledIcon = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledContentContainer = styled('div')(() => ({
-    overflow: 'hidden',
-    width: '100%',
+const StyledDescription = styled('div')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    fontWeight: theme.fontWeight.medium,
 }));
 
 const StyledName = styled(StringTruncator)(({ theme }) => ({
-    fontWeight: theme.typography.fontWeightBold,
-    display: 'block',
-    marginBottom: theme.spacing(0.5),
+    fontWeight: theme.fontWeight.bold,
 }));
 
 const StyledCard = styled(Button)(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: '2.5rem 1fr',
-    width: '100%',
-    maxWidth: '30rem',
+    gridTemplateColumns: '3rem 1fr',
+    width: '20rem',
     padding: theme.spacing(2),
     color: 'inherit',
     textDecoration: 'inherit',
@@ -42,7 +38,6 @@ const StyledCard = styled(Button)(({ theme }) => ({
     borderColor: theme.palette.divider,
     borderRadius: theme.spacing(1),
     textAlign: 'left',
-    overflow: 'hidden',
     '&:hover, &:focus': {
         borderColor: theme.palette.primary.main,
     },
@@ -53,7 +48,7 @@ interface IFeatureReleasePlanCardProps {
     onClick: () => void;
 }
 
-export const FeatureReleasePlanCard = ({
+export const OldFeatureReleasePlanCard = ({
     template: { name, description },
     onClick,
 }: IFeatureReleasePlanCardProps) => {
@@ -64,22 +59,10 @@ export const FeatureReleasePlanCard = ({
             <StyledIcon>
                 <Icon />
             </StyledIcon>
-            <StyledContentContainer>
+            <div>
                 <StyledName text={name} maxWidth='200' maxLength={25} />
-                <Truncator
-                    lines={1}
-                    title={description}
-                    arrow
-                    sx={{
-                        fontSize: (theme) => theme.typography.body2.fontSize,
-                        fontWeight: (theme) =>
-                            theme.typography.fontWeightRegular,
-                        width: '100%',
-                    }}
-                >
-                    {description}
-                </Truncator>
-            </StyledContentContainer>
+                <StyledDescription>{description}</StyledDescription>
+            </div>
         </StyledCard>
     );
 };

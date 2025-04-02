@@ -10,7 +10,7 @@ title: Frontend API
 
 ## Overview
 
-The Unleash [Frontend API](/reference/api/unleash/frontend-api) simplifies connecting client-side applications to Unleash. It shares the same API as [Unleash Edge](https://docs.getunleash.io/reference/unleash-edge) but is best suited for development environments, low-traffic applications, or internal dashboards. 
+The Unleash [Frontend API](/reference/api/unleash/frontend-api) simplifies connecting client-side applications to Unleash. [Unleash Edge](https://docs.getunleash.io/reference/unleash-edge) also implements this API allowing you to scale from development environments, low-traffic applications, or internal dashboards to a production-ready scalable solution.
 
 The Frontend API has a straightforward setup, and since it is built directly into Unleash, you don't need to manage it. However, unlike Unleash Edge, it cannot be scaled horizontally and isn’t designed for high request volumes.
 

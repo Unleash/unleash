@@ -27,7 +27,7 @@ A web interface for managing feature flags, defining activation strategies, view
 
 Unleash provides both [server-side](/reference/sdks#server-side-sdks) and [client-side SDKs](/reference/sdks#client-side-sdks) for integrating feature flagging into your applications. SDKs fetch feature configurations from the Unleash API to check which features are enabled and what activation strategy to use for each feature.
 
-SDKs cache all feature flag data in memory, applying activation strategies locally. This makes flag evaluation incredibly fast, as it is a simple function operating on local state, without the need to poll data from the database. This architecture results in a small delay (typically a few seconds, but configurable) when propagating configuration changes to your applications.
+Server-side SDKs cache all feature flag data in memory, applying activation strategies locally. This makes flag evaluation incredibly fast, as it is a simple function operating on local state, without the need to poll data from the database. This architecture results in a small delay (typically a few seconds, but configurable) when propagating configuration changes to your applications.
 
 #### Server-side SDKs
 
@@ -37,9 +37,11 @@ Supported languages include: [Node.js](/reference/sdks/node), [Go](/reference/sd
 
 #### Client-side SDKs
 
-Client-side SDKs are used in frontend and mobile applications. They communicate with Unleash through the [Frontend API](#frontend-api) or [Unleash Edge](#unleash-edge). Supported platforms include: [JavaScript](/reference/sdks/javascript-browser), [React](/reference/sdks/react), [iOS](/reference/sdks/ios-proxy), [Android](/reference/sdks/android-proxy), and more.
+Client-side SDKs are used in frontend and mobile applications. They communicate with Unleash or [Unleash Edge](#unleash-edge) through the [Frontend API](#frontend-api). Supported platforms include: [JavaScript](/reference/sdks/javascript-browser), [React](/reference/sdks/react), [iOS](/reference/sdks/ios-proxy), [Android](/reference/sdks/android-proxy), and more.
 
 Unlike server-side SDKs, client-side SDKs do not perform the flag evaluation locally. Instead, they fetch all enabled feature flags for a given [Unleash Context](/reference/unleash-context). The flag evaluation happens inside [Unleash Edge](#unleash-edge), or within the Unleash server, when using the [Frontend API](#frontend-api) directly.
+
+### Flag evaluation
 
 The following table outlines where flag evaluation happens with different SDK setups.
 

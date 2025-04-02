@@ -87,7 +87,6 @@ const SectionTitle = styled(Box)(({ theme }) => ({
 const StyledInfoIcon = styled(InfoOutlinedIcon)(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     color: theme.palette.text.secondary,
-    cursor: 'help',
 }));
 
 export const FeatureStrategyMenuCards = ({

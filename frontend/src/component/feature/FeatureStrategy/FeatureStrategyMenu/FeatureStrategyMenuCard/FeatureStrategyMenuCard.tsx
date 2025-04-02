@@ -41,6 +41,7 @@ const StyledContentContainer = styled('div')(() => ({
 
 const StyledName = styled(StringTruncator)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.caption.fontSize,
     display: 'block',
     marginBottom: theme.spacing(0.5),
 }));
@@ -107,7 +108,7 @@ export const FeatureStrategyMenuCard = ({
                     title={strategy.description}
                     arrow
                     sx={{
-                        fontSize: (theme) => theme.typography.body2.fontSize,
+                        fontSize: (theme) => theme.typography.caption.fontSize,
                         width: '100%',
                     }}
                 >

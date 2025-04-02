@@ -31,7 +31,7 @@ SDKs cache all feature flag data in memory, applying activation strategies local
 
 #### Server-side SDKs
 
-Server-side SDKs run in backend applications and retrieve feature flag configurations using the [Client API](#client-api) or [Unleash Edge](#unleash-edge). Server-side SDKs perform the flag evaluation locally, meaning all user data is retained within the SDK.
+Server-side SDKs run in backend applications and retrieve feature flag configurations using the [Client API](#client-api) either from Unleash server or [Unleash Edge](#unleash-edge). Server-side SDKs perform the flag evaluation locally, meaning all user data is retained within the SDK.
 
 Supported languages include: [Node.js](/reference/sdks/node), [Go](/reference/sdks/go), [Java](/reference/sdks/java), [Python](/reference/sdks/python), [.NET](/reference/sdks/dotnet), [PHP](/reference/sdks/php), and more.
 

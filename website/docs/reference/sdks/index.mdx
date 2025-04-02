@@ -93,7 +93,7 @@ Static fields (`environment`, `appName`), defined fields, and custom properties 
 #### `isEnabled` implementation
 | Capability | [Java](/docs/generated/sdks/server-side/java.md) | [Node.js](/docs/generated/sdks/server-side/node.md) | [Go](/docs/generated/sdks/server-side/go.md) | [Python](/docs/generated/sdks/server-side/python.md) | [Ruby](/docs/generated/sdks/server-side/ruby.md) | [.NET](/docs/generated/sdks/server-side/dotnet.md) | [PHP](/docs/generated/sdks/server-side/php.md) | [Rust](/docs/generated/sdks/server-side/rust.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| Can take context and override feedback value | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Can take context and override fallback value | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Fallback function | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ⭕ | ⭕ |
 
 #### Strategy variants
@@ -195,7 +195,7 @@ To identify which SDK instances are connected to Unleash, the following headers 
 
 `unleash-sdk`  
 - **Description**: Provides information about the language/framework and version of the SDK making the request.  
-- **Format**: The language/framework followed by a colon and the semantic version of the SDK. For example, `unleash-client-java@10.0.1` or `unleash-client-node@6.4.4`.  
+- **Format**: The language/framework followed by the `@` symbol and the semantic version of the SDK. For example, `unleash-client-java@10.0.1` or `unleash-client-node@6.4.4`.  
 - **Additional information**: Each SDK implementation should use a platform-idiomatic method to read the version from a package manager and update it with each version release.
 
 `unleash-appname` (Optional)  

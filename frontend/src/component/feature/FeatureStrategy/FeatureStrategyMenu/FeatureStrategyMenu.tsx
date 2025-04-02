@@ -226,15 +226,6 @@ export const FeatureStrategyMenu = ({
                     vertical: 'top',
                     horizontal: 'left',
                 }}
-                PaperProps={{
-                    sx: (theme) => ({
-                        width: 'auto',
-                        maxWidth: '95vw',
-                        maxHeight: '80vh',
-                        display: 'flex',
-                        flexDirection: 'column',
-                    }),
-                }}
                 disableScrollLock={true}
             >
                 {newStrategyDropdownEnabled ? (

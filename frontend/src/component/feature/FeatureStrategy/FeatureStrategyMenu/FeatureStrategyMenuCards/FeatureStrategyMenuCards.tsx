@@ -1,4 +1,11 @@
-import { Link, styled, Typography, Box, IconButton } from '@mui/material';
+import {
+    Link,
+    styled,
+    Typography,
+    Box,
+    IconButton,
+    Tooltip,
+} from '@mui/material';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -7,6 +14,7 @@ import { FeatureReleasePlanCard } from '../FeatureReleasePlanCard/FeatureRelease
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 interface IFeatureStrategyMenuCardsProps {
     projectId: string;
@@ -30,6 +38,15 @@ const StyledLink = styled(Link)(({ theme }) => ({
 
 const GridContainer = styled(Box)(() => ({
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+}));
+
+const ScrollableContent = styled(Box)(({ theme }) => ({
+    width: '100%',
+    maxHeight: '70vh',
+    overflowY: 'auto',
+    padding: theme.spacing(0, 0, 1, 0),
 }));
 
 const GridSection = styled(Box)(({ theme }) => ({
@@ -37,6 +54,7 @@ const GridSection = styled(Box)(({ theme }) => ({
     gridTemplateColumns: 'repeat(2, 1fr)',
     gap: theme.spacing(1.5),
     padding: theme.spacing(0, 2),
+    marginBottom: theme.spacing(3),
     width: '100%',
 }));
 
@@ -56,6 +74,19 @@ const TitleText = styled(Typography)(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,
     fontWeight: theme.typography.fontWeightBold,
     margin: 0,
+}));
+
+const SectionTitle = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+    padding: theme.spacing(1, 2),
+    width: '100%',
+}));
+
+const StyledInfoIcon = styled(InfoOutlinedIcon)(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
+    color: theme.palette.text.secondary,
 }));
 
 export const FeatureStrategyMenuCards = ({
@@ -102,113 +133,140 @@ export const FeatureStrategyMenuCards = ({
                     </IconButton>
                 )}
             </TitleRow>
-            {allStrategies ? (
-                <>
-                    <StyledTypography color='textSecondary'>
-                        Default strategy for {environmentId} environment
-                    </StyledTypography>
-                    <GridSection>
-                        <CardWrapper key={defaultStrategy.name}>
-                            <FeatureStrategyMenuCard
-                                projectId={projectId}
-                                featureId={featureId}
-                                environmentId={environmentId}
-                                strategy={defaultStrategy}
-                                defaultStrategy={true}
-                            />
-                        </CardWrapper>
-                    </GridSection>
-                </>
-            ) : null}
-            <ConditionallyRender
-                condition={templates.length > 0}
-                show={
+            <ScrollableContent>
+                {allStrategies ? (
                     <>
-                        <StyledTypography color='textSecondary'>
-                            Release templates
-                        </StyledTypography>
+                        <SectionTitle>
+                            <Typography color='inherit' variant='body2'>
+                                Pre-defined strategy types
+                            </Typography>
+                            <Tooltip
+                                title='Select a starting setup, and customize the strategy to your need with targeting and variants'
+                                arrow
+                            >
+                                <StyledInfoIcon />
+                            </Tooltip>
+                        </SectionTitle>
                         <GridSection>
-                            {templates.map((template) => (
-                                <CardWrapper key={template.id}>
-                                    <FeatureReleasePlanCard
-                                        template={template}
-                                        onClick={() =>
-                                            onAddReleasePlan(template)
-                                        }
+                            <CardWrapper key={defaultStrategy.name}>
+                                <FeatureStrategyMenuCard
+                                    projectId={projectId}
+                                    featureId={featureId}
+                                    environmentId={environmentId}
+                                    strategy={defaultStrategy}
+                                    defaultStrategy={true}
+                                />
+                            </CardWrapper>
+                            {preDefinedStrategies.map((strategy) => (
+                                <CardWrapper key={strategy.name}>
+                                    <FeatureStrategyMenuCard
+                                        projectId={projectId}
+                                        featureId={featureId}
+                                        environmentId={environmentId}
+                                        strategy={strategy}
                                     />
                                 </CardWrapper>
                             ))}
                         </GridSection>
                     </>
-                }
-            />
-            <ConditionallyRender
-                condition={templates.length === 0 && onlyReleasePlans}
-                show={
-                    <>
-                        <StyledTypography
-                            color='textSecondary'
-                            sx={{
-                                padding: (theme) => theme.spacing(1, 2, 0, 2),
-                            }}
-                        >
-                            <p>No templates created.</p>
-                            <p>
-                                Go to&nbsp;
-                                <StyledLink
-                                    onClick={() =>
-                                        navigate('/release-templates')
-                                    }
+                ) : null}
+                <ConditionallyRender
+                    condition={templates.length > 0}
+                    show={
+                        <>
+                            <SectionTitle>
+                                <Typography color='inherit' variant='body2'>
+                                    Apply a release template
+                                </Typography>
+                                <Tooltip
+                                    title='Use one of the pre-defined templates defined in your company for rolling out features to users'
+                                    arrow
                                 >
-                                    Release templates
-                                </StyledLink>
-                                &nbsp;to get started
-                            </p>
-                        </StyledTypography>
+                                    <StyledInfoIcon />
+                                </Tooltip>
+                            </SectionTitle>
+                            <GridSection>
+                                {templates.map((template) => (
+                                    <CardWrapper key={template.id}>
+                                        <FeatureReleasePlanCard
+                                            template={template}
+                                            onClick={() =>
+                                                onAddReleasePlan(template)
+                                            }
+                                        />
+                                    </CardWrapper>
+                                ))}
+                            </GridSection>
+                        </>
+                    }
+                />
+                <ConditionallyRender
+                    condition={templates.length === 0 && onlyReleasePlans}
+                    show={
+                        <>
+                            <StyledTypography
+                                color='textSecondary'
+                                sx={{
+                                    padding: (theme) =>
+                                        theme.spacing(1, 2, 0, 2),
+                                }}
+                            >
+                                <p>No templates created.</p>
+                                <p>
+                                    Go to&nbsp;
+                                    <StyledLink
+                                        onClick={() =>
+                                            navigate('/release-templates')
+                                        }
+                                    >
+                                        Release templates
+                                    </StyledLink>
+                                    &nbsp;to get started
+                                </p>
+                            </StyledTypography>
+                        </>
+                    }
+                />
+                {allStrategies ? (
+                    <>
+                        <ConditionallyRender
+                            condition={customStrategies.length > 0}
+                            show={
+                                <>
+                                    <SectionTitle>
+                                        <Typography
+                                            color='inherit'
+                                            variant='body2'
+                                        >
+                                            Custom strategies
+                                        </Typography>
+                                        <Tooltip
+                                            title='Custom strategies you have defined in Unleash'
+                                            arrow
+                                        >
+                                            <StyledInfoIcon />
+                                        </Tooltip>
+                                    </SectionTitle>
+                                    <GridSection>
+                                        {customStrategies.map((strategy) => (
+                                            <CardWrapper key={strategy.name}>
+                                                <FeatureStrategyMenuCard
+                                                    projectId={projectId}
+                                                    featureId={featureId}
+                                                    environmentId={
+                                                        environmentId
+                                                    }
+                                                    strategy={strategy}
+                                                />
+                                            </CardWrapper>
+                                        ))}
+                                    </GridSection>
+                                </>
+                            }
+                        />
                     </>
-                }
-            />
-            {allStrategies ? (
-                <>
-                    <StyledTypography color='textSecondary'>
-                        Predefined strategy types
-                    </StyledTypography>
-                    <GridSection>
-                        {preDefinedStrategies.map((strategy) => (
-                            <CardWrapper key={strategy.name}>
-                                <FeatureStrategyMenuCard
-                                    projectId={projectId}
-                                    featureId={featureId}
-                                    environmentId={environmentId}
-                                    strategy={strategy}
-                                />
-                            </CardWrapper>
-                        ))}
-                    </GridSection>
-                    <ConditionallyRender
-                        condition={customStrategies.length > 0}
-                        show={
-                            <>
-                                <StyledTypography color='textSecondary'>
-                                    Custom strategies
-                                </StyledTypography>
-                                <GridSection>
-                                    {customStrategies.map((strategy) => (
-                                        <CardWrapper key={strategy.name}>
-                                            <FeatureStrategyMenuCard
-                                                projectId={projectId}
-                                                featureId={featureId}
-                                                environmentId={environmentId}
-                                                strategy={strategy}
-                                            />
-                                        </CardWrapper>
-                                    ))}
-                                </GridSection>
-                            </>
-                        }
-                    />
-                </>
-            ) : null}
+                ) : null}
+            </ScrollableContent>
         </GridContainer>
     );
 };

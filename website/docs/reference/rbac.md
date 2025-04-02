@@ -122,7 +122,11 @@ You can assign the following root permissions:
 
 #### Release template permissions
 
+:::note Availability
+
 **Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `6.8+ in BETA`
+
+:::
 
 | Permission Name | Description               |
 |-----------------|---------------------------|

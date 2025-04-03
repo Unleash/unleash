@@ -15,6 +15,7 @@ import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
 
 interface IFeatureStrategyMenuCardsProps {
     projectId: string;
@@ -89,6 +90,25 @@ const StyledInfoIcon = styled(InfoOutlinedIcon)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
+const StyledIcon = styled('div')(({ theme }) => ({
+    width: theme.spacing(4),
+    height: 'auto',
+    '& > svg': {
+        // Styling for SVG icons.
+        fill: theme.palette.primary.main,
+        width: '18px',
+        height: '18px',
+    },
+    '& > div': {
+        // Styling for the Rollout icon.
+        height: theme.spacing(2),
+        marginLeft: '-.75rem',
+        color: theme.palette.primary.main,
+    },
+    display: 'flex',
+    alignItems: 'center',
+}));
+
 // Empty state styling
 const EmptyStateContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -106,6 +126,8 @@ const EmptyStateTitle = styled(Typography)(({ theme }) => ({
     fontSize: theme.typography.caption.fontSize,
     fontWeight: theme.typography.fontWeightBold,
     marginBottom: theme.spacing(1),
+    display: 'flex',
+    alignItems: 'center',
 }));
 
 const EmptyStateDescription = styled(Typography)(({ theme }) => ({
@@ -237,6 +259,9 @@ export const FeatureStrategyMenuCards = ({
                     elseShow={
                         <EmptyStateContainer>
                             <EmptyStateTitle>
+                                <StyledIcon>
+                                    <FactCheckOutlinedIcon />
+                                </StyledIcon>
                                 Create your own templates
                             </EmptyStateTitle>
                             <EmptyStateDescription>

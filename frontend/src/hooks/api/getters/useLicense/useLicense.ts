@@ -2,6 +2,8 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
 import type { BannerVariant } from 'interfaces/banner';
+import AccessContext from 'contexts/AccessContext';
+import { useContext } from 'react';
 
 export interface LicenseInfo {
     isValid: boolean;
@@ -50,6 +52,14 @@ export const useLicenseCheck = (): LicenseInfo => {
 };
 
 export const useLicense = (): License => {
+    const { isAdmin } = useContext(AccessContext);
+    if (!isAdmin) {
+        return {
+            license: undefined,
+            loading: false,
+            refetchLicense: () => {},
+        };
+    }
     const { data, error, mutate } = useEnterpriseSWR(
         undefined,
         formatApiPath(`api/admin/license`),

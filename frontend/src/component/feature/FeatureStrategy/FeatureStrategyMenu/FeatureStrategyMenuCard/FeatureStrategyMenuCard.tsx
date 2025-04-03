@@ -20,23 +20,12 @@ interface IFeatureStrategyMenuCardProps {
 }
 
 const StyledIcon = styled('div')(({ theme }) => ({
-    width: theme.spacing(4),
-    height: 'auto',
+    width: theme.spacing(3),
     '& > svg': {
-        // Styling for SVG icons.
+        width: theme.spacing(2.25),
+        height: theme.spacing(2.25),
         fill: theme.palette.primary.main,
     },
-    '& > div': {
-        // Styling for the Rollout icon.
-        height: theme.spacing(2),
-        marginLeft: '-.75rem',
-        color: theme.palette.primary.main,
-    },
-}));
-
-const StyledContentContainer = styled('div')(() => ({
-    overflow: 'hidden',
-    width: '100%',
 }));
 
 const StyledName = styled(StringTruncator)(({ theme }) => ({
@@ -47,8 +36,8 @@ const StyledName = styled(StringTruncator)(({ theme }) => ({
 }));
 
 const StyledCard = styled(Link)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: '2.5rem 1fr',
+    display: 'flex',
+    flexDirection: 'column',
     width: '100%',
     maxWidth: '30rem',
     padding: theme.spacing(2),
@@ -64,6 +53,14 @@ const StyledCard = styled(Link)(({ theme }) => ({
         borderColor: theme.palette.primary.main,
     },
 }));
+
+const StyledTopRow = styled('div')({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: '0.5rem',
+});
 
 export const FeatureStrategyMenuCard = ({
     projectId,
@@ -94,27 +91,27 @@ export const FeatureStrategyMenuCard = ({
 
     return (
         <StyledCard to={createStrategyPath} onClick={openStrategyCreationModal}>
-            <StyledIcon>
-                <StrategyIcon />
-            </StyledIcon>
-            <StyledContentContainer>
+            <StyledTopRow>
+                <StyledIcon>
+                    <StrategyIcon />
+                </StyledIcon>
                 <StyledName
                     text={strategy.displayName || strategyName}
                     maxWidth='200'
                     maxLength={25}
                 />
-                <Truncator
-                    lines={1}
-                    title={strategy.description}
-                    arrow
-                    sx={{
-                        fontSize: (theme) => theme.typography.caption.fontSize,
-                        width: '100%',
-                    }}
-                >
-                    {strategy.description}
-                </Truncator>
-            </StyledContentContainer>
+            </StyledTopRow>
+            <Truncator
+                lines={1}
+                title={strategy.description}
+                arrow
+                sx={{
+                    fontSize: (theme) => theme.typography.caption.fontSize,
+                    width: '100%',
+                }}
+            >
+                {strategy.description}
+            </Truncator>
         </StyledCard>
     );
 };

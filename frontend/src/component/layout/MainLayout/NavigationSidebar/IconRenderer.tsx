@@ -13,7 +13,9 @@ import UsersIcon from '@mui/icons-material/GroupOutlined';
 import ServiceAccountIcon from '@mui/icons-material/Computer';
 import GroupsIcon from '@mui/icons-material/GroupsOutlined';
 import RoleIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
+import SettingsIcon from '@mui/icons-material/Settings';
 import SearchIcon from '@mui/icons-material/Search';
+import InsightsIcon from '@mui/icons-material/Insights';
 import ApiAccessIcon from '@mui/icons-material/KeyOutlined';
 import SingleSignOnIcon from '@mui/icons-material/AssignmentOutlined';
 import NetworkIcon from '@mui/icons-material/HubOutlined';
@@ -39,6 +41,7 @@ const icons: Record<
     typeof SvgIcon | FC<ComponentProps<typeof SvgIcon>>
 > = {
     '/search': SearchIcon,
+    '/insights': InsightsIcon,
     '/applications': ApplicationsIcon,
     '/context': ContextFieldsIcon,
     '/feature-toggle-type': FlagTypesIcon,
@@ -47,13 +50,24 @@ const icons: Record<
     '/strategies': CustomStrategiesIcon,
     '/tag-types': TagTypesIcon,
     '/environments': EnvironmentsIcon,
+    '/admin': SettingsIcon,
     '/admin/users': UsersIcon,
     '/admin/service-accounts': ServiceAccountIcon,
     '/admin/groups': GroupsIcon,
     '/admin/roles': RoleIcon,
+    '/admin/roles/project-roles': RoleIcon,
     '/admin/api': ApiAccessIcon,
     '/admin/auth': SingleSignOnIcon,
+    '/admin/auth/saml': SingleSignOnIcon,
+    '/admin/auth/scim': SingleSignOnIcon,
+    '/admin/auth/password': SingleSignOnIcon,
+    '/admin/auth/google': SingleSignOnIcon,
     '/admin/network': NetworkIcon,
+    '/admin/network/traffic': NetworkIcon,
+    '/admin/network/data-usage': NetworkIcon,
+    '/admin/network/frontend-data-usage': NetworkIcon,
+    '/admin/network/connected-edges': NetworkIcon,
+    '/admin/network/backend-connections': NetworkIcon,
     '/admin/maintenance': MaintenanceIcon,
     '/admin/banners': BannersIcon,
     '/admin/instance': InstanceStatsIcon,

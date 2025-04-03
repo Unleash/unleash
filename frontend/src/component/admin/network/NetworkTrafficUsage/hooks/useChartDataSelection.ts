@@ -51,7 +51,7 @@ export const useChartDataSelection = (includedTraffic?: number) => {
             },
             includedTraffic,
         );
-    }, [theme, chartDataSelection]);
+    }, [theme, chartDataSelection, includedTraffic]);
 
     return { chartDataSelection, setChartDataSelection, options };
 };

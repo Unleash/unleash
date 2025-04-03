@@ -35,13 +35,15 @@ export const ProjectCardFooter: FC<IProjectCardFooterProps> = ({
     owners,
     disabled = false,
 }) => {
-    const ownersWithoutSystem: ProjectSchemaOwners | undefined = owners?.filter(
+    const ownersWithoutSystem = owners?.filter(
         (owner) => owner.ownerType !== 'system',
     );
     return (
         <StyledFooter disabled={disabled}>
             {ownersWithoutSystem ? (
-                <ProjectOwners owners={ownersWithoutSystem} />
+                <ProjectOwners
+                    owners={ownersWithoutSystem as ProjectSchemaOwners}
+                />
             ) : null}
             {children}
         </StyledFooter>

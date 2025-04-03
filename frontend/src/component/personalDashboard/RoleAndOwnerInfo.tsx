@@ -54,7 +54,7 @@ const StyledAvatarGroup = styled(AvatarGroupFromOwners)(({ theme }) => ({
 export const RoleAndOwnerInfo = ({ roles, owners }: Props) => {
     const firstRoles = roles.slice(0, 3);
     const extraRoles = roles.slice(3);
-    const ownersWithoutSystem: ProjectSchemaOwners = owners.filter(
+    const ownersWithoutSystem = owners.filter(
         (owner) => owner.ownerType !== 'system',
     );
     return (
@@ -124,7 +124,7 @@ export const RoleAndOwnerInfo = ({ roles, owners }: Props) => {
                             {ownersWithoutSystem.length > 1 ? 's' : ''}
                         </Typography>
                         <StyledAvatarGroup
-                            users={ownersWithoutSystem}
+                            users={ownersWithoutSystem as ProjectSchemaOwners}
                             avatarLimit={3}
                         />
                     </>

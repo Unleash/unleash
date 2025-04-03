@@ -18,7 +18,6 @@ import {
     type CommandResultGroupItem,
 } from './RecentlyVisited/CommandResultGroup';
 import { CommandPageSuggestions } from './CommandPageSuggestions';
-import { useRoutes } from 'component/layout/MainLayout/NavigationSidebar/useRoutes';
 import { useAsyncDebounce } from 'react-table';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import {
@@ -31,6 +30,7 @@ import { CommandSearchPages } from './CommandSearchPages';
 import { CommandBarFeedback } from './CommandBarFeedback';
 import { RecentlyVisitedRecorder } from './RecentlyVisitedRecorder';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
+import { useCommandBarRoutes } from './useCommandBarRoutes';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -101,12 +101,6 @@ const StyledClose = styled(Close)(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,
 }));
 
-interface IPageRouteInfo {
-    path: string;
-    route: string;
-    title: string;
-}
-
 export const CommandBar = () => {
     const { trackEvent } = usePlausibleTracker();
     const searchInputRef = useRef<HTMLInputElement>(null);
@@ -124,19 +118,7 @@ export const CommandBar = () => {
         useState<CommandQueryCounter>({ query: '', count: 0 });
     const [hasNoResults, setHasNoResults] = useState(false);
     const [value, setValue] = useState<string>('');
-    const { routes } = useRoutes();
-    const allRoutes: Record<string, IPageRouteInfo> = {};
-    for (const route of [
-        ...routes.mainNavRoutes,
-        ...routes.adminRoutes,
-        ...routes.primaryRoutes,
-    ]) {
-        allRoutes[route.path] = {
-            path: route.path,
-            route: route.route,
-            title: route.title,
-        };
-    }
+    const { allRoutes } = useCommandBarRoutes();
 
     const hideSuggestions = () => {
         setShowSuggestions(false);
@@ -159,7 +141,7 @@ export const CommandBar = () => {
         setSearchedProjects(mappedProjects);
 
         const filteredPages = Object.values(allRoutes).filter((route) =>
-            route.title.toLowerCase().includes(query.toLowerCase()),
+            route.searchText.toLowerCase().includes(query.toLowerCase()),
         );
         const mappedPages = filteredPages.map((page) => ({
             name: page.title,

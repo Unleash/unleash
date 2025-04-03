@@ -23,6 +23,7 @@ import {
     StyledMetaDataItemLabel,
     StyledMetaDataItemValue,
 } from './FeatureOverviewMetaData';
+import { Truncator } from 'component/common/Truncator/Truncator';
 
 const StyledPermissionButton = styled(PermissionButton)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
@@ -137,7 +138,9 @@ export const DependencyRow = ({ feature }: IDependencyRowProps) => {
                         <StyledLink
                             to={`/projects/${feature.project}/features/${feature.dependencies[0]?.feature}`}
                         >
-                            {feature.dependencies[0]?.feature}
+                            <Truncator title={feature.dependencies[0]?.feature}>
+                                {feature.dependencies[0]?.feature}
+                            </Truncator>
                         </StyledLink>
                         {checkAccess(UPDATE_FEATURE_DEPENDENCY, environment) ? (
                             <DependencyActions

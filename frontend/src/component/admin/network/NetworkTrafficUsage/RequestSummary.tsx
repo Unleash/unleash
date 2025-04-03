@@ -102,10 +102,7 @@ export const RequestSummary: FC<Props> = ({
                     <Row>
                         <dt>Included in your plan monthly</dt>
                         <dd>
-                            {(includedTraffic * 1_000_000).toLocaleString(
-                                'en-US',
-                            )}{' '}
-                            requests
+                            {includedTraffic.toLocaleString('en-US')} requests
                         </dd>
                     </Row>
                 )}
@@ -113,10 +110,7 @@ export const RequestSummary: FC<Props> = ({
                     <Row>
                         <dt>Additional traffic purchased</dt>
                         <dd>
-                            {(purchasedTraffic * 1_000_000).toLocaleString(
-                                'en-US',
-                            )}{' '}
-                            requests
+                            {purchasedTraffic.toLocaleString('en-US')} requests
                         </dd>
                     </Row>
                 )}
@@ -125,8 +119,7 @@ export const RequestSummary: FC<Props> = ({
                         <dt>Total traffic</dt>
                         <dd>
                             {(
-                                (includedTraffic + purchasedTraffic) *
-                                1_000_000
+                                includedTraffic + purchasedTraffic
                             ).toLocaleString('en-US')}{' '}
                             requests
                         </dd>

@@ -12,15 +12,37 @@ type IUseTrafficBundlesOutput = {
     refetch: () => void;
 };
 
+const DEFAULT_TRAFFIC_INCLUDED_PAYG = 53;
+const DEFAULT_TRAFFIC_INCLUDED_ENTERPRISE = 259;
+const DEFAULT_TRAFFIC_MULTIPLIER = 1_000_000;
+
 const defaultIncludedTraffic = (
     isEnterprise: boolean,
     billing?: string,
 ): number => {
     if (!isEnterprise || billing === 'pay-as-you-go') {
-        return 53;
+        return DEFAULT_TRAFFIC_INCLUDED_PAYG;
     }
-    return 259;
+    return DEFAULT_TRAFFIC_INCLUDED_ENTERPRISE;
 };
+
+function includedTraffic(
+    includedTraffic: number | undefined,
+    isEnterprise: boolean,
+    billing?: string,
+): number {
+    if (includedTraffic === undefined) {
+        return defaultIncludedTraffic(isEnterprise, billing);
+    }
+    return includedTraffic;
+}
+
+function purchasedTraffic(purchasedTraffic: number | undefined): number {
+    if (purchasedTraffic === undefined) {
+        return 0;
+    }
+    return purchasedTraffic;
+}
 
 export const useTrafficBundles = (): IUseTrafficBundlesOutput => {
     const { isEnterprise, uiConfig } = useUiConfig();
@@ -30,9 +52,14 @@ export const useTrafficBundles = (): IUseTrafficBundlesOutput => {
     const trafficBundles = useMemo(() => {
         return {
             includedTraffic:
-                data?.includedTraffic ||
-                defaultIncludedTraffic(isEnterprise(), uiConfig.billing),
-            purchasedTraffic: data?.purchasedTraffic || 0,
+                includedTraffic(
+                    data?.includedTraffic,
+                    isEnterprise(),
+                    uiConfig.billing,
+                ) * DEFAULT_TRAFFIC_MULTIPLIER,
+            purchasedTraffic:
+                purchasedTraffic(data?.purchasedTraffic) *
+                DEFAULT_TRAFFIC_MULTIPLIER,
         };
     }, [data]);
     return {

@@ -45,8 +45,7 @@ const NetworkTrafficUsage: FC = () => {
     const { trafficBundles } = useTrafficBundles();
 
     const totalTraffic =
-        (trafficBundles.includedTraffic + trafficBundles.purchasedTraffic) *
-        1_000_000;
+        trafficBundles.includedTraffic + trafficBundles.purchasedTraffic;
 
     const { chartDataSelection, setChartDataSelection, options } =
         useChartDataSelection(totalTraffic);

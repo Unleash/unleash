@@ -126,21 +126,21 @@ const ProjectStatus = () => {
     const [projectStatusOpen, setProjectStatusOpen] = useState(
         searchParams.has('project-status'),
     );
-    const toggleStatusModal = (open: boolean, clickedLink?: boolean) => {
-        if (open) {
-            searchParams.set('project-status', '');
-            setSearchParams(searchParams);
-        } else if (!clickedLink) {
-            searchParams.delete('project-status');
-            setSearchParams(searchParams);
-        }
-        setProjectStatusOpen(open);
+    const openStatusModal = () => {
+        searchParams.set('project-status', '');
+        setSearchParams(searchParams);
+        setProjectStatusOpen(true);
+    };
+    const closeStatusModal = () => {
+        searchParams.delete('project-status');
+        setSearchParams(searchParams);
+        setProjectStatusOpen(false);
     };
 
     return (
         <>
             <ProjectStatusButton
-                onClick={() => toggleStatusModal(true)}
+                onClick={openStatusModal}
                 startIcon={<ProjectStatusSvgWithMargin />}
                 data-loading-project
             >
@@ -148,7 +148,8 @@ const ProjectStatus = () => {
             </ProjectStatusButton>
             <ProjectStatusModal
                 open={projectStatusOpen}
-                close={(clickedLink) => toggleStatusModal(false, clickedLink)}
+                onClose={closeStatusModal}
+                onFollowLink={() => setProjectStatusOpen(false)}
             />
         </>
     );

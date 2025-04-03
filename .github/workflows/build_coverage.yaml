@@ -1,6 +1,7 @@
 name: Coverage
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -44,7 +45,6 @@ jobs:
       - run: yarn install --immutable
         env:
           YARN_ENABLE_SCRIPTS: false
-      - run: yarn build:frontend
       - run: yarn run test:coverage
         env:
           CI: true

@@ -135,6 +135,7 @@ const ProjectStatus = () => {
         searchParams.delete('project-status');
         setSearchParams(searchParams);
         setProjectStatusOpen(false);
+    };
 
     return (
         <>

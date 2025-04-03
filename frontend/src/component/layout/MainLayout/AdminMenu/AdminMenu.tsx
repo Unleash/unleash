@@ -99,7 +99,6 @@ const StyledMenuPaper = styled(Paper)(({ theme }) => ({
 const StickyContainer = styled(Sticky)(({ theme }) => ({
     position: 'sticky',
     top: 0,
-    zIndex: theme.zIndex.sticky,
     background: theme.palette.background.application,
     transition: 'padding 0.3s ease',
 }));

@@ -127,11 +127,8 @@ const EmptyStateDescription = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const BoldText = styled('span')(({ theme }) => ({
+const ClickableBoldText = styled(Link)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
-}));
-
-const ClickableBoldText = styled(BoldText)(({ theme }) => ({
     cursor: 'pointer',
     '&:hover': {
         textDecoration: 'underline',

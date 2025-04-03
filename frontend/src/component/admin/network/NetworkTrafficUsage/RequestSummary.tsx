@@ -10,6 +10,7 @@ type Props = {
     period: ChartDataSelection;
     usageTotal: number;
     includedTraffic: number;
+    purchasedTraffic: number;
 };
 
 const Container = styled('article')(({ theme }) => ({
@@ -70,6 +71,7 @@ export const RequestSummary: FC<Props> = ({
     period,
     usageTotal,
     includedTraffic,
+    purchasedTraffic,
 }) => {
     const { locationSettings } = useLocationSettings();
 
@@ -100,7 +102,33 @@ export const RequestSummary: FC<Props> = ({
                     <Row>
                         <dt>Included in your plan monthly</dt>
                         <dd>
-                            {includedTraffic.toLocaleString('en-US')} requests
+                            {(includedTraffic * 1_000_000).toLocaleString(
+                                'en-US',
+                            )}{' '}
+                            requests
+                        </dd>
+                    </Row>
+                )}
+                {purchasedTraffic > 0 && (
+                    <Row>
+                        <dt>Additional traffic purchased</dt>
+                        <dd>
+                            {(purchasedTraffic * 1_000_000).toLocaleString(
+                                'en-US',
+                            )}{' '}
+                            requests
+                        </dd>
+                    </Row>
+                )}
+                {includedTraffic > 0 && (
+                    <Row>
+                        <dt>Total traffic</dt>
+                        <dd>
+                            {(
+                                (includedTraffic + purchasedTraffic) *
+                                1_000_000
+                            ).toLocaleString('en-US')}{' '}
+                            requests
                         </dd>
                     </Row>
                 )}

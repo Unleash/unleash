@@ -18,7 +18,6 @@ import {
 import { Bar } from 'react-chartjs-2';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin';
-import { useTrafficLimit } from './hooks/useTrafficLimit';
 import { PeriodSelector } from './PeriodSelector';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { OverageInfo, RequestSummary } from './RequestSummary';
@@ -27,6 +26,7 @@ import { getChartLabel } from './chart-functions';
 import { useTrafficStats } from './hooks/useStats';
 import { BoldText, StyledBox, TopRow } from './SharedComponents';
 import { useChartDataSelection } from './hooks/useChartDataSelection';
+import { useTrafficBundles } from '../../../../hooks/api/getters/useTrafficBundles/useTrafficBundles';
 
 const TrafficInfoBoxes = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -42,10 +42,14 @@ const NetworkTrafficUsage: FC = () => {
 
     const { isOss } = useUiConfig();
 
-    const includedTraffic = useTrafficLimit();
+    const { trafficBundles } = useTrafficBundles();
+
+    const totalTraffic =
+        (trafficBundles.includedTraffic + trafficBundles.purchasedTraffic) *
+        1_000_000;
 
     const { chartDataSelection, setChartDataSelection, options } =
-        useChartDataSelection(includedTraffic);
+        useChartDataSelection(totalTraffic);
 
     const {
         chartData,
@@ -53,19 +57,19 @@ const NetworkTrafficUsage: FC = () => {
         overageCost,
         estimatedMonthlyCost,
         requestSummaryUsage,
-    } = useTrafficStats(includedTraffic, chartDataSelection);
+    } = useTrafficStats(totalTraffic, chartDataSelection);
 
     const showOverageCalculations =
         chartDataSelection.grouping === 'daily' &&
         chartDataSelection.month === currentMonth &&
-        includedTraffic > 0 &&
-        usageTotal - includedTraffic > 0 &&
+        totalTraffic > 0 &&
+        usageTotal - totalTraffic > 0 &&
         estimateTrafficDataCost;
 
     const showConsumptionBillingWarning =
         (chartDataSelection.grouping === 'monthly' ||
             chartDataSelection.month === currentMonth) &&
-        includedTraffic > 0 &&
+        totalTraffic > 0 &&
         overageCost > 0;
 
     return (
@@ -100,12 +104,17 @@ const NetworkTrafficUsage: FC = () => {
                                 <RequestSummary
                                     period={chartDataSelection}
                                     usageTotal={requestSummaryUsage}
-                                    includedTraffic={includedTraffic}
+                                    includedTraffic={
+                                        trafficBundles.includedTraffic
+                                    }
+                                    purchasedTraffic={
+                                        trafficBundles.purchasedTraffic
+                                    }
                                 />
                                 {showOverageCalculations && (
                                     <OverageInfo
                                         overageCost={overageCost}
-                                        overages={usageTotal - includedTraffic}
+                                        overages={usageTotal - totalTraffic}
                                         estimatedMonthlyCost={
                                             estimatedMonthlyCost
                                         }

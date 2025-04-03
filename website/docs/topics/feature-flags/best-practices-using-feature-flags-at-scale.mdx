@@ -15,11 +15,12 @@ We've broken this guide into three sections, based on the key phases of a large-
 
 - Instrument
 - Stay on top of technical debt
-- Common putfalls
+- Use feature flag lifecycle to optimize your development workflow
+- Common pitfalls when implementing feature flags at scale
 - Organizing your teams
 - Keepig cool?
 
-## Instrument your feature flag code and manage flag lifecycle
+## Organize your feature flag code effectively
 
 Feature flags live in your codebase—and how you implement them matters. The choices you make when organizing flags can impact performance, testability, and long-term maintainability. Here are a few best practices we've learned from working with large-scale systems.
 
@@ -44,78 +45,75 @@ Whenever possible, evaluate your flag in a single place. Centralizing the evalua
 
 :::
 
-#### Examples of good evaluation points
--   Recommendation engine: Place the flag near the module that controls recommendation logic to isolate testing and changes.
--   Database query optimization: Evaluate near the optimized query to validate behavior in a focused context.
--   Third-party integrations: Check the flag near the integration code to simplify testing and avoid side effects elsewhere.
--   Cache invalidation: Evaluate flags near the logic that updates or clears the cache to keep changes scoped and testable.
-
-### Evaluate a feature flag only once
+### Evaluate feature flags once per user request
 
 ![Evaluate flags once](/img/evaluate-flags-only-once.svg)
 
-When building new (often complex) features for users, systems require changes across multiple parts – modules within an application or services in a microservices architecture. While it's tempting to use a single feature flag to control all these changes and evaluate it locally in each module, we recommend against it for a few reasons:
+When rolling out complex features, changes often span multiple parts of a system—whether that's modules within a single application or services in a distributed architecture. It might seem convenient to use the same feature flag across all components and evaluate it locally in each one, but this can lead to problems.
 
--   Unpredictable Timing: User requests flow through the system and touch different parts as they progress. Between each invocation, time passes. Even with perfectly synchronized feature flags, requests will hit different system parts at slightly different times. This means the flag state could change between evaluations, leading to inconsistent behavior for the user.
--   Laws of distributed computing: Particularly in distributed systems, we cannot assume all parts of the system are perfectly synchronized, as networks are unreliable and can experience transient errors at any time. Feature flag systems generally [prefer availability over consistency](./feature-flag-best-practices#2-prioritize-availability-over-consistency). By only evaluating a feature flag once, we guarantee a consistent experience for our users.
--   Violates Single Responsibility: Using the same flag in multiple locations spreads feature control logic throughout your codebase, violating the single-responsibility principle.
+As a user request moves through the system, it hits different parts at different times. Even with synchronized flag states, there's a risk the flag's value changes between evaluations, resulting inconsistent behavior for the user.
+Particularly in distributed systems, we cannot assume all parts of the system are perfectly synchronized, as networks are unreliable and can experience transient errors at any time. Most feature flag systems prioritize [availability over consistency](./feature-flag-best-practices#2-prioritize-availability-over-consistency). By only evaluating a feature flag once, we guarantee a consistent experience for our users.
 
-We find that companies are usually more successful when using feature flags when they can protect new complex features with a single flag evaluated only once per user request. This approach ensures consistent behavior and simplifies long-term code maintainability.
+Using the same flag in multiple places fragments the control logic and breaks the single responsibility principle, making code harder to understand and maintain.
+
+Instead, evaluate the flag once—typically at the start of a user request—and pass the result through the system. This keeps behavior predictable and makes the codebase cleaner and easier to manage over time.
 
 ## Stay on top of technical debt
-### Continually pay down feature flag tech debt
 
-We love feature flags for the way that they increase developer productivity, reduce risk and enable data-driven product development. But feature flags are also technical debt. How can both be true? The answer lies not with flags but with how they are managed.
+Feature flags are powerful—they increase developer productivity, reduce risk, and support data-driven product decisions. But they also come with a catch: they're a form of technical debt.
 
-Feature flag technical debt accumulates when feature flags are not properly managed or retired after their intended use. Over time, the codebase becomes cluttered with outdated or unnecessary flags, making the code more complex and harder to maintain. This increased complexity can slow development productivity as developers spend more time understanding and navigating the code. Additionally, neglected feature flags can introduce security vulnerabilities if they unintentionally expose sensitive features or data. Furthermore, the presence of stale or conflicting feature flags can lead to unexpected app behaviors, increasing the risk of downtime and affecting overall application stability. Managing feature flags effectively minimizes these risks and maintains a healthy development workflow.
+Technical debt builds up when flags stick around long after they've served their purpose. Over time, outdated or unused flags clutter your codebase, making it harder to read, test, and maintain. This slows down development and can even lead to bugs, security risks, or unexpected behavior—especially if old flags conflict with one another or expose sensitive features.
 
-This is why we [avoid using feature flags for things like application configuration](#12-dont-use-flags-to-manage-configuration) for which they are not a great fit. More flags, more debt. Like any debt, it can be used efficiently to accomplish goals that would otherwise be difficult or impossible (e.g., buying a home). But left unchecked, you can end up in a world of pain.
+The simplest way to pay down flag debt? Track your flags and remove them when they're no longer needed. Understanding the full lifecycle of a flag is key to keeping your codebase clean and your team moving fast.
 
-Paying down technical debt–in its simplest form, removing old flags–requires an understanding of flag lifecycles and the ability to track them.
+## Use feature flag lifecycle to optimize your development workflow
 
-### Leverage flag lifecycles to optimize your development
+Every feature flag follows a lifecycle—even if your tooling doesn't make it explicit. Understanding and tracking this lifecycle helps teams reduce technical debt identify bottlenecks in the development workflow.
 
-All feature flags progress through a set of predefined lifecycle stages even if these stages are not explicitly defined in your feature flag system:
+Here are the typical stages:
+	- **Define**: The flag is created, but no code has been written yet.
+	- **Develop**: Code is in progress. The feature isn't live, but it's being tested internally.
+	- **Production**: The feature is deployed to production and gradually rolled out to users.
+	- **Cleanup**: The team has decided to keep or discard the feature. The flag is still active, but it's time to clean up the code.
+	- **Archived**: The flag is no longer needed. It's been disabled and the associated code removed.
 
--   Define: The feature flag is defined, but no code implementation has begun.
--   Develop: Some code is implemented, but the feature is not enabled for any users in production. Internal testing and validation are ongoing.
--   Production: The code is deployed to production and gradually rolled out to a controlled set of users for validation with real users.
--   Cleanup: A team has decided to keep or cancel the feature. The feature flag still exists, but it is now time to clean up the code protected by it to ensure no more technical debt is acquired.
--   Archived: The feature flag has reached its end-of-life and has been disabled. The code associated with the feature flag is cleaned up to avoid technical debt.
+Tracking flags through these stages helps teams work smarter. Here's how:
 
-By monitoring feature progression through the lifecycle stages, organizations gain valuable insights from which they can benefit to improve their development process and pay down technical debt. Some key benefits of tracking feature flag lifecycle include:
+**Spot bottlenecks**
+  - Stuck in Define? Maybe requirements aren't clear. Perhaps there are integration difficulties.
+  - Stuck in Develop? Could point to testing delays or bugs.
+  - Stuck in Production? Might be missing success criteria or user feedback.
+  - Stuck in Cleanup? Check for accumnulating technical debt.
 
--   Identifying Bottlenecks: Teams can analyze the average time spent in each stage and pinpoint bottlenecks. Some examples include:
-    1. Stuck in Define: This may indicate issues like unclear requirements or integration difficulties in pre-production environments.
-    2. Stuck in Develop: Suggest challenges in achieving production readiness, like incomplete testing or code bugs.
-    3. Stuck in Production: This could imply difficulties gathering data or making decisions about the feature's future (e.g., lack of clear success metrics).
-    4. Stuck in Cleanup: Signals delays in decommissioning the feature flag and cleaning up resources, potentially creating technical debt.
--   Easily Remove Stale Feature Flags: Feature flags left active after their purpose is served tend to create technical debt. This code is unused, increasing the risk of accidental exposure in production and making the codebase more complex to maintain. By retiring flags promptly, developers understand which code sections can be safely cleaned up, reducing technical debt.
--   Data-Driven Insights: By collecting and aggregating metrics across features and teams over time, organizations gain valuable insights into team performance trends. Suddenly, it is easy to measure time-to-production or the number of times we need to disable a feature in production. Over time, this level of insights allows organizations to identify gradual changes in team efficiency or identify areas needing improvement that might otherwise go unnoticed.
+**Clean up stale flags**
+ Flags that outlive their purpose clutter the codebase and can lead to bugs or security risks. Regularly reviewing the lifecycle data helps you keep your code clean and secure.
 
-## Common pitfalls to avoid when implementing flags at scale
+**Get actionable insights**
+Track metrics like time-to-production, rollback rates, or cleanup delays across teams. Over time, these insights can highlight efficiency gains—or uncover hidden slowdowns you might otherwise miss.
 
-This section could have been called “Been There. Done That. Got the T-shirt.” We’ve seen it all when it comes to large-scale flag implementations, and here are some of the things that seem like a good idea at the time but come back to bite you at scale.
+## Common pitfalls when implementing feature flags at scale
 
-### Avoid feature flag parent-child dependencies
+When you work with feature flags at scale, some decisions seem smart in the moment—but can cause big headaches down the line. Here are two of the most common pitfalls we've seen:
 
-For larger organizations, it is often tempting to group multiple feature flags together and establish a “parent-child” dependency. The purpose of this relationship is to make it easier to coordinate releases. Often, you would like to have a single parent that will enable/disable multiple features that work together in concert.
+### Parent child dependencies with complex targeting rules
 
-Dependent feature flags make sense when you have different parts of a complex feature you want the option to disable individually but want the ability to control the gradual rollout strategies for each part of the feature together. The parent flag also acts as a global kill switch for the sibling feature flags.
+At scale, it's tempting to group related feature flags under a single parent flag to coordinate complex releases. The idea is simple: toggle one parent flag to enable or disable multiple child flags together. The parent can also serve as a global kill switch.
 
-However, you should be careful when introducing these dependencies, as it increases the complexity of everyone interacting with the feature flag system. It's no longer enough to consider the configuration of a single flag, you also need to consider the configuration of the parent. It's easy to cause confusion, leading to accidentally enabling or disabling a feature in production
+While this might work in theory, in practice it adds significant complexity. Now, enabling or disabling a feature isn't just about a single flag—you have to account for both the parent and the child. It becomes easy to misconfigure rollouts or cause unintended behavior in production.
 
-To keep complexity down, we generally advise not to have complex targeting rules for both the parent and the child flag simultaneously. This can make it harder to achieve consistency for end users. It also increases the complexity for the user of the feature flag system. For example, if both the parent and the child are configured to a 50% rollout, are you then exposing the feature to 50% or 25% of the user base? The answer is that it depends on the identifier used to roll the flag out.
+Things get even trickier when both parent and child flags have their own targeting rules. For example, if both are set to a 50% rollout, are you exposing the feature to 50% or 25% of users? The answer depends on how rollouts are calculated—which can be confusing and inconsistent.
 
-### Don't use flags to manage configuration
+Our advice: Keep it simple. If you use parent-child structures, avoid overlapping rollout rules, and document the hierarchy clearly. Better yet, try to design flags so that they can be managed independently.
 
-Both feature flags and configuration settings control an application’s behavior. However, it's crucial to distinguish between feature flagging systems and configuration management systems and use each for its intended purpose. Otherwise, you risk management nightmares and security vulnerabilities
+### Using feature flags to manage configuration
 
-Feature flags are intended for dynamic and temporary use, giving you [runtime control](./feature-flag-best-practices#1-enable-runtime-control) to enable or disable functionality in a live environment. This flexibility supports [short-lived experiments](./feature-flag-best-practices#3-make-flags-short-lived), such as A/B testing or gradual rollouts, instead of relying on configuration settings that require an application redeploy to take effect. Despite the ease of turning off and on features or functionality with feature flags, they should not be repurposed for managing configuration.
+Both feature flags and configuration settings control an application's behavior. However, it's crucial to distinguish between feature flagging systems and configuration management systems and use each for its intended purpose.
 
-A dedicated config management system should manage long-term configuration settings. These systems are designed to handle sensitive information such as API keys and access credentials securely, unlike feature flag systems, which typically do not encrypt flag states. Misusing feature flags for configuration can lead to security risks and management complexities.
+Feature flags are temporary and dynamic. They give you [runtime control](./feature-flag-best-practices#1-enable-runtime-control) to enable or disable functionality in a live environment-perfect for things like [short-lived experiments](./feature-flag-best-practices#3-make-flags-short-lived), such as A/B testing or gradual rollouts.
 
-A good rule of thumb is that if the data is static (you don’t expect it to change without restarting your application), needs encryption, or contains PII (Personal Identifiable Information), it’s probably better suited for your Configuration management system than a feature flag system.
+Configurations, on the other hand, are usually static and long-lived. They often contain sensitive data like API keys or access credentials, which need to be encrypted and carefully managed. Using feature flags for configuration can create security vulnerabilities and operational issues. Most flag systems don't encrypt values the way configuration management tools do.
+
+A good rule of thumb is that if the data is static (you don't expect it to change without application restart), needs encryption, or contains PII (personally identifiable information), manage it through a proper configuration system—not a feature flag.
 
 <table>
   <thead>
@@ -131,7 +129,7 @@ A good rule of thumb is that if the data is static (you don’t expect it to cha
     </tr>
     <tr>
       <td>
-        Examples of things to update with the config system:
+        Update with config systems:
         <ul>
           <li>Database or server credentials</li>
           <li>Server port</li>
@@ -141,7 +139,7 @@ A good rule of thumb is that if the data is static (you don’t expect it to cha
         </ul>
       </td>
       <td>
-        Examples of things to update with feature flag system:
+        Update with feature flags:
         <ul>
           <li>Dark mode/light mode</li>
           <li>Stable / Beta feature</li>

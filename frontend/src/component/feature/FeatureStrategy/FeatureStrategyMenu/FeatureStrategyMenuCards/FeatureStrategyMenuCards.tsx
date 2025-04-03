@@ -220,7 +220,7 @@ export const FeatureStrategyMenuCards = ({
                     </>
                 ) : null}
                 <ConditionallyRender
-                    condition={templates.length < 0}
+                    condition={templates.length > 0}
                     show={
                         <>
                             <SectionTitle>

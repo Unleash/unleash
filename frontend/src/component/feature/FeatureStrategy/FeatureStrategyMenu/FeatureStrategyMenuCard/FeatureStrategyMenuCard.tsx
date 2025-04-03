@@ -40,7 +40,7 @@ const StyledCard = styled(Link)(({ theme }) => ({
     flexDirection: 'column',
     width: '100%',
     maxWidth: '30rem',
-    padding: theme.spacing(2),
+    padding: theme.spacing(1.5, 2),
     color: 'inherit',
     textDecoration: 'inherit',
     lineHeight: 1.25,
@@ -54,13 +54,12 @@ const StyledCard = styled(Link)(({ theme }) => ({
     },
 }));
 
-const StyledTopRow = styled('div')({
+const StyledTopRow = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
-    marginBottom: '0.5rem',
-});
+}));
 
 export const FeatureStrategyMenuCard = ({
     projectId,

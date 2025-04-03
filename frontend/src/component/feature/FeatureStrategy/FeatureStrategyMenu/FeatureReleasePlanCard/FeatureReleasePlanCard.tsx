@@ -5,21 +5,12 @@ import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { Truncator } from 'component/common/Truncator/Truncator';
 
 const StyledIcon = styled('div')(({ theme }) => ({
-    width: theme.spacing(4),
-    height: 'auto',
+    width: theme.spacing(3),
     '& > svg': {
+        width: theme.spacing(2.25),
+        height: theme.spacing(2.25),
         fill: theme.palette.primary.main,
     },
-    '& > div': {
-        height: theme.spacing(2),
-        marginLeft: '-.75rem',
-        color: theme.palette.primary.main,
-    },
-}));
-
-const StyledContentContainer = styled('div')(() => ({
-    overflow: 'hidden',
-    width: '100%',
 }));
 
 const StyledName = styled(StringTruncator)(({ theme }) => ({
@@ -30,11 +21,11 @@ const StyledName = styled(StringTruncator)(({ theme }) => ({
 }));
 
 const StyledCard = styled(Button)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: '2.5rem 1fr',
+    display: 'flex',
+    flexDirection: 'column',
     width: '100%',
     maxWidth: '30rem',
-    padding: theme.spacing(2),
+    padding: theme.spacing(1.5, 2),
     color: 'inherit',
     textDecoration: 'inherit',
     lineHeight: 1.25,
@@ -47,6 +38,13 @@ const StyledCard = styled(Button)(({ theme }) => ({
     '&:hover, &:focus': {
         borderColor: theme.palette.primary.main,
     },
+}));
+
+const StyledTopRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
 }));
 
 interface IFeatureReleasePlanCardProps {
@@ -62,25 +60,24 @@ export const FeatureReleasePlanCard = ({
 
     return (
         <StyledCard onClick={onClick}>
-            <StyledIcon>
-                <Icon />
-            </StyledIcon>
-            <StyledContentContainer>
+            <StyledTopRow>
+                <StyledIcon>
+                    <Icon />
+                </StyledIcon>
                 <StyledName text={name} maxWidth='200' maxLength={25} />
-                <Truncator
-                    lines={1}
-                    title={description}
-                    arrow
-                    sx={{
-                        fontSize: (theme) => theme.typography.caption.fontSize,
-                        fontWeight: (theme) =>
-                            theme.typography.fontWeightRegular,
-                        width: '100%',
-                    }}
-                >
-                    {description}
-                </Truncator>
-            </StyledContentContainer>
+            </StyledTopRow>
+            <Truncator
+                lines={1}
+                title={description}
+                arrow
+                sx={{
+                    fontSize: (theme) => theme.typography.caption.fontSize,
+                    fontWeight: (theme) => theme.typography.fontWeightRegular,
+                    width: '100%',
+                }}
+            >
+                {description}
+            </Truncator>
         </StyledCard>
     );
 };

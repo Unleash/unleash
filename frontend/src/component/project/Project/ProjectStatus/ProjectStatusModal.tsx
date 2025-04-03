@@ -124,7 +124,7 @@ const FeedbackButton = styled(Button)(({ theme }) => ({
 
 type Props = {
     open: boolean;
-    close: () => void;
+    close: (clickedLink?: boolean) => void;
 };
 
 export const ProjectStatusModal = ({ open, close }: Props) => {
@@ -143,11 +143,11 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
     return (
         <DynamicSidebarModal
             open={open}
-            onClose={close}
+            onClose={() => close(false)}
             label='Project status'
             onClick={(e: React.SyntheticEvent) => {
                 if (e.target instanceof HTMLAnchorElement) {
-                    close();
+                    close(true);
                 }
             }}
         >
@@ -188,7 +188,7 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
                                 variant='text'
                                 onClick={() => {
                                     createFeedbackContext();
-                                    close();
+                                    close(false);
                                 }}
                                 size='small'
                             >
@@ -197,7 +197,7 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
                         </p>
                     </FeedbackContainer>
 
-                    <Button variant='outlined' onClick={close}>
+                    <Button variant='outlined' onClick={() => close(false)}>
                         Close
                     </Button>
                 </CloseRow>

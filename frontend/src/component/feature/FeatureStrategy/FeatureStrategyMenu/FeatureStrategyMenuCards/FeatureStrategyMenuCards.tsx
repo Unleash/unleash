@@ -15,6 +15,7 @@ import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
 
 interface IFeatureStrategyMenuCardsProps {
     projectId: string;
@@ -87,6 +88,51 @@ const SectionTitle = styled(Box)(({ theme }) => ({
 const StyledInfoIcon = styled(InfoOutlinedIcon)(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     color: theme.palette.text.secondary,
+}));
+
+const StyledIcon = styled('div')(({ theme }) => ({
+    width: theme.spacing(3),
+    '& > svg': {
+        fill: theme.palette.primary.main,
+        width: theme.spacing(2.25),
+        height: theme.spacing(2.25),
+    },
+    display: 'flex',
+    alignItems: 'center',
+}));
+
+// Empty state styling
+const EmptyStateContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    backgroundColor: theme.palette.neutral.light,
+    borderRadius: theme.shape.borderRadiusMedium,
+    padding: theme.spacing(3),
+    margin: theme.spacing(0, 2),
+    width: 'auto',
+}));
+
+const EmptyStateTitle = styled(Typography)(({ theme }) => ({
+    fontSize: theme.typography.caption.fontSize,
+    fontWeight: theme.typography.fontWeightBold,
+    marginBottom: theme.spacing(1),
+    display: 'flex',
+    alignItems: 'center',
+}));
+
+const EmptyStateDescription = styled(Typography)(({ theme }) => ({
+    fontSize: theme.typography.caption.fontSize,
+    color: theme.palette.text.secondary,
+}));
+
+const ClickableBoldText = styled(Link)(({ theme }) => ({
+    fontWeight: theme.typography.fontWeightBold,
+    cursor: 'pointer',
+    '&:hover': {
+        textDecoration: 'underline',
+    },
 }));
 
 export const FeatureStrategyMenuCards = ({
@@ -198,6 +244,29 @@ export const FeatureStrategyMenuCards = ({
                                 ))}
                             </GridSection>
                         </>
+                    }
+                    elseShow={
+                        <EmptyStateContainer>
+                            <EmptyStateTitle>
+                                <StyledIcon>
+                                    <FactCheckOutlinedIcon />
+                                </StyledIcon>
+                                Create your own templates
+                            </EmptyStateTitle>
+                            <EmptyStateDescription>
+                                Standardize how you do rollouts and make it more
+                                efficient without having to set up the same
+                                stategies from time to time. You find it in the
+                                sidemenu under{' '}
+                                <ClickableBoldText
+                                    onClick={() =>
+                                        navigate('/release-templates')
+                                    }
+                                >
+                                    Configure &gt; Release templates
+                                </ClickableBoldText>
+                            </EmptyStateDescription>
+                        </EmptyStateContainer>
                     }
                 />
                 <ConditionallyRender

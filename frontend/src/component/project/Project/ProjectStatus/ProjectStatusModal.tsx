@@ -197,7 +197,6 @@ export const ProjectStatusModal = ({ open, onClose, onFollowLink }: Props) => {
                             </FeedbackButton>
                         </p>
                     </FeedbackContainer>
-
                     <Button variant='outlined' onClick={onClose}>
                         Close
                     </Button>

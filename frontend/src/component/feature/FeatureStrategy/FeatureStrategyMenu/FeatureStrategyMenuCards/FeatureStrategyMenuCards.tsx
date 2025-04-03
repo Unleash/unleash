@@ -89,6 +89,41 @@ const StyledInfoIcon = styled(InfoOutlinedIcon)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
+// Empty state styling
+const EmptyStateContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    backgroundColor: theme.palette.neutral.light,
+    borderRadius: theme.shape.borderRadiusMedium,
+    padding: theme.spacing(3),
+    margin: theme.spacing(0, 2),
+    width: 'auto',
+}));
+
+const EmptyStateTitle = styled(Typography)(({ theme }) => ({
+    fontSize: theme.typography.caption.fontSize,
+    fontWeight: theme.typography.fontWeightBold,
+    marginBottom: theme.spacing(1),
+}));
+
+const EmptyStateDescription = styled(Typography)(({ theme }) => ({
+    fontSize: theme.typography.caption.fontSize,
+    color: theme.palette.text.secondary,
+}));
+
+const BoldText = styled('span')(({ theme }) => ({
+    fontWeight: theme.typography.fontWeightBold,
+}));
+
+const ClickableBoldText = styled(BoldText)(({ theme }) => ({
+    cursor: 'pointer',
+    '&:hover': {
+        textDecoration: 'underline',
+    },
+}));
+
 export const FeatureStrategyMenuCards = ({
     projectId,
     featureId,
@@ -171,7 +206,7 @@ export const FeatureStrategyMenuCards = ({
                     </>
                 ) : null}
                 <ConditionallyRender
-                    condition={templates.length > 0}
+                    condition={templates.length < 0}
                     show={
                         <>
                             <SectionTitle>
@@ -198,6 +233,26 @@ export const FeatureStrategyMenuCards = ({
                                 ))}
                             </GridSection>
                         </>
+                    }
+                    elseShow={
+                        <EmptyStateContainer>
+                            <EmptyStateTitle>
+                                Create your own templates
+                            </EmptyStateTitle>
+                            <EmptyStateDescription>
+                                Standardize how you do rollouts and make it more
+                                efficient without having to set up the same
+                                stategies from time to time. You find it in the
+                                sidemenu under{' '}
+                                <ClickableBoldText
+                                    onClick={() =>
+                                        navigate('/release-templates')
+                                    }
+                                >
+                                    Configure &gt; Release templates
+                                </ClickableBoldText>
+                            </EmptyStateDescription>
+                        </EmptyStateContainer>
                     }
                 />
                 <ConditionallyRender

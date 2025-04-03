@@ -91,19 +91,11 @@ const StyledInfoIcon = styled(InfoOutlinedIcon)(({ theme }) => ({
 }));
 
 const StyledIcon = styled('div')(({ theme }) => ({
-    width: theme.spacing(4),
-    height: 'auto',
+    width: theme.spacing(3),
     '& > svg': {
-        // Styling for SVG icons.
         fill: theme.palette.primary.main,
-        width: '18px',
-        height: '18px',
-    },
-    '& > div': {
-        // Styling for the Rollout icon.
-        height: theme.spacing(2),
-        marginLeft: '-.75rem',
-        color: theme.palette.primary.main,
+        width: theme.spacing(2.25),
+        height: theme.spacing(2.25),
     },
     display: 'flex',
     alignItems: 'center',

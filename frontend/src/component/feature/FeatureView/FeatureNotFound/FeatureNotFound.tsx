@@ -30,8 +30,8 @@ export const FeatureNotFound = () => {
             <p>
                 The feature <StyledFeatureId>{featureId}</StyledFeatureId> has
                 been archived. You can find it on the{' '}
-                <Link to={`/projects/${projectId}/archive`}>
-                    project archive page
+                <Link to={`/projects/${projectId}?archived=IS%3Atrue`}>
+                    project overview with archived flags filter
                 </Link>
                 .
             </p>

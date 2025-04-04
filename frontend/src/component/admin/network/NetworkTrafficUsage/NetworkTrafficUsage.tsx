@@ -69,7 +69,10 @@ const NetworkTrafficUsage: FC = () => {
         chartDataSelection.grouping === 'daily' &&
         chartDataSelection.month === currentMonth;
     const showConsumptionBillingWarning =
-        isCurrentMonth && totalTraffic > 0 && overageCost > 0;
+        (chartDataSelection.grouping === 'monthly' ||
+            chartDataSelection.month === currentMonth) &&
+        totalTraffic > 0 &&
+        overageCost > 0;
 
     return (
         <ConditionallyRender

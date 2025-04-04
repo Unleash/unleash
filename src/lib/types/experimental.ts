@@ -66,7 +66,8 @@ export type IFlagKey =
     | 'tagTypeColor'
     | 'globalChangeRequestConfig'
     | 'addEditStrategy'
-    | 'newStrategyDropdown';
+    | 'newStrategyDropdown'
+    | 'flagsOverviewSearch';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 

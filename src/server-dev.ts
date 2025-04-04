@@ -59,6 +59,7 @@ process.nextTick(async () => {
                         adminNavUI: true,
                         tagTypeColor: true,
                         newStrategyDropdown: true,
+                        addEditStrategy: true,
                     },
                 },
                 authentication: {

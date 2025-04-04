@@ -66,7 +66,7 @@ const NetworkTrafficUsage: FC = () => {
         estimateTrafficDataCost;
 
     const isCurrentMonth =
-        chartDataSelection.grouping === 'monthly' ||
+        chartDataSelection.grouping === 'daily' &&
         chartDataSelection.month === currentMonth;
     const showConsumptionBillingWarning =
         isCurrentMonth && totalTraffic > 0 && overageCost > 0;

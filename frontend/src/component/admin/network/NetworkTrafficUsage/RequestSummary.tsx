@@ -11,6 +11,7 @@ type Props = {
     usageTotal: number;
     includedTraffic: number;
     purchasedTraffic: number;
+    currentMonth: boolean;
 };
 
 const Container = styled('article')(({ theme }) => ({
@@ -64,7 +65,7 @@ const incomingRequestsText = (period: ChartDataSelection): string => {
         return `Average requests from ${formatMonth(fromMonth)} to ${formatMonth(toMonth)}`;
     }
 
-    return `Incoming requests in ${formatMonth(parseMonthString(period.month))}`;
+    return `Requests used in ${formatMonth(parseMonthString(period.month))}`;
 };
 
 export const RequestSummary: FC<Props> = ({
@@ -72,6 +73,7 @@ export const RequestSummary: FC<Props> = ({
     usageTotal,
     includedTraffic,
     purchasedTraffic,
+    currentMonth,
 }) => {
     const { locationSettings } = useLocationSettings();
 
@@ -100,13 +102,13 @@ export const RequestSummary: FC<Props> = ({
                 </Row>
                 {includedTraffic > 0 && (
                     <Row>
-                        <dt>Included in your plan monthly</dt>
+                        <dt>Included in your plan</dt>
                         <dd>
                             {includedTraffic.toLocaleString('en-US')} requests
                         </dd>
                     </Row>
                 )}
-                {purchasedTraffic > 0 && (
+                {purchasedTraffic > 0 && currentMonth && (
                     <Row>
                         <dt>Additional traffic purchased</dt>
                         <dd>
@@ -114,9 +116,9 @@ export const RequestSummary: FC<Props> = ({
                         </dd>
                     </Row>
                 )}
-                {includedTraffic > 0 && (
+                {includedTraffic > 0 && currentMonth && (
                     <Row>
-                        <dt>Total traffic</dt>
+                        <dt>Total traffic available</dt>
                         <dd>
                             {(
                                 includedTraffic + purchasedTraffic

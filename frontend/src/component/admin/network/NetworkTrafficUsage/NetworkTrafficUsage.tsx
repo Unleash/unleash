@@ -65,6 +65,9 @@ const NetworkTrafficUsage: FC = () => {
         usageTotal - totalTraffic > 0 &&
         estimateTrafficDataCost;
 
+    const isCurrentMonth =
+        chartDataSelection.grouping === 'daily' &&
+        chartDataSelection.month === currentMonth;
     const showConsumptionBillingWarning =
         (chartDataSelection.grouping === 'monthly' ||
             chartDataSelection.month === currentMonth) &&
@@ -109,6 +112,7 @@ const NetworkTrafficUsage: FC = () => {
                                     purchasedTraffic={
                                         trafficBundles.purchasedTraffic
                                     }
+                                    currentMonth={isCurrentMonth}
                                 />
                                 {showOverageCalculations && (
                                     <OverageInfo

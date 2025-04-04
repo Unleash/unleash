@@ -91,6 +91,7 @@ export type UiFlags = {
     adminNavUI?: boolean;
     tagTypeColor?: boolean;
     globalChangeRequestConfig?: boolean;
+    addEditStrategy?: boolean;
     newStrategyDropdown?: boolean;
 };
 

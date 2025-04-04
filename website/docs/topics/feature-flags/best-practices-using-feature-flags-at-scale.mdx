@@ -5,7 +5,7 @@ description: 'A guide for feature flag management. Best practices for organizati
 
 # Feature flag management at scale: best practies
 
-You've probably heard someone say, “A feature flag is just an if statement.” And in simple cases, that's true. But when your organization has thousands of developers managing hundreds of [feature flags](https://docs.getunleash.io/what-is-a-feature-flag)—with complex targeting rules, audit trails, and dozens of microservices—those if statements get complicated fast. Especially if you don't [set things up properly from the start](./use-cases).
+You've probably heard someone say, “A feature flag is just an if statement.” And in simple cases, that's true. But when your organization has thousands of developers managing hundreds of [feature flags](https://docs.getunleash.io/what-is-a-feature-flag)—with complex targeting rules, audit trails, and dozens of microservices—those if statements get complicated fast. Especially if you don't [set things up properly from the start](../../use-cases/user-management-access-controls-auditing).
 
 This guide shares what we've learned from helping teams run some of the largest feature flag deployments in the world, both through [Unleash Open-Source](https://github.com/Unleash/unleash) and [Unleash Enterprise](https://www.getunleash.io/enterprise-feature-management-platform).
 
@@ -144,34 +144,33 @@ A good rule of thumb is that if the data is static (you don't expect it to chang
           <li>Dark mode/light mode</li>
           <li>Stable / Beta feature</li>
           <li>New or old algorithm</li>
-          <li>A/B test</li>
-        </ul>
+          <li>A/B test</li>`
+        </ul>`
       </td>
     </tr>
   </tbody>
 </table>
 
-### Never reuse feature flag names
+### Resuing feature flag names
 
-Feature flag names need to be globally unique. [We wrote about this before](https://docs.getunleash.io/topics/feature-flags/unique-names), but it is such an important point that it bears repeating. Every feature flag within the same Feature Flag Control service must have a unique name across the cluster to prevent inconsistencies and errors.
+Feature flag names need to be [globally unique](https://docs.getunleash.io/topics/feature-flags/unique-names). In an ideal world, all flag references would be removed from the codebase as soon as a flag is archived—but in reality, that rarely happens. Using unique names helps protect new features from accidentally linking to old, unused flags that could unintentionally re-enable outdated behavior.
 
-In a perfect world, all references to feature flags in code would be cleaned up as soon as the feature flag is archived. But we don’t live in a perfect world. You will save yourself many hours of frustration and potential downtime if you use unique names to protect new features from being accidentally linked to outdated flags, which could inadvertently expose old features. [Unique names should ideally be enforced during flag creation](https://docs.getunleash.io/reference/feature-toggles#set-a-naming-pattern).
+To avoid this risk, enforce a [naming pattern](https://docs.getunleash.io/reference/feature-toggles#set-a-naming-pattern) at flag creation.
 
-### Avoid giant feature flag targeting lists
+### Using large targeting lists
 
-When implementing feature flags, it's crucial to aim for the quickest evaluation times possible. To achieve this, it's advisable to streamline the design of your constraints, which define when a feature protected by a flag is exposed.
+When implementing feature flags, it's crucial to aim for the quickest evaluation times possible. To achieve this, avoid relying on large inclusion lists—like thousands of specific user IDs—which can slow things down and become difficult to maintain.
 
-Avoid relying heavily on extensive lists of inclusion criteria, which can slow down the process. Instead, delve into the underlying factors determining whether a user qualifies for inclusion in these lists. For instance, consider users who have registered for a beta-testers program. An even more efficient approach would be to integrate an external registration system for the beta program and configure your feature flag system to recognize "beta" group members.
+Instead, focus on the underlying traits that qualify users for a feature. For example, rather than building a large list of beta testers, use a user attribute that can be managed in an external system.
+You can then configure your feature flag system to recognize the attributes that indicate that the user is part of the beta testing group.
 
-This method of managing group memberships on a per-user basis significantly enhances the maintainability of your feature flagging system. Adding a new user to the beta testing group becomes a straightforward process. There's no need to manually update the configuration to ensure all existing user IDs are accounted for; simply enroll the new user in the beta program.
+This approach helps with:
+- Maintainability: Adding a new user to the beta group is as simple as updating their group membership, without needing to edit the flag configuration.
+- Memory usage: Storing a simple attribute is much more efficient than holding a list of thousands of user IDs in memory.
+- Compliance: Restricting personal data to only the systems that need it makes it easier to [stay compliant](./using-unleash/compliance/compliance-overview).
 
-Avoiding big lists also helps with memory usage since most well-designed feature flagging systems keep feature configuration in memory. A list of 10,000 user IDs will require more memory than keeping a true/false record of a user membership in a specific group.
 
-Initially, using a list of specific handpicked users might work fine. But once you approach 100 users, maintaining this list becomes unwieldy. Once it does, you will probably keep this list in at least one other place. It would be better to keep this list updated in one place and use that to set a context field for the user. You could then use that field for feature flagging.
-
-The last thing is that maintaining these lists also risks leaking PII to systems that don't need it. With PII, the fewer places you need to handle it, the easier it will be to make your systems compliant with frameworks such as GDPR/Schrems II or CCPA.
-
-### Do not define business logic using feature flags
+### Defining business logic using feature flags
 
 In our experience, since feature flags reduce the friction of releasing software, teams who adopt feature flags tend to use them more and more. This is a good thing as long as archived flags are removed from the code base keeping tech debt down. You should resist, however, the temptation to codify core business logic inside feature flags, the same way you should [resist wrapping application configuration in feature flags](#12-dont-use-flags-to-manage-configuration).
 
@@ -181,7 +180,7 @@ For example, if you want to determine whether premium users of your product will
 
 If feature flags are so great, why shouldn’t you use them for business logic? A few reasons:
 
-#### Dependency on 3rd party services
+#### Dependencing on third-party services
 
 Coming from a feature flag vendor, it might surprise you that we do not advocate making core business logic dependent on a 3rd party feature flag service. If that flag service is down, then your app could potentially cease to function in the way designed. This applies to using 3rd party feature flag services, as well as home grown feature flags service.
 

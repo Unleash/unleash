@@ -71,6 +71,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
             hasEnabledStrategies: r.has_enabled_strategies,
             yes: Number(r.yes) || 0,
             no: Number(r.no) || 0,
+            changeRequestIds: r.change_request_ids ?? [],
         };
     }
 
@@ -326,6 +327,43 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 'ranked_features.feature_name',
                 'lifecycle.stage_feature',
             );
+        if (this.flagResolver.isEnabled('flagsOverviewSearch')) {
+            finalQuery
+                .leftJoin(
+                    this.db('change_request_events AS cre')
+                        .join(
+                            'change_requests AS cr',
+                            'cre.change_request_id',
+                            'cr.id',
+                        )
+                        .select('cre.feature')
+                        .select(
+                            this.db.raw(
+                                'array_agg(distinct cre.change_request_id) AS change_request_ids',
+                            ),
+                        )
+                        .select('cr.environment')
+                        .groupBy('cre.feature', 'cr.environment')
+                        .whereNotIn('cr.state', [
+                            'Applied',
+                            'Cancelled',
+                            'Rejected',
+                        ])
+                        .as('feature_cr'),
+                    function () {
+                        this.on(
+                            'feature_cr.feature',
+                            '=',
+                            'ranked_features.feature_name',
+                        ).andOn(
+                            'feature_cr.environment',
+                            '=',
+                            'ranked_features.environment',
+                        );
+                    },
+                )
+                .select('feature_cr.change_request_ids');
+        }
         this.queryExtraData(finalQuery);
         const rows = await finalQuery;
         stopTimer();

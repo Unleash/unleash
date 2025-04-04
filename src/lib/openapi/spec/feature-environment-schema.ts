@@ -68,7 +68,8 @@ export const featureEnvironmentSchema = {
             items: {
                 type: 'number',
             },
-            description: 'A list of change request identifiers',
+            description:
+                'Experimental. A list of change request identifiers for actionable change requests that are not Cancelled, Rejected or Approved.',
         },
         lastSeenAt: {
             type: 'string',

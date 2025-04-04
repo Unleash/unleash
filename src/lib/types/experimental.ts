@@ -66,7 +66,8 @@ export type IFlagKey =
     | 'tagTypeColor'
     | 'globalChangeRequestConfig'
     | 'addEditStrategy'
-    | 'newStrategyDropdown';
+    | 'newStrategyDropdown'
+    | 'flagsOverviewSearch';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -317,6 +318,10 @@ const flags: IFlags = {
     ),
     newStrategyDropdown: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_STRATEGY_DROPDOWN,
+        false,
+    ),
+    flagsOverviewSearch: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FLAGS_OVERVIEW_SEARCH,
         false,
     ),
 };

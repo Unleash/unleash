@@ -18,8 +18,6 @@ interface IConstraintAccordionListProps {
     constraints: IConstraint[];
     setConstraints?: React.Dispatch<React.SetStateAction<IConstraint[]>>;
     showCreateButton?: boolean;
-    /* Add "constraints" title on the top - default `true` */
-    showLabel?: boolean;
 }
 
 export const constraintAccordionListId = 'constraintAccordionListId';

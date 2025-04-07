@@ -30,10 +30,10 @@ const HoverButtonsContainer = styled('div')(({ theme }) => ({
     right: theme.spacing(2),
     display: 'flex',
     gap: theme.spacing(1),
-    visibility: 'hidden',
+    opacity: 0,
 }));
 
-const StyledCard = styled(Button)(({ theme }) => ({
+const StyledCard = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
@@ -48,13 +48,13 @@ const StyledCard = styled(Button)(({ theme }) => ({
     borderRadius: theme.spacing(1),
     textAlign: 'left',
     overflow: 'hidden',
-    [`&:hover ${CardContent}, &:focus-within ${CardContent}`]: {
+    position: 'relative',
+    [`&:hover ${CardContent}`]: {
         opacity: 0.5,
     },
-    [`&:hover ${HoverButtonsContainer}, &:focus-within ${HoverButtonsContainer}`]:
-        {
-            visibility: 'visible',
-        },
+    [`&:hover ${HoverButtonsContainer}`]: {
+        opacity: 1,
+    },
 }));
 
 const StyledTopRow = styled('div')(({ theme }) => ({
@@ -118,6 +118,7 @@ export const FeatureReleasePlanCard = ({
                     variant='contained'
                     size='small'
                     onClick={handleUseClick}
+                    tabIndex={0}
                 >
                     Use
                 </Button>

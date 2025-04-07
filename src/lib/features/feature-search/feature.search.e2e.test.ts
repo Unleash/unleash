@@ -29,6 +29,7 @@ beforeAll(async () => {
                 flags: {
                     strictSchemaValidation: true,
                     anonymiseEventLog: true,
+                    flagsOverviewSearch: true,
                 },
             },
         },
@@ -1281,6 +1282,101 @@ test('should return tags with color information from tag type', async () => {
                         value: 'my_tag',
                         color: '#FF0000',
                     },
+                ],
+            },
+        ],
+    });
+});
+
+const createChangeRequest = async ({
+    id,
+    feature,
+    environment,
+    state,
+}: { id: number; feature: string; environment: string; state: string }) => {
+    await db
+        .rawDatabase('change_requests')
+        .insert({ id, environment, state, project: 'default', created_by: 1 });
+    await db.rawDatabase('change_request_events').insert({
+        id,
+        feature,
+        action: 'updateEnabled',
+        created_by: 1,
+        change_request_id: id,
+    });
+};
+
+test('should return change request ids per environment', async () => {
+    await app.createFeature('my_feature_a');
+    await app.createFeature('my_feature_b');
+
+    await createChangeRequest({
+        id: 1,
+        feature: 'my_feature_a',
+        environment: 'production',
+        state: 'In review',
+    });
+    await createChangeRequest({
+        id: 2,
+        feature: 'my_feature_a',
+        environment: 'production',
+        state: 'Applied',
+    });
+    await createChangeRequest({
+        id: 3,
+        feature: 'my_feature_a',
+        environment: 'production',
+        state: 'Cancelled',
+    });
+    await createChangeRequest({
+        id: 4,
+        feature: 'my_feature_a',
+        environment: 'production',
+        state: 'Rejected',
+    });
+    await createChangeRequest({
+        id: 5,
+        feature: 'my_feature_a',
+        environment: 'development',
+        state: 'Draft',
+    });
+    await createChangeRequest({
+        id: 6,
+        feature: 'my_feature_a',
+        environment: 'development',
+        state: 'Scheduled',
+    });
+    await createChangeRequest({
+        id: 7,
+        feature: 'my_feature_a',
+        environment: 'development',
+        state: 'Approved',
+    });
+    await createChangeRequest({
+        id: 8,
+        feature: 'my_feature_b',
+        environment: 'development',
+        state: 'Approved',
+    });
+
+    const { body } = await searchFeatures({});
+
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'my_feature_a',
+                environments: [
+                    { name: 'default', changeRequestIds: [] },
+                    { name: 'development', changeRequestIds: [5, 6, 7] },
+                    { name: 'production', changeRequestIds: [1] },
+                ],
+            },
+            {
+                name: 'my_feature_b',
+                environments: [
+                    { name: 'default', changeRequestIds: [] },
+                    { name: 'development', changeRequestIds: [8] },
+                    { name: 'production', changeRequestIds: [] },
                 ],
             },
         ],

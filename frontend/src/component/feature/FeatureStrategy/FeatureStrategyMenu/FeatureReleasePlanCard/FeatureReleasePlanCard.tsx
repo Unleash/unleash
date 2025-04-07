@@ -5,21 +5,12 @@ import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { Truncator } from 'component/common/Truncator/Truncator';
 
 const StyledIcon = styled('div')(({ theme }) => ({
-    width: theme.spacing(4),
-    height: 'auto',
+    width: theme.spacing(3),
     '& > svg': {
+        width: theme.spacing(2.25),
+        height: theme.spacing(2.25),
         fill: theme.palette.primary.main,
     },
-    '& > div': {
-        height: theme.spacing(2),
-        marginLeft: '-.75rem',
-        color: theme.palette.primary.main,
-    },
-}));
-
-const StyledContentContainer = styled('div')(() => ({
-    overflow: 'hidden',
-    width: '100%',
 }));
 
 const StyledName = styled(StringTruncator)(({ theme }) => ({
@@ -29,12 +20,25 @@ const StyledName = styled(StringTruncator)(({ theme }) => ({
     marginBottom: theme.spacing(0.5),
 }));
 
-const StyledCard = styled(Button)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: '2.5rem 1fr',
+const CardContent = styled('div')(({ theme }) => ({
+    width: '100%',
+    transition: 'opacity 0.2s ease-in-out',
+}));
+
+const HoverButtonsContainer = styled('div')(({ theme }) => ({
+    position: 'absolute',
+    right: theme.spacing(2),
+    display: 'flex',
+    gap: theme.spacing(1),
+    opacity: 0,
+}));
+
+const StyledCard = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
     width: '100%',
     maxWidth: '30rem',
-    padding: theme.spacing(2),
+    padding: theme.spacing(1.5, 2),
     color: 'inherit',
     textDecoration: 'inherit',
     lineHeight: 1.25,
@@ -44,29 +48,57 @@ const StyledCard = styled(Button)(({ theme }) => ({
     borderRadius: theme.spacing(1),
     textAlign: 'left',
     overflow: 'hidden',
-    '&:hover, &:focus': {
-        borderColor: theme.palette.primary.main,
+    position: 'relative',
+    [`&:hover ${CardContent}, &:focus-within ${CardContent}`]: {
+        opacity: 0.5,
     },
+    [`&:hover ${HoverButtonsContainer}, &:focus-within ${HoverButtonsContainer}`]:
+        {
+            opacity: 1,
+        },
+}));
+
+const StyledTopRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
 }));
 
 interface IFeatureReleasePlanCardProps {
     template: IReleasePlanTemplate;
     onClick: () => void;
+    onPreviewClick?: (e: React.MouseEvent) => void;
 }
 
 export const FeatureReleasePlanCard = ({
     template: { name, description },
     onClick,
+    onPreviewClick,
 }: IFeatureReleasePlanCardProps) => {
     const Icon = getFeatureStrategyIcon('releasePlanTemplate');
 
+    const handleUseClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        onClick();
+    };
+
+    const handlePreviewClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (onPreviewClick) {
+            onPreviewClick(e);
+        }
+    };
+
     return (
-        <StyledCard onClick={onClick}>
-            <StyledIcon>
-                <Icon />
-            </StyledIcon>
-            <StyledContentContainer>
-                <StyledName text={name} maxWidth='200' maxLength={25} />
+        <StyledCard>
+            <CardContent>
+                <StyledTopRow>
+                    <StyledIcon>
+                        <Icon />
+                    </StyledIcon>
+                    <StyledName text={name} maxWidth='200' maxLength={25} />
+                </StyledTopRow>
                 <Truncator
                     lines={1}
                     title={description}
@@ -80,7 +112,25 @@ export const FeatureReleasePlanCard = ({
                 >
                     {description}
                 </Truncator>
-            </StyledContentContainer>
+            </CardContent>
+
+            <HoverButtonsContainer>
+                <Button
+                    variant='contained'
+                    size='small'
+                    onClick={handleUseClick}
+                    tabIndex={0}
+                >
+                    Use
+                </Button>
+                <Button
+                    variant='outlined'
+                    size='small'
+                    onClick={handlePreviewClick}
+                >
+                    Preview
+                </Button>
+            </HoverButtonsContainer>
         </StyledCard>
     );
 };

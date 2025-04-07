@@ -65,7 +65,9 @@ export type IFlagKey =
     | 'adminNavUI'
     | 'tagTypeColor'
     | 'globalChangeRequestConfig'
-    | 'newStrategyDropdown';
+    | 'addEditStrategy'
+    | 'newStrategyDropdown'
+    | 'flagsOverviewSearch';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -310,8 +312,16 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_GLOBAL_CHANGE_REQUEST_CONFIG,
         false,
     ),
+    addEditStrategy: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ADD_EDIT_STRATEGY,
+        false,
+    ),
     newStrategyDropdown: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_STRATEGY_DROPDOWN,
+        false,
+    ),
+    flagsOverviewSearch: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FLAGS_OVERVIEW_SEARCH,
         false,
     ),
 };

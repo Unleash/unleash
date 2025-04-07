@@ -1,3 +1,4 @@
+import type { ComponentProps, FC } from 'react';
 import EmptyIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
 import type SvgIcon from '@mui/material/SvgIcon/SvgIcon';
 import ApplicationsIcon from '@mui/icons-material/AppsOutlined';
@@ -12,7 +13,9 @@ import UsersIcon from '@mui/icons-material/GroupOutlined';
 import ServiceAccountIcon from '@mui/icons-material/Computer';
 import GroupsIcon from '@mui/icons-material/GroupsOutlined';
 import RoleIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
+import SettingsIcon from '@mui/icons-material/Settings';
 import SearchIcon from '@mui/icons-material/Search';
+import InsightsIcon from '@mui/icons-material/Insights';
 import ApiAccessIcon from '@mui/icons-material/KeyOutlined';
 import SingleSignOnIcon from '@mui/icons-material/AssignmentOutlined';
 import NetworkIcon from '@mui/icons-material/HubOutlined';
@@ -29,11 +32,16 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
 import PersonalDashboardIcon from '@mui/icons-material/DashboardOutlined';
-import type { FC } from 'react';
+import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
+import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
 
 // TODO: move to routes
-const icons: Record<string, typeof SvgIcon> = {
+const icons: Record<
+    string,
+    typeof SvgIcon | FC<ComponentProps<typeof SvgIcon>>
+> = {
     '/search': SearchIcon,
+    '/insights': InsightsIcon,
     '/applications': ApplicationsIcon,
     '/context': ContextFieldsIcon,
     '/feature-toggle-type': FlagTypesIcon,
@@ -42,13 +50,24 @@ const icons: Record<string, typeof SvgIcon> = {
     '/strategies': CustomStrategiesIcon,
     '/tag-types': TagTypesIcon,
     '/environments': EnvironmentsIcon,
+    '/admin': SettingsIcon,
     '/admin/users': UsersIcon,
     '/admin/service-accounts': ServiceAccountIcon,
     '/admin/groups': GroupsIcon,
     '/admin/roles': RoleIcon,
+    '/admin/roles/project-roles': RoleIcon,
     '/admin/api': ApiAccessIcon,
     '/admin/auth': SingleSignOnIcon,
+    '/admin/auth/saml': SingleSignOnIcon,
+    '/admin/auth/scim': SingleSignOnIcon,
+    '/admin/auth/password': SingleSignOnIcon,
+    '/admin/auth/google': SingleSignOnIcon,
     '/admin/network': NetworkIcon,
+    '/admin/network/traffic': NetworkIcon,
+    '/admin/network/data-usage': NetworkIcon,
+    '/admin/network/frontend-data-usage': NetworkIcon,
+    '/admin/network/connected-edges': NetworkIcon,
+    '/admin/network/backend-connections': NetworkIcon,
     '/admin/maintenance': MaintenanceIcon,
     '/admin/banners': BannersIcon,
     '/admin/instance': InstanceStatsIcon,
@@ -60,6 +79,8 @@ const icons: Record<string, typeof SvgIcon> = {
     '/history': EventLogIcon,
     '/release-templates': FactCheckOutlinedIcon,
     '/personal': PersonalDashboardIcon,
+    '/projects': ProjectIcon,
+    '/playground': PlaygroundIcon,
     GitHub: GitHubIcon,
     Documentation: LibraryBooksIcon,
 };

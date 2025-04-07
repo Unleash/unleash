@@ -10,6 +10,8 @@ type Props = {
     period: ChartDataSelection;
     usageTotal: number;
     includedTraffic: number;
+    purchasedTraffic: number;
+    currentMonth: boolean;
 };
 
 const Container = styled('article')(({ theme }) => ({
@@ -63,13 +65,15 @@ const incomingRequestsText = (period: ChartDataSelection): string => {
         return `Average requests from ${formatMonth(fromMonth)} to ${formatMonth(toMonth)}`;
     }
 
-    return `Incoming requests in ${formatMonth(parseMonthString(period.month))}`;
+    return `Requests used in ${formatMonth(parseMonthString(period.month))}`;
 };
 
 export const RequestSummary: FC<Props> = ({
     period,
     usageTotal,
     includedTraffic,
+    purchasedTraffic,
+    currentMonth,
 }) => {
     const { locationSettings } = useLocationSettings();
 
@@ -98,9 +102,28 @@ export const RequestSummary: FC<Props> = ({
                 </Row>
                 {includedTraffic > 0 && (
                     <Row>
-                        <dt>Included in your plan monthly</dt>
+                        <dt>Included in your plan</dt>
                         <dd>
                             {includedTraffic.toLocaleString('en-US')} requests
+                        </dd>
+                    </Row>
+                )}
+                {purchasedTraffic > 0 && currentMonth && (
+                    <Row>
+                        <dt>Additional traffic purchased</dt>
+                        <dd>
+                            {purchasedTraffic.toLocaleString('en-US')} requests
+                        </dd>
+                    </Row>
+                )}
+                {includedTraffic > 0 && currentMonth && (
+                    <Row>
+                        <dt>Total traffic available</dt>
+                        <dd>
+                            {(
+                                includedTraffic + purchasedTraffic
+                            ).toLocaleString('en-US')}{' '}
+                            requests
                         </dd>
                     </Row>
                 )}

@@ -14,10 +14,10 @@ on:
       version:
         description: What version number would you like to use? The version number should be **without** a leading `v`, e.g. `5.7.1` or `6.2.4`.
       bump-main:
-        description: Should we bump the package.json main version?
+        description: I'm releasing from a branch and want the version number backported to main
         required: true
         type: boolean
-        default: true
+        default: false
       is-latest-version:
         description: Is this the latest version? If latest we'll update the version function, docker and npm latest
         required: true

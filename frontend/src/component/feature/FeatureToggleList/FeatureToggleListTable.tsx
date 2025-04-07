@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type VFC } from 'react';
+import { useCallback, useEffect, useMemo, useState, type FC } from 'react';
 import { Box, Link, useMediaQuery, useTheme } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
@@ -18,7 +18,7 @@ import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ExportDialog } from './ExportDialog';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { focusable } from 'themes/themeStyles';
 import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
@@ -30,6 +30,7 @@ import { FeatureToggleListActions } from './FeatureToggleListActions/FeatureTogg
 import useLoading from 'hooks/useLoading';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useGlobalFeatureSearch } from './useGlobalFeatureSearch';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -40,9 +41,8 @@ export const featuresPlaceholder = Array(15).fill({
 });
 
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
-const feedbackCategory = 'search';
 
-export const FeatureToggleListTable: VFC = () => {
+export const FeatureToggleListTable: FC = () => {
     const theme = useTheme();
     const { trackEvent } = usePlausibleTracker();
     const { environments } = useEnvironments();
@@ -54,7 +54,7 @@ export const FeatureToggleListTable: VFC = () => {
     const [showExportDialog, setShowExportDialog] = useState(false);
 
     const { setToastApiError } = useToast();
-    const { uiConfig } = useUiConfig();
+    const flagsReleaseManagementUI = useUiFlag('flagsReleaseManagementUI');
 
     const {
         features,
@@ -66,6 +66,7 @@ export const FeatureToggleListTable: VFC = () => {
         setTableState,
         filterState,
     } = useGlobalFeatureSearch();
+    const { projects } = useProjects();
     const bodyLoadingRef = useLoading(loading);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const onFavorite = useCallback(
@@ -144,30 +145,40 @@ export const FeatureToggleListTable: VFC = () => {
                     width: '50%',
                 },
             }),
-            columnHelper.accessor((row) => row.segments?.join('\n') || '', {
-                header: 'Segments',
-                cell: ({ getValue, row }) => (
-                    <FeatureSegmentCell value={getValue()} row={row} />
-                ),
-                enableSorting: false,
-                meta: {
-                    width: '1%',
-                },
-            }),
-            columnHelper.accessor(
-                (row) =>
-                    row.tags
-                        ?.map(({ type, value }) => `${type}:${value}`)
-                        .join('\n') || '',
-                {
-                    header: 'Tags',
-                    cell: FeatureTagCell,
-                    enableSorting: false,
-                    meta: {
-                        width: '1%',
-                    },
-                },
-            ),
+            ...(!flagsReleaseManagementUI
+                ? [
+                      columnHelper.accessor(
+                          (row) => row.segments?.join('\n') || '',
+                          {
+                              header: 'Segments',
+                              cell: ({ getValue, row }) => (
+                                  <FeatureSegmentCell
+                                      value={getValue()}
+                                      row={row}
+                                  />
+                              ),
+                              enableSorting: false,
+                              meta: {
+                                  width: '1%',
+                              },
+                          },
+                      ),
+                      columnHelper.accessor(
+                          (row) =>
+                              row.tags
+                                  ?.map(({ type, value }) => `${type}:${value}`)
+                                  .join('\n') || '',
+                          {
+                              header: 'Tags',
+                              cell: FeatureTagCell,
+                              enableSorting: false,
+                              meta: {
+                                  width: '1%',
+                              },
+                          },
+                      ),
+                  ]
+                : ([] as never[])),
             columnHelper.accessor('createdAt', {
                 header: 'Created',
                 cell: ({ getValue }) => <DateCell value={getValue()} />,
@@ -176,24 +187,41 @@ export const FeatureToggleListTable: VFC = () => {
                 },
             }),
             columnHelper.accessor('project', {
-                header: 'Project ID',
-                cell: ({ getValue }) => (
-                    <LinkCell
-                        title={getValue()}
-                        to={`/projects/${getValue()}`}
-                    />
-                ),
+                header: flagsReleaseManagementUI ? 'Project' : 'Project ID',
+                cell: ({ getValue }) => {
+                    const value = getValue();
+                    const project = projects.find(
+                        (project) => project.id === value,
+                    );
+
+                    return (
+                        <LinkCell
+                            title={
+                                flagsReleaseManagementUI
+                                    ? project?.name || value
+                                    : value
+                            }
+                            to={`/projects/${getValue()}`}
+                        />
+                    );
+                },
                 meta: {
                     width: '1%',
                 },
             }),
-            columnHelper.accessor('stale', {
-                header: 'State',
-                cell: ({ getValue }) => <FeatureStaleCell value={getValue()} />,
-                meta: {
-                    width: '1%',
-                },
-            }),
+            ...(!flagsReleaseManagementUI
+                ? [
+                      columnHelper.accessor('stale', {
+                          header: 'State',
+                          cell: ({ getValue }) => (
+                              <FeatureStaleCell value={getValue()} />
+                          ),
+                          meta: {
+                              width: '1%',
+                          },
+                      }),
+                  ]
+                : ([] as never[])),
         ],
         [tableState.favoritesFirst],
     );

@@ -78,7 +78,6 @@ type Props = {
     setOperator: (operator: Operator) => void;
     setLocalConstraint: React.Dispatch<React.SetStateAction<IConstraint>>;
     action: string;
-    compact: boolean;
     onDelete?: () => void;
     setInvertedOperator: () => void;
     setCaseInsensitive: () => void;

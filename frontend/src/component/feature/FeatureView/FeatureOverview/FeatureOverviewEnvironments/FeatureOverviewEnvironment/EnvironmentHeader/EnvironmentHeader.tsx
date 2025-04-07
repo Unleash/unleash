@@ -17,11 +17,15 @@ const StyledAccordionSummary = styled(AccordionSummary, {
     padding: theme.spacing(0.5, 3, 0.5, 2),
     display: 'flex',
     alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
-        fontWeight: 'bold',
-    },
+    borderRadius: theme.shape.borderRadiusLarge,
+    pointerEvents: 'auto',
+    opacity: 1,
     '&&&': {
         cursor: expandable ? 'pointer' : 'default',
+    },
+
+    ':focus-within': {
+        background: 'none',
     },
 }));
 
@@ -33,18 +37,24 @@ const StyledHeader = styled('header')(({ theme }) => ({
     color: theme.palette.text.primary,
     alignItems: 'center',
     minHeight: theme.spacing(8),
+    containerType: 'inline-size',
 }));
 
 const StyledHeaderTitle = styled('hgroup')(({ theme }) => ({
-    display: 'flex',
+    display: 'grid',
+    gridTemplateColumns: 'auto 1fr',
     flexDirection: 'column',
     flex: 1,
+    columnGap: theme.spacing(1),
+    '@container (max-width: 500px)': {
+        gridTemplateColumns: '1fr',
+    },
 }));
 
 const StyledHeaderTitleLabel = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
-    margin: 0,
+    gridColumn: '1/-1',
 }));
 
 const StyledTruncator = styled(Truncator)(({ theme }) => ({
@@ -52,14 +62,71 @@ const StyledTruncator = styled(Truncator)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightMedium,
 }));
 
+const StyledStrategyCount = styled('p')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.info.contrastText,
+    backgroundColor: theme.palette.info.light,
+    whiteSpace: 'nowrap',
+    width: 'min-content',
+    borderRadius: theme.shape.borderRadiusExtraLarge,
+    padding: theme.spacing(0.5, 1),
+}));
+
+const NeutralStrategyCount = styled(StyledStrategyCount)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.text.secondary,
+    backgroundColor: theme.palette.neutral.light,
+}));
+
+type EnvironmentMetadata = {
+    strategyCount: number;
+    releasePlanCount: number;
+};
+
 type EnvironmentHeaderProps = {
     environmentId: string;
     expandable?: boolean;
+    environmentMetadata?: EnvironmentMetadata;
 } & AccordionSummaryProps;
+
+const MetadataChip = ({
+    strategyCount,
+    releasePlanCount,
+}: EnvironmentMetadata) => {
+    if (strategyCount === 0 && releasePlanCount === 0) {
+        return <NeutralStrategyCount>0 strategies added</NeutralStrategyCount>;
+    }
+
+    const releasePlanText = releasePlanCount > 0 ? 'Release plan' : undefined;
+
+    const strategyText = () => {
+        switch (strategyCount) {
+            case 0:
+                return undefined;
+            case 1:
+                return `1 strategy`;
+            default:
+                return `${strategyCount} strategies`;
+        }
+    };
+
+    const text = `${[releasePlanText, strategyText()].filter(Boolean).join(', ')} added`;
+
+    return <StyledStrategyCount>{text}</StyledStrategyCount>;
+};
+
+export const environmentAccordionSummaryClassName =
+    'environment-accordion-summary';
 
 export const EnvironmentHeader: FC<
     PropsWithChildren<EnvironmentHeaderProps>
-> = ({ environmentId, children, expandable = true, ...props }) => {
+> = ({
+    environmentId,
+    children,
+    expandable = true,
+    environmentMetadata,
+    ...props
+}) => {
     const id = useId();
     return (
         <StyledAccordionSummary
@@ -72,6 +139,8 @@ export const EnvironmentHeader: FC<
             id={id}
             aria-controls={`environment-accordion-${id}-content`}
             expandable={expandable}
+            tabIndex={expandable ? 0 : -1}
+            className={environmentAccordionSummaryClassName}
         >
             <StyledHeader data-loading>
                 <StyledHeaderTitle>
@@ -79,6 +148,9 @@ export const EnvironmentHeader: FC<
                     <StyledTruncator component='h2'>
                         {environmentId}
                     </StyledTruncator>
+                    {environmentMetadata ? (
+                        <MetadataChip {...environmentMetadata} />
+                    ) : null}
                 </StyledHeaderTitle>
                 {children}
             </StyledHeader>

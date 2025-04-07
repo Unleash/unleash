@@ -1,8 +1,6 @@
 import type { DragEventHandler, FC, ReactNode } from 'react';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { StrategyExecution } from './StrategyExecution/StrategyExecution';
-import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
-import { Box } from '@mui/material';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 
 type StrategyItemProps = {
@@ -29,16 +27,6 @@ export const StrategyItem: FC<StrategyItemProps> = ({
             headerItemsRight={headerItemsRight}
         >
             <StrategyExecution strategy={strategy} />
-
-            {strategy.variants &&
-                strategy.variants.length > 0 &&
-                (strategy.disabled ? (
-                    <Box sx={{ opacity: '0.5' }}>
-                        <SplitPreviewSlider variants={strategy.variants} />
-                    </Box>
-                ) : (
-                    <SplitPreviewSlider variants={strategy.variants} />
-                ))}
         </StrategyItemContainer>
     );
 };

@@ -15,7 +15,7 @@ interface ISidebarModalProps {
 
 const TRANSITION_DURATION = 250;
 
-const ModalContentWrapper = styled('div')({
+const ModalContentWrapper = styled('div')(({ theme }) => ({
     position: 'absolute',
     top: 0,
     right: 0,
@@ -24,7 +24,8 @@ const ModalContentWrapper = styled('div')({
     maxWidth: '98vw',
     overflow: 'auto',
     boxShadow: '0 0 1rem rgba(0, 0, 0, 0.25)',
-});
+    background: theme.palette.background.paper,
+}));
 
 const FixedWidthContentWrapper = styled(ModalContentWrapper)({
     width: 1300,

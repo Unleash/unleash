@@ -7,12 +7,12 @@ import type { SdkContextSchema } from './sdkContextSchema';
 import type { PlaygroundRequestSchemaProjects } from './playgroundRequestSchemaProjects';
 
 /**
- * Data for the playground API to evaluate toggles
+ * Data for the playground API to evaluate feature flags
  */
 export interface PlaygroundRequestSchema {
     context: SdkContextSchema;
-    /** The environment to evaluate toggles in. */
+    /** The environment to evaluate feature flags in. */
     environment: string;
-    /** A list of projects to check for toggles in. */
+    /** A list of projects to check for feature flags in. */
     projects?: PlaygroundRequestSchemaProjects;
 }

@@ -87,8 +87,11 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return this.features.filter((f) => names.includes(f.name));
     }
 
-    async getProjectId(name: string): Promise<string> {
-        return this.get(name).then((f) => f.project);
+    async getProjectId(name: string | undefined): Promise<string | undefined> {
+        if (name === undefined) {
+            return Promise.resolve(undefined);
+        }
+        return Promise.resolve(this.get(name).then((f) => f.project));
     }
 
     private getFilterQuery(query: Partial<IFeatureToggleStoreQuery>) {
@@ -164,7 +167,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         if (revive) {
             revive.archived = false;
         }
-        return this.update(revive.project, revive);
+        return this.update(revive!.project, revive!);
     }
 
     async getFeatureToggleList(
@@ -195,7 +198,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         if (exists) {
             const id = this.features.findIndex((f) => f.name === data.name);
             const old = this.features.find((f) => f.name === data.name);
-            const updated = { ...old, ...data };
+            const updated = { project, ...old, ...data };
             this.features.splice(id, 1);
             this.features.push(updated);
             return updated;
@@ -248,12 +251,13 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return Promise.resolve(variants);
     }
 
-    getVariantsForEnv(
+    async getVariantsForEnv(
         featureName: string,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         environment_name: string,
     ): Promise<IVariant[]> {
-        return this.getVariants(featureName);
+        const feature = await this.get(featureName);
+        // there's no way to filter by environment in the fake store
+        return feature.variants as IVariant[];
     }
 
     async saveVariants(
@@ -292,8 +296,9 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
             }
 
             if (
+                queryModifiers.date &&
                 new Date(feature[queryModifiers.dateAccessor]).getTime() >=
-                new Date(queryModifiers.date).getTime()
+                    new Date(queryModifiers.date).getTime()
             ) {
                 return true;
             }
@@ -302,6 +307,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
                 feature[queryModifiers.dateAccessor],
             ).getTime();
             if (
+                queryModifiers.range &&
                 featureDate >= new Date(queryModifiers.range[0]).getTime() &&
                 featureDate <= new Date(queryModifiers.range[1]).getTime()
             ) {

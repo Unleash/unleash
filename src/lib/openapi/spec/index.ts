@@ -209,6 +209,7 @@ export * from './update-tag-type-schema';
 export * from './update-tags-schema';
 export * from './update-user-schema';
 export * from './upsert-segment-schema';
+export * from './user-access-overview-schema';
 export * from './user-schema';
 export * from './users-groups-base-schema';
 export * from './users-schema';

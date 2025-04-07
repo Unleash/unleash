@@ -75,7 +75,7 @@ export default class FakeClientApplicationsStore
     }
 
     async upsert(details: Partial<IClientApplication>): Promise<void> {
-        await this.delete(details.appName);
+        await this.delete(details.appName!!);
         return this.bulkUpsert([details]);
     }
 

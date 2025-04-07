@@ -13,9 +13,13 @@ import type {
     StrategySchemaParametersItem,
 } from 'openapi';
 import type { IFeatureStrategyPayload } from 'interfaces/strategy';
+import { ValuesList } from 'component/common/ConstraintsList/ValuesList/ValuesList';
 
 export const useCustomStrategyParameters = (
-    strategy: CreateFeatureStrategySchema | IFeatureStrategyPayload,
+    strategy: Pick<
+        CreateFeatureStrategySchema | IFeatureStrategyPayload,
+        'parameters' | 'name'
+    >,
     strategies: StrategySchema[],
 ) => {
     const { parameters } = strategy;
@@ -45,14 +49,11 @@ export const useCustomStrategyParameters = (
                 }
 
                 return (
-                    <StrategyEvaluationItem
-                        key={key}
-                        type={typeItem}
-                        values={values}
-                    >
+                    <StrategyEvaluationItem key={key} type={typeItem}>
                         {values.length === 1
                             ? 'has 1 item:'
                             : `has ${values.length} items:`}
+                        <ValuesList values={values} />
                     </StrategyEvaluationItem>
                 );
             }
@@ -79,12 +80,11 @@ export const useCustomStrategyParameters = (
                 const value = parseParameterString(parameters[name]);
 
                 return (
-                    <StrategyEvaluationItem
-                        key={key}
-                        type={typeItem}
-                        values={value === '' ? undefined : [value]}
-                    >
+                    <StrategyEvaluationItem key={key} type={typeItem}>
                         {value === '' ? 'is an empty string' : 'is set to'}
+                        <ValuesList
+                            values={value === '' ? undefined : [value]}
+                        />
                     </StrategyEvaluationItem>
                 );
             }
@@ -92,12 +92,9 @@ export const useCustomStrategyParameters = (
             case 'number': {
                 const value = parseParameterNumber(parameters[name]);
                 return (
-                    <StrategyEvaluationItem
-                        key={key}
-                        type={typeItem}
-                        values={[`${value}`]}
-                    >
+                    <StrategyEvaluationItem key={key} type={typeItem}>
                         is a number set to
+                        <ValuesList values={[`${value}`]} />
                     </StrategyEvaluationItem>
                 );
             }

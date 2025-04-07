@@ -44,7 +44,7 @@ test('upsert stores new entries', async () => {
         statusCodeSeries: data.statusCodeSeries,
     });
     expect(data2).toBeDefined();
-    expect(data2.count).toBe(1);
+    expect(data2!.count).toBe(1);
 });
 
 test('upsert upserts', async () => {
@@ -68,7 +68,7 @@ test('upsert upserts', async () => {
         statusCodeSeries: data.statusCodeSeries,
     });
     expect(data2).toBeDefined();
-    expect(data2.count).toBe(4);
+    expect(data2!.count).toBe(4);
 });
 
 test('getAll returns all', async () => {

@@ -1,4 +1,4 @@
-import { SYSTEM_USER } from '../../lib/types';
+import { SYSTEM_USER, SYSTEM_USER_AUDIT } from '../../lib/types';
 import type {
     IApiRequest,
     IApiUser,
@@ -8,7 +8,9 @@ import type {
 } from '../server-impl';
 
 export function extractUsernameFromUser(user: IUser | IApiUser): string {
-    return (user as IUser)?.email || user?.username || SYSTEM_USER.username;
+    return (
+        (user as IUser)?.email || user?.username || SYSTEM_USER_AUDIT.username
+    );
 }
 
 export function extractUsername(req: IAuthRequest | IApiRequest): string {

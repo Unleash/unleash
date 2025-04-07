@@ -24,6 +24,8 @@ import { v4 as uuidv4 } from 'uuid';
 // because of db-migrate bug (https://github.com/Unleash/unleash/issues/171)
 process.setMaxListeners(0);
 
+export const testDbPrefix = 'unleashtestdb_';
+
 async function getDefaultEnvRolePermissions(knex) {
     return knex.table('role_permission').whereIn('environment', ['default']);
 }
@@ -108,7 +110,7 @@ export default async function init(
     getLogger: LogProvider = noLoggerProvider,
     configOverride: Partial<IUnleashOptions & DBTestOptions> = {},
 ): Promise<ITestDb> {
-    const testDbName = `unleashtestdb_${uuidv4().replace(/-/g, '')}`;
+    const testDbName = `${testDbPrefix}${uuidv4().replace(/-/g, '')}`;
     const useDbTemplate =
         (configOverride.dbInitMethod ?? 'template') === 'template';
     const testDBTemplateName = process.env.TEST_DB_TEMPLATE_NAME;
@@ -139,6 +141,8 @@ export default async function init(
         await client.query(
             `CREATE DATABASE ${testDbName} TEMPLATE ${testDBTemplateName}`,
         );
+        await client.query(`ALTER DATABASE ${testDbName} SET TIMEZONE TO UTC`);
+
         await client.end();
     } else {
         const db = createDb(config);

@@ -28,7 +28,7 @@ const StyledCardTitle = styled('h3')(({ theme }) => ({
 export const ReleasePlanTemplateCard = ({
     template,
 }: { template: IReleasePlanTemplate }) => (
-    <StyledCardLink to={`/release-management/edit/${template.id}`}>
+    <StyledCardLink to={`/release-templates/edit/${template.id}`}>
         <Card
             icon={<ReleaseTemplateIcon />}
             title={

@@ -20,7 +20,7 @@ beforeAll(async () => {
     });
     app = await setupAppWithCustomConfig(db.stores, {}, db.rawDatabase);
 
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         projectId,
         {
             name: featureName,
@@ -29,7 +29,7 @@ beforeAll(async () => {
         TEST_AUDIT_USER,
     );
 
-    await app.services.featureToggleServiceV2.createStrategy(
+    await app.services.featureToggleService.createStrategy(
         { name: 'default', constraints: [], parameters: {} },
         { projectId, featureName, environment: DEFAULT_ENV },
         TEST_AUDIT_USER,
@@ -43,7 +43,7 @@ afterAll(async () => {
 });
 
 test('returns feature flag for default env', async () => {
-    await app.services.featureToggleServiceV2.updateEnabled(
+    await app.services.featureToggleService.updateEnabled(
         'default',
         'feature.default.1',
         'default',

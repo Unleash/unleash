@@ -37,7 +37,7 @@ export interface DeprecatedProjectOverviewSchema {
     featureNaming?: CreateFeatureNamingPatternSchema;
     /** The full list of features in this project (excluding archived features) */
     features?: FeatureSchema[];
-    /** An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100 */
+    /** An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100 */
     health?: number;
     /** The number of members this project has */
     members?: number;

@@ -35,7 +35,7 @@ import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility';
 import { TableEmptyState } from './TableEmptyState/TableEmptyState';
 import { useRowActions } from './hooks/useRowActions';
 import { useSelectedData } from './hooks/useSelectedData';
-import { FeatureOverviewCell } from 'component/common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
+import { createFeatureOverviewCell } from 'component/common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 import {
     useProjectFeatureSearch,
     useProjectFeatureSearchActions,
@@ -213,7 +213,7 @@ export const ProjectFeatureToggles = ({
             columnHelper.accessor('name', {
                 id: 'name',
                 header: 'Name',
-                cell: FeatureOverviewCell(onTagClick, onFlagTypeClick),
+                cell: createFeatureOverviewCell(onTagClick, onFlagTypeClick),
                 enableHiding: false,
             }),
             columnHelper.accessor('createdAt', {

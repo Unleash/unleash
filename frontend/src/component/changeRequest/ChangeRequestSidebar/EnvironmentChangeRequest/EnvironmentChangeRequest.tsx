@@ -9,7 +9,7 @@ import {
     useTheme,
 } from '@mui/material';
 import type { ChangeRequestType } from '../../changeRequest.types';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ChangeRequestStatusBadge } from '../../ChangeRequestStatusBadge/ChangeRequestStatusBadge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { changesCount } from '../../changesCount';
@@ -25,6 +25,7 @@ import Input from 'component/common/Input/Input';
 import { ChangeRequestTitle } from './ChangeRequestTitle';
 import { UpdateCount } from 'component/changeRequest/UpdateCount';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const SubmitChangeRequestButton: FC<{
     onClick: () => void;
@@ -69,7 +70,7 @@ export const EnvironmentChangeRequest: FC<{
     children?: React.ReactNode;
 }> = ({ environmentChangeRequest, onClose, onReview, onDiscard, children }) => {
     const theme = useTheme();
-    const navigate = useNavigate();
+    const showCloudIcon = !useUiFlag('flagOverviewRedesign');
     const [commentText, setCommentText] = useState('');
     const { user } = useAuthUser();
     const [title, setTitle] = useState(environmentChangeRequest.title);
@@ -97,12 +98,14 @@ export const EnvironmentChangeRequest: FC<{
                             alignItems: 'center',
                         }}
                     >
-                        <CloudCircle
-                            sx={(theme) => ({
-                                color: theme.palette.primary.light,
-                                mr: 0.5,
-                            })}
-                        />
+                        {showCloudIcon ? (
+                            <CloudCircle
+                                sx={(theme) => ({
+                                    color: theme.palette.primary.light,
+                                    mr: 0.5,
+                                })}
+                            />
+                        ) : null}
                         <Typography component='span' variant='h2'>
                             {environmentChangeRequest.environment}
                         </Typography>
@@ -201,11 +204,10 @@ export const EnvironmentChangeRequest: FC<{
                                     <Button
                                         sx={{ marginLeft: 2 }}
                                         variant='outlined'
+                                        component={Link}
+                                        to={`/projects/${environmentChangeRequest.project}/change-requests/${environmentChangeRequest.id}`}
                                         onClick={() => {
                                             onClose();
-                                            navigate(
-                                                `/projects/${environmentChangeRequest.project}/change-requests/${environmentChangeRequest.id}`,
-                                            );
                                         }}
                                     >
                                         View change request page

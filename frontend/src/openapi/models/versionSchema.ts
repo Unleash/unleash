@@ -10,6 +10,11 @@ import type { VersionSchemaLatest } from './versionSchemaLatest';
  * Detailed information about an Unleash version
  */
 export interface VersionSchema {
+    /**
+     * The date and time of when this Unleash instance version was built
+     * @nullable
+     */
+    buildDate?: string | null;
     /** The current version of Unleash. */
     current: VersionSchemaCurrent;
     /** The instance identifier of the Unleash instance */

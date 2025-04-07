@@ -55,7 +55,6 @@ export type UiFlags = {
     maintenanceMode?: boolean;
     messageBanner?: Variant;
     banner?: Variant;
-    caseInsensitiveInOperators?: boolean;
     notifications?: boolean;
     personalAccessTokensKillSwitch?: boolean;
     demo?: boolean;
@@ -74,7 +73,6 @@ export type UiFlags = {
     feedbackComments?: Variant;
     showInactiveUsers?: boolean;
     feedbackPosting?: boolean;
-    userAccessUIEnabled?: boolean;
     outdatedSdksBanner?: boolean;
     estimateTrafficDataCost?: boolean;
     disableShowContextFieldSelectionValues?: boolean;
@@ -84,13 +82,17 @@ export type UiFlags = {
     enableLegacyVariants?: boolean;
     flagCreator?: boolean;
     releasePlans?: boolean;
-    releasePlanChangeRequests?: boolean;
     'enterprise-payg'?: boolean;
     productivityReportEmail?: boolean;
     showUserDeviceCount?: boolean;
     flagOverviewRedesign?: boolean;
     consumptionModel?: boolean;
     edgeObservability?: boolean;
+    adminNavUI?: boolean;
+    tagTypeColor?: boolean;
+    globalChangeRequestConfig?: boolean;
+    addEditStrategy?: boolean;
+    newStrategyDropdown?: boolean;
 };
 
 export interface IVersionInfo {

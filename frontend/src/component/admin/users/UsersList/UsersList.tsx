@@ -1,4 +1,3 @@
-import type React from 'react';
 import { useMemo, useState } from 'react';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import ChangePassword from './ChangePassword/ChangePassword';
@@ -59,7 +58,6 @@ const UsersList = () => {
     }>({
         open: false,
     });
-    const userAccessUIEnabled = useUiFlag('userAccessUIEnabled');
     const showUserDeviceCount = useUiFlag('showUserDeviceCount');
     const showSSOUpgrade = isOss() && users.length > 3;
 
@@ -82,23 +80,17 @@ const UsersList = () => {
         setDelUser(undefined);
     };
 
-    const openDelDialog =
-        (user: IUser) => (e: React.SyntheticEvent<Element, Event>) => {
-            e.preventDefault();
-            setDelDialog(true);
-            setDelUser(user);
-        };
-    const openPwDialog =
-        (user: IUser) => (e: React.SyntheticEvent<Element, Event>) => {
-            e.preventDefault();
-            setPwDialog({ open: true, user });
-        };
+    const openDelDialog = (user: IUser) => () => {
+        setDelDialog(true);
+        setDelUser(user);
+    };
+    const openPwDialog = (user: IUser) => () => {
+        setPwDialog({ open: true, user });
+    };
 
-    const openResetPwDialog =
-        (user: IUser) => (e: React.SyntheticEvent<Element, Event>) => {
-            e.preventDefault();
-            setResetPwDialog({ open: true, user });
-        };
+    const openResetPwDialog = (user: IUser) => () => {
+        setResetPwDialog({ open: true, user });
+    };
 
     const closePwDialog = () => {
         setPwDialog({ open: false });
@@ -215,7 +207,7 @@ const UsersList = () => {
                 sortType: 'boolean',
             },
             {
-                Header: 'Actions',
+                Header: '',
                 id: 'Actions',
                 align: 'center',
                 Cell: ({
@@ -225,22 +217,17 @@ const UsersList = () => {
                         onEdit={() => {
                             navigate(`/admin/users/${user.id}/edit`);
                         }}
-                        onViewAccess={
-                            userAccessUIEnabled
-                                ? () => {
-                                      navigate(
-                                          `/admin/users/${user.id}/access`,
-                                      );
-                                  }
-                                : undefined
-                        }
+                        onViewAccess={() => {
+                            navigate(`/admin/users/${user.id}/access`);
+                        }}
                         onChangePassword={openPwDialog(user)}
                         onResetPassword={openResetPwDialog(user)}
                         onDelete={openDelDialog(user)}
                         isScimUser={scimEnabled && Boolean(user.scimId)}
+                        userId={user.id}
                     />
                 ),
-                width: userAccessUIEnabled ? 240 : 200,
+                width: 80,
                 disableSortBy: true,
             },
             // Always hidden -- for search
@@ -256,7 +243,7 @@ const UsersList = () => {
                 searchable: true,
             },
         ],
-        [roles, navigate, isBillingUsers, userAccessUIEnabled],
+        [roles, navigate, isBillingUsers],
     );
 
     const initialState = useMemo(() => {

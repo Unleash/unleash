@@ -13,9 +13,13 @@ class AccessServiceMock extends AccessService {
     constructor() {
         super(
             {
+                // @ts-expect-error - We're mocking the service so we don't need the store
                 accessStore: undefined,
+                // @ts-expect-error - We're mocking the service so we don't need the store
                 accountStore: undefined,
+                // @ts-expect-error - We're mocking the service so we don't need the store
                 roleStore: undefined,
+                // @ts-expect-error - We're mocking the service so we don't need the store
                 environmentStore: undefined,
             },
             { getLogger: noLoggerProvider },

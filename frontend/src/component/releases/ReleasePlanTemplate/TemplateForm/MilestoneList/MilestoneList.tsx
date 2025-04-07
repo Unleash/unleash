@@ -32,38 +32,44 @@ export const MilestoneList = ({
 }: IMilestoneListProps) => {
     const useNewMilestoneCard = useUiFlag('flagOverviewRedesign');
     const onMoveItem: OnMoveItem = useCallback(
-        async (dragIndex: number, dropIndex: number, save?: boolean) => {
-            if (useNewMilestoneCard && save) {
+        async ({ dragIndex, dropIndex, event, draggedElement }) => {
+            if (useNewMilestoneCard && event.type === 'drop') {
                 return; // the user has let go, we should leave the current sort order as it is currently visually displayed
             }
 
-            if (dragIndex !== dropIndex) {
-                // todo! See if there's a way to make this snippet to stabilize dragging before removing flag `flagOverviewRedesign`
-                // We don't have a reference to `ref` or `event` here, but maybe we can make it work? Somehow?
+            if (event.type === 'dragenter' && dragIndex !== dropIndex) {
+                const target = event.target as HTMLElement;
 
-                // const { top, bottom } = ref.current.getBoundingClientRect();
-                // const overTargetTop = event.clientY - top < dragItem.height;
-                // const overTargetBottom =
-                //     bottom - event.clientY < dragItem.height;
-                // const draggingUp = dragItem.index > targetIndex;
+                const draggedElementHeight =
+                    draggedElement.getBoundingClientRect().height;
 
-                // // prevent oscillating by only reordering if there is sufficient space
-                // if (
-                //     (overTargetTop && draggingUp) ||
-                //     (overTargetBottom && !draggingUp)
-                // ) {
-                //     // reorder here
-                // }
-                const oldMilestones = milestones || [];
-                const newMilestones = [...oldMilestones];
-                const movedMilestone = newMilestones.splice(dragIndex, 1)[0];
-                newMilestones.splice(dropIndex, 0, movedMilestone);
+                const { top, bottom } = target.getBoundingClientRect();
+                const overTargetTop =
+                    event.clientY - top < draggedElementHeight;
+                const overTargetBottom =
+                    bottom - event.clientY < draggedElementHeight;
+                const draggingUp = dragIndex > dropIndex;
 
-                newMilestones.forEach((milestone, index) => {
-                    milestone.sortOrder = index;
-                });
+                // prevent oscillating by only reordering if there is sufficient space
+                const shouldReorder = draggingUp
+                    ? overTargetTop
+                    : overTargetBottom;
 
-                setMilestones(newMilestones);
+                if (shouldReorder) {
+                    const oldMilestones = milestones || [];
+                    const newMilestones = [...oldMilestones];
+                    const movedMilestone = newMilestones.splice(
+                        dragIndex,
+                        1,
+                    )[0];
+                    newMilestones.splice(dropIndex, 0, movedMilestone);
+
+                    newMilestones.forEach((milestone, index) => {
+                        milestone.sortOrder = index;
+                    });
+
+                    setMilestones(newMilestones);
+                }
             }
         },
         [milestones],

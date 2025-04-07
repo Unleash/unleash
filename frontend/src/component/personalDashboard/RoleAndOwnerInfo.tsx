@@ -9,6 +9,8 @@ type Props = {
     owners: ProjectSchemaOwners;
 };
 
+const avatarHeight = 3.5;
+
 const Wrapper = styled('div')(({ theme }) => ({
     width: '100%',
     display: 'flex',
@@ -21,6 +23,7 @@ const InfoSection = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
     alignItems: 'center',
+    minHeight: theme.spacing(avatarHeight),
 }));
 
 const Roles = styled('ul')(({ theme }) => ({
@@ -43,13 +46,17 @@ const RoleBadge = styled(Badge)({
     whitespace: 'nowrap',
 });
 
-const StyledAvatarGroup = styled(AvatarGroupFromOwners)({
+const StyledAvatarGroup = styled(AvatarGroupFromOwners)(({ theme }) => ({
     width: 'max-content',
-});
+    height: theme.spacing(avatarHeight),
+}));
 
 export const RoleAndOwnerInfo = ({ roles, owners }: Props) => {
     const firstRoles = roles.slice(0, 3);
     const extraRoles = roles.slice(3);
+    const ownersWithoutSystem = owners.filter(
+        (owner) => owner.ownerType !== 'system',
+    );
     return (
         <Wrapper data-loading>
             <InfoSection>
@@ -104,16 +111,24 @@ export const RoleAndOwnerInfo = ({ roles, owners }: Props) => {
                 )}
             </InfoSection>
             <InfoSection>
-                <Typography
-                    variant='body1'
-                    component='h4'
-                    sx={{
-                        whiteSpace: 'nowrap',
-                    }}
-                >
-                    Project owner{owners.length > 1 ? 's' : ''}
-                </Typography>
-                <StyledAvatarGroup users={owners} avatarLimit={3} />
+                {ownersWithoutSystem.length > 0 ? (
+                    <>
+                        <Typography
+                            variant='body1'
+                            component='h4'
+                            sx={{
+                                whiteSpace: 'nowrap',
+                            }}
+                        >
+                            Project owner
+                            {ownersWithoutSystem.length > 1 ? 's' : ''}
+                        </Typography>
+                        <StyledAvatarGroup
+                            users={ownersWithoutSystem as ProjectSchemaOwners}
+                            avatarLimit={3}
+                        />
+                    </>
+                ) : null}
             </InfoSection>
         </Wrapper>
     );

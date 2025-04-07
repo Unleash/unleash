@@ -4,7 +4,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { ActionsActionState } from '../../useProjectActionsForm';
 import { ProjectActionsFormItem } from '../ProjectActionsFormItem';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useServiceAccountAccessMatrix } from 'hooks/api/getters/useServiceAccountAccessMatrix/useServiceAccountAccessMatrix';
+import { useServiceAccountAccessOverview } from 'hooks/api/getters/useServiceAccountAccessOverview/useServiceAccountAccessOverview';
 import { useEffect, useMemo } from 'react';
 import { ProjectActionsActionParameter } from './ProjectActionsActionParameter/ProjectActionsActionParameter';
 import type { ActionConfigurations } from 'interfaces/action';
@@ -51,7 +51,7 @@ export const ProjectActionsActionItem = ({
 }: IProjectActionsItemProps) => {
     const { action: actionName, executionParams, error } = action;
     const projectId = useRequiredPathParam('projectId');
-    const { permissions } = useServiceAccountAccessMatrix(
+    const { permissions } = useServiceAccountAccessOverview(
         actorId,
         projectId,
         executionParams.environment as string,

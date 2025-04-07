@@ -10,7 +10,6 @@ import PermissionError from './permission-error';
 import OwaspValidationError from './owasp-validation-error';
 import IncompatibleProjectError from './incompatible-project-error';
 import PasswordUndefinedError from './password-undefined';
-import ProjectWithoutOwnerError from './project-without-owner-error';
 import NotFoundError from './notfound-error';
 import { validateString } from '../util/validators/constraint-types';
 import { fromLegacyError } from './from-legacy-error';
@@ -660,20 +659,6 @@ describe('Error serialization special cases', () => {
 
     it('PasswordUndefinedError: adds `validationErrors: []` to the `details` list', () => {
         const error = new PasswordUndefinedError();
-        const json = error.toJSON();
-
-        expect(json).toMatchObject({
-            details: [
-                {
-                    validationErrors: [],
-                    message: json.message,
-                },
-            ],
-        });
-    });
-
-    it('ProjectWithoutOwnerError: adds `validationErrors: []` to the `details` list', () => {
-        const error = new ProjectWithoutOwnerError();
         const json = error.toJSON();
 
         expect(json).toMatchObject({

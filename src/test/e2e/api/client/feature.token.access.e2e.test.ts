@@ -25,7 +25,7 @@ beforeAll(async () => {
     app = await setupAppWithAuth(db.stores, {}, db.rawDatabase);
     apiTokenService = app.services.apiTokenService;
 
-    const { featureToggleServiceV2, environmentService } = app.services;
+    const { featureToggleService, environmentService } = app.services;
     const { environmentStore, projectStore } = db.stores;
 
     await environmentStore.create({
@@ -51,7 +51,7 @@ beforeAll(async () => {
         TEST_AUDIT_USER,
     );
 
-    await featureToggleServiceV2.createFeatureToggle(
+    await featureToggleService.createFeatureToggle(
         project,
         {
             name: feature1,
@@ -60,7 +60,7 @@ beforeAll(async () => {
         TEST_AUDIT_USER,
     );
 
-    await featureToggleServiceV2.createStrategy(
+    await featureToggleService.createStrategy(
         {
             name: 'default',
             constraints: [],
@@ -69,7 +69,7 @@ beforeAll(async () => {
         { projectId: project, featureName: feature1, environment: DEFAULT_ENV },
         TEST_AUDIT_USER,
     );
-    await featureToggleServiceV2.createStrategy(
+    await featureToggleService.createStrategy(
         {
             name: 'flexibleRollout',
             constraints: [],
@@ -80,14 +80,14 @@ beforeAll(async () => {
     );
 
     // create feature 2
-    await featureToggleServiceV2.createFeatureToggle(
+    await featureToggleService.createFeatureToggle(
         project,
         {
             name: feature2,
         },
         TEST_AUDIT_USER,
     );
-    await featureToggleServiceV2.createStrategy(
+    await featureToggleService.createStrategy(
         {
             name: 'default',
             constraints: [],
@@ -98,14 +98,14 @@ beforeAll(async () => {
     );
 
     // create feature 3
-    await featureToggleServiceV2.createFeatureToggle(
+    await featureToggleService.createFeatureToggle(
         project2,
         {
             name: feature3,
         },
         TEST_AUDIT_USER,
     );
-    await featureToggleServiceV2.createStrategy(
+    await featureToggleService.createStrategy(
         {
             name: 'default',
             constraints: [],

@@ -1,6 +1,11 @@
-import type { TrafficUsageDataSegmentedCombinedSchema } from 'openapi';
+import type {
+    MeteredConnectionsSchema,
+    MeteredRequestsSchema,
+    TrafficUsageDataSegmentedCombinedSchema,
+} from 'openapi';
 import {
     toConnectionChartData,
+    toRequestChartData,
     toTrafficUsageChartData,
 } from './chart-functions';
 import { endpointsInfo } from './endpoint-info';
@@ -152,9 +157,9 @@ describe('toTrafficUsageChartData', () => {
 });
 
 describe('toConnectionChartData', () => {
-    const dataPoint = (period: string, count: number) => ({
+    const dataPoint = (period: string, connections: number) => ({
         period,
-        trafficTypes: [{ count, group: 'successful-requests' }],
+        connections,
     });
 
     const fromEndpointInfo = (endpoint: keyof typeof endpointsInfo) => {
@@ -167,7 +172,7 @@ describe('toConnectionChartData', () => {
     };
 
     test('monthly data conversion', () => {
-        const input: TrafficUsageDataSegmentedCombinedSchema = {
+        const input: MeteredConnectionsSchema = {
             grouping: 'monthly',
             dateRange: {
                 from: '2025-01-01',
@@ -175,16 +180,12 @@ describe('toConnectionChartData', () => {
             },
             apiData: [
                 {
-                    apiPath: '/api/admin', // filter out
-                    dataPoints: [dataPoint('2025-06', 5)],
-                },
-                {
-                    apiPath: '/api/client',
+                    meteredGroup: 'default',
                     dataPoints: [
-                        dataPoint('2025-06', 10 * 5 * 60 * 24 * 30),
-                        dataPoint('2025-01', 7 * 5 * 60 * 24 * 31),
-                        dataPoint('2025-03', 11 * 5 * 60 * 24 * 31),
-                        dataPoint('2025-04', 13 * 5 * 60 * 24 * 30),
+                        dataPoint('2025-06', 10),
+                        dataPoint('2025-01', 7),
+                        dataPoint('2025-03', 11),
+                        dataPoint('2025-04', 13),
                     ],
                 },
             ],
@@ -194,7 +195,9 @@ describe('toConnectionChartData', () => {
             datasets: [
                 {
                     data: [7, 0, 11, 13, 0, 10],
-                    ...fromEndpointInfo('/api/client'),
+                    hoverBackgroundColor: '#6D66D9',
+                    label: 'Connections',
+                    backgroundColor: '#6D66D9',
                 },
             ],
             labels: [
@@ -211,7 +214,7 @@ describe('toConnectionChartData', () => {
     });
 
     test('daily data conversion', () => {
-        const input: TrafficUsageDataSegmentedCombinedSchema = {
+        const input: MeteredConnectionsSchema = {
             grouping: 'daily',
             dateRange: {
                 from: '2025-01-01',
@@ -219,16 +222,12 @@ describe('toConnectionChartData', () => {
             },
             apiData: [
                 {
-                    apiPath: '/api/admin', // filter out
-                    dataPoints: [dataPoint('2025-01-01', 5)],
-                },
-                {
-                    apiPath: '/api/client',
+                    meteredGroup: 'default',
                     dataPoints: [
-                        dataPoint('2025-01-02', 2 * 5 * 60 * 24),
-                        dataPoint('2025-01-17', 6 * 5 * 60 * 24),
-                        dataPoint('2025-01-19', 4 * 5 * 60 * 24),
-                        dataPoint('2025-01-06', 8 * 5 * 60 * 24),
+                        dataPoint('2025-01-02', 2),
+                        dataPoint('2025-01-17', 6),
+                        dataPoint('2025-01-19', 4),
+                        dataPoint('2025-01-06', 8),
                     ],
                 },
             ],
@@ -241,7 +240,9 @@ describe('toConnectionChartData', () => {
                         0, 2, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 4,
                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     ],
-                    ...fromEndpointInfo('/api/client'),
+                    hoverBackgroundColor: '#6D66D9',
+                    label: 'Connections',
+                    backgroundColor: '#6D66D9',
                 },
             ],
             labels: Array.from({ length: 31 }).map((_, index) =>
@@ -250,5 +251,94 @@ describe('toConnectionChartData', () => {
         };
 
         expect(toConnectionChartData(input)).toMatchObject(expectedOutput);
+    });
+});
+
+describe('toRequestChartData', () => {
+    const dataPoint = (period: string, requests: number) => ({
+        period,
+        requests,
+    });
+
+    test('monthly data conversion', () => {
+        const input: MeteredRequestsSchema = {
+            grouping: 'monthly',
+            dateRange: {
+                from: '2025-01-01',
+                to: '2025-06-30',
+            },
+            apiData: [
+                {
+                    meteredGroup: 'default',
+                    dataPoints: [
+                        dataPoint('2025-06', 15),
+                        dataPoint('2025-01', 9),
+                        dataPoint('2025-03', 14),
+                        dataPoint('2025-04', 18),
+                    ],
+                },
+            ],
+        };
+
+        const expectedOutput = {
+            datasets: [
+                {
+                    data: [9, 0, 14, 18, 0, 15],
+                    hoverBackgroundColor: '#A39EFF',
+                    label: 'Frontend requests',
+                    backgroundColor: '#A39EFF',
+                },
+            ],
+            labels: [
+                '2025-01',
+                '2025-02',
+                '2025-03',
+                '2025-04',
+                '2025-05',
+                'Current month',
+            ],
+        };
+
+        expect(toRequestChartData(input)).toMatchObject(expectedOutput);
+    });
+
+    test('daily data conversion', () => {
+        const input: MeteredRequestsSchema = {
+            grouping: 'daily',
+            dateRange: {
+                from: '2025-01-01',
+                to: '2025-01-31',
+            },
+            apiData: [
+                {
+                    meteredGroup: 'default',
+                    dataPoints: [
+                        dataPoint('2025-01-02', 3),
+                        dataPoint('2025-01-17', 7),
+                        dataPoint('2025-01-19', 5),
+                        dataPoint('2025-01-06', 10),
+                    ],
+                },
+            ],
+        };
+
+        const expectedOutput = {
+            datasets: [
+                {
+                    data: [
+                        0, 3, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0,
+                        5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    ],
+                    hoverBackgroundColor: '#A39EFF',
+                    label: 'Frontend requests',
+                    backgroundColor: '#A39EFF',
+                },
+            ],
+            labels: Array.from({ length: 31 }).map((_, index) =>
+                (index + 1).toString(),
+            ),
+        };
+
+        expect(toRequestChartData(input)).toMatchObject(expectedOutput);
     });
 });

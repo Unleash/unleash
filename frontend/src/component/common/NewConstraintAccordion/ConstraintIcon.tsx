@@ -7,6 +7,9 @@ interface IConstraintIconProps {
     disabled?: boolean;
 }
 
+/**
+ * @deprecated remove with `flagOverviewRedesign`
+ */
 export const ConstraintIcon: VFC<IConstraintIconProps> = ({
     compact,
     disabled,

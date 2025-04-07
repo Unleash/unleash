@@ -195,6 +195,7 @@ export default async function getApp(
     }
 
     // Setup API routes
+    // @ts-expect-error - our db is possibly undefined and our indexrouter doesn't currently handle that
     app.use(`${baseUriPath}/`, new IndexRouter(config, services, db).router);
 
     if (process.env.NODE_ENV !== 'production') {

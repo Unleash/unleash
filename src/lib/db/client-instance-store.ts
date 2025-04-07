@@ -7,9 +7,8 @@ import type {
 } from '../types/stores/client-instance-store';
 import { subDays } from 'date-fns';
 import type { Db } from './db';
-
-const metricsHelper = require('../util/metrics-helper');
-const { DB_TIME } = require('../metric-events');
+import metricsHelper from '../util/metrics-helper';
+import { DB_TIME } from '../metric-events';
 
 const COLUMNS = [
     'app_name',

@@ -14,7 +14,8 @@ exports.up = function (db, callback) {
                               (SELECT Max(created_at) date
                                FROM   events
                                WHERE  type = 'feature-archived'
-                                      AND e.feature_name = f.NAME)) res
+                                      AND feature_name = f.NAME
+                                      AND f.archived = 't')) res
         WHERE  res.NAME = f.NAME;
         UPDATE features
         SET    archived_at = Now()

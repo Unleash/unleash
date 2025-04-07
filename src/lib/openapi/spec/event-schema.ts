@@ -102,6 +102,13 @@ export const eventSchema = {
             nullable: true,
             description: 'A markdown-formatted summary of the event.',
         },
+        ip: {
+            type: 'string',
+            nullable: true,
+            description:
+                'The IP address of the user that created the event. Only available in Enterprise.',
+            example: '192.168.1.1',
+        },
     },
     components: {
         schemas: {

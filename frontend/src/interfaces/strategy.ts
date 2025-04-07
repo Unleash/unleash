@@ -22,6 +22,9 @@ export interface IFeatureStrategyParameters {
     [key: string]: string | number | undefined;
 }
 
+/**
+ * @deprecated use `FeatureStrategySchema` from openapi
+ */
 export interface IFeatureStrategyPayload {
     id?: string;
     name?: string;

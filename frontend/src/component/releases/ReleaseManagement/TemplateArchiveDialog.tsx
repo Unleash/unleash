@@ -18,7 +18,7 @@ export const TemplateArchiveDialog: React.FC<ITemplateArchiveDialogProps> = ({
 }) => {
     return (
         <Dialogue
-            title='Archive release plan template?'
+            title='Archive release template?'
             open={open}
             secondaryButtonText='Cancel'
             onClose={() => {
@@ -35,7 +35,7 @@ export const TemplateArchiveDialog: React.FC<ITemplateArchiveDialogProps> = ({
             }
         >
             <p>
-                You are about to archive release plan template:{' '}
+                You are about to archive release template:{' '}
                 <strong>{template?.name}</strong>
             </p>
         </Dialogue>

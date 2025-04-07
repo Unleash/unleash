@@ -1,8 +1,7 @@
 import { useMemo, useState, type VFC } from 'react';
 import { Button } from '@mui/material';
 import { ManageBulkTagsDialog } from 'component/feature/FeatureView/FeatureOverview/ManageTagsDialog/ManageBulkTagsDialog';
-import type { FeatureSchema } from 'openapi';
-import type { ITag } from 'interfaces/tags';
+import type { FeatureSchema, TagSchema } from 'openapi';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -28,7 +27,7 @@ export const ManageTags: VFC<IManageTagsProps> = ({
     const [initialValues, indeterminateValues] = useMemo(() => {
         const uniqueTags = data
             .flatMap(({ tags }) => tags || [])
-            .reduce<ITag[]>(
+            .reduce<TagSchema[]>(
                 (acc, tag) => [
                     ...acc,
                     ...(acc.some(
@@ -56,8 +55,8 @@ export const ManageTags: VFC<IManageTagsProps> = ({
         addedTags,
         removedTags,
     }: {
-        addedTags: ITag[];
-        removedTags: ITag[];
+        addedTags: TagSchema[];
+        removedTags: TagSchema[];
     }) => {
         const features = data.map(({ name }) => name);
         const payload = { features, tags: { addedTags, removedTags } };

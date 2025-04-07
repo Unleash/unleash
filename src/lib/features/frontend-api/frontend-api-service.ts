@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import type {
     IAuditUser,
     IUnleashConfig,
@@ -38,7 +38,7 @@ export type Stores = Pick<IUnleashStores, 'segmentReadModel'>;
 
 export type Services = Pick<
     IUnleashServices,
-    | 'featureToggleServiceV2'
+    | 'featureToggleService'
     | 'clientMetricsServiceV2'
     | 'settingService'
     | 'configurationRevisionService'
@@ -63,7 +63,7 @@ export class FrontendApiService {
     private readonly clients: Map<ApiUser['secret'], Promise<Unleash>> =
         new Map();
 
-    private cachedFrontendSettings?: FrontendSettings;
+    private cachedFrontendSettings: FrontendSettings;
 
     constructor(
         config: Config,
@@ -228,9 +228,12 @@ export class FrontendApiService {
     async fetchFrontendSettings(): Promise<FrontendSettings> {
         try {
             this.cachedFrontendSettings =
-                await this.services.settingService.get(frontendSettingsKey, {
-                    frontendApiOrigins: this.config.frontendApiOrigins,
-                });
+                await this.services.settingService.getWithDefault(
+                    frontendSettingsKey,
+                    {
+                        frontendApiOrigins: this.config.frontendApiOrigins,
+                    },
+                );
         } catch (error) {
             this.logger.debug('Unable to fetch frontend settings', error);
         }

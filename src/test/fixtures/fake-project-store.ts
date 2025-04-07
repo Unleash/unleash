@@ -17,7 +17,9 @@ import type {
     ProjectEnvironment,
 } from '../../lib/features/project/project-store-type';
 
-type ArchivableProject = IProject & { archivedAt: null | Date };
+type ArchivableProject = Omit<IProject, 'archivedAt'> & {
+    archivedAt: null | Date;
+};
 
 export default class FakeProjectStore implements IProjectStore {
     projects: ArchivableProject[] = [];
@@ -56,7 +58,7 @@ export default class FakeProjectStore implements IProjectStore {
             archivedAt: null,
         };
         this.projects.push(newProj);
-        return newProj;
+        return newProj as IProject;
     }
 
     async create(project: IProjectInsert): Promise<IProject> {
@@ -95,13 +97,15 @@ export default class FakeProjectStore implements IProjectStore {
     async get(key: string): Promise<IProject> {
         const project = this.projects.find((p) => p.id === key);
         if (project) {
-            return project;
+            return project as IProject;
         }
         throw new NotFoundError(`Could not find project with id: ${key}`);
     }
 
     async getAll(): Promise<IProject[]> {
-        return this.projects.filter((project) => project.archivedAt === null);
+        return this.projects
+            .filter((project) => project.archivedAt === null)
+            .map((p) => p as IProject);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

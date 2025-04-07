@@ -38,7 +38,7 @@ export default class FakeFeatureTagStore implements IFeatureTagStore {
         return this.featureTags.some((t) => t === key);
     }
 
-    async get(key: IFeatureTag): Promise<IFeatureTag> {
+    async get(key: IFeatureTag): Promise<IFeatureTag | undefined> {
         return this.featureTags.find((t) => t === key);
     }
 
@@ -78,7 +78,7 @@ export default class FakeFeatureTagStore implements IFeatureTagStore {
                         value: fT.tagValue,
                         type: fT.tagType,
                     },
-                    fT.createdByUserId,
+                    fT.createdByUserId || -1337,
                 );
                 return {
                     featureName: fT.featureName,

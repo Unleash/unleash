@@ -98,7 +98,7 @@ export const ReleasePlanAddDialog = ({
             </StyledReleasePlanContainer>
             {crProtected && (
                 <Typography sx={{ mt: 4 }}>
-                    <strong>Adding</strong> release plan template{' '}
+                    <strong>Adding</strong> release template{' '}
                     <strong>{template?.name}</strong> to{' '}
                     <strong>{featureName}</strong> in{' '}
                     <strong>{environment}</strong>.

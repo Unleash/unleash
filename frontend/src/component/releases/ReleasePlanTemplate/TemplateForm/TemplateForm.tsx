@@ -1,5 +1,5 @@
 import Input from 'component/common/Input/Input';
-import { styled, useTheme } from '@mui/material';
+import { Alert, styled, useTheme } from '@mui/material';
 import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { TemplateFormDescription } from './TemplateFormDescription';
@@ -45,6 +45,7 @@ interface ITemplateFormProps {
     errors: { [key: string]: string };
     clearErrors: () => void;
     formTitle: string;
+    archived?: boolean;
     formatApiCode: () => string;
     handleSubmit: (e: React.FormEvent) => void;
     loading?: boolean;
@@ -61,6 +62,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
     errors,
     clearErrors,
     formTitle,
+    archived,
     formatApiCode,
     handleSubmit,
     children,
@@ -81,6 +83,11 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
             description={<TemplateFormDescription />}
             formatApiCode={formatApiCode}
         >
+            {archived && (
+                <Alert severity='warning'>
+                    This template has been archived and can no longer be edited.
+                </Alert>
+            )}
             <StyledForm onSubmit={handleSubmit}>
                 <StyledInput
                     label='Template name'

@@ -3,16 +3,20 @@ import { useTrafficSearch } from 'hooks/api/getters/useInstanceTrafficMetrics/us
 import { currentDate } from '../dates';
 import { useMemo } from 'react';
 import {
-    toTrafficUsageChartData as newToChartData,
     toConnectionChartData,
+    toRequestChartData,
+    toTrafficUsageChartData,
 } from '../chart-functions';
 import {
     calculateEstimatedMonthlyCost,
     calculateOverageCost,
     calculateTotalUsage,
 } from 'utils/traffic-calculations';
-import { BILLING_TRAFFIC_BUNDLE_PRICE } from '../../../billing/BillingDashboard/BillingPlan/BillingPlan';
+import { BILLING_TRAFFIC_PRICE } from '../../../billing/BillingDashboard/BillingPlan/BillingPlan';
 import { averageTrafficPreviousMonths } from '../average-traffic-previous-months';
+import { useConnectionsConsumption } from 'hooks/api/getters/useConnectionsConsumption/useConnectionsConsumption';
+import { useRequestsConsumption } from 'hooks/api/getters/useRequestsConsumption/useRequestsConsumption';
+import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 
 export const useTrafficStats = (
     includedTraffic: number,
@@ -23,6 +27,12 @@ export const useTrafficStats = (
         chartDataSelection.grouping,
         toDateRange(chartDataSelection, currentDate),
     );
+    const { instanceStatus } = useInstanceStatus();
+    const trafficPrice =
+        instanceStatus?.prices?.[
+            instanceStatus?.billing === 'pay-as-you-go' ? 'payg' : 'pro'
+        ]?.traffic ?? BILLING_TRAFFIC_PRICE;
+
     const results = useMemo(() => {
         if (result.state !== 'success') {
             return {
@@ -35,19 +45,19 @@ export const useTrafficStats = (
         }
         const traffic = result.data;
 
-        const chartData = newToChartData(traffic, filter);
+        const chartData = toTrafficUsageChartData(traffic, filter);
         const usageTotal = calculateTotalUsage(traffic);
         const overageCost = calculateOverageCost(
             usageTotal,
             includedTraffic,
-            BILLING_TRAFFIC_BUNDLE_PRICE,
+            trafficPrice,
         );
 
         const estimatedMonthlyCost = calculateEstimatedMonthlyCost(
             traffic.apiData,
             includedTraffic,
             currentDate,
-            BILLING_TRAFFIC_BUNDLE_PRICE,
+            trafficPrice,
         );
 
         const requestSummaryUsage =
@@ -66,13 +76,14 @@ export const useTrafficStats = (
         JSON.stringify(result),
         includedTraffic,
         JSON.stringify(chartDataSelection),
+        trafficPrice,
     ]);
 
     return results;
 };
 
 export const useConsumptionStats = (chartDataSelection: ChartDataSelection) => {
-    const { result } = useTrafficSearch(
+    const { result } = useConnectionsConsumption(
         chartDataSelection.grouping,
         toDateRange(chartDataSelection, currentDate),
     );
@@ -80,15 +91,34 @@ export const useConsumptionStats = (chartDataSelection: ChartDataSelection) => {
         if (result.state !== 'success') {
             return {
                 chartData: { datasets: [], labels: [] },
-                usageTotal: 0,
-                overageCost: 0,
-                estimatedMonthlyCost: 0,
-                requestSummaryUsage: 0,
             };
         }
         const traffic = result.data;
 
         const chartData = toConnectionChartData(traffic);
+
+        return {
+            chartData,
+        };
+    }, [JSON.stringify(result), JSON.stringify(chartDataSelection)]);
+
+    return results;
+};
+
+export const useRequestsStats = (chartDataSelection: ChartDataSelection) => {
+    const { result } = useRequestsConsumption(
+        chartDataSelection.grouping,
+        toDateRange(chartDataSelection, currentDate),
+    );
+    const results = useMemo(() => {
+        if (result.state !== 'success') {
+            return {
+                chartData: { datasets: [], labels: [] },
+            };
+        }
+        const traffic = result.data;
+
+        const chartData = toRequestChartData(traffic);
 
         return {
             chartData,

@@ -50,7 +50,7 @@ const mapRow = (row: ContextFieldDB): IContextField => ({
 
 interface ICreateContextField {
     name: string;
-    description: string;
+    description?: string | null;
     stickiness: boolean;
     sort_order: number;
     legal_values?: string;
@@ -80,8 +80,8 @@ class ContextFieldStore implements IContextFieldStore {
         return {
             name: data.name,
             description: data.description,
-            stickiness: data.stickiness,
-            sort_order: data.sortOrder, // eslint-disable-line
+            stickiness: data.stickiness || false,
+            sort_order: data.sortOrder || 0,
             legal_values: JSON.stringify(data.legalValues || []),
         };
     }

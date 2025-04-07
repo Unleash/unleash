@@ -149,7 +149,7 @@ const payloadOptions = [
     { key: 'number', label: 'number' },
 ];
 
-const EMPTY_PAYLOAD = { type: 'string', value: '' };
+const EMPTY_PAYLOAD = { type: 'string' as const, value: '' };
 
 enum ErrorField {
     NAME = 'name',
@@ -438,7 +438,7 @@ export const VariantForm = ({
                         clearError(ErrorField.PAYLOAD);
                         setPayload((payload) => ({
                             ...payload,
-                            type: e.target.value,
+                            type: e.target.value as typeof payload.type,
                         }));
                     }}
                 />

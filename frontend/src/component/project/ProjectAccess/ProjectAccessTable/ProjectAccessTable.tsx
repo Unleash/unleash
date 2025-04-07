@@ -232,12 +232,8 @@ export const ProjectAccessTable: VFC = () => {
                                     ? 'group'
                                     : 'user'
                             }/${row.entity.id}`}
-                            disabled={access?.rows.length === 1}
                             tooltipProps={{
-                                title:
-                                    access?.rows.length === 1
-                                        ? 'Cannot edit access. A project must have at least one owner'
-                                        : 'Edit access',
+                                title: 'Edit access',
                             }}
                         >
                             <Edit />
@@ -253,12 +249,8 @@ export const ProjectAccessTable: VFC = () => {
                                 setSelectedRow(row);
                                 setRemoveOpen(true);
                             }}
-                            disabled={access?.rows.length === 1}
                             tooltipProps={{
-                                title:
-                                    access?.rows.length === 1
-                                        ? 'Cannot remove access. A project must have at least one owner'
-                                        : 'Remove access',
+                                title: 'Remove access',
                             }}
                         >
                             <Delete />

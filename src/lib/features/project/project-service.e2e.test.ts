@@ -476,16 +476,11 @@ test('should add a member user to the project', async () => {
 
     const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        memberRole.id,
-        projectMember1.id,
-        auditUser,
-    );
-    await projectService.addUser(
-        project.id,
-        memberRole.id,
-        projectMember2.id,
+        [memberRole.id],
+        [], // no groups
+        [projectMember1.id, projectMember2.id],
         auditUser,
     );
 
@@ -917,16 +912,11 @@ test('should add admin users to the project', async () => {
 
     const ownerRole = await stores.roleStore.getRoleByName(RoleName.OWNER);
 
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        ownerRole.id,
-        projectAdmin1.id,
-        auditUser,
-    );
-    await projectService.addUser(
-        project.id,
-        ownerRole.id,
-        projectAdmin2.id,
+        [ownerRole.id],
+        [], // no groups
+        [projectAdmin1.id, projectAdmin2.id],
         auditUser,
     );
 
@@ -944,7 +934,7 @@ test('should add admin users to the project', async () => {
     await isProjectUser(adminUsers[2].id, project.id, true);
 });
 
-test('add user should fail if user already have access', async () => {
+test('add user do nothing if user already has access', async () => {
     const project = {
         id: 'add-users-twice',
         name: 'New project',
@@ -961,23 +951,25 @@ test('add user should fail if user already have access', async () => {
 
     const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        memberRole.id,
-        projectMember1.id,
+        [memberRole.id],
+        [], // no groups
+        [projectMember1.id],
         auditUser,
     );
+    const access = await projectService.getAccessToProject(project.id);
+    expect(access.users).toHaveLength(2);
 
-    await expect(async () =>
-        projectService.addUser(
-            project.id,
-            memberRole.id,
-            projectMember1.id,
-            auditUser,
-        ),
-    ).rejects.toThrow(
-        new Error('User already has access to project=add-users-twice'),
+    await projectService.addAccess(
+        project.id,
+        [memberRole.id],
+        [], // no groups
+        [projectMember1.id],
+        auditUser,
     );
+    const accessAfter = await projectService.getAccessToProject(project.id);
+    expect(accessAfter.users).toHaveLength(2);
 });
 
 test('should remove user from the project', async () => {
@@ -997,10 +989,11 @@ test('should remove user from the project', async () => {
 
     const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        memberRole.id,
-        projectMember1.id,
+        [memberRole.id],
+        [], // no groups
+        [projectMember1.id],
         auditUser,
     );
     await projectService.removeUser(
@@ -1360,10 +1353,11 @@ test('should add a user to the project with a custom role', async () => {
         SYSTEM_USER_AUDIT,
     );
 
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        customRole.id,
-        projectMember1.id,
+        [customRole.id],
+        [], // no groups
+        [projectMember1.id],
         auditUser,
     );
 
@@ -1414,16 +1408,11 @@ test('should delete role entries when deleting project', async () => {
         SYSTEM_USER_AUDIT,
     );
 
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        customRole.id,
-        user1.id,
-        auditUser,
-    );
-    await projectService.addUser(
-        project.id,
-        customRole.id,
-        user2.id,
+        [customRole.id],
+        [], // no groups
+        [user1.id, user2.id],
         auditUser,
     );
 
@@ -1469,10 +1458,11 @@ test('should change a users role in the project', async () => {
     );
     const member = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        member.id,
-        projectUser.id,
+        [member.id],
+        [], // no groups
+        [projectUser.id],
         auditUser,
     );
     const { users } = await projectService.getAccessToProject(project.id);
@@ -1487,13 +1477,13 @@ test('should change a users role in the project', async () => {
         projectUser.id,
         auditUser,
     );
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        customRole.id,
-        projectUser.id,
+        [customRole.id],
+        [], // no groups
+        [projectUser.id],
         auditUser,
     );
-
     const { users: updatedUsers } = await projectService.getAccessToProject(
         project.id,
     );
@@ -1522,10 +1512,11 @@ test('should update role for user on project', async () => {
     const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
     const ownerRole = await stores.roleStore.getRoleByName(RoleName.OWNER);
 
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        memberRole.id,
-        projectMember1.id,
+        [memberRole.id],
+        [], // no groups
+        [projectMember1.id],
         auditUser,
     );
     await projectService.changeRole(
@@ -1566,10 +1557,11 @@ test('should able to assign role without existing members', async () => {
 
     const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        memberRole.id,
-        projectMember1.id,
+        [memberRole.id],
+        [], // no groups
+        [projectMember1.id],
         auditUser,
     );
     await projectService.changeRole(
@@ -1585,224 +1577,6 @@ test('should able to assign role without existing members', async () => {
 
     expect(memberUsers).toHaveLength(0);
     expect(testUsers).toHaveLength(1);
-});
-
-describe('ensure project has at least one owner', () => {
-    test('should not remove user from the project', async () => {
-        const project = {
-            id: 'remove-users-not-allowed',
-            name: 'New project',
-            description: 'Blah',
-            mode: 'open' as const,
-            defaultStickiness: 'clientId',
-        };
-        await projectService.createProject(project, user, auditUser);
-
-        const roles = await stores.roleStore.getRolesForProject(project.id);
-        const ownerRole = roles.find((r) => r.name === RoleName.OWNER)!;
-
-        await expect(async () => {
-            await projectService.removeUser(
-                project.id,
-                ownerRole.id,
-                user.id,
-                auditUser,
-            );
-        }).rejects.toThrowError(
-            new Error('A project must have at least one owner'),
-        );
-
-        await expect(async () => {
-            await projectService.removeUserAccess(
-                project.id,
-                user.id,
-                auditUser,
-            );
-        }).rejects.toThrowError(
-            new Error('A project must have at least one owner'),
-        );
-    });
-
-    test('should be able to remove member user from the project when another is owner', async () => {
-        const project = {
-            id: 'remove-users-members-allowed',
-            name: 'New project',
-            description: 'Blah',
-            mode: 'open' as const,
-            defaultStickiness: 'clientId',
-        };
-        await projectService.createProject(project, user, auditUser);
-
-        const memberRole = await stores.roleStore.getRoleByName(
-            RoleName.MEMBER,
-        );
-
-        const memberUser = await stores.userStore.insert({
-            name: 'Some Name',
-            email: 'member@getunleash.io',
-        });
-
-        await projectService.addAccess(
-            project.id,
-            [memberRole.id],
-            [],
-            [memberUser.id],
-            auditUser,
-        );
-
-        const usersBefore = await projectService.getProjectUsers(project.id);
-        await projectService.removeUserAccess(
-            project.id,
-            memberUser.id,
-            auditUser,
-        );
-        const usersAfter = await projectService.getProjectUsers(project.id);
-        expect(usersBefore).toHaveLength(2);
-        expect(usersAfter).toHaveLength(1);
-    });
-
-    test('should not update role for user on project when she is the owner', async () => {
-        const project = {
-            id: 'update-users-not-allowed',
-            name: 'New project',
-            description: 'Blah',
-            mode: 'open' as const,
-            defaultStickiness: 'clientId',
-        };
-        await projectService.createProject(project, user, auditUser);
-
-        const projectMember1 = await stores.userStore.insert({
-            name: 'Some Member',
-            email: 'update991@getunleash.io',
-        });
-
-        const memberRole = await stores.roleStore.getRoleByName(
-            RoleName.MEMBER,
-        );
-
-        await projectService.addUser(
-            project.id,
-            memberRole.id,
-            projectMember1.id,
-            auditUser,
-        );
-
-        await expect(async () => {
-            await projectService.changeRole(
-                project.id,
-                memberRole.id,
-                user.id,
-                auditUser,
-            );
-        }).rejects.toThrowError(
-            new Error('A project must have at least one owner'),
-        );
-
-        await expect(async () => {
-            await projectService.setRolesForUser(
-                project.id,
-                user.id,
-                [memberRole.id],
-                auditUser,
-            );
-        }).rejects.toThrowError(
-            new Error('A project must have at least one owner'),
-        );
-    });
-
-    async function projectWithGroupOwner(projectId: string) {
-        const project = {
-            id: projectId,
-            name: 'New project',
-            description: 'Blah',
-            mode: 'open' as const,
-            defaultStickiness: 'clientId',
-        };
-        await projectService.createProject(project, user, auditUser);
-
-        const roles = await stores.roleStore.getRolesForProject(project.id);
-        const ownerRole = roles.find((r) => r.name === RoleName.OWNER)!;
-
-        await projectService.addGroup(
-            project.id,
-            ownerRole.id,
-            group.id,
-            auditUser,
-        );
-
-        // this should be fine, leaving the group as the only owner
-        // note group has zero members, but it still acts as an owner
-        await projectService.removeUser(
-            project.id,
-            ownerRole.id,
-            user.id,
-            auditUser,
-        );
-
-        return {
-            project,
-            group,
-            ownerRole,
-        };
-    }
-
-    test('should not remove group from the project', async () => {
-        const { project, group, ownerRole } = await projectWithGroupOwner(
-            'remove-group-not-allowed',
-        );
-
-        await expect(async () => {
-            await projectService.removeGroup(
-                project.id,
-                ownerRole.id,
-                group.id,
-                auditUser,
-            );
-        }).rejects.toThrowError(
-            new Error('A project must have at least one owner'),
-        );
-
-        await expect(async () => {
-            await projectService.removeGroupAccess(
-                project.id,
-                group.id,
-                auditUser,
-            );
-        }).rejects.toThrowError(
-            new Error('A project must have at least one owner'),
-        );
-    });
-
-    test('should not update role for group on project when she is the owner', async () => {
-        const { project, group } = await projectWithGroupOwner(
-            'update-group-not-allowed',
-        );
-        const memberRole = await stores.roleStore.getRoleByName(
-            RoleName.MEMBER,
-        );
-
-        await expect(async () => {
-            await projectService.changeGroupRole(
-                project.id,
-                memberRole.id,
-                group.id,
-                auditUser,
-            );
-        }).rejects.toThrowError(
-            new Error('A project must have at least one owner'),
-        );
-
-        await expect(async () => {
-            await projectService.setRolesForGroup(
-                project.id,
-                group.id,
-                [memberRole.id],
-                auditUser,
-            );
-        }).rejects.toThrowError(
-            new Error('A project must have at least one owner'),
-        );
-    });
 });
 
 test('Should allow bulk update of group permissions', async () => {
@@ -2328,20 +2102,17 @@ test('should get correct amount of project members for current and past window',
     );
     const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
-    await Promise.all(
-        createdUsers.map((createdUser) =>
-            projectService.addUser(
-                project.id,
-                memberRole.id,
-                createdUser.id,
-                auditUser,
-            ),
-        ),
+    await projectService.addAccess(
+        project.id,
+        [memberRole.id],
+        [], // no groups
+        createdUsers.map((u) => u.id),
+        auditUser,
     );
 
     const result = await projectService.getStatusUpdates(project.id);
     expect(result.updates.projectMembersAddedCurrentWindow).toBe(6); // 5 members + 1 owner
-    expect(result.updates.projectActivityCurrentWindow).toBe(6);
+    expect(result.updates.projectActivityCurrentWindow).toBe(2);
     expect(result.updates.projectActivityPastWindow).toBe(0);
 });
 
@@ -2701,7 +2472,7 @@ test('should not delete project-bound api tokens still bound to project', async 
     await projectService.deleteProject(project1, user, auditUser);
     const fetchedToken = await apiTokenService.getToken(token.secret);
     expect(fetchedToken).not.toBeUndefined();
-    expect(fetchedToken.project).toBe(project2);
+    expect(fetchedToken!.project).toBe(project2);
 });
 
 test('should delete project-bound api tokens when all projects they belong to are deleted', async () => {

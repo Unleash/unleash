@@ -64,13 +64,13 @@ const createFlag = async (
     username: string = 'test',
     userId: number = -9999,
 ) => {
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         projectId,
         flag,
         TEST_AUDIT_USER,
     );
     if (strategy) {
-        await app.services.featureToggleServiceV2.createStrategy(
+        await app.services.featureToggleService.createStrategy(
             strategy,
             {
                 projectId,

@@ -37,7 +37,7 @@ export interface ProjectSchema {
     favorite?: boolean;
     /** The number of features this project has */
     featureCount?: number;
-    /** An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100 */
+    /** An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100 */
     health?: number;
     /** The id of this project */
     id: string;

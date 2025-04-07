@@ -39,7 +39,7 @@ export default class FakeGroupStore implements IGroupStore {
         return this.data.some((u) => u.id === key);
     }
 
-    async get(key: number): Promise<IGroup> {
+    async get(key: number): Promise<IGroup | undefined> {
         return this.data.find((u) => u.id === key);
     }
 

@@ -104,7 +104,7 @@ const PATH_STRATEGY = `${PATH_STRATEGIES}/:strategyId`;
 
 type ProjectFeaturesServices = Pick<
     IUnleashServices,
-    | 'featureToggleServiceV2'
+    | 'featureToggleService'
     | 'projectHealthService'
     | 'openApiService'
     | 'transactionalFeatureToggleService'
@@ -131,7 +131,7 @@ export default class ProjectFeaturesController extends Controller {
     constructor(
         config: IUnleashConfig,
         {
-            featureToggleServiceV2,
+            featureToggleService,
             openApiService,
             transactionalFeatureToggleService,
             featureTagService,
@@ -139,7 +139,7 @@ export default class ProjectFeaturesController extends Controller {
         startTransaction: TransactionCreator<UnleashTransaction>,
     ) {
         super(config);
-        this.featureService = featureToggleServiceV2;
+        this.featureService = featureToggleService;
         this.transactionalFeatureToggleService =
             transactionalFeatureToggleService;
         this.startTransaction = startTransaction;
@@ -670,7 +670,7 @@ export default class ProjectFeaturesController extends Controller {
             201,
             res,
             featureSchema.$id,
-            serializeDates(created),
+            serializeDates({ ...created, stale: created.stale || false }),
         );
     }
 
@@ -693,7 +693,7 @@ export default class ProjectFeaturesController extends Controller {
             201,
             res,
             featureSchema.$id,
-            serializeDates(created),
+            serializeDates({ ...created, stale: created.stale || false }),
         );
     }
 
@@ -740,8 +740,13 @@ export default class ProjectFeaturesController extends Controller {
             environmentVariants: variantEnvironments === 'true',
             userId: user.id,
         });
-
-        res.status(200).json(serializeDates(this.maybeAnonymise(feature)));
+        const maybeAnonymized = this.maybeAnonymise(feature);
+        res.status(200).json(
+            serializeDates({
+                ...maybeAnonymized,
+                stale: maybeAnonymized.stale || false,
+            }),
+        );
     }
 
     async updateFeature(
@@ -771,7 +776,7 @@ export default class ProjectFeaturesController extends Controller {
             200,
             res,
             featureSchema.$id,
-            serializeDates(created),
+            serializeDates({ ...created, stale: created.stale || false }),
         );
     }
 
@@ -795,7 +800,7 @@ export default class ProjectFeaturesController extends Controller {
             200,
             res,
             featureSchema.$id,
-            serializeDates(updated),
+            serializeDates({ ...updated, stale: updated.stale || false }),
         );
     }
 

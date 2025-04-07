@@ -63,6 +63,14 @@ export const featureEnvironmentSchema = {
             },
             description: 'A list of variants for the feature environment',
         },
+        changeRequestIds: {
+            type: 'array',
+            items: {
+                type: 'number',
+            },
+            description:
+                'Experimental. A list of change request identifiers for actionable change requests that are not Cancelled, Rejected or Approved.',
+        },
         lastSeenAt: {
             type: 'string',
             format: 'date-time',

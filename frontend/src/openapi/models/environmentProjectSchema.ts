@@ -31,4 +31,6 @@ export interface EnvironmentProjectSchema {
     sortOrder: number;
     /** The [type of environment](https://docs.getunleash.io/reference/environments#environment-types). */
     type: string;
+    /** Indicates whether the environment can be enabled for feature flags in the project */
+    visible?: boolean;
 }

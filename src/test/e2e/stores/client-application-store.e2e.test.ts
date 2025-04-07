@@ -138,8 +138,8 @@ test('Merge keeps value for single row in database', async () => {
     const stored = await clientApplicationsStore.get(
         clientRegistration.appName,
     );
-    expect(stored.color).toBe(clientRegistration.color);
-    expect(stored.description).toBe('new description');
+    expect(stored!.color).toBe(clientRegistration.color);
+    expect(stored!.description).toBe('new description');
 });
 
 test('Multi row merge also works', async () => {
@@ -171,7 +171,7 @@ test('Multi row merge also works', async () => {
         clients.map(async (c) => clientApplicationsStore.get(c.appName!)),
     );
     stored.forEach((s, i) => {
-        expect(s.description).toBe(clients[i].description);
-        expect(s.icon).toBe('red');
+        expect(s!.description).toBe(clients[i].description);
+        expect(s!.icon).toBe('red');
     });
 });

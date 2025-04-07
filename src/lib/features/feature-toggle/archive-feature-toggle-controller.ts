@@ -37,18 +37,18 @@ export default class ArchiveController extends Controller {
         config: IUnleashConfig,
         {
             transactionalFeatureToggleService,
-            featureToggleServiceV2,
+            featureToggleService,
             openApiService,
         }: Pick<
             IUnleashServices,
             | 'transactionalFeatureToggleService'
-            | 'featureToggleServiceV2'
+            | 'featureToggleService'
             | 'openApiService'
         >,
         startTransaction: TransactionCreator<UnleashTransaction>,
     ) {
         super(config);
-        this.featureService = featureToggleServiceV2;
+        this.featureService = featureToggleService;
         this.openApiService = openApiService;
         this.transactionalFeatureToggleService =
             transactionalFeatureToggleService;
@@ -150,11 +150,23 @@ export default class ArchiveController extends Controller {
             true,
             extractUserIdFromUser(user),
         );
+
         this.openApiService.respondWithValidation(
             200,
             res,
             archivedFeaturesSchema.$id,
-            { version: 2, features: serializeDates(features) },
+            {
+                version: 2,
+                features: serializeDates(
+                    features.map((feature) => {
+                        return {
+                            ...feature,
+                            stale: feature.stale || false,
+                            archivedAt: feature.archivedAt!,
+                        };
+                    }),
+                ),
+            },
         );
     }
 

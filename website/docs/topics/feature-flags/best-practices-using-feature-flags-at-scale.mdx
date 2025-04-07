@@ -1,24 +1,24 @@
 ---
 title: 'Feature flag management: Best practices'
 description: 'A guide for feature flag management. Best practices for organization, lifecycle management, and avoiding common pitfalls to keep your system efficient and secure.'
+toc_max_heading_level: 2
 ---
 
-# Feature flag management at scale: best practies
+# Feature flag management at scale: best practices
 
 You've probably heard someone say, “A feature flag is just an if statement.” And in simple cases, that's true. But when your organization has thousands of developers managing hundreds of [feature flags](https://docs.getunleash.io/what-is-a-feature-flag)—with complex targeting rules, audit trails, and dozens of microservices—those if statements get complicated fast. Especially if you don't [set things up properly from the start](../../use-cases/user-management-access-controls-auditing).
 
 This guide shares what we've learned from helping teams run some of the largest feature flag deployments in the world, both through [Unleash Open-Source](https://github.com/Unleash/unleash) and [Unleash Enterprise](https://www.getunleash.io/enterprise-feature-management-platform).
 
-The principles here don't only apply to Unleash—they're relevant for any large-scale feature flag system, whether you're building your own or using a commercial solution. If you're just getting started, check out our [best practices for building and scaling feature flags](./feature-flag-best-practices).
+The principles here don't only apply to [Unleash](https://www.getunleash.io/guide-to-feature-management)—they're relevant for any large-scale feature flag system, whether you're building your own or using a commercial solution. If you're just getting started, check out our [best practices for building and scaling feature flags](./feature-flag-best-practices).
 
-We've broken this guide into three sections, based on the key phases of a large-scale feature flag rollout:
+In this guide, we'll cover tips and best practices in five key focus areas to help you scale a feature flag system:
 
-- Instrument
-- Stay on top of technical debt
-- Use feature flag lifecycle to optimize your development workflow
-- Common pitfalls when implementing feature flags at scale
-- Organizing your teams
-- Keepig cool?
+- [Organize your feature flag code effectively](#organize-your-feature-flag-code-effectively)
+- [Stay on top of technical debt](#stay-on-top-of-technical-debt)
+- [Use feature flag lifecycle to optimize your development workflow](#use-feature-flag-lifecycle-to-optimize-your-development-workflow)
+- [Avoid common pitfalls when implementing feature flags](#avoid-common-pitfalls-when-implementing-feature-flags)
+- [Enable secure collaboration with flexible permissions](#enable-secure-collaboration-with-flexible-permissions)
 
 ## Organize your feature flag code effectively
 
@@ -26,12 +26,12 @@ Feature flags live in your codebase—and how you implement them matters. The ch
 
 ### Define flags at the highest level of abstraction
 
-![Evaluate flags at the edge](/img/evaluate-flags-at-the-edge.svg)
-
 Place feature flag evaluations as high in the stack as possible. For example, when testing a dark mode toggle or a new signup flow, evaluate the flag near the UI layer rather than scattering it across multiple components. This helps you:
 	- **Simplify your code**: Control feature behavior from a single point so that the rest of your system does not need to be aware of the flag.
 	- **Test more easily**: Isolate the feature for unit and integration testing.
 	- **Clean up faster**: Flags defined in one place are easier to find, maintain, and clean up when no longer needed.
+
+![Evaluate flags at the edge](/img/evaluate-flags-at-the-edge.jpg)
 
 For backend logic—such as introducing a new database schema or optimizing a query—evaluate the flag close to the affected module. Make sure your code is easily testable. Evaluate the flag externally and inject the result, or provide two separate implementations. This makes it easier to write unit tests for both versions of the logic.
 
@@ -39,7 +39,7 @@ This enables:
 -   Focused testing: Evaluating the flag's impact within the specified module simplifies testing and debugging. You only need to consider the immediate code's behavior, making troubleshooting more efficient.
 -   Isolation: Evaluating close to the module helps isolate the impact of the feature flag, reducing the risk of unintended consequences in other parts of the codebase.
 
-::: note
+:::note
 
 Whenever possible, evaluate your flag in a single place. Centralizing the evaluation simplifies your code and reduces the chances of inconsistent behavior.
 
@@ -47,28 +47,30 @@ Whenever possible, evaluate your flag in a single place. Centralizing the evalua
 
 ### Evaluate feature flags once per user request
 
-![Evaluate flags once](/img/evaluate-flags-only-once.svg)
-
 When rolling out complex features, changes often span multiple parts of a system—whether that's modules within a single application or services in a distributed architecture. It might seem convenient to use the same feature flag across all components and evaluate it locally in each one, but this can lead to problems.
 
-As a user request moves through the system, it hits different parts at different times. Even with synchronized flag states, there's a risk the flag's value changes between evaluations, resulting inconsistent behavior for the user.
-Particularly in distributed systems, we cannot assume all parts of the system are perfectly synchronized, as networks are unreliable and can experience transient errors at any time. Most feature flag systems prioritize [availability over consistency](./feature-flag-best-practices#2-prioritize-availability-over-consistency). By only evaluating a feature flag once, we guarantee a consistent experience for our users.
+As a user request moves through the system, it hits different parts at different times. Even with synchronized flag states, there's a risk that the flag's value changes between evaluations, resulting in inconsistent behavior for the user.
+Particularly in distributed systems, we cannot assume all parts of the system are perfectly synchronized, as networks are unreliable and can experience errors at any time. Most feature flag systems prioritize [availability over consistency](./feature-flag-best-practices#2-prioritize-availability-over-consistency). By only evaluating a feature flag once, we guarantee a consistent experience for our users.
 
-Using the same flag in multiple places fragments the control logic and breaks the single responsibility principle, making code harder to understand and maintain.
+Using the same flag in multiple places fragments the control logic and breaks the single responsibility principle, making code [harder to understand and maintain](https://www.getunleash.io/simplicity).
+
+![Evaluate flags once](/img/evaluate-flag-many-places.jpg)
 
 Instead, evaluate the flag once—typically at the start of a user request—and pass the result through the system. This keeps behavior predictable and makes the codebase cleaner and easier to manage over time.
 
+![Evaluate flags once](/img/evaluate-flags-only-once.jpg)
+
 ## Stay on top of technical debt
 
-Feature flags are powerful—they increase developer productivity, reduce risk, and support data-driven product decisions. But they also come with a catch: they're a form of technical debt.
+[Feature flags are powerful](https://www.getunleash.io/blog/feature-ops-is-the-next-frontier)—they increase developer productivity, reduce risk, and support data-driven product decisions. But they also come with a catch: they're a form of [technical debt](./reference/technical-debt).
 
-Technical debt builds up when flags stick around long after they've served their purpose. Over time, outdated or unused flags clutter your codebase, making it harder to read, test, and maintain. This slows down development and can even lead to bugs, security risks, or unexpected behavior—especially if old flags conflict with one another or expose sensitive features.
+Technical debt builds up when flags stick around long after they've served their purpose. Over time, outdated or unused flags clutter your codebase, making it harder to read, test, and maintain. This slows down development and can even lead to bugs, [security risks](https://www.getunleash.io/security-and-performance), or unexpected behavior—especially if old flags conflict with one another or expose sensitive features.
 
 The simplest way to pay down flag debt? Track your flags and remove them when they're no longer needed. Understanding the full lifecycle of a flag is key to keeping your codebase clean and your team moving fast.
 
 ## Use feature flag lifecycle to optimize your development workflow
 
-Every feature flag follows a lifecycle—even if your tooling doesn't make it explicit. Understanding and tracking this lifecycle helps teams reduce technical debt identify bottlenecks in the development workflow.
+Every feature flag follows a [lifecycle](./reference/feature-toggles#feature-flag-lifecycle)—even if your tooling doesn't make it explicit. Understanding and tracking this lifecycle helps teams reduce technical debt and identify bottlenecks in the development workflow.
 
 Here are the typical stages:
 	- **Define**: The flag is created, but no code has been written yet.
@@ -83,19 +85,21 @@ Tracking flags through these stages helps teams work smarter. Here's how:
   - Stuck in Define? Maybe requirements aren't clear. Perhaps there are integration difficulties.
   - Stuck in Develop? Could point to testing delays or bugs.
   - Stuck in Production? Might be missing success criteria or user feedback.
-  - Stuck in Cleanup? Check for accumnulating technical debt.
+  - Stuck in Cleanup? Check for accumulating technical debt.
 
 **Clean up stale flags**
- Flags that outlive their purpose clutter the codebase and can lead to bugs or security risks. Regularly reviewing the lifecycle data helps you keep your code clean and secure.
+
+Flags that outlive their purpose clutter the codebase and can lead to bugs or [security risks](https://www.getunleash.io/security-and-performance). Regularly reviewing the lifecycle data helps you keep your code clean and secure.
 
 **Get actionable insights**
+
 Track metrics like time-to-production, rollback rates, or cleanup delays across teams. Over time, these insights can highlight efficiency gains—or uncover hidden slowdowns you might otherwise miss.
 
-## Common pitfalls when implementing feature flags at scale
+## Avoid common pitfalls when implementing feature flags
 
-When you work with feature flags at scale, some decisions seem smart in the moment—but can cause big headaches down the line. Here are two of the most common pitfalls we've seen:
+When you work with feature flags at scale, some decisions seem smart in the moment—but can cause big headaches down the line. Here are five of the most common pitfalls we've seen:
 
-### Parent child dependencies with complex targeting rules
+### Parent-child dependencies with complex targeting rules
 
 At scale, it's tempting to group related feature flags under a single parent flag to coordinate complex releases. The idea is simple: toggle one parent flag to enable or disable multiple child flags together. The parent can also serve as a global kill switch.
 
@@ -109,7 +113,7 @@ Our advice: Keep it simple. If you use parent-child structures, avoid overlappin
 
 Both feature flags and configuration settings control an application's behavior. However, it's crucial to distinguish between feature flagging systems and configuration management systems and use each for its intended purpose.
 
-Feature flags are temporary and dynamic. They give you [runtime control](./feature-flag-best-practices#1-enable-runtime-control) to enable or disable functionality in a live environment-perfect for things like [short-lived experiments](./feature-flag-best-practices#3-make-flags-short-lived), such as A/B testing or gradual rollouts.
+[Feature flags are temporary and dynamic](https://docs.getunleash.io/what-is-a-feature-flag). They give you [runtime control](./feature-flag-best-practices#1-enable-runtime-control) to enable or disable functionality in a live environment—perfect for things like [short-lived experiments](./feature-flag-best-practices#3-make-flags-short-lived), such as A/B testing or gradual rollouts.
 
 Configurations, on the other hand, are usually static and long-lived. They often contain sensitive data like API keys or access credentials, which need to be encrypted and carefully managed. Using feature flags for configuration can create security vulnerabilities and operational issues. Most flag systems don't encrypt values the way configuration management tools do.
 
@@ -144,14 +148,14 @@ A good rule of thumb is that if the data is static (you don't expect it to chang
           <li>Dark mode/light mode</li>
           <li>Stable / Beta feature</li>
           <li>New or old algorithm</li>
-          <li>A/B test</li>`
-        </ul>`
+          <li>A/B test</li>
+        </ul>
       </td>
     </tr>
   </tbody>
 </table>
 
-### Resuing feature flag names
+### Reusing feature flag names
 
 Feature flag names need to be [globally unique](https://docs.getunleash.io/topics/feature-flags/unique-names). In an ideal world, all flag references would be removed from the codebase as soon as a flag is archived—but in reality, that rarely happens. Using unique names helps protect new features from accidentally linking to old, unused flags that could unintentionally re-enable outdated behavior.
 
@@ -169,155 +173,146 @@ This approach helps with:
 - Memory usage: Storing a simple attribute is much more efficient than holding a list of thousands of user IDs in memory.
 - Compliance: Restricting personal data to only the systems that need it makes it easier to [stay compliant](./using-unleash/compliance/compliance-overview).
 
+### Defining core business logic in feature flags
 
-### Defining business logic using feature flags
+Feature flags [reduce the friction of releasing software](https://www.getunleash.io/feature-flag-use-cases-progressive-or-gradual-rollouts), so it's no surprise that teams who adopt them often expand their usage. This is generally a good thing—as long as archived flags are removed from the code base keeping tech debt down.
 
-In our experience, since feature flags reduce the friction of releasing software, teams who adopt feature flags tend to use them more and more. This is a good thing as long as archived flags are removed from the code base keeping tech debt down. You should resist, however, the temptation to codify core business logic inside feature flags, the same way you should [resist wrapping application configuration in feature flags](#12-dont-use-flags-to-manage-configuration).
+However, one common pitfall is using feature flags to control core business logic. Just like you shouldn't use feature flags to [manage application configuration](#using-feature-flags-to-manage-configuration), you should avoid embedding fundamental business rules in flags.
 
-Here is a good rule of thumb: Experiment with business logic using feature flags. But once you have established the business logic, codify it in code that lives outside of a flag.
+We recommend using feature flags to experiment with business logic, not to define it long-term. For example, let's say you want to test whether premium users will adopt a new feature. Wrapping it in a flag lets you test and measure safely. But once you've decided that all premium users should have access, remove the flag and move the logic into your entitlement service or backend code.
 
-For example, if you want to determine whether premium users of your product will use a certain new feature, you can wrap it in a flag and measure the result. Once you have determined that premium users do use the feature, and that all premium users should have access to it, however, you should remove the flag and add the feature to your entitlement service.
+So, if feature flags are so useful, why not use them for business logic? Here's why:
 
-If feature flags are so great, why shouldn’t you use them for business logic? A few reasons:
+#### Dependency on external services
 
-#### Dependencing on third-party services
+We don't recommend making core business logic dependent on any feature flag service. Even though Unleash is built with [high resilience](https://www.getunleash.io/blog/unleash-enterprise-edge-think-of-it-as-a-cdn-for-your-feature-flags) in mind—and designed to help your application keep running smoothly, even if you temporarily lose access to it—critical business functionality should never rely solely on the availability of an external service. This principle applies whether you’re using Unleash, another third-party provider, or a homegrown solution.
 
-Coming from a feature flag vendor, it might surprise you that we do not advocate making core business logic dependent on a 3rd party feature flag service. If that flag service is down, then your app could potentially cease to function in the way designed. This applies to using 3rd party feature flag services, as well as home grown feature flags service.
+#### Complexity and maintainability
 
-#### Complexity and Maintainability
+Embedding business logic within feature flags can make the codebase unnecessarily complex. Business rules can become scattered and entangled with feature flagging logic, making the code harder to read, understand, and maintain. When changes are needed, developers might have to navigate through many feature flags to find and update the relevant logic, increasing the risk of introducing bugs.
 
-Embedding business logic within feature flags can make the codebase unnecessarily complex. Business rules can become scattered and entangled with feature flagging logic, making the code harder to read, understand, and maintain. When changes are needed, developers might have to navigate through a labyrinth of feature flags to find and update the relevant logic, increasing the risk of introducing bugs.
+#### Performance implications
 
-#### Performance Implications
+Feature flags are typically designed to be checked frequently and quickly, with minimal performance overhead. However, when feature flags are used to control business logic, [they may involve more complex evaluations and data fetching, which can degrade application performance](#using-large-targeting-lists). This is particularly problematic for high-traffic applications where performance is critical.
 
-Feature flags are typically designed to be checked frequently and quickly, with minimal performance overhead. However, when feature flags are used to control business logic, [they may involve more complex evaluations and data fetching, which can degrade application performance](#14-avoid-giant-feature-flag-targeting-lists). This is particularly problematic for high-traffic applications where performance is critical.
-
-#### Security Risks
+#### Security risks
 
 Business logic often involves access controls and entitlements. Using feature flags to manage these aspects can expose security vulnerabilities if not handled correctly. Feature flags might be toggled accidentally or maliciously, leading to unauthorized access or exposure of sensitive data.
 
-## Organize your team and internal processes to support feature flags
+## Enable secure collaboration with flexible permissions
 
-Before you add your first feature flag, you need to think about how organizational structure and processes that live outside of code will affect your feature flag deployments.
+Before you add your first feature flag, you need to think about how organizational structure and processes that live outside of code affect your feature flag deployments. Also consider what legal and regulatory requirements you have—and how access, ownership, and collaboration is expected to change as your teams grow and your features evolve.
 
-### Align feature flags with organizational and application desig
+### Align feature flags with your organizational and application structure
 
 > Any organization that designs a system will produce a design whose structure is a copy of the organization's communication structure.
 >
 > – Melvin Conway
 
-![Feature flag organization methods](/img/feature-flag-organization-methods.svg)
+[Conway's Law](https://martinfowler.com/bliki/ConwaysLaw.html) tells us that the systems we build naturally reflect the way our teams are structured—and that includes how we organize feature flags. Instead of working against this, it's best to acknowledge it and design your feature flag system in a way that mirrors your organization's structure.
 
-There is no getting around [Conway’s law](https://martinfowler.com/bliki/ConwaysLaw.html). Applications tend to resemble the organizations that create them, and your feature flag system is no exception. Rather than fighting this law, acknowledge and embrace it, and pick a way to organize your feature flags that reflects your organization.
+For example, a large enterprise with thousands of developers might be structured around business units or product lines, not individual applications. If your flags are organized only by application, that mismatch can lead to confusion and make permission management harder than it needs to be.
 
-A typical Fortune 500 company typically has thousands of software developers. Organizing your feature flag system based on “applications” when your company is organized based on business units or products will lead to a poor experience and additional complexities in managing flag permissions.
+Instead, organize flags in a way that matches how your teams actually work. People should be able to see the flags relevant to their work—whether that's by team, product, project, or application. They should also be able to inspect a flag's configuration and stay up to date on any changes.
 
-Users should be shown information about any flags related to their work, whether on a team, an application, a product, or a project basis. This includes inspecting the flag’s configuration and tracking updates to the flag.
+Choose the right level of abstraction for grouping your flags:
+	- If your teams own features end-to-end, group flags by team.
+	- If you form cross-functional project teams, group flags by project.
 
-Achieve this by grouping related flags together based on the most appropriate level of abstraction. If you work on static teams that see a feature through from start to finish, group flags by team. If you form project-based teams, group flags by project.
-
-Taken to the extreme, you might be tempted to put all flags into one giant group. Avoid that temptation because it will create permission complexities and information overload.
-
-In an organization that actively uses feature flags, there will invariably be a large number of flags and an even larger number of changes made to those flags. This can quickly become overwhelming and a user may end up losing track of updates that are important to them.
-
-Removing information and updates you don’t care about makes the things you care about stand out that much more.
-
-**Example**: Do all members of Team A need updates on Project X, even if only one member of Team A is working on it? If so, include all team members in Project X’s group. Otherwise, only include the member who works on project X.
+Avoid putting all flags into one large group. While it might seem simpler, it quickly becomes difficult to manage. Permissions become complex and users are overwhelmed with irrelevant updates, making it harder to focus on what matters. Only include people in a flag group if they actually need to work with or track that flag.
 
 ### Make flags searchable globally
 
-Modern applications are composed of multiple services with many complex dependencies. While you should try to organize your flags based on high-level abstractions such as applications, teams, or business units, many services cut across these artificial organizing principles.
+Modern applications are composed of multiple services with many complex dependencies. While organizing flags by applications, teams, or business units is a good starting point, real-world services often exist across these organizational boundaries.
 
-Just because a user might need to interact with a flag does not mean you should display it by default when it is outside your main organizational parameters. However, all flags should be easily searchable. When a user finds one, they should be able to inspect its configuration and ownership so that they might request additional permissions or [submit change requests for approval](#6-implement-flag-approval-workflows-early).
+Just because a user doesn't normally work with a flag doesn't mean they won't need to find it. However, you don't need to show every flag by default—especially those outside a user's main scope. What matters is that all flags are [searchable](https://docs.getunleash.io/reference/api/unleash/search-features). When someone searches for a flag, they should be able to view its configuration and ownership, so they can request access or submit a [change request](./reference/change-requests) if needed.
 
-This is why feature flag systems should be [open by default](./feature-flag-best-practices#5-choose-open-by-default). There are valid use cases for excluding flags from global search. For example, a public company in the middle of an acquisition where exposing flags related to the website or app changes might breach regulatory guidelines. Your feature flag system should accommodate these private projects; however, they should be the exception, not the rule.
+This is why feature flag systems should be [open by default](./feature-flag-best-practices#5-choose-open-by-default).
+
+There are also valid use cases for excluding flags from global search. For example, during sensitive projects, it may be necessary to hide flags that could expose confidential changes. Your system should support private flags in special cases—but those should remain the exception, not the norm.
 
 ### Design for flag permissions to change over time
 
-The owner or maintainer of a flag may change over time as the feature it controls [evolves across its lifecycle](#10-leverage-flag-lifecycles-to-optimize-your-development).
+The owner or maintainer of a flag may change over time as the feature it controls [evolves across its lifecycle](use-feature-flag-lifecycle-to-optimize-your-development-workflow).
 
-For instance, when a developer starts working on a feature, they’ll place it behind a flag so that they can merge back into the main branch early and often (a development style known as [trunk-based development](https://www.getunleash.io/blog/how-to-implement-trunk-based-development-a-practical-guide#What%20is%20trunk-based%20development)) without affecting the product. At this point, the flag exists to hide unfinished code and should be owned and managed by the developer.
+For instance, a developer might initially create a flag to hide incomplete code while working in [trunk-based development](https://www.getunleash.io/blog/how-to-implement-trunk-based-development-a-practical-guide#What%20is%20trunk-based%20development) model. At this stage, the flag exists to hide unfinished code and is owned and managed by the developer.
 
-When the feature is ready to be rolled out, the flag’s purpose will change. Its purpose is no longer to hide unfinished code but rather to _expose_ new functionality. This can be done in several ways and will vary from feature to feature.
+Later, when the feature is ready to roll out, the purpose of the flag shifts—from hiding unfinished work to managing exposure to users. With this shift, ownership often becomes shared:
+- For simple rollouts, the developer might remain the main owner, gradually enabling the feature while monitoring for issues.
+- For more complex rollouts, especially when business context matters, the developer may still manage the flag, but a product owner or Customer Success Manager might control targeting rules or decide which users see the feature first.
 
-If the feature is a simple improvement, the change can likely be incrementally rolled out while keeping an eye out for any signs that the feature is misbehaving. This can be managed entirely by the developer.
+In B2B environments, for instance, it's common for customer-facing teams to guide rollouts based on account needs. These teams need the appropriate access and ownership—while still keeping developers in the loop for technical oversight.
 
-However, if the feature rollout has certain requirements, it’s quite likely that the developer doesn’t have the entire context that they need. As such, the ownership is now shared between the developer and a product owner. In cases like this, the developer may be in charge of the main switch, enabling or disabling the feature so that they can turn it off if something goes wrong. However, the product owner might decide what targeting strategies to use, such as how many users to roll the feature out to.
+Feature flag permissions should be dynamic and reflect real-world collaboration. You should also design your permission system to easily adapt to common scenarios like:
+	- Access is misconfigured—someone needs access or has access they shouldn't.
+	- Project requirements shift midway through development.
+	- Project ownership changes due to role or team changes.
+	- Organizational structure evolves and teams are reorganized.
 
-This is also often the case for B2B companies where specific customers request certain functionality. A Customer Success Manager will often have better insight into to whom to roll out a new feature first.
+### Get flag permissions right—and audit everything
 
-To be clear, the developers should still be kept in the loop (after all, when was the last time your Customer Success Managers checked system logs?). However, the flags are now a shared responsibility, and other team members should be given the power and responsibility to make the changes they want to see.
+As features move through their lifecycle, different teams will need access to the same flags—but not everyone should have the same level of control.
 
-Here are common examples that require updating flag permissions you should plan for:
-
--   Permissions are wrongly scoped. Someone was left out, or someone who should not have access does.
--   Requirements changed mid-project.
--   The project owner or team lead changed.
--   Teams are reorganized.
-
-The flag lifecycle stage dictates changes in the owners.
-
-### Get flag management permissions right. And audit everything
-
-It is clear now that different teams will require access to flags across their lifecycle. However, not every user will need the same permissions for common flag management tasks.
-
-Here is a partial list of things one or more users will want to do with a feature flag for which you need to configure permissions:
+Here's a sample list of actions users may need to perform on a feature flag, each requiring its own permission setting:
 
 -   Create
 -   Delete
--   Turn-on
--   Turn-off
+-   Turn on / off
 -   Configure targeting
 -   Change rollout
 -   Read configuration
 -   Update configuration
 
-Let’s look at a simple example: a product manager working with the development team to test a new Beta feature.
+Let's walk through a simple example: a product manager is collaborating with a developer to test a beta feature.
 
-The developer should most likely be able to turn the flag on and off. Should the product manager? That depends on your organization's culture and requirements. Your feature flag system should be able to deal with this permission complexity.
+The developer should likely have full control—turning the flag on or off as needed. But what about the product manager? That depends on how your organization handles ownership and responsibilities. Your feature flag system should support fine-grained permissions to reflect those organizational needs.
 
-The same thing goes for editing targeting rules (i.e. who sees the version of the application controlled by the flag) and rollout strategies (i.e., what % of users are exposed to the feature). It is up to your organization how much the product owner can do independently. It might make sense for them to be able to update and edit targeting rules for a flag freely but not control the rollout itself. Or, they might be able to make the edits to targeting and rollout directly but need to submit a change request for their desired changes and have them reviewed by a manager or more technical stakeholder. These permissions are directly related to an organization's security and compliance policies and are important to get right.
+Take targeting and rollout strategies, for instance:
+	- You might allow the product manager to update targeting rules but not control rollout percentages.
+	- Or, they may have full access to both, but changes must go through an approval workflow before being applied.
 
-Equally important is auditing all of these permissions and changes. As such, knowing where to find the flagging system’s audit log is essential. If there’s a slip-up, you can find out when and where it happened and use those findings to improve your processes. Should you require more approvals before going into production? Do you need to update targeting rules or user segments? In the case of a malicious actor, the audit log can help you identify the actor and the changes they made.
+These choices often reflect broader compliance or security policies. The key is flexibility: your flag system should let you tailor permissions based on roles, use cases, and risk levels.
 
-### Base flag permissions on global permissions
+Just as important as getting permissions right is tracking what happens to your flags. A robust audit log is critical. It helps answer questions like:
+	- Who changed a targeting rule—and when?
+	- What configuration was live during an incident?
+	- Are approval workflows being followed?
+	- Do we need tighter controls or better communication?
 
-Your organization has already established some notions of groups. Leverage that for your feature flag system permissions.
+And in the rare case of malicious behavior, an audit trail can help you pinpoint the issue and respond quickly.
 
-These might be groups based on roles (such as developers, operations, marketing, etc.), or business units, or both.
+### Align flag permissions with your global access controls
 
-These groups should be mirrored in your feature flag system to help you organize your users and access rights. Your system should be set up to sync with SSO providers to make this process as painless as possible.
+Your organization likely already defines user groups, for example by role (such as developers, operations, marketing) or by business unit. Use those existing structures to manage feature flag permissions. This makes it easier to assign the right access levels and keeps your permission model consistent across systems.
 
-Users who are added or removed from your main SSO directory should be added or removed (based on their role) from your feature flag system. Managing global permissions is complex. Only do it in one place.
+Your flag system should integrate with your [single sign-on](./reference/sso) (SSO) provider. That way, when a user is added to or removed from a group in your central directory, their access to the [flag system updates automatically](./reference/provisioning).
+
+Managing access is complex—so don't manage it in multiple places. Let your global permissions drive flag access and keep everything in sync.
 
 ### Implement flag approval workflows early
 
+Depending on the industry and legal framework you're operating in, you'll need varying levels of approval for a feature flag change to go into production. Whether your process is lightweight or highly controlled, your feature flag system should support it.
+
 ![Change request process](/img/change-request-flow.png)
 
-Depending on the industry and legal framework you’re operating in, you’ll need varying approvals for a feature flag change to go into production. You may be able to just roll something out on a whim, or you might need to get it approved by specific stakeholders before releasing it. Your feature flag tool should help you do this, regardless of how much oversight you need.
+In regulated industries, peer review is often required before changes reach production—commonly known as the [four-eyes principle](https://www.unido.org/overview-member-states-change-management-faq/what-four-eyes-principle). Think of it like a pull request: users should be able to bundle related changes across multiple flags into a single request, preview the impact, and submit it for review. Reviewers should have clear visibility into what's changing and what the new configuration will look like.
 
-**Require approvals where necessary**
+Even if your organization doesn't require approvals, having an optional review step is still valuable, as it allows you to:
+- **Coordinate multiple changes**:
+      Grouping related flag updates ensures they go live together, preventing inconsistent or incomplete rollouts.
+- **Prevent accidental changes**:
+      A quick review adds a layer of safety, so unfinished code won't accidentally be exposed.
+- **Double-check outcomes**:
+      Reviewing changes in context helps you confirm that you're delivering what you intended.
 
-When legal requirements say that a change must be peer-reviewed before being put into production (often referred to as the ‘[four-eyes principle](https://www.unido.org/overview-member-states-change-management-faq/what-four-eyes-principle)' or the ‘two-person rule’), it should be easy to do. You should be able to add all the changes you want to make to all the relevant flags and present them as a group, similar to making a pull request on GitHub.
+## Staying in control with feature flags at scale
 
-It should be easy for the reviewers to see what changes would be made and what the configuration would look like after the change.
+These best practices are based on insights from working with some of the world's largest organizations. What we've learned is that careful planning, discipline, and the right systems in place help you stay in control, no matter the size of your organization.
 
-But this isn’t just useful for legal reasons. The process of submitting something for review is useful in and of itself.
+By [aligning feature flags with your organizational structure](#align-feature-flags-with-your-organizational-and-application-structure), and keeping them globally [searchable](./reference/search-operators), you lay the foundation for a system that's [easy to maintain and scale](https://www.getunleash.io/unleash-enterprise-edge). [Instrumenting your code properly](#organize-your-feature-flag-code-effectively), [addressing technical debt regularly](#stay-on-top-of-technical-debt), and [maintaining a flexible permission system](#enable-secure-collaboration-with-flexible-permissions) ensures strong performance and security over time. And by avoiding common pitfalls—like embedding business logic or managing config through flags—you keep your system clean and manageable.
 
-Review flag changes before they take effect
+Feature flags are a powerful tool for delivering software efficiently while maintaining [security](https://www.getunleash.io/security-and-performance) and [compliance](/../using-unleash/compliance/compliance-overview). For developers working in large organizations, that is the best of both worlds. Following the practices in this guide will help you get the most value from feature flags without getting lost in complexity.
 
-Even if you don’t require anyone else's approval before making changes in production environments, there are still benefits to grouping your changes together and reviewing them before actually making them:
+The key to success at scale? Clear processes, regular maintenance, and a commitment to best practices. With these in place, you can rely on feature flags to drive innovation and improve your software development lifecycle.
 
-1. You can make multiple changes at the same time. If you have a set of changes across flags that should change in tandem, you can make sure they update at the same time, avoiding awkward in-between states.
-2. You avoid making changes by mistake. If your cat walks across the keyboard, you can feel safe that they won’t accidentally expose your unfinished code to everyone.
-3. You get to review the changes before they go out. You get the full overview of the changes you’re making. You can double-check that the changes will have the effect you want.
-
-## Keeping cool while managing feature flags at scale
-
-These best practices come from working with many of the largest organizations on the planet. We’ve learned that keeping cool while managing feature flags at scale requires careful planning, thoughtful organization, and adherence to several best practices. By aligning feature flags with organizational structure, making flags searchable, and managing permissions effectively, you can maintain a clean and efficient system that sets you up for success from the start. Instrumenting your code correctly and regularly paying down technical debt helps maintain performance and security. Finally, avoiding common pitfalls, such as using feature flags for business logic or configuration management, keeps your system robust and manageable.
-
-Feature flags are a powerful tool for delivering software efficiently while maintaining security and compliance. For developers working in large organizations, that is the best of both worlds. By following the best practices outlined in this guide, you can harness the full potential of feature flags while avoiding the complexities and risks associated with their misuse.
-
-Remember, the key to successful feature flag management at scale lies in clear processes, regular maintenance, and a commitment to best practices. With these in place, you can leverage feature flags to drive innovation and improve your software development lifecycle.
-
-This guide was all about using feature flags at scale. For similar tips on building and scaling the feature flag system itself, see our [feature flag best practices guide](./feature-flag-best-practices).
+This guide focused on using [feature flags at scale](https://www.getunleash.io/blog/feature-management). For advice on building and scaling the flag system itself, check out our [feature flag best practices guide](./feature-flag-best-practices).

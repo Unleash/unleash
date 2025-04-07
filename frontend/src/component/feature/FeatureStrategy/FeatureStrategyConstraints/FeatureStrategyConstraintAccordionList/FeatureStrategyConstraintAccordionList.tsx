@@ -46,12 +46,6 @@ const useConstraintLimit = (constraintsCount: number) => {
     };
 };
 
-const ConstraintList = styled('ul')(({ theme }) => ({
-    listStyle: 'none',
-    padding: 0,
-    margin: 0,
-}));
-
 export const FeatureStrategyConstraintAccordionList = forwardRef<
     IConstraintAccordionListRef | undefined,
     IConstraintAccordionListProps
@@ -61,7 +55,6 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
         ref as RefObject<IConstraintAccordionListRef>,
     );
 
-    console.log('state:', state, 'context', context);
     const { limit, limitReached } = useConstraintLimit(constraints.length);
 
     if (context.length === 0) {
@@ -104,15 +97,6 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                             state={state}
                         />
 
-                        {/* <ConstraintList>
-                            {constraints.map((constraint, index) => (
-                                <li key={index}>
-                                    <EditableConstraint
-                                        contextFields={context}
-                                    />
-                                </li>
-                            ))}
-                        </ConstraintList> */}
                         <Box
                             sx={(theme) => ({
                                 marginTop: theme.spacing(2),

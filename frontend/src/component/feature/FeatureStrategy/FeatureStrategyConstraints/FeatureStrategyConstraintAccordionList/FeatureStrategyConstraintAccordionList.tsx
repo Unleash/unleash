@@ -54,7 +54,6 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
         setConstraints,
         ref as RefObject<IConstraintAccordionListRef>,
     );
-
     const { limit, limitReached } = useConstraintLimit(constraints.length);
 
     if (context.length === 0) {

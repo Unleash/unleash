@@ -27,14 +27,10 @@ const CardContent = styled('div')(({ theme }) => ({
 
 const HoverButtonsContainer = styled('div')(({ theme }) => ({
     position: 'absolute',
-    top: '50%',
     right: theme.spacing(2),
-    transform: 'translateY(-50%)',
     display: 'flex',
     gap: theme.spacing(1),
-    opacity: 0,
     visibility: 'hidden',
-    transition: 'opacity 0.2s ease-in-out, visibility 0.2s ease-in-out',
 }));
 
 const StyledCard = styled(Button)(({ theme }) => ({
@@ -52,13 +48,13 @@ const StyledCard = styled(Button)(({ theme }) => ({
     borderRadius: theme.spacing(1),
     textAlign: 'left',
     overflow: 'hidden',
-    [`&:hover ${CardContent}`]: {
+    [`&:hover ${CardContent}, &:focus-within ${CardContent}`]: {
         opacity: 0.5,
     },
-    [`&:hover ${HoverButtonsContainer}`]: {
-        opacity: 1,
-        visibility: 'visible',
-    },
+    [`&:hover ${HoverButtonsContainer}, &:focus-within ${HoverButtonsContainer}`]:
+        {
+            visibility: 'visible',
+        },
 }));
 
 const StyledTopRow = styled('div')(({ theme }) => ({
@@ -66,23 +62,6 @@ const StyledTopRow = styled('div')(({ theme }) => ({
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
-}));
-
-const UseButton = styled(Button)(({ theme }) => ({
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-    '&:hover': {
-        backgroundColor: theme.palette.primary.dark,
-    },
-}));
-
-const PreviewButton = styled(Button)(({ theme }) => ({
-    backgroundColor: 'transparent',
-    border: `1px solid ${theme.palette.primary.main}`,
-    color: theme.palette.primary.main,
-    '&:hover': {
-        backgroundColor: theme.palette.action.hover,
-    },
 }));
 
 interface IFeatureReleasePlanCardProps {
@@ -135,20 +114,20 @@ export const FeatureReleasePlanCard = ({
             </CardContent>
 
             <HoverButtonsContainer>
-                <UseButton
+                <Button
                     variant='contained'
                     size='small'
                     onClick={handleUseClick}
                 >
                     Use
-                </UseButton>
-                <PreviewButton
+                </Button>
+                <Button
                     variant='outlined'
                     size='small'
                     onClick={handlePreviewClick}
                 >
                     Preview
-                </PreviewButton>
+                </Button>
             </HoverButtonsContainer>
         </StyledCard>
     );

@@ -670,7 +670,7 @@ export default class ProjectFeaturesController extends Controller {
             201,
             res,
             featureSchema.$id,
-            serializeDates(created),
+            serializeDates({ ...created, stale: created.stale || false }),
         );
     }
 
@@ -693,7 +693,7 @@ export default class ProjectFeaturesController extends Controller {
             201,
             res,
             featureSchema.$id,
-            serializeDates(created),
+            serializeDates({ ...created, stale: created.stale || false }),
         );
     }
 
@@ -740,8 +740,13 @@ export default class ProjectFeaturesController extends Controller {
             environmentVariants: variantEnvironments === 'true',
             userId: user.id,
         });
-
-        res.status(200).json(serializeDates(this.maybeAnonymise(feature)));
+        const maybeAnonymized = this.maybeAnonymise(feature);
+        res.status(200).json(
+            serializeDates({
+                ...maybeAnonymized,
+                stale: maybeAnonymized.stale || false,
+            }),
+        );
     }
 
     async updateFeature(
@@ -771,7 +776,7 @@ export default class ProjectFeaturesController extends Controller {
             200,
             res,
             featureSchema.$id,
-            serializeDates(created),
+            serializeDates({ ...created, stale: created.stale || false }),
         );
     }
 
@@ -795,7 +800,7 @@ export default class ProjectFeaturesController extends Controller {
             200,
             res,
             featureSchema.$id,
-            serializeDates(updated),
+            serializeDates({ ...updated, stale: updated.stale || false }),
         );
     }
 

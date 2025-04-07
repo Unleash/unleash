@@ -1,5 +1,5 @@
 import { Box, styled } from '@mui/material';
-import { PlaygroundResultChip } from '../PlaygroundResultChip/PlaygroundResultChip';
+import { PlaygroundResultChip } from '../PlaygroundResultChip/LegacyPlaygroundResultChip';
 import type { PlaygroundFeatureSchema } from 'openapi';
 
 interface IFeatureStatusCellProps {

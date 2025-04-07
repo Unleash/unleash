@@ -103,9 +103,9 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                 `curl --location --request PUT '${uiConfig.unleashUrl}/api/admin/feature-types/${featureType?.id}/lifetime`,
                 "--header 'Authorization: INSERT_API_KEY'",
                 "--header 'Content-Type: application/json'",
-                '--data-raw \'{\n  "lifetimeDays": 7\n}\'',
+                `--data-raw \'{\n  "lifetimeDays": ${doesntExpire ? 0 : lifetime}\n}\'`,
             ].join(' \\\n'),
-        [uiConfig, featureType?.id],
+        [uiConfig, featureType?.id, lifetime, doesntExpire],
     );
 
     if (!loading && !featureType) {

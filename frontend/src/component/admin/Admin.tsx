@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { ApiTokenPage } from './apiToken/ApiTokenPage/ApiTokenPage';
 import { CreateApiToken } from './apiToken/CreateApiToken/CreateApiToken';
 import { AuthSettings } from './auth/AuthSettings';
+import { OldAuthSettings } from './auth/OldAuthSettings';
 import { Billing } from './billing/Billing';
 import FlaggedBillingRedirect from './billing/FlaggedBillingRedirect/FlaggedBillingRedirect';
 import { CorsAdmin } from './cors';
@@ -19,12 +20,20 @@ import NotFound from 'component/common/NotFound/NotFound';
 import { AdminIndex } from './AdminIndex';
 import { Banners } from './banners/Banners';
 import { License } from './license/License';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { AdminHome } from './AdminHome';
 
 export const Admin = () => {
+    const newAdminUIEnabled = useUiFlag('adminNavUI');
+
     return (
         <>
             <Routes>
-                <Route index element={<AdminIndex />} />
+                {newAdminUIEnabled ? (
+                    <Route index element={<AdminHome />} />
+                ) : (
+                    <Route index element={<AdminIndex />} />
+                )}
                 <Route path='users/*' element={<UsersAdmin />} />
                 <Route path='api' element={<ApiTokenPage />} />
                 <Route path='api/create-token' element={<CreateApiToken />} />
@@ -39,7 +48,11 @@ export const Admin = () => {
                 <Route path='banners' element={<Banners />} />
                 <Route path='license' element={<License />} />
                 <Route path='cors' element={<CorsAdmin />} />
-                <Route path='auth' element={<AuthSettings />} />
+                {newAdminUIEnabled ? (
+                    <Route path='auth/*' element={<AuthSettings />} />
+                ) : (
+                    <Route path='auth' element={<OldAuthSettings />} />
+                )}
                 <Route
                     path='admin-invoices'
                     element={<FlaggedBillingRedirect />}

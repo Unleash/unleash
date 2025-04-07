@@ -147,7 +147,7 @@ export class FeatureToggleRowConverter {
         feature.name = row.name;
         feature.description = row.description;
         feature.project = row.project;
-        feature.stale = row.stale;
+        feature.stale = row.stale || false;
         feature.type = row.type;
         feature.lastSeenAt = row.last_seen_at;
         feature.variants = row.variants || [];
@@ -176,13 +176,13 @@ export class FeatureToggleRowConverter {
         const result = rows.reduce((acc, r) => {
             let feature: PartialDeep<IFeatureToggleListItem> = acc[r.name] ?? {
                 strategies: [],
+                stale: r.stale || false,
             };
 
             feature = this.createBaseFeature(r, feature, featureQuery);
 
             feature.createdAt = r.created_at;
             feature.favorite = r.favorite;
-
             this.addLastSeenByEnvironment(feature, r);
 
             acc[r.name] = feature;

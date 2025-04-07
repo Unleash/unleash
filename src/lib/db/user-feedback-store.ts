@@ -25,7 +25,7 @@ const fieldToRow = (fields: IUserFeedback): IUserFeedbackTable => ({
 });
 
 const rowToField = (row: IUserFeedbackTable): IUserFeedback => ({
-    neverShow: row.nevershow,
+    neverShow: row.nevershow || false,
     feedbackId: row.feedback_id,
     given: row.given,
     userId: row.user_id,
@@ -71,7 +71,7 @@ export default class UserFeedbackStore implements IUserFeedbackStore {
             .merge()
             .returning(COLUMNS);
 
-        return rowToField(insertedFeedback[0]);
+        return rowToField(insertedFeedback[0] as IUserFeedbackTable);
     }
 
     async delete({ userId, feedbackId }: IUserFeedbackKey): Promise<void> {

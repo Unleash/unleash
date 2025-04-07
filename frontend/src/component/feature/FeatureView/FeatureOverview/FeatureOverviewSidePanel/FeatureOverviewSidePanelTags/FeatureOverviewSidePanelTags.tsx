@@ -13,6 +13,7 @@ import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { formatTag } from 'utils/format-tag';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -83,7 +84,7 @@ export const FeatureOverviewSidePanelTags = ({
             {header}
             <StyledTagContainer>
                 {tags.map((tag) => {
-                    const tagLabel = `${tag.type}:${tag.value}`;
+                    const tagLabel = formatTag(tag);
                     return (
                         <StyledChip
                             key={tagLabel}

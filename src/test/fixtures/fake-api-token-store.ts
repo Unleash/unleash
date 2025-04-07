@@ -74,7 +74,10 @@ export default class FakeApiTokenStore
             });
     }
 
-    async setExpiry(secret: string, expiresAt: Date): Promise<IApiToken> {
+    async setExpiry(
+        secret: string,
+        expiresAt: Date,
+    ): Promise<IApiToken | undefined> {
         const found = this.tokens.find((t) => t.secret === secret);
         if (!found) {
             return undefined;

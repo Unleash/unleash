@@ -21,7 +21,7 @@ import type {
 } from 'interfaces/environments';
 import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
-import EnvironmentTypeSelector from 'component/environments/EnvironmentForm/EnvironmentTypeSelector/EnvironmentTypeSelector';
+import { EnvironmentTypeSelector } from 'component/environments/EnvironmentForm/EnvironmentTypeSelector';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { EnvironmentProjectSelect } from './EnvironmentProjectSelect/EnvironmentProjectSelect';
 import { SelectProjectInput } from 'component/admin/apiToken/ApiTokenForm/ProjectSelector/SelectProjectInput/SelectProjectInput';

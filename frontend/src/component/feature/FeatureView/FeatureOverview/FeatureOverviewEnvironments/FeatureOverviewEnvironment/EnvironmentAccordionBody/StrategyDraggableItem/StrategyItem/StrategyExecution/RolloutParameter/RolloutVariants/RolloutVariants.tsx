@@ -6,27 +6,25 @@ import type { StrategyVariantSchema } from 'openapi';
 import type { FC } from 'react';
 
 const StyledVariantChip = styled(StrategyEvaluationChip)<{ order: number }>(
-    ({ theme, order }) => {
-        const variantColor =
-            theme.palette.variants[order % theme.palette.variants.length];
-
-        return {
-            borderRadius: theme.shape.borderRadiusExtraLarge,
-            border: 'none',
-            color: theme.palette.text.primary,
-            background:
-                // TODO: adjust theme.palette.variants
-                theme.mode === 'dark'
-                    ? `hsl(from ${variantColor} h calc(s - 30) calc(l - 45))`
-                    : `hsl(from ${variantColor} h s calc(l + 5))`,
-            fontWeight: theme.typography.fontWeightRegular,
-        };
-    },
+    ({ theme, order }) => ({
+        borderRadius: theme.shape.borderRadiusExtraLarge,
+        border: 'none',
+        color: theme.palette.text.primary,
+        background:
+            theme.palette.variants[order % theme.palette.variants.length],
+        fontWeight: theme.typography.fontWeightRegular,
+    }),
 );
 
 const StyledPayloadHeader = styled('div')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     marginBottom: theme.spacing(1),
+}));
+
+const StyledValuesContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(0.75, 0.5),
+    flexWrap: 'wrap',
 }));
 
 export const RolloutVariants: FC<{
@@ -38,34 +36,36 @@ export const RolloutVariants: FC<{
 
     return (
         <StrategyEvaluationItem type={`Variants (${variants.length})`}>
-            {variants.map((variant, i) => (
-                <HtmlTooltip
-                    arrow
-                    title={
-                        variant.payload?.value ? (
-                            <div>
-                                <StyledPayloadHeader>
-                                    Payload:
-                                </StyledPayloadHeader>
-                                <code>{variant.payload?.value}</code>
-                            </div>
-                        ) : null
-                    }
-                    key={variant.name}
-                >
-                    <StyledVariantChip
-                        key={variant.name}
-                        order={i}
-                        label={
-                            <>
-                                <span>
-                                    {variant.weight / 10}% – {variant.name}
-                                </span>
-                            </>
+            <StyledValuesContainer>
+                {variants.map((variant, i) => (
+                    <HtmlTooltip
+                        arrow
+                        title={
+                            variant.payload?.value ? (
+                                <div>
+                                    <StyledPayloadHeader>
+                                        Payload:
+                                    </StyledPayloadHeader>
+                                    <code>{variant.payload?.value}</code>
+                                </div>
+                            ) : null
                         }
-                    />
-                </HtmlTooltip>
-            ))}
+                        key={variant.name}
+                    >
+                        <StyledVariantChip
+                            key={variant.name}
+                            order={i}
+                            label={
+                                <>
+                                    <span>
+                                        {variant.weight / 10}% – {variant.name}
+                                    </span>
+                                </>
+                            }
+                        />
+                    </HtmlTooltip>
+                ))}
+            </StyledValuesContainer>
         </StrategyEvaluationItem>
     );
 };

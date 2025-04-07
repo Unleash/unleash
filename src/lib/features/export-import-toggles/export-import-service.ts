@@ -463,7 +463,7 @@ export default class ExportImportService
                 this.contextService.createContextField(
                     {
                         name: contextField.name,
-                        description: contextField.description || '',
+                        description: contextField.description,
                         legalValues: contextField.legalValues,
                         stickiness: contextField.stickiness,
                     },

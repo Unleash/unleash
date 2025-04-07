@@ -3,13 +3,16 @@ import type {
     PlaygroundStrategySchema,
 } from 'openapi';
 import { ConstraintExecution } from './ConstraintExecution/ConstraintExecution';
-import { SegmentExecution } from './SegmentExecution/SegmentExecution';
 import { formattedStrategyNames } from 'utils/strategyNames';
 import { StyledBoxSummary } from './StrategyExecution.styles';
 import { Badge } from 'component/common/Badge/Badge';
-import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
+import {
+    ConstraintListItem,
+    ConstraintsList,
+} from 'component/common/ConstraintsList/ConstraintsList';
 import { objectId } from 'utils/objectId';
 import type { FC } from 'react';
+import { SegmentExecution } from './SegmentExecution/SegmentExecution';
 import { useStrategyParameters } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/hooks/useStrategyParameters';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { useCustomStrategyParameters } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/hooks/useCustomStrategyParameters';
@@ -42,7 +45,15 @@ export const StrategyExecution: FC<StrategyExecutionProps> = ({
     }
 
     const items = [
-        hasSegments && <SegmentExecution segments={segments} input={input} />,
+        ...(hasSegments
+            ? segments.map((segment) => (
+                  <SegmentExecution
+                      key={objectId(segment)}
+                      segment={segment}
+                      input={input}
+                  />
+              ))
+            : []),
         ...(hasConstraints
             ? constraints.map((constraint) => (
                   <ConstraintExecution
@@ -52,8 +63,14 @@ export const StrategyExecution: FC<StrategyExecutionProps> = ({
                   />
               ))
             : []),
-        hasExecutionParameters && params,
-        isCustomStrategy && customStrategyItems,
+        hasExecutionParameters &&
+            params.map((param, index) => (
+                <ConstraintListItem key={index}>{param}</ConstraintListItem>
+            )),
+        isCustomStrategy &&
+            customStrategyItems.map((param, index) => (
+                <ConstraintListItem key={index}>{param}</ConstraintListItem>
+            )),
         name === 'default' && (
             <StyledBoxSummary sx={{ width: '100%' }}>
                 The standard strategy is <Badge color='success'>ON</Badge> for

@@ -1,4 +1,4 @@
-import type { ReactNode, VFC } from 'react';
+import type { VFC } from 'react';
 import { Link } from 'react-router-dom';
 import { Divider, Drawer, styled } from '@mui/material';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
@@ -8,6 +8,8 @@ import theme from 'themes/theme';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { MobileNavigationSidebar } from 'component/layout/MainLayout/NavigationSidebar/NavigationSidebar';
 import { NewInUnleash } from 'component/layout/MainLayout/NavigationSidebar/NewInUnleash/NewInUnleash';
+import { AdminMobileNavigation } from 'component/layout/MainLayout/AdminMenu/AdminNavigationItems';
+import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 
 const StyledDrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -25,19 +27,16 @@ interface IDrawerMenuProps {
     title?: string;
     open?: boolean;
     toggleDrawer: () => void;
-    links: Array<{
-        value: string;
-        icon: ReactNode;
-        href: string;
-        title: string;
-    }>;
 }
 
 export const DrawerMenu: VFC<IDrawerMenuProps> = ({
-    links = [],
     open = false,
     toggleDrawer,
 }) => {
+    const showOnlyAdminMenu = useNewAdminMenu();
+    const onClick = () => {
+        toggleDrawer();
+    };
     return (
         <Drawer
             className={styles.drawer}
@@ -65,10 +64,14 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
                     </Link>
                 </StyledDrawerHeader>
                 <Divider />
-                <MobileNavigationSidebar
-                    onClick={toggleDrawer}
-                    NewInUnleash={NewInUnleash}
-                />
+                {showOnlyAdminMenu ? (
+                    <AdminMobileNavigation onClick={onClick} />
+                ) : (
+                    <MobileNavigationSidebar
+                        onClick={toggleDrawer}
+                        NewInUnleash={NewInUnleash}
+                    />
+                )}
             </nav>
         </Drawer>
     );

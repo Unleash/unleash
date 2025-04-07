@@ -12,6 +12,7 @@ import {
     SecondaryNavigation,
     SecondaryNavigationList,
     AdminSettingsNavigation,
+    AdminSettingsLink,
 } from './NavigationList';
 import { FullListItem, MiniListItem } from './ListItems';
 import { useInitialPathname } from './useInitialPathname';
@@ -35,6 +36,7 @@ export const MobileNavigationSidebar: FC<{
     NewInUnleash?: typeof NewInUnleash;
 }> = ({ onClick, NewInUnleash }) => {
     const { routes } = useRoutes();
+    const newAdminUIEnabled = useUiFlag('adminNavUI');
 
     return (
         <>
@@ -45,11 +47,15 @@ export const MobileNavigationSidebar: FC<{
                 mode='full'
                 onClick={onClick}
             />
-            <SecondaryNavigationList
-                routes={routes.adminRoutes}
-                mode='full'
-                onClick={onClick}
-            />
+            {newAdminUIEnabled ? (
+                <AdminSettingsLink mode={'full'} onClick={onClick} />
+            ) : (
+                <SecondaryNavigationList
+                    routes={routes.adminRoutes}
+                    mode='full'
+                    onClick={onClick}
+                />
+            )}
             <OtherLinksList />
         </>
     );

@@ -41,8 +41,10 @@ jobs:
           cache: 'yarn'
       - name: Enable corepack
         run: corepack enable
-      - run: yarn
-      - run: yarn build:frontend:if-needed
+      - run: yarn install --immutable
+        env:
+          YARN_ENABLE_SCRIPTS: false
+      - run: yarn build:frontend
       - run: yarn run test:coverage
         env:
           CI: true

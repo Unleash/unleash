@@ -17,12 +17,15 @@ const CreateTagType = () => {
     const {
         tagName,
         tagDesc,
+        color,
         setTagName,
         setTagDesc,
+        setColor,
         getTagPayload,
         validateNameUniqueness,
         errors,
         clearErrors,
+        isTagTypeColorEnabled,
     } = useTagTypeForm();
     const { createTag, loading } = useTagTypesApi();
 
@@ -70,12 +73,15 @@ const CreateTagType = () => {
                 handleSubmit={handleSubmit}
                 handleCancel={handleCancel}
                 tagName={tagName}
-                setTagName={setTagName}
                 tagDesc={tagDesc}
+                color={color}
+                setTagName={setTagName}
                 setTagDesc={setTagDesc}
+                setColor={setColor}
                 mode='Create'
                 clearErrors={clearErrors}
                 validateNameUniqueness={validateNameUniqueness}
+                isTagTypeColorEnabled={isTagTypeColorEnabled}
             >
                 <CreateButton name='type' permission={CREATE_TAG_TYPE} />
             </TagTypeForm>

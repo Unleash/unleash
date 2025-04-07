@@ -71,6 +71,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
             hasEnabledStrategies: r.has_enabled_strategies,
             yes: Number(r.yes) || 0,
             no: Number(r.no) || 0,
+            changeRequestIds: r.change_request_ids ?? [],
         };
     }
 
@@ -134,6 +135,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     'environments.sort_order as environment_sort_order',
                     'ft.tag_value as tag_value',
                     'ft.tag_type as tag_type',
+                    'tag_types.color as tag_type_color',
                     'segments.name as segment_name',
                     'users.id as user_id',
                     'users.name as user_name',
@@ -207,6 +209,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'ft.feature_name',
                         'features.name',
                     )
+                    .leftJoin('tag_types', 'tag_types.name', 'ft.tag_type')
                     .leftJoin(
                         'feature_strategies',
                         'feature_strategies.feature_name',
@@ -253,7 +256,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
 
                 const rankingSql = this.buildRankingSql(
                     favoritesFirst,
-                    sortBy,
+                    sortBy || '',
                     validatedSortOrder,
                     lastSeenQuery,
                 );
@@ -324,6 +327,43 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 'ranked_features.feature_name',
                 'lifecycle.stage_feature',
             );
+        if (this.flagResolver.isEnabled('flagsOverviewSearch')) {
+            finalQuery
+                .leftJoin(
+                    this.db('change_request_events AS cre')
+                        .join(
+                            'change_requests AS cr',
+                            'cre.change_request_id',
+                            'cr.id',
+                        )
+                        .select('cre.feature')
+                        .select(
+                            this.db.raw(
+                                'array_agg(distinct cre.change_request_id) AS change_request_ids',
+                            ),
+                        )
+                        .select('cr.environment')
+                        .groupBy('cre.feature', 'cr.environment')
+                        .whereNotIn('cr.state', [
+                            'Applied',
+                            'Cancelled',
+                            'Rejected',
+                        ])
+                        .as('feature_cr'),
+                    function () {
+                        this.on(
+                            'feature_cr.feature',
+                            '=',
+                            'ranked_features.feature_name',
+                        ).andOn(
+                            'feature_cr.environment',
+                            '=',
+                            'ranked_features.environment',
+                        );
+                    },
+                )
+                .select('feature_cr.change_request_ids');
+        }
         this.queryExtraData(finalQuery);
         const rows = await finalQuery;
         stopTimer();
@@ -548,6 +588,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
         return {
             value: r.tag_value,
             type: r.tag_type,
+            color: r.tag_type_color,
         };
     }
 
@@ -705,12 +746,14 @@ const applyMultiQueryParams = (
     ) => (dbSubQuery: Knex.QueryBuilder) => Knex.QueryBuilder,
 ): void => {
     queryParams.forEach((param) => {
-        const values = param.values.map((val) =>
-            (Array.isArray(fields)
-                ? val.split(/:(.+)/).filter(Boolean)
-                : [val]
-            ).map((s) => s.trim()),
-        );
+        const values = param.values
+            .filter((v) => typeof v === 'string')
+            .map((val) =>
+                (Array.isArray(fields)
+                    ? val!.split(/:(.+)/).filter(Boolean)
+                    : [val]
+                ).map((s) => s?.trim() || ''),
+            );
         const baseSubQuery = createBaseQuery(values);
 
         switch (param.operator) {

@@ -22,6 +22,12 @@ import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePla
 import { ReleasePlan } from '../../../ReleasePlan/ReleasePlan';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { ProjectEnvironmentStrategyDraggableItem } from './StrategyDraggableItem/ProjectEnvironmentStrategyDraggableItem';
+import {
+    StrategyListItem,
+    releasePlanBackground,
+    strategyBackground,
+} from 'component/common/StrategyList/StrategyListItem';
+import { StrategyList } from 'component/common/StrategyList/StrategyList';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -33,48 +39,13 @@ const StyledAccordionBodyInnerContainer = styled('div')(({ theme }) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
-export const StyledContentList = styled('ol')(({ theme }) => ({
-    listStyle: 'none',
-    padding: 0,
-    margin: 0,
-
-    '& > li': {
-        paddingBlock: theme.spacing(2.5),
-        position: 'relative',
+const AlertContainer = styled('div')(({ theme }) => ({
+    padding: theme.spacing(2),
+    paddingBottom: theme.spacing(0),
+    backgroundColor: strategyBackground(theme),
+    ':has(+ ol>li[data-type="release-plan"])': {
+        backgroundColor: releasePlanBackground(theme),
     },
-    '& > li + li': {
-        borderTop: `1px solid ${theme.palette.divider}`,
-    },
-    '&:not(li > &) > li:first-of-type': {
-        // select first list elements in lists that are not directly nested
-        // within other lists.
-        paddingTop: theme.spacing(1),
-    },
-    '& > li:has(> ol)': {
-        // nested lists add their own padding to their list items, so we don't want to double it up.
-        paddingBlock: 0,
-    },
-}));
-
-export const StyledListItem = styled('li', {
-    shouldForwardProp: (prop) => prop !== 'type',
-})<{ type?: 'release plan' | 'strategy' }>(({ theme, type }) => ({
-    background:
-        type === 'release plan'
-            ? theme.palette.background.elevation2
-            : theme.palette.background.elevation1,
-}));
-
-const PaginatedStrategyContainer = styled('div')(({ theme }) => ({
-    paddingTop: theme.spacing(2.5),
-    position: 'relative',
-    display: 'flex',
-    flexFlow: 'column nowrap',
-    gap: theme.spacing(2),
-}));
-
-const StyledAlert = styled(Alert)(({ theme }) => ({
-    marginInline: theme.spacing(2), // should consider finding a variable here
 }));
 
 export const EnvironmentAccordionBody = ({
@@ -118,13 +89,13 @@ export const EnvironmentAccordionBody = ({
         }
     }, []);
 
-    if (!featureEnvironment) {
-        return null;
-    }
-
     const pageSize = 20;
     const { page, pages, setPageIndex, pageIndex } =
         usePagination<IFeatureStrategy>(strategies, pageSize);
+
+    if (!featureEnvironment) {
+        return null;
+    }
 
     const onReorder = async (payload: { id: string; sortOrder: number }[]) => {
         try {
@@ -238,80 +209,77 @@ export const EnvironmentAccordionBody = ({
         );
     };
 
-    const strategyList =
-        strategies.length < 50 || !manyStrategiesPagination ? (
-            <StyledContentList>
-                {strategies.map((strategy, index) => (
-                    <StyledListItem key={strategy.id}>
-                        {index > 0 ? <StrategySeparator /> : null}
+    const paginateStrategies =
+        strategies.length >= 50 && manyStrategiesPagination;
 
-                        <ProjectEnvironmentStrategyDraggableItem
-                            strategy={strategy}
-                            index={index}
-                            environmentName={featureEnvironment.name}
-                            otherEnvironments={otherEnvironments}
-                            isDragging={dragItem?.id === strategy.id}
-                            onDragStartRef={onDragStartRef}
-                            onDragOver={onDragOver(strategy.id)}
-                            onDragEnd={onDragEnd}
+    return (
+        <StyledAccordionBodyInnerContainer>
+            {paginateStrategies ? (
+                <AlertContainer>
+                    <Alert severity='warning'>
+                        We noticed you're using a high number of activation
+                        strategies. To ensure a more targeted approach, consider
+                        leveraging constraints or segments.
+                    </Alert>
+                </AlertContainer>
+            ) : null}
+            <StrategyList>
+                {releasePlans.map((plan) => (
+                    <StrategyListItem data-type='release-plan' key={plan.id}>
+                        <ReleasePlan
+                            plan={plan}
+                            environmentIsDisabled={isDisabled}
                         />
-                    </StyledListItem>
+                    </StrategyListItem>
                 ))}
-            </StyledContentList>
-        ) : (
-            <PaginatedStrategyContainer>
-                <StyledAlert severity='warning'>
-                    We noticed you're using a high number of activation
-                    strategies. To ensure a more targeted approach, consider
-                    leveraging constraints or segments.
-                </StyledAlert>
-                <StyledContentList>
-                    {page.map((strategy, index) => (
-                        <StyledListItem key={strategy.id}>
-                            {index > 0 ? <StrategySeparator /> : null}
+                {paginateStrategies ? (
+                    <>
+                        {page.map((strategy, index) => (
+                            <StrategyListItem key={strategy.id}>
+                                {index > 0 || releasePlans.length > 0 ? (
+                                    <StrategySeparator />
+                                ) : null}
 
-                            <ProjectEnvironmentStrategyDraggableItem
-                                strategy={strategy}
-                                index={index + pageIndex * pageSize}
-                                environmentName={featureEnvironment.name}
-                                otherEnvironments={otherEnvironments}
-                            />
-                        </StyledListItem>
-                    ))}
-                </StyledContentList>
+                                <ProjectEnvironmentStrategyDraggableItem
+                                    strategy={strategy}
+                                    index={index + pageIndex * pageSize}
+                                    environmentName={featureEnvironment.name}
+                                    otherEnvironments={otherEnvironments}
+                                />
+                            </StrategyListItem>
+                        ))}
+                    </>
+                ) : (
+                    <>
+                        {strategies.map((strategy, index) => (
+                            <StrategyListItem key={strategy.id}>
+                                {index > 0 || releasePlans.length > 0 ? (
+                                    <StrategySeparator />
+                                ) : null}
+
+                                <ProjectEnvironmentStrategyDraggableItem
+                                    strategy={strategy}
+                                    index={index}
+                                    environmentName={featureEnvironment.name}
+                                    otherEnvironments={otherEnvironments}
+                                    isDragging={dragItem?.id === strategy.id}
+                                    onDragStartRef={onDragStartRef}
+                                    onDragOver={onDragOver(strategy.id)}
+                                    onDragEnd={onDragEnd}
+                                />
+                            </StrategyListItem>
+                        ))}
+                    </>
+                )}
+            </StrategyList>
+            {paginateStrategies ? (
                 <Pagination
                     count={pages.length}
                     shape='rounded'
                     page={pageIndex + 1}
                     onChange={(_, page) => setPageIndex(page - 1)}
                 />
-            </PaginatedStrategyContainer>
-        );
-
-    return (
-        <StyledAccordionBodyInnerContainer>
-            <StyledContentList>
-                {releasePlans.length > 0 ? (
-                    <>
-                        {releasePlans.map((plan) => (
-                            <StyledListItem type='release plan' key={plan.id}>
-                                <ReleasePlan
-                                    plan={plan}
-                                    environmentIsDisabled={isDisabled}
-                                />
-                            </StyledListItem>
-                        ))}
-                        {strategies.length > 0 ? (
-                            <li>
-                                <StrategySeparator />
-                                {strategyList}
-                            </li>
-                        ) : null}
-                    </>
-                ) : strategies.length > 0 ? (
-                    strategyList
-                ) : null}
-            </StyledContentList>
+            ) : null}
         </StyledAccordionBodyInnerContainer>
     );
 };

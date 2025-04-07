@@ -18,10 +18,10 @@ jest.mock(
         },
 );
 
-const getApp = require('./app').default;
-
+import getApp from './app';
 test('should not throw when valid config', async () => {
     const config = createTestConfig();
+    // @ts-expect-error - We're passing in empty stores and services
     const app = await getApp(config, {}, {});
     expect(typeof app.listen).toBe('function');
 });
@@ -33,6 +33,7 @@ test('should call preHook', async () => {
             called++;
         },
     });
+    // @ts-expect-error - We're passing in empty stores and services
     await getApp(config, {}, {});
     expect(called).toBe(1);
 });
@@ -44,6 +45,7 @@ test('should call preRouterHook', async () => {
             called++;
         },
     });
+    // @ts-expect-error - We're passing in empty stores and services
     await getApp(config, {}, {});
     expect(called).toBe(1);
 });
@@ -82,6 +84,7 @@ describe('compression middleware', () => {
                     disableCompression: disableCompression as any,
                 },
             });
+            // @ts-expect-error - We're passing in empty stores and services
             await getApp(config, {}, {});
             expect(compression).toBeCalledTimes(+expectCompressionEnabled);
         },

@@ -1,6 +1,6 @@
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { Alert, Typography, useTheme, styled, IconButton } from '@mui/material';
-import { PlaygroundResultChip } from '../../PlaygroundResultChip/PlaygroundResultChip';
+import { PlaygroundResultChip } from '../../PlaygroundResultChip/LegacyPlaygroundResultChip';
 import CloseOutlined from '@mui/icons-material/CloseOutlined';
 import type React from 'react';
 import {
@@ -117,13 +117,11 @@ export const FeatureDetails = ({
                     <p>
                         {feature?.strategies?.result !== 'unknown' ? (
                             <PlaygroundResultChip
-                                tabindex={-1}
                                 enabled={feature.isEnabled}
                                 label={feature.isEnabled ? 'True' : 'False'}
                             />
                         ) : (
                             <PlaygroundResultChip
-                                tabindex={-1}
                                 enabled='unknown'
                                 label={'Unknown'}
                                 showIcon={false}

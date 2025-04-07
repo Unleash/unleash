@@ -12,7 +12,10 @@ import type {
 } from '../../changeRequest.types';
 import { HtmlTooltip } from '../../../common/HtmlTooltip/HtmlTooltip';
 import ErrorIcon from '@mui/icons-material/Error';
-import { useLocationSettings } from 'hooks/useLocationSettings';
+import {
+    type ILocationSettings,
+    useLocationSettings,
+} from 'hooks/useLocationSettings';
 import { formatDateYMDHMS } from 'utils/formatDate';
 
 export type ISuggestChangeTimelineProps =
@@ -99,6 +102,7 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
             data = steps;
     }
     const activeIndex = data.findIndex((item) => item === state);
+    const { locationSettings } = useLocationSettings();
 
     return (
         <StyledPaper elevation={0}>
@@ -106,7 +110,10 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
                 <StyledTimeline>
                     {data.map((title, index) => {
                         if (schedule && title === 'Scheduled') {
-                            return createTimelineScheduleItem(schedule);
+                            return createTimelineScheduleItem(
+                                schedule,
+                                locationSettings,
+                            );
                         }
 
                         const color = determineColor(
@@ -195,9 +202,10 @@ export const getScheduleProps = (
     }
 };
 
-const createTimelineScheduleItem = (schedule: ChangeRequestSchedule) => {
-    const { locationSettings } = useLocationSettings();
-
+const createTimelineScheduleItem = (
+    schedule: ChangeRequestSchedule,
+    locationSettings: ILocationSettings,
+) => {
     const time = formatDateYMDHMS(
         new Date(schedule.scheduledAt),
         locationSettings?.locale,

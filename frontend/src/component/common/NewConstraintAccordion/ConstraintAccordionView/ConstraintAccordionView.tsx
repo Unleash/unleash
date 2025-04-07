@@ -30,12 +30,12 @@ interface IConstraintAccordionViewProps {
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
-    backgroundColor: 'transparent',
     boxShadow: 'none',
     margin: 0,
     '&:before': {
         opacity: '0',
     },
+    overflow: 'hidden',
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
@@ -96,6 +96,7 @@ export const ConstraintAccordionView = ({
                         cursor: expandable ? 'pointer' : 'default!important',
                     },
                 }}
+                tabIndex={expandable ? 0 : -1}
             >
                 <StyledWrapper>
                     <ConstraintAccordionViewHeader

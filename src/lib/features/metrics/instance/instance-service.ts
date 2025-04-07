@@ -26,6 +26,7 @@ import type { Logger } from '../../../logger';
 import { findOutdatedSDKs, isOutdatedSdk } from './findOutdatedSdks';
 import type { OutdatedSdksSchema } from '../../../openapi/spec/outdated-sdks-schema';
 import { CLIENT_REGISTERED } from '../../../metric-events';
+import { NotFoundError } from '../../../error';
 
 export default class ClientInstanceService {
     apps = {};
@@ -219,7 +220,11 @@ export default class ClientInstanceService {
                 this.strategyStore.getAll(),
                 this.featureToggleStore.getAll(),
             ]);
-
+        if (application === undefined) {
+            throw new NotFoundError(
+                `Could not find application with appName ${appName}`,
+            );
+        }
         return {
             appName: application.appName,
             createdAt: application.createdAt,

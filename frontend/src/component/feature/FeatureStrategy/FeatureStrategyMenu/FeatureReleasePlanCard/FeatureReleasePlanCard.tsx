@@ -49,12 +49,13 @@ const StyledCard = styled('div')(({ theme }) => ({
     textAlign: 'left',
     overflow: 'hidden',
     position: 'relative',
-    [`&:hover ${CardContent}`]: {
+    [`&:hover ${CardContent}, &:focus-within ${CardContent}`]: {
         opacity: 0.5,
     },
-    [`&:hover ${HoverButtonsContainer}`]: {
-        opacity: 1,
-    },
+    [`&:hover ${HoverButtonsContainer}, &:focus-within ${HoverButtonsContainer}`]:
+        {
+            opacity: 1,
+        },
 }));
 
 const StyledTopRow = styled('div')(({ theme }) => ({

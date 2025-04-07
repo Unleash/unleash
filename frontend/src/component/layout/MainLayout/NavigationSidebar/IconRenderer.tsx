@@ -1,4 +1,4 @@
-import type { ComponentProps, FC } from 'react';
+import { useMemo, type ComponentProps, type FC } from 'react';
 import EmptyIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
 import type SvgIcon from '@mui/material/SvgIcon/SvgIcon';
 import ApplicationsIcon from '@mui/icons-material/AppsOutlined';
@@ -34,6 +34,8 @@ import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
 import PersonalDashboardIcon from '@mui/icons-material/DashboardOutlined';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 // TODO: move to routes
 const icons: Record<
@@ -85,12 +87,13 @@ const icons: Record<
     Documentation: LibraryBooksIcon,
 };
 
-const findIcon = (key: string) => {
-    return icons[key] || EmptyIcon;
-};
-
 export const IconRenderer: FC<{ path: string }> = ({ path }) => {
-    const IconComponent = findIcon(path); // Fallback to 'default' if the type is not found
+    const flagsReleaseManagementUI = useUiFlag('flagsReleaseManagementUI');
+    const IconComponent = useMemo(() => icons[path] || EmptyIcon, [path]); // Fallback to 'default' if the type is not found
+
+    if (flagsReleaseManagementUI && path === '/search') {
+        return <FlagOutlinedIcon />;
+    }
 
     return <IconComponent />;
 };

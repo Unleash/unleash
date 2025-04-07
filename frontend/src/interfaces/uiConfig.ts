@@ -93,6 +93,7 @@ export type UiFlags = {
     globalChangeRequestConfig?: boolean;
     addEditStrategy?: boolean;
     newStrategyDropdown?: boolean;
+    flagsReleaseManagementUI?: boolean;
 };
 
 export interface IVersionInfo {

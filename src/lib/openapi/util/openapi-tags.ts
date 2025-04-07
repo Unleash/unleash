@@ -68,7 +68,7 @@ const OPENAPI_TAGS = [
     {
         name: 'Frontend API',
         description:
-            'API for connecting client-side (frontend) applications to Unleash.',
+            'The [Frontend API](https://docs.getunleash.io/reference/front-end-api) is used for connecting client-side (frontend) applications to Unleash.',
     },
     {
         name: 'Import/Export',

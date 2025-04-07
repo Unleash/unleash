@@ -35,6 +35,18 @@ export const featureSearchQueryParameters = [
         in: 'query',
     },
     {
+        name: 'lifecycle',
+        schema: {
+            type: 'string',
+            example: 'IS:initial',
+            pattern:
+                '^(IS|IS_NOT|IS_ANY_OF|IS_NONE_OF):(.*?)(,([a-zA-Z0-9_]+))*$',
+        },
+        description:
+            'The lifecycle stage of the feature. The stagee can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.',
+        in: 'query',
+    },
+    {
         name: 'type',
         schema: {
             type: 'string',

@@ -5,7 +5,7 @@ pagination_next: reference/events
 
 :::note Availability
 
-**Version**: `4.7+`. Requires [SDK compatibility](../reference/sdks#server-side-sdk-compatibility-table).
+**Version**: `4.7+`. Requires [SDK compatibility](../reference/sdks#feature-compatibility-in-server-side-sdks).
 
 :::
 

@@ -14,6 +14,7 @@ import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStra
 import { NewConstraintAccordion } from 'component/common/NewConstraintAccordion/NewConstraintAccordion';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { EditableConstraintWrapper } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraintWrapper';
 
 export interface IConstraintAccordionListProps {
     constraints: IConstraint[];
@@ -86,6 +87,7 @@ export const NewConstraintAccordionList = forwardRef<
 >(({ constraints, setConstraints, state }, ref) => {
     const { context } = useUnleashContext();
     const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
+    const addEditStrategy = useUiFlag('addEditStrategy');
 
     const onEdit =
         setConstraints &&
@@ -146,19 +148,36 @@ export const NewConstraintAccordionList = forwardRef<
         return (
             <StyledContainer id={constraintAccordionListId}>
                 <ConstraintsList>
-                    {constraints.map((constraint, index) => (
-                        <NewConstraintAccordion
-                            key={constraint[constraintId]}
-                            constraint={constraint}
-                            onEdit={onEdit?.bind(null, constraint)}
-                            onCancel={onCancel.bind(null, index)}
-                            onDelete={onRemove?.bind(null, index)}
-                            onSave={onSave?.bind(null, index)}
-                            onAutoSave={onAutoSave?.(constraint[constraintId])}
-                            editing={Boolean(state.get(constraint)?.editing)}
-                            compact
-                        />
-                    ))}
+                    {constraints.map((constraint, index) =>
+                        addEditStrategy ? (
+                            <EditableConstraintWrapper
+                                key={constraint[constraintId]}
+                                constraint={constraint}
+                                onCancel={onCancel.bind(null, index)}
+                                onDelete={onRemove?.bind(null, index)}
+                                onSave={onSave!.bind(null, index)}
+                                onAutoSave={onAutoSave?.(
+                                    constraint[constraintId],
+                                )}
+                            />
+                        ) : (
+                            <NewConstraintAccordion
+                                key={constraint[constraintId]}
+                                constraint={constraint}
+                                onEdit={onEdit?.bind(null, constraint)}
+                                onCancel={onCancel.bind(null, index)}
+                                onDelete={onRemove?.bind(null, index)}
+                                onSave={onSave?.bind(null, index)}
+                                onAutoSave={onAutoSave?.(
+                                    constraint[constraintId],
+                                )}
+                                editing={Boolean(
+                                    state.get(constraint)?.editing,
+                                )}
+                                compact
+                            />
+                        ),
+                    )}
                 </ConstraintsList>
             </StyledContainer>
         );

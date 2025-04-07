@@ -13,18 +13,12 @@ import { Box, List, Typography } from '@mui/material';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { IconRenderer } from './IconRenderer';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import SearchIcon from '@mui/icons-material/Search';
-import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
-import InsightsIcon from '@mui/icons-material/Insights';
-import PersonalDashboardIcon from '@mui/icons-material/DashboardOutlined';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FlagIcon from '@mui/icons-material/OutlinedFlag';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
-import SettingsIcon from '@mui/icons-material/Settings';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useShowBadge } from 'component/layout/components/EnterprisePlanBadge/useShowBadge';
 import { EnterprisePlanBadge } from 'component/layout/components/EnterprisePlanBadge/EnterprisePlanBadge';
@@ -132,6 +126,7 @@ export const PrimaryNavigationList: FC<{
 }> = ({ mode, onClick, activeItem }) => {
     const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
     const { isOss } = useUiConfig();
+    const flagsReleaseManagementUI = useUiFlag('flagsReleaseManagementUI');
 
     return (
         <List>
@@ -141,7 +136,7 @@ export const PrimaryNavigationList: FC<{
                 onClick={() => onClick('/personal')}
                 selected={activeItem === '/personal'}
             >
-                <PersonalDashboardIcon />
+                <IconRenderer path='/personal' />
             </DynamicListItem>
 
             <DynamicListItem
@@ -150,15 +145,15 @@ export const PrimaryNavigationList: FC<{
                 onClick={() => onClick('/projects')}
                 selected={activeItem === '/projects'}
             >
-                <ProjectIcon />
+                <IconRenderer path='/projects' />
             </DynamicListItem>
             <DynamicListItem
                 href='/search'
-                text='Search'
+                text={flagsReleaseManagementUI ? 'Flags overview' : 'Search'}
                 onClick={() => onClick('/search')}
                 selected={activeItem === '/search'}
             >
-                <SearchIcon />
+                <IconRenderer path='/search' />
             </DynamicListItem>
             <DynamicListItem
                 href='/playground'
@@ -166,21 +161,18 @@ export const PrimaryNavigationList: FC<{
                 onClick={() => onClick('/playground')}
                 selected={activeItem === '/playground'}
             >
-                <PlaygroundIcon />
+                <IconRenderer path='/playground' />
             </DynamicListItem>
-            <ConditionallyRender
-                condition={!isOss()}
-                show={
-                    <DynamicListItem
-                        href='/insights'
-                        text='Insights'
-                        onClick={() => onClick('/insights')}
-                        selected={activeItem === '/insights'}
-                    >
-                        <InsightsIcon />
-                    </DynamicListItem>
-                }
-            />
+            {!isOss() ? (
+                <DynamicListItem
+                    href='/insights'
+                    text='Insights'
+                    onClick={() => onClick('/insights')}
+                    selected={activeItem === '/insights'}
+                >
+                    <IconRenderer path='/insights' />
+                </DynamicListItem>
+            ) : null}
         </List>
     );
 };
@@ -294,7 +286,7 @@ export const AdminSettingsLink: FC<{
                     text='Admin settings'
                     onClick={() => onClick('/admin')}
                 >
-                    <SettingsIcon />
+                    <IconRenderer path='/admin' />
                 </DynamicListItem>
             </List>
         </Box>

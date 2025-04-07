@@ -52,7 +52,6 @@ const StyledCard = styled(Button)(({ theme }) => ({
     borderRadius: theme.spacing(1),
     textAlign: 'left',
     overflow: 'hidden',
-    // position: 'relative',
     [`&:hover ${CardContent}`]: {
         opacity: 0.5,
     },
@@ -69,7 +68,7 @@ const StyledTopRow = styled('div')(({ theme }) => ({
     width: '100%',
 }));
 
-const PrimaryButton = styled(Button)(({ theme }) => ({
+const UseButton = styled(Button)(({ theme }) => ({
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
     '&:hover': {
@@ -77,7 +76,7 @@ const PrimaryButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const SecondaryButton = styled(Button)(({ theme }) => ({
+const PreviewButton = styled(Button)(({ theme }) => ({
     backgroundColor: 'transparent',
     border: `1px solid ${theme.palette.primary.main}`,
     color: theme.palette.primary.main,
@@ -136,20 +135,20 @@ export const FeatureReleasePlanCard = ({
             </CardContent>
 
             <HoverButtonsContainer>
-                <PrimaryButton
+                <UseButton
                     variant='contained'
                     size='small'
                     onClick={handleUseClick}
                 >
                     Use
-                </PrimaryButton>
-                <SecondaryButton
+                </UseButton>
+                <PreviewButton
                     variant='outlined'
                     size='small'
                     onClick={handlePreviewClick}
                 >
                     Preview
-                </SecondaryButton>
+                </PreviewButton>
             </HoverButtonsContainer>
         </StyledCard>
     );

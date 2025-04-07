@@ -99,7 +99,7 @@ export const ConstraintOperatorSelect = ({
     return (
         <StyledFormInput variant='outlined' size='small' fullWidth>
             <InputLabel htmlFor='operator-select'>Operator</InputLabel>
-            <Select
+            <Select // add prop to send different select element
                 id='operator-select'
                 name='operator'
                 label='Operator'

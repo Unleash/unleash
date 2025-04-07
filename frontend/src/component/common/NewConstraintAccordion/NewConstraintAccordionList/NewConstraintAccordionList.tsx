@@ -14,6 +14,7 @@ import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStra
 import { NewConstraintAccordion } from 'component/common/NewConstraintAccordion/NewConstraintAccordion';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { NewComponent } from '../ConstraintAccordionEdit/EditableConstraintInAccordion';
 
 export interface IConstraintAccordionListProps {
     constraints: IConstraint[];
@@ -145,9 +146,10 @@ export const NewConstraintAccordionList = forwardRef<
     if (flagOverviewRedesign) {
         return (
             <StyledContainer id={constraintAccordionListId}>
+                This is where we're using the new component
                 <ConstraintsList>
                     {constraints.map((constraint, index) => (
-                        <NewConstraintAccordion
+                        <NewComponent
                             key={constraint[constraintId]}
                             constraint={constraint}
                             onEdit={onEdit?.bind(null, constraint)}

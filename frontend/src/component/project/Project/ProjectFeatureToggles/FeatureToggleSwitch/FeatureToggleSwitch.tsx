@@ -56,7 +56,6 @@ export const FeatureToggleSwitch: VFC<FeatureToggleSwitchProps> = ({
                     inputProps={{ 'aria-label': environmentName }}
                     onClick={onClick}
                     data-testid={'permission-switch'}
-                    disableRipple
                     disabled={value !== isChecked}
                 />
             </StyledBoxContainer>

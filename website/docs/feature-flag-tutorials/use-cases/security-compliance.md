@@ -22,7 +22,7 @@ There are several steps to ensuring your feature flag implementation is audit-pr
 
 ## Introduction to regulatory compliance frameworks​
 
-Unleash is designed to support critical enterprise compliance standards. In this tutorial, we reference three frameworks that organizations in highly regulated industries are most likely to be audited against:
+Unleash is designed to support critical enterprise compliance standards. In this guide, we reference three frameworks that organizations in highly regulated industries are most likely to be audited against:
 
 [FedRAMP](/using-unleash/compliance/fedramp): A U.S. government program that standardizes how federal agencies assess, authorize, and monitor cloud services. For organizations listing their software on the [FedRAMP](https://www.fedramp.gov/program-basics/) marketplace, Unleash's security controls are designed to meet these rigorous requirements.
 
@@ -140,7 +140,7 @@ Imagine a developer working at a large banking platform who wants to modify a fe
 4. Final sign-off from technical leadership
 
 With Unleash, you can create a change request workflow to reflect these exact requirements.
-And from a security perspective, you'll always want an auditable trail of changes that occur in your feature flag system. We record all changes like these in the event logs. These are the configuration management practices required by compliance frameworks like SOC 2, FedRAMP, and ISO 27001. We’ll explore [event logs](#audit-manual-and-automated-events-in-unleash) more in a later section, but it’s important to note throughout this tutorial since it’s relevant to many features in Unleash that align with security and compliance standards.
+And from a security perspective, you'll always want an auditable trail of changes that occur in your feature flag system. We record all changes like these in the event logs. These are the configuration management practices required by compliance frameworks like SOC 2, FedRAMP, and ISO 27001. We’ll explore [event logs](#audit-manual-and-automated-events-in-unleash) more in a later section, but it’s important to note throughout this guide since it’s relevant to many features in Unleash that align with security and compliance standards.
 
 Projects in Unleash have an open [collaboration mode](/reference/project-collaboration-mode) by default, which means anyone with access to Unleash can see the project and submit change requests in it. However, only users with specific permissions can approve, apply, or skip them. None of the [predefined roles](/reference/rbac#predefined-roles) have any change request permissions, so you must create [custom project roles](/reference/rbac#predefined-roles). You can adjust the collaboration mode of your project to restrict visibility and limit who can submit change requests.
 
@@ -195,17 +195,15 @@ With Unleash, you can architect your feature flagging solution in a way that all
 
 ### Use Unleash Edge for enterprise-grade data privacy
 
-To take data privacy, scalability, high performance, and resiliency to the next level for large enterprises, we built [Unleash Edge](/reference/unleash-edge), a lightweight proxy layer between your Unleash API and SDKs. You can deploy Unleash Edge within your own infrastructure so PII and sensitive context data never leave your network boundary.
+To take scalability, high availability, and resiliency to the next level for large enterprises, we built [Unleash Edge](/reference/unleash-edge)—a lightweight proxy layer that sits between your Unleash API and SDKs. Beyond the performance benefits, Unleash Edge delivers critical enhancements to both security and privacy. 
 
-Unleash Edge operates as a local evaluation point for feature flags, meaning that the evaluation of flags and user context data happens within your infrastructure. It keeps a local copy of your feature flag configuration in sync with your Unleash instance. Another benefit to Edge functioning as a local evaluation point is preventing performance issues in one part of your system from affecting others and maintaining service level agreements required by compliance frameworks.
+Deployed within your own infrastructure, Edge ensures that PII and sensitive context data never leave your network, [regardless of which SDKs you use](/understanding-unleash/unleash-overview#unleash-sdks). Each Edge instance can be scoped to specific projects or environments, enforcing least privilege access and tight network segmentation.
 
-Edge allows you to decide what you expose to the world. You only have to expose one project (or a predefined set of projects) and environments through Edge. Nothing else will be exposed. In our cloud-hosted offering, you can also define an [IP allow list](#set-up-ip-allow-lists-for-enhanced-security) for the Unleash instance and Hosted Edge to reduce the attack surface.
+With Edge, you can keep your core Unleash service hidden from the internet while evaluating feature flags at the edge for better performance and scalability. Unleash Enterprise Edge cannot access the [Unleash Admin API](/understanding-unleash/unleash-overview#admin-api), minimizing the impact of compromised clients or credentials. In our cloud-hosted offering, you can also define an [IP allow list](#set-up-ip-allow-lists-for-enhanced-security) for the Unleash instance and Hosted Edge to further reduce the attack surface.
 
-With Unleash Enterprise Edge, you can keep your core Unleash service hidden from the internet while evaluating feature flags at the edge for better performance and scalability. Each Edge instance can be scoped to specific projects or environments, enforcing the least-privileged access and tight network segmentation. Unleash Enterprise Edge cannot access the Unleash Admin API, minimizing the impact of compromised clients or credentials.
+For regulated environments that require continuous availability, you can configure persistent storage—such as Redis or local backup files—to keep feature flag evaluations running, even if the main Unleash server is temporarily unreachable. Learn more about Edge architecture and setup in ou [Edge Concepts](/reference/unleash-edge/concepts).
 
-When your regulated environments require continuous service availability, use persistent storage options through Redis or local backup files, ensuring your feature flag system remains operational even if the Unleash server is temporarily unreachable. Refer to our [Edge Concepts](/reference/unleash-edge/concepts) for more architecture and setup information.
-
-The tutorial so far has focused on how you can use the features of Unleash to improve your application's security posture, making sure that feature flags are not the weak link. But what about Unleash itself, as a company and SaaS service? You might be asking…
+The guide so far has focused on how you can use the features of Unleash to improve your application's security posture, making sure that feature flags are not the weak link. But what about Unleash itself, as a company and SaaS service? You might be asking…
 
 ## Can Unleash itself pass a security audit?
 
@@ -219,7 +217,7 @@ When you engage with Unleash, you will get access to our Trust Center, which hou
 
 ## Best practices and recommendations
 
-Throughout this tutorial, we've explored how to use Unleash Enterprise as a secure and compliant feature flag system. You now understand how Unleash's features work together to pass security audits while enabling your teams to build and ship safely.
+Throughout this guide, we've explored how to use Unleash Enterprise as a secure and compliant feature flag system. You now understand how Unleash's features work together to pass security audits while enabling your teams to build and ship safely.
 
 By using Unleash with security and compliance in mind, you've learned how to transform what could be a potential security liability into an asset that strengthens your overall security posture. Here are key recommendations to make sure your feature flag implementation meets enterprise security and compliance standards:
 

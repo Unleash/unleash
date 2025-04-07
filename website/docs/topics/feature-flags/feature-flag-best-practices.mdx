@@ -4,7 +4,7 @@ description: Build a scalable, secure feature flag system with 11 key principles
 toc_max_heading_level: 2
 ---
 
-Feature flags, [sometimes called feature toggles or feature switches](../what-is-a-feature-flag), are a powerful software development technique that allows engineering teams to decouple the release of new functionality from software deployments. 
+Feature flags, [sometimes called feature toggles or feature switches](../../what-is-a-feature-flag), are a powerful software development technique that allows engineering teams to decouple the release of new functionality from software deployments. 
 
 With feature flags, developers can turn [specific features or code segments on or off at runtime](https://www.getunleash.io/feature-flag-use-cases-software-kill-switches) without needing a code deployment or rollback. Organizations that adopt feature flags see improvements in key [DevOps metrics](https://www.getunleash.io/blog/dora-metrics-in-2023-5-ways-to-measure-devops-performance) like lead time to changes, mean time to recovery, deployment frequency, and change failure rate.
 
@@ -30,7 +30,7 @@ Let's dive deeper into each principle.
 
 A scalable feature management system evaluates flags at runtime. Flags are dynamic, not static. If you need to restart your application to turn on a flag, that's configuration, not a feature flag.
 
-A large-scale feature flag system that enables [runtime control](https://www.getunleash.io/blog/so-what-exactly-is-runtime-control) should have, at minimum, the following components: a [service to manage feature flags](https://www.getunleash.io/blog/feature-management), a database or data store, an [API layer](../understanding-unleash/unleash-overview), a [feature flag SDK](../reference/sdks), and a continuous update mechanism.
+A large-scale feature flag system that enables [runtime control](https://www.getunleash.io/blog/so-what-exactly-is-runtime-control) should have, at minimum, the following components: a [service to manage feature flags](https://www.getunleash.io/blog/feature-management), a database or data store, an [API layer](../../understanding-unleash/unleash-overview), a [feature flag SDK](../../reference/sdks), and a continuous update mechanism.
 
 Let's break down these components.
 
@@ -38,9 +38,9 @@ Let's break down these components.
 
 - **Feature Flag Control Service**: A [service that acts as the control plane for your feature flags](https://www.getunleash.io/feature-flag-service), managing all flag configurations. The scope of this service should reflect the boundaries of your organization.
 - **Database or data store**: A robust, scalable, and highly available database or data store that stores feature flag configurations reliably. Common options include SQL databases, NoSQL databases, or key-value stores.
-- **API layer**: An API layer that exposes endpoints for your application to interact with the _Feature Flag Control Service_. [This API should allow your application to request feature flag configurations](../understanding-unleash/unleash-overview).
-- **Feature flag SDK**: [An easy-to-use interface for fetching flag configurations and evaluating feature flags at runtime](../reference/sdks). When considering feature flags in your application, the call to the SDK should query the local cache, and the SDK should ask the central service for updates in the background.
-- **Continuous update mechanism**: An update mechanism that enables [dynamic updates to feature flag configurations](../understanding-unleash/unleash-overview) without requiring application restarts or redeployments. The SDK should handle subscriptions or polling to the _Feature Flag Control Service_ for updates.
+- **API layer**: An API layer that exposes endpoints for your application to interact with the _Feature Flag Control Service_. [This API should allow your application to request feature flag configurations](../../understanding-unleash/unleash-overview).
+- **Feature flag SDK**: [An easy-to-use interface for fetching flag configurations and evaluating feature flags at runtime](../../reference/sdks). When considering feature flags in your application, the call to the SDK should query the local cache, and the SDK should ask the central service for updates in the background.
+- **Continuous update mechanism**: An update mechanism that enables [dynamic updates to feature flag configurations](../../understanding-unleash/unleash-overview) without requiring application restarts or redeployments. The SDK should handle subscriptions or polling to the _Feature Flag Control Service_ for updates.
 
 ![The SDK holds an in-memory feature flag configuration cache which is continuously synced with the Feature Flag Control Service. You can then use the SDK to check the state of feature flags in your application.](/img/feature-flag-scalable-architecture.png)
 

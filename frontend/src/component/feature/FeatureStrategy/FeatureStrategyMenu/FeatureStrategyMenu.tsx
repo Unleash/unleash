@@ -14,7 +14,6 @@ import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import useToast from 'hooks/useToast';
-import { ReleasePlanAddDialog } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanAddDialog';
 import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
@@ -22,6 +21,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { OldFeatureStrategyMenuCards } from './FeatureStrategyMenuCards/OldFeatureStrategyMenuCards';
+import { ReleasePlanReviewDialog } from '../../FeatureView/FeatureOverview/ReleasePlan/ReleasePlanReviewDialog';
 
 interface IFeatureStrategyMenuProps {
     label: string;
@@ -104,16 +104,14 @@ export const FeatureStrategyMenu = ({
         setAnchor(event.currentTarget);
     };
 
-    const addReleasePlan = async () => {
-        if (!selectedTemplate) return;
-
+    const addReleasePlan = async (template: IReleasePlanTemplate) => {
         try {
             if (crProtected) {
                 await addChange(projectId, environmentId, {
                     feature: featureId,
                     action: 'addReleasePlan',
                     payload: {
-                        templateId: selectedTemplate.id,
+                        templateId: template.id,
                     },
                 });
 
@@ -126,7 +124,7 @@ export const FeatureStrategyMenu = ({
             } else {
                 await addReleasePlanToFeature(
                     featureId,
-                    selectedTemplate.id,
+                    template.id,
                     projectId,
                     environmentId,
                 );
@@ -141,7 +139,7 @@ export const FeatureStrategyMenu = ({
             trackEvent('release-management', {
                 props: {
                     eventType: 'add-plan',
-                    plan: selectedTemplate.name,
+                    plan: template.name,
                 },
             });
         } catch (error: unknown) {
@@ -241,6 +239,10 @@ export const FeatureStrategyMenu = ({
                         onlyReleasePlans={onlyReleasePlans}
                         onAddReleasePlan={(template) => {
                             setSelectedTemplate(template);
+                            addReleasePlan(template);
+                        }}
+                        onReviewReleasePlan={(template) => {
+                            setSelectedTemplate(template);
                             setAddReleasePlanOpen(true);
                         }}
                         onClose={onClose}
@@ -259,10 +261,12 @@ export const FeatureStrategyMenu = ({
                 )}
             </Popover>
             {selectedTemplate && (
-                <ReleasePlanAddDialog
+                <ReleasePlanReviewDialog
                     open={addReleasePlanOpen}
                     setOpen={setAddReleasePlanOpen}
-                    onConfirm={addReleasePlan}
+                    onConfirm={() => {
+                        addReleasePlan(selectedTemplate);
+                    }}
                     template={selectedTemplate}
                     projectId={projectId}
                     featureName={featureId}

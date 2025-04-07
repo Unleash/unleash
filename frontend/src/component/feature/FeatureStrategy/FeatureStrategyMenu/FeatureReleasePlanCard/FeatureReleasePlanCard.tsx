@@ -68,7 +68,7 @@ const StyledTopRow = styled('div')(({ theme }) => ({
 interface IFeatureReleasePlanCardProps {
     template: IReleasePlanTemplate;
     onClick: () => void;
-    onPreviewClick?: (e: React.MouseEvent) => void;
+    onPreviewClick: (e: React.MouseEvent) => void;
 }
 
 export const FeatureReleasePlanCard = ({
@@ -85,9 +85,7 @@ export const FeatureReleasePlanCard = ({
 
     const handlePreviewClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        if (onPreviewClick) {
-            onPreviewClick(e);
-        }
+        onPreviewClick(e);
     };
 
     return (

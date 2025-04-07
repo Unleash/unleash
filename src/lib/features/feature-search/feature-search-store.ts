@@ -15,7 +15,11 @@ import type {
     IFeatureSearchParams,
     IQueryParam,
 } from '../feature-toggle/types/feature-toggle-strategies-store-type';
-import { applyGenericQueryParams, applySearchFilters } from './search-utils';
+import {
+    applyGenericQueryParams,
+    applySearchFilters,
+    parseSearchOperatorValue,
+} from './search-utils';
 import type { FeatureSearchEnvironmentSchema } from '../../openapi/spec/feature-search-environment-schema';
 import { generateImageUrl } from '../../util';
 import Raw = Knex.Raw;
@@ -100,6 +104,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
             status,
             offset,
             limit,
+            lifecycle,
             sortOrder,
             sortBy,
             archived,
@@ -327,7 +332,15 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 'ranked_features.feature_name',
                 'lifecycle.stage_feature',
             );
+
         if (this.flagResolver.isEnabled('flagsOverviewSearch')) {
+            const parsedLifecycle = lifecycle
+                ? parseSearchOperatorValue('lifecycle.latest_stage', lifecycle)
+                : null;
+            if (parsedLifecycle) {
+                applyGenericQueryParams(finalQuery, [parsedLifecycle]);
+            }
+
             finalQuery
                 .leftJoin(
                     this.db('change_request_events AS cre')

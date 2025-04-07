@@ -103,6 +103,22 @@ const searchFeatures = async (
         .expect(expectedCode);
 };
 
+const searchFeaturesWithLifecycle = async (
+    {
+        query = '',
+        project = 'IS:default',
+        archived = 'IS:false',
+        lifecycle = 'IS:initial',
+    }: FeatureSearchQueryParameters,
+    expectedCode = 200,
+) => {
+    return app.request
+        .get(
+            `/api/admin/search/features?query=${query}&project=${project}&archived=${archived}&lifecycle=${lifecycle}`,
+        )
+        .expect(expectedCode);
+};
+
 const sortFeatures = async (
     {
         sortBy = '',
@@ -1130,10 +1146,10 @@ test('should return environment usage metrics and lifecycle', async () => {
         { feature: 'my_feature_b', stage: 'completed', status: 'discarded' },
     ]);
 
-    const { body } = await searchFeatures({
+    const { body: noExplicitLifecycle } = await searchFeatures({
         query: 'my_feature_b',
     });
-    expect(body).toMatchObject({
+    expect(noExplicitLifecycle).toMatchObject({
         features: [
             {
                 name: 'my_feature_b',
@@ -1157,6 +1173,22 @@ test('should return environment usage metrics and lifecycle', async () => {
                 ],
             },
         ],
+    });
+
+    const { body: noFeaturesWithOtherLifecycle } =
+        await searchFeaturesWithLifecycle({
+            query: 'my_feature_b',
+            lifecycle: 'IS:initial',
+        });
+    expect(noFeaturesWithOtherLifecycle).toMatchObject({ features: [] });
+
+    const { body: featureWithMatchingLifecycle } =
+        await searchFeaturesWithLifecycle({
+            query: 'my_feature_b',
+            lifecycle: 'IS:completed',
+        });
+    expect(featureWithMatchingLifecycle).toMatchObject({
+        features: [{ name: 'my_feature_b' }],
     });
 });
 

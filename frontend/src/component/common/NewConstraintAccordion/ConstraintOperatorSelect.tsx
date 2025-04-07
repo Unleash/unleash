@@ -96,10 +96,11 @@ export const ConstraintOperatorSelect = ({
         );
     };
 
+    // todo (addEditStrategy): add prop to configure the select element or style it. (currently, the chevron is different from the other select element we use). Maybe add a new component.
     return (
         <StyledFormInput variant='outlined' size='small' fullWidth>
             <InputLabel htmlFor='operator-select'>Operator</InputLabel>
-            <Select // add prop to send different select element
+            <Select
                 id='operator-select'
                 name='operator'
                 label='Operator'

@@ -2226,19 +2226,27 @@ class FeatureToggleService {
             featureName,
             environment,
         );
-        const { newDocument } = await applyPatch(
-            deepClone(oldVariants),
-            newVariants,
-        );
-        return this.crProtectedSaveVariantsOnEnv(
-            project,
-            featureName,
-            environment,
-            newDocument,
-            user,
-            auditUser,
-            oldVariants,
-        );
+
+        try {
+            const { newDocument } = await applyPatch(
+                deepClone(oldVariants),
+                newVariants,
+            );
+
+            return this.crProtectedSaveVariantsOnEnv(
+                project,
+                featureName,
+                environment,
+                newDocument,
+                user,
+                auditUser,
+                oldVariants,
+            );
+        } catch (e) {
+            throw new BadDataError(
+                `Could not apply provided patch: ${e.message}`,
+            );
+        }
     }
 
     async saveVariants(

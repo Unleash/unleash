@@ -54,7 +54,7 @@ Particularly in distributed systems, we cannot assume all parts of the system ar
 
 Using the same flag in multiple places fragments the control logic and breaks the single responsibility principle, making code [harder to understand and maintain](https://www.getunleash.io/simplicity).
 
-![Evaluate flags once](/img/evaluate-flag-many-places.jpg)
+![Evaluate flags once](/img/evaluate-flags-in-many-places.jpg)
 
 Instead, evaluate the flag once—typically at the start of a user request—and pass the result through the system. This keeps behavior predictable and makes the codebase cleaner and easier to manage over time.
 

@@ -185,7 +185,7 @@ export const EditableConstraint: FC<Props> = ({
         }
     };
 
-    const resolveInput = () => {
+    const Input = () => {
         switch (input) {
             case IN_OPERATORS_LEGAL_VALUES:
             case STRING_OPERATORS_LEGAL_VALUES:
@@ -325,7 +325,7 @@ export const EditableConstraint: FC<Props> = ({
                         setCaseInsensitive={setCaseInsensitive}
                     />
                 ) : null}
-                {resolveInput()}
+                <Input />
                 {/* <ul>
                 <li>
                     <Chip

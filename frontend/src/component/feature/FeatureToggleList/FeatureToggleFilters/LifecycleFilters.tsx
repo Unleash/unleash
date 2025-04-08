@@ -44,7 +44,6 @@ const lifecycleOptions: {
     { label: 'Develop', value: 'pre-live' },
     { label: 'Rollout production', value: 'live' },
     { label: 'Cleanup', value: 'completed' },
-    { label: 'Archived', value: 'archived' },
 ];
 
 export const LifecycleFilters: FC<ILifecycleFiltersProps> = ({

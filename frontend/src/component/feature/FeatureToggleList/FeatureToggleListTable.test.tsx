@@ -76,14 +76,14 @@ const setupApi = (features: APIFeature[], projects: APIProject[]) => {
 
 const verifyTableFeature = async (feature: Partial<UIFeature>) => {
     await screen.findByText('Search');
-    await screen.findByText('Add Filter');
+    await screen.findByText('Filter');
     await Promise.all(
         Object.values(feature).map((value) => screen.findByText(value)),
     );
 };
 
 const filterFeaturesByProject = async (projectName: string) => {
-    const addFilterButton = screen.getByText('Add Filter');
+    const addFilterButton = screen.getByText('Filter');
     addFilterButton.click();
 
     const projectItem = await screen.findByText('Project');

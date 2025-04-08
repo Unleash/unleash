@@ -150,7 +150,7 @@ test('filters by flag author', async () => {
             route: '/projects/default',
         },
     );
-    const addFilter = await screen.findByText('Add Filter');
+    const addFilter = await screen.findByText('Filter');
     fireEvent.click(addFilter);
 
     const createdBy = await screen.findByText('Created by');

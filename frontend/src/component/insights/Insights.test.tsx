@@ -31,7 +31,7 @@ test('Filter insights by project and date', async () => {
     vi.setSystemTime(currentTime);
     setupApi();
     render(<Insights withCharts={false} />);
-    const addFilter = await screen.findByText('Add Filter');
+    const addFilter = await screen.findByText('Filter');
     fireEvent.click(addFilter);
     const projectFilter = await screen.findByText('Project');
 

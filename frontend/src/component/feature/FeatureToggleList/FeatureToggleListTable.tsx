@@ -31,6 +31,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useGlobalFeatureSearch } from './useGlobalFeatureSearch';
 import { LifecycleFilters } from './FeatureToggleFilters/LifecycleFilters';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { ExportFlags } from './ExportFlags';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -289,9 +290,17 @@ export const FeatureToggleListTable: VFC = () => {
                             >
                                 View archive
                             </Link>
-                            <FeatureToggleListActions
-                                onExportClick={() => setShowExportDialog(true)}
-                            />
+                            {flagsReleaseManagementUIEnabled ? (
+                                <ExportFlags
+                                    onClick={() => setShowExportDialog(true)}
+                                />
+                            ) : (
+                                <FeatureToggleListActions
+                                    onExportClick={() =>
+                                        setShowExportDialog(true)
+                                    }
+                                />
+                            )}
                         </>
                     }
                 >

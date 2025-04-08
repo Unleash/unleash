@@ -1111,6 +1111,10 @@ test('should return environment usage metrics and lifecycle', async () => {
         name: 'my_feature_b',
         createdAt: '2023-01-29T15:21:39.975Z',
     });
+    await app.createFeature({
+        name: 'my_feature_c',
+        createdAt: '2023-01-29T15:21:39.975Z',
+    });
 
     await stores.clientMetricsStoreV2.batchInsertMetrics([
         {
@@ -1143,6 +1147,9 @@ test('should return environment usage metrics and lifecycle', async () => {
         { feature: 'my_feature_b', stage: 'initial' },
     ]);
     await stores.featureLifecycleStore.insert([
+        { feature: 'my_feature_c', stage: 'initial' },
+    ]);
+    await stores.featureLifecycleStore.insert([
         { feature: 'my_feature_b', stage: 'completed', status: 'discarded' },
     ]);
 
@@ -1150,6 +1157,7 @@ test('should return environment usage metrics and lifecycle', async () => {
         query: 'my_feature_b',
     });
     expect(noExplicitLifecycle).toMatchObject({
+        total: 1,
         features: [
             {
                 name: 'my_feature_b',
@@ -1180,14 +1188,17 @@ test('should return environment usage metrics and lifecycle', async () => {
             query: 'my_feature_b',
             lifecycle: 'IS:initial',
         });
-    expect(noFeaturesWithOtherLifecycle).toMatchObject({ features: [] });
+    expect(noFeaturesWithOtherLifecycle).toMatchObject({
+        total: 0,
+        features: [],
+    });
 
     const { body: featureWithMatchingLifecycle } =
         await searchFeaturesWithLifecycle({
-            query: 'my_feature_b',
             lifecycle: 'IS:completed',
         });
     expect(featureWithMatchingLifecycle).toMatchObject({
+        total: 1,
         features: [{ name: 'my_feature_b' }],
     });
 });

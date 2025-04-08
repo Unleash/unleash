@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import type { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
 import { useState } from 'react';
+import type { ReactNode } from 'react';
 
 interface IAutocompleteBoxProps {
     label: string;
@@ -15,6 +16,7 @@ interface IAutocompleteBoxProps {
     value?: IAutocompleteBoxOption[];
     onChange: (value: IAutocompleteBoxOption[]) => void;
     disabled?: boolean;
+    icon?: ReactNode | null;
 }
 
 export interface IAutocompleteBoxOption {
@@ -41,28 +43,37 @@ export const AutocompleteBox = ({
     value = [],
     onChange,
     disabled,
+    icon,
 }: IAutocompleteBoxProps) => {
     const [_, setPlaceholder] = useState('Add Segments');
     const theme = useTheme();
 
     const renderCustomInput = (params: AutocompleteRenderInputParams) => {
         const { InputProps } = params;
+
+        let startAdornment = undefined;
+        if (icon !== null) {
+            startAdornment = (
+                <InputAdornment position='start'>
+                    {icon || (
+                        <Add
+                            sx={{
+                                height: 20,
+                                width: 20,
+                                color: theme.palette.primary.main,
+                            }}
+                        />
+                    )}
+                </InputAdornment>
+            );
+        }
+
         return (
             <TextField
                 {...params}
                 InputProps={{
                     ...InputProps,
-                    startAdornment: (
-                        <InputAdornment position='start'>
-                            <Add
-                                sx={{
-                                    height: 20,
-                                    width: 20,
-                                    color: theme.palette.primary.main,
-                                }}
-                            />
-                        </InputAdornment>
-                    ),
+                    startAdornment,
                 }}
                 variant='outlined'
                 sx={{

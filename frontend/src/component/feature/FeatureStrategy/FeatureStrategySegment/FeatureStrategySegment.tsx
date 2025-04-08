@@ -100,6 +100,7 @@ export const FeatureStrategySegment = ({
                 options={autocompleteOptions}
                 onChange={onChange}
                 disabled={atStrategySegmentsLimit}
+                icon={null}
             />
             <FeatureStrategySegmentList
                 segments={selectedSegments}

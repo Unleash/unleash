@@ -18,7 +18,6 @@ import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ExportDialog } from './ExportDialog';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { focusable } from 'themes/themeStyles';
 import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
@@ -30,6 +29,8 @@ import { FeatureToggleListActions } from './FeatureToggleListActions/FeatureTogg
 import useLoading from 'hooks/useLoading';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useGlobalFeatureSearch } from './useGlobalFeatureSearch';
+import { LifecycleFilters } from './FeatureToggleFilters/LifecycleFilters';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -40,7 +41,6 @@ export const featuresPlaceholder = Array(15).fill({
 });
 
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
-const feedbackCategory = 'search';
 
 export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
@@ -54,7 +54,9 @@ export const FeatureToggleListTable: VFC = () => {
     const [showExportDialog, setShowExportDialog] = useState(false);
 
     const { setToastApiError } = useToast();
-    const { uiConfig } = useUiConfig();
+    const flagsReleaseManagementUIEnabled = useUiFlag(
+        'flagsReleaseManagementUI',
+    );
 
     const {
         features,
@@ -306,6 +308,12 @@ export const FeatureToggleListTable: VFC = () => {
                 </PageHeader>
             }
         >
+            {flagsReleaseManagementUIEnabled ? (
+                <LifecycleFilters
+                    state={filterState}
+                    onChange={setTableState}
+                />
+            ) : null}
             <FeatureToggleFilters
                 onChange={setTableState}
                 state={filterState}

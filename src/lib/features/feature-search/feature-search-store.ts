@@ -1,4 +1,4 @@
-import type { Knex } from 'knex';
+import { Knex } from 'knex';
 import type EventEmitter from 'events';
 import metricsHelper from '../../util/metrics-helper';
 import { DB_TIME } from '../../metric-events';

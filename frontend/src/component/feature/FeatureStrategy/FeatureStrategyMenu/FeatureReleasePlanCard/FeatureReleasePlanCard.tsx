@@ -50,10 +50,10 @@ const StyledCard = styled('div')(({ theme }) => ({
     textAlign: 'left',
     overflow: 'hidden',
     position: 'relative',
-    '&:hover > div:first-of-type, &:focus-within > div:first-of-type': {
+    '&:hover .cardContent, &:focus-within .cardContent': {
         opacity: 0.5,
     },
-    '&:hover > div:last-of-type, &:focus-within > div:last-of-type': {
+    '&:hover .buttonContainer, &:focus-within .buttonContainer': {
         opacity: 1,
     },
 }));
@@ -90,7 +90,7 @@ export const FeatureReleasePlanCard = ({
 
     return (
         <StyledCard>
-            <CardContent>
+            <CardContent className='cardContent'>
                 <StyledTopRow>
                     <StyledIcon>
                         <Icon />
@@ -112,7 +112,7 @@ export const FeatureReleasePlanCard = ({
                 </Truncator>
             </CardContent>
 
-            <HoverButtonsContainer>
+            <HoverButtonsContainer className='buttonContainer'>
                 <Button
                     variant='contained'
                     size='small'

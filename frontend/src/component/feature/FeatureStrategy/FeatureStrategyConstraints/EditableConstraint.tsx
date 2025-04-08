@@ -43,12 +43,16 @@ import {
 
 const Container = styled('article')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusLarge,
     border: `1px solid ${theme.palette.divider}`,
+}));
+
+const TopRow = styled('div')(({ theme }) => ({
+    padding: theme.spacing(2),
     display: 'flex',
     flexFlow: 'row nowrap',
     justifyItems: 'space-between',
+    borderBottom: `1px dashed ${theme.palette.divider}`,
 }));
 
 const resolveLegalValues = (
@@ -80,6 +84,7 @@ const resolveLegalValues = (
 const ConstraintDetails = styled('div')(({ theme }) => ({
     display: 'flex', // maybe a grid will be easier to modify
     flexFlow: 'row nowrap',
+    width: '100%',
 }));
 
 type Props = {
@@ -301,32 +306,32 @@ export const EditableConstraint: FC<Props> = ({
 
     return (
         <Container>
-            <ConstraintDetails>
-                <GeneralSelect
-                    id='context-field-select'
-                    name='contextName'
-                    label='Context Field'
-                    autoFocus
-                    options={constraintNameOptions}
-                    value={contextName || ''}
-                    onChange={setContextName}
-                />
-                <ConstraintOperatorSelect
-                    options={operatorsForContext(contextName)}
-                    value={operator}
-                    onChange={onOperatorChange}
-                />
-
-                {/*  this is how to style them */}
-                {/* <StrategyEvaluationChip label='label' /> */}
-                {showCaseSensitiveButton ? (
-                    <CaseSensitiveButton
-                        localConstraint={localConstraint}
-                        setCaseInsensitive={setCaseInsensitive}
+            <TopRow>
+                <ConstraintDetails>
+                    <GeneralSelect
+                        id='context-field-select'
+                        name='contextName'
+                        label='Context Field'
+                        autoFocus
+                        options={constraintNameOptions}
+                        value={contextName || ''}
+                        onChange={setContextName}
                     />
-                ) : null}
-                <Input />
-                {/* <ul>
+                    <ConstraintOperatorSelect
+                        options={operatorsForContext(contextName)}
+                        value={operator}
+                        onChange={onOperatorChange}
+                    />
+
+                    {/*  this is how to style them */}
+                    {/* <StrategyEvaluationChip label='label' /> */}
+                    {showCaseSensitiveButton ? (
+                        <CaseSensitiveButton
+                            localConstraint={localConstraint}
+                            setCaseInsensitive={setCaseInsensitive}
+                        />
+                    ) : null}
+                    {/* <ul>
                 <li>
                     <Chip
                         label='value1'
@@ -340,17 +345,19 @@ export const EditableConstraint: FC<Props> = ({
                     />
                 </li>
             </ul> */}
-            </ConstraintDetails>
+                </ConstraintDetails>
 
-            <HtmlTooltip title='Delete constraint' arrow>
-                <IconButton
-                    type='button'
-                    onClick={onDelete}
-                    aria-label='Delete constraint'
-                >
-                    <Delete />
-                </IconButton>
-            </HtmlTooltip>
+                <HtmlTooltip title='Delete constraint' arrow>
+                    <IconButton
+                        type='button'
+                        onClick={onDelete}
+                        aria-label='Delete constraint'
+                    >
+                        <Delete />
+                    </IconButton>
+                </HtmlTooltip>
+            </TopRow>
+            <Input />
         </Container>
     );
 };

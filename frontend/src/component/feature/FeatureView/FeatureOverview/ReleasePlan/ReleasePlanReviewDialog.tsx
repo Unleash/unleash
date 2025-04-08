@@ -31,7 +31,6 @@ const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
 const TitleRow = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center',
     marginBottom: theme.spacing(2),
 }));
 
@@ -39,6 +38,20 @@ const BackButton = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     cursor: 'pointer',
+}));
+
+const StyledBackIcon = styled(ArrowBackIcon)(({ theme }) => ({
+    marginRight: theme.spacing(1),
+    color: theme.palette.primary.main,
+    display: 'flex',
+    alignSelf: 'center',
+}));
+
+const BackText = styled(Typography)(({ theme }) => ({
+    fontWeight: theme.typography.fontWeightMedium,
+    display: 'flex',
+    alignItems: 'center',
+    lineHeight: 1,
 }));
 
 interface IReleasePlanAddDialogProps {
@@ -89,22 +102,10 @@ export const ReleasePlanReviewDialog = ({
             <DialogContent>
                 <TitleRow>
                     <BackButton onClick={handleClose}>
-                        <ArrowBackIcon
-                            sx={{
-                                mr: 1,
-                                color: (theme) => theme.palette.primary.main,
-                            }}
-                        />
-                        <Typography
-                            variant='body2'
-                            color='primary'
-                            sx={{
-                                fontWeight: (theme) =>
-                                    theme.typography.fontWeightMedium,
-                            }}
-                        >
+                        <StyledBackIcon />
+                        <BackText variant='body2' color='primary'>
                             Go back
-                        </Typography>
+                        </BackText>
                     </BackButton>
                     <IconButton
                         size='small'

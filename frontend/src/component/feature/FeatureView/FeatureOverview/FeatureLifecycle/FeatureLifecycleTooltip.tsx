@@ -348,9 +348,9 @@ export const FeatureLifecycleTooltip: FC<{
     children: React.ReactElement<any, any>;
     stage: LifecycleStage;
     project: string;
-    onArchive: () => void;
-    onComplete: () => void;
-    onUncomplete: () => void;
+    onArchive?: () => void;
+    onComplete?: () => void;
+    onUncomplete?: () => void;
     loading: boolean;
 }> = ({
     children,
@@ -399,7 +399,7 @@ export const FeatureLifecycleTooltip: FC<{
                 {stage.name !== 'archived' ? (
                     <StyledFooter>
                         <EnvironmentsInfo stage={stage} />
-                        {stage.name === 'live' && (
+                        {stage.name === 'live' && onComplete ? (
                             <LiveStageAction
                                 onComplete={onComplete}
                                 loading={loading}
@@ -409,8 +409,10 @@ export const FeatureLifecycleTooltip: FC<{
                                     environments={stage.environments!}
                                 />
                             </LiveStageAction>
-                        )}
-                        {stage.name === 'completed' && (
+                        ) : null}
+                        {stage.name === 'completed' &&
+                        onArchive &&
+                        onUncomplete ? (
                             <CompletedStageDescription
                                 environments={stage.environments!}
                                 onArchive={onArchive}
@@ -418,7 +420,7 @@ export const FeatureLifecycleTooltip: FC<{
                                 loading={loading}
                                 project={project}
                             />
-                        )}
+                        ) : null}
                     </StyledFooter>
                 ) : null}
             </Box>

@@ -5,99 +5,87 @@ import { MarkCompletedDialogue } from 'component/feature/FeatureView/FeatureOver
 import { ArchivedFeatureDeleteConfirm } from '../../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm';
 import { ArchivedFeatureReviveConfirm } from '../../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureReviveConfirm/ArchivedFeatureReviveConfirm';
 
-export const useRowActions = (onChange: () => void, projectId: string) => {
-    const [featureArchiveState, setFeatureArchiveState] = useState<
-        string | undefined
-    >();
+export const useRowActions = (onChange: () => void) => {
+    const [featureArchiveState, setFeatureArchiveState] = useState<{
+        featureId: string;
+        projectId: string;
+    }>();
 
     const [featureStaleDialogState, setFeatureStaleDialogState] = useState<{
-        featureId?: string;
-        stale?: boolean;
-    }>({});
+        featureId: string;
+        projectId: string;
+        stale: boolean;
+    }>();
 
     const [showMarkCompletedDialogue, setShowMarkCompletedDialogue] = useState<{
         featureId: string;
-        open: boolean;
-    }>({
-        featureId: 'default',
-        open: false,
-    });
+        projectId: string;
+    }>();
+
     const [showFeatureReviveDialogue, setShowFeatureReviveDialogue] = useState<{
         featureId: string;
-        open: boolean;
-    }>({
-        featureId: 'default',
-        open: false,
-    });
+        projectId: string;
+    }>();
+
     const [showFeatureDeleteDialogue, setShowFeatureDeleteDialogue] = useState<{
         featureId: string;
-        open: boolean;
-    }>({
-        featureId: 'default',
-        open: false,
-    });
+        projectId: string;
+    }>();
 
     const rowActionsDialogs = (
         <>
             <FeatureStaleDialog
-                isStale={Boolean(featureStaleDialogState.stale)}
-                isOpen={Boolean(featureStaleDialogState.featureId)}
+                isStale={Boolean(featureStaleDialogState?.stale)}
+                isOpen={Boolean(featureStaleDialogState)}
                 onClose={() => {
-                    setFeatureStaleDialogState({});
+                    setFeatureStaleDialogState(undefined);
                     onChange();
                 }}
-                featureId={featureStaleDialogState.featureId || ''}
-                projectId={projectId}
+                featureId={featureStaleDialogState?.featureId || ''}
+                projectId={featureStaleDialogState?.projectId || ''}
             />
-
             <FeatureArchiveDialog
                 isOpen={Boolean(featureArchiveState)}
                 onConfirm={onChange}
                 onClose={() => {
                     setFeatureArchiveState(undefined);
                 }}
-                featureIds={[featureArchiveState || '']}
-                projectId={projectId}
+                featureIds={[featureArchiveState?.featureId || '']}
+                projectId={featureArchiveState?.projectId || ''}
             />
             <MarkCompletedDialogue
-                isOpen={showMarkCompletedDialogue.open}
+                isOpen={Boolean(showMarkCompletedDialogue)}
                 setIsOpen={(open) => {
-                    setShowMarkCompletedDialogue({
-                        ...showMarkCompletedDialogue,
-                        open,
-                    });
+                    setShowMarkCompletedDialogue(
+                        open ? showMarkCompletedDialogue : undefined,
+                    );
                 }}
-                projectId={projectId}
-                featureId={showMarkCompletedDialogue.featureId}
+                projectId={showMarkCompletedDialogue?.projectId || ''}
+                featureId={showMarkCompletedDialogue?.featureId || ''}
                 onComplete={onChange}
             />
             <ArchivedFeatureDeleteConfirm
-                deletedFeatures={[showFeatureDeleteDialogue.featureId]}
-                projectId={projectId}
-                open={showFeatureDeleteDialogue.open}
+                deletedFeatures={[showFeatureDeleteDialogue?.featureId || '']}
+                projectId={showFeatureDeleteDialogue?.projectId || ''}
+                open={Boolean(showFeatureDeleteDialogue)}
                 setOpen={(open) => {
-                    setShowFeatureDeleteDialogue((prev) => ({
-                        ...prev,
-                        open,
-                    }));
+                    setShowFeatureDeleteDialogue(
+                        open ? showFeatureDeleteDialogue : undefined,
+                    );
                 }}
                 refetch={onChange}
             />
             <ArchivedFeatureReviveConfirm
-                revivedFeatures={[showFeatureReviveDialogue.featureId]}
-                projectId={projectId}
-                open={showFeatureReviveDialogue.open}
+                revivedFeatures={[showFeatureReviveDialogue?.featureId || '']}
+                projectId={showFeatureReviveDialogue?.projectId || ''}
+                open={Boolean(showFeatureReviveDialogue)}
                 setOpen={(open) => {
-                    setShowFeatureReviveDialogue((prev) => ({
-                        ...prev,
-                        open,
-                    }));
+                    setShowFeatureReviveDialogue(
+                        open ? showFeatureReviveDialogue : undefined,
+                    );
                 }}
                 refetch={() => {
-                    setShowFeatureReviveDialogue((prev) => ({
-                        ...prev,
-                        open: false,
-                    }));
+                    setShowFeatureReviveDialogue(undefined);
                     onChange();
                 }}
             />

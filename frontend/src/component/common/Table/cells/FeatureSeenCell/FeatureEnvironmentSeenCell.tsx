@@ -35,9 +35,9 @@ interface IFeatureLifecycleProps {
         project: string;
         name: string;
     };
-    onComplete: () => void;
-    onUncomplete: () => void;
-    onArchive: () => void;
+    onComplete?: () => void;
+    onUncomplete?: () => void;
+    onArchive?: () => void;
 }
 
 export const FeatureLifecycleCell: VFC<IFeatureLifecycleProps> = ({

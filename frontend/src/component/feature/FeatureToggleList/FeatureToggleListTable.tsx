@@ -32,7 +32,10 @@ import { FeatureSegmentCell } from 'component/common/Table/cells/FeatureSegmentC
 import { FeatureToggleListActions } from './FeatureToggleListActions/FeatureToggleListActions';
 import useLoading from 'hooks/useLoading';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { useGlobalFeatureSearch } from './useGlobalFeatureSearch';
+import {
+    useGlobalFeatureSearch,
+    useTableStateFilter,
+} from './useGlobalFeatureSearch';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { LifecycleFilters } from './FeatureToggleFilters/LifecycleFilters';
 import { ExportFlags } from './ExportFlags';
@@ -43,9 +46,22 @@ export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
     description: 'Short description of the feature',
     type: '-',
-    createdAt: new Date(2022, 1, 1),
+    createdAt: new Date(2022, 1, 1).toISOString(),
     project: 'projectID',
-});
+    createdBy: {
+        id: 0,
+        name: 'admin',
+        imageUrl: '',
+    },
+    archivedAt: null,
+    favorite: false,
+    stale: false,
+    dependencyType: null,
+    tags: [],
+    environments: [],
+    impressionData: false,
+    segments: [],
+} as FeatureSearchResponseSchema);
 
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 
@@ -75,6 +91,22 @@ export const FeatureToggleListTable: FC = () => {
         setTableState,
         filterState,
     } = useGlobalFeatureSearch();
+    const onFlagTypeClick = useTableStateFilter(
+        ['type', 'IS'],
+        tableState,
+        setTableState,
+    );
+    const onTagClick = useTableStateFilter(
+        ['tag', 'INCLUDE'],
+        tableState,
+        setTableState,
+    );
+    const onAvatarClick = useTableStateFilter(
+        ['createdBy', 'IS'],
+        tableState,
+        setTableState,
+    );
+
     const { projects } = useProjects();
     const bodyLoadingRef = useLoading(loading);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
@@ -123,23 +155,10 @@ export const FeatureToggleListTable: FC = () => {
                       }),
                       columnHelper.accessor('name', {
                           header: 'Name',
-                          cell: flagsReleaseManagementUIEnabled
-                              ? createFeatureOverviewCell(
-                                    // FIXME: add action
-                                    () => {},
-                                    // FIXME: add action
-                                    () => {},
-                                )
-                              : ({ row }) => (
-                                    <LinkCell
-                                        title={row.original.name}
-                                        subtitle={
-                                            row.original.description ||
-                                            undefined
-                                        }
-                                        to={`/projects/${row.original.project}/features/${row.original.name}`}
-                                    />
-                                ),
+                          cell: createFeatureOverviewCell(
+                              onTagClick,
+                              onFlagTypeClick,
+                          ),
                           meta: { width: '50%' },
                       }),
                       columnHelper.accessor('createdAt', {
@@ -152,9 +171,9 @@ export const FeatureToggleListTable: FC = () => {
                       columnHelper.accessor('createdBy', {
                           id: 'createdBy',
                           header: 'By',
-                          cell: AvatarCell(() => {}),
-                          enableSorting: false,
+                          cell: AvatarCell(onAvatarClick),
                           meta: { width: '1%', align: 'center' },
+                          enableSorting: false,
                       }),
 
                       columnHelper.accessor('lifecycle', {
@@ -163,40 +182,25 @@ export const FeatureToggleListTable: FC = () => {
                           cell: ({ row: { original } }) => (
                               <FeatureLifecycleCell
                                   feature={original}
-                                  onComplete={() => {
-                                      // FIXME: add action
-                                      //   setShowMarkCompletedDialogue({
-                                      //       featureId: original.name,
-                                      //       open: true,
-                                      //   });
-                                  }}
-                                  onUncomplete={
-                                      () => {}
-                                      // FIXME: add action -- refetch
-                                  }
-                                  onArchive={
-                                      () => {}
-                                      // FIXME: add action -- setFeatureArchiveState(original.name)
-                                  }
                                   data-loading
                               />
                           ),
-                          enableSorting: false,
+                          enableSorting: false, // FIXME: enable sorting by lifecycle
                           size: 50,
                           meta: { align: 'center', width: '1%' },
                       }),
                       columnHelper.accessor('project', {
                           header: 'Project',
                           cell: ({ getValue }) => {
-                              const value = getValue();
-                              const project = projects.find(
-                                  (project) => project.id === value,
-                              );
+                              const projectId = getValue();
+                              const projectName = projects.find(
+                                  (project) => project.id === projectId,
+                              )?.name;
 
                               return (
                                   <LinkCell
-                                      title={project?.name || value}
-                                      to={`/projects/${getValue()}`}
+                                      title={projectName || projectId}
+                                      to={`/projects/${projectId}`}
                                   />
                               );
                           },

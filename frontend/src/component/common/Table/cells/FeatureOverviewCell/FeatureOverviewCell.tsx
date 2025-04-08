@@ -90,13 +90,13 @@ const CappedDescription: FC<{ text: string; searchQuery: string }> = ({
                     placement='bottom-start'
                     arrow
                 >
-                    <StyledDescription>
+                    <StyledDescription data-loading>
                         <Highlighter search={searchQuery}>{text}</Highlighter>
                     </StyledDescription>
                 </HtmlTooltip>
             }
             elseShow={
-                <StyledDescription>
+                <StyledDescription data-loading>
                     <Highlighter search={searchQuery}>{text}</Highlighter>
                 </StyledDescription>
             }

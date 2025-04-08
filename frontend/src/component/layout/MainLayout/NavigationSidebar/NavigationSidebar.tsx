@@ -30,6 +30,7 @@ import { ReactComponent as LogoOnlyWhite } from 'assets/img/logo.svg';
 import { ReactComponent as LogoOnly } from 'assets/img/logoDark.svg';
 import { Link } from 'react-router-dom';
 import { useFlag } from '@unleash/proxy-client-react';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export const MobileNavigationSidebar: FC<{
     onClick: () => void;

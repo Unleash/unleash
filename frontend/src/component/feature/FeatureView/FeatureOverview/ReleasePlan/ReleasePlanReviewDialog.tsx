@@ -28,7 +28,7 @@ const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
     padding: theme.spacing(2, 4, 4),
 }));
 
-const TitleRow = styled(Box)(({ theme }) => ({
+const TopRow = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     marginBottom: theme.spacing(2),
@@ -100,7 +100,7 @@ export const ReleasePlanReviewDialog = ({
     return (
         <StyledDialog open={open} onClose={handleClose} fullWidth maxWidth='md'>
             <DialogContent>
-                <TitleRow>
+                <TopRow>
                     <BackButton onClick={handleClose}>
                         <StyledBackIcon />
                         <BackText variant='body2' color='primary'>
@@ -115,7 +115,7 @@ export const ReleasePlanReviewDialog = ({
                     >
                         <CloseIcon fontSize='small' />
                     </IconButton>
-                </TitleRow>
+                </TopRow>
 
                 {activeReleasePlan && (
                     <Alert severity='error' sx={{ mb: 1 }}>

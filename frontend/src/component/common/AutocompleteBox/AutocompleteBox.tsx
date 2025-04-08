@@ -17,6 +17,7 @@ interface IAutocompleteBoxProps {
     onChange: (value: IAutocompleteBoxOption[]) => void;
     disabled?: boolean;
     icon?: ReactNode | null;
+    width?: string | number;
 }
 
 export interface IAutocompleteBoxOption {
@@ -44,6 +45,7 @@ export const AutocompleteBox = ({
     onChange,
     disabled,
     icon,
+    width = '215px',
 }: IAutocompleteBoxProps) => {
     const [_, setPlaceholder] = useState('Add Segments');
     const theme = useTheme();
@@ -77,7 +79,7 @@ export const AutocompleteBox = ({
                 }}
                 variant='outlined'
                 sx={{
-                    width: '215px',
+                    width,
                     '& .MuiOutlinedInput-root': {
                         '& .MuiInputBase-input': {
                             color: theme.palette.primary.main,

@@ -101,6 +101,7 @@ export const FeatureStrategySegment = ({
                 onChange={onChange}
                 disabled={atStrategySegmentsLimit}
                 icon={null}
+                width={'175px'}
             />
             <FeatureStrategySegmentList
                 segments={selectedSegments}

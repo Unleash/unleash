@@ -191,7 +191,9 @@ export const FeatureToggleListTable: FC = () => {
                 },
             }),
             columnHelper.accessor('project', {
-                header: flagsReleaseManagementUIEnabled ? 'Project' : 'Project ID',
+                header: flagsReleaseManagementUIEnabled
+                    ? 'Project'
+                    : 'Project ID',
                 cell: ({ getValue }) => {
                     const value = getValue();
                     const project = projects.find(

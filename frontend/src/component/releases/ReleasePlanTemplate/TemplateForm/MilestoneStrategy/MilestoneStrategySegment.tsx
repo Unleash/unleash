@@ -88,6 +88,8 @@ export const MilestoneStrategySegment = ({
                 options={autocompleteOptions}
                 onChange={onChange}
                 disabled={atStrategySegmentsLimit}
+                icon={null}
+                width={'175px'}
             />
             <MilestoneStrategySegmentList
                 segments={selectedSegments}

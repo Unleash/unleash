@@ -9,6 +9,7 @@ import {
     type IAutocompleteBoxOption,
 } from 'component/common/AutocompleteBox/AutocompleteBox';
 import { MilestoneStrategySegmentList } from './MilestoneStrategySegmentList';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledHelpIconBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -26,6 +27,7 @@ export const MilestoneStrategySegment = ({
     segments: selectedSegments,
     setSegments: setSelectedSegments,
 }: IMilestoneStrategySegmentProps) => {
+    const addEditStrategy = useUiFlag('addEditStrategy');
     const { segments: allSegments } = useSegments();
     const { strategySegmentsLimit } = useSegmentLimits();
 
@@ -88,6 +90,8 @@ export const MilestoneStrategySegment = ({
                 options={autocompleteOptions}
                 onChange={onChange}
                 disabled={atStrategySegmentsLimit}
+                icon={addEditStrategy ? null : undefined}
+                width={'175px'}
             />
             <MilestoneStrategySegmentList
                 segments={selectedSegments}

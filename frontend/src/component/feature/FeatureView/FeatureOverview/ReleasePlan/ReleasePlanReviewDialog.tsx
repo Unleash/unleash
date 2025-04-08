@@ -1,14 +1,46 @@
-import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { ReleasePlan } from './ReleasePlan';
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
-import { styled, Typography, Alert } from '@mui/material';
+import {
+    styled,
+    Typography,
+    Alert,
+    Box,
+    IconButton,
+    Dialog,
+    DialogContent,
+    DialogActions,
+    Button,
+} from '@mui/material';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CloseIcon from '@mui/icons-material/Close';
 
-const StyledReleasePlanContainer = styled('div')(({ theme }) => ({
-    margin: theme.spacing(2, 0),
+const StyledDialog = styled(Dialog)(({ theme }) => ({
+    '& .MuiDialog-paper': {
+        borderRadius: theme.shape.borderRadiusLarge,
+        maxWidth: theme.spacing(85),
+    },
 }));
+
+const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
+    padding: theme.spacing(2, 4, 4),
+}));
+
+const TitleRow = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing(2),
+}));
+
+const BackButton = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+}));
+
 interface IReleasePlanAddDialogProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -50,60 +82,66 @@ export const ReleasePlanReviewDialog = ({
         environment,
     );
 
-    const firstMilestone = planPreview.milestones[0];
+    const handleClose = () => setOpen(false);
 
     return (
-        <Dialogue
-            title='Add release plan?'
-            open={open}
-            primaryButtonText={
-                crProtected ? 'Add suggestion to draft' : 'Add release plan'
-            }
-            secondaryButtonText='Cancel'
-            onClick={onConfirm}
-            onClose={() => setOpen(false)}
-        >
-            {activeReleasePlan && (
-                <Alert severity='error' sx={{ mb: 1 }}>
-                    This feature environment currently has{' '}
-                    <strong>{activeReleasePlan.name}</strong> -{' '}
-                    <strong>{activeReleasePlan.milestones[0].name}</strong>
-                    {environmentEnabled ? ' running' : ' paused'}. Adding a new
-                    release plan will replace the existing release plan.
-                </Alert>
-            )}
-            {environmentEnabled ? (
-                <Alert severity='info'>
-                    This environment is currently <strong>enabled</strong>.
-                    {firstMilestone && (
-                        <p>
-                            The first milestone will be started as soon as the
-                            release plan is added:{' '}
-                            <strong>{planPreview.milestones[0].name}</strong>
-                        </p>
-                    )}
-                </Alert>
-            ) : (
-                <Alert severity='warning'>
-                    This environment is currently <strong>disabled</strong>.
-                    <p>
-                        Milestones will not start automatically after adding the
-                        release plan. They will remain paused until the
-                        environment is enabled.
-                    </p>
-                </Alert>
-            )}
-            <StyledReleasePlanContainer>
-                <ReleasePlan plan={planPreview} readonly />
-            </StyledReleasePlanContainer>
-            {crProtected && (
-                <Typography sx={{ mt: 4 }}>
-                    <strong>Adding</strong> release template{' '}
-                    <strong>{template?.name}</strong> to{' '}
-                    <strong>{featureName}</strong> in{' '}
-                    <strong>{environment}</strong>.
-                </Typography>
-            )}
-        </Dialogue>
+        <StyledDialog open={open} onClose={handleClose} fullWidth maxWidth='md'>
+            <DialogContent>
+                <TitleRow>
+                    <BackButton onClick={handleClose}>
+                        <ArrowBackIcon
+                            sx={{
+                                mr: 1,
+                                color: (theme) => theme.palette.primary.main,
+                            }}
+                        />
+                        <Typography
+                            variant='body2'
+                            color='primary'
+                            sx={{
+                                fontWeight: (theme) =>
+                                    theme.typography.fontWeightMedium,
+                            }}
+                        >
+                            Go back
+                        </Typography>
+                    </BackButton>
+                    <IconButton
+                        size='small'
+                        onClick={handleClose}
+                        edge='end'
+                        aria-label='close'
+                    >
+                        <CloseIcon fontSize='small' />
+                    </IconButton>
+                </TitleRow>
+
+                {activeReleasePlan && (
+                    <Alert severity='error' sx={{ mb: 1 }}>
+                        This feature environment currently has{' '}
+                        <strong>{activeReleasePlan.name}</strong> -{' '}
+                        <strong>{activeReleasePlan.milestones[0].name}</strong>
+                        {environmentEnabled ? ' running' : ' paused'}. Adding a
+                        new release plan will replace the existing release plan.
+                    </Alert>
+                )}
+                <div>
+                    <ReleasePlan plan={planPreview} readonly />
+                </div>
+                {crProtected && (
+                    <Typography sx={{ mt: 4 }}>
+                        <strong>Adding</strong> release template{' '}
+                        <strong>{template?.name}</strong> to{' '}
+                        <strong>{featureName}</strong> in{' '}
+                        <strong>{environment}</strong>.
+                    </Typography>
+                )}
+            </DialogContent>
+            <StyledDialogActions>
+                <Button variant='contained' color='primary' onClick={onConfirm}>
+                    {crProtected ? 'Add suggestion to draft' : 'Use template'}
+                </Button>
+            </StyledDialogActions>
+        </StyledDialog>
     );
 };

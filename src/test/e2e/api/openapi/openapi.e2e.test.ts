@@ -114,7 +114,7 @@ test('the generated OpenAPI spec is valid', async () => {
     } catch (err) {
         console.error(err);
         // there's an error here, so let's exit after showing it in the console.
-        expect(true).toBe(false);
+        expect(err).toBeUndefined();
     }
 
     const [, enforcerError, enforcerWarning] = await enforcer(body, {

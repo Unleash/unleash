@@ -1,6 +1,7 @@
 import { Box, Chip, styled } from '@mui/material';
 import type { FC } from 'react';
 import type { FilterItemParamHolder } from '../../../filter/Filters/Filters';
+import type { LifecycleStage } from '../../FeatureView/FeatureOverview/FeatureLifecycle/LifecycleStage';
 
 const StyledChip = styled(Chip, {
     shouldForwardProp: (prop) => prop !== 'isActive',
@@ -35,7 +36,10 @@ const Wrapper = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2, 3, 0, 3),
 }));
 
-const lifecycleOptions = [
+const lifecycleOptions: {
+    label: string;
+    value: LifecycleStage['name'] | null;
+}[] = [
     { label: 'All flags', value: null },
     { label: 'Develop', value: 'pre-live' },
     { label: 'Rollout production', value: 'live' },

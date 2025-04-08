@@ -33,6 +33,7 @@ export interface IGeneralSelectProps<T extends string = string>
     classes?: any;
     defaultValue?: string;
     visuallyHideLabel?: boolean;
+    FormControl?: typeof StyledFormControl;
 }
 
 const StyledFormControl = styled(FormControl)({
@@ -40,6 +41,7 @@ const StyledFormControl = styled(FormControl)({
 });
 
 function GeneralSelect<T extends string = string>({
+    FormControl = StyledFormControl,
     name,
     value,
     label = '',
@@ -59,8 +61,10 @@ function GeneralSelect<T extends string = string>({
         onChange(String(event.target.value) as T);
     };
 
+    console.log('classes', classes);
+
     return (
-        <StyledFormControl
+        <FormControl
             variant='outlined'
             size='small'
             classes={classes}
@@ -107,7 +111,7 @@ function GeneralSelect<T extends string = string>({
                     </MenuItem>
                 ))}
             </Select>
-        </StyledFormControl>
+        </FormControl>
     );
 }
 

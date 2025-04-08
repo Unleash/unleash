@@ -1,5 +1,5 @@
 import Delete from '@mui/icons-material/Delete';
-import { IconButton, styled } from '@mui/material';
+import { FormControl, IconButton, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { DateSingleValue } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/DateSingleValue/DateSingleValue';
@@ -86,6 +86,17 @@ const ConstraintDetails = styled('div')(({ theme }) => ({
     flexFlow: 'row nowrap',
     width: '100%',
 }));
+
+const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
+    fieldset: { border: 'none', borderRadius: 0 },
+    ':focus-within fieldset': { borderBottomStyle: 'solid' },
+}));
+
+const StyledFormControl = styled(FormControl)({
+    maxWidth: '20ch',
+    width: '25ch',
+    minWidth: '5ch',
+});
 
 type Props = {
     localConstraint: IConstraint;
@@ -308,7 +319,8 @@ export const EditableConstraint: FC<Props> = ({
         <Container>
             <TopRow>
                 <ConstraintDetails>
-                    <GeneralSelect
+                    <StyledSelect
+                        visuallyHideLabel
                         id='context-field-select'
                         name='contextName'
                         label='Context Field'
@@ -316,6 +328,7 @@ export const EditableConstraint: FC<Props> = ({
                         options={constraintNameOptions}
                         value={contextName || ''}
                         onChange={setContextName}
+                        FormControl={StyledFormControl}
                     />
                     <ConstraintOperatorSelect
                         options={operatorsForContext(contextName)}

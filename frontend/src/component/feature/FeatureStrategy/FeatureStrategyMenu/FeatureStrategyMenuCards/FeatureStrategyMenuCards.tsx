@@ -23,6 +23,7 @@ interface IFeatureStrategyMenuCardsProps {
     environmentId: string;
     onlyReleasePlans: boolean;
     onAddReleasePlan: (template: IReleasePlanTemplate) => void;
+    onReviewReleasePlan: (template: IReleasePlanTemplate) => void;
     onClose?: () => void;
 }
 
@@ -141,6 +142,7 @@ export const FeatureStrategyMenuCards = ({
     environmentId,
     onlyReleasePlans,
     onAddReleasePlan,
+    onReviewReleasePlan,
     onClose,
 }: IFeatureStrategyMenuCardsProps) => {
     const { strategies } = useStrategies();
@@ -238,6 +240,9 @@ export const FeatureStrategyMenuCards = ({
                                             template={template}
                                             onClick={() =>
                                                 onAddReleasePlan(template)
+                                            }
+                                            onPreviewClick={() =>
+                                                onReviewReleasePlan(template)
                                             }
                                         />
                                     </CardWrapper>

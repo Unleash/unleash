@@ -1,4 +1,3 @@
-import { useStyles } from 'component/common/AutocompleteBox/AutocompleteBox.styles';
 import Add from '@mui/icons-material/Add';
 import {
     Autocomplete,
@@ -32,23 +31,6 @@ const StyledContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledIcon = styled('div', {
-    shouldForwardProp: (prop: string) => !prop.startsWith('$'),
-})<{ $disabled: boolean }>(({ theme, $disabled }) => ({
-    background: $disabled
-        ? theme.palette.primary.light
-        : theme.palette.primary.main,
-    height: '48px',
-    width: '48px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingLeft: 6,
-    borderTopLeftRadius: '40px',
-    borderBottomLeftRadius: '40px',
-    color: theme.palette.primary.contrastText,
-}));
-
 const StyledAutocomplete = styled(Autocomplete)({
     flex: 1,
 }) as typeof Autocomplete;
@@ -60,13 +42,8 @@ export const AutocompleteBox = ({
     onChange,
     disabled,
 }: IAutocompleteBoxProps) => {
-    const [placeHolder, setPlaceholder] = useState('Add Segments');
-    const { classes: styles } = useStyles();
+    const [_, setPlaceholder] = useState('Add Segments');
     const theme = useTheme();
-
-    const renderInput = (params: AutocompleteRenderInputParams) => {
-        return <TextField {...params} variant='outlined' label={label} />;
-    };
 
     const renderCustomInput = (params: AutocompleteRenderInputParams) => {
         const { InputProps } = params;
@@ -120,7 +97,7 @@ export const AutocompleteBox = ({
             <StyledAutocomplete
                 options={options}
                 value={value}
-                onChange={(event, value) => onChange(value || [])}
+                onChange={(_, value) => onChange(value || [])}
                 renderInput={renderCustomInput}
                 getOptionLabel={(value) => value.label}
                 disabled={disabled}

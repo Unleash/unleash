@@ -31,6 +31,8 @@ import useLoading from 'hooks/useLoading';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useGlobalFeatureSearch } from './useGlobalFeatureSearch';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { LifecycleFilters } from './FeatureToggleFilters/LifecycleFilters';
+import { ExportFlags } from './ExportFlags';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -54,7 +56,9 @@ export const FeatureToggleListTable: FC = () => {
     const [showExportDialog, setShowExportDialog] = useState(false);
 
     const { setToastApiError } = useToast();
-    const flagsReleaseManagementUI = useUiFlag('flagsReleaseManagementUI');
+    const flagsReleaseManagementUIEnabled = useUiFlag(
+        'flagsReleaseManagementUI',
+    );
 
     const {
         features,
@@ -145,7 +149,7 @@ export const FeatureToggleListTable: FC = () => {
                     width: '50%',
                 },
             }),
-            ...(!flagsReleaseManagementUI
+            ...(!flagsReleaseManagementUIEnabled
                 ? [
                       columnHelper.accessor(
                           (row) => row.segments?.join('\n') || '',
@@ -187,7 +191,7 @@ export const FeatureToggleListTable: FC = () => {
                 },
             }),
             columnHelper.accessor('project', {
-                header: flagsReleaseManagementUI ? 'Project' : 'Project ID',
+                header: flagsReleaseManagementUIEnabled ? 'Project' : 'Project ID',
                 cell: ({ getValue }) => {
                     const value = getValue();
                     const project = projects.find(
@@ -197,7 +201,7 @@ export const FeatureToggleListTable: FC = () => {
                     return (
                         <LinkCell
                             title={
-                                flagsReleaseManagementUI
+                                flagsReleaseManagementUIEnabled
                                     ? project?.name || value
                                     : value
                             }
@@ -209,7 +213,7 @@ export const FeatureToggleListTable: FC = () => {
                     width: '1%',
                 },
             }),
-            ...(!flagsReleaseManagementUI
+            ...(!flagsReleaseManagementUIEnabled
                 ? [
                       columnHelper.accessor('stale', {
                           header: 'State',
@@ -315,9 +319,17 @@ export const FeatureToggleListTable: FC = () => {
                             >
                                 View archive
                             </Link>
-                            <FeatureToggleListActions
-                                onExportClick={() => setShowExportDialog(true)}
-                            />
+                            {flagsReleaseManagementUIEnabled ? (
+                                <ExportFlags
+                                    onClick={() => setShowExportDialog(true)}
+                                />
+                            ) : (
+                                <FeatureToggleListActions
+                                    onExportClick={() =>
+                                        setShowExportDialog(true)
+                                    }
+                                />
+                            )}
                         </>
                     }
                 >
@@ -334,6 +346,12 @@ export const FeatureToggleListTable: FC = () => {
                 </PageHeader>
             }
         >
+            {flagsReleaseManagementUIEnabled ? (
+                <LifecycleFilters
+                    state={filterState}
+                    onChange={setTableState}
+                />
+            ) : null}
             <FeatureToggleFilters
                 onChange={setTableState}
                 state={filterState}

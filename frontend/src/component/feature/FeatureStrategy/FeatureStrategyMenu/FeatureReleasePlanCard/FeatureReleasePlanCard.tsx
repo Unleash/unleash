@@ -31,6 +31,7 @@ const HoverButtonsContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
     opacity: 0,
+    transition: 'opacity 0.1s ease-in-out',
 }));
 
 const StyledCard = styled('div')(({ theme }) => ({
@@ -49,13 +50,12 @@ const StyledCard = styled('div')(({ theme }) => ({
     textAlign: 'left',
     overflow: 'hidden',
     position: 'relative',
-    [`&:hover ${CardContent}, &:focus-within ${CardContent}`]: {
+    '&:hover > div:first-of-type, &:focus-within > div:first-of-type': {
         opacity: 0.5,
     },
-    [`&:hover ${HoverButtonsContainer}, &:focus-within ${HoverButtonsContainer}`]:
-        {
-            opacity: 1,
-        },
+    '&:hover > div:last-of-type, &:focus-within > div:last-of-type': {
+        opacity: 1,
+    },
 }));
 
 const StyledTopRow = styled('div')(({ theme }) => ({

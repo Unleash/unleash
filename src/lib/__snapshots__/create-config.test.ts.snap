@@ -68,7 +68,6 @@ exports[`should create default config 1`] = `
     "_events": {},
     "_eventsCount": 0,
     "_maxListeners": undefined,
-    Symbol(shapeMode): false,
     Symbol(kCapture): false,
   },
   "feedbackUriPath": undefined,
@@ -158,6 +157,7 @@ exports[`should create default config 1`] = `
   "ui": {
     "environment": "Open Source",
   },
+  "unleashFrontendToken": undefined,
   "userInactivityThresholdInDays": 180,
   "versionCheck": {
     "enable": true,

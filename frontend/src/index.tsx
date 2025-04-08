@@ -22,6 +22,7 @@ import { Error as LayoutError } from './component/layout/Error/Error';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecordUIErrorApi } from 'hooks/api/actions/useRecordUIErrorApi/useRecordUiErrorApi';
 import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';
+import { UnleashFlagProvider } from 'component/providers/UnleashFlagProvider/UnleashFlagProvider';
 
 window.global ||= window;
 
@@ -50,23 +51,25 @@ const ApplicationRoot = () => {
                         <ThemeProvider>
                             <AnnouncerProvider>
                                 <PlausibleProvider>
-                                    <ErrorBoundary
-                                        FallbackComponent={LayoutError}
-                                        onError={sendErrorToApi}
-                                    >
-                                        <FeedbackProvider>
-                                            <FeedbackCESProvider>
-                                                <StickyProvider>
-                                                    <HighlightProvider>
-                                                        <InstanceStatus>
-                                                            <ScrollTop />
-                                                            <App />
-                                                        </InstanceStatus>
-                                                    </HighlightProvider>
-                                                </StickyProvider>
-                                            </FeedbackCESProvider>
-                                        </FeedbackProvider>
-                                    </ErrorBoundary>
+                                    <UnleashFlagProvider>
+                                        <ErrorBoundary
+                                            FallbackComponent={LayoutError}
+                                            onError={sendErrorToApi}
+                                        >
+                                            <FeedbackProvider>
+                                                <FeedbackCESProvider>
+                                                    <StickyProvider>
+                                                        <HighlightProvider>
+                                                            <InstanceStatus>
+                                                                <ScrollTop />
+                                                                <App />
+                                                            </InstanceStatus>
+                                                        </HighlightProvider>
+                                                    </StickyProvider>
+                                                </FeedbackCESProvider>
+                                            </FeedbackProvider>
+                                        </ErrorBoundary>
+                                    </UnleashFlagProvider>
                                 </PlausibleProvider>
                             </AnnouncerProvider>
                         </ThemeProvider>

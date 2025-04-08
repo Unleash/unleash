@@ -174,6 +174,12 @@ class ConfigController extends Controller {
             ...expFlags,
         };
 
+        const unleashContext = {
+            ...this.flagResolver.getStaticContext(), //clientId etc.
+            email: req.user.email,
+            userId: req.user.id,
+        };
+
         const response: UiConfigSchema = {
             ...this.config.ui,
             flags,
@@ -192,6 +198,7 @@ class ConfigController extends Controller {
             maintenanceMode,
             feedbackUriPath: this.config.feedbackUriPath,
             maxSessionsCount,
+            unleashContext: unleashContext,
         };
 
         this.openApiService.respondWithValidation(

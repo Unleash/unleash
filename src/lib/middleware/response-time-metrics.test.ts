@@ -31,6 +31,7 @@ const flagResolver = {
     isEnabled: jest.fn(),
     getAll: jest.fn(),
     getVariant: jest.fn(),
+    getStaticContext: jest.fn(),
 };
 
 // Make sure it's always cleaned up

@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 import type { Variant } from 'utils/variants';
 import type { ResourceLimitsSchema } from '../openapi';
+import {} from '@unleash/proxy-client-react/dist/FlagContext';
+import type { IMutableContext } from 'unleash-proxy-client';
 
 export interface IUiConfig {
     authenticationType?: string;
@@ -34,6 +36,8 @@ export interface IUiConfig {
     oidcConfiguredThroughEnv?: boolean;
     samlConfiguredThroughEnv?: boolean;
     maxSessionsCount?: number;
+    unleashToken?: string;
+    unleashContext?: IMutableContext;
 }
 
 export interface IProclamationToast {

@@ -20,7 +20,10 @@ import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironmen
 import { ExportDialog } from './ExportDialog';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { focusable } from 'themes/themeStyles';
-import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
+import {
+    FeatureEnvironmentSeenCell,
+    FeatureLifecycleCell,
+} from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
 import { FeatureToggleFilters } from './FeatureToggleFilters/FeatureToggleFilters';
 import { withTableState } from 'utils/withTableState';
@@ -33,6 +36,8 @@ import { useGlobalFeatureSearch } from './useGlobalFeatureSearch';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { LifecycleFilters } from './FeatureToggleFilters/LifecycleFilters';
 import { ExportFlags } from './ExportFlags';
+import { createFeatureOverviewCell } from 'component/common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
+import { AvatarCell } from 'component/project/Project/PaginatedProjectFeatureToggles/AvatarCell';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -92,65 +97,175 @@ export const FeatureToggleListTable: FC = () => {
     );
 
     const columns = useMemo(
-        () => [
-            columnHelper.accessor('favorite', {
-                header: () => (
-                    <FavoriteIconHeader
-                        isActive={tableState.favoritesFirst}
-                        onClick={() =>
-                            setTableState({
-                                favoritesFirst: !tableState.favoritesFirst,
-                            })
-                        }
-                    />
-                ),
-                cell: ({ getValue, row }) => (
-                    <>
-                        <FavoriteIconCell
-                            value={getValue()}
-                            onClick={() => onFavorite(row.original)}
-                        />
-                    </>
-                ),
-                enableSorting: false,
-                meta: {
-                    width: '1%',
-                },
-            }),
-            columnHelper.accessor('lastSeenAt', {
-                header: 'Seen',
-                cell: ({ row }) => (
-                    <FeatureEnvironmentSeenCell feature={row.original} />
-                ),
-                meta: {
-                    align: 'center',
-                    width: '1%',
-                },
-            }),
-            columnHelper.accessor('type', {
-                header: 'Type',
-                cell: ({ getValue }) => <FeatureTypeCell value={getValue()} />,
-                meta: {
-                    align: 'center',
-                    width: '1%',
-                },
-            }),
-            columnHelper.accessor('name', {
-                header: 'Name',
-                // cell: (cell) => <FeatureNameCell value={cell.row} />,
-                cell: ({ row }) => (
-                    <LinkCell
-                        title={row.original.name}
-                        subtitle={row.original.description || undefined}
-                        to={`/projects/${row.original.project}/features/${row.original.name}`}
-                    />
-                ),
-                meta: {
-                    width: '50%',
-                },
-            }),
-            ...(!flagsReleaseManagementUIEnabled
+        () =>
+            flagsReleaseManagementUIEnabled
                 ? [
+                      columnHelper.accessor('favorite', {
+                          header: () => (
+                              <FavoriteIconHeader
+                                  isActive={tableState.favoritesFirst}
+                                  onClick={() =>
+                                      setTableState({
+                                          favoritesFirst:
+                                              !tableState.favoritesFirst,
+                                      })
+                                  }
+                              />
+                          ),
+                          cell: ({ getValue, row }) => (
+                              <FavoriteIconCell
+                                  value={getValue()}
+                                  onClick={() => onFavorite(row.original)}
+                              />
+                          ),
+                          enableSorting: false,
+                          meta: { width: 48 },
+                      }),
+                      columnHelper.accessor('name', {
+                          header: 'Name',
+                          cell: flagsReleaseManagementUIEnabled
+                              ? createFeatureOverviewCell(
+                                    // FIXME: add action
+                                    () => {},
+                                    // FIXME: add action
+                                    () => {},
+                                )
+                              : ({ row }) => (
+                                    <LinkCell
+                                        title={row.original.name}
+                                        subtitle={
+                                            row.original.description ||
+                                            undefined
+                                        }
+                                        to={`/projects/${row.original.project}/features/${row.original.name}`}
+                                    />
+                                ),
+                          meta: { width: '50%' },
+                      }),
+                      columnHelper.accessor('createdAt', {
+                          header: 'Created',
+                          cell: ({ getValue }) => (
+                              <DateCell value={getValue()} />
+                          ),
+                          meta: { width: '1%' },
+                      }),
+                      columnHelper.accessor('createdBy', {
+                          id: 'createdBy',
+                          header: 'By',
+                          cell: AvatarCell(() => {}),
+                          enableSorting: false,
+                          meta: { width: '1%', align: 'center' },
+                      }),
+
+                      columnHelper.accessor('lifecycle', {
+                          id: 'lifecycle',
+                          header: 'Lifecycle',
+                          cell: ({ row: { original } }) => (
+                              <FeatureLifecycleCell
+                                  feature={original}
+                                  onComplete={() => {
+                                      // FIXME: add action
+                                      //   setShowMarkCompletedDialogue({
+                                      //       featureId: original.name,
+                                      //       open: true,
+                                      //   });
+                                  }}
+                                  onUncomplete={
+                                      () => {}
+                                      // FIXME: add action -- refetch
+                                  }
+                                  onArchive={
+                                      () => {}
+                                      // FIXME: add action -- setFeatureArchiveState(original.name)
+                                  }
+                                  data-loading
+                              />
+                          ),
+                          enableSorting: false,
+                          size: 50,
+                          meta: { align: 'center', width: '1%' },
+                      }),
+                      columnHelper.accessor('project', {
+                          header: 'Project',
+                          cell: ({ getValue }) => {
+                              const value = getValue();
+                              const project = projects.find(
+                                  (project) => project.id === value,
+                              );
+
+                              return (
+                                  <LinkCell
+                                      title={project?.name || value}
+                                      to={`/projects/${getValue()}`}
+                                  />
+                              );
+                          },
+                      }),
+                  ]
+                : [
+                      columnHelper.accessor('favorite', {
+                          header: () => (
+                              <FavoriteIconHeader
+                                  isActive={tableState.favoritesFirst}
+                                  onClick={() =>
+                                      setTableState({
+                                          favoritesFirst:
+                                              !tableState.favoritesFirst,
+                                      })
+                                  }
+                              />
+                          ),
+                          cell: ({ getValue, row }) => (
+                              <>
+                                  <FavoriteIconCell
+                                      value={getValue()}
+                                      onClick={() => onFavorite(row.original)}
+                                  />
+                              </>
+                          ),
+                          enableSorting: false,
+                          meta: {
+                              width: '1%',
+                          },
+                      }),
+                      columnHelper.accessor('lastSeenAt', {
+                          header: 'Seen',
+                          cell: ({ row }) => (
+                              <FeatureEnvironmentSeenCell
+                                  feature={row.original}
+                              />
+                          ),
+                          meta: {
+                              align: 'center',
+                              width: '1%',
+                          },
+                      }),
+                      columnHelper.accessor('type', {
+                          header: 'Type',
+                          cell: ({ getValue }) => (
+                              <FeatureTypeCell value={getValue()} />
+                          ),
+                          meta: {
+                              align: 'center',
+                              width: '1%',
+                          },
+                      }),
+
+                      columnHelper.accessor('name', {
+                          header: 'Name',
+                          cell: ({ row }) => (
+                              <LinkCell
+                                  title={row.original.name}
+                                  subtitle={
+                                      row.original.description || undefined
+                                  }
+                                  to={`/projects/${row.original.project}/features/${row.original.name}`}
+                              />
+                          ),
+                          meta: {
+                              width: '50%',
+                          },
+                      }),
                       columnHelper.accessor(
                           (row) => row.segments?.join('\n') || '',
                           {
@@ -181,42 +296,30 @@ export const FeatureToggleListTable: FC = () => {
                               },
                           },
                       ),
-                  ]
-                : ([] as never[])),
-            columnHelper.accessor('createdAt', {
-                header: 'Created',
-                cell: ({ getValue }) => <DateCell value={getValue()} />,
-                meta: {
-                    width: '1%',
-                },
-            }),
-            columnHelper.accessor('project', {
-                header: flagsReleaseManagementUIEnabled
-                    ? 'Project'
-                    : 'Project ID',
-                cell: ({ getValue }) => {
-                    const value = getValue();
-                    const project = projects.find(
-                        (project) => project.id === value,
-                    );
-
-                    return (
-                        <LinkCell
-                            title={
-                                flagsReleaseManagementUIEnabled
-                                    ? project?.name || value
-                                    : value
-                            }
-                            to={`/projects/${getValue()}`}
-                        />
-                    );
-                },
-                meta: {
-                    width: '1%',
-                },
-            }),
-            ...(!flagsReleaseManagementUIEnabled
-                ? [
+                      columnHelper.accessor('createdAt', {
+                          header: 'Created',
+                          cell: ({ getValue }) => (
+                              <DateCell value={getValue()} />
+                          ),
+                          meta: {
+                              width: '1%',
+                          },
+                      }),
+                      columnHelper.accessor('project', {
+                          header: 'Project ID',
+                          cell: ({ getValue }) => {
+                              const value = getValue();
+                              return (
+                                  <LinkCell
+                                      title={value}
+                                      to={`/projects/${value}`}
+                                  />
+                              );
+                          },
+                          meta: {
+                              width: '1%',
+                          },
+                      }),
                       columnHelper.accessor('stale', {
                           header: 'State',
                           cell: ({ getValue }) => (
@@ -226,12 +329,9 @@ export const FeatureToggleListTable: FC = () => {
                               width: '1%',
                           },
                       }),
-                  ]
-                : ([] as never[])),
-        ],
+                  ],
         [tableState.favoritesFirst],
     );
-
     const data = useMemo(
         () =>
             features?.length === 0 && loading ? featuresPlaceholder : features,

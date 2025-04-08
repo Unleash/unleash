@@ -7,7 +7,6 @@ import {
     useTheme,
 } from '@mui/material';
 import type { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
-import { useState } from 'react';
 import type { ReactNode } from 'react';
 
 interface IAutocompleteBoxProps {
@@ -47,7 +46,6 @@ export const AutocompleteBox = ({
     icon,
     width = '215px',
 }: IAutocompleteBoxProps) => {
-    const [_, setPlaceholder] = useState('Add Segments');
     const theme = useTheme();
 
     const renderCustomInput = (params: AutocompleteRenderInputParams) => {
@@ -100,8 +98,6 @@ export const AutocompleteBox = ({
                     },
                 }}
                 placeholder={label}
-                onFocus={() => setPlaceholder('')}
-                onBlur={() => setPlaceholder(label)}
             />
         );
     };

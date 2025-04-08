@@ -22,6 +22,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { OldFeatureStrategyMenuCards } from './FeatureStrategyMenuCards/OldFeatureStrategyMenuCards';
 import { ReleasePlanReviewDialog } from '../../FeatureView/FeatureOverview/ReleasePlan/ReleasePlanReviewDialog';
+import { ReleasePlanAddDialog } from '../../FeatureView/FeatureOverview/ReleasePlan/ReleasePlanAddDialog';
 
 interface IFeatureStrategyMenuProps {
     label: string;
@@ -260,20 +261,33 @@ export const FeatureStrategyMenu = ({
                     />
                 )}
             </Popover>
-            {selectedTemplate && (
-                <ReleasePlanReviewDialog
-                    open={addReleasePlanOpen}
-                    setOpen={setAddReleasePlanOpen}
-                    onConfirm={() => {
-                        addReleasePlan(selectedTemplate);
-                    }}
-                    template={selectedTemplate}
-                    projectId={projectId}
-                    featureName={featureId}
-                    environment={environmentId}
-                    crProtected={crProtected}
-                />
-            )}
+            {selectedTemplate &&
+                (newStrategyDropdownEnabled ? (
+                    <ReleasePlanReviewDialog
+                        open={addReleasePlanOpen}
+                        setOpen={setAddReleasePlanOpen}
+                        onConfirm={() => {
+                            addReleasePlan(selectedTemplate);
+                        }}
+                        template={selectedTemplate}
+                        projectId={projectId}
+                        featureName={featureId}
+                        environment={environmentId}
+                        crProtected={crProtected}
+                    />
+                ) : (
+                    <ReleasePlanAddDialog
+                        open={addReleasePlanOpen}
+                        setOpen={setAddReleasePlanOpen}
+                        onConfirm={() => {
+                            addReleasePlan(selectedTemplate);
+                        }}
+                        template={selectedTemplate}
+                        projectId={projectId}
+                        featureName={featureId}
+                        environment={environmentId}
+                    />
+                ))}
         </StyledStrategyMenu>
     );
 };

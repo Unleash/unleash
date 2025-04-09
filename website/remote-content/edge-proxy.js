@@ -23,6 +23,10 @@ const DOCS = mapObject(enrich)({
                 sidebarName: 'Deploying',
                 slugName: 'deploying',
             },
+            'docs/benchmarking.md': {
+                sidebarName: 'Benchmarking',
+                slugName: 'benchmarking',
+            },
         },
     },
 });

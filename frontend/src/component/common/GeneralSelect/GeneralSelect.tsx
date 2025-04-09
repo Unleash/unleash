@@ -33,7 +33,6 @@ export interface IGeneralSelectProps<T extends string = string>
     classes?: any;
     defaultValue?: string;
     visuallyHideLabel?: boolean;
-    FormControl?: typeof StyledFormControl;
     variant?: 'outlined' | 'filled' | 'standard';
 }
 

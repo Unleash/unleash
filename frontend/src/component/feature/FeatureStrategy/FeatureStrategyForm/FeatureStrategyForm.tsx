@@ -76,11 +76,11 @@ const StyledDividerContent = styled(Box)(({ theme }) => ({
     color: theme.palette.text.primary,
     fontSize: theme.fontSizes.smallerBody,
     backgroundColor: theme.palette.background.elevation2,
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: theme.shape.borderRadiusExtraLarge,
     width: '45px',
     position: 'absolute',
     top: '-10px',
-    left: 'calc(50% - 45px)',
+    left: '0',
     lineHeight: 1,
 }));
 

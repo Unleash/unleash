@@ -1,7 +1,5 @@
-import Delete from '@mui/icons-material/Delete';
 import { IconButton, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { DateSingleValue } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/DateSingleValue/DateSingleValue';
 import { FreeTextInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/FreeTextInput/FreeTextInput';
 import { RestrictiveLegalValues } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/RestrictiveLegalValues/RestrictiveLegalValues';
@@ -39,6 +37,8 @@ import {
     operatorsForContext,
 } from 'utils/operatorsForContext';
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
+import Delete from '@mui/icons-material/Delete';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -394,12 +394,7 @@ export const EditableConstraint: FC<Props> = ({
                 </ConstraintDetails>
 
                 <HtmlTooltip title='Delete constraint' arrow>
-                    <IconButton
-                        type='button'
-                        size='small'
-                        onClick={onDelete}
-                        aria-label='Delete constraint'
-                    >
+                    <IconButton type='button' size='small' onClick={onDelete}>
                         <Delete />
                     </IconButton>
                 </HtmlTooltip>

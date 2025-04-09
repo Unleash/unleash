@@ -20,9 +20,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { OldFeatureStrategyMenuCards } from './FeatureStrategyMenuCards/OldFeatureStrategyMenuCards';
 import { ReleasePlanReviewDialog } from '../../FeatureView/FeatureOverview/ReleasePlan/ReleasePlanReviewDialog';
-import { ReleasePlanAddDialog } from '../../FeatureView/FeatureOverview/ReleasePlan/ReleasePlanAddDialog';
 
 interface IFeatureStrategyMenuProps {
     label: string;
@@ -77,7 +75,6 @@ export const FeatureStrategyMenu = ({
     const { addReleasePlanToFeature } = useReleasePlansApi();
     const { isOss } = useUiConfig();
     const releasePlansEnabled = useUiFlag('releasePlans');
-    const newStrategyDropdownEnabled = useUiFlag('newStrategyDropdown');
     const displayReleasePlanButton = !isOss() && releasePlansEnabled;
     const crProtected =
         releasePlansEnabled && isChangeRequestConfigured(environmentId);
@@ -221,7 +218,7 @@ export const FeatureStrategyMenu = ({
                     },
                 }}
             >
-                {newStrategyDropdownEnabled ? (
+                {
                     <FeatureStrategyMenuCards
                         projectId={projectId}
                         featureId={featureId}
@@ -237,46 +234,22 @@ export const FeatureStrategyMenu = ({
                         }}
                         onClose={onClose}
                     />
-                ) : (
-                    <OldFeatureStrategyMenuCards
-                        projectId={projectId}
-                        featureId={featureId}
-                        environmentId={environmentId}
-                        onlyReleasePlans={onlyReleasePlans}
-                        onAddReleasePlan={(template) => {
-                            setSelectedTemplate(template);
-                            setAddReleasePlanOpen(true);
-                        }}
-                    />
-                )}
+                }
             </Dialog>
-            {selectedTemplate &&
-                (newStrategyDropdownEnabled ? (
-                    <ReleasePlanReviewDialog
-                        open={addReleasePlanOpen}
-                        setOpen={setAddReleasePlanOpen}
-                        onConfirm={() => {
-                            addReleasePlan(selectedTemplate);
-                        }}
-                        template={selectedTemplate}
-                        projectId={projectId}
-                        featureName={featureId}
-                        environment={environmentId}
-                        crProtected={crProtected}
-                    />
-                ) : (
-                    <ReleasePlanAddDialog
-                        open={addReleasePlanOpen}
-                        setOpen={setAddReleasePlanOpen}
-                        onConfirm={() => {
-                            addReleasePlan(selectedTemplate);
-                        }}
-                        template={selectedTemplate}
-                        projectId={projectId}
-                        featureName={featureId}
-                        environment={environmentId}
-                    />
-                ))}
+            {selectedTemplate && (
+                <ReleasePlanReviewDialog
+                    open={addReleasePlanOpen}
+                    setOpen={setAddReleasePlanOpen}
+                    onConfirm={() => {
+                        addReleasePlan(selectedTemplate);
+                    }}
+                    template={selectedTemplate}
+                    projectId={projectId}
+                    featureName={featureId}
+                    environment={environmentId}
+                    crProtected={crProtected}
+                />
+            )}
         </StyledStrategyMenu>
     );
 };

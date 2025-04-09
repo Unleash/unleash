@@ -5,8 +5,7 @@ import PermissionButton, {
     type IPermissionButtonProps,
 } from 'component/common/PermissionButton/PermissionButton';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import { Dialog, styled } from '@mui/material';
-import { FeatureStrategyMenuCards } from './FeatureStrategyMenuCards/FeatureStrategyMenuCards';
+import { Popover, styled } from '@mui/material';
 import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrategyCreate';
 import MoreVert from '@mui/icons-material/MoreVert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -14,6 +13,7 @@ import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import useToast from 'hooks/useToast';
+import { ReleasePlanAddDialog } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanAddDialog';
 import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
@@ -21,8 +21,6 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { OldFeatureStrategyMenuCards } from './FeatureStrategyMenuCards/OldFeatureStrategyMenuCards';
-import { ReleasePlanReviewDialog } from '../../FeatureView/FeatureOverview/ReleasePlan/ReleasePlanReviewDialog';
-import { ReleasePlanAddDialog } from '../../FeatureView/FeatureOverview/ReleasePlan/ReleasePlanAddDialog';
 
 interface IFeatureStrategyMenuProps {
     label: string;
@@ -49,7 +47,7 @@ const StyledAdditionalMenuButton = styled(PermissionButton)(({ theme }) => ({
     paddingBlock: 0,
 }));
 
-export const FeatureStrategyMenu = ({
+export const OldFeatureStrategyMenu = ({
     label,
     projectId,
     featureId,
@@ -77,7 +75,6 @@ export const FeatureStrategyMenu = ({
     const { addReleasePlanToFeature } = useReleasePlansApi();
     const { isOss } = useUiConfig();
     const releasePlansEnabled = useUiFlag('releasePlans');
-    const newStrategyDropdownEnabled = useUiFlag('newStrategyDropdown');
     const displayReleasePlanButton = !isOss() && releasePlansEnabled;
     const crProtected =
         releasePlansEnabled && isChangeRequestConfigured(environmentId);
@@ -105,14 +102,16 @@ export const FeatureStrategyMenu = ({
         setAnchor(event.currentTarget);
     };
 
-    const addReleasePlan = async (template: IReleasePlanTemplate) => {
+    const addReleasePlan = async () => {
+        if (!selectedTemplate) return;
+
         try {
             if (crProtected) {
                 await addChange(projectId, environmentId, {
                     feature: featureId,
                     action: 'addReleasePlan',
                     payload: {
-                        templateId: template.id,
+                        templateId: selectedTemplate.id,
                     },
                 });
 
@@ -125,7 +124,7 @@ export const FeatureStrategyMenu = ({
             } else {
                 await addReleasePlanToFeature(
                     featureId,
-                    template.id,
+                    selectedTemplate.id,
                     projectId,
                     environmentId,
                 );
@@ -140,7 +139,7 @@ export const FeatureStrategyMenu = ({
             trackEvent('release-management', {
                 props: {
                     eventType: 'add-plan',
-                    plan: template.name,
+                    plan: selectedTemplate.name,
                 },
             });
         } catch (error: unknown) {
@@ -211,72 +210,45 @@ export const FeatureStrategyMenu = ({
             >
                 <MoreVert />
             </StyledAdditionalMenuButton>
-            <Dialog
+            <Popover
+                id={popoverId}
                 open={isPopoverOpen}
+                anchorEl={anchor}
                 onClose={onClose}
-                maxWidth='md'
+                onClick={onClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
                 PaperProps={{
-                    sx: {
-                        borderRadius: (theme) => '12px',
-                    },
+                    sx: (theme) => ({
+                        paddingBottom: theme.spacing(1),
+                    }),
                 }}
             >
-                {newStrategyDropdownEnabled ? (
-                    <FeatureStrategyMenuCards
-                        projectId={projectId}
-                        featureId={featureId}
-                        environmentId={environmentId}
-                        onlyReleasePlans={onlyReleasePlans}
-                        onAddReleasePlan={(template) => {
-                            setSelectedTemplate(template);
-                            addReleasePlan(template);
-                        }}
-                        onReviewReleasePlan={(template) => {
-                            setSelectedTemplate(template);
-                            setAddReleasePlanOpen(true);
-                        }}
-                        onClose={onClose}
-                    />
-                ) : (
-                    <OldFeatureStrategyMenuCards
-                        projectId={projectId}
-                        featureId={featureId}
-                        environmentId={environmentId}
-                        onlyReleasePlans={onlyReleasePlans}
-                        onAddReleasePlan={(template) => {
-                            setSelectedTemplate(template);
-                            setAddReleasePlanOpen(true);
-                        }}
-                    />
-                )}
-            </Dialog>
-            {selectedTemplate &&
-                (newStrategyDropdownEnabled ? (
-                    <ReleasePlanReviewDialog
-                        open={addReleasePlanOpen}
-                        setOpen={setAddReleasePlanOpen}
-                        onConfirm={() => {
-                            addReleasePlan(selectedTemplate);
-                        }}
-                        template={selectedTemplate}
-                        projectId={projectId}
-                        featureName={featureId}
-                        environment={environmentId}
-                        crProtected={crProtected}
-                    />
-                ) : (
-                    <ReleasePlanAddDialog
-                        open={addReleasePlanOpen}
-                        setOpen={setAddReleasePlanOpen}
-                        onConfirm={() => {
-                            addReleasePlan(selectedTemplate);
-                        }}
-                        template={selectedTemplate}
-                        projectId={projectId}
-                        featureName={featureId}
-                        environment={environmentId}
-                    />
-                ))}
+                <OldFeatureStrategyMenuCards
+                    projectId={projectId}
+                    featureId={featureId}
+                    environmentId={environmentId}
+                    onlyReleasePlans={onlyReleasePlans}
+                    onAddReleasePlan={(template) => {
+                        setSelectedTemplate(template);
+                        setAddReleasePlanOpen(true);
+                    }}
+                />
+            </Popover>
+            {selectedTemplate && (
+                <ReleasePlanAddDialog
+                    open={addReleasePlanOpen}
+                    setOpen={setAddReleasePlanOpen}
+                    onConfirm={addReleasePlan}
+                    template={selectedTemplate}
+                    projectId={projectId}
+                    featureName={featureId}
+                    environment={environmentId}
+                    crProtected={crProtected}
+                />
+            )}
         </StyledStrategyMenu>
     );
 };

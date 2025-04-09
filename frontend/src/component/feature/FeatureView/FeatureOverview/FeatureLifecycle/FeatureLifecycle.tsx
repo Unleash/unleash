@@ -5,7 +5,7 @@ import { populateCurrentStage } from './populateCurrentStage';
 import type { FC } from 'react';
 import type { Lifecycle } from 'interfaces/featureToggle';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { getFeatureLifecycleName } from '../../../../common/FeatureLifecycle/getFeatureLifecycleName';
+import { getFeatureLifecycleName } from 'component/common/FeatureLifecycle/getFeatureLifecycleName';
 import { Box } from '@mui/material';
 
 export interface LifecycleFeature {

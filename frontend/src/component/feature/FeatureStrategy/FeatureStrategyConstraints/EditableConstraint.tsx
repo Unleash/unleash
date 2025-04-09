@@ -83,7 +83,7 @@ const resolveLegalValues = (
 };
 
 const ConstraintDetails = styled('div')(({ theme }) => ({
-    display: 'flex', // maybe a grid will be easier to modify
+    display: 'flex',
     gap: theme.spacing(1),
     flexFlow: 'row nowrap',
     width: '100%',

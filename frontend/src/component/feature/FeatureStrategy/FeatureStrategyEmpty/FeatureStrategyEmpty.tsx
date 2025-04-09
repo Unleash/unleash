@@ -12,7 +12,7 @@ import { useChangeRequestAddStrategy } from 'hooks/useChangeRequestAddStrategy';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
 import { CopyStrategiesMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/CopyStrategiesMessage';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { FeatureStrategyMenu } from '../FeatureStrategyMenu/FeatureStrategyMenu';
+import { FeatureStrategyMenuWrapper } from '../FeatureStrategyMenu/FeatureStrategyMenu';
 
 interface IFeatureStrategyEmptyProps {
     projectId: string;
@@ -161,7 +161,7 @@ export const FeatureStrategyEmpty = ({
                         justifyContent: 'center',
                     }}
                 >
-                    <FeatureStrategyMenu
+                    <FeatureStrategyMenuWrapper
                         label='Add your first strategy'
                         projectId={projectId}
                         featureId={featureId}

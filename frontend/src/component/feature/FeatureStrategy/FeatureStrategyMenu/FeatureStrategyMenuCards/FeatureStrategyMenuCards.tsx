@@ -29,7 +29,7 @@ interface IFeatureStrategyMenuCardsProps {
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
-    padding: theme.spacing(1, 2),
+    padding: theme.spacing(1, 4),
     width: '100%',
 }));
 
@@ -48,14 +48,14 @@ const ScrollableContent = styled(Box)(({ theme }) => ({
     width: '100%',
     maxHeight: '70vh',
     overflowY: 'auto',
-    padding: theme.spacing(0, 0, 1, 0),
+    padding: theme.spacing(1, 0, 1, 0),
 }));
 
 const GridSection = styled(Box)(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: 'repeat(2, 1fr)',
     gap: theme.spacing(1.5),
-    padding: theme.spacing(0, 2),
+    padding: theme.spacing(0, 4),
     marginBottom: theme.spacing(3),
     width: '100%',
 }));
@@ -69,7 +69,7 @@ const TitleRow = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: theme.spacing(1, 2),
+    padding: theme.spacing(4, 4, 2, 4),
 }));
 
 const TitleText = styled(Typography)(({ theme }) => ({
@@ -82,7 +82,7 @@ const SectionTitle = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(0.5),
-    padding: theme.spacing(1, 2),
+    padding: theme.spacing(0, 4, 1, 4),
     width: '100%',
 }));
 
@@ -111,7 +111,7 @@ const EmptyStateContainer = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.neutral.light,
     borderRadius: theme.shape.borderRadiusMedium,
     padding: theme.spacing(3),
-    margin: theme.spacing(0, 2),
+    margin: theme.spacing(0, 4),
     width: 'auto',
 }));
 

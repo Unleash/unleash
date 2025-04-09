@@ -182,12 +182,13 @@ export const FeatureToggleListTable: FC = () => {
                           cell: ({ row: { original } }) => (
                               <FeatureLifecycleCell
                                   feature={original}
+                                  expanded
                                   data-loading
                               />
                           ),
                           enableSorting: false, // FIXME: enable sorting by lifecycle
                           size: 50,
-                          meta: { align: 'center', width: '1%' },
+                          meta: { width: '1%' },
                       }),
                       columnHelper.accessor('project', {
                           header: 'Project',

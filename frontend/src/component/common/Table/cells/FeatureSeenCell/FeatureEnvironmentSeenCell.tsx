@@ -38,6 +38,7 @@ interface IFeatureLifecycleProps {
     onComplete?: () => void;
     onUncomplete?: () => void;
     onArchive?: () => void;
+    expanded?: boolean;
 }
 
 export const FeatureLifecycleCell: VFC<IFeatureLifecycleProps> = ({
@@ -45,6 +46,7 @@ export const FeatureLifecycleCell: VFC<IFeatureLifecycleProps> = ({
     onComplete,
     onUncomplete,
     onArchive,
+    expanded,
     ...rest
 }) => {
     const environments = feature.environments
@@ -58,6 +60,7 @@ export const FeatureLifecycleCell: VFC<IFeatureLifecycleProps> = ({
                 onComplete={onComplete}
                 onUncomplete={onUncomplete}
                 feature={feature}
+                expanded={expanded}
             />
         </Box>
     );

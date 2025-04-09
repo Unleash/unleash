@@ -14,7 +14,7 @@ export const ConstraintSeparator = styled(({ ...props }) => (
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.primary,
     background: theme.palette.background.application,
-    borderRadius: theme.shape.borderRadiusLarge,
+    borderRadius: theme.shape.borderRadiusExtraLarge,
     zIndex: theme.zIndex.fab,
     textTransform: 'uppercase',
 }));

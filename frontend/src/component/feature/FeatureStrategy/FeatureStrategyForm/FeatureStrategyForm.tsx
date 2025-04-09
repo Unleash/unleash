@@ -47,6 +47,7 @@ import { BuiltInStrategies, formatStrategyName } from 'utils/strategyNames';
 import { Badge } from 'component/common/Badge/Badge';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests';
+import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -70,19 +71,6 @@ interface IFeatureStrategyFormProps {
     Limit?: JSX.Element;
     disabled?: boolean;
 }
-
-const StyledDividerContent = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(0.75, 1),
-    color: theme.palette.text.primary,
-    fontSize: theme.fontSizes.smallerBody,
-    backgroundColor: theme.palette.background.elevation2,
-    borderRadius: theme.shape.borderRadius,
-    width: '45px',
-    position: 'absolute',
-    top: '-10px',
-    left: 'calc(50% - 45px)',
-    lineHeight: 1,
-}));
 
 const StyledForm = styled('form')(({ theme }) => ({
     position: 'relative',
@@ -189,6 +177,12 @@ const StyledTab = styled(Tab)(({ theme }) => ({
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     marginLeft: theme.spacing(1),
+}));
+
+const StyledConstraintSeparator = styled(ConstraintSeparator)(({ theme }) => ({
+    top: '-10px',
+    left: '0',
+    transform: 'translateY(0)',
 }));
 
 export const FeatureStrategyForm = ({
@@ -517,7 +511,7 @@ export const FeatureStrategyForm = ({
 
                             <StyledBox>
                                 <StyledDivider />
-                                <StyledDividerContent>AND</StyledDividerContent>
+                                <StyledConstraintSeparator />
                             </StyledBox>
                             <FeatureStrategyConstraints
                                 projectId={feature.project}

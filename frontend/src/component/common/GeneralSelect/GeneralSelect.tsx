@@ -61,8 +61,6 @@ function GeneralSelect<T extends string = string>({
         onChange(String(event.target.value) as T);
     };
 
-    console.log('classes', classes);
-
     return (
         <FormControl
             variant='outlined'

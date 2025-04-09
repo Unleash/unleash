@@ -53,7 +53,7 @@ export const FeatureStrategyMenuWrapper = (
 ) => {
     const newStrategyDropdownEnabled = useUiFlag('newStrategyDropdown');
 
-    if (!newStrategyDropdownEnabled) {
+    if (newStrategyDropdownEnabled) {
         return <FeatureStrategyMenu {...props} />;
     }
 

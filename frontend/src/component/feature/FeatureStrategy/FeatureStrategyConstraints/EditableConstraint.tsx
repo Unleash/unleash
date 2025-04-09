@@ -152,8 +152,8 @@ export const EditableConstraint: FC<Props> = ({
     setOperator,
     onDelete,
     onUndo,
-    toggleInvertedOperator: setInvertedOperator,
-    toggleCaseSensitivity: setCaseInsensitive,
+    toggleInvertedOperator,
+    toggleCaseSensitivity,
     input,
     contextDefinition,
     constraintValues,
@@ -355,7 +355,10 @@ export const EditableConstraint: FC<Props> = ({
                         variant='standard'
                     />
 
-                    <StyledButton type='button' onClick={setInvertedOperator}>
+                    <StyledButton
+                        type='button'
+                        onClick={toggleInvertedOperator}
+                    >
                         {localConstraint.inverted ? 'aint' : 'is'}
                     </StyledButton>
 
@@ -369,7 +372,7 @@ export const EditableConstraint: FC<Props> = ({
                     {showCaseSensitiveButton ? (
                         <StyledButton
                             type='button'
-                            onClick={setCaseInsensitive}
+                            onClick={toggleCaseSensitivity}
                         >
                             {localConstraint.caseInsensitive ? 'Aa' : 'A/a'}
                         </StyledButton>

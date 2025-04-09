@@ -24,7 +24,7 @@ interface IFeatureStrategyMenuCardsProps {
     onlyReleasePlans: boolean;
     onAddReleasePlan: (template: IReleasePlanTemplate) => void;
     onReviewReleasePlan: (template: IReleasePlanTemplate) => void;
-    onClose?: () => void;
+    onClose: () => void;
 }
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
@@ -102,7 +102,6 @@ const StyledIcon = styled('div')(({ theme }) => ({
     alignItems: 'center',
 }));
 
-// Empty state styling
 const EmptyStateContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -170,16 +169,14 @@ export const FeatureStrategyMenuCards = ({
                 <TitleText variant='h2'>
                     {onlyReleasePlans ? 'Select template' : 'Select strategy'}
                 </TitleText>
-                {onClose && (
-                    <IconButton
-                        size='small'
-                        onClick={onClose}
-                        edge='end'
-                        aria-label='close'
-                    >
-                        <CloseIcon fontSize='small' />
-                    </IconButton>
-                )}
+                <IconButton
+                    size='small'
+                    onClick={onClose}
+                    edge='end'
+                    aria-label='close'
+                >
+                    <CloseIcon fontSize='small' />
+                </IconButton>
             </TitleRow>
             <ScrollableContent>
                 {allStrategies ? (
@@ -203,6 +200,7 @@ export const FeatureStrategyMenuCards = ({
                                     environmentId={environmentId}
                                     strategy={defaultStrategy}
                                     defaultStrategy={true}
+                                    onClose={onClose}
                                 />
                             </CardWrapper>
                             {preDefinedStrategies.map((strategy) => (
@@ -212,6 +210,7 @@ export const FeatureStrategyMenuCards = ({
                                         featureId={featureId}
                                         environmentId={environmentId}
                                         strategy={strategy}
+                                        onClose={onClose}
                                     />
                                 </CardWrapper>
                             ))}
@@ -331,6 +330,7 @@ export const FeatureStrategyMenuCards = ({
                                                         environmentId
                                                     }
                                                     strategy={strategy}
+                                                    onClose={onClose}
                                                 />
                                             </CardWrapper>
                                         ))}

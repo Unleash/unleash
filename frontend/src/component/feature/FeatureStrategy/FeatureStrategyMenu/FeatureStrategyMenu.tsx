@@ -70,15 +70,17 @@ export const FeatureStrategyMenu = ({
     matchWidth,
     disableReason,
 }: IFeatureStrategyMenuProps) => {
-    const [anchor, setAnchor] = useState<Element>();
+    const [isStrategyMenuDialogOpen, setIsStrategyMenuDialogOpen] =
+        useState<boolean>(false);
     const [onlyReleasePlans, setOnlyReleasePlans] = useState<boolean>(false);
     const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
     const [selectedTemplate, setSelectedTemplate] =
         useState<IReleasePlanTemplate>();
     const [addReleasePlanOpen, setAddReleasePlanOpen] = useState(false);
-    const isPopoverOpen = Boolean(anchor);
-    const popoverId = isPopoverOpen ? 'FeatureStrategyMenuPopover' : undefined;
+    const dialogId = isStrategyMenuDialogOpen
+        ? 'FeatureStrategyMenuDialog'
+        : undefined;
     const { setToastApiError, setToastData } = useToast();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { addChange } = useChangeRequestApi();
@@ -93,7 +95,7 @@ export const FeatureStrategyMenu = ({
         releasePlansEnabled && isChangeRequestConfigured(environmentId);
 
     const onClose = () => {
-        setAnchor(undefined);
+        setIsStrategyMenuDialogOpen(false);
     };
 
     const openDefaultStrategyCreationModal = (event: React.SyntheticEvent) => {
@@ -107,12 +109,12 @@ export const FeatureStrategyMenu = ({
 
     const openMoreStrategies = (event: React.SyntheticEvent) => {
         setOnlyReleasePlans(false);
-        setAnchor(event.currentTarget);
+        setIsStrategyMenuDialogOpen(true);
     };
 
     const openReleasePlans = (event: React.SyntheticEvent) => {
         setOnlyReleasePlans(true);
-        setAnchor(event.currentTarget);
+        setIsStrategyMenuDialogOpen(true);
     };
 
     const addReleasePlan = async (template: IReleasePlanTemplate) => {
@@ -158,6 +160,7 @@ export const FeatureStrategyMenu = ({
         } finally {
             setAddReleasePlanOpen(false);
             setSelectedTemplate(undefined);
+            onClose();
         }
     };
 
@@ -178,7 +181,7 @@ export const FeatureStrategyMenu = ({
                     projectId={projectId}
                     environmentId={environmentId}
                     onClick={openReleasePlans}
-                    aria-labelledby={popoverId}
+                    aria-labelledby={dialogId}
                     variant='outlined'
                     sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
                     disabled={Boolean(disableReason)}
@@ -196,7 +199,7 @@ export const FeatureStrategyMenu = ({
                 projectId={projectId}
                 environmentId={environmentId}
                 onClick={openDefaultStrategyCreationModal}
-                aria-labelledby={popoverId}
+                aria-labelledby={dialogId}
                 variant={variant}
                 sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
                 disabled={Boolean(disableReason)}
@@ -222,7 +225,7 @@ export const FeatureStrategyMenu = ({
                 <MoreVert />
             </StyledAdditionalMenuButton>
             <Dialog
-                open={isPopoverOpen}
+                open={isStrategyMenuDialogOpen}
                 onClose={onClose}
                 maxWidth='md'
                 PaperProps={{
@@ -244,6 +247,7 @@ export const FeatureStrategyMenu = ({
                         onReviewReleasePlan={(template) => {
                             setSelectedTemplate(template);
                             setAddReleasePlanOpen(true);
+                            onClose();
                         }}
                         onClose={onClose}
                     />
@@ -252,7 +256,12 @@ export const FeatureStrategyMenu = ({
             {selectedTemplate && (
                 <ReleasePlanReviewDialog
                     open={addReleasePlanOpen}
-                    setOpen={setAddReleasePlanOpen}
+                    setOpen={(open) => {
+                        setAddReleasePlanOpen(open);
+                        if (!open) {
+                            setIsStrategyMenuDialogOpen(true);
+                        }
+                    }}
                     onConfirm={() => {
                         addReleasePlan(selectedTemplate);
                     }}

@@ -41,6 +41,7 @@ import { LifecycleFilters } from './FeatureToggleFilters/LifecycleFilters';
 import { ExportFlags } from './ExportFlags';
 import { createFeatureOverviewCell } from 'component/common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 import { AvatarCell } from 'component/project/Project/PaginatedProjectFeatureToggles/AvatarCell';
+import { StatusCell } from './StatusCell/StatusCell';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -175,7 +176,6 @@ export const FeatureToggleListTable: FC = () => {
                           meta: { width: '1%', align: 'center' },
                           enableSorting: false,
                       }),
-
                       columnHelper.accessor('lifecycle', {
                           id: 'lifecycle',
                           header: 'Lifecycle',
@@ -189,6 +189,15 @@ export const FeatureToggleListTable: FC = () => {
                           enableSorting: false, // FIXME: enable sorting by lifecycle
                           size: 50,
                           meta: { width: '1%' },
+                      }),
+                      columnHelper.accessor('environments', {
+                          id: 'status',
+                          header: 'Status',
+                          cell: ({ row: { original } }) => (
+                              <StatusCell {...original} />
+                          ),
+                          enableSorting: false,
+                          size: 50,
                       }),
                       columnHelper.accessor('project', {
                           header: 'Project',

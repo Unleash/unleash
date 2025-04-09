@@ -47,7 +47,7 @@ import { BuiltInStrategies, formatStrategyName } from 'utils/strategyNames';
 import { Badge } from 'component/common/Badge/Badge';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests';
-import { ConstraintSeparator } from '../../../common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
+import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;

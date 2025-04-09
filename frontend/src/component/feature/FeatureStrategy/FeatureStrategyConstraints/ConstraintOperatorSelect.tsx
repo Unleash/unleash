@@ -71,7 +71,7 @@ const StyledMenuItem = styled(MenuItem, {
         : {},
 );
 
-const NewStyledDesc = styled('span')(({ theme }) => ({
+const StyledValue = styled('span')(({ theme }) => ({
     paddingInline: theme.spacing(1),
 }));
 
@@ -89,9 +89,9 @@ export const ConstraintOperatorSelect = ({
 
     const renderValue = () => {
         return (
-            <NewStyledDesc>
+            <StyledValue>
                 {formatOperatorDescription(value, inverted)}
-            </NewStyledDesc>
+            </StyledValue>
         );
     };
 

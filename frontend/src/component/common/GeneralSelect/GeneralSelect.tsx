@@ -34,6 +34,7 @@ export interface IGeneralSelectProps<T extends string = string>
     defaultValue?: string;
     visuallyHideLabel?: boolean;
     FormControl?: typeof StyledFormControl;
+    variant?: 'outlined' | 'filled' | 'standard';
 }
 
 const StyledFormControl = styled(FormControl)({
@@ -41,7 +42,7 @@ const StyledFormControl = styled(FormControl)({
 });
 
 function GeneralSelect<T extends string = string>({
-    FormControl = StyledFormControl,
+    variant = 'outlined',
     name,
     value,
     label = '',
@@ -62,8 +63,8 @@ function GeneralSelect<T extends string = string>({
     };
 
     return (
-        <FormControl
-            variant='outlined'
+        <StyledFormControl
+            variant={variant}
             size='small'
             classes={classes}
             fullWidth={fullWidth}
@@ -109,7 +110,7 @@ function GeneralSelect<T extends string = string>({
                     </MenuItem>
                 ))}
             </Select>
-        </FormControl>
+        </StyledFormControl>
     );
 }
 

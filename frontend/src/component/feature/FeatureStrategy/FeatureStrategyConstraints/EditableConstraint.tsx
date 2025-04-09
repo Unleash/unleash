@@ -19,7 +19,6 @@ import {
     STRING_OPERATORS_LEGAL_VALUES,
     type Input,
 } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
-import { CaseSensitiveButton } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/StyledToggleButton/CaseSensitiveButton/CaseSensitiveButton';
 import {
     DATE_AFTER,
     dateOperators,
@@ -97,6 +96,13 @@ const InputContainer = styled('div')(({ theme }) => ({
 const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
     fieldset: { border: 'none', borderRadius: 0 },
     ':focus-within fieldset': { borderBottomStyle: 'solid' },
+    'label + &': {
+        // override default mui styling
+        margin: 0,
+    },
+    '&::before': {
+        border: 'none',
+    },
 }));
 
 const StyledFormControl = styled(FormControl)({
@@ -105,6 +111,21 @@ const StyledFormControl = styled(FormControl)({
     minWidth: '5ch',
 });
 
+const StyledButton = styled('button')(({ theme }) => ({
+    width: '5ch',
+    borderRadius: theme.shape.borderRadius,
+    padding: theme.spacing(0.25, 0),
+    fontSize: theme.fontSizes.smallerBody,
+    background: theme.palette.secondary.light,
+    border: `1px solid ${theme.palette.secondary.border}`,
+    color: theme.palette.secondary.dark,
+    fontWeight: theme.typography.fontWeightBold,
+    transition: 'all 0.03s ease',
+    '&:is(:hover, :focus-visible)': {
+        outline: `1px solid ${theme.palette.primary.main}`,
+    },
+}));
+
 type Props = {
     localConstraint: IConstraint;
     setContextName: (contextName: string) => void;
@@ -112,8 +133,8 @@ type Props = {
     setLocalConstraint: React.Dispatch<React.SetStateAction<IConstraint>>;
     action: string;
     onDelete?: () => void;
-    setInvertedOperator: () => void;
-    setCaseInsensitive: () => void;
+    toggleInvertedOperator: () => void;
+    toggleCaseSensitivity: () => void;
     onUndo: () => void;
     constraintChanges: IConstraint[];
     contextDefinition: Pick<IUnleashContextDefinition, 'legalValues'>;
@@ -135,8 +156,8 @@ export const EditableConstraint: FC<Props> = ({
     setOperator,
     onDelete,
     onUndo,
-    setInvertedOperator,
-    setCaseInsensitive,
+    toggleInvertedOperator: setInvertedOperator,
+    toggleCaseSensitivity: setCaseInsensitive,
     input,
     contextDefinition,
     constraintValues,
@@ -335,19 +356,27 @@ export const EditableConstraint: FC<Props> = ({
                         options={constraintNameOptions}
                         value={contextName || ''}
                         onChange={setContextName}
-                        FormControl={StyledFormControl}
+                        variant='standard'
                     />
+
+                    <StyledButton type='button' onClick={setInvertedOperator}>
+                        {localConstraint.inverted ? 'aint' : 'is'}
+                    </StyledButton>
+
                     <ConstraintOperatorSelect
                         options={operatorsForContext(contextName)}
                         value={operator}
                         onChange={onOperatorChange}
+                        inverted={localConstraint.inverted}
                     />
 
                     {showCaseSensitiveButton ? (
-                        <CaseSensitiveButton
-                            localConstraint={localConstraint}
-                            setCaseInsensitive={setCaseInsensitive}
-                        />
+                        <StyledButton
+                            type='button'
+                            onClick={setCaseInsensitive}
+                        >
+                            {localConstraint.caseInsensitive ? 'Aa' : 'A/a'}
+                        </StyledButton>
                     ) : null}
                     {/* <ul>
                 <li>

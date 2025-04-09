@@ -23,17 +23,33 @@ interface IConstraintOperatorSelectProps {
     options: Operator[];
     value: Operator;
     onChange: (value: Operator) => void;
+    inverted?: boolean;
 }
+const StyledFormControl = styled(FormControl)(({ theme }) => ({
+    // paddingBlock: theme.spacing(0.5),
+}));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(0.25, 0),
     fontSize: theme.fontSizes.smallerBody,
-    height: 'auto',
     background: theme.palette.secondary.light,
     border: `1px solid ${theme.palette.secondary.border}`,
     color: theme.palette.secondary.dark,
     fontWeight: theme.typography.fontWeightBold,
+    fieldset: {
+        border: 'none',
+    },
+    transition: 'all 0.03s ease',
+    '&:is(:hover, :focus-within)': {
+        outline: `1px solid ${theme.palette.primary.main}`,
+    },
+    '&::before,&::after': {
+        border: 'none',
+    },
+    '.MuiInput-input': {
+        paddingBlock: theme.spacing(0.25),
+    },
 }));
 
 const StyledMenuItem = styled(MenuItem, {
@@ -58,28 +74,44 @@ const StyledMenuItem = styled(MenuItem, {
         : {},
 );
 
+const NewStyledDesc = styled('span')(({ theme }) => ({
+    paddingInline: theme.spacing(1),
+    // paddingBlock: theme.spacing(0.25),
+}));
+
 export const ConstraintOperatorSelect = ({
     options,
     value,
     onChange,
+    inverted,
 }: IConstraintOperatorSelectProps) => {
-    const id = useId();
+    const selectId = useId();
+    const labelId = useId();
     const onSelectChange = (event: SelectChangeEvent<unknown>) => {
         onChange(event.target.value as Operator);
     };
 
     const renderValue = () => {
-        return formatOperatorDescription(value);
+        // return formatOperatorDescription(value, inverted);
+        return (
+            <NewStyledDesc>
+                {formatOperatorDescription(value, inverted)}
+            </NewStyledDesc>
+        );
     };
 
     return (
-        <FormControl variant='outlined' size='small' hiddenLabel>
+        <StyledFormControl variant='standard' size='small' hiddenLabel>
             <ScreenReaderOnly>
-                <InputLabel htmlFor='operator-select'>Operator</InputLabel>
+                <InputLabel id={labelId} htmlFor={selectId}>
+                    Operator
+                </InputLabel>
             </ScreenReaderOnly>
             <StyledSelect
-                id={id}
+                id={selectId}
+                labelId={labelId}
                 name='operator'
+                disableUnderline
                 value={value}
                 onChange={onSelectChange}
                 renderValue={renderValue}
@@ -91,11 +123,11 @@ export const ConstraintOperatorSelect = ({
                         value={operator}
                         separator={needSeparatorAbove(options, operator)}
                     >
-                        {formatOperatorDescription(operator)}
+                        {formatOperatorDescription(operator, inverted)}
                     </StyledMenuItem>
                 ))}
             </StyledSelect>
-        </FormControl>
+        </StyledFormControl>
     );
 };
 

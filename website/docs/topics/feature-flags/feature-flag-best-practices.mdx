@@ -4,6 +4,8 @@ description: Build a scalable, secure feature flag system with 11 key principles
 toc_max_heading_level: 2
 ---
 
+import VideoContent from '@site/src/components/VideoContent.jsx';
+
 Feature flags, [sometimes called feature toggles or feature switches](../../what-is-a-feature-flag), are a powerful software development technique that allows engineering teams to decouple the release of new functionality from software deployments. 
 
 With feature flags, developers can turn [specific features or code segments on or off at runtime](https://www.getunleash.io/feature-flag-use-cases-software-kill-switches) without needing a code deployment or rollback. Organizations that adopt feature flags see improvements in key [DevOps metrics](https://www.getunleash.io/blog/dora-metrics-in-2023-5-ways-to-measure-devops-performance) like lead time to changes, mean time to recovery, deployment frequency, and change failure rate.
@@ -168,7 +170,7 @@ In [Principle 1](#1-enable-runtime-control), we proposed a set of architectural 
 
 For client-side feature flags, SDKs should send the context to an evaluation server and receive the evaluated results. The evaluated results are then cached in memory in the client-side application, allowing quick lookups without additional network overhead. This provides the performance benefits of local evaluation while minimizing the exposure of sensitive data.
 
-[![Video display SDKs](/img/sdk-video-display.png)](https://www.youtube.com/embed/mCXSAWzdn3I)
+<VideoContent videoUrls={["https://www.youtube.com/embed/mCXSAWzdn3I"]}/>
 
 ## 7. Evaluate flags as close to the user as possible
 
@@ -253,11 +255,11 @@ Have something to contribute? [Open a PR](https://github.com/Unleash/unleash/pul
 
 To learn more about Unleash architecture and implementation basics, check out this webinar: 
 
-[![What are feature flags video display](/img/what-are-ff-video-display.png)](https://www.youtube.com/embed/_kYAQsuTtqQ?si=tbMDZOyiZSILW70H)
+<VideoContent videoUrls={["https://www.youtube.com/embed/_kYAQsuTtqQ?si=tbMDZOyiZSILW70H"]}/>
 
 
 ### Best practices for deploying Unleash at scale
 
 An introduction to Unleash Edge product and its scaling capabilities:
 
-[![Edge video display](/img/edge-video-display.png)](https://www.youtube.com/embed/6uIdF-yByWs?si=kk5OGb-1nVfea06B)
+<VideoContent videoUrls={["https://www.youtube.com/embed/6uIdF-yByWs?si=kk5OGb-1nVfea06B"]}/>

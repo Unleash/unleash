@@ -20,7 +20,6 @@ import {
     type Input,
 } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
 import { CaseSensitiveButton } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/StyledToggleButton/CaseSensitiveButton/CaseSensitiveButton';
-import { ConstraintOperatorSelect } from 'component/common/NewConstraintAccordion/ConstraintOperatorSelect';
 import {
     DATE_AFTER,
     dateOperators,
@@ -40,15 +39,17 @@ import {
     CURRENT_TIME_CONTEXT_FIELD,
     operatorsForContext,
 } from 'utils/operatorsForContext';
+import { ConstraintOperatorSelect } from './ConstraintOperatorSelect';
 
 const Container = styled('article')(({ theme }) => ({
+    '--padding': theme.spacing(2),
     backgroundColor: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadiusLarge,
     border: `1px solid ${theme.palette.divider}`,
 }));
 
 const TopRow = styled('div')(({ theme }) => ({
-    padding: theme.spacing(2),
+    padding: 'var(--padding)',
     display: 'flex',
     flexFlow: 'row nowrap',
     justifyItems: 'space-between',
@@ -83,8 +84,14 @@ const resolveLegalValues = (
 
 const ConstraintDetails = styled('div')(({ theme }) => ({
     display: 'flex', // maybe a grid will be easier to modify
+    gap: theme.spacing(1),
     flexFlow: 'row nowrap',
     width: '100%',
+}));
+
+const InputContainer = styled('div')(({ theme }) => ({
+    padding: 'var(--padding)',
+    paddingTop: 0,
 }));
 
 const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
@@ -336,8 +343,6 @@ export const EditableConstraint: FC<Props> = ({
                         onChange={onOperatorChange}
                     />
 
-                    {/*  this is how to style them */}
-                    {/* <StrategyEvaluationChip label='label' /> */}
                     {showCaseSensitiveButton ? (
                         <CaseSensitiveButton
                             localConstraint={localConstraint}
@@ -370,7 +375,9 @@ export const EditableConstraint: FC<Props> = ({
                     </IconButton>
                 </HtmlTooltip>
             </TopRow>
-            <Input />
+            <InputContainer>
+                <Input />
+            </InputContainer>
         </Container>
     );
 };

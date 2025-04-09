@@ -42,7 +42,7 @@ export const FeatureLifecycle: FC<{
     };
 
     return currentStage ? (
-        <Box sx={{ display: 'flex', gap: 0.5 }}>
+        <Box sx={(theme) => ({ display: 'flex', gap: theme.spacing(0.5) })}>
             <FeatureLifecycleTooltip
                 stage={currentStage!}
                 project={feature.project}

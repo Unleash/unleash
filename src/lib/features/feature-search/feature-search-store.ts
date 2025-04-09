@@ -79,24 +79,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
         };
     }
 
-    private getLatestLifecycleStageQuery() {
-        return this.db('feature_lifecycles')
-            .select(
-                'feature as stage_feature',
-                'stage as latest_stage',
-                'status as stage_status',
-                'created_at as entered_stage_at',
-            )
-            .distinctOn('stage_feature')
-            .orderBy([
-                'stage_feature',
-                {
-                    column: 'entered_stage_at',
-                    order: 'desc',
-                },
-            ]);
-    }
-
     async searchFeatures(
         {
             userId,
@@ -147,6 +129,9 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     'users.username as user_username',
                     'users.email as user_email',
                     'users.image_url as user_image_url',
+                    'lifecycle.latest_stage',
+                    'lifecycle.stage_status',
+                    'lifecycle.entered_stage_at',
                 ] as (string | Raw<any> | Knex.QueryBuilder)[];
 
                 const lastSeenQuery = 'last_seen_at_metrics.last_seen_at';
@@ -245,19 +230,48 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'users',
                         'users.id',
                         'features.created_by_user_id',
+                    )
+                    .leftJoin('last_seen_at_metrics', function () {
+                        this.on(
+                            'last_seen_at_metrics.environment',
+                            '=',
+                            'environments.name',
+                        ).andOn(
+                            'last_seen_at_metrics.feature_name',
+                            '=',
+                            'features.name',
+                        );
+                    })
+                    .leftJoin(
+                        this.db
+                            .select(
+                                'feature as stage_feature',
+                                'stage as latest_stage',
+                                'status as stage_status',
+                                'created_at as entered_stage_at',
+                            )
+                            .from('feature_lifecycles')
+                            .distinctOn('feature')
+                            .orderBy([
+                                'feature',
+                                { column: 'created_at', order: 'desc' },
+                            ])
+                            .as('lifecycle'),
+                        'features.name',
+                        'lifecycle.stage_feature',
                     );
 
-                query.leftJoin('last_seen_at_metrics', function () {
-                    this.on(
-                        'last_seen_at_metrics.environment',
-                        '=',
-                        'environments.name',
-                    ).andOn(
-                        'last_seen_at_metrics.feature_name',
-                        '=',
-                        'features.name',
-                    );
-                });
+                if (this.flagResolver.isEnabled('flagsOverviewSearch')) {
+                    const parsedLifecycle = lifecycle
+                        ? parseSearchOperatorValue(
+                              'lifecycle.latest_stage',
+                              lifecycle,
+                          )
+                        : null;
+                    if (parsedLifecycle) {
+                        applyGenericQueryParams(query, [parsedLifecycle]);
+                    }
+                }
 
                 const rankingSql = this.buildRankingSql(
                     favoritesFirst,
@@ -270,7 +284,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     .select(selectColumns)
                     .denseRank('rank', this.db.raw(rankingSql));
             })
-            .with('lifecycle', this.getLatestLifecycleStageQuery())
             .with(
                 'final_ranks',
                 this.db.raw(
@@ -321,26 +334,8 @@ class FeatureSearchStore implements IFeatureSearchStore {
             .joinRaw('CROSS JOIN total_features')
             .whereBetween('final_rank', [offset + 1, offset + limit])
             .orderBy('final_rank');
-        finalQuery
-            .select(
-                'lifecycle.latest_stage',
-                'lifecycle.stage_status',
-                'lifecycle.entered_stage_at',
-            )
-            .leftJoin(
-                'lifecycle',
-                'ranked_features.feature_name',
-                'lifecycle.stage_feature',
-            );
 
         if (this.flagResolver.isEnabled('flagsOverviewSearch')) {
-            const parsedLifecycle = lifecycle
-                ? parseSearchOperatorValue('lifecycle.latest_stage', lifecycle)
-                : null;
-            if (parsedLifecycle) {
-                applyGenericQueryParams(finalQuery, [parsedLifecycle]);
-            }
-
             finalQuery
                 .leftJoin(
                     this.db('change_request_events AS cre')

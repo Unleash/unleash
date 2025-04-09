@@ -37,7 +37,6 @@ const StyledHeader = styled('header')(({ theme }) => ({
     color: theme.palette.text.primary,
     alignItems: 'center',
     minHeight: theme.spacing(8),
-    containerType: 'inline-size',
 }));
 
 const StyledHeaderTitle = styled('hgroup')(({ theme }) => ({

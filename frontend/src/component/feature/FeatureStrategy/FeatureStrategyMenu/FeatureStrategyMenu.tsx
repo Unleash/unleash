@@ -214,23 +214,17 @@ export const FeatureStrategyMenu = ({
             <Popover
                 id={popoverId}
                 open={isPopoverOpen}
-                anchorEl={anchor}
                 onClose={onClose}
                 onClick={onClose}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
-                }}
-                PaperProps={{
-                    sx: (theme) => ({
-                        maxWidth: '45vw',
-                    }),
-                }}
                 disableScrollLock={true}
+                sx={{
+                    '& .MuiPopover-paper': {
+                        position: 'fixed',
+                        top: '50% !important',
+                        left: '50% !important',
+                        transform: 'translate(-50%, -50%) !important',
+                    },
+                }}
             >
                 {newStrategyDropdownEnabled ? (
                     <FeatureStrategyMenuCards

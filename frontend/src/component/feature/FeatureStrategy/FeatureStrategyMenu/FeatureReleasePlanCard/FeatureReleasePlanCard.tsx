@@ -38,6 +38,7 @@ const StyledCard = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
+    height: '100%',
     maxWidth: '30rem',
     padding: theme.spacing(1.5, 2),
     color: 'inherit',

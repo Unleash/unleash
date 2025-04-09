@@ -1,5 +1,5 @@
 import Delete from '@mui/icons-material/Delete';
-import { FormControl, IconButton, styled } from '@mui/material';
+import { IconButton, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { DateSingleValue } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/DateSingleValue/DateSingleValue';
@@ -106,12 +106,6 @@ const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
         border: 'none',
     },
 }));
-
-const StyledFormControl = styled(FormControl)({
-    maxWidth: '20ch',
-    width: '25ch',
-    minWidth: '5ch',
-});
 
 const StyledButton = styled('button')(({ theme }) => ({
     width: '5ch',

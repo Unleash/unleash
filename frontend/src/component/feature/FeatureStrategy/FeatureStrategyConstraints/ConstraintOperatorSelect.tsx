@@ -25,9 +25,6 @@ interface IConstraintOperatorSelectProps {
     onChange: (value: Operator) => void;
     inverted?: boolean;
 }
-const StyledFormControl = styled(FormControl)(({ theme }) => ({
-    // paddingBlock: theme.spacing(0.5),
-}));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
@@ -76,7 +73,6 @@ const StyledMenuItem = styled(MenuItem, {
 
 const NewStyledDesc = styled('span')(({ theme }) => ({
     paddingInline: theme.spacing(1),
-    // paddingBlock: theme.spacing(0.25),
 }));
 
 export const ConstraintOperatorSelect = ({
@@ -92,7 +88,6 @@ export const ConstraintOperatorSelect = ({
     };
 
     const renderValue = () => {
-        // return formatOperatorDescription(value, inverted);
         return (
             <NewStyledDesc>
                 {formatOperatorDescription(value, inverted)}
@@ -101,7 +96,7 @@ export const ConstraintOperatorSelect = ({
     };
 
     return (
-        <StyledFormControl variant='standard' size='small' hiddenLabel>
+        <FormControl variant='standard' size='small' hiddenLabel>
             <ScreenReaderOnly>
                 <InputLabel id={labelId} htmlFor={selectId}>
                     Operator
@@ -127,7 +122,7 @@ export const ConstraintOperatorSelect = ({
                     </StyledMenuItem>
                 ))}
             </StyledSelect>
-        </StyledFormControl>
+        </FormControl>
     );
 };
 

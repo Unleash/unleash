@@ -16,7 +16,7 @@ import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import EnvironmentAccordionBody from './EnvironmentAccordionBody/LegacyEnvironmentAccordionBody';
 import { EnvironmentFooter } from './EnvironmentFooter/EnvironmentFooter';
 import FeatureOverviewEnvironmentMetrics from './EnvironmentHeader/FeatureOverviewEnvironmentMetrics/LegacyFeatureOverviewEnvironmentMetrics';
-import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
+import { FeatureStrategyMenuWrapper } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
 import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureStrategyIcons } from 'component/feature/FeatureStrategy/FeatureStrategyIcons/FeatureStrategyIcons';
@@ -179,7 +179,7 @@ const FeatureOverviewEnvironment = ({
                                     />
                                 </StyledHeaderTitle>
                                 <StyledButtonContainer>
-                                    <FeatureStrategyMenu
+                                    <FeatureStrategyMenuWrapper
                                         label='Add strategy'
                                         projectId={projectId}
                                         featureId={featureId}
@@ -223,7 +223,7 @@ const FeatureOverviewEnvironment = ({
                                                 py: 1,
                                             }}
                                         >
-                                            <FeatureStrategyMenu
+                                            <FeatureStrategyMenuWrapper
                                                 label='Add strategy'
                                                 projectId={projectId}
                                                 featureId={featureId}

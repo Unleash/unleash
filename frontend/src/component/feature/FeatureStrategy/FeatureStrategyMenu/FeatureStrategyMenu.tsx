@@ -21,6 +21,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ReleasePlanReviewDialog } from '../../FeatureView/FeatureOverview/ReleasePlan/ReleasePlanReviewDialog';
+import { OldFeatureStrategyMenu } from './OldFeatureStrategyMenu';
 
 interface IFeatureStrategyMenuProps {
     label: string;
@@ -46,6 +47,18 @@ const StyledAdditionalMenuButton = styled(PermissionButton)(({ theme }) => ({
     alignSelf: 'stretch',
     paddingBlock: 0,
 }));
+
+export const FeatureStrategyMenuWrapper = (
+    props: IFeatureStrategyMenuProps,
+) => {
+    const newStrategyDropdownEnabled = useUiFlag('newStrategyDropdown');
+
+    if (!newStrategyDropdownEnabled) {
+        return <FeatureStrategyMenu {...props} />;
+    }
+
+    return <OldFeatureStrategyMenu {...props} />;
+};
 
 export const FeatureStrategyMenu = ({
     label,

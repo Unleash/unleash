@@ -37,24 +37,19 @@ const StyledHeader = styled('header')(({ theme }) => ({
     color: theme.palette.text.primary,
     alignItems: 'center',
     minHeight: theme.spacing(8),
-    containerType: 'inline-size',
 }));
 
 const StyledHeaderTitle = styled('hgroup')(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: 'auto 1fr',
-    flexDirection: 'column',
+    display: 'flex',
+    flexFlow: 'row wrap',
     flex: 1,
     columnGap: theme.spacing(1),
-    '@container (max-width: 500px)': {
-        gridTemplateColumns: '1fr',
-    },
 }));
 
 const StyledHeaderTitleLabel = styled('p')(({ theme }) => ({
+    width: '100%',
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
-    gridColumn: '1/-1',
 }));
 
 const StyledTruncator = styled(Truncator)(({ theme }) => ({

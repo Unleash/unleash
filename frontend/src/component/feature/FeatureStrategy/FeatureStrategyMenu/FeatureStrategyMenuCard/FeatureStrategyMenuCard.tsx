@@ -17,6 +17,7 @@ interface IFeatureStrategyMenuCardProps {
     strategy: Pick<IStrategy, 'name' | 'displayName' | 'description'> &
         Partial<IStrategy>;
     defaultStrategy?: boolean;
+    onClose?: () => void;
 }
 
 const StyledIcon = styled('div')(({ theme }) => ({
@@ -67,6 +68,7 @@ export const FeatureStrategyMenuCard = ({
     environmentId,
     strategy,
     defaultStrategy,
+    onClose,
 }: IFeatureStrategyMenuCardProps) => {
     const StrategyIcon = getFeatureStrategyIcon(strategy.name);
     const strategyName = formatStrategyName(strategy.name);
@@ -86,6 +88,9 @@ export const FeatureStrategyMenuCard = ({
                 buttonTitle: strategy.displayName || strategyName,
             },
         });
+        if (onClose) {
+            onClose();
+        }
     };
 
     return (

@@ -158,6 +158,7 @@ export const FeatureStrategyMenu = ({
         } finally {
             setAddReleasePlanOpen(false);
             setSelectedTemplate(undefined);
+            onClose();
         }
     };
 
@@ -244,6 +245,7 @@ export const FeatureStrategyMenu = ({
                         onReviewReleasePlan={(template) => {
                             setSelectedTemplate(template);
                             setAddReleasePlanOpen(true);
+                            onClose();
                         }}
                         onClose={onClose}
                     />

@@ -203,6 +203,7 @@ export const FeatureStrategyMenuCards = ({
                                     environmentId={environmentId}
                                     strategy={defaultStrategy}
                                     defaultStrategy={true}
+                                    onClose={onClose}
                                 />
                             </CardWrapper>
                             {preDefinedStrategies.map((strategy) => (
@@ -212,6 +213,7 @@ export const FeatureStrategyMenuCards = ({
                                         featureId={featureId}
                                         environmentId={environmentId}
                                         strategy={strategy}
+                                        onClose={onClose}
                                     />
                                 </CardWrapper>
                             ))}
@@ -331,6 +333,7 @@ export const FeatureStrategyMenuCards = ({
                                                         environmentId
                                                     }
                                                     strategy={strategy}
+                                                    onClose={onClose}
                                                 />
                                             </CardWrapper>
                                         ))}

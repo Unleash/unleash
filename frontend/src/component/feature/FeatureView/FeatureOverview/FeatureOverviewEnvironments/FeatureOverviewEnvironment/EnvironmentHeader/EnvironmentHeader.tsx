@@ -46,7 +46,7 @@ const StyledHeaderTitle = styled('hgroup')(({ theme }) => ({
     flexDirection: 'column',
     flex: 1,
     columnGap: theme.spacing(1),
-    '@container (max-width: 500px)': {
+    '@container (max-width: 600px)': {
         gridTemplateColumns: '1fr',
     },
 }));

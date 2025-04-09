@@ -99,7 +99,7 @@ const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
     fieldset: { border: 'none', borderRadius: 0 },
     ':focus-within fieldset': { borderBottomStyle: 'solid' },
     'label + &': {
-        // override default mui styling
+        // mui adds a margin top to 'standard' selects with labels
         margin: 0,
     },
     '&::before': {

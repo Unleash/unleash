@@ -51,6 +51,7 @@ const TopRow = styled('div')(({ theme }) => ({
     padding: 'var(--padding)',
     display: 'flex',
     flexFlow: 'row nowrap',
+    alignItems: 'center',
     justifyItems: 'space-between',
     borderBottom: `1px dashed ${theme.palette.divider}`,
 }));
@@ -86,6 +87,7 @@ const ConstraintDetails = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     flexFlow: 'row nowrap',
     width: '100%',
+    height: 'min-content',
 }));
 
 const InputContainer = styled('div')(({ theme }) => ({
@@ -397,6 +399,7 @@ export const EditableConstraint: FC<Props> = ({
                 <HtmlTooltip title='Delete constraint' arrow>
                     <IconButton
                         type='button'
+                        size='small'
                         onClick={onDelete}
                         aria-label='Delete constraint'
                     >

@@ -111,7 +111,7 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
     NewInUnleash,
 }) => {
     const { routes } = useRoutes();
-    const celebatoryUnleash = useFlag('celebrateUnleashFrontend');
+    const celebrateUnleashFrontend = useFlag('celebrateUnleashFrontend');
 
     const [mode, setMode] = useNavigationMode();
     const [expanded, changeExpanded] = useExpanded<'configure' | 'admin'>();
@@ -139,7 +139,7 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
                         <ThemeMode
                             darkmode={
                                 <ConditionallyRender
-                                    condition={celebatoryUnleash}
+                                    condition={celebrateUnleashFrontend}
                                     show={<CelebatoryUnleashLogoWhite />}
                                     elseShow={
                                         <StyledUnleashLogoWhite aria-label='Unleash logo' />
@@ -148,7 +148,7 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
                             }
                             lightmode={
                                 <ConditionallyRender
-                                    condition={celebatoryUnleash}
+                                    condition={celebrateUnleashFrontend}
                                     show={<StyledCelebatoryLogo />}
                                     elseShow={
                                         <StyledUnleashLogo aria-label='Unleash logo' />

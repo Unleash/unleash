@@ -37,7 +37,6 @@ export const UnleashFlagProvider: FC<{ children?: React.ReactNode }> = ({
     const { uiConfig } = useUiConfig();
 
     useEffect(() => {
-        console.log('uiConfig.unleashToken', token);
         if (uiConfig.unleashContext && token) {
             client.updateContext(uiConfig.unleashContext);
             if (!started) {

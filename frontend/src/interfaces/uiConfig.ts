@@ -36,7 +36,6 @@ export interface IUiConfig {
     oidcConfiguredThroughEnv?: boolean;
     samlConfiguredThroughEnv?: boolean;
     maxSessionsCount?: number;
-    unleashToken?: string;
     unleashContext?: IMutableContext;
 }
 

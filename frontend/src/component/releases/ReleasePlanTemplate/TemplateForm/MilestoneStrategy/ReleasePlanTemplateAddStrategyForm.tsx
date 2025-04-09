@@ -25,6 +25,7 @@ import { MilestoneStrategyTitle } from './MilestoneStrategyTitle';
 import { MilestoneStrategyConstraints } from './MilestoneStrategyConstraints';
 import { MilestoneStrategyVariants } from './MilestoneStrategyVariants';
 import { MilestoneStrategyType } from './MilestoneStrategyType';
+import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
 import {
     featureStrategyDocsLink,
     featureStrategyDocsLinkLabel,
@@ -117,17 +118,10 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
     width: '100%',
 }));
 
-const StyledDividerContent = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(0.75, 1),
-    color: theme.palette.text.primary,
-    fontSize: theme.fontSizes.smallerBody,
-    backgroundColor: theme.palette.background.elevation2,
-    borderRadius: theme.shape.borderRadiusExtraLarge,
-    width: '45px',
-    position: 'absolute',
+const StyledConstraintSeparator = styled(ConstraintSeparator)(({ theme }) => ({
     top: '-10px',
     left: '0',
-    lineHeight: 1,
+    transform: 'translateY(0)',
 }));
 
 interface IReleasePlanTemplateAddStrategyFormProps {
@@ -332,7 +326,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                             />
                             <StyledBox>
                                 <StyledDivider />
-                                <StyledDividerContent>AND</StyledDividerContent>
+                                <StyledConstraintSeparator />
                             </StyledBox>
                             <MilestoneStrategyConstraints
                                 strategy={currentStrategy}

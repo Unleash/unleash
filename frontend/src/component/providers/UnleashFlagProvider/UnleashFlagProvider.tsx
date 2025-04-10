@@ -29,7 +29,6 @@ export const UnleashFlagProvider: FC<{ children?: React.ReactNode }> = ({
         client = new UnleashClient({
             url: UNLEASH_API,
             clientKey: token || 'offline',
-            refreshInterval: 1,
             appName: 'Unleash Cloud UI',
         });
     }

@@ -9,7 +9,7 @@ const ValueListWrapper = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const ValuesList = styled('ul')({
+const StyledList = styled('ul')({
     listStyle: 'none',
     padding: 0,
     display: 'contents',
@@ -80,7 +80,7 @@ export const ValueList: FC<Props> = ({ values = [], removeValue }) => {
 
     return (
         <ValueListWrapper>
-            <ValuesList>
+            <StyledList>
                 {values.map((value, index) => (
                     <li key={value}>
                         <ValueChip
@@ -96,7 +96,7 @@ export const ValueList: FC<Props> = ({ values = [], removeValue }) => {
                         />
                     </li>
                 ))}
-            </ValuesList>
+            </StyledList>
             <AddValuesButton
                 ref={addValueRef}
                 label={'Add values'}

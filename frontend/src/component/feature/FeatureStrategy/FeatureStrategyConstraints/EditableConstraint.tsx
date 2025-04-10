@@ -1,4 +1,4 @@
-import { Chip, IconButton, styled } from '@mui/material';
+import { Chip, type ChipProps, IconButton, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { DateSingleValue } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/DateSingleValue/DateSingleValue';
 import { FreeTextInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/FreeTextInput/FreeTextInput';
@@ -39,6 +39,8 @@ import {
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import Delete from '@mui/icons-material/Delete';
+import Add from '@mui/icons-material/Add';
+import Clear from '@mui/icons-material/Clear';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -132,6 +134,40 @@ const ValueList = styled('ul')(({ theme }) => ({
     listStyle: 'none',
     padding: 0,
     display: 'contents',
+}));
+
+const ValueChipBase = styled((props: ChipProps) => (
+    <Chip size='small' {...props} />
+))(({ theme }) => ({
+    background: theme.palette.background.elevation1,
+    ':focus-visible': {
+        background: theme.palette.background.elevation2,
+    },
+}));
+
+const ValueChip = styled(ValueChipBase)(({ theme }) => ({
+    svg: {
+        fill: theme.palette.secondary.dark,
+        borderRadius: '50%',
+        outline: `2px solid #0000`,
+        transition: 'all 0.3s ease',
+        ':focus-visible,:hover': {
+            backgroundColor: theme.palette.table.headerHover,
+            outlineColor: theme.palette.table.headerHover,
+        },
+    },
+    ':focus-visible': {
+        background: theme.palette.background.elevation2,
+    },
+}));
+
+const AddValuesButton = styled(ValueChipBase)(({ theme }) => ({
+    color: theme.palette.primary.main,
+    svg: {
+        fill: theme.palette.primary.main,
+        height: theme.fontSizes.smallerBody,
+        width: theme.fontSizes.smallerBody,
+    },
 }));
 
 type Props = {
@@ -394,7 +430,8 @@ export const EditableConstraint: FC<Props> = ({
                     <ValueList>
                         {localConstraint.values?.map((value, index) => (
                             <li key={value}>
-                                <Chip
+                                <ValueChip
+                                    deleteIcon={<Clear />}
                                     label={value}
                                     onDelete={() =>
                                         setValues(
@@ -408,10 +445,10 @@ export const EditableConstraint: FC<Props> = ({
                             </li>
                         ))}
                     </ValueList>
-                    <Chip
+                    <AddValuesButton
                         label={'Add values'}
-                        component='button'
                         onClick={() => console.log('adding values')}
+                        icon={<Add />}
                     />
                 </ValueListWrapper>
 

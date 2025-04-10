@@ -35,6 +35,7 @@ test('should use external resolver for dynamic flags', () => {
             }
         },
         getVariant: () => getDefaultVariant(),
+        getStaticContext: () => ({}),
     };
 
     const config = {
@@ -55,6 +56,7 @@ test('should not use external resolver for enabled experiments', () => {
             return false;
         },
         getVariant: () => getDefaultVariant(),
+        getStaticContext: () => ({}),
     };
 
     const config = {
@@ -75,6 +77,7 @@ test('should load experimental flags', () => {
             return false;
         },
         getVariant: () => getDefaultVariant(),
+        getStaticContext: () => ({}),
     };
 
     const config = {
@@ -96,6 +99,7 @@ test('should load experimental flags from external provider', () => {
             }
         },
         getVariant: () => getDefaultVariant(),
+        getStaticContext: () => ({}),
     };
 
     const config = {
@@ -127,6 +131,7 @@ test('should support variant flags', () => {
             }
             return getDefaultVariant();
         },
+        getStaticContext: () => ({}),
     };
 
     const config = {
@@ -196,6 +201,7 @@ test('should call external resolver getVariant when not overridden to be true, e
             }
             return getDefaultVariant();
         },
+        getStaticContext: () => ({}),
     };
 
     const config = {
@@ -217,4 +223,46 @@ test('should call external resolver getVariant when not overridden to be true, e
     expect(resolver.getVariant('variantFlag' as IFlagKey)).toStrictEqual(
         variant,
     );
+});
+
+test('should call external resolver getStaticContext ', () => {
+    const variant = {
+        enabled: true,
+        name: 'variant',
+        payload: {
+            type: PayloadType.STRING,
+            value: 'variant-A',
+        },
+    };
+
+    const externalResolver = {
+        isEnabled: () => true,
+        getVariant: (name: string) => {
+            if (name === 'variantFlag') {
+                return variant;
+            }
+            return getDefaultVariant();
+        },
+        getStaticContext: () => {
+            return { clientId: 'red' };
+        },
+    };
+
+    const config = {
+        flags: {
+            variantFlag: {
+                name: 'variant-flag',
+                enabled: false,
+                payload: {
+                    type: PayloadType.JSON,
+                    value: '',
+                },
+            },
+        },
+        externalResolver,
+    };
+
+    const resolver = new FlagResolver(config as IExperimentalOptions);
+
+    expect(resolver.getStaticContext()).toStrictEqual({ clientId: 'red' });
 });

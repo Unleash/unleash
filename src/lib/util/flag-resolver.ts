@@ -63,7 +63,7 @@ export default class FlagResolver implements IFlagResolver {
     }
 
     getStaticContext(): IFlagContext {
-        return {};
+        return this.externalResolver.getStaticContext();
     }
 }
 

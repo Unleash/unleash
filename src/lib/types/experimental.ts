@@ -336,6 +336,7 @@ export const defaultExperimentalOptions: IExperimentalOptions = {
     externalResolver: {
         isEnabled: (): boolean => false,
         getVariant: () => getDefaultVariant(),
+        getStaticContext: () => ({}),
     },
 };
 
@@ -358,4 +359,5 @@ export interface IFlagResolver {
 export interface IExternalFlagResolver {
     isEnabled: (flagName: IFlagKey, context?: IFlagContext) => boolean;
     getVariant: (flagName: IFlagKey, context?: IFlagContext) => Variant;
+    getStaticContext: () => IFlagContext;
 }

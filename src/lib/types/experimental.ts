@@ -1,6 +1,7 @@
 import { PayloadType, type Variant } from 'unleash-client';
 import { parseEnvVarBoolean } from '../util';
 import { getDefaultVariant } from 'unleash-client/lib/variant';
+import type { Context } from '../features/playground/feature-evaluator';
 
 export type IFlagKey =
     | 'accessLogs'
@@ -345,9 +346,7 @@ export interface IExperimentalOptions {
     externalResolver: IExternalFlagResolver;
 }
 
-export interface IFlagContext {
-    [key: string]: string;
-}
+export interface IFlagContext extends Context {}
 
 export interface IFlagResolver {
     getAll: (context?: IFlagContext) => IFlags;

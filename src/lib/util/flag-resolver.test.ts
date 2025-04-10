@@ -244,7 +244,7 @@ test('should call external resolver getStaticContext ', () => {
             return getDefaultVariant();
         },
         getStaticContext: () => {
-            return { clientId: 'red' };
+            return { properties: { clientId: 'red' } };
         },
     };
 
@@ -264,5 +264,7 @@ test('should call external resolver getStaticContext ', () => {
 
     const resolver = new FlagResolver(config as IExperimentalOptions);
 
-    expect(resolver.getStaticContext()).toStrictEqual({ clientId: 'red' });
+    expect(resolver.getStaticContext()).toStrictEqual({
+        properties: { clientId: 'red' },
+    });
 });

@@ -751,6 +751,9 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const openAIAPIKey = process.env.OPENAI_API_KEY;
 
+    const unleashFrontendToken =
+        options.unleashFrontendToken || process.env.UNLEASH_FRONTEND_TOKEN;
+
     const defaultDaysToBeConsideredInactive = 180;
     const userInactivityThresholdInDays =
         options.userInactivityThresholdInDays ??
@@ -801,6 +804,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         openAIAPIKey,
         userInactivityThresholdInDays,
         buildDate: process.env.BUILD_DATE,
+        unleashFrontendToken,
     };
 }
 

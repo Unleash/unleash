@@ -28,8 +28,9 @@ import { ReactComponent as CelebatoryUnleashLogo } from 'assets/img/unleashHolid
 import { ReactComponent as CelebatoryUnleashLogoWhite } from 'assets/img/unleashHolidayDark.svg';
 import { ReactComponent as LogoOnlyWhite } from 'assets/img/logo.svg';
 import { ReactComponent as LogoOnly } from 'assets/img/logoDark.svg';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { Link } from 'react-router-dom';
+import { useFlag } from '@unleash/proxy-client-react';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export const MobileNavigationSidebar: FC<{
     onClick: () => void;
@@ -110,7 +111,7 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
     NewInUnleash,
 }) => {
     const { routes } = useRoutes();
-    const celebatoryUnleash = useUiFlag('celebrateUnleash');
+    const celebrateUnleashFrontend = useFlag('celebrateUnleashFrontend');
 
     const [mode, setMode] = useNavigationMode();
     const [expanded, changeExpanded] = useExpanded<'configure' | 'admin'>();
@@ -138,7 +139,7 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
                         <ThemeMode
                             darkmode={
                                 <ConditionallyRender
-                                    condition={celebatoryUnleash}
+                                    condition={celebrateUnleashFrontend}
                                     show={<CelebatoryUnleashLogoWhite />}
                                     elseShow={
                                         <StyledUnleashLogoWhite aria-label='Unleash logo' />
@@ -147,7 +148,7 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
                             }
                             lightmode={
                                 <ConditionallyRender
-                                    condition={celebatoryUnleash}
+                                    condition={celebrateUnleashFrontend}
                                     show={<StyledCelebatoryLogo />}
                                     elseShow={
                                         <StyledUnleashLogo aria-label='Unleash logo' />

@@ -158,6 +158,7 @@ exports[`should create default config 1`] = `
   "ui": {
     "environment": "Open Source",
   },
+  "unleashFrontendToken": undefined,
   "userInactivityThresholdInDays": 180,
   "versionCheck": {
     "enable": true,

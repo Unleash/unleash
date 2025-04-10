@@ -130,11 +130,11 @@ const ValueListWrapper = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const ValueList = styled('ul')(({ theme }) => ({
+const ValueList = styled('ul')({
     listStyle: 'none',
     padding: 0,
     display: 'contents',
-}));
+});
 
 const ValueChipBase = styled((props: ChipProps) => (
     <Chip size='small' {...props} />

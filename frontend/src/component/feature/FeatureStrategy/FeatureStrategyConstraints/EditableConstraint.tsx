@@ -1,4 +1,4 @@
-import { Chip, type ChipProps, IconButton, styled } from '@mui/material';
+import { IconButton, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { DateSingleValue } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/DateSingleValue/DateSingleValue';
 import { FreeTextInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/FreeTextInput/FreeTextInput';
@@ -30,7 +30,7 @@ import type {
     IUnleashContextDefinition,
 } from 'interfaces/context';
 import type { IConstraint } from 'interfaces/strategy';
-import { forwardRef, useEffect, useRef, useState, type FC } from 'react';
+import { useEffect, useState, type FC } from 'react';
 import { oneOf } from 'utils/oneOf';
 import {
     CURRENT_TIME_CONTEXT_FIELD,
@@ -39,8 +39,7 @@ import {
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import Delete from '@mui/icons-material/Delete';
-import Add from '@mui/icons-material/Add';
-import Clear from '@mui/icons-material/Clear';
+import { ValueList } from './ValueList';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -124,58 +123,6 @@ const StyledButton = styled('button')(({ theme }) => ({
     },
 }));
 
-const ValueListWrapper = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexFlow: 'row wrap',
-    gap: theme.spacing(1),
-}));
-
-const ValueList = styled('ul')({
-    listStyle: 'none',
-    padding: 0,
-    display: 'contents',
-});
-
-const ValueChipBase = styled(
-    forwardRef<HTMLDivElement, ChipProps>((props, ref) => (
-        <Chip size='small' {...props} ref={ref} />
-    )),
-)(({ theme }) => ({
-    transition: 'all 0.3s ease',
-    outline: `1px solid #0000`,
-    background: theme.palette.background.elevation1,
-    ':hover, :focus-visible': {
-        background: theme.palette.background.elevation1,
-    },
-    ':focus-visible': {
-        outlineColor: theme.palette.secondary.dark,
-    },
-}));
-const ValueChip = styled(ValueChipBase)(({ theme }) => ({
-    svg: {
-        fill: theme.palette.secondary.dark,
-        borderRadius: '50%',
-        outline: `2px solid #0000`,
-        transition: 'inherit',
-        ':focus-visible,:hover': {
-            backgroundColor: theme.palette.table.headerHover,
-            outlineColor: theme.palette.table.headerHover,
-        },
-    },
-}));
-
-const AddValuesButton = styled(ValueChipBase)(({ theme }) => ({
-    color: theme.palette.primary.main,
-    svg: {
-        fill: theme.palette.primary.main,
-        height: theme.fontSizes.smallerBody,
-        width: theme.fontSizes.smallerBody,
-    },
-    ':hover': {
-        outlineColor: theme.palette.secondary.dark,
-    },
-}));
-
 type Props = {
     localConstraint: IConstraint;
     setContextName: (contextName: string) => void;
@@ -223,11 +170,6 @@ export const EditableConstraint: FC<Props> = ({
     const { contextName, operator } = localConstraint;
     const [showCaseSensitiveButton, setShowCaseSensitiveButton] =
         useState(false);
-
-    const constraintElementRefs: React.MutableRefObject<
-        (HTMLDivElement | null)[]
-    > = useRef([]);
-    const addValueRef = useRef(null);
 
     /* We need a special case to handle the currentTime context field. Since
     this field will be the only one to allow DATE_BEFORE and DATE_AFTER operators
@@ -398,8 +340,6 @@ export const EditableConstraint: FC<Props> = ({
         }
     };
 
-    const localConstraintValues = localConstraint.values || [];
-
     return (
         <Container>
             <TopRow>
@@ -439,48 +379,10 @@ export const EditableConstraint: FC<Props> = ({
                         </StyledButton>
                     ) : null}
                 </ConstraintDetails>
-                <ValueListWrapper>
-                    <ValueList>
-                        {localConstraintValues.map((value, index) => (
-                            <li key={value}>
-                                <ValueChip
-                                    ref={(el) => {
-                                        constraintElementRefs.current[index] =
-                                            el;
-                                    }}
-                                    deleteIcon={<Clear />}
-                                    label={value}
-                                    onDelete={() => {
-                                        const nextFocus = () => {
-                                            if (
-                                                index ===
-                                                localConstraintValues.length - 1
-                                            ) {
-                                                if (index === 0) {
-                                                    return addValueRef.current;
-                                                } else {
-                                                    return constraintElementRefs
-                                                        .current[index - 1];
-                                                }
-                                            } else {
-                                                return constraintElementRefs
-                                                    .current[index + 1];
-                                            }
-                                        };
-                                        nextFocus()?.focus();
-                                        removeValue(index);
-                                    }}
-                                />
-                            </li>
-                        ))}
-                    </ValueList>
-                    <AddValuesButton
-                        ref={addValueRef}
-                        label={'Add values'}
-                        onClick={() => console.log('adding values')}
-                        icon={<Add />}
-                    />
-                </ValueListWrapper>
+                <ValueList
+                    values={localConstraint.values}
+                    removeValue={removeValue}
+                />
 
                 <HtmlTooltip title='Delete constraint' arrow>
                     <IconButton type='button' size='small' onClick={onDelete}>

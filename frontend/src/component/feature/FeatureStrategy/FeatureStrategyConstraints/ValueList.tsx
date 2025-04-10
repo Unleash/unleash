@@ -65,12 +65,12 @@ export const ValueList: FC<Props> = ({ values = [], removeValue }) => {
     const constraintElementRefs: React.MutableRefObject<
         (HTMLDivElement | null)[]
     > = useRef([]);
-    const addValueRef = useRef(null);
+    const addValuesButtonRef = useRef(null);
 
     const nextFocusTarget = (deletedIndex: number) => {
         if (deletedIndex === values.length - 1) {
             if (deletedIndex === 0) {
-                return addValueRef.current;
+                return addValuesButtonRef.current;
             } else {
                 return constraintElementRefs.current[deletedIndex - 1];
             }
@@ -99,7 +99,7 @@ export const ValueList: FC<Props> = ({ values = [], removeValue }) => {
                 ))}
             </StyledList>
             <AddValuesButton
-                ref={addValueRef}
+                ref={addValuesButtonRef}
                 label={'Add values'}
                 onClick={() => console.log('adding values')}
                 icon={<Add />}

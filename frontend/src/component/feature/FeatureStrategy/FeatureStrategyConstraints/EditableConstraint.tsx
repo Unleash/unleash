@@ -139,9 +139,14 @@ const ValueList = styled('ul')({
 const ValueChipBase = styled((props: ChipProps) => (
     <Chip size='small' {...props} />
 ))(({ theme }) => ({
+    transition: 'all 0.3s ease',
+    outline: `1px solid #0000`,
     background: theme.palette.background.elevation1,
+    ':hover, :focus-visible': {
+        background: theme.palette.background.elevation1,
+    },
     ':focus-visible': {
-        background: theme.palette.background.elevation2,
+        outlineColor: theme.palette.secondary.dark,
     },
 }));
 
@@ -150,14 +155,11 @@ const ValueChip = styled(ValueChipBase)(({ theme }) => ({
         fill: theme.palette.secondary.dark,
         borderRadius: '50%',
         outline: `2px solid #0000`,
-        transition: 'all 0.3s ease',
+        transition: 'inherit',
         ':focus-visible,:hover': {
             backgroundColor: theme.palette.table.headerHover,
             outlineColor: theme.palette.table.headerHover,
         },
-    },
-    ':focus-visible': {
-        background: theme.palette.background.elevation2,
     },
 }));
 
@@ -167,6 +169,9 @@ const AddValuesButton = styled(ValueChipBase)(({ theme }) => ({
         fill: theme.palette.primary.main,
         height: theme.fontSizes.smallerBody,
         width: theme.fontSizes.smallerBody,
+    },
+    ':hover': {
+        outlineColor: theme.palette.secondary.dark,
     },
 }));
 

@@ -30,6 +30,7 @@ const ValueChipBase = styled(
         outlineColor: theme.palette.secondary.dark,
     },
 }));
+
 const ValueChip = styled(ValueChipBase)(({ theme }) => ({
     svg: {
         fill: theme.palette.secondary.dark,

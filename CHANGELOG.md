@@ -2,6 +2,142 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.9.1] - 2025-04-10
+
+### Bug Fixes
+
+- Add Project and Playground icons for command bar ([#9677](https://github.com/Unleash/unleash/issues/9677))
+
+- Link to "view more insights" from dashboard goes to status modal ([#9684](https://github.com/Unleash/unleash/issues/9684))
+
+- Project status modal links don't work ([#9693](https://github.com/Unleash/unleash/issues/9693))
+
+- Depenency name truncator ([#9696](https://github.com/Unleash/unleash/issues/9696))
+
+- Consumption warning is either/or not and
+
+- Restore focus style to the env switch ([#9707](https://github.com/Unleash/unleash/issues/9707))
+
+- Return bad data error when failing to patch env variants ([#9708](https://github.com/Unleash/unleash/issues/9708))
+
+- Update link text for archived feature navigation ([#9698](https://github.com/Unleash/unleash/issues/9698))
+
+- Fix hover on release template card ([#9721](https://github.com/Unleash/unleash/issues/9721))
+
+- Wrap env data before truncating env name. ([#9733](https://github.com/Unleash/unleash/issues/9733))
+
+- Remove custom refresh interval for UnleashClient
+
+- Flag-resolver should resolve external static context
+
+- Flag-resolver context type
+
+
+### Chore
+
+- New constraint edit design iteration 1 ([#9727](https://github.com/Unleash/unleash/issues/9727))
+
+
+### Documentation
+
+- 6.9 updates ([#9680](https://github.com/Unleash/unleash/issues/9680))
+
+- Environment change requests ([#9648](https://github.com/Unleash/unleash/issues/9648))
+
+- .NET supports impression events ([#9704](https://github.com/Unleash/unleash/issues/9704))
+
+- Updates to Unleash Frontend API docs and Unleash architecture overview ([#9513](https://github.com/Unleash/unleash/issues/9513))
+
+- Add Edge section to security doc ([#9562](https://github.com/Unleash/unleash/issues/9562))
+
+- Updates to 11 principles and scaling pages ([#9688](https://github.com/Unleash/unleash/issues/9688))
+
+- Add Go impression data support ([#9728](https://github.com/Unleash/unleash/issues/9728))
+
+
+### Features
+
+- New styling for strategy selector ([#9683](https://github.com/Unleash/unleash/issues/9683))
+
+- Command bar admin menu improvements ([#9689](https://github.com/Unleash/unleash/issues/9689))
+
+- Strategy selector screen updates ([#9692](https://github.com/Unleash/unleash/issues/9692))
+
+- Added network traffic bundle ([#9691](https://github.com/Unleash/unleash/issues/9691))
+
+- Only admin can fetch license ([#9697](https://github.com/Unleash/unleash/issues/9697))
+
+- Flag overview change requests ([#9702](https://github.com/Unleash/unleash/issues/9702))
+
+- Release plan hover buttons ([#9703](https://github.com/Unleash/unleash/issues/9703))
+
+- Search by lifecycle stage ([#9705](https://github.com/Unleash/unleash/issues/9705))
+
+- Rename search page and change icon ([#9706](https://github.com/Unleash/unleash/issues/9706))
+
+- Lifecycle filters UI ([#9713](https://github.com/Unleash/unleash/issues/9713))
+
+- Export button in flags overview ([#9715](https://github.com/Unleash/unleash/issues/9715))
+
+- Release plan review dialogue ([#9712](https://github.com/Unleash/unleash/issues/9712))
+
+- Remove + from the segment dropdown ([#9714](https://github.com/Unleash/unleash/issues/9714))
+
+- Remove archived from filters ([#9719](https://github.com/Unleash/unleash/issues/9719))
+
+- Adjust filter UI ([#9720](https://github.com/Unleash/unleash/issues/9720))
+
+- Adjust columns for a search page refactor ([#9709](https://github.com/Unleash/unleash/issues/9709))
+
+- Total count respect lifecycle filter ([#9724](https://github.com/Unleash/unleash/issues/9724))
+
+- Adjust search page columns ([#9722](https://github.com/Unleash/unleash/issues/9722))
+
+- Styling of AND operator in strategies ([#9726](https://github.com/Unleash/unleash/issues/9726))
+
+- Update strategy window styles, extract old and new components ([#9730](https://github.com/Unleash/unleash/issues/9730))
+
+- Lifecycle column text ([#9731](https://github.com/Unleash/unleash/issues/9731))
+
+- Strategy menu interaction between two dialogues. ([#9732](https://github.com/Unleash/unleash/issues/9732))
+
+- Use Unleash React SDK in Admin UI ([#9723](https://github.com/Unleash/unleash/issues/9723))
+
+- Targeting info box new styling ([#9740](https://github.com/Unleash/unleash/issues/9740))
+
+- Add milestones to search results ([#9739](https://github.com/Unleash/unleash/issues/9739))
+
+- Styling of info box for release plans ([#9741](https://github.com/Unleash/unleash/issues/9741))
+
+- Segment chip recoloring ([#9742](https://github.com/Unleash/unleash/issues/9742))
+
+- Flag lifecycle status - first pass ([#9736](https://github.com/Unleash/unleash/issues/9736))
+
+
+### Fix
+
+- Fix focus styles and tab navigation for segments + constraints ([#9655](https://github.com/Unleash/unleash/issues/9655))
+
+- Lifetime API command doesn't update. ([#9685](https://github.com/Unleash/unleash/issues/9685))
+
+
+### Miscellaneous Tasks
+
+- Fix coverage tests ([#9674](https://github.com/Unleash/unleash/issues/9674))
+
+- Change default for release ([#9681](https://github.com/Unleash/unleash/issues/9681))
+
+- Remove z-index from sticky admin menu as its probably not needed ([#9690](https://github.com/Unleash/unleash/issues/9690))
+
+- Cleaner project status modal link handling ([#9694](https://github.com/Unleash/unleash/issues/9694))
+
+- Add flag for add/edit strategies ([#9699](https://github.com/Unleash/unleash/issues/9699))
+
+- Set up the basis of the new constraint editing component. ([#9701](https://github.com/Unleash/unleash/issues/9701))
+
+- Make popover center of screen ([#9725](https://github.com/Unleash/unleash/issues/9725))
+
+
 ## [6.9.0] - 2025-04-02
 
 ### Bug Fixes

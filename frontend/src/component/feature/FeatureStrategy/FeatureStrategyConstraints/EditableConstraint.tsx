@@ -1,4 +1,4 @@
-import { IconButton, styled } from '@mui/material';
+import { Chip, IconButton, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { DateSingleValue } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/DateSingleValue/DateSingleValue';
 import { FreeTextInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/FreeTextInput/FreeTextInput';
@@ -51,7 +51,7 @@ const TopRow = styled('div')(({ theme }) => ({
     padding: 'var(--padding)',
     display: 'flex',
     flexFlow: 'row nowrap',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyItems: 'space-between',
     borderBottom: `1px dashed ${theme.palette.divider}`,
 }));
@@ -120,6 +120,18 @@ const StyledButton = styled('button')(({ theme }) => ({
     '&:is(:hover, :focus-visible)': {
         outline: `1px solid ${theme.palette.primary.main}`,
     },
+}));
+
+const ValueListWrapper = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row wrap',
+    gap: theme.spacing(1),
+}));
+
+const ValueList = styled('ul')(({ theme }) => ({
+    listStyle: 'none',
+    padding: 0,
+    display: 'contents',
 }));
 
 type Props = {
@@ -377,21 +389,31 @@ export const EditableConstraint: FC<Props> = ({
                             {localConstraint.caseInsensitive ? 'Aa' : 'A/a'}
                         </StyledButton>
                     ) : null}
-                    {/* <ul>
-                <li>
-                    <Chip
-                        label='value1'
-                        onDelete={() => console.log('Clicked')}
-                    />
-                </li>
-                <li>
-                    <Chip
-                        label='value2'
-                        onDelete={() => console.log('Clicked')}
-                    />
-                </li>
-            </ul> */}
                 </ConstraintDetails>
+                <ValueListWrapper>
+                    <ValueList>
+                        {localConstraint.values?.map((value, index) => (
+                            <li key={value}>
+                                <Chip
+                                    label={value}
+                                    onDelete={() =>
+                                        setValues(
+                                            localConstraint.values?.filter(
+                                                (existingValue) =>
+                                                    existingValue !== value,
+                                            ) ?? [],
+                                        )
+                                    }
+                                />
+                            </li>
+                        ))}
+                    </ValueList>
+                    <Chip
+                        label={'Add values'}
+                        component='button'
+                        onClick={() => console.log('adding values')}
+                    />
+                </ValueListWrapper>
 
                 <HtmlTooltip title='Delete constraint' arrow>
                     <IconButton type='button' size='small' onClick={onDelete}>

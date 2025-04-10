@@ -24,14 +24,15 @@ const StyledChip = styled('span')(({ theme }) => ({
     paddingBlockStart: theme.spacing(0.5),
     paddingBlockEnd: theme.spacing(0.5),
     borderRadius: '100rem',
-    background: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
+    background: theme.palette.background.elevation1,
+    color: theme.palette.text.primary,
 }));
 
 const StyledButton = styled('button')(({ theme }) => ({
     all: 'unset',
     height: theme.spacing(2),
     cursor: 'pointer',
+    color: theme.palette.secondary.dark,
 }));
 
 const StyledLink = styled(Link)(({ theme }) => ({

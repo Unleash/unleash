@@ -76,6 +76,13 @@ class FeatureSearchStore implements IFeatureSearchStore {
             yes: Number(r.yes) || 0,
             no: Number(r.no) || 0,
             changeRequestIds: r.change_request_ids ?? [],
+            ...(r.milestone_name
+                ? {
+                      milestoneName: r.milestone_name,
+                      milestoneOrder: r.milestone_order,
+                      totalMilestones: Number(r.total_milestones || 0),
+                  }
+                : {}),
         };
     }
 
@@ -371,6 +378,53 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     },
                 )
                 .select('feature_cr.change_request_ids');
+
+            finalQuery
+                .leftJoin(
+                    this.db
+                        .with('total_milestones', (qb) => {
+                            qb.select('release_plan_definition_id')
+                                .count('* as total_milestones')
+                                .from('milestones')
+                                .groupBy('release_plan_definition_id');
+                        })
+                        .select([
+                            'rpd.feature_name',
+                            'rpd.environment',
+                            'active_milestone.sort_order AS milestone_order',
+                            'total_milestones.total_milestones',
+                            'active_milestone.name AS milestone_name',
+                        ])
+                        .from('release_plan_definitions AS rpd')
+                        .join(
+                            'total_milestones',
+                            'total_milestones.release_plan_definition_id',
+                            'rpd.id',
+                        )
+                        .join(
+                            'milestones AS active_milestone',
+                            'active_milestone.id',
+                            'rpd.active_milestone_id',
+                        )
+                        .where('rpd.discriminator', 'plan')
+                        .as('feature_release_plan'),
+                    function () {
+                        this.on(
+                            'feature_release_plan.feature_name',
+                            '=',
+                            'ranked_features.feature_name',
+                        ).andOn(
+                            'feature_release_plan.environment',
+                            '=',
+                            'ranked_features.environment',
+                        );
+                    },
+                )
+                .select([
+                    'feature_release_plan.milestone_name',
+                    'feature_release_plan.milestone_order',
+                    'feature_release_plan.total_milestones',
+                ]);
         }
         this.queryExtraData(finalQuery);
         const rows = await finalQuery;

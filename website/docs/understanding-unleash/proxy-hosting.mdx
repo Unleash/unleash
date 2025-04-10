@@ -49,7 +49,7 @@ This fully-managed solution is designed for high availability, featuring the fol
 - Europe (London): `eu-west-2`
 - Europe (Paris): `eu-west-3`
 
-### Unleash Enterprise Edge vs Self-hosted Edge
+### Unleash Enterprise Edge vs self-hosted Edge
 
 | Feature                 | Unleash Enterprise Edge                                                       | Self-hosted Unleash Edge                                                                                    |
 | :---------------------- | :------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------- |
@@ -64,7 +64,7 @@ This fully-managed solution is designed for high availability, featuring the fol
 | **Observability** | Provided by Unleash (monitoring, logging)                                                   | You need to set up and manage your own monitoring and logging solutions for Edge  |
 | **Deployment location** | Available in [11 global regions](#cloud-hosted-unleash-edge) | Deploy within your own infrastructure, VPC, or on-premises, wherever you can run containers |
 | **Latency optimization**| Automatically connect SDKs to the nearest available Unleash-managed region                  | Deploy Edge instances geographically close to your applications within your network        |
-
+| *Client-side context processing (may include PII)** | Processed on Unleash-managed Edge infrastructure, but does not reach the central Unleash server or database. | Processed entirely within your infrastructure. PII does not leave your network boundary. |
 ### Using Unleash without Edge
 Using Unleash Edge is optional. You can also access the Unleash API directly using the [Frontend or Client API](#key-apis). This setup comes with the following considerations:
 - **Fair Use Policy:** Sending requests to the Unleash API is subject to limits outlined in the [Fair Use Policy](https://www.getunleash.io/fair-use-policy). While short traffic spikes are accommodated, sustained high traffic might require using Unleash Edge.

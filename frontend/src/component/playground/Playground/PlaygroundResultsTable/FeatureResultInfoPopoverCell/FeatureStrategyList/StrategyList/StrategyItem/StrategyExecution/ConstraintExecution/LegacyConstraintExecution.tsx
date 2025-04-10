@@ -7,7 +7,7 @@ import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import { styled } from '@mui/material';
-import { ConstraintAccordionView } from 'component/common/ConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
+import { ConstraintAccordionView } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
 import { ConstraintError } from './ConstraintError/LegacyConstraintError';
 import { ConstraintOk } from './ConstraintOk/LegacyConstraintOk';
 

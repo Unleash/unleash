@@ -3,7 +3,7 @@ import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { FeatureStrategyConstraintAccordionList } from './FeatureStrategyConstraintAccordionList';
 import type { IConstraint } from 'interfaces/strategy';
-import { constraintId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
+import { constraintId } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 
 const server = testServerSetup();
 

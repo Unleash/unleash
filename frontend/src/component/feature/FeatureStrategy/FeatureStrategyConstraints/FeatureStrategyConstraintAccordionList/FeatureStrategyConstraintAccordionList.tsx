@@ -9,7 +9,7 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import {
     type IConstraintAccordionListRef,
     useConstraintAccordionList,
-} from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
+} from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
 import { NewConstraintAccordionList } from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/NewConstraintAccordionList';
 import { Limit } from 'component/common/Limit/Limit';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

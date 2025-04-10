@@ -8,7 +8,7 @@ import { type IUseWeakMap, useWeakMap } from 'hooks/useWeakMap';
 import {
     constraintId,
     createEmptyConstraint,
-} from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
+} from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import { NewConstraintAccordion } from 'component/common/NewConstraintAccordion/NewConstraintAccordion';

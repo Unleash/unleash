@@ -468,12 +468,7 @@ export const EditableConstraint: FC<Props> = ({
                                             }
                                         };
                                         nextFocus()?.focus();
-                                        setValues(
-                                            localConstraint.values?.filter(
-                                                (existingValue) =>
-                                                    existingValue !== value,
-                                            ) ?? [],
-                                        );
+                                        removeValue(index);
                                     }}
                                 />
                             </li>

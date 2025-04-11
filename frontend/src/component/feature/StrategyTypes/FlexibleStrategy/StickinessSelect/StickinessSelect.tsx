@@ -33,6 +33,14 @@ const StyledDescription = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.neutral.main,
     overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+}));
+
+const StyledDropdownDescription = styled('div')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.neutral.main,
+    overflow: 'hidden',
     whiteSpace: 'normal',
     wordBreak: 'break-word',
 }));
@@ -104,13 +112,16 @@ export const StickinessSelect = ({
                         key={option.key}
                         value={option.key}
                         data-testid={`${SELECT_ITEM_ID}-${option.label}`}
+                        sx={{
+                            padding: theme.spacing(1, 2),
+                        }}
                     >
                         <StyledOptionContainer>
                             <StyledLabel>{option.label}</StyledLabel>
                             {option.description && (
-                                <StyledDescription>
+                                <StyledDropdownDescription>
                                     {option.description}
-                                </StyledDescription>
+                                </StyledDropdownDescription>
                             )}
                         </StyledOptionContainer>
                     </MenuItem>

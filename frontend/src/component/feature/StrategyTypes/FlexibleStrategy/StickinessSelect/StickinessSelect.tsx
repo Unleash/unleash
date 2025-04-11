@@ -33,12 +33,13 @@ const StyledDescription = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.neutral.main,
     overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
+    whiteSpace: 'normal',
+    wordBreak: 'break-word',
 }));
 
 const StyledOptionContainer = styled('div')(({ theme }) => ({
     lineHeight: 1.2,
+    width: '100%',
 }));
 
 export const StickinessSelect = ({
@@ -82,6 +83,21 @@ export const StickinessSelect = ({
                 data-testid={dataTestId}
                 onChange={onChange}
                 renderValue={renderValue}
+                MenuProps={{
+                    anchorOrigin: {
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    },
+                    transformOrigin: {
+                        vertical: 'top',
+                        horizontal: 'left',
+                    },
+                    PaperProps: {
+                        style: {
+                            width: '18%',
+                        },
+                    },
+                }}
             >
                 {stickinessOptions.map((option) => (
                     <MenuItem

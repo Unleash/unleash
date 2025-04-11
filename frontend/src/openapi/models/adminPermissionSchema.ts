@@ -10,8 +10,11 @@
 export interface AdminPermissionSchema {
     /** The name to display in listings of permissions */
     displayName: string;
-    /** Which environment this permission applies to */
-    environment?: string;
+    /**
+     * Which environment this permission applies to
+     * @nullable
+     */
+    environment?: string | null;
     /** The identifier for this permission */
     id: number;
     /** The name of this permission */

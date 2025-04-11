@@ -41,4 +41,22 @@ test('Modifies filenames and content properly', () => {
     expect(firstSubpage.content).toContain(
         'custom_edit_url: https://github.com/Unleash/unleash-edge/edit/main/docs/benchmarking.md',
     );
+
+    expect(thirdSubpage.content).toContain('title: CLI');
+    expect(firstSubpage.content).toContain('slug: /reference/unleash-edge/cli');
+    expect(firstSubpage.content).toContain(
+        'custom_edit_url: https://github.com/Unleash/unleash-edge/edit/main/docs/CLI.md',
+    );
+
+    expect(thirdSubpage.content).toContain('title: Development guide');
+    expect(firstSubpage.content).toContain('slug: /reference/unleash-edge/development-guide');
+    expect(firstSubpage.content).toContain(
+        'custom_edit_url: https://github.com/Unleash/unleash-edge/edit/main/docs/development-guide.md',
+    );
+
+    expect(thirdSubpage.content).toContain('title: Migration guide');
+    expect(firstSubpage.content).toContain('slug: /reference/unleash-edge/migration-guide');
+    expect(firstSubpage.content).toContain(
+        'custom_edit_url: https://github.com/Unleash/unleash-edge/edit/main/docs/migration-guide.md',
+    );
 });

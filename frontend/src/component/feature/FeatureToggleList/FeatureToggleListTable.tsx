@@ -197,7 +197,7 @@ export const FeatureToggleListTable: FC = () => {
                               <StatusCell {...original} />
                           ),
                           enableSorting: false,
-                          size: 50,
+                          size: 80,
                       }),
                       columnHelper.accessor('project', {
                           header: 'Project',

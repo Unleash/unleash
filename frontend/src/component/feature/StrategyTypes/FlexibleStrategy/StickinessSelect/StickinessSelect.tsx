@@ -73,7 +73,7 @@ export const StickinessSelect = ({
             }}
         >
             <InputLabel htmlFor='stickiness-select'>{label}</InputLabel>
-            <Select<string>
+            <Select
                 id='stickiness-select'
                 name='stickiness'
                 label={label}

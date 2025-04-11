@@ -113,7 +113,7 @@ export const ConstraintOperatorSelect = ({
                 {options.map((operator) => (
                     <StyledMenuItem
                         key={operator}
-                        value={operator}
+                        value={qgioperator}
                         separator={needSeparatorAbove(options, operator)}
                     >
                         <StyledOptionContainer>

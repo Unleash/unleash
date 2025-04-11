@@ -3,8 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { ConnectionConsumptionSchema } from './connectionConsumptionSchema';
 import type { EdgeUpstreamLatencySchema } from './edgeUpstreamLatencySchema';
 import type { EdgeProcessMetricsSchema } from './edgeProcessMetricsSchema';
+import type { RequestConsumptionSchema } from './requestConsumptionSchema';
 import type { EdgeRequestStatsSchema } from './edgeRequestStatsSchema';
 import type { EdgeInstanceTrafficSchema } from './edgeInstanceTrafficSchema';
 
@@ -21,6 +23,8 @@ export interface EdgeInstanceDataSchema {
      * @minimum 0
      */
     connectedStreamingClients: number;
+    /** Connection consumption data since last report, including features and metrics consumption. Used for long-lived backend SDKs with backend controlled number of instances. */
+    connectionConsumptionSinceLastReport?: ConnectionConsumptionSchema;
     /** Which version (semver) of Edge is the Edge instance running. */
     edgeVersion: string;
     /** The ID of the Edge process, typically a ULID. Newly generated for each restart of the instance. */
@@ -33,6 +37,8 @@ export interface EdgeInstanceDataSchema {
      * @nullable
      */
     region?: string | null;
+    /** Request consumption data since last report, grouped by metered group. User for frontend SDKs with unpredictable and potentially large number of user devices running those SDKs. */
+    requestConsumptionSinceLastReport?: RequestConsumptionSchema;
     /** Requests made to edge's endpoints since last report. Meant to be used for billing purposes. */
     requestsSinceLastReport?: EdgeRequestStatsSchema;
     /** RFC3339 timestamp for when the Edge instance was started. */

@@ -55,6 +55,10 @@ import type { IUserUnsubscribeStore } from '../features/user-subscriptions/user-
 import type { IUserSubscriptionsReadModel } from '../features/user-subscriptions/user-subscriptions-read-model-type';
 import { IUniqueConnectionStore } from '../features/unique-connection/unique-connection-store-type';
 import { IUniqueConnectionReadModel } from '../features/unique-connection/unique-connection-read-model-type';
+import { ReleasePlanStore } from '../features/release-plans/release-plan-store';
+import { ReleasePlanTemplateStore } from '../features/release-plans/release-plan-template-store';
+import { ReleasePlanMilestoneStore } from '../features/release-plans/release-plan-milestone-store';
+import { ReleasePlanMilestoneStrategyStore } from '../features/release-plans/release-plan-milestone-strategy-store';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -114,6 +118,10 @@ export interface IUnleashStores {
     userSubscriptionsReadModel: IUserSubscriptionsReadModel;
     uniqueConnectionStore: IUniqueConnectionStore;
     uniqueConnectionReadModel: IUniqueConnectionReadModel;
+    releasePlanStore: ReleasePlanStore;
+    releasePlanTemplateStore: ReleasePlanTemplateStore;
+    releasePlanMilestoneStore: ReleasePlanMilestoneStore;
+    releasePlanMilestoneStrategyStore: ReleasePlanMilestoneStrategyStore;
 }
 
 export {
@@ -171,4 +179,8 @@ export {
     type IUserSubscriptionsReadModel,
     IUniqueConnectionStore,
     IUniqueConnectionReadModel,
+    ReleasePlanStore,
+    ReleasePlanTemplateStore,
+    ReleasePlanMilestoneStore,
+    ReleasePlanMilestoneStrategyStore,
 };

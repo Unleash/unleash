@@ -1,4 +1,11 @@
-import type { IUnleashConfig, IUnleashStores } from '../types';
+import {
+    type IUnleashConfig,
+    type IUnleashStores,
+    ReleasePlanMilestoneStore,
+    ReleasePlanMilestoneStrategyStore,
+    ReleasePlanStore,
+    ReleasePlanTemplateStore,
+} from '../types';
 
 import EventStore from '../features/events/event-store';
 import FeatureToggleStore from '../features/feature-toggle/feature-toggle-store';
@@ -191,6 +198,11 @@ export const createStores = (
         uniqueConnectionReadModel: new UniqueConnectionReadModel(
             new UniqueConnectionStore(db),
         ),
+        releasePlanStore: new ReleasePlanStore(db, config),
+        releasePlanTemplateStore: new ReleasePlanTemplateStore(db, config),
+        releasePlanMilestoneStore: new ReleasePlanMilestoneStore(db, config),
+        releasePlanMilestoneStrategyStore:
+            new ReleasePlanMilestoneStrategyStore(db, config),
     };
 };
 

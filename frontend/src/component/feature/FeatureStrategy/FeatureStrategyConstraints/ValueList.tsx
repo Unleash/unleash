@@ -1,7 +1,20 @@
 import Add from '@mui/icons-material/Add';
 import Clear from '@mui/icons-material/Clear';
-import { Chip, type ChipProps, styled } from '@mui/material';
-import { type FC, forwardRef, useRef } from 'react';
+import {
+    Box,
+    Button,
+    Chip,
+    type ChipProps,
+    Popover,
+    styled,
+} from '@mui/material';
+import {
+    type FC,
+    forwardRef,
+    useImperativeHandle,
+    useRef,
+    useState,
+} from 'react';
 
 const ValueListWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -44,17 +57,81 @@ const ValueChip = styled(ValueChipBase)(({ theme }) => ({
     },
 }));
 
-const AddValuesButton = styled(ValueChipBase)(({ theme }) => ({
+const AddValuesButton = styled('button')(({ theme }) => ({
     color: theme.palette.primary.main,
     svg: {
         fill: theme.palette.primary.main,
         height: theme.fontSizes.smallerBody,
         width: theme.fontSizes.smallerBody,
     },
-    ':hover': {
+    border: 'none',
+    borderRadius: theme.shape.borderRadiusExtraLarge,
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    whiteSpace: 'nowrap',
+    gap: theme.spacing(0.25),
+    alignItems: 'center',
+    paddingInline: theme.spacing(1.5),
+    height: theme.spacing(3),
+    transition: 'all 0.3s ease',
+    outline: `1px solid #0000`,
+    background: theme.palette.background.elevation1,
+    ':hover, :focus-visible': {
+        background: theme.palette.background.elevation1,
         outlineColor: theme.palette.secondary.dark,
     },
 }));
+
+const StyledPopover = styled(Popover)(({ theme }) => ({
+    '& .MuiPaper-root': {
+        borderRadius: theme.shape.borderRadiusLarge,
+        border: `1px solid ${theme.palette.divider}`,
+        padding: theme.spacing(1),
+    },
+}));
+
+const AddValues = forwardRef<HTMLButtonElement, {}>((props, ref) => {
+    const [open, setOpen] = useState(false);
+    const positioningRef = useRef<HTMLButtonElement>(null);
+    useImperativeHandle(ref, () => positioningRef.current as HTMLButtonElement);
+
+    return (
+        <Box>
+            <AddValuesButton
+                ref={positioningRef}
+                onClick={() => setOpen(true)}
+                type='button'
+            >
+                <Add />
+                <span>Add values</span>
+            </AddValuesButton>
+            <StyledPopover
+                open={open}
+                disableScrollLock
+                anchorEl={positioningRef.current}
+                onClose={() => setOpen(false)}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                }}
+            >
+                <form action='' onSubmit={(e) => e.preventDefault()}>
+                    <input type='text' />
+                    <Button
+                        variant='text'
+                        onClick={() => console.log('clicked the add button')}
+                    >
+                        Add
+                    </Button>
+                </form>
+            </StyledPopover>
+        </Box>
+    );
+});
 
 type Props = {
     values: string[] | undefined;
@@ -65,7 +142,7 @@ export const ValueList: FC<Props> = ({ values = [], removeValue }) => {
     const constraintElementRefs: React.MutableRefObject<
         (HTMLDivElement | null)[]
     > = useRef([]);
-    const addValuesButtonRef = useRef(null);
+    const addValuesButtonRef = useRef<HTMLButtonElement>(null);
 
     const nextFocusTarget = (deletedIndex: number) => {
         if (deletedIndex === values.length - 1) {
@@ -98,12 +175,7 @@ export const ValueList: FC<Props> = ({ values = [], removeValue }) => {
                     </li>
                 ))}
             </StyledList>
-            <AddValuesButton
-                ref={addValuesButtonRef}
-                label={'Add values'}
-                onClick={() => console.log('adding values')}
-                icon={<Add />}
-            />
+            <AddValues ref={addValuesButtonRef} />
         </ValueListWrapper>
     );
 };

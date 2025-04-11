@@ -29,7 +29,7 @@ const StyledLabel = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
 
-const StyledDescription = styled('div')(({ theme }) => ({
+const StyledDescription = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.neutral.main,
     overflow: 'hidden',
@@ -37,7 +37,7 @@ const StyledDescription = styled('div')(({ theme }) => ({
     textOverflow: 'ellipsis',
 }));
 
-const StyledDropdownDescription = styled('div')(({ theme }) => ({
+const StyledDropdownDescription = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.neutral.main,
     overflow: 'hidden',

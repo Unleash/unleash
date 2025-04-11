@@ -1426,32 +1426,50 @@ test('should return change request ids per environment', async () => {
     });
 });
 
-const createReleasePlan = async ({
-    feature,
-    environment,
-    planId,
-}: { feature: string; environment: string; planId: string }) => {
-    await db.rawDatabase('release_plan_definitions').insert({
-        id: planId,
-        discriminator: 'plan',
+const createReleasePlan = async (
+    {
+        feature,
+        environment,
+        planId,
+    }: { feature: string; environment: string; planId: string },
+    milestones: {
+        name: string;
+        order: number;
+    }[],
+) => {
+    const result = await db.stores.releasePlanTemplateStore.insert({
         name: 'plan',
-        feature_name: feature,
-        environment: environment,
-        created_by_user_id: 1,
+        createdByUserId: 1,
+        discriminator: 'template',
     });
+    const releasePlan = await db.stores.releasePlanStore.insert({
+        id: planId,
+        name: 'plan',
+        featureName: feature,
+        environment: environment,
+        createdByUserId: 1,
+        releasePlanTemplateId: result.id,
+    });
+    const milestoneResults = await Promise.all(
+        milestones.map((milestone) =>
+            createMilestone({
+                ...milestone,
+                planId: releasePlan.id,
+            }),
+        ),
+    );
+    return { releasePlan, milestones: milestoneResults };
 };
 
 const createMilestone = async ({
-    id,
     name,
     order,
     planId,
-}: { id: string; name: string; order: number; planId: string }) => {
-    await db.rawDatabase('milestones').insert({
-        id,
+}: { name: string; order: number; planId: string }) => {
+    return db.stores.releasePlanMilestoneStore.insert({
         name,
-        sort_order: order,
-        release_plan_definition_id: planId,
+        sortOrder: order,
+        releasePlanDefinitionId: planId,
     });
 };
 
@@ -1459,39 +1477,39 @@ const activateMilestone = async ({
     planId,
     milestoneId,
 }: { planId: string; milestoneId: string }) => {
-    await db
-        .rawDatabase('release_plan_definitions')
-        .update({ active_milestone_id: milestoneId })
-        .where('id', planId);
+    await db.stores.releasePlanStore.update(planId, {
+        activeMilestoneId: milestoneId,
+    });
 };
 
 test('should return release plan milestones', async () => {
     await app.createFeature('my_feature_a');
 
-    await createReleasePlan({
-        feature: 'my_feature_a',
-        environment: 'development',
-        planId: 'plan0',
+    const { releasePlan, milestones } = await createReleasePlan(
+        {
+            feature: 'my_feature_a',
+            environment: 'development',
+            planId: 'plan0',
+        },
+        [
+            {
+                name: 'Milestone 1',
+                order: 0,
+            },
+            {
+                name: 'Milestone 2',
+                order: 1,
+            },
+            {
+                name: 'Milestone 3',
+                order: 2,
+            },
+        ],
+    );
+    await activateMilestone({
+        planId: releasePlan.id,
+        milestoneId: milestones[1].id,
     });
-    await createMilestone({
-        id: 'milestone0',
-        name: 'Milestone 1',
-        order: 0,
-        planId: 'plan0',
-    });
-    await createMilestone({
-        id: 'milestone1',
-        name: 'Milestone 2',
-        order: 1,
-        planId: 'plan0',
-    });
-    await createMilestone({
-        id: 'milestone3',
-        name: 'Milestone 3',
-        order: 2,
-        planId: 'plan0',
-    });
-    await activateMilestone({ planId: 'plan0', milestoneId: 'milestone1' });
 
     const { body } = await searchFeatures({});
 

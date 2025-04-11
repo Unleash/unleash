@@ -1,13 +1,6 @@
 import Add from '@mui/icons-material/Add';
 import Clear from '@mui/icons-material/Clear';
-import {
-    Box,
-    Button,
-    Chip,
-    type ChipProps,
-    Popover,
-    styled,
-} from '@mui/material';
+import { Button, Chip, type ChipProps, Popover, styled } from '@mui/material';
 import {
     type FC,
     forwardRef,
@@ -96,7 +89,7 @@ const AddValues = forwardRef<HTMLButtonElement, {}>((props, ref) => {
     useImperativeHandle(ref, () => positioningRef.current as HTMLButtonElement);
 
     return (
-        <Box>
+        <>
             <AddValuesButton
                 ref={positioningRef}
                 onClick={() => setOpen(true)}
@@ -129,7 +122,7 @@ const AddValues = forwardRef<HTMLButtonElement, {}>((props, ref) => {
                     </Button>
                 </form>
             </StyledPopover>
-        </Box>
+        </>
     );
 });
 

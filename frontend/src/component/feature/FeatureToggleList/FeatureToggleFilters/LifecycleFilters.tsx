@@ -27,6 +27,7 @@ const StyledChip = styled(Chip, {
 interface ILifecycleFiltersProps {
     state: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
+    total?: number;
 }
 
 const Wrapper = styled(Box)(({ theme }) => ({
@@ -49,6 +50,7 @@ const lifecycleOptions: {
 export const LifecycleFilters: FC<ILifecycleFiltersProps> = ({
     state,
     onChange,
+    total,
 }) => {
     const current = state.lifecycle?.values ?? [];
 
@@ -57,6 +59,10 @@ export const LifecycleFilters: FC<ILifecycleFiltersProps> = ({
             {lifecycleOptions.map(({ label, value }) => {
                 const isActive =
                     value === null ? !state.lifecycle : current.includes(value);
+                const dynamicLabel =
+                    isActive && Number.isInteger(total)
+                        ? `${label} (${total})`
+                        : label;
 
                 const handleClick = () =>
                     onChange(
@@ -73,7 +79,7 @@ export const LifecycleFilters: FC<ILifecycleFiltersProps> = ({
                 return (
                     <StyledChip
                         key={label}
-                        label={label}
+                        label={dynamicLabel}
                         variant='outlined'
                         isActive={isActive}
                         onClick={handleClick}

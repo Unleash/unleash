@@ -466,6 +466,7 @@ export const FeatureToggleListTable: FC = () => {
                 <LifecycleFilters
                     state={filterState}
                     onChange={setTableState}
+                    total={loading ? undefined : total}
                 />
             ) : null}
             <FeatureToggleFilters

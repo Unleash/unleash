@@ -8,6 +8,7 @@ import type { UiConfigSchemaBilling } from './uiConfigSchemaBilling';
 import type { UiConfigSchemaFlags } from './uiConfigSchemaFlags';
 import type { UiConfigSchemaLinksItem } from './uiConfigSchemaLinksItem';
 import type { ResourceLimitsSchema } from './resourceLimitsSchema';
+import type { UiConfigSchemaUnleashContext } from './uiConfigSchemaUnleashContext';
 import type { VersionSchema } from './versionSchema';
 
 /**
@@ -60,6 +61,8 @@ export interface UiConfigSchema {
      * @deprecated
      */
     strategySegmentsLimit?: number;
+    /** The context object used to configure the Unleash instance. */
+    unleashContext?: UiConfigSchemaUnleashContext;
     /** The URL of the Unleash instance. */
     unleashUrl: string;
     /** The current version of Unleash */

@@ -1425,3 +1425,111 @@ test('should return change request ids per environment', async () => {
         ],
     });
 });
+
+const createReleasePlan = async (
+    {
+        feature,
+        environment,
+        planId,
+    }: { feature: string; environment: string; planId: string },
+    milestones: {
+        name: string;
+        order: number;
+    }[],
+) => {
+    const result = await db.stores.releasePlanTemplateStore.insert({
+        name: 'plan',
+        createdByUserId: 1,
+        discriminator: 'template',
+    });
+    const releasePlan = await db.stores.releasePlanStore.insert({
+        id: planId,
+        name: 'plan',
+        featureName: feature,
+        environment: environment,
+        createdByUserId: 1,
+        releasePlanTemplateId: result.id,
+    });
+    const milestoneResults = await Promise.all(
+        milestones.map((milestone) =>
+            createMilestone({
+                ...milestone,
+                planId: releasePlan.id,
+            }),
+        ),
+    );
+    return { releasePlan, milestones: milestoneResults };
+};
+
+const createMilestone = async ({
+    name,
+    order,
+    planId,
+}: { name: string; order: number; planId: string }) => {
+    return db.stores.releasePlanMilestoneStore.insert({
+        name,
+        sortOrder: order,
+        releasePlanDefinitionId: planId,
+    });
+};
+
+const activateMilestone = async ({
+    planId,
+    milestoneId,
+}: { planId: string; milestoneId: string }) => {
+    await db.stores.releasePlanStore.update(planId, {
+        activeMilestoneId: milestoneId,
+    });
+};
+
+test('should return release plan milestones', async () => {
+    await app.createFeature('my_feature_a');
+
+    const { releasePlan, milestones } = await createReleasePlan(
+        {
+            feature: 'my_feature_a',
+            environment: 'development',
+            planId: 'plan0',
+        },
+        [
+            {
+                name: 'Milestone 1',
+                order: 0,
+            },
+            {
+                name: 'Milestone 2',
+                order: 1,
+            },
+            {
+                name: 'Milestone 3',
+                order: 2,
+            },
+        ],
+    );
+    await activateMilestone({
+        planId: releasePlan.id,
+        milestoneId: milestones[1].id,
+    });
+
+    const { body } = await searchFeatures({});
+
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'my_feature_a',
+                environments: [
+                    { name: 'default' },
+                    {
+                        name: 'development',
+                        totalMilestones: 3,
+                        milestoneName: 'Milestone 2',
+                        milestoneOrder: 1,
+                    },
+                    { name: 'production' },
+                ],
+            },
+        ],
+    });
+    expect(body.features[0].environments[0].milestoneName).toBeUndefined();
+    expect(body.features[0].environments[2].milestoneName).toBeUndefined();
+});

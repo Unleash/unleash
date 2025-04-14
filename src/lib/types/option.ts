@@ -4,6 +4,7 @@ import type { LogLevel, LogProvider } from '../logger';
 import type { ILegacyApiTokenCreate } from './models/api-token';
 import type {
     IExperimentalOptions,
+    IFlagContext,
     IFlagResolver,
     IFlags,
 } from './experimental';
@@ -165,6 +166,7 @@ export interface IUnleashOptions {
         >
     >;
     userInactivityThresholdInDays?: number;
+    unleashFrontendToken?: string;
 }
 
 export interface IEmailOption {
@@ -198,6 +200,8 @@ export interface IUIConfig {
         title: string;
     }[];
     flags?: IFlags;
+    unleashToken?: string;
+    unleashContext?: IFlagContext;
 }
 
 export interface ICspDomainOptions {
@@ -287,4 +291,5 @@ export interface IUnleashConfig {
     openAIAPIKey?: string;
     userInactivityThresholdInDays: number;
     buildDate?: string;
+    unleashFrontendToken?: string;
 }

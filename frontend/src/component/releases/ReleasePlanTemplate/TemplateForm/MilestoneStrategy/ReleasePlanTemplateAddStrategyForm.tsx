@@ -109,11 +109,6 @@ const StyledBox = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(3.5),
 }));
 
-const StyledTargetingHeader = styled('div')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    marginTop: theme.spacing(1.5),
-}));
-
 const StyledDivider = styled(Divider)(({ theme }) => ({
     width: '100%',
 }));
@@ -315,24 +310,24 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                 )}
                 {activeTab === 1 && (
                     <>
-                        <StyledTargetingHeader>
+                        <Alert severity='info' sx={{ mb: 2 }} icon={false}>
                             Segmentation and constraints allow you to set
                             filters on your strategies, so that they will only
                             be evaluated for users and applications that match
                             the specified preconditions.
-                            <MilestoneStrategySegment
-                                segments={segments}
-                                setSegments={setSegments}
-                            />
-                            <StyledBox>
-                                <StyledDivider />
-                                <StyledConstraintSeparator />
-                            </StyledBox>
-                            <MilestoneStrategyConstraints
-                                strategy={currentStrategy}
-                                setStrategy={setCurrentStrategy}
-                            />
-                        </StyledTargetingHeader>
+                        </Alert>
+                        <MilestoneStrategySegment
+                            segments={segments}
+                            setSegments={setSegments}
+                        />
+                        <StyledBox>
+                            <StyledDivider />
+                            <StyledConstraintSeparator />
+                        </StyledBox>
+                        <MilestoneStrategyConstraints
+                            strategy={currentStrategy}
+                            setStrategy={setCurrentStrategy}
+                        />
                     </>
                 )}
                 {activeTab === 2 && showVariants && (

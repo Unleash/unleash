@@ -49,27 +49,6 @@ This fully-managed solution is designed for high availability, featuring the fol
 - Europe (London): `eu-west-2`
 - Europe (Paris): `eu-west-3`
 
-### Unleash Enterprise Edge vs self-hosted Edge
-
-| Feature                 | Unleash Enterprise Edge                                                       | Self-hosted Unleash Edge                                                                                    |
-| :---------------------- | :------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------- |
-| **Infrastructure**| Managed entirely by Unleash                                                                  | Managed entirely by you                                                                                     |
-| **Operational effort** | Minimal setup and no ongoing maintenance required from you                           | Requires setup, deployment, scaling, monitoring, and maintenance effort from you                 |
-| **Infrastructure cost** | Included in Unleash Enterprise Edge fee                                                   | Pay for the compute, network, storage, and operational overhead on your infrastructure                 |
-| **Control and flexibility**| Lower direct control over the underlying infrastructure                 | Full control over deployment environment, location, network configuration, and resource allocation |
-| **Setup and configuration**| Point your SDKs to the provided Unleash Edge URL                                      | Pull Docker image, configure upstream URL and API tokens via environment variables, deploy and manage the containers |
-| **Scalability** | Handled automatically by Unleash                                                            | Monitor load and scale Edge instances manually or via automation      |
-| **High availability** | Managed by Unleash with multi-AZ and multi-region redundancy and failover       | Requires you to design and implement high availability (e.g., multiple instances, load balancers, potentially across AZs) |
-| **Security and updates** | Handled automatically by Unleash                                                            | You manage host and container security, network rules, and apply Edge updates    |
-| **Observability** | Provided by Unleash (monitoring, logging)                                                   | You need to set up and manage your own monitoring and logging solutions for Edge  |
-| **Deployment location** | Available in [11 global regions](#cloud-hosted-unleash-edge) | Deploy within your own infrastructure, VPC, or on-premises, wherever you can run containers |
-| **Latency optimization**| Automatically connect SDKs to the nearest available Unleash-managed region                  | Deploy Edge instances geographically close to your applications within your network        |
-| *Client-side context processing (may include PII)** | Processed on Unleash-managed Edge infrastructure, but does not reach the central Unleash server or database. | Processed entirely within your infrastructure. PII does not leave your network boundary. |
-### Using Unleash without Edge
-Using Unleash Edge is optional. You can also access the Unleash API directly using the [Frontend or Client API](#key-apis). This setup comes with the following considerations:
-- **Fair Use Policy:** Sending requests to the Unleash API is subject to limits outlined in the [Fair Use Policy](https://www.getunleash.io/fair-use-policy). While short traffic spikes are accommodated, sustained high traffic might require using Unleash Edge.
-- **Latency:** Although the Unleash architecture is designed for incredibly fast flag evaluations thanks to caching in the SDKs, the central Unleash API server might not be geographically close to all your end users, potentially increasing flag evaluation latency.
-- **Data privacy:** When using the Frontend API to talk to Unleash, any end-user data included in the [Unleash Context](../reference/unleash-context.md) is sent directly to the Unleash server. Evaluate if this meets your privacy requirements. Using Edge avoids sending this context data directly to the central Unleash API server.
 
 ## Hybrid
 
@@ -122,6 +101,32 @@ You can deploy self-hosted Edge instances in multiple geographic regions, even i
 
 Each Edge instance connects back to your central Unleash API server but serves SDKs in its local region. This reduces latency for your applications by keeping flag evaluation geographically close.
 
+## Unleash Edge options
+
+### Unleash Enterprise Edge vs self-hosted Edge
+
+The following table compares the key differences between using the cloud-hosted Unleash Enterprise Edge and self-hosting Unleash Edge.
+
+| Feature                 | Unleash Enterprise Edge                                                       | Self-hosted Unleash Edge                                                                                    |
+| :---------------------- | :------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------- |
+| **Infrastructure**| Managed entirely by Unleash                                                                  | Managed entirely by you                                                                                     |
+| **Operational effort** | Minimal setup and no ongoing maintenance required from you                           | Requires setup, deployment, scaling, monitoring, and maintenance effort from you                 |
+| **Infrastructure cost** | Included in Unleash Enterprise Edge fee                                                   | Pay for the compute, network, storage, and operational overhead on your infrastructure                 |
+| **Setup and configuration**| Point your SDKs to the provided Unleash Edge URL                                      | Pull Docker image, configure upstream URL and API tokens via environment variables, deploy and manage the containers |
+| **Scalability** | Handled automatically by Unleash                                                            | Monitor load and scale Edge instances manually or via automation      |
+| **High availability** | Managed by Unleash with multi-AZ and multi-region redundancy and failover       | Requires you to design and implement high availability (e.g., multiple instances, load balancers, potentially across AZs) |
+| **Security and updates** | Handled automatically by Unleash                                                            | You manage host and container security, network rules, and apply Edge updates    |
+| **Observability** | Provided by Unleash (monitoring, logging)                                                   | You need to set up and manage your own monitoring and logging solutions for Edge  |
+| **Deployment location** | Available in [11 global regions](#cloud-hosted-unleash-edge) | Deploy within your own infrastructure, VPC, or on-premises, wherever you can run containers |
+| **Latency optimization**| Automatically connect SDKs to the nearest available Unleash-managed region                  | Deploy Edge instances geographically close to your applications within your network        |
+| *Client-side context processing (may include PII)** | Processed on Unleash-managed Edge infrastructure, but does not reach the central Unleash server or database. | Processed entirely within your infrastructure. PII does not leave your network boundary. |
+
+### Using Unleash without Edge
+
+Using Unleash Edge is optional. You can also access the Unleash API directly using the [Frontend or Client API](#key-apis). This setup comes with the following considerations:
+- **Fair Use Policy:** Sending requests to the Unleash API is subject to limits outlined in the [Fair Use Policy](https://www.getunleash.io/fair-use-policy). While short traffic spikes are accommodated, sustained high traffic might require using Unleash Edge.
+- **Latency:** Although the Unleash architecture is designed for incredibly fast flag evaluations thanks to caching in the SDKs, the central Unleash API server might not be geographically close to all your end users, potentially increasing flag evaluation latency.
+- **Data privacy:** When using the Frontend API to talk to Unleash, any end-user data included in the [Unleash Context](../reference/unleash-context.md) is sent directly to the Unleash server. Evaluate if this meets your privacy requirements. Using Edge avoids sending this context data directly to the central Unleash API server.
 
 ## Self-hosted Unleash Proxy
 

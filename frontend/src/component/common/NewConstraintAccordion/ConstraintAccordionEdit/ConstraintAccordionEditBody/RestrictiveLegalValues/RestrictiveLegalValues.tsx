@@ -51,8 +51,8 @@ export const getIllegalValues = (
 };
 
 const StyledValuesContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexWrap: 'wrap',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, 120px)',
     gap: theme.spacing(1),
     padding: theme.spacing(2),
     border: `1px solid ${theme.palette.divider}`,

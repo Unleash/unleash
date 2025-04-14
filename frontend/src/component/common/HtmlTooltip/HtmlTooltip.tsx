@@ -74,13 +74,5 @@ export interface IHtmlTooltipProps extends TooltipProps {
 
 export const HtmlTooltip = (props: IHtmlTooltipProps) => {
     if (!props.title) return props.children;
-    return (
-        <StyledHtmlTooltip
-            {...props}
-            // disableFocusListener={props.disableFocusListener !== false}
-            disableFocusListener={false}
-        >
-            {props.children}
-        </StyledHtmlTooltip>
-    );
+    return <StyledHtmlTooltip {...props}>{props.children}</StyledHtmlTooltip>;
 };

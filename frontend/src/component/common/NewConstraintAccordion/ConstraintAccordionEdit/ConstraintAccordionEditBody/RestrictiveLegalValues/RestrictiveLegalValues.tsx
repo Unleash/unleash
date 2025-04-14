@@ -178,7 +178,9 @@ export const RestrictiveLegalValues = ({
                                 Boolean(values)
                             }
                             show={
-                                <StyledValuesContainer sx={{ border: 0 }}>
+                                <StyledValuesContainer
+                                    sx={{ border: 0, paddingTop: 0 }}
+                                >
                                     {values.map((value) => {
                                         return (
                                             <Chip
@@ -191,13 +193,10 @@ export const RestrictiveLegalValues = ({
                                 </StyledValuesContainer>
                             }
                         />
-                        <ConstraintValueSearch
-                            filter={filter}
-                            setFilter={setFilter}
-                        />
                     </>
                 }
             />
+            <ConstraintValueSearch filter={filter} setFilter={setFilter} />
             <StyledValuesContainer>
                 {filteredValues.map((match) => (
                     <LegalValueLabel

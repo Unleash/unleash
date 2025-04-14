@@ -148,4 +148,44 @@ describe('getStatus', () => {
             ).toBe('No strategies');
         });
     });
+
+    describe('release plan - milestones', () => {
+        it('should show the release plan', () => {
+            expect(
+                getStatus({
+                    environments: [
+                        {
+                            ...prodEnvEnabled,
+                            totalMilestones: 2,
+                            milestoneOrder: 0,
+                            milestoneName: 'First step',
+                        },
+                    ],
+                    lifecycle: {
+                        stage: 'live',
+                        enteredStageAt: null as any,
+                    },
+                }),
+            ).toBe('Milestone: First step (1 of 2)');
+        });
+
+        it('should not show the milestone if a flag is disabled', () => {
+            expect(
+                getStatus({
+                    environments: [
+                        {
+                            ...prodEnvDisabled,
+                            totalMilestones: 2,
+                            milestoneOrder: 0,
+                            milestoneName: 'First step',
+                        },
+                    ],
+                    lifecycle: {
+                        stage: 'live',
+                        enteredStageAt: null as any,
+                    },
+                }),
+            ).not.toBe('Release plan');
+        });
+    });
 });

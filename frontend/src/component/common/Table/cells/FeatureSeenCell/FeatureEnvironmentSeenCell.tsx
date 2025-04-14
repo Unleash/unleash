@@ -54,7 +54,13 @@ export const FeatureLifecycleCell: VFC<IFeatureLifecycleProps> = ({
         : [];
 
     return (
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Box
+            sx={(theme) => ({
+                display: 'flex',
+                justifyContent: 'center',
+                padding: theme.spacing(0, expanded ? 1 : 0),
+            })}
+        >
             <FeatureLifecycle
                 onArchive={onArchive}
                 onComplete={onComplete}

@@ -69,12 +69,17 @@ export interface IHtmlTooltipProps extends TooltipProps {
     maxHeight?: SpacingArgument;
     fontSize?: string;
     tabIndex?: number;
+    disableFocusListener?: boolean;
 }
 
 export const HtmlTooltip = (props: IHtmlTooltipProps) => {
     if (!props.title) return props.children;
     return (
-        <StyledHtmlTooltip {...props} disableFocusListener>
+        <StyledHtmlTooltip
+            {...props}
+            // disableFocusListener={props.disableFocusListener !== false}
+            disableFocusListener={false}
+        >
             {props.children}
         </StyledHtmlTooltip>
     );

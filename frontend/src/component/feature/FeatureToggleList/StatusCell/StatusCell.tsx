@@ -5,18 +5,20 @@ import { getStatus } from './getStatus';
 import DifferenceIcon from '@mui/icons-material/Difference';
 import { Link } from 'react-router-dom';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
+import { Truncator } from 'component/common/Truncator/Truncator';
 
 const Container = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 2),
     display: 'flex',
     alignItems: 'center',
-    gap: theme.spacing(1),
+    gap: theme.spacing(0.5),
+    minWidth: '180px',
 }));
 
 const ChangeRequestIcon = styled(DifferenceIcon)(({ theme }) => ({
     color: theme.palette.primary.main,
-    fontSize: theme.spacing(2.5),
-    marginLeft: theme.spacing(0.5),
+    fontSize: theme.spacing(3.5),
+    padding: theme.spacing(0.5),
 }));
 
 const ChangeRequestTooltip = styled('div')(({ theme }) => ({
@@ -33,11 +35,9 @@ const ChangeRequestTooltip = styled('div')(({ theme }) => ({
     },
 }));
 
-export const StatusCell: FC<FeatureSearchResponseSchema> = ({
-    lifecycle,
-    environments,
-    project,
-}) => {
+export const StatusCell: FC<
+    Pick<FeatureSearchResponseSchema, 'lifecycle' | 'environments' | 'project'>
+> = ({ lifecycle, environments, project }) => {
     const status = useMemo(
         () => getStatus({ lifecycle, environments }),
         [lifecycle, environments],
@@ -49,7 +49,9 @@ export const StatusCell: FC<FeatureSearchResponseSchema> = ({
 
     return (
         <Container>
-            <div>{status}</div>
+            <Truncator title={status} lines={2}>
+                {status}
+            </Truncator>
             {changeRequestIds.length > 0 && (
                 <HtmlTooltip
                     arrow
@@ -72,7 +74,10 @@ export const StatusCell: FC<FeatureSearchResponseSchema> = ({
                         </ChangeRequestTooltip>
                     }
                 >
-                    <ChangeRequestIcon />
+                    <ChangeRequestIcon
+                        data-testid='change-requests-icon'
+                        tabIndex={0}
+                    />
                 </HtmlTooltip>
             )}
         </Container>

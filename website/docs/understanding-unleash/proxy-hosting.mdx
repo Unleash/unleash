@@ -17,7 +17,7 @@ The availability of hosting options may depend on your plan. See the [Unleash Pr
 
 In this setup, Unleash manages the infrastructure for both the Unleash API server and Unleash Edge.
 
-![An architecture diagram of Enterprise Edge](/img/unleash-hosts-everything.png)
+![An architecture diagram of Enterprise Edge](/img/hosting-cloud-hosted.png)
 
 ### Cloud-hosted Unleash 
 This fully-managed solution is designed for high availability, featuring the following key aspects:
@@ -34,7 +34,7 @@ This fully-managed solution is designed for high availability, featuring the fol
 - **Multi-AZ deployments:** Edge instances run across at least two AZs within each region.
 - **Multi-region deployment:** Edge is available in multiple global regions. SDKs automatically connect to the nearest available region. Traffic fails over to other regions if one region becomes unavailable.
 - **Resilience:** Edge caches flag configurations locally. SDKs connected to Edge can continue evaluating flags even if the connection to the primary Unleash API server is temporarily lost.
-- **Scalability:** Edge acts as a read-only cache, handling numerous SDK connections while consolidating requests back to the main Unleash API server. It collects metrics from SDKs and syncs them periodically.
+- **Scalability and performance:** Edge acts as a read-only cache, handling numerous SDK connections. Instead of relying on periodic polling, Edge and the Unleash server use a high-speed streaming protocol to sync flag changes in milliseconds.
 
 [Enterprise Edge](https://www.getunleash.io/unleash-enterprise-edge) is available in the following 11 global data centers across North America, Europe, and Asia, allowing you to achieve low latency, high resilience, and optimal performance:
 - US East (Ohio): `us-east-2`
@@ -54,7 +54,7 @@ This fully-managed solution is designed for high availability, featuring the fol
 
 In this hybrid model, Unleash hosts the API server and Admin UI, while you host Unleash Edge instances yourself. You run Edge as a container within your own infrastructure, close to your applications. This gives you control over Edge's location and its network environment. Unleash manages the Unleash API, the Admin UI, and the backing database in our AWS setup; the API and the UI run together in a Kubernetes deployment and connect to an Amazon RDS database.
 
-![An architecture diagram of using Edge in a setup where Unleash hosts the API and you host the Edge.](/img/you-host-edge.png)
+![An architecture diagram of using Edge in a setup where Unleash hosts the API and you host the Edge.](/img/hosting-hybrid.png)
 
 In this setup, you need to configure Edge and the SDKs.
 
@@ -86,7 +86,7 @@ Point your SDKs to your self-hosted Edge instance's URL.
 
 In this model, you host and manage all components: the Unleash API server, the database, the Admin UI, and Unleash Edge instances.
 
-![An architecture diagram of using the Edge in a single-region, self-hosted setup.](/img/you-host-everything.png)
+![An architecture diagram of using the Edge in a single-region, self-hosted setup.](/img/hosting-self-hosted.png)
 
 This option offers maximum flexibility and control over your feature management infrastructure but requires the most operational effort.
 
@@ -97,7 +97,7 @@ In addition to [configuring Edge](#configure-edge), you must also set up the Unl
 
 You can deploy self-hosted Edge instances in multiple geographic regions, even if your primary Unleash API server is in a single location.
 
-![An architecture diagram of using the proxy in a multi-region, self-hosted setup.](/img/you-host-everything-multi-region.png)
+![An architecture diagram of using the proxy in a multi-region, self-hosted setup.](/img/hosting-self-hosted-multi-region.png)
 
 Each Edge instance connects back to your central Unleash API server but serves SDKs in its local region. This reduces latency for your applications by keeping flag evaluation geographically close.
 
@@ -119,7 +119,7 @@ The following table compares the key differences between using the cloud-hosted 
 | **Observability** | Provided by Unleash (monitoring, logging)                                                   | You need to set up and manage your own monitoring and logging solutions for Edge  |
 | **Deployment location** | Available in [11 global regions](#cloud-hosted-unleash-edge) | Deploy within your own infrastructure, VPC, or on-premises, wherever you can run containers |
 | **Latency optimization**| Automatically connect SDKs to the nearest available Unleash-managed region                  | Deploy Edge instances geographically close to your applications within your network        |
-| *Client-side context processing (may include PII)** | Processed on Unleash-managed Edge infrastructure, but does not reach the central Unleash server or database. | Processed entirely within your infrastructure. PII does not leave your network boundary. |
+| **Client-side context processing** | Processed on Unleash-managed Edge infrastructure, but does not reach the central Unleash server or database | Processed entirely within your infrastructure. PII does not leave your network boundary |
 
 ### Using Unleash without Edge
 

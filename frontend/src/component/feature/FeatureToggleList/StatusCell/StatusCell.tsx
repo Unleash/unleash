@@ -19,6 +19,20 @@ const ChangeRequestIcon = styled(DifferenceIcon)(({ theme }) => ({
     marginLeft: theme.spacing(0.5),
 }));
 
+const ChangeRequestTooltip = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+    ul: {
+        listStyle: 'none',
+        padding: 0,
+        margin: 0,
+        display: 'flex',
+        flexDirection: 'column',
+    },
+}));
+
 export const StatusCell: FC<FeatureSearchResponseSchema> = ({
     lifecycle,
     environments,
@@ -40,20 +54,22 @@ export const StatusCell: FC<FeatureSearchResponseSchema> = ({
                 <HtmlTooltip
                     arrow
                     title={
-                        <div>
-                            <span>Change requests:</span>
-                            <br />
-                            {changeRequestIds.map((id) => (
-                                <Link
-                                    key={id}
-                                    to={`/projects/${project}/change-requests/${id}`}
-                                    target='_blank'
-                                    rel='noopener noreferrer'
-                                >
-                                    {`#${id}`}
-                                </Link>
-                            ))}
-                        </div>
+                        <ChangeRequestTooltip>
+                            <div>Change requests:</div>
+                            <ul>
+                                {changeRequestIds.map((id) => (
+                                    <li key={id}>
+                                        <Link
+                                            to={`/projects/${project}/change-requests/${id}`}
+                                            target='_blank'
+                                            rel='noopener noreferrer'
+                                        >
+                                            {`#${id}`}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </ChangeRequestTooltip>
                     }
                 >
                     <ChangeRequestIcon />

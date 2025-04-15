@@ -15,9 +15,8 @@ interface IFeatureStrategyEnabledDisabledProps {
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: theme.palette.background.elevation1,
     padding: theme.spacing(2),
-    borderRadius: `${theme.shape.borderRadiusMedium}px`,
+    borderRadius: theme.shape.borderRadiusMedium,
 }));
 
 const StyledCheckboxRow = styled(Box)(({ theme }) => ({
@@ -26,18 +25,14 @@ const StyledCheckboxRow = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(1),
 }));
 
-const StyledDescription = styled(Typography)(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    fontSize: theme.fontSizes.smallBody,
-    marginLeft: theme.spacing(1),
-}));
-
 export const FeatureStrategyEnabledDisabled: VFC<
     IFeatureStrategyEnabledDisabledProps
 > = ({ enabled, onToggleEnabled }) => {
     return (
         <StyledBox>
-            <Typography variant='subtitle1'>Strategy Status</Typography>
+            <Typography variant='body2' fontWeight='bold'>
+                Strategy Status
+            </Typography>
             <StyledCheckboxRow>
                 <FormControlLabel
                     control={
@@ -47,11 +42,11 @@ export const FeatureStrategyEnabledDisabled: VFC<
                             checked={enabled}
                         />
                     }
-                    label='Enabled'
+                    label={<Typography variant='body2'>Enabled</Typography>}
                 />
-                <StyledDescription>
+                <Typography variant='body2' color='text.secondary'>
                     Strategy will be exposed when environment is enabled
-                </StyledDescription>
+                </Typography>
             </StyledCheckboxRow>
         </StyledBox>
     );

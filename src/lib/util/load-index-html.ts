@@ -10,7 +10,12 @@ export async function loadIndexHTML(
 ): Promise<string> {
     const { cdnPrefix, baseUriPath = '' } = config.server;
     const uiFlags = encodeURI(JSON.stringify(config.ui.flags || '{}'));
-    const unleashToken = config.unleashFrontendToken;
+
+    const variant = config.flagResolver.getVariant('unleashFrontendSDK');
+    const unleashToken =
+        variant.enabled && variant.payload
+            ? variant.payload.value
+            : config.unleashFrontendToken;
 
     let indexHTML: string;
     if (cdnPrefix) {

@@ -1,82 +1,58 @@
-import { useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { type Location, Navigate } from 'react-router-dom';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import Loader from './common/Loader/Loader';
-import { getSessionStorageItem, setSessionStorageItem } from 'utils/storage';
-import { useUiFlag } from 'hooks/useUiFlag';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useLocalStorageState } from 'hooks/useLocalStorageState';
+import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 
-export const InitialRedirect = () => {
-    const { loading } = useUiConfig();
-    const flagsReleaseManagementUIEnabled = useUiFlag(
-        'flagsReleaseManagementUI',
+export const useLastViewedPage = (location?: Location) => {
+    const [state, setState] = useLocalStorageState<string>(
+        'last-viewed-page',
+        '/personal',
     );
 
-    if (loading) {
-        return <Loader type='fullscreen' />;
-    }
-
-    if (flagsReleaseManagementUIEnabled) {
-        return <NewInitialRedirect />;
-    }
-
-    return <LegacyInitialRedirect />;
-};
-
-export const LegacyInitialRedirect = () => {
-    const { lastViewed } = useLastViewedProject();
-    const { projects, loading } = useProjects();
-    const navigate = useNavigate();
-    const sessionRedirect = getSessionStorageItem('login-redirect');
-
-    // Redirect based on project and last viewed
-    const getRedirect = useCallback(() => {
-        if (projects && lastViewed) {
-            return `/projects/${lastViewed}`;
-        }
-
-        return '/personal';
-    }, [lastViewed, projects]);
-
-    const redirect = () => {
-        navigate(sessionRedirect ?? getRedirect(), { replace: true });
-    };
-
     useEffect(() => {
-        setSessionStorageItem('login-redirect');
-        redirect();
-    }, [getRedirect]);
+        if (location) {
+            const page = [
+                '/personal',
+                '/projects',
+                '/search',
+                '/playground',
+                '/insights',
+                '/admin',
+            ].find(
+                (page) =>
+                    page === location.pathname ||
+                    location.pathname.startsWith(`/{page}/`),
+            );
+            if (page) {
+                setState(page);
+            }
+        }
+    }, [location]);
 
-    if (loading) {
-        return <Loader type='fullscreen' />;
-    }
-
-    return null;
+    return state;
 };
 
-const NewInitialRedirect = () => {
-    const { lastViewed } = useLastViewedProject();
-    const { projects, loading } = useProjects();
-    const navigate = useNavigate();
-    const sessionRedirect = getSessionStorageItem('login-redirect');
+export const InitialRedirect = () => {
+    const { user, loading: isLoadingAuth } = useAuthUser();
+    const { loading: isLoadingProjects } = useProjects();
+    const isLoggedIn = Boolean(user?.id);
+    const lastViewedPage = useLastViewedPage();
+    const { lastViewed: lastViewedProject } = useLastViewedProject();
 
-    if (loading) {
+    if (isLoadingAuth || isLoadingProjects) {
         return <Loader type='fullscreen' />;
     }
 
-    if (sessionRedirect) {
-        setSessionStorageItem('login-redirect');
-        navigate(sessionRedirect, { replace: true });
-        return null;
+    if (!isLoggedIn) {
+        return <Navigate to='/login' replace />;
     }
 
-    if (projects && lastViewed) {
-        navigate(`/projects/${lastViewed}`, { replace: true });
-        return null;
+    if (lastViewedPage === '/projects' && lastViewedProject) {
+        return <Navigate to={`/projects/${lastViewedProject}`} replace />;
     }
 
-    navigate('/personal', { replace: true });
-
-    return null;
+    return <Navigate to={lastViewedPage} replace />;
 };

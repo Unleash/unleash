@@ -391,7 +391,11 @@ export const FeatureToggleListTable: FC = () => {
             bodyClass='no-padding'
             header={
                 <PageHeader
-                    title='Search'
+                    title={
+                        flagsReleaseManagementUIEnabled
+                            ? 'Flags overview'
+                            : 'Search'
+                    }
                     actions={
                         <>
                             <ConditionallyRender

@@ -17,7 +17,6 @@ export const useChartDataSelection = (includedTraffic?: number) => {
         });
 
     const options = useMemo(() => {
-        console.log(includedTraffic);
         return createBarChartOptions(
             theme,
             (tooltipItems: any) => {

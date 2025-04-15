@@ -89,6 +89,9 @@ import type EventEmitter from 'events';
 import type { ApiTokenService } from '../../services/api-token-service';
 import type { ProjectForUi } from './project-read-model-type';
 import { canGrantProjectRole } from './can-grant-project-role';
+import { batchExecute } from '../../util/batchExecute';
+import metricsHelper from '../../util/metrics-helper';
+import { FUNCTION_TIME } from '../../metric-events';
 
 type Days = number;
 type Count = number;
@@ -167,6 +170,8 @@ export default class ProjectService {
 
     private onboardingReadModel: IOnboardingReadModel;
 
+    private timer: Function;
+
     constructor(
         {
             projectStore,
@@ -226,6 +231,11 @@ export default class ProjectService {
         this.eventBus = config.eventBus;
         this.projectReadModel = projectReadModel;
         this.onboardingReadModel = onboardingReadModel;
+        this.timer = (functionName: string) =>
+            metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {
+                className: 'ProjectService',
+                functionName,
+            });
     }
 
     async getProjects(
@@ -1282,21 +1292,18 @@ export default class ProjectService {
     async statusJob(): Promise<void> {
         const projects = await this.projectStore.getAll();
 
-        const statusUpdates = await Promise.all(
-            projects.map((project) => this.getStatusUpdates(project.id)),
-        );
-
-        await Promise.all(
-            statusUpdates.map((statusUpdate) => {
-                return this.projectStatsStore.updateProjectStats(
-                    statusUpdate.projectId,
-                    statusUpdate.updates,
-                );
-            }),
-        );
+        // run one project status update at a time every
+        void batchExecute(projects, 1, 30_000, async (project) => {
+            const statusUpdate = await this.getStatusUpdates(project.id);
+            await this.projectStatsStore.updateProjectStats(
+                statusUpdate.projectId,
+                statusUpdate.updates,
+            );
+        });
     }
 
     async getStatusUpdates(projectId: string): Promise<ICalculateStatus> {
+        const stopTimer = this.timer('getStatusUpdates');
         const dateMinusThirtyDays = subDays(new Date(), 30).toISOString();
         const dateMinusSixtyDays = subDays(new Date(), 60).toISOString();
 
@@ -1370,6 +1377,7 @@ export default class ProjectService {
                 dateMinusThirtyDays,
             );
 
+        stopTimer();
         return {
             projectId,
             updates: {

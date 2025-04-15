@@ -117,6 +117,7 @@ class ProjectStatsStore implements IProjectStatsStore {
     async getTimeToProdDates(
         projectId: string,
     ): Promise<ICreateEnabledDates[]> {
+        const stopTimer = this.timer('getTimeToProdDates');
         const result = await this.db
             .select('events.feature_name')
             // select only first enabled event, distinct works with orderBy
@@ -143,6 +144,7 @@ class ProjectStatsStore implements IProjectStatsStore {
             .orderBy('events.feature_name')
             // first enabled event
             .orderBy('events.created_at', 'asc');
+        stopTimer();
         return result;
     }
 

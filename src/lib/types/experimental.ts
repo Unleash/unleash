@@ -69,7 +69,8 @@ export type IFlagKey =
     | 'addEditStrategy'
     | 'newStrategyDropdown'
     | 'flagsOverviewSearch'
-    | 'flagsReleaseManagementUI';
+    | 'flagsReleaseManagementUI'
+    | 'unleashFrontendSDK';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -330,6 +331,11 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_FLAGS_RELEASE_MANAGEMENT_UI,
         false,
     ),
+    unleashFrontendSDK: {
+        name: 'disabled',
+        feature_enabled: false,
+        enabled: false,
+    },
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

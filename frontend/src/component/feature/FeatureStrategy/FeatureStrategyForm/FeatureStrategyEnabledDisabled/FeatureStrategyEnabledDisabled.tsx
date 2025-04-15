@@ -2,7 +2,7 @@ import {
     Box,
     FormControlLabel,
     styled,
-    Switch,
+    Checkbox,
     Typography,
 } from '@mui/material';
 import type { VFC } from 'react';
@@ -29,7 +29,7 @@ export const FeatureStrategyEnabledDisabled: VFC<
             <Typography>Strategy Status</Typography>
             <FormControlLabel
                 control={
-                    <Switch
+                    <Checkbox
                         name='enabled'
                         onChange={onToggleEnabled}
                         checked={enabled}

@@ -10,6 +10,9 @@ import { endOfDay, startOfHour } from 'date-fns';
 import { collapseHourlyMetrics, spreadVariants } from './collapseHourlyMetrics';
 import type { Db } from '../../../db/db';
 import type { IFlagResolver } from '../../../types';
+import metricsHelper from '../../../util/metrics-helper';
+import { DB_TIME } from '../../../metric-events';
+import type EventEmitter from 'events';
 
 interface ClientMetricsBaseTable {
     feature_name: string;
@@ -134,10 +137,22 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
 
     private flagResolver: IFlagResolver;
 
-    constructor(db: Db, getLogger: LogProvider, flagResolver: IFlagResolver) {
+    private metricTimer: Function;
+
+    constructor(
+        db: Db,
+        eventBus: EventEmitter,
+        getLogger: LogProvider,
+        flagResolver: IFlagResolver,
+    ) {
         this.db = db;
         this.logger = getLogger('client-metrics-store-v2.js');
         this.flagResolver = flagResolver;
+        this.metricTimer = (action) =>
+            metricsHelper.wrapTimer(eventBus, DB_TIME, {
+                store: 'client-metrics',
+                action,
+            });
     }
 
     async get(key: IClientMetricsEnvKey): Promise<IClientMetricsEnv> {
@@ -393,6 +408,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
 
     // aggregates all hourly metrics from a previous day into daily metrics
     async aggregateDailyMetrics(): Promise<void> {
+        const stopTimer = this.metricTimer('aggregateDailyMetrics');
         const rawQuery: string = `
           INSERT INTO ${DAILY_TABLE} (feature_name, app_name, environment, date, yes, no)
           SELECT
@@ -435,5 +451,6 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         // have to be run serially since variants table has FK on yes/no metrics
         await this.db.raw(rawQuery);
         await this.db.raw(rawVariantsQuery);
+        stopTimer();
     }
 }

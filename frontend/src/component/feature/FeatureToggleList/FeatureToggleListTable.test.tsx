@@ -136,9 +136,7 @@ test('Filter table by project', async () => {
     setupNoFeaturesReturned();
     await filterFeaturesByProject('Project B');
 
-    await screen.findByText(
-        'No feature flags found matching your criteria. Get started by adding a new feature flag.',
-    );
+    await screen.findByText('No feature flags found matching your criteria.');
     expect(window.location.href).toContain(
         '?offset=0&columns=&project=IS%3Aproject-b',
     );

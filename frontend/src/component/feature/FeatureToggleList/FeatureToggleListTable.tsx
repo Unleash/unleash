@@ -495,8 +495,7 @@ export const FeatureToggleListTable: FC = () => {
                             elseShow={
                                 <TablePlaceholder>
                                     No feature flags found matching your
-                                    criteria. Get started by adding a new
-                                    feature flag.
+                                    criteria.
                                 </TablePlaceholder>
                             }
                         />

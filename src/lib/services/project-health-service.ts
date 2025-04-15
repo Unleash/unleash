@@ -10,6 +10,9 @@ import {
     calculateProjectHealth,
     calculateProjectHealthRating,
 } from '../domain/project-health/project-health';
+import { batchExecute } from '../util';
+import metricsHelper from '../util/metrics-helper';
+import { FUNCTION_TIME } from '../metric-events';
 
 export default class ProjectHealthService {
     private logger: Logger;
@@ -22,7 +25,9 @@ export default class ProjectHealthService {
 
     private projectService: ProjectService;
 
-    calculateHealthRating: (project: IProject) => Promise<number>;
+    calculateHealthRating: (project: Pick<IProject, 'id'>) => Promise<number>;
+
+    private timer: Function;
 
     constructor(
         {
@@ -33,7 +38,7 @@ export default class ProjectHealthService {
             IUnleashStores,
             'projectStore' | 'featureTypeStore' | 'featureToggleStore'
         >,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        { getLogger, eventBus }: Pick<IUnleashConfig, 'getLogger' | 'eventBus'>,
         projectService: ProjectService,
     ) {
         this.logger = getLogger('services/project-health-service.ts');
@@ -46,6 +51,11 @@ export default class ProjectHealthService {
             this.featureTypeStore,
             this.featureToggleStore,
         );
+        this.timer = (functionName: string) =>
+            metricsHelper.wrapTimer(eventBus, FUNCTION_TIME, {
+                className: 'ProjectHealthService',
+                functionName,
+            });
     }
 
     async getProjectHealthReport(
@@ -70,17 +80,21 @@ export default class ProjectHealthService {
         };
     }
 
-    async setHealthRating(): Promise<void> {
+    async setHealthRating(batchSize = 1): Promise<void> {
         const projects = await this.projectStore.getAll();
 
-        await Promise.all(
-            projects.map(async (project) => {
-                const newHealth = await this.calculateHealthRating(project);
-                await this.projectStore.updateHealth({
-                    id: project.id,
-                    health: newHealth,
-                });
-            }),
+        void batchExecute(projects, batchSize, 5000, (project) =>
+            this.setProjectHealthRating(project.id),
         );
+    }
+
+    async setProjectHealthRating(projectId: string): Promise<void> {
+        const stopTimer = this.timer('setProjectHealthRating');
+        const newHealth = await this.calculateHealthRating({ id: projectId });
+        await this.projectStore.updateHealth({
+            id: projectId,
+            health: newHealth,
+        });
+        stopTimer();
     }
 }

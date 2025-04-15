@@ -197,7 +197,6 @@ export const FeatureToggleListTable: FC = () => {
                               <StatusCell {...original} />
                           ),
                           enableSorting: false,
-                          size: 80,
                       }),
                       columnHelper.accessor('project', {
                           header: 'Project',
@@ -208,10 +207,12 @@ export const FeatureToggleListTable: FC = () => {
                               )?.name;
 
                               return (
-                                  <LinkCell
-                                      title={projectName || projectId}
-                                      to={`/projects/${projectId}`}
-                                  />
+                                  <Box sx={{ minWidth: '180px' }}>
+                                      <LinkCell
+                                          title={projectName || projectId}
+                                          to={`/projects/${projectId}`}
+                                      />
+                                  </Box>
                               );
                           },
                       }),

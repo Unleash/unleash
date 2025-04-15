@@ -56,7 +56,7 @@ The following table outlines where flag evaluation happens with different SDK se
 
 Flag evaluation relies on the [Unleash Context](/reference/unleash-context) and may involve user data. Since server-side SDKs always perform local evaluation, your user data remains within your application and is never shared with the Unleash server.
 
-For client-side SDKs, you can use Unleash Edge for flag evaluation to ensure that user data is not shared with the Unleash server. You have different hosting options for both [Unleash](/understanding-unleash/proxy-hosting#you-host-everything) and [Unleash Edge](/understanding-unleash/proxy-hosting#unleash-hosts-the-api-you-host-edge) allowing you to meet any privacy requirements.
+For client-side SDKs, you can use Unleash Edge for flag evaluation to ensure that user data is not shared with the Unleash server. You have different [hosting options](/understanding-unleash/hosting-options) for both Unleash and Unleash Edge allowing you to meet any privacy requirements.
 
 ### Unleash Edge
 

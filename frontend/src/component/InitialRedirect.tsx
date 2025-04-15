@@ -8,8 +8,9 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 
 export const useLastViewedPage = (location?: Location) => {
     const [state, setState] = useLocalStorageState<string>(
-        'last-viewed-page',
+        'lastViewedPage',
         '/personal',
+        7 * 24 * 60 * 60 * 1000,
     );
 
     useEffect(() => {

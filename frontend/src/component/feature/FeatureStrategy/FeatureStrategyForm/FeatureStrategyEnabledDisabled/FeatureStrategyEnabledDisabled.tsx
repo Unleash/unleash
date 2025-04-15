@@ -42,7 +42,7 @@ export const FeatureStrategyEnabledDisabled: VFC<
                             checked={enabled}
                         />
                     }
-                    label={<Typography variant='body2'>Enabled</Typography>}
+                    label={<Typography variant='body2'>Active</Typography>}
                 />
                 <Typography variant='body2' color='text.secondary'>
                     Strategy will be exposed when environment is enabled

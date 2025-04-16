@@ -131,24 +131,26 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 href: `/projects/${PROJECT}/features/demoApp.step2`,
-                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] .MuiAccordionSummary-expandIconWrapper`,
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] > div[aria-expanded="false"]`,
                 content: (
                     <Description>
                         Expand the environment card to see all the defined
-                        strategies by using the arrow button.
+                        strategies.
                     </Description>
                 ),
                 optional: true,
+                delay: 500,
             },
             {
-                href: `/projects/${PROJECT}/features/demoApp.step2`,
-                target: 'button[data-testid="ADD_STRATEGY_BUTTON"]',
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] button[data-testid="ADD_STRATEGY_BUTTON"]`,
                 content: (
                     <Description>
                         Add a new strategy to this environment by using this
                         button.
                     </Description>
                 ),
+                delay: 500,
+                backCollapseExpanded: true,
             },
             {
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2/strategies/create?environmentId=${ENVIRONMENT}&strategyName=flexibleRollout&defaultStrategy=true"]`,
@@ -365,17 +367,18 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 href: `/projects/${PROJECT}/features/demoApp.step3`,
-                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] .MuiAccordionSummary-expandIconWrapper`,
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] > div[aria-expanded="false"]`,
                 content: (
                     <Description>
                         Expand the environment card to see all the defined
-                        strategies by using the arrow button.
+                        strategies.
                     </Description>
                 ),
                 optional: true,
+                delay: 500,
             },
             {
-                target: `a[data-testid="STRATEGY_EDIT-flexibleRollout"]`,
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] a[data-testid="STRATEGY_EDIT-flexibleRollout"]`,
                 content: (
                     <Description>
                         Edit the existing gradual rollout strategy by using the
@@ -481,18 +484,19 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 href: `/projects/${PROJECT}/features/demoApp.step4`,
-                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] .MuiAccordionSummary-expandIconWrapper`,
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] > div[aria-expanded="false"]`,
                 content: (
                     <Description>
                         Expand the environment card to see all the defined
-                        strategies by using the arrow button.
+                        strategies.
                     </Description>
                 ),
                 optional: true,
+                delay: 500,
             },
             {
                 href: `/projects/${PROJECT}/features/demoApp.step4`,
-                target: 'button[data-testid="ADD_STRATEGY_BUTTON"]',
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] button[data-testid="ADD_STRATEGY_BUTTON"]`,
                 content: (
                     <Description>
                         Add a new strategy to this environment by using this

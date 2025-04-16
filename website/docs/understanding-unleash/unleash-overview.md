@@ -13,9 +13,9 @@ The Unleash system consists of several key components.
 
 ![A visual overview of an Unleash system as described in the following paragraph.](/img/unleash-architecture-edge.png)
 
-### The Unleash API
+### The Unleash API server
 
-The Unleash API (or Unleash server) is the core service for managing feature flags, configurations, and related concepts. It provides SDKs with all the data needed to work with feature flags and their [activation strategies](/reference/activation-strategies).
+The Unleash API server is the core service for managing feature flags, configurations, and related concepts. It provides SDKs with all the data needed to work with feature flags and their [activation strategies](/reference/activation-strategies).
 
 ### The Unleash Admin UI
 
@@ -56,7 +56,7 @@ The following table outlines where flag evaluation happens with different SDK se
 
 Flag evaluation relies on the [Unleash Context](/reference/unleash-context) and may involve user data. Since server-side SDKs always perform local evaluation, your user data remains within your application and is never shared with the Unleash server.
 
-For client-side SDKs, you can use Unleash Edge for flag evaluation to ensure that user data is not shared with the Unleash server. You have different hosting options for both [Unleash](/understanding-unleash/proxy-hosting#you-host-everything) and [Unleash Edge](/understanding-unleash/proxy-hosting#unleash-hosts-the-api-you-host-edge) allowing you to meet any privacy requirements.
+For client-side SDKs, you can use Unleash Edge for flag evaluation to ensure that user data is not shared with the Unleash server. You have different [hosting options](/understanding-unleash/hosting-options) for both Unleash and Unleash Edge allowing you to meet any privacy requirements.
 
 ### Unleash Edge
 
@@ -84,7 +84,7 @@ The [Admin API](/reference/api/unleash) is an API layer for managing all aspects
 
 ## Get started with Unleash
 
-To integrate Unleash, you first need an [Unleash server](#the-unleash-api). You can choose from:
+To integrate Unleash, you first need an [Unleash server](#the-unleash-api-server). You can choose from:
 - Unleash Enterprise:
   - [Cloud-hosted plans](https://www.getunleash.io/pricing)
   - [Self-hosted plans](https://www.getunleash.io/pricing)

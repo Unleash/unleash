@@ -118,9 +118,8 @@ export const MenuGroup = ({
     return (
         <StyledAccordion
             disableGutters={true}
-            expanded={isExpanded || staticExpanded}
+            expanded={isExpanded}
             onChange={(element, expanded) => {
-                if (staticExpanded) return;
                 setIsExpanded(expanded);
             }}
             sx={{

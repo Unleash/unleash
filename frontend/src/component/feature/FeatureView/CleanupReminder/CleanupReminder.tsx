@@ -1,6 +1,7 @@
 import { type FC, useState } from 'react';
 import { Alert, Box, styled } from '@mui/material';
 import FlagIcon from '@mui/icons-material/OutlinedFlag';
+import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { parseISO } from 'date-fns';
 import differenceInDays from 'date-fns/differenceInDays';
 
@@ -106,6 +107,7 @@ export const CleanupReminder: FC<{
                 <>
                     <Alert
                         severity='warning'
+                        icon={<CleaningServicesIcon />}
                         action={
                             <PermissionButton
                                 variant='contained'
@@ -147,7 +149,7 @@ export const CleanupReminder: FC<{
             )}
 
             {reminder === 'removeCode' && (
-                <Alert severity='warning'>
+                <Alert severity='warning' icon={<CleaningServicesIcon />}>
                     <b>Time to remove flag from code?</b>
                     <p>
                         This flag was marked as complete and ready for cleanup.

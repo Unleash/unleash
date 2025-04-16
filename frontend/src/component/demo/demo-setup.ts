@@ -5,12 +5,47 @@ import { formatApiPath } from 'utils/formatPath';
 const PROJECT = 'demo-app';
 const ENVIRONMENT = 'dev';
 
-const ensureUserIdContextExists = async () => {
+const CONTEXT_FIELDS_TO_KEEP = [
+    'appName',
+    'country',
+    'currentTime',
+    'sessionId',
+    'userId',
+];
+
+const getContextFields = async () => {
     const contextFields: IUnleashContextDefinition[] =
         (await fetch(formatApiPath('api/admin/context')).then((res) =>
             res.json(),
         )) || [];
 
+    return contextFields;
+};
+
+const deleteOldContextFields = async (
+    contextFields: IUnleashContextDefinition[],
+) => {
+    const outdatedContextFields = contextFields
+        .filter((field) => !CONTEXT_FIELDS_TO_KEEP.includes(field.name))
+        .sort(
+            (a, b) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime(),
+        )
+        .slice(10);
+
+    await Promise.all(
+        outdatedContextFields.map((field) =>
+            fetch(formatApiPath(`api/admin/context/${field.name}`), {
+                method: 'DELETE',
+            }),
+        ),
+    );
+};
+
+const ensureUserIdContextExists = async (
+    contextFields: IUnleashContextDefinition[],
+) => {
     if (!contextFields.find(({ name }) => name === 'userId')) {
         await fetch(formatApiPath('api/admin/context'), {
             method: 'POST',
@@ -27,46 +62,10 @@ const ensureUserIdContextExists = async () => {
     }
 };
 
-export const specificUser = async () => {
-    await deleteOldStrategies('demoApp.step2');
-    await ensureUserIdContextExists();
-};
-
-export const gradualRollout = async () => {
-    await deleteOldStrategies('demoApp.step3');
-    const featureId = 'demoApp.step3';
-
-    const { environments }: IFeatureToggle = await fetch(
-        formatApiPath(
-            `api/admin/projects/${PROJECT}/features/${featureId}?variantEnvironments=true`,
-        ),
-    ).then((res) => res.json());
-
-    const strategies =
-        environments.find(({ name }) => name === ENVIRONMENT)?.strategies || [];
-
-    if (!strategies.find(({ name }) => name === 'flexibleRollout')) {
-        await fetch(
-            formatApiPath(
-                `api/admin/projects/${PROJECT}/features/${featureId}/environments/${ENVIRONMENT}/strategies`,
-            ),
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    name: 'flexibleRollout',
-                    constraints: [],
-                    parameters: {
-                        rollout: '50',
-                        stickiness: 'default',
-                        groupId: featureId,
-                    },
-                }),
-            },
-        );
-    }
+const cleanUpContext = async () => {
+    const contextFields = await getContextFields();
+    await deleteOldContextFields(contextFields);
+    await ensureUserIdContextExists(contextFields);
 };
 
 const deleteStrategy = (featureId: string, strategyId: string) =>
@@ -98,7 +97,7 @@ const deleteOldStrategies = async (featureId: string) => {
         ),
     );
 
-    const strategyLimit = 25;
+    const strategyLimit = 10;
     if (constrainedStrategies.length >= strategyLimit) {
         await Promise.all(
             constrainedStrategies
@@ -179,8 +178,50 @@ const ensureDefaultVariants = async (featureId: string) => {
     }
 };
 
+export const specificUser = async () => {
+    await deleteOldStrategies('demoApp.step2');
+    await cleanUpContext();
+};
+
+export const gradualRollout = async () => {
+    await deleteOldStrategies('demoApp.step3');
+    const featureId = 'demoApp.step3';
+
+    const { environments }: IFeatureToggle = await fetch(
+        formatApiPath(
+            `api/admin/projects/${PROJECT}/features/${featureId}?variantEnvironments=true`,
+        ),
+    ).then((res) => res.json());
+
+    const strategies =
+        environments.find(({ name }) => name === ENVIRONMENT)?.strategies || [];
+
+    if (!strategies.find(({ name }) => name === 'flexibleRollout')) {
+        await fetch(
+            formatApiPath(
+                `api/admin/projects/${PROJECT}/features/${featureId}/environments/${ENVIRONMENT}/strategies`,
+            ),
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: 'flexibleRollout',
+                    constraints: [],
+                    parameters: {
+                        rollout: '50',
+                        stickiness: 'default',
+                        groupId: featureId,
+                    },
+                }),
+            },
+        );
+    }
+};
+
 export const variants = async () => {
     await deleteOldStrategies('demoApp.step4');
     await ensureDefaultVariants('demoApp.step4');
-    await ensureUserIdContextExists();
+    await cleanUpContext();
 };

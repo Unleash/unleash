@@ -18,6 +18,8 @@ import { useEnvironmentVisibility } from './FeatureOverviewMetaData/EnvironmentV
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
 import { StrategyDragTooltip } from './StrategyDragTooltip';
+import { CleanupReminder } from '../CleanupReminder/CleanupReminder';
+import { useFeature } from '../../../../hooks/api/getters/useFeature/useFeature';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -53,6 +55,8 @@ export const FeatureOverview = () => {
     const { splash } = useAuthSplash();
     const [showTooltip, setShowTooltip] = useState(false);
     const [hasClosedTooltip, setHasClosedTooltip] = useState(false);
+    const { feature, refetchFeature } = useFeature(projectId, featureId);
+    const cleanupReminderEnabled = useUiFlag('cleanupReminder');
 
     if (!flagOverviewRedesign) {
         return <LegacyFleatureOverview />;
@@ -71,49 +75,57 @@ export const FeatureOverview = () => {
     };
 
     return (
-        <StyledContainer>
-            <div>
-                <FeatureOverviewMetaData
-                    hiddenEnvironments={hiddenEnvironments}
-                    onEnvironmentVisibilityChange={
-                        onEnvironmentVisibilityChange
-                    }
-                />
-            </div>
-            <StyledMainContent>
-                <FeatureOverviewEnvironments
-                    onToggleEnvOpen={toggleShowTooltip}
-                    hiddenEnvironments={hiddenEnvironments}
-                />
-            </StyledMainContent>
-            <Routes>
-                <Route
-                    path='strategies/create'
-                    element={
-                        <SidebarModal
-                            label='Create feature strategy'
-                            onClose={onSidebarClose}
-                            open
-                        >
-                            <FeatureStrategyCreate />
-                        </SidebarModal>
-                    }
-                />
-                <Route
-                    path='strategies/edit'
-                    element={
-                        <SidebarModal
-                            label='Edit feature strategy'
-                            onClose={onSidebarClose}
-                            open
-                        >
-                            <FeatureStrategyEdit />
-                        </SidebarModal>
-                    }
-                />
-            </Routes>
+        <div>
+            {cleanupReminderEnabled ? (
+                <CleanupReminder feature={feature} onChange={refetchFeature} />
+            ) : null}
+            <StyledContainer>
+                <div>
+                    <FeatureOverviewMetaData
+                        hiddenEnvironments={hiddenEnvironments}
+                        onEnvironmentVisibilityChange={
+                            onEnvironmentVisibilityChange
+                        }
+                    />
+                </div>
+                <StyledMainContent>
+                    <FeatureOverviewEnvironments
+                        onToggleEnvOpen={toggleShowTooltip}
+                        hiddenEnvironments={hiddenEnvironments}
+                    />
+                </StyledMainContent>
+                <Routes>
+                    <Route
+                        path='strategies/create'
+                        element={
+                            <SidebarModal
+                                label='Create feature strategy'
+                                onClose={onSidebarClose}
+                                open
+                            >
+                                <FeatureStrategyCreate />
+                            </SidebarModal>
+                        }
+                    />
+                    <Route
+                        path='strategies/edit'
+                        element={
+                            <SidebarModal
+                                label='Edit feature strategy'
+                                onClose={onSidebarClose}
+                                open
+                            >
+                                <FeatureStrategyEdit />
+                            </SidebarModal>
+                        }
+                    />
+                </Routes>
 
-            <StrategyDragTooltip show={showTooltip} onClose={onTooltipClose} />
-        </StyledContainer>
+                <StrategyDragTooltip
+                    show={showTooltip}
+                    onClose={onTooltipClose}
+                />
+            </StyledContainer>
+        </div>
     );
 };

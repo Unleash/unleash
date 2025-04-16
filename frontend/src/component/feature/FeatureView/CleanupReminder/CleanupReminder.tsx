@@ -13,8 +13,8 @@ import { MarkCompletedDialogue } from '../FeatureOverview/FeatureLifecycle/MarkC
 import { populateCurrentStage } from '../FeatureOverview/FeatureLifecycle/populateCurrentStage';
 import { isSafeToArchive } from '../FeatureOverview/FeatureLifecycle/isSafeToArchive';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
-import { FeatureArchiveNotAllowedDialog } from '../../../common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
-import { FeatureArchiveDialog } from '../../../common/FeatureArchiveDialog/FeatureArchiveDialog';
+import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
+import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useNavigate } from 'react-router-dom';
 
 const StyledBox = styled(Box)(({ theme }) => ({

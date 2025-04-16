@@ -13,9 +13,9 @@ The Unleash system consists of several key components.
 
 ![A visual overview of an Unleash system as described in the following paragraph.](/img/unleash-architecture-edge.png)
 
-### The Unleash API
+### The Unleash API server
 
-The Unleash API (or Unleash server) is the core service for managing feature flags, configurations, and related concepts. It provides SDKs with all the data needed to work with feature flags and their [activation strategies](/reference/activation-strategies).
+The Unleash API server is the core service for managing feature flags, configurations, and related concepts. It provides SDKs with all the data needed to work with feature flags and their [activation strategies](/reference/activation-strategies).
 
 ### The Unleash Admin UI
 

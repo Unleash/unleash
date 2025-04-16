@@ -110,14 +110,14 @@ The following table compares the key differences between using the Unleash Enter
 | **High availability** | Managed by Unleash with multi-AZ and multi-region redundancy and failover       | Requires you to design and implement high availability (e.g., multiple instances, load balancers, potentially across AZs) |
 | **Security and updates** | Handled automatically by Unleash                                                            | You manage host and container security, network rules, and apply Edge updates    |
 | **Observability** | Monitor health, replica count, memory usage, CPU, latency, and more directly from Unleash  | You need to set up and manage your own monitoring and logging solutions for Edge  |
-| **Deployment location** | Available in [11 global regions](#cloud-hosted-unleash-edge) | Deploy within your own infrastructure, VPC, or on-premises, wherever you can run containers |
-| **Latency optimization**| Automatically connect SDKs to the nearest available Unleash-managed region                  | Deploy Edge instances geographically close to your applications within your network        |
+| **Deployment location** | Available in [11 global regions](#unleash-enterprise-edge-cloud) | Deploy within your own infrastructure, VPC, or on-premises, wherever you can run containers |
+| **Latency optimization**| Edge nodes are always up to date due to streaming; SDKs automatically connect SDKs to the nearest node | Deploy Edge instances geographically close to your applications within your network        |
 | **Client-side context processing** | Processed on Unleash-managed Edge infrastructure, but does not reach the central Unleash server or database | Processed entirely within your infrastructure. PII remains within your network boundary |
 | **Support** | Enterprise-grade support with SLAs and uptime guarantees  | No formal SLA |
 
 ### Using Unleash without Edge
 
-Using Unleash Edge is optional. You can also access the Unleash API directly using the [Frontend or Client API](#key-apis). This setup comes with the following considerations:
+Using Unleash Edge is optional. You can also access the Unleash API directly using the [Frontend or Client API](./unleash-overview#unleash-apis). This setup comes with the following considerations:
 - **Fair Use Policy:** Sending requests to the Unleash API is subject to limits outlined in the [Fair Use Policy](https://www.getunleash.io/fair-use-policy). While short traffic spikes are accommodated, sustained high traffic might require using Unleash Edge.
 - **Latency:** Although the Unleash architecture is designed for incredibly fast flag evaluations thanks to caching in the SDKs, the central Unleash API server might not be geographically close to all your end users, potentially increasing flag evaluation latency.
 - **Data privacy:** When using the Frontend API to talk to Unleash, any end-user data included in the [Unleash Context](../reference/unleash-context.md) is sent directly to the Unleash server. Evaluate if this meets your privacy requirements. Using Edge avoids sending this context data directly to the central Unleash API server.

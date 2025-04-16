@@ -59,7 +59,7 @@ export const DemoDialogFinish = ({
                     onClick={onClose}
                     data-testid='DEMO_FINISH_BUTTON'
                 >
-                    Continue
+                    Continue exploring
                 </StyledButton>
             </StyledActions>
         </DemoDialog>

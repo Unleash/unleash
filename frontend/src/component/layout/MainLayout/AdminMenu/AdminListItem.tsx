@@ -10,7 +10,7 @@ import {
     AccordionDetails,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import type { FC, ReactNode } from 'react';
+import { useState, type FC, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import type { Theme } from '@mui/material/styles/createTheme';
 
@@ -18,15 +18,29 @@ const listItemButtonStyle = (theme: Theme) => ({
     borderRadius: theme.spacing(0.5),
     borderLeft: `${theme.spacing(0.5)} solid transparent`,
     m: 0,
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
     '&.Mui-selected': {
-        borderLeft: `${theme.spacing(0.5)} solid ${theme.palette.primary.main}`,
+        backgroundColor: '#607B81',
+        color: theme.palette.common.white,
+        '& p': {
+            fontWeight: theme.typography.fontWeightBold,
+        },
+        '&:hover': {
+            backgroundColor: theme.palette.action.hover,
+            color: 'inherit',
+            fontWeight: theme.typography.fontWeightLight,
+            '& p': {
+                fontWeight: theme.typography.fontWeightLight,
+            },
+        },
     },
     minHeight: '0px',
     '.MuiAccordionSummary-content': { margin: 0 },
     '&>.MuiAccordionSummary-content.MuiAccordionSummary-content': {
         margin: '0',
         alignItems: 'center',
-        padding: theme.spacing(0.5, 0),
+        padding: theme.spacing(0.1, 0),
     },
 });
 
@@ -35,17 +49,32 @@ const subListItemButtonStyle = (theme: Theme) => ({
     borderRadius: theme.spacing(0.5),
     borderLeft: `${theme.spacing(0.5)} solid transparent`,
     m: 0,
+    paddingTop: theme.spacing(0.75),
+    paddingBottom: theme.spacing(0.75),
     '&.Mui-selected': {
-        borderLeft: `${theme.spacing(0.5)} solid ${theme.palette.primary.main}`,
+        backgroundColor: '#607B81',
+        color: theme.palette.common.white,
+        '& p': {
+            fontWeight: theme.typography.fontWeightBold,
+        },
+        '&:hover': {
+            backgroundColor: theme.palette.action.hover,
+            color: 'inherit',
+            fontWeight: theme.typography.fontWeightLight,
+            '& p': {
+                fontWeight: theme.typography.fontWeightLight,
+            },
+        },
     },
 });
 
-const CappedText = styled(Typography)({
+const CappedText = styled(Typography)(({ theme }) => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     width: '100%',
-});
+    paddingTop: theme.spacing(0.25),
+}));
 
 const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({
     minWidth: theme.spacing(4),
@@ -58,6 +87,7 @@ const StyledListItemText = styled(ListItemText)(({ theme }) => ({
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     paddingTop: theme.spacing(0),
+    backgroundColor: 'inherit',
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
@@ -84,10 +114,15 @@ export const MenuGroup = ({
     isActiveMenu,
     staticExpanded,
 }: IMenuGroupProps) => {
+    const [isExpanded, setIsExpanded] = useState<boolean>(isActiveMenu);
     return (
         <StyledAccordion
             disableGutters={true}
-            expanded={staticExpanded}
+            expanded={isExpanded || staticExpanded}
+            onChange={(element, expanded) => {
+                if (staticExpanded) return;
+                setIsExpanded(expanded);
+            }}
             sx={{
                 boxShadow: 'none',
                 '&:before': {

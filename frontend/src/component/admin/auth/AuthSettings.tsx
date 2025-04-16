@@ -9,7 +9,7 @@ import { GoogleAuth } from './GoogleAuth/GoogleAuth';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { ADMIN, UPDATE_AUTH_CONFIGURATION } from '@server/types/permissions';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useUiFlag } from 'hooks/useUiFlag';
 
@@ -20,7 +20,7 @@ export const AuthSettings = () => {
     const tabs = [
         {
             label: 'Single sign-on: OpenID Connect',
-            path: '/admin/auth',
+            path: '/admin/auth/oidc',
         },
         {
             label: 'Single sign-on: SAML 2.0',
@@ -55,7 +55,12 @@ export const AuthSettings = () => {
             <PermissionGuard permissions={[ADMIN, UPDATE_AUTH_CONFIGURATION]}>
                 <PageContent header={activeTab}>
                     <Routes>
-                        <Route path='/' element={<OidcAuth />} />
+                        <Route
+                            path='/'
+                            index
+                            element={<Navigate to='/admin/auth/oidc' />}
+                        />
+                        <Route path='/oidc' index element={<OidcAuth />} />
                         <Route path='/saml' element={<SamlAuth />} />
                         <Route path='/password' element={<PasswordAuth />} />
                         {googleAuthEnabled && (

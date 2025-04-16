@@ -110,9 +110,9 @@ The following table compares the key differences between using the Unleash Enter
 | **High availability** | Managed by Unleash with multi-AZ and multi-region redundancy and failover       | Requires you to design and implement high availability (e.g., multiple instances, load balancers, potentially across AZs) |
 | **Security and updates** | Handled automatically by Unleash                                                            | You manage host and container security, network rules, and apply Edge updates    |
 | **Observability** | Monitor health, replica count, memory usage, CPU, latency, and more directly from Unleash  | You need to set up and manage your own monitoring and logging solutions for Edge  |
-| **Deployment location** | Available in [11 global regions](#unleash-enterprise-edge-cloud) | Deploy within your own infrastructure, VPC, or on-premises, wherever you can run containers |
-| **Latency optimization**| Edge nodes are always up to date due to streaming; SDKs automatically connect SDKs to the nearest node | Deploy Edge instances geographically close to your applications within your network        |
-| **Client-side context processing** | Processed on Unleash-managed Edge infrastructure, but does not reach the central Unleash server or database | Processed entirely within your infrastructure. PII remains within your network boundary |
+| **Deployment** | Available in [11 global regions](#unleash-enterprise-edge-cloud) | Deploy within your own infrastructure, VPC, or on-premises, wherever you can run containers |
+| **Latency**|  Configuration changes are pushed instantly to Enterprise Edge, ensuring it's always up to date; no polling required—changes propagate in real time | Relies on polling at a configured interval to check for updates; this introduces a delay between when changes are made and when they take effect        |
+| **Client-side context** | Processed on Unleash-managed Edge infrastructure, but does not reach the central Unleash server or database | Processed entirely within your infrastructure |
 | **Support** | Enterprise-grade support with SLAs and uptime guarantees  | No formal SLA |
 
 ### Using Unleash without Edge

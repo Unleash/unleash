@@ -49,7 +49,6 @@ const CappedText = styled(Typography)(({ theme }) => ({
     width: '100%',
     paddingTop: theme.spacing(0.25),
     marginLeft: theme.spacing(0.75),
-    //color: theme.palette.primary.main,
     fontWeight: theme.typography.fontWeightBold,
 }));
 

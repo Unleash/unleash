@@ -1,6 +1,13 @@
 import Add from '@mui/icons-material/Add';
 import Clear from '@mui/icons-material/Clear';
-import { Button, Chip, type ChipProps, Popover, styled } from '@mui/material';
+import {
+    Button,
+    Chip,
+    type ChipProps,
+    Popover,
+    styled,
+    TextField,
+} from '@mui/material';
 import {
     type FC,
     forwardRef,
@@ -8,6 +15,7 @@ import {
     useRef,
     useState,
 } from 'react';
+import { parseParameterStrings } from 'utils/parseParameter';
 
 const ValueListWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -79,59 +87,136 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
     '& .MuiPaper-root': {
         borderRadius: theme.shape.borderRadiusLarge,
         border: `1px solid ${theme.palette.divider}`,
-        padding: theme.spacing(1),
+        padding: theme.spacing(2),
+        width: '300px',
     },
 }));
 
-const AddValues = forwardRef<HTMLButtonElement, {}>((props, ref) => {
-    const [open, setOpen] = useState(false);
-    const positioningRef = useRef<HTMLButtonElement>(null);
-    useImperativeHandle(ref, () => positioningRef.current as HTMLButtonElement);
+const StyledTextField = styled(TextField)(({ theme }) => ({
+    width: '100%',
+    marginBottom: theme.spacing(1),
+}));
 
-    return (
-        <>
-            <AddValuesButton
-                ref={positioningRef}
-                onClick={() => setOpen(true)}
-                type='button'
-            >
-                <Add />
-                <span>Add values</span>
-            </AddValuesButton>
-            <StyledPopover
-                open={open}
-                disableScrollLock
-                anchorEl={positioningRef.current}
-                onClose={() => setOpen(false)}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'center',
-                }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'center',
-                }}
-            >
-                <form action='' onSubmit={(e) => e.preventDefault()}>
-                    <input type='text' />
-                    <Button
-                        variant='text'
-                        onClick={() => console.log('clicked the add button')}
-                    >
-                        Add
-                    </Button>
-                </form>
-            </StyledPopover>
-        </>
-    );
-});
+const ButtonContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-end',
+}));
+
+const ErrorMessage = styled('div')(({ theme }) => ({
+    color: theme.palette.error.main,
+    fontSize: theme.typography.caption.fontSize,
+    marginBottom: theme.spacing(1),
+}));
+
+interface AddValuesProps {
+    onAddValues: (values: string[]) => void;
+}
+
+const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
+    ({ onAddValues }, ref) => {
+        const [open, setOpen] = useState(false);
+        const [inputValues, setInputValues] = useState('');
+        const [error, setError] = useState('');
+        const positioningRef = useRef<HTMLButtonElement>(null);
+        useImperativeHandle(
+            ref,
+            () => positioningRef.current as HTMLButtonElement,
+        );
+
+        const handleAdd = () => {
+            const newValues = parseParameterStrings(inputValues);
+
+            if (newValues.length === 0) {
+                setError('Values cannot be empty');
+                return;
+            }
+
+            if (newValues.some((v) => v.length > 100)) {
+                setError('Values cannot be longer than 100 characters');
+                return;
+            }
+
+            onAddValues(newValues);
+            setInputValues('');
+            setError('');
+            setOpen(false);
+        };
+
+        const handleKeyPress = (event: React.KeyboardEvent) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                handleAdd();
+            }
+        };
+
+        return (
+            <>
+                <AddValuesButton
+                    ref={positioningRef}
+                    onClick={() => setOpen(true)}
+                    type='button'
+                >
+                    <Add />
+                    <span>Add values</span>
+                </AddValuesButton>
+                <StyledPopover
+                    open={open}
+                    disableScrollLock
+                    anchorEl={positioningRef.current}
+                    onClose={() => setOpen(false)}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                    }}
+                >
+                    <div>
+                        <StyledTextField
+                            label='Values'
+                            placeholder='value1, value2, value3...'
+                            value={inputValues}
+                            onChange={(e) => {
+                                setInputValues(e.target.value);
+                                setError('');
+                            }}
+                            onKeyPress={handleKeyPress}
+                            error={Boolean(error)}
+                            helperText={error}
+                            size='small'
+                            fullWidth
+                            autoFocus
+                        />
+                        <ButtonContainer>
+                            <Button
+                                variant='contained'
+                                color='primary'
+                                onClick={handleAdd}
+                                disabled={!inputValues.trim()}
+                            >
+                                Add
+                            </Button>
+                        </ButtonContainer>
+                    </div>
+                </StyledPopover>
+            </>
+        );
+    },
+);
 
 type Props = {
     values: string[] | undefined;
     removeValue: (index: number) => void;
+    setValues?: (values: string[]) => void;
 };
 
-export const ValueList: FC<Props> = ({ values = [], removeValue }) => {
+export const ValueList: FC<Props> = ({
+    values = [],
+    removeValue,
+    setValues,
+}) => {
     const constraintElementRefs: React.MutableRefObject<
         (HTMLDivElement | null)[]
     > = useRef([]);
@@ -146,6 +231,19 @@ export const ValueList: FC<Props> = ({ values = [], removeValue }) => {
             }
         } else {
             return constraintElementRefs.current[deletedIndex + 1];
+        }
+    };
+
+    const handleAddValues = (newValues: string[]) => {
+        if (setValues) {
+            // Combine existing values with new values and deduplicate
+            const combinedValues = uniqueValues([
+                ...(values || []),
+                ...newValues,
+            ]);
+            setValues(combinedValues);
+        } else {
+            console.log('Values to add:', newValues);
         }
     };
 
@@ -168,7 +266,11 @@ export const ValueList: FC<Props> = ({ values = [], removeValue }) => {
                     </li>
                 ))}
             </StyledList>
-            <AddValues ref={addValuesButtonRef} />
+            <AddValues ref={addValuesButtonRef} onAddValues={handleAddValues} />
         </ValueListWrapper>
     );
+};
+
+const uniqueValues = <T,>(values: T[]): T[] => {
+    return Array.from(new Set(values));
 };

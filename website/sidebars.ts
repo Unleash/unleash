@@ -340,7 +340,7 @@ const sidebars: SidebarsConfig = {
                 'understanding-unleash/unleash-overview',
                 'understanding-unleash/the-anatomy-of-unleash',
                 'understanding-unleash/managing-constraints',
-                'understanding-unleash/proxy-hosting',
+                'understanding-unleash/hosting-options',
                 'understanding-unleash/data-collection',
                 {
                     type: 'category',

@@ -150,7 +150,7 @@ Let’s say a project owner wants to update a rollout strategy so that a new fea
 
 You could also schedule changes by using the [date and time operators](/reference/activation-strategies#date-and-time-operators) in [strategy constraints](/reference/activation-strategies#constraints). However, when you have change requests configured in the project, we recommend using the schedule feature in change requests, as it is a faster and simpler approach.
 
-For more recommendations, read our section on [change management workflow](/topics/feature-flags/best-practices-using-feature-flags-at-scale#6-implement-flag-approval-workflows-early) from _Using Feature Flags at Scale_.
+For more recommendations, read our section on [change management workflow](/topics/feature-flags/best-practices-using-feature-flags-at-scale#implement-flag-approval-workflows-early) from _Using Feature Flags at Scale_.
 
 Now that we covered change requests as a practical tool for both feature management oversight and good security posture, let’s explore Unleash event logs as an audit logging system for your organization.
 
@@ -191,7 +191,7 @@ Protecting data is critical within any software tool. It’s a security best pra
 
 This is a potential attack surface area that you wouldn’t want to be the root of data breaches or unauthorized access in your system. That’s why Unleash was built in a way where integrating feature flags into your services won’t be a weak link in your organization’s ability to ship software safely.
 
-With Unleash, you can architect your feature flagging solution in a way that all user data stays within your applications. When using server-side SDKs, user data remains within your application and is never shared with the Unleash server regardless of your setup. For client-side SDKs, you can retain all user data within your applications by either [self-hosting Unleash](/understanding-unleash/proxy-hosting#you-host-everything), or [self-hosting Unleash Edge](/understanding-unleash/proxy-hosting#unleash-hosts-the-api-you-host-edge). Read more on the [Unleash architecture here](/understanding-unleash/unleash-overview).
+With Unleash, you can architect your feature flagging solution in a way that all user data stays within your applications. When using server-side SDKs, user data remains within your application and is never shared with the Unleash server regardless of your setup. For client-side SDKs, you can retain all user data within your applications by either [self-hosting Unleash](/understanding-unleash/hosting-options#), or [self-hosting Unleash Edge](/understanding-unleash/hosting-options#unleash-edge-options). Read more on the [Unleash architecture here](/understanding-unleash/unleash-overview).
 
 ### Use Unleash Edge for enterprise-grade data privacy
 

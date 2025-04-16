@@ -97,6 +97,7 @@ export type UiFlags = {
     addEditStrategy?: boolean;
     newStrategyDropdown?: boolean;
     flagsReleaseManagementUI?: boolean;
+    cleanupReminder?: boolean;
 };
 
 export interface IVersionInfo {

@@ -577,10 +577,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     // make sure init tokens appear only once
     authentication.initApiTokens = [
         ...new Map(
-            authentication.initApiTokens.map((token) => [
-                `${token.type}${token.project}${token.projects?.join(',')}${token.environment}${token.secret}`,
-                token,
-            ]),
+            authentication.initApiTokens.map((token) => [token.secret, token]),
         ).values(),
     ];
 

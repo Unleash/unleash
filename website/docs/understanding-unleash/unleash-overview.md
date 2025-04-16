@@ -84,7 +84,7 @@ The [Admin API](/reference/api/unleash) is an API layer for managing all aspects
 
 ## Get started with Unleash
 
-To integrate Unleash, you first need an [Unleash server](#the-unleash-api). You can choose from:
+To integrate Unleash, you first need an [Unleash server](#the-unleash-api-server). You can choose from:
 - Unleash Enterprise:
   - [Cloud-hosted plans](https://www.getunleash.io/pricing)
   - [Self-hosted plans](https://www.getunleash.io/pricing)

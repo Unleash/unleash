@@ -383,6 +383,7 @@ export const EditableConstraint: FC<Props> = ({
                     <ValueList
                         values={localConstraint.values}
                         removeValue={removeValue}
+                        setValues={setValuesWithRecord}
                     />
                 )}
 

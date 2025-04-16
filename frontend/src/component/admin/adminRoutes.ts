@@ -1,11 +1,11 @@
 import type { INavigationMenuItem } from 'interfaces/route';
 
 export const adminGroups: Record<string, string> = {
-    users: 'User administration',
+    users: 'User config',
     access: 'Access control',
     sso: 'Single sign-on',
     network: 'Network',
-    instance: 'Instance configuration',
+    instance: 'Instance config',
 };
 
 export const adminRoutes: INavigationMenuItem[] = [
@@ -87,7 +87,7 @@ export const adminRoutes: INavigationMenuItem[] = [
 
     // Single sign-on/login
     {
-        path: '/admin/auth',
+        path: '/admin/auth/oidc',
         title: 'Open ID Connect',
         menu: { adminSettings: true, mode: ['enterprise'] },
         group: 'sso',

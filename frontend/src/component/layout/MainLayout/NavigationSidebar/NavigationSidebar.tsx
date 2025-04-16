@@ -31,6 +31,7 @@ import { ReactComponent as LogoOnly } from 'assets/img/logoDark.svg';
 import { Link } from 'react-router-dom';
 import { useFlag } from '@unleash/proxy-client-react';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 
 export const MobileNavigationSidebar: FC<{
     onClick: () => void;
@@ -62,9 +63,12 @@ export const MobileNavigationSidebar: FC<{
     );
 };
 
-export const StretchContainer = styled(Box)<{ mode: string }>(
-    ({ theme, mode }) => ({
-        backgroundColor: theme.palette.background.paper,
+export const StretchContainer = styled(Box)<{ mode: string; admin: boolean }>(
+    ({ theme, mode, admin }) => ({
+        backgroundColor: admin
+            ? theme.palette.background.application
+            : theme.palette.background.paper,
+        borderRight: admin ? `2px solid ${theme.palette.divider}` : 'none',
         padding: theme.spacing(2),
         alignSelf: 'stretch',
         display: 'flex',
@@ -98,12 +102,14 @@ const StyledUnleashLogoOnlyWhite = styled(LogoOnlyWhite)(({ theme }) => ({
 }));
 
 // This component is needed when the sticky item could overlap with nav items. You can replicate it on a short screen.
-const StickyContainer = styled(Box)(({ theme }) => ({
+const StickyContainer = styled(Box)<{ admin: boolean }>(({ theme, admin }) => ({
     position: 'sticky',
     paddingBottom: theme.spacing(1.5),
     paddingTop: theme.spacing(1),
     bottom: theme.spacing(0),
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: admin
+        ? theme.palette.background.application
+        : theme.palette.background.paper,
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
@@ -112,6 +118,7 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
 }) => {
     const { routes } = useRoutes();
     const celebrateUnleashFrontend = useFlag('celebrateUnleashFrontend');
+    const { showOnlyAdminMenu } = useNewAdminMenu();
 
     const [mode, setMode] = useNavigationMode();
     const [expanded, changeExpanded] = useExpanded<'configure' | 'admin'>();
@@ -131,7 +138,7 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
     }, [initialPathname]);
 
     return (
-        <StretchContainer mode={mode}>
+        <StretchContainer mode={mode} admin={showOnlyAdminMenu}>
             <ConditionallyRender
                 condition={mode === 'full'}
                 show={
@@ -168,72 +175,94 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
                 }
             />
 
-            <PrimaryNavigationList
-                mode={mode}
-                onClick={setActiveItem}
-                activeItem={activeItem}
+            <ConditionallyRender
+                condition={!showOnlyAdminMenu}
+                show={
+                    <>
+                        <PrimaryNavigationList
+                            mode={mode}
+                            onClick={setActiveItem}
+                            activeItem={activeItem}
+                        />
+                        <SecondaryNavigation
+                            expanded={expanded.includes('configure')}
+                            onExpandChange={(expand) => {
+                                changeExpanded('configure', expand);
+                            }}
+                            mode={mode}
+                            title='Configure'
+                        >
+                            <SecondaryNavigationList
+                                routes={routes.mainNavRoutes}
+                                mode={mode}
+                                onClick={setActiveItem}
+                                activeItem={activeItem}
+                            />
+                        </SecondaryNavigation>
+
+                        <AdminSettingsNavigation
+                            onClick={setActiveItem}
+                            mode={mode}
+                            onSetFullMode={() => setMode('full')}
+                            activeItem={activeItem}
+                            onExpandChange={(expand) => {
+                                changeExpanded('admin', expand);
+                            }}
+                            expanded={expanded.includes('admin')}
+                            routes={routes.adminRoutes}
+                        />
+
+                        {showRecentProject && (
+                            <RecentProjectsNavigation
+                                mode={mode}
+                                projectId={lastViewedProject}
+                                onClick={() => setActiveItem('/projects')}
+                            />
+                        )}
+
+                        {showRecentFlags && (
+                            <RecentFlagsNavigation
+                                mode={mode}
+                                flags={lastViewedFlags}
+                                onClick={() => setActiveItem('/projects')}
+                            />
+                        )}
+
+                        {/* this will push the show/hide to the bottom on short nav list */}
+                        <Box sx={{ flex: 1 }} />
+
+                        <StickyContainer admin={showOnlyAdminMenu}>
+                            {NewInUnleash ? (
+                                <NewInUnleash
+                                    mode={mode}
+                                    onMiniModeClick={() => setMode('full')}
+                                />
+                            ) : null}
+                            <ShowHide
+                                mode={mode}
+                                onChange={() => {
+                                    setMode(mode === 'full' ? 'mini' : 'full');
+                                }}
+                            />
+                        </StickyContainer>
+                    </>
+                }
+                elseShow={
+                    <>
+                        <AdminSettingsNavigation
+                            onClick={setActiveItem}
+                            mode={mode}
+                            onSetFullMode={() => setMode('full')}
+                            activeItem={activeItem}
+                            onExpandChange={(expand) => {
+                                changeExpanded('admin', expand);
+                            }}
+                            expanded={expanded.includes('admin')}
+                            routes={routes.adminRoutes}
+                        />
+                    </>
+                }
             />
-            <SecondaryNavigation
-                expanded={expanded.includes('configure')}
-                onExpandChange={(expand) => {
-                    changeExpanded('configure', expand);
-                }}
-                mode={mode}
-                title='Configure'
-            >
-                <SecondaryNavigationList
-                    routes={routes.mainNavRoutes}
-                    mode={mode}
-                    onClick={setActiveItem}
-                    activeItem={activeItem}
-                />
-            </SecondaryNavigation>
-
-            <AdminSettingsNavigation
-                onClick={setActiveItem}
-                mode={mode}
-                onSetFullMode={() => setMode('full')}
-                activeItem={activeItem}
-                onExpandChange={(expand) => {
-                    changeExpanded('admin', expand);
-                }}
-                expanded={expanded.includes('admin')}
-                routes={routes.adminRoutes}
-            />
-
-            {showRecentProject && (
-                <RecentProjectsNavigation
-                    mode={mode}
-                    projectId={lastViewedProject}
-                    onClick={() => setActiveItem('/projects')}
-                />
-            )}
-
-            {showRecentFlags && (
-                <RecentFlagsNavigation
-                    mode={mode}
-                    flags={lastViewedFlags}
-                    onClick={() => setActiveItem('/projects')}
-                />
-            )}
-
-            {/* this will push the show/hide to the bottom on short nav list */}
-            <Box sx={{ flex: 1 }} />
-
-            <StickyContainer>
-                {NewInUnleash ? (
-                    <NewInUnleash
-                        mode={mode}
-                        onMiniModeClick={() => setMode('full')}
-                    />
-                ) : null}
-                <ShowHide
-                    mode={mode}
-                    onChange={() => {
-                        setMode(mode === 'full' ? 'mini' : 'full');
-                    }}
-                />
-            </StickyContainer>
         </StretchContainer>
     );
 };

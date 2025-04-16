@@ -1,4 +1,12 @@
-import { Button, styled, Typography, List } from '@mui/material';
+import {
+    styled,
+    Typography,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemText,
+    type Theme,
+} from '@mui/material';
 import { OtherLinksList } from '../NavigationSidebar/NavigationList';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import StopRoundedIcon from '@mui/icons-material/StopRounded';
@@ -6,11 +14,11 @@ import { AdminListItem, AdminSubListItem, MenuGroup } from './AdminListItem';
 import { IconRenderer } from './AdminMenuIcons';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { filterByConfig } from 'component/common/util';
 import { filterAdminRoutes } from 'component/admin/filterAdminRoutes';
 import { adminGroups, adminRoutes } from 'component/admin/adminRoutes';
-import type { ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
 import { useShowBadge } from 'component/layout/components/EnterprisePlanBadge/useShowBadge';
 import { EnterprisePlanBadge } from 'component/layout/components/EnterprisePlanBadge/EnterprisePlanBadge';
@@ -34,31 +42,72 @@ const SettingsHeader = styled(Typography)(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
 }));
 
-const StyledButton = styled(Button)(({ theme }) => ({
-    paddingLeft: theme.spacing(0),
-    marginBottom: theme.spacing(3),
+const CappedText = styled(Typography)(({ theme }) => ({
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    width: '100%',
+    paddingTop: theme.spacing(0.25),
+    marginLeft: theme.spacing(0.75),
+    fontWeight: theme.typography.fontWeightBold,
+}));
+
+const StyledListItemText = styled(ListItemText)(({ theme }) => ({
+    margin: 0,
 }));
 
 const StyledDiv = styled('div')(({ theme }) => ({
     padding: theme.spacing(2, 2.5, 0, 2.5),
+
+    '&.MuiButton-root': {
+        padding: theme.spacing(0),
+    },
 }));
 
 const StyledStopRoundedIcon = styled(StopRoundedIcon)(({ theme }) => ({
-    color: theme.palette.primary.main,
+    color: '#607B81',
 }));
 
-export const DashboardLink = () => {
-    const navigate = useNavigate();
+const ActiveStyledStopRoundedIcon = styled(StopRoundedIcon)(({ theme }) => ({
+    color: theme.palette.common.white,
+}));
+
+const listItemButtonStyle = (theme: Theme) => ({
+    borderRadius: theme.spacing(0.5),
+    borderLeft: `${theme.spacing(0.5)} solid transparent`,
+    color: theme.palette.primary.main,
+    fontWeight: theme.typography.fontWeightBold,
+    m: 0,
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    minHeight: '0px',
+    '.MuiAccordionSummary-content': { margin: 0 },
+    '&>.MuiAccordionSummary-content.MuiAccordionSummary-content': {
+        margin: '0',
+        alignItems: 'center',
+        padding: theme.spacing(0.1, 0),
+    },
+});
+
+export const DashboardLink = ({ onClick }: { onClick: () => void }) => {
     return (
-        <StyledButton
-            onClick={() => {
-                navigate(`/personal`);
-            }}
-            rel='noreferrer'
-            startIcon={<ArrowBackIcon />}
-        >
-            Back to Unleash
-        </StyledButton>
+        <List>
+            <ListItem disablePadding>
+                <ListItemButton
+                    dense={true}
+                    component={Link}
+                    to='/personal'
+                    sx={listItemButtonStyle}
+                    selected={false}
+                    onClick={onClick}
+                >
+                    <ArrowBackIcon />
+                    <StyledListItemText>
+                        <CappedText>Back to Unleash</CappedText>
+                    </StyledListItemText>
+                </ListItemButton>
+            </ListItem>
+        </List>
     );
 };
 
@@ -66,8 +115,9 @@ export const AdminMobileNavigation = ({ onClick }: { onClick: () => void }) => {
     return (
         <>
             <StyledDiv>
-                <AdminNavigationHeader />
+                <SettingsHeader>Admin settings</SettingsHeader>
             </StyledDiv>
+            <DashboardLink onClick={onClick} />
 
             <AdminNavigationItems staticExpanded={true} onClick={onClick} />
 
@@ -79,17 +129,8 @@ export const AdminMobileNavigation = ({ onClick }: { onClick: () => void }) => {
 export const AdminMenuNavigation = ({ onClick }: { onClick: () => void }) => {
     return (
         <>
-            <AdminNavigationHeader />
+            <DashboardLink onClick={onClick} />
             <AdminNavigationItems onClick={onClick} />
-        </>
-    );
-};
-
-export const AdminNavigationHeader = () => {
-    return (
-        <>
-            <SettingsHeader>Admin settings</SettingsHeader>
-            <DashboardLink />
         </>
     );
 };
@@ -100,8 +141,6 @@ export const AdminNavigationItems = ({
 }: { onClick: () => void; staticExpanded?: true | undefined }) => {
     const { uiConfig, isPro, isEnterprise } = useUiConfig();
     const { isBilling } = useInstanceStatus();
-    const isActiveItem = (item?: string) =>
-        item !== undefined && location.pathname === item;
     const location = useLocation();
     const showBadge = useShowBadge();
 
@@ -114,6 +153,28 @@ export const AdminNavigationItems = ({
                 billing: isBilling,
             }),
         );
+
+    const findActiveItem = () => {
+        const activeItem = routes.find(
+            (route) => route.path === location.pathname,
+        );
+        if (!activeItem) {
+            return routes.find(
+                (route) =>
+                    route.path !== '/admin' &&
+                    location.pathname.startsWith(route.path),
+            )?.path;
+        }
+        return activeItem.path;
+    };
+    const [activeItem, setActiveItem] = useState<string | undefined>(
+        findActiveItem(),
+    );
+    const isActiveItem = (item?: string) =>
+        item !== undefined && activeItem !== undefined && item === activeItem;
+    useEffect(() => {
+        setActiveItem(findActiveItem());
+    }, [location, location.pathname]);
 
     const menuStructure = routes.reduce(
         (acc: Record<string, IMenuItem>, route) => {
@@ -159,7 +220,7 @@ export const AdminNavigationItems = ({
                                 <IconRenderer path={item.href} active={false} />
                             }
                             activeIcon={
-                                <IconRenderer path={item.href} active={true} />
+                                <IconRenderer path={item.href} active={false} />
                             }
                             isActiveMenu={Boolean(isActiveMenu)}
                             key={item.text}
@@ -178,7 +239,11 @@ export const AdminNavigationItems = ({
                                         ) : null
                                     }
                                 >
-                                    <StyledStopRoundedIcon />
+                                    {isActiveItem(subItem.href) ? (
+                                        <ActiveStyledStopRoundedIcon />
+                                    ) : (
+                                        <StyledStopRoundedIcon />
+                                    )}
                                 </AdminSubListItem>
                             ))}
                         </MenuGroup>
@@ -197,7 +262,10 @@ export const AdminNavigationItems = ({
                             ) : null
                         }
                     >
-                        <IconRenderer path={item.href} active={false} />
+                        <IconRenderer
+                            path={item.href}
+                            active={isActiveItem(item.href)}
+                        />
                     </AdminListItem>
                 );
             })}

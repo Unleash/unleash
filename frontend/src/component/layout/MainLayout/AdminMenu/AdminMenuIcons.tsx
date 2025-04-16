@@ -35,9 +35,9 @@ export const IconRenderer: FC<{ path: string; active: boolean }> = ({
 
     return (
         <IconComponent
-            sx={{
-                color: active ? 'primary.main' : 'inherit',
-            }}
+            sx={(theme) => ({
+                color: active ? theme.palette.common.white : 'inherit',
+            })}
         />
     );
 };

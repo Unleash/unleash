@@ -574,6 +574,15 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             : options.authentication) || {},
         { initApiTokens: initApiTokens },
     ]);
+    // make sure init tokens appear only once
+    authentication.initApiTokens = [
+        ...new Map(
+            authentication.initApiTokens.map((token) => [
+                `${token.type}${token.project}${token.projects?.join(',')}${token.environment}${token.secret}`,
+                token,
+            ]),
+        ).values(),
+    ];
 
     const environmentEnableOverrides = loadEnvironmentEnableOverrides();
 

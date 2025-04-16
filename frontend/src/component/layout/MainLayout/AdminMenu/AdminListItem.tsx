@@ -114,7 +114,9 @@ export const MenuGroup = ({
     isActiveMenu,
     staticExpanded,
 }: IMenuGroupProps) => {
-    const [isExpanded, setIsExpanded] = staticExpanded? [true, () => undefined] : useState<boolean>(isActiveMenu);
+    const [isExpanded, setIsExpanded] = staticExpanded
+        ? [true, () => undefined]
+        : useState<boolean>(isActiveMenu);
     return (
         <StyledAccordion
             disableGutters={true}

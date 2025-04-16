@@ -5980,9 +5980,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"http-proxy-middleware@npm:2.0.7":
-  version: 2.0.7
-  resolution: "http-proxy-middleware@npm:2.0.7"
+"http-proxy-middleware@npm:2.0.8":
+  version: 2.0.8
+  resolution: "http-proxy-middleware@npm:2.0.8"
   dependencies:
     "@types/http-proxy": "npm:^1.17.8"
     http-proxy: "npm:^1.18.1"
@@ -5994,7 +5994,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/express":
       optional: true
-  checksum: 10c0/8d00a61eb215b83826460b07489d8bb095368ec16e02a9d63e228dcf7524e7c20d61561e5476de1391aecd4ec32ea093279cdc972115b311f8e0a95a24c9e47e
+  checksum: 10c0/9426e64d9c6c671b4c093236bceb373b96a43ac850c7ad926355bb9f9452e1da48b9b8a5592b225970ca7d68eacbfb6eb22099a96231663a850364db36ef28cb
   languageName: node
   linkType: hard
 
@@ -10157,7 +10157,7 @@ __metadata:
     deep-diff: "npm:1.0.2"
     dequal: "npm:2.0.3"
     fast-json-patch: "npm:3.1.1"
-    http-proxy-middleware: "npm:2.0.7"
+    http-proxy-middleware: "npm:2.0.8"
     immer: "npm:9.0.21"
     jsdom: "npm:25.0.1"
     json-2-csv: "npm:^5.5.5"

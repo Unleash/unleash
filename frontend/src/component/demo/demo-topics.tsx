@@ -495,7 +495,6 @@ export const TOPICS: ITutorialTopic[] = [
                 delay: 500,
             },
             {
-                href: `/projects/${PROJECT}/features/demoApp.step4`,
                 target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] button[data-testid="ADD_STRATEGY_BUTTON"]`,
                 content: (
                     <Description>
@@ -503,6 +502,8 @@ export const TOPICS: ITutorialTopic[] = [
                         button.
                     </Description>
                 ),
+                delay: 500,
+                backCollapseExpanded: true,
             },
             {
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step4/strategies/create?environmentId=${ENVIRONMENT}&strategyName=flexibleRollout&defaultStrategy=true"]`,

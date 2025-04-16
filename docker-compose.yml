@@ -28,13 +28,6 @@ services:
       DATABASE_SSL: "false"
       # Changing log levels:
       LOG_LEVEL: "warn"
-      # Proxy clients must use one of these keys to connect to the
-      # Proxy. To add more keys, separate them with a comma (`key1,key2`).
-      INIT_FRONTEND_API_TOKENS: "default:development.unleash-insecure-frontend-api-token"
-      # Initialize Unleash with a default set of client API tokens. To
-      # initialize Unleash with multiple tokens, separate them with a
-      # comma (`token1,token2`).
-      INIT_CLIENT_API_TOKENS: "default:development.unleash-insecure-api-token"
     depends_on:
       db:
         condition: service_healthy

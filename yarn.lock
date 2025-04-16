@@ -4256,12 +4256,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-check@npm:3.23.2":
-  version: 3.23.2
-  resolution: "fast-check@npm:3.23.2"
+"fast-check@npm:4.1.1":
+  version: 4.1.1
+  resolution: "fast-check@npm:4.1.1"
   dependencies:
-    pure-rand: "npm:^6.1.0"
-  checksum: 10c0/16fcff3c80321ee765e23c3aebd0f6427f175c9c6c1753104ec658970162365dc2d56bda046d815e8f2e90634c07ba7d6f0bcfd327fbd576d98c56a18a9765ed
+    pure-rand: "npm:^7.0.0"
+  checksum: 10c0/7bee9cc031d3b746dd7967314d8d33e094c77ed70d343747209575ef76deb63e6458b9a70cb86a94dc84baad26a7a99a74c231a19090d3173fbc070d8dbab8f0
   languageName: node
   linkType: hard
 
@@ -7844,10 +7844,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pure-rand@npm:^6.1.0":
-  version: 6.1.0
-  resolution: "pure-rand@npm:6.1.0"
-  checksum: 10c0/1abe217897bf74dcb3a0c9aba3555fe975023147b48db540aa2faf507aee91c03bf54f6aef0eb2bf59cc259a16d06b28eca37f0dc426d94f4692aeff02fb0e65
+"pure-rand@npm:^7.0.0":
+  version: 7.0.1
+  resolution: "pure-rand@npm:7.0.1"
+  checksum: 10c0/9cade41030f5ec95f5d55a11a71404cd6f46b69becaad892097cd7f58e2c6248cd0a933349ca7d21336ab629f1da42ffe899699b671bc4651600eaf6e57f837e
   languageName: node
   linkType: hard
 
@@ -9427,7 +9427,7 @@ __metadata:
     express-rate-limit: "npm:^7.3.1"
     express-session: "npm:^1.17.3"
     faker: "npm:5.5.3"
-    fast-check: "npm:3.23.2"
+    fast-check: "npm:4.1.1"
     fast-json-patch: "npm:^3.1.0"
     fetch-mock: "npm:^12.0.0"
     hash-sum: "npm:^2.0.0"

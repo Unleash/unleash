@@ -209,7 +209,7 @@ const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
 type Props = {
     values: string[] | undefined;
     removeValue: (index: number) => void;
-    setValues?: (values: string[]) => void;
+    setValues: (values: string[]) => void;
 };
 
 export const ValueList: FC<Props> = ({
@@ -235,16 +235,8 @@ export const ValueList: FC<Props> = ({
     };
 
     const handleAddValues = (newValues: string[]) => {
-        if (setValues) {
-            // Combine existing values with new values and deduplicate
-            const combinedValues = uniqueValues([
-                ...(values || []),
-                ...newValues,
-            ]);
-            setValues(combinedValues);
-        } else {
-            console.log('Values to add:', newValues);
-        }
+        const combinedValues = uniqueValues([...(values || []), ...newValues]);
+        setValues(combinedValues);
     };
 
     return (

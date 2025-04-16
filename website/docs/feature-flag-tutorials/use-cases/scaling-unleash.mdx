@@ -79,7 +79,7 @@ We run Unleash API instances across multiple AWS Availability Zones (Multi-AZ). 
 We use AWS RDS (PostgreSQL) configured for high availability with Multi-AZ deployments, providing automatic failover to a hot standby in case the primary database instance or its AZ fails.
 
 #### Regional disaster recovery
-The Admin UI's static assets are served via a global CDN (like CloudFront) for fast, low-latency access for administrators globally.
+Full backups are stored in a separate region. A standby Unleash cluster in the backup region can take over in the rare event of a complete primary region failure.
 
 #### CDN for UI assets
 The Admin UI's static assets are served via a global CDN for fast loading worldwide.

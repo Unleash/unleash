@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Icon, styled } from '@mui/material';
-import Add from '@mui/icons-material/Add';
+import FilterList from '@mui/icons-material/FilterList';
 import { Box } from '@mui/system';
 import type { IFilterItem } from './Filters/Filters';
 import { FILTERS_MENU } from 'utils/testIds';
@@ -117,13 +117,16 @@ export const AddFilterButton = ({
                     describeChild
                     open={archiveTooltipOpen}
                 >
-                    <StyledButton onClick={handleClick} startIcon={<Add />}>
-                        Add Filter
+                    <StyledButton
+                        onClick={handleClick}
+                        startIcon={<FilterList />}
+                    >
+                        Filter
                     </StyledButton>
                 </StyledHtmlTooltip>
             ) : (
-                <StyledButton onClick={handleClick} startIcon={<Add />}>
-                    Add Filter
+                <StyledButton onClick={handleClick} startIcon={<FilterList />}>
+                    Filter
                 </StyledButton>
             )}
 

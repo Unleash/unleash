@@ -60,6 +60,7 @@ process.nextTick(async () => {
                         tagTypeColor: true,
                         newStrategyDropdown: true,
                         addEditStrategy: true,
+                        flagsOverviewSearch: true,
                     },
                 },
                 authentication: {

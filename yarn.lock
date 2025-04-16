@@ -6246,6 +6246,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"layerr@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "layerr@npm:3.0.0"
+  checksum: 10c0/320c9b9cf1392c73c9ff8f8d1bb7a782093ac7341fe5d7fea6ebfeea6d785af8e0fc573541431b6ffcb268577f8aea66168757e73a15035568a00ab9e4370705
+  languageName: node
+  linkType: hard
+
 "lazy-cache@npm:^0.2.3":
   version: 0.2.7
   resolution: "lazy-cache@npm:0.2.7"
@@ -9290,6 +9297,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ulidx@npm:^2.4.1":
+  version: 2.4.1
+  resolution: "ulidx@npm:2.4.1"
+  dependencies:
+    layerr: "npm:^3.0.0"
+  checksum: 10c0/3cbe05123b4b49d262e26cd0edd3ac38a4f9e97f043d47ae7daa88502748881d1615d832e3bcb29698ca2429947c24494929ba35b40d6bf38df891cb15642d2e
+  languageName: node
+  linkType: hard
+
 "undici-types@npm:~5.26.4":
   version: 5.26.5
   resolution: "undici-types@npm:5.26.5"
@@ -9464,6 +9480,7 @@ __metadata:
     tsc-watch: "npm:6.2.1"
     type-is: "npm:^1.6.18"
     typescript: "npm:5.8.2"
+    ulidx: "npm:^2.4.1"
     unleash-client: "npm:^6.6.0"
     uuid: "npm:^9.0.0"
     wait-on: "npm:^8.0.0"

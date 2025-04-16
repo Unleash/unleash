@@ -3,7 +3,7 @@ import type {
     IFeatureEnvironment,
     IFeatureEnvironmentMetrics,
 } from 'interfaces/featureToggle';
-import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
+import { FeatureStrategyMenuWrapper } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
 import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { UpgradeChangeRequests } from './UpgradeChangeRequests/UpgradeChangeRequests';
@@ -103,7 +103,7 @@ export const FeatureOverviewEnvironment = ({
                         environment={environment}
                     />
                     {!hasActivations ? (
-                        <FeatureStrategyMenu
+                        <FeatureStrategyMenuWrapper
                             label='Add strategy'
                             projectId={projectId}
                             featureId={featureId}
@@ -129,7 +129,7 @@ export const FeatureOverviewEnvironment = ({
                         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                             <ReleaseTemplatesFeedback />
                             <Box ml='auto'>
-                                <FeatureStrategyMenu
+                                <FeatureStrategyMenuWrapper
                                     label='Add strategy'
                                     projectId={projectId}
                                     featureId={featureId}

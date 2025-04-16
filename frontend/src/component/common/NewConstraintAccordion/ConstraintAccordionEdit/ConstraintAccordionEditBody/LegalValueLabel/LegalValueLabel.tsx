@@ -7,6 +7,7 @@ import {
 import type React from 'react';
 import { FormControlLabel } from '@mui/material';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
+import { Truncator } from 'component/common/Truncator/Truncator';
 
 interface ILegalValueTextProps {
     legal: ILegalValue;
@@ -35,9 +36,15 @@ export const LegalValueLabel = ({
                             </Highlighter>
                         </StyledValue>
                         <StyledDescription>
-                            <Highlighter search={filter}>
-                                {legal.description}
-                            </Highlighter>
+                            <Truncator
+                                title={legal.description}
+                                arrow
+                                lines={1}
+                            >
+                                <Highlighter search={filter}>
+                                    {legal.description}
+                                </Highlighter>
+                            </Truncator>
                         </StyledDescription>
                     </>
                 }

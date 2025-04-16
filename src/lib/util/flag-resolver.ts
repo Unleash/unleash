@@ -61,6 +61,10 @@ export default class FlagResolver implements IFlagResolver {
         }
         return this.externalResolver.getVariant(expName, context);
     }
+
+    getStaticContext(): IFlagContext {
+        return this.externalResolver.getStaticContext();
+    }
 }
 
 export const getVariantValue = <T = string>(

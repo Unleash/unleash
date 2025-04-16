@@ -50,6 +50,7 @@ export const useChartDataSelection = (includedTraffic?: number) => {
                 }
             },
             includedTraffic,
+            chartDataSelection.grouping === 'daily',
         );
     }, [theme, chartDataSelection, includedTraffic]);
 

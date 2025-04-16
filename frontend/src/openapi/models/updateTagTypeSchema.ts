@@ -8,6 +8,11 @@
  * The request body for updating a tag type.
  */
 export interface UpdateTagTypeSchema {
+    /**
+     * The hexadecimal color code for the tag type.
+     * @pattern ^#[0-9A-Fa-f]{6}$
+     */
+    color?: string;
     /** The description of the tag type. */
     description?: string;
     /** The icon of the tag type. */

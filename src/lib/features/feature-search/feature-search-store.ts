@@ -76,25 +76,14 @@ class FeatureSearchStore implements IFeatureSearchStore {
             yes: Number(r.yes) || 0,
             no: Number(r.no) || 0,
             changeRequestIds: r.change_request_ids ?? [],
+            ...(r.milestone_name
+                ? {
+                      milestoneName: r.milestone_name,
+                      milestoneOrder: r.milestone_order,
+                      totalMilestones: Number(r.total_milestones || 0),
+                  }
+                : {}),
         };
-    }
-
-    private getLatestLifecycleStageQuery() {
-        return this.db('feature_lifecycles')
-            .select(
-                'feature as stage_feature',
-                'stage as latest_stage',
-                'status as stage_status',
-                'created_at as entered_stage_at',
-            )
-            .distinctOn('stage_feature')
-            .orderBy([
-                'stage_feature',
-                {
-                    column: 'entered_stage_at',
-                    order: 'desc',
-                },
-            ]);
     }
 
     async searchFeatures(
@@ -147,6 +136,9 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     'users.username as user_username',
                     'users.email as user_email',
                     'users.image_url as user_image_url',
+                    'lifecycle.latest_stage',
+                    'lifecycle.stage_status',
+                    'lifecycle.entered_stage_at',
                 ] as (string | Raw<any> | Knex.QueryBuilder)[];
 
                 const lastSeenQuery = 'last_seen_at_metrics.last_seen_at';
@@ -245,19 +237,48 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'users',
                         'users.id',
                         'features.created_by_user_id',
+                    )
+                    .leftJoin('last_seen_at_metrics', function () {
+                        this.on(
+                            'last_seen_at_metrics.environment',
+                            '=',
+                            'environments.name',
+                        ).andOn(
+                            'last_seen_at_metrics.feature_name',
+                            '=',
+                            'features.name',
+                        );
+                    })
+                    .leftJoin(
+                        this.db
+                            .select(
+                                'feature as stage_feature',
+                                'stage as latest_stage',
+                                'status as stage_status',
+                                'created_at as entered_stage_at',
+                            )
+                            .from('feature_lifecycles')
+                            .distinctOn('feature')
+                            .orderBy([
+                                'feature',
+                                { column: 'created_at', order: 'desc' },
+                            ])
+                            .as('lifecycle'),
+                        'features.name',
+                        'lifecycle.stage_feature',
                     );
 
-                query.leftJoin('last_seen_at_metrics', function () {
-                    this.on(
-                        'last_seen_at_metrics.environment',
-                        '=',
-                        'environments.name',
-                    ).andOn(
-                        'last_seen_at_metrics.feature_name',
-                        '=',
-                        'features.name',
-                    );
-                });
+                if (this.flagResolver.isEnabled('flagsOverviewSearch')) {
+                    const parsedLifecycle = lifecycle
+                        ? parseSearchOperatorValue(
+                              'lifecycle.latest_stage',
+                              lifecycle,
+                          )
+                        : null;
+                    if (parsedLifecycle) {
+                        applyGenericQueryParams(query, [parsedLifecycle]);
+                    }
+                }
 
                 const rankingSql = this.buildRankingSql(
                     favoritesFirst,
@@ -270,7 +291,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     .select(selectColumns)
                     .denseRank('rank', this.db.raw(rankingSql));
             })
-            .with('lifecycle', this.getLatestLifecycleStageQuery())
             .with(
                 'final_ranks',
                 this.db.raw(
@@ -321,62 +341,12 @@ class FeatureSearchStore implements IFeatureSearchStore {
             .joinRaw('CROSS JOIN total_features')
             .whereBetween('final_rank', [offset + 1, offset + limit])
             .orderBy('final_rank');
-        finalQuery
-            .select(
-                'lifecycle.latest_stage',
-                'lifecycle.stage_status',
-                'lifecycle.entered_stage_at',
-            )
-            .leftJoin(
-                'lifecycle',
-                'ranked_features.feature_name',
-                'lifecycle.stage_feature',
-            );
 
         if (this.flagResolver.isEnabled('flagsOverviewSearch')) {
-            const parsedLifecycle = lifecycle
-                ? parseSearchOperatorValue('lifecycle.latest_stage', lifecycle)
-                : null;
-            if (parsedLifecycle) {
-                applyGenericQueryParams(finalQuery, [parsedLifecycle]);
-            }
-
-            finalQuery
-                .leftJoin(
-                    this.db('change_request_events AS cre')
-                        .join(
-                            'change_requests AS cr',
-                            'cre.change_request_id',
-                            'cr.id',
-                        )
-                        .select('cre.feature')
-                        .select(
-                            this.db.raw(
-                                'array_agg(distinct cre.change_request_id) AS change_request_ids',
-                            ),
-                        )
-                        .select('cr.environment')
-                        .groupBy('cre.feature', 'cr.environment')
-                        .whereNotIn('cr.state', [
-                            'Applied',
-                            'Cancelled',
-                            'Rejected',
-                        ])
-                        .as('feature_cr'),
-                    function () {
-                        this.on(
-                            'feature_cr.feature',
-                            '=',
-                            'ranked_features.feature_name',
-                        ).andOn(
-                            'feature_cr.environment',
-                            '=',
-                            'ranked_features.environment',
-                        );
-                    },
-                )
-                .select('feature_cr.change_request_ids');
+            this.buildChangeRequestSql(finalQuery);
+            this.buildReleasePlanSql(finalQuery);
         }
+
         this.queryExtraData(finalQuery);
         const rows = await finalQuery;
         stopTimer();
@@ -463,6 +433,93 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     );
                 },
             );
+    }
+
+    private buildReleasePlanSql(queryBuilder: Knex.QueryBuilder) {
+        queryBuilder
+            .leftJoin(
+                this.db
+                    .with('total_milestones', (qb) => {
+                        qb.select('release_plan_definition_id')
+                            .count('* as total_milestones')
+                            .from('milestones')
+                            .groupBy('release_plan_definition_id');
+                    })
+                    .select([
+                        'rpd.feature_name',
+                        'rpd.environment',
+                        'active_milestone.sort_order AS milestone_order',
+                        'total_milestones.total_milestones',
+                        'active_milestone.name AS milestone_name',
+                    ])
+                    .from('release_plan_definitions AS rpd')
+                    .join(
+                        'total_milestones',
+                        'total_milestones.release_plan_definition_id',
+                        'rpd.id',
+                    )
+                    .join(
+                        'milestones AS active_milestone',
+                        'active_milestone.id',
+                        'rpd.active_milestone_id',
+                    )
+                    .where('rpd.discriminator', 'plan')
+                    .as('feature_release_plan'),
+                function () {
+                    this.on(
+                        'feature_release_plan.feature_name',
+                        '=',
+                        'ranked_features.feature_name',
+                    ).andOn(
+                        'feature_release_plan.environment',
+                        '=',
+                        'ranked_features.environment',
+                    );
+                },
+            )
+            .select([
+                'feature_release_plan.milestone_name',
+                'feature_release_plan.milestone_order',
+                'feature_release_plan.total_milestones',
+            ]);
+    }
+
+    private buildChangeRequestSql(queryBuilder: Knex.QueryBuilder) {
+        queryBuilder
+            .leftJoin(
+                this.db('change_request_events AS cre')
+                    .join(
+                        'change_requests AS cr',
+                        'cre.change_request_id',
+                        'cr.id',
+                    )
+                    .select('cre.feature')
+                    .select(
+                        this.db.raw(
+                            'array_agg(distinct cre.change_request_id) AS change_request_ids',
+                        ),
+                    )
+                    .select('cr.environment')
+                    .groupBy('cre.feature', 'cr.environment')
+                    .whereNotIn('cr.state', [
+                        'Applied',
+                        'Cancelled',
+                        'Rejected',
+                    ])
+                    .as('feature_cr'),
+                function () {
+                    this.on(
+                        'feature_cr.feature',
+                        '=',
+                        'ranked_features.feature_name',
+                    ).andOn(
+                        'feature_cr.environment',
+                        '=',
+                        'ranked_features.environment',
+                    );
+                },
+            )
+            .select('feature_cr.change_request_ids');
     }
 
     private buildRankingSql(

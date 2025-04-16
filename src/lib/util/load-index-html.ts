@@ -10,6 +10,7 @@ export async function loadIndexHTML(
 ): Promise<string> {
     const { cdnPrefix, baseUriPath = '' } = config.server;
     const uiFlags = encodeURI(JSON.stringify(config.ui.flags || '{}'));
+    const unleashToken = config.unleashFrontendToken;
 
     let indexHTML: string;
     if (cdnPrefix) {
@@ -23,5 +24,11 @@ export async function loadIndexHTML(
             .toString();
     }
 
-    return rewriteHTML(indexHTML, baseUriPath, cdnPrefix, uiFlags);
+    return rewriteHTML(
+        indexHTML,
+        baseUriPath,
+        cdnPrefix,
+        uiFlags,
+        unleashToken,
+    );
 }

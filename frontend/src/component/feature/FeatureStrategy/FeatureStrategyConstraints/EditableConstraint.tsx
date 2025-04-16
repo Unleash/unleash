@@ -1,4 +1,4 @@
-import { styled } from '@mui/material';
+import { IconButton, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { DateSingleValue } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/DateSingleValue/DateSingleValue';
 import { FreeTextInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/FreeTextInput/FreeTextInput';
@@ -17,8 +17,6 @@ import {
     STRING_OPERATORS_LEGAL_VALUES,
     type Input,
 } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
-import { CaseSensitiveButton } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/StyledToggleButton/CaseSensitiveButton/CaseSensitiveButton';
-import { ConstraintOperatorSelect } from 'component/common/NewConstraintAccordion/ConstraintOperatorSelect';
 import {
     DATE_AFTER,
     dateOperators,
@@ -38,12 +36,25 @@ import {
     CURRENT_TIME_CONTEXT_FIELD,
     operatorsForContext,
 } from 'utils/operatorsForContext';
+import { ConstraintOperatorSelect } from './ConstraintOperatorSelect';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
+import Delete from '@mui/icons-material/Delete';
+import { ValueList } from './ValueList';
 
 const Container = styled('article')(({ theme }) => ({
+    '--padding': theme.spacing(2),
     backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusLarge,
     border: `1px solid ${theme.palette.divider}`,
+}));
+
+const TopRow = styled('div')(({ theme }) => ({
+    padding: 'var(--padding)',
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'flex-start',
+    justifyItems: 'space-between',
+    borderBottom: `1px dashed ${theme.palette.divider}`,
 }));
 
 const resolveLegalValues = (
@@ -72,6 +83,46 @@ const resolveLegalValues = (
     };
 };
 
+const ConstraintDetails = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+    flexFlow: 'row nowrap',
+    width: '100%',
+    height: 'min-content',
+}));
+
+const InputContainer = styled('div')(({ theme }) => ({
+    padding: 'var(--padding)',
+    paddingTop: 0,
+}));
+
+const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
+    fieldset: { border: 'none', borderRadius: 0 },
+    ':focus-within fieldset': { borderBottomStyle: 'solid' },
+    'label + &': {
+        // mui adds a margin top to 'standard' selects with labels
+        margin: 0,
+    },
+    '&::before': {
+        border: 'none',
+    },
+}));
+
+const StyledButton = styled('button')(({ theme }) => ({
+    width: '5ch',
+    borderRadius: theme.shape.borderRadius,
+    padding: theme.spacing(0.25, 0),
+    fontSize: theme.fontSizes.smallerBody,
+    background: theme.palette.secondary.light,
+    border: `1px solid ${theme.palette.secondary.border}`,
+    color: theme.palette.secondary.dark,
+    fontWeight: theme.typography.fontWeightBold,
+    transition: 'all 0.03s ease',
+    '&:is(:hover, :focus-visible)': {
+        outline: `1px solid ${theme.palette.primary.main}`,
+    },
+}));
+
 type Props = {
     localConstraint: IConstraint;
     setContextName: (contextName: string) => void;
@@ -79,8 +130,8 @@ type Props = {
     setLocalConstraint: React.Dispatch<React.SetStateAction<IConstraint>>;
     action: string;
     onDelete?: () => void;
-    setInvertedOperator: () => void;
-    setCaseInsensitive: () => void;
+    toggleInvertedOperator: () => void;
+    toggleCaseSensitivity: () => void;
     onUndo: () => void;
     constraintChanges: IConstraint[];
     contextDefinition: Pick<IUnleashContextDefinition, 'legalValues'>;
@@ -102,8 +153,8 @@ export const EditableConstraint: FC<Props> = ({
     setOperator,
     onDelete,
     onUndo,
-    setInvertedOperator,
-    setCaseInsensitive,
+    toggleInvertedOperator,
+    toggleCaseSensitivity,
     input,
     contextDefinition,
     constraintValues,
@@ -175,7 +226,7 @@ export const EditableConstraint: FC<Props> = ({
         }
     };
 
-    const resolveInput = () => {
+    const Input = () => {
         switch (input) {
             case IN_OPERATORS_LEGAL_VALUES:
             case STRING_OPERATORS_LEGAL_VALUES:
@@ -291,44 +342,60 @@ export const EditableConstraint: FC<Props> = ({
 
     return (
         <Container>
-            <GeneralSelect
-                id='context-field-select'
-                name='contextName'
-                label='Context Field'
-                autoFocus
-                options={constraintNameOptions}
-                value={contextName || ''}
-                onChange={setContextName}
-            />
-            <ConstraintOperatorSelect
-                options={operatorsForContext(contextName)}
-                value={operator}
-                onChange={onOperatorChange}
-            />
+            <TopRow>
+                <ConstraintDetails>
+                    <StyledSelect
+                        visuallyHideLabel
+                        id='context-field-select'
+                        name='contextName'
+                        label='Context Field'
+                        autoFocus
+                        options={constraintNameOptions}
+                        value={contextName || ''}
+                        onChange={setContextName}
+                        variant='standard'
+                    />
 
-            {/*  this is how to style them */}
-            {/* <StrategyEvaluationChip label='label' /> */}
-            {showCaseSensitiveButton ? (
-                <CaseSensitiveButton
-                    localConstraint={localConstraint}
-                    setCaseInsensitive={setCaseInsensitive}
-                />
-            ) : null}
-            {resolveInput()}
-            {/* <ul>
-                <li>
-                    <Chip
-                        label='value1'
-                        onDelete={() => console.log('Clicked')}
+                    <StyledButton
+                        type='button'
+                        onClick={toggleInvertedOperator}
+                    >
+                        {localConstraint.inverted ? 'aint' : 'is'}
+                    </StyledButton>
+
+                    <ConstraintOperatorSelect
+                        options={operatorsForContext(contextName)}
+                        value={operator}
+                        onChange={onOperatorChange}
+                        inverted={localConstraint.inverted}
                     />
-                </li>
-                <li>
-                    <Chip
-                        label='value2'
-                        onDelete={() => console.log('Clicked')}
+
+                    {showCaseSensitiveButton ? (
+                        <StyledButton
+                            type='button'
+                            onClick={toggleCaseSensitivity}
+                        >
+                            {localConstraint.caseInsensitive ? 'Aa' : 'A/a'}
+                        </StyledButton>
+                    ) : null}
+                </ConstraintDetails>
+                {!input.includes('LEGAL_VALUES') && (
+                    <ValueList
+                        values={localConstraint.values}
+                        removeValue={removeValue}
+                        setValues={setValuesWithRecord}
                     />
-                </li>
-            </ul> */}
+                )}
+
+                <HtmlTooltip title='Delete constraint' arrow>
+                    <IconButton type='button' size='small' onClick={onDelete}>
+                        <Delete />
+                    </IconButton>
+                </HtmlTooltip>
+            </TopRow>
+            <InputContainer>
+                <Input />
+            </InputContainer>
         </Container>
     );
 };

@@ -31,12 +31,14 @@ const HoverButtonsContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
     opacity: 0,
+    transition: 'opacity 0.1s ease-in-out',
 }));
 
 const StyledCard = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
+    height: '100%',
     maxWidth: '30rem',
     padding: theme.spacing(1.5, 2),
     color: 'inherit',
@@ -49,13 +51,12 @@ const StyledCard = styled('div')(({ theme }) => ({
     textAlign: 'left',
     overflow: 'hidden',
     position: 'relative',
-    [`&:hover ${CardContent}, &:focus-within ${CardContent}`]: {
+    '&:hover .cardContent, &:focus-within .cardContent': {
         opacity: 0.5,
     },
-    [`&:hover ${HoverButtonsContainer}, &:focus-within ${HoverButtonsContainer}`]:
-        {
-            opacity: 1,
-        },
+    '&:hover .buttonContainer, &:focus-within .buttonContainer': {
+        opacity: 1,
+    },
 }));
 
 const StyledTopRow = styled('div')(({ theme }) => ({
@@ -90,7 +91,7 @@ export const FeatureReleasePlanCard = ({
 
     return (
         <StyledCard>
-            <CardContent>
+            <CardContent className='cardContent'>
                 <StyledTopRow>
                     <StyledIcon>
                         <Icon />
@@ -112,7 +113,7 @@ export const FeatureReleasePlanCard = ({
                 </Truncator>
             </CardContent>
 
-            <HoverButtonsContainer>
+            <HoverButtonsContainer className='buttonContainer'>
                 <Button
                     variant='contained'
                     size='small'

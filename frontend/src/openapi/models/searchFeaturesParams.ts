@@ -19,6 +19,10 @@ export type SearchFeaturesParams = {
      */
     state?: string;
     /**
+     * The lifecycle stage of the feature. The stagee can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.
+     */
+    lifecycle?: string;
+    /**
      * The feature flag type to filter by. The type can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.
      */
     type?: string;

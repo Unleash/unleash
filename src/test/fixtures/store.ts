@@ -20,6 +20,10 @@ import type {
     IntegrationEventsStore,
     IPrivateProjectStore,
     IUnleashStores,
+    ReleasePlanMilestoneStore,
+    ReleasePlanMilestoneStrategyStore,
+    ReleasePlanStore,
+    ReleasePlanTemplateStore,
 } from '../../lib/types';
 import FakeSessionStore from './fake-session-store';
 import FakeFeatureEnvironmentStore from './fake-feature-environment-store';
@@ -129,6 +133,11 @@ const createStores: () => IUnleashStores = () => {
         uniqueConnectionReadModel: new UniqueConnectionReadModel(
             uniqueConnectionStore,
         ),
+        releasePlanStore: {} as ReleasePlanStore,
+        releasePlanMilestoneStore: {} as ReleasePlanMilestoneStore,
+        releasePlanTemplateStore: {} as ReleasePlanTemplateStore,
+        releasePlanMilestoneStrategyStore:
+            {} as ReleasePlanMilestoneStrategyStore,
     };
 };
 

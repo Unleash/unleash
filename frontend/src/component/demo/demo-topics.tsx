@@ -131,6 +131,17 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 href: `/projects/${PROJECT}/features/demoApp.step2`,
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] .MuiAccordionSummary-expandIconWrapper`,
+                content: (
+                    <Description>
+                        Expand the environment card to see all the defined
+                        strategies by using the arrow button.
+                    </Description>
+                ),
+                optional: true,
+            },
+            {
+                href: `/projects/${PROJECT}/features/demoApp.step2`,
                 target: 'button[data-testid="ADD_STRATEGY_BUTTON"]',
                 content: (
                     <Description>
@@ -264,6 +275,7 @@ export const TOPICS: ITutorialTopic[] = [
                         Save the constraint by using this button.
                     </Description>
                 ),
+                optional: true,
             },
             {
                 target: 'button[data-testid="STRATEGY_FORM_SUBMIT_ID"]',
@@ -469,6 +481,17 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 href: `/projects/${PROJECT}/features/demoApp.step4`,
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] .MuiAccordionSummary-expandIconWrapper`,
+                content: (
+                    <Description>
+                        Expand the environment card to see all the defined
+                        strategies by using the arrow button.
+                    </Description>
+                ),
+                optional: true,
+            },
+            {
+                href: `/projects/${PROJECT}/features/demoApp.step4`,
                 target: 'button[data-testid="ADD_STRATEGY_BUTTON"]',
                 content: (
                     <Description>
@@ -602,6 +625,7 @@ export const TOPICS: ITutorialTopic[] = [
                         Save the constraint by using this button.
                     </Description>
                 ),
+                optional: true,
             },
             {
                 target: 'button[data-testid="STRATEGY_VARIANTS_TAB"]',

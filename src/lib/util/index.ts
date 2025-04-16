@@ -30,3 +30,4 @@ export * from './arraysHaveSameItems';
 export * from './constantTimeCompare';
 export * from '../features/metrics/client-metrics/collapseHourlyMetrics';
 export * from '../features/playground/offline-unleash-client';
+export * from './batchExecute';

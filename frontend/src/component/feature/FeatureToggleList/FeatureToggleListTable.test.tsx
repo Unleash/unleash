@@ -76,14 +76,14 @@ const setupApi = (features: APIFeature[], projects: APIProject[]) => {
 
 const verifyTableFeature = async (feature: Partial<UIFeature>) => {
     await screen.findByText('Search');
-    await screen.findByText('Add Filter');
+    await screen.findByText('Filter');
     await Promise.all(
         Object.values(feature).map((value) => screen.findByText(value)),
     );
 };
 
 const filterFeaturesByProject = async (projectName: string) => {
-    const addFilterButton = screen.getByText('Add Filter');
+    const addFilterButton = screen.getByText('Filter');
     addFilterButton.click();
 
     const projectItem = await screen.findByText('Project');
@@ -136,9 +136,7 @@ test('Filter table by project', async () => {
     setupNoFeaturesReturned();
     await filterFeaturesByProject('Project B');
 
-    await screen.findByText(
-        'No feature flags found matching your criteria. Get started by adding a new feature flag.',
-    );
+    await screen.findByText('No feature flags found matching your criteria.');
     expect(window.location.href).toContain(
         '?offset=0&columns=&project=IS%3Aproject-b',
     );

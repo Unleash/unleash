@@ -8,6 +8,12 @@
  * A tag type.
  */
 export interface TagTypeSchema {
+    /**
+     * The hexadecimal color code for the tag type.
+     * @nullable
+     * @pattern ^#[0-9A-Fa-f]{6}$
+     */
+    color?: string | null;
     /** The description of the tag type. */
     description?: string;
     /**

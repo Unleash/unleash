@@ -3371,6 +3371,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@unleash/proxy-client-react@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "@unleash/proxy-client-react@npm:5.0.0"
+  peerDependencies:
+    unleash-proxy-client: ^3.7.3
+  checksum: 10c0/cf8d227a2db06c5ca09be4be45885306b71733540ace3980ff3794bfaa22c6b38a15446e46ca8880478c018d8ecd0f14e14cb203a6c3ba9b901853db0a9890ba
+  languageName: node
+  linkType: hard
+
 "@vitejs/plugin-react@npm:4.3.4":
   version: 4.3.4
   resolution: "@vitejs/plugin-react@npm:4.3.4"
@@ -9609,6 +9618,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tiny-emitter@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "tiny-emitter@npm:2.1.0"
+  checksum: 10c0/459c0bd6e636e80909898220eb390e1cba2b15c430b7b06cec6ac29d87acd29ef618b9b32532283af749f5d37af3534d0e3bde29fdf6bcefbf122784333c953d
+  languageName: node
+  linkType: hard
+
 "tinybench@npm:^2.9.0":
   version: 2.9.0
   resolution: "tinybench@npm:2.9.0"
@@ -10123,6 +10139,7 @@ __metadata:
     "@types/uuid": "npm:^9.0.0"
     "@uiw/codemirror-theme-duotone": "npm:4.23.10"
     "@uiw/react-codemirror": "npm:4.23.10"
+    "@unleash/proxy-client-react": "npm:^5.0.0"
     "@vitejs/plugin-react": "npm:4.3.4"
     cartesian: "npm:^1.0.1"
     chart.js: "npm:3.9.1"
@@ -10173,9 +10190,10 @@ __metadata:
     swr: "npm:2.3.3"
     tss-react: "npm:4.9.15"
     typescript: "npm:5.4.5"
+    unleash-proxy-client: "npm:^3.7.3"
     use-query-params: "npm:^2.2.1"
     vanilla-jsoneditor: "npm:^0.23.0"
-    vite: "npm:5.4.16"
+    vite: "npm:5.4.18"
     vite-plugin-env-compatible: "npm:2.0.1"
     vite-plugin-svgr: "npm:3.3.0"
     vite-tsconfig-paths: "npm:4.3.2"
@@ -10183,6 +10201,16 @@ __metadata:
     whatwg-fetch: "npm:3.6.20"
   languageName: unknown
   linkType: soft
+
+"unleash-proxy-client@npm:^3.7.3":
+  version: 3.7.3
+  resolution: "unleash-proxy-client@npm:3.7.3"
+  dependencies:
+    tiny-emitter: "npm:^2.1.0"
+    uuid: "npm:^9.0.1"
+  checksum: 10c0/3a061d4e3587325046fea0133fe405fef143dbcfdd6ed20c54200b46a22bf49acdccb6dcc0b250400a9ace2350b0065f856731a5712598d27c1e9266a141f559
+  languageName: node
+  linkType: hard
 
 "untildify@npm:^4.0.0":
   version: 4.0.0
@@ -10295,6 +10323,15 @@ __metadata:
   bin:
     uuid: dist/bin/uuid
   checksum: 10c0/bcbb807a917d374a49f475fae2e87fdca7da5e5530820ef53f65ba1d12131bd81a92ecf259cc7ce317cbe0f289e7d79fdfebcef9bfa3087c8c8a2fa304c9be54
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^9.0.1":
+  version: 9.0.1
+  resolution: "uuid@npm:9.0.1"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 10c0/1607dd32ac7fc22f2d8f77051e6a64845c9bce5cd3dd8aa0070c074ec73e666a1f63c7b4e0f4bf2bc8b9d59dc85a15e17807446d9d2b17c8485fbc2147b27f9b
   languageName: node
   linkType: hard
 
@@ -10448,9 +10485,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:5.4.16":
-  version: 5.4.16
-  resolution: "vite@npm:5.4.16"
+"vite@npm:5.4.18":
+  version: 5.4.18
+  resolution: "vite@npm:5.4.18"
   dependencies:
     esbuild: "npm:^0.21.3"
     fsevents: "npm:~2.3.3"
@@ -10487,7 +10524,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10c0/10faad2614c24a4ff65a680acfe9f71a90eba6c291ecf2d98919eb72c16d7d39b40e54e859d6a48c139a497829c3546cd2ae95be31f1a4145cba560d3d6e1b12
+  checksum: 10c0/a8cbbec6bdf399e62c386d70b8485e4f2f1b427beb19bc7c5d52b402a0c3750b7ff469fc20a8333755ea13bc1b0af5df3f22c8fd37d1739ee51d709b7a4740b6
   languageName: node
   linkType: hard
 

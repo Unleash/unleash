@@ -640,6 +640,10 @@ const sidebars: SidebarsConfig = {
                     items: [
                         'generated/unleash-edge/concepts',
                         'generated/unleash-edge/deploying',
+                        'generated/unleash-edge/benchmarking',
+                        'generated/unleash-edge/cli',
+                        'generated/unleash-edge/development-guide',
+                        'generated/unleash-edge/migration-guide',
                     ],
                 },
                 'generated/unleash-proxy',

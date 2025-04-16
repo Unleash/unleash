@@ -51,8 +51,8 @@ export const getIllegalValues = (
 };
 
 const StyledValuesContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexWrap: 'wrap',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, 120px)',
     gap: theme.spacing(1),
     padding: theme.spacing(2),
     border: `1px solid ${theme.palette.divider}`,
@@ -178,7 +178,9 @@ export const RestrictiveLegalValues = ({
                                 Boolean(values)
                             }
                             show={
-                                <StyledValuesContainer sx={{ border: 0 }}>
+                                <StyledValuesContainer
+                                    sx={{ border: 0, paddingTop: 0 }}
+                                >
                                     {values.map((value) => {
                                         return (
                                             <Chip
@@ -191,13 +193,10 @@ export const RestrictiveLegalValues = ({
                                 </StyledValuesContainer>
                             }
                         />
-                        <ConstraintValueSearch
-                            filter={filter}
-                            setFilter={setFilter}
-                        />
                     </>
                 }
             />
+            <ConstraintValueSearch filter={filter} setFilter={setFilter} />
             <StyledValuesContainer>
                 {filteredValues.map((match) => (
                     <LegalValueLabel

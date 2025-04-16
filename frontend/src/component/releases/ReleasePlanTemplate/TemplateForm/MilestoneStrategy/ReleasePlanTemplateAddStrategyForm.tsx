@@ -25,6 +25,7 @@ import { MilestoneStrategyTitle } from './MilestoneStrategyTitle';
 import { MilestoneStrategyConstraints } from './MilestoneStrategyConstraints';
 import { MilestoneStrategyVariants } from './MilestoneStrategyVariants';
 import { MilestoneStrategyType } from './MilestoneStrategyType';
+import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
 import {
     featureStrategyDocsLink,
     featureStrategyDocsLinkLabel,
@@ -108,26 +109,14 @@ const StyledBox = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(3.5),
 }));
 
-const StyledTargetingHeader = styled('div')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    marginTop: theme.spacing(1.5),
-}));
-
 const StyledDivider = styled(Divider)(({ theme }) => ({
     width: '100%',
 }));
 
-const StyledDividerContent = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(0.75, 1),
-    color: theme.palette.text.primary,
-    fontSize: theme.fontSizes.smallerBody,
-    backgroundColor: theme.palette.background.elevation2,
-    borderRadius: theme.shape.borderRadius,
-    width: '45px',
-    position: 'absolute',
+const StyledConstraintSeparator = styled(ConstraintSeparator)(({ theme }) => ({
     top: '-10px',
-    left: 'calc(50% - 45px)',
-    lineHeight: 1,
+    left: '0',
+    transform: 'translateY(0)',
 }));
 
 interface IReleasePlanTemplateAddStrategyFormProps {
@@ -321,24 +310,24 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                 )}
                 {activeTab === 1 && (
                     <>
-                        <StyledTargetingHeader>
+                        <Alert severity='info' sx={{ mb: 2 }} icon={false}>
                             Segmentation and constraints allow you to set
                             filters on your strategies, so that they will only
                             be evaluated for users and applications that match
                             the specified preconditions.
-                            <MilestoneStrategySegment
-                                segments={segments}
-                                setSegments={setSegments}
-                            />
-                            <StyledBox>
-                                <StyledDivider />
-                                <StyledDividerContent>AND</StyledDividerContent>
-                            </StyledBox>
-                            <MilestoneStrategyConstraints
-                                strategy={currentStrategy}
-                                setStrategy={setCurrentStrategy}
-                            />
-                        </StyledTargetingHeader>
+                        </Alert>
+                        <MilestoneStrategySegment
+                            segments={segments}
+                            setSegments={setSegments}
+                        />
+                        <StyledBox>
+                            <StyledDivider />
+                            <StyledConstraintSeparator />
+                        </StyledBox>
+                        <MilestoneStrategyConstraints
+                            strategy={currentStrategy}
+                            setStrategy={setCurrentStrategy}
+                        />
                     </>
                 )}
                 {activeTab === 2 && showVariants && (

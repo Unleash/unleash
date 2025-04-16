@@ -24,12 +24,12 @@ interface IFeatureStrategyMenuCardsProps {
     onlyReleasePlans: boolean;
     onAddReleasePlan: (template: IReleasePlanTemplate) => void;
     onReviewReleasePlan: (template: IReleasePlanTemplate) => void;
-    onClose?: () => void;
+    onClose: () => void;
 }
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
-    padding: theme.spacing(1, 2),
+    padding: theme.spacing(1, 4),
     width: '100%',
 }));
 
@@ -48,14 +48,14 @@ const ScrollableContent = styled(Box)(({ theme }) => ({
     width: '100%',
     maxHeight: '70vh',
     overflowY: 'auto',
-    padding: theme.spacing(0, 0, 1, 0),
+    padding: theme.spacing(1, 0, 1, 0),
 }));
 
 const GridSection = styled(Box)(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: 'repeat(2, 1fr)',
     gap: theme.spacing(1.5),
-    padding: theme.spacing(0, 2),
+    padding: theme.spacing(0, 4),
     marginBottom: theme.spacing(3),
     width: '100%',
 }));
@@ -69,7 +69,7 @@ const TitleRow = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: theme.spacing(1, 2),
+    padding: theme.spacing(4, 4, 2, 4),
 }));
 
 const TitleText = styled(Typography)(({ theme }) => ({
@@ -82,7 +82,7 @@ const SectionTitle = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(0.5),
-    padding: theme.spacing(1, 2),
+    padding: theme.spacing(0, 4, 1, 4),
     width: '100%',
 }));
 
@@ -102,7 +102,6 @@ const StyledIcon = styled('div')(({ theme }) => ({
     alignItems: 'center',
 }));
 
-// Empty state styling
 const EmptyStateContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -111,7 +110,7 @@ const EmptyStateContainer = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.neutral.light,
     borderRadius: theme.shape.borderRadiusMedium,
     padding: theme.spacing(3),
-    margin: theme.spacing(0, 2),
+    margin: theme.spacing(0, 4),
     width: 'auto',
 }));
 
@@ -170,16 +169,14 @@ export const FeatureStrategyMenuCards = ({
                 <TitleText variant='h2'>
                     {onlyReleasePlans ? 'Select template' : 'Select strategy'}
                 </TitleText>
-                {onClose && (
-                    <IconButton
-                        size='small'
-                        onClick={onClose}
-                        edge='end'
-                        aria-label='close'
-                    >
-                        <CloseIcon fontSize='small' />
-                    </IconButton>
-                )}
+                <IconButton
+                    size='small'
+                    onClick={onClose}
+                    edge='end'
+                    aria-label='close'
+                >
+                    <CloseIcon fontSize='small' />
+                </IconButton>
             </TitleRow>
             <ScrollableContent>
                 {allStrategies ? (
@@ -203,6 +200,7 @@ export const FeatureStrategyMenuCards = ({
                                     environmentId={environmentId}
                                     strategy={defaultStrategy}
                                     defaultStrategy={true}
+                                    onClose={onClose}
                                 />
                             </CardWrapper>
                             {preDefinedStrategies.map((strategy) => (
@@ -212,6 +210,7 @@ export const FeatureStrategyMenuCards = ({
                                         featureId={featureId}
                                         environmentId={environmentId}
                                         strategy={strategy}
+                                        onClose={onClose}
                                     />
                                 </CardWrapper>
                             ))}
@@ -331,6 +330,7 @@ export const FeatureStrategyMenuCards = ({
                                                         environmentId
                                                     }
                                                     strategy={strategy}
+                                                    onClose={onClose}
                                                 />
                                             </CardWrapper>
                                         ))}

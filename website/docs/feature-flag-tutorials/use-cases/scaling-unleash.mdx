@@ -137,19 +137,19 @@ In the rare event of a complete primary region failure (disaster recovery scenar
 2. Adjust DNS records or load balancer configurations to direct traffic to the Unleash API instances in the new region.
 3. Scale up compute resources (API servers, Edge instances if applicable) in the new region as needed to handle the full production load.
 
-### Scaling with Unleash Edge
+## Scaling with Unleash Edge
 For organizations with globally distributed users and a high number of client-side (e.g., web/mobile) flag evaluations, relying solely on a central Unleash API server can introduce unacceptable latency for end-users and place significant read load on the central API and database.
 
 Unleash Edge acts as a lightweight, globally distributed, read-only caching layer for your feature flag configurations. SDKs connect to the nearest Edge instance instead of directly to the central Unleash API.
 
 Edge was specifically built to handle scenarios where tens of millions of end-users are spread across the globe, requiring localized evaluation of feature toggles with minimal latency.
 
-#### Why use Edge?
+### Why use Edge?
 - **Low latency**: Dramatically reduces flag configuration fetch times for users worldwide by serving requests from a geographically closer point. With Enterprise Edge, feature flag updates are pushed instantly from the central API to the Edge nodes, ensuring they serve near-real-time configurations.
 - **Scalability**: Edge instances are stateless and optimized for high throughput. They can be scaled horizontally, independently of the main Unleash API. This offloads the vast majority of read traffic (SDK polling/requests) from your central Unleash API and database. A single Edge instance can typically handle tens of thousands of requests per second.
 - **Enhanced availability**: Edge instances maintain an in-memory cache of the flag configuration. If the central Unleash API is temporarily unavailable, Edge continues to serve the last known valid configuration to SDKs, providing an additional layer of resilience beyond the SDK's own cache.
 
-#### Global scale and multi-region scenarios
+### Global scale and multi-region scenarios
 
 When you require low-latency flag evaluations for a globally distributed user base, we recommend that you use distributed Edge instances across multiple global regions.
 
@@ -175,14 +175,14 @@ With Unleash Enterprise Edge Cloud, this complexity is handled for you—you sim
     Read more in the Unleash Edge deployment guide.
 </details>
 
-#### Lower scale or single-region scenarios
+### Lower scale or single-region scenarios
 
 Even when global scaling and sub-second cross-continent latency are not primary concerns initially, implementing basic high-availability practices is still recommended for production workloads:
 - SDKs connect directly to the Unleash API behind a load balancer or use a local Unleash Edge instance.
 - The load balancer should distribute requests across Unleash API instances running in multiple AZs for redundancy.
 - A Multi-AZ managed database ensures high availability at the database layer.
 
-### Monitoring and observability
+## Monitoring and observability
 
 Unleash Cloud provides built-in observability dashboards, usage metrics, and system status updates via the Admin UI and a public status page.
 
@@ -202,7 +202,7 @@ The **Network** dashboard in the Admin UI, including the **Connected Edges** vie
 
 Unleash is architected with scalability, performance, and resilience in mind, designed specifically for supporting demanding enterprise workloads. By leveraging its client-side evaluation architecture, Unleash Edge for added scalability, and flexible deployment models, organizations can achieve reliable, high-performance feature management at a global scale, enabling faster, safer software delivery.
 
-## Unleash scaling and availability: Frequently Asked Questions (FAQs)
+## Frequently asked questions (FAQs)
 This FAQ section addresses common questions about scaling the Unleash feature management platform for enterprise use, focusing on performance, high availability, and managing large user and flag volumes.
 
 #### Should I choose cloud-hosted or self-hosted Unleash?

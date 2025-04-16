@@ -5,11 +5,17 @@ import { parseISO } from 'date-fns';
 import differenceInDays from 'date-fns/differenceInDays';
 
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { UPDATE_FEATURE } from '../../../providers/AccessProvider/permissions';
+import {
+    DELETE_FEATURE,
+    UPDATE_FEATURE,
+} from '../../../providers/AccessProvider/permissions';
 import { MarkCompletedDialogue } from '../FeatureOverview/FeatureLifecycle/MarkCompletedDialogue';
 import { populateCurrentStage } from '../FeatureOverview/FeatureLifecycle/populateCurrentStage';
 import { isSafeToArchive } from '../FeatureOverview/FeatureLifecycle/isSafeToArchive';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
+import { FeatureArchiveNotAllowedDialog } from '../../../common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
+import { FeatureArchiveDialog } from '../../../common/FeatureArchiveDialog/FeatureArchiveDialog';
+import { useNavigate } from 'react-router-dom';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     marginRight: theme.spacing(2),
@@ -22,8 +28,11 @@ export const CleanupReminder: FC<{
     feature: IFeatureToggle;
     onChange: () => void;
 }> = ({ feature, onChange }) => {
+    const navigate = useNavigate();
+
     const [markCompleteDialogueOpen, setMarkCompleteDialogueOpen] =
         useState(false);
+    const [archiveDialogueOpen, setArchiveDialogueOpen] = useState(false);
 
     const currentStage = populateCurrentStage(feature);
     const isRelevantType =
@@ -94,13 +103,47 @@ export const CleanupReminder: FC<{
             )}
 
             {reminder === 'archive' && (
-                <Alert severity='warning'>
-                    <b>Time to clean up technical debt?</b>
-                    <p>
-                        We haven't observed any metrics for this flag lately.
-                        Can it be archived?
-                    </p>
-                </Alert>
+                <>
+                    <Alert
+                        severity='warning'
+                        action={
+                            <PermissionButton
+                                variant='contained'
+                                permission={DELETE_FEATURE}
+                                size='small'
+                                sx={{ mb: 2 }}
+                                onClick={() => setArchiveDialogueOpen(true)}
+                                projectId={feature.project}
+                            >
+                                Archive flag
+                            </PermissionButton>
+                        }
+                    >
+                        <b>Time to clean up technical debt?</b>
+                        <p>
+                            We haven't observed any metrics for this flag
+                            lately. Can it be archived?
+                        </p>
+                    </Alert>
+                    {feature.children.length > 0 ? (
+                        <FeatureArchiveNotAllowedDialog
+                            features={feature.children}
+                            project={feature.project}
+                            isOpen={archiveDialogueOpen}
+                            onClose={() => setArchiveDialogueOpen(false)}
+                        />
+                    ) : (
+                        <FeatureArchiveDialog
+                            isOpen={archiveDialogueOpen}
+                            onConfirm={() => {
+                                navigate(`/projects/${feature.project}`);
+                            }}
+                            onClose={() => setArchiveDialogueOpen(false)}
+                            projectId={feature.project}
+                            featureIds={[feature.name]}
+                        />
+                    )}
+                </>
             )}
 
             {reminder === 'removeCode' && (

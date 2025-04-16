@@ -3,7 +3,10 @@ import { CleanupReminder } from './CleanupReminder';
 import { render } from 'utils/testRenderer';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { screen } from '@testing-library/react';
-import { UPDATE_FEATURE } from '../../../providers/AccessProvider/permissions';
+import {
+    DELETE_FEATURE,
+    UPDATE_FEATURE,
+} from '../../../providers/AccessProvider/permissions';
 
 const currentTime = '2024-04-25T08:05:00.000Z';
 const monthAgo = '2024-03-25T06:05:00.000Z';
@@ -26,7 +29,8 @@ test('render complete feature reminder', async () => {
     await screen.findByText('31 days');
 
     button.click();
-    await screen.findByText('Cancel');
+    const cancel = await screen.findByText('Cancel');
+    cancel.click();
 });
 
 test('render remove flag from code reminder', async () => {
@@ -61,11 +65,17 @@ test('render archive flag reminder', async () => {
         type: 'release',
         lifecycle: { stage: 'completed', enteredStageAt: monthAgo },
         environments: [{ name: 'prod', type: 'production', enabled: true }],
+        children: ['child1'],
     } as IFeatureToggle;
 
     render(<CleanupReminder feature={feature} onChange={() => {}} />, {
-        permissions: [{ permission: UPDATE_FEATURE }],
+        permissions: [{ permission: DELETE_FEATURE }],
     });
 
-    await screen.findByText('Time to clean up technical debt?');
+    const button = await screen.findByText('Archive flag');
+    button.click();
+
+    await screen.findByText('child1');
+    const okButton = await screen.findByText('OK');
+    okButton.click();
 });

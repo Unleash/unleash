@@ -61,6 +61,7 @@ process.nextTick(async () => {
                         newStrategyDropdown: true,
                         addEditStrategy: true,
                         flagsOverviewSearch: true,
+                        cleanupReminder: true,
                     },
                 },
                 authentication: {

@@ -69,7 +69,8 @@ export type IFlagKey =
     | 'addEditStrategy'
     | 'newStrategyDropdown'
     | 'flagsOverviewSearch'
-    | 'flagsReleaseManagementUI';
+    | 'flagsReleaseManagementUI'
+    | 'cleanupReminder';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -328,6 +329,10 @@ const flags: IFlags = {
     ),
     flagsReleaseManagementUI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FLAGS_RELEASE_MANAGEMENT_UI,
+        false,
+    ),
+    cleanupReminder: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CLEANUP_REMINDER,
         false,
     ),
 };

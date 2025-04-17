@@ -93,13 +93,14 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
 }));
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
-    width: '100%',
-    marginBottom: theme.spacing(1),
+    flexGrow: 1,
 }));
 
-const ButtonContainer = styled('div')(({ theme }) => ({
+const InputRow = styled('div')(({ theme }) => ({
     display: 'flex',
-    justifyContent: 'flex-end',
+    gap: theme.spacing(1),
+    alignItems: 'start',
+    width: '100%',
 }));
 
 const ErrorMessage = styled('div')(({ theme }) => ({
@@ -174,22 +175,21 @@ const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
                     }}
                 >
                     <div>
-                        <StyledTextField
-                            label='Values'
-                            placeholder='value1, value2, value3...'
-                            value={inputValues}
-                            onChange={(e) => {
-                                setInputValues(e.target.value);
-                                setError('');
-                            }}
-                            onKeyPress={handleKeyPress}
-                            error={Boolean(error)}
-                            helperText={error}
-                            size='small'
-                            fullWidth
-                            autoFocus
-                        />
-                        <ButtonContainer>
+                        {error && <ErrorMessage>{error}</ErrorMessage>}
+                        <InputRow>
+                            <StyledTextField
+                                label='Values'
+                                placeholder='value1, value2, value3...'
+                                value={inputValues}
+                                onChange={(e) => {
+                                    setInputValues(e.target.value);
+                                    setError('');
+                                }}
+                                onKeyPress={handleKeyPress}
+                                size='small'
+                                fullWidth
+                                autoFocus
+                            />
                             <Button
                                 variant='contained'
                                 color='primary'
@@ -198,7 +198,7 @@ const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
                             >
                                 Add
                             </Button>
-                        </ButtonContainer>
+                        </InputRow>
                     </div>
                 </StyledPopover>
             </>

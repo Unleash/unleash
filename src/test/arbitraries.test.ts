@@ -108,14 +108,6 @@ export const strategies = (): Arbitrary<FeatureStrategySchema[]> =>
             ),
 
             strategy(
-                'userWithId',
-                fc.record({
-                    userIds: fc
-                        .uniqueArray(fc.emailAddress())
-                        .map((ids) => ids.join(',')),
-                }),
-            ),
-            strategy(
                 'remoteAddress',
                 fc.record({
                     IPs: fc.uniqueArray(fc.ipV4()).map((ips) => ips.join(',')),

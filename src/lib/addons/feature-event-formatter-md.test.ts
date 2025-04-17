@@ -353,46 +353,6 @@ const testCases: [string, IEvent][] = [
             ],
     ),
     [
-        'when userIds changed',
-        {
-            id: 920,
-            type: FEATURE_STRATEGY_UPDATE,
-            createdBy: 'user@company.com',
-            createdByUserId: SYSTEM_USER_ID,
-            createdAt: new Date('2022-06-01T10:03:11.549Z'),
-            data: {
-                name: 'userWithId',
-                constraints: [
-                    {
-                        values: ['x', 'y'],
-                        inverted: false,
-                        operator: IN,
-                        contextName: 'appName',
-                        caseInsensitive: false,
-                    },
-                ],
-                parameters: {
-                    userIds: 'a,b',
-                },
-                sortOrder: 9999,
-                id: '9a995d94-5944-4897-a82f-0f7e65c2fb3f',
-            },
-            preData: {
-                name: 'userWithId',
-                constraints: [],
-                parameters: {
-                    userIds: '',
-                },
-                sortOrder: 9999,
-                id: '9a995d94-5944-4897-a82f-0f7e65c2fb3f',
-            },
-            tags: [],
-            featureName: 'new-feature',
-            project: 'my-other-project',
-            environment: 'production',
-        },
-    ],
-    [
         'when IPs changed',
         {
             id: 920,

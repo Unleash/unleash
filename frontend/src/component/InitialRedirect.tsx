@@ -10,7 +10,7 @@ export const useLastViewedPage = (location?: Location) => {
     const [state, setState] = useLocalStorageState<string>(
         'lastViewedPage',
         '/personal',
-        7 * 24 * 60 * 60 * 1000,
+        7 * 24 * 60 * 60 * 1000, // 7 days, left to promote seeing Personal dashboard from time to time
     );
 
     useEffect(() => {

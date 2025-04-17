@@ -2,7 +2,6 @@ import DefaultStrategy from './default-strategy';
 import GradualRolloutRandomStrategy from './gradual-rollout-random';
 import GradualRolloutUserIdStrategy from './gradual-rollout-user-id';
 import GradualRolloutSessionIdStrategy from './gradual-rollout-session-id';
-import UserWithIdStrategy from './user-with-id-strategy';
 import RemoteAddressStrategy from './remote-address-strategy';
 import FlexibleRolloutStrategy from './flexible-rollout-strategy';
 import type { Strategy } from './strategy';
@@ -18,7 +17,6 @@ export const defaultStrategies: Array<Strategy> = [
     new GradualRolloutRandomStrategy(),
     new GradualRolloutUserIdStrategy(),
     new GradualRolloutSessionIdStrategy(),
-    new UserWithIdStrategy(),
     new RemoteAddressStrategy(),
     new FlexibleRolloutStrategy(),
     new UnknownStrategy(),

@@ -37,4 +37,4 @@ jobs:
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
           config: baseUrl=http://localhost:3000
           spec: cypress/integration/${{ matrix.test }}
-          install: false
+          install-command: yarn --immutable

@@ -43,7 +43,7 @@ services:
       interval: 1s
       timeout: 1m
       retries: 5
-      start_period: 45s
+      start_period: 15s
   db:
     expose:
       - "5432"

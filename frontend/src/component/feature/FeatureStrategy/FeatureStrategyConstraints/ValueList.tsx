@@ -94,6 +94,9 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
     flexGrow: 1,
+    '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
+        borderBottomColor: theme.palette.primary.light,
+    },
 }));
 
 const InputRow = styled('div')(({ theme }) => ({
@@ -178,8 +181,7 @@ const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
                         {error && <ErrorMessage>{error}</ErrorMessage>}
                         <InputRow>
                             <StyledTextField
-                                label='Values'
-                                placeholder='value1, value2, value3...'
+                                placeholder='Enter value'
                                 value={inputValues}
                                 onChange={(e) => {
                                     setInputValues(e.target.value);
@@ -187,6 +189,7 @@ const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
                                 }}
                                 onKeyPress={handleKeyPress}
                                 size='small'
+                                variant='standard'
                                 fullWidth
                                 autoFocus
                             />

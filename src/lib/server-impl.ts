@@ -36,6 +36,19 @@ import { defaultLockKey, defaultTimeout, withDbLock } from './util/db-lock';
 import { scheduleServices } from './features/scheduler/schedule-services';
 import { compareAndLogPostgresVersion } from './util/postgres-version-checker';
 
+export async function initialServiceSetup(
+    { authentication }: Pick<IUnleashConfig, 'authentication'>,
+    {
+        userService,
+        apiTokenService,
+    }: Pick<IUnleashServices, 'userService' | 'apiTokenService'>,
+) {
+    await userService.initAdminUser(authentication);
+    if (authentication.initApiTokens.length > 0) {
+        await apiTokenService.initApiTokens(authentication.initApiTokens);
+    }
+}
+
 async function createApp(
     config: IUnleashConfig,
     startApp: boolean,
@@ -47,6 +60,7 @@ async function createApp(
     const stores = createStores(config, db);
     await compareAndLogPostgresVersion(config, stores.settingStore);
     const services = createServices(stores, config, db);
+    await initialServiceSetup(config, services);
 
     if (!config.disableScheduler) {
         await scheduleServices(services, config);

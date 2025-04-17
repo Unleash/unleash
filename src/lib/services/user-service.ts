@@ -106,18 +106,12 @@ class UserService {
         {
             server,
             getLogger,
-            authentication,
             eventBus,
             flagResolver,
             session,
         }: Pick<
             IUnleashConfig,
-            | 'getLogger'
-            | 'authentication'
-            | 'server'
-            | 'eventBus'
-            | 'flagResolver'
-            | 'session'
+            'getLogger' | 'server' | 'eventBus' | 'flagResolver' | 'session'
         >,
         services: {
             accessService: AccessService;
@@ -139,9 +133,6 @@ class UserService {
         this.settingService = services.settingService;
         this.flagResolver = flagResolver;
         this.maxParallelSessions = session.maxParallelSessions;
-
-        process.nextTick(() => this.initAdminUser(authentication));
-
         this.baseUriPath = server.baseUriPath || '';
         this.unleashUrl = server.unleashUrl;
     }

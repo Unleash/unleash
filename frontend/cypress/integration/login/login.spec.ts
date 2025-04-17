@@ -18,86 +18,59 @@ describe('login', () => {
     });
 
     beforeEach(() => {
-        // clear last visited pages before each test
-        cy.window().then((win) => {
-            win.localStorage.clear();
-            win.location.reload();
-        });
         cy.login_UI();
     });
 
     it('is redirecting to /personal after first login', () => {
         cy.visit('/');
-        cy.location().should((location) => {
-            expect(location.pathname).to.eq('/personal');
-        });
+        cy.url().should('eq', `${baseUrl}/personal`);
         cy.visit('/');
-        // Twice, because "/" it should always return to last "home" page
-        cy.location().should((location) => {
-            expect(location.pathname).to.eq('/personal');
-        });
+        // "/" should again redirect to last "home" page
+        cy.url().should('eq', `${baseUrl}/personal`);
     });
 
     it('is redirecting to last visited projects', () => {
         cy.visit('/projects');
         cy.visit('/');
-        cy.location().should((location) => {
-            expect(location.pathname).to.eq('/projects');
-        });
+        cy.url().should('eq', `${baseUrl}/projects`);
         cy.contains('a', projectName).click();
         cy.get(`h1 span`).should('not.have.class', 'skeleton');
         cy.visit('/');
-        cy.location().should((location) => {
-            expect(location.pathname).to.eq(`/projects/${projectName}`);
-        });
+        cy.url().should('eq', `${baseUrl}/projects/${projectName}`); // last visited project
     });
 
     it('is redirecting to other pages', () => {
         cy.visit('/search');
         cy.visit('/');
-        cy.location().should((location) => {
-            expect(location.pathname).to.eq('/search');
-        });
+        cy.url().should('eq', `${baseUrl}/search`);
         cy.visit('/search');
         cy.visit('/admin');
         cy.visit('/applications');
         cy.visit('/');
-        cy.location().should((location) => {
-            expect(location.pathname).to.eq('/admin');
-        });
+        cy.url().should('eq', `${baseUrl}/admin`);
     });
 
     it('is redirecting to other pages', () => {
         cy.visit('/search');
+        cy.visit('/playground');
         cy.visit('/');
-        cy.location().should((location) => {
-            expect(location.pathname).to.eq('/search');
-        });
-        cy.visit('/search');
+        cy.url().should('eq', `${baseUrl}/playground`);
         cy.visit('/admin');
-        cy.visit('/applications');
+        cy.visit('/applications'); // not one of main pages
         cy.visit('/');
-        cy.location().should((location) => {
-            expect(location.pathname).to.eq('/admin');
-        });
+        cy.url().should('eq', `${baseUrl}/admin`);
     });
 
     it('clears last visited page on manual logout', () => {
         cy.visit('/search');
         cy.get('[data-testid=HEADER_USER_AVATAR]').click();
         cy.get('button').contains('Log out').click();
-        cy.location().should((location) => {
-            expect(location.pathname).to.eq('/login');
-        });
+        cy.url().should('eq', `${baseUrl}/login`);
         cy.visit('/');
-        cy.location().should((location) => {
-            expect(location.pathname).to.eq('/login');
-        });
+        cy.url().should('eq', `${baseUrl}/login`);
         cy.do_login();
         cy.visit('/');
-        cy.location().should((location) => {
-            expect(location.pathname).to.eq('/personal');
-        });
+        cy.url().should('eq', `${baseUrl}/personal`);
     });
 
     it('remembers last visited page on next login', () => {
@@ -106,13 +79,9 @@ describe('login', () => {
             win.sessionStorage.clear(); // not localStorage
             win.location.reload();
         });
-        cy.location().should((location) => {
-            expect(location.pathname).to.eq('/login');
-        });
+        cy.url().should('eq', `${baseUrl}/login`);
         cy.do_login();
         cy.visit('/');
-        cy.location().should((location) => {
-            expect(location.pathname).to.eq('/insights');
-        });
+        cy.url().should('eq', `${baseUrl}/insights`);
     });
 });

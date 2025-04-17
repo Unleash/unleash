@@ -94,9 +94,6 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
     flexGrow: 1,
-    '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
-        borderBottomColor: theme.palette.primary.light,
-    },
 }));
 
 const InputRow = styled('div')(({ theme }) => ({

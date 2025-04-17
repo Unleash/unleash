@@ -88,7 +88,7 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
         borderRadius: theme.shape.borderRadiusLarge,
         border: `1px solid ${theme.palette.divider}`,
         padding: theme.spacing(2),
-        width: '300px',
+        width: '250px',
     },
 }));
 
@@ -167,11 +167,11 @@ const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
                     onClose={() => setOpen(false)}
                     anchorOrigin={{
                         vertical: 'bottom',
-                        horizontal: 'center',
+                        horizontal: 'left',
                     }}
                     transformOrigin={{
                         vertical: 'top',
-                        horizontal: 'center',
+                        horizontal: 'left',
                     }}
                 >
                     <div>

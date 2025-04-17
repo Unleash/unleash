@@ -18,9 +18,11 @@ services:
     image: node:20-alpine
     working_dir: /app
     volumes:
-      - ..:/app
+      - ..:/src
     command: |
-      sh -c "echo \"Building frontend\" && \
+      sh -c " cp -r /src /app && \
+      echo \"Building frontend\" && \
+      corepack enable && \
       yarn --cwd ./frontend install && \
       echo \"Waiting for Unleash to start\" && \
       npx wait-on http://unleash:4242/health && \

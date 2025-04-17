@@ -157,8 +157,8 @@ describe.each([
                 `"61824cd0:16:${etagVariant.name}"`,
             );
         } else {
-            expect(res.headers.etag).toBe('"61824cd0:16"');
-            expect(res.body.meta.etag).toBe('"61824cd0:16"');
+            expect(res.headers.etag).toBe('"61824cd0:15"');
+            expect(res.body.meta.etag).toBe('"61824cd0:15"');
         }
     });
 

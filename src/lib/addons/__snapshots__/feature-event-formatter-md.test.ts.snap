@@ -239,11 +239,3 @@ exports[`Should format specialised text for events when strategy removed 1`] = `
   "url": "unleashUrl/projects/my-other-project/features/new-feature",
 }
 `;
-
-exports[`Should format specialised text for events when userIds changed 1`] = `
-{
-  "label": "Flag strategy updated",
-  "text": "*user@company.com* updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *[my-other-project](unleashUrl/projects/my-other-project)* by updating strategy *userWithId* in *production* userIds from empty set of userIds to [a,b]; constraints from empty set of constraints to [appName is one of (x,y)]",
-  "url": "unleashUrl/projects/my-other-project/features/new-feature",
-}
-`;

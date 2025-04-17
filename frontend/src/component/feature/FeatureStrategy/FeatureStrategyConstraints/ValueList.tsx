@@ -36,9 +36,21 @@ const ValueChipBase = styled(
 )(({ theme }) => ({
     transition: 'all 0.3s ease',
     outline: `1px solid #0000`,
-    background: theme.palette.background.elevation1,
+    background: theme.palette.secondary.light,
+    color: theme.palette.secondary.dark,
+    border: `1px solid ${theme.palette.secondary.border}`,
+    padding: 0,
+    height: 'auto',
+    '& .MuiChip-label': {
+        paddingTop: theme.spacing(0.5),
+        paddingBottom: theme.spacing(0.5),
+        paddingLeft: theme.spacing(1.5),
+    },
+    '& .MuiChip-deleteIcon': {
+        marginRight: theme.spacing(1),
+    },
     ':hover, :focus-visible': {
-        background: theme.palette.background.elevation1,
+        background: theme.palette.secondary.light,
     },
     ':focus-visible': {
         outlineColor: theme.palette.secondary.dark,
@@ -72,8 +84,8 @@ const AddValuesButton = styled('button')(({ theme }) => ({
     whiteSpace: 'nowrap',
     gap: theme.spacing(0.25),
     alignItems: 'center',
-    paddingInline: theme.spacing(1.5),
-    height: theme.spacing(3),
+    padding: theme.spacing(0.5, 1.5, 0.5, 1.5),
+    height: 'auto',
     transition: 'all 0.3s ease',
     outline: `1px solid #0000`,
     background: theme.palette.background.elevation1,

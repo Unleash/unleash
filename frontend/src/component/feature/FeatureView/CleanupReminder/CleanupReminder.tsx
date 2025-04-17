@@ -1,5 +1,5 @@
 import { type FC, useState } from 'react';
-import { Alert, Box, styled } from '@mui/material';
+import { Alert, Box, Button, styled } from '@mui/material';
 import FlagIcon from '@mui/icons-material/OutlinedFlag';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { parseISO } from 'date-fns';
@@ -17,10 +17,17 @@ import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useNavigate } from 'react-router-dom';
+import { useFlagReminders } from './useFlagReminders';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     marginRight: theme.spacing(2),
     marginBottom: theme.spacing(2),
+}));
+
+const ActionsBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+    alignItems: 'center',
 }));
 
 type ReminderType = 'complete' | 'removeCode' | 'archive' | null;
@@ -42,6 +49,7 @@ export const CleanupReminder: FC<{
     const daysInStage = enteredStageAt
         ? differenceInDays(new Date(), parseISO(enteredStageAt))
         : 0;
+    const { shouldShowReminder, snoozeReminder } = useFlagReminders();
 
     const determineReminder = (): ReminderType => {
         if (!currentStage || !isRelevantType) return null;
@@ -49,7 +57,10 @@ export const CleanupReminder: FC<{
         if (currentStage.name === 'live' && daysInStage > 30) {
             return 'complete';
         }
-        if (currentStage.name === 'completed') {
+        if (
+            currentStage.name === 'completed' &&
+            shouldShowReminder(feature.name)
+        ) {
             if (isSafeToArchive(currentStage.environments)) {
                 return 'archive';
             }
@@ -76,7 +87,7 @@ export const CleanupReminder: FC<{
                             <PermissionButton
                                 variant='contained'
                                 permission={UPDATE_FEATURE}
-                                size='small'
+                                size='medium'
                                 onClick={() =>
                                     setMarkCompleteDialogueOpen(true)
                                 }
@@ -109,16 +120,23 @@ export const CleanupReminder: FC<{
                         severity='warning'
                         icon={<CleaningServicesIcon />}
                         action={
-                            <PermissionButton
-                                variant='contained'
-                                permission={DELETE_FEATURE}
-                                size='small'
-                                sx={{ mb: 2 }}
-                                onClick={() => setArchiveDialogueOpen(true)}
-                                projectId={feature.project}
-                            >
-                                Archive flag
-                            </PermissionButton>
+                            <ActionsBox>
+                                <Button
+                                    size='medium'
+                                    onClick={() => snoozeReminder(feature.name)}
+                                >
+                                    Remind me later
+                                </Button>
+                                <PermissionButton
+                                    variant='contained'
+                                    permission={DELETE_FEATURE}
+                                    size='medium'
+                                    onClick={() => setArchiveDialogueOpen(true)}
+                                    projectId={feature.project}
+                                >
+                                    Archive flag
+                                </PermissionButton>
+                            </ActionsBox>
                         }
                     >
                         <b>Time to clean up technical debt?</b>
@@ -149,7 +167,18 @@ export const CleanupReminder: FC<{
             )}
 
             {reminder === 'removeCode' && (
-                <Alert severity='warning' icon={<CleaningServicesIcon />}>
+                <Alert
+                    severity='warning'
+                    icon={<CleaningServicesIcon />}
+                    action={
+                        <Button
+                            size='medium'
+                            onClick={() => snoozeReminder(feature.name)}
+                        >
+                            Remind me later
+                        </Button>
+                    }
+                >
                     <b>Time to remove flag from code?</b>
                     <p>
                         This flag was marked as complete and ready for cleanup.

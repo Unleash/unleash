@@ -15,19 +15,14 @@ services:
   # The Unleash server contains the Unleash configuration and
   # communicates with server-side SDKs and the Unleash Proxy
   frontend:
-    image: node:20-alpine
-    working_dir: /app
-    volumes:
-      - ..:/src
+    build:
+      context: ..
+      dockerfile: frontend/Dockerfile
     command: |
-      sh -c " cp -r /src /app && \
-      echo \"Building frontend\" && \
-      corepack enable && \
-      yarn --cwd ./frontend install && \
-      echo \"Waiting for Unleash to start\" && \
+      sh -c "echo \"Waiting for Unleash to start\" && \
       npx wait-on http://unleash:4242/health && \
       echo \"Unleash is up, starting frontend\" && \
-      yarn --cwd ./frontend run dev"
+      yarn run dev"
     ports:
       - "3000:3000"
     environment:
@@ -37,7 +32,7 @@ services:
       interval: 1s
       timeout: 1m
       retries: 10
-      start_period: 30s
+      start_period: 45s
   unleash:
     image: unleashorg/unleash-enterprise:latest
     pull_policy: "always"
@@ -55,11 +50,11 @@ services:
       interval: 1s
       timeout: 1m
       retries: 5
-      start_period: 15s
+      start_period: 45s
   db:
     expose:
       - "5432"
-    image: postgres:16
+    image: postgres
     environment:
       POSTGRES_DB: "unleash"
       # trust incoming connections blindly (DON'T DO THIS IN PRODUCTION!)

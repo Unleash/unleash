@@ -191,7 +191,7 @@ const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
                                 autoFocus
                             />
                             <Button
-                                variant='contained'
+                                variant='text'
                                 color='primary'
                                 onClick={handleAdd}
                                 disabled={!inputValues.trim()}

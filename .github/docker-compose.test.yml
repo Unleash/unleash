@@ -22,12 +22,9 @@ services:
       - "3000:80"
     volumes:
       - ../frontend/build:/app:ro
-    healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://localhost/health || exit 1
-      interval: 1s
-      timeout: 1m
-      retries: 5
-      start_period: 45s
+    depends_on:
+      unleash:
+        condition: service_healthy
   unleash:
     image: unleashorg/unleash-enterprise:latest
     pull_policy: "always"

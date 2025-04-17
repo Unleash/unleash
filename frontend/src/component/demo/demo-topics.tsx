@@ -76,8 +76,8 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            Enable or disable the feature for everyone by
-                            toggling the highlighted switch.
+                            Now you can disable or enable the feature for
+                            everyone by toggling the highlighted switch.
                         </Description>
                         <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             Look at the demo page to see your changes!
@@ -304,8 +304,8 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            Finally, enable or disable the feature for your user
-                            by toggling the highlighted switch.
+                            Now you can disable or enable the feature for your
+                            user by toggling the highlighted switch.
                         </Description>
                         <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             Look at the demo page to see your changes!
@@ -428,8 +428,9 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            Finally, enable or disable the feature with the new
-                            variant by toggling the highlighted switch.
+                            Now you can disable or enable the feature for the
+                            selected percentage of users by toggling the
+                            highlighted switch.
                         </Description>
                         <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             Look at the demo page to see your changes!
@@ -736,8 +737,8 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            Finally, enable or disable the feature with the new
-                            variant by toggling the highlighted switch.
+                            Now you can disable or enable the feature with the
+                            new variant by toggling the highlighted switch.
                         </Description>
                         <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             Look at the demo page to see your changes!

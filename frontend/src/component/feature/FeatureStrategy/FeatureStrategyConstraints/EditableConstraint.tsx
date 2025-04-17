@@ -378,14 +378,15 @@ export const EditableConstraint: FC<Props> = ({
                             {localConstraint.caseInsensitive ? 'Aa' : 'A/a'}
                         </StyledButton>
                     ) : null}
+
+                    {!input.includes('LEGAL_VALUES') && (
+                        <ValueList
+                            values={localConstraint.values}
+                            removeValue={removeValue}
+                            setValues={setValuesWithRecord}
+                        />
+                    )}
                 </ConstraintDetails>
-                {!input.includes('LEGAL_VALUES') && (
-                    <ValueList
-                        values={localConstraint.values}
-                        removeValue={removeValue}
-                        setValues={setValuesWithRecord}
-                    />
-                )}
 
                 <HtmlTooltip title='Delete constraint' arrow>
                     <IconButton type='button' size='small' onClick={onDelete}>

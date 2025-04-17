@@ -50,7 +50,7 @@ export const StyledInnerContainer = styled('div')(({ theme }) => ({
     alignItems: 'start',
 }));
 
-export const StyledProjectTitle = styled('span')(({ theme }) => ({
+export const StyledProjectTitle = styled('h1')(({ theme }) => ({
     margin: 0,
     width: '100%',
     fontSize: theme.typography.h1.fontSize,

@@ -60,7 +60,7 @@ export function getLocalStorageItem<T>(key: string): T | undefined {
 export function setLocalStorageItem<T>(
     key: string,
     value: T | undefined = undefined,
-    timeToLive?: number,
+    timeToLive?: number, // milliseconds
 ) {
     try {
         const item: Expirable<T> = {
@@ -80,7 +80,7 @@ export function setLocalStorageItem<T>(
 export function setSessionStorageItem<T>(
     key: string,
     value: T | undefined = undefined,
-    timeToLive?: number,
+    timeToLive?: number, // milliseconds
 ) {
     try {
         const item: Expirable<T> = {

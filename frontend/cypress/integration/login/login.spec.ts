@@ -89,6 +89,7 @@ describe('login', { testIsolation: true }, () => {
             win.sessionStorage.clear(); // not localStorage
             win.location.reload();
         });
+        cy.visit('/');
         cy.url().should('eq', `${baseUrl}/login`);
         cy.do_login();
         cy.visit('/');

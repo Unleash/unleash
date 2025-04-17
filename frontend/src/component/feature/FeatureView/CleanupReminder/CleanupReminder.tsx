@@ -18,6 +18,7 @@ import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveD
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useNavigate } from 'react-router-dom';
 import { useFlagReminders } from './useFlagReminders';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     marginRight: theme.spacing(2),
@@ -37,6 +38,7 @@ export const CleanupReminder: FC<{
     onChange: () => void;
 }> = ({ feature, onChange }) => {
     const navigate = useNavigate();
+    const { trackEvent } = usePlausibleTracker();
 
     const [markCompleteDialogueOpen, setMarkCompleteDialogueOpen] =
         useState(false);
@@ -123,7 +125,14 @@ export const CleanupReminder: FC<{
                             <ActionsBox>
                                 <Button
                                     size='medium'
-                                    onClick={() => snoozeReminder(feature.name)}
+                                    onClick={() => {
+                                        snoozeReminder(feature.name);
+                                        trackEvent('feature-lifecycle', {
+                                            props: {
+                                                eventType: 'snoozeReminder',
+                                            },
+                                        });
+                                    }}
                                 >
                                     Remind me later
                                 </Button>
@@ -173,7 +182,14 @@ export const CleanupReminder: FC<{
                     action={
                         <Button
                             size='medium'
-                            onClick={() => snoozeReminder(feature.name)}
+                            onClick={() => {
+                                snoozeReminder(feature.name);
+                                trackEvent('feature-lifecycle', {
+                                    props: {
+                                        eventType: 'snoozeReminder',
+                                    },
+                                });
+                            }}
                         >
                             Remind me later
                         </Button>

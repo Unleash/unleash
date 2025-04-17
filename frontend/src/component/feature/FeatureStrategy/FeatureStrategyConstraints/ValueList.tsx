@@ -88,18 +88,19 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
         borderRadius: theme.shape.borderRadiusLarge,
         border: `1px solid ${theme.palette.divider}`,
         padding: theme.spacing(2),
-        width: '300px',
+        width: '250px',
     },
 }));
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
-    width: '100%',
-    marginBottom: theme.spacing(1),
+    flexGrow: 1,
 }));
 
-const ButtonContainer = styled('div')(({ theme }) => ({
+const InputRow = styled('div')(({ theme }) => ({
     display: 'flex',
-    justifyContent: 'flex-end',
+    gap: theme.spacing(1),
+    alignItems: 'start',
+    width: '100%',
 }));
 
 const ErrorMessage = styled('div')(({ theme }) => ({
@@ -166,39 +167,38 @@ const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
                     onClose={() => setOpen(false)}
                     anchorOrigin={{
                         vertical: 'bottom',
-                        horizontal: 'center',
+                        horizontal: 'left',
                     }}
                     transformOrigin={{
                         vertical: 'top',
-                        horizontal: 'center',
+                        horizontal: 'left',
                     }}
                 >
                     <div>
-                        <StyledTextField
-                            label='Values'
-                            placeholder='value1, value2, value3...'
-                            value={inputValues}
-                            onChange={(e) => {
-                                setInputValues(e.target.value);
-                                setError('');
-                            }}
-                            onKeyPress={handleKeyPress}
-                            error={Boolean(error)}
-                            helperText={error}
-                            size='small'
-                            fullWidth
-                            autoFocus
-                        />
-                        <ButtonContainer>
+                        {error && <ErrorMessage>{error}</ErrorMessage>}
+                        <InputRow>
+                            <StyledTextField
+                                placeholder='Enter value'
+                                value={inputValues}
+                                onChange={(e) => {
+                                    setInputValues(e.target.value);
+                                    setError('');
+                                }}
+                                onKeyPress={handleKeyPress}
+                                size='small'
+                                variant='standard'
+                                fullWidth
+                                autoFocus
+                            />
                             <Button
-                                variant='contained'
+                                variant='text'
                                 color='primary'
                                 onClick={handleAdd}
                                 disabled={!inputValues.trim()}
                             >
                                 Add
                             </Button>
-                        </ButtonContainer>
+                        </InputRow>
                     </div>
                 </StyledPopover>
             </>

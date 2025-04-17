@@ -1,6 +1,7 @@
 import { PayloadType, type Variant } from 'unleash-client';
 import { parseEnvVarBoolean } from '../util';
 import { getDefaultVariant } from 'unleash-client/lib/variant';
+import type { Context } from '../features/playground/feature-evaluator';
 
 export type IFlagKey =
     | 'accessLogs'
@@ -68,7 +69,8 @@ export type IFlagKey =
     | 'addEditStrategy'
     | 'newStrategyDropdown'
     | 'flagsOverviewSearch'
-    | 'flagsReleaseManagementUI';
+    | 'flagsReleaseManagementUI'
+    | 'cleanupReminder';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -329,6 +331,10 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_FLAGS_RELEASE_MANAGEMENT_UI,
         false,
     ),
+    cleanupReminder: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CLEANUP_REMINDER,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {
@@ -336,6 +342,7 @@ export const defaultExperimentalOptions: IExperimentalOptions = {
     externalResolver: {
         isEnabled: (): boolean => false,
         getVariant: () => getDefaultVariant(),
+        getStaticContext: () => ({}),
     },
 };
 
@@ -344,17 +351,17 @@ export interface IExperimentalOptions {
     externalResolver: IExternalFlagResolver;
 }
 
-export interface IFlagContext {
-    [key: string]: string;
-}
+export interface IFlagContext extends Context {}
 
 export interface IFlagResolver {
     getAll: (context?: IFlagContext) => IFlags;
     isEnabled: (expName: IFlagKey, context?: IFlagContext) => boolean;
     getVariant: (expName: IFlagKey, context?: IFlagContext) => Variant;
+    getStaticContext: () => IFlagContext;
 }
 
 export interface IExternalFlagResolver {
     isEnabled: (flagName: IFlagKey, context?: IFlagContext) => boolean;
     getVariant: (flagName: IFlagKey, context?: IFlagContext) => Variant;
+    getStaticContext: () => IFlagContext;
 }

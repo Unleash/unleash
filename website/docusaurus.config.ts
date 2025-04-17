@@ -838,13 +838,6 @@ class="header-github-link"
                         },
                         {
                             from: [
-                                '/tutorials/proxy-hosting',
-                                '/topics/proxy-hosting',
-                            ],
-                            to: '/understanding-unleash/proxy-hosting',
-                        },
-                        {
-                            from: [
                                 '/tutorials/data-collection',
                                 '/topics/data-collection',
                             ],

@@ -33,7 +33,7 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
     open = false,
     toggleDrawer,
 }) => {
-    const showOnlyAdminMenu = useNewAdminMenu();
+    const { showOnlyAdminMenu } = useNewAdminMenu();
     const onClick = () => {
         toggleDrawer();
     };

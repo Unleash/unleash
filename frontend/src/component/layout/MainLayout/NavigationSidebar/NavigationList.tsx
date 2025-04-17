@@ -22,6 +22,8 @@ import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useShowBadge } from 'component/layout/components/EnterprisePlanBadge/useShowBadge';
 import { EnterprisePlanBadge } from 'component/layout/components/EnterprisePlanBadge/EnterprisePlanBadge';
+import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
+import { AdminMenuNavigation } from '../AdminMenu/AdminNavigationItems';
 
 export const SecondaryNavigationList: FC<{
     routes: INavigationMenuItem[];
@@ -235,10 +237,18 @@ export const AdminSettingsNavigation: FC<{
     activeItem,
     mode,
 }) => {
-    const newAdminUIEnabled = useUiFlag('adminNavUI');
+    const { showOnlyAdminMenu, newAdminUIEnabled } = useNewAdminMenu();
+    if (showOnlyAdminMenu) {
+        return <AdminMenuNavigation onClick={() => onClick('/admin')} />;
+    }
+
+    const setFullModeOnClick = (activeItem: string) => {
+        onSetFullMode();
+        onClick(activeItem);
+    };
 
     if (newAdminUIEnabled) {
-        return <AdminSettingsLink mode={mode} onClick={onClick} />;
+        return <AdminSettingsLink mode={mode} onClick={setFullModeOnClick} />;
     }
 
     return (

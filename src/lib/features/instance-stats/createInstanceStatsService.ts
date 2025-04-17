@@ -89,6 +89,7 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
     );
     const clientMetricsStoreV2 = new ClientMetricsStoreV2(
         db,
+        eventBus,
         getLogger,
         flagResolver,
     );

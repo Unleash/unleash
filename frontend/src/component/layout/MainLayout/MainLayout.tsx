@@ -18,9 +18,6 @@ import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
 import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash';
 
-import { WrapIfAdminSubpage } from './AdminMenu/AdminMenu';
-import { useNewAdminMenu } from '../../../hooks/useNewAdminMenu';
-
 interface IMainLayoutProps {
     children: ReactNode;
 }
@@ -32,6 +29,34 @@ const MainLayoutContainer = styled(Grid)(() => ({
     flexDirection: 'column',
     flexGrow: 1,
     position: 'relative',
+}));
+
+const MainLayoutContent = styled(Grid)(({ theme }) => ({
+    minWidth: 0, // this is a fix for overflowing flex
+    maxWidth: `1512px`,
+    margin: '0 auto',
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    [theme.breakpoints.up(1856)]: {
+        width: '100%',
+    },
+    [theme.breakpoints.down(1856)]: {
+        marginLeft: theme.spacing(7),
+        marginRight: theme.spacing(7),
+    },
+    [theme.breakpoints.down('lg')]: {
+        maxWidth: `1250px`,
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
+    },
+    [theme.breakpoints.down(1024)]: {
+        marginLeft: 0,
+        marginRight: 0,
+    },
+    [theme.breakpoints.down('sm')]: {
+        minWidth: '100%',
+    },
+    minHeight: '94vh',
 }));
 
 const MainLayoutContentWrapper = styled('div')(({ theme }) => ({
@@ -65,7 +90,6 @@ const MainLayoutContentContainer = styled('main')(({ theme }) => ({
 
 export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
     ({ children }, ref) => {
-        const showOnlyAdminMenu = useNewAdminMenu();
         const { uiConfig } = useUiConfig();
         const projectId = useOptionalPathParam('projectId');
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
@@ -73,9 +97,6 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         );
         const theme = useTheme();
         const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
-
-        const showRegularNavigationSideBar =
-            !isSmallScreen && !showOnlyAdminMenu;
 
         return (
             <EventTimelineProvider>
@@ -97,7 +118,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                             })}
                         >
                             <ConditionallyRender
-                                condition={showRegularNavigationSideBar}
+                                condition={!isSmallScreen}
                                 show={
                                     <NavigationSidebar
                                         NewInUnleash={NewInUnleash}
@@ -115,14 +136,14 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                             >
                                 <Header />
 
-                                <WrapIfAdminSubpage>
+                                <MainLayoutContent>
                                     <SkipNavTarget />
                                     <MainLayoutContentContainer ref={ref}>
                                         <BreadcrumbNav />
                                         <Proclamation toast={uiConfig.toast} />
                                         {children}
                                     </MainLayoutContentContainer>
-                                </WrapIfAdminSubpage>
+                                </MainLayoutContent>
                             </Box>
                         </Box>
 

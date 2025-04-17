@@ -1,0 +1,48 @@
+import { ulid } from 'ulidx';
+import type { ReleasePlanMilestone } from './release-plan-milestone';
+import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store';
+import type { Row } from '../../db/crud/row-type';
+import type { Db } from '../../db/db';
+
+const TABLE = 'milestones';
+
+const fromRow = (row: any): ReleasePlanMilestone => {
+    return {
+        id: row.id,
+        name: row.name,
+        sortOrder: row.sort_order,
+        releasePlanDefinitionId: row.release_plan_definition_id,
+        strategies: [],
+    };
+};
+
+export type ReleasePlanMilestoneWriteModel = Omit<ReleasePlanMilestone, 'id'>;
+
+export class ReleasePlanMilestoneStore extends CRUDStore<
+    ReleasePlanMilestone,
+    ReleasePlanMilestoneWriteModel,
+    Row<ReleasePlanMilestone>,
+    ReleasePlanMilestone,
+    string
+> {
+    constructor(db: Db, config: CrudStoreConfig) {
+        super(TABLE, db, config);
+    }
+
+    override async insert(
+        item: ReleasePlanMilestoneWriteModel,
+    ): Promise<ReleasePlanMilestone> {
+        const row = this.toRow(item);
+        row.id = ulid();
+        await this.db(TABLE).insert(row);
+        return fromRow(row);
+    }
+
+    async deleteAllConnectedToReleasePlanTemplate(
+        templateId: string,
+    ): Promise<void> {
+        await this.db(TABLE)
+            .where('release_plan_definition_id', templateId)
+            .delete();
+    }
+}

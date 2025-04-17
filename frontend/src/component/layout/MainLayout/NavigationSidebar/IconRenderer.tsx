@@ -60,6 +60,7 @@ const icons: Record<
     '/admin/roles/project-roles': RoleIcon,
     '/admin/api': ApiAccessIcon,
     '/admin/auth': SingleSignOnIcon,
+    '/admin/auth/oidc': SingleSignOnIcon,
     '/admin/auth/saml': SingleSignOnIcon,
     '/admin/auth/scim': SingleSignOnIcon,
     '/admin/auth/password': SingleSignOnIcon,

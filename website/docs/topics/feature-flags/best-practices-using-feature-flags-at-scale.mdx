@@ -50,7 +50,7 @@ Whenever possible, evaluate your flag in a single place. Centralizing the evalua
 When rolling out complex features, changes often span multiple parts of a system—whether that's modules within a single application or services in a distributed architecture. It might seem convenient to use the same feature flag across all components and evaluate it locally in each one, but this can lead to problems.
 
 As a user request moves through the system, it hits different parts at different times. Even with synchronized flag states, there's a risk that the flag's value changes between evaluations, resulting in inconsistent behavior for the user.
-Particularly in distributed systems, we cannot assume all parts of the system are perfectly synchronized, as networks are unreliable and can experience errors at any time. Most feature flag systems prioritize [availability over consistency](./feature-flag-best-practices#2-prioritize-availability-over-consistency). By only evaluating a feature flag once, we guarantee a consistent experience for our users.
+Particularly in distributed systems, we cannot assume all parts of the system are perfectly synchronized, as networks are unreliable and can experience errors at any time. Most feature flag systems prioritize [availability over consistency](./feature-flag-best-practices#3-prioritize-availability-over-consistency). By only evaluating a feature flag once, we guarantee a consistent experience for our users.
 
 Using the same flag in multiple places fragments the control logic and breaks the single responsibility principle, making code [harder to understand and maintain](https://www.getunleash.io/simplicity).
 
@@ -113,7 +113,7 @@ Our advice: Keep it simple. If you use parent-child structures, avoid overlappin
 
 Both feature flags and configuration settings control an application's behavior. However, it's crucial to distinguish between feature flagging systems and configuration management systems and use each for its intended purpose.
 
-[Feature flags are temporary and dynamic](https://docs.getunleash.io/what-is-a-feature-flag). They give you [runtime control](./feature-flag-best-practices#1-enable-runtime-control) to enable or disable functionality in a live environment—perfect for things like [short-lived experiments](./feature-flag-best-practices#3-make-flags-short-lived), such as A/B testing or gradual rollouts.
+[Feature flags are temporary and dynamic](https://docs.getunleash.io/what-is-a-feature-flag). They give you [runtime control](./feature-flag-best-practices#1-enable-runtime-control) to enable or disable functionality in a live environment—perfect for things like [short-lived experiments](./feature-flag-best-practices#2-make-flags-short-lived), such as A/B testing or gradual rollouts.
 
 Configurations, on the other hand, are usually static and long-lived. They often contain sensitive data like API keys or access credentials, which need to be encrypted and carefully managed. Using feature flags for configuration can create security vulnerabilities and operational issues. Most flag systems don't encrypt values the way configuration management tools do.
 

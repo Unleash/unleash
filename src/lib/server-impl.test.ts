@@ -38,6 +38,8 @@ jest.mock('./services', () => ({
             featureLifecycleService: { listen() {} },
             schedulerService: { stop() {}, start() {} },
             addonService: { destroy() {} },
+            userService: { initAdminUser() {} },
+            apiTokenService: { initApiTokens() {} },
         };
     },
 }));

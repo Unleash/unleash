@@ -39,6 +39,7 @@ import {
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import Delete from '@mui/icons-material/Delete';
+import { ValueList } from './ValueList';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -51,7 +52,7 @@ const TopRow = styled('div')(({ theme }) => ({
     padding: 'var(--padding)',
     display: 'flex',
     flexFlow: 'row nowrap',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyItems: 'space-between',
     borderBottom: `1px dashed ${theme.palette.divider}`,
 }));
@@ -377,20 +378,14 @@ export const EditableConstraint: FC<Props> = ({
                             {localConstraint.caseInsensitive ? 'Aa' : 'A/a'}
                         </StyledButton>
                     ) : null}
-                    {/* <ul>
-                <li>
-                    <Chip
-                        label='value1'
-                        onDelete={() => console.log('Clicked')}
-                    />
-                </li>
-                <li>
-                    <Chip
-                        label='value2'
-                        onDelete={() => console.log('Clicked')}
-                    />
-                </li>
-            </ul> */}
+
+                    {!input.includes('LEGAL_VALUES') && (
+                        <ValueList
+                            values={localConstraint.values}
+                            removeValue={removeValue}
+                            setValues={setValuesWithRecord}
+                        />
+                    )}
                 </ConstraintDetails>
 
                 <HtmlTooltip title='Delete constraint' arrow>

@@ -191,6 +191,11 @@ export const uiConfigSchema = {
             description: 'The maximum number of sessions that a user has.',
             example: 10,
         },
+        unleashContext: {
+            type: 'object',
+            description:
+                'The context object used to configure the Unleash instance.',
+        },
     },
     components: {
         schemas: {

@@ -32,11 +32,12 @@ test('Should init api token', async () => {
             },
         },
     });
-    const { apiTokenStore } = createFakeApiTokenService(config);
+    const { apiTokenService, apiTokenStore } =
+        createFakeApiTokenService(config);
     const insertCalled = new Promise((resolve) => {
         apiTokenStore.on('insert', resolve);
     });
-
+    apiTokenService.initApiTokens([token]);
     await insertCalled;
 
     const tokens = await apiTokenStore.getAll();

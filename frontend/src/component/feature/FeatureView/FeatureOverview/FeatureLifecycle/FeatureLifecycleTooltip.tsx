@@ -194,7 +194,7 @@ const SafeToArchive: FC<{
                     disabled={loading}
                     projectId={project}
                 >
-                    Revert to live
+                    Revert to production
                 </PermissionButton>
                 <PermissionButton
                     variant='outlined'
@@ -233,7 +233,7 @@ const ActivelyUsed: FC<{
             onClick={onUncomplete}
             disabled={loading}
         >
-            Revert to live
+            Revert to production
         </PermissionButton>
     </StyledStageAction>
 );

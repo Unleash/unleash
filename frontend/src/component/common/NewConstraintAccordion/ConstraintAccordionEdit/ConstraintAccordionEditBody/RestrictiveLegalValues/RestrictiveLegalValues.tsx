@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert, Button, Checkbox, Chip, Stack, styled } from '@mui/material';
-import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
+import { ConstraintValueSearch } from 'component/common/LegacyConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
 import type { ILegalValue } from 'interfaces/context';
 import {
@@ -51,8 +51,8 @@ export const getIllegalValues = (
 };
 
 const StyledValuesContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexWrap: 'wrap',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, 120px)',
     gap: theme.spacing(1),
     padding: theme.spacing(2),
     border: `1px solid ${theme.palette.divider}`,
@@ -178,7 +178,9 @@ export const RestrictiveLegalValues = ({
                                 Boolean(values)
                             }
                             show={
-                                <StyledValuesContainer sx={{ border: 0 }}>
+                                <StyledValuesContainer
+                                    sx={{ border: 0, paddingTop: 0 }}
+                                >
                                     {values.map((value) => {
                                         return (
                                             <Chip
@@ -191,13 +193,10 @@ export const RestrictiveLegalValues = ({
                                 </StyledValuesContainer>
                             }
                         />
-                        <ConstraintValueSearch
-                            filter={filter}
-                            setFilter={setFilter}
-                        />
                     </>
                 }
             />
+            <ConstraintValueSearch filter={filter} setFilter={setFilter} />
             <StyledValuesContainer>
                 {filteredValues.map((match) => (
                     <LegalValueLabel

@@ -574,6 +574,12 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             : options.authentication) || {},
         { initApiTokens: initApiTokens },
     ]);
+    // make sure init tokens appear only once
+    authentication.initApiTokens = [
+        ...new Map(
+            authentication.initApiTokens.map((token) => [token.secret, token]),
+        ).values(),
+    ];
 
     const environmentEnableOverrides = loadEnvironmentEnableOverrides();
 
@@ -751,6 +757,9 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const openAIAPIKey = process.env.OPENAI_API_KEY;
 
+    const unleashFrontendToken =
+        options.unleashFrontendToken || process.env.UNLEASH_FRONTEND_TOKEN;
+
     const defaultDaysToBeConsideredInactive = 180;
     const userInactivityThresholdInDays =
         options.userInactivityThresholdInDays ??
@@ -801,6 +810,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         openAIAPIKey,
         userInactivityThresholdInDays,
         buildDate: process.env.BUILD_DATE,
+        unleashFrontendToken,
     };
 }
 

@@ -112,7 +112,7 @@ Static fields (`environment`, `appName`), defined fields, and custom properties 
 | Capability | [Java](/docs/generated/sdks/server-side/java.md) | [Node.js](/docs/generated/sdks/server-side/node.md) | [Go](/docs/generated/sdks/server-side/go.md) | [Python](/docs/generated/sdks/server-side/python.md) | [Ruby](/docs/generated/sdks/server-side/ruby.md) | [.NET](/docs/generated/sdks/server-side/dotnet.md) | [PHP](/docs/generated/sdks/server-side/php.md) | [Rust](/docs/generated/sdks/server-side/rust.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | Usage metrics | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |    
-| [Impression data](./impression-data) | ✅ | ✅ | ⭕ | ✅ | ⭕ | ✅  | ✅ | ⭕ |
+| [Impression data](./impression-data) | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅  | ✅ | ⭕ |
 
 #### Bootstrap
 | Capability | [Java](/docs/generated/sdks/server-side/java.md) | [Node.js](/docs/generated/sdks/server-side/node.md) | [Go](/docs/generated/sdks/server-side/go.md) | [Python](/docs/generated/sdks/server-side/python.md) | [Ruby](/docs/generated/sdks/server-side/ruby.md) | [.NET](/docs/generated/sdks/server-side/dotnet.md) | [PHP](/docs/generated/sdks/server-side/php.md) | [Rust](/docs/generated/sdks/server-side/rust.md) |
@@ -170,7 +170,7 @@ Unless the SDK supports [bootstrapping](#bootstrapping), it needs to connect to 
 
 ### Bootstrapping
 
-By default, all SDKs reach out to the Unleash server at startup to fetch their flag configuration. Additionally, most of the [server-side SDKs](#server-side-sdk-compatibility-table) and Unleash Edge support bootstrapping, which allows them to get their flag configuration from a file, the environment, or other local resources. These SDKs can function without any network connection.
+By default, all SDKs reach out to the Unleash server at startup to fetch their flag configuration. Additionally, most of the [server-side SDKs](#server-side-sdks) and Unleash Edge support bootstrapping, which allows them to get their flag configuration from a file, the environment, or other local resources. These SDKs can function without any network connection.
 
 Bootstrapping is also supported by the following frontend SDKs:
 

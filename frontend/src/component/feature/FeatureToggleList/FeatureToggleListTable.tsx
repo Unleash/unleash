@@ -41,6 +41,7 @@ import { LifecycleFilters } from './FeatureToggleFilters/LifecycleFilters';
 import { ExportFlags } from './ExportFlags';
 import { createFeatureOverviewCell } from 'component/common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 import { AvatarCell } from 'component/project/Project/PaginatedProjectFeatureToggles/AvatarCell';
+import { StatusCell } from './StatusCell/StatusCell';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -175,7 +176,6 @@ export const FeatureToggleListTable: FC = () => {
                           meta: { width: '1%', align: 'center' },
                           enableSorting: false,
                       }),
-
                       columnHelper.accessor('lifecycle', {
                           id: 'lifecycle',
                           header: 'Lifecycle',
@@ -190,6 +190,14 @@ export const FeatureToggleListTable: FC = () => {
                           size: 50,
                           meta: { width: '1%' },
                       }),
+                      columnHelper.accessor('environments', {
+                          id: 'status',
+                          header: 'Status',
+                          cell: ({ row: { original } }) => (
+                              <StatusCell {...original} />
+                          ),
+                          enableSorting: false,
+                      }),
                       columnHelper.accessor('project', {
                           header: 'Project',
                           cell: ({ getValue }) => {
@@ -199,10 +207,12 @@ export const FeatureToggleListTable: FC = () => {
                               )?.name;
 
                               return (
-                                  <LinkCell
-                                      title={projectName || projectId}
-                                      to={`/projects/${projectId}`}
-                                  />
+                                  <Box sx={{ minWidth: '180px' }}>
+                                      <LinkCell
+                                          title={projectName || projectId}
+                                          to={`/projects/${projectId}`}
+                                      />
+                                  </Box>
                               );
                           },
                       }),
@@ -461,6 +471,7 @@ export const FeatureToggleListTable: FC = () => {
                 <LifecycleFilters
                     state={filterState}
                     onChange={setTableState}
+                    total={loading ? undefined : total}
                 />
             ) : null}
             <FeatureToggleFilters
@@ -488,8 +499,7 @@ export const FeatureToggleListTable: FC = () => {
                             elseShow={
                                 <TablePlaceholder>
                                     No feature flags found matching your
-                                    criteria. Get started by adding a new
-                                    feature flag.
+                                    criteria.
                                 </TablePlaceholder>
                             }
                         />

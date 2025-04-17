@@ -76,8 +76,8 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            Enable or disable the feature for everyone by
-                            toggling the highlighted switch.
+                            Now you can disable or enable the feature for
+                            everyone by toggling the highlighted switch.
                         </Description>
                         <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             Look at the demo page to see your changes!
@@ -131,13 +131,26 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 href: `/projects/${PROJECT}/features/demoApp.step2`,
-                target: 'button[data-testid="ADD_STRATEGY_BUTTON"]',
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] > div[aria-expanded="false"]`,
+                content: (
+                    <Description>
+                        Expand the environment card to see all the defined
+                        strategies.
+                    </Description>
+                ),
+                optional: true,
+                delay: 500,
+            },
+            {
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] button[data-testid="ADD_STRATEGY_BUTTON"]`,
                 content: (
                     <Description>
                         Add a new strategy to this environment by using this
                         button.
                     </Description>
                 ),
+                delay: 500,
+                backCollapseExpanded: true,
             },
             {
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2/strategies/create?environmentId=${ENVIRONMENT}&strategyName=flexibleRollout&defaultStrategy=true"]`,
@@ -264,6 +277,7 @@ export const TOPICS: ITutorialTopic[] = [
                         Save the constraint by using this button.
                     </Description>
                 ),
+                optional: true,
             },
             {
                 target: 'button[data-testid="STRATEGY_FORM_SUBMIT_ID"]',
@@ -290,8 +304,8 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            Finally, enable or disable the feature for your user
-                            by toggling the highlighted switch.
+                            Now you can disable or enable the feature for your
+                            user by toggling the highlighted switch.
                         </Description>
                         <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             Look at the demo page to see your changes!
@@ -353,17 +367,18 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 href: `/projects/${PROJECT}/features/demoApp.step3`,
-                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] .MuiAccordionSummary-expandIconWrapper`,
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] > div[aria-expanded="false"]`,
                 content: (
                     <Description>
                         Expand the environment card to see all the defined
-                        strategies by using the arrow button.
+                        strategies.
                     </Description>
                 ),
                 optional: true,
+                delay: 500,
             },
             {
-                target: `a[data-testid="STRATEGY_EDIT-flexibleRollout"]`,
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] a[data-testid="STRATEGY_EDIT-flexibleRollout"]`,
                 content: (
                     <Description>
                         Edit the existing gradual rollout strategy by using the
@@ -413,8 +428,9 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            Finally, enable or disable the feature with the new
-                            variant by toggling the highlighted switch.
+                            Now you can disable or enable the feature for the
+                            selected percentage of users by toggling the
+                            highlighted switch.
                         </Description>
                         <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             Look at the demo page to see your changes!
@@ -469,13 +485,26 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 href: `/projects/${PROJECT}/features/demoApp.step4`,
-                target: 'button[data-testid="ADD_STRATEGY_BUTTON"]',
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] > div[aria-expanded="false"]`,
+                content: (
+                    <Description>
+                        Expand the environment card to see all the defined
+                        strategies.
+                    </Description>
+                ),
+                optional: true,
+                delay: 500,
+            },
+            {
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] button[data-testid="ADD_STRATEGY_BUTTON"]`,
                 content: (
                     <Description>
                         Add a new strategy to this environment by using this
                         button.
                     </Description>
                 ),
+                delay: 500,
+                backCollapseExpanded: true,
             },
             {
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step4/strategies/create?environmentId=${ENVIRONMENT}&strategyName=flexibleRollout&defaultStrategy=true"]`,
@@ -602,6 +631,7 @@ export const TOPICS: ITutorialTopic[] = [
                         Save the constraint by using this button.
                     </Description>
                 ),
+                optional: true,
             },
             {
                 target: 'button[data-testid="STRATEGY_VARIANTS_TAB"]',
@@ -707,8 +737,8 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            Finally, enable or disable the feature with the new
-                            variant by toggling the highlighted switch.
+                            Now you can disable or enable the feature with the
+                            new variant by toggling the highlighted switch.
                         </Description>
                         <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             Look at the demo page to see your changes!

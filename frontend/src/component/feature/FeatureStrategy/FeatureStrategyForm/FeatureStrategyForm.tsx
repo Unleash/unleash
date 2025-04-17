@@ -126,11 +126,6 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
     width: '100%',
 }));
 
-const StyledTargetingHeader = styled('div')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    marginTop: theme.spacing(1.5),
-}));
-
 const StyledHeaderBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -471,6 +466,14 @@ export const FeatureStrategyForm = ({
                                 }}
                             />
 
+                            <FeatureStrategyType
+                                strategy={strategy}
+                                strategyDefinition={strategyDefinition}
+                                setStrategy={setStrategy}
+                                validateParameter={validateParameter}
+                                errors={errors}
+                                hasAccess={access}
+                            />
                             <FeatureStrategyEnabledDisabled
                                 enabled={!strategy?.disabled}
                                 onToggleEnabled={() =>
@@ -480,15 +483,6 @@ export const FeatureStrategyForm = ({
                                     }))
                                 }
                             />
-
-                            <FeatureStrategyType
-                                strategy={strategy}
-                                strategyDefinition={strategyDefinition}
-                                setStrategy={setStrategy}
-                                validateParameter={validateParameter}
-                                errors={errors}
-                                hasAccess={access}
-                            />
                         </>
                     }
                 />
@@ -497,12 +491,12 @@ export const FeatureStrategyForm = ({
                     condition={tab === 1}
                     show={
                         <>
-                            <StyledTargetingHeader>
+                            <Alert severity='info' sx={{ mb: 2 }} icon={false}>
                                 Segmentation and constraints allow you to set
                                 filters on your strategies, so that they will
                                 only be evaluated for users and applications
                                 that match the specified preconditions.
-                            </StyledTargetingHeader>
+                            </Alert>
                             <FeatureStrategySegment
                                 segments={segments}
                                 setSegments={setSegments}

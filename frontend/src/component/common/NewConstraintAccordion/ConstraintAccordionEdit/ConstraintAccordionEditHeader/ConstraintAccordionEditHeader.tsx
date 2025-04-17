@@ -2,7 +2,7 @@ import type { IConstraint } from 'interfaces/strategy';
 
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
+import { ConstraintIcon } from 'component/common/LegacyConstraintAccordion/ConstraintIcon';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     dateOperators,
@@ -15,7 +15,7 @@ import { oneOf } from 'utils/oneOf';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import type { Operator } from 'constants/operators';
-import { ConstraintOperatorSelect } from 'component/common/ConstraintAccordion/ConstraintOperatorSelect';
+import { ConstraintOperatorSelect } from 'component/common/LegacyConstraintAccordion/ConstraintOperatorSelect';
 import {
     operatorsForContext,
     CURRENT_TIME_CONTEXT_FIELD,

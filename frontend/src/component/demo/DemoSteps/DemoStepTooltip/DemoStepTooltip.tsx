@@ -129,7 +129,7 @@ export const DemoStepTooltip = ({
                                 condition={topic > 0 || stepIndex > 0}
                                 show={
                                     <Button
-                                        variant='outlined'
+                                        variant='text'
                                         onClick={() => onBack(step)}
                                     >
                                         Back
@@ -180,10 +180,7 @@ export const DemoStepTooltip = ({
                     <ConditionallyRender
                         condition={topic > 0 || stepIndex > 0}
                         show={
-                            <Button
-                                variant='outlined'
-                                onClick={() => onBack(step)}
-                            >
+                            <Button variant='text' onClick={() => onBack(step)}>
                                 Back
                             </Button>
                         }

@@ -165,7 +165,7 @@ describe.each([
     test(`returns ${etagVariant.feature_enabled ? 200 : 304} for pre-calculated hash${etagVariant.feature_enabled ? ' because hash changed' : ''}`, async () => {
         const res = await app.request
             .get('/api/client/features')
-            .set('if-none-match', '"61824cd0:16"')
+            .set('if-none-match', '"61824cd0:15"')
             .expect(etagVariant.feature_enabled ? 200 : 304);
 
         if (etagVariant.feature_enabled) {

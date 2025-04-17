@@ -15,20 +15,17 @@ services:
   # The Unleash server contains the Unleash configuration and
   # communicates with server-side SDKs and the Unleash Proxy
   frontend:
-    build:
-      context: ..
-      dockerfile: frontend/Dockerfile
+    image: nginx
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html
     command: |
-      sh -c "echo \"Waiting for Unleash to start\" && \
-      npx wait-on http://unleash:4242/health && \
-      echo \"Unleash is up, starting frontend\" && \
-      yarn run dev"
+      sh -c "printf 'server { listen 80; location / { add_header Access-Control-Allow-Origin \"*\" always; root /usr/share/nginx/html; try_files \$uri \$uri/ =404; }}' > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
     ports:
-      - "3000:3000"
+      - "3000:80"
     environment:
       UNLEASH_API: "http://unleash:4242/"
     healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://localhost:3000/login || exit 1
+      test: wget --no-verbose --tries=1 --spider http://localhost:80/login || exit 1
       interval: 1s
       timeout: 1m
       retries: 10

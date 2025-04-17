@@ -36,9 +36,11 @@ const ValueChipBase = styled(
 )(({ theme }) => ({
     transition: 'all 0.3s ease',
     outline: `1px solid #0000`,
-    background: theme.palette.background.elevation1,
+    background: theme.palette.secondary.light,
+    color: theme.palette.secondary.dark,
+    border: `1px solid ${theme.palette.secondary.border}`,
     ':hover, :focus-visible': {
-        background: theme.palette.background.elevation1,
+        background: theme.palette.secondary.light,
     },
     ':focus-visible': {
         outlineColor: theme.palette.secondary.dark,

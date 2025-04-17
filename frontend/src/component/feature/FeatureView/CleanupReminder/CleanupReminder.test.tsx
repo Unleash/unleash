@@ -2,7 +2,7 @@ import { vi } from 'vitest';
 import { CleanupReminder } from './CleanupReminder';
 import { render } from 'utils/testRenderer';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import {
     DELETE_FEATURE,
     UPDATE_FEATURE,
@@ -10,6 +10,10 @@ import {
 
 const currentTime = '2024-04-25T08:05:00.000Z';
 const monthAgo = '2024-03-25T06:05:00.000Z';
+
+beforeEach(() => {
+    window.localStorage.clear();
+});
 
 test('render complete feature reminder', async () => {
     vi.setSystemTime(currentTime);
@@ -55,6 +59,13 @@ test('render remove flag from code reminder', async () => {
     });
 
     await screen.findByText('Time to remove flag from code?');
+
+    const reminder = await screen.findByText('Remind me later');
+    reminder.click();
+
+    await waitFor(() => {
+        expect(screen.queryByText('Archive flag')).not.toBeInTheDocument();
+    });
 });
 
 test('render archive flag reminder', async () => {
@@ -78,4 +89,11 @@ test('render archive flag reminder', async () => {
     await screen.findByText('child1');
     const okButton = await screen.findByText('OK');
     okButton.click();
+
+    const reminder = await screen.findByText('Remind me later');
+    reminder.click();
+
+    await waitFor(() => {
+        expect(screen.queryByText('Archive flag')).not.toBeInTheDocument();
+    });
 });

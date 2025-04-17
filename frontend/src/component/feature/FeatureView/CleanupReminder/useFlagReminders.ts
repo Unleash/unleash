@@ -36,7 +36,7 @@ export const useFlagReminders = ({
                 // Sort by timestamp (oldest first)
                 entries.sort((a, b) => a[1] - b[1]);
 
-                // Keep only the newest MAX_REMINDERS
+                // Keep only the newest maxReminders
                 const trimmed = entries.slice(entries.length - maxReminders);
 
                 return Object.fromEntries(trimmed);

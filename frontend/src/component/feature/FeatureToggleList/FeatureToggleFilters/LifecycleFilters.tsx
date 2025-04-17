@@ -2,6 +2,8 @@ import { Box, Chip, styled } from '@mui/material';
 import type { FC } from 'react';
 import type { FilterItemParamHolder } from '../../../filter/Filters/Filters';
 import type { LifecycleStage } from '../../FeatureView/FeatureOverview/FeatureLifecycle/LifecycleStage';
+import { useNavigate } from 'react-router-dom';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledChip = styled(Chip, {
     shouldForwardProp: (prop) => prop !== 'isActive',
@@ -34,7 +36,7 @@ const Wrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
-    padding: theme.spacing(2, 3, 0, 3),
+    padding: theme.spacing(0, 3),
 }));
 
 const lifecycleOptions: {
@@ -52,6 +54,8 @@ export const LifecycleFilters: FC<ILifecycleFiltersProps> = ({
     onChange,
     total,
 }) => {
+    const navigate = useNavigate();
+    const { trackEvent } = usePlausibleTracker();
     const current = state.lifecycle?.values ?? [];
 
     return (
@@ -86,6 +90,18 @@ export const LifecycleFilters: FC<ILifecycleFiltersProps> = ({
                     />
                 );
             })}
+            <StyledChip
+                label='Archived'
+                variant='outlined'
+                onClick={() => {
+                    navigate('/archive');
+                    trackEvent('search-feature-buttons', {
+                        props: {
+                            action: 'archive',
+                        },
+                    });
+                }}
+            />
         </Wrapper>
     );
 };

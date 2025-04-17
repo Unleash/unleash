@@ -399,76 +399,92 @@ export const FeatureToggleListTable: FC = () => {
         <PageContent
             disableLoading={true}
             bodyClass='no-padding'
+            disableBorder={flagsReleaseManagementUIEnabled}
             header={
-                <PageHeader
-                    title='Search'
-                    actions={
-                        <>
-                            <ConditionallyRender
-                                condition={!isSmallScreen}
-                                show={
-                                    <>
-                                        <Search
-                                            placeholder='Search'
-                                            expandable
-                                            initialValue={
-                                                tableState.query || ''
-                                            }
-                                            onChange={setSearchValue}
-                                            id='globalFeatureFlags'
-                                        />
-                                        <PageHeader.Divider />
-                                    </>
-                                }
-                            />
-                            <Link
-                                component={RouterLink}
-                                to='/archive'
-                                underline='always'
-                                sx={{ marginRight: 2, ...focusable(theme) }}
-                                onClick={() => {
-                                    trackEvent('search-feature-buttons', {
-                                        props: {
-                                            action: 'archive',
-                                        },
-                                    });
-                                }}
-                            >
-                                View archive
-                            </Link>
-                            {flagsReleaseManagementUIEnabled ? (
-                                <ExportFlags
-                                    onClick={() => setShowExportDialog(true)}
+                !flagsReleaseManagementUIEnabled ? (
+                    <PageHeader
+                        title={'Search'}
+                        actions={
+                            <>
+                                <ConditionallyRender
+                                    condition={!isSmallScreen}
+                                    show={
+                                        <>
+                                            <Search
+                                                placeholder='Search'
+                                                expandable
+                                                initialValue={
+                                                    tableState.query || ''
+                                                }
+                                                onChange={setSearchValue}
+                                                id='globalFeatureFlags'
+                                            />
+                                            <PageHeader.Divider />
+                                        </>
+                                    }
                                 />
-                            ) : (
+                                <Link
+                                    component={RouterLink}
+                                    to='/archive'
+                                    underline='always'
+                                    sx={{ marginRight: 2, ...focusable(theme) }}
+                                    onClick={() => {
+                                        trackEvent('search-feature-buttons', {
+                                            props: {
+                                                action: 'archive',
+                                            },
+                                        });
+                                    }}
+                                >
+                                    View archive
+                                </Link>
                                 <FeatureToggleListActions
                                     onExportClick={() =>
                                         setShowExportDialog(true)
                                     }
                                 />
-                            )}
-                        </>
-                    }
-                >
-                    <ConditionallyRender
-                        condition={isSmallScreen}
-                        show={
-                            <Search
-                                initialValue={tableState.query || ''}
-                                onChange={setSearchValue}
-                                id='globalFeatureFlags'
-                            />
+                            </>
                         }
-                    />
-                </PageHeader>
+                    >
+                        <ConditionallyRender
+                            condition={isSmallScreen}
+                            show={
+                                <Search
+                                    initialValue={tableState.query || ''}
+                                    onChange={setSearchValue}
+                                    id='globalFeatureFlags'
+                                />
+                            }
+                        />
+                    </PageHeader>
+                ) : (
+                    <PageHeader title='FlagsOverview' />
+                )
             }
         >
             {flagsReleaseManagementUIEnabled ? (
-                <LifecycleFilters
-                    state={filterState}
-                    onChange={setTableState}
-                    total={loading ? undefined : total}
-                />
+                <Box sx={{ display: 'flex' }}>
+                    <Box sx={{ marginRight: 'auto' }}>
+                        <LifecycleFilters
+                            state={filterState}
+                            onChange={setTableState}
+                            total={loading ? undefined : total}
+                        />
+                    </Box>
+
+                    <Search
+                        placeholder='Search'
+                        expandable
+                        initialValue={tableState.query || ''}
+                        onChange={setSearchValue}
+                        id='globalFeatureFlags'
+                    />
+                    <Box sx={(theme) => ({ marginRight: theme.spacing(2) })}>
+                        <ExportFlags
+                            onClick={() => setShowExportDialog(true)}
+                        />
+                    </Box>
+                </Box>
             ) : null}
             <FeatureToggleFilters
                 onChange={setTableState}

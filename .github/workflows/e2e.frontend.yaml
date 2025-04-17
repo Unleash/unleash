@@ -21,6 +21,10 @@ jobs:
           echo "$GITHUB_CONTEXT"
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          corepack enable
+          yarn --cwd ./frontend install
       - name: Start Unleash test instance
         run: |
           docker compose -f .github/docker-compose.test.yml up -d --wait -t 90
@@ -33,4 +37,4 @@ jobs:
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
           config: baseUrl=http://localhost:3000
           spec: cypress/integration/${{ matrix.test }}
-          install-command: yarn --immutable
+          install: false

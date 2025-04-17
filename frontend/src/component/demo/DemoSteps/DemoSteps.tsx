@@ -118,6 +118,8 @@ export const DemoSteps = ({
         }
 
         if (action === ACTIONS.UPDATE) {
+            if (step.target === 'body') return;
+
             const el = document.querySelector(
                 step.target as string,
             ) as HTMLElement | null;

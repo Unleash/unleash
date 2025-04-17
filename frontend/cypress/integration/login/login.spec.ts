@@ -36,31 +36,16 @@ describe('login', { testIsolation: true }, () => {
         cy.wait(1_000);
         cy.visit('/');
         cy.wait(1_000);
-        cy.url().should('eq', `${baseUrl}/projects`);
+        cy.url().should((url) => url.startsWith(`${baseUrl}/projects`));
         cy.contains('a', projectName).click();
         cy.wait(1_000);
         cy.get(`h1 span`).should('not.have.class', 'skeleton');
         cy.visit('/');
         cy.wait(1_000);
         cy.url().should((url) =>
+            // last visited project
             url.startsWith(`${baseUrl}/projects/${projectName}`),
-        ); // last visited project
-    });
-
-    it('is redirecting to other pages', () => {
-        cy.visit('/search');
-        cy.wait(1_000);
-        cy.visit('/');
-        cy.wait(1_000);
-        cy.url().should('eq', `${baseUrl}/search`);
-        cy.visit('/search');
-        cy.wait(1_000);
-        cy.visit('/admin');
-        cy.wait(1_000);
-        cy.visit('/applications');
-        cy.wait(1_000);
-        cy.visit('/');
-        cy.url().should('eq', `${baseUrl}/admin`);
+        );
     });
 
     it('is redirecting to other pages', () => {

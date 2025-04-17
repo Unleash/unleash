@@ -62,6 +62,7 @@ process.nextTick(async () => {
                         addEditStrategy: true,
                         flagsOverviewSearch: true,
                         cleanupReminder: true,
+                        strictSchemaValidation: true,
                     },
                 },
                 authentication: {

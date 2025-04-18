@@ -12,7 +12,6 @@ import {
 import Archive from '@mui/icons-material/Archive';
 import ArchiveOutlined from '@mui/icons-material/ArchiveOutlined';
 import FileCopy from '@mui/icons-material/FileCopy';
-import FileCopyOutlined from '@mui/icons-material/FileCopyOutlined';
 import Label from '@mui/icons-material/Label';
 import WatchLater from '@mui/icons-material/WatchLater';
 import WatchLaterOutlined from '@mui/icons-material/WatchLaterOutlined';
@@ -45,6 +44,7 @@ import { ManageTagsDialog } from './FeatureOverview/ManageTagsDialog/ManageTagsD
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
+import { FeatureCopyName } from './FeatureCopyName/FeatureCopyName';
 
 const NewStyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: 'none',
@@ -64,7 +64,13 @@ const UpperHeaderRow = styled('div')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'row wrap',
     alignItems: 'center',
-    columnGap: theme.spacing(2),
+    columnGap: theme.spacing(1.5),
+}));
+
+const StyledTitle = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    columnGap: theme.spacing(0.5),
 }));
 
 const LowerHeaderRow = styled(UpperHeaderRow)(({ theme }) => ({
@@ -233,14 +239,6 @@ const HeaderActionsComponent = ({
         >
             {feature.favorite ? <Star /> : <StarBorder />}
         </IconButtonWithTooltip>
-
-        <IconButtonWithTooltip
-            label='Copy flag name'
-            onClick={handleCopyToClipboard}
-            data-loading
-        >
-            {isFeatureNameCopied ? <Check /> : <FileCopyOutlined />}
-        </IconButtonWithTooltip>
         <PermissionIconButton
             permission={CREATE_FEATURE}
             projectId={feature.project}
@@ -386,7 +384,11 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
             {flagOverviewRedesign ? (
                 <NewStyledHeader>
                     <UpperHeaderRow>
-                        <Typography variant='h1'>{feature.name}</Typography>
+                        <StyledTitle>
+                            <Typography variant='h1'>{feature.name}</Typography>
+                            <FeatureCopyName name={feature.name} />
+                        </StyledTitle>
+                        <FeatureStatusChip stale={true} />
                         {feature.stale ? (
                             <FeatureStatusChip stale={true} />
                         ) : null}

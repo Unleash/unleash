@@ -136,6 +136,11 @@ const sidebars: SidebarsConfig = {
                                     label: 'Security and Compliance',
                                     id: 'feature-flag-tutorials/use-cases/security-compliance',
                                 },
+                                {
+                                    type: 'doc',
+                                    label: 'Scaling Unleash',
+                                    id: 'feature-flag-tutorials/use-cases/scaling-unleash',
+                                },
                             ],
                         },
                         {

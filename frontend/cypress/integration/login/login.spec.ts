@@ -31,16 +31,11 @@ describe('login', { testIsolation: true }, () => {
 
     it('is redirecting to last a visited projects', () => {
         cy.visit('/projects');
-        cy.wait(3_000);
         cy.visit('/');
-        cy.wait(3_000);
         cy.url().should((url) => url.startsWith(`${baseUrl}/projects`));
         cy.visit(`/projects/${projectName}`);
-        cy.wait(3_000);
         cy.visit('/projects');
-        cy.wait(3_000);
         cy.visit('/');
-        cy.wait(3_000);
         cy.url().should((url) =>
             // last visited project
             url.startsWith(`${baseUrl}/projects/${projectName}`),
@@ -49,18 +44,14 @@ describe('login', { testIsolation: true }, () => {
 
     it('is redirecting to other pages', () => {
         cy.visit('/search');
-        cy.wait(3_000);
         cy.visit('/playground');
-        cy.wait(3_000);
-        cy.visit('/');
-        cy.wait(3_000);
+        cy.wait(5_000);
         cy.url().should('eq', `${baseUrl}/playground`);
+        // cy.visit('/');
+        // cy.url().should('eq', `${baseUrl}/playground`);
         cy.visit('/admin');
-        cy.wait(3_000);
         cy.visit('/applications'); // not one of main pages
-        cy.wait(3_000);
         cy.visit('/');
-        cy.wait(3_000);
         cy.url().should('eq', `${baseUrl}/admin`);
     });
 

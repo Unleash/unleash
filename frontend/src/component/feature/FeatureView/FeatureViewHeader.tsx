@@ -216,8 +216,6 @@ type HeaderActionsProps = {
     feature: IFeatureToggle;
     showOnNarrowScreens?: boolean;
     onFavorite: () => void;
-    handleCopyToClipboard: () => void;
-    isFeatureNameCopied: boolean;
     openStaleDialog: () => void;
     openDeleteDialog: () => void;
 };
@@ -226,8 +224,6 @@ const HeaderActionsComponent = ({
     showOnNarrowScreens,
     feature,
     onFavorite,
-    handleCopyToClipboard,
-    isFeatureNameCopied,
     openStaleDialog,
     openDeleteDialog,
 }: HeaderActionsProps) => (
@@ -371,8 +367,6 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                 showOnNarrowScreens={showOnNarrowScreens}
                 feature={feature}
                 onFavorite={onFavorite}
-                handleCopyToClipboard={handleCopyToClipboard}
-                isFeatureNameCopied={isFeatureNameCopied}
                 openStaleDialog={() => setOpenStaleDialog(true)}
                 openDeleteDialog={() => setShowDelDialog(true)}
             />

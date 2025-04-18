@@ -433,13 +433,6 @@ describe('offline client', () => {
                 },
             },
             {
-                name: 'userWithId',
-                constraints: [],
-                parameters: {
-                    userIds: 'uoea,ueoa',
-                },
-            },
-            {
                 name: 'remoteAddress',
                 constraints: [],
                 parameters: {

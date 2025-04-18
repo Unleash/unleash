@@ -135,8 +135,6 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
                         return this.flexibleRolloutStrategyChangeText(event);
                     case 'default':
                         return this.defaultStrategyChangeText(event);
-                    case 'userWithId':
-                        return this.userWithIdStrategyChangeText(event);
                     case 'remoteAddress':
                         return this.remoteAddressStrategyChangeText(event);
                     case 'applicationHostname':
@@ -160,10 +158,6 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
 
     private remoteAddressStrategyChangeText(event: IEvent) {
         return this.listOfValuesStrategyChangeText(event, 'IPs');
-    }
-
-    private userWithIdStrategyChangeText(event: IEvent) {
-        return this.listOfValuesStrategyChangeText(event, 'userIds');
     }
 
     private listOfValuesStrategyChangeText(

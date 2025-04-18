@@ -13,7 +13,7 @@ jobs:
           - groups/groups.spec.ts
           - projects/access.spec.ts
           - segments/segments.spec.ts
-          #- login/login.spec.ts
+          - login/login.spec.ts
     steps:
       - name: Dump GitHub context
         env:

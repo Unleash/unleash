@@ -49,7 +49,7 @@ test('rewriteHTML swaps out faviconPath if cdnPrefix is set', () => {
     const result = rewriteHTML(input, '', 'https://cdn.getunleash.io/v4.1.0');
     expect(
         result.includes(
-            '<link rel="icon" href="https://cdn.getunleash.io/favicon.ico" />',
+            '<link rel="icon" href="https://cdn.getunleash.io/v4.1.0/favicon.ico" />',
         ),
     ).toBe(true);
 });

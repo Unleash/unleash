@@ -47,7 +47,7 @@ services:
   db:
     expose:
       - "5432"
-    image: postgres:16
+    image: postgres:17
     environment:
       POSTGRES_DB: "unleash"
       # trust incoming connections blindly (DON'T DO THIS IN PRODUCTION!)

@@ -86,6 +86,8 @@ export const FeatureOverview = () => {
                         onEnvironmentVisibilityChange={
                             onEnvironmentVisibilityChange
                         }
+                        feature={feature}
+                        onChange={refetchFeature}
                     />
                 </div>
                 <StyledMainContent>

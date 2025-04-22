@@ -37,10 +37,10 @@ const ENVIRONMENT = 'dev';
 
 export const TOPICS: ITutorialTopic[] = [
     {
-        title: 'Enable/disable a feature flag',
+        title: 'How to enable/disable a feature flag',
         steps: [
             {
-                title: 'Enable/disable a feature flag',
+                title: 'How to enable/disable a feature flag',
                 href: `/projects/${PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
@@ -91,11 +91,11 @@ export const TOPICS: ITutorialTopic[] = [
         ],
     },
     {
-        title: 'Enable for a specific user',
+        title: 'Next: How to enable for a specific user',
         setup: specificUser,
         steps: [
             {
-                title: 'Enable for a specific user',
+                title: 'Next: How to enable for a specific user',
                 href: `/projects/${PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
@@ -335,11 +335,11 @@ export const TOPICS: ITutorialTopic[] = [
         ],
     },
     {
-        title: 'Adjust gradual rollout',
+        title: 'Next: How to adjust gradual rollout',
         setup: gradualRollout,
         steps: [
             {
-                title: 'Adjust gradual rollout',
+                title: 'Next: How to adjust gradual rollout',
                 href: `/projects/${PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
@@ -468,11 +468,11 @@ export const TOPICS: ITutorialTopic[] = [
         ],
     },
     {
-        title: 'Adjust variants',
+        title: 'Next: How to adjust variants',
         setup: variants,
         steps: [
             {
-                title: 'Adjust variants',
+                title: 'Next: How to adjust variants',
                 href: `/projects/${PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',

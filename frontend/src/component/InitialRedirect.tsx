@@ -6,10 +6,12 @@ import Loader from './common/Loader/Loader';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 
+const defaultPage = '/personal';
+
 export const useLastViewedPage = (location?: Location) => {
     const [state, setState] = useLocalStorageState<string>(
         'lastViewedPage',
-        '/personal',
+        defaultPage,
         7 * 24 * 60 * 60 * 1000, // 7 days, left to promote seeing Personal dashboard from time to time
     );
 
@@ -55,5 +57,9 @@ export const InitialRedirect = () => {
         return <Navigate to={`/projects/${lastViewedProject}`} replace />;
     }
 
-    return <Navigate to={lastViewedPage} replace />;
+    if (lastViewedPage && lastViewedPage !== '/') {
+        return <Navigate to={lastViewedPage} replace />;
+    }
+
+    return <Navigate to={defaultPage} replace />;
 };

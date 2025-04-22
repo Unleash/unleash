@@ -10,6 +10,13 @@ import { useSegment } from 'hooks/api/getters/useSegment/useSegment';
 import { SegmentDiff, SegmentTooltipLink } from '../../SegmentTooltipLink';
 import { ConstraintAccordionList } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
 import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning';
+import {
+    NewConstraintAccordionList,
+    useConstraintAccordionList,
+} from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/NewConstraintAccordionList';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useRef } from 'react';
 
 const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -65,6 +72,9 @@ export const SegmentChangeDetails: FC<{
             : currentSegment?.name;
     const referenceSegment =
         changeRequestState === 'Applied' ? snapshotSegment : currentSegment;
+    const addEditStrategy = useUiFlag('addEditStrategy');
+    const ref = useRef(null);
+    const { state } = useConstraintAccordionList(undefined, ref);
 
     return (
         <SegmentContainer conflict={change.conflict}>
@@ -113,9 +123,21 @@ export const SegmentChangeDetails: FC<{
                         </ChangeItemInfo>
                         <div>{actions}</div>
                     </ChangeItemCreateEditWrapper>
-                    <ConstraintAccordionList
-                        constraints={change.payload.constraints}
-                        showLabel={false}
+                    <ConditionallyRender
+                        condition={addEditStrategy}
+                        show={
+                            <NewConstraintAccordionList
+                                constraints={change.payload.constraints}
+                                state={state}
+                                ref={ref}
+                            />
+                        }
+                        elseShow={
+                            <ConstraintAccordionList
+                                constraints={change.payload.constraints}
+                                showLabel={false}
+                            />
+                        }
                     />
                 </>
             )}

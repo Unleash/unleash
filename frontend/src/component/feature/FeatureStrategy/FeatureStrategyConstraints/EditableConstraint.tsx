@@ -42,6 +42,8 @@ import Delete from '@mui/icons-material/Delete';
 import { ValueList } from './ValueList';
 import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive.svg';
 import { ReactComponent as CaseInsensitiveIcon } from 'assets/icons/case-insensitive.svg';
+import { ReactComponent as EqualsIcon } from 'assets/icons/constraint-equals.svg';
+import { ReactComponent as NotEqualsIcon } from 'assets/icons/constraint-not-equals.svg';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 
 const Container = styled('article')(({ theme }) => ({
@@ -112,6 +114,8 @@ const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
 }));
 
 const StyledButton = styled('button')(({ theme }) => ({
+    display: 'grid',
+    placeItems: 'center',
     width: '5ch',
     borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(0.25, 0),
@@ -134,13 +138,24 @@ const StyledCaseInsensitiveIcon = styled(CaseInsensitiveIcon)(({ theme }) => ({
         fill: theme.palette.text.secondary,
     },
 }));
+
 const StyledCaseSensitiveIcon = styled(CaseSensitiveIcon)(({ theme }) => ({
     fill: 'currentcolor',
 }));
 
-const CaseButton = styled(StyledButton)(({ theme }) => ({
-    display: 'grid',
-    placeItems: 'center',
+const StyledEqualsIcon = styled(EqualsIcon)(({ theme }) => ({
+    path: {
+        fill: 'currentcolor',
+    },
+}));
+
+const StyledNotEqualsIcon = styled(NotEqualsIcon)(({ theme }) => ({
+    path: {
+        fill: theme.palette.text.disabled,
+    },
+    rect: {
+        fill: theme.palette.text.secondary,
+    },
 }));
 
 type Props = {
@@ -380,7 +395,17 @@ export const EditableConstraint: FC<Props> = ({
                         type='button'
                         onClick={toggleInvertedOperator}
                     >
-                        {localConstraint.inverted ? 'aint' : 'is'}
+                        {localConstraint.inverted ? (
+                            <StyledNotEqualsIcon aria-label='The constraint operator is exclusive.' />
+                        ) : (
+                            <StyledEqualsIcon aria-label='The constraint operator is inclusive.' />
+                        )}
+                        <ScreenReaderOnly>
+                            Make the selected operator
+                            {localConstraint.inverted
+                                ? ' inclusive'
+                                : ' exclusive'}
+                        </ScreenReaderOnly>
                     </StyledButton>
 
                     <ConstraintOperatorSelect
@@ -391,7 +416,7 @@ export const EditableConstraint: FC<Props> = ({
                     />
 
                     {showCaseSensitiveButton ? (
-                        <CaseButton
+                        <StyledButton
                             type='button'
                             onClick={toggleCaseSensitivity}
                         >
@@ -407,7 +432,7 @@ export const EditableConstraint: FC<Props> = ({
                                     : ' not '}
                                 case sensitive
                             </ScreenReaderOnly>
-                        </CaseButton>
+                        </StyledButton>
                     ) : null}
 
                     {!input.includes('LEGAL_VALUES') && (

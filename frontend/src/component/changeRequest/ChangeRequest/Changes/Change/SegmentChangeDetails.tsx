@@ -16,7 +16,8 @@ import {
 } from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/NewConstraintAccordionList';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import type { IConstraint } from 'interfaces/strategy';
 
 const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -74,7 +75,10 @@ export const SegmentChangeDetails: FC<{
         changeRequestState === 'Applied' ? snapshotSegment : currentSegment;
     const addEditStrategy = useUiFlag('addEditStrategy');
     const ref = useRef(null);
-    const { state } = useConstraintAccordionList(undefined, ref);
+    const [constraints, setConstraints] = useState<IConstraint[]>(
+        change.action === 'updateSegment' ? change.payload.constraints : [],
+    );
+    const { state } = useConstraintAccordionList(setConstraints, ref);
 
     return (
         <SegmentContainer conflict={change.conflict}>
@@ -127,7 +131,8 @@ export const SegmentChangeDetails: FC<{
                         condition={addEditStrategy}
                         show={
                             <NewConstraintAccordionList
-                                constraints={change.payload.constraints}
+                                constraints={constraints}
+                                setConstraints={setConstraints}
                                 state={state}
                                 ref={ref}
                             />

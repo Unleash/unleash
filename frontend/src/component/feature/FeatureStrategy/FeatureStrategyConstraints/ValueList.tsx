@@ -8,9 +8,11 @@ import {
     styled,
     TextField,
 } from '@mui/material';
+import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import {
     type FC,
     forwardRef,
+    useId,
     useImperativeHandle,
     useRef,
     useState,
@@ -131,6 +133,7 @@ const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
         const [inputValues, setInputValues] = useState('');
         const [error, setError] = useState('');
         const positioningRef = useRef<HTMLButtonElement>(null);
+        const inputId = useId();
         useImperativeHandle(
             ref,
             () => positioningRef.current as HTMLButtonElement,
@@ -187,7 +190,13 @@ const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
                     >
                         {error && <ErrorMessage>{error}</ErrorMessage>}
                         <InputRow>
+                            <ScreenReaderOnly>
+                                <label htmlFor={inputId}>
+                                    Constraint Value
+                                </label>
+                            </ScreenReaderOnly>
                             <StyledTextField
+                                id={inputId}
                                 placeholder='Enter value'
                                 value={inputValues}
                                 onChange={(e) => {

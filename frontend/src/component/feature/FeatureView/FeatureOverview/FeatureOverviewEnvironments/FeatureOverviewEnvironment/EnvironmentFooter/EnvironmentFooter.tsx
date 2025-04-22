@@ -12,6 +12,9 @@ interface IEnvironmentFooterProps {
     environmentMetric?: IFeatureEnvironmentMetrics;
 }
 
+/**
+ * @deprecated remove with `featureOverviewRedesign` flag
+ */
 export const EnvironmentFooter = ({
     environmentMetric,
 }: IEnvironmentFooterProps) => {

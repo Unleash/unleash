@@ -11,6 +11,9 @@ export type ApplicationEnvironmentInstancesSchemaInstancesItem = {
     instanceId: string;
     /** The last time the application environment instance was seen */
     lastSeen?: string;
-    /** An SDK version identifier. Usually formatted as "unleash-client-<language>:<version>" */
-    sdkVersion?: string;
+    /**
+     * An SDK version identifier. Usually formatted as "unleash-client-<language>:<version>"
+     * @nullable
+     */
+    sdkVersion?: string | null;
 };

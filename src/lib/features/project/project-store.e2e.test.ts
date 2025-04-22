@@ -45,7 +45,7 @@ test('should exclude archived projects', async () => {
 test('should have default project', async () => {
     const project = await projectStore.get('default');
     expect(project).toBeDefined();
-    expect(project.id).toBe('default');
+    expect(project!.id).toBe('default');
 });
 
 test('should create new project', async () => {
@@ -58,11 +58,11 @@ test('should create new project', async () => {
     await projectStore.create(project);
     const ret = await projectStore.get('test');
     const exists = await projectStore.exists('test');
-    expect(project.id).toEqual(ret.id);
-    expect(project.name).toEqual(ret.name);
-    expect(project.description).toEqual(ret.description);
-    expect(ret.createdAt).toBeTruthy();
-    expect(ret.updatedAt).toBeTruthy();
+    expect(project.id).toEqual(ret!.id);
+    expect(project.name).toEqual(ret!.name);
+    expect(project.description).toEqual(ret!.description);
+    expect(ret!.createdAt).toBeTruthy();
+    expect(ret!.updatedAt).toBeTruthy();
     expect(exists).toBe(true);
 });
 
@@ -103,8 +103,8 @@ test('should update project', async () => {
 
     const readProject = await projectStore.get(project.id);
 
-    expect(updatedProject.name).toBe(readProject.name);
-    expect(updatedProject.description).toBe(readProject.description);
+    expect(updatedProject.name).toBe(readProject!.name);
+    expect(updatedProject.description).toBe(readProject!.description);
 });
 
 test('should give error when getting unknown project', async () => {

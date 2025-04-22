@@ -253,6 +253,8 @@ const theme = {
 
         /**
          * For Environment Accordion.
+         * @deprecated Use `elevation1` for `disabled` and `elevation2` for `expanded` instead.
+         * remove with the flagOverviewRedesign flag
          */
         envAccordion: {
             disabled: colors.grey[100],
@@ -279,7 +281,7 @@ const theme = {
             // A400: '#A6000E',
             // A700: '#A6000E',
         },
-        variants: colors.variants,
+        variants: colors.lightVariants,
 
         /**
          * Dashboard and charts
@@ -487,7 +489,7 @@ export const lightTheme = createTheme({
             styleOverrides: {
                 root: ({ theme }) => ({
                     color: theme.palette.text.primary,
-                    fontSize: '1rem',
+                    fontSize: theme.typography.body1.fontSize,
                     textTransform: 'none',
                     fontWeight: 400,
                     lineHeight: '1',
@@ -509,13 +511,13 @@ export const lightTheme = createTheme({
             },
         },
 
-        // Environment accordion
         MuiAccordion: {
             styleOverrides: {
                 root: ({ theme }) => ({
                     '&:first-of-type, &:last-of-type': {
                         borderRadius: theme.shape.borderRadiusLarge,
                     },
+                    // Environment accordion -- remove with `flagOverviewRedesign` flag
                     '&.environment-accordion.Mui-expanded': {
                         outline: `2px solid ${alpha(
                             theme.palette.background.alternative,

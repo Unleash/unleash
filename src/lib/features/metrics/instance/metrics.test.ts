@@ -5,6 +5,7 @@ import { clientMetricsSchema } from '../shared/schema';
 import { createServices } from '../../../services';
 import {
     IAuthType,
+    type IUnleashConfig,
     type IUnleashOptions,
     type IUnleashServices,
     type IUnleashStores,
@@ -12,14 +13,15 @@ import {
 import dbInit, {
     type ITestDb,
 } from '../../../../test/e2e/helpers/database-init';
-import { subMinutes } from 'date-fns';
+import { startOfHour } from 'date-fns';
 import { ApiTokenType } from '../../../types/models/api-token';
 import type TestAgent from 'supertest/lib/agent';
 
 let db: ITestDb;
+let config: IUnleashConfig;
 
 async function getSetup(opts?: IUnleashOptions) {
-    const config = createTestConfig(opts);
+    config = createTestConfig(opts);
     db = await dbInit('metrics', config.getLogger);
 
     const services = createServices(db.stores, config, db.rawDatabase);
@@ -273,6 +275,8 @@ test('should return 204 if metrics are disabled by feature flag', async () => {
 
 describe('bulk metrics', () => {
     test('filters out metrics for environments we do not have access for. No auth setup so we can only access default env', async () => {
+        const now = new Date();
+
         await request
             .post('/api/client/metrics/bulk')
             .send({
@@ -282,7 +286,7 @@ describe('bulk metrics', () => {
                         featureName: 'test_feature_one',
                         appName: 'test_application',
                         environment: 'default',
-                        timestamp: subMinutes(Date.now(), 3),
+                        timestamp: startOfHour(now),
                         yes: 1000,
                         no: 800,
                         variants: {},
@@ -291,7 +295,7 @@ describe('bulk metrics', () => {
                         featureName: 'test_feature_two',
                         appName: 'test_application',
                         environment: 'development',
-                        timestamp: subMinutes(Date.now(), 3),
+                        timestamp: startOfHour(now),
                         yes: 1000,
                         no: 800,
                         variants: {},
@@ -299,7 +303,9 @@ describe('bulk metrics', () => {
                 ],
             })
             .expect(202);
+
         await services.clientMetricsServiceV2.bulkAdd(); // Force bulk collection.
+
         const developmentReport =
             await services.clientMetricsServiceV2.getClientMetricsForToggle(
                 'test_feature_two',
@@ -310,6 +316,7 @@ describe('bulk metrics', () => {
                 'test_feature_one',
                 1,
             );
+
         expect(developmentReport).toHaveLength(0);
         expect(defaultReport).toHaveLength(1);
         expect(defaultReport[0].yes).toBe(1000);
@@ -356,12 +363,6 @@ describe('bulk metrics', () => {
                 type: IAuthType.DEMO,
                 enableApiToken: true,
             },
-        });
-        await authed.db('environments').insert({
-            name: 'development',
-            sort_order: 5000,
-            type: 'development',
-            enabled: true,
         });
         const clientToken =
             await authed.services.apiTokenService.createApiTokenWithProjects({

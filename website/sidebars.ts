@@ -131,6 +131,11 @@ const sidebars: SidebarsConfig = {
                                     label: 'User Management, Access Controls, and Auditing',
                                     id: 'feature-flag-tutorials/use-cases/user-management-access-controls',
                                 },
+                                {
+                                    type: 'doc',
+                                    label: 'Security and Compliance',
+                                    id: 'feature-flag-tutorials/use-cases/security-compliance',
+                                },
                             ],
                         },
                         {
@@ -335,7 +340,7 @@ const sidebars: SidebarsConfig = {
                 'understanding-unleash/unleash-overview',
                 'understanding-unleash/the-anatomy-of-unleash',
                 'understanding-unleash/managing-constraints',
-                'understanding-unleash/proxy-hosting',
+                'understanding-unleash/hosting-options',
                 'understanding-unleash/data-collection',
                 {
                     type: 'category',
@@ -374,6 +379,7 @@ const sidebars: SidebarsConfig = {
                                 'reference/segments',
                                 'reference/unleash-context',
                                 'reference/stickiness',
+                                'reference/release-templates',
                             ],
                         },
                         {
@@ -634,6 +640,10 @@ const sidebars: SidebarsConfig = {
                     items: [
                         'generated/unleash-edge/concepts',
                         'generated/unleash-edge/deploying',
+                        'generated/unleash-edge/benchmarking',
+                        'generated/unleash-edge/cli',
+                        'generated/unleash-edge/development-guide',
+                        'generated/unleash-edge/migration-guide',
                     ],
                 },
                 'generated/unleash-proxy',

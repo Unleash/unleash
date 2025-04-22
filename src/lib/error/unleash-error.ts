@@ -8,7 +8,6 @@ export const UnleashApiErrorTypes = [
     'IncompatibleProjectError',
     'InvalidOperationError',
     'InvalidTokenError',
-    'MinimumOneEnvironmentError',
     'NameExistsError',
     'NoAccessError',
     'NotFoundError',

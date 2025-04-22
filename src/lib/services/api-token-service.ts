@@ -102,11 +102,6 @@ export class ApiTokenService {
             this.fetchActiveTokens();
         }
         this.updateLastSeen();
-        if (config.authentication.initApiTokens.length > 0) {
-            process.nextTick(async () =>
-                this.initApiTokens(config.authentication.initApiTokens),
-            );
-        }
         this.timer = (functionName: string) =>
             metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {
                 className: 'ApiTokenService',
@@ -127,7 +122,7 @@ export class ApiTokenService {
         }
     }
 
-    async getToken(secret: string): Promise<IApiToken> {
+    async getToken(secret: string): Promise<IApiToken | undefined> {
         return this.store.get(secret);
     }
 
@@ -199,9 +194,12 @@ export class ApiTokenService {
         return this.store.getAll();
     }
 
-    private async initApiTokens(tokens: ILegacyApiTokenCreate[]) {
+    async initApiTokens(tokens: ILegacyApiTokenCreate[]) {
         const tokenCount = await this.store.count();
         if (tokenCount > 0) {
+            this.logger.debug(
+                'Not creating initial API tokens because tokens exist in the database',
+            );
             return;
         }
         try {
@@ -209,8 +207,14 @@ export class ApiTokenService {
                 .map(mapLegacyTokenWithSecret)
                 .map((t) => this.insertNewApiToken(t, SYSTEM_USER_AUDIT));
             await Promise.all(createAll);
+            this.logger.info(
+                `Created initial API tokens: ${tokens.map((t) => `(name: ${t.tokenName}, type: ${t.type})`).join(', ')}`,
+            );
         } catch (e) {
-            this.logger.error('Unable to create initial Admin API tokens');
+            this.logger.warn(
+                `Unable to create initial API tokens from: ${tokens.map((t) => `(name: ${t.tokenName}, type: ${t.type})`).join(', ')}`,
+                e,
+            );
         }
     }
 
@@ -244,8 +248,8 @@ export class ApiTokenService {
         expiresAt: Date,
         auditUser: IAuditUser,
     ): Promise<IApiToken> {
-        const previous = await this.store.get(secret);
-        const token = await this.store.setExpiry(secret, expiresAt);
+        const previous = (await this.store.get(secret))!;
+        const token = (await this.store.setExpiry(secret, expiresAt))!;
         await this.eventService.storeEvent(
             new ApiTokenUpdatedEvent({
                 auditUser,
@@ -258,7 +262,7 @@ export class ApiTokenService {
 
     public async delete(secret: string, auditUser: IAuditUser): Promise<void> {
         if (await this.store.exists(secret)) {
-            const token = await this.store.get(secret);
+            const token = (await this.store.get(secret))!;
             await this.store.delete(secret);
             await this.eventService.storeEvent(
                 new ApiTokenDeletedEvent({

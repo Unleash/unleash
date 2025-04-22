@@ -8,18 +8,15 @@ import {
 import { FeatureStrategySegmentList } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentList';
 import { SegmentDocsStrategyWarning } from 'component/segments/SegmentDocs';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
-import { Box, Divider, styled, Typography } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IFeatureStrategySegmentProps {
     segments: ISegment[];
     setSegments: React.Dispatch<React.SetStateAction<ISegment[]>>;
     projectId: string;
 }
-
-const StyledDivider = styled(Divider)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-}));
 
 const StyledHelpIconBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -33,6 +30,7 @@ export const FeatureStrategySegment = ({
     setSegments: setSelectedSegments,
     projectId,
 }: IFeatureStrategySegmentProps) => {
+    const addEditStrategy = useUiFlag('addEditStrategy');
     const { segments: allSegments } = useSegments();
     const { strategySegmentsLimit } = useSegmentLimits();
 
@@ -100,6 +98,8 @@ export const FeatureStrategySegment = ({
                 options={autocompleteOptions}
                 onChange={onChange}
                 disabled={atStrategySegmentsLimit}
+                icon={addEditStrategy ? null : undefined}
+                width={'175px'}
             />
             <FeatureStrategySegmentList
                 segments={selectedSegments}

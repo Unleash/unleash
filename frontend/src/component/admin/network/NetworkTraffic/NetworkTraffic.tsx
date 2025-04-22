@@ -28,6 +28,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { usePageTitle } from 'hooks/usePageTitle';
 import { unknownify } from 'utils/unknownify';
 import type { Theme } from '@mui/material/styles/createTheme';
+import { NetworkPrometheusAPIWarning } from '../NetworkPrometheusAPIWarning';
 
 const pointStyles = ['circle', 'rect', 'rectRounded', 'rectRot', 'triangle'];
 
@@ -206,7 +207,12 @@ export const NetworkTraffic: VFC = () => {
     return (
         <ConditionallyRender
             condition={data.datasets.length === 0}
-            show={<Alert severity='warning'>No data available.</Alert>}
+            show={
+                <Alert severity='warning'>
+                    No data available.
+                    <NetworkPrometheusAPIWarning />
+                </Alert>
+            }
             elseShow={
                 <Box sx={{ display: 'grid', gap: 4 }}>
                     <div style={{ height: 400 }}>

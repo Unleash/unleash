@@ -48,12 +48,14 @@ export class ImportPermissionsService {
     ): Promise<ContextFieldSchema[]> {
         const availableContextFields = await this.contextService.getAll();
 
-        return dto.data.contextFields?.filter(
-            (contextField) =>
-                !availableContextFields.some(
-                    (availableField) =>
-                        availableField.name === contextField.name,
-                ),
+        return (
+            dto.data.contextFields?.filter(
+                (contextField) =>
+                    !availableContextFields.some(
+                        (availableField) =>
+                            availableField.name === contextField.name,
+                    ),
+            ) || []
         );
     }
 

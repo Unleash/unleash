@@ -1,5 +1,5 @@
 import { Suspense, useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeedbackNPS } from 'component/feedback/FeedbackNPS/FeedbackNPS';
 import { LayoutPicker } from 'component/layout/LayoutPicker/LayoutPicker';
@@ -16,13 +16,14 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 import MaintenanceBanner from './maintenance/MaintenanceBanner';
 import { styled } from '@mui/material';
-import { InitialRedirect } from './InitialRedirect';
+import { InitialRedirect, useLastViewedPage } from './InitialRedirect';
 import { InternalBanners } from './banners/internalBanners/InternalBanners';
 import { ExternalBanners } from './banners/externalBanners/ExternalBanners';
 import { LicenseBanner } from './banners/internalBanners/LicenseBanner';
 import { Demo } from './demo/Demo';
 import { LoginRedirect } from './common/LoginRedirect/LoginRedirect';
 import { SecurityBanner } from './banners/internalBanners/SecurityBanner';
+import { MonthsOldVersionBanner } from './banners/internalBanners/MonthsOldVersionBanner';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -50,6 +51,9 @@ export const App = () => {
 
     const isLoggedIn = Boolean(user?.id);
 
+    const location = useLocation();
+    useLastViewedPage(location);
+
     return (
         <SWRProvider>
             <Suspense fallback={<Loader type='fullscreen' />}>
@@ -67,6 +71,7 @@ export const App = () => {
                                 />
                                 <LicenseBanner />
                                 <SecurityBanner />
+                                <MonthsOldVersionBanner />
                                 <ExternalBanners />
                                 <InternalBanners />
                                 <StyledContainer>

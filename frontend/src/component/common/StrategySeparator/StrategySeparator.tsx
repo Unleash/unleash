@@ -1,51 +1,25 @@
-import { Box, styled, useTheme } from '@mui/material';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import { styled } from '@mui/material';
+import { disabledStrategyClassName } from '../StrategyItemContainer/disabled-strategy-utils';
 
-interface IStrategySeparatorProps {
-    text: 'AND' | 'OR';
-}
-
-const StyledContent = styled('div')(({ theme }) => ({
+const Chip = styled('div')(({ theme }) => ({
     padding: theme.spacing(0.75, 1),
-    color: theme.palette.text.primary,
     fontSize: theme.fontSizes.smallerBody,
-    backgroundColor: theme.palette.background.elevation2,
-    borderRadius: theme.shape.borderRadius,
     position: 'absolute',
     zIndex: theme.zIndex.fab,
-    top: '50%',
-    left: theme.spacing(2),
+    top: 0,
     transform: 'translateY(-50%)',
     lineHeight: 1,
-}));
-
-const StyledCenteredContent = styled(StyledContent)(({ theme }) => ({
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    backgroundColor: theme.palette.seen.primary,
     borderRadius: theme.shape.borderRadiusLarge,
-    padding: theme.spacing(0.75, 1.5),
+    backgroundColor: theme.palette.secondary.border,
+    left: theme.spacing(4),
+
+    // if the strategy it's applying to is disabled
+    [`&:has(+ * .${disabledStrategyClassName}, + .${disabledStrategyClassName})`]:
+        {
+            filter: 'grayscale(.8)',
+        },
 }));
 
-export const StrategySeparator = ({ text }: IStrategySeparatorProps) => {
-    const theme = useTheme();
-
-    return (
-        <Box
-            sx={{
-                height: theme.spacing(text === 'AND' ? 1 : 1.5),
-                position: 'relative',
-                width: '100%',
-            }}
-        >
-            <ConditionallyRender
-                condition={text === 'AND'}
-                show={() => <StyledContent>{text}</StyledContent>}
-                elseShow={() => (
-                    <StyledCenteredContent>{text}</StyledCenteredContent>
-                )}
-            />
-        </Box>
-    );
+export const StrategySeparator = () => {
+    return <Chip role='separator'>OR</Chip>;
 };

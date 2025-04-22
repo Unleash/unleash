@@ -8,6 +8,7 @@ import type { UiConfigSchemaBilling } from './uiConfigSchemaBilling';
 import type { UiConfigSchemaFlags } from './uiConfigSchemaFlags';
 import type { UiConfigSchemaLinksItem } from './uiConfigSchemaLinksItem';
 import type { ResourceLimitsSchema } from './resourceLimitsSchema';
+import type { UiConfigSchemaUnleashContext } from './uiConfigSchemaUnleashContext';
 import type { VersionSchema } from './versionSchema';
 
 /**
@@ -40,10 +41,10 @@ export interface UiConfigSchema {
     maxSessionsCount?: number;
     /** The name of this Unleash instance. Used to build the text in the footer. */
     name?: string;
-    /** Whether to enable the Unleash network view or not. */
-    networkViewEnabled?: boolean;
     /** Whether the OIDC configuration is set through environment variables or not. */
     oidcConfiguredThroughEnv?: boolean;
+    /** Whether a Prometheus API is available. */
+    prometheusAPIAvailable?: boolean;
     /** A map of resource names and their limits. */
     resourceLimits?: ResourceLimitsSchema;
     /** Whether the SAML configuration is set through environment variables or not. */
@@ -60,8 +61,8 @@ export interface UiConfigSchema {
      * @deprecated
      */
     strategySegmentsLimit?: number;
-    /** Whether Unleash AI is available. */
-    unleashAIAvailable?: boolean;
+    /** The context object used to configure the Unleash instance. */
+    unleashContext?: UiConfigSchemaUnleashContext;
     /** The URL of the Unleash instance. */
     unleashUrl: string;
     /** The current version of Unleash */

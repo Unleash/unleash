@@ -29,8 +29,8 @@ export interface INavigationMenuItem {
 }
 
 interface IRouteMenu {
-    mobile?: boolean;
-    advanced?: boolean;
+    main?: boolean;
+    primary?: boolean;
     adminSettings?: boolean;
     mode?: Array<'pro' | 'enterprise'>;
     billing?: boolean;

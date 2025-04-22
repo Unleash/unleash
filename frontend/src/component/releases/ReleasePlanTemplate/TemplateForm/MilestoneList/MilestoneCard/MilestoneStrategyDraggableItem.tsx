@@ -3,7 +3,7 @@ import { type DragEventHandler, type RefObject, useRef } from 'react';
 import { Box, IconButton } from '@mui/material';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/DeleteOutlined';
-import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
+import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import { MilestoneStrategyItem } from './MilestoneStrategyItem';
 
 interface IMilestoneStrategyDraggableItemProps {

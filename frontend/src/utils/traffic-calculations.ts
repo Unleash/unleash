@@ -4,10 +4,11 @@ import type {
 } from 'openapi';
 import { getDaysInMonth } from 'date-fns';
 import { format } from 'date-fns';
+import { parseDateString } from 'component/admin/network/NetworkTrafficUsage/dates';
 export const DEFAULT_TRAFFIC_DATA_UNIT_COST = 5;
 export const DEFAULT_TRAFFIC_DATA_UNIT_SIZE = 1_000_000;
 
-export const TRAFFIC_MEASUREMENT_START_DATE = new Date('2024-05-01');
+export const TRAFFIC_MEASUREMENT_START_DATE = parseDateString('2024-05-01');
 
 export const METERED_TRAFFIC_ENDPOINTS = [
     '/api/admin',
@@ -94,7 +95,8 @@ export const calculateOverageCost = (
     }
 
     const overage =
-        Math.floor((dataUsage - includedTraffic) / 1_000_000) * 1_000_000;
+        Math.floor((dataUsage - includedTraffic) / trafficUnitSize) *
+        trafficUnitSize;
     return overage > 0
         ? calculateTrafficDataCost(overage, trafficUnitCost, trafficUnitSize)
         : 0;

@@ -6,6 +6,7 @@ import {
     type IFilterItem,
 } from 'component/filter/Filters/Filters';
 import { useProjectFlagCreators } from 'hooks/api/getters/useProjectFlagCreators/useProjectFlagCreators';
+import { formatTag } from 'utils/format-tag';
 
 interface IProjectOverviewFilters {
     state: FilterItemParamHolder;
@@ -23,10 +24,13 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
 
     useEffect(() => {
-        const tagsOptions = (tags || []).map((tag) => ({
-            label: `${tag.type}:${tag.value}`,
-            value: `${tag.type}:${tag.value}`,
-        }));
+        const tagsOptions = (tags || []).map((tag) => {
+            const tagString = formatTag(tag);
+            return {
+                label: tagString,
+                value: tagString,
+            };
+        });
 
         const flagCreatorsOptions = flagCreators.map((creator) => ({
             label: creator.name,

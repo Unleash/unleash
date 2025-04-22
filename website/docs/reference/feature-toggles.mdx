@@ -70,13 +70,13 @@ You can also manually change the state on a feature flag's page by going to **Ov
 
 Marking a flag as stale helps you deprecate a feature flag without removing the active configuration for connected applications.
 
-You can use this to signal to your team to stop using the feature in your applications. Stale flags will show as stale in the [project status dashboard](./technical-debt#project-health).
+You can use this to signal to your team to stop using the feature in your applications. Stale flags will show as stale in the [project status dashboard](./technical-debt#project-status).
 
 Marking a flag as stale generates the `feature-stale-on` [event](/reference/events#feature-stale-on). You can use [an integration](/reference/integrations) to trigger automated workflows, such as posting notifications in a Slack channel, breaking project builds if the code contains stale flags, or automatically opening pull requests to remove stale flags from the code.
 
 ### Configure expected lifetime
 
-Each [feature flag type](#feature-flag-type) has a default expected lifetime.
+Each [feature flag type](#feature-flag-types) has a default expected lifetime.
 With Admin access, you can configure these values. In the Admin UI, go to **Configure > Feature flag types** and edit the flag type you'd like to change.
 
 ## Feature flag lifecycle
@@ -128,7 +128,7 @@ If an archived feature is revived, it starts a new lifecycle with a new [Define]
 
 **Plan**: [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing)
 
-**Unleash version**: `5.7+` | **Unleash Edge version**: `13.1+` | **Unleash Proxy version**: `0.18+`. Requires [SDK compatibility](../reference/sdks#server-side-sdk-compatibility-table) for variants.
+**Unleash version**: `5.7+` | **Unleash Edge version**: `13.1+` | **Unleash Proxy version**: `0.18+`. Requires [SDK compatibility](../reference/sdks#feature-compatibility-in-server-side-sdks) for variants.
 :::
 
 Feature flag dependencies define a relationship between feature flags. Each feature flag can have one parent, but multiple child flags can share the same parent.
@@ -140,7 +140,7 @@ A child feature flag is evaluated only when both the child and its parent featur
 - Parent feature is disabled: Useful when the parent acts as a kill switch with inverted enabled/disabled logic.
 - Parent feature is enabled with variants: Useful for A/B testing scenarios where you need specific variant dependencies.
 
-To add a dependency, you need the `update-feature-dependency` project permission. In the Admin UI, go to the feature flag you want to add a parent to and select **Add parent feature**.
+To add a dependency, you need the `update-feature-dependency` project permission. In the Admin UI, go to the feature flag you want to add a parent to and select **Add parent flag**.
 
 ![Feature parent flag](/img/add-parent-flag.png)
 

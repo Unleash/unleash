@@ -74,6 +74,11 @@ You can assign the following root permissions:
 
 #### Authentication permissions
 
+:::note Availability
+
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `6.9+`
+
+:::
 | Permission Name     | Description                        |
 |---------------------|------------------------------------|
 | Change authentication settings | Update authentication settings, such as for [single sign-on (SSO)](./sso). |
@@ -88,11 +93,17 @@ You can assign the following root permissions:
 
 #### Instance maintenance permissions
 
+:::note Availability
+
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `6.9+`
+
+:::
+
 | Permission Name     | Description                        |
 |---------------------|------------------------------------|
 | Change instance banners | Change instance [banners](./banners). |
 | Change maintenance mode state | Change [maintenance mode](./maintenance-mode) state. |
-| Update CORS settings | Update [CORS settings](./front-end-api#cors). |
+| Update CORS settings | Update [CORS settings](./front-end-api#configure-cross-origin-resource-sharing-cors). |
 | Read instance logs and login history | Read instance logs and [login history](./login-history.md). |
 
 #### Integration permissions
@@ -108,6 +119,20 @@ You can assign the following root permissions:
 | Permission Name | Description                    |
 |-----------------|--------------------------------|
 | Create projects | Create [projects](./projects). |
+
+#### Release template permissions
+
+:::note Availability
+
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `6.8+ in BETA`
+
+:::
+
+| Permission Name | Description               |
+|-----------------|---------------------------|
+| Create release plan template      | Create [release template](./release-templates). |
+| Update release plan template      | Update [release template](./release-templates). |
+| Delete release plan template      | Delete [release template](./release-templates). |
 
 #### Role permissions
 
@@ -231,6 +256,19 @@ This multi-role assignment feature can be particularly beneficial in complex pro
 group needs to wear multiple hats. For example, a team member could serve as both a developer and a quality assurance
 tester. By combining roles, you simplify the access management process, eliminating the need to create a new, custom
 role that encapsulates the needed permissions.
+
+## View a user's roles and permissions
+
+:::note Availability
+
+**Version**: `6.9+`
+
+:::
+
+The access overview page helps administrators see exactly what a user can do in Unleash and which roles grant those permissions. You can explore permissions at the root level or for specific environments and projects.
+
+To view a user’s permissions, go to **Admin > Users**. Select a user and click **Access overview**.
+
 
 ## User groups
 

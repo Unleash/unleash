@@ -99,9 +99,9 @@ export const uiConfigSchema = {
                 ),
             },
         },
-        networkViewEnabled: {
+        prometheusAPIAvailable: {
             type: 'boolean',
-            description: 'Whether to enable the Unleash network view or not.',
+            description: 'Whether a Prometheus API is available.',
             example: true,
         },
         frontendApiOrigins: {
@@ -190,6 +190,11 @@ export const uiConfigSchema = {
             type: 'number',
             description: 'The maximum number of sessions that a user has.',
             example: 10,
+        },
+        unleashContext: {
+            type: 'object',
+            description:
+                'The context object used to configure the Unleash instance.',
         },
     },
     components: {

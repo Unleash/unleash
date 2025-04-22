@@ -48,7 +48,6 @@ import {
     ProjectGroupUpdateRoleEvent,
     ProjectRevivedEvent,
     ProjectUpdatedEvent,
-    ProjectUserAddedEvent,
     ProjectUserRemovedEvent,
     ProjectUserUpdateRoleEvent,
     RoleName,
@@ -63,7 +62,6 @@ import type {
 } from '../../types/stores/access-store';
 import type FeatureToggleService from '../feature-toggle/feature-toggle-service';
 import IncompatibleProjectError from '../../error/incompatible-project-error';
-import ProjectWithoutOwnerError from '../../error/project-without-owner-error';
 import { arraysHaveSameItems } from '../../util';
 import type { GroupService } from '../../services/group-service';
 import type { IGroupRole } from '../../types/group';
@@ -91,6 +89,9 @@ import type EventEmitter from 'events';
 import type { ApiTokenService } from '../../services/api-token-service';
 import type { ProjectForUi } from './project-read-model-type';
 import { canGrantProjectRole } from './can-grant-project-role';
+import { batchExecute } from '../../util/batchExecute';
+import metricsHelper from '../../util/metrics-helper';
+import { FUNCTION_TIME } from '../../metric-events';
 
 type Days = number;
 type Count = number;
@@ -169,6 +170,8 @@ export default class ProjectService {
 
     private onboardingReadModel: IOnboardingReadModel;
 
+    private timer: Function;
+
     constructor(
         {
             projectStore,
@@ -228,6 +231,11 @@ export default class ProjectService {
         this.eventBus = config.eventBus;
         this.projectReadModel = projectReadModel;
         this.onboardingReadModel = onboardingReadModel;
+        this.timer = (functionName: string) =>
+            metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {
+                className: 'ProjectService',
+                functionName,
+            });
     }
 
     async getProjects(
@@ -263,7 +271,11 @@ export default class ProjectService {
     }
 
     async getProject(id: string): Promise<IProject> {
-        return this.projectStore.get(id);
+        const project = await this.projectStore.get(id);
+        if (project === undefined) {
+            throw new NotFoundError(`Could not find project with id ${id}`);
+        }
+        return Promise.resolve(project);
     }
 
     private validateAndProcessFeatureNamingPattern = (
@@ -315,12 +327,6 @@ export default class ProjectService {
 
     async validateProjectEnvironments(environments: string[] | undefined) {
         if (environments) {
-            if (environments.length === 0) {
-                throw new BadDataError(
-                    'A project must always have at least one environment.',
-                );
-            }
-
             await this.validateEnvironmentsExist(environments);
         }
     }
@@ -348,6 +354,27 @@ export default class ProjectService {
             }
         };
         return generateUniqueId();
+    }
+
+    async getAllChangeRequestEnvironments(
+        newProject: CreateProject,
+    ): Promise<CreateProject['changeRequestEnvironments']> {
+        const predefinedChangeRequestEnvironments =
+            await this.environmentStore.getChangeRequestEnvironments(
+                newProject.environments || [],
+            );
+        const userSelectedChangeRequestEnvironments =
+            newProject.changeRequestEnvironments || [];
+        const allChangeRequestEnvironments = [
+            ...userSelectedChangeRequestEnvironments.filter(
+                (userEnv) =>
+                    !predefinedChangeRequestEnvironments.find(
+                        (predefinedEnv) => predefinedEnv.name === userEnv.name,
+                    ),
+            ),
+            ...predefinedChangeRequestEnvironments,
+        ];
+        return allChangeRequestEnvironments;
     }
 
     async createProject(
@@ -383,7 +410,7 @@ export default class ProjectService {
 
         await this.projectStore.create(data);
 
-        const envsToEnable = newProject.environments?.length
+        const envsToEnable = newProject.environments
             ? newProject.environments
             : (
                   await this.environmentStore.getAll({
@@ -402,12 +429,25 @@ export default class ProjectService {
                 await this.validateEnvironmentsExist(
                     newProject.changeRequestEnvironments.map((env) => env.name),
                 );
-                const changeRequestEnvironments =
-                    await enableChangeRequestsForSpecifiedEnvironments(
-                        newProject.changeRequestEnvironments,
-                    );
+                const globalChangeRequestConfigEnabled =
+                    this.flagResolver.isEnabled('globalChangeRequestConfig');
+                if (globalChangeRequestConfigEnabled) {
+                    const allChangeRequestEnvironments =
+                        await this.getAllChangeRequestEnvironments(newProject);
+                    const changeRequestEnvironments =
+                        await enableChangeRequestsForSpecifiedEnvironments(
+                            allChangeRequestEnvironments,
+                        );
 
-                data.changeRequestEnvironments = changeRequestEnvironments;
+                    data.changeRequestEnvironments = changeRequestEnvironments;
+                } else {
+                    const changeRequestEnvironments =
+                        await enableChangeRequestsForSpecifiedEnvironments(
+                            newProject.changeRequestEnvironments,
+                        );
+
+                    data.changeRequestEnvironments = changeRequestEnvironments;
+                }
             } else {
                 data.changeRequestEnvironments = [];
             }
@@ -511,7 +551,9 @@ export default class ProjectService {
         auditUser: IAuditUser,
     ): Promise<any> {
         const feature = await this.featureToggleStore.get(featureName);
-
+        if (feature === undefined) {
+            throw new NotFoundError(`Could not find feature ${featureName}`);
+        }
         if (feature.project !== currentProjectId) {
             throw new PermissionError(MOVE_FEATURE_TOGGLE);
         }
@@ -662,47 +704,6 @@ export default class ProjectService {
     }
 
     /**
-     * @deprecated see addAccess instead.
-     */
-    async addUser(
-        projectId: string,
-        roleId: number,
-        userId: number,
-        auditUser: IAuditUser,
-    ): Promise<void> {
-        const { roles, users } =
-            await this.accessService.getProjectRoleAccess(projectId);
-        const user = await this.accountStore.get(userId);
-
-        const role = roles.find((r) => r.id === roleId);
-        if (!role) {
-            throw new NotFoundError(
-                `Could not find roleId=${roleId} on project=${projectId}`,
-            );
-        }
-
-        const alreadyHasAccess = users.some((u) => u.id === userId);
-        if (alreadyHasAccess) {
-            throw new Error(`User already has access to project=${projectId}`);
-        }
-
-        await this.accessService.addUserToRole(userId, role.id, projectId);
-
-        await this.eventService.storeEvent(
-            new ProjectUserAddedEvent({
-                project: projectId,
-                auditUser,
-                data: {
-                    roleId,
-                    userId,
-                    roleName: role.name,
-                    email: user.email,
-                },
-            }),
-        );
-    }
-
-    /**
      * @deprecated use removeUserAccess
      */
     async removeUser(
@@ -712,8 +713,6 @@ export default class ProjectService {
         auditUser: IAuditUser,
     ): Promise<void> {
         const role = await this.findProjectRole(projectId, roleId);
-
-        await this.validateAtLeastOneOwner(projectId, role);
 
         await this.accessService.removeUserFromRole(userId, role.id, projectId);
 
@@ -727,7 +726,7 @@ export default class ProjectService {
                     roleId,
                     userId,
                     roleName: role.name,
-                    email: user.email,
+                    email: user?.email,
                 },
             }),
         );
@@ -742,14 +741,6 @@ export default class ProjectService {
             projectId,
             userId,
         );
-
-        const ownerRole = await this.accessService.getRoleByName(
-            RoleName.OWNER,
-        );
-
-        if (existingRoles.includes(ownerRole.id)) {
-            await this.validateAtLeastOneOwner(projectId, ownerRole);
-        }
 
         await this.accessService.removeUserAccess(projectId, userId);
 
@@ -774,14 +765,6 @@ export default class ProjectService {
             projectId,
             groupId,
         );
-
-        const ownerRole = await this.accessService.getRoleByName(
-            RoleName.OWNER,
-        );
-
-        if (existingRoles.includes(ownerRole.id)) {
-            await this.validateAtLeastOneOwner(projectId, ownerRole);
-        }
 
         await this.accessService.removeGroupAccess(projectId, groupId);
 
@@ -851,8 +834,6 @@ export default class ProjectService {
                 [],
                 undefined,
             );
-
-        await this.validateAtLeastOneOwner(projectId, role);
 
         await this.accessService.removeGroupFromRole(
             group.id,
@@ -1015,15 +996,6 @@ export default class ProjectService {
             projectId,
             userId,
         );
-        const ownerRole = await this.accessService.getRoleByName(
-            RoleName.OWNER,
-        );
-
-        const hasOwnerRole = includes(currentRoles, ownerRole);
-        const isRemovingOwnerRole = !includes(newRoles, ownerRole);
-        if (hasOwnerRole && isRemovingOwnerRole) {
-            await this.validateAtLeastOneOwner(projectId, ownerRole);
-        }
         const isAllowedToAssignRoles = await this.isAllowedToAddAccess(
             auditUser,
             projectId,
@@ -1067,14 +1039,6 @@ export default class ProjectService {
             groupId,
         );
 
-        const ownerRole = await this.accessService.getRoleByName(
-            RoleName.OWNER,
-        );
-        const hasOwnerRole = includes(currentRoles, ownerRole);
-        const isRemovingOwnerRole = !includes(newRoles, ownerRole);
-        if (hasOwnerRole && isRemovingOwnerRole) {
-            await this.validateAtLeastOneOwner(projectId, ownerRole);
-        }
         const isAllowedToAssignRoles = await this.isAllowedToAddAccess(
             auditUser,
             projectId,
@@ -1134,25 +1098,6 @@ export default class ProjectService {
             );
         }
         return role;
-    }
-
-    async validateAtLeastOneOwner(
-        projectId: string,
-        currentRole: IRoleDescriptor,
-    ): Promise<void> {
-        if (currentRole.name === RoleName.OWNER) {
-            const users = await this.accessService.getProjectUsersForRole(
-                currentRole.id,
-                projectId,
-            );
-            const groups = await this.groupService.getProjectGroups(projectId);
-            const roleGroups = groups.filter((g) =>
-                g.roles?.includes(currentRole.id),
-            );
-            if (users.length + roleGroups.length < 2) {
-                throw new ProjectWithoutOwnerError();
-            }
-        }
     }
 
     /** @deprecated use projectInsightsService instead */
@@ -1228,7 +1173,6 @@ export default class ProjectService {
             // Nothing to do....
             return;
         }
-        await this.validateAtLeastOneOwner(projectId, currentRole);
 
         await this.accessService.updateUserProjectRole(
             userId,
@@ -1281,7 +1225,6 @@ export default class ProjectService {
             // Nothing to do....
             return;
         }
-        await this.validateAtLeastOneOwner(projectId, currentRole);
 
         await this.accessService.updateGroupProjectRole(
             userId,
@@ -1349,21 +1292,18 @@ export default class ProjectService {
     async statusJob(): Promise<void> {
         const projects = await this.projectStore.getAll();
 
-        const statusUpdates = await Promise.all(
-            projects.map((project) => this.getStatusUpdates(project.id)),
-        );
-
-        await Promise.all(
-            statusUpdates.map((statusUpdate) => {
-                return this.projectStatsStore.updateProjectStats(
-                    statusUpdate.projectId,
-                    statusUpdate.updates,
-                );
-            }),
-        );
+        // run one project status update at a time every
+        void batchExecute(projects, 1, 30_000, async (project) => {
+            const statusUpdate = await this.getStatusUpdates(project.id);
+            await this.projectStatsStore.updateProjectStats(
+                statusUpdate.projectId,
+                statusUpdate.updates,
+            );
+        });
     }
 
     async getStatusUpdates(projectId: string): Promise<ICalculateStatus> {
+        const stopTimer = this.timer('getStatusUpdates');
         const dateMinusThirtyDays = subDays(new Date(), 30).toISOString();
         const dateMinusSixtyDays = subDays(new Date(), 60).toISOString();
 
@@ -1437,6 +1377,7 @@ export default class ProjectService {
                 dateMinusThirtyDays,
             );
 
+        stopTimer();
         return {
             projectId,
             updates: {
@@ -1481,7 +1422,11 @@ export default class ProjectService {
                 : Promise.resolve(false),
             this.projectStatsStore.getProjectStats(projectId),
         ]);
-
+        if (project === undefined) {
+            throw new NotFoundError(
+                `Could not find project with id ${projectId}`,
+            );
+        }
         return {
             stats: projectStats,
             name: project.name,
@@ -1532,6 +1477,12 @@ export default class ProjectService {
             this.projectStatsStore.getProjectStats(projectId),
             this.onboardingReadModel.getOnboardingStatusForProject(projectId),
         ]);
+
+        if (project === undefined) {
+            throw new NotFoundError(
+                `Could not find project with id: ${projectId}`,
+            );
+        }
 
         return {
             stats: projectStats,

@@ -23,7 +23,7 @@ const fieldToRow = (fields: IUserSplash): IUserSplashTable => ({
 });
 
 const rowToField = (row: IUserSplashTable): IUserSplash => ({
-    seen: row.seen,
+    seen: row.seen || false,
     splashId: row.splash_id,
     userId: row.user_id,
 });
@@ -65,7 +65,7 @@ export default class UserSplashStore implements IUserSplashStore {
             .merge()
             .returning(COLUMNS);
 
-        return rowToField(insertedSplash[0]);
+        return rowToField(insertedSplash[0] as IUserSplashTable);
     }
 
     async delete({ userId, splashId }: IUserSplashKey): Promise<void> {

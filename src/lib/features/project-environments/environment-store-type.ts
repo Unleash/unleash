@@ -9,7 +9,7 @@ export interface IEnvironmentStore extends Store<IEnvironment, string> {
     exists(name: string): Promise<boolean>;
     create(env: IEnvironmentCreate): Promise<IEnvironment>;
     update(
-        env: Pick<IEnvironment, 'type' | 'protected'>,
+        env: Pick<IEnvironment, 'type' | 'protected' | 'requiredApprovals'>,
         name: string,
     ): Promise<IEnvironment>;
     updateProperty(
@@ -17,6 +17,7 @@ export interface IEnvironmentStore extends Store<IEnvironment, string> {
         field: string,
         value: string | number | boolean,
     ): Promise<void>;
+    toggle(name: string, enabled: boolean): Promise<void>;
     updateSortOrder(id: string, value: number): Promise<void>;
     importEnvironments(environments: IEnvironment[]): Promise<IEnvironment[]>;
     delete(name: string): Promise<void>;
@@ -29,4 +30,7 @@ export interface IEnvironmentStore extends Store<IEnvironment, string> {
         projectId: string,
         query?: Object,
     ): Promise<IProjectEnvironment[]>;
+    getChangeRequestEnvironments(
+        environments: string[],
+    ): Promise<{ name: string; requiredApprovals: number }[]>;
 }

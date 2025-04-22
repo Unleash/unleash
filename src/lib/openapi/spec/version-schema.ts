@@ -56,6 +56,14 @@ export const versionSchema = {
             description: 'The instance identifier of the Unleash instance',
             example: '0d652a82-43db-4144-8e02-864b0b030710',
         },
+        buildDate: {
+            description:
+                'The date and time of when this Unleash instance version was built',
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+            example: '2023-06-30T11:41:00.123Z',
+        },
     },
     components: {},
 } as const;

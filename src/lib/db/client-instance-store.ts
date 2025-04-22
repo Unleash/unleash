@@ -7,9 +7,8 @@ import type {
 } from '../types/stores/client-instance-store';
 import { subDays } from 'date-fns';
 import type { Db } from './db';
-
-const metricsHelper = require('../util/metrics-helper');
-const { DB_TIME } = require('../metric-events');
+import metricsHelper from '../util/metrics-helper';
+import { DB_TIME } from '../metric-events';
 
 const COLUMNS = [
     'app_name',
@@ -180,7 +179,7 @@ export default class ClientInstanceStore implements IClientInstanceStore {
         return rows.map(mapRow);
     }
 
-    async getByAppNameAndEnvironment(
+    async getRecentByAppNameAndEnvironment(
         appName: string,
         environment: string,
     ): Promise<IClientInstance[]> {
@@ -189,6 +188,7 @@ export default class ClientInstanceStore implements IClientInstanceStore {
             .from(TABLE)
             .where('app_name', appName)
             .where('environment', environment)
+            .whereRaw("last_seen >= NOW() - INTERVAL '24 hours'")
             .orderBy('last_seen', 'desc')
             .limit(1000);
 
@@ -253,17 +253,26 @@ export default class ClientInstanceStore implements IClientInstanceStore {
     }
 
     async getDistinctApplicationsCount(daysBefore?: number): Promise<number> {
-        let query = this.db.from(TABLE);
-        if (daysBefore) {
-            query = query.where(
-                'last_seen',
-                '>',
-                subDays(new Date(), daysBefore),
-            );
-        }
-        return query
-            .countDistinct('app_name')
-            .then((res) => Number(res[0].count));
+        const query = this.db
+            .from((qb) =>
+                qb
+                    .select('app_name')
+                    .from(TABLE)
+                    .modify((qb) => {
+                        if (daysBefore) {
+                            qb.where(
+                                'last_seen',
+                                '>',
+                                subDays(new Date(), daysBefore),
+                            );
+                        }
+                    })
+                    .groupBy('app_name')
+                    .as('subquery'),
+            )
+            .count('* as count');
+
+        return query.then((res) => Number(res[0].count));
     }
 
     async deleteForApplication(appName: string): Promise<void> {

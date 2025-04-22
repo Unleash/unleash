@@ -63,8 +63,8 @@ export const RemoveApiTokenButton = ({
                     <br />
                     <StyledUl>
                         <li>
-                            <strong>username</strong>:{' '}
-                            <code>{token.username}</code>
+                            <strong>name</strong>:{' '}
+                            <code>{token.tokenName}</code>
                         </li>
                         <li>
                             <strong>type</strong>: <code>{token.type}</code>

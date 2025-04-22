@@ -1,3 +1,4 @@
+import type EventEmitter from 'events';
 import { APPLICATION_CREATED, CLIENT_REGISTER } from '../../../types/events';
 import type { IApplication, IApplicationOverview } from './models';
 import type { IUnleashStores } from '../../../types/stores';
@@ -24,6 +25,8 @@ import { ALL_PROJECTS, parseStrictSemVer } from '../../../util';
 import type { Logger } from '../../../logger';
 import { findOutdatedSDKs, isOutdatedSdk } from './findOutdatedSdks';
 import type { OutdatedSdksSchema } from '../../../openapi/spec/outdated-sdks-schema';
+import { CLIENT_REGISTERED } from '../../../metric-events';
+import { NotFoundError } from '../../../error';
 
 export default class ClientInstanceService {
     apps = {};
@@ -48,6 +51,8 @@ export default class ClientInstanceService {
 
     private flagResolver: IFlagResolver;
 
+    private eventBus: EventEmitter;
+
     constructor(
         {
             clientMetricsStoreV2,
@@ -68,7 +73,8 @@ export default class ClientInstanceService {
         {
             getLogger,
             flagResolver,
-        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+            eventBus,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver' | 'eventBus'>,
         privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
@@ -77,6 +83,7 @@ export default class ClientInstanceService {
         this.clientApplicationsStore = clientApplicationsStore;
         this.clientInstanceStore = clientInstanceStore;
         this.eventStore = eventStore;
+        this.eventBus = eventBus;
         this.privateProjectChecker = privateProjectChecker;
         this.flagResolver = flagResolver;
         this.logger = getLogger(
@@ -105,6 +112,7 @@ export default class ClientInstanceService {
         value.clientIp = clientIp;
         value.createdBy = SYSTEM_USER.username!;
         this.seenClients[this.clientKey(value)] = value;
+        this.eventBus.emit(CLIENT_REGISTERED, value);
 
         if (value.sdkVersion && value.sdkVersion.indexOf(':') > -1) {
             const [sdkName, sdkVersion] = value.sdkVersion.split(':');
@@ -212,7 +220,11 @@ export default class ClientInstanceService {
                 this.strategyStore.getAll(),
                 this.featureToggleStore.getAll(),
             ]);
-
+        if (application === undefined) {
+            throw new NotFoundError(
+                `Could not find application with appName ${appName}`,
+            );
+        }
         return {
             appName: application.appName,
             createdAt: application.createdAt,
@@ -255,12 +267,12 @@ export default class ClientInstanceService {
         return result;
     }
 
-    async getApplicationEnvironmentInstances(
+    async getRecentApplicationEnvironmentInstances(
         appName: string,
         environment: string,
     ) {
         const instances =
-            await this.clientInstanceStore.getByAppNameAndEnvironment(
+            await this.clientInstanceStore.getRecentByAppNameAndEnvironment(
                 appName,
                 environment,
             );

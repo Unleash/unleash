@@ -45,4 +45,7 @@ const StringTruncator = ({
     );
 };
 
+/**
+ * @deprecated use `Truncator` instead
+ */
 export default StringTruncator;

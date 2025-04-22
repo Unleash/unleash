@@ -14,17 +14,17 @@ If both the user id and the session id is unavailable, the calculation returns a
 
 Because the number assigned to a user won't change, Unleash also guarantees that the a user will keep seeing the same features even if certain other parameters change.
 
-For instance: When using the [gradual rollout activation strategy](../reference/activation-strategies#gradual-rollout), any user whose number is less than or equal to the rollout percentage will see the feature. This means that the same users will keep seeing the feature even as you increase the percentage of your user base that sees the feature.
+For instance: When using the [gradual rollout activation strategy](../reference/activation-strategies), any user whose number is less than or equal to the rollout percentage will see the feature. This means that the same users will keep seeing the feature even as you increase the percentage of your user base that sees the feature.
 
 ## Custom stickiness
 
 :::note Availability
 
-**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.0+` and [SDK compatibility](../reference/sdks#server-side-sdk-compatibility-table).
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.0+` and [SDK compatibility](../reference/sdks#feature-compatibility-in-server-side-sdks).
 
 :::
 
-When using [the gradual rollout strategy](../reference/activation-strategies#gradual-rollout) or [feature flag variants](./feature-toggle-variants), you can use parameters other than the user id to calculate stickiness. More specifically, you can use any field, custom or otherwise, of the [Unleash Context](../reference/unleash-context) as long as you have enabled custom stickiness for these fields.
+When using [the gradual rollout strategy](../reference/activation-strategies) or [feature flag variants](./feature-toggle-variants), you can use parameters other than the user id to calculate stickiness. More specifically, you can use any field, custom or otherwise, of the [Unleash Context](../reference/unleash-context) as long as you have enabled custom stickiness for these fields.
 
 
 ### Enabling custom stickiness

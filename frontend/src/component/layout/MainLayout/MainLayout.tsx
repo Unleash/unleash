@@ -15,10 +15,8 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { DraftBanner } from './DraftBanner/DraftBanner';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar';
-import { MainLayoutEventTimeline } from './MainLayoutEventTimeline';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
 import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -33,17 +31,9 @@ const MainLayoutContainer = styled(Grid)(() => ({
     position: 'relative',
 }));
 
-const MainLayoutContentWrapper = styled('div')(({ theme }) => ({
-    margin: theme.spacing(0, 'auto'),
-    flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.palette.background.application,
-    position: 'relative',
-}));
-
 const MainLayoutContent = styled(Grid)(({ theme }) => ({
     minWidth: 0, // this is a fix for overflowing flex
-    maxWidth: '1512px',
+    maxWidth: `1512px`,
     margin: '0 auto',
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
@@ -55,7 +45,7 @@ const MainLayoutContent = styled(Grid)(({ theme }) => ({
         marginRight: theme.spacing(7),
     },
     [theme.breakpoints.down('lg')]: {
-        maxWidth: '1250px',
+        maxWidth: `1250px`,
         paddingLeft: theme.spacing(1),
         paddingRight: theme.spacing(1),
     },
@@ -67,6 +57,14 @@ const MainLayoutContent = styled(Grid)(({ theme }) => ({
         minWidth: '100%',
     },
     minHeight: '94vh',
+}));
+
+const MainLayoutContentWrapper = styled('div')(({ theme }) => ({
+    margin: theme.spacing(0, 'auto'),
+    flexGrow: 1,
+    width: '100%',
+    backgroundColor: theme.palette.background.application,
+    position: 'relative',
 }));
 
 const StyledImg = styled('img')(() => ({
@@ -94,22 +92,15 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
     ({ children }, ref) => {
         const { uiConfig } = useUiConfig();
         const projectId = useOptionalPathParam('projectId');
-        const frontendHeaderRedesign = useUiFlag('frontendHeaderRedesign');
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
             projectId || '',
         );
-
         const theme = useTheme();
         const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
         return (
             <EventTimelineProvider>
                 <SkipNavLink />
-                <ConditionallyRender
-                    condition={!frontendHeaderRedesign}
-                    show={<Header />}
-                />
-
                 <MainLayoutContainer>
                     <MainLayoutContentWrapper>
                         <ConditionallyRender
@@ -123,9 +114,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                         <Box
                             sx={(theme) => ({
                                 display: 'flex',
-                                mt: frontendHeaderRedesign
-                                    ? 0
-                                    : theme.spacing(0.25),
+                                mt: 0,
                             })}
                         >
                             <ConditionallyRender
@@ -145,15 +134,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                     minWidth: 0,
                                 }}
                             >
-                                <ConditionallyRender
-                                    condition={frontendHeaderRedesign}
-                                    show={<Header />}
-                                />
-
-                                <ConditionallyRender
-                                    condition={!frontendHeaderRedesign}
-                                    show={<MainLayoutEventTimeline />}
-                                />
+                                <Header />
 
                                 <MainLayoutContent>
                                     <SkipNavTarget />

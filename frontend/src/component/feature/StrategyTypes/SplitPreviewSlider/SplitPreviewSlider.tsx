@@ -48,6 +48,7 @@ const StyledVariantBoxContainer = styled(Box)(() => ({
     display: 'flex',
     alignItems: 'center',
     marginLeft: 'auto',
+    flexWrap: 'wrap',
 }));
 
 const StyledVariantBox = styled(Box, {

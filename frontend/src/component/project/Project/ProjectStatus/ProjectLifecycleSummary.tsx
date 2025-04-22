@@ -116,6 +116,8 @@ const AverageDaysStat: FC<{ averageDays?: number | null }> = ({
 
         if (averageDays < 1) {
             return 'less than a day';
+        } else if (averageDays === 1) {
+            return '1 day';
         }
         return `${averageDays} days`;
     };
@@ -164,6 +166,10 @@ export const ProjectLifecycleSummary = () => {
             </StyledStageTitle>
         );
     };
+
+    const archivedLast30DaysCount =
+        data?.lifecycleSummary.archived.last30Days ?? 0;
+    const totalArchivedText = `${archivedLast30DaysCount} ${archivedLast30DaysCount === 1 ? 'flag' : 'flags'} archived`;
 
     return (
         <LifecycleList ref={loadingRef}>
@@ -258,8 +264,7 @@ export const ProjectLifecycleSummary = () => {
                 <Stats>
                     <dt>Last 30 days</dt>
                     <dd data-loading-project-lifecycle-summary>
-                        {data?.lifecycleSummary.archived.last30Days ?? 0} flags
-                        archived
+                        {totalArchivedText}
                     </dd>
                 </Stats>
             </LifecycleBox>

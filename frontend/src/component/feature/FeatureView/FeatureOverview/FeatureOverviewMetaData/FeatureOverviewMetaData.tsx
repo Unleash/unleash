@@ -1,11 +1,7 @@
-import { capitalize, styled } from '@mui/material';
+import { type FC, useState } from 'react';
+import { styled } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
-import { useState } from 'react';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { formatDateYMD } from 'utils/formatDate';
 import { parseISO } from 'date-fns';
@@ -14,8 +10,12 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { useShowDependentFeatures } from './useShowDependentFeatures';
 import { FeatureLifecycle } from '../FeatureLifecycle/FeatureLifecycle';
 import { MarkCompletedDialogue } from '../FeatureLifecycle/MarkCompletedDialogue';
-import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { TagRow } from './TagRow';
+import { capitalizeFirst } from 'utils/capitalizeFirst';
+import { Collaborators } from './Collaborators';
+import { EnvironmentVisibilityMenu } from './EnvironmentVisibilityMenu/EnvironmentVisibilityMenu';
+import { Truncator } from 'component/common/Truncator/Truncator';
+import type { IFeatureToggle } from '../../../../../interfaces/featureToggle';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -25,27 +25,16 @@ const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     flexDirection: 'column',
     gap: theme.spacing(2),
     width: '350px',
-    [theme.breakpoints.down(1000)]: {
+    border: `1px solid ${theme.palette.divider}`,
+    [theme.breakpoints.down('md')]: {
         width: '100%',
     },
 }));
 
-const StyledMetaDataHeader = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(2),
-    '& > svg': {
-        height: theme.spacing(5),
-        width: theme.spacing(5),
-        padding: theme.spacing(0.5),
-        backgroundColor: theme.palette.background.alternative,
-        fill: theme.palette.primary.contrastText,
-        borderRadius: theme.shape.borderRadiusMedium,
-    },
-    '& > h2': {
-        fontSize: theme.fontSizes.mainHeader,
-        fontWeight: 'normal',
-    },
+const StyledTitle = styled('h2')(({ theme }) => ({
+    fontSize: theme.typography.body1.fontSize,
+    fontWeight: theme.typography.fontWeightBold,
+    marginBottom: theme.spacing(0.5),
 }));
 
 const StyledBody = styled('div')({
@@ -57,7 +46,7 @@ export const StyledMetaDataItem = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    minHeight: theme.spacing(4.25),
+    minHeight: theme.spacing(4.5),
     fontSize: theme.fontSizes.smallBody,
 }));
 
@@ -76,16 +65,19 @@ export const StyledMetaDataItemValue = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
-    height: theme.spacing(3.5),
-    width: theme.spacing(3.5),
-}));
+type FeatureOverviewMetaDataProps = {
+    hiddenEnvironments?: string[];
+    onEnvironmentVisibilityChange?: (environment: string) => void;
+    feature: IFeatureToggle;
+    onChange: () => void;
+};
 
-const FeatureOverviewMetaData = () => {
-    const projectId = useRequiredPathParam('projectId');
-    const featureId = useRequiredPathParam('featureId');
-    const { feature, refetchFeature } = useFeature(projectId, featureId);
-
+const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
+    hiddenEnvironments,
+    onEnvironmentVisibilityChange,
+    feature,
+    onChange,
+}) => {
     const { locationSettings } = useLocationSettings();
     const navigate = useNavigate();
 
@@ -97,55 +89,48 @@ const FeatureOverviewMetaData = () => {
 
     const showDependentFeatures = useShowDependentFeatures(project);
 
-    const FlagTypeIcon = getFeatureTypeIcons(type);
-
     return (
         <>
             <StyledMetaDataContainer>
-                <StyledMetaDataHeader data-loading>
-                    <FlagTypeIcon />
-                    <h2>{capitalize(type || '')} flag</h2>
-                </StyledMetaDataHeader>
-                <ConditionallyRender
-                    condition={Boolean(description)}
-                    show={
+                <div>
+                    <StyledTitle>Flag details</StyledTitle>
+                    {description ? (
                         <StyledMetaDataItem data-loading>
                             <StyledMetaDataItemText>
-                                {description}
+                                <Truncator arrow lines={5} title={description}>
+                                    {description}
+                                </Truncator>
                             </StyledMetaDataItemText>
                         </StyledMetaDataItem>
-                    }
-                />
+                    ) : null}
+                </div>
                 <StyledBody>
                     <StyledMetaDataItem>
                         <StyledMetaDataItemLabel>
-                            Project:
+                            Flag type:
                         </StyledMetaDataItemLabel>
                         <StyledMetaDataItemText data-loading>
-                            {project}
+                            {capitalizeFirst(type || ' ')} flag
                         </StyledMetaDataItemText>
                     </StyledMetaDataItem>
-                    <ConditionallyRender
-                        condition={Boolean(feature.lifecycle)}
-                        show={
-                            <StyledMetaDataItem data-loading>
-                                <StyledMetaDataItemLabel>
-                                    Lifecycle:
-                                </StyledMetaDataItemLabel>
-                                <FeatureLifecycle
-                                    feature={feature}
-                                    onArchive={() => setArchiveDialogOpen(true)}
-                                    onComplete={() =>
-                                        setMarkCompletedDialogueOpen(true)
-                                    }
-                                    onUncomplete={refetchFeature}
-                                />
-                            </StyledMetaDataItem>
-                        }
-                    />
+                    {feature.lifecycle ? (
+                        <StyledMetaDataItem data-loading>
+                            <StyledMetaDataItemLabel>
+                                Lifecycle:
+                            </StyledMetaDataItemLabel>
+                            <FeatureLifecycle
+                                feature={feature}
+                                onArchive={() => setArchiveDialogOpen(true)}
+                                onComplete={() =>
+                                    setMarkCompletedDialogueOpen(true)
+                                }
+                                onUncomplete={onChange}
+                            />
+                        </StyledMetaDataItem>
+                    ) : null}
                     <StyledMetaDataItem>
                         <StyledMetaDataItemLabel>
-                            Created at:
+                            Created:
                         </StyledMetaDataItemLabel>
                         <StyledMetaDataItemText data-loading>
                             {formatDateYMD(
@@ -154,65 +139,71 @@ const FeatureOverviewMetaData = () => {
                             )}
                         </StyledMetaDataItemText>
                     </StyledMetaDataItem>
-                    <ConditionallyRender
-                        condition={Boolean(feature.createdBy)}
-                        show={() => (
-                            <StyledMetaDataItem>
-                                <StyledMetaDataItemLabel>
-                                    Created by:
-                                </StyledMetaDataItemLabel>
-                                <StyledMetaDataItemValue>
-                                    <StyledMetaDataItemText data-loading>
-                                        {feature.createdBy?.name}
-                                    </StyledMetaDataItemText>
-                                    <StyledUserAvatar
-                                        user={feature.createdBy}
-                                    />
-                                </StyledMetaDataItemValue>
-                            </StyledMetaDataItem>
-                        )}
-                    />
-                    <ConditionallyRender
-                        condition={showDependentFeatures}
-                        show={<DependencyRow feature={feature} />}
-                    />
+                    {feature.createdBy ? (
+                        <StyledMetaDataItem>
+                            <StyledMetaDataItemLabel>
+                                Created by:
+                            </StyledMetaDataItemLabel>
+                            <StyledMetaDataItemValue>
+                                <StyledMetaDataItemText data-loading>
+                                    {feature.createdBy?.name}
+                                </StyledMetaDataItemText>
+                            </StyledMetaDataItemValue>
+                        </StyledMetaDataItem>
+                    ) : null}
+                    {feature.collaborators?.users &&
+                    feature.collaborators?.users.length > 0 ? (
+                        <StyledMetaDataItem>
+                            <StyledMetaDataItemLabel>
+                                Collaborators:
+                            </StyledMetaDataItemLabel>
+                            <StyledMetaDataItemValue>
+                                <Collaborators
+                                    collaborators={feature.collaborators?.users}
+                                />
+                            </StyledMetaDataItemValue>
+                        </StyledMetaDataItem>
+                    ) : null}
+                    {showDependentFeatures ? (
+                        <DependencyRow feature={feature} />
+                    ) : null}
                     <TagRow feature={feature} />
+                    {onEnvironmentVisibilityChange ? (
+                        <EnvironmentVisibilityMenu
+                            environments={feature.environments || []}
+                            hiddenEnvironments={hiddenEnvironments || []}
+                            onChange={onEnvironmentVisibilityChange}
+                        />
+                    ) : null}
                 </StyledBody>
             </StyledMetaDataContainer>
-            <ConditionallyRender
-                condition={feature.children.length > 0}
-                show={
-                    <FeatureArchiveNotAllowedDialog
-                        features={feature.children}
-                        project={projectId}
-                        isOpen={archiveDialogOpen}
-                        onClose={() => setArchiveDialogOpen(false)}
-                    />
-                }
-                elseShow={
-                    <FeatureArchiveDialog
-                        isOpen={archiveDialogOpen}
-                        onConfirm={() => {
-                            navigate(`/projects/${projectId}`);
-                        }}
-                        onClose={() => setArchiveDialogOpen(false)}
-                        projectId={projectId}
-                        featureIds={[featureId]}
-                    />
-                }
-            />
-            <ConditionallyRender
-                condition={Boolean(feature.project)}
-                show={
-                    <MarkCompletedDialogue
-                        isOpen={markCompletedDialogueOpen}
-                        setIsOpen={setMarkCompletedDialogueOpen}
-                        projectId={feature.project}
-                        featureId={feature.name}
-                        onComplete={refetchFeature}
-                    />
-                }
-            />
+            {feature.children.length > 0 ? (
+                <FeatureArchiveNotAllowedDialog
+                    features={feature.children}
+                    project={feature.project}
+                    isOpen={archiveDialogOpen}
+                    onClose={() => setArchiveDialogOpen(false)}
+                />
+            ) : (
+                <FeatureArchiveDialog
+                    isOpen={archiveDialogOpen}
+                    onConfirm={() => {
+                        navigate(`/projects/${feature.project}`);
+                    }}
+                    onClose={() => setArchiveDialogOpen(false)}
+                    projectId={feature.project}
+                    featureIds={[feature.name]}
+                />
+            )}
+            {feature.project ? (
+                <MarkCompletedDialogue
+                    isOpen={markCompletedDialogueOpen}
+                    setIsOpen={setMarkCompletedDialogueOpen}
+                    projectId={feature.project}
+                    featureId={feature.name}
+                    onComplete={onChange}
+                />
+            ) : null}
         </>
     );
 };

@@ -68,7 +68,7 @@ export const routes: IRoute[] = [
         title: 'Dashboard',
         component: PersonalDashboard,
         type: 'protected',
-        menu: { mobile: true },
+        menu: { primary: true },
     },
 
     // Project
@@ -127,7 +127,7 @@ export const routes: IRoute[] = [
         title: 'Projects',
         component: ProjectList,
         type: 'protected',
-        menu: { mobile: true },
+        menu: { primary: true },
     },
     {
         path: '/projects-archive',
@@ -137,13 +137,22 @@ export const routes: IRoute[] = [
         menu: {},
     },
 
-    // Features
+    // Flags overview
     {
         path: '/search',
         title: 'Search',
         component: FeatureToggleListTable,
         type: 'protected',
-        menu: { mobile: true },
+        menu: { primary: true },
+        notFlag: 'flagsReleaseManagementUI',
+    },
+    {
+        path: '/search',
+        title: 'Flags overview',
+        component: FeatureToggleListTable,
+        type: 'protected',
+        menu: { primary: true },
+        flag: 'flagsReleaseManagementUI',
     },
 
     // Playground
@@ -153,7 +162,7 @@ export const routes: IRoute[] = [
         component: LazyPlayground,
         hidden: false,
         type: 'protected',
-        menu: { mobile: true },
+        menu: { primary: true },
     },
 
     // Insights
@@ -162,7 +171,7 @@ export const routes: IRoute[] = [
         title: 'Insights',
         component: Insights,
         type: 'protected',
-        menu: { mobile: true },
+        menu: { primary: true },
         enterprise: true,
     },
 
@@ -180,7 +189,7 @@ export const routes: IRoute[] = [
         title: 'Applications',
         component: PaginatedApplicationList,
         type: 'protected',
-        menu: { mobile: true, advanced: true },
+        menu: { main: true },
     },
 
     // Context
@@ -205,7 +214,7 @@ export const routes: IRoute[] = [
         title: 'Context fields',
         component: ContextList,
         type: 'protected',
-        menu: { mobile: true, advanced: true },
+        menu: { main: true },
     },
 
     // Feature types
@@ -214,7 +223,7 @@ export const routes: IRoute[] = [
         title: 'Feature flag types',
         component: FeatureTypesList,
         type: 'protected',
-        menu: { mobile: true, advanced: true },
+        menu: { main: true },
     },
 
     // Strategies
@@ -247,7 +256,7 @@ export const routes: IRoute[] = [
         title: 'Strategy types',
         component: StrategiesList,
         type: 'protected',
-        menu: { mobile: true, advanced: true },
+        menu: { main: true },
     },
     {
         path: '/environments/create',
@@ -269,7 +278,7 @@ export const routes: IRoute[] = [
         title: 'Environments',
         component: EnvironmentTable,
         type: 'protected',
-        menu: { mobile: true, advanced: true },
+        menu: { main: true },
         enterprise: true,
     },
     {
@@ -283,17 +292,17 @@ export const routes: IRoute[] = [
 
     // Release management/plans
     {
-        path: '/release-management',
-        title: 'Release management',
+        path: '/release-templates',
+        title: 'Release templates',
         component: ReleaseManagement,
         type: 'protected',
-        menu: { advanced: true, mode: ['enterprise'] },
+        menu: { main: true, mode: ['enterprise'] },
         flag: 'releasePlans',
     },
     {
-        path: '/release-management/create-template',
-        title: 'Create release plan template',
-        parent: '/release-management',
+        path: '/release-templates/create-template',
+        title: 'Create release template',
+        parent: '/release-templates',
         component: CreateReleasePlanTemplate,
         type: 'protected',
         menu: { mode: ['enterprise'] },
@@ -301,9 +310,9 @@ export const routes: IRoute[] = [
         enterprise: true,
     },
     {
-        path: '/release-management/edit/:templateId',
-        title: 'Edit release plan template',
-        parent: '/release-management',
+        path: '/release-templates/edit/:templateId',
+        title: 'Edit release template',
+        parent: '/release-templates',
         component: EditReleasePlanTemplate,
         type: 'protected',
         menu: { mode: ['enterprise'] },
@@ -333,7 +342,7 @@ export const routes: IRoute[] = [
         title: 'Tag types',
         component: TagTypeList,
         type: 'protected',
-        menu: { mobile: true, advanced: true },
+        menu: { main: true },
     },
 
     // Integrations
@@ -391,7 +400,7 @@ export const routes: IRoute[] = [
         component: IntegrationList,
         hidden: false,
         type: 'protected',
-        menu: { mobile: true, advanced: true },
+        menu: { main: true },
     },
     {
         path: '/integrations/signals',
@@ -427,7 +436,7 @@ export const routes: IRoute[] = [
         component: SegmentTable,
         hidden: false,
         type: 'protected',
-        menu: { mobile: true, advanced: true },
+        menu: { main: true },
     },
 
     // History
@@ -518,24 +527,7 @@ export const routes: IRoute[] = [
 export const getRoute = (path: string) =>
     routes.find((route) => route.path === path);
 
-export const baseRoutes = routes.filter((route) => !route.hidden);
-
-const computeRoutes = () => {
-    const mainNavRoutes = baseRoutes.filter((route) => route.menu.advanced);
-    const adminRoutes = routes.filter((route) => route.menu.adminSettings);
-    const mobileRoutes = routes.filter((route) => route.menu.mobile);
-
-    const computedRoutes = {
-        mainNavRoutes,
-        adminRoutes,
-        mobileRoutes,
-    };
-    return () => {
-        return computedRoutes;
-    };
-};
-
-export const getCondensedRoutes = (routes: IRoute[]): INavigationMenuItem[] => {
+const getCondensedRoutes = (routes: IRoute[]): INavigationMenuItem[] => {
     return routes.map((route) => {
         return {
             path: route.path,
@@ -549,4 +541,10 @@ export const getCondensedRoutes = (routes: IRoute[]): INavigationMenuItem[] => {
     });
 };
 
-export const getRoutes = computeRoutes();
+export const baseRoutes = routes.filter((route) => !route.hidden);
+export const getNavRoutes = () => {
+    return getCondensedRoutes(baseRoutes.filter((route) => route.menu.main));
+};
+export const getPrimaryRoutes = () => {
+    return getCondensedRoutes(baseRoutes.filter((route) => route.menu.primary));
+};

@@ -100,9 +100,9 @@ To move a feature flag between projects:
 
 :::
 
-Each project has a default strategy of [gradual rollout](./activation-strategies#gradual-rollout) to 100% of the user base. The default strategy only applies when **no active strategies** are defined for a flag in a specific environment.
+Each project has a default strategy of [gradual rollout](./activation-strategies) to 100% of the user base. The default strategy only applies when **no active strategies** are defined for a flag in a specific environment.
 
-You can change the default strategies of a project per environment. You can customize the default strategies by changing the rollout percentage and [stickiness](./stickiness) and adding [segments](./segments), [constraints](./activation-strategies#-constraints), and [variants](./strategy-variants).
+You can change the default strategies of a project per environment. You can customize the default strategies by changing the rollout percentage and [stickiness](./stickiness) and adding [segments](./segments), [constraints](./activation-strategies#constraints), and [variants](./strategy-variants).
 
 To change the default strategy for an environment in a project:
 
@@ -112,6 +112,10 @@ To change the default strategy for an environment in a project:
 4. Click **Save strategy**.
 
 ![Configuring the default strategy](/img/edit-default-strategy-development.png)
+
+## Project roles
+
+Unleash supports [predefined](./rbac#predefined-roles) and [custom roles](./rbac#custom-project-roles) at the project level. The two predefined project roles are Owner and Member. By default, the person creating the project becomes the Owner. If a project does not have an Owner, it is shown as owned by _System_.
 
 ## View project insights
 

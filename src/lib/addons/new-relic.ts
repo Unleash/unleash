@@ -39,7 +39,7 @@ interface INewRelicRequestBody {
 export default class NewRelicAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
-    flagResolver: IFlagResolver;
+    declare flagResolver: IFlagResolver;
 
     constructor(config: IAddonConfig) {
         super(definition, config);

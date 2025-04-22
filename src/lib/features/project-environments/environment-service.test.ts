@@ -3,6 +3,7 @@ import { createTestConfig } from '../../../test/config/test-config';
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import NotFoundError from '../../error/notfound-error';
 import {
+    type IExperimentalOptions,
     type IUnleashStores,
     SYSTEM_USER,
     SYSTEM_USER_AUDIT,
@@ -17,8 +18,16 @@ let service: EnvironmentService;
 let eventService: EventService;
 
 beforeAll(async () => {
-    const config = createTestConfig();
-    db = await dbInit('environment_service_serial', config.getLogger);
+    const flags: Partial<IExperimentalOptions> = {
+        flags: { globalChangeRequestConfig: true },
+    };
+    const config = createTestConfig({
+        experimental: flags,
+    });
+    db = await dbInit('environment_service_serial', config.getLogger, {
+        dbInitMethod: 'legacy' as const,
+        experimental: flags,
+    });
     stores = db.stores;
     eventService = createEventsService(db.rawDatabase, config);
     service = new EnvironmentService(stores, config, eventService);
@@ -45,6 +54,43 @@ test('Can get all', async () => {
 
     const environments = await service.getAll();
     expect(environments).toHaveLength(3); // the one we created plus 'default'
+});
+
+test('Can manage required approvals', async () => {
+    const created = await db.stores.environmentStore.create({
+        name: 'approval_env',
+        type: 'production',
+        requiredApprovals: 1,
+    });
+
+    const retrieved = await service.get('approval_env');
+
+    await db.stores.environmentStore.update(
+        {
+            type: 'production',
+            protected: false,
+            requiredApprovals: 2,
+        },
+        'approval_env',
+    );
+
+    const updated = await service.get('approval_env');
+    const groupRetrieved = (await service.getAll()).find(
+        (env) => env.name === 'approval_env',
+    );
+    const changeRequestEnvs =
+        await db.stores.environmentStore.getChangeRequestEnvironments([
+            'approval_env',
+            'default',
+            'other',
+        ]);
+
+    expect(retrieved).toEqual(created);
+    expect(updated).toEqual({ ...created, requiredApprovals: 2 });
+    expect(groupRetrieved).toMatchObject({ ...created, requiredApprovals: 2 });
+    expect(changeRequestEnvs).toEqual([
+        { name: 'approval_env', requiredApprovals: 2 },
+    ]);
 });
 
 test('Can connect environment to project', async () => {
@@ -335,4 +381,55 @@ test('Override works correctly when enabling default and disabling prod and dev'
     expect(envNames).toContain('development');
     expect(targetedEnvironment?.enabled).toBe(true);
     expect(allOtherEnvironments.every((x) => !x)).toBe(true);
+});
+
+test('getProjectEnvironments also includes whether or not a given project is visible on a given environment', async () => {
+    const assertContains = (environments, envName, visible) => {
+        const env = environments.find((e) => e.name === envName);
+        expect(env).toBeDefined();
+        expect(env.visible).toBe(visible);
+    };
+
+    const assertContainsVisible = (environments, envName) => {
+        assertContains(environments, envName, true);
+    };
+
+    const assertContainsNotVisible = (environments, envName) => {
+        assertContains(environments, envName, false);
+    };
+
+    const projectId = 'default';
+    const firstEnvTest = 'some-connected-environment';
+    const secondEnvTest = 'some-also-connected-environment';
+    await db.stores.environmentStore.create({
+        name: firstEnvTest,
+        type: 'production',
+    });
+    await db.stores.environmentStore.create({
+        name: secondEnvTest,
+        type: 'production',
+    });
+
+    await service.addEnvironmentToProject(
+        firstEnvTest,
+        projectId,
+        SYSTEM_USER_AUDIT,
+    );
+    await service.addEnvironmentToProject(
+        secondEnvTest,
+        projectId,
+        SYSTEM_USER_AUDIT,
+    );
+    let environments = await service.getProjectEnvironments(projectId);
+    assertContainsVisible(environments, firstEnvTest);
+    assertContainsVisible(environments, secondEnvTest);
+
+    await service.removeEnvironmentFromProject(
+        firstEnvTest,
+        projectId,
+        SYSTEM_USER_AUDIT,
+    );
+    environments = await service.getProjectEnvironments(projectId);
+    assertContainsNotVisible(environments, firstEnvTest);
+    assertContainsVisible(environments, secondEnvTest);
 });

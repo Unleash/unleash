@@ -1,6 +1,9 @@
-import type { FC, ReactElement } from 'react';
-import type { FeatureSearchResponseSchema } from '../../../../../openapi';
-import { Box, IconButton, styled } from '@mui/material';
+import type { FC } from 'react';
+import type {
+    FeatureSearchResponseSchema,
+    TagSchema,
+} from '../../../../../openapi';
+import { Box, IconButton, styled, Chip } from '@mui/material';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import { useSearchHighlightContext } from '../../SearchHighlightContext/SearchHighlightContext';
@@ -13,6 +16,9 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { getLocalizedDateString } from '../../../util';
+import { Tag } from 'component/common/Tag/Tag';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { formatTag } from 'utils/format-tag';
 
 interface IFeatureNameCellProps {
     row: {
@@ -36,7 +42,7 @@ const StyledFeatureLink = styled(Link)({
     },
 });
 
-const Tag = styled('button')(({ theme }) => ({
+const CustomTagButton = styled('button')(({ theme }) => ({
     marginRight: theme.spacing(0.5),
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadius,
@@ -49,6 +55,24 @@ const Tag = styled('button')(({ theme }) => ({
     cursor: 'pointer',
     background: 'inherit',
     color: 'inherit',
+}));
+
+const StyledTag = styled(Chip)(({ theme }) => ({
+    overflowWrap: 'anywhere',
+    lineHeight: theme.typography.body1.lineHeight,
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.text.primary,
+    padding: theme.spacing(0.25, 0.5),
+    height: 'auto',
+    fontSize: theme.fontSizes.smallerBody,
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadius,
+    '&:hover': {
+        backgroundColor: theme.palette.background.paper,
+    },
+    '& .MuiChip-label': {
+        padding: 0,
+    },
 }));
 
 const CappedDescription: FC<{ text: string; searchQuery: string }> = ({
@@ -66,29 +90,16 @@ const CappedDescription: FC<{ text: string; searchQuery: string }> = ({
                     placement='bottom-start'
                     arrow
                 >
-                    <StyledDescription>
+                    <StyledDescription data-loading>
                         <Highlighter search={searchQuery}>{text}</Highlighter>
                     </StyledDescription>
                 </HtmlTooltip>
             }
             elseShow={
-                <StyledDescription>
+                <StyledDescription data-loading>
                     <Highlighter search={searchQuery}>{text}</Highlighter>
                 </StyledDescription>
             }
-        />
-    );
-};
-
-const CappedTag: FC<{ tag: string; children: ReactElement }> = ({
-    tag,
-    children,
-}) => {
-    return (
-        <ConditionallyRender
-            condition={tag.length > 30}
-            show={<HtmlTooltip title={tag}>{children}</HtmlTooltip>}
-            elseShow={children}
         />
     );
 };
@@ -132,6 +143,7 @@ const FeatureName: FC<{
                     style={{
                         WebkitLineClamp: 1,
                         lineClamp: 1,
+                        overflowWrap: 'anywhere',
                     }}
                 >
                     <Highlighter search={searchQuery}>{feature}</Highlighter>
@@ -157,23 +169,82 @@ const ArchivedFeatureName: FC<{
     );
 };
 
-const RestTags: FC<{ tags: string[]; onClick: (tag: string) => void }> = ({
-    tags,
-    onClick,
-}) => {
+interface ITagItemProps {
+    tag: TagSchema;
+    onClick: (tag: TagSchema) => void;
+}
+
+const TagItem: FC<ITagItemProps> = ({ tag, onClick }) => {
+    const isTagTypeColorEnabled = useUiFlag('tagTypeColor');
+    const tagFullText = formatTag(tag);
+
+    if (isTagTypeColorEnabled) {
+        const tagComponent = (
+            <Box onClick={() => onClick(tag)} sx={{ cursor: 'pointer' }}>
+                <Tag tag={tag} maxLength={30} />
+            </Box>
+        );
+
+        return (
+            <HtmlTooltip key={tagFullText} title={tagFullText} arrow>
+                <span>{tagComponent}</span>
+            </HtmlTooltip>
+        );
+    }
+
+    // For non-color tags, use the StyledTag approach
+    const isOverflowing = tagFullText.length > 30;
+    const displayText = isOverflowing
+        ? `${tagFullText.substring(0, 30)}...`
+        : tagFullText;
+
+    return (
+        <StyledTag
+            key={tagFullText}
+            label={displayText}
+            size='small'
+            onClick={() => onClick(tag)}
+            sx={{ cursor: 'pointer' }}
+            title={isOverflowing ? tagFullText : undefined}
+        />
+    );
+};
+
+const RestTags: FC<{
+    tags: TagSchema[];
+    onClick: (tag: string) => void;
+}> = ({ tags, onClick }) => {
+    const isTagTypeColorEnabled = useUiFlag('tagTypeColor');
+
     return (
         <HtmlTooltip
-            title={tags.map((tag) => (
-                <Box
-                    sx={{ cursor: 'pointer' }}
-                    onClick={() => onClick(tag)}
-                    key={tag}
-                >
-                    {tag}
-                </Box>
-            ))}
+            title={tags.map((tag) => {
+                const formattedTag = formatTag(tag);
+                return (
+                    <Box
+                        sx={{ cursor: 'pointer' }}
+                        onClick={() => onClick(formattedTag)}
+                        key={formattedTag}
+                    >
+                        {isTagTypeColorEnabled ? (
+                            <Tag tag={tag} maxLength={30} />
+                        ) : (
+                            formattedTag
+                        )}
+                    </Box>
+                );
+            })}
         >
-            <Tag sx={{ cursor: 'initial' }}>{tags.length} more...</Tag>
+            <CustomTagButton
+                sx={{
+                    cursor: 'initial',
+                    ...(isTagTypeColorEnabled && {
+                        borderRadius: (theme) => theme.spacing(2),
+                    }),
+                }}
+            >
+                {tags.length} more...
+            </CustomTagButton>
         </HtmlTooltip>
     );
 };
@@ -182,27 +253,21 @@ const Tags: FC<{
     tags: FeatureSearchResponseSchema['tags'];
     onClick: (tag: string) => void;
 }> = ({ tags, onClick }) => {
-    const [tag1, tag2, tag3, ...restTags] = (tags || []).map(
-        ({ type, value }) => `${type}:${value}`,
-    );
+    if (!tags || tags.length === 0) {
+        return null;
+    }
+
+    const [tag1, tag2, tag3, ...restTags] = tags;
+
+    const handleTagClick = (tag: TagSchema) => {
+        onClick(formatTag(tag));
+    };
 
     return (
         <TagsContainer>
-            {tag1 && (
-                <CappedTag tag={tag1}>
-                    <Tag onClick={() => onClick(tag1)}>{tag1}</Tag>
-                </CappedTag>
-            )}
-            {tag2 && (
-                <CappedTag tag={tag2}>
-                    <Tag onClick={() => onClick(tag2)}>{tag2}</Tag>
-                </CappedTag>
-            )}
-            {tag3 && (
-                <CappedTag tag={tag3}>
-                    <Tag onClick={() => onClick(tag3)}>{tag3}</Tag>
-                </CappedTag>
-            )}
+            {tag1 && <TagItem tag={tag1} onClick={handleTagClick} />}
+            {tag2 && <TagItem tag={tag2} onClick={handleTagClick} />}
+            {tag3 && <TagItem tag={tag3} onClick={handleTagClick} />}
             <ConditionallyRender
                 condition={restTags.length > 0}
                 show={<RestTags tags={restTags} onClick={onClick} />}
@@ -341,7 +406,9 @@ export const PrimaryFeatureInfo: FC<{
             />
             {archivedAt && (
                 <HtmlTooltip arrow title={archivedDate} describeChild>
-                    <Badge color='neutral'>Archived</Badge>
+                    <Badge tabIndex={0} color='neutral'>
+                        Archived
+                    </Badge>
                 </HtmlTooltip>
             )}
         </FeatureNameAndType>
@@ -369,7 +436,7 @@ const SecondaryFeatureInfo: FC<{
     );
 };
 
-export const FeatureOverviewCell =
+export const createFeatureOverviewCell =
     (
         onTagClick: (tag: string) => void,
         onFlagTypeClick: (type: string) => void,

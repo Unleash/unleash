@@ -103,7 +103,7 @@ test('Should create a reset link with unleashUrl with context path', async () =>
 
     const url = await resetToken.createResetPasswordUrl(
         userIdToCreateResetFor,
-        adminUser.username,
+        adminUser.username!,
     );
     expect(url.toString().substring(0, url.toString().indexOf('='))).toBe(
         `${localConfig.server.unleashUrl}/reset-password?token`,
@@ -113,7 +113,7 @@ test('Should create a reset link with unleashUrl with context path', async () =>
 test('Should create a welcome link', async () => {
     const url = await resetTokenService.createNewUserUrl(
         userIdToCreateResetFor,
-        adminUser.username,
+        adminUser.username!,
     );
     const urlS = url.toString();
     expect(urlS.substring(0, urlS.indexOf('='))).toBe(
@@ -124,7 +124,7 @@ test('Should create a welcome link', async () => {
 test('Tokens should be one-time only', async () => {
     const token = await resetTokenService.createToken(
         userIdToCreateResetFor,
-        adminUser.username,
+        adminUser.username!,
     );
 
     const accessGranted = await resetTokenService.useAccessToken(token);
@@ -136,11 +136,11 @@ test('Tokens should be one-time only', async () => {
 test('Creating a new token should expire older tokens', async () => {
     const firstToken = await resetTokenService.createToken(
         userIdToCreateResetFor,
-        adminUser.username,
+        adminUser.username!,
     );
     const secondToken = await resetTokenService.createToken(
         userIdToCreateResetFor,
-        adminUser.username,
+        adminUser.username!,
     );
     await expect(async () =>
         resetTokenService.isValid(firstToken.token),
@@ -152,7 +152,7 @@ test('Creating a new token should expire older tokens', async () => {
 test('Retrieving valid invitation links should retrieve an object with userid key and token value', async () => {
     const token = await resetTokenService.createToken(
         userIdToCreateResetFor,
-        adminUser.username,
+        adminUser.username!,
     );
     expect(token).toBeTruthy();
     const activeInvitations = await resetTokenService.getActiveInvitations();

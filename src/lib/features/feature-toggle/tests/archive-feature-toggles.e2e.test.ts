@@ -11,7 +11,9 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('archive_test_serial', getLogger);
+    db = await dbInit('archive_test_serial', getLogger, {
+        dbInitMethod: 'legacy' as const,
+    });
     app = await setupAppWithCustomConfig(
         db.stores,
         {

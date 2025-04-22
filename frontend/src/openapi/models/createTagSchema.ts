@@ -5,11 +5,17 @@
  */
 
 /**
- * Data used to create a new [tag](https://docs.getunleash.io/reference/tags)
+ * Data used to create a new [tag](https://docs.getunleash.io/reference/feature-toggles#tags)
  */
 export interface CreateTagSchema {
     /**
-     * The [type](https://docs.getunleash.io/reference/tags#tag-types) of the tag
+     * The hexadecimal color code for the tag type.
+     * @nullable
+     * @pattern ^#[0-9A-Fa-f]{6}$
+     */
+    color?: string | null;
+    /**
+     * The [type](https://docs.getunleash.io/reference/feature-toggles#tags) of the tag
      * @minLength 2
      * @maxLength 50
      */

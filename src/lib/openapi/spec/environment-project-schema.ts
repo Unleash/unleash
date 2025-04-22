@@ -57,6 +57,12 @@ export const environmentProjectSchema = {
                 'The strategy configuration to add when enabling a feature environment by default',
             $ref: '#/components/schemas/createFeatureStrategySchema',
         },
+        visible: {
+            type: 'boolean',
+            example: true,
+            description:
+                'Indicates whether the environment can be enabled for feature flags in the project',
+        },
     },
     components: {
         schemas: {

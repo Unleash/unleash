@@ -19,7 +19,7 @@ export interface IAccountStore extends Store<IUser, number> {
     getAllWithId(userIdList: number[]): Promise<IUser[]>;
     getByQuery(idQuery: IUserLookup): Promise<IUser>;
     count(): Promise<number>;
-    getAccountByPersonalAccessToken(secret: string): Promise<IUser>;
+    getAccountByPersonalAccessToken(secret: string): Promise<IUser | undefined>;
     markSeenAt(secrets: string[]): Promise<void>;
     getAdminCount(): Promise<IAdminCount>;
     getAdmins(): Promise<MinimalUser[]>;

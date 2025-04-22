@@ -169,6 +169,11 @@ export function registerPrometheusMetrics(
         help: 'Number of times a feature flag has been used',
         labelNames: ['toggle', 'active', 'appName'],
     });
+    const clientRegistrationTotal = createCounter({
+        name: 'client_registration_total',
+        help: 'Number of times a an application have registered',
+        labelNames: ['appName', 'environment', 'interval'],
+    });
 
     dbMetrics.registerGaugeDbMetric({
         name: 'feature_toggles_total',
@@ -414,6 +419,20 @@ export function registerPrometheusMetrics(
         name: 'strategies_total',
         help: 'Number of strategies',
         query: () => instanceStatsService.strategiesCount(),
+        map: (result) => ({ value: result }),
+    });
+
+    dbMetrics.registerGaugeDbMetric({
+        name: 'custom_strategies_total',
+        help: 'Number of custom strategies',
+        query: () => instanceStatsService.customStrategiesCount(),
+        map: (result) => ({ value: result }),
+    });
+
+    dbMetrics.registerGaugeDbMetric({
+        name: 'custom_strategies_in_use_total',
+        help: 'Number of custom strategies in use',
+        query: () => instanceStatsService.customStrategiesInUseCount(),
         map: (result) => ({ value: result }),
     });
 
@@ -807,12 +826,24 @@ export function registerPrometheusMetrics(
         clientDeltaMemory.reset();
         clientDeltaMemory.set(event.memory);
     });
+    eventBus.on(
+        events.CLIENT_REGISTERED,
+        ({ appName, environment, interval }) => {
+            clientRegistrationTotal
+                .labels({ appName, environment, interval })
+                .inc();
+        },
+    );
 
     events.onMetricEvent(
         eventBus,
         events.REQUEST_ORIGIN,
         ({ type, method, source }) => {
-            requestOriginCounter.increment({ type, method, source });
+            requestOriginCounter.increment({
+                type,
+                method,
+                source: source || 'unknown',
+            });
         },
     );
 

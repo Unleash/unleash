@@ -1,8 +1,10 @@
 import { Checkbox, ListItem, styled } from '@mui/material';
 
 export const StyledListItem = styled(ListItem)(({ theme }) => ({
-    paddingLeft: theme.spacing(1),
+    paddingLeft: theme.spacing(2),
+    paddingBlock: theme.spacing(1),
     cursor: 'pointer',
+
     '&:hover, &:focus': {
         backgroundColor: theme.palette.action.hover,
         outline: 'none',

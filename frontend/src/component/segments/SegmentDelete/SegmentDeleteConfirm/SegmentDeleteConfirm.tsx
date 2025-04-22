@@ -15,6 +15,7 @@ interface ISegmentDeleteConfirmProps {
     open: boolean;
     onClose: () => void;
     onRemove: () => void;
+    title: string;
 }
 
 export const SegmentDeleteConfirm = ({
@@ -22,6 +23,7 @@ export const SegmentDeleteConfirm = ({
     open,
     onClose,
     onRemove,
+    title,
 }: ISegmentDeleteConfirmProps) => {
     const [confirmName, setConfirmName] = useState('');
 
@@ -37,7 +39,7 @@ export const SegmentDeleteConfirm = ({
         <Dialogue
             title='Are you sure you want to delete this segment?'
             open={open}
-            primaryButtonText='Delete segment'
+            primaryButtonText={title}
             secondaryButtonText='Cancel'
             onClick={() => {
                 onRemove();

@@ -15,6 +15,8 @@ These ADRs describe decisions that concern the entire codebase. They apply to ba
 
 * [Domain language](./overarching/domain-language.md)
 * [Separation of request and response schemas](./overarching/separation-request-response-schemas.md)
+* [Error Logging stack traces](./overarching/logging.md)
+* [Logging levels](./overarching/logging-levels.md)
 
 ## Back-end ADRs
 
@@ -27,6 +29,7 @@ We are in the process of defining ADRs for the back end. At the time of writing 
 * [Specificity in database column references](./back-end/specificity-db-columns.md)
 * [Write model vs Read models](./back-end/write-model-vs-read-models.md)
 * [Frontend API Design](./back-end/frontend-api-design.md)
+* [Correct type dependencies](./back-end/correct-type-dependencies.md)
 
 ## Front-end ADRs
 

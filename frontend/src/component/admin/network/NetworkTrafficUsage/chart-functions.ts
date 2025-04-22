@@ -1,5 +1,9 @@
 import type { ChartDataset } from 'chart.js';
-import type { TrafficUsageDataSegmentedCombinedSchema } from 'openapi';
+import type {
+    MeteredConnectionsSchema,
+    MeteredRequestsSchema,
+    TrafficUsageDataSegmentedCombinedSchema,
+} from 'openapi';
 import { endpointsInfo } from './endpoint-info';
 import {
     addDays,
@@ -7,15 +11,17 @@ import {
     differenceInCalendarDays,
     differenceInCalendarMonths,
 } from 'date-fns';
-import { formatDay, formatMonth } from './dates';
+import { formatDay, formatMonth, parseDateString } from './dates';
 import type { ChartDataSelection } from './chart-data-selection';
 export type ChartDatasetType = ChartDataset<'bar'>;
 
-export const toChartData = (
+export const toTrafficUsageChartData = (
     traffic: TrafficUsageDataSegmentedCombinedSchema,
+    filter?: string,
 ): { datasets: ChartDatasetType[]; labels: string[] } => {
     const { newRecord, labels } = getLabelsAndRecords(traffic);
     const datasets = traffic.apiData
+        .filter((apiData) => (filter ? apiData.apiPath === filter : true))
         .sort(
             (item1, item2) =>
                 endpointsInfo[item1.apiPath].order -
@@ -40,12 +46,71 @@ export const toChartData = (
     return { datasets, labels };
 };
 
+export const toConnectionChartData = (
+    traffic: MeteredConnectionsSchema,
+): { datasets: ChartDatasetType[]; labels: string[] } => {
+    const { newRecord, labels } = getLabelsAndRecords(traffic);
+    const datasets = traffic.apiData.map((item) => {
+        const record = newRecord();
+        for (const dataPoint of Object.values(item.dataPoints)) {
+            const requestCount = dataPoint.connections;
+            record[dataPoint.period] = requestCount;
+        }
+
+        const epInfo = {
+            label: 'Connections',
+            color: '#6D66D9',
+            order: 1,
+        };
+
+        return {
+            label: epInfo.label,
+            data: Object.values(record),
+            backgroundColor: epInfo.color,
+            hoverBackgroundColor: epInfo.color,
+        };
+    });
+
+    return { datasets, labels };
+};
+
+export const toRequestChartData = (
+    traffic: MeteredRequestsSchema,
+): { datasets: ChartDatasetType[]; labels: string[] } => {
+    const { newRecord, labels } = getLabelsAndRecords(traffic);
+    const datasets = traffic.apiData.map((item) => {
+        const record = newRecord();
+        for (const dataPoint of Object.values(item.dataPoints)) {
+            const requestCount = dataPoint.requests;
+            record[dataPoint.period] = requestCount;
+        }
+
+        const epInfo = {
+            label: 'Frontend requests',
+            color: '#A39EFF',
+            order: 1,
+        };
+
+        return {
+            label: epInfo.label,
+            data: Object.values(record),
+            backgroundColor: epInfo.color,
+            hoverBackgroundColor: epInfo.color,
+        };
+    });
+
+    return { datasets, labels };
+};
+
 const getLabelsAndRecords = (
-    traffic: TrafficUsageDataSegmentedCombinedSchema,
+    traffic: Pick<
+        TrafficUsageDataSegmentedCombinedSchema,
+        'dateRange' | 'grouping'
+    >,
 ) => {
     if (traffic.grouping === 'monthly') {
-        const from = new Date(traffic.dateRange.from);
-        const to = new Date(traffic.dateRange.to);
+        const from = parseDateString(traffic.dateRange.from);
+        const to = parseDateString(traffic.dateRange.to);
         const numMonths = Math.abs(differenceInCalendarMonths(to, from)) + 1;
         const monthsRec: { [month: string]: number } = {};
         for (let i = 0; i < numMonths; i++) {
@@ -59,8 +124,8 @@ const getLabelsAndRecords = (
         );
         return { newRecord: () => ({ ...monthsRec }), labels };
     } else {
-        const from = new Date(traffic.dateRange.from);
-        const to = new Date(traffic.dateRange.to);
+        const from = parseDateString(traffic.dateRange.from);
+        const to = parseDateString(traffic.dateRange.to);
         const numDays = Math.abs(differenceInCalendarDays(to, from)) + 1;
         const daysRec: { [day: string]: number } = {};
         for (let i = 0; i < numDays; i++) {

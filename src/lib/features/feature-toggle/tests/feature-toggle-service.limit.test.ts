@@ -143,7 +143,11 @@ describe('Strategy limits', () => {
                 {
                     constraints: newConstraints,
                 },
-                { projectId: 'default', featureName: 'feature' } as any,
+                {
+                    projectId: 'default',
+                    featureName: 'feature',
+                    environment: 'default',
+                },
                 {} as IAuditUser,
             );
 
@@ -246,7 +250,11 @@ describe('Strategy limits', () => {
                 {
                     constraints: constraints(valueCount),
                 },
-                { projectId: 'default', featureName: 'feature' } as any,
+                {
+                    projectId: 'default',
+                    featureName: 'feature',
+                    environment: 'default',
+                },
                 {} as IAuditUser,
             );
 

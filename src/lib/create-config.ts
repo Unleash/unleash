@@ -335,17 +335,22 @@ const parseEnvVarInitialAdminUser = (): UsernameAdminUser | undefined => {
     return username && password ? { username, password } : undefined;
 };
 
-const defaultAuthentication: IAuthOption = {
-    demoAllowAdminLogin: parseEnvVarBoolean(
-        process.env.AUTH_DEMO_ALLOW_ADMIN_LOGIN,
-        false,
-    ),
-    enableApiToken: parseEnvVarBoolean(process.env.AUTH_ENABLE_API_TOKEN, true),
-    type: authTypeFromString(process.env.AUTH_TYPE),
-    customAuthHandler: defaultCustomAuthDenyAll,
-    createAdminUser: true,
-    initialAdminUser: parseEnvVarInitialAdminUser(),
-    initApiTokens: [],
+const buildDefaultAuthOption = () => {
+    return {
+        demoAllowAdminLogin: parseEnvVarBoolean(
+            process.env.AUTH_DEMO_ALLOW_ADMIN_LOGIN,
+            false,
+        ),
+        enableApiToken: parseEnvVarBoolean(
+            process.env.AUTH_ENABLE_API_TOKEN,
+            true,
+        ),
+        type: authTypeFromString(process.env.AUTH_TYPE),
+        customAuthHandler: defaultCustomAuthDenyAll,
+        createAdminUser: true,
+        initialAdminUser: parseEnvVarInitialAdminUser(),
+        initApiTokens: [],
+    };
 };
 
 const defaultImport: WithOptional<IImportOption, 'file'> = {
@@ -563,12 +568,18 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     const initApiTokens = loadInitApiTokens();
 
     const authentication: IAuthOption = mergeAll([
-        defaultAuthentication,
+        buildDefaultAuthOption(),
         (options.authentication
             ? removeUndefinedKeys(options.authentication)
             : options.authentication) || {},
         { initApiTokens: initApiTokens },
     ]);
+    // make sure init tokens appear only once
+    authentication.initApiTokens = [
+        ...new Map(
+            authentication.initApiTokens.map((token) => [token.secret, token]),
+        ).values(),
+    ];
 
     const environmentEnableOverrides = loadEnvironmentEnableOverrides();
 
@@ -746,6 +757,9 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const openAIAPIKey = process.env.OPENAI_API_KEY;
 
+    const unleashFrontendToken =
+        options.unleashFrontendToken || process.env.UNLEASH_FRONTEND_TOKEN;
+
     const defaultDaysToBeConsideredInactive = 180;
     const userInactivityThresholdInDays =
         options.userInactivityThresholdInDays ??
@@ -795,6 +809,8 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         dailyMetricsStorageDays,
         openAIAPIKey,
         userInactivityThresholdInDays,
+        buildDate: process.env.BUILD_DATE,
+        unleashFrontendToken,
     };
 }
 

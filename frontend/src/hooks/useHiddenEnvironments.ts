@@ -2,6 +2,9 @@ import { useGlobalLocalStorage } from './useGlobalLocalStorage';
 import { useState } from 'react';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
+/**
+ * @deprecated remove with `flagOverviewRedesign`
+ */
 export const useHiddenEnvironments = () => {
     const { trackEvent } = usePlausibleTracker();
 
@@ -25,11 +28,6 @@ export const useHiddenEnvironments = () => {
                 });
             } else {
                 hiddenEnvironments.add(environment);
-                trackEvent('hidden_environment', {
-                    props: {
-                        eventType: `environment hidden`,
-                    },
-                });
             }
             setStoredHiddenEnvironments(hiddenEnvironments);
 

@@ -25,7 +25,7 @@ interface IParameters {
 export default class Webhook extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
-    flagResolver: IFlagResolver;
+    declare flagResolver: IFlagResolver;
 
     constructor(args: IAddonConfig) {
         super(definition, args);

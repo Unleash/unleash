@@ -1,16 +1,19 @@
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { adminRoutes as oldAdminRoutes } from './oldAdminRoutes';
 import { adminRoutes } from './adminRoutes';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { filterAdminRoutes } from './filterAdminRoutes';
 import { filterByConfig, mapRouteLink } from 'component/common/util';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export const useAdminRoutes = () => {
+    const newAdminUIEnabled = useUiFlag('adminNavUI');
     const { uiConfig, isPro, isEnterprise } = useUiConfig();
     const { isBilling } = useInstanceStatus();
-    const routes = [...adminRoutes];
+    const routes = newAdminUIEnabled ? [...adminRoutes] : [...oldAdminRoutes];
 
     if (uiConfig.flags.UNLEASH_CLOUD) {
-        const adminBillingMenuItem = adminRoutes.findIndex(
+        const adminBillingMenuItem = routes.findIndex(
             (route) => route.title === 'Billing & invoices',
         );
         routes[adminBillingMenuItem] = {

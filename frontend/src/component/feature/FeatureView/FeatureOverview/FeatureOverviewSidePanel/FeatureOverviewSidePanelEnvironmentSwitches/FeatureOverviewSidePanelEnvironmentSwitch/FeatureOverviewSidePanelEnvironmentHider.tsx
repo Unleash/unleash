@@ -32,13 +32,16 @@ export const FeatureOverviewSidePanelEnvironmentHider = ({
         setHiddenEnvironments(environment.name);
     };
 
+    const isHidden = hiddenEnvironments.has(environment.name);
+
     return (
         <StyledVisibilityToggle
             onClick={toggleHiddenEnvironments}
-            visibilityOff={hiddenEnvironments.has(environment.name)}
+            visibilityOff={isHidden}
+            aria-label={`${isHidden ? 'Show' : 'Hide'} environment "${environment.name}"`}
         >
             <ConditionallyRender
-                condition={hiddenEnvironments.has(environment.name)}
+                condition={isHidden}
                 show={<VisibilityOff />}
                 elseShow={<Visibility />}
             />

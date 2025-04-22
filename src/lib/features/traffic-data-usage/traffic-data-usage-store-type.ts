@@ -24,9 +24,6 @@ export interface ITrafficDataUsageStore
     extends Store<IStatTrafficUsage, IStatTrafficUsageKey> {
     upsert(trafficDataUsage: IStatTrafficUsage): Promise<void>;
     getTrafficDataUsageForPeriod(period: string): Promise<IStatTrafficUsage[]>;
-    getTrafficDataForMonthRange(
-        monthsBack: number,
-    ): Promise<IStatMonthlyTrafficUsage[]>;
     getDailyTrafficDataUsageForPeriod(
         from: Date,
         to: Date,

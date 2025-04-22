@@ -5,6 +5,6 @@
  */
 
 /**
- * A list of projects to check for toggles in.
+ * A list of projects to check for feature flags in.
  */
 export type PlaygroundRequestSchemaProjects = string[] | '*';

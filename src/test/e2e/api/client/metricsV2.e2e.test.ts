@@ -13,7 +13,9 @@ let db: ITestDb;
 
 let defaultToken: IApiToken;
 beforeAll(async () => {
-    db = await dbInit('metrics_two_api_client', getLogger);
+    db = await dbInit('metrics_two_api_client', getLogger, {
+        dbInitMethod: 'legacy' as const,
+    });
     app = await setupAppWithAuth(db.stores, {}, db.rawDatabase);
     defaultToken =
         await app.services.apiTokenService.createApiTokenWithProjects({
@@ -104,12 +106,12 @@ test('should pick up environment from token', async () => {
 
 test('should set lastSeen for toggles with metrics both for toggle and toggle env', async () => {
     const start = Date.now();
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         { name: 't1' },
         TEST_AUDIT_USER,
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         { name: 't2' },
         TEST_AUDIT_USER,
@@ -147,13 +149,13 @@ test('should set lastSeen for toggles with metrics both for toggle and toggle en
 
     await app.services.clientMetricsServiceV2.bulkAdd();
     await app.services.lastSeenService.store();
-    const t1 = await app.services.featureToggleServiceV2.getFeature({
+    const t1 = await app.services.featureToggleService.getFeature({
         featureName: 't1',
         archived: false,
         environmentVariants: true,
         projectId: 'default',
     });
-    const t2 = await app.services.featureToggleServiceV2.getFeature({
+    const t2 = await app.services.featureToggleService.getFeature({
         featureName: 't2',
         archived: false,
         environmentVariants: true,

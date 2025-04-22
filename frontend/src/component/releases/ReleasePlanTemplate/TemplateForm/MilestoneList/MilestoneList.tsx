@@ -4,6 +4,8 @@ import Add from '@mui/icons-material/Add';
 import { v4 as uuidv4 } from 'uuid';
 import { useCallback } from 'react';
 import type { OnMoveItem } from 'hooks/useDragItem';
+import { MilestoneCard as LegacyMilestoneCard } from './MilestoneCard/LegacyMilestoneCard';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { MilestoneCard } from './MilestoneCard/MilestoneCard';
 
 interface IMilestoneListProps {
@@ -28,19 +30,46 @@ export const MilestoneList = ({
     clearErrors,
     milestoneChanged,
 }: IMilestoneListProps) => {
+    const useNewMilestoneCard = useUiFlag('flagOverviewRedesign');
     const onMoveItem: OnMoveItem = useCallback(
-        async (dragIndex: number, dropIndex: number) => {
-            if (dragIndex !== dropIndex) {
-                const oldMilestones = milestones || [];
-                const newMilestones = [...oldMilestones];
-                const movedMilestone = newMilestones.splice(dragIndex, 1)[0];
-                newMilestones.splice(dropIndex, 0, movedMilestone);
+        async ({ dragIndex, dropIndex, event, draggedElement }) => {
+            if (useNewMilestoneCard && event.type === 'drop') {
+                return; // the user has let go, we should leave the current sort order as it is currently visually displayed
+            }
 
-                newMilestones.forEach((milestone, index) => {
-                    milestone.sortOrder = index;
-                });
+            if (event.type === 'dragenter' && dragIndex !== dropIndex) {
+                const target = event.target as HTMLElement;
 
-                setMilestones(newMilestones);
+                const draggedElementHeight =
+                    draggedElement.getBoundingClientRect().height;
+
+                const { top, bottom } = target.getBoundingClientRect();
+                const overTargetTop =
+                    event.clientY - top < draggedElementHeight;
+                const overTargetBottom =
+                    bottom - event.clientY < draggedElementHeight;
+                const draggingUp = dragIndex > dropIndex;
+
+                // prevent oscillating by only reordering if there is sufficient space
+                const shouldReorder = draggingUp
+                    ? overTargetTop
+                    : overTargetBottom;
+
+                if (shouldReorder) {
+                    const oldMilestones = milestones || [];
+                    const newMilestones = [...oldMilestones];
+                    const movedMilestone = newMilestones.splice(
+                        dragIndex,
+                        1,
+                    )[0];
+                    newMilestones.splice(dropIndex, 0, movedMilestone);
+
+                    newMilestones.forEach((milestone, index) => {
+                        milestone.sortOrder = index;
+                    });
+
+                    setMilestones(newMilestones);
+                }
             }
         },
         [milestones],
@@ -54,10 +83,12 @@ export const MilestoneList = ({
         );
     };
 
+    const Card = useNewMilestoneCard ? MilestoneCard : LegacyMilestoneCard;
+
     return (
         <>
             {milestones.map((milestone, index) => (
-                <MilestoneCard
+                <Card
                     key={milestone.id}
                     index={index}
                     onMoveItem={onMoveItem}
@@ -80,6 +111,15 @@ export const MilestoneList = ({
                             id: uuidv4(),
                             name: `Milestone ${prev.length + 1}`,
                             sortOrder: prev.length,
+                            strategies: prev[prev.length - 1].strategies?.map(
+                                (strat) => {
+                                    return {
+                                        ...strat,
+                                        id: uuidv4(),
+                                    };
+                                },
+                            ),
+                            startExpanded: true,
                         },
                     ])
                 }

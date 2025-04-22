@@ -22,18 +22,15 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import { RemoveReleasePlanChangeRequestDialog } from './ChangeRequest/RemoveReleasePlanChangeRequestDialog';
 import { StartMilestoneChangeRequestDialog } from './ChangeRequest/StartMilestoneChangeRequestDialog';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { Truncator } from 'component/common/Truncator/Truncator';
 
-const StyledContainer = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'readonly',
-})<{ readonly?: boolean }>(({ theme, readonly }) => ({
+const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
-    borderRadius: theme.shape.borderRadiusMedium,
-    '& + &': {
-        marginTop: theme.spacing(2),
-    },
-    background: readonly
-        ? theme.palette.background.elevation1
-        : theme.palette.background.paper,
+    paddingTop: theme.spacing(0),
+    background: 'inherit',
+    display: 'flex',
+    flexFlow: 'column',
+    gap: theme.spacing(1),
 }));
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -42,30 +39,34 @@ const StyledHeader = styled('div')(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
 
-const StyledHeaderTitleContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    gap: theme.spacing(1),
+const StyledHeaderGroup = styled('hgroup')(({ theme }) => ({
+    paddingTop: theme.spacing(1.5),
 }));
 
-const StyledHeaderTitleLabel = styled('span')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallerBody,
+const StyledHeaderTitleLabel = styled('p')(({ theme }) => ({
+    fontWeight: 'bold',
+    fontSize: theme.typography.body1.fontSize,
     lineHeight: 0.5,
-    color: theme.palette.text.secondary,
     marginBottom: theme.spacing(0.5),
+    display: 'inline',
 }));
 
-const StyledHeaderDescription = styled('span')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-    lineHeight: 0.5,
+const StyledHeaderTitle = styled('h3')(({ theme }) => ({
+    display: 'inline',
+    margin: 0,
+    fontWeight: 'normal',
+    fontSize: theme.typography.body1.fontSize,
+}));
+
+const StyledHeaderDescription = styled('p')(({ theme }) => ({
+    marginTop: theme.spacing(1),
+    fontSize: theme.typography.body2.fontSize,
     color: theme.palette.text.secondary,
 }));
 
 const StyledBody = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    marginTop: theme.spacing(3),
 }));
 
 const StyledConnection = styled('div')(({ theme }) => ({
@@ -119,12 +120,10 @@ export const ReleasePlan = ({
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
 
-    const releasePlanChangeRequestsEnabled = useUiFlag(
-        'releasePlanChangeRequests',
-    );
+    const releasePlansEnabled = useUiFlag('releasePlans');
 
     const onAddRemovePlanChangesConfirm = async () => {
-        addChange(projectId, environment, {
+        await addChange(projectId, environment, {
             feature: featureName,
             action: 'deleteReleasePlan',
             payload: {
@@ -132,7 +131,7 @@ export const ReleasePlan = ({
             },
         });
 
-        refetchChangeRequests();
+        await refetchChangeRequests();
 
         setToastData({
             type: 'success',
@@ -143,7 +142,7 @@ export const ReleasePlan = ({
     };
 
     const onAddStartMilestoneChangesConfirm = async () => {
-        addChange(projectId, environment, {
+        await addChange(projectId, environment, {
             feature: featureName,
             action: 'startMilestone',
             payload: {
@@ -152,7 +151,7 @@ export const ReleasePlan = ({
             },
         });
 
-        refetchChangeRequests();
+        await refetchChangeRequests();
 
         setToastData({
             type: 'success',
@@ -163,10 +162,7 @@ export const ReleasePlan = ({
     };
 
     const confirmRemoveReleasePlan = () => {
-        if (
-            releasePlanChangeRequestsEnabled &&
-            isChangeRequestConfigured(environment)
-        ) {
+        if (releasePlansEnabled && isChangeRequestConfigured(environment)) {
             setChangeRequestDialogRemoveOpen(true);
         } else {
             setRemoveOpen(true);
@@ -201,10 +197,7 @@ export const ReleasePlan = ({
     };
 
     const onStartMilestone = async (milestone: IReleasePlanMilestone) => {
-        if (
-            releasePlanChangeRequestsEnabled &&
-            isChangeRequestConfigured(environment)
-        ) {
+        if (releasePlansEnabled && isChangeRequestConfigured(environment)) {
             setMilestoneForChangeRequestDialog(milestone);
             setChangeRequestDialogStartMilestoneOpen(true);
         } else {
@@ -240,17 +233,19 @@ export const ReleasePlan = ({
     );
 
     return (
-        <StyledContainer readonly={readonly}>
+        <StyledContainer>
             <StyledHeader>
-                <StyledHeaderTitleContainer>
+                <StyledHeaderGroup>
                     <StyledHeaderTitleLabel>
-                        Release plan
+                        Release plan:{' '}
                     </StyledHeaderTitleLabel>
-                    <span>{name}</span>
+                    <StyledHeaderTitle>{name}</StyledHeaderTitle>
                     <StyledHeaderDescription>
-                        {description}
+                        <Truncator lines={2} title={description}>
+                            {description}
+                        </Truncator>
                     </StyledHeaderDescription>
-                </StyledHeaderTitleContainer>
+                </StyledHeaderGroup>
                 {!readonly && (
                     <PermissionIconButton
                         onClick={confirmRemoveReleasePlan}

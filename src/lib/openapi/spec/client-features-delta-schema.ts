@@ -35,11 +35,12 @@ export const clientFeaturesDeltaSchema = {
                     },
                     {
                         type: 'object',
-                        required: ['eventId', 'type', 'featureName'],
+                        required: ['eventId', 'type', 'featureName', 'project'],
                         properties: {
                             eventId: { type: 'number' },
                             type: { type: 'string', enum: ['feature-removed'] },
                             featureName: { type: 'string' },
+                            project: { type: 'string' },
                         },
                     },
                     {

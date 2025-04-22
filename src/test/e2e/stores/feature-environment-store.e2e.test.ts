@@ -124,7 +124,7 @@ test('Copying features also copies variants', async () => {
         featureName: featureName,
         environment: 'clone',
     });
-    expect(cloned.variants).toMatchObject([variant]);
+    expect(cloned!.variants).toMatchObject([variant]);
 });
 
 test('Copying strategies also copies strategy variants', async () => {

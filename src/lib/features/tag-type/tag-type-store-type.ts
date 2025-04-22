@@ -4,6 +4,7 @@ export interface ITagType {
     name: string;
     description?: string;
     icon?: string | null;
+    color?: string | null;
 }
 
 export interface ITagTypeStore extends Store<ITagType, string> {

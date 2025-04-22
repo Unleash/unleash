@@ -24,6 +24,7 @@ import type { Knex } from 'knex';
 import type TestAgent from 'supertest/lib/agent';
 import type Test from 'supertest/lib/test';
 import type { Server } from 'node:http';
+import { initialServiceSetup } from '../../../lib/server-impl';
 process.env.NODE_ENV = 'test';
 
 export interface IUnleashTest extends IUnleashHttpAPI {
@@ -357,6 +358,8 @@ async function createApp(
         },
     });
     const services = createServices(stores, config, db);
+    await initialServiceSetup(config, services);
+    // @ts-expect-error We don't have a database for sessions here.
     const unleashSession = sessionDb(config, undefined);
     const app = await getApp(config, stores, services, unleashSession, db);
     const request = supertest.agent(app);
@@ -411,6 +414,8 @@ export async function setupAppWithoutSupertest(
         },
     });
     const services = createServices(stores, config, db);
+    await initialServiceSetup(config, services);
+    // @ts-expect-error we don't have a db for the session here
     const unleashSession = sessionDb(config, undefined);
     const app = await getApp(config, stores, services, unleashSession, db);
     const server = app.listen(0);
@@ -453,7 +458,7 @@ export async function setupAppWithAuth(
 
 export async function setupAppWithCustomAuth(
     stores: IUnleashStores,
-    preHook: Function,
+    preHook?: Function,
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     customOptions?: any,
     db?: Db,

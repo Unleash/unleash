@@ -4,11 +4,21 @@ import { Tab, Tabs } from '@mui/material';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { TabLink } from 'component/common/TabNav/TabLink';
 import { PageContent } from 'component/common/PageContent/PageContent';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const NetworkOverview = lazy(() => import('./NetworkOverview/NetworkOverview'));
+const NetworkConnectedEdges = lazy(
+    () => import('./NetworkConnectedEdges/NetworkConnectedEdges'),
+);
 const NetworkTraffic = lazy(() => import('./NetworkTraffic/NetworkTraffic'));
 const NetworkTrafficUsage = lazy(
     () => import('./NetworkTrafficUsage/NetworkTrafficUsage'),
+);
+const BackendConnections = lazy(
+    () => import('./NetworkTrafficUsage/BackendConnections'),
+);
+const FrontendNetworkTrafficUsage = lazy(
+    () => import('./NetworkTrafficUsage/FrontendNetworkTrafficUsage'),
 );
 
 const tabs = [
@@ -21,13 +31,40 @@ const tabs = [
         path: '/admin/network/traffic',
     },
     {
+        label: 'Connected Edges',
+        path: '/admin/network/connected-edges',
+    },
+];
+
+const seatModelTabs = [
+    {
         label: 'Data Usage',
         path: '/admin/network/data-usage',
     },
 ];
 
+const consumptionModelTabs = [
+    {
+        label: 'Backend Connections',
+        path: '/admin/network/backend-connections',
+    },
+    {
+        label: 'Frontend Traffic',
+        path: '/admin/network/frontend-data-usage',
+    },
+];
+
 export const Network = () => {
     const { pathname } = useLocation();
+    const edgeObservabilityEnabled = useUiFlag('edgeObservability');
+    const consumptionModelEnabled = useUiFlag('consumptionModel');
+    const allTabs = consumptionModelEnabled
+        ? [...tabs, ...consumptionModelTabs]
+        : [...tabs, ...seatModelTabs];
+
+    const filteredTabs = allTabs.filter(
+        ({ label }) => label !== 'Connected Edges' || edgeObservabilityEnabled,
+    );
 
     return (
         <div>
@@ -41,7 +78,7 @@ export const Network = () => {
                         variant='scrollable'
                         allowScrollButtonsMobile
                     >
-                        {tabs.map(({ label, path }) => (
+                        {filteredTabs.map(({ label, path }) => (
                             <Tab
                                 key={label}
                                 value={path}
@@ -57,11 +94,25 @@ export const Network = () => {
                 }
             >
                 <Routes>
-                    <Route path='traffic' element={<NetworkTraffic />} />
                     <Route path='*' element={<NetworkOverview />} />
+                    <Route path='traffic' element={<NetworkTraffic />} />
+                    {edgeObservabilityEnabled && (
+                        <Route
+                            path='connected-edges'
+                            element={<NetworkConnectedEdges />}
+                        />
+                    )}
                     <Route
                         path='data-usage'
                         element={<NetworkTrafficUsage />}
+                    />
+                    <Route
+                        path='backend-connections'
+                        element={<BackendConnections />}
+                    />
+                    <Route
+                        path='frontend-data-usage'
+                        element={<FrontendNetworkTrafficUsage />}
                     />
                 </Routes>
             </PageContent>

@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 import type { Variant } from 'utils/variants';
 import type { ResourceLimitsSchema } from '../openapi';
+import {} from '@unleash/proxy-client-react/dist/FlagContext';
+import type { IMutableContext } from 'unleash-proxy-client';
 
 export interface IUiConfig {
     authenticationType?: string;
@@ -24,7 +26,7 @@ export interface IUiConfig {
     links: ILinks[];
     disablePasswordAuth?: boolean;
     emailEnabled?: boolean;
-    networkViewEnabled: boolean;
+    prometheusAPIAvailable: boolean;
     maintenanceMode?: boolean;
     toast?: IProclamationToast;
     segmentValuesLimit?: number;
@@ -34,6 +36,7 @@ export interface IUiConfig {
     oidcConfiguredThroughEnv?: boolean;
     samlConfiguredThroughEnv?: boolean;
     maxSessionsCount?: number;
+    unleashContext?: IMutableContext;
 }
 
 export interface IProclamationToast {
@@ -55,13 +58,11 @@ export type UiFlags = {
     maintenanceMode?: boolean;
     messageBanner?: Variant;
     banner?: Variant;
-    caseInsensitiveInOperators?: boolean;
     notifications?: boolean;
     personalAccessTokensKillSwitch?: boolean;
     demo?: boolean;
     googleAuthEnabled?: boolean;
     disableBulkToggle?: boolean;
-    disableNotifications?: boolean;
     advancedPlayground?: boolean;
     strategyVariant?: boolean;
     doraMetrics?: boolean;
@@ -71,11 +72,9 @@ export type UiFlags = {
     automatedActions?: boolean;
     celebrateUnleash?: boolean;
     enableLicense?: boolean;
-    adminTokenKillSwitch?: boolean;
     feedbackComments?: Variant;
     showInactiveUsers?: boolean;
     feedbackPosting?: boolean;
-    userAccessUIEnabled?: boolean;
     outdatedSdksBanner?: boolean;
     estimateTrafficDataCost?: boolean;
     disableShowContextFieldSelectionValues?: boolean;
@@ -85,15 +84,19 @@ export type UiFlags = {
     enableLegacyVariants?: boolean;
     flagCreator?: boolean;
     releasePlans?: boolean;
-    releasePlanChangeRequests?: boolean;
     'enterprise-payg'?: boolean;
     productivityReportEmail?: boolean;
     showUserDeviceCount?: boolean;
     flagOverviewRedesign?: boolean;
-    granularAdminPermissions?: boolean;
-    frontendHeaderRedesign?: boolean;
-    dataUsageMultiMonthView?: boolean;
-    uiGlobalFontSize?: Variant;
+    consumptionModel?: boolean;
+    edgeObservability?: boolean;
+    adminNavUI?: boolean;
+    tagTypeColor?: boolean;
+    globalChangeRequestConfig?: boolean;
+    addEditStrategy?: boolean;
+    newStrategyDropdown?: boolean;
+    flagsReleaseManagementUI?: boolean;
+    cleanupReminder?: boolean;
 };
 
 export interface IVersionInfo {
@@ -101,6 +104,7 @@ export interface IVersionInfo {
     isLatest: boolean;
     latest: Partial<IVersion>;
     current: IVersion;
+    buildDate?: string;
 }
 
 export interface IVersion {

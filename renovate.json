@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:base"],
+  "extends": ["config:recommended"],
   "timezone": "Europe/Madrid",
   "schedule": ["after 7pm every weekday", "before 5am every weekday"],
   "packageRules": [
@@ -12,6 +12,10 @@
       "internalChecksFilter": "strict"
     }
   ],
-  "ignoreDeps": ["react-router-dom"],
+  "ignoreDeps": [
+    "react-router-dom",
+    "docusaurus-plugin-openapi-docs",
+    "docusaurus-theme-openapi-docs"
+  ],
   "labels": ["dependencies"]
 }

@@ -63,6 +63,32 @@ export const featureEnvironmentSchema = {
             },
             description: 'A list of variants for the feature environment',
         },
+        changeRequestIds: {
+            type: 'array',
+            items: {
+                type: 'number',
+            },
+            description:
+                'Experimental. A list of change request identifiers for actionable change requests that are not Cancelled, Rejected or Approved.',
+        },
+        milestoneName: {
+            type: 'string',
+            example: 'Phase One',
+            description:
+                'Experimental: The name of the currently active release plan milestone',
+        },
+        milestoneOrder: {
+            type: 'number',
+            example: 0,
+            description:
+                'Experimental: The zero-indexed order of currently active milestone in the list of all release plan milestones',
+        },
+        totalMilestones: {
+            type: 'number',
+            example: 0,
+            description:
+                'Experimental: The total number of milestones in the feature environment release plan',
+        },
         lastSeenAt: {
             type: 'string',
             format: 'date-time',

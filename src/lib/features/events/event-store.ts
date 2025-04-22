@@ -93,6 +93,7 @@ export interface IEventTable {
     project?: string;
     environment?: string;
     tags: ITag[];
+    ip?: string;
 }
 
 const TABLE = 'events';
@@ -374,15 +375,20 @@ class EventStore implements IEventStore {
     async searchEvents(
         params: IEventSearchParams,
         queryParams: IQueryParam[],
+        options?: { withIp?: boolean },
     ): Promise<IEvent[]> {
         const query = this.buildSearchQuery(params, queryParams)
-            .select(EVENT_COLUMNS)
+            .select(options?.withIp ? [...EVENT_COLUMNS, 'ip'] : EVENT_COLUMNS)
             .orderBy('created_at', 'desc')
             .limit(Number(params.limit) ?? 100)
             .offset(Number(params.offset) ?? 0);
 
         try {
-            return (await query).map(this.rowToEvent);
+            return (await query).map((row) =>
+                options?.withIp
+                    ? { ...this.rowToEvent(row), ip: row.ip }
+                    : this.rowToEvent(row),
+            );
         } catch (err) {
             return [];
         }

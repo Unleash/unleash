@@ -1,41 +1,46 @@
 import { getFeatureStrategyIcon } from 'utils/strategyNames';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { Link, styled } from '@mui/material';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { Button, styled } from '@mui/material';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
-import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
-import useToast from 'hooks/useToast';
-import { formatUnknownError } from 'utils/formatUnknownError';
-import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { useUiFlag } from 'hooks/useUiFlag';
+import { Truncator } from 'component/common/Truncator/Truncator';
 
 const StyledIcon = styled('div')(({ theme }) => ({
-    width: theme.spacing(4),
-    height: 'auto',
+    width: theme.spacing(3),
     '& > svg': {
+        width: theme.spacing(2.25),
+        height: theme.spacing(2.25),
         fill: theme.palette.primary.main,
     },
-    '& > div': {
-        height: theme.spacing(2),
-        marginLeft: '-.75rem',
-        color: theme.palette.primary.main,
-    },
-}));
-
-const StyledDescription = styled('div')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
 }));
 
 const StyledName = styled(StringTruncator)(({ theme }) => ({
-    fontWeight: theme.fontWeight.bold,
+    fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.caption.fontSize,
+    display: 'block',
+    marginBottom: theme.spacing(0.5),
 }));
 
-const StyledCard = styled(Link)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: '3rem 1fr',
-    width: '20rem',
-    padding: theme.spacing(2),
+const CardContent = styled('div')(({ theme }) => ({
+    width: '100%',
+    transition: 'opacity 0.2s ease-in-out',
+}));
+
+const HoverButtonsContainer = styled('div')(({ theme }) => ({
+    position: 'absolute',
+    right: theme.spacing(2),
+    display: 'flex',
+    gap: theme.spacing(1),
+    opacity: 0,
+    transition: 'opacity 0.1s ease-in-out',
+}));
+
+const StyledCard = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    height: '100%',
+    maxWidth: '30rem',
+    padding: theme.spacing(1.5, 2),
     color: 'inherit',
     textDecoration: 'inherit',
     lineHeight: 1.25,
@@ -43,83 +48,88 @@ const StyledCard = styled(Link)(({ theme }) => ({
     borderStyle: 'solid',
     borderColor: theme.palette.divider,
     borderRadius: theme.spacing(1),
-    '&:hover, &:focus': {
-        borderColor: theme.palette.primary.main,
+    textAlign: 'left',
+    overflow: 'hidden',
+    position: 'relative',
+    '&:hover .cardContent, &:focus-within .cardContent': {
+        opacity: 0.5,
+    },
+    '&:hover .buttonContainer, &:focus-within .buttonContainer': {
+        opacity: 1,
     },
 }));
 
+const StyledTopRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+}));
+
 interface IFeatureReleasePlanCardProps {
-    projectId: string;
-    featureId: string;
-    environmentId: string;
-    releasePlanTemplate: IReleasePlanTemplate;
-    setTemplateForChangeRequestDialog: (template: IReleasePlanTemplate) => void;
+    template: IReleasePlanTemplate;
+    onClick: () => void;
+    onPreviewClick: (e: React.MouseEvent) => void;
 }
 
 export const FeatureReleasePlanCard = ({
-    projectId,
-    featureId,
-    environmentId,
-    releasePlanTemplate,
-    setTemplateForChangeRequestDialog,
+    template: { name, description },
+    onClick,
+    onPreviewClick,
 }: IFeatureReleasePlanCardProps) => {
     const Icon = getFeatureStrategyIcon('releasePlanTemplate');
-    const { trackEvent } = usePlausibleTracker();
-    const { refetch } = useReleasePlans(projectId, featureId, environmentId);
-    const { addReleasePlanToFeature } = useReleasePlansApi();
-    const { setToastApiError, setToastData } = useToast();
-    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
-    const releasePlanChangeRequestsEnabled = useUiFlag(
-        'releasePlanChangeRequests',
-    );
 
-    const addReleasePlan = async () => {
-        try {
-            if (
-                releasePlanChangeRequestsEnabled &&
-                isChangeRequestConfigured(environmentId)
-            ) {
-                setTemplateForChangeRequestDialog(releasePlanTemplate);
-            } else {
-                await addReleasePlanToFeature(
-                    featureId,
-                    releasePlanTemplate.id,
-                    projectId,
-                    environmentId,
-                );
-                setToastData({
-                    type: 'success',
-                    text: 'Release plan added',
-                });
-                refetch();
-            }
+    const handleUseClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        onClick();
+    };
 
-            trackEvent('release-management', {
-                props: {
-                    eventType: 'add-plan',
-                    plan: releasePlanTemplate.name,
-                },
-            });
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
+    const handlePreviewClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        onPreviewClick(e);
     };
 
     return (
-        <StyledCard onClick={addReleasePlan}>
-            <StyledIcon>
-                <Icon />
-            </StyledIcon>
-            <div>
-                <StyledName
-                    text={releasePlanTemplate.name}
-                    maxWidth='200'
-                    maxLength={25}
-                />
-                <StyledDescription>
-                    {releasePlanTemplate.description}
-                </StyledDescription>
-            </div>
+        <StyledCard>
+            <CardContent className='cardContent'>
+                <StyledTopRow>
+                    <StyledIcon>
+                        <Icon />
+                    </StyledIcon>
+                    <StyledName text={name} maxWidth='200' maxLength={25} />
+                </StyledTopRow>
+                <Truncator
+                    lines={1}
+                    title={description}
+                    arrow
+                    sx={{
+                        fontSize: (theme) => theme.typography.caption.fontSize,
+                        fontWeight: (theme) =>
+                            theme.typography.fontWeightRegular,
+                        width: '100%',
+                    }}
+                >
+                    {description}
+                </Truncator>
+            </CardContent>
+
+            <HoverButtonsContainer className='buttonContainer'>
+                <Button
+                    variant='contained'
+                    size='small'
+                    onClick={handleUseClick}
+                    tabIndex={0}
+                >
+                    Use
+                </Button>
+                <Button
+                    variant='outlined'
+                    size='small'
+                    onClick={handlePreviewClick}
+                >
+                    Preview
+                </Button>
+            </HoverButtonsContainer>
         </StyledCard>
     );
 };

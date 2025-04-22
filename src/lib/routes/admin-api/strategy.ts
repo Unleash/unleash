@@ -253,7 +253,7 @@ class StrategyController extends Controller {
             res,
             strategySchema.$id,
             strategy,
-            { location: `strategies/${strategy.name}` },
+            { location: `strategies/${strategy!.name}` },
         );
     }
 

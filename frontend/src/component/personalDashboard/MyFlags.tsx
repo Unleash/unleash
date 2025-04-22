@@ -40,9 +40,10 @@ const FlagListItem: FC<{
     useEffect(() => {
         if (activeFlagRef.current) {
             activeFlagRef.current.scrollIntoView({
-                block: 'nearest',
+                block: 'start',
                 inline: 'start',
             });
+            window.scrollTo({ top: 0 });
         }
     }, []);
     const IconComponent = getFeatureTypeIcons(flag.type);

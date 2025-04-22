@@ -19,8 +19,6 @@ const getStatusCode = (errorName: string): number => {
             return 400;
         case 'PasswordUndefinedError':
             return 400;
-        case 'MinimumOneEnvironmentError':
-            return 400;
         case 'InvalidTokenError':
             return 401;
         case 'UsedTokenError':

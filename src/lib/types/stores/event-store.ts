@@ -41,6 +41,7 @@ export interface IEventStore
     searchEvents(
         params: IEventSearchParams,
         queryParams: IQueryParam[],
+        options?: { withIp?: boolean },
     ): Promise<IEvent[]>;
     getMaxRevisionId(currentMax?: number): Promise<number>;
     getRevisionRange(start: number, end: number): Promise<IEvent[]>;

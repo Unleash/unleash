@@ -1,10 +1,11 @@
-import type {
-    IEventStore,
-    IFeatureToggleDeltaQuery,
-    IFeatureToggleQuery,
-    IFlagResolver,
-    ISegmentReadModel,
-    IUnleashConfig,
+import {
+    FEATURE_PROJECT_CHANGE,
+    type IEventStore,
+    type IFeatureToggleDeltaQuery,
+    type IFeatureToggleQuery,
+    type IFlagResolver,
+    type ISegmentReadModel,
+    type IUnleashConfig,
 } from '../../../types';
 import type ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service';
 import { UPDATE_REVISION } from '../../feature-toggle/configuration-revision-service';
@@ -201,17 +202,13 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 namePrefix,
             );
 
-            const response: ClientFeaturesDeltaSchema = {
-                events: events.map((event) => {
-                    if (event.type === 'feature-removed') {
-                        const { project, ...rest } = event;
-                        return rest;
-                    }
-                    return event;
-                }),
-            };
+            if (events.length === 0) {
+                return undefined;
+            }
 
-            return Promise.resolve(response);
+            return {
+                events,
+            };
         }
     }
 
@@ -241,6 +238,16 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             this.currentRevisionId,
             latestRevision,
         );
+
+        const featuresMovedEvents = changeEvents
+            .filter((event) => event.featureName)
+            .filter((event) => event.type === FEATURE_PROJECT_CHANGE)
+            .map((event) => ({
+                eventId: latestRevision,
+                type: DELTA_EVENT_TYPES.FEATURE_REMOVED,
+                featureName: event.featureName!,
+                project: event.data.oldProject,
+            }));
 
         const featuresUpdated = [
             ...new Set(
@@ -303,6 +310,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 }),
             );
             this.delta[environment].addEvents([
+                ...featuresMovedEvents,
                 ...featuresUpdatedEvents,
                 ...featuresRemovedEvents,
                 ...segmentsUpdatedEvents,

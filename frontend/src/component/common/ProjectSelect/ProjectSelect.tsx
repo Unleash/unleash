@@ -133,6 +133,7 @@ export const ProjectSelect: VFC<IProjectSelectProps> = forwardRef(
                             {value.slice(0, limitTags).map((option, index) => (
                                 <Chip
                                     {...getTagProps({ index })}
+                                    size='small'
                                     key={index}
                                     label={option.label}
                                 />

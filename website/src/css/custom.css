@@ -322,6 +322,14 @@ main .theme-doc-breadcrumbs {
     margin-top: 0;
 }
 
+.markdown > h3 {
+    font-size: 18px;
+}
+
+.markdown > h4 {
+    font-size: 15px;
+}
+
 .markdown > p {
     font-size: 16px;
     line-height: 22px;

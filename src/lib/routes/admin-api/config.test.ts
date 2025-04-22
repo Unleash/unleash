@@ -19,11 +19,6 @@ const uiConfig = {
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const config = createTestConfig({
-        experimental: {
-            flags: {
-                granularAdminPermissions: true,
-            },
-        },
         server: { baseUriPath: base },
         ui: uiConfig,
     });

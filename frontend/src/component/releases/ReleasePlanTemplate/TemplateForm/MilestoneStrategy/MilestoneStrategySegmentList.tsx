@@ -2,7 +2,7 @@ import { Fragment, useState } from 'react';
 import type { ISegment } from 'interfaces/segment';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategySegmentChip } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentChip';
-import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
+import { SegmentItem } from 'component/common/SegmentItem/LegacySegmentItem';
 import { styled } from '@mui/material';
 
 const StyledList = styled('div')(({ theme }) => ({

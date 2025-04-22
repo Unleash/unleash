@@ -7,6 +7,7 @@ import {
     setupAppWithCustomConfig,
 } from '../../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../../test/fixtures/no-logger';
+import type { IUnleashOptions } from '../../../internals';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -14,13 +15,12 @@ let db: ITestDb;
 const setupLastSeenAtTest = async (featureName: string) => {
     await app.createFeature(featureName);
 
-    await insertLastSeenAt(featureName, db.rawDatabase, 'default');
     await insertLastSeenAt(featureName, db.rawDatabase, 'development');
     await insertLastSeenAt(featureName, db.rawDatabase, 'production');
 };
 
 beforeAll(async () => {
-    const config = {
+    const config: Partial<IUnleashOptions> = {
         experimental: {
             flags: {
                 strictSchemaValidation: true,
@@ -34,29 +34,6 @@ beforeAll(async () => {
         config,
     );
     app = await setupAppWithCustomConfig(db.stores, config, db.rawDatabase);
-
-    await db.stores.environmentStore.create({
-        name: 'development',
-        type: 'development',
-        sortOrder: 1,
-        enabled: true,
-    });
-
-    await db.stores.environmentStore.create({
-        name: 'production',
-        type: 'production',
-        sortOrder: 2,
-        enabled: true,
-    });
-
-    await app.services.projectService.addEnvironmentToProject(
-        'default',
-        'development',
-    );
-    await app.services.projectService.addEnvironmentToProject(
-        'default',
-        'production',
-    );
 });
 
 afterAll(async () => {
@@ -67,7 +44,7 @@ afterAll(async () => {
 test('should return last seen at per env for /api/admin/features', async () => {
     await app.createFeature('lastSeenAtPerEnv');
 
-    await insertLastSeenAt('lastSeenAtPerEnv', db.rawDatabase, 'default');
+    await insertLastSeenAt('lastSeenAtPerEnv', db.rawDatabase, 'development');
 
     const response = await app.request
         .get('/api/admin/projects/default/features')
@@ -94,10 +71,7 @@ test('response should include last seen at per environment for multiple environm
 
     const featureEnvironments = body.features[1].environments;
 
-    const [def, development, production] = featureEnvironments;
-
-    expect(def.name).toBe('default');
-    expect(def.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
+    const [development, production] = featureEnvironments;
 
     expect(development.name).toBe('development');
     expect(development.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
@@ -117,10 +91,7 @@ test('response should include last seen at per environment for multiple environm
     const { body } = await app.request.get(`/api/admin/archive/features`);
 
     const featureEnvironments = body.features[0].environments;
-    const [def, development, production] = featureEnvironments;
-
-    expect(def.name).toBe('default');
-    expect(def.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
+    const [development, production] = featureEnvironments;
 
     expect(development.name).toBe('development');
     expect(development.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
@@ -142,10 +113,7 @@ test('response should include last seen at per environment for multiple environm
     );
 
     const featureEnvironments = body.features[0].environments;
-    const [def, development, production] = featureEnvironments;
-
-    expect(def.name).toBe('default');
-    expect(def.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
+    const [development, production] = featureEnvironments;
 
     expect(development.name).toBe('development');
     expect(development.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
@@ -166,13 +134,6 @@ test('response should include last seen at per environment correctly for a singl
     await insertLastSeenAt(
         featureName,
         db.rawDatabase,
-        'default',
-        '2023-08-01T12:30:56.000Z',
-    );
-
-    await insertLastSeenAt(
-        featureName,
-        db.rawDatabase,
         'development',
         '2023-08-01T12:30:56.000Z',
     );
@@ -189,10 +150,6 @@ test('response should include last seen at per environment correctly for a singl
         .expect(200);
 
     const expected = [
-        {
-            name: 'default',
-            lastSeenAt: '2023-08-01T12:30:56.000Z',
-        },
         {
             name: 'development',
             lastSeenAt: '2023-08-01T12:30:56.000Z',

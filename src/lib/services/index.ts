@@ -282,7 +282,7 @@ export const createServices = (
         ? new FeatureCollaboratorsReadModel(db)
         : new FakeFeatureCollaboratorsReadModel();
 
-    const featureToggleServiceV2 = new FeatureToggleService(
+    const featureToggleService = new FeatureToggleService(
         stores,
         config,
         segmentService,
@@ -308,10 +308,12 @@ export const createServices = (
     const favoritesService = new FavoritesService(stores, config, eventService);
     const projectService = db
         ? createProjectService(db, config)
-        : createFakeProjectService(config);
+        : createFakeProjectService(config).projectService;
     const transactionalProjectService = db
         ? withTransactional((db: Db) => createProjectService(db, config), db)
-        : withFakeTransactional(createFakeProjectService(config));
+        : withFakeTransactional(
+              createFakeProjectService(config).projectService,
+          );
     const projectInsightsService = db
         ? createProjectInsightsService(db, config)
         : createFakeProjectInsightsService().projectInsightsService;
@@ -426,8 +428,7 @@ export const createServices = (
         accountService,
         addonService,
         eventAnnouncerService,
-        featureToggleService: featureToggleServiceV2,
-        featureToggleServiceV2,
+        featureToggleService,
         featureTypeService,
         healthService,
         projectService,

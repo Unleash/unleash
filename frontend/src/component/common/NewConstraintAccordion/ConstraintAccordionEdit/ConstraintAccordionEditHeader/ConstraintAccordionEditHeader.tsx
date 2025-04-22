@@ -2,21 +2,20 @@ import type { IConstraint } from 'interfaces/strategy';
 
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
+import { ConstraintIcon } from 'component/common/LegacyConstraintAccordion/ConstraintIcon';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     dateOperators,
     DATE_AFTER,
     IN,
     stringOperators,
-    inOperators,
 } from 'constants/operators';
 import { resolveText } from './helpers';
 import { oneOf } from 'utils/oneOf';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import type { Operator } from 'constants/operators';
-import { ConstraintOperatorSelect } from 'component/common/ConstraintAccordion/ConstraintOperatorSelect';
+import { ConstraintOperatorSelect } from 'component/common/LegacyConstraintAccordion/ConstraintOperatorSelect';
 import {
     operatorsForContext,
     CURRENT_TIME_CONTEXT_FIELD,
@@ -25,7 +24,6 @@ import { InvertedOperatorButton } from '../StyledToggleButton/InvertedOperatorBu
 import { CaseSensitiveButton } from '../StyledToggleButton/CaseSensitiveButton/CaseSensitiveButton';
 import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';
 import { styled } from '@mui/material';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IConstraintAccordionViewHeader {
     localConstraint: IConstraint;
@@ -107,13 +105,8 @@ export const ConstraintAccordionEditHeader = ({
     const { contextName, operator } = localConstraint;
     const [showCaseSensitiveButton, setShowCaseSensitiveButton] =
         useState(false);
-    const { uiConfig } = useUiConfig();
 
-    const caseInsensitiveInOperators = Boolean(
-        uiConfig.flags.caseInsensitiveInOperators,
-    );
-
-    /* We need a special case to handle the currenTime context field. Since
+    /* We need a special case to handle the currentTime context field. Since
     this field will be the only one to allow DATE_BEFORE and DATE_AFTER operators
     this will check if the context field is the current time context field AND check
     if it is not already using one of the date operators (to not overwrite if there is existing
@@ -135,21 +128,12 @@ export const ConstraintAccordionEditHeader = ({
             setOperator(IN);
         }
 
-        if (
-            oneOf(stringOperators, operator) ||
-            (oneOf(inOperators, operator) && caseInsensitiveInOperators)
-        ) {
+        if (oneOf(stringOperators, operator)) {
             setShowCaseSensitiveButton(true);
         } else {
             setShowCaseSensitiveButton(false);
         }
-    }, [
-        contextName,
-        setOperator,
-        operator,
-        setLocalConstraint,
-        caseInsensitiveInOperators,
-    ]);
+    }, [contextName, setOperator, operator, setLocalConstraint]);
 
     if (!context) {
         return null;
@@ -160,10 +144,7 @@ export const ConstraintAccordionEditHeader = ({
     });
 
     const onOperatorChange = (operator: Operator) => {
-        if (
-            oneOf(stringOperators, operator) ||
-            (oneOf(inOperators, operator) && caseInsensitiveInOperators)
-        ) {
+        if (oneOf(stringOperators, operator)) {
             setShowCaseSensitiveButton(true);
         } else {
             setShowCaseSensitiveButton(false);

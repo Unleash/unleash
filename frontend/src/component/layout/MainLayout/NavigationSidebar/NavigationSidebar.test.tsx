@@ -75,9 +75,9 @@ test('select active item', async () => {
         { route: '/search' },
     );
 
-    const links = screen.getAllByRole('link');
+    const searchLink = screen.getByRole('link', { name: 'Search' });
 
-    expect(links[2]).toHaveClass(classes.selected);
+    expect(searchLink).toHaveClass(classes.selected);
 });
 
 test('print recent projects and flags', async () => {

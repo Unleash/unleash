@@ -11,9 +11,7 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('metrics_serial', getLogger, {
-        experimental: {
-            flags: {},
-        },
+        dbInitMethod: 'legacy' as const,
     });
     app = await setupAppWithCustomConfig(
         db.stores,

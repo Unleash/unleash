@@ -47,7 +47,7 @@ A variant has four components that define it:
 
 A variant's weight determines how likely it is that a user will receive that variant. It is a numeric value between 0 and 100 (inclusive) with one decimal's worth of precision.
 
-When you have multiple variants, the sum of all their weights must add up to exactly 100. Depending on the [weight type](#weight-types), Unleash may automatically determine the weight of the new variant and balance it out with the other variants.
+When you have multiple variants, the sum of all their weights must add up to exactly 100. Depending on the [weight type](#weight-types-and-calculation), Unleash may automatically determine the weight of the new variant and balance it out with the other variants.
 
 #### Weight types and calculation
 

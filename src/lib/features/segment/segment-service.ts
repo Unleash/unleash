@@ -20,12 +20,12 @@ import type {
     ISegmentService,
     StrategiesUsingSegment,
 } from './segment-service-interface';
-import { PermissionError } from '../../error';
+import { NotFoundError, PermissionError } from '../../error';
 import type { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import type EventService from '../events/event-service';
 import type { IChangeRequestSegmentUsageReadModel } from '../change-request-segment-usage-service/change-request-segment-usage-read-model';
-import type { ResourceLimitsSchema } from '../../openapi';
+import type { ResourceLimitsSchema, UpsertSegmentSchema } from '../../openapi';
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
 
 export class SegmentService implements ISegmentService {
@@ -74,7 +74,11 @@ export class SegmentService implements ISegmentService {
     }
 
     async get(id: number): Promise<ISegment> {
-        return this.segmentStore.get(id);
+        const segment = await this.segmentStore.get(id);
+        if (segment === undefined) {
+            throw new NotFoundError(`Could find segment with id ${id}`);
+        }
+        return segment;
     }
 
     async getAll(): Promise<ISegment[]> {
@@ -162,7 +166,7 @@ export class SegmentService implements ISegmentService {
 
     async update(
         id: number,
-        data: unknown,
+        data: UpsertSegmentSchema,
         user: User,
         auditUser: IAuditUser,
     ): Promise<void> {
@@ -173,13 +177,17 @@ export class SegmentService implements ISegmentService {
 
     async unprotectedUpdate(
         id: number,
-        data: unknown,
+        data: UpsertSegmentSchema,
         auditUser: IAuditUser,
     ): Promise<void> {
         const input = await segmentSchema.validateAsync(data);
         this.validateSegmentValuesLimit(input);
         const preData = await this.segmentStore.get(id);
-
+        if (preData === undefined) {
+            throw new NotFoundError(
+                `Could not find segment with id ${id} to update`,
+            );
+        }
         if (preData.name !== input.name) {
             await this.validateName(input.name);
         }
@@ -200,6 +208,10 @@ export class SegmentService implements ISegmentService {
 
     async delete(id: number, user: User, auditUser: IAuditUser): Promise<void> {
         const segment = await this.segmentStore.get(id);
+        if (segment === undefined) {
+            /// Already deleted
+            return;
+        }
         await this.stopWhenChangeRequestsEnabled(segment.project, user);
         await this.segmentStore.delete(id);
         await this.eventService.storeEvent(

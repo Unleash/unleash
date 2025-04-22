@@ -3,6 +3,7 @@ import EventEmitter from 'events';
 import type { IEventStore } from './types/stores/event-store';
 import { createTestConfig } from '../test/config/test-config';
 import {
+    CLIENT_REGISTERED,
     DB_TIME,
     EXCEEDS_LIMIT,
     FUNCTION_TIME,
@@ -284,6 +285,21 @@ test('Should collect metrics for client sdk versions', async () => {
     );
     expect(newmetrics).toMatch(
         /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5"\,platform_name=\"not-set\",platform_version=\"not-set\",yggdrasil_version=\"not-set\",spec_version=\"not-set\"} 4/,
+    );
+});
+
+test('Should register intervals when client registered', async () => {
+    eventBus.emit(CLIENT_REGISTERED, {
+        appName: 'unleash-client-node',
+        environment: 'development',
+        interval: '15',
+    });
+
+    const metrics = await prometheusRegister.getSingleMetricAsString(
+        'client_registration_total',
+    );
+    expect(metrics).toMatch(
+        /client_registration_total{appName=\"unleash-client-node\",environment=\"development\",interval=\"15\"} 1/,
     );
 });
 

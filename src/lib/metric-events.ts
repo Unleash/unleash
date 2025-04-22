@@ -19,6 +19,7 @@ const CLIENT_METRICS_NAMEPREFIX = 'client-api-nameprefix';
 const CLIENT_METRICS_TAGS = 'client-api-tags';
 const CLIENT_FEATURES_MEMORY = 'client_features_memory';
 const CLIENT_DELTA_MEMORY = 'client_delta_memory';
+const CLIENT_REGISTERED = 'client_registered';
 
 type MetricEvent =
     | typeof REQUEST_TIME
@@ -91,6 +92,7 @@ export {
     CLIENT_METRICS_TAGS,
     CLIENT_FEATURES_MEMORY,
     CLIENT_DELTA_MEMORY,
+    CLIENT_REGISTERED,
     type MetricEvent,
     type MetricEventPayload,
     emitMetricEvent,

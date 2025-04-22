@@ -1,8 +1,10 @@
-import useSWR, { type SWRConfiguration } from 'swr';
+import type { SWRConfiguration } from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import type { RequestsPerSecondSchema } from 'openapi';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
+import useUiConfig from '../useUiConfig/useUiConfig';
 
 export interface IInstanceMetricsResponse {
     metrics: RequestsPerSecondSchema;
@@ -17,7 +19,13 @@ export interface IInstanceMetricsResponse {
 export const useInstanceMetrics = (
     options: SWRConfiguration = {},
 ): IInstanceMetricsResponse => {
-    const { data, error, mutate } = useSWR(
+    const {
+        uiConfig: { prometheusAPIAvailable },
+    } = useUiConfig();
+
+    const { data, error, mutate } = useConditionalSWR(
+        prometheusAPIAvailable,
+        {},
         formatApiPath(`api/admin/metrics/rps`),
         fetcher,
         options,

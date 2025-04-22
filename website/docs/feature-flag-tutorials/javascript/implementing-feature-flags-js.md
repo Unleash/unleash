@@ -6,27 +6,26 @@ slug: /feature-flag-tutorials/javascript
 
 import VideoContent from '@site/src/components/VideoContent.jsx';
 
-Hello! In this tutorial we'll show you how to add feature flags to a plain JavaScript app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Browser SDK](/reference/sdks/javascript-browser). With Unleash, an open-source feature flag service, you can add feature flags to your application and release new features faster.
+In this tutorial we'll show you how to add feature flags to a plain JavaScript app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Browser SDK](/reference/sdks/javascript-browser). With Unleash, an open-source feature flag service, you can add feature flags to your application and release new features faster.
 
-In this tutorial, we'll make a basic website all about... Corgis! We'll use the [dog.ceo API 🐶](https://dog.ceo/) with HTML, CSS, JS to retrive some images of Queen Elisabeth's favourite dogs. We'll use feature flags to decide whether to show some corgi fun facts alongside the images.
+In this tutorial, we'll make a basic website about Corgis! We'll use the [dog.ceo API 🐶](https://dog.ceo/) with HTML, CSS, JS to retrieve some images of Queen Elizabeth's favorite dogs. We'll use feature flags to decide whether to show some Corgi fun facts alongside the images.
 
 ## Prerequisites
 
 For this tutorial, you'll need the following:
-
 -   Git
 -   Docker and Docker Compose
--   A modern browser
+-   A browser or IDE; you can also use [CodeSandbox](https://codesandbox.io/docs/learn)
 
 ![architecture diagram for our implementation](./diagram.png)
 
-The Unleash Server is a **Feature Flag Control Service**, which manages your feature flags and lets you retrieve flag data. Unleash has a UI for creating and managing projects and feature flags. You can perform the same actions straight from your CLI or server-side app using the [Unleash API](/reference/api/unleash).
+The Unleash Server is a **Feature Flag Control Service**, which manages your feature flags and lets you retrieve flag data. Unleash has a UI for creating and managing projects and feature flags. In this example, we'll set up a script to make requests to Unleash using the Unleash SDK and show/hide a DOM element based on the flag data we receive. 
 
-## Install a local feature flag provider
+## Install Unleash
 
-In this section, we'll install Unleash, run the instance locally, log in, and create a feature flag. If you prefer, you can use other tools instead of Unleash, but you'll need to update the code accordingly.
+In this section, we'll install Unleash, run the instance locally, log in, and create a feature flag.
 
-Use Git to clone the Unleash repository and Docker to build and run it. Open a terminal window and run the following commands:
+First, use Git to clone the Unleash repository and Docker to build and run it. Open a terminal window and run the following commands:
 
 ```
 git clone https://github.com/unleash/unleash.git
@@ -34,9 +33,9 @@ cd unleash
 docker compose up -d
 ```
 
-You will now have Unleash installed onto your machine and running in the background. You can access this instance in your web browser at [http://localhost:4242](http://localhost:4242).
+You now have Unleash installed on your machine and running in the background. You can access this instance in your web browser at [http://localhost:4242](http://localhost:4242).
 
-Log in to the platform using these credentials:
+Log in to the Unleash Admin UI using the following credentials:
 
 ```
 Username: admin
@@ -49,11 +48,11 @@ Click **New feature flag** to create a new feature flag.
 
 Call it `show-info` and enable it in the `development` environment.
 
-Everything's now set up on the Unleash side. Let's go to the code now.
+Everything's now set up in Unleash. Let's look at the HTML and JavaScript code next.
 
 ## Make a basic HTML website
 
-Open a new tab in your terminal, and create a new folder (outside of the unleash folder).
+Open a new tab in your terminal, and create a new folder outside of the Unleash folder.
 
 ```sh
 mkdir unleash-js
@@ -61,7 +60,7 @@ cd unleash-js
 touch index.html
 ```
 
-Add our HTML:
+In the `index.html` file, add the following:
 
 ```html
 <!DOCTYPE html>
@@ -93,7 +92,7 @@ Add our HTML:
     <body>
         <main>
             <h1>🐾 Corgi Cuteness 🐾</h1>
-            <img id="corgi-img" src="" alt="Adorable Corgi" />
+            <img id="corgi-img" src="#" alt="Adorable Corgi" />
             <p id="fun-fact" class="notice"></p>
             <button id="new-corgi-btn">Show Me Another Corgi!</button>
         </main>
@@ -105,11 +104,13 @@ Add our HTML:
 
 Open the file in your browser, you'll see something like this:
 
-![A non-fonctional website with only a button and a notice box](./template.png)
+![A non-functional website with only a button and a notice box](./template.png)
 
-## Fetch from the API
+## Fetch images from the API
 
-Our website is looking a little empty and useless. Let's add a bit of JavaScript to fetch a photo of a corgi from the [dog.ceo API 🐶](https://dog.ceo/) and insert a random piece of information (or, fun fact) in the notice box. We'll add an event listener to the button so we can do the same when we click it.
+Let's add a bit of JavaScript to fetch a photo of a Corgi from the [dog.ceo API](https://dog.ceo/) and insert a random fun fact in the notice box. We'll add an event listener to the button so we can fetch a new image on click. In this file, we'll also import the Unleash client.
+
+Create a file called `index.js`:
 
 ```js
 import { UnleashClient } from "https://esm.sh/unleash-proxy-client";
@@ -151,7 +152,7 @@ newCorgiBtn.addEventListener("click", fetchCorgi);
 start();
 ```
 
-Refresh your browser again. Our mini website is now functional.
+Refresh your browser again. Our website is now functional.
 
 ![Our mini corgi website](./corgi-site.png)
 
@@ -159,12 +160,12 @@ Refresh your browser again. Our mini website is now functional.
 
 Now, let's connect our project to Unleash so that you can toggle a feature flag at runtime. If you wanted to, you could also do a [gradual rollout](/feature-flag-tutorials/use-cases/gradual-rollout) or use the flag for [A/B testing](/feature-flag-tutorials/use-cases/a-b-testing).
 
-You'll need 2 things:
+You'll need two things:
 
 -   The URL of your Unleash instance's API. It's `http://localhost:4242/api/` for your local version.
--   The API token we created on our Unleash instance, feel free to create another one if you can't find it.
+-   A [client API token](/reference/api-tokens-and-client-keys#client-tokens). You can create one inside a project in **Settings > API access**.
 
-With these 2, you can initialize your Unleash client as follows:
+You can now initialize your Unleash client as follows:
 
 ```js
 const unleash = new UnleashClient({
@@ -174,7 +175,7 @@ const unleash = new UnleashClient({
 });
 ```
 
-Now, let's add our client to the project, after the selectors. Don't forget to also update the config with your API key:
+Now, let's add our client to the project, after the selectors. Don't forget to also update the config with your API key, and start the Unleash server.
 
 ```js
 const corgiImg = document.getElementById("corgi-img");
@@ -185,9 +186,11 @@ const unleash = new UnleashClient({
     clientKey: "YOUR_API_KEY",
     appName: "corgi-site",
 });
+
+unleash.start();
 ```
 
-Then, we can decide to show the info box only if the `show-info` flag is enabled. Let's update our `fetchCorgi` function so it looks like the following:
+Then, we can decide to show the info box component only if the `show-info` flag is enabled. Let's update our `fetchCorgi` function so it looks like the following:
 
 ```diff
 async function fetchCorgi() {
@@ -207,7 +210,7 @@ async function fetchCorgi() {
 
 ## 6. Verify the toggle experience
 
-Now that we've connected our project to Unleash and grabbed our feature flag, we can verify that if you disable that flag in your development environment, you stop seeing the fun facts.
+We've now connected our project to Unleash and grabbed our feature flag using JavaScript. Let's go back to the Unleash Admin UI and turn the feature flag off. We can now verify that if we disable the flag in the development environment, we no longer see the info box component with the fun facts.
 
 > **Note:** An update to a feature flag may take 30 seconds to propagate.
 
@@ -215,8 +218,7 @@ Now that we've connected our project to Unleash and grabbed our feature flag, we
 
 All done! Now you know how to add feature flags with Unleash in plain JavaScript, without any frameworks or libraries. You've learned how to:
 
+-   Set up Unleash
+-   Create and enable a feature flag
+-   Grab the value of a feature flag with just JavaScript
 -   Toggle between a DOM element based on a feature flag
--   Install Unleash and create/enable a feature flag
--   Grab the value of a feature flag with just JavaScript.
-
-Thank you

@@ -15,6 +15,12 @@ export const updateTagTypeSchema = {
             description: 'The icon of the tag type.',
             example: 'not-really-used',
         },
+        color: {
+            type: 'string',
+            description: 'The hexadecimal color code for the tag type.',
+            example: '#FFFFFF',
+            pattern: '^#[0-9A-Fa-f]{6}$',
+        },
     },
     components: {},
 } as const;

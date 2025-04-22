@@ -294,7 +294,9 @@ class FeatureToggleService {
         project: string,
     ): Promise<void> {
         const toggle = await this.featureToggleStore.get(featureName);
-
+        if (toggle === undefined) {
+            throw new NotFoundError(`Could not find feature ${featureName}`);
+        }
         if (toggle.archived || Boolean(toggle.archivedAt)) {
             throw new ArchivedFeatureError();
         }
@@ -603,12 +605,9 @@ class FeatureToggleService {
         const eventPreData: StrategyIds = { strategyIds: existingOrder };
 
         await Promise.all(
-            sortOrders.map(async ({ id, sortOrder }) => {
-                await this.featureStrategiesStore.updateSortOrder(
-                    id,
-                    sortOrder,
-                );
-            }),
+            sortOrders.map(({ id, sortOrder }) =>
+                this.featureStrategiesStore.updateSortOrder(id, sortOrder),
+            ),
         );
         const newOrder = (
             await this.getStrategiesForEnvironment(
@@ -793,12 +792,35 @@ class FeatureToggleService {
         auditUser: IAuditUser,
         user?: IUser,
     ): Promise<void> {
+        if (this.flagResolver.isEnabled('simplifyDisableFeature')) {
+            const strategies =
+                await this.featureStrategiesStore.getStrategiesForFeatureEnv(
+                    projectId,
+                    featureName,
+                    environment,
+                );
+            const hasOnlyDisabledStrategies = strategies.every(
+                (strategy) => strategy.disabled,
+            );
+            if (hasOnlyDisabledStrategies) {
+                await this.unprotectedUpdateEnabled(
+                    projectId,
+                    featureName,
+                    environment,
+                    false,
+                    auditUser,
+                    user,
+                );
+            }
+            return;
+        }
         const feature = await this.getFeature({ featureName });
 
         const env = feature.environments.find((e) => e.name === environment);
         const hasOnlyDisabledStrategies = env?.strategies.every(
             (strategy) => strategy.disabled,
         );
+
         if (hasOnlyDisabledStrategies) {
             await this.unprotectedUpdateEnabled(
                 projectId,
@@ -820,7 +842,9 @@ class FeatureToggleService {
     ): Promise<Saved<IStrategyConfig>> {
         const { projectId, environment, featureName } = context;
         const existingStrategy = await this.featureStrategiesStore.get(id);
-
+        if (existingStrategy === undefined) {
+            throw new NotFoundError(`Could not find strategy with id ${id}`);
+        }
         this.validateUpdatedProperties(context, existingStrategy);
         await this.validateStrategyType(updates.name);
         await this.validateProjectCanAccessSegments(
@@ -900,6 +924,9 @@ class FeatureToggleService {
         const { projectId, environment, featureName } = context;
 
         const existingStrategy = await this.featureStrategiesStore.get(id);
+        if (existingStrategy === undefined) {
+            throw new NotFoundError(`Could not find strategy with id ${id}`);
+        }
         this.validateUpdatedProperties(context, existingStrategy);
 
         if (existingStrategy.id === id) {
@@ -963,6 +990,10 @@ class FeatureToggleService {
         auditUser: IAuditUser,
     ): Promise<void> {
         const existingStrategy = await this.featureStrategiesStore.get(id);
+        if (!existingStrategy) {
+            // If the strategy doesn't exist, do nothing.
+            return;
+        }
         const { featureName, projectId, environment } = context;
         this.validateUpdatedProperties(context, existingStrategy);
 
@@ -1093,6 +1124,7 @@ class FeatureToggleService {
                     userId,
                     archived,
                 );
+
             return {
                 ...result,
                 dependencies,
@@ -1121,11 +1153,17 @@ class FeatureToggleService {
             featureName,
             environment,
         });
-        return featureEnvironment.variants || [];
+        return featureEnvironment?.variants || [];
     }
 
     async getFeatureMetadata(featureName: string): Promise<FeatureToggle> {
-        return this.featureToggleStore.get(featureName);
+        const metaData = await this.featureToggleStore.get(featureName);
+        if (metaData === undefined) {
+            throw new NotFoundError(
+                `Could find metadata for feature with name ${featureName}`,
+            );
+        }
+        return metaData;
     }
 
     async getClientFeatures(
@@ -1151,7 +1189,7 @@ class FeatureToggleService {
                 type,
                 enabled,
                 project,
-                stale,
+                stale: stale || false,
                 strategies,
                 variants,
                 description,
@@ -1301,7 +1339,11 @@ class FeatureToggleService {
     ): Promise<FeatureNameCheckResultWithFeaturePattern> {
         try {
             const project = await this.projectStore.get(projectId);
-
+            if (project === undefined) {
+                throw new NotFoundError(
+                    `Could not find project with id: ${projectId}`,
+                );
+            }
             const patternData = project.featureNaming;
             const namingPattern = patternData?.pattern;
 
@@ -1469,7 +1511,11 @@ class FeatureToggleService {
             ...featureData,
             name: featureName,
         });
-
+        if (preData === undefined) {
+            throw new NotFoundError(
+                `Could find feature toggle with name ${featureName}`,
+            );
+        }
         await this.eventService.storeEvent(
             new FeatureMetadataUpdateEvent({
                 auditUser,
@@ -1580,6 +1626,9 @@ class FeatureToggleService {
         let msg: string;
         try {
             const feature = await this.featureToggleStore.get(name);
+            if (feature === undefined) {
+                return;
+            }
             msg = feature.archived
                 ? 'An archived flag with that name already exists'
                 : 'A flag with that name already exists';
@@ -1599,6 +1648,11 @@ class FeatureToggleService {
         auditUser: IAuditUser,
     ): Promise<any> {
         const feature = await this.featureToggleStore.get(featureName);
+        if (feature === undefined) {
+            throw new NotFoundError(
+                `Could not find feature with name: ${featureName}`,
+            );
+        }
         const { project } = feature;
         feature.stale = isStale;
         await this.featureToggleStore.update(project, feature);
@@ -1637,7 +1691,11 @@ class FeatureToggleService {
         projectId?: string,
     ): Promise<void> {
         const feature = await this.featureToggleStore.get(featureName);
-
+        if (feature === undefined) {
+            throw new NotFoundError(
+                `Could not find feature with name ${featureName}`,
+            );
+        }
         if (projectId) {
             await this.validateFeatureBelongsToProject({
                 featureName,
@@ -1920,7 +1978,7 @@ class FeatureToggleService {
                 }),
             );
         }
-        return feature;
+        return feature!; // If we get here we know the toggle exists
     }
 
     async changeProject(
@@ -1947,6 +2005,11 @@ class FeatureToggleService {
             );
         }
         const feature = await this.featureToggleStore.get(featureName);
+        if (feature === undefined) {
+            throw new NotFoundError(
+                `Could not find feature with name ${featureName}`,
+            );
+        }
         const oldProject = feature.project;
         feature.project = newProject;
         await this.featureToggleStore.update(newProject, feature);
@@ -1968,6 +2031,9 @@ class FeatureToggleService {
     ): Promise<void> {
         await this.validateNoChildren(featureName);
         const toggle = await this.featureToggleStore.get(featureName);
+        if (toggle === undefined) {
+            return; /// Do nothing, toggle is already deleted
+        }
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
         await this.featureToggleStore.delete(featureName);
 
@@ -2160,19 +2226,27 @@ class FeatureToggleService {
             featureName,
             environment,
         );
-        const { newDocument } = await applyPatch(
-            deepClone(oldVariants),
-            newVariants,
-        );
-        return this.crProtectedSaveVariantsOnEnv(
-            project,
-            featureName,
-            environment,
-            newDocument,
-            user,
-            auditUser,
-            oldVariants,
-        );
+
+        try {
+            const { newDocument } = await applyPatch(
+                deepClone(oldVariants),
+                newVariants,
+            );
+
+            return this.crProtectedSaveVariantsOnEnv(
+                project,
+                featureName,
+                environment,
+                newDocument,
+                user,
+                auditUser,
+                oldVariants,
+            );
+        } catch (e) {
+            throw new BadDataError(
+                `Could not apply provided patch: ${e.message}`,
+            );
+        }
     }
 
     async saveVariants(
@@ -2254,7 +2328,7 @@ class FeatureToggleService {
                     featureName,
                     environment,
                 })
-            ).variants ||
+            )?.variants ||
             [];
 
         await this.eventService.storeEvent(
@@ -2332,7 +2406,7 @@ class FeatureToggleService {
                 featureName,
                 environment: env,
             });
-            oldVariants[env] = featureEnv.variants || [];
+            oldVariants[env] = featureEnv?.variants || [];
         }
 
         await this.eventService.storeEvents(

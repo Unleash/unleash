@@ -168,7 +168,7 @@ test('should always lowercase emails on updates', async () => {
 
     await store.upsert(user);
 
-    let storedUser = await store.getByQuery({ email });
+    const storedUser = await store.getByQuery({ email });
 
     expect(storedUser.email).toEqual(user.email.toLowerCase());
 
@@ -178,8 +178,9 @@ test('should always lowercase emails on updates', async () => {
     };
     await store.upsert(updatedUser);
 
-    storedUser = await store.get(storedUser.id);
-    expect(storedUser.email).toBe(updatedUser.email.toLowerCase());
+    const newFromStore = await store.get(storedUser.id);
+    expect(newFromStore).toBeDefined();
+    expect(newFromStore!.email).toBe(updatedUser.email.toLowerCase());
 });
 
 test('should delete user', async () => {

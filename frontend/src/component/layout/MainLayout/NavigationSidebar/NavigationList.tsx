@@ -1,58 +1,29 @@
 import type React from 'react';
-import { type FC, useCallback } from 'react';
+import type { FC } from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
 import type { NavigationMode } from './NavigationMode';
+import { ShowAdmin } from './ShowHide';
 import {
     ExternalFullListItem,
     FullListItem,
     MiniListItem,
     SignOutItem,
 } from './ListItems';
-import { Box, List, styled, Tooltip, Typography } from '@mui/material';
+import { Box, List, Typography } from '@mui/material';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { IconRenderer } from './IconRenderer';
-import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import SearchIcon from '@mui/icons-material/Search';
-import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
-import InsightsIcon from '@mui/icons-material/Insights';
-import PersonalDashboardIcon from '@mui/icons-material/DashboardOutlined';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FlagIcon from '@mui/icons-material/OutlinedFlag';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
-
-const StyledBadgeContainer = styled('div')(({ theme }) => ({
-    paddingLeft: theme.spacing(2),
-    display: 'flex',
-}));
-
-const EnterprisePlanBadge = () => (
-    <Tooltip title='This is an Enterprise feature'>
-        <StyledBadgeContainer>
-            <EnterpriseBadge />
-        </StyledBadgeContainer>
-    </Tooltip>
-);
-
-const useShowBadge = () => {
-    const { isPro } = useUiConfig();
-
-    const showBadge = useCallback(
-        (mode?: INavigationMenuItem['menu']['mode']) => {
-            return !!(
-                isPro() &&
-                !mode?.includes('pro') &&
-                mode?.includes('enterprise')
-            );
-        },
-        [isPro],
-    );
-    return showBadge;
-};
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { useShowBadge } from 'component/layout/components/EnterprisePlanBadge/useShowBadge';
+import { EnterprisePlanBadge } from 'component/layout/components/EnterprisePlanBadge/EnterprisePlanBadge';
+import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
+import { AdminMenuNavigation } from '../AdminMenu/AdminNavigationItems';
 
 export const SecondaryNavigationList: FC<{
     routes: INavigationMenuItem[];
@@ -157,6 +128,7 @@ export const PrimaryNavigationList: FC<{
 }> = ({ mode, onClick, activeItem }) => {
     const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
     const { isOss } = useUiConfig();
+    const flagsReleaseManagementUI = useUiFlag('flagsReleaseManagementUI');
 
     return (
         <List>
@@ -166,7 +138,7 @@ export const PrimaryNavigationList: FC<{
                 onClick={() => onClick('/personal')}
                 selected={activeItem === '/personal'}
             >
-                <PersonalDashboardIcon />
+                <IconRenderer path='/personal' />
             </DynamicListItem>
 
             <DynamicListItem
@@ -175,15 +147,15 @@ export const PrimaryNavigationList: FC<{
                 onClick={() => onClick('/projects')}
                 selected={activeItem === '/projects'}
             >
-                <ProjectIcon />
+                <IconRenderer path='/projects' />
             </DynamicListItem>
             <DynamicListItem
                 href='/search'
-                text='Search'
+                text={flagsReleaseManagementUI ? 'Flags overview' : 'Search'}
                 onClick={() => onClick('/search')}
                 selected={activeItem === '/search'}
             >
-                <SearchIcon />
+                <IconRenderer path='/search' />
             </DynamicListItem>
             <DynamicListItem
                 href='/playground'
@@ -191,21 +163,18 @@ export const PrimaryNavigationList: FC<{
                 onClick={() => onClick('/playground')}
                 selected={activeItem === '/playground'}
             >
-                <PlaygroundIcon />
+                <IconRenderer path='/playground' />
             </DynamicListItem>
-            <ConditionallyRender
-                condition={!isOss()}
-                show={
-                    <DynamicListItem
-                        href='/insights'
-                        text='Insights'
-                        onClick={() => onClick('/insights')}
-                        selected={activeItem === '/insights'}
-                    >
-                        <InsightsIcon />
-                    </DynamicListItem>
-                }
-            />
+            {!isOss() ? (
+                <DynamicListItem
+                    href='/insights'
+                    text='Insights'
+                    onClick={() => onClick('/insights')}
+                    selected={activeItem === '/insights'}
+                >
+                    <IconRenderer path='/insights' />
+                </DynamicListItem>
+            ) : null}
         </List>
     );
 };
@@ -248,6 +217,89 @@ export const SecondaryNavigation: FC<{
             {mode === 'full' && <AccordionHeader>{title}</AccordionHeader>}
             <AccordionDetails sx={{ p: 0 }}>{children}</AccordionDetails>
         </Accordion>
+    );
+};
+
+export const AdminSettingsNavigation: FC<{
+    onClick: (activeItem: string) => void;
+    onSetFullMode: () => void;
+    expanded: boolean;
+    routes: INavigationMenuItem[];
+    onExpandChange: (expanded: boolean) => void;
+    activeItem: string;
+    mode: NavigationMode;
+}> = ({
+    onClick,
+    onSetFullMode,
+    expanded,
+    routes,
+    onExpandChange,
+    activeItem,
+    mode,
+}) => {
+    const { showOnlyAdminMenu, newAdminUIEnabled } = useNewAdminMenu();
+    if (showOnlyAdminMenu) {
+        return <AdminMenuNavigation onClick={() => onClick('/admin')} />;
+    }
+
+    const setFullModeOnClick = (activeItem: string) => {
+        onSetFullMode();
+        onClick(activeItem);
+    };
+
+    if (newAdminUIEnabled) {
+        return <AdminSettingsLink mode={mode} onClick={setFullModeOnClick} />;
+    }
+
+    return (
+        <>
+            {mode === 'full' && (
+                <SecondaryNavigation
+                    expanded={expanded}
+                    onExpandChange={(expand) => {
+                        onExpandChange(expand);
+                    }}
+                    mode={mode}
+                    title='Admin'
+                >
+                    <SecondaryNavigationList
+                        routes={routes}
+                        mode={mode}
+                        onClick={onClick}
+                        activeItem={activeItem}
+                    />
+                </SecondaryNavigation>
+            )}
+
+            {mode === 'mini' && (
+                <ShowAdmin
+                    onChange={() => {
+                        onExpandChange(true);
+                        onSetFullMode();
+                    }}
+                />
+            )}
+        </>
+    );
+};
+
+export const AdminSettingsLink: FC<{
+    mode: NavigationMode;
+    onClick: (activeItem: string) => void;
+}> = ({ mode, onClick }) => {
+    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
+    return (
+        <Box>
+            <List>
+                <DynamicListItem
+                    href='/admin'
+                    text='Admin settings'
+                    onClick={() => onClick('/admin')}
+                >
+                    <IconRenderer path='/admin' />
+                </DynamicListItem>
+            </List>
+        </Box>
     );
 };
 

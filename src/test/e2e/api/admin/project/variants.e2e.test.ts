@@ -20,14 +20,6 @@ beforeAll(async () => {
             },
         },
     });
-    await db.stores.environmentStore.create({
-        name: 'development',
-        type: 'development',
-    });
-    await db.stores.environmentStore.create({
-        name: 'production',
-        type: 'production',
-    });
 });
 
 afterAll(async () => {

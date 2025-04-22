@@ -5,6 +5,7 @@ import {
     ProjectOwners,
     type IProjectOwnersProps,
 } from './ProjectOwners/ProjectOwners';
+import type { ProjectSchemaOwners } from 'openapi';
 
 interface IProjectCardFooterProps {
     id?: string;
@@ -19,11 +20,13 @@ const StyledFooter = styled(Box)<{ disabled: boolean }>(
         display: 'flex',
         background: disabled
             ? theme.palette.background.paper
-            : theme.palette.envAccordion.expanded,
+            : theme.palette.background.elevation1,
         boxShadow: theme.boxShadows.accordionFooter,
         alignItems: 'center',
         justifyContent: 'space-between',
         borderTop: `1px solid ${theme.palette.divider}`,
+        paddingInline: theme.spacing(2),
+        paddingBlock: theme.spacing(1.5),
     }),
 );
 
@@ -32,9 +35,16 @@ export const ProjectCardFooter: FC<IProjectCardFooterProps> = ({
     owners,
     disabled = false,
 }) => {
+    const ownersWithoutSystem = owners?.filter(
+        (owner) => owner.ownerType !== 'system',
+    );
     return (
         <StyledFooter disabled={disabled}>
-            {owners ? <ProjectOwners owners={owners} /> : null}
+            {ownersWithoutSystem ? (
+                <ProjectOwners
+                    owners={ownersWithoutSystem as ProjectSchemaOwners}
+                />
+            ) : null}
             {children}
         </StyledFooter>
     );

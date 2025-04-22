@@ -1,4 +1,7 @@
-import type { IEnvironment, IProjectEnvironment } from '../../types/model';
+import type {
+    IEnvironment,
+    IProjectsAvailableOnEnvironment,
+} from '../../types/model';
 import NotFoundError from '../../error/notfound-error';
 import type { IEnvironmentStore } from './environment-store-type';
 
@@ -57,12 +60,12 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
     }
 
     async update(
-        env: Pick<IEnvironment, 'type' | 'protected'>,
+        env: Pick<IEnvironment, 'type' | 'protected' | 'requiredApprovals'>,
         name: string,
     ): Promise<IEnvironment> {
         const found = this.environments.find(
             (en: IEnvironment) => en.name === name,
-        );
+        )!;
         const idx = this.environments.findIndex(
             (en: IEnvironment) => en.name === name,
         );
@@ -75,7 +78,7 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
     async updateSortOrder(id: string, value: number): Promise<void> {
         const environment = this.environments.find(
             (env: IEnvironment) => env.name === id,
-        );
+        )!;
         environment.sortOrder = value;
         return Promise.resolve();
     }
@@ -87,8 +90,16 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
     ): Promise<void> {
         const environment = this.environments.find(
             (env: IEnvironment) => env.name === id,
-        );
+        )!;
         environment[field] = value;
+        return Promise.resolve();
+    }
+
+    async toggle(name: string, enabled: boolean): Promise<void> {
+        const environment = this.environments.find(
+            (env: IEnvironment) => env.name === name,
+        );
+        if (environment) environment.enabled = enabled;
         return Promise.resolve();
     }
 
@@ -121,18 +132,35 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
 
     destroy(): void {}
 
-    async get(key: string): Promise<IEnvironment> {
-        return this.environments.find((e) => e.name === key);
+    async get(key: string): Promise<IEnvironment | undefined> {
+        return Promise.resolve(this.environments.find((e) => e.name === key));
     }
 
     async getAllWithCounts(): Promise<IEnvironment[]> {
         return Promise.resolve(this.environments);
     }
 
+    async getChangeRequestEnvironments(
+        environments: string[],
+    ): Promise<{ name: string; requiredApprovals: number }[]> {
+        const filteredEnvironments = this.environments
+            .filter(
+                (env) =>
+                    environments.includes(env.name) &&
+                    env.requiredApprovals &&
+                    env.requiredApprovals > 0,
+            )
+            .map((env) => ({
+                name: env.name,
+                requiredApprovals: env.requiredApprovals || 1,
+            }));
+        return Promise.resolve(filteredEnvironments);
+    }
+
     async getProjectEnvironments(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         projectId: string,
-    ): Promise<IProjectEnvironment[]> {
+    ): Promise<IProjectsAvailableOnEnvironment[]> {
         return Promise.reject(new Error('Not implemented'));
     }
 

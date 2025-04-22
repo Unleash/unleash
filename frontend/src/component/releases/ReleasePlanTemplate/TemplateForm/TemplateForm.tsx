@@ -1,12 +1,12 @@
 import Input from 'component/common/Input/Input';
-import { styled, useTheme } from '@mui/material';
+import { Alert, styled, useTheme } from '@mui/material';
 import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { TemplateFormDescription } from './TemplateFormDescription';
 import { MilestoneList } from './MilestoneList/MilestoneList';
+import type { IExtendedMilestonePayload } from 'component/releases/hooks/useTemplateForm';
 
 const StyledInput = styled(Input)(({ theme }) => ({
-    width: '100%',
     maxWidth: theme.spacing(50),
     fieldset: { border: 'none' },
     'label::first-letter': {
@@ -14,6 +14,16 @@ const StyledInput = styled(Input)(({ theme }) => ({
     },
     marginBottom: theme.spacing(2),
     padding: theme.spacing(0),
+}));
+
+const StyledDescriptionInput = styled(Input)(({ theme }) => ({
+    width: '100%',
+    fieldset: { border: 'none' },
+    'label::first-letter': {
+        textTransform: 'uppercase',
+    },
+    marginBottom: theme.spacing(2),
+    padding: theme.spacing(2, 5, 1, 1.75),
 }));
 
 const StyledForm = styled('form')(({ theme }) => ({
@@ -28,13 +38,14 @@ interface ITemplateFormProps {
     setName: React.Dispatch<React.SetStateAction<string>>;
     description: string;
     setDescription: React.Dispatch<React.SetStateAction<string>>;
-    milestones: IReleasePlanMilestonePayload[];
+    milestones: IExtendedMilestonePayload[];
     setMilestones: React.Dispatch<
-        React.SetStateAction<IReleasePlanMilestonePayload[]>
+        React.SetStateAction<IExtendedMilestonePayload[]>
     >;
     errors: { [key: string]: string };
     clearErrors: () => void;
     formTitle: string;
+    archived?: boolean;
     formatApiCode: () => string;
     handleSubmit: (e: React.FormEvent) => void;
     loading?: boolean;
@@ -51,6 +62,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
     errors,
     clearErrors,
     formTitle,
+    archived,
     formatApiCode,
     handleSubmit,
     children,
@@ -71,6 +83,11 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
             description={<TemplateFormDescription />}
             formatApiCode={formatApiCode}
         >
+            {archived && (
+                <Alert severity='warning'>
+                    This template has been archived and can no longer be edited.
+                </Alert>
+            )}
             <StyledForm onSubmit={handleSubmit}>
                 <StyledInput
                     label='Template name'
@@ -91,8 +108,9 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                     }}
                     size='medium'
                 />
-                <StyledInput
+                <StyledDescriptionInput
                     label='Template description (optional)'
+                    multiline
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     InputProps={{
@@ -107,7 +125,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                             padding: 0,
                         },
                     }}
-                    size='medium'
+                    size='small'
                 />
                 <MilestoneList
                     milestones={milestones}

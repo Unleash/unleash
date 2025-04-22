@@ -1,6 +1,6 @@
 import type { Operator } from 'constants/operators';
 import type { IFeatureVariant } from './featureToggle';
-import { constraintId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
+import { constraintId } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 
 export interface IFeatureStrategy {
     id: string;
@@ -22,6 +22,9 @@ export interface IFeatureStrategyParameters {
     [key: string]: string | number | undefined;
 }
 
+/**
+ * @deprecated use `FeatureStrategySchema` from openapi
+ */
 export interface IFeatureStrategyPayload {
     id?: string;
     name?: string;

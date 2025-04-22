@@ -1,17 +1,17 @@
 import { useTheme } from '@mui/material';
 import type { CSSProperties } from 'react';
 
-interface IPercentageCircleProps {
+type PercentageCircleProps = {
     percentage: number;
     size?: `${number}rem`;
     disabled?: boolean | null;
-}
+};
 
 const PercentageCircle = ({
     percentage,
     size = '4rem',
     disabled = false,
-}: IPercentageCircleProps) => {
+}: PercentageCircleProps) => {
     const theme = useTheme();
 
     const style: CSSProperties = {

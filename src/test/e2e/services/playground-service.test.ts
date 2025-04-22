@@ -47,7 +47,7 @@ beforeAll(async () => {
     service = new PlaygroundService(
         config,
         {
-            featureToggleServiceV2: featureToggleService,
+            featureToggleService: featureToggleService,
             privateProjectChecker,
         },
         segmentReadModel,
@@ -80,6 +80,8 @@ const mapSegmentSchemaToISegment = (
     ...segment,
     name: segment.name || `test-segment ${index ?? 'unnumbered'}`,
     createdAt: new Date(),
+    description: '',
+    project: undefined,
 });
 
 export const seedDatabaseForPlaygroundTest = async (
@@ -116,11 +118,13 @@ export const seedDatabaseForPlaygroundTest = async (
 
             // create feature
             const toggle = await database.stores.featureToggleStore.create(
-                feature.project,
+                feature.project!,
                 {
                     ...feature,
                     createdAt: undefined,
-                    variants: null,
+                    variants: [],
+                    description: undefined,
+                    impressionData: false,
                     createdByUserId: 9999,
                 },
             );
@@ -133,7 +137,7 @@ export const seedDatabaseForPlaygroundTest = async (
             );
 
             await database.stores.featureToggleStore.saveVariants(
-                feature.project,
+                feature.project!,
                 feature.name,
                 [
                     ...(feature.variants ?? []).map((variant) => ({
@@ -791,7 +795,7 @@ describe('the playground service (e2e)', () => {
                             unmappedFeature.strategies?.forEach(
                                 (unmappedStrategy) => {
                                     const mappedStrategySegments: PlaygroundSegmentSchema[] =
-                                        strategies[unmappedStrategy.id]
+                                        strategies[unmappedStrategy.id!]
                                             .segments;
 
                                     const unmappedSegments =
@@ -808,7 +812,7 @@ describe('the playground service (e2e)', () => {
                                     ).toEqual([...unmappedSegments].sort());
 
                                     switch (
-                                        strategies[unmappedStrategy.id].result
+                                        strategies[unmappedStrategy.id!].result
                                     ) {
                                         case true:
                                             // If a strategy is considered true, _all_ segments
@@ -975,7 +979,7 @@ describe('the playground service (e2e)', () => {
                                 ...feature,
                                 // use a constraint that will never be true
                                 strategies: [
-                                    ...feature.strategies.map((strategy) => ({
+                                    ...feature.strategies!.map((strategy) => ({
                                         ...strategy,
                                         constraints: [
                                             {

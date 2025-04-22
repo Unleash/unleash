@@ -17,7 +17,9 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('feature_strategy_auth_api_serial', getLogger);
+    db = await dbInit('feature_strategy_auth_api_serial', getLogger, {
+        dbInitMethod: 'legacy' as const,
+    });
     app = await setupAppWithAuth(
         db.stores,
         {
@@ -113,7 +115,7 @@ test('Should not be possible auto-enable feature flag without CREATE_FEATURE_STR
     const url = '/api/admin/projects/default/features';
     const name = 'auth.flag.enable';
 
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         { name },
         TEST_AUDIT_USER,

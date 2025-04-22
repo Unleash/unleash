@@ -8,7 +8,7 @@ import type {
 } from 'component/changeRequest/changeRequest.types';
 import { useSegment } from 'hooks/api/getters/useSegment/useSegment';
 import { SegmentDiff, SegmentTooltipLink } from '../../SegmentTooltipLink';
-import { ConstraintAccordionList } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
+import { ConstraintAccordionList } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
 import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning';
 
 const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
@@ -59,6 +59,10 @@ export const SegmentChangeDetails: FC<{
 }> = ({ actions, change, changeRequestState }) => {
     const { segment: currentSegment } = useSegment(change.payload.id);
     const snapshotSegment = change.payload.snapshot;
+    const previousName =
+        changeRequestState === 'Applied'
+            ? change.payload?.snapshot?.name
+            : currentSegment?.name;
     const referenceSegment =
         changeRequestState === 'Applied' ? snapshotSegment : currentSegment;
 
@@ -74,10 +78,13 @@ export const SegmentChangeDetails: FC<{
                         >
                             - Deleting segment:
                         </Typography>
-                        <SegmentTooltipLink change={change}>
+                        <SegmentTooltipLink
+                            name={change.payload.name}
+                            previousName={previousName}
+                        >
                             <SegmentDiff
                                 change={change}
-                                currentSegment={currentSegment}
+                                currentSegment={referenceSegment}
                             />
                         </SegmentTooltipLink>
                     </ChangeItemInfo>
@@ -97,7 +104,7 @@ export const SegmentChangeDetails: FC<{
                     <ChangeItemCreateEditWrapper>
                         <ChangeItemInfo>
                             <Typography>Editing segment:</Typography>
-                            <SegmentTooltipLink change={change}>
+                            <SegmentTooltipLink name={change.payload.name}>
                                 <SegmentDiff
                                     change={change}
                                     currentSegment={referenceSegment}

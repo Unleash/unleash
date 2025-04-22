@@ -5,6 +5,9 @@ interface IGlobalStore {
     hiddenEnvironments?: Array<string>;
 }
 
+/**
+ * @deprecated use tested `useLocalStorageState` hook instead
+ */
 export const useGlobalLocalStorage = () => {
     const { value, setValue } = createLocalStorage<IGlobalStore>(
         'global:v1',

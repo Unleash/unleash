@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState, type VFC } from 'react';
+import { useContext, useMemo, useState, type VFC as FC } from 'react';
 import { type HeaderGroup, useGlobalFilter, useTable } from 'react-table';
 import { Alert, Box, styled, Typography } from '@mui/material';
 import {
@@ -41,8 +41,9 @@ const StyledBox = styled(Box)(({ theme }) => ({
     },
 }));
 
-export const ChangeRequestTable: VFC = () => {
+export const ChangeRequestTable: FC = () => {
     const { trackEvent } = usePlausibleTracker();
+    const { hasAccess } = useContext(AccessContext);
     const [dialogState, setDialogState] = useState<{
         isOpen: boolean;
         enableEnvironment: string;
@@ -139,43 +140,33 @@ export const ChangeRequestTable: VFC = () => {
             },
             {
                 Header: 'Required approvals',
-                Cell: ({ row: { original } }: any) => {
-                    const { hasAccess } = useContext(AccessContext);
-
-                    return (
-                        <ConditionallyRender
-                            condition={original.changeRequestEnabled}
-                            show={
-                                <StyledBox data-loading>
-                                    <GeneralSelect
-                                        sx={{ width: '140px', marginLeft: 1 }}
-                                        options={approvalOptions}
-                                        value={original.requiredApprovals || 1}
-                                        onChange={(approvals) => {
-                                            onRequiredApprovalsChange(
-                                                original,
-                                                approvals,
-                                            );
-                                        }}
-                                        disabled={
-                                            !hasAccess(
-                                                [
-                                                    UPDATE_PROJECT,
-                                                    PROJECT_CHANGE_REQUEST_WRITE,
-                                                ],
-                                                projectId,
-                                            )
-                                        }
-                                        IconComponent={
-                                            KeyboardArrowDownOutlined
-                                        }
-                                        fullWidth
-                                    />
-                                </StyledBox>
-                            }
-                        />
-                    );
-                },
+                Cell: ({ row: { original } }: any) =>
+                    original.changeRequestEnabled ? (
+                        <StyledBox data-loading>
+                            <GeneralSelect
+                                sx={{ width: '140px', marginLeft: 1 }}
+                                options={approvalOptions}
+                                value={original.requiredApprovals || 1}
+                                onChange={(approvals) => {
+                                    onRequiredApprovalsChange(
+                                        original,
+                                        approvals,
+                                    );
+                                }}
+                                disabled={
+                                    !hasAccess(
+                                        [
+                                            UPDATE_PROJECT,
+                                            PROJECT_CHANGE_REQUEST_WRITE,
+                                        ],
+                                        projectId,
+                                    )
+                                }
+                                IconComponent={KeyboardArrowDownOutlined}
+                                fullWidth
+                            />
+                        </StyledBox>
+                    ) : null,
                 width: 100,
                 disableGlobalFilter: true,
                 disableSortBy: true,

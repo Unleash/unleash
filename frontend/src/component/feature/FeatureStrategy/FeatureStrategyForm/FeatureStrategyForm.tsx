@@ -46,7 +46,8 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { BuiltInStrategies, formatStrategyName } from 'utils/strategyNames';
 import { Badge } from 'component/common/Badge/Badge';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
-import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests';
+import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests';
+import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -70,19 +71,6 @@ interface IFeatureStrategyFormProps {
     Limit?: JSX.Element;
     disabled?: boolean;
 }
-
-const StyledDividerContent = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(0.75, 1),
-    color: theme.palette.text.primary,
-    fontSize: theme.fontSizes.smallerBody,
-    backgroundColor: theme.palette.background.elevation2,
-    borderRadius: theme.shape.borderRadius,
-    width: '45px',
-    position: 'absolute',
-    top: '-10px',
-    left: 'calc(50% - 45px)',
-    lineHeight: 1,
-}));
 
 const StyledForm = styled('form')(({ theme }) => ({
     position: 'relative',
@@ -138,11 +126,6 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
     width: '100%',
 }));
 
-const StyledTargetingHeader = styled('div')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    marginTop: theme.spacing(1.5),
-}));
-
 const StyledHeaderBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -189,6 +172,12 @@ const StyledTab = styled(Tab)(({ theme }) => ({
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     marginLeft: theme.spacing(1),
+}));
+
+const StyledConstraintSeparator = styled(ConstraintSeparator)(({ theme }) => ({
+    top: '-10px',
+    left: '0',
+    transform: 'translateY(0)',
 }));
 
 export const FeatureStrategyForm = ({
@@ -477,6 +466,14 @@ export const FeatureStrategyForm = ({
                                 }}
                             />
 
+                            <FeatureStrategyType
+                                strategy={strategy}
+                                strategyDefinition={strategyDefinition}
+                                setStrategy={setStrategy}
+                                validateParameter={validateParameter}
+                                errors={errors}
+                                hasAccess={access}
+                            />
                             <FeatureStrategyEnabledDisabled
                                 enabled={!strategy?.disabled}
                                 onToggleEnabled={() =>
@@ -486,15 +483,6 @@ export const FeatureStrategyForm = ({
                                     }))
                                 }
                             />
-
-                            <FeatureStrategyType
-                                strategy={strategy}
-                                strategyDefinition={strategyDefinition}
-                                setStrategy={setStrategy}
-                                validateParameter={validateParameter}
-                                errors={errors}
-                                hasAccess={access}
-                            />
                         </>
                     }
                 />
@@ -503,12 +491,12 @@ export const FeatureStrategyForm = ({
                     condition={tab === 1}
                     show={
                         <>
-                            <StyledTargetingHeader>
+                            <Alert severity='info' sx={{ mb: 2 }} icon={false}>
                                 Segmentation and constraints allow you to set
                                 filters on your strategies, so that they will
                                 only be evaluated for users and applications
                                 that match the specified preconditions.
-                            </StyledTargetingHeader>
+                            </Alert>
                             <FeatureStrategySegment
                                 segments={segments}
                                 setSegments={setSegments}
@@ -517,7 +505,7 @@ export const FeatureStrategyForm = ({
 
                             <StyledBox>
                                 <StyledDivider />
-                                <StyledDividerContent>AND</StyledDividerContent>
+                                <StyledConstraintSeparator />
                             </StyledBox>
                             <FeatureStrategyConstraints
                                 projectId={feature.project}

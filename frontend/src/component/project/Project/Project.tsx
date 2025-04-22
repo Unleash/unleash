@@ -32,7 +32,13 @@ import ProjectFlags from './ProjectFlags';
 import ProjectHealth from './ProjectHealth/ProjectHealth';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import {
+    Navigate,
+    Route,
+    Routes,
+    useLocation,
+    useSearchParams,
+} from 'react-router-dom';
 import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue';
 import { ProjectLog } from './ProjectLog/ProjectLog';
 import { ChangeRequestOverview } from 'component/changeRequest/ChangeRequestOverview/ChangeRequestOverview';
@@ -116,11 +122,25 @@ const ProjectStatusSvgWithMargin = styled(ProjectStatusSvg)(({ theme }) => ({
 }));
 
 const ProjectStatus = () => {
-    const [projectStatusOpen, setProjectStatusOpen] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [projectStatusOpen, setProjectStatusOpen] = useState(
+        searchParams.has('project-status'),
+    );
+    const openStatusModal = () => {
+        searchParams.set('project-status', '');
+        setSearchParams(searchParams);
+        setProjectStatusOpen(true);
+    };
+    const closeStatusModal = () => {
+        searchParams.delete('project-status');
+        setSearchParams(searchParams);
+        setProjectStatusOpen(false);
+    };
+
     return (
         <>
             <ProjectStatusButton
-                onClick={() => setProjectStatusOpen(true)}
+                onClick={openStatusModal}
                 startIcon={<ProjectStatusSvgWithMargin />}
                 data-loading-project
             >
@@ -128,7 +148,8 @@ const ProjectStatus = () => {
             </ProjectStatusButton>
             <ProjectStatusModal
                 open={projectStatusOpen}
-                close={() => setProjectStatusOpen(false)}
+                onClose={closeStatusModal}
+                onFollowLink={() => setProjectStatusOpen(false)}
             />
         </>
     );

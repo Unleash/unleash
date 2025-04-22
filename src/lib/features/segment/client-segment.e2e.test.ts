@@ -197,7 +197,9 @@ const createTestSegments = async () => {
 };
 
 beforeAll(async () => {
-    db = await dbInit('segments', getLogger);
+    db = await dbInit('segments', getLogger, {
+        dbInitMethod: 'legacy' as const,
+    });
     app = await setupAppWithCustomConfig(
         db.stores,
         {
@@ -353,7 +355,9 @@ test('should inline segment constraints into features by default', async () => {
 
     const clientFeatures = await fetchClientFeatures();
     const clientStrategies = clientFeatures.flatMap((f) => f.strategies);
-    const clientConstraints = clientStrategies.flatMap((s) => s.constraints);
+    const clientConstraints = clientStrategies.flatMap(
+        (s) => s.constraints || [],
+    );
     const clientValues = clientConstraints.flatMap((c) => c.values);
     const uniqueValues = [...new Set(clientValues)];
 

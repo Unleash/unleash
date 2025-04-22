@@ -2,6 +2,697 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.9.1] - 2025-04-10
+
+### Bug Fixes
+
+- Add Project and Playground icons for command bar ([#9677](https://github.com/Unleash/unleash/issues/9677))
+
+- Link to "view more insights" from dashboard goes to status modal ([#9684](https://github.com/Unleash/unleash/issues/9684))
+
+- Project status modal links don't work ([#9693](https://github.com/Unleash/unleash/issues/9693))
+
+- Depenency name truncator ([#9696](https://github.com/Unleash/unleash/issues/9696))
+
+- Consumption warning is either/or not and
+
+- Restore focus style to the env switch ([#9707](https://github.com/Unleash/unleash/issues/9707))
+
+- Return bad data error when failing to patch env variants ([#9708](https://github.com/Unleash/unleash/issues/9708))
+
+- Update link text for archived feature navigation ([#9698](https://github.com/Unleash/unleash/issues/9698))
+
+- Fix hover on release template card ([#9721](https://github.com/Unleash/unleash/issues/9721))
+
+- Wrap env data before truncating env name. ([#9733](https://github.com/Unleash/unleash/issues/9733))
+
+- Remove custom refresh interval for UnleashClient
+
+- Flag-resolver should resolve external static context
+
+- Flag-resolver context type
+
+
+### Chore
+
+- New constraint edit design iteration 1 ([#9727](https://github.com/Unleash/unleash/issues/9727))
+
+
+### Documentation
+
+- 6.9 updates ([#9680](https://github.com/Unleash/unleash/issues/9680))
+
+- Environment change requests ([#9648](https://github.com/Unleash/unleash/issues/9648))
+
+- .NET supports impression events ([#9704](https://github.com/Unleash/unleash/issues/9704))
+
+- Updates to Unleash Frontend API docs and Unleash architecture overview ([#9513](https://github.com/Unleash/unleash/issues/9513))
+
+- Add Edge section to security doc ([#9562](https://github.com/Unleash/unleash/issues/9562))
+
+- Updates to 11 principles and scaling pages ([#9688](https://github.com/Unleash/unleash/issues/9688))
+
+- Add Go impression data support ([#9728](https://github.com/Unleash/unleash/issues/9728))
+
+
+### Features
+
+- New styling for strategy selector ([#9683](https://github.com/Unleash/unleash/issues/9683))
+
+- Command bar admin menu improvements ([#9689](https://github.com/Unleash/unleash/issues/9689))
+
+- Strategy selector screen updates ([#9692](https://github.com/Unleash/unleash/issues/9692))
+
+- Added network traffic bundle ([#9691](https://github.com/Unleash/unleash/issues/9691))
+
+- Only admin can fetch license ([#9697](https://github.com/Unleash/unleash/issues/9697))
+
+- Flag overview change requests ([#9702](https://github.com/Unleash/unleash/issues/9702))
+
+- Release plan hover buttons ([#9703](https://github.com/Unleash/unleash/issues/9703))
+
+- Search by lifecycle stage ([#9705](https://github.com/Unleash/unleash/issues/9705))
+
+- Rename search page and change icon ([#9706](https://github.com/Unleash/unleash/issues/9706))
+
+- Lifecycle filters UI ([#9713](https://github.com/Unleash/unleash/issues/9713))
+
+- Export button in flags overview ([#9715](https://github.com/Unleash/unleash/issues/9715))
+
+- Release plan review dialogue ([#9712](https://github.com/Unleash/unleash/issues/9712))
+
+- Remove + from the segment dropdown ([#9714](https://github.com/Unleash/unleash/issues/9714))
+
+- Remove archived from filters ([#9719](https://github.com/Unleash/unleash/issues/9719))
+
+- Adjust filter UI ([#9720](https://github.com/Unleash/unleash/issues/9720))
+
+- Adjust columns for a search page refactor ([#9709](https://github.com/Unleash/unleash/issues/9709))
+
+- Total count respect lifecycle filter ([#9724](https://github.com/Unleash/unleash/issues/9724))
+
+- Adjust search page columns ([#9722](https://github.com/Unleash/unleash/issues/9722))
+
+- Styling of AND operator in strategies ([#9726](https://github.com/Unleash/unleash/issues/9726))
+
+- Update strategy window styles, extract old and new components ([#9730](https://github.com/Unleash/unleash/issues/9730))
+
+- Lifecycle column text ([#9731](https://github.com/Unleash/unleash/issues/9731))
+
+- Strategy menu interaction between two dialogues. ([#9732](https://github.com/Unleash/unleash/issues/9732))
+
+- Use Unleash React SDK in Admin UI ([#9723](https://github.com/Unleash/unleash/issues/9723))
+
+- Targeting info box new styling ([#9740](https://github.com/Unleash/unleash/issues/9740))
+
+- Add milestones to search results ([#9739](https://github.com/Unleash/unleash/issues/9739))
+
+- Styling of info box for release plans ([#9741](https://github.com/Unleash/unleash/issues/9741))
+
+- Segment chip recoloring ([#9742](https://github.com/Unleash/unleash/issues/9742))
+
+- Flag lifecycle status - first pass ([#9736](https://github.com/Unleash/unleash/issues/9736))
+
+
+### Fix
+
+- Fix focus styles and tab navigation for segments + constraints ([#9655](https://github.com/Unleash/unleash/issues/9655))
+
+- Lifetime API command doesn't update. ([#9685](https://github.com/Unleash/unleash/issues/9685))
+
+
+### Miscellaneous Tasks
+
+- Fix coverage tests ([#9674](https://github.com/Unleash/unleash/issues/9674))
+
+- Change default for release ([#9681](https://github.com/Unleash/unleash/issues/9681))
+
+- Remove z-index from sticky admin menu as its probably not needed ([#9690](https://github.com/Unleash/unleash/issues/9690))
+
+- Cleaner project status modal link handling ([#9694](https://github.com/Unleash/unleash/issues/9694))
+
+- Add flag for add/edit strategies ([#9699](https://github.com/Unleash/unleash/issues/9699))
+
+- Set up the basis of the new constraint editing component. ([#9701](https://github.com/Unleash/unleash/issues/9701))
+
+- Make popover center of screen ([#9725](https://github.com/Unleash/unleash/issues/9725))
+
+
+## [6.9.0] - 2025-04-02
+
+### Bug Fixes
+
+- Only show accrued traffic charges and estimated overages for the current month ([#9440](https://github.com/Unleash/unleash/issues/9440))
+
+- Update dependency json-2-csv to v5.5.9 ([#9453](https://github.com/Unleash/unleash/issues/9453))
+
+- Update dependency git-url-parse to v16 ([#9463](https://github.com/Unleash/unleash/issues/9463))
+
+- Frontend tests after Cypress upgrade ([#9505](https://github.com/Unleash/unleash/issues/9505))
+
+- Update dependency helmet to v8 ([#9491](https://github.com/Unleash/unleash/issues/9491))
+
+- Update dependency pg to v8.14.0 ([#9516](https://github.com/Unleash/unleash/issues/9516))
+
+- Features table migrations in 20220603081324-add-archive-at-to-fea… ([#9518](https://github.com/Unleash/unleash/issues/9518))
+
+- Data usage graphs don't work in UTC-n time zones ([#9530](https://github.com/Unleash/unleash/issues/9530))
+
+- Ignore youtube embed from check links ([#9534](https://github.com/Unleash/unleash/issues/9534))
+
+- Command bar search padding
+
+- New header z-index style ([#9541](https://github.com/Unleash/unleash/issues/9541))
+
+- Strategy dragging is broken in env overview ([#9538](https://github.com/Unleash/unleash/issues/9538))
+
+- Command bar z-index ([#9543](https://github.com/Unleash/unleash/issues/9543))
+
+- Use the correct permission for the create template button ([#9545](https://github.com/Unleash/unleash/issues/9545))
+
+- Only drag handle is draggable, allow you to select text in the header ([#9536](https://github.com/Unleash/unleash/issues/9536))
+
+- Segment spacing in strategy constraints ([#9559](https://github.com/Unleash/unleash/issues/9559))
+
+- S is possibly null ([#9578](https://github.com/Unleash/unleash/issues/9578))
+
+- Access overview fallback to email ([#9582](https://github.com/Unleash/unleash/issues/9582))
+
+- All users have a root role and warning if not ([#9584](https://github.com/Unleash/unleash/issues/9584))
+
+- Wrap env header grid on narrow containers ([#9596](https://github.com/Unleash/unleash/issues/9596))
+
+- Now hydration event will have segments inside ([#9597](https://github.com/Unleash/unleash/issues/9597))
+
+- Update dependency @slack/web-api to v7.9.0 ([#9601](https://github.com/Unleash/unleash/issues/9601))
+
+- Flaky test once an hour ([#9615](https://github.com/Unleash/unleash/issues/9615))
+
+- Fixes an issue where the new feedback button on the config strategy pane ([#9638](https://github.com/Unleash/unleash/issues/9638))
+
+- UseLocation instead of browser location for resolving pathname ([#9640](https://github.com/Unleash/unleash/issues/9640))
+
+- Back to Unleash onClick+useNavigate instead of href ([#9641](https://github.com/Unleash/unleash/issues/9641))
+
+- Feedback button ([#9644](https://github.com/Unleash/unleash/issues/9644))
+
+- Focus styles for env headers ([#9635](https://github.com/Unleash/unleash/issues/9635))
+
+- Tooltips not working after base element is also clicked ([#9629](https://github.com/Unleash/unleash/issues/9629))
+
+- Update dependency @slack/web-api to v7.9.1 ([#9661](https://github.com/Unleash/unleash/issues/9661))
+
+- Linter rule for hooks ([#9660](https://github.com/Unleash/unleash/issues/9660))
+
+
+### Chore
+
+- Release plans in strategy env ([#9441](https://github.com/Unleash/unleash/issues/9441))
+
+
+### Documentation
+
+- SDK refresh intervals ([#9432](https://github.com/Unleash/unleash/issues/9432))
+
+- Update terraform docs ([#9468](https://github.com/Unleash/unleash/issues/9468))
+
+- Fix setup references ([#9502](https://github.com/Unleash/unleash/issues/9502))
+
+- Feature Flag Security and Compliance for Enterprises ([#9528](https://github.com/Unleash/unleash/issues/9528))
+
+
+### Feat
+
+- New strategy variant chips ([#9507](https://github.com/Unleash/unleash/issues/9507))
+
+
+### Features
+
+- Rename api token column ([#9445](https://github.com/Unleash/unleash/issues/9445))
+
+- Always show features table ([#9446](https://github.com/Unleash/unleash/issues/9446))
+
+- Create connection count consumption table ([#9444](https://github.com/Unleash/unleash/issues/9444))
+
+- Frontend consumption table ([#9523](https://github.com/Unleash/unleash/issues/9523))
+
+- Archived indicators and disabled button when editing archived template ([#9503](https://github.com/Unleash/unleash/issues/9503))
+
+- Read backend connections UI ([#9526](https://github.com/Unleash/unleash/issues/9526))
+
+- Requests consumption UI for frontend ([#9550](https://github.com/Unleash/unleash/issues/9550))
+
+- Rework navigation sidebar admin section ([#9556](https://github.com/Unleash/unleash/issues/9556))
+
+- New constraint view for flag edit page ([#9567](https://github.com/Unleash/unleash/issues/9567))
+
+- Connection explanation box ([#9598](https://github.com/Unleash/unleash/issues/9598))
+
+- Admin home landing page ([#9594](https://github.com/Unleash/unleash/issues/9594))
+
+- Frontend traffic explanation box ([#9602](https://github.com/Unleash/unleash/issues/9602))
+
+- Expose required approvals for envs ([#9608](https://github.com/Unleash/unleash/issues/9608))
+
+- Add use template button to strategies selector on flag config pane ([#9605](https://github.com/Unleash/unleash/issues/9605))
+
+- Backend for retrieving tag colors ([#9610](https://github.com/Unleash/unleash/issues/9610))
+
+- Added ADR for logging levels ([#9580](https://github.com/Unleash/unleash/issues/9580))
+
+- Environment required approvals migration ([#9612](https://github.com/Unleash/unleash/issues/9612))
+
+- Persist env required approvals ([#9616](https://github.com/Unleash/unleash/issues/9616))
+
+- Release template feedback module ([#9614](https://github.com/Unleash/unleash/issues/9614))
+
+- Show seats used only for full enterprise customers ([#9618](https://github.com/Unleash/unleash/issues/9618))
+
+- Admin menu ([#9617](https://github.com/Unleash/unleash/issues/9617))
+
+- Create and edit environment required approvals ([#9621](https://github.com/Unleash/unleash/issues/9621))
+
+- Show environments with change requests ([#9628](https://github.com/Unleash/unleash/issues/9628))
+
+- Preselect change request settings in create project ([#9625](https://github.com/Unleash/unleash/issues/9625))
+
+- Admin menu for mobile ([#9626](https://github.com/Unleash/unleash/issues/9626))
+
+- Improve constraints item on small screens ([#9609](https://github.com/Unleash/unleash/issues/9609))
+
+- Enabled change requests reacting to available environments ([#9631](https://github.com/Unleash/unleash/issues/9631))
+
+- Enforce change request settings in create project dialog ([#9637](https://github.com/Unleash/unleash/issues/9637))
+
+- Show only link to /admin in mobile menu ([#9647](https://github.com/Unleash/unleash/issues/9647))
+
+- Enforce env change request on project create ([#9646](https://github.com/Unleash/unleash/issues/9646))
+
+- Remove access overview flag making it GA ready ([#9654](https://github.com/Unleash/unleash/issues/9654))
+
+- Admin menu: unleash logo in header - links to dashboard ([#9676](https://github.com/Unleash/unleash/issues/9676))
+
+- New feature strategy menu ([#9678](https://github.com/Unleash/unleash/issues/9678))
+
+
+### Fix
+
+- Drag and drop reverts to previous position on drop ([#9439](https://github.com/Unleash/unleash/issues/9439))
+
+- Separate segment and constraint accordions ([#9652](https://github.com/Unleash/unleash/issues/9652))
+
+- Move hooks to before we bail if the flag is off. ([#9659](https://github.com/Unleash/unleash/issues/9659))
+
+
+### Miscellaneous Tasks
+
+- Place strategy names and titles on the same line (and fix list nesting issues) ([#9443](https://github.com/Unleash/unleash/issues/9443))
+
+- Migrate renovate config ([#9451](https://github.com/Unleash/unleash/issues/9451))
+
+- Weird strategy spacing on envs without release plans ([#9466](https://github.com/Unleash/unleash/issues/9466))
+
+- Constrains custom strategy titles to a single line ([#9469](https://github.com/Unleash/unleash/issues/9469))
+
+- Use new designs for project default strategies ([#9447](https://github.com/Unleash/unleash/issues/9447))
+
+- Remove granularAdminPermissions flag ([#9467](https://github.com/Unleash/unleash/issues/9467))
+
+- Remove apitoken.username ([#9448](https://github.com/Unleash/unleash/issues/9448))
+
+- Playground strategies list ([#9504](https://github.com/Unleash/unleash/issues/9504))
+
+- Remove deprecated getAdmin from client features store ([#9497](https://github.com/Unleash/unleash/issues/9497))
+
+- Delete .github/workflows/generate-docs.yaml ([#9506](https://github.com/Unleash/unleash/issues/9506))
+
+- Remove legacy feature type ([#9499](https://github.com/Unleash/unleash/issues/9499))
+
+- Remove deprecated method from project-service ([#9498](https://github.com/Unleash/unleash/issues/9498))
+
+- Show events IP ([#9512](https://github.com/Unleash/unleash/issues/9512))
+
+- Remove project at least one owner constraint ([#9517](https://github.com/Unleash/unleash/issues/9517))
+
+- Stop using feature service v2 ([#9500](https://github.com/Unleash/unleash/issues/9500))
+
+- Use a local image of unleash enterprise for testing FE ([#9509](https://github.com/Unleash/unleash/issues/9509))
+
+- Orval generation ([#9524](https://github.com/Unleash/unleash/issues/9524))
+
+- Users actions menu ([#9525](https://github.com/Unleash/unleash/issues/9525))
+
+- Playground Strategy Lists ([#9510](https://github.com/Unleash/unleash/issues/9510))
+
+- Rename access matrix to access overview ([#9531](https://github.com/Unleash/unleash/issues/9531))
+
+- Clean up frontend routes ([#9533](https://github.com/Unleash/unleash/issues/9533))
+
+- New flag adminNavUI for admin UI 2.0 ([#9537](https://github.com/Unleash/unleash/issues/9537))
+
+- Cleanup old test dbs ([#9539](https://github.com/Unleash/unleash/issues/9539))
+
+- Mark release mgmt new in unleash as beta ([#9540](https://github.com/Unleash/unleash/issues/9540))
+
+- Change access overview to lists in accordions ([#9535](https://github.com/Unleash/unleash/issues/9535))
+
+- Delete unused files ([#9542](https://github.com/Unleash/unleash/issues/9542))
+
+- Categorize access overview ([#9546](https://github.com/Unleash/unleash/issues/9546))
+
+- Access overview search ([#9547](https://github.com/Unleash/unleash/issues/9547))
+
+- Update orval types ([#9549](https://github.com/Unleash/unleash/issues/9549))
+
+- Implement design for disabled environments in playground ([#9544](https://github.com/Unleash/unleash/issues/9544))
+
+- Add user access overview schema ([#9552](https://github.com/Unleash/unleash/issues/9552))
+
+- Fix missing primary routes for commandbar ([#9557](https://github.com/Unleash/unleash/issues/9557))
+
+- Segment execution in playground ([#9558](https://github.com/Unleash/unleash/issues/9558))
+
+- Add spacing to playground header + style segment's no constraints text ([#9561](https://github.com/Unleash/unleash/issues/9561))
+
+- Rename release management to release templates ([#9564](https://github.com/Unleash/unleash/issues/9564))
+
+- Handle cases with no strategies ([#9563](https://github.com/Unleash/unleash/issues/9563))
+
+- Make it build with strict null checks set to true ([#9554](https://github.com/Unleash/unleash/issues/9554))
+
+- Updates change request sidebar to remove env/cloud icon ([#9577](https://github.com/Unleash/unleash/issues/9577))
+
+- Finish up disabled strategies ([#9579](https://github.com/Unleash/unleash/issues/9579))
+
+- Don't use fallback functions for dragging ([#9585](https://github.com/Unleash/unleash/issues/9585))
+
+- Instance status prices ([#9588](https://github.com/Unleash/unleash/issues/9588))
+
+- Add release plan / strategy count to env header ([#9589](https://github.com/Unleash/unleash/issues/9589))
+
+- Rework constraint equality and case sensitivity ([#9591](https://github.com/Unleash/unleash/issues/9591))
+
+- Rename release-management to release-templates, remove "plan" from descriptions ([#9595](https://github.com/Unleash/unleash/issues/9595))
+
+- GlobalChangeRequestConfig flag ([#9607](https://github.com/Unleash/unleash/issues/9607))
+
+- Consolidate release plan flags ([#9606](https://github.com/Unleash/unleash/issues/9606))
+
+- Stylable card ([#9604](https://github.com/Unleash/unleash/issues/9604))
+
+- Whats new dialog ([#9622](https://github.com/Unleash/unleash/issues/9622))
+
+- Add a message stating no templates when there aren't any ([#9624](https://github.com/Unleash/unleash/issues/9624))
+
+- Drag-n-drop tooltip for strategies ([#9623](https://github.com/Unleash/unleash/issues/9623))
+
+- Add some getting started info and images when you have no release plans ([#9627](https://github.com/Unleash/unleash/issues/9627))
+
+- Feedback link on feature strategy ([#9633](https://github.com/Unleash/unleash/issues/9633))
+
+- Ux feedback on release templates ([#9634](https://github.com/Unleash/unleash/issues/9634))
+
+- Swap release template instruction svgs for pngs ([#9642](https://github.com/Unleash/unleash/issues/9642))
+
+- Fix weird alignment issue with main content and admin menu ([#9636](https://github.com/Unleash/unleash/issues/9636))
+
+- Added a hook for cleanly deciding new or old admin menu ([#9645](https://github.com/Unleash/unleash/issues/9645))
+
+- Fixing typo pre-defined ([#9651](https://github.com/Unleash/unleash/issues/9651))
+
+- Decrease ui observability to warn ([#9658](https://github.com/Unleash/unleash/issues/9658))
+
+- Expose custom strategy metrics in prometheus ([#9657](https://github.com/Unleash/unleash/issues/9657))
+
+- Admin menu enterprise badge ([#9656](https://github.com/Unleash/unleash/issues/9656))
+
+- Bump slack dependency ([#9664](https://github.com/Unleash/unleash/issues/9664))
+
+- Add flags to control network route links from menu ([#9667](https://github.com/Unleash/unleash/issues/9667))
+
+- Upgrade date-fns in package.json ([#9673](https://github.com/Unleash/unleash/issues/9673))
+
+- Admin menu main layout tweaks ([#9671](https://github.com/Unleash/unleash/issues/9671))
+
+
+### Refactor
+
+- Don't use absolute positioning for drag handle ([#9434](https://github.com/Unleash/unleash/issues/9434))
+
+- Remove unused access overview component ([#9527](https://github.com/Unleash/unleash/issues/9527))
+
+- Flatten release plan + strategy list ([#9581](https://github.com/Unleash/unleash/issues/9581))
+
+- Variant colors ([#9586](https://github.com/Unleash/unleash/issues/9586))
+
+- Extract shared components and styling from Env Accordion Body to common ([#9590](https://github.com/Unleash/unleash/issues/9590))
+
+- Environments in feature directory ([#9650](https://github.com/Unleash/unleash/issues/9650))
+
+- Colorpicker ([#9668](https://github.com/Unleash/unleash/issues/9668))
+
+- Change colors ([#9672](https://github.com/Unleash/unleash/issues/9672))
+
+
+## [6.8.0] - 2025-03-06
+
+### Bug Fixes
+
+- Long flag names push table to overflow and flag descriptions are not truncated ([#9350](https://github.com/Unleash/unleash/issues/9350))
+
+- Update dependency docusaurus-plugin-openapi-docs to v4.3.4 ([#9368](https://github.com/Unleash/unleash/issues/9368))
+
+- Update dependency docusaurus-theme-openapi-docs to v4.3.4 ([#9374](https://github.com/Unleash/unleash/issues/9374))
+
+- Update dependency pg to v8.13.3 ([#9375](https://github.com/Unleash/unleash/issues/9375))
+
+- Get all strategies and check if env to be disabled ([#9357](https://github.com/Unleash/unleash/issues/9357))
+
+- Solve 31 day month issue by using trafficUnitSize and not constant 1_000_000 ([#9404](https://github.com/Unleash/unleash/issues/9404))
+
+- Copy strategy is allowed to copy to self (duplicate) ([#9407](https://github.com/Unleash/unleash/issues/9407))
+
+- Update dependency docusaurus-plugin-openapi-docs to v4.3.5 ([#9423](https://github.com/Unleash/unleash/issues/9423))
+
+- Update dependency docusaurus-theme-openapi-docs to v4.3.5 ([#9424](https://github.com/Unleash/unleash/issues/9424))
+
+- Update dependency compression to v1.8.0 ([#9437](https://github.com/Unleash/unleash/issues/9437))
+
+
+### Documentation
+
+- Entra scim setup now includes SCIM compliance flag ([#9336](https://github.com/Unleash/unleash/issues/9336))
+
+
+### Features
+
+- Show and hide environments ([#9323](https://github.com/Unleash/unleash/issues/9323))
+
+- Show add strategy button when release plan ([#9329](https://github.com/Unleash/unleash/issues/9329))
+
+- Add tests for filterEventsByQuery ([#9338](https://github.com/Unleash/unleash/issues/9338))
+
+- Make env selector filterable ([#9340](https://github.com/Unleash/unleash/issues/9340))
+
+- New environment box ([#9342](https://github.com/Unleash/unleash/issues/9342))
+
+- Now project moving is split into two events ([#9358](https://github.com/Unleash/unleash/issues/9358))
+
+- Ignore events in log when nothing has changed ([#9364](https://github.com/Unleash/unleash/issues/9364))
+
+- Allow command bar navigation to wrap around ([#9370](https://github.com/Unleash/unleash/issues/9370))
+
+- SQL performance optimization to count instances ([#9369](https://github.com/Unleash/unleash/issues/9369))
+
+- Now instances are only shown for last 24 hours ([#9372](https://github.com/Unleash/unleash/issues/9372))
+
+- Backend connections tab ([#9381](https://github.com/Unleash/unleash/issues/9381))
+
+- Frontend traffic tab ([#9385](https://github.com/Unleash/unleash/issues/9385))
+
+- Use new strategy list in release plans ([#9405](https://github.com/Unleash/unleash/issues/9405))
+
+- UI for archiving release templates ([#9415](https://github.com/Unleash/unleash/issues/9415))
+
+- Project environments include visible property ([#9427](https://github.com/Unleash/unleash/issues/9427))
+
+
+### Miscellaneous Tasks
+
+- Await so change requests banner shows up after adding release plans changes ([#9328](https://github.com/Unleash/unleash/issues/9328))
+
+- Visualize connected edges ([#9325](https://github.com/Unleash/unleash/issues/9325))
+
+- Handle narrow windows for the flag header. ([#9321](https://github.com/Unleash/unleash/issues/9321))
+
+- Make Edge instance node width consistent ([#9335](https://github.com/Unleash/unleash/issues/9335))
+
+- Reduce tab sizes on flag page + fix wrapping/overlapping issue with action buttons ([#9339](https://github.com/Unleash/unleash/issues/9339))
+
+- Upgrade vitest to 3.0.6 ([#9337](https://github.com/Unleash/unleash/issues/9337))
+
+- Improve UX in the Edge observability latency table ([#9343](https://github.com/Unleash/unleash/issues/9343))
+
+- Edge observability width fix ([#9345](https://github.com/Unleash/unleash/issues/9345))
+
+- Add file and component names to `styled` output class names in dev ([#9351](https://github.com/Unleash/unleash/issues/9351))
+
+- Fix small UI issues in release templates/plans ([#9341](https://github.com/Unleash/unleash/issues/9341))
+
+- Node sdk version upgrade to support deltas ([#9356](https://github.com/Unleash/unleash/issues/9356))
+
+- Months old version banner ([#9352](https://github.com/Unleash/unleash/issues/9352))
+
+- Deprecate and undeprecate protected environments ([#9360](https://github.com/Unleash/unleash/issues/9360))
+
+- Remove deltaApiStreaming flag ([#9362](https://github.com/Unleash/unleash/issues/9362))
+
+- Remove uiGlobalFontSize flag ([#9331](https://github.com/Unleash/unleash/issues/9331))
+
+- Improve release plan template form validation ([#9371](https://github.com/Unleash/unleash/issues/9371))
+
+- New env strategy containers ([#9361](https://github.com/Unleash/unleash/issues/9361))
+
+- Fix text on last seen instances ([#9376](https://github.com/Unleash/unleash/issues/9376))
+
+- Wrap strategy list in an ordered list ([#9377](https://github.com/Unleash/unleash/issues/9377))
+
+- Consumption model flag ([#9379](https://github.com/Unleash/unleash/issues/9379))
+
+- Handle release plans in new strategy list ([#9380](https://github.com/Unleash/unleash/issues/9380))
+
+- Adjust env dropdown ([#9382](https://github.com/Unleash/unleash/issues/9382))
+
+- Deprecate `envAccordion` colors; update non-legacy components ([#9378](https://github.com/Unleash/unleash/issues/9378))
+
+- Adapt existing tests to new components ([#9396](https://github.com/Unleash/unleash/issues/9396))
+
+- Release template card min height ([#9390](https://github.com/Unleash/unleash/issues/9390))
+
+- New add release plan dialog ([#9389](https://github.com/Unleash/unleash/issues/9389))
+
+- Release plan replacement UI ([#9400](https://github.com/Unleash/unleash/issues/9400))
+
+- Flip UI and backend validation for project env disabling ([#9395](https://github.com/Unleash/unleash/issues/9395))
+
+- Migration for new archive columns on release defintion ([#9412](https://github.com/Unleash/unleash/issues/9412))
+
+- Archive release plan template event ([#9414](https://github.com/Unleash/unleash/issues/9414))
+
+- Remove frontendHeaderRedesign flag ([#9428](https://github.com/Unleash/unleash/issues/9428))
+
+- Remove dataUsageMultiMonthView flag ([#9429](https://github.com/Unleash/unleash/issues/9429))
+
+
+### Refactor
+
+- Rename networkViewEnabled to prometheusAPIAvailable ([#9330](https://github.com/Unleash/unleash/issues/9330))
+
+- Fix deprecation for string truncator ([#9359](https://github.com/Unleash/unleash/issues/9359))
+
+- Makes the drag args optional, defaulting to noops ([#9394](https://github.com/Unleash/unleash/issues/9394))
+
+- New constraints style ([#9363](https://github.com/Unleash/unleash/issues/9363))
+
+- Strategy draggable item is now proj/env agnostic ([#9411](https://github.com/Unleash/unleash/issues/9411))
+
+
+### Testing
+
+- Connection count chart functions ([#9383](https://github.com/Unleash/unleash/issues/9383))
+
+
+## [6.7.2] - 2025-02-19
+
+### Bug Fixes
+
+- Command bar spacing ([#9288](https://github.com/Unleash/unleash/issues/9288))
+
+- Make the chip in the playground project selector small ([#9298](https://github.com/Unleash/unleash/issues/9298))
+
+- Add some missing button labels on the project page ([#9299](https://github.com/Unleash/unleash/issues/9299))
+
+- Add strategy and more strategies button are different heights ([#9300](https://github.com/Unleash/unleash/issues/9300))
+
+- Hydration event should update with every event ([#9310](https://github.com/Unleash/unleash/issues/9310))
+
+- Mutating delta events ([#9303](https://github.com/Unleash/unleash/issues/9303))
+
+- Return undefined from delta if no events ([#9311](https://github.com/Unleash/unleash/issues/9311))
+
+- Access e2e test ([#9313](https://github.com/Unleash/unleash/issues/9313))
+
+- Add a metric to track client registrations ([#9314](https://github.com/Unleash/unleash/issues/9314))
+
+- Delete project segment with change request ([#9315](https://github.com/Unleash/unleash/issues/9315))
+
+- Fix unintended scroll on dashboard ([#9316](https://github.com/Unleash/unleash/issues/9316))
+
+- Handle singular counts in project status lifecycle boxes ([#9317](https://github.com/Unleash/unleash/issues/9317))
+
+- Use bucket stop as timestamp for metrics bucket ([#9327](https://github.com/Unleash/unleash/issues/9327))
+
+
+### Documentation
+
+- Include create db permission required for new tests ([#9301](https://github.com/Unleash/unleash/issues/9301))
+
+
+### Features
+
+- Connection count usage ([#9294](https://github.com/Unleash/unleash/issues/9294))
+
+- Frontend API POST endpoint ([#9291](https://github.com/Unleash/unleash/issues/9291))
+
+- New flag header ([#9302](https://github.com/Unleash/unleash/issues/9302))
+
+- New flag info box ([#9308](https://github.com/Unleash/unleash/issues/9308))
+
+- Add stale badge to the new header ([#9320](https://github.com/Unleash/unleash/issues/9320))
+
+- Project field to feature removed event ([#9322](https://github.com/Unleash/unleash/issues/9322))
+
+
+### Miscellaneous Tasks
+
+- Use gitcliff changelog for release ([#9289](https://github.com/Unleash/unleash/issues/9289))
+
+- Add migration that backfills scim user email hashes ([#9295](https://github.com/Unleash/unleash/issues/9295))
+
+- Bump unleash client version to beta 6.5 ([#9305](https://github.com/Unleash/unleash/issues/9305))
+
+- Make setting service handle conflict on insert ([#9160](https://github.com/Unleash/unleash/issues/9160))
+
+- Add edge observability tables ([#9307](https://github.com/Unleash/unleash/issues/9307))
+
+- Add change request events to teams integration ([#9309](https://github.com/Unleash/unleash/issues/9309))
+
+- Add status_code to edge traffic table to store 304s as well ([#9312](https://github.com/Unleash/unleash/issues/9312))
+
+- Remove references to admin token kill switch ([#9324](https://github.com/Unleash/unleash/issues/9324))
+
+
+### Refactor
+
+- MuiTab font sizes ([#9296](https://github.com/Unleash/unleash/issues/9296))
+
+- Move feature overview header into separate file ([#9319](https://github.com/Unleash/unleash/issues/9319))
+
+
+## [6.7.1] - 2025-02-11
+
+### Bug Fixes
+
+- Font size flag change to boolean ([#9290](https://github.com/Unleash/unleash/issues/9290))
+
+- Use the right theme even if the payload is a variant. ([#9292](https://github.com/Unleash/unleash/issues/9292))
+
+
+### Miscellaneous Tasks
+
+- Create test db from template ([#9265](https://github.com/Unleash/unleash/issues/9265))
+
+
 ## [6.7.0] - 2025-02-11
 
 ### Bug Fixes
@@ -82,6 +773,8 @@ All notable changes to this project will be documented in this file.
 
 - Some accessibility issues ([#9282](https://github.com/Unleash/unleash/issues/9282))
 
+- Add legacy button styles ([#9283](https://github.com/Unleash/unleash/issues/9283))
+
 
 ### Documentation
 
@@ -110,6 +803,8 @@ All notable changes to this project will be documented in this file.
 - Organize/update custom project permissions to reflect Unleash Admin UI ([#9246](https://github.com/Unleash/unleash/issues/9246))
 
 - Remove notifications docs ([#9258](https://github.com/Unleash/unleash/issues/9258))
+
+- Update CHANGELOG.md
 
 
 ### Features
@@ -268,6 +963,12 @@ All notable changes to this project will be documented in this file.
 - Make playground code editor height dynamic ([#9271](https://github.com/Unleash/unleash/issues/9271))
 
 - Make mui buttons respect font size changes ([#9275](https://github.com/Unleash/unleash/issues/9275))
+
+- Add button styles to dark mode too ([#9285](https://github.com/Unleash/unleash/issues/9285))
+
+- Retry release 6.7 ([#9287](https://github.com/Unleash/unleash/issues/9287))
+
+- Remove concurrency block ([#9286](https://github.com/Unleash/unleash/issues/9286))
 
 
 ### Refactor

@@ -1,14 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 import { type FC, type ReactNode, useRef, type PropsWithChildren } from 'react';
 import { Box, Button } from '@mui/material';
-import {
-    StyledDropdown,
-    StyledPopover,
-    ButtonLabel,
-    StyledTooltipContent,
-} from './ConfigButton.styles';
+import { ButtonLabel, StyledTooltipContent } from './ConfigButton.styles';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
+import { StyledPopover } from './shared.styles';
 
 export type ConfigButtonProps = {
     button: {
@@ -94,13 +90,12 @@ export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
                     vertical: 'top',
                     horizontal: 'left',
                 }}
+                aria-describedby={descriptionId}
             >
                 <ScreenReaderOnly>
                     <p id={descriptionId}>{description}</p>
                 </ScreenReaderOnly>
-                <StyledDropdown aria-describedby={descriptionId}>
-                    {children}
-                </StyledDropdown>
+                {children}
             </StyledPopover>
         </>
     );

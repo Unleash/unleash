@@ -11,7 +11,7 @@ import type { StrategyVariantSchema } from './strategyVariantSchema';
  * A single activation strategy configuration schema for a feature
  */
 export interface FeatureStrategySchema {
-    /** A list of the constraints attached to the strategy. See https://docs.getunleash.io/reference/strategy-constraints */
+    /** A list of the constraints attached to the strategy. See https://docs.getunleash.io/reference/activation-strategies#constraints */
     constraints?: ConstraintSchema[];
     /**
      * A toggle to disable the strategy. defaults to false. Disabled strategies are not evaluated or returned to the SDKs

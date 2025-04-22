@@ -149,7 +149,7 @@ export const ProjectSetupComplete: FC<{
             />
 
             {projectHealthTrend !== 'unknown' && (
-                <Link to={`/projects/${project}/insights`}>
+                <Link to={`/projects/${project}?project-status`}>
                     View more insights
                 </Link>
             )}

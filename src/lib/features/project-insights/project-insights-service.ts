@@ -112,7 +112,7 @@ export class ProjectInsightsService {
         ]);
 
         return {
-            health: project.health || 0,
+            health: project?.health || 0,
             features: features,
         };
     }

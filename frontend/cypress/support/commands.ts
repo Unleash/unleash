@@ -12,6 +12,7 @@ import {
     addFlexibleRolloutStrategyToFeature_UI,
     addUserIdStrategyToFeature_UI,
     updateFlexibleRolloutStrategy_UI,
+    do_login,
     //@ts-ignore
 } from './UI';
 import {
@@ -32,6 +33,7 @@ Cypress.on('window:before:load', (window) => {
 });
 Cypress.Commands.add('runBefore', runBefore);
 Cypress.Commands.add('login_UI', login_UI);
+Cypress.Commands.add('do_login', do_login);
 Cypress.Commands.add('createSegment_UI', createSegment_UI);
 Cypress.Commands.add('deleteSegment_UI', deleteSegment_UI);
 Cypress.Commands.add('deleteFeature_API', deleteFeature_API);
@@ -67,4 +69,9 @@ Cypress.Commands.overwrite('visit', (originalFn, url, options = {}) => {
     options.headers['x-vercel-skip-toolbar'] = '1';
 
     return originalFn(url, options);
+});
+
+Cypress.Commands.overwrite('click', (originalFn, x, y, options = {}) => {
+    options.waitForAnimations = false;
+    return originalFn(x, y, options);
 });

@@ -12,7 +12,9 @@ let db: ITestDb;
 let user: IUser;
 
 beforeAll(async () => {
-    db = await dbInit('project_health_api_serial', getLogger);
+    db = await dbInit('project_health_api_serial', getLogger, {
+        dbInitMethod: 'legacy' as const,
+    });
     app = await setupAppWithCustomConfig(
         db.stores,
         {
@@ -110,7 +112,7 @@ test('Health rating endpoint yields stale, potentially stale and active count on
             stale: true,
         })
         .expect(201);
-    await app.services.projectHealthService.setHealthRating();
+    await app.services.projectHealthService.setProjectHealthRating(project.id);
     await app.request
         .get(`/api/admin/projects/${project.id}/health-report`)
         .expect(200)
@@ -175,7 +177,7 @@ test('Health rating endpoint does not include archived toggles when calculating 
         })
         .expect(201);
 
-    await app.services.projectHealthService.setHealthRating();
+    await app.services.projectHealthService.setProjectHealthRating(project.id);
     await app.request
         .get(`/api/admin/projects/${project.id}/health-report`)
         .expect(200)
@@ -230,7 +232,7 @@ test('Health rating endpoint correctly handles potentially stale toggles', async
             createdAt: new Date(2019, 5, 1),
         })
         .expect(201);
-    await app.services.projectHealthService.setHealthRating();
+    await app.services.projectHealthService.setProjectHealthRating(project.id);
     await app.request
         .get(`/api/admin/projects/${project.id}/health-report`)
         .expect(200)
@@ -337,7 +339,7 @@ test('Sorts environments correctly if sort order is equal', async () => {
 });
 
 test('Update update_at when setHealth runs', async () => {
-    await app.services.projectHealthService.setHealthRating();
+    await app.services.projectHealthService.setProjectHealthRating('default');
     await app.request
         .get('/api/admin/projects/default/health-report')
         .expect(200)

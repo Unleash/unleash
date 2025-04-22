@@ -1,18 +1,8 @@
-import type * as React from 'react';
 import { type ReactNode, useState } from 'react';
-import {
-    IconButton,
-    ListItem,
-    ListItemButton,
-    styled,
-    Tooltip,
-    Typography,
-} from '@mui/material';
-import Close from '@mui/icons-material/Close';
+import { ListItem } from '@mui/material';
 import { NewInUnleashTooltip } from './NewInUnleashTooltip';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Badge } from 'component/common/Badge/Badge';
-import { Truncator } from 'component/common/Truncator/Truncator';
+import { NewInUnleashDialog } from './NewInUnleashDialog';
+import { NewInUnleashSideBarItem } from './NewInUnleashSideBarItem';
 
 export type NewInUnleashItemDetails = {
     label: string;
@@ -21,40 +11,11 @@ export type NewInUnleashItemDetails = {
     onCheckItOut?: () => void;
     docsLink?: string;
     show: boolean;
-    longDescription: ReactNode;
+    longDescription?: ReactNode;
     preview?: ReactNode;
     beta?: boolean;
+    popout?: boolean;
 };
-
-const StyledItemButton = styled(ListItemButton)(({ theme }) => ({
-    outline: `1px solid ${theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadiusMedium,
-    padding: theme.spacing(1),
-    width: '100%',
-    display: 'flex',
-    alignItems: 'start',
-    gap: theme.spacing(1),
-    fontSize: theme.fontSizes.smallBody,
-    '& > svg': {
-        width: theme.spacing(3),
-        height: theme.spacing(3),
-    },
-}));
-
-const LabelWithSummary = styled('div')(({ theme }) => ({
-    flex: 1,
-}));
-
-const StyledItemTitle = styled('div')(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(1),
-    alignItems: 'center',
-    height: theme.spacing(3),
-}));
-
-const StyledItemButtonClose = styled(IconButton)(({ theme }) => ({
-    padding: theme.spacing(0.25),
-}));
 
 interface INewInUnleashItemProps
     extends Omit<NewInUnleashItemDetails, 'show' | 'beta'> {
@@ -88,6 +49,7 @@ export const NewInUnleashItem = ({
     preview,
     summary,
     beta,
+    popout,
 }: INewInUnleashItemProps) => {
     const { open, handleTooltipOpen, handleTooltipClose } = useTooltip();
 
@@ -96,51 +58,55 @@ export const NewInUnleashItem = ({
         onDismiss();
     };
 
+    const onOpen = () => {
+        onClick();
+        handleTooltipOpen();
+    };
+
     return (
-        <ListItem
-            disablePadding
-            onClick={() => {
-                onClick();
-                handleTooltipOpen();
-            }}
-        >
-            <NewInUnleashTooltip
-                open={open}
-                onClose={handleTooltipClose}
-                title={label}
-                longDescription={longDescription}
-                onCheckItOut={onCheckItOut}
-                docsLink={docsLink}
-                preview={preview}
-                beta={beta}
-            >
-                <StyledItemButton>
-                    {icon}
-                    <LabelWithSummary>
-                        <StyledItemTitle>
-                            <Typography fontWeight='bold' fontSize='small'>
-                                <Truncator title={label} arrow>
-                                    {label}
-                                </Truncator>
-                            </Typography>
-                            <ConditionallyRender
-                                condition={beta}
-                                show={<Badge color='secondary'>Beta</Badge>}
-                            />
-                        </StyledItemTitle>
-                        <Typography fontSize='small'>{summary}</Typography>
-                    </LabelWithSummary>
-                    <Tooltip title='Dismiss' arrow sx={{ marginLeft: 'auto' }}>
-                        <StyledItemButtonClose
-                            aria-label='dismiss'
-                            onClick={onDismissClick}
-                            size='small'
-                        >
-                            <Close fontSize='inherit' />
-                        </StyledItemButtonClose>
-                    </Tooltip>
-                </StyledItemButton>
-            </NewInUnleashTooltip>
+        <ListItem disablePadding>
+            {popout ? (
+                <>
+                    <NewInUnleashDialog
+                        open={open}
+                        onClose={handleTooltipClose}
+                        title={label}
+                        longDescription={longDescription}
+                        onCheckItOut={onCheckItOut}
+                        docsLink={docsLink}
+                        preview={preview}
+                        beta={beta}
+                    />
+                    <NewInUnleashSideBarItem
+                        label={label}
+                        summary={summary}
+                        icon={icon}
+                        beta={beta}
+                        onClick={onOpen}
+                        onDismiss={onDismissClick}
+                    />
+                </>
+            ) : (
+                <NewInUnleashTooltip
+                    open={open}
+                    onClose={handleTooltipClose}
+                    title={label}
+                    longDescription={longDescription}
+                    onCheckItOut={onCheckItOut}
+                    docsLink={docsLink}
+                    preview={preview}
+                    beta={beta}
+                >
+                    <NewInUnleashSideBarItem
+                        label={label}
+                        summary={summary}
+                        icon={icon}
+                        beta={beta}
+                        onClick={onOpen}
+                        onDismiss={onDismissClick}
+                    />
+                </NewInUnleashTooltip>
+            )}
         </ListItem>
     );
 };

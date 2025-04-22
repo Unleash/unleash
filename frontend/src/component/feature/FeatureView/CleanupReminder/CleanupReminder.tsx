@@ -34,6 +34,9 @@ const ActionsBox = styled(Box)(({ theme }) => ({
 
 type ReminderType = 'complete' | 'removeCode' | 'archive' | null;
 
+export const COMPLETE_REMINDER_DAYS = 30;
+export const REMOVE_CODE_REMINDER_DAYS = 3;
+
 export const CleanupReminder: FC<{
     feature: IFeatureToggle;
     onChange: () => void;
@@ -62,7 +65,10 @@ export const CleanupReminder: FC<{
     const determineReminder = (): ReminderType => {
         if (!currentStage || !isRelevantType) return null;
 
-        if (currentStage.name === 'live' && daysInStage > 30) {
+        if (
+            currentStage.name === 'live' &&
+            daysInStage > COMPLETE_REMINDER_DAYS
+        ) {
             return 'complete';
         }
         if (
@@ -72,7 +78,7 @@ export const CleanupReminder: FC<{
             if (isSafeToArchive(currentStage.environments)) {
                 return 'archive';
             }
-            if (daysInStage > 2) {
+            if (daysInStage > REMOVE_CODE_REMINDER_DAYS) {
                 return 'removeCode';
             }
         }

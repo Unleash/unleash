@@ -180,7 +180,6 @@ This endpoint gives insight into details about application seen per feature flag
         "abTest",
         "default",
         "betaUser",
-        "userWithId",
         "byHostName",
         "gradualRolloutWithSessionId",
         "gradualRollout",

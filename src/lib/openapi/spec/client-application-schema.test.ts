@@ -48,7 +48,6 @@ test('clientApplicationSchema go-sdk request', () => {
             "gradualRolloutSessionId",
             "gradualRolloutUserId",
             "remoteAddress",
-            "userWithId",
             "flexibleRollout"
         ],
         "started": "2022-06-24T09:59:12.822607943+02:00",
@@ -75,7 +74,6 @@ test('clientApplicationSchema node-sdk request', () => {
             "gradualRolloutRandom",
             "gradualRolloutUserId",
             "gradualRolloutSessionId",
-            "userWithId",
             "remoteAddress",
             "flexibleRollout"
         ],

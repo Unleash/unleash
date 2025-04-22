@@ -39,7 +39,7 @@ How you set up Unleash to scale depends significantly on the [hosting option](/u
 
 <TabItem value="unleash-cloud" label="Unleash Cloud">
 
-- **How it works**: Unleash manages the entire infrastructure stack (Unleash API server, database, [Admin UI](/reference/admin-ui), [Unleash Enterprise Edge](https://www.getunleash.io/unleash-enterprise-edge)) on a robust, multi-region AWS setup designed for high availability and performance.
+- **How it works**: Unleash manages the entire infrastructure stack (Unleash API server, database, [Admin UI](/understanding-unleash/unleash-overview#the-unleash-admin-ui), [Unleash Enterprise Edge](https://www.getunleash.io/unleash-enterprise-edge)) on a robust, multi-region AWS setup designed for high availability and performance.
 - **Ideal for**: Teams wanting to focus on feature delivery, minimize operational overhead, and leverage Unleash's expertise in scaling and managing the platform. Offers the fastest time-to-value.
 - **Scaling and infrastructure**: Automatic scaling, Multi-Availability Zone (AZ) deployments, managed databases with automatic failover, and built-in disaster recovery. Handles traffic bursts seamlessly. Leverages a globally distributed Unleash Edge network for low latency.
 - **Key tradeoff**: Less direct control over the underlying infrastructure compared to self-hosting, in exchange for significantly reduced operational overhead.
@@ -48,7 +48,7 @@ How you set up Unleash to scale depends significantly on the [hosting option](/u
 
 <TabItem value="unleash-self-hosted" label="Unleash self-hosted">
 
-- **How it works**: You deploy, manage, and scale all Unleash components (Unleash API server, database, [Admin UI](/reference/admin-ui), [Unleash Edge](/reference/unleash-edge)) within your own infrastructure (cloud or on-premises).
+- **How it works**: You deploy, manage, and scale all Unleash components (Unleash API server, database, [Admin UI](/understanding-unleash/unleash-overview#the-unleash-admin-ui), [Unleash Edge](/reference/unleash-edge)) within your own infrastructure (cloud or on-premises).
 - **Ideal for**: Organizations with strict regulatory environments requiring full data and infrastructure control, air-gapped networks, or those with strong preferences and capabilities for managing their own software infrastructure.
 - **Scaling and infrastructure**: You are responsible for architecting for high availability (for example, Multi-AZ API deployment, database clusters), scaling [compute resources](/using-unleash/deploy/configuring-unleash#minimum-and-recommended-specifications), [database capacity planning](/using-unleash/deploy/database-setup#sizing), backups, disaster recovery strategies, monitoring, and security updates.
 - **Key tradeoff**: Maximum control over data and infrastructure, at the cost of significant SRE/DevOps expertise, resources, and ongoing operational effort.
@@ -57,7 +57,7 @@ How you set up Unleash to scale depends significantly on the [hosting option](/u
 
 <TabItem value="hybrid" label="Hybrid">
 
-- **How it works**: You use the managed Unleash Cloud for the core platform (API server, database, [Admin UI](/reference/admin-ui)) but deploy and manage [Unleash Edge](/reference/unleash-edge) instances yourself within your own network perimeter. SDKs connect to your self-hosted Edge.
+- **How it works**: You use the managed Unleash Cloud for the core platform (API server, database, [Admin UI](/understanding-unleash/unleash-overview#the-unleash-admin-ui)) but deploy and manage [Unleash Edge](/reference/unleash-edge) instances yourself within your own network perimeter. SDKs connect to your self-hosted Edge.
 - **Ideal for**: Teams needing the operational ease of a managed core platform but requiring absolute control over where end-user context is evaluated (for example, for [data privacy](/understanding-unleash/data-collection), residency [regulations](/using-unleash/compliance/compliance-overview)) by keeping Edge within their network boundaries.
 - **Scaling and infrastructure**: Unleash manages the core API/DB scaling and availability. You manage the Edge instance lifecycle, including its deployment, scaling, monitoring, and high-availability setup within your environment.
 - **Key tradeoff**: Provides granular control over Edge data processing and network placement while reducing the operational overhead of managing the core Unleash API and database. Still requires expertise and resources to operate Edge reliably at scale.
@@ -83,7 +83,7 @@ The database layer must be performant and highly available. Use managed database
 
 ### Unleash Frontend / Admin UI
 
-A bundled [single-page application interface](/reference/admin-ui) for interacting with the Unleash API server. Use a global content delivery network (CDN) to serve the UI and static assets for fast loading times worldwide.
+A bundled [single-page application interface](/understanding-unleash/unleash-overview#the-unleash-admin-ui) for interacting with the Unleash API server. Use a global content delivery network (CDN) to serve the UI and static assets for fast loading times worldwide.
 
 ### How we scale Unleash Cloud
 

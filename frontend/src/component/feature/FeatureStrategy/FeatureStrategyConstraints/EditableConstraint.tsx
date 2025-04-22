@@ -134,6 +134,9 @@ const StyledCaseInsensitiveIcon = styled(CaseInsensitiveIcon)(({ theme }) => ({
         fill: theme.palette.text.secondary,
     },
 }));
+const StyledCaseSensitiveIcon = styled(CaseSensitiveIcon)(({ theme }) => ({
+    fill: 'currentcolor',
+}));
 
 const CaseButton = styled(StyledButton)(({ theme }) => ({
     display: 'grid',
@@ -395,10 +398,7 @@ export const EditableConstraint: FC<Props> = ({
                             {localConstraint.caseInsensitive ? (
                                 <StyledCaseInsensitiveIcon aria-label='The match is not case sensitive.' />
                             ) : (
-                                <CaseSensitiveIcon
-                                    aria-label='The match is case sensitive.'
-                                    fill='currentColor'
-                                />
+                                <StyledCaseSensitiveIcon aria-label='The match is case sensitive.' />
                             )}
                             <ScreenReaderOnly>
                                 Make match

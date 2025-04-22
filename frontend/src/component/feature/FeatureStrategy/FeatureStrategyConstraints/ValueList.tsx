@@ -133,11 +133,12 @@ const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
         const [inputValues, setInputValues] = useState('');
         const [error, setError] = useState('');
         const positioningRef = useRef<HTMLButtonElement>(null);
-        const inputId = useId();
         useImperativeHandle(
             ref,
             () => positioningRef.current as HTMLButtonElement,
         );
+        const inputRef = useRef<HTMLInputElement>(null);
+        const inputId = useId();
 
         const handleAdd = () => {
             const newValues = parseParameterStrings(inputValues);
@@ -155,6 +156,7 @@ const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
             onAddValues(newValues);
             setInputValues('');
             setError('');
+            inputRef?.current?.focus();
         };
 
         return (
@@ -206,12 +208,13 @@ const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
                                 size='small'
                                 variant='standard'
                                 fullWidth
+                                inputRef={inputRef}
                                 autoFocus
                             />
                             <Button
                                 variant='text'
+                                type='submit'
                                 color='primary'
-                                onClick={handleAdd}
                                 disabled={!inputValues.trim()}
                             >
                                 Add

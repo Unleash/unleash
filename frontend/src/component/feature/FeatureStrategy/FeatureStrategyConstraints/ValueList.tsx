@@ -152,14 +152,6 @@ const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
             onAddValues(newValues);
             setInputValues('');
             setError('');
-            setOpen(false);
-        };
-
-        const handleKeyPress = (event: React.KeyboardEvent) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                handleAdd();
-            }
         };
 
         return (
@@ -186,7 +178,13 @@ const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
                         horizontal: 'left',
                     }}
                 >
-                    <div>
+                    <form
+                        onSubmit={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            handleAdd();
+                        }}
+                    >
                         {error && <ErrorMessage>{error}</ErrorMessage>}
                         <InputRow>
                             <StyledTextField
@@ -196,7 +194,6 @@ const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
                                     setInputValues(e.target.value);
                                     setError('');
                                 }}
-                                onKeyPress={handleKeyPress}
                                 size='small'
                                 variant='standard'
                                 fullWidth
@@ -211,7 +208,7 @@ const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
                                 Add
                             </Button>
                         </InputRow>
-                    </div>
+                    </form>
                 </StyledPopover>
             </>
         );

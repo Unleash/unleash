@@ -122,12 +122,8 @@ export const FeatureOverview = () => {
                         }
                     />
                 </Routes>
-
-                <StrategyDragTooltip
-                    show={showTooltip}
-                    onClose={onTooltipClose}
-                />
             </StyledContainer>
+            <StrategyDragTooltip show={showTooltip} onClose={onTooltipClose} />
         </div>
     );
 };

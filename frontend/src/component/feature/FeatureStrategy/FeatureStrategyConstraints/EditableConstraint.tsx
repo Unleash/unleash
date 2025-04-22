@@ -40,6 +40,9 @@ import { ConstraintOperatorSelect } from './ConstraintOperatorSelect';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import Delete from '@mui/icons-material/Delete';
 import { ValueList } from './ValueList';
+import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive.svg';
+import { ReactComponent as CaseInsensitiveIcon } from 'assets/icons/case-insensitive.svg';
+import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -121,6 +124,20 @@ const StyledButton = styled('button')(({ theme }) => ({
     '&:is(:hover, :focus-visible)': {
         outline: `1px solid ${theme.palette.primary.main}`,
     },
+}));
+
+const StyledCaseInsensitiveIcon = styled(CaseInsensitiveIcon)(({ theme }) => ({
+    path: {
+        fill: theme.palette.text.disabled,
+    },
+    rect: {
+        fill: theme.palette.text.secondary,
+    },
+}));
+
+const CaseButton = styled(StyledButton)(({ theme }) => ({
+    display: 'grid',
+    placeItems: 'center',
 }));
 
 type Props = {
@@ -371,12 +388,26 @@ export const EditableConstraint: FC<Props> = ({
                     />
 
                     {showCaseSensitiveButton ? (
-                        <StyledButton
+                        <CaseButton
                             type='button'
                             onClick={toggleCaseSensitivity}
                         >
-                            {localConstraint.caseInsensitive ? 'Aa' : 'A/a'}
-                        </StyledButton>
+                            {localConstraint.caseInsensitive ? (
+                                <StyledCaseInsensitiveIcon aria-label='The match is not case sensitive.' />
+                            ) : (
+                                <CaseSensitiveIcon
+                                    aria-label='The match is case sensitive.'
+                                    fill='currentColor'
+                                />
+                            )}
+                            <ScreenReaderOnly>
+                                Make match
+                                {localConstraint.caseInsensitive
+                                    ? ' '
+                                    : ' not '}
+                                case sensitive
+                            </ScreenReaderOnly>
+                        </CaseButton>
                     ) : null}
 
                     {!input.includes('LEGAL_VALUES') && (

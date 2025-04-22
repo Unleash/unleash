@@ -6,6 +6,8 @@ import { IconButton, Tooltip } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import FileCopyOutlined from '@mui/icons-material/FileCopyOutlined';
 
+const iconSize = 18 / 8;
+
 export const FeatureCopyName: FC<{ name: string }> = ({ name }) => {
     const [isFeatureNameCopied, setIsFeatureNameCopied] = useState(false);
     const { setToastData } = useToast();
@@ -14,9 +16,13 @@ export const FeatureCopyName: FC<{ name: string }> = ({ name }) => {
         try {
             copy(name);
             setIsFeatureNameCopied(true);
-            setTimeout(() => {
+            const timeout = setTimeout(() => {
                 setIsFeatureNameCopied(false);
             }, 3000);
+
+            return () => {
+                clearTimeout(timeout);
+            };
         } catch (error: unknown) {
             setToastData({
                 type: 'error',
@@ -40,12 +46,14 @@ export const FeatureCopyName: FC<{ name: string }> = ({ name }) => {
                 {isFeatureNameCopied ? (
                     <Check
                         sx={(theme) => ({
-                            fontSize: 18,
+                            fontSize: theme.spacing(iconSize),
                             color: theme.palette.success.main,
                         })}
                     />
                 ) : (
-                    <FileCopyOutlined sx={{ fontSize: 18 }} />
+                    <FileCopyOutlined
+                        sx={(theme) => ({ fontSize: theme.spacing(iconSize) })}
+                    />
                 )}
             </IconButton>
         </Tooltip>

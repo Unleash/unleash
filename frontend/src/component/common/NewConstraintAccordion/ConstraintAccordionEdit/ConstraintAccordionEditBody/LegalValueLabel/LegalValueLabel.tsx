@@ -27,13 +27,18 @@ export const LegalValueLabel = ({
             <FormControlLabel
                 value={value || legal.value}
                 control={control}
-                sx={{ width: '100%' }}
+                sx={{
+                    width: '100%',
+                    overflowX: 'hidden',
+                }}
                 label={
                     <>
                         <StyledValue>
-                            <Highlighter search={filter}>
-                                {legal.value}
-                            </Highlighter>
+                            <Truncator title={legal.value} arrow lines={1}>
+                                <Highlighter search={filter}>
+                                    {legal.value}
+                                </Highlighter>
+                            </Truncator>
                         </StyledValue>
                         <StyledDescription>
                             <Truncator

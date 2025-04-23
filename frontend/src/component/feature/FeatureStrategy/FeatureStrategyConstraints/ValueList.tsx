@@ -8,9 +8,11 @@ import {
     styled,
     TextField,
 } from '@mui/material';
+import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import {
     type FC,
     forwardRef,
+    useId,
     useImperativeHandle,
     useRef,
     useState,
@@ -135,6 +137,8 @@ const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
             ref,
             () => positioningRef.current as HTMLButtonElement,
         );
+        const inputRef = useRef<HTMLInputElement>(null);
+        const inputId = useId();
 
         const handleAdd = () => {
             const newValues = parseParameterStrings(inputValues);
@@ -152,14 +156,7 @@ const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
             onAddValues(newValues);
             setInputValues('');
             setError('');
-            setOpen(false);
-        };
-
-        const handleKeyPress = (event: React.KeyboardEvent) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                handleAdd();
-            }
+            inputRef?.current?.focus();
         };
 
         return (
@@ -186,32 +183,44 @@ const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
                         horizontal: 'left',
                     }}
                 >
-                    <div>
+                    <form
+                        onSubmit={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            handleAdd();
+                        }}
+                    >
                         {error && <ErrorMessage>{error}</ErrorMessage>}
                         <InputRow>
+                            <ScreenReaderOnly>
+                                <label htmlFor={inputId}>
+                                    Constraint Value
+                                </label>
+                            </ScreenReaderOnly>
                             <StyledTextField
+                                id={inputId}
                                 placeholder='Enter value'
                                 value={inputValues}
                                 onChange={(e) => {
                                     setInputValues(e.target.value);
                                     setError('');
                                 }}
-                                onKeyPress={handleKeyPress}
                                 size='small'
                                 variant='standard'
                                 fullWidth
+                                inputRef={inputRef}
                                 autoFocus
                             />
                             <Button
                                 variant='text'
+                                type='submit'
                                 color='primary'
-                                onClick={handleAdd}
                                 disabled={!inputValues.trim()}
                             >
                                 Add
                             </Button>
                         </InputRow>
-                    </div>
+                    </form>
                 </StyledPopover>
             </>
         );

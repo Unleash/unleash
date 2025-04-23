@@ -10,15 +10,18 @@ This guide helps you set up Unleash Enterprise in your own environment using [Do
 
 ## Set up Unleash with Docker
 
-### Pull the Unleash Enterprise Docker image
+### Start Unleash locally
 
-To start pull the Unleash Enterprise Docker image locally, run the following command:
+To start Unleash locally, clone the Unleash repository and start the server with Docker Compose:
 
-```shell
-docker pull unleashorg/unleash-enterprise
+``
+git clone git@github.com:Unleash/unleash.git
+
+cd unleash
+docker compose -f docker-compose-enterprise.yml up
 ```
 
-### Run the Docker image
+This pulls the `unleashorg/unleash-enterprise` Docker image and uses the Enterprise Docker Compose file to configure the Unleash server and its database.
 
 ### Log in to the Unleash Admin UI
 
@@ -34,7 +37,9 @@ Request a license by signing up for a free download of our self-hosted trial [he
 
 Go to http://localhost:4242/admin/license and install your Unleash Enterprise license trial:
 
-### Create your first flag
+> Note: Without a valid license, your instance is in read-only mode.
+
+## Create your first flag
 
 To create your first flag:
 1. Open the **Default** project.
@@ -43,7 +48,7 @@ To create your first flag:
 
 For more details on creating feature flags, see [How to create a feature flag](/how-to-create-feature-flag).
 
-### Connect an SDK
+## Connect an SDK
 
 Next, use one of the client or server-side [SDKs](/reference/sdks) to connect Unleash with your application.
 

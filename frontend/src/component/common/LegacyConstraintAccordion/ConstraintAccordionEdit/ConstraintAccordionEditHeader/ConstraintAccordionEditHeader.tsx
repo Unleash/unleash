@@ -24,6 +24,7 @@ import { InvertedOperatorButton } from '../StyledToggleButton/InvertedOperatorBu
 import { CaseSensitiveButton } from '../StyledToggleButton/CaseSensitiveButton/CaseSensitiveButton';
 import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';
 import { styled } from '@mui/material';
+import type { IUnleashContextDefinition } from 'interfaces/context';
 
 interface IConstraintAccordionViewHeader {
     localConstraint: IConstraint;
@@ -35,6 +36,7 @@ interface IConstraintAccordionViewHeader {
     onDelete?: () => void;
     setInvertedOperator: () => void;
     setCaseInsensitive: () => void;
+    contextDefinition?: Pick<IUnleashContextDefinition, 'legalValues'>;
 }
 
 const StyledHeaderContainer = styled('div')(({ theme }) => ({
@@ -99,6 +101,7 @@ export const ConstraintAccordionEditHeader = ({
     onDelete,
     setInvertedOperator,
     setCaseInsensitive,
+    contextDefinition,
 }: IConstraintAccordionViewHeader) => {
     const { context } = useUnleashContext();
     const { contextName, operator } = localConstraint;
@@ -182,7 +185,10 @@ export const ConstraintAccordionEditHeader = ({
                     />
                     <StyledHeaderSelect>
                         <ConstraintOperatorSelect
-                            options={operatorsForContext(contextName)}
+                            options={operatorsForContext(
+                                contextName,
+                                contextDefinition,
+                            )}
                             value={operator}
                             onChange={onOperatorChange}
                         />

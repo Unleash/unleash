@@ -1,14 +1,11 @@
 import type React from 'react';
-import { forwardRef, Fragment, useImperativeHandle } from 'react';
+import { forwardRef, Fragment } from 'react';
 import { styled } from '@mui/material';
 import type { IConstraint } from 'interfaces/strategy';
 import produce from 'immer';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import { type IUseWeakMap, useWeakMap } from 'hooks/useWeakMap';
-import {
-    constraintId,
-    createEmptyConstraint,
-} from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
+import type { IUseWeakMap } from 'hooks/useWeakMap';
+import { constraintId } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import { NewConstraintAccordion } from 'component/common/NewConstraintAccordion/NewConstraintAccordion';
@@ -44,37 +41,6 @@ const StyledContainer = styled('div')({
     display: 'flex',
     flexDirection: 'column',
 });
-
-export const useConstraintAccordionList = (
-    setConstraints:
-        | React.Dispatch<React.SetStateAction<IConstraint[]>>
-        | undefined,
-    ref: React.RefObject<IConstraintAccordionListRef>,
-) => {
-    // Constraint metadata: This is a weak map to give a constraint an ID by using the placement in memory.
-    const state = useWeakMap<IConstraint, IConstraintAccordionListItemState>();
-    const { context } = useUnleashContext();
-
-    const addConstraint =
-        setConstraints &&
-        ((contextName: string) => {
-            const constraint = createEmptyConstraint(contextName);
-            state.set(constraint, { editing: true, new: true });
-            setConstraints((prev) => [...prev, constraint]);
-        });
-
-    useImperativeHandle(ref, () => ({
-        addConstraint,
-    }));
-
-    const onAdd =
-        addConstraint &&
-        (() => {
-            addConstraint(context[0].name);
-        });
-
-    return { onAdd, state, context };
-};
 interface IConstraintList {
     constraints: IConstraint[];
     setConstraints?: React.Dispatch<React.SetStateAction<IConstraint[]>>;

@@ -94,7 +94,6 @@ export const ConstraintOperatorSelect = ({
             </StyledValue>
         );
     };
-
     return (
         <FormControl variant='standard' size='small' hiddenLabel>
             <ScreenReaderOnly>

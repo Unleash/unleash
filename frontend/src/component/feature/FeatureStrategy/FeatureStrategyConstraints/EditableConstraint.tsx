@@ -394,7 +394,10 @@ export const EditableConstraint: FC<Props> = ({
                     </StyledButton>
 
                     <ConstraintOperatorSelect
-                        options={operatorsForContext(contextName)}
+                        options={operatorsForContext(
+                            contextName,
+                            contextDefinition,
+                        )}
                         value={operator}
                         onChange={onOperatorChange}
                         inverted={localConstraint.inverted}

@@ -22,30 +22,19 @@ export const LegalValueLabel = ({
     filter,
     value,
 }: ILegalValueTextProps) => {
+    const tooltipText = legal.description
+        ? `${legal.value}: ${legal.description}`
+        : legal.value;
     return (
         <StyledContainer>
             <FormControlLabel
                 value={value || legal.value}
                 control={control}
                 sx={{
-                    '.MuiFormControlLabel-label': {
-                        overflowX: 'hidden',
-                    },
                     width: '100%',
-                    overflowX: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
                 }}
                 label={
-                    <Truncator
-                        title={
-                            legal.value + legal.description
-                                ? `: ${legal.description}`
-                                : ''
-                        }
-                        arrow
-                        lines={1}
-                    >
+                    <Truncator title={tooltipText} arrow lines={2}>
                         <StyledValue>
                             <Highlighter search={filter}>
                                 {legal.value}

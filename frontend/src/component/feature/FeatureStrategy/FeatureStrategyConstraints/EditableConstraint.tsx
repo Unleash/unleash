@@ -427,6 +427,7 @@ export const EditableConstraint: FC<Props> = ({
                             <AddValuesWidget
                                 ref={addValuesButtonRef}
                                 onAddValues={(newValues) => {
+                                    // todo (`addEditStrategy`): move deduplication logic higher up in the context handling
                                     const combinedValues = new Set([
                                         ...(localConstraint.values || []),
                                         ...newValues,

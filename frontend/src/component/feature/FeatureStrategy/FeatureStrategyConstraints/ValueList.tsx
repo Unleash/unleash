@@ -1,23 +1,6 @@
-import Add from '@mui/icons-material/Add';
 import Clear from '@mui/icons-material/Clear';
-import {
-    Button,
-    Chip,
-    type ChipProps,
-    Popover,
-    styled,
-    TextField,
-} from '@mui/material';
-import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
-import {
-    type FC,
-    forwardRef,
-    useId,
-    useImperativeHandle,
-    useRef,
-    useState,
-} from 'react';
-import { parseParameterStrings } from 'utils/parseParameter';
+import { Chip, type ChipProps, styled } from '@mui/material';
+import { type FC, forwardRef, type PropsWithChildren, useRef } from 'react';
 
 const ValueListWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -72,192 +55,34 @@ const ValueChip = styled(ValueChipBase)(({ theme }) => ({
     },
 }));
 
-const AddValuesButton = styled('button')(({ theme }) => ({
-    color: theme.palette.primary.main,
-    svg: {
-        fill: theme.palette.primary.main,
-        height: theme.fontSizes.smallerBody,
-        width: theme.fontSizes.smallerBody,
-    },
-    border: 'none',
-    borderRadius: theme.shape.borderRadiusExtraLarge,
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    whiteSpace: 'nowrap',
-    gap: theme.spacing(0.25),
-    alignItems: 'center',
-    padding: theme.spacing(0.5, 1.5, 0.5, 1.5),
-    height: 'auto',
-    transition: 'all 0.3s ease',
-    outline: `1px solid #0000`,
-    background: theme.palette.background.elevation1,
-    ':hover, :focus-visible': {
-        background: theme.palette.background.elevation1,
-        outlineColor: theme.palette.secondary.dark,
-    },
-}));
-
-const StyledPopover = styled(Popover)(({ theme }) => ({
-    '& .MuiPaper-root': {
-        borderRadius: theme.shape.borderRadiusLarge,
-        border: `1px solid ${theme.palette.divider}`,
-        padding: theme.spacing(2),
-        width: '250px',
-    },
-}));
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-    flexGrow: 1,
-}));
-
-const InputRow = styled('div')(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(1),
-    alignItems: 'start',
-    width: '100%',
-}));
-
-const ErrorMessage = styled('div')(({ theme }) => ({
-    color: theme.palette.error.main,
-    fontSize: theme.typography.caption.fontSize,
-    marginBottom: theme.spacing(1),
-}));
-
-interface AddValuesProps {
-    onAddValues: (values: string[]) => void;
-}
-
-const AddValues = forwardRef<HTMLButtonElement, AddValuesProps>(
-    ({ onAddValues }, ref) => {
-        const [open, setOpen] = useState(false);
-        const [inputValues, setInputValues] = useState('');
-        const [error, setError] = useState('');
-        const positioningRef = useRef<HTMLButtonElement>(null);
-        useImperativeHandle(
-            ref,
-            () => positioningRef.current as HTMLButtonElement,
-        );
-        const inputRef = useRef<HTMLInputElement>(null);
-        const inputId = useId();
-
-        const handleAdd = () => {
-            const newValues = parseParameterStrings(inputValues);
-
-            if (newValues.length === 0) {
-                setError('Values cannot be empty');
-                return;
-            }
-
-            if (newValues.some((v) => v.length > 100)) {
-                setError('Values cannot be longer than 100 characters');
-                return;
-            }
-
-            onAddValues(newValues);
-            setInputValues('');
-            setError('');
-            inputRef?.current?.focus();
-        };
-
-        return (
-            <>
-                <AddValuesButton
-                    ref={positioningRef}
-                    onClick={() => setOpen(true)}
-                    type='button'
-                >
-                    <Add />
-                    <span>Add values</span>
-                </AddValuesButton>
-                <StyledPopover
-                    open={open}
-                    disableScrollLock
-                    anchorEl={positioningRef.current}
-                    onClose={() => setOpen(false)}
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left',
-                    }}
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'left',
-                    }}
-                >
-                    <form
-                        onSubmit={(e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            handleAdd();
-                        }}
-                    >
-                        {error && <ErrorMessage>{error}</ErrorMessage>}
-                        <InputRow>
-                            <ScreenReaderOnly>
-                                <label htmlFor={inputId}>
-                                    Constraint Value
-                                </label>
-                            </ScreenReaderOnly>
-                            <StyledTextField
-                                id={inputId}
-                                placeholder='Enter value'
-                                value={inputValues}
-                                onChange={(e) => {
-                                    setInputValues(e.target.value);
-                                    setError('');
-                                }}
-                                size='small'
-                                variant='standard'
-                                fullWidth
-                                inputRef={inputRef}
-                                autoFocus
-                            />
-                            <Button
-                                variant='text'
-                                type='submit'
-                                color='primary'
-                                disabled={!inputValues.trim()}
-                            >
-                                Add
-                            </Button>
-                        </InputRow>
-                    </form>
-                </StyledPopover>
-            </>
-        );
-    },
-);
-
 type Props = {
     values: string[] | undefined;
     removeValue: (index: number) => void;
     setValues: (values: string[]) => void;
+    // the element that should receive focus when all value chips are deleted
+    getExternalFocusTarget: () => HTMLElement | null;
 };
 
-export const ValueList: FC<Props> = ({
+export const ValueList: FC<PropsWithChildren<Props>> = ({
     values = [],
     removeValue,
-    setValues,
+    getExternalFocusTarget,
+    children,
 }) => {
     const constraintElementRefs: React.MutableRefObject<
         (HTMLDivElement | null)[]
     > = useRef([]);
-    const addValuesButtonRef = useRef<HTMLButtonElement>(null);
 
     const nextFocusTarget = (deletedIndex: number) => {
         if (deletedIndex === values.length - 1) {
             if (deletedIndex === 0) {
-                return addValuesButtonRef.current;
+                return getExternalFocusTarget();
             } else {
                 return constraintElementRefs.current[deletedIndex - 1];
             }
         } else {
             return constraintElementRefs.current[deletedIndex + 1];
         }
-    };
-
-    const handleAddValues = (newValues: string[]) => {
-        const combinedValues = uniqueValues([...(values || []), ...newValues]);
-        setValues(combinedValues);
     };
 
     return (
@@ -279,11 +104,7 @@ export const ValueList: FC<Props> = ({
                     </li>
                 ))}
             </StyledList>
-            <AddValues ref={addValuesButtonRef} onAddValues={handleAddValues} />
+            {children}
         </ValueListWrapper>
     );
-};
-
-const uniqueValues = <T,>(values: T[]): T[] => {
-    return Array.from(new Set(values));
 };

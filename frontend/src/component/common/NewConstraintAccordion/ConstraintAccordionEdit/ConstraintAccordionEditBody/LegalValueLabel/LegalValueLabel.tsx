@@ -27,26 +27,36 @@ export const LegalValueLabel = ({
             <FormControlLabel
                 value={value || legal.value}
                 control={control}
-                sx={{ width: '100%' }}
+                sx={{
+                    '.MuiFormControlLabel-label': {
+                        overflowX: 'hidden',
+                    },
+                    width: '100%',
+                    overflowX: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                }}
                 label={
-                    <>
+                    <Truncator
+                        title={
+                            legal.value + legal.description
+                                ? `: ${legal.description}`
+                                : ''
+                        }
+                        arrow
+                        lines={1}
+                    >
                         <StyledValue>
                             <Highlighter search={filter}>
                                 {legal.value}
                             </Highlighter>
                         </StyledValue>
                         <StyledDescription>
-                            <Truncator
-                                title={legal.description}
-                                arrow
-                                lines={1}
-                            >
-                                <Highlighter search={filter}>
-                                    {legal.description}
-                                </Highlighter>
-                            </Truncator>
+                            <Highlighter search={filter}>
+                                {legal.description}
+                            </Highlighter>
                         </StyledDescription>
-                    </>
+                    </Truncator>
                 }
             />
         </StyledContainer>

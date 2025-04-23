@@ -52,7 +52,7 @@ export const getIllegalValues = (
 
 const StyledValuesContainer = styled('div')(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, 120px)',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
     gap: theme.spacing(1),
     padding: theme.spacing(2),
     border: `1px solid ${theme.palette.divider}`,

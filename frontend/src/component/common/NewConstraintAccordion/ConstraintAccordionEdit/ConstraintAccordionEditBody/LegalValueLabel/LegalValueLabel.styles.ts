@@ -17,6 +17,8 @@ export const StyledContainer = styled('div')(({ theme }) => ({
 export const StyledValue = styled('div')(({ theme }) => ({
     lineHeight: 1.33,
     fontSize: theme.fontSizes.smallBody,
+    overflowX: 'hidden',
+    textOverflow: 'ellipsis',
 }));
 
 export const StyledDescription = styled('div')(({ theme }) => ({

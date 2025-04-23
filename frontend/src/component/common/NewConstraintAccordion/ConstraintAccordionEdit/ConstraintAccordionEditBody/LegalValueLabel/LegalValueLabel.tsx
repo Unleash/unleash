@@ -22,9 +22,6 @@ export const LegalValueLabel = ({
     filter,
     value,
 }: ILegalValueTextProps) => {
-    const tooltipText = legal.description
-        ? `${legal.value}: ${legal.description}`
-        : legal.value;
     return (
         <StyledContainer>
             <FormControlLabel
@@ -32,20 +29,29 @@ export const LegalValueLabel = ({
                 control={control}
                 sx={{
                     width: '100%',
+                    overflowX: 'hidden',
                 }}
                 label={
-                    <Truncator title={tooltipText} arrow lines={2}>
+                    <>
                         <StyledValue>
-                            <Highlighter search={filter}>
-                                {legal.value}
-                            </Highlighter>
+                            <Truncator title={legal.value} arrow lines={1}>
+                                <Highlighter search={filter}>
+                                    {legal.value}
+                                </Highlighter>
+                            </Truncator>
                         </StyledValue>
                         <StyledDescription>
-                            <Highlighter search={filter}>
-                                {legal.description}
-                            </Highlighter>
+                            <Truncator
+                                title={legal.description}
+                                arrow
+                                lines={1}
+                            >
+                                <Highlighter search={filter}>
+                                    {legal.description}
+                                </Highlighter>
+                            </Truncator>
                         </StyledDescription>
-                    </Truncator>
+                    </>
                 }
             />
         </StyledContainer>

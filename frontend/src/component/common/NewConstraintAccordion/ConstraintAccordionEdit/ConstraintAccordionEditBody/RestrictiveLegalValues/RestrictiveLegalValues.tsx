@@ -60,6 +60,15 @@ const StyledValuesContainer = styled('div')(({ theme }) => ({
     maxHeight: '378px',
     overflow: 'auto',
 }));
+
+const StyledChipList = styled('ul')(({ theme }) => ({
+    display: 'flex',
+    flexWrap: 'wrap',
+    listStyle: 'none',
+    gap: theme.spacing(1),
+    padding: theme.spacing(2),
+}));
+
 const StyledStack = styled(Stack)(({ theme }) => ({
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(0.5),
@@ -185,19 +194,22 @@ export const RestrictiveLegalValues = ({
                                 Boolean(values)
                             }
                             show={
-                                <StyledValuesContainer
+                                <StyledChipList
                                     sx={{ border: 0, paddingTop: 0 }}
                                 >
                                     {values.map((value) => {
                                         return (
-                                            <Chip
-                                                key={value}
-                                                label={value}
-                                                onDelete={() => onChange(value)}
-                                            />
+                                            <li key={value}>
+                                                <Chip
+                                                    label={value}
+                                                    onDelete={() =>
+                                                        onChange(value)
+                                                    }
+                                                />
+                                            </li>
                                         );
                                     })}
-                                </StyledValuesContainer>
+                                </StyledChipList>
                             }
                         />
                     </>

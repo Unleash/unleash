@@ -36,6 +36,7 @@ import { InactiveUsersController } from '../../users/inactive/inactive-users-con
 import { UiObservabilityController } from '../../features/ui-observability-controller/ui-observability-controller';
 import { SearchApi } from './search';
 import PersonalDashboardController from '../../features/personal-dashboard/personal-dashboard-controller';
+import FeatureLifecycleCountController from '../../features/feature-lifecycle/feature-lifecycle-count-controller';
 
 export class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
@@ -120,6 +121,10 @@ export class AdminApi extends Controller {
         this.app.use(
             '/projects',
             new ProjectController(config, services, db).router,
+        );
+        this.app.use(
+            '/lifecycle',
+            new FeatureLifecycleCountController(config, services).router,
         );
         this.app.use(
             '/personal-dashboard',

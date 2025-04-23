@@ -67,10 +67,7 @@ beforeAll(async () => {
     const versionService = new VersionService(stores, config);
     db = await dbInit('metrics_test', getLogger);
 
-    featureLifeCycleReadModel = new FeatureLifecycleReadModel(
-        db.rawDatabase,
-        config.flagResolver,
-    );
+    featureLifeCycleReadModel = new FeatureLifecycleReadModel(db.rawDatabase);
     stores.featureLifecycleReadModel = featureLifeCycleReadModel;
     featureLifeCycleStore = new FeatureLifecycleStore(db.rawDatabase);
     stores.featureLifecycleStore = featureLifeCycleStore;

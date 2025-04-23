@@ -41,10 +41,7 @@ beforeAll(async () => {
     );
     eventStore = db.stores.eventStore;
     eventBus = app.config.eventBus;
-    featureLifecycleReadModel = new FeatureLifecycleReadModel(
-        db.rawDatabase,
-        app.config.flagResolver,
-    );
+    featureLifecycleReadModel = new FeatureLifecycleReadModel(db.rawDatabase);
     featureLifecycleStore = db.stores.featureLifecycleStore;
 
     await app.request
@@ -115,6 +112,10 @@ const expectFeatureStage = async (featureName: string, stage: StageName) => {
     });
 };
 
+const getFeaturesLifecycleCount = async () => {
+    return app.request.get(`/api/admin/lifecycle/count`).expect(200);
+};
+
 test('should return lifecycle stages', async () => {
     await app.createFeature('my_feature_a');
     await app.enableFeature('my_feature_a', 'default');
@@ -173,6 +174,15 @@ test('should return lifecycle stages', async () => {
 
     eventStore.emit(FEATURE_REVIVED, { featureName: 'my_feature_a' });
     await reachedStage('my_feature_a', 'initial');
+
+    const { body: lifecycleCount } = await getFeaturesLifecycleCount();
+    expect(lifecycleCount).toEqual({
+        initial: 1,
+        preLive: 0,
+        live: 0,
+        completed: 0,
+        archived: 0,
+    });
 });
 
 test('should be able to toggle between completed/uncompleted', async () => {

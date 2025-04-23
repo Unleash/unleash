@@ -60,6 +60,7 @@ import type { PersonalDashboardService } from '../features/personal-dashboard/pe
 import type { ProjectStatusService } from '../features/project-status/project-status-service';
 import type { UserSubscriptionsService } from '../features/user-subscriptions/user-subscriptions-service';
 import type { UniqueConnectionService } from '../features/unique-connection/unique-connection-service';
+import type { IFeatureLifecycleReadModel } from '../features/feature-lifecycle/feature-lifecycle-read-model-type';
 
 export interface IUnleashServices {
     transactionalAccessService: WithTransactional<AccessService>;
@@ -131,4 +132,5 @@ export interface IUnleashServices {
     projectStatusService: ProjectStatusService;
     transactionalUserSubscriptionsService: WithTransactional<UserSubscriptionsService>;
     uniqueConnectionService: UniqueConnectionService;
+    featureLifecycleReadModel: IFeatureLifecycleReadModel;
 }

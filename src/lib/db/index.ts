@@ -181,10 +181,7 @@ export const createStores = (
         featureStrategiesReadModel: new FeatureStrategiesReadModel(db),
         onboardingReadModel: createOnboardingReadModel(db),
         onboardingStore: new OnboardingStore(db),
-        featureLifecycleReadModel: new FeatureLifecycleReadModel(
-            db,
-            config.flagResolver,
-        ),
+        featureLifecycleReadModel: new FeatureLifecycleReadModel(db),
         largestResourcesReadModel: new LargestResourcesReadModel(db),
         integrationEventsStore: new IntegrationEventsStore(db, { eventBus }),
         featureCollaboratorsReadModel: new FeatureCollaboratorsReadModel(db),

@@ -1,0 +1,16 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+	<title>webhooks</title>
+	<defs>
+		<clipPath clipPathUnits="userSpaceOnUse" id="cp1">
+			<path d="m4 4h24v24h-24z"/>
+		</clipPath>
+		<image width="50" height="72" id="img1" href="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJMb2dvcyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNTAiIGhlaWdodD0iNzIiIHZpZXdCb3g9IjAgMCA1MCA3MiI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOiM3YjQyYmM7ZmlsbC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlLXdpZHRoOjBweDt9PC9zdHlsZT48L2RlZnM+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTcuMywxNy41bDE1LjUsOXYxOGwtMTUuNS05di0xOFoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0zNC41LDI2LjV2MThsMTUuNS05di0xOGwtMTUuNSw5WiIvPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTAsNy41djE4bDE1LjUsOXYtMThMMCw3LjVaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTcuMyw1NS41bDE1LjUsOXYtMThsLTE1LjUtOXYxOFoiLz48L3N2Zz4="/>
+	</defs>
+	<style>
+		.s0 { fill: #f7f7fa } 
+	</style>
+	<path class="s0" d="m0 0h32v32h-32z"/>
+	<g id="Clip-Path" clip-path="url(#cp1)">
+		<use id="terraform" href="#img1" transform="matrix(.444,0,0,.444,5,0)"/>
+	</g>
+</svg>

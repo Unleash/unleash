@@ -6,24 +6,27 @@ import Tabs from '@theme/Tabs';
 
 import TabItem from '@theme/TabItem';
 
-This guide helps you set up Unleash Enterprise in your own environment using [Docker](#set-up-unleash-with-docker). Alternatively, you can sign up for a [cloud-hosted trial instance](https://www.getunleash.io/pricing).
+This guide helps you set up Unleash Enterprise in your own environment using [Docker](#set-up-unleash-with-docker).
+
+Alternatively, you can sign up for a [cloud-hosted trial instance](https://www.getunleash.io/pricing).
+
 
 ## Set up Unleash with Docker
 
-### Start Unleash locally
+To start Unleash locally, clone the Unleash repository and start the server with [Docker Compose](https://docs.docker.com/compose/):
 
-To start Unleash locally, clone the Unleash repository and start the server with Docker Compose:
-
-``
+```shell
 git clone git@github.com:Unleash/unleash.git
 
 cd unleash
 docker compose -f docker-compose-enterprise.yml up
 ```
 
-This pulls the `unleashorg/unleash-enterprise` Docker image and uses the Enterprise Docker Compose file to configure the Unleash server and its database.
+This pulls the `unleashorg/unleash-enterprise` Docker image and uses a Docker Compose file to configure the Unleash server and its database.
 
-### Log in to the Unleash Admin UI
+> This step uses `docker compose` (V2 syntax). If you have the older `docker-compose` (V1), use that command syntax instead.
+
+## Log in to the Unleash Admin UI
 
 In your browser, go to [http://localhost:4242](http://localhost:4242) and log in using the following credentials:
 - **username**: `admin`
@@ -31,13 +34,16 @@ In your browser, go to [http://localhost:4242](http://localhost:4242) and log in
 
 ![Unleash Admin UI log in screen](/img/quickstart-login.png)
 
-### Install your trial license
+## Install your trial license
 
-Request a license by signing up for a free download of our self-hosted trial [here](https://www.getunleash.io/pricing). Once you've signed up, you'll receive an email from Unleash containing your trial license key.
+Request a license by signing up for a self-hosted trial [here](https://www.getunleash.io/pricing). Once you've signed up, you'll receive an email from Unleash containing your trial license key.
 
-Go to http://localhost:4242/admin/license and install your Unleash Enterprise license trial:
+In the Admin UI, go to **Admin > License**, copy the license key you received by email and click **Update license key**.
 
-> Note: Without a valid license, your instance is in read-only mode.
+The top banner now displays the number of days you have left on your free trial.
+
+![Unleash Admin UI log in screen](/img/quickstart-license.png)
+
 
 ## Create your first flag
 
@@ -52,20 +58,16 @@ For more details on creating feature flags, see [How to create a feature flag](/
 
 Next, use one of the client or server-side [SDKs](/reference/sdks) to connect Unleash with your application.
 
-1. Create an API token:
-    - For client-side SDKs, use a [frontend token](/reference/api-tokens-and-client-keys#frontend-tokens). 
-    - For server-side SDKs, use a [client token](/reference/api-tokens-and-client-keys#client-tokens).
-2. Determine your Unleash URL:
-    - For client-side SDKs, use `<your-unleash-instance>/api/frontend`. 
-    - For server-side SDKs, use `<your-unleash-instance>/api`.
-3. Use the SDK to connect to Unleash in your application.
-
-The following example shows how to use the [JavaScript SDK](/reference/sdks/javascript-browser) and the [Node.js SDK](/reference/sdks/node) to connect to your Unleash instance:
-
 
 <Tabs groupId="connect-sdk-quickstart">
 
 <TabItem value="sdk-client-side" label="Connect a client-side SDK">
+
+1. Create a [frontend API token](/reference/api-tokens-and-client-keys#frontend-tokens). 
+2. Determine your Unleash URL, for example: `http://localhost:4242/api/frontend`. 
+3. Use the SDK to connect to Unleash in your application.
+
+The following example shows how to use the [JavaScript SDK](/reference/sdks/javascript-browser) to connect to your Unleash instance:
 
 ```javascript title="JavaScript SDK"
 import { UnleashClient } from "unleash-proxy-client";
@@ -89,11 +91,17 @@ unleash.on("synchronized", () => {
 </TabItem>
 <TabItem value="sdk-server-side" label="Connect a server-side SDK">
 
+1. Create a [client API token](/reference/api-tokens-and-client-keys#client-tokens).
+2. Determine your Unleash URL, for example: `http://localhost:4242/api`.
+3. Use the SDK to connect to Unleash in your application.
+
+The following example shows how to use the [Node.js SDK](/reference/sdks/node) to connect to your Unleash instance:
+
 ```javascript title="Node.js SDK"
 const { initialize } = require("unleash-client");
 
 const unleash = initialize({
-    url: "https://<your-unleash-instance>/api/",
+    url: "https://<your-unleash-instance>/api",
     appName: "<your-app-name>",
     customHeaders: {
         Authorization: "<your-token>",
@@ -114,6 +122,6 @@ unleash.on("synchronized", () => {
 
 ## Next steps
 
-Check out our reference documentation that explains all [core concepts](/reference) you need to get the most out of Unleash.
+Check out our reference documentation that explains the [Unleash architecture](/understanding-unleash/unleash-overview), the different [hosting options](/understanding-unleash/hosting-options) available, and other [core concepts](/reference) you need to get the most out of Unleash. 
 
 Explore feature flag best practices and language-specific tutorials in our [developer guides](/topics).

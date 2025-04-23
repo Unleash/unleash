@@ -41,6 +41,7 @@ Execute the following commands:
 
 ```bash
 git clone git@github.com:Unleash/unleash.git
+
 cd unleash
 docker compose up -d
 ```

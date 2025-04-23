@@ -2,7 +2,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { adminRoutes as oldAdminRoutes } from './oldAdminRoutes';
 import { adminRoutes } from './adminRoutes';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
-import { filterAdminRoutes } from './filterAdminRoutes';
+import { filterRoutesByPlanData } from './filterRoutesByPlanData';
 import { filterByConfig, mapRouteLink } from 'component/common/util';
 import { useUiFlag } from 'hooks/useUiFlag';
 
@@ -25,7 +25,7 @@ export const useAdminRoutes = () => {
     return routes
         .filter(filterByConfig(uiConfig))
         .filter((route) =>
-            filterAdminRoutes(route?.menu, {
+            filterRoutesByPlanData(route?.menu, {
                 enterprise: isEnterprise(),
                 pro: isPro(),
                 billing: isBilling,

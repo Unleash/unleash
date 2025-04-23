@@ -2,16 +2,13 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { getNavRoutes, getPrimaryRoutes } from 'component/menu/routes';
 import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import { filterByConfig, mapRouteLink } from 'component/common/util';
-import { filterAdminRoutes } from 'component/admin/filterAdminRoutes';
+import {
+    filterRoutesByPlanData,
+    type PlanData,
+} from 'component/admin/filterRoutesByPlanData';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import type { INavigationMenuItem } from 'interfaces/route';
 import type { IUiConfig } from 'interfaces/uiConfig';
-
-type PlanData = {
-    enterprise: boolean;
-    pro: boolean;
-    billing: boolean;
-};
 
 const filterRoutes = (
     routes: INavigationMenuItem[],
@@ -21,7 +18,7 @@ const filterRoutes = (
     return routes
         .filter(filterByConfig(uiConfig))
         .filter((route) =>
-            filterAdminRoutes(route?.menu, {
+            filterRoutesByPlanData(route?.menu, {
                 enterprise,
                 pro,
                 billing,

@@ -1,12 +1,14 @@
 import type { INavigationMenuItem } from 'interfaces/route';
 
-export const filterAdminRoutes = (
+export type PlanData = {
+    enterprise: boolean;
+    pro: boolean;
+    billing: boolean;
+};
+
+export const filterRoutesByPlanData = (
     menu: INavigationMenuItem['menu'],
-    {
-        pro,
-        enterprise,
-        billing,
-    }: { pro?: boolean; enterprise?: boolean; billing?: boolean },
+    { pro, enterprise, billing }: PlanData,
 ): boolean => {
     const mode = menu?.mode;
     if (menu?.billing && !billing) return false;

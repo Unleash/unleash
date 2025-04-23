@@ -41,12 +41,12 @@ const StyledAvatar = styled(UserAvatar)(({ theme }) => ({
 }));
 
 export const AvatarCell =
-    (onAvatarClick: (userId: number) => void): FC<AvatarCellProps> =>
+    (onAvatarClick?: (userId: number) => void): FC<AvatarCellProps> =>
     ({ row: { original } }) => {
         const ariaDisabled = original.createdBy.id === 0;
         const clickAction = ariaDisabled
             ? () => {}
-            : () => onAvatarClick(original.createdBy.id);
+            : () => onAvatarClick?.(original.createdBy.id);
         const tooltipContent = ariaDisabled ? (
             <>
                 <p>{original.createdBy.name}</p>
@@ -58,29 +58,37 @@ export const AvatarCell =
             <p>{original.createdBy.name}</p>
         );
 
+        const content = (
+            <>
+                <ScreenReaderOnly>
+                    <span>
+                        Show only flags created by {original.createdBy.name}
+                    </span>
+                </ScreenReaderOnly>
+                <StyledAvatar
+                    disableTooltip
+                    user={{
+                        id: original.createdBy.id,
+                        name: original.createdBy.name,
+                        imageUrl: original.createdBy.imageUrl,
+                    }}
+                />
+            </>
+        );
+
         return (
             <StyledContainer>
                 <HtmlTooltip arrow describeChild title={tooltipContent}>
-                    <StyledAvatarButton
-                        aria-disabled={ariaDisabled}
-                        onClick={clickAction}
-                    >
-                        <ScreenReaderOnly>
-                            <span>
-                                Show only flags created by{' '}
-                                {original.createdBy.name}
-                            </span>
-                        </ScreenReaderOnly>
-
-                        <StyledAvatar
-                            disableTooltip
-                            user={{
-                                id: original.createdBy.id,
-                                name: original.createdBy.name,
-                                imageUrl: original.createdBy.imageUrl,
-                            }}
-                        />
-                    </StyledAvatarButton>
+                    {onAvatarClick ? (
+                        <StyledAvatarButton
+                            aria-disabled={ariaDisabled}
+                            onClick={clickAction}
+                        >
+                            {content}
+                        </StyledAvatarButton>
+                    ) : (
+                        <div>{content}</div>
+                    )}
                 </HtmlTooltip>
             </StyledContainer>
         );

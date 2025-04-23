@@ -102,11 +102,6 @@ export const FeatureToggleListTable: FC = () => {
         tableState,
         setTableState,
     );
-    const onAvatarClick = useTableStateFilter(
-        ['createdBy', 'IS'],
-        tableState,
-        setTableState,
-    );
 
     const { projects } = useProjects();
     const bodyLoadingRef = useLoading(loading);
@@ -172,7 +167,7 @@ export const FeatureToggleListTable: FC = () => {
                       columnHelper.accessor('createdBy', {
                           id: 'createdBy',
                           header: 'By',
-                          cell: AvatarCell(onAvatarClick),
+                          cell: AvatarCell(),
                           meta: { width: '1%', align: 'center' },
                           enableSorting: false,
                       }),
@@ -347,12 +342,11 @@ export const FeatureToggleListTable: FC = () => {
                   ],
         [tableState.favoritesFirst],
     );
-    const data = useMemo(
+    const data = useMemo<FeatureSearchResponseSchema[]>(
         () =>
             features?.length === 0 && loading ? featuresPlaceholder : features,
         [initialLoad, features, loading],
     );
-
     const table = useReactTable(
         withTableState(tableState, setTableState, {
             columns,

@@ -30,7 +30,7 @@ import type {
     IUnleashContextDefinition,
 } from 'interfaces/context';
 import type { IConstraint } from 'interfaces/strategy';
-import { useEffect, useState, type FC } from 'react';
+import { useEffect, useRef, useState, type FC } from 'react';
 import { oneOf } from 'utils/oneOf';
 import {
     CURRENT_TIME_CONTEXT_FIELD,
@@ -190,6 +190,7 @@ export const EditableConstraint: FC<Props> = ({
     const { contextName, operator } = localConstraint;
     const [showCaseSensitiveButton, setShowCaseSensitiveButton] =
         useState(false);
+    const deleteButtonRef = useRef<HTMLButtonElement>(null);
 
     /* We need a special case to handle the currentTime context field. Since
     this field will be the only one to allow DATE_BEFORE and DATE_AFTER operators
@@ -414,11 +415,18 @@ export const EditableConstraint: FC<Props> = ({
                         values={localConstraint.values}
                         removeValue={removeValue}
                         setValues={setValuesWithRecord}
+                        hideAddButton={input.includes('LEGAL_VALUES')}
+                        fallbackFocusTarget={deleteButtonRef.current}
                     />
                 </ConstraintDetails>
 
                 <HtmlTooltip title='Delete constraint' arrow>
-                    <IconButton type='button' size='small' onClick={onDelete}>
+                    <IconButton
+                        type='button'
+                        size='small'
+                        onClick={onDelete}
+                        ref={deleteButtonRef}
+                    >
                         <Delete />
                     </IconButton>
                 </HtmlTooltip>

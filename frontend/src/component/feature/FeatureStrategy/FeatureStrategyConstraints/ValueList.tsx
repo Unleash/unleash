@@ -231,12 +231,16 @@ type Props = {
     values: string[] | undefined;
     removeValue: (index: number) => void;
     setValues: (values: string[]) => void;
+    hideAddButton?: boolean;
+    fallbackFocusTarget?: HTMLElement | null;
 };
 
 export const ValueList: FC<Props> = ({
     values = [],
     removeValue,
     setValues,
+    hideAddButton,
+    fallbackFocusTarget,
 }) => {
     const constraintElementRefs: React.MutableRefObject<
         (HTMLDivElement | null)[]
@@ -246,7 +250,9 @@ export const ValueList: FC<Props> = ({
     const nextFocusTarget = (deletedIndex: number) => {
         if (deletedIndex === values.length - 1) {
             if (deletedIndex === 0) {
-                return addValuesButtonRef.current;
+                return hideAddButton
+                    ? fallbackFocusTarget
+                    : addValuesButtonRef.current;
             } else {
                 return constraintElementRefs.current[deletedIndex - 1];
             }
@@ -279,7 +285,12 @@ export const ValueList: FC<Props> = ({
                     </li>
                 ))}
             </StyledList>
-            <AddValues ref={addValuesButtonRef} onAddValues={handleAddValues} />
+            {!hideAddButton && (
+                <AddValues
+                    ref={addValuesButtonRef}
+                    onAddValues={handleAddValues}
+                />
+            )}
         </ValueListWrapper>
     );
 };

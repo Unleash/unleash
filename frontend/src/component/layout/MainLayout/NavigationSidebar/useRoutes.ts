@@ -2,21 +2,51 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { getNavRoutes, getPrimaryRoutes } from 'component/menu/routes';
 import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import { filterByConfig, mapRouteLink } from 'component/common/util';
+import { filterAdminRoutes } from 'component/admin/filterAdminRoutes';
+import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
+import type { INavigationMenuItem } from 'interfaces/route';
+import type { IUiConfig } from 'interfaces/uiConfig';
+
+type PlanData = {
+    enterprise: boolean;
+    pro: boolean;
+    billing: boolean;
+};
+
+const filterRoutes = (
+    routes: INavigationMenuItem[],
+    uiConfig: IUiConfig,
+    { enterprise, pro, billing }: PlanData,
+) => {
+    return routes
+        .filter(filterByConfig(uiConfig))
+        .filter((route) =>
+            filterAdminRoutes(route?.menu, {
+                enterprise,
+                pro,
+                billing,
+            }),
+        )
+        .map(mapRouteLink);
+};
 
 export const useRoutes = () => {
-    const { uiConfig } = useUiConfig();
+    const { uiConfig, isPro, isEnterprise } = useUiConfig();
+    const { isBilling } = useInstanceStatus();
     const routes = getNavRoutes();
     const adminRoutes = useAdminRoutes();
     const primaryRoutes = getPrimaryRoutes();
 
+    const planData: PlanData = {
+        enterprise: isEnterprise(),
+        pro: isPro(),
+        billing: isBilling,
+    };
+
     const filteredMainRoutes = {
-        mainNavRoutes: routes
-            .filter(filterByConfig(uiConfig))
-            .map(mapRouteLink),
+        mainNavRoutes: filterRoutes(routes, uiConfig, planData),
         adminRoutes,
-        primaryRoutes: primaryRoutes
-            .filter(filterByConfig(uiConfig))
-            .map(mapRouteLink),
+        primaryRoutes: filterRoutes(primaryRoutes, uiConfig, planData),
     };
 
     return { routes: filteredMainRoutes };

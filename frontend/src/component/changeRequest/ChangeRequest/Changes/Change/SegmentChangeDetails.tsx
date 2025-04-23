@@ -1,5 +1,6 @@
 import type React from 'react';
 import type { FC, ReactNode } from 'react';
+import { useRef } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import type {
     ChangeRequestState,
@@ -9,6 +10,12 @@ import type {
 import { useSegment } from 'hooks/api/getters/useSegment/useSegment';
 import { SegmentDiff, SegmentTooltipLink } from '../../SegmentTooltipLink';
 import { ConstraintAccordionList } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
+import {
+    NewConstraintAccordionList,
+    useConstraintAccordionList,
+} from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/NewConstraintAccordionList';
+import type { IConstraintAccordionListRef } from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/NewConstraintAccordionList';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning';
 
 const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
@@ -65,6 +72,9 @@ export const SegmentChangeDetails: FC<{
             : currentSegment?.name;
     const referenceSegment =
         changeRequestState === 'Applied' ? snapshotSegment : currentSegment;
+    const addEditStrategy = useUiFlag('addEditStrategy');
+    const constraintsRef = useRef<IConstraintAccordionListRef | null>(null);
+    const { state } = useConstraintAccordionList(undefined, constraintsRef);
 
     return (
         <SegmentContainer conflict={change.conflict}>
@@ -113,10 +123,18 @@ export const SegmentChangeDetails: FC<{
                         </ChangeItemInfo>
                         <div>{actions}</div>
                     </ChangeItemCreateEditWrapper>
-                    <ConstraintAccordionList
-                        constraints={change.payload.constraints}
-                        showLabel={false}
-                    />
+                    {addEditStrategy ? (
+                        <NewConstraintAccordionList
+                            ref={constraintsRef}
+                            constraints={change.payload.constraints}
+                            state={state}
+                        />
+                    ) : (
+                        <ConstraintAccordionList
+                            constraints={change.payload.constraints}
+                            showLabel={false}
+                        />
+                    )}
                 </>
             )}
         </SegmentContainer>

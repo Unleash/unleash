@@ -37,9 +37,10 @@ const ENVIRONMENT = 'dev';
 
 export const TOPICS: ITutorialTopic[] = [
     {
-        title: 'Enable/disable a feature flag',
+        title: 'How to enable/disable a feature flag',
         steps: [
             {
+                title: 'How to enable/disable a feature flag',
                 href: `/projects/${PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
@@ -71,13 +72,14 @@ export const TOPICS: ITutorialTopic[] = [
                 nextButton: true,
             },
             {
+                title: 'Control the flag',
                 href: `/projects/${PROJECT}?sort=name`,
                 target: `div[data-testid="TOGGLE-demoApp.step1-${ENVIRONMENT}"]`,
                 content: (
                     <>
                         <Description>
-                            Enable or disable the feature for everyone by
-                            toggling the highlighted switch.
+                            Now you can disable or enable the feature for
+                            everyone by toggling the highlighted switch.
                         </Description>
                         <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             Look at the demo page to see your changes!
@@ -89,10 +91,11 @@ export const TOPICS: ITutorialTopic[] = [
         ],
     },
     {
-        title: 'Enable for a specific user',
+        title: 'Next: How to enable for a specific user',
         setup: specificUser,
         steps: [
             {
+                title: 'Next: How to enable for a specific user',
                 href: `/projects/${PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
@@ -118,6 +121,7 @@ export const TOPICS: ITutorialTopic[] = [
                 nextButton: true,
             },
             {
+                title: 'Select a flag',
                 href: `/projects/${PROJECT}?sort=name`,
                 target: `table a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2"]`,
                 content: (
@@ -130,6 +134,7 @@ export const TOPICS: ITutorialTopic[] = [
                 preventDefault: true,
             },
             {
+                title: 'Select an environment',
                 href: `/projects/${PROJECT}/features/demoApp.step2`,
                 target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] > div[aria-expanded="false"]`,
                 content: (
@@ -142,6 +147,7 @@ export const TOPICS: ITutorialTopic[] = [
                 delay: 500,
             },
             {
+                title: 'Add a strategy',
                 target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] button[data-testid="ADD_STRATEGY_BUTTON"]`,
                 content: (
                     <Description>
@@ -153,6 +159,7 @@ export const TOPICS: ITutorialTopic[] = [
                 backCollapseExpanded: true,
             },
             {
+                title: 'Select a strategy',
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2/strategies/create?environmentId=${ENVIRONMENT}&strategyName=flexibleRollout&defaultStrategy=true"]`,
                 content: (
                     <Description>Select the default strategy.</Description>
@@ -162,6 +169,7 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
+                title: 'Narrow down your target audience',
                 target: 'button[data-testid="STRATEGY_TARGETING_TAB"]',
                 content: (
                     <>
@@ -173,6 +181,7 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
+                title: 'Add a constraint',
                 target: 'button[data-testid="ADD_CONSTRAINT_BUTTON"]',
                 content: (
                     <>
@@ -202,6 +211,7 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
+                title: 'Select a context',
                 target: '#context-field-select',
                 content: (
                     <>
@@ -225,6 +235,7 @@ export const TOPICS: ITutorialTopic[] = [
                 anyClick: true,
             },
             {
+                title: 'Select a pre-defined context field',
                 target: 'li[data-testid="SELECT_ITEM_ID-userId"]',
                 content: (
                     <Description>
@@ -236,6 +247,7 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
+                title: 'Input value',
                 target: 'div[data-testid="CONSTRAINT_VALUES_INPUT"]',
                 content: (
                     <>
@@ -263,6 +275,7 @@ export const TOPICS: ITutorialTopic[] = [
                 focus: 'input',
             },
             {
+                title: 'Add value',
                 target: 'button[data-testid="CONSTRAINT_VALUES_ADD_BUTTON"]',
                 content: (
                     <Description>
@@ -271,6 +284,7 @@ export const TOPICS: ITutorialTopic[] = [
                 ),
             },
             {
+                title: 'Save constraint setup',
                 target: 'button[data-testid="CONSTRAINT_SAVE_BUTTON"]',
                 content: (
                     <Description>
@@ -280,6 +294,7 @@ export const TOPICS: ITutorialTopic[] = [
                 optional: true,
             },
             {
+                title: 'Save strategy for flag',
                 target: 'button[data-testid="STRATEGY_FORM_SUBMIT_ID"]',
                 content: (
                     <Description>
@@ -289,6 +304,7 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
+                title: 'Confirm your changes',
                 target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
                 content: (
                     <Description>
@@ -299,13 +315,14 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
+                title: 'Control the flag',
                 href: `/projects/${PROJECT}?sort=name`,
                 target: `div[data-testid="TOGGLE-demoApp.step2-${ENVIRONMENT}"]`,
                 content: (
                     <>
                         <Description>
-                            Finally, enable or disable the feature for your user
-                            by toggling the highlighted switch.
+                            Now you can disable or enable the feature for your
+                            user by toggling the highlighted switch.
                         </Description>
                         <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             Look at the demo page to see your changes!
@@ -318,10 +335,11 @@ export const TOPICS: ITutorialTopic[] = [
         ],
     },
     {
-        title: 'Adjust gradual rollout',
+        title: 'Next: How to adjust gradual rollout',
         setup: gradualRollout,
         steps: [
             {
+                title: 'Next: How to adjust gradual rollout',
                 href: `/projects/${PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
@@ -354,6 +372,7 @@ export const TOPICS: ITutorialTopic[] = [
                 nextButton: true,
             },
             {
+                title: 'Select a flag',
                 href: `/projects/${PROJECT}?sort=name`,
                 target: `table a[href="${basePath}/projects/${PROJECT}/features/demoApp.step3"]`,
                 content: (
@@ -366,6 +385,7 @@ export const TOPICS: ITutorialTopic[] = [
                 preventDefault: true,
             },
             {
+                title: 'Select an environment',
                 href: `/projects/${PROJECT}/features/demoApp.step3`,
                 target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] > div[aria-expanded="false"]`,
                 content: (
@@ -378,6 +398,7 @@ export const TOPICS: ITutorialTopic[] = [
                 delay: 500,
             },
             {
+                title: 'Edit strategy',
                 target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] a[data-testid="STRATEGY_EDIT-flexibleRollout"]`,
                 content: (
                     <Description>
@@ -388,6 +409,7 @@ export const TOPICS: ITutorialTopic[] = [
                 backCollapseExpanded: true,
             },
             {
+                title: 'Edit rollout',
                 target: 'span[data-testid="ROLLOUT_SLIDER_ID"]',
                 content: (
                     <>
@@ -405,6 +427,7 @@ export const TOPICS: ITutorialTopic[] = [
                 nextButton: true,
             },
             {
+                title: 'Save changes for flag',
                 target: 'button[data-testid="STRATEGY_FORM_SUBMIT_ID"]',
                 content: (
                     <Description>
@@ -413,6 +436,7 @@ export const TOPICS: ITutorialTopic[] = [
                 ),
             },
             {
+                title: 'Confirm your changes',
                 target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
                 content: (
                     <Description>
@@ -423,13 +447,15 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
+                title: 'Control the flag',
                 href: `/projects/${PROJECT}?sort=name`,
                 target: `div[data-testid="TOGGLE-demoApp.step3-${ENVIRONMENT}"]`,
                 content: (
                     <>
                         <Description>
-                            Finally, enable or disable the feature with the new
-                            variant by toggling the highlighted switch.
+                            Now you can disable or enable the feature for the
+                            selected percentage of users by toggling the
+                            highlighted switch.
                         </Description>
                         <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             Look at the demo page to see your changes!
@@ -442,10 +468,11 @@ export const TOPICS: ITutorialTopic[] = [
         ],
     },
     {
-        title: 'Adjust variants',
+        title: 'Next: How to adjust variants',
         setup: variants,
         steps: [
             {
+                title: 'Next: How to adjust variants',
                 href: `/projects/${PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
@@ -471,6 +498,7 @@ export const TOPICS: ITutorialTopic[] = [
                 nextButton: true,
             },
             {
+                title: 'Select a flag',
                 href: `/projects/${PROJECT}?sort=name`,
                 target: `table a[href="${basePath}/projects/${PROJECT}/features/demoApp.step4"]`,
                 content: (
@@ -483,6 +511,7 @@ export const TOPICS: ITutorialTopic[] = [
                 preventDefault: true,
             },
             {
+                title: 'Select an environment',
                 href: `/projects/${PROJECT}/features/demoApp.step4`,
                 target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] > div[aria-expanded="false"]`,
                 content: (
@@ -495,6 +524,7 @@ export const TOPICS: ITutorialTopic[] = [
                 delay: 500,
             },
             {
+                title: 'Add a strategy',
                 target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] button[data-testid="ADD_STRATEGY_BUTTON"]`,
                 content: (
                     <Description>
@@ -506,6 +536,7 @@ export const TOPICS: ITutorialTopic[] = [
                 backCollapseExpanded: true,
             },
             {
+                title: 'Select a strategy',
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step4/strategies/create?environmentId=${ENVIRONMENT}&strategyName=flexibleRollout&defaultStrategy=true"]`,
                 content: (
                     <Description>Select the default strategy.</Description>
@@ -515,6 +546,7 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
+                title: 'Narrow down your target audience',
                 target: 'button[data-testid="STRATEGY_TARGETING_TAB"]',
                 content: (
                     <>
@@ -526,6 +558,7 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
+                title: 'Add a constraint',
                 target: 'button[data-testid="ADD_CONSTRAINT_BUTTON"]',
                 content: (
                     <>
@@ -555,6 +588,7 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
+                title: 'Select a context',
                 target: '#context-field-select',
                 content: (
                     <>
@@ -578,6 +612,7 @@ export const TOPICS: ITutorialTopic[] = [
                 anyClick: true,
             },
             {
+                title: 'Select a pre-defined context field',
                 target: 'li[data-testid="SELECT_ITEM_ID-userId"]',
                 content: (
                     <Description>
@@ -589,6 +624,7 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
+                title: 'Input value',
                 target: 'div[data-testid="CONSTRAINT_VALUES_INPUT"]',
                 content: (
                     <>
@@ -616,6 +652,7 @@ export const TOPICS: ITutorialTopic[] = [
                 focus: 'input',
             },
             {
+                title: 'Add value',
                 target: 'button[data-testid="CONSTRAINT_VALUES_ADD_BUTTON"]',
                 content: (
                     <Description>
@@ -624,6 +661,7 @@ export const TOPICS: ITutorialTopic[] = [
                 ),
             },
             {
+                title: 'Save constraint setup',
                 target: 'button[data-testid="CONSTRAINT_SAVE_BUTTON"]',
                 content: (
                     <Description>
@@ -633,6 +671,7 @@ export const TOPICS: ITutorialTopic[] = [
                 optional: true,
             },
             {
+                title: 'Set up a variant',
                 target: 'button[data-testid="STRATEGY_VARIANTS_TAB"]',
                 content: (
                     <>
@@ -644,6 +683,7 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
+                title: 'Add new variant',
                 target: 'button[data-testid="ADD_STRATEGY_VARIANT_BUTTON"]',
                 content: (
                     <>
@@ -673,6 +713,7 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
+                title: 'Input variant name',
                 target: 'div[data-testid="VARIANT"]:last-of-type div[data-testid="VARIANT_NAME_INPUT"]',
                 content: (
                     <>
@@ -691,6 +732,7 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
+                title: 'Input variant value',
                 target: 'div[data-testid="VARIANT"]:last-of-type #variant-payload-value',
                 content: (
                     <>
@@ -722,6 +764,7 @@ export const TOPICS: ITutorialTopic[] = [
                 focus: true,
             },
             {
+                title: 'Save strategy for flag',
                 target: 'button[data-testid="STRATEGY_FORM_SUBMIT_ID"]',
                 content: (
                     <Description>
@@ -731,13 +774,14 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
+                title: 'Control the flag',
                 href: `/projects/${PROJECT}?sort=name`,
                 target: `div[data-testid="TOGGLE-demoApp.step4-${ENVIRONMENT}"]`,
                 content: (
                     <>
                         <Description>
-                            Finally, enable or disable the feature with the new
-                            variant by toggling the highlighted switch.
+                            Now you can disable or enable the feature with the
+                            new variant by toggling the highlighted switch.
                         </Description>
                         <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             Look at the demo page to see your changes!

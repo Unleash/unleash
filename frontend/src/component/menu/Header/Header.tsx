@@ -15,13 +15,10 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 import { DrawerMenu } from './DrawerMenu/DrawerMenu';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import DarkModeOutlined from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlined from '@mui/icons-material/LightModeOutlined';
 import { useThemeMode } from 'hooks/useThemeMode';
-import { Notifications } from 'component/common/Notifications/Notifications';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { CommandBar } from 'component/commandBar/CommandBar';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
@@ -81,8 +78,6 @@ const Header = () => {
     const { onSetThemeMode, themeMode } = useThemeMode();
     const theme = useTheme();
 
-    const disableNotifications = useUiFlag('disableNotifications');
-    const { isOss } = useUiConfig();
     const smallScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
@@ -148,10 +143,6 @@ const Header = () => {
                                 />
                             </StyledIconButton>
                         </Tooltip>
-                        <ConditionallyRender
-                            condition={!isOss() && !disableNotifications}
-                            show={<Notifications />}
-                        />
                         <Tooltip title='Documentation' arrow>
                             <StyledIconButton
                                 component='a'

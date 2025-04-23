@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import {
     ConstraintAccordionList,
     type IConstraintAccordionListRef,
-} from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
+} from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
 import type { SegmentFormStep, SegmentFormMode } from './SegmentForm';
 import {
     AutocompleteBox,

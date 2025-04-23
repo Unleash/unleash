@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert, Button, Checkbox, Chip, Stack, styled } from '@mui/material';
-import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
+import { ConstraintValueSearch } from 'component/common/LegacyConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
 import type { ILegalValue } from 'interfaces/context';
 import {
@@ -142,6 +142,13 @@ export const RestrictiveLegalValues = ({
         ]);
     };
 
+    const handleSearchKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === 'Enter' && filteredValues.length > 0) {
+            const firstValue = filteredValues[0].value;
+            onChange(firstValue);
+        }
+    };
+
     return (
         <>
             <ConditionallyRender
@@ -196,7 +203,9 @@ export const RestrictiveLegalValues = ({
                     </>
                 }
             />
-            <ConstraintValueSearch filter={filter} setFilter={setFilter} />
+            <div onKeyDown={handleSearchKeyDown}>
+                <ConstraintValueSearch filter={filter} setFilter={setFilter} />
+            </div>
             <StyledValuesContainer>
                 {filteredValues.map((match) => (
                     <LegalValueLabel

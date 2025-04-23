@@ -499,6 +499,42 @@ test('Config with enterpriseVersion set and not pro environment should set isEnt
     expect(config.isEnterprise).toBe(true);
 });
 
+test('create config should be idempotent in terms of tokens', async () => {
+    // two admin tokens
+    process.env.INIT_ADMIN_API_TOKENS = '*:*.some-token1, *:*.some-token2';
+    process.env.INIT_CLIENT_API_TOKENS = 'default:development.some-token1';
+    process.env.INIT_FRONTEND_API_TOKENS = 'frontend:development.some-token1';
+    const token = {
+        environment: '*',
+        project: '*',
+        secret: '*:*.some-random-string',
+        type: ApiTokenType.ADMIN,
+        tokenName: 'admin',
+    };
+    const config = createConfig({
+        db: {
+            host: 'localhost',
+            port: 4242,
+            user: 'unleash',
+            password: 'password',
+            database: 'unleash_db',
+        },
+        server: {
+            port: 4242,
+        },
+        authentication: {
+            initApiTokens: [token],
+        },
+    });
+    expect(config.authentication.initApiTokens.length).toStrictEqual(
+        createConfig(config).authentication.initApiTokens.length,
+    );
+    expect(config.authentication.initApiTokens).toHaveLength(5);
+    delete process.env.INIT_ADMIN_API_TOKENS;
+    delete process.env.INIT_CLIENT_API_TOKENS;
+    delete process.env.INIT_FRONTEND_API_TOKENS;
+});
+
 describe('isOSS', () => {
     test('Config with pro environment should set isOss to false regardless of pro casing', async () => {
         const isOss = resolveIsOss(false, false, 'Pro');

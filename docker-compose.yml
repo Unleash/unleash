@@ -1,6 +1,5 @@
 # This docker compose setup configures:
 # - the Unleash server instance + the necessary backing Postgres database
-# - the Unleash proxy
 #
 # To learn more about all the parts of Unleash, visit
 # https://docs.getunleash.io
@@ -24,16 +23,12 @@ services:
     environment:
       # This points Unleash to its backing database (defined in the `db` section below)
       DATABASE_URL: "postgres://postgres:unleash@db/db"
-      # Disable SSL for database connections. @chriswk: why do we do this?
+      # Disable SSL for database connections.
       DATABASE_SSL: "false"
       # Changing log levels:
       LOG_LEVEL: "warn"
-      # Proxy clients must use one of these keys to connect to the
-      # Proxy. To add more keys, separate them with a comma (`key1,key2`).
       INIT_FRONTEND_API_TOKENS: "default:development.unleash-insecure-frontend-api-token"
-      # Initialize Unleash with a default set of client API tokens. To
-      # initialize Unleash with multiple tokens, separate them with a
-      # comma (`token1,token2`).
+      # The default API token is insecure and should not be used in production.
       INIT_CLIENT_API_TOKENS: "default:development.unleash-insecure-api-token"
     depends_on:
       db:

@@ -24,28 +24,35 @@ export const runBefore = () => {
     disableActiveSplashScreens();
 };
 
+export const do_login = (
+    user = AUTH_USER,
+    password = AUTH_PASSWORD,
+): Chainable<any> => {
+    cy.visit('/');
+    cy.wait(200);
+    cy.get("[data-testid='LOGIN_EMAIL_ID']").type(user);
+
+    if (AUTH_PASSWORD) {
+        cy.get("[data-testid='LOGIN_PASSWORD_ID']").type(password);
+    }
+
+    cy.get("[data-testid='LOGIN_BUTTON']").click();
+
+    // Wait for the login redirect to complete.
+    cy.get("[data-testid='HEADER_USER_AVATAR']");
+
+    if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
+        cy.get("[data-testid='CLOSE_SPLASH']").click();
+    }
+
+    return cy;
+};
+
 export const login_UI = (
     user = AUTH_USER,
     password = AUTH_PASSWORD,
 ): Chainable<any> => {
-    return cy.session(user, () => {
-        cy.visit('/');
-        cy.wait(200);
-        cy.get("[data-testid='LOGIN_EMAIL_ID']").type(user);
-
-        if (AUTH_PASSWORD) {
-            cy.get("[data-testid='LOGIN_PASSWORD_ID']").type(password);
-        }
-
-        cy.get("[data-testid='LOGIN_BUTTON']").click();
-
-        // Wait for the login redirect to complete.
-        cy.get("[data-testid='HEADER_USER_AVATAR']");
-
-        if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
-            cy.get("[data-testid='CLOSE_SPLASH']").click();
-        }
-    });
+    return cy.session(user, () => do_login(user, password));
 };
 
 export const createFeature_UI = (

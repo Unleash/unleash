@@ -30,7 +30,7 @@ import type {
     IUnleashContextDefinition,
 } from 'interfaces/context';
 import type { IConstraint } from 'interfaces/strategy';
-import { useEffect, useState, type FC } from 'react';
+import { useEffect, useRef, useState, type FC } from 'react';
 import { oneOf } from 'utils/oneOf';
 import {
     CURRENT_TIME_CONTEXT_FIELD,
@@ -40,6 +40,10 @@ import { ConstraintOperatorSelect } from './ConstraintOperatorSelect';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import Delete from '@mui/icons-material/Delete';
 import { ValueList } from './ValueList';
+import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive.svg';
+import { ReactComponent as CaseInsensitiveIcon } from 'assets/icons/case-insensitive.svg';
+import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
+import { AddValuesWidget } from './AddValuesWidget';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -123,6 +127,28 @@ const StyledButton = styled('button')(({ theme }) => ({
     },
 }));
 
+const StyledCaseInsensitiveIcon = styled(CaseInsensitiveIcon)(({ theme }) => ({
+    path: {
+        fill: theme.palette.text.disabled,
+    },
+    rect: {
+        fill: theme.palette.text.secondary,
+    },
+}));
+const StyledCaseSensitiveIcon = styled(CaseSensitiveIcon)(({ theme }) => ({
+    fill: 'currentcolor',
+}));
+
+const CaseButton = styled(StyledButton)(({ theme }) => ({
+    display: 'grid',
+    placeItems: 'center',
+}));
+
+const OPERATORS_WITH_ADD_VALUES_WIDGET = [
+    'IN_OPERATORS_FREETEXT',
+    'STRING_OPERATORS_FREETEXT',
+];
+
 type Props = {
     localConstraint: IConstraint;
     setContextName: (contextName: string) => void;
@@ -170,6 +196,10 @@ export const EditableConstraint: FC<Props> = ({
     const { contextName, operator } = localConstraint;
     const [showCaseSensitiveButton, setShowCaseSensitiveButton] =
         useState(false);
+    const deleteButtonRef = useRef<HTMLButtonElement>(null);
+    const addValuesButtonRef = useRef<HTMLButtonElement>(null);
+    const showAddValuesButton =
+        OPERATORS_WITH_ADD_VALUES_WIDGET.includes(input);
 
     /* We need a special case to handle the currentTime context field. Since
     this field will be the only one to allow DATE_BEFORE and DATE_AFTER operators
@@ -371,24 +401,59 @@ export const EditableConstraint: FC<Props> = ({
                     />
 
                     {showCaseSensitiveButton ? (
-                        <StyledButton
+                        <CaseButton
                             type='button'
                             onClick={toggleCaseSensitivity}
                         >
-                            {localConstraint.caseInsensitive ? 'Aa' : 'A/a'}
-                        </StyledButton>
+                            {localConstraint.caseInsensitive ? (
+                                <StyledCaseInsensitiveIcon aria-label='The match is not case sensitive.' />
+                            ) : (
+                                <StyledCaseSensitiveIcon aria-label='The match is case sensitive.' />
+                            )}
+                            <ScreenReaderOnly>
+                                Make match
+                                {localConstraint.caseInsensitive
+                                    ? ' '
+                                    : ' not '}
+                                case sensitive
+                            </ScreenReaderOnly>
+                        </CaseButton>
                     ) : null}
-                </ConstraintDetails>
-                {!input.includes('LEGAL_VALUES') && (
+
                     <ValueList
                         values={localConstraint.values}
                         removeValue={removeValue}
                         setValues={setValuesWithRecord}
-                    />
-                )}
+                        getExternalFocusTarget={() =>
+                            addValuesButtonRef.current ??
+                            deleteButtonRef.current
+                        }
+                    >
+                        {showAddValuesButton ? (
+                            <AddValuesWidget
+                                ref={addValuesButtonRef}
+                                onAddValues={(newValues) => {
+                                    // todo (`addEditStrategy`): move deduplication logic higher up in the context handling
+                                    const combinedValues = new Set([
+                                        ...(localConstraint.values || []),
+                                        ...newValues,
+                                    ]);
+                                    setValuesWithRecord(
+                                        Array.from(combinedValues),
+                                    );
+                                }}
+                            />
+                        ) : null}
+                    </ValueList>
+                </ConstraintDetails>
 
                 <HtmlTooltip title='Delete constraint' arrow>
-                    <IconButton type='button' size='small' onClick={onDelete}>
+                    <IconButton
+                        type='button'
+                        size='small'
+                        onClick={onDelete}
+                        ref={deleteButtonRef}
+                    >
                         <Delete />
                     </IconButton>
                 </HtmlTooltip>

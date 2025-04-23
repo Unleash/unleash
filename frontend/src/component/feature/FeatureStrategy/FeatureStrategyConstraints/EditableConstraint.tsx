@@ -144,6 +144,11 @@ const CaseButton = styled(StyledButton)(({ theme }) => ({
     placeItems: 'center',
 }));
 
+const OPERATORS_WITH_ADD_VALUES_WIDGET = [
+    'IN_OPERATORS_FREETEXT',
+    'STRING_OPERATORS_FREETEXT',
+];
+
 type Props = {
     localConstraint: IConstraint;
     setContextName: (contextName: string) => void;
@@ -193,7 +198,8 @@ export const EditableConstraint: FC<Props> = ({
         useState(false);
     const deleteButtonRef = useRef<HTMLButtonElement>(null);
     const addValuesButtonRef = useRef<HTMLButtonElement>(null);
-    const showAddValuesButton = !input.includes('LEGAL_VALUES');
+    const showAddValuesButton =
+        OPERATORS_WITH_ADD_VALUES_WIDGET.includes(input);
 
     /* We need a special case to handle the currentTime context field. Since
     this field will be the only one to allow DATE_BEFORE and DATE_AFTER operators

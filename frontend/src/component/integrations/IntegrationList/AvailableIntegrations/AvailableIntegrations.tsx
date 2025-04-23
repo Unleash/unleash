@@ -121,6 +121,14 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                             />
                         ),
                     )}
+                    <IntegrationCard
+                        icon='terraform'
+                        title='Terraform'
+                        description={`Manage Unleash with HashiCorp’s Terraform using infrastructure as code (IaC).`}
+                        link='https://docs.getunleash.io/reference/terraform'
+                        configureActionText='View documentation'
+                        isExternal
+                    />
                     <RequestIntegrationCard />
                 </StyledCardsGrid>
             </StyledSection>

@@ -9,7 +9,7 @@ export const rewriteHTML = (
     result = result.replace(/::baseUriPath::/gi, rewriteValue);
     result = result.replace(/::cdnPrefix::/gi, cdnPrefix || '');
 
-    const faviconPrefix = cdnPrefix ? 'https://cdn.getunleash.io' : '';
+    const faviconPrefix = cdnPrefix ? cdnPrefix : '';
     result = result.replace(/::faviconPrefix::/gi, faviconPrefix);
 
     result = result.replace(/::uiFlags::/gi, uiFlags || '{}');

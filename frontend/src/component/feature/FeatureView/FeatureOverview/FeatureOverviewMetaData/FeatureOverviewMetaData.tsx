@@ -1,8 +1,6 @@
 import { type FC, useState } from 'react';
 import { styled } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { formatDateYMD } from 'utils/formatDate';
@@ -17,6 +15,7 @@ import { capitalizeFirst } from 'utils/capitalizeFirst';
 import { Collaborators } from './Collaborators';
 import { EnvironmentVisibilityMenu } from './EnvironmentVisibilityMenu/EnvironmentVisibilityMenu';
 import { Truncator } from 'component/common/Truncator/Truncator';
+import type { IFeatureToggle } from '../../../../../interfaces/featureToggle';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -69,16 +68,16 @@ export const StyledMetaDataItemValue = styled('div')(({ theme }) => ({
 type FeatureOverviewMetaDataProps = {
     hiddenEnvironments?: string[];
     onEnvironmentVisibilityChange?: (environment: string) => void;
+    feature: IFeatureToggle;
+    onChange: () => void;
 };
 
 const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
     hiddenEnvironments,
     onEnvironmentVisibilityChange,
+    feature,
+    onChange,
 }) => {
-    const projectId = useRequiredPathParam('projectId');
-    const featureId = useRequiredPathParam('featureId');
-    const { feature, refetchFeature } = useFeature(projectId, featureId);
-
     const { locationSettings } = useLocationSettings();
     const navigate = useNavigate();
 
@@ -125,7 +124,7 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                                 onComplete={() =>
                                     setMarkCompletedDialogueOpen(true)
                                 }
-                                onUncomplete={refetchFeature}
+                                onUncomplete={onChange}
                             />
                         </StyledMetaDataItem>
                     ) : null}
@@ -181,7 +180,7 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
             {feature.children.length > 0 ? (
                 <FeatureArchiveNotAllowedDialog
                     features={feature.children}
-                    project={projectId}
+                    project={feature.project}
                     isOpen={archiveDialogOpen}
                     onClose={() => setArchiveDialogOpen(false)}
                 />
@@ -189,11 +188,11 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                 <FeatureArchiveDialog
                     isOpen={archiveDialogOpen}
                     onConfirm={() => {
-                        navigate(`/projects/${projectId}`);
+                        navigate(`/projects/${feature.project}`);
                     }}
                     onClose={() => setArchiveDialogOpen(false)}
-                    projectId={projectId}
-                    featureIds={[featureId]}
+                    projectId={feature.project}
+                    featureIds={[feature.name]}
                 />
             )}
             {feature.project ? (
@@ -202,7 +201,7 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                     setIsOpen={setMarkCompletedDialogueOpen}
                     projectId={feature.project}
                     featureId={feature.name}
-                    onComplete={refetchFeature}
+                    onComplete={onChange}
                 />
             ) : null}
         </>

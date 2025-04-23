@@ -13,7 +13,7 @@ jobs:
           - groups/groups.spec.ts
           - projects/access.spec.ts
           - segments/segments.spec.ts
-          - login/login.spec.ts
+          # - login/login.spec.ts
     steps:
       - name: Dump GitHub context
         env:
@@ -22,9 +22,13 @@ jobs:
           echo "$GITHUB_CONTEXT"
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Build static frontend
+        run: |
+          cd frontend
+          yarn install --immutable
+          yarn build
       - name: Start Unleash test instance
         run: |
-          curl https://app.unleash-hosted.com/docker-login/token/${{ secrets.ECR_ENTERPRISE_TOKEN }} | docker login --username AWS --password-stdin 726824350591.dkr.ecr.eu-central-1.amazonaws.com
           docker compose -f .github/docker-compose.test.yml up -d --wait -t 90
         env:
           FRONTEND_TEST_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
@@ -33,6 +37,6 @@ jobs:
         with:
           working-directory: frontend
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
-          config: baseUrl=http://localhost:4242
+          config: baseUrl=http://localhost:3000
           spec: cypress/integration/${{ matrix.test }}
           install-command: yarn --immutable

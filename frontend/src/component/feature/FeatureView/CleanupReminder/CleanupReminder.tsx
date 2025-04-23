@@ -18,6 +18,8 @@ import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveD
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useNavigate } from 'react-router-dom';
 import { useFlagReminders } from './useFlagReminders';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useUncomplete } from '../FeatureOverview/FeatureLifecycle/useUncomplete';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     marginRight: theme.spacing(2),
@@ -32,15 +34,24 @@ const ActionsBox = styled(Box)(({ theme }) => ({
 
 type ReminderType = 'complete' | 'removeCode' | 'archive' | null;
 
+export const COMPLETE_REMINDER_DAYS = 30;
+export const REMOVE_CODE_REMINDER_DAYS = 3;
+
 export const CleanupReminder: FC<{
     feature: IFeatureToggle;
     onChange: () => void;
 }> = ({ feature, onChange }) => {
     const navigate = useNavigate();
+    const { trackEvent } = usePlausibleTracker();
 
     const [markCompleteDialogueOpen, setMarkCompleteDialogueOpen] =
         useState(false);
     const [archiveDialogueOpen, setArchiveDialogueOpen] = useState(false);
+    const { onUncompleteHandler, loading } = useUncomplete({
+        feature: feature.name,
+        project: feature.project,
+        onChange,
+    });
 
     const currentStage = populateCurrentStage(feature);
     const isRelevantType =
@@ -54,7 +65,10 @@ export const CleanupReminder: FC<{
     const determineReminder = (): ReminderType => {
         if (!currentStage || !isRelevantType) return null;
 
-        if (currentStage.name === 'live' && daysInStage > 30) {
+        if (
+            currentStage.name === 'live' &&
+            daysInStage > COMPLETE_REMINDER_DAYS
+        ) {
             return 'complete';
         }
         if (
@@ -64,7 +78,7 @@ export const CleanupReminder: FC<{
             if (isSafeToArchive(currentStage.environments)) {
                 return 'archive';
             }
-            if (daysInStage > 2) {
+            if (daysInStage > REMOVE_CODE_REMINDER_DAYS) {
                 return 'removeCode';
             }
         }
@@ -123,7 +137,14 @@ export const CleanupReminder: FC<{
                             <ActionsBox>
                                 <Button
                                     size='medium'
-                                    onClick={() => snoozeReminder(feature.name)}
+                                    onClick={() => {
+                                        snoozeReminder(feature.name);
+                                        trackEvent('feature-lifecycle', {
+                                            props: {
+                                                eventType: 'snoozeReminder',
+                                            },
+                                        });
+                                    }}
                                 >
                                     Remind me later
                                 </Button>
@@ -171,12 +192,31 @@ export const CleanupReminder: FC<{
                     severity='warning'
                     icon={<CleaningServicesIcon />}
                     action={
-                        <Button
-                            size='medium'
-                            onClick={() => snoozeReminder(feature.name)}
-                        >
-                            Remind me later
-                        </Button>
+                        <ActionsBox>
+                            <Button
+                                size='medium'
+                                onClick={() => {
+                                    snoozeReminder(feature.name);
+                                    trackEvent('feature-lifecycle', {
+                                        props: {
+                                            eventType: 'snoozeReminder',
+                                        },
+                                    });
+                                }}
+                            >
+                                Remind me later
+                            </Button>
+                            <PermissionButton
+                                variant='outlined'
+                                permission={UPDATE_FEATURE}
+                                size='medium'
+                                onClick={onUncompleteHandler}
+                                disabled={loading}
+                                projectId={feature.project}
+                            >
+                                Revert to production
+                            </PermissionButton>
+                        </ActionsBox>
                     }
                 >
                     <b>Time to remove flag from code?</b>

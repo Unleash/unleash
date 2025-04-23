@@ -17,13 +17,12 @@ services:
   # The Unleash server contains the Unleash configuration and
   # communicates with server-side SDKs and the Unleash Proxy
   web:
-    image: unleashorg/unleash-server:latest
+    image: unleashorg/unleash-enterprise:latest
     ports:
       - "4242:4242"
     environment:
       # This points Unleash to its backing database (defined in the `db` section below)
       DATABASE_URL: "postgres://postgres:unleash@db/db"
-      # Disable SSL for database connections.
       DATABASE_SSL: "false"
       # Changing log levels:
       LOG_LEVEL: "warn"
@@ -33,7 +32,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: [ "node", "index.js" ]
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost:4242/health || exit 1
       interval: 1s

@@ -86,6 +86,8 @@ export const FeatureOverview = () => {
                         onEnvironmentVisibilityChange={
                             onEnvironmentVisibilityChange
                         }
+                        feature={feature}
+                        onChange={refetchFeature}
                     />
                 </div>
                 <StyledMainContent>
@@ -120,12 +122,8 @@ export const FeatureOverview = () => {
                         }
                     />
                 </Routes>
-
-                <StrategyDragTooltip
-                    show={showTooltip}
-                    onClose={onTooltipClose}
-                />
             </StyledContainer>
+            <StrategyDragTooltip show={showTooltip} onClose={onTooltipClose} />
         </div>
     );
 };

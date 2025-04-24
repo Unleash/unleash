@@ -10,7 +10,7 @@ import {
     PROJECT_DEFAULT_STRATEGY_WRITE,
     UPDATE_PROJECT,
 } from '@server/types/permissions';
-import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
+import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/LegacyStrategyItemContainer';
 
 interface ProjectEnvironmentDefaultStrategyProps {
@@ -84,7 +84,7 @@ const ProjectEnvironmentDefaultStrategy = ({
                 <StrategyExecution strategy={strategy} />
 
                 {strategy.variants && strategy.variants.length > 0 ? (
-                    <SplitPreviewSlider variants={strategy.variants} />
+                    <VariantsSplitPreview variants={strategy.variants} />
                 ) : null}
             </StrategyItemContainer>
         </>

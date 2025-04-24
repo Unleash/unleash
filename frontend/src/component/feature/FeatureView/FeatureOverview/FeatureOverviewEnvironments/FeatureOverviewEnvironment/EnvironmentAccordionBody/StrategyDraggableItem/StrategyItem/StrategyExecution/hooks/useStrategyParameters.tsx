@@ -30,7 +30,6 @@ export const useStrategyParameters = (
                     parameters={parameters}
                     hasConstraints={hasConstraints}
                     displayGroupId={displayGroupId}
-                    variants={variants}
                 />
             );
         }

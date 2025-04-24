@@ -10,7 +10,7 @@ import { updateWeightEdit } from 'component/common/util';
 import { WeightType } from 'constants/variantTypes';
 import { useTheme } from '@mui/material';
 import Add from '@mui/icons-material/Add';
-import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
+import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';
 
 const StyledVariantForms = styled('div')({
     display: 'flex',
@@ -180,7 +180,7 @@ export const MilestoneStrategyVariants = ({
             <Button onClick={addVariant} variant='outlined' startIcon={<Add />}>
                 Add variant
             </Button>
-            <SplitPreviewSlider
+            <VariantsSplitPreview
                 variants={variantsEdit}
                 weightsError={variantWeightsError}
             />

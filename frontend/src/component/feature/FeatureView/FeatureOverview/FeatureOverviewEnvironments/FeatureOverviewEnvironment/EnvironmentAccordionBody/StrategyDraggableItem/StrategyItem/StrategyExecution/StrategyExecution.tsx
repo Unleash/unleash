@@ -14,6 +14,7 @@ import {
     ConstraintListItem,
     ConstraintsList,
 } from 'component/common/ConstraintsList/ConstraintsList';
+import { RolloutVariants } from './RolloutVariants/RolloutVariants';
 
 type StrategyExecutionProps = {
     strategy: IFeatureStrategyPayload | FeatureStrategySchema;
@@ -48,21 +49,25 @@ export const StrategyExecution: FC<StrategyExecutionProps> = ({
     }
 
     return (
-        <ConstraintsList>
-            {strategySegments?.map((segment) => (
-                <SegmentItem segment={segment} key={segment.id} />
-            ))}
-            {constraints?.map((constraint, index) => (
-                <ConstraintAccordionView
-                    key={`${objectId(constraint)}-${index}`}
-                    constraint={constraint}
-                />
-            ))}
-            {(isCustomStrategy ? customStrategyItems : strategyParameters).map(
-                (item, index) => (
+        <>
+            <ConstraintsList>
+                {strategySegments?.map((segment) => (
+                    <SegmentItem segment={segment} key={segment.id} />
+                ))}
+                {constraints?.map((constraint, index) => (
+                    <ConstraintAccordionView
+                        key={`${objectId(constraint)}-${index}`}
+                        constraint={constraint}
+                    />
+                ))}
+                {(isCustomStrategy
+                    ? customStrategyItems
+                    : strategyParameters
+                ).map((item, index) => (
                     <ConstraintListItem key={index}>{item}</ConstraintListItem>
-                ),
-            )}
-        </ConstraintsList>
+                ))}
+            </ConstraintsList>
+            <RolloutVariants variants={strategy.variants} />
+        </>
     );
 };

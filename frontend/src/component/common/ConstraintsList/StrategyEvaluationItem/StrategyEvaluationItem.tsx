@@ -5,6 +5,7 @@ import { disabledStrategyClassName } from 'component/common/StrategyItemContaine
 export type StrategyEvaluationItemProps = {
     type?: ReactNode;
     children?: ReactNode;
+    alignType?: 'center' | 'top';
 };
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -22,6 +23,8 @@ const StyledContent = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
     alignItems: 'center',
+    flexGrow: 1,
+    position: 'relative',
     [`.${disabledStrategyClassName} &`]: {
         filter: 'grayscale(1)',
         color: theme.palette.text.secondary,
@@ -31,7 +34,9 @@ const StyledContent = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledType = styled('span')(({ theme }) => ({
+const StyledType = styled('span')<{
+    align?: 'top' | 'center';
+}>(({ theme, align }) => ({
     display: 'block',
     flexShrink: 0,
     fontSize: theme.fontSizes.smallerBody,
@@ -41,6 +46,9 @@ const StyledType = styled('span')(({ theme }) => ({
     [theme.breakpoints.down('sm')]: {
         width: '100%',
     },
+    ...(align === 'top' && {
+        alignSelf: 'flex-start',
+    }),
 }));
 
 /**
@@ -49,10 +57,11 @@ const StyledType = styled('span')(({ theme }) => ({
 export const StrategyEvaluationItem: FC<StrategyEvaluationItemProps> = ({
     type,
     children,
+    alignType,
 }) => {
     return (
         <StyledContainer>
-            <StyledType>{type}</StyledType>
+            <StyledType align={alignType}>{type}</StyledType>
             <StyledContent>{children}</StyledContent>
         </StyledContainer>
     );

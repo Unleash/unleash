@@ -6,7 +6,7 @@ import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReader
 interface IConstraintValueSearchProps {
     filter: string;
     setFilter: React.Dispatch<React.SetStateAction<string>>;
-    onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+    onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 export const ConstraintValueSearch = ({

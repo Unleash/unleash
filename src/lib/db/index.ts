@@ -66,6 +66,7 @@ import { UserSubscriptionsReadModel } from '../features/user-subscriptions/user-
 import { UniqueConnectionStore } from '../features/unique-connection/unique-connection-store';
 import { UniqueConnectionReadModel } from '../features/unique-connection/unique-connection-read-model';
 import { FeatureLinkStore } from '../features/feature-links/feature-link-store';
+import { UnknownFlagsStore } from '../features/metrics/unknown-flags/unknown-flags-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -203,6 +204,7 @@ export const createStores = (
         releasePlanMilestoneStrategyStore:
             new ReleasePlanMilestoneStrategyStore(db, config),
         featureLinkStore: new FeatureLinkStore(db, config),
+        unknownFlagsStore: new UnknownFlagsStore(db),
     };
 };
 

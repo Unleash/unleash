@@ -63,6 +63,7 @@ import { FakeUserSubscriptionsReadModel } from '../../lib/features/user-subscrip
 import { FakeUniqueConnectionStore } from '../../lib/features/unique-connection/fake-unique-connection-store';
 import { UniqueConnectionReadModel } from '../../lib/features/unique-connection/unique-connection-read-model';
 import FakeFeatureLinkStore from '../../lib/features/feature-links/fake-feature-link-store';
+import { FakeUnknownFlagsStore } from '../../lib/features/metrics/unknown-flags/fake-unknown-flags-store';
 
 const db = {
     select: () => ({
@@ -72,6 +73,7 @@ const db = {
 
 const createStores: () => IUnleashStores = () => {
     const uniqueConnectionStore = new FakeUniqueConnectionStore();
+    const unknownFlagsStore = new FakeUnknownFlagsStore();
 
     return {
         db,
@@ -140,6 +142,7 @@ const createStores: () => IUnleashStores = () => {
         releasePlanMilestoneStrategyStore:
             {} as ReleasePlanMilestoneStrategyStore,
         featureLinkStore: new FakeFeatureLinkStore(),
+        unknownFlagsStore,
     };
 };
 

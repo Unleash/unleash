@@ -47,7 +47,9 @@ export const getIllegalValues = (
 ) => {
     const deletedValuesSet = getLegalValueSet(deletedLegalValues);
 
-    return constraintValues.filter((value) => deletedValuesSet.has(value));
+    return constraintValues.filter(
+        (value) => value !== '' && deletedValuesSet.has(value),
+    );
 };
 
 const StyledValuesContainer = styled('div')(({ theme }) => ({

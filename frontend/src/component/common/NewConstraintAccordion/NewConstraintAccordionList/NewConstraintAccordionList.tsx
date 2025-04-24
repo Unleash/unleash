@@ -15,6 +15,7 @@ import { NewConstraintAccordion } from 'component/common/NewConstraintAccordion/
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { EditableConstraintWrapper } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraintWrapper';
+import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
 
 export interface IConstraintAccordionListProps {
     constraints: IConstraint[];
@@ -150,16 +151,25 @@ export const NewConstraintAccordionList = forwardRef<
                 <ConstraintsList>
                     {constraints.map((constraint, index) =>
                         addEditStrategy ? (
-                            <EditableConstraintWrapper
-                                key={constraint[constraintId]}
-                                constraint={constraint}
-                                onCancel={onCancel.bind(null, index)}
-                                onDelete={onRemove?.bind(null, index)}
-                                onSave={onSave!.bind(null, index)}
-                                onAutoSave={onAutoSave?.(
-                                    constraint[constraintId],
-                                )}
-                            />
+                            state.get(constraint)?.editing ? (
+                                <EditableConstraintWrapper
+                                    key={constraint[constraintId]}
+                                    constraint={constraint}
+                                    onCancel={onCancel?.bind(null, index)}
+                                    onDelete={onRemove?.bind(null, index)}
+                                    onSave={onSave!.bind(null, index)}
+                                    onAutoSave={onAutoSave?.(
+                                        constraint[constraintId],
+                                    )}
+                                />
+                            ) : (
+                                <ConstraintAccordionView
+                                    key={constraint[constraintId]}
+                                    constraint={constraint}
+                                    onEdit={onEdit?.bind(null, constraint)}
+                                    onDelete={onRemove?.bind(null, index)}
+                                />
+                            )
                         ) : (
                             <NewConstraintAccordion
                                 key={constraint[constraintId]}

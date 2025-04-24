@@ -382,7 +382,6 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                             <Typography variant='h1'>{feature.name}</Typography>
                             <FeatureCopyName name={feature.name} />
                         </StyledTitle>
-                        <FeatureStatusChip stale={true} />
                         {feature.stale ? (
                             <FeatureStatusChip stale={true} />
                         ) : null}

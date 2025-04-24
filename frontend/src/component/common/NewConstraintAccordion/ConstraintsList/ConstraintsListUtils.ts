@@ -5,24 +5,20 @@ import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashCon
 import { useWeakMap } from 'hooks/useWeakMap';
 import { createEmptyConstraint } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 
-// Common props interface
 export interface IConstraintsListProps {
     constraints: IConstraint[];
     setConstraints?: React.Dispatch<React.SetStateAction<IConstraint[]>>;
 }
 
-// Common ref interface
 export interface IConstraintsListRef {
     addConstraint?: (contextName: string) => void;
 }
 
-// Common state interface
 export interface IConstraintsListItemState {
     new?: boolean;
     editing?: boolean;
 }
 
-// Shared hook for both editable and viewable constraints lists
 export const useConstraintsList = (
     setConstraints:
         | React.Dispatch<React.SetStateAction<IConstraint[]>>

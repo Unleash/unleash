@@ -1,14 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Alert, Button, Checkbox, Stack, styled } from '@mui/material';
+import { Alert, Button, Checkbox, styled } from '@mui/material';
 import type { ILegalValue } from 'interfaces/context';
-import { useUiFlag } from 'hooks/useUiFlag';
 import {
     filterLegalValues,
     LegalValueLabel,
 } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/LegalValueLabel/LegalValueLabel';
-import { ConstraintFormHeader } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/ConstraintFormHeader/ConstraintFormHeader';
-import { ConstraintValueSearch } from 'component/common/NewConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
+import { ConstraintValueSearch } from './ConstraintValueSearch';
 
 interface IRestrictiveLegalValuesProps {
     data: {
@@ -45,32 +43,30 @@ export const getIllegalValues = (
 ) => {
     const deletedValuesSet = getLegalValueSet(deletedLegalValues);
 
-    return constraintValues.filter((value) => deletedValuesSet.has(value));
+    return constraintValues.filter(
+        (value) => value && deletedValuesSet.has(value),
+    );
 };
 
 const StyledValuesContainer = styled('div')(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
     gap: theme.spacing(1),
-    padding: theme.spacing(2),
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadiusMedium,
     maxHeight: '378px',
     overflow: 'auto',
 }));
 
-const StyledChipList = styled('ul')(({ theme }) => ({
+const Row = styled('div')(({ theme }) => ({
     display: 'flex',
-    flexWrap: 'wrap',
-    listStyle: 'none',
+    alignItems: 'center',
     gap: theme.spacing(1),
-    padding: theme.spacing(2),
 }));
 
-const StyledStack = styled(Stack)(({ theme }) => ({
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(0.5),
-    justifyContent: 'space-between',
+const LegalValuesSelectorWidget = styled('article')(({ theme }) => ({
+    paddingBlock: `var(--padding, ${theme.spacing(1)})`,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
 }));
 
 export const LegalValuesSelector = ({
@@ -82,15 +78,12 @@ export const LegalValuesSelector = ({
 }: IRestrictiveLegalValuesProps) => {
     const [filter, setFilter] = useState('');
     const { legalValues, deletedLegalValues } = data;
+    const descriptionId = useId();
 
     const filteredValues = filterLegalValues(legalValues, filter);
 
     // Lazily initialise the values because there might be a lot of them.
     const [valuesMap, setValuesMap] = useState(() => createValuesMap(values));
-
-    const disableShowContextFieldSelectionValues = useUiFlag(
-        'disableShowContextFieldSelectionValues',
-    );
 
     const cleanDeletedLegalValues = (constraintValues: string[]): string[] => {
         const deletedValuesSet = getLegalValueSet(deletedLegalValues);
@@ -148,7 +141,7 @@ export const LegalValuesSelector = ({
     };
 
     return (
-        <>
+        <LegalValuesSelectorWidget>
             <ConditionallyRender
                 condition={Boolean(illegalValues && illegalValues.length > 0)}
                 show={
@@ -165,17 +158,13 @@ export const LegalValuesSelector = ({
                     </Alert>
                 }
             />
-            <StyledStack direction={'row'}>
-                <ConstraintFormHeader>
-                    Select values from a predefined set
-                </ConstraintFormHeader>
+            <p id={descriptionId}>Select values from a predefined set</p>
+            <Row>
+                <ConstraintValueSearch filter={filter} setFilter={setFilter} />
                 <Button variant={'text'} onClick={onSelectAll}>
                     {isAllSelected ? 'Unselect all' : 'Select all'}
                 </Button>
-            </StyledStack>
-            <div onKeyDown={handleSearchKeyDown}>
-                <ConstraintValueSearch filter={filter} setFilter={setFilter} />
-            </div>
+            </Row>
             <StyledValuesContainer>
                 {filteredValues.map((match) => (
                     <LegalValueLabel
@@ -196,6 +185,6 @@ export const LegalValuesSelector = ({
                     />
                 ))}
             </StyledValuesContainer>
-        </>
+        </LegalValuesSelectorWidget>
     );
 };

@@ -97,7 +97,6 @@ const ConstraintDetails = styled('div')(({ theme }) => ({
 
 const InputContainer = styled('div')(({ theme }) => ({
     padding: 'var(--padding)',
-    paddingTop: 0,
 }));
 
 const StyledSelect = styled(GeneralSelect)(({ theme }) => ({

@@ -63,7 +63,6 @@ const Row = styled('div')(({ theme }) => ({
 }));
 
 const LegalValuesSelectorWidget = styled('article')(({ theme }) => ({
-    paddingBlock: `var(--padding, ${theme.spacing(1)})`,
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),

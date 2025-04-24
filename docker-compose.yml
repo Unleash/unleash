@@ -2,7 +2,7 @@
 # - the Unleash server instance + the necessary backing Postgres database
 #
 # To learn more about all the parts of Unleash, visit
-# https://docs.getunleash.io
+# https://docs.getunleash.io/understanding-unleash/unleash-overview
 #
 # NOTE: please do not use this configuration for production setups.
 # Unleash does not take responsibility for any data leaks or other
@@ -15,7 +15,7 @@ version: "3.9"
 services:
 
   # The Unleash server contains the Unleash configuration and
-  # communicates with server-side SDKs and the Unleash Proxy
+  # communicates with client SDKs and Unleash Edge
   web:
     image: unleashorg/unleash-server:latest
     ports:

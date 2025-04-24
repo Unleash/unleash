@@ -2,7 +2,6 @@ import { IconButton, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { DateSingleValue } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/DateSingleValue/DateSingleValue';
 import { FreeTextInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/FreeTextInput/FreeTextInput';
-import { RestrictiveLegalValues } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/RestrictiveLegalValues/RestrictiveLegalValues';
 import { SingleLegalValue } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/SingleLegalValue/SingleLegalValue';
 import { SingleValue } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/SingleValue/SingleValue';
 import {
@@ -44,6 +43,7 @@ import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive
 import { ReactComponent as CaseInsensitiveIcon } from 'assets/icons/case-insensitive.svg';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { AddValuesWidget } from './AddValuesWidget';
+import { LegalValuesSelector } from './LegalValuesSelector';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -261,20 +261,16 @@ export const EditableConstraint: FC<Props> = ({
             case IN_OPERATORS_LEGAL_VALUES:
             case STRING_OPERATORS_LEGAL_VALUES:
                 return (
-                    <>
-                        <RestrictiveLegalValues
-                            data={resolveLegalValues(
-                                constraintValues,
-                                contextDefinition.legalValues,
-                            )}
-                            constraintValues={constraintValues}
-                            values={localConstraint.values || []}
-                            setValuesWithRecord={setValuesWithRecord}
-                            setValues={setValues}
-                            error={error}
-                            setError={setError}
-                        />
-                    </>
+                    <LegalValuesSelector
+                        data={resolveLegalValues(
+                            constraintValues,
+                            contextDefinition.legalValues,
+                        )}
+                        constraintValues={constraintValues}
+                        values={localConstraint.values || []}
+                        setValuesWithRecord={setValuesWithRecord}
+                        setValues={setValues}
+                    />
                 );
             case NUM_OPERATORS_LEGAL_VALUES:
                 return (

@@ -198,7 +198,7 @@ export const createServices = (
         ? new DependentFeaturesReadModel(db)
         : new FakeDependentFeaturesReadModel();
     const featureLifecycleReadModel = db
-        ? new FeatureLifecycleReadModel(db, config.flagResolver)
+        ? new FeatureLifecycleReadModel(db)
         : new FakeFeatureLifecycleReadModel();
 
     const transactionalContextService = db
@@ -490,6 +490,7 @@ export const createServices = (
         projectStatusService,
         transactionalUserSubscriptionsService,
         uniqueConnectionService,
+        featureLifecycleReadModel,
     };
 };
 
@@ -544,4 +545,5 @@ export {
     ProjectStatusService,
     UserSubscriptionsService,
     UniqueConnectionService,
+    FeatureLifecycleReadModel,
 };

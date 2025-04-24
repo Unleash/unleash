@@ -7,7 +7,6 @@ import type {
 import { getCurrentStage } from './get-current-stage';
 import type {
     IFeatureLifecycleStage,
-    IFlagResolver,
     IProjectLifecycleStageDuration,
     StageName,
 } from '../../types';
@@ -28,11 +27,8 @@ type DBProjectType = DBType & {
 export class FeatureLifecycleReadModel implements IFeatureLifecycleReadModel {
     private db: Db;
 
-    private flagResolver: IFlagResolver;
-
-    constructor(db: Db, flagResolver: IFlagResolver) {
+    constructor(db: Db) {
         this.db = db;
-        this.flagResolver = flagResolver;
     }
 
     async getStageCount(): Promise<StageCount[]> {

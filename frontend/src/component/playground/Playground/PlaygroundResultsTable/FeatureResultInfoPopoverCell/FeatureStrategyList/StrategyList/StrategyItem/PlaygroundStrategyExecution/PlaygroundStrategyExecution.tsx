@@ -1,6 +1,8 @@
 import type {
+    PlaygroundFeatureSchemaVariant,
     PlaygroundRequestSchema,
     PlaygroundStrategySchema,
+    StrategyVariantSchema,
 } from 'openapi';
 import { ConstraintExecution } from './ConstraintExecution/ConstraintExecution';
 import { formattedStrategyNames } from 'utils/strategyNames';
@@ -16,6 +18,7 @@ import { SegmentExecution } from './SegmentExecution/SegmentExecution';
 import { useStrategyParameters } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/hooks/useStrategyParameters';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { useCustomStrategyParameters } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/hooks/useCustomStrategyParameters';
+import { RolloutVariants } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/RolloutVariants/RolloutVariants';
 
 type StrategyExecutionProps = {
     strategyResult: PlaygroundStrategySchema;
@@ -23,7 +26,7 @@ type StrategyExecutionProps = {
     input?: PlaygroundRequestSchema;
 };
 
-export const StrategyExecution: FC<StrategyExecutionProps> = ({
+export const PlaygroundStrategyExecution: FC<StrategyExecutionProps> = ({
     strategyResult,
     input,
 }) => {
@@ -79,5 +82,17 @@ export const StrategyExecution: FC<StrategyExecutionProps> = ({
         ),
     ].filter(Boolean);
 
-    return <ConstraintsList>{items}</ConstraintsList>;
+    const { variant, variants } = strategyResult.result as unknown as Partial<{
+        variant: PlaygroundFeatureSchemaVariant;
+        variants: StrategyVariantSchema[];
+    }>;
+
+    return (
+        <>
+            <ConstraintsList>{items}</ConstraintsList>
+            {variants?.length ? (
+                <RolloutVariants variants={variants} selected={variant?.name} />
+            ) : null}
+        </>
+    );
 };

@@ -10,10 +10,18 @@ const StyledContainer = styled(Box)(() => ({
     position: 'relative',
 }));
 
-const StyledSegment = styled(Box)(({ theme }) => ({
-    position: 'relative',
-    fontSize: theme.fontSizes.smallerBody,
-}));
+const StyledSegment = styled(Box)<{ selected?: boolean }>(
+    ({ theme, selected }) => ({
+        position: 'relative',
+        fontSize: theme.fontSizes.smallerBody,
+        ...(selected
+            ? {
+                  fontWeight: theme.typography.fontWeightBold,
+              }
+            : {}),
+    }),
+);
+
 const StyledSegmentTrack = styled(Box)<{
     index: number;
     hasError?: boolean;
@@ -60,17 +68,19 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
     marginY: theme.spacing(1),
 }));
 
-type SplitPreviewSliderProps = {
+type VariantsSplitPreviewProps = {
     variants: StrategyVariantSchema[];
     weightsError?: boolean;
     header?: boolean;
+    selected?: string;
 };
 
 export const VariantsSplitPreview = ({
     variants,
     weightsError,
     header = true,
-}: SplitPreviewSliderProps) => {
+    selected,
+}: VariantsSplitPreviewProps) => {
     if (variants.length < 1) {
         return null;
     }
@@ -100,10 +110,14 @@ export const VariantsSplitPreview = ({
                                 <SplitPreviewTooltip
                                     variant={variant}
                                     index={index}
+                                    selected={selected === variant.name}
                                 />
                             }
                         >
-                            <StyledSegment sx={{ width: `${value}%` }}>
+                            <StyledSegment
+                                sx={{ width: `${value}%` }}
+                                selected={selected === variant.name}
+                            >
                                 <StyledSegmentTrack
                                     index={index}
                                     isFirst={index === 0}

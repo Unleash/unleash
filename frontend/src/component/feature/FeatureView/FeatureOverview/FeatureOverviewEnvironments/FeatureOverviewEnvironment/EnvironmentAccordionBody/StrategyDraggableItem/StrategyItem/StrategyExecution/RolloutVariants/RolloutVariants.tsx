@@ -15,7 +15,8 @@ const StyledTrack = styled('div')(() => ({
 
 export const RolloutVariants: FC<{
     variants?: StrategyVariantSchema[];
-}> = ({ variants }) => {
+    selected?: StrategyVariantSchema['name'];
+}> = ({ variants, selected }) => {
     if (!variants?.length) {
         return null;
     }
@@ -27,7 +28,11 @@ export const RolloutVariants: FC<{
                 alignTypeCenter={false}
             >
                 <StyledTrack>
-                    <VariantsSplitPreview variants={variants} header={false} />
+                    <VariantsSplitPreview
+                        variants={variants}
+                        header={false}
+                        selected={selected}
+                    />
                 </StyledTrack>
             </StrategyEvaluationItem>
         </StyledContainer>

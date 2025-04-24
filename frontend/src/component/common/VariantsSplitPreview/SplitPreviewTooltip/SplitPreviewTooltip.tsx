@@ -1,11 +1,6 @@
 import { Box, styled, Typography } from '@mui/material';
 import type { StrategyVariantSchema } from 'openapi';
 
-type SplitPreviewTooltipProps = {
-    variant: StrategyVariantSchema;
-    index: number;
-};
-
 const StyledTooltipContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -59,9 +54,16 @@ const StyledVariantPayload = styled('code')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
 }));
 
+type SplitPreviewTooltipProps = {
+    variant: StrategyVariantSchema;
+    index: number;
+    selected?: boolean;
+};
+
 export const SplitPreviewTooltip = ({
     variant: { name, weight, payload },
     index,
+    selected,
 }: SplitPreviewTooltipProps) => (
     <StyledTooltipContainer>
         <StyledVariantContainer>

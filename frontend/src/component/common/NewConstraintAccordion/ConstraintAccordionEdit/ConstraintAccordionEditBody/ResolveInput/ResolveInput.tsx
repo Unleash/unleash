@@ -21,6 +21,8 @@ import {
     type Input,
 } from '../useConstraintInput/useConstraintInput';
 import type React from 'react';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { LegalValuesSelector } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/LegalValuesSelector';
 
 interface IResolveInputProps {
     contextDefinition: Pick<IUnleashContextDefinition, 'legalValues'>;
@@ -75,25 +77,35 @@ export const ResolveInput = ({
     removeValue,
     error,
 }: IResolveInputProps) => {
+    const useNewLegalValueInput = useUiFlag('addEditStrategy');
     const resolveInput = () => {
         switch (input) {
             case IN_OPERATORS_LEGAL_VALUES:
             case STRING_OPERATORS_LEGAL_VALUES:
-                return (
-                    <>
-                        <RestrictiveLegalValues
-                            data={resolveLegalValues(
-                                constraintValues,
-                                contextDefinition.legalValues,
-                            )}
-                            constraintValues={constraintValues}
-                            values={localConstraint.values || []}
-                            setValuesWithRecord={setValuesWithRecord}
-                            setValues={setValues}
-                            error={error}
-                            setError={setError}
-                        />
-                    </>
+                return useNewLegalValueInput ? (
+                    <LegalValuesSelector
+                        data={resolveLegalValues(
+                            constraintValues,
+                            contextDefinition.legalValues,
+                        )}
+                        constraintValues={constraintValues}
+                        values={localConstraint.values || []}
+                        setValuesWithRecord={setValuesWithRecord}
+                        setValues={setValues}
+                    />
+                ) : (
+                    <RestrictiveLegalValues
+                        data={resolveLegalValues(
+                            constraintValues,
+                            contextDefinition.legalValues,
+                        )}
+                        constraintValues={constraintValues}
+                        values={localConstraint.values || []}
+                        setValuesWithRecord={setValuesWithRecord}
+                        setValues={setValues}
+                        error={error}
+                        setError={setError}
+                    />
                 );
             case NUM_OPERATORS_LEGAL_VALUES:
                 return (

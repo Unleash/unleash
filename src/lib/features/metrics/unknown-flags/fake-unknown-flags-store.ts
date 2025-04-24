@@ -1,32 +1,33 @@
 import type { IUnknownFlagsStore, UnknownFlag } from './unknown-flags-store';
 
 export class FakeUnknownFlagsStore implements IUnknownFlagsStore {
-    private unknownFlagRecord: Record<string, UnknownFlag> = {};
+    private unknownFlagMap = new Map<string, UnknownFlag>();
+
+    private getKey(flag: UnknownFlag): string {
+        return `${flag.name}:${flag.appName}`;
+    }
 
     async replaceAll(flags: UnknownFlag[]): Promise<void> {
-        this.unknownFlagRecord = {};
+        this.unknownFlagMap.clear();
         for (const flag of flags) {
-            this.unknownFlagRecord[flag.name] = flag;
+            this.unknownFlagMap.set(this.getKey(flag), flag);
         }
     }
 
     async getAll(): Promise<UnknownFlag[]> {
-        return Object.values(this.unknownFlagRecord);
+        return Array.from(this.unknownFlagMap.values());
     }
 
     async clear(hoursAgo: number): Promise<void> {
-        const now = new Date();
-        for (const flag of Object.values(this.unknownFlagRecord)) {
-            if (
-                flag.seenAt.getTime() <
-                now.getTime() - hoursAgo * 60 * 60 * 1000
-            ) {
-                delete this.unknownFlagRecord[flag.name];
+        const cutoff = Date.now() - hoursAgo * 60 * 60 * 1000;
+        for (const [key, flag] of this.unknownFlagMap.entries()) {
+            if (flag.seenAt.getTime() < cutoff) {
+                this.unknownFlagMap.delete(key);
             }
         }
     }
 
     async deleteAll(): Promise<void> {
-        this.unknownFlagRecord = {};
+        this.unknownFlagMap.clear();
     }
 }

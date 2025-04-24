@@ -1,10 +1,10 @@
 import { Box, styled, Typography } from '@mui/material';
 import type { StrategyVariantSchema } from 'openapi';
 
-interface ISplitPreviewTooltip {
+type SplitPreviewTooltipProps = {
     variant: StrategyVariantSchema;
     index: number;
-}
+};
 
 const StyledTooltipContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -47,9 +47,7 @@ const StyledVariantType = styled('span')(({ theme }) => ({
     background: theme.palette.background.elevation2,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(0.25, 1),
-    // margin: theme.spacing(-0.25, 0),
     align: 'center',
-    // fontFamily: 'monospace',
     fontSize: theme.fontSizes.smallBody,
 }));
 
@@ -64,7 +62,7 @@ const StyledVariantPayload = styled('code')(({ theme }) => ({
 export const SplitPreviewTooltip = ({
     variant: { name, weight, payload },
     index,
-}: ISplitPreviewTooltip) => (
+}: SplitPreviewTooltipProps) => (
     <StyledTooltipContainer>
         <StyledVariantContainer>
             <StyledVariantBox index={index}>

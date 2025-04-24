@@ -91,7 +91,7 @@ A bundled [single-page application interface](/understanding-unleash/unleash-ove
 
 Unleash achieves scalability and high availability by distributing API instances, ensuring database resilience, providing regional disaster recovery, utilizing a CDN for UI assets, and dynamically handling traffic bursts. Let's look at the key mechanisms at play.
 
-![How we scale Unleash](/img/scaling-unleash.png)
+![How we scale Unleash](/img/scaling-unleash-unleash.jpg)
 
 #### Horizontal scaling
 We run Unleash API instances across multiple AWS Availability Zones (Multi-AZ) in each region. Load balancers distribute incoming traffic, and our infrastructure automatically scales compute resources, allowing the number of Unleash instances to adjust based on observed load.
@@ -198,7 +198,7 @@ Edge was specifically built to handle scenarios where tens of millions of end-us
 
 When you require low-latency flag evaluations for a globally distributed user base, we recommend that you use distributed Edge instances across multiple global regions.
 
-![How we scale Unleash Edge](/img/scaling-edge.png)
+![How we scale Unleash Edge](/img/scaling-unleash-edge.jpg)
 
 With Unleash Enterprise Edge Cloud, this complexity is handled for you—you simply configure your SDKs with the provided Edge URL. We ensure that:
 - Edge instances run across multiple global regions with at least two AZs within each region.

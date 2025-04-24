@@ -23,12 +23,14 @@ Unleash is fundamentally designed for speed and resilience. Understanding the co
 ### Fast, local feature flag evaluation
 [SDKs](/reference/sdks) embedded in your applications fetch [feature flag](/reference/feature-toggles) configurations from the Unleash server or [Unleash Edge](/reference/unleash-edge).
 
-[Backend SDKs](/reference/sdks#server-side-sdks) perform flag evaluations locally within the application's memory. This eliminates network latency for each evaluation, resulting in extremely fast checks.
+[Server-side SDKs](/reference/sdks#server-side-sdks) perform flag evaluations locally within the application's memory. This eliminates network latency for each evaluation, resulting in extremely fast checks.
 
-[Frontend SDKs](/reference/sdks#client-side-sdks) rely on Unleash Edge as a fast, lightweight caching and evaluation layer closer to the end-user.
+[Client-side SDKs](/reference/sdks#client-side-sdks) rely on Unleash Edge as a fast, lightweight caching and evaluation layer closer to the end-user.
 
 ### Resilience through caching
-SDKs cache the last known valid configuration. If the Unleash API server or Unleash Edge becomes temporarily unavailable, the SDK continues operating using these cached flags and predefined default values, ensuring your application remains functional and resilient to network interruptions or upstream service issues.
+
+SDKs enhance resilience by caching the last known valid configuration. For optimal performance, this is often kept in-memory, but SDKs can also be configured to use persistent backup storage (like a local file, Redis, or S3). If the Unleash API server or Unleash Edge becomes temporarily unavailable, the SDK continues operating using these cached flags along with predefined default values.
+This persistence ensures your application remains functional not only through network interruptions but also allows it to recover state even after restarting during an upstream outage.
 
 For a deeper dive, explore the [Unleash architecture overview](/understanding-unleash/unleash-overview). 
 
@@ -50,7 +52,7 @@ How you set up Unleash to scale depends significantly on the [hosting option](/u
 
 - **How it works**: You deploy, manage, and scale all Unleash components (Unleash API server, database, [Admin UI](/understanding-unleash/unleash-overview#the-unleash-admin-ui), [Unleash Edge](/reference/unleash-edge)) within your own infrastructure (cloud or on-premises).
 - **Ideal for**: Organizations with strict regulatory environments requiring full data and infrastructure control, air-gapped networks, or those with strong preferences and capabilities for managing their own software infrastructure.
-- **Scaling and infrastructure**: You are responsible for architecting for high availability (for example, Multi-AZ API deployment, database clusters), scaling [compute resources](/using-unleash/deploy/configuring-unleash#minimum-and-recommended-specifications), [database capacity planning](/using-unleash/deploy/database-setup#sizing), backups, disaster recovery strategies, monitoring, and security updates.
+- **Scaling and infrastructure**: You are responsible for architecting for high availability (for example, Multi-AZ API deployment, database clusters), scaling [compute resources](/using-unleash/deploy/configuring-unleash#minimum-and-recommended-specifications), [database capacity planning](/using-unleash/deploy/database-setup#sizing), backups, disaster recovery strategies, monitoring, handling upgrades of Unleash and Unleash Edge and other and security updates.
 - **Key tradeoff**: Maximum control over data and infrastructure, at the cost of significant SRE/DevOps expertise, resources, and ongoing operational effort.
 
 </TabItem>
@@ -79,7 +81,7 @@ Utilize Auto Scaling Groups (ASGs) or similar mechanisms in cloud environments t
 
 A [PostgreSQL database](/using-unleash/deploy/database-setup#requirements) that stores all configurations, feature flags, strategies, context fields, metrics, and audit logs. It is the critical stateful component.
 
-The database layer must be performant and highly available. Use managed database services (such as AWS RDS for PostgreSQL) configured for high availability.
+The database layer must be performant and highly available. Use managed database services (such as AWS RDS for PostgreSQL) configured for high availability and backups.
 
 ### Unleash Frontend / Admin UI
 
@@ -92,7 +94,7 @@ Unleash achieves scalability and high availability by distributing API instances
 ![How we scale Unleash](/img/scaling-unleash.png)
 
 #### Horizontal scaling
-We run Unleash API instances across multiple AWS Availability Zones (Multi-AZ) in each region. Load balancers distribute incoming traffic, and auto-scaling groups automatically adjust the number of instances based on observed load.
+We run Unleash API instances across multiple AWS Availability Zones (Multi-AZ) in each region. Load balancers distribute incoming traffic, and our infrastructure automatically scales compute resources, allowing the number of Unleash instances to adjust based on observed load.
 
 #### Database resilience
 We use AWS RDS for PostgreSQL configured for high availability with Multi-AZ deployments, providing automatic failover within 2 minutes to a hot standby in case the primary database instance or its AZ fails.
@@ -177,7 +179,7 @@ Configure the following:
 
   In the rare event of a complete primary region failure (disaster recovery scenario):
   1. Promote the database read replica (or restore from backup) in the standby region to become the new primary database.
-  2. Adjust DNS records or load balancer configurations to direct traffic to the Unleash API instances in the new region.
+  2. Adjust DNS records or load balancer configurations to direct traffic to the Unleash API instances in the new region. DNS propagation latency could be a limiting factor on your ability to recover.
   3. Scale up compute resources (API servers, Edge instances if applicable) in the new region as needed to handle the full production load.
 
 ## Scaling with Unleash Edge
@@ -239,7 +241,7 @@ Use the [Connected Edges dashboard](/reference/network-view#connected-edges) to 
 <details>
   <summary>Self-hosted observability</summary>
 
-    - **Health checks**: Poll `/health` endpoints on API and Edge instances. Monitor `/internal-backstage/prometheus` on Edge.
+    - **Health checks**: Poll `/health` endpoints on API and Edge instances. Monitor `/internal-backstage/prometheus` for Unleash and Unleash Edge.
     - **API/Edge instances**: Track CPU, memory, network, request latency, and error rates.
     - **Database**: Monitor key performance indicators such as CPU utilization, memory usage, disk I/O, network throughput, active connections, query latency/throughput, and available disk space.
     - **Application logs**: Enhance default logging and centralize (e.g., CloudWatch Logs, Datadog, Splunk).
@@ -268,7 +270,7 @@ Unleash Cloud is architected on AWS for high availability and elasticity:
 - **Multi-AZ deployment**: Services run across multiple Availability Zones within a region for fault tolerance.
 - **Auto scaling**: We use load balancers and auto-scaling groups for the Unleash API instances, automatically adjusting capacity based on real-time traffic load.
 - **Managed databases**: Highly available managed databases with hot standbys and automatic failover are used.
-- **Global Edge network**: [Unleash Edge](/reference/unleash-edge) distributes flag serving globally for low latency and high throughput.
+- **Global Edge network**: [Unleash Edge](/reference/unleash-edge) distributes flag serving globally for low latency and high throughput with a low memory footprint.
 - **Proactive monitoring and elasticity**: We continuously monitor performance and scale resources proactively to handle anticipated and sudden peaks smoothly.
 - **Disaster recovery**: Full backups and a running cluster exist in a separate region for rare regional failure scenarios.
 

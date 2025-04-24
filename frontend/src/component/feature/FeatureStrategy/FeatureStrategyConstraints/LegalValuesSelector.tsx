@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert, Button, Checkbox, styled } from '@mui/material';
 import type { ILegalValue } from 'interfaces/context';
@@ -78,7 +78,6 @@ export const LegalValuesSelector = ({
 }: IRestrictiveLegalValuesProps) => {
     const [filter, setFilter] = useState('');
     const { legalValues, deletedLegalValues } = data;
-    const descriptionId = useId();
 
     const filteredValues = filterLegalValues(legalValues, filter);
 
@@ -158,7 +157,7 @@ export const LegalValuesSelector = ({
                     </Alert>
                 }
             />
-            <p id={descriptionId}>Select values from a predefined set</p>
+            <p>Select values from a predefined set</p>
             <Row>
                 <ConstraintValueSearch
                     onKeyDown={handleSearchKeyDown}

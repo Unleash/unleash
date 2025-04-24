@@ -7,6 +7,10 @@ interface IConstraintValueSearchProps {
     setFilter: React.Dispatch<React.SetStateAction<string>>;
 }
 
+/**
+ * @deprecated use `/component/feature/FeatureStrategy/FeatureStrategyConstraints/LegalValuesSelector.tsx`
+ * Remove with flag `addEditStrategy`
+ */
 export const ConstraintValueSearch = ({
     filter,
     setFilter,

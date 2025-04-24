@@ -80,6 +80,10 @@ const ErrorText = styled('p')(({ theme }) => ({
     color: theme.palette.error.main,
 }));
 
+/**
+ * @deprecated use `/component/feature/FeatureStrategy/FeatureStrategyConstraints/LegalValuesSelector.tsx`
+ * Remove with flag `addEditStrategy`
+ */
 export const RestrictiveLegalValues = ({
     data,
     values,

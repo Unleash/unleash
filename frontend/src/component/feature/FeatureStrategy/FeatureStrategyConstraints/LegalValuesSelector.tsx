@@ -58,6 +58,7 @@ const StyledValuesContainer = styled('div')(({ theme }) => ({
 
 const Row = styled('div')(({ theme }) => ({
     display: 'flex',
+    flexFlow: 'row wrap',
     alignItems: 'center',
     gap: theme.spacing(1),
 }));
@@ -159,8 +160,18 @@ export const LegalValuesSelector = ({
             />
             <p id={descriptionId}>Select values from a predefined set</p>
             <Row>
-                <ConstraintValueSearch filter={filter} setFilter={setFilter} />
-                <Button variant={'text'} onClick={onSelectAll}>
+                <ConstraintValueSearch
+                    onKeyDown={handleSearchKeyDown}
+                    filter={filter}
+                    setFilter={setFilter}
+                />
+                <Button
+                    sx={{
+                        whiteSpace: 'nowrap',
+                    }}
+                    variant={'text'}
+                    onClick={onSelectAll}
+                >
                     {isAllSelected ? 'Unselect all' : 'Select all'}
                 </Button>
             </Row>
@@ -174,7 +185,7 @@ export const LegalValuesSelector = ({
                             <Checkbox
                                 checked={Boolean(valuesMap[match.value])}
                                 onChange={() => onChange(match.value)}
-                                name={match.value}
+                                name='legal-value'
                                 color='primary'
                                 disabled={deletedLegalValues
                                     .map(({ value }) => value)

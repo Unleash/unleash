@@ -2,6 +2,7 @@ import { Box, Chip, styled } from '@mui/material';
 import type { FC } from 'react';
 import type { FilterItemParamHolder } from '../../../filter/Filters/Filters';
 import type { LifecycleStage } from '../../FeatureView/FeatureOverview/FeatureLifecycle/LifecycleStage';
+import { useLifecycleCount } from 'hooks/api/getters/useLifecycleCount/useLifecycleCount';
 
 const StyledChip = styled(Chip, {
     shouldForwardProp: (prop) => prop !== 'isActive',
@@ -52,6 +53,8 @@ export const LifecycleFilters: FC<ILifecycleFiltersProps> = ({
     onChange,
     total,
 }) => {
+    const { lifecycleCount } = useLifecycleCount();
+    // FIXME: use lifecycleCount
     const current = state.lifecycle?.values ?? [];
 
     return (

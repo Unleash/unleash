@@ -5,7 +5,7 @@ import { disabledStrategyClassName } from 'component/common/StrategyItemContaine
 export type StrategyEvaluationItemProps = {
     type?: ReactNode;
     children?: ReactNode;
-    alignTypeCenter?: boolean;
+    alignType?: 'center' | 'top';
 };
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -35,8 +35,8 @@ const StyledContent = styled('div')(({ theme }) => ({
 }));
 
 const StyledType = styled('span')<{
-    alignCenter?: boolean;
-}>(({ theme, alignCenter }) => ({
+    align?: 'top' | 'center';
+}>(({ theme, align }) => ({
     display: 'block',
     flexShrink: 0,
     fontSize: theme.fontSizes.smallerBody,
@@ -46,7 +46,7 @@ const StyledType = styled('span')<{
     [theme.breakpoints.down('sm')]: {
         width: '100%',
     },
-    ...(!alignCenter && {
+    ...(align === 'top' && {
         alignSelf: 'flex-start',
     }),
 }));
@@ -57,11 +57,11 @@ const StyledType = styled('span')<{
 export const StrategyEvaluationItem: FC<StrategyEvaluationItemProps> = ({
     type,
     children,
-    alignTypeCenter = true,
+    alignType,
 }) => {
     return (
         <StyledContainer>
-            <StyledType alignCenter={alignTypeCenter}>{type}</StyledType>
+            <StyledType align={alignType}>{type}</StyledType>
             <StyledContent>{children}</StyledContent>
         </StyledContainer>
     );

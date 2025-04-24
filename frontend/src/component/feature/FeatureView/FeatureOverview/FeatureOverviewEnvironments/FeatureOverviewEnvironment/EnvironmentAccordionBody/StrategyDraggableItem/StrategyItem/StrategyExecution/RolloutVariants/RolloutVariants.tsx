@@ -25,7 +25,7 @@ export const RolloutVariants: FC<{
         <StyledContainer>
             <StrategyEvaluationItem
                 type={`Variants (${variants.length})`}
-                alignTypeCenter={false}
+                alignType='top'
             >
                 <StyledTrack>
                     <VariantsSplitPreview

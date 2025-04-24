@@ -28,7 +28,9 @@ const StyledVariantBox = styled(Box, {
 })<{ index: number }>(({ theme, index }) => ({
     display: 'flex',
     alignItems: 'center',
-    '& div': {
+    figure: {
+        margin: 0,
+        padding: 0,
         width: theme.spacing(1.6),
         height: theme.spacing(1.6),
         borderRadius: '50%',
@@ -68,7 +70,7 @@ export const SplitPreviewTooltip = ({
     <StyledTooltipContainer>
         <StyledVariantContainer>
             <StyledVariantBox index={index}>
-                <Box />
+                <figure />
             </StyledVariantBox>
 
             <Typography variant='subtitle2'>

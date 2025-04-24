@@ -10,7 +10,7 @@ const StyledContainer = styled(Box)(() => ({
     position: 'relative',
 }));
 
-const StyledSegment = styled(Box)<{ selected?: boolean }>(
+const StyledVariantItem = styled(Box)<{ selected?: boolean }>(
     ({ theme, selected }) => ({
         position: 'relative',
         fontSize: theme.fontSizes.smallerBody,
@@ -22,7 +22,7 @@ const StyledSegment = styled(Box)<{ selected?: boolean }>(
     }),
 );
 
-const StyledSegmentTrack = styled(Box)<{
+const StyledVariantItemTrack = styled(Box)<{
     index: number;
     hasError?: boolean;
     isFirst?: boolean;
@@ -52,7 +52,7 @@ const StyledTrackPercentage = styled(Box)(({ theme }) => ({
     lineHeight: 1,
 }));
 
-const StyledSegmentInfo = styled(Box)(({ theme }) => ({
+const StyledVariantItemInfo = styled(Box)(({ theme }) => ({
     padding: theme.spacing(0.125, 0.25, 0),
     overflow: 'hidden',
     color: theme.palette.text.secondary,
@@ -114,11 +114,11 @@ export const VariantsSplitPreview = ({
                                 />
                             }
                         >
-                            <StyledSegment
+                            <StyledVariantItem
                                 sx={{ width: `${value}%` }}
                                 selected={selected === variant.name}
                             >
-                                <StyledSegmentTrack
+                                <StyledVariantItemTrack
                                     index={index}
                                     isFirst={index === 0}
                                     isLast={index === variants.length - 1}
@@ -129,13 +129,13 @@ export const VariantsSplitPreview = ({
                                             {`${value}%`}
                                         </Truncator>
                                     </StyledTrackPercentage>
-                                </StyledSegmentTrack>
-                                <StyledSegmentInfo>
+                                </StyledVariantItemTrack>
+                                <StyledVariantItemInfo>
                                     <Truncator lines={1}>
                                         {variant.name}
                                     </Truncator>
-                                </StyledSegmentInfo>
-                            </StyledSegment>
+                                </StyledVariantItemInfo>
+                            </StyledVariantItem>
                         </TooltipResolver>
                     );
                 })}

@@ -298,6 +298,13 @@ export default class ClientInstanceService {
         return this.clientInstanceStore.removeInstancesOlderThanTwoDays();
     }
 
+    async removeInactiveApplications(): Promise<number> {
+        if (this.flagResolver.isEnabled('removeInactiveApplications')) {
+            return this.clientApplicationsStore.removeInactiveApplications();
+        }
+        return 0;
+    }
+
     async getOutdatedSdks(): Promise<OutdatedSdksSchema['sdks']> {
         const sdkApps = await this.clientInstanceStore.groupApplicationsBySdk();
 

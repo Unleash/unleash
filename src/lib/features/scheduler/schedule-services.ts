@@ -79,6 +79,14 @@ export const scheduleServices = async (
     );
 
     schedulerService.schedule(
+        clientInstanceService.removeInactiveApplications.bind(
+            clientInstanceService,
+        ),
+        hoursToMilliseconds(24),
+        'removeInactiveApplications',
+    );
+
+    schedulerService.schedule(
         clientInstanceService.bulkAdd.bind(clientInstanceService),
         secondsToMilliseconds(5),
         'bulkAddInstances',

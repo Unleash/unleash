@@ -1,7 +1,7 @@
 // deprecated; remove with `flagOverviewRedesign` flag
 import { Box, styled } from '@mui/material';
 import { StrategyExecution } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
-import SplitPreviewSlider from 'component/common/SplitPreviewSlider/SplitPreviewSlider';
+import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';
 import {
     formatStrategyName,
     getFeatureStrategyIcon,
@@ -46,10 +46,10 @@ export const ReleasePlanMilestoneStrategy = ({
                 strategy.variants.length > 0 &&
                 (strategy.disabled ? (
                     <Box sx={{ opacity: '0.5' }}>
-                        <SplitPreviewSlider variants={strategy.variants} />
+                        <VariantsSplitPreview variants={strategy.variants} />
                     </Box>
                 ) : (
-                    <SplitPreviewSlider variants={strategy.variants} />
+                    <VariantsSplitPreview variants={strategy.variants} />
                 ))}
         </StyledStrategy>
     );

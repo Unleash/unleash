@@ -76,7 +76,7 @@ interface ISplitPreviewSliderProps {
     weightsError?: boolean;
 }
 
-const SplitPreviewSlider = ({
+export const VariantsSplitPreview = ({
     variants,
     weightsError,
 }: ISplitPreviewSliderProps) => {
@@ -199,5 +199,3 @@ const SplitPreviewTooltip = ({ variant, index }: ISplitPreviewTooltip) => {
         </StyledTooltipContainer>
     );
 };
-
-export default SplitPreviewSlider;

@@ -1,17 +1,17 @@
 import { VariantForm } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm';
-import { updateWeightEdit } from '../../common/util';
+import { updateWeightEdit } from 'component/common/util';
 import type React from 'react';
 import { type FC, useEffect, useState } from 'react';
 import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal';
-import PermissionButton from '../../common/PermissionButton/PermissionButton';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions';
 import { v4 as uuidv4 } from 'uuid';
 import { WeightType } from '../../../constants/variantTypes';
 import { Link, styled, Typography, useTheme } from '@mui/material';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import SplitPreviewSlider from '../../common/SplitPreviewSlider/SplitPreviewSlider';
-import { HelpIcon } from '../../common/HelpIcon/HelpIcon';
-import { StrategyVariantsUpgradeAlert } from '../../common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
+import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import { StrategyVariantsUpgradeAlert } from 'component/common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledVariantForms = styled('div')({
@@ -168,7 +168,7 @@ export const StrategyVariants: FC<{
             >
                 Add variant
             </PermissionButton>
-            <SplitPreviewSlider variants={variantsEdit} />
+            <VariantsSplitPreview variants={variantsEdit} />
         </>
     );
 };

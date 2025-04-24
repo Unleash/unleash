@@ -449,4 +449,16 @@ export default class ClientApplicationsStore
             }));
         }
     };
+
+    async removeInactiveApplications(): Promise<number> {
+        const rows = await this.db(TABLE)
+            .whereRaw("seen_at < now() - interval '30 days'")
+            .del();
+
+        if (rows > 0) {
+            this.logger.debug(`Deleted ${rows} applications`);
+        }
+
+        return rows;
+    }
 }

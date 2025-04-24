@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { WeightType } from '../../../constants/variantTypes';
 import { Box, styled, Typography, useTheme } from '@mui/material';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import SplitPreviewSlider from './SplitPreviewSlider/SplitPreviewSlider';
+import SplitPreviewSlider from '../../common/SplitPreviewSlider/SplitPreviewSlider';
 import { HelpIcon } from '../../common/HelpIcon/HelpIcon';
 import { StrategyVariantsUpgradeAlert } from '../../common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';

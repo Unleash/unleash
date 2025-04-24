@@ -1,7 +1,8 @@
 import { Box, Typography, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
-import type { IFeatureVariant } from 'interfaces/featureToggle';
+import { Truncator } from 'component/common/Truncator/Truncator';
+import type { StrategyVariantSchema } from 'openapi';
 
 const StyledContainer = styled(Box)(() => ({
     display: 'flex',
@@ -9,29 +10,41 @@ const StyledContainer = styled(Box)(() => ({
     position: 'relative',
 }));
 
-const StyledTrack = styled(Box)(({ theme }) => ({
-    position: 'absolute',
-    height: theme.spacing(3),
-    width: '100%',
-    display: 'flex',
-    overflow: 'hidden',
+const StyledSegment = styled(Box)(() => ({
+    position: 'relative',
 }));
 
-const StyledSegment = styled(Box)(() => ({
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+const StyledSegmentInfo = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'hasError',
+})<{ hasError?: boolean }>(({ theme, hasError }) => ({
     width: '100%',
+    top: 0,
+    position: 'absolute',
+    padding: theme.spacing(0, 0.125),
+    fontSize: theme.fontSizes.smallerBody,
+    overflow: 'hidden',
+    color: hasError ? theme.palette.error.main : 'inherit',
 }));
 
 const StyledSegmentTrack = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'index',
-})<{ index: number }>(({ theme, index }) => ({
-    height: theme.spacing(1.8),
+    shouldForwardProp: (prop) => prop !== 'index' && prop !== 'isLast',
+})<{ index: number; isLast: boolean }>(({ theme, index, isLast }) => ({
+    height: theme.spacing(2),
     width: '100%',
     position: 'relative',
     background: theme.palette.variants[index % theme.palette.variants.length],
+    ...(index === 0
+        ? {
+              borderTopLeftRadius: theme.shape.borderRadius,
+              borderBottomLeftRadius: theme.shape.borderRadius,
+          }
+        : {}),
+    ...(isLast
+        ? {
+              borderTopRightRadius: theme.shape.borderRadius,
+              borderBottomRightRadius: theme.shape.borderRadius,
+          }
+        : {}),
 }));
 
 const StyledHeaderContainer = styled(Box)(({ theme }) => ({
@@ -44,35 +57,22 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
     marginY: theme.spacing(1),
 }));
 
-const StyledVariantBoxContainer = styled(Box)(() => ({
-    display: 'flex',
-    alignItems: 'center',
-    marginLeft: 'auto',
-    flexWrap: 'wrap',
-}));
-
 const StyledVariantBox = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'index',
 })<{ index: number }>(({ theme, index }) => ({
     display: 'flex',
     alignItems: 'center',
-    marginRight: theme.spacing(2),
     '& div': {
         width: theme.spacing(1.6),
         height: theme.spacing(1.6),
         borderRadius: '50%',
-        marginRight: theme.spacing(1),
         background:
             theme.palette.variants[index % theme.palette.variants.length],
     },
 }));
 
-const StyledTypographySubtitle = styled(Typography)(({ theme }) => ({
-    marginTop: theme.spacing(1),
-}));
-
 interface ISplitPreviewSliderProps {
-    variants: IFeatureVariant[];
+    variants: StrategyVariantSchema[];
     weightsError?: boolean;
 }
 
@@ -88,10 +88,11 @@ const SplitPreviewSlider = ({
         <Box sx={(theme) => ({ marginTop: theme.spacing(2) })}>
             <SplitPreviewHeader variants={variants} />
             <StyledContainer>
-                <StyledTrack />
-
                 {variants.map((variant, index) => {
                     const value = variant.weight / 10;
+                    if (value === 0) {
+                        return null;
+                    }
                     return (
                         <TooltipResolver
                             variant='custom'
@@ -105,24 +106,21 @@ const SplitPreviewSlider = ({
                                 />
                             }
                         >
-                            <Box
-                                style={{
-                                    width: `${value}%`,
-                                }}
-                            >
-                                {' '}
-                                <StyledSegment>
-                                    <StyledSegmentTrack index={index} />
-                                    <StyledTypographySubtitle
-                                        variant='subtitle2'
-                                        color={
-                                            weightsError ? 'error' : 'inherit'
-                                        }
-                                    >
-                                        {value}%
-                                    </StyledTypographySubtitle>
-                                </StyledSegment>
-                            </Box>
+                            <StyledSegment sx={{ width: `${value}%` }}>
+                                <StyledSegmentTrack
+                                    index={index}
+                                    isLast={index === variants.length - 1}
+                                />
+                                <StyledSegmentInfo hasError={weightsError}>
+                                    {value >= 5 ? (
+                                        <Truncator
+                                            lines={1}
+                                        >{`${value}%${value >= 10 ? ` – ${variant.name}` : ` `}`}</Truncator>
+                                    ) : (
+                                        <>…</>
+                                    )}
+                                </StyledSegmentInfo>
+                            </StyledSegment>
                         </TooltipResolver>
                     );
                 })}
@@ -135,24 +133,14 @@ const SplitPreviewHeader = ({ variants }: ISplitPreviewSliderProps) => {
     return (
         <StyledHeaderContainer>
             <StyledTypography variant='body2'>
-                Feature variants ({variants.length})
+                Flag variants ({variants.length})
             </StyledTypography>
-            <StyledVariantBoxContainer>
-                {variants.map((variant, index) => (
-                    <StyledVariantBox key={index} index={index}>
-                        <Box />
-                        <StyledTypography variant='body2'>
-                            {variant.name}
-                        </StyledTypography>
-                    </StyledVariantBox>
-                ))}
-            </StyledVariantBoxContainer>
         </StyledHeaderContainer>
     );
 };
 
 interface ISplitPreviewTooltip {
-    variant: IFeatureVariant;
+    variant: StrategyVariantSchema;
     index: number;
 }
 
@@ -161,10 +149,11 @@ const StyledTooltipContainer = styled(Box)(() => ({
     flexDirection: 'column',
 }));
 
-const StyledVariantContainer = styled(Box)(() => ({
+const StyledVariantContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     minWidth: '250px',
+    gap: theme.spacing(1),
 }));
 
 const StyledPayloadContainer = styled(Box)(({ theme }) => ({

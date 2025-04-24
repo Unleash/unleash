@@ -1,5 +1,5 @@
 import { Box, IconButton, styled } from '@mui/material';
-import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
+import SplitPreviewSlider from 'component/common/SplitPreviewSlider/SplitPreviewSlider';
 import {
     formatStrategyName,
     getFeatureStrategyIcon,

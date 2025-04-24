@@ -10,7 +10,7 @@ import {
     PROJECT_DEFAULT_STRATEGY_WRITE,
     UPDATE_PROJECT,
 } from '@server/types/permissions';
-import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
+import SplitPreviewSlider from 'component/common/SplitPreviewSlider/SplitPreviewSlider';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/LegacyStrategyItemContainer';
 
 interface ProjectEnvironmentDefaultStrategyProps {

@@ -10,7 +10,7 @@ import { updateWeightEdit } from 'component/common/util';
 import { WeightType } from 'constants/variantTypes';
 import { useTheme } from '@mui/material';
 import Add from '@mui/icons-material/Add';
-import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
+import SplitPreviewSlider from 'component/common/SplitPreviewSlider/SplitPreviewSlider';
 
 const StyledVariantForms = styled('div')({
     display: 'flex',

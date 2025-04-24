@@ -1,7 +1,7 @@
 // deprecated; remove with `flagOverviewRedesign` flag
 import { Box, styled } from '@mui/material';
 import { StrategyExecution } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
-import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
+import SplitPreviewSlider from 'component/common/SplitPreviewSlider/SplitPreviewSlider';
 import {
     formatStrategyName,
     getFeatureStrategyIcon,

@@ -13,7 +13,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { CopyStrategyIconMenu } from './CopyStrategyIconMenu/CopyStrategyIconMenu';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/LegacyStrategyItemContainer';
 import MenuStrategyRemove from './MenuStrategyRemove/MenuStrategyRemove';
-import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
+import SplitPreviewSlider from 'component/common/SplitPreviewSlider/SplitPreviewSlider';
 import { Box } from '@mui/material';
 interface IStrategyItemProps {
     environmentId: string;

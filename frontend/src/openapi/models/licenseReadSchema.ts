@@ -19,13 +19,13 @@ export interface LicenseReadSchema {
     /** Date when the license was issued. */
     issuedAt?: string;
     /** Whether the license is valid or not. */
-    isValid?: boolean;
+    isValid: boolean;
     /** Name of plan that the license is for. */
-    plan: string;
+    plan?: string;
     /** Number of seats in the license. */
-    seats: number;
+    seats?: number;
     /** The actual license token. */
-    token: string;
+    token?: string;
     /** Type of license. */
-    type: string;
+    type?: string;
 }

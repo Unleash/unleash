@@ -19,10 +19,7 @@ export interface ProjectCreatedSchema {
      * @nullable
      */
     description?: string | null;
-    /**
-     * The environments enabled for the project.
-     * @minItems 1
-     */
+    /** The environments enabled for the project. */
     environments?: string[];
     /**
      * A limit on the number of features allowed in the project. `null` if no limit.

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Alert, Button, Checkbox, Chip, Stack, styled } from '@mui/material';
+import { Alert, Button, Checkbox, Stack, styled } from '@mui/material';
 import type { ILegalValue } from 'interfaces/context';
 import { useUiFlag } from 'hooks/useUiFlag';
 import {
@@ -173,37 +173,6 @@ export const LegalValuesSelector = ({
                     {isAllSelected ? 'Unselect all' : 'Select all'}
                 </Button>
             </StyledStack>
-            <ConditionallyRender
-                condition={legalValues.length > 100}
-                show={
-                    <>
-                        <ConditionallyRender
-                            condition={
-                                !disableShowContextFieldSelectionValues &&
-                                Boolean(values)
-                            }
-                            show={
-                                <StyledChipList
-                                    sx={{ border: 0, paddingTop: 0 }}
-                                >
-                                    {values.map((value) => {
-                                        return (
-                                            <li key={value}>
-                                                <Chip
-                                                    label={value}
-                                                    onDelete={() =>
-                                                        onChange(value)
-                                                    }
-                                                />
-                                            </li>
-                                        );
-                                    })}
-                                </StyledChipList>
-                            }
-                        />
-                    </>
-                }
-            />
             <div onKeyDown={handleSearchKeyDown}>
                 <ConstraintValueSearch filter={filter} setFilter={setFilter} />
             </div>

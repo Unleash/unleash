@@ -118,7 +118,7 @@ export default class ClientInstanceService {
 
     public async registerClient(
         data: PartialSome<IClientApp, 'instanceId'>,
-        clientIp: string | null,
+        clientIp: string,
     ): Promise<void> {
         const value = await clientRegisterSchema.validateAsync(data);
         value.clientIp = clientIp;

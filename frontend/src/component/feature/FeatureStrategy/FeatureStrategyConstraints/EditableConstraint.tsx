@@ -39,19 +39,28 @@ const Container = styled('article')(({ theme }) => ({
 }));
 
 const TopRow = styled('div')(({ theme }) => ({
+    '--gap': theme.spacing(1),
     padding: 'var(--padding)',
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'flex-start',
     justifyItems: 'space-between',
     borderBottom: `1px dashed ${theme.palette.divider}`,
+    gap: 'var(--gap)',
 }));
 
 const ConstraintOptions = styled('div')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'row nowrap',
-    gap: theme.spacing(1),
+    gap: 'var(--gap)',
     alignSelf: 'flex-start',
+    '@container (max-width: 700px)': {
+        flexFlow: 'row wrap',
+    },
+}));
+
+const OperatorOptions = styled(ConstraintOptions)(({ theme }) => ({
+    flexFlow: 'row nowrap',
 }));
 
 const resolveLegalValues = (
@@ -82,7 +91,7 @@ const resolveLegalValues = (
 
 const ConstraintDetails = styled('div')(({ theme }) => ({
     display: 'flex',
-    gap: theme.spacing(1),
+    gap: 'var(--gap)',
     flexFlow: 'row nowrap',
     width: '100%',
     height: 'min-content',
@@ -97,6 +106,7 @@ const InputContainer = styled('div')(({ theme }) => ({
 
 const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
     fieldset: { border: 'none', borderRadius: 0 },
+    maxWidth: '25ch',
     ':focus-within fieldset': { borderBottomStyle: 'solid' },
     'label + &': {
         // mui adds a margin top to 'standard' selects with labels
@@ -105,6 +115,11 @@ const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
     '&::before': {
         border: 'none',
     },
+}));
+
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+    position: 'absolute',
+    right: theme.spacing(1),
 }));
 
 const StyledButton = styled('button')(({ theme }) => ({
@@ -120,6 +135,10 @@ const StyledButton = styled('button')(({ theme }) => ({
     '&:is(:hover, :focus-visible)': {
         outline: `1px solid ${theme.palette.primary.main}`,
     },
+}));
+
+const ButtonPlaceholder = styled('div')(({ theme }) => ({
+    width: theme.spacing(2),
 }));
 
 const StyledCaseInsensitiveIcon = styled(CaseInsensitiveIcon)(({ theme }) => ({
@@ -270,39 +289,41 @@ export const EditableConstraint: FC<Props> = ({
                             variant='standard'
                         />
 
-                        <StyledButton
-                            type='button'
-                            onClick={toggleInvertedOperator}
-                        >
-                            {localConstraint.inverted ? 'aint' : 'is'}
-                        </StyledButton>
-
-                        <ConstraintOperatorSelect
-                            options={operatorsForContext(contextName)}
-                            value={operator}
-                            onChange={onOperatorChange}
-                            inverted={localConstraint.inverted}
-                        />
-
-                        {showCaseSensitiveButton ? (
-                            <CaseButton
+                        <OperatorOptions>
+                            <StyledButton
                                 type='button'
-                                onClick={toggleCaseSensitivity}
+                                onClick={toggleInvertedOperator}
                             >
-                                {localConstraint.caseInsensitive ? (
-                                    <StyledCaseInsensitiveIcon aria-label='The match is not case sensitive.' />
-                                ) : (
-                                    <StyledCaseSensitiveIcon aria-label='The match is case sensitive.' />
-                                )}
-                                <ScreenReaderOnly>
-                                    Make match
-                                    {localConstraint.caseInsensitive
-                                        ? ' '
-                                        : ' not '}
-                                    case sensitive
-                                </ScreenReaderOnly>
-                            </CaseButton>
-                        ) : null}
+                                {localConstraint.inverted ? 'aint' : 'is'}
+                            </StyledButton>
+
+                            <ConstraintOperatorSelect
+                                options={operatorsForContext(contextName)}
+                                value={operator}
+                                onChange={onOperatorChange}
+                                inverted={localConstraint.inverted}
+                            />
+
+                            {showCaseSensitiveButton ? (
+                                <CaseButton
+                                    type='button'
+                                    onClick={toggleCaseSensitivity}
+                                >
+                                    {localConstraint.caseInsensitive ? (
+                                        <StyledCaseInsensitiveIcon aria-label='The match is not case sensitive.' />
+                                    ) : (
+                                        <StyledCaseSensitiveIcon aria-label='The match is case sensitive.' />
+                                    )}
+                                    <ScreenReaderOnly>
+                                        Make match
+                                        {localConstraint.caseInsensitive
+                                            ? ' '
+                                            : ' not '}
+                                        case sensitive
+                                    </ScreenReaderOnly>
+                                </CaseButton>
+                            ) : null}
+                        </OperatorOptions>
                     </ConstraintOptions>
                     <ValueList
                         values={localConstraint.values}
@@ -330,16 +351,16 @@ export const EditableConstraint: FC<Props> = ({
                         ) : null}
                     </ValueList>
                 </ConstraintDetails>
-
+                <ButtonPlaceholder />
                 <HtmlTooltip title='Delete constraint' arrow>
-                    <IconButton
+                    <StyledIconButton
                         type='button'
                         size='small'
                         onClick={onDelete}
                         ref={deleteButtonRef}
                     >
                         <Delete fontSize='inherit' />
-                    </IconButton>
+                    </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
             <InputContainer>

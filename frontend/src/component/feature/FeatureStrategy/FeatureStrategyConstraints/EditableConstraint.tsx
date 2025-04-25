@@ -44,7 +44,6 @@ const TopRow = styled('div')(({ theme }) => ({
     flexFlow: 'row nowrap',
     alignItems: 'flex-start',
     justifyItems: 'space-between',
-    borderBottom: `1px dashed ${theme.palette.divider}`,
     gap: 'var(--gap)',
 }));
 

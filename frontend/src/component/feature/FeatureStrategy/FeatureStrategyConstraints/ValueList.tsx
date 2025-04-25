@@ -94,6 +94,13 @@ export const ValueList: FC<PropsWithChildren<Props>> = ({
                             ref={(el) => {
                                 constraintElementRefs.current[index] = el;
                             }}
+                            sx={{
+                                height: 'auto',
+                                '& .MuiChip-label': {
+                                    display: 'block',
+                                    whiteSpace: 'normal',
+                                },
+                            }}
                             deleteIcon={<Clear />}
                             label={value}
                             onDelete={() => {

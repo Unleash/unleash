@@ -47,6 +47,9 @@ const StyledSelect = styled(Select)(({ theme }) => ({
     '.MuiInput-input': {
         paddingBlock: theme.spacing(0.25),
     },
+    ':focus-within .MuiSelect-select': {
+        background: 'none',
+    },
 }));
 
 const StyledMenuItem = styled(MenuItem, {

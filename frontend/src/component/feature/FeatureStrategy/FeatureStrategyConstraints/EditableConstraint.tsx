@@ -1,21 +1,6 @@
 import { IconButton, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import { DateSingleValue } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/DateSingleValue/DateSingleValue';
-import { FreeTextInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/FreeTextInput/FreeTextInput';
-import { SingleLegalValue } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/SingleLegalValue/SingleLegalValue';
-import { SingleValue } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/SingleValue/SingleValue';
-import {
-    DATE_OPERATORS_SINGLE_VALUE,
-    IN_OPERATORS_FREETEXT,
-    IN_OPERATORS_LEGAL_VALUES,
-    NUM_OPERATORS_LEGAL_VALUES,
-    NUM_OPERATORS_SINGLE_VALUE,
-    SEMVER_OPERATORS_LEGAL_VALUES,
-    SEMVER_OPERATORS_SINGLE_VALUE,
-    STRING_OPERATORS_FREETEXT,
-    STRING_OPERATORS_LEGAL_VALUES,
-    type Input,
-} from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
+import type { Input } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
 import {
     DATE_AFTER,
     dateOperators,
@@ -24,10 +9,7 @@ import {
     type Operator,
 } from 'constants/operators';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import type {
-    ILegalValue,
-    IUnleashContextDefinition,
-} from 'interfaces/context';
+import type { IUnleashContextDefinition } from 'interfaces/context';
 import type { IConstraint } from 'interfaces/strategy';
 import { useEffect, useRef, useState, type FC } from 'react';
 import { oneOf } from 'utils/oneOf';
@@ -43,64 +25,64 @@ import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive
 import { ReactComponent as CaseInsensitiveIcon } from 'assets/icons/case-insensitive.svg';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { AddValuesWidget } from './AddValuesWidget';
-import { LegalValuesSelector } from './LegalValuesSelector';
+import { ResolveInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/ResolveInput/ResolveInput';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
     backgroundColor: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadiusLarge,
     border: `1px solid ${theme.palette.divider}`,
+    containerType: 'inline-size',
 }));
 
+const onNarrowContainer = '@container (max-width: 700px)';
+
 const TopRow = styled('div')(({ theme }) => ({
+    '--gap': theme.spacing(1),
     padding: 'var(--padding)',
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'flex-start',
     justifyItems: 'space-between',
-    borderBottom: `1px dashed ${theme.palette.divider}`,
+    gap: 'var(--gap)',
 }));
 
-const resolveLegalValues = (
-    values: IConstraint['values'],
-    legalValues: IUnleashContextDefinition['legalValues'],
-): { legalValues: ILegalValue[]; deletedLegalValues: ILegalValue[] } => {
-    if (legalValues?.length === 0) {
-        return {
-            legalValues: [],
-            deletedLegalValues: [],
-        };
-    }
+const ConstraintOptions = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    gap: 'var(--gap)',
+    alignSelf: 'flex-start',
+    [onNarrowContainer]: {
+        flexFlow: 'row wrap',
+    },
+}));
 
-    const deletedLegalValues = (values || [])
-        .filter(
-            (value) =>
-                !(legalValues || []).some(
-                    ({ value: legalValue }) => legalValue === value,
-                ),
-        )
-        .map((v) => ({ value: v, description: '' }));
-
-    return {
-        legalValues: legalValues || [],
-        deletedLegalValues,
-    };
-};
+const OperatorOptions = styled(ConstraintOptions)(({ theme }) => ({
+    flexFlow: 'row nowrap',
+}));
 
 const ConstraintDetails = styled('div')(({ theme }) => ({
     display: 'flex',
-    gap: theme.spacing(1),
+    gap: 'var(--gap)',
     flexFlow: 'row nowrap',
     width: '100%',
     height: 'min-content',
+    [onNarrowContainer]: {
+        flexDirection: 'column',
+    },
 }));
 
 const InputContainer = styled('div')(({ theme }) => ({
     padding: 'var(--padding)',
+    borderTop: `1px dashed ${theme.palette.divider}`,
 }));
 
 const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
     fieldset: { border: 'none', borderRadius: 0 },
+    maxWidth: '25ch',
+    ':focus-within .MuiSelect-select': {
+        background: 'none',
+    },
     ':focus-within fieldset': { borderBottomStyle: 'solid' },
     'label + &': {
         // mui adds a margin top to 'standard' selects with labels
@@ -111,10 +93,19 @@ const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
     },
 }));
 
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+    position: 'absolute',
+    right: theme.spacing(1),
+}));
+
 const StyledButton = styled('button')(({ theme }) => ({
+    // todo (`addEditStrategy`): this is pretty rough, but it needs to be the
+    // same height as the input fields, which are 27.25 px at the moment.
+    // Consider editing this when we get new icons for the buttons. There may be
+    // a better solution.
+    height: `calc(${theme.typography.body1.fontSize} + ${theme.spacing(1.5)})`,
     width: '5ch',
     borderRadius: theme.shape.borderRadius,
-    padding: theme.spacing(0.25, 0),
     fontSize: theme.fontSizes.smallerBody,
     background: theme.palette.secondary.light,
     border: `1px solid ${theme.palette.secondary.border}`,
@@ -124,6 +115,14 @@ const StyledButton = styled('button')(({ theme }) => ({
     '&:is(:hover, :focus-visible)': {
         outline: `1px solid ${theme.palette.primary.main}`,
     },
+}));
+
+const ButtonPlaceholder = styled('div')(({ theme }) => ({
+    // this is a trick that lets us use absolute positioning for the button so
+    // that it can go over the operator context fields when necessary (narrow
+    // screens), but still retain necessary space for the button when it's all
+    // on one line.
+    width: theme.spacing(2),
 }));
 
 const StyledCaseInsensitiveIcon = styled(CaseInsensitiveIcon)(({ theme }) => ({
@@ -149,6 +148,7 @@ const OPERATORS_WITH_ADD_VALUES_WIDGET = [
 ];
 
 type Props = {
+    constraint: IConstraint;
     localConstraint: IConstraint;
     setContextName: (contextName: string) => void;
     setOperator: (operator: Operator) => void;
@@ -172,6 +172,7 @@ type Props = {
 };
 export const EditableConstraint: FC<Props> = ({
     constraintChanges,
+    constraint,
     localConstraint,
     setLocalConstraint,
     setContextName,
@@ -199,6 +200,7 @@ export const EditableConstraint: FC<Props> = ({
     const addValuesButtonRef = useRef<HTMLButtonElement>(null);
     const showAddValuesButton =
         OPERATORS_WITH_ADD_VALUES_WIDGET.includes(input);
+    const showInputField = !showAddValuesButton;
 
     /* We need a special case to handle the currentTime context field. Since
     this field will be the only one to allow DATE_BEFORE and DATE_AFTER operators
@@ -255,166 +257,59 @@ export const EditableConstraint: FC<Props> = ({
         }
     };
 
-    const Input = () => {
-        switch (input) {
-            case IN_OPERATORS_LEGAL_VALUES:
-            case STRING_OPERATORS_LEGAL_VALUES:
-                return (
-                    <LegalValuesSelector
-                        data={resolveLegalValues(
-                            constraintValues,
-                            contextDefinition.legalValues,
-                        )}
-                        constraintValues={constraintValues}
-                        values={localConstraint.values || []}
-                        setValuesWithRecord={setValuesWithRecord}
-                        setValues={setValues}
-                    />
-                );
-            case NUM_OPERATORS_LEGAL_VALUES:
-                return (
-                    <>
-                        <SingleLegalValue
-                            data={resolveLegalValues(
-                                [constraintValue],
-                                contextDefinition.legalValues,
-                            )}
-                            setValue={setValue}
-                            value={localConstraint.value}
-                            constraintValue={constraintValue}
-                            type='number'
-                            legalValues={
-                                contextDefinition.legalValues?.filter(
-                                    (legalValue) => Number(legalValue.value),
-                                ) || []
-                            }
-                            error={error}
-                            setError={setError}
-                        />
-                    </>
-                );
-            case SEMVER_OPERATORS_LEGAL_VALUES:
-                return (
-                    <>
-                        <SingleLegalValue
-                            data={resolveLegalValues(
-                                [constraintValue],
-                                contextDefinition.legalValues,
-                            )}
-                            setValue={setValue}
-                            value={localConstraint.value}
-                            constraintValue={constraintValue}
-                            type='semver'
-                            legalValues={contextDefinition.legalValues || []}
-                            error={error}
-                            setError={setError}
-                        />
-                    </>
-                );
-            case DATE_OPERATORS_SINGLE_VALUE:
-                return (
-                    <DateSingleValue
-                        value={localConstraint.value}
-                        setValue={setValue}
-                        error={error}
-                        setError={setError}
-                    />
-                );
-            case IN_OPERATORS_FREETEXT:
-                return (
-                    <FreeTextInput
-                        values={localConstraint.values || []}
-                        removeValue={removeValue}
-                        setValues={setValuesWithRecord}
-                        error={error}
-                        setError={setError}
-                    />
-                );
-            case STRING_OPERATORS_FREETEXT:
-                return (
-                    <>
-                        <FreeTextInput
-                            values={localConstraint.values || []}
-                            removeValue={removeValue}
-                            setValues={setValuesWithRecord}
-                            error={error}
-                            setError={setError}
-                        />
-                    </>
-                );
-            case NUM_OPERATORS_SINGLE_VALUE:
-                return (
-                    <SingleValue
-                        setValue={setValue}
-                        value={localConstraint.value}
-                        type='number'
-                        error={error}
-                        setError={setError}
-                    />
-                );
-            case SEMVER_OPERATORS_SINGLE_VALUE:
-                return (
-                    <SingleValue
-                        setValue={setValue}
-                        value={localConstraint.value}
-                        type='semver'
-                        error={error}
-                        setError={setError}
-                    />
-                );
-        }
-    };
-
     return (
         <Container>
             <TopRow>
                 <ConstraintDetails>
-                    <StyledSelect
-                        visuallyHideLabel
-                        id='context-field-select'
-                        name='contextName'
-                        label='Context Field'
-                        autoFocus
-                        options={constraintNameOptions}
-                        value={contextName || ''}
-                        onChange={setContextName}
-                        variant='standard'
-                    />
+                    <ConstraintOptions>
+                        <StyledSelect
+                            visuallyHideLabel
+                            id='context-field-select'
+                            name='contextName'
+                            label='Context Field'
+                            autoFocus
+                            options={constraintNameOptions}
+                            value={contextName || ''}
+                            onChange={setContextName}
+                            variant='standard'
+                        />
 
-                    <StyledButton
-                        type='button'
-                        onClick={toggleInvertedOperator}
-                    >
-                        {localConstraint.inverted ? 'aint' : 'is'}
-                    </StyledButton>
+                        <OperatorOptions>
+                            <StyledButton
+                                type='button'
+                                onClick={toggleInvertedOperator}
+                            >
+                                {localConstraint.inverted ? 'aint' : 'is'}
+                            </StyledButton>
 
-                    <ConstraintOperatorSelect
-                        options={operatorsForContext(contextName)}
-                        value={operator}
-                        onChange={onOperatorChange}
-                        inverted={localConstraint.inverted}
-                    />
+                            <ConstraintOperatorSelect
+                                options={operatorsForContext(contextName)}
+                                value={operator}
+                                onChange={onOperatorChange}
+                                inverted={localConstraint.inverted}
+                            />
 
-                    {showCaseSensitiveButton ? (
-                        <CaseButton
-                            type='button'
-                            onClick={toggleCaseSensitivity}
-                        >
-                            {localConstraint.caseInsensitive ? (
-                                <StyledCaseInsensitiveIcon aria-label='The match is not case sensitive.' />
-                            ) : (
-                                <StyledCaseSensitiveIcon aria-label='The match is case sensitive.' />
-                            )}
-                            <ScreenReaderOnly>
-                                Make match
-                                {localConstraint.caseInsensitive
-                                    ? ' '
-                                    : ' not '}
-                                case sensitive
-                            </ScreenReaderOnly>
-                        </CaseButton>
-                    ) : null}
-
+                            {showCaseSensitiveButton ? (
+                                <CaseButton
+                                    type='button'
+                                    onClick={toggleCaseSensitivity}
+                                >
+                                    {localConstraint.caseInsensitive ? (
+                                        <StyledCaseInsensitiveIcon aria-label='The match is not case sensitive.' />
+                                    ) : (
+                                        <StyledCaseSensitiveIcon aria-label='The match is case sensitive.' />
+                                    )}
+                                    <ScreenReaderOnly>
+                                        Make match
+                                        {localConstraint.caseInsensitive
+                                            ? ' '
+                                            : ' not '}
+                                        case sensitive
+                                    </ScreenReaderOnly>
+                                </CaseButton>
+                            ) : null}
+                        </OperatorOptions>
+                    </ConstraintOptions>
                     <ValueList
                         values={localConstraint.values}
                         removeValue={removeValue}
@@ -441,21 +336,35 @@ export const EditableConstraint: FC<Props> = ({
                         ) : null}
                     </ValueList>
                 </ConstraintDetails>
-
+                <ButtonPlaceholder />
                 <HtmlTooltip title='Delete constraint' arrow>
-                    <IconButton
+                    <StyledIconButton
                         type='button'
                         size='small'
                         onClick={onDelete}
                         ref={deleteButtonRef}
                     >
-                        <Delete />
-                    </IconButton>
+                        <Delete fontSize='inherit' />
+                    </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
-            <InputContainer>
-                <Input />
-            </InputContainer>
+            {showInputField ? (
+                <InputContainer>
+                    <ResolveInput
+                        setValues={setValues}
+                        setValuesWithRecord={setValuesWithRecord}
+                        setValue={setValue}
+                        setError={setError}
+                        localConstraint={localConstraint}
+                        constraintValues={constraint?.values || []}
+                        constraintValue={constraint?.value || ''}
+                        input={input}
+                        error={error}
+                        contextDefinition={contextDefinition}
+                        removeValue={removeValue}
+                    />
+                </InputContainer>
+            ) : null}
         </Container>
     );
 };

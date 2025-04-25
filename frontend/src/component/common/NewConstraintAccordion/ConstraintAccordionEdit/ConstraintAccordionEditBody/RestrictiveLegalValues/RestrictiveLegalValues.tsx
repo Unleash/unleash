@@ -158,10 +158,12 @@ export const RestrictiveLegalValues = ({
     };
 
     const handleSearchKeyDown = (event: React.KeyboardEvent) => {
-        if (event.key === 'Enter' && filteredValues.length > 0) {
+        if (event.key === 'Enter') {
             event.preventDefault();
-            const firstValue = filteredValues[0].value;
-            onChange(firstValue);
+            if (filteredValues.length > 0) {
+                const firstValue = filteredValues[0].value;
+                onChange(firstValue);
+            }
         }
     };
 

@@ -1,21 +1,6 @@
 import { IconButton, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import { DateSingleValue } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/DateSingleValue/DateSingleValue';
-import { FreeTextInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/FreeTextInput/FreeTextInput';
-import { SingleLegalValue } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/SingleLegalValue/SingleLegalValue';
-import { SingleValue } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/SingleValue/SingleValue';
-import {
-    DATE_OPERATORS_SINGLE_VALUE,
-    IN_OPERATORS_FREETEXT,
-    IN_OPERATORS_LEGAL_VALUES,
-    NUM_OPERATORS_LEGAL_VALUES,
-    NUM_OPERATORS_SINGLE_VALUE,
-    SEMVER_OPERATORS_LEGAL_VALUES,
-    SEMVER_OPERATORS_SINGLE_VALUE,
-    STRING_OPERATORS_FREETEXT,
-    STRING_OPERATORS_LEGAL_VALUES,
-    type Input,
-} from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
+import type { Input } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
 import {
     DATE_AFTER,
     dateOperators,
@@ -43,7 +28,7 @@ import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive
 import { ReactComponent as CaseInsensitiveIcon } from 'assets/icons/case-insensitive.svg';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { AddValuesWidget } from './AddValuesWidget';
-import { LegalValuesSelector } from './LegalValuesSelector';
+import { ResolveInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/ResolveInput/ResolveInput';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -149,6 +134,7 @@ const OPERATORS_WITH_ADD_VALUES_WIDGET = [
 ];
 
 type Props = {
+    constraint: IConstraint;
     localConstraint: IConstraint;
     setContextName: (contextName: string) => void;
     setOperator: (operator: Operator) => void;
@@ -172,6 +158,7 @@ type Props = {
 };
 export const EditableConstraint: FC<Props> = ({
     constraintChanges,
+    constraint,
     localConstraint,
     setLocalConstraint,
     setContextName,
@@ -252,116 +239,6 @@ export const EditableConstraint: FC<Props> = ({
             }));
         } else {
             setOperator(operator);
-        }
-    };
-
-    const Input = () => {
-        switch (input) {
-            case IN_OPERATORS_LEGAL_VALUES:
-            case STRING_OPERATORS_LEGAL_VALUES:
-                return (
-                    <LegalValuesSelector
-                        data={resolveLegalValues(
-                            constraintValues,
-                            contextDefinition.legalValues,
-                        )}
-                        constraintValues={constraintValues}
-                        values={localConstraint.values || []}
-                        setValuesWithRecord={setValuesWithRecord}
-                        setValues={setValues}
-                    />
-                );
-            case NUM_OPERATORS_LEGAL_VALUES:
-                return (
-                    <>
-                        <SingleLegalValue
-                            data={resolveLegalValues(
-                                [constraintValue],
-                                contextDefinition.legalValues,
-                            )}
-                            setValue={setValue}
-                            value={localConstraint.value}
-                            constraintValue={constraintValue}
-                            type='number'
-                            legalValues={
-                                contextDefinition.legalValues?.filter(
-                                    (legalValue) => Number(legalValue.value),
-                                ) || []
-                            }
-                            error={error}
-                            setError={setError}
-                        />
-                    </>
-                );
-            case SEMVER_OPERATORS_LEGAL_VALUES:
-                return (
-                    <>
-                        <SingleLegalValue
-                            data={resolveLegalValues(
-                                [constraintValue],
-                                contextDefinition.legalValues,
-                            )}
-                            setValue={setValue}
-                            value={localConstraint.value}
-                            constraintValue={constraintValue}
-                            type='semver'
-                            legalValues={contextDefinition.legalValues || []}
-                            error={error}
-                            setError={setError}
-                        />
-                    </>
-                );
-            case DATE_OPERATORS_SINGLE_VALUE:
-                return (
-                    <DateSingleValue
-                        value={localConstraint.value}
-                        setValue={setValue}
-                        error={error}
-                        setError={setError}
-                    />
-                );
-            case IN_OPERATORS_FREETEXT:
-                return (
-                    <FreeTextInput
-                        values={localConstraint.values || []}
-                        removeValue={removeValue}
-                        setValues={setValuesWithRecord}
-                        error={error}
-                        setError={setError}
-                    />
-                );
-            case STRING_OPERATORS_FREETEXT:
-                return (
-                    <>
-                        <FreeTextInput
-                            values={localConstraint.values || []}
-                            removeValue={removeValue}
-                            setValues={setValuesWithRecord}
-                            error={error}
-                            setError={setError}
-                        />
-                    </>
-                );
-            case NUM_OPERATORS_SINGLE_VALUE:
-                return (
-                    <SingleValue
-                        setValue={setValue}
-                        value={localConstraint.value}
-                        type='number'
-                        error={error}
-                        setError={setError}
-                    />
-                );
-            case SEMVER_OPERATORS_SINGLE_VALUE:
-                return (
-                    <SingleValue
-                        setValue={setValue}
-                        value={localConstraint.value}
-                        type='semver'
-                        error={error}
-                        setError={setError}
-                    />
-                );
         }
     };
 
@@ -454,7 +331,19 @@ export const EditableConstraint: FC<Props> = ({
                 </HtmlTooltip>
             </TopRow>
             <InputContainer>
-                <Input />
+                <ResolveInput
+                    setValues={setValues}
+                    setValuesWithRecord={setValuesWithRecord}
+                    setValue={setValue}
+                    setError={setError}
+                    localConstraint={localConstraint}
+                    constraintValues={constraint?.values || []}
+                    constraintValue={constraint?.value || ''}
+                    input={input}
+                    error={error}
+                    contextDefinition={contextDefinition}
+                    removeValue={removeValue}
+                />
             </InputContainer>
         </Container>
     );

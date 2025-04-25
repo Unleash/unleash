@@ -63,6 +63,7 @@ process.nextTick(async () => {
                         flagsOverviewSearch: true,
                         cleanupReminder: true,
                         strictSchemaValidation: true,
+                        registerFrontendClient: true,
                     },
                 },
                 authentication: {

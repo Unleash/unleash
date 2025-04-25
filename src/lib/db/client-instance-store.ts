@@ -35,6 +35,7 @@ const mapToDb = (client) => ({
     app_name: client.appName,
     instance_id: client.instanceId,
     sdk_version: client.sdkVersion || '',
+    sdk_type: client.sdkType,
     client_ip: client.clientIp,
     last_seen: client.lastSeen || 'now()',
     environment: client.environment || 'default',

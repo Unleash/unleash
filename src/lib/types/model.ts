@@ -460,6 +460,16 @@ export interface IRoleIdentifier {
     roleName?: RoleName;
 }
 
+export interface IFrontendClientApp {
+    appName: string;
+    instanceId: string;
+    sdkVersion: string;
+    sdkType: 'frontend';
+    environment: string;
+    projects: string[];
+    createdBy?: string;
+}
+
 export interface IClientApp {
     appName: string;
     instanceId: string;
@@ -478,6 +488,7 @@ export interface IClientApp {
     platformVersion?: string;
     yggdrasilVersion?: string;
     specVersion?: string;
+    sdkType?: 'frontend' | 'backend';
 }
 
 export interface IAppFeature {

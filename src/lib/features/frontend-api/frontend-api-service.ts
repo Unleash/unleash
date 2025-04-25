@@ -111,7 +111,7 @@ export class FrontendApiService {
         token: IApiUser,
         metrics: ClientMetricsSchema,
         ip: string,
-    ): Promise<void> {
+    ): Promise<string> {
         FrontendApiService.assertExpectedTokenType(token);
 
         const environment =
@@ -127,6 +127,8 @@ export class FrontendApiService {
             },
             ip,
         );
+
+        return environment;
     }
 
     private async clientForFrontendApiToken(token: IApiUser): Promise<Unleash> {

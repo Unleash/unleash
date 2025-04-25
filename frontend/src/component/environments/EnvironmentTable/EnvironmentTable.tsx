@@ -39,9 +39,6 @@ export const EnvironmentTable = () => {
     const { setToastApiError } = useToast();
     const { environments, mutateEnvironments } = useEnvironments();
     const isFeatureEnabled = useUiFlag('EEA');
-    const globalChangeRequestConfigEnabled = useUiFlag(
-        'globalChangeRequestConfig',
-    );
     const { isEnterprise } = useUiConfig();
 
     const onMoveItem: OnMoveItem = useCallback(
@@ -86,7 +83,7 @@ export const EnvironmentTable = () => {
                   ]
                 : []),
         ];
-        if (globalChangeRequestConfigEnabled && isEnterprise()) {
+        if (isEnterprise()) {
             baseColumns.splice(2, 0, {
                 Header: 'Change request',
                 accessor: (row: IEnvironment) =>
@@ -96,7 +93,7 @@ export const EnvironmentTable = () => {
         }
 
         return baseColumns;
-    }, [isFeatureEnabled, globalChangeRequestConfigEnabled]);
+    }, [isFeatureEnabled]);
 
     const {
         getTableProps,

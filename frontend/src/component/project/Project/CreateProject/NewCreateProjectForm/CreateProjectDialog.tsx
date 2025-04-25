@@ -27,7 +27,6 @@ import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { ChangeRequestTableConfigButton } from './ConfigButtons/ChangeRequestTableConfigButton';
 import { StyledDefinitionList } from './CreateProjectDialog.styles';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface ICreateProjectDialogProps {
     open: boolean;
@@ -210,10 +209,6 @@ export const CreateProjectDialog = ({
     const activeEnvironments = allEnvironments.filter((env) => env.enabled);
     const stickinessOptions = useStickinessOptions(projectStickiness);
 
-    const globalChangeRequestConfigEnabled = useUiFlag(
-        'globalChangeRequestConfig',
-    );
-
     const numberOfConfiguredChangeRequestEnvironments = Object.keys(
         projectChangeRequestConfiguration,
     ).length;
@@ -234,13 +229,10 @@ export const CreateProjectDialog = ({
         name,
         type,
         requiredApprovals,
-        configurable: globalChangeRequestConfigEnabled
-            ? !Number.isInteger(requiredApprovals)
-            : true,
+        configurable: !Number.isInteger(requiredApprovals),
     }));
 
     useEffect(() => {
-        if (!globalChangeRequestConfigEnabled) return;
         availableChangeRequestEnvironments.forEach((environment) => {
             if (Number.isInteger(environment.requiredApprovals)) {
                 updateProjectChangeRequestConfig.enableChangeRequests(

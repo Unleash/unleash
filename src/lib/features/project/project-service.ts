@@ -429,25 +429,14 @@ export default class ProjectService {
                 await this.validateEnvironmentsExist(
                     newProject.changeRequestEnvironments.map((env) => env.name),
                 );
-                const globalChangeRequestConfigEnabled =
-                    this.flagResolver.isEnabled('globalChangeRequestConfig');
-                if (globalChangeRequestConfigEnabled) {
-                    const allChangeRequestEnvironments =
-                        await this.getAllChangeRequestEnvironments(newProject);
-                    const changeRequestEnvironments =
-                        await enableChangeRequestsForSpecifiedEnvironments(
-                            allChangeRequestEnvironments,
-                        );
+                const allChangeRequestEnvironments =
+                    await this.getAllChangeRequestEnvironments(newProject);
+                const changeRequestEnvironments =
+                    await enableChangeRequestsForSpecifiedEnvironments(
+                        allChangeRequestEnvironments,
+                    );
 
-                    data.changeRequestEnvironments = changeRequestEnvironments;
-                } else {
-                    const changeRequestEnvironments =
-                        await enableChangeRequestsForSpecifiedEnvironments(
-                            newProject.changeRequestEnvironments,
-                        );
-
-                    data.changeRequestEnvironments = changeRequestEnvironments;
-                }
+                data.changeRequestEnvironments = changeRequestEnvironments;
             } else {
                 data.changeRequestEnvironments = [];
             }

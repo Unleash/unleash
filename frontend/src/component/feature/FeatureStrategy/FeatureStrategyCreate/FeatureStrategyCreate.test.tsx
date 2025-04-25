@@ -318,28 +318,36 @@ describe('NewFeatureStrategyCreate', () => {
         fireEvent.click(addConstraintEl);
         fireEvent.click(addConstraintEl);
 
-        const inputElements = screen.getAllByPlaceholderText(
-            'value1, value2, value3...',
-        );
-
-        fireEvent.change(inputElements[0], {
-            target: { value: '123' },
-        });
-        fireEvent.change(inputElements[1], {
-            target: { value: '456' },
-        });
-        fireEvent.change(inputElements[2], {
-            target: { value: '789' },
+        const popoverOpenButtons = screen.getAllByRole('button', {
+            name: 'Add values',
         });
 
-        const addValueEls = await screen.findAllByText('Add values');
-        fireEvent.click(addValueEls[0]);
-        fireEvent.click(addValueEls[1]);
-        fireEvent.click(addValueEls[2]);
+        const values = ['123', '456', '789'];
+        for (const [index, popoverOpenButton] of popoverOpenButtons.entries()) {
+            fireEvent.click(popoverOpenButton);
+
+            const popoverInput = screen.getByRole('textbox', {
+                name: 'Constraint Value',
+            });
+            fireEvent.change(popoverInput, {
+                target: { value: values[index] },
+            });
+            const addButton = screen.getByRole('button', {
+                name: 'Add',
+            });
+            fireEvent.click(addButton);
+            fireEvent.keyPress(popoverInput, { key: 'Escape' });
+        }
 
         expect(screen.queryByText('123')).toBeInTheDocument();
-        const deleteBtns = await screen.findAllByTestId('CancelIcon');
+        expect(screen.queryByText('456')).toBeInTheDocument();
+        expect(screen.queryByText('789')).toBeInTheDocument();
+
+        const deleteBtns = await screen.findAllByTestId(
+            'constraint-deletion-button',
+        );
         fireEvent.click(deleteBtns[0]);
+        screen.debug(undefined, 200000);
 
         expect(screen.queryByText('123')).not.toBeInTheDocument();
         expect(screen.queryByText('456')).toBeInTheDocument();

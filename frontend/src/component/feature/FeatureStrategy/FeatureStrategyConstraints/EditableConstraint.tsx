@@ -294,6 +294,7 @@ export const EditableConstraint: FC<Props> = ({
                 <HtmlTooltip title='Delete constraint' arrow>
                     <IconButton
                         type='button'
+                        data-testid='constraint-deletion-button'
                         size='small'
                         onClick={onDelete}
                         ref={deleteButtonRef}

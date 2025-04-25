@@ -134,6 +134,7 @@ export const LegalValuesSelector = ({
 
     const handleSearchKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Enter' && filteredValues.length > 0) {
+            event.preventDefault();
             const firstValue = filteredValues[0].value;
             onChange(firstValue);
         }

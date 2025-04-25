@@ -9,10 +9,7 @@ import {
     type Operator,
 } from 'constants/operators';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import type {
-    ILegalValue,
-    IUnleashContextDefinition,
-} from 'interfaces/context';
+import type { IUnleashContextDefinition } from 'interfaces/context';
 import type { IConstraint } from 'interfaces/strategy';
 import { useEffect, useRef, useState, type FC } from 'react';
 import { oneOf } from 'utils/oneOf';
@@ -65,32 +62,6 @@ const OperatorOptions = styled(ConstraintOptions)(({ theme }) => ({
     flexFlow: 'row nowrap',
 }));
 
-const resolveLegalValues = (
-    values: IConstraint['values'],
-    legalValues: IUnleashContextDefinition['legalValues'],
-): { legalValues: ILegalValue[]; deletedLegalValues: ILegalValue[] } => {
-    if (legalValues?.length === 0) {
-        return {
-            legalValues: [],
-            deletedLegalValues: [],
-        };
-    }
-
-    const deletedLegalValues = (values || [])
-        .filter(
-            (value) =>
-                !(legalValues || []).some(
-                    ({ value: legalValue }) => legalValue === value,
-                ),
-        )
-        .map((v) => ({ value: v, description: '' }));
-
-    return {
-        legalValues: legalValues || [],
-        deletedLegalValues,
-    };
-};
-
 const ConstraintDetails = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: 'var(--gap)',
@@ -104,6 +75,7 @@ const ConstraintDetails = styled('div')(({ theme }) => ({
 
 const InputContainer = styled('div')(({ theme }) => ({
     padding: 'var(--padding)',
+    borderTop: `1px dashed ${theme.palette.divider}`,
 }));
 
 const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
@@ -229,6 +201,7 @@ export const EditableConstraint: FC<Props> = ({
     const addValuesButtonRef = useRef<HTMLButtonElement>(null);
     const showAddValuesButton =
         OPERATORS_WITH_ADD_VALUES_WIDGET.includes(input);
+    const showInputField = !showAddValuesButton;
 
     /* We need a special case to handle the currentTime context field. Since
     this field will be the only one to allow DATE_BEFORE and DATE_AFTER operators
@@ -376,21 +349,23 @@ export const EditableConstraint: FC<Props> = ({
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
-            <InputContainer>
-                <ResolveInput
-                    setValues={setValues}
-                    setValuesWithRecord={setValuesWithRecord}
-                    setValue={setValue}
-                    setError={setError}
-                    localConstraint={localConstraint}
-                    constraintValues={constraint?.values || []}
-                    constraintValue={constraint?.value || ''}
-                    input={input}
-                    error={error}
-                    contextDefinition={contextDefinition}
-                    removeValue={removeValue}
-                />
-            </InputContainer>
+            {showInputField ? (
+                <InputContainer>
+                    <ResolveInput
+                        setValues={setValues}
+                        setValuesWithRecord={setValuesWithRecord}
+                        setValue={setValue}
+                        setError={setError}
+                        localConstraint={localConstraint}
+                        constraintValues={constraint?.values || []}
+                        constraintValue={constraint?.value || ''}
+                        input={input}
+                        error={error}
+                        contextDefinition={contextDefinition}
+                        removeValue={removeValue}
+                    />
+                </InputContainer>
+            ) : null}
         </Container>
     );
 };

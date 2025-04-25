@@ -1,10 +1,12 @@
 import { formatApiPath } from 'utils/formatPath';
 import useSWR from 'swr';
 import type { FeatureLifecycleCountSchema } from 'openapi';
+import handleErrorResponses from '../httpErrorResponseHandler';
 
 export const useLifecycleCount = () => {
     const { data, error } = useSWR<FeatureLifecycleCountSchema>(
         formatApiPath('api/admin/lifecycle/count'),
+        fetcher,
     );
 
     return {
@@ -12,4 +14,10 @@ export const useLifecycleCount = () => {
         error,
         loading: !error && !data,
     };
+};
+
+const fetcher = (path: string) => {
+    return fetch(path)
+        .then(handleErrorResponses('Instance Stats'))
+        .then((res) => res.json());
 };

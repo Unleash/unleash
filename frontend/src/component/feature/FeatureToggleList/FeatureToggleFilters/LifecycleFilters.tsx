@@ -3,6 +3,7 @@ import type { FC } from 'react';
 import type { FilterItemParamHolder } from '../../../filter/Filters/Filters';
 import type { LifecycleStage } from '../../FeatureView/FeatureOverview/FeatureLifecycle/LifecycleStage';
 import { useLifecycleCount } from 'hooks/api/getters/useLifecycleCount/useLifecycleCount';
+import type { FeatureLifecycleCountSchema } from 'openapi';
 
 const StyledChip = styled(Chip, {
     shouldForwardProp: (prop) => prop !== 'isActive',
@@ -48,13 +49,33 @@ const lifecycleOptions: {
     { label: 'Cleanup', value: 'completed' },
 ];
 
+const getStageCount = (
+    lifecycle: LifecycleStage['name'] | null,
+    lifecycleCount?: FeatureLifecycleCountSchema,
+) => {
+    if (!lifecycleCount) {
+        return undefined;
+    }
+
+    if (lifecycle === null) {
+        return (
+            (lifecycleCount.initial || 0) +
+            (lifecycleCount.preLive || 0) +
+            (lifecycleCount.live || 0) +
+            (lifecycleCount.completed || 0)
+        );
+    }
+
+    const key = lifecycle === 'pre-live' ? 'preLive' : lifecycle;
+    return lifecycleCount[key];
+};
+
 export const LifecycleFilters: FC<ILifecycleFiltersProps> = ({
     state,
     onChange,
     total,
 }) => {
     const { lifecycleCount } = useLifecycleCount();
-    // FIXME: use lifecycleCount
     const current = state.lifecycle?.values ?? [];
 
     return (
@@ -62,10 +83,11 @@ export const LifecycleFilters: FC<ILifecycleFiltersProps> = ({
             {lifecycleOptions.map(({ label, value }) => {
                 const isActive =
                     value === null ? !state.lifecycle : current.includes(value);
+                const count = getStageCount(value, lifecycleCount);
                 const dynamicLabel =
                     isActive && Number.isInteger(total)
-                        ? `${label} (${total})`
-                        : label;
+                        ? `${label} (${total === count ? total : `${total} of ${count}`})`
+                        : `${label}${count !== undefined ? ` (${count})` : ''}`;
 
                 const handleClick = () =>
                     onChange(

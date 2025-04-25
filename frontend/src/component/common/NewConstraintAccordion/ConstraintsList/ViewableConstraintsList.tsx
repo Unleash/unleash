@@ -9,8 +9,6 @@ export interface IViewableConstraintsListProps {
     constraints: IConstraint[];
 }
 
-export const viewableConstraintsListId = 'viewableConstraintsListId';
-
 const StyledContainer = styled('div')({
     width: '100%',
     display: 'flex',
@@ -27,7 +25,7 @@ export const ViewableConstraintsList = ({
     }
 
     return (
-        <StyledContainer id={viewableConstraintsListId}>
+        <StyledContainer>
             <ConstraintsList>
                 {constraints.map((constraint, index) => (
                     <ConstraintAccordionView

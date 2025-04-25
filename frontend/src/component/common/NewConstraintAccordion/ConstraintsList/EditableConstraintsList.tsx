@@ -17,8 +17,6 @@ export interface IEditableConstraintsListProps {
     setConstraints?: React.Dispatch<React.SetStateAction<IConstraint[]>>;
 }
 
-export const editableConstraintsListId = 'editableConstraintsListId';
-
 const StyledContainer = styled('div')({
     width: '100%',
     display: 'flex',
@@ -71,7 +69,7 @@ export const EditableConstraintsList = forwardRef<
     }
 
     return (
-        <StyledContainer id={editableConstraintsListId}>
+        <StyledContainer>
             <ConstraintsList>
                 {constraints.map((constraint, index) => (
                     <EditableConstraintWrapper

@@ -206,6 +206,7 @@ export const EditableConstraintWrapper = ({
             error={error}
             contextDefinition={contextDefinition}
             removeValue={removeValue}
+            constraint={constraint}
         />
     );
 };

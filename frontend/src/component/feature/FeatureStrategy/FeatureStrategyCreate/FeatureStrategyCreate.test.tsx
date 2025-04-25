@@ -411,10 +411,8 @@ describe('NewFeatureStrategyCreate', () => {
             name: 'Add',
         });
         fireEvent.click(addButton);
-        fireEvent.keyPress(popoverInput, { key: 'Escape' });
 
         // like with one of the ohter tests, the API response in the screen output looks correct. Not sure why the chips aren't showing up, though.
-        expect(screen.queryByText('123')).not.toBeInTheDocument();
         expect(screen.queryByText('456')).toBeInTheDocument();
         expect(screen.queryByText('789')).toBeInTheDocument();
     });

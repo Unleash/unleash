@@ -338,7 +338,7 @@ export const EditableConstraint: FC<Props> = ({
                         onClick={onDelete}
                         ref={deleteButtonRef}
                     >
-                        <Delete />
+                        <Delete fontSize='inherit' />
                     </IconButton>
                 </HtmlTooltip>
             </TopRow>

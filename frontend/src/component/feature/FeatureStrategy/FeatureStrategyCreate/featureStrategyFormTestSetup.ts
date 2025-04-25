@@ -87,6 +87,7 @@ export const setupUiConfigEndpoint = () => {
         environment: 'enterprise',
         flags: {
             newStrategyConfiguration: true,
+            addEditStrategy: true,
         },
         resourceLimits: {
             featureEnvironmentStrategies: 2,

@@ -10,7 +10,7 @@ import {
     type IConstraintAccordionListRef,
     useConstraintAccordionList,
 } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
-import { NewConstraintAccordionList } from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/NewConstraintAccordionList';
+import { EditableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/EditableConstraintsList';
 import { Limit } from 'component/common/Limit/Limit';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
@@ -89,11 +89,10 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                                 }
                             />
                         </StyledHelpIconBox>
-                        <NewConstraintAccordionList
+                        <EditableConstraintsList
                             ref={ref}
                             setConstraints={setConstraints}
                             constraints={constraints}
-                            state={state}
                         />
 
                         <Box

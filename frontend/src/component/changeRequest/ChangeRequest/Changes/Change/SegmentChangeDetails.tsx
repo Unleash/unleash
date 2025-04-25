@@ -1,6 +1,5 @@
 import type React from 'react';
 import type { FC, ReactNode } from 'react';
-import { useRef } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import type {
     ChangeRequestState,
@@ -10,11 +9,7 @@ import type {
 import { useSegment } from 'hooks/api/getters/useSegment/useSegment';
 import { SegmentDiff, SegmentTooltipLink } from '../../SegmentTooltipLink';
 import { ConstraintAccordionList } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
-import {
-    NewConstraintAccordionList,
-    useConstraintAccordionList,
-} from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/NewConstraintAccordionList';
-import type { IConstraintAccordionListRef } from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/NewConstraintAccordionList';
+import { ViewableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/ViewableConstraintsList';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning';
 
@@ -73,8 +68,6 @@ export const SegmentChangeDetails: FC<{
     const referenceSegment =
         changeRequestState === 'Applied' ? snapshotSegment : currentSegment;
     const addEditStrategy = useUiFlag('addEditStrategy');
-    const constraintsRef = useRef<IConstraintAccordionListRef | null>(null);
-    const { state } = useConstraintAccordionList(undefined, constraintsRef);
 
     return (
         <SegmentContainer conflict={change.conflict}>
@@ -124,10 +117,8 @@ export const SegmentChangeDetails: FC<{
                         <div>{actions}</div>
                     </ChangeItemCreateEditWrapper>
                     {addEditStrategy ? (
-                        <NewConstraintAccordionList
-                            ref={constraintsRef}
+                        <ViewableConstraintsList
                             constraints={change.payload.constraints}
-                            state={state}
                         />
                     ) : (
                         <ConstraintAccordionList

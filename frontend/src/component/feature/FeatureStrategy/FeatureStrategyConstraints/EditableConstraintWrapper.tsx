@@ -10,7 +10,7 @@ import { useConstraintInput } from 'component/common/NewConstraintAccordion/Cons
 
 interface IConstraintAccordionEditProps {
     constraint: IConstraint;
-    onCancel: () => void;
+    onCancel?: () => void;
     onSave: (constraint: IConstraint) => void;
     onDelete?: () => void;
     onAutoSave?: (constraint: IConstraint) => void;

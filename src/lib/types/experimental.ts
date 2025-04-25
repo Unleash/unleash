@@ -69,7 +69,8 @@ export type IFlagKey =
     | 'newStrategyDropdown'
     | 'flagsOverviewSearch'
     | 'flagsReleaseManagementUI'
-    | 'cleanupReminder';
+    | 'cleanupReminder'
+    | 'removeInactiveApplications';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -328,6 +329,10 @@ const flags: IFlags = {
     ),
     cleanupReminder: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CLEANUP_REMINDER,
+        false,
+    ),
+    removeInactiveApplications: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_REMOVE_INACTIVE_APPLICATIONS,
         false,
     ),
 };

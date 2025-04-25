@@ -4,10 +4,10 @@ import type {
     PlaygroundStrategySchema,
     PlaygroundRequestSchema,
 } from 'openapi';
-import { StrategyExecution } from './StrategyExecution/LegacyStrategyExecution';
+import { StrategyExecution } from './PlaygroundStrategyExecution/LegacyStrategyExecution';
 import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { DisabledStrategyExecution } from './StrategyExecution/DisabledStrategyExecution';
+import { DisabledStrategyExecution } from './PlaygroundStrategyExecution/DisabledStrategyExecution';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/LegacyStrategyItemContainer';
 
 interface IFeatureStrategyItemProps {

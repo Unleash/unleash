@@ -1,5 +1,5 @@
 import { Box, IconButton, styled } from '@mui/material';
-import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
+import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';
 import {
     formatStrategyName,
     getFeatureStrategyIcon,
@@ -88,10 +88,12 @@ export const MilestoneStrategyItem = ({
                     strategy.variants.length > 0 &&
                     (strategy.disabled ? (
                         <Box sx={{ opacity: '0.5' }}>
-                            <SplitPreviewSlider variants={strategy.variants} />
+                            <VariantsSplitPreview
+                                variants={strategy.variants}
+                            />
                         </Box>
                     ) : (
-                        <SplitPreviewSlider variants={strategy.variants} />
+                        <VariantsSplitPreview variants={strategy.variants} />
                     ))}
             </StyledStrategyExecution>
         </StyledStrategy>

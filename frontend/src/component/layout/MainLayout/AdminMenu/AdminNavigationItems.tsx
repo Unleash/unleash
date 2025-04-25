@@ -16,7 +16,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { Link, useLocation } from 'react-router-dom';
 import { filterByConfig } from 'component/common/util';
-import { filterAdminRoutes } from 'component/admin/filterAdminRoutes';
+import { filterRoutesByPlanData } from 'component/admin/filterRoutesByPlanData';
 import { adminGroups, adminRoutes } from 'component/admin/adminRoutes';
 import { useEffect, useState, type ReactNode } from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
@@ -147,7 +147,7 @@ export const AdminNavigationItems = ({
     const routes = adminRoutes
         .filter(filterByConfig(uiConfig))
         .filter((route) =>
-            filterAdminRoutes(route?.menu, {
+            filterRoutesByPlanData(route?.menu, {
                 enterprise: isEnterprise(),
                 pro: isPro(),
                 billing: isBilling,

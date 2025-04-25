@@ -62,7 +62,7 @@ export default class ClientInstanceStore implements IClientInstanceStore {
 
     async removeInstancesOlderThanTwoDays(): Promise<void> {
         const rows = await this.db(TABLE)
-            .whereRaw("created_at < now() - interval '2 days'")
+            .whereRaw("last_seen < now() - interval '2 days'")
             .del();
 
         if (rows > 0) {

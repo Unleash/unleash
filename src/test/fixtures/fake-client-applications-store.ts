@@ -82,4 +82,8 @@ export default class FakeClientApplicationsStore
     getApplicationOverview(appName: string): Promise<IApplicationOverview> {
         throw new Error('Method not implemented.');
     }
+
+    async removeInactiveApplications(): Promise<number> {
+        return 0;
+    }
 }

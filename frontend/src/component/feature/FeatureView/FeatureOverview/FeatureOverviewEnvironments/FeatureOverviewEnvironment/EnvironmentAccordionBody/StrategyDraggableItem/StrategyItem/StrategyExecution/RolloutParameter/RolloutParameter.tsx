@@ -1,17 +1,15 @@
+import type { FC } from 'react';
 import { StrategyEvaluationChip } from 'component/common/ConstraintsList/StrategyEvaluationChip/StrategyEvaluationChip';
 import { StrategyEvaluationItem } from 'component/common/ConstraintsList/StrategyEvaluationItem/StrategyEvaluationItem';
-import type { ParametersSchema, StrategyVariantSchema } from 'openapi';
-import type { FC } from 'react';
+import type { ParametersSchema } from 'openapi';
 import { parseParameterNumber } from 'utils/parseParameter';
-import { RolloutVariants } from './RolloutVariants/RolloutVariants';
 
 export const RolloutParameter: FC<{
     value: string;
     parameters?: ParametersSchema;
     hasConstraints?: boolean;
-    variants?: StrategyVariantSchema[];
     displayGroupId?: boolean;
-}> = ({ value, parameters, hasConstraints, variants, displayGroupId }) => {
+}> = ({ value, parameters, hasConstraints, displayGroupId }) => {
     const percentage = parseParameterNumber(value);
 
     const explainStickiness =
@@ -43,7 +41,6 @@ export const RolloutParameter: FC<{
                     ) : null}
                 </p>
             </StrategyEvaluationItem>
-            <RolloutVariants variants={variants} />
         </>
     );
 };

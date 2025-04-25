@@ -38,6 +38,8 @@ const Container = styled('article')(({ theme }) => ({
     containerType: 'inline-size',
 }));
 
+const onNarrowContainer = '@container (max-width: 700px)';
+
 const TopRow = styled('div')(({ theme }) => ({
     '--gap': theme.spacing(1),
     padding: 'var(--padding)',
@@ -54,7 +56,7 @@ const ConstraintOptions = styled('div')(({ theme }) => ({
     flexFlow: 'row nowrap',
     gap: 'var(--gap)',
     alignSelf: 'flex-start',
-    '@container (max-width: 700px)': {
+    [onNarrowContainer]: {
         flexFlow: 'row wrap',
     },
 }));
@@ -95,7 +97,7 @@ const ConstraintDetails = styled('div')(({ theme }) => ({
     flexFlow: 'row nowrap',
     width: '100%',
     height: 'min-content',
-    '@container (max-width: 700px)': {
+    [onNarrowContainer]: {
         flexDirection: 'column',
     },
 }));

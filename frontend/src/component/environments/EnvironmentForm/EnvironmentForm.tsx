@@ -4,7 +4,6 @@ import Input from 'component/common/Input/Input';
 import { EnvironmentTypeSelector } from './EnvironmentTypeSelector';
 import { ChangeRequestSelector } from './ChangeRequestSelector';
 import { trim } from 'component/common/util';
-import { useUiFlag } from '../../../hooks/useUiFlag';
 
 interface IEnvironmentForm {
     name: string;
@@ -82,9 +81,6 @@ const EnvironmentForm: React.FC<IEnvironmentForm> = ({
     clearErrors,
     Limit,
 }) => {
-    const globalChangeRequestConfigEnabled = useUiFlag(
-        'globalChangeRequestConfig',
-    );
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledFormHeader>Environment information</StyledFormHeader>
@@ -113,18 +109,16 @@ const EnvironmentForm: React.FC<IEnvironmentForm> = ({
                     value={type}
                 />
 
-                {globalChangeRequestConfigEnabled ? (
-                    <>
-                        <StyledInputDescription sx={{ mt: 2 }}>
-                            Would you like to predefine change requests for this
-                            environment?
-                        </StyledInputDescription>
-                        <ChangeRequestSelector
-                            onChange={setRequiredApprovals}
-                            value={requiredApprovals}
-                        />
-                    </>
-                ) : null}
+                <>
+                    <StyledInputDescription sx={{ mt: 2 }}>
+                        Would you like to predefine change requests for this
+                        environment?
+                    </StyledInputDescription>
+                    <ChangeRequestSelector
+                        onChange={setRequiredApprovals}
+                        value={requiredApprovals}
+                    />
+                </>
             </StyledContainer>
 
             <LimitContainer>{Limit}</LimitContainer>

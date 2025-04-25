@@ -12,7 +12,6 @@ import useEnvironmentForm from '../hooks/useEnvironmentForm';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { GO_BACK } from 'constants/navigate';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const EditEnvironment = () => {
     const { uiConfig } = useUiConfig();
@@ -37,15 +36,12 @@ const EditEnvironment = () => {
         environment.requiredApprovals,
     );
     const { refetch } = usePermissions();
-    const globalChangeRequestConfigEnabled = useUiFlag(
-        'globalChangeRequestConfig',
-    );
 
     const editPayload = () => {
         return {
             type,
             sortOrder: environment.sortOrder,
-            ...(globalChangeRequestConfigEnabled ? { requiredApprovals } : {}),
+            requiredApprovals,
         };
     };
 

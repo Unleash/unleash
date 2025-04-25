@@ -43,6 +43,7 @@ const COLUMNS = [
     'sort_order',
     'enabled',
     'protected',
+    'required_approvals',
 ];
 
 function mapRow(row: IEnvironmentsTable): IEnvironment {
@@ -134,18 +135,12 @@ export default class EnvironmentStore implements IEnvironmentStore {
             });
     }
 
-    private allColumns() {
-        return this.flagResolver.isEnabled('globalChangeRequestConfig')
-            ? [...COLUMNS, 'required_approvals']
-            : COLUMNS;
-    }
-
     async importEnvironments(
         environments: IEnvironment[],
     ): Promise<IEnvironment[]> {
         const rows = await this.db(TABLE)
             .insert(environments.map(fieldToRow))
-            .returning(this.allColumns())
+            .returning(COLUMNS)
             .onConflict('name')
             .ignore();
 
@@ -355,7 +350,7 @@ export default class EnvironmentStore implements IEnvironmentStore {
         const updatedEnv = await this.db<IEnvironmentsTable>(TABLE)
             .update(snakeCaseKeys(env))
             .where({ name, protected: false })
-            .returning<IEnvironmentsTable>(this.allColumns());
+            .returning<IEnvironmentsTable>(COLUMNS);
 
         return mapRow(updatedEnv[0]);
     }
@@ -363,7 +358,7 @@ export default class EnvironmentStore implements IEnvironmentStore {
     async create(env: IEnvironmentCreate): Promise<IEnvironment> {
         const row = await this.db<IEnvironmentsTable>(TABLE)
             .insert(snakeCaseKeys(env))
-            .returning<IEnvironmentsTable>(this.allColumns());
+            .returning<IEnvironmentsTable>(COLUMNS);
 
         return mapRow(row[0]);
     }

@@ -146,18 +146,22 @@ describe('NewFeatureStrategyCreate', () => {
         const addConstraintEl = await screen.findByText('Add constraint');
         fireEvent.click(addConstraintEl);
 
-        const inputElement = screen.getByPlaceholderText(
-            'value1, value2, value3...',
-        );
-        fireEvent.change(inputElement, {
+        const popoverOpenButton = screen.getByRole('button', {
+            name: 'Add values',
+        });
+        fireEvent.click(popoverOpenButton);
+
+        const popoverInput = screen.getByRole('textbox', {
+            name: 'Constraint Value',
+        });
+        fireEvent.change(popoverInput, {
             target: { value: expectedConstraintValue },
         });
 
-        const addValueEl = screen.getByText('Add values');
-        fireEvent.click(addValueEl);
-
-        const doneEl = screen.getByText('Done');
-        fireEvent.click(doneEl);
+        const addButton = screen.getByRole('button', {
+            name: 'Add',
+        });
+        fireEvent.click(addButton);
 
         const selectElement = screen.getByPlaceholderText('Select segments');
         fireEvent.mouseDown(selectElement);

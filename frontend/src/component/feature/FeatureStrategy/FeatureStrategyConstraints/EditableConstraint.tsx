@@ -138,6 +138,10 @@ const StyledButton = styled('button')(({ theme }) => ({
 }));
 
 const ButtonPlaceholder = styled('div')(({ theme }) => ({
+    // this is a trick that lets us use absolute positioning for the button so
+    // that it can go over the operator context fields when necessary (narrow
+    // screens), but still retain necessary space for the button when it's all
+    // on one line.
     width: theme.spacing(2),
 }));
 

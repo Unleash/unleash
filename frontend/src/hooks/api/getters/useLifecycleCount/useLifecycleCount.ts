@@ -18,6 +18,6 @@ export const useLifecycleCount = () => {
 
 const fetcher = (path: string) => {
     return fetch(path)
-        .then(handleErrorResponses('Instance Stats'))
+        .then(handleErrorResponses('Lifecycle count'))
         .then((res) => res.json());
 };

@@ -35,6 +35,7 @@ const Container = styled('article')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadiusLarge,
     border: `1px solid ${theme.palette.divider}`,
+    containerType: 'inline-size',
 }));
 
 const TopRow = styled('div')(({ theme }) => ({
@@ -44,6 +45,13 @@ const TopRow = styled('div')(({ theme }) => ({
     alignItems: 'flex-start',
     justifyItems: 'space-between',
     borderBottom: `1px dashed ${theme.palette.divider}`,
+}));
+
+const ConstraintOptions = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    gap: theme.spacing(1),
+    alignSelf: 'flex-start',
 }));
 
 const resolveLegalValues = (
@@ -78,6 +86,9 @@ const ConstraintDetails = styled('div')(({ theme }) => ({
     flexFlow: 'row nowrap',
     width: '100%',
     height: 'min-content',
+    '@container (max-width: 700px)': {
+        flexDirection: 'column',
+    },
 }));
 
 const InputContainer = styled('div')(({ theme }) => ({
@@ -246,52 +257,53 @@ export const EditableConstraint: FC<Props> = ({
         <Container>
             <TopRow>
                 <ConstraintDetails>
-                    <StyledSelect
-                        visuallyHideLabel
-                        id='context-field-select'
-                        name='contextName'
-                        label='Context Field'
-                        autoFocus
-                        options={constraintNameOptions}
-                        value={contextName || ''}
-                        onChange={setContextName}
-                        variant='standard'
-                    />
+                    <ConstraintOptions>
+                        <StyledSelect
+                            visuallyHideLabel
+                            id='context-field-select'
+                            name='contextName'
+                            label='Context Field'
+                            autoFocus
+                            options={constraintNameOptions}
+                            value={contextName || ''}
+                            onChange={setContextName}
+                            variant='standard'
+                        />
 
-                    <StyledButton
-                        type='button'
-                        onClick={toggleInvertedOperator}
-                    >
-                        {localConstraint.inverted ? 'aint' : 'is'}
-                    </StyledButton>
-
-                    <ConstraintOperatorSelect
-                        options={operatorsForContext(contextName)}
-                        value={operator}
-                        onChange={onOperatorChange}
-                        inverted={localConstraint.inverted}
-                    />
-
-                    {showCaseSensitiveButton ? (
-                        <CaseButton
+                        <StyledButton
                             type='button'
-                            onClick={toggleCaseSensitivity}
+                            onClick={toggleInvertedOperator}
                         >
-                            {localConstraint.caseInsensitive ? (
-                                <StyledCaseInsensitiveIcon aria-label='The match is not case sensitive.' />
-                            ) : (
-                                <StyledCaseSensitiveIcon aria-label='The match is case sensitive.' />
-                            )}
-                            <ScreenReaderOnly>
-                                Make match
-                                {localConstraint.caseInsensitive
-                                    ? ' '
-                                    : ' not '}
-                                case sensitive
-                            </ScreenReaderOnly>
-                        </CaseButton>
-                    ) : null}
+                            {localConstraint.inverted ? 'aint' : 'is'}
+                        </StyledButton>
 
+                        <ConstraintOperatorSelect
+                            options={operatorsForContext(contextName)}
+                            value={operator}
+                            onChange={onOperatorChange}
+                            inverted={localConstraint.inverted}
+                        />
+
+                        {showCaseSensitiveButton ? (
+                            <CaseButton
+                                type='button'
+                                onClick={toggleCaseSensitivity}
+                            >
+                                {localConstraint.caseInsensitive ? (
+                                    <StyledCaseInsensitiveIcon aria-label='The match is not case sensitive.' />
+                                ) : (
+                                    <StyledCaseSensitiveIcon aria-label='The match is case sensitive.' />
+                                )}
+                                <ScreenReaderOnly>
+                                    Make match
+                                    {localConstraint.caseInsensitive
+                                        ? ' '
+                                        : ' not '}
+                                    case sensitive
+                                </ScreenReaderOnly>
+                            </CaseButton>
+                        ) : null}
+                    </ConstraintOptions>
                     <ValueList
                         values={localConstraint.values}
                         removeValue={removeValue}

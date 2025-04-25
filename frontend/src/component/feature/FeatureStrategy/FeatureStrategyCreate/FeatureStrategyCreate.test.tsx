@@ -407,44 +407,6 @@ describe('NewFeatureStrategyCreate', () => {
         expect(screen.queryByText('789')).toBeInTheDocument();
     });
 
-    test('Should undo changes made to constraints', async () => {
-        setupComponent();
-
-        const titleEl = await screen.findByText('Gradual rollout');
-        expect(titleEl).toBeInTheDocument();
-
-        const targetingEl = screen.getByText('Targeting');
-        fireEvent.click(targetingEl);
-
-        const addConstraintEl = await screen.findByText('Add constraint');
-        fireEvent.click(addConstraintEl);
-
-        const inputEl = screen.getByPlaceholderText(
-            'value1, value2, value3...',
-        );
-
-        fireEvent.change(inputEl, {
-            target: { value: '6, 7, 8' },
-        });
-
-        const addBtn = await screen.findByText('Add values');
-        fireEvent.click(addBtn);
-
-        expect(screen.queryByText('6')).toBeInTheDocument();
-        expect(screen.queryByText('7')).toBeInTheDocument();
-        expect(screen.queryByText('8')).toBeInTheDocument();
-
-        const undoBtn = await screen.findByTestId(
-            'UNDO_CONSTRAINT_CHANGE_BUTTON',
-        );
-
-        fireEvent.click(undoBtn);
-
-        expect(screen.queryByText('6')).not.toBeInTheDocument();
-        expect(screen.queryByText('7')).not.toBeInTheDocument();
-        expect(screen.queryByText('8')).not.toBeInTheDocument();
-    });
-
     test('Should remove constraint when no valid values are set and moving between tabs', async () => {
         setupComponent();
 

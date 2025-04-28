@@ -399,7 +399,7 @@ class="header-github-link"
                     alt: 'Unleash logo',
                 },
             },
-            image: 'img/unleash-logo-1200-630.png',
+            image: 'img/unleash-preview-1200-630.png',
             imageZoom: {
                 // Optional medium-zoom options at
                 // https://www.npmjs.com/package/medium-zoom#options

@@ -5,10 +5,14 @@ export const areConstraintsEqual = (
     a: IConstraint,
     b: IConstraint,
 ): boolean => {
+    // Sort the values arrays if they exist
+    const sortedValues = (values?: string[]) =>
+        values ? [...values].sort() : undefined;
+
     const aJson = JSON.stringify({
         contextName: a.contextName,
         operator: a.operator,
-        values: a.values,
+        values: sortedValues(a.values),
         value: a.value,
         inverted: a.inverted,
         caseInsensitive: a.caseInsensitive,
@@ -17,7 +21,7 @@ export const areConstraintsEqual = (
     const bJson = JSON.stringify({
         contextName: b.contextName,
         operator: b.operator,
-        values: b.values,
+        values: sortedValues(b.values),
         value: b.value,
         inverted: b.inverted,
         caseInsensitive: b.caseInsensitive,

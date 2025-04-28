@@ -36,6 +36,22 @@ describe('areConstraintsEqual', () => {
         expect(areConstraintsEqual(constraint1, constraint2)).toBe(true);
     });
 
+    it('should return true for constraints with same values in different order', () => {
+        const constraint1: IConstraint = {
+            contextName: 'userId',
+            operator: IN,
+            values: ['user1', 'user2', 'user3'],
+        };
+
+        const constraint2: IConstraint = {
+            contextName: 'userId',
+            operator: IN,
+            values: ['user2', 'user3', 'user1'],
+        };
+
+        expect(areConstraintsEqual(constraint1, constraint2)).toBe(true);
+    });
+
     it('should return false for constraints with different content', () => {
         const constraint1: IConstraint = {
             contextName: 'userId',
@@ -154,6 +170,44 @@ describe('useRecentlyUsedConstraints', () => {
         expect(result.current.items.length).toBe(2);
         expect(result.current.items[0].contextName).toBe('userId');
         expect(result.current.items[1].contextName).toBe('email');
+    });
+
+    it('should not add duplicate constraints with values in different order', () => {
+        const { result } = renderHook(() =>
+            useRecentlyUsedConstraints('test-key'),
+        );
+
+        const constraint1 = {
+            contextName: 'userId',
+            operator: IN,
+            values: ['user1', 'user2', 'user3'],
+        } as IConstraint;
+
+        act(() => {
+            result.current.addItem(constraint1);
+        });
+        expect(result.current.items.length).toBe(1);
+
+        // Same constraint but with values in different order
+        const sameConstraintDifferentOrder = {
+            contextName: 'userId',
+            operator: IN,
+            values: ['user3', 'user1', 'user2'],
+        } as IConstraint;
+
+        act(() => {
+            result.current.addItem(sameConstraintDifferentOrder);
+        });
+
+        // Should not add a duplicate, just move it to the top
+        expect(result.current.items.length).toBe(1);
+        expect(result.current.items[0].contextName).toBe('userId');
+        // The values array in the stored item should be the one from the most recently added item
+        expect(result.current.items[0].values).toEqual([
+            'user3',
+            'user1',
+            'user2',
+        ]);
     });
 
     it('should persist items to localStorage', () => {

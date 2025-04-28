@@ -712,6 +712,11 @@
       "permanent": true
     },
     {
+      "source": "/using-unleash/deploy",
+      "destination": "/using-unleash/deploy/getting-started",
+      "permanent": true
+    },
+    {
       "source": "/understanding-unleash/proxy-hosting",
       "destination": "/understanding-unleash/hosting-options",
       "permanent": true

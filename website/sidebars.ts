@@ -584,11 +584,8 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     link: {
-                        type: 'generated-index',
-                        title: 'Self-Hosting Unleash',
-                        description:
-                            'All you need to learn how to deploy and manage your own Unleash instance.',
-                        slug: '/using-unleash/deploy',
+                        type: 'doc',
+                        id: 'using-unleash/deploy/getting-started'
                     },
                     label: 'Self-hosting',
                     items: [

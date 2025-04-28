@@ -344,7 +344,7 @@ describe('NewFeatureStrategyCreate', () => {
         expect(screen.queryByText('789')).toBeInTheDocument();
 
         const deleteBtns = await screen.findAllByTestId(
-            'constraint-deletion-button',
+            'DELETE_CONSTRAINT_BUTTON',
         );
         fireEvent.click(deleteBtns[0]);
         screen.debug(undefined, 200000);

@@ -13,7 +13,11 @@ import type {
 import type { IFeatureToggleStore } from '../../feature-toggle/types/feature-toggle-store-type';
 import type { IStrategyStore } from '../../../types/stores/strategy-store';
 import type { IClientInstanceStore } from '../../../types/stores/client-instance-store';
-import type { IClientApp, ISdkHeartbeat } from '../../../types/model';
+import type {
+    IClientApp,
+    IFrontendClientApp,
+    ISdkHeartbeat,
+} from '../../../types/model';
 import { clientRegisterSchema } from '../shared/schema';
 
 import type { IClientMetricsStoreV2 } from '../client-metrics/client-metrics-store-v2-type';
@@ -104,6 +108,12 @@ export default class ClientInstanceService {
         });
     }
 
+    public registerFrontendClient(data: IFrontendClientApp): void {
+        data.createdBy = SYSTEM_USER.username!;
+
+        this.seenClients[this.clientKey(data)] = data;
+    }
+
     public async registerClient(
         data: PartialSome<IClientApp, 'instanceId'>,
         clientIp: string,
@@ -111,6 +121,7 @@ export default class ClientInstanceService {
         const value = await clientRegisterSchema.validateAsync(data);
         value.clientIp = clientIp;
         value.createdBy = SYSTEM_USER.username!;
+        value.sdkType = 'backend';
         this.seenClients[this.clientKey(value)] = value;
         this.eventBus.emit(CLIENT_REGISTERED, value);
 

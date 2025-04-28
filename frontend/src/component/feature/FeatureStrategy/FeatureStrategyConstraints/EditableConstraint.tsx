@@ -32,22 +32,44 @@ const Container = styled('article')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadiusLarge,
     border: `1px solid ${theme.palette.divider}`,
+    containerType: 'inline-size',
 }));
 
+const onNarrowContainer = '@container (max-width: 700px)';
+
 const TopRow = styled('div')(({ theme }) => ({
+    '--gap': theme.spacing(1),
     padding: 'var(--padding)',
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'flex-start',
     justifyItems: 'space-between',
+    gap: 'var(--gap)',
+}));
+
+const ConstraintOptions = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    gap: 'var(--gap)',
+    alignSelf: 'flex-start',
+    [onNarrowContainer]: {
+        flexFlow: 'row wrap',
+    },
+}));
+
+const OperatorOptions = styled(ConstraintOptions)(({ theme }) => ({
+    flexFlow: 'row nowrap',
 }));
 
 const ConstraintDetails = styled('div')(({ theme }) => ({
     display: 'flex',
-    gap: theme.spacing(1),
+    gap: 'var(--gap)',
     flexFlow: 'row nowrap',
     width: '100%',
     height: 'min-content',
+    [onNarrowContainer]: {
+        flexDirection: 'column',
+    },
 }));
 
 const InputContainer = styled('div')(({ theme }) => ({
@@ -57,6 +79,10 @@ const InputContainer = styled('div')(({ theme }) => ({
 
 const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
     fieldset: { border: 'none', borderRadius: 0 },
+    maxWidth: '25ch',
+    ':focus-within .MuiSelect-select': {
+        background: 'none',
+    },
     ':focus-within fieldset': { borderBottomStyle: 'solid' },
     'label + &': {
         // mui adds a margin top to 'standard' selects with labels
@@ -67,10 +93,19 @@ const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
     },
 }));
 
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+    position: 'absolute',
+    right: theme.spacing(1),
+}));
+
 const StyledButton = styled('button')(({ theme }) => ({
+    // todo (`addEditStrategy`): this is pretty rough, but it needs to be the
+    // same height as the input fields, which are 27.25 px at the moment.
+    // Consider editing this when we get new icons for the buttons. There may be
+    // a better solution.
+    height: `calc(${theme.typography.body1.fontSize} + ${theme.spacing(1.5)})`,
     width: '5ch',
     borderRadius: theme.shape.borderRadius,
-    padding: theme.spacing(0.25, 0),
     fontSize: theme.fontSizes.smallerBody,
     background: theme.palette.secondary.light,
     border: `1px solid ${theme.palette.secondary.border}`,
@@ -80,6 +115,14 @@ const StyledButton = styled('button')(({ theme }) => ({
     '&:is(:hover, :focus-visible)': {
         outline: `1px solid ${theme.palette.primary.main}`,
     },
+}));
+
+const ButtonPlaceholder = styled('div')(({ theme }) => ({
+    // this is a trick that lets us use absolute positioning for the button so
+    // that it can go over the operator context fields when necessary (narrow
+    // screens), but still retain necessary space for the button when it's all
+    // on one line.
+    width: theme.spacing(2),
 }));
 
 const StyledCaseInsensitiveIcon = styled(CaseInsensitiveIcon)(({ theme }) => ({
@@ -218,52 +261,55 @@ export const EditableConstraint: FC<Props> = ({
         <Container>
             <TopRow>
                 <ConstraintDetails>
-                    <StyledSelect
-                        visuallyHideLabel
-                        id='context-field-select'
-                        name='contextName'
-                        label='Context Field'
-                        autoFocus
-                        options={constraintNameOptions}
-                        value={contextName || ''}
-                        onChange={setContextName}
-                        variant='standard'
-                    />
+                    <ConstraintOptions>
+                        <StyledSelect
+                            visuallyHideLabel
+                            id='context-field-select'
+                            name='contextName'
+                            label='Context Field'
+                            autoFocus
+                            options={constraintNameOptions}
+                            value={contextName || ''}
+                            onChange={setContextName}
+                            variant='standard'
+                        />
 
-                    <StyledButton
-                        type='button'
-                        onClick={toggleInvertedOperator}
-                    >
-                        {localConstraint.inverted ? 'aint' : 'is'}
-                    </StyledButton>
+                        <OperatorOptions>
+                            <StyledButton
+                                type='button'
+                                onClick={toggleInvertedOperator}
+                            >
+                                {localConstraint.inverted ? 'aint' : 'is'}
+                            </StyledButton>
 
-                    <ConstraintOperatorSelect
-                        options={operatorsForContext(contextName)}
-                        value={operator}
-                        onChange={onOperatorChange}
-                        inverted={localConstraint.inverted}
-                    />
+                            <ConstraintOperatorSelect
+                                options={operatorsForContext(contextName)}
+                                value={operator}
+                                onChange={onOperatorChange}
+                                inverted={localConstraint.inverted}
+                            />
 
-                    {showCaseSensitiveButton ? (
-                        <CaseButton
-                            type='button'
-                            onClick={toggleCaseSensitivity}
-                        >
-                            {localConstraint.caseInsensitive ? (
-                                <StyledCaseInsensitiveIcon aria-label='The match is not case sensitive.' />
-                            ) : (
-                                <StyledCaseSensitiveIcon aria-label='The match is case sensitive.' />
-                            )}
-                            <ScreenReaderOnly>
-                                Make match
-                                {localConstraint.caseInsensitive
-                                    ? ' '
-                                    : ' not '}
-                                case sensitive
-                            </ScreenReaderOnly>
-                        </CaseButton>
-                    ) : null}
-
+                            {showCaseSensitiveButton ? (
+                                <CaseButton
+                                    type='button'
+                                    onClick={toggleCaseSensitivity}
+                                >
+                                    {localConstraint.caseInsensitive ? (
+                                        <StyledCaseInsensitiveIcon aria-label='The match is not case sensitive.' />
+                                    ) : (
+                                        <StyledCaseSensitiveIcon aria-label='The match is case sensitive.' />
+                                    )}
+                                    <ScreenReaderOnly>
+                                        Make match
+                                        {localConstraint.caseInsensitive
+                                            ? ' '
+                                            : ' not '}
+                                        case sensitive
+                                    </ScreenReaderOnly>
+                                </CaseButton>
+                            ) : null}
+                        </OperatorOptions>
+                    </ConstraintOptions>
                     <ValueList
                         values={localConstraint.values}
                         removeValue={removeValue}
@@ -290,16 +336,16 @@ export const EditableConstraint: FC<Props> = ({
                         ) : null}
                     </ValueList>
                 </ConstraintDetails>
-
+                <ButtonPlaceholder />
                 <HtmlTooltip title='Delete constraint' arrow>
-                    <IconButton
+                    <StyledIconButton
                         type='button'
                         size='small'
                         onClick={onDelete}
                         ref={deleteButtonRef}
                     >
-                        <Delete />
-                    </IconButton>
+                        <Delete fontSize='inherit' />
+                    </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
             {showInputField ? (

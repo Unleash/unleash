@@ -64,7 +64,6 @@ export type IFlagKey =
     | 'simplifyDisableFeature'
     | 'adminNavUI'
     | 'tagTypeColor'
-    | 'globalChangeRequestConfig'
     | 'addEditStrategy'
     | 'newStrategyDropdown'
     | 'flagsOverviewSearch'
@@ -306,10 +305,6 @@ const flags: IFlags = {
     ),
     tagTypeColor: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_TAG_TYPE_COLOR,
-        false,
-    ),
-    globalChangeRequestConfig: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_GLOBAL_CHANGE_REQUEST_CONFIG,
         false,
     ),
     addEditStrategy: parseEnvVarBoolean(

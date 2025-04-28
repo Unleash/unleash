@@ -92,7 +92,6 @@ export type UiFlags = {
     edgeObservability?: boolean;
     adminNavUI?: boolean;
     tagTypeColor?: boolean;
-    globalChangeRequestConfig?: boolean;
     addEditStrategy?: boolean;
     newStrategyDropdown?: boolean;
     flagsReleaseManagementUI?: boolean;

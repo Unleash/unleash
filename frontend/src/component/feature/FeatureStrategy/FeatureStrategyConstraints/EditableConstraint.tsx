@@ -166,6 +166,7 @@ type Props = {
     setValues: (values: string[]) => void;
     setValuesWithRecord: (values: string[]) => void;
     setError: React.Dispatch<React.SetStateAction<string>>;
+    addValues: (...values: string[]) => void;
     removeValue: (index: number) => void;
     input: Input;
     error: string;
@@ -187,6 +188,7 @@ export const EditableConstraint: FC<Props> = ({
     constraintValue,
     setValue,
     setValues,
+    addValues,
     setValuesWithRecord,
     setError,
     removeValue,
@@ -313,7 +315,6 @@ export const EditableConstraint: FC<Props> = ({
                     <ValueList
                         values={localConstraint.values}
                         removeValue={removeValue}
-                        setValues={setValuesWithRecord}
                         getExternalFocusTarget={() =>
                             addValuesButtonRef.current ??
                             deleteButtonRef.current
@@ -323,14 +324,11 @@ export const EditableConstraint: FC<Props> = ({
                             <AddValuesWidget
                                 ref={addValuesButtonRef}
                                 onAddValues={(newValues) => {
-                                    // todo (`addEditStrategy`): move deduplication logic higher up in the context handling
-                                    const combinedValues = new Set([
-                                        ...(localConstraint.values || []),
-                                        ...newValues,
-                                    ]);
-                                    setValuesWithRecord(
-                                        Array.from(combinedValues),
-                                    );
+                                    addValues(...newValues);
+                                    // setValuesWithRecord([
+                                    //     ...(localConstraint.values || []),
+                                    //     ...newValues,
+                                    // ]);
                                 }}
                             />
                         ) : null}
@@ -351,7 +349,7 @@ export const EditableConstraint: FC<Props> = ({
             </TopRow>
             {showInputField ? (
                 <InputContainer>
-                    <ResolveInput
+                    <ResolveInput // todo (`addEditStrategy`) can we get rid of `setValues` in favor of `addValues` (and removeValues / clearValues)? that way, downstream components don't need to know anything about how to handle constraint values. Only that they need to call these functions. Can also be grouped into `constraintValueActions: { add, remove, clear }` or something.
                         setValues={setValues}
                         setValuesWithRecord={setValuesWithRecord}
                         setValue={setValue}

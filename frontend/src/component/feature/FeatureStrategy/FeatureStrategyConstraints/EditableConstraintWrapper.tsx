@@ -125,7 +125,10 @@ export const EditableConstraintWrapper = ({
 
     const setValuesWithRecord = useCallback((values: string[]) => {
         setLocalConstraint((prev) => {
-            const localConstraint = { ...prev, values };
+            const localConstraint = {
+                ...prev,
+                values: Array.from(new Set(values)),
+            };
 
             recordChange(localConstraint);
 
@@ -135,7 +138,10 @@ export const EditableConstraintWrapper = ({
 
     const setValues = useCallback((values: string[]) => {
         setLocalConstraint((prev) => {
-            const localConstraint = { ...prev, values };
+            const localConstraint = {
+                ...prev,
+                values: Array.from(new Set(values)),
+            };
 
             return localConstraint;
         });

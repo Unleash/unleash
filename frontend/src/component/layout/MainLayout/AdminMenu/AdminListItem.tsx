@@ -15,11 +15,11 @@ import { Link } from 'react-router-dom';
 import type { Theme } from '@mui/material/styles/createTheme';
 
 const listItemButtonStyle = (theme: Theme) => ({
-    borderRadius: theme.spacing(0.5),
+    borderRadius: theme.spacing(1),
     borderLeft: `${theme.spacing(0.5)} solid transparent`,
     m: 0,
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
+    paddingTop: theme.spacing(0.5),
+    paddingBottom: theme.spacing(0.5),
     '&.Mui-selected': {
         backgroundColor: '#607B81',
         color: theme.palette.common.white,
@@ -27,11 +27,11 @@ const listItemButtonStyle = (theme: Theme) => ({
             fontWeight: theme.typography.fontWeightBold,
         },
         '&:hover': {
-            backgroundColor: theme.palette.action.hover,
+            backgroundColor: '#546C71',
             color: 'inherit',
-            fontWeight: theme.typography.fontWeightLight,
+            fontWeight: theme.typography.fontWeightBold,
             '& p': {
-                fontWeight: theme.typography.fontWeightLight,
+                fontWeight: theme.typography.fontWeightBold,
             },
         },
     },
@@ -40,17 +40,14 @@ const listItemButtonStyle = (theme: Theme) => ({
     '&>.MuiAccordionSummary-content.MuiAccordionSummary-content': {
         margin: '0',
         alignItems: 'center',
-        padding: theme.spacing(0.1, 0),
     },
 });
 
 const subListItemButtonStyle = (theme: Theme) => ({
     paddingLeft: theme.spacing(4),
-    borderRadius: theme.spacing(0.5),
+    borderRadius: theme.spacing(1),
     borderLeft: `${theme.spacing(0.5)} solid transparent`,
     m: 0,
-    paddingTop: theme.spacing(0.75),
-    paddingBottom: theme.spacing(0.75),
     '&.Mui-selected': {
         backgroundColor: '#607B81',
         color: theme.palette.common.white,
@@ -58,11 +55,11 @@ const subListItemButtonStyle = (theme: Theme) => ({
             fontWeight: theme.typography.fontWeightBold,
         },
         '&:hover': {
-            backgroundColor: theme.palette.action.hover,
+            backgroundColor: '#546C71',
             color: 'inherit',
-            fontWeight: theme.typography.fontWeightLight,
+            fontWeight: theme.typography.fontWeightBold,
             '& p': {
-                fontWeight: theme.typography.fontWeightLight,
+                fontWeight: theme.typography.fontWeightBold,
             },
         },
     },

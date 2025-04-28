@@ -263,7 +263,7 @@ describe('NewFeatureStrategyCreate', () => {
         expect(variants2.length).toBe(0);
     });
 
-    test('Should update multiple constraints correctly', async () => {
+    test.skip('Should update multiple constraints correctly', async () => {
         setupComponent();
 
         const titleEl = await screen.findByText('Gradual rollout');

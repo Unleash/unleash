@@ -15,12 +15,9 @@ import {
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IConstraint } from 'interfaces/strategy';
 import { useNavigate } from 'react-router-dom';
-import type { IConstraintAccordionListRef } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
 import { ConstraintAccordionList } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
-import {
-    NewConstraintAccordionList,
-    useConstraintAccordionList,
-} from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/NewConstraintAccordionList';
+import { EditableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/EditableConstraintsList';
+import type { IEditableConstraintsListRef } from 'component/common/NewConstraintAccordion/ConstraintsList/EditableConstraintsList';
 import type { SegmentFormStep, SegmentFormMode } from './SegmentForm';
 import {
     AutocompleteBox,
@@ -34,7 +31,6 @@ import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValues
 import AccessContext from 'contexts/AccessContext';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 import { GO_BACK } from 'constants/navigate';
-import type { RefObject } from 'react';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 interface ISegmentFormPartTwoProps {
@@ -115,7 +111,7 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
     setCurrentStep,
     mode,
 }) => {
-    const constraintsAccordionListRef = useRef<IConstraintAccordionListRef>();
+    const constraintsAccordionListRef = useRef<IEditableConstraintsListRef>();
     const navigate = useNavigate();
     const { hasAccess } = useContext(AccessContext);
     const { context = [] } = useUnleashContext();
@@ -127,10 +123,6 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
             : [UPDATE_SEGMENT, UPDATE_PROJECT_SEGMENT];
     const { segmentValuesLimit } = useSegmentLimits();
     const addEditStrategy = useUiFlag('addEditStrategy');
-    const { state } = useConstraintAccordionList(
-        hasAccess(modePermission, project) ? setConstraints : undefined,
-        constraintsAccordionListRef as RefObject<IConstraintAccordionListRef>,
-    );
 
     const overSegmentValuesLimit: boolean = Boolean(
         segmentValuesLimit && segmentValuesCount > segmentValuesLimit,
@@ -213,7 +205,7 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                     <ConditionallyRender
                         condition={addEditStrategy}
                         show={
-                            <NewConstraintAccordionList
+                            <EditableConstraintsList
                                 ref={constraintsAccordionListRef}
                                 constraints={constraints}
                                 setConstraints={
@@ -221,7 +213,6 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                                         ? setConstraints
                                         : undefined
                                 }
-                                state={state}
                             />
                         }
                         elseShow={

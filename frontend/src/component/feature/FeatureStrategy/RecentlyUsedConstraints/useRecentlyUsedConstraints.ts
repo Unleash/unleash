@@ -1,5 +1,5 @@
-import { useLocalStorageState } from '../../../../hooks/useLocalStorageState';
-import type { IConstraint } from '../../../../interfaces/strategy';
+import { useLocalStorageState } from 'hooks/useLocalStorageState';
+import type { IConstraint } from 'interfaces/strategy';
 
 export const areConstraintsEqual = (
     a: IConstraint,

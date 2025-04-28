@@ -3,9 +3,9 @@ import {
     areConstraintsEqual,
 } from './useRecentlyUsedConstraints';
 import { renderHook, act } from '@testing-library/react';
-import type { IConstraint } from '../../../../interfaces/strategy';
-import { IN, STR_CONTAINS } from '../../../../constants/operators';
-import type { Operator } from '../../../../constants/operators';
+import type { IConstraint } from 'interfaces/strategy';
+import { IN, STR_CONTAINS } from 'constants/operators';
+import type { Operator } from 'constants/operators';
 
 const createTestConstraint = (
     contextName: string,

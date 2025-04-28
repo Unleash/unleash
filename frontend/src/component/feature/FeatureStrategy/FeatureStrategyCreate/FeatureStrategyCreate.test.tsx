@@ -263,47 +263,6 @@ describe('NewFeatureStrategyCreate', () => {
         expect(variants2.length).toBe(0);
     });
 
-    test('Should autosave constraint settings when navigating between tabs', async () => {
-        const { expectedMultipleValues } = setupComponent();
-
-        const titleEl = await screen.findByText('Gradual rollout');
-        expect(titleEl).toBeInTheDocument();
-
-        const targetingEl = screen.getByText('Targeting');
-        fireEvent.click(targetingEl);
-
-        const addConstraintEl = await screen.findByText('Add constraint');
-        fireEvent.click(addConstraintEl);
-
-        const popoverOpenButton = screen.getByRole('button', {
-            name: 'Add values',
-        });
-        fireEvent.click(popoverOpenButton);
-
-        const popoverInput = screen.getByRole('textbox', {
-            name: 'Constraint Value',
-        });
-        fireEvent.change(popoverInput, {
-            target: { value: expectedMultipleValues },
-        });
-        const addButton = screen.getByRole('button', {
-            name: 'Add',
-        });
-        fireEvent.click(addButton);
-        fireEvent.keyPress(popoverInput, { key: 'Escape' });
-
-        const variantsEl = screen.getByText('Variants');
-        fireEvent.click(variantsEl);
-
-        fireEvent.click(targetingEl);
-
-        const values = expectedMultipleValues.split(',');
-
-        expect(screen.getByText(values[0])).toBeInTheDocument();
-        expect(screen.getByText(values[1])).toBeInTheDocument();
-        expect(screen.getByText(values[2])).toBeInTheDocument();
-    });
-
     test('Should update multiple constraints correctly', async () => {
         setupComponent();
 

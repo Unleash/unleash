@@ -1,5 +1,5 @@
 import Clear from '@mui/icons-material/Clear';
-import { Chip, type ChipProps, styled } from '@mui/material';
+import { Chip, type ChipProps, styled, type Theme } from '@mui/material';
 import { type FC, forwardRef, type PropsWithChildren, useRef } from 'react';
 
 const ValueListWrapper = styled('div')(({ theme }) => ({
@@ -14,14 +14,25 @@ const StyledList = styled('ul')({
     display: 'contents',
 });
 
+export const baseChipStyles = (theme: Theme) => ({
+    ':hover': { background: theme.palette.secondary.light },
+    ':focus-visible': {
+        background: theme.palette.background.elevation1,
+        outlineColor: theme.palette.secondary.dark,
+    },
+    background: theme.palette.background.elevation1,
+    color: theme.palette.text.primary,
+    height: 'auto',
+    outline: `1px solid #0000`,
+    transition: 'all 0.3s ease',
+});
+
 const ValueChipBase = styled(
     forwardRef<HTMLDivElement, ChipProps>((props, ref) => (
         <Chip size='small' {...props} ref={ref} />
     )),
 )(({ theme }) => ({
-    transition: 'all 0.3s ease',
-    outline: `1px solid #0000`,
-    background: theme.palette.background.elevation1,
+    ...baseChipStyles(theme),
     color: theme.palette.text.primary,
     padding: 0,
     height: 'auto',
@@ -32,13 +43,6 @@ const ValueChipBase = styled(
     },
     '& .MuiChip-deleteIcon': {
         marginRight: theme.spacing(1),
-    },
-    ':hover': {
-        background: theme.palette.secondary.light,
-    },
-    ':focus-visible': {
-        background: theme.palette.background.elevation1,
-        outlineColor: theme.palette.secondary.dark,
     },
 }));
 

@@ -9,8 +9,10 @@ import {
     useState,
 } from 'react';
 import { parseParameterStrings } from 'utils/parseParameter';
+import { baseChipStyles } from './ValueList';
 
 const AddValuesButton = styled('button')(({ theme }) => ({
+    ...baseChipStyles(theme),
     color: theme.palette.primary.main,
     svg: {
         fill: theme.palette.primary.main,
@@ -26,13 +28,7 @@ const AddValuesButton = styled('button')(({ theme }) => ({
     alignItems: 'center',
     padding: theme.spacing(0.5, 1.5, 0.5, 1.5),
     height: 'auto',
-    transition: 'all 0.3s ease',
-    outline: `1px solid #0000`,
-    background: theme.palette.background.elevation1,
-    ':hover, :focus-visible': {
-        background: theme.palette.background.elevation1,
-        outlineColor: theme.palette.secondary.dark,
-    },
+    cursor: 'pointer',
 }));
 
 const StyledPopover = styled(Popover)(({ theme }) => ({

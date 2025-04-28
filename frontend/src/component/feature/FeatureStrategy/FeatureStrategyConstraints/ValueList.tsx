@@ -21,9 +21,8 @@ const ValueChipBase = styled(
 )(({ theme }) => ({
     transition: 'all 0.3s ease',
     outline: `1px solid #0000`,
-    background: theme.palette.secondary.light,
-    color: theme.palette.secondary.dark,
-    border: `1px solid ${theme.palette.secondary.border}`,
+    background: theme.palette.background.elevation1,
+    color: theme.palette.text.primary,
     padding: 0,
     height: 'auto',
     '& .MuiChip-label': {
@@ -34,10 +33,11 @@ const ValueChipBase = styled(
     '& .MuiChip-deleteIcon': {
         marginRight: theme.spacing(1),
     },
-    ':hover, :focus-visible': {
+    ':hover': {
         background: theme.palette.secondary.light,
     },
     ':focus-visible': {
+        background: theme.palette.background.elevation1,
         outlineColor: theme.palette.secondary.dark,
     },
 }));

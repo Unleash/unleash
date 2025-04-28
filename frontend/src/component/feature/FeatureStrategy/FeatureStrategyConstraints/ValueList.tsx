@@ -58,7 +58,6 @@ const ValueChip = styled(ValueChipBase)(({ theme }) => ({
 type Props = {
     values: string[] | undefined;
     removeValue: (index: number) => void;
-    setValues: (values: string[]) => void;
     // the element that should receive focus when all value chips are deleted
     getExternalFocusTarget: () => HTMLElement | null;
 };

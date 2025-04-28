@@ -103,12 +103,7 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
 const StyledButton = styled('button')(({ theme }) => ({
     display: 'grid',
     placeItems: 'center',
-    // todo (`addEditStrategy`): this is pretty rough, but it needs to be the
-    // same height as the input fields, which are 27.25 px at the moment.
-    // Consider editing this when we get new icons for the buttons. There may be
-    // a better solution.
-    height: `calc(${theme.typography.body1.fontSize} + ${theme.spacing(1.5)})`,
-    width: '5ch',
+    padding: 0,
     borderRadius: theme.shape.borderRadius,
     fontSize: theme.fontSizes.smallerBody,
     background: theme.palette.secondary.light,

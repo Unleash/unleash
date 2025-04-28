@@ -108,9 +108,7 @@ export default class ClientInstanceService {
         });
     }
 
-    public async registerFrontendClient(
-        data: IFrontendClientApp,
-    ): Promise<void> {
+    public registerFrontendClient(data: IFrontendClientApp): void {
         data.createdBy = SYSTEM_USER.username!;
 
         this.seenClients[this.clientKey(data)] = data;

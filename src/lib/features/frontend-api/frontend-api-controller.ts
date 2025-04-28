@@ -268,9 +268,7 @@ export default class FrontendAPIController extends Controller {
                 environment: environment,
                 projects: this.resolveProject(req.user),
             };
-            await this.services.clientInstanceService.registerFrontendClient(
-                client,
-            );
+            this.services.clientInstanceService.registerFrontendClient(client);
         }
 
         res.sendStatus(200);

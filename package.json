@@ -1,5 +1,6 @@
 {
   "name": "unleash-server",
+  "type": "module",
   "description": "Unleash is an enterprise ready feature flag service. It provides different strategies for handling feature flags.",
   "version": "6.9.2",
   "keywords": [
@@ -51,7 +52,7 @@
     "local:package": "del-cli --force build && mkdir build && cp -r dist docs CHANGELOG.md LICENSE README.md package.json build",
     "build:watch": "tsc -w",
     "prepare": "husky && yarn --cwd ./frontend install && if [ ! -d ./dist ]; then yarn build; fi",
-    "test": "NODE_ENV=test PORT=4243 node --trace-warnings node_modules/.bin/jest",
+    "test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test PORT=4243 node --trace-warnings node_modules/.bin/jest",
     "test:unit": "NODE_ENV=test PORT=4243 jest --testPathIgnorePatterns=src/test/e2e --testPathIgnorePatterns=dist",
     "test:docker": "./scripts/docker-postgres.sh",
     "test:report": "NODE_ENV=test PORT=4243 jest --reporters=\"default\" --reporters=\"jest-junit\"",
@@ -251,5 +252,5 @@
       "yarn biome format --write --no-errors-on-unmatched"
     ]
   },
-  "packageManager": "yarn@4.7.0"
+  "packageManager": "yarn@4.9.1"
 }

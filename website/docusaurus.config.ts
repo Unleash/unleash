@@ -93,7 +93,7 @@ export default async function createConfigAsync(): Promise<Config> {
             metadata: [
                 { name: 'og:image:width', content: '1200' },
                 { name: 'og:image:height', content: '630' },
-            ],    
+            ],
             navbar: {
                 logo: {
                     alt: 'Unleash logo',

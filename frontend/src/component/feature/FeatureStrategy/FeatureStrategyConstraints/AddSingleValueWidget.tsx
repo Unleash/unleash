@@ -4,7 +4,7 @@ import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { ValueChip } from './ValueList';
 import { AddValuesPopover, type OnAddActions } from './AddValuesPopover';
 
-const AddValuesButton = styled(ValueChip, {
+const StyledChip = styled(ValueChip, {
     shouldForwardProp: (prop) => prop !== 'hasValue',
 })<{ hasValue: boolean }>(({ theme, hasValue }) => ({
     color: hasValue ? 'inherit' : theme.palette.primary.main,
@@ -22,7 +22,7 @@ interface AddValuesProps {
     currentValue?: string;
 }
 
-export const SingleValueWidget = forwardRef<HTMLDivElement, AddValuesProps>(
+export const AddSingleValueWidget = forwardRef<HTMLDivElement, AddValuesProps>(
     ({ currentValue, onAddValue, removeValue }, ref) => {
         const [open, setOpen] = useState(false);
         const positioningRef = useRef<HTMLDivElement>(null);
@@ -44,7 +44,7 @@ export const SingleValueWidget = forwardRef<HTMLDivElement, AddValuesProps>(
 
         return (
             <>
-                <AddValuesButton
+                <StyledChip
                     hasValue={!!currentValue}
                     ref={positioningRef}
                     label={currentValue || 'Add value'}

@@ -26,9 +26,10 @@ import { ReactComponent as CaseInsensitiveIcon } from 'assets/icons/case-insensi
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { AddValuesWidget } from './AddValuesWidget';
 import { ResolveInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/ResolveInput/ResolveInput';
+
 import { ReactComponent as EqualsIcon } from 'assets/icons/constraint-equals.svg';
 import { ReactComponent as NotEqualsIcon } from 'assets/icons/constraint-not-equals.svg';
-import { SingleValueWidget } from './SingleValueWidget';
+import { AddSingleValueWidget } from './AddSingleValueWidget';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -362,7 +363,7 @@ export const EditableConstraint: FC<Props> = ({
                         ) : null}
                     </ValueList>
                     {showSingleValueButton ? (
-                        <SingleValueWidget
+                        <AddSingleValueWidget
                             onAddValue={(newValue) => {
                                 setValue(newValue);
                             }}

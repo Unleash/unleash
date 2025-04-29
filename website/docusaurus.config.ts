@@ -90,6 +90,10 @@ export default async function createConfigAsync(): Promise<Config> {
                 apiKey: 'dc9c4491fcf9143ee34015f22d1dd9d6',
                 indexName: 'getunleash',
             },
+            metadata: [
+                { name: 'og:image:width', content: '1200' },
+                { name: 'og:image:height', content: '630' },
+            ],    
             navbar: {
                 logo: {
                     alt: 'Unleash logo',
@@ -395,7 +399,7 @@ class="header-github-link"
                     alt: 'Unleash logo',
                 },
             },
-            image: 'img/logo.png',
+            image: 'img/unleash-preview-1200-630.png',
             imageZoom: {
                 // Optional medium-zoom options at
                 // https://www.npmjs.com/package/medium-zoom#options

@@ -70,6 +70,12 @@ export const bulkRegistrationSchema = {
             example: 'unleash-client-java:8.0.0',
             type: 'string',
         },
+        sdkType: {
+            description: 'The sdk type',
+            example: 'backend',
+            type: 'string',
+            enum: ['frontend', 'backend'],
+        },
     },
     components: {
         schemas: {

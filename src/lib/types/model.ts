@@ -466,7 +466,7 @@ export interface IFrontendClientApp {
     sdkVersion: string;
     sdkType: 'frontend';
     environment: string;
-    projects: string[];
+    projects?: string[];
     createdBy?: string;
 }
 

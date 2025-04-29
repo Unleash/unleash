@@ -114,7 +114,7 @@ export default class ClientInstanceService {
         this.seenClients[this.clientKey(data)] = data;
     }
 
-    public async registerClient(
+    public async registerBackendClient(
         data: PartialSome<IClientApp, 'instanceId'>,
         clientIp: string,
     ): Promise<void> {

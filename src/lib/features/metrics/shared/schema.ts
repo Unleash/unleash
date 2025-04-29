@@ -84,10 +84,7 @@ export const clientRegisterSchema = joi
         appName: joi.string().required(),
         instanceId: joi.string().empty(['', null]).default('default'),
         sdkVersion: joi.string().optional(),
-        strategies: joi
-            .array()
-            .required()
-            .items(joi.string(), joi.any().strip()),
+        strategies: joi.array().items(joi.string(), joi.any().strip()),
         started: joi.date().required(),
         interval: joi.number().required(),
         environment: joi.string().optional(),

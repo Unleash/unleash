@@ -55,12 +55,21 @@ test('Apps registered should be announced', async () => {
         description: faker.company.catchPhrase(),
         color: faker.internet.color(),
     };
-    await clientInstanceService.registerClient(clientRegistration, '127.0.0.1');
-    await clientInstanceService.registerClient(differentClient, '127.0.0.1');
+    await clientInstanceService.registerBackendClient(
+        clientRegistration,
+        '127.0.0.1',
+    );
+    await clientInstanceService.registerBackendClient(
+        differentClient,
+        '127.0.0.1',
+    );
     await clientInstanceService.bulkAdd(); // in prod called by a SchedulerService
     const first = await stores.clientApplicationsStore.getUnannounced();
     expect(first.length).toBe(2);
-    await clientInstanceService.registerClient(clientRegistration, '127.0.0.1');
+    await clientInstanceService.registerBackendClient(
+        clientRegistration,
+        '127.0.0.1',
+    );
     await clientInstanceService.announceUnannounced(); // in prod called by a SchedulerService
     const second = await stores.clientApplicationsStore.getUnannounced();
     expect(second.length).toBe(0);

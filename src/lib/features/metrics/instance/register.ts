@@ -94,7 +94,7 @@ export default class RegisterController extends Controller {
         data.environment = this.resolveEnvironment(user, data);
         data.projects = this.resolveProject(user);
 
-        await this.clientInstanceService.registerClient(data, clientIp);
+        await this.clientInstanceService.registerBackendClient(data, clientIp);
         res.header('X-Unleash-Version', version).status(202).end();
     }
 }

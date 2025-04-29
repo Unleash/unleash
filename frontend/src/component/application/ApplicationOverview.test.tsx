@@ -26,6 +26,8 @@ test('Display application overview with environments', async () => {
                 instanceCount: 999,
                 lastSeen: new Date().toISOString(),
                 sdks: ['unleash-client-node:5.5.0-beta.0'],
+                frontendSdks: [],
+                backendSdks: ['unleash-client-node:5.5.0-beta.0'],
                 issues: {
                     missingFeatures: [],
                     outdatedSdks: [],
@@ -88,6 +90,8 @@ test('Display application with issues', async () => {
                 instanceCount: 999,
                 lastSeen: new Date().toISOString(),
                 sdks: ['unleash-client-node:5.5.0-beta.0'],
+                frontendSdks: [],
+                backendSdks: ['unleash-client-node:5.5.0-beta.0'],
                 issues: {
                     missingFeatures: ['feature1'],
                     outdatedSdks: [],

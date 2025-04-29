@@ -66,6 +66,7 @@ export const BillingPlan = () => {
     const { instanceStatus } = useInstanceStatus();
 
     const isPAYG = billing === 'pay-as-you-go';
+    const isEnterpriseConsumption = billing === 'enterprise-consumption';
 
     if (!instanceStatus)
         return (
@@ -130,7 +131,7 @@ export const BillingPlan = () => {
                         </GridCol>
                         <GridCol>
                             <ConditionallyRender
-                                condition={!isPAYG}
+                                condition={!isPAYG && !isEnterpriseConsumption}
                                 show={
                                     <StyledPriceSpan>
                                         ${baseProPrice.toFixed(2)}
@@ -141,9 +142,14 @@ export const BillingPlan = () => {
                     </GridRow>
                     <GridRow>
                         <ConditionallyRender
-                            condition={isPAYG}
+                            condition={isPAYG || isEnterpriseConsumption}
                             show={
-                                <StyledPAYGSpan>Pay-as-You-Go</StyledPAYGSpan>
+                                <StyledPAYGSpan>
+                                    Pay-as-You-Go{' '}
+                                    {isEnterpriseConsumption
+                                        ? 'Consumption'
+                                        : ''}
+                                </StyledPAYGSpan>
                             }
                         />
                     </GridRow>
@@ -151,6 +157,7 @@ export const BillingPlan = () => {
                 <BillingDetails
                     instanceStatus={instanceStatus}
                     isPAYG={isPAYG}
+                    isEnterpriseConsumption={isEnterpriseConsumption}
                 />
             </StyledPlanBox>
         </Grid>

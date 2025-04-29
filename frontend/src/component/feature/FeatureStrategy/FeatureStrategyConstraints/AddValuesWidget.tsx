@@ -72,7 +72,6 @@ export const AddValuesWidget = forwardRef<HTMLButtonElement, AddValuesProps>(
                 </AddValuesButton>
 
                 <AddValuesPopover
-                    currentValue={''}
                     onAdd={handleAdd}
                     open={open}
                     anchorEl={positioningRef.current}

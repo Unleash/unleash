@@ -35,21 +35,20 @@ export type OnAddActions = {
 
 type AddValuesProps = {
     onAdd: (newValue: string, actions: OnAddActions) => void;
-    currentValue?: string;
+    initialValue?: string;
     open: boolean;
     anchorEl: HTMLElement | null;
     onClose: () => void;
-    error?: string;
 };
 
 export const AddValuesPopover: FC<AddValuesProps> = ({
-    currentValue,
+    initialValue,
     onAdd,
     anchorEl,
     open,
     onClose,
 }) => {
-    const [inputValue, setInputValue] = useState(currentValue);
+    const [inputValue, setInputValue] = useState(initialValue || '');
     const [error, setError] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
     const inputId = useId();
@@ -58,7 +57,7 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
         <StyledPopover
             open={open}
             onTransitionEnter={() => {
-                if (inputValue && !currentValue?.trim()) {
+                if (inputValue && !initialValue?.trim()) {
                     // if the input value is not empty and the current value is empty or whitespace ()
                     setInputValue('');
                 } else if (inputValue) {

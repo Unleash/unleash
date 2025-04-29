@@ -53,7 +53,7 @@ export const SingleValueWidget = forwardRef<HTMLDivElement, AddValuesProps>(
                     onDelete={currentValue ? removeValue : undefined}
                 />
                 <AddValuesPopover
-                    currentValue={currentValue}
+                    initialValue={currentValue}
                     onAdd={handleAdd}
                     open={open}
                     anchorEl={positioningRef.current}

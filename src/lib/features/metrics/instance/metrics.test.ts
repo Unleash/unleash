@@ -16,6 +16,7 @@ import dbInit, {
 import { startOfHour } from 'date-fns';
 import { ApiTokenType } from '../../../types/models/api-token';
 import type TestAgent from 'supertest/lib/agent';
+import type { BulkRegistrationSchema } from '../../../openapi';
 
 let db: ITestDb;
 let config: IUnleashConfig;
@@ -41,7 +42,13 @@ let services: IUnleashServices;
 let destroy: () => Promise<void>;
 
 beforeAll(async () => {
-    const setup = await getSetup();
+    const setup = await getSetup({
+        experimental: {
+            flags: {
+                registerFrontendClient: true,
+            },
+        },
+    });
     request = setup.request;
     stores = setup.stores;
     destroy = setup.destroy;
@@ -274,6 +281,67 @@ test('should return 204 if metrics are disabled by feature flag', async () => {
 });
 
 describe('bulk metrics', () => {
+    test('should separate frontend applications and backend applications', async () => {
+        const frontendApp: BulkRegistrationSchema = {
+            appName: 'application-name',
+            instanceId: 'browser',
+            environment: 'development',
+            sdkVersion: 'unleash-client-js:1.0.0',
+            sdkType: 'frontend',
+        };
+        const backendApp: BulkRegistrationSchema = {
+            appName: 'application-name',
+            instanceId: 'instance1234',
+            environment: 'development',
+            sdkVersion: 'unleash-client-node',
+            sdkType: 'backend',
+            started: '1952-03-11T12:00:00.000Z',
+            interval: 15000,
+        };
+        const defaultApp: BulkRegistrationSchema = {
+            appName: 'application-name',
+            instanceId: 'instance5678',
+            environment: 'development',
+            sdkVersion: 'unleash-client-java',
+            started: '1952-03-11T12:00:00.000Z',
+            interval: 15000,
+        };
+        await request
+            .post('/api/client/metrics/bulk')
+            .send({
+                applications: [frontendApp, backendApp, defaultApp],
+                metrics: [],
+            })
+            .expect(202);
+
+        await services.clientInstanceService.bulkAdd();
+        const app =
+            await services.clientInstanceService.getApplication(
+                'application-name',
+            );
+
+        expect(app).toMatchObject({
+            appName: 'application-name',
+            instances: [
+                {
+                    instanceId: 'browser',
+                    sdkVersion: 'unleash-client-js:1.0.0',
+                    environment: 'development',
+                },
+                {
+                    instanceId: 'instance1234',
+                    sdkVersion: 'unleash-client-node',
+                    environment: 'development',
+                },
+                {
+                    instanceId: 'instance5678',
+                    sdkVersion: 'unleash-client-java',
+                    environment: 'development',
+                },
+            ],
+        });
+    });
+
     test('filters out metrics for environments we do not have access for. No auth setup so we can only access default env', async () => {
         const now = new Date();
 

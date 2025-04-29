@@ -8,13 +8,13 @@ type IRecentlyUsedConstraintsProps = {
 };
 
 const StyledContainer = styled('div')(({ theme }) => ({
-    marginTop: theme.spacing(3), // 24px spacing from previous component
+    marginTop: theme.spacing(3),
 }));
 
 const StyledHeader = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
-    marginBottom: theme.spacing(1), // 8px spacing between header and constraints list
+    marginBottom: theme.spacing(1),
 }));
 
 const StyledConstraintsContainer = styled('div')(({ theme }) => ({

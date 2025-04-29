@@ -28,20 +28,19 @@ const ErrorMessage = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
-interface AddValuesProps {
-    onAdd: (
-        newValue: string,
-        functions: {
-            setError: (error: string) => void;
-            clearInput: () => void;
-        },
-    ) => void;
+export type OnAddActions = {
+    setError: (error: string) => void;
+    clearInput: () => void;
+};
+
+type AddValuesProps = {
+    onAdd: (newValue: string, actions: OnAddActions) => void;
     currentValue?: string;
     open: boolean;
     anchorEl: HTMLElement | null;
     onClose: () => void;
     error?: string;
-}
+};
 
 export const AddValuesPopover: FC<AddValuesProps> = ({
     currentValue,
@@ -58,6 +57,12 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
     return (
         <StyledPopover
             open={open}
+            onTransitionEnter={() => {
+                if (inputValue && !currentValue?.trim()) {
+                    // if the input value is not empty and the current value is empty or whitespace ()
+                    setInputValue('');
+                }
+            }}
             disableScrollLock
             anchorEl={anchorEl}
             onClose={onClose}
@@ -74,8 +79,8 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
                 onSubmit={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
-                    if (!inputValue) {
-                        setError('Value cannot be empty');
+                    if (!inputValue?.trim()) {
+                        setError('Value cannot be empty or whitespace');
                         return;
                     } else {
                         onAdd(inputValue, {

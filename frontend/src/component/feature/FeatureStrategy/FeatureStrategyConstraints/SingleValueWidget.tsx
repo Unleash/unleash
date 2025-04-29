@@ -2,7 +2,7 @@ import Add from '@mui/icons-material/Add';
 import { styled } from '@mui/material';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { ValueChip } from './ValueList';
-import { AddValuesPopover } from './AddValuesPopover';
+import { AddValuesPopover, type OnAddActions } from './AddValuesPopover';
 
 const AddValuesButton = styled(ValueChip, {
     shouldForwardProp: (prop) => prop !== 'hasValue',
@@ -31,11 +31,7 @@ export const SingleValueWidget = forwardRef<HTMLDivElement, AddValuesProps>(
             () => positioningRef.current as HTMLDivElement,
         );
 
-        const handleAdd = (newValue: string, { setError }) => {
-            if (!newValue) {
-                setError('Values cannot be empty');
-                return;
-            }
+        const handleAdd = (newValue: string, { setError }: OnAddActions) => {
             if (newValue.length > 100) {
                 setError('Values cannot be longer than 100 characters');
                 return;

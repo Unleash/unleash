@@ -61,6 +61,9 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
                 if (inputValue && !currentValue?.trim()) {
                     // if the input value is not empty and the current value is empty or whitespace ()
                     setInputValue('');
+                } else if (inputValue) {
+                    // select the text in the input field
+                    inputRef?.current?.select();
                 }
             }}
             disableScrollLock

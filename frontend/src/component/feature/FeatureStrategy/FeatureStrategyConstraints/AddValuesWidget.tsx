@@ -1,16 +1,11 @@
 import Add from '@mui/icons-material/Add';
-import { Button, Popover, styled, TextField } from '@mui/material';
-import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
-import {
-    forwardRef,
-    useId,
-    useImperativeHandle,
-    useRef,
-    useState,
-} from 'react';
+import { styled } from '@mui/material';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { parseParameterStrings } from 'utils/parseParameter';
 import { baseChipStyles } from './ValueList';
+import { AddValuesPopover } from './AddValuesPopover';
 
+// todo: MUI v6 / v7 upgrade: consider changing this to a Chip to align with the rest of the values and the single value selector. There was a fix introduced in v6 that makes you not lose focus on pressing esc: https://mui.com/material-ui/migration/upgrade-to-v6/#chip talk to Thomas for more info.
 const AddValuesButton = styled('button')(({ theme }) => ({
     ...baseChipStyles(theme),
     color: theme.palette.primary.main,
@@ -31,32 +26,6 @@ const AddValuesButton = styled('button')(({ theme }) => ({
     cursor: 'pointer',
 }));
 
-const StyledPopover = styled(Popover)(({ theme }) => ({
-    '& .MuiPaper-root': {
-        borderRadius: theme.shape.borderRadiusLarge,
-        border: `1px solid ${theme.palette.divider}`,
-        padding: theme.spacing(2),
-        width: '250px',
-    },
-}));
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-    flexGrow: 1,
-}));
-
-const InputRow = styled('div')(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(1),
-    alignItems: 'start',
-    width: '100%',
-}));
-
-const ErrorMessage = styled('div')(({ theme }) => ({
-    color: theme.palette.error.main,
-    fontSize: theme.typography.caption.fontSize,
-    marginBottom: theme.spacing(1),
-}));
-
 interface AddValuesProps {
     onAddValues: (newValues: string[]) => void;
 }
@@ -64,17 +33,13 @@ interface AddValuesProps {
 export const AddValuesWidget = forwardRef<HTMLButtonElement, AddValuesProps>(
     ({ onAddValues }, ref) => {
         const [open, setOpen] = useState(false);
-        const [inputValues, setInputValues] = useState('');
-        const [error, setError] = useState('');
         const positioningRef = useRef<HTMLButtonElement>(null);
         useImperativeHandle(
             ref,
             () => positioningRef.current as HTMLButtonElement,
         );
-        const inputRef = useRef<HTMLInputElement>(null);
-        const inputId = useId();
 
-        const handleAdd = () => {
+        const handleAdd = (inputValues: string, { setError, clearInput }) => {
             const newValues = parseParameterStrings(inputValues);
 
             if (newValues.length === 0) {
@@ -88,9 +53,8 @@ export const AddValuesWidget = forwardRef<HTMLButtonElement, AddValuesProps>(
             }
 
             onAddValues(newValues);
-            setInputValues('');
+            clearInput();
             setError('');
-            inputRef?.current?.focus();
         };
 
         return (
@@ -103,59 +67,14 @@ export const AddValuesWidget = forwardRef<HTMLButtonElement, AddValuesProps>(
                     <Add />
                     <span>Add values</span>
                 </AddValuesButton>
-                <StyledPopover
+
+                <AddValuesPopover
+                    currentValue={''}
+                    onAdd={handleAdd}
                     open={open}
-                    disableScrollLock
                     anchorEl={positioningRef.current}
                     onClose={() => setOpen(false)}
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left',
-                    }}
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'left',
-                    }}
-                >
-                    <form
-                        onSubmit={(e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            handleAdd();
-                        }}
-                    >
-                        {error && <ErrorMessage>{error}</ErrorMessage>}
-                        <InputRow>
-                            <ScreenReaderOnly>
-                                <label htmlFor={inputId}>
-                                    Constraint Value
-                                </label>
-                            </ScreenReaderOnly>
-                            <StyledTextField
-                                id={inputId}
-                                placeholder='Enter value'
-                                value={inputValues}
-                                onChange={(e) => {
-                                    setInputValues(e.target.value);
-                                    setError('');
-                                }}
-                                size='small'
-                                variant='standard'
-                                fullWidth
-                                inputRef={inputRef}
-                                autoFocus
-                            />
-                            <Button
-                                variant='text'
-                                type='submit'
-                                color='primary'
-                                disabled={!inputValues.trim()}
-                            >
-                                Add
-                            </Button>
-                        </InputRow>
-                    </form>
-                </StyledPopover>
+                />
             </>
         );
     },

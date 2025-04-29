@@ -37,13 +37,23 @@ export const useRecentlyUsedConstraints = (
         initialItems,
     );
 
-    const addItem = (newItem: IConstraint) => {
+    const addItem = (newItem: IConstraint | IConstraint[]) => {
         setItems((prevItems) => {
-            const filteredItems = prevItems.filter(
-                (item) => !areConstraintsEqual(item, newItem),
-            );
+            const itemsToAdd = Array.isArray(newItem) ? newItem : [newItem];
 
-            const updatedItems = [newItem, ...filteredItems];
+            let updatedItems = [...prevItems];
+
+            itemsToAdd.forEach((item) => {
+                // Remove any existing items that are equal to the new item
+                updatedItems = updatedItems.filter(
+                    (existingItem) => !areConstraintsEqual(existingItem, item),
+                );
+
+                // Add the new item at the beginning
+                updatedItems = [item, ...updatedItems];
+            });
+
+            // Limit to 3 items
             return updatedItems.slice(0, 3);
         });
     };

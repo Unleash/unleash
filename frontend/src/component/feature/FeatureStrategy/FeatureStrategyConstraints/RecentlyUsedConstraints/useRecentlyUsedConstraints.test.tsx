@@ -120,6 +120,25 @@ describe('useRecentlyUsedConstraints', () => {
         expect(result.current.items[1].contextName).toBe('userId');
     });
 
+    it('should handle array of constraints when adding items', () => {
+        const { result } = renderHook(() => useRecentlyUsedConstraints());
+
+        const constraints = [
+            createTestConstraint('userId'),
+            createTestConstraint('email'),
+            createTestConstraint('appName'),
+        ];
+
+        act(() => {
+            result.current.addItem(constraints);
+        });
+
+        expect(result.current.items.length).toBe(3);
+        expect(result.current.items[0].contextName).toBe('appName');
+        expect(result.current.items[1].contextName).toBe('email');
+        expect(result.current.items[2].contextName).toBe('userId');
+    });
+
     it('should limit stored items to maximum of 3', () => {
         const { result } = renderHook(() => useRecentlyUsedConstraints());
 
@@ -134,6 +153,23 @@ describe('useRecentlyUsedConstraints', () => {
         expect(result.current.items[0].contextName).toBe('appName');
         expect(result.current.items[1].contextName).toBe('countryId');
         expect(result.current.items[2].contextName).toBe('email');
+    });
+
+    it('should also limit to max of 3 items when adding an array of constraints', () => {
+        const { result } = renderHook(() => useRecentlyUsedConstraints());
+
+        const constraints = [
+            createTestConstraint('userId'),
+            createTestConstraint('email'),
+            createTestConstraint('appName'),
+            createTestConstraint('countryId'),
+        ];
+
+        act(() => {
+            result.current.addItem(constraints);
+        });
+
+        expect(result.current.items.length).toBe(3);
     });
 
     it('should not add duplicate constraints', () => {
@@ -198,6 +234,24 @@ describe('useRecentlyUsedConstraints', () => {
             'user1',
             'user2',
         ]);
+    });
+
+    it('should handle duplicates in an array of constraints', () => {
+        const { result } = renderHook(() => useRecentlyUsedConstraints());
+
+        const constraints = [
+            createTestConstraint('userId', IN, ['user1', 'user2']),
+            createTestConstraint('email'),
+            createTestConstraint('userId', IN, ['user1', 'user2']), // Duplicate
+        ];
+
+        act(() => {
+            result.current.addItem(constraints);
+        });
+
+        expect(result.current.items.length).toBe(2);
+        expect(result.current.items[0].contextName).toBe('userId');
+        expect(result.current.items[1].contextName).toBe('email');
     });
 
     it('should persist items to localStorage', () => {

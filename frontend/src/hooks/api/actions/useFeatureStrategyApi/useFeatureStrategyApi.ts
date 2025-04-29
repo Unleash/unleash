@@ -2,7 +2,6 @@ import type {
     IFeatureStrategyPayload,
     IFeatureStrategy,
     IFeatureStrategySortOrder,
-    IConstraint,
 } from 'interfaces/strategy';
 import useAPI from '../useApi/useApi';
 import { useRecentlyUsedConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/RecentlyUsedConstraints/useRecentlyUsedConstraints';
@@ -14,14 +13,6 @@ const useFeatureStrategyApi = () => {
 
     const { addItem: addToRecentlyUsedConstraints } =
         useRecentlyUsedConstraints();
-
-    const saveConstraintsToRecentlyUsed = (constraints: IConstraint[]) => {
-        if (Array.isArray(constraints)) {
-            constraints.forEach((constraint) => {
-                addToRecentlyUsedConstraints(constraint);
-            });
-        }
-    };
 
     const addStrategyToFeature = async (
         projectId: string,
@@ -37,8 +28,8 @@ const useFeatureStrategyApi = () => {
         );
         const result = await makeRequest(req.caller, req.id);
 
-        if (payload.constraints) {
-            saveConstraintsToRecentlyUsed(payload.constraints);
+        if (payload.constraints && payload.constraints.length > 0) {
+            addToRecentlyUsedConstraints(payload.constraints);
         }
 
         return result.json();
@@ -74,8 +65,8 @@ const useFeatureStrategyApi = () => {
         );
         await makeRequest(req.caller, req.id);
 
-        if (payload.constraints) {
-            saveConstraintsToRecentlyUsed(payload.constraints);
+        if (payload.constraints && payload.constraints.length > 0) {
+            addToRecentlyUsedConstraints(payload.constraints);
         }
     };
 

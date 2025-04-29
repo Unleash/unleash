@@ -28,7 +28,7 @@ const listItemButtonStyle = (theme: Theme) => ({
         },
         '&:hover': {
             backgroundColor: '#546C71',
-            color: 'inherit',
+            color: theme.palette.common.white,
             fontWeight: theme.typography.fontWeightBold,
             '& p': {
                 fontWeight: theme.typography.fontWeightBold,
@@ -56,7 +56,7 @@ const subListItemButtonStyle = (theme: Theme) => ({
         },
         '&:hover': {
             backgroundColor: '#546C71',
-            color: 'inherit',
+            color: theme.palette.common.white,
             fontWeight: theme.typography.fontWeightBold,
             '& p': {
                 fontWeight: theme.typography.fontWeightBold,

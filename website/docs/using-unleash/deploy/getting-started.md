@@ -1,5 +1,5 @@
 ---
-title: Getting Started
+title: Getting started
 ---
 
 import Tabs from '@theme/Tabs';
@@ -154,7 +154,7 @@ In the Admin UI, go to **Admin > License**, copy the license key you received by
 
 ## Test your server connection
 
-You can quickly test if your server is running and accepting API requests using `curl`. For example, you can attempt creating a feature flag via the [Admin API](/understanding-unleash/unleash-overview#admin-api). Replace `<API_TOKEN>` with a valid ([API token](/reference/api-tokens-and-client-keys) and adjust the URL `http://localhost:4242` if needed.
+You can quickly test if your server is running and accepting API requests using `curl`. For example, you can attempt creating a feature flag via the [Admin API](/understanding-unleash/unleash-overview#admin-api). Replace `<API_TOKEN>` with a valid [API token](/reference/api-tokens-and-client-keys) and adjust the URL `http://localhost:4242` if needed.
 
 ```shell
 curl --location --request POST 'http://localhost:4242/api/admin/features' \
@@ -178,5 +178,5 @@ curl --location --request POST 'http://localhost:4242/api/admin/features' \
 ## Disable version check
 
 By default, your self-hosted Unleash instance periodically checks https://version.unleash.run to inform you about new releases. This check sends a unique, anonymous instance ID.
-
+ 
 If you prefer to disable this version check, set the environment variable CHECK_VERSION to false before starting the Unleash server.

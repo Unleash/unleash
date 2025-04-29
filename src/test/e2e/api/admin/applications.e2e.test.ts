@@ -128,6 +128,11 @@ test('should show correct application metrics', async () => {
             {
                 instanceCount: 2,
                 name: 'default',
+                frontendSdks: [],
+                backendSdks: [
+                    'unleash-client-node:3.2.1',
+                    'unleash-client-node:3.2.2',
+                ],
                 sdks: [
                     'unleash-client-node:3.2.1',
                     'unleash-client-node:3.2.2',

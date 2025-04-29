@@ -16,6 +16,7 @@ import WarningAmberRounded from '@mui/icons-material/WarningAmberRounded';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { getApplicationIssues } from './ApplicationIssues/ApplicationIssues';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledTable = styled('table')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
@@ -196,6 +197,7 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
     const { elementRef, width } = useElementWidth();
     const navigate = useNavigate();
     const theme = useTheme();
+    const registerFrontendClientEnabled = useUiFlag('registerFrontendClient');
 
     const mode = getApplicationIssues(data);
 
@@ -294,14 +296,57 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                                 {environment.instanceCount}
                                             </StyledCell>
                                         </tr>
-                                        <tr>
-                                            <StyledCell>SDK:</StyledCell>
-                                            <StyledCell>
-                                                {environment.sdks.map((sdk) => (
-                                                    <div key={sdk}>{sdk}</div>
-                                                ))}
-                                            </StyledCell>
-                                        </tr>
+                                        {!registerFrontendClientEnabled ? (
+                                            <tr>
+                                                <StyledCell>SDK:</StyledCell>
+                                                <StyledCell>
+                                                    {environment.sdks.map(
+                                                        (sdk) => (
+                                                            <div key={sdk}>
+                                                                {sdk}
+                                                            </div>
+                                                        ),
+                                                    )}
+                                                </StyledCell>
+                                            </tr>
+                                        ) : null}
+
+                                        {registerFrontendClientEnabled &&
+                                        environment.backendSdks.length > 0 ? (
+                                            <tr>
+                                                <StyledCell>
+                                                    Backend SDK:
+                                                </StyledCell>
+                                                <StyledCell>
+                                                    {environment.backendSdks.map(
+                                                        (sdk) => (
+                                                            <div key={sdk}>
+                                                                {sdk}
+                                                            </div>
+                                                        ),
+                                                    )}
+                                                </StyledCell>
+                                            </tr>
+                                        ) : null}
+
+                                        {registerFrontendClientEnabled &&
+                                        environment.frontendSdks.length > 0 ? (
+                                            <tr>
+                                                <StyledCell>
+                                                    Frontend SDK:
+                                                </StyledCell>
+                                                <StyledCell>
+                                                    {environment.frontendSdks.map(
+                                                        (sdk) => (
+                                                            <div key={sdk}>
+                                                                {sdk}
+                                                            </div>
+                                                        ),
+                                                    )}
+                                                </StyledCell>
+                                            </tr>
+                                        ) : null}
+
                                         <tr>
                                             <StyledCell>Last seen:</StyledCell>
                                             <StyledCell>

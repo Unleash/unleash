@@ -328,6 +328,12 @@ export default class ClientApplicationsStore
                         'ARRAY_AGG(DISTINCT ci.sdk_version) FILTER (WHERE ci.sdk_version IS NOT NULL) as sdk_versions',
                     ),
                     this.db.raw('MAX(ci.last_seen) as latest_last_seen'),
+                    this.db.raw(
+                        "ARRAY_AGG(DISTINCT ci.sdk_version) FILTER (WHERE ci.sdk_type = 'frontend' AND ci.sdk_version IS NOT NULL) as frontend_sdks",
+                    ),
+                    this.db.raw(
+                        "ARRAY_AGG(DISTINCT ci.sdk_version) FILTER (WHERE ci.sdk_type = 'backend' AND ci.sdk_version IS NOT NULL) as backend_sdks",
+                    ),
                 ])
                     .from('client_instances as ci')
                     .where('ci.app_name', appName)
@@ -340,6 +346,8 @@ export default class ClientApplicationsStore
                 'm.features',
                 'i.unique_instance_count',
                 'i.sdk_versions',
+                'i.backend_sdks',
+                'i.frontend_sdks',
                 'i.latest_last_seen',
                 'ca.strategies',
             ])
@@ -371,6 +379,8 @@ export default class ClientApplicationsStore
                 environment,
                 unique_instance_count,
                 sdk_versions,
+                frontend_sdks,
+                backend_sdks,
                 latest_last_seen,
                 project,
                 features,
@@ -396,6 +406,8 @@ export default class ClientApplicationsStore
                     name: environment,
                     instanceCount: Number(unique_instance_count),
                     sdks: sdk_versions || [],
+                    frontendSdks: frontend_sdks || [],
+                    backendSdks: backend_sdks || [],
                     lastSeen: latest_last_seen,
                     issues: {
                         missingFeatures: featuresNotMappedToProject

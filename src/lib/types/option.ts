@@ -1,16 +1,16 @@
 import type { Express } from 'express';
 import type EventEmitter from 'events';
-import type { LogLevel, LogProvider } from '../logger';
-import type { ILegacyApiTokenCreate } from './models/api-token';
+import type { LogLevel, LogProvider } from '../logger.js';
+import type { ILegacyApiTokenCreate } from './models/api-token.js';
 import type {
     IExperimentalOptions,
     IFlagContext,
     IFlagResolver,
     IFlags,
-} from './experimental';
-import type SMTPTransport from 'nodemailer/lib/smtp-transport';
-import type { IUnleashServices } from './services';
-import type { ResourceLimitsSchema } from '../openapi/spec/resource-limits-schema';
+} from './experimental.js';
+import type { IUnleashServices } from './services.js';
+import type { ResourceLimitsSchema } from '../openapi/spec/resource-limits-schema.js';
+import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js';
 
 export interface ISSLOption {
     rejectUnauthorized: boolean;

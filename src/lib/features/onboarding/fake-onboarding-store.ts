@@ -2,7 +2,7 @@ import type {
     InstanceEvent,
     IOnboardingStore,
     ProjectEvent,
-} from './onboarding-store-type';
+} from './onboarding-store-type.js';
 
 export class FakeOnboardingStore implements IOnboardingStore {
     insertProjectEvent(event: ProjectEvent): Promise<void> {

@@ -1,21 +1,21 @@
 import { log } from 'db-migrate-shared';
-import { migrateDb } from '../../../migrator';
-import { createStores } from '../../../lib/db';
-import { createDb } from '../../../lib/db/db-pool';
-import { getDbConfig } from './database-config';
-import { createTestConfig } from '../../config/test-config';
-import dbState from './database.json';
-import type { LogProvider } from '../../../lib/logger';
-import noLoggerProvider from '../../fixtures/no-logger';
-import type EnvironmentStore from '../../../lib/features/project-environments/environment-store';
-import type { IUnleashStores } from '../../../lib/types';
-import type { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store';
-import { DEFAULT_ENV } from '../../../lib/util/constants';
+import { migrateDb } from '../../../migrator.js';
+import { createStores } from '../../../lib/db/index.js';
+import { createDb } from '../../../lib/db/db-pool.js';
+import { getDbConfig } from './database-config.js';
+import { createTestConfig } from '../../config/test-config.js';
+import dbState from './database.json' with { type: 'json' };
+import type { LogProvider } from '../../../lib/logger.js';
+import noLoggerProvider from '../../fixtures/no-logger.js';
+import type EnvironmentStore from '../../../lib/features/project-environments/environment-store.js';
+import type { IUnleashStores } from '../../../lib/types/index.js';
+import type { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store.js';
+import { DEFAULT_ENV } from '../../../lib/util/constants.js';
 import type {
     IUnleashConfig,
     IUnleashOptions,
     Knex,
-} from '../../../lib/server-impl';
+} from '../../../lib/server-impl.js';
 import { Client } from 'pg';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -185,5 +185,3 @@ export default async function init(
         },
     };
 }
-
-module.exports = init;

@@ -1,15 +1,15 @@
 import stoppable, { type StoppableServer } from 'stoppable';
 import { promisify } from 'util';
-import version from './util/version';
-import { migrateDb } from '../migrator';
-import getApp from './app';
-import { createMetricsMonitor } from './metrics';
-import { createStores } from './db';
-import { createServices } from './services';
-import { createConfig } from './create-config';
-import registerGracefulShutdown from './util/graceful-shutdown';
-import { createDb } from './db/db-pool';
-import sessionDb from './middleware/session-db';
+import version from './util/version.js';
+import { migrateDb } from '../migrator.js';
+import getApp from './app.js';
+import { createMetricsMonitor } from './metrics.js';
+import { createStores } from './db/index.js';
+import { createServices } from './services/index.js';
+import { createConfig } from './create-config.js';
+import registerGracefulShutdown from './util/graceful-shutdown.js';
+import { createDb } from './db/db-pool.js';
+import sessionDb from './middleware/session-db.js';
 // Types
 import {
     type CustomAuthHandler,
@@ -19,22 +19,22 @@ import {
     type IUnleashOptions,
     type IUnleashServices,
     RoleName,
-} from './types';
+} from './types/index.js';
 
-import User, { type IAuditUser, type IUser } from './types/user';
-import ApiUser, { type IApiUser } from './types/api-user';
-import { type Logger, LogLevel } from './logger';
-import AuthenticationRequired from './types/authentication-required';
-import Controller from './routes/controller';
-import type { IApiRequest, IAuthRequest } from './routes/unleash-types';
-import type { SimpleAuthSettings } from './types/settings/simple-auth-settings';
-import { Knex } from 'knex';
-import * as permissions from './types/permissions';
-import * as eventType from './types/events';
-import { Db } from './db/db';
-import { defaultLockKey, defaultTimeout, withDbLock } from './util/db-lock';
-import { scheduleServices } from './features/scheduler/schedule-services';
-import { compareAndLogPostgresVersion } from './util/postgres-version-checker';
+import User, { type IAuditUser, type IUser } from './types/user.js';
+import ApiUser, { type IApiUser } from './types/api-user.js';
+import { type Logger, LogLevel } from './logger.js';
+import AuthenticationRequired from './types/authentication-required.js';
+import Controller from './routes/controller.js';
+import type { IApiRequest, IAuthRequest } from './routes/unleash-types.js';
+import type { SimpleAuthSettings } from './types/settings/simple-auth-settings.js';
+import type { Knex } from 'knex';
+import * as permissions from './types/permissions.js';
+import * as eventType from './types/events.js';
+import { Db } from './db/db.js';
+import { defaultLockKey, defaultTimeout, withDbLock } from './util/db-lock.js';
+import { scheduleServices } from './features/scheduler/schedule-services.js';
+import { compareAndLogPostgresVersion } from './util/postgres-version-checker.js';
 
 export async function initialServiceSetup(
     { authentication }: Pick<IUnleashConfig, 'authentication'>,
@@ -206,11 +206,6 @@ async function create(opts: IUnleashOptions): Promise<IUnleash> {
     return createApp(config, false);
 }
 
-export default {
-    start,
-    create,
-};
-
 export {
     start,
     create,
@@ -221,7 +216,7 @@ export {
     LogLevel,
     RoleName,
     IAuthType,
-    Knex,
+    type Knex,
     Db,
     permissions,
     eventType,

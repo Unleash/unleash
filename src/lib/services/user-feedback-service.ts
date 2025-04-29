@@ -1,11 +1,11 @@
-import type { Logger } from '../logger';
-import type { IUnleashStores } from '../types/stores';
-import type { IUnleashConfig } from '../types/option';
-import type { IUser } from '../types/user';
+import type { Logger } from '../logger.js';
+import type { IUnleashStores } from '../types/stores.js';
+import type { IUnleashConfig } from '../types/option.js';
+import type { IUser } from '../types/user.js';
 import type {
     IUserFeedback,
     IUserFeedbackStore,
-} from '../types/stores/user-feedback-store';
+} from '../types/stores/user-feedback-store.js';
 
 export default class UserFeedbackService {
     private userFeedbackStore: IUserFeedbackStore;
@@ -43,5 +43,3 @@ export default class UserFeedbackService {
         return this.userFeedbackStore.updateFeedback(feedback);
     }
 }
-
-module.exports = UserFeedbackService;

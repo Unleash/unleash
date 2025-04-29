@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { DateSchema } from './dateSchema';
-import type { ClientMetricsEnvSchemaVariants } from './clientMetricsEnvSchemaVariants';
+import type { DateSchema } from './dateSchema.js';
+import type { ClientMetricsEnvSchemaVariants } from './clientMetricsEnvSchemaVariants.js';
 
 /**
  * Used for reporting feature evaluation results from SDKs

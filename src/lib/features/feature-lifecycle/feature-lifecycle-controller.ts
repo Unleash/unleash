@@ -1,4 +1,4 @@
-import type { FeatureLifecycleService } from './feature-lifecycle-service';
+import type { FeatureLifecycleService } from './feature-lifecycle-service.js';
 import {
     type IFlagResolver,
     type IUnleashConfig,
@@ -6,8 +6,8 @@ import {
     NONE,
     serializeDates,
     UPDATE_FEATURE,
-} from '../../types';
-import type { OpenApiService } from '../../services';
+} from '../../types/index.js';
+import type { OpenApiService } from '../../services/index.js';
 import {
     createRequestSchema,
     createResponseSchema,
@@ -16,11 +16,11 @@ import {
     featureLifecycleSchema,
     type FeatureLifecycleSchema,
     getStandardResponses,
-} from '../../openapi';
-import Controller from '../../routes/controller';
+} from '../../openapi/index.js';
+import Controller from '../../routes/controller.js';
 import type { Request, Response } from 'express';
-import type { IAuthRequest } from '../../routes/unleash-types';
-import type { WithTransactional } from '../../db/transaction';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
+import type { WithTransactional } from '../../db/transaction.js';
 
 interface FeatureLifecycleParams {
     projectId: string;

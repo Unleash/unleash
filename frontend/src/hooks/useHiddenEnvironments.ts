@@ -1,4 +1,4 @@
-import { useGlobalLocalStorage } from './useGlobalLocalStorage';
+import { useGlobalLocalStorage } from './useGlobalLocalStorage.js';
 import { useState } from 'react';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 

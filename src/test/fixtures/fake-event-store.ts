@@ -1,11 +1,11 @@
-import type { IEventStore } from '../../lib/types/stores/event-store';
-import type { IBaseEvent, IEvent } from '../../lib/types/events';
-import { sharedEventEmitter } from '../../lib/util/anyEventEmitter';
-import type { IQueryOperations } from '../../lib/features/events/event-store';
+import type { IEventStore } from '../../lib/types/stores/event-store.js';
+import type { IBaseEvent, IEvent } from '../../lib/types/events.js';
+import { sharedEventEmitter } from '../../lib/util/anyEventEmitter.js';
+import type { IQueryOperations } from '../../lib/features/events/event-store.js';
 import type {
     DeprecatedSearchEventsSchema,
     ProjectActivitySchema,
-} from '../../lib/openapi';
+} from '../../lib/openapi/index.js';
 import type EventEmitter from 'events';
 
 class FakeEventStore implements IEventStore {
@@ -149,5 +149,4 @@ class FakeEventStore implements IEventStore {
     }
 }
 
-module.exports = FakeEventStore;
 export default FakeEventStore;

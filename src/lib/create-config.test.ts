@@ -1,5 +1,5 @@
-import { createConfig, resolveIsOss } from './create-config';
-import { ApiTokenType } from './types/models/api-token';
+import { createConfig, resolveIsOss } from './create-config.js';
+import { ApiTokenType } from './types/models/api-token.js';
 
 test('should create default config', async () => {
     const config = createConfig({

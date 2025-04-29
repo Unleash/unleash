@@ -5,7 +5,7 @@ import type {
     IGroupProject,
     IGroupRole,
     IGroupUser,
-} from '../types/group';
+} from '../types/group.js';
 import {
     GroupDeletedEvent,
     GroupUpdatedEvent,
@@ -13,24 +13,24 @@ import {
     type IAuditUser,
     type IUnleashConfig,
     type IUnleashStores,
-} from '../types';
-import type { IGroupStore } from '../types/stores/group-store';
-import type { Logger } from '../logger';
-import BadDataError from '../error/bad-data-error';
+} from '../types/index.js';
+import type { IGroupStore } from '../types/stores/group-store.js';
+import type { Logger } from '../logger.js';
+import BadDataError from '../error/bad-data-error.js';
 import {
     GROUP_CREATED,
     GroupUserAdded,
     GroupUserRemoved,
     ScimGroupsDeleted,
     type IBaseEvent,
-} from '../types/events';
-import NameExistsError from '../error/name-exists-error';
-import type { IAccountStore } from '../types/stores/account-store';
-import type { IUser } from '../types/user';
-import type EventService from '../features/events/event-service';
-import { SSO_SYNC_USER } from '../db/group-store';
-import type { IGroupWithProjectRoles } from '../types/stores/access-store';
-import { NotFoundError } from '../error';
+} from '../types/events.js';
+import NameExistsError from '../error/name-exists-error.js';
+import type { IAccountStore } from '../types/stores/account-store.js';
+import type { IUser } from '../types/user.js';
+import type EventService from '../features/events/event-service.js';
+import { SSO_SYNC_USER } from '../db/group-store.js';
+import type { IGroupWithProjectRoles } from '../types/stores/access-store.js';
+import { NotFoundError } from '../error/index.js';
 
 const setsAreEqual = (firstSet, secondSet) =>
     firstSet.size === secondSet.size &&

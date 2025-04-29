@@ -1,36 +1,36 @@
 import type EventEmitter from 'events';
-import { APPLICATION_CREATED, CLIENT_REGISTER } from '../../../types/events';
-import type { IApplication, IApplicationOverview } from './models';
-import type { IUnleashStores } from '../../../types/stores';
-import type { IUnleashConfig } from '../../../types/option';
-import type { IEventStore } from '../../../types/stores/event-store';
+import { APPLICATION_CREATED, CLIENT_REGISTER } from '../../../types/events.js';
+import type { IApplication, IApplicationOverview } from './models.js';
+import type { IUnleashStores } from '../../../types/stores.js';
+import type { IUnleashConfig } from '../../../types/option.js';
+import type { IEventStore } from '../../../types/stores/event-store.js';
 import type {
     IClientApplication,
     IClientApplications,
     IClientApplicationsSearchParams,
     IClientApplicationsStore,
-} from '../../../types/stores/client-applications-store';
-import type { IFeatureToggleStore } from '../../feature-toggle/types/feature-toggle-store-type';
-import type { IStrategyStore } from '../../../types/stores/strategy-store';
-import type { IClientInstanceStore } from '../../../types/stores/client-instance-store';
+} from '../../../types/stores/client-applications-store.js';
+import type { IFeatureToggleStore } from '../../feature-toggle/types/feature-toggle-store-type.js';
+import type { IStrategyStore } from '../../../types/stores/strategy-store.js';
+import type { IClientInstanceStore } from '../../../types/stores/client-instance-store.js';
 import type {
     IClientApp,
     IFrontendClientApp,
     ISdkHeartbeat,
-} from '../../../types/model';
-import { clientRegisterSchema } from '../shared/schema';
+} from '../../../types/model.js';
+import { clientRegisterSchema } from '../shared/schema.js';
 
-import type { IClientMetricsStoreV2 } from '../client-metrics/client-metrics-store-v2-type';
-import { clientMetricsSchema } from '../shared/schema';
-import type { PartialSome } from '../../../types/partial';
-import type { IPrivateProjectChecker } from '../../private-project/privateProjectCheckerType';
-import { type IFlagResolver, SYSTEM_USER } from '../../../types';
-import { ALL_PROJECTS, parseStrictSemVer } from '../../../util';
-import type { Logger } from '../../../logger';
-import { findOutdatedSDKs, isOutdatedSdk } from './findOutdatedSdks';
-import type { OutdatedSdksSchema } from '../../../openapi/spec/outdated-sdks-schema';
-import { CLIENT_REGISTERED } from '../../../metric-events';
-import { NotFoundError } from '../../../error';
+import type { IClientMetricsStoreV2 } from '../client-metrics/client-metrics-store-v2-type.js';
+import { clientMetricsSchema } from '../shared/schema.js';
+import type { PartialSome } from '../../../types/partial.js';
+import type { IPrivateProjectChecker } from '../../private-project/privateProjectCheckerType.js';
+import { type IFlagResolver, SYSTEM_USER } from '../../../types/index.js';
+import { ALL_PROJECTS, parseStrictSemVer } from '../../../util/index.js';
+import type { Logger } from '../../../logger.js';
+import { findOutdatedSDKs, isOutdatedSdk } from './findOutdatedSdks.js';
+import type { OutdatedSdksSchema } from '../../../openapi/spec/outdated-sdks-schema.js';
+import { CLIENT_REGISTERED } from '../../../metric-events.js';
+import { NotFoundError } from '../../../error/index.js';
 
 export default class ClientInstanceService {
     apps = {};

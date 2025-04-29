@@ -1,18 +1,20 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 import {
     type IFeatureToggleStore,
     type ILastSeenStore,
     type IOnboardingStore,
     SYSTEM_USER,
-} from '../../types';
-import type { IOnboardingReadModel } from './onboarding-read-model-type';
-import type ClientInstanceService from '../metrics/instance/instance-service';
+} from '../../types/index.js';
+import type { IOnboardingReadModel } from './onboarding-read-model-type.js';
+import type ClientInstanceService from '../metrics/instance/instance-service.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../test/e2e/helpers/test-helper';
-import { ApiTokenType } from '../../types/models/api-token';
+} from '../../../test/e2e/helpers/test-helper.js';
+import { ApiTokenType } from '../../types/models/api-token.js';
 
 let db: ITestDb;
 let onboardingReadModel: IOnboardingReadModel;

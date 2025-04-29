@@ -1,6 +1,6 @@
 import Input from 'component/common/Input/Input';
 import { makeStyles } from 'tss-react/mui';
-import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
+import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader.tsx';
 
 interface ISingleValueProps {
     setValue: (value: string) => void;

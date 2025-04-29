@@ -6,11 +6,11 @@ import type {
     IFeatureToggleQuery,
     IFeatureStrategy,
     FeatureToggle,
-} from '../../../types/model';
-import NotFoundError from '../../../error/notfound-error';
-import type { IFeatureStrategiesStore } from '../types/feature-toggle-strategies-store-type';
-import type { IFeatureProjectUserParams } from '../feature-toggle-controller';
-import { ALL_PROJECTS } from '../../../util';
+} from '../../../types/model.js';
+import NotFoundError from '../../../error/notfound-error.js';
+import type { IFeatureStrategiesStore } from '../types/feature-toggle-strategies-store-type.js';
+import type { IFeatureProjectUserParams } from '../feature-toggle-controller.js';
+import { ALL_PROJECTS } from '../../../util/index.js';
 
 interface ProjectEnvironment {
     projectName: string;
@@ -344,5 +344,3 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve(3);
     }
 }
-
-module.exports = FakeFeatureStrategiesStore;

@@ -1,4 +1,4 @@
-import { countCombinations, getBucket } from './combinationCounter';
+import { countCombinations, getBucket } from './combinationCounter.js';
 import type {
     AdvancedPlaygroundEnvironmentFeatureSchema,
     AdvancedPlaygroundFeatureSchema,

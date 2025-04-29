@@ -1,7 +1,7 @@
 import type { Config } from '@docusaurus/types';
 
-import { sdks } from './remote-content/sdks';
-import { docs as edgeAndProxy } from './remote-content/edge-proxy';
+import { sdks } from './remote-content/sdks.js';
+import { docs as edgeAndProxy } from './remote-content/edge-proxy.js';
 import pluginNpm2Yarn from '@docusaurus/remark-plugin-npm2yarn';
 
 // for a given redirect object, modify it's `from` property such that for every

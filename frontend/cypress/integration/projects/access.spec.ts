@@ -9,7 +9,7 @@ import {
     PA_USERS_GROUPS_ID,
     PA_USERS_GROUPS_TITLE_ID,
     //@ts-ignore
-} from '../../../src/utils/testIds';
+} from '../../../src/utils/testIds.js';
 
 describe('project-access', () => {
     const baseUrl = Cypress.config().baseUrl;

@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { useIsAppleDevice } from './useIsAppleDevice';
+import { useIsAppleDevice } from './useIsAppleDevice.js';
 
 export const useKeyboardShortcut = (
     {

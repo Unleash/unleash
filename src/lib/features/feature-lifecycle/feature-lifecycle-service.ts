@@ -11,19 +11,19 @@ import {
     type IFeatureEnvironmentStore,
     type IFlagResolver,
     type IUnleashConfig,
-} from '../../types';
+} from '../../types/index.js';
 import type {
     FeatureLifecycleView,
     IFeatureLifecycleStore,
     NewStage,
-} from './feature-lifecycle-store-type';
+} from './feature-lifecycle-store-type.js';
 import type EventEmitter from 'events';
-import type { Logger } from '../../logger';
-import type EventService from '../events/event-service';
-import type { FeatureLifecycleCompletedSchema } from '../../openapi';
-import type { IClientMetricsEnv } from '../metrics/client-metrics/client-metrics-store-v2-type';
+import type { Logger } from '../../logger.js';
+import type EventService from '../events/event-service.js';
+import type { FeatureLifecycleCompletedSchema } from '../../openapi/index.js';
+import type { IClientMetricsEnv } from '../metrics/client-metrics/client-metrics-store-v2-type.js';
 import groupBy from 'lodash.groupby';
-import { STAGE_ENTERED } from '../../metric-events';
+import { STAGE_ENTERED } from '../../metric-events.js';
 
 export class FeatureLifecycleService {
     private eventStore: IEventStore;

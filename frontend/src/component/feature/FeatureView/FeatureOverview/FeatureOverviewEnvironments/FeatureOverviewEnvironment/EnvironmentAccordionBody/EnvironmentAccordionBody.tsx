@@ -19,9 +19,9 @@ import type { IFeatureStrategy } from 'interfaces/strategy';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
-import { ReleasePlan } from '../../../ReleasePlan/ReleasePlan';
+import { ReleasePlan } from '../../../ReleasePlan/ReleasePlan.tsx';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-import { ProjectEnvironmentStrategyDraggableItem } from './StrategyDraggableItem/ProjectEnvironmentStrategyDraggableItem';
+import { ProjectEnvironmentStrategyDraggableItem } from './StrategyDraggableItem/ProjectEnvironmentStrategyDraggableItem.tsx';
 import {
     StrategyListItem,
     releasePlanBackground,

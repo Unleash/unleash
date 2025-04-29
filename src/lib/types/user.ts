@@ -1,5 +1,6 @@
-import { ValidationError } from 'joi';
-import { generateImageUrl } from '../util/generateImageUrl';
+import Joi from 'joi';
+const { ValidationError } = Joi;
+import { generateImageUrl } from '../util/generateImageUrl.js';
 
 export const AccountTypes = ['User', 'Service Account'] as const;
 type AccountType = (typeof AccountTypes)[number];
@@ -111,5 +112,3 @@ export default class User implements IUser {
 export interface IUserWithRootRole extends IUser {
     rootRole: number;
 }
-
-module.exports = User;

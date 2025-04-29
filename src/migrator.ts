@@ -1,6 +1,6 @@
 import { log } from 'db-migrate-shared';
 import { getInstance } from 'db-migrate';
-import type { IUnleashConfig } from './lib/types/option';
+import type { IUnleashConfig } from './lib/types/option.js';
 import { secondsToMilliseconds } from 'date-fns';
 
 log.setLogLevel('error');

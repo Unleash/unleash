@@ -11,7 +11,7 @@ import {
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { PlaygroundStrategySchema } from 'openapi';
-import { Badge } from '../Badge/Badge';
+import { Badge } from '../Badge/Badge.tsx';
 import { Link } from 'react-router-dom';
 
 interface IStrategyItemContainerProps {

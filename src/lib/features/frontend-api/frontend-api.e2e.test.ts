@@ -1,23 +1,25 @@
 import {
     type IUnleashTest,
     setupAppWithAuth,
-} from '../../../test/e2e/helpers/test-helper';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
-import { randomId } from '../../util';
+} from '../../../test/e2e/helpers/test-helper.js';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import { randomId } from '../../util/index.js';
 import {
     ApiTokenType,
     type IApiToken,
     type IApiTokenCreate,
-} from '../../types/models/api-token';
+} from '../../types/models/api-token.js';
 import { startOfHour } from 'date-fns';
 import {
     type IConstraint,
     type IStrategyConfig,
     SYSTEM_USER_AUDIT,
     TEST_AUDIT_USER,
-} from '../../types';
-import type { FrontendApiService } from './frontend-api-service';
+} from '../../types/index.js';
+import type { FrontendApiService } from './frontend-api-service.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

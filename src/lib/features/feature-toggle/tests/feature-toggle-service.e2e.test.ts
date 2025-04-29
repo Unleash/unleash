@@ -1,11 +1,11 @@
-import type FeatureToggleService from '../feature-toggle-service';
-import { createTestConfig } from '../../../../test/config/test-config';
+import type FeatureToggleService from '../feature-toggle-service.js';
+import { createTestConfig } from '../../../../test/config/test-config.js';
 import dbInit, {
     type ITestDb,
-} from '../../../../test/e2e/helpers/database-init';
-import { DEFAULT_ENV, extractAuditInfoFromUser } from '../../../util';
-import type { FeatureStrategySchema } from '../../../openapi';
-import type User from '../../../types/user';
+} from '../../../../test/e2e/helpers/database-init.js';
+import { DEFAULT_ENV, extractAuditInfoFromUser } from '../../../util/index.js';
+import type { FeatureStrategySchema } from '../../../openapi/index.js';
+import type User from '../../../types/user.js';
 import {
     type IConstraint,
     type IUnleashConfig,
@@ -14,22 +14,22 @@ import {
     SKIP_CHANGE_REQUEST,
     SYSTEM_USER_AUDIT,
     TEST_AUDIT_USER,
-} from '../../../types';
-import EnvironmentService from '../../project-environments/environment-service';
+} from '../../../types/index.js';
+import EnvironmentService from '../../project-environments/environment-service.js';
 import {
     ForbiddenError,
     NotFoundError,
     PatternError,
     PermissionError,
-} from '../../../error';
-import type { ISegmentService } from '../../segment/segment-service-interface';
+} from '../../../error/index.js';
+import type { ISegmentService } from '../../segment/segment-service-interface.js';
 import {
     createEventsService,
     createFeatureToggleService,
     createSegmentService,
-} from '../..';
-import { insertLastSeenAt } from '../../../../test/e2e/helpers/test-helper';
-import type { EventService } from '../../../services';
+} from '../../index.js';
+import { insertLastSeenAt } from '../../../../test/e2e/helpers/test-helper.js';
+import type { EventService } from '../../../services/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

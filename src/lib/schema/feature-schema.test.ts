@@ -1,4 +1,8 @@
-import { constraintSchema, featureSchema, querySchema } from './feature-schema';
+import {
+    constraintSchema,
+    featureSchema,
+    querySchema,
+} from './feature-schema.js';
 
 test('should require URL firendly name', () => {
     const toggle = {

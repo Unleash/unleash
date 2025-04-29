@@ -1,8 +1,11 @@
-import getLogger from '../../../fixtures/no-logger';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import { type IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
-import { IAuthType, type IUnleashStores } from '../../../../lib/types';
-import { ApiTokenType } from '../../../../lib/types/models/api-token';
+import getLogger from '../../../fixtures/no-logger.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import {
+    type IUnleashTest,
+    setupAppWithAuth,
+} from '../../helpers/test-helper.js';
+import { IAuthType, type IUnleashStores } from '../../../../lib/types/index.js';
+import { ApiTokenType } from '../../../../lib/types/models/api-token.js';
 
 let app: IUnleashTest;
 let appWithBaseUrl: IUnleashTest;

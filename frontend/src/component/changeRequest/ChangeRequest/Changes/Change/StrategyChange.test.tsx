@@ -1,5 +1,5 @@
 import { render } from 'utils/testRenderer';
-import { StrategyChange } from './StrategyChange';
+import { StrategyChange } from './StrategyChange.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';

@@ -1,7 +1,7 @@
 import { formatApiPath } from 'utils/formatPath';
 import useSWR from 'swr';
 import type { FeatureLifecycleCountSchema } from 'openapi';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 
 export const useLifecycleCount = () => {
     const { data, error } = useSWR<FeatureLifecycleCountSchema>(

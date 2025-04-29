@@ -1,23 +1,24 @@
-import type { IUnleashConfig } from '../../types/option';
-import type { IFeatureTagStore, IUnleashStores } from '../../types/stores';
-import type { Logger } from '../../logger';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IFeatureTagStore, IUnleashStores } from '../../types/stores.js';
+import type { Logger } from '../../logger.js';
 import type {
     IEventSearchParams,
     IEventStore,
-} from '../../types/stores/event-store';
-import type { IBaseEvent, IEventList } from '../../types/events';
-import type { DeprecatedSearchEventsSchema } from '../../openapi/spec/deprecated-search-events-schema';
+} from '../../types/stores/event-store.js';
+import type { IBaseEvent, IEventList } from '../../types/events.js';
+import type { DeprecatedSearchEventsSchema } from '../../openapi/spec/deprecated-search-events-schema.js';
 import type EventEmitter from 'events';
-import type { IApiUser, ITag, IUser } from '../../types';
-import { ApiTokenType } from '../../types/models/api-token';
-import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events';
-import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type';
-import { parseSearchOperatorValue } from '../feature-search/search-utils';
+import type { IApiUser, ITag, IUser } from '../../types/index.js';
+import { ApiTokenType } from '../../types/models/api-token.js';
+import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events.js';
+import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
+import { parseSearchOperatorValue } from '../feature-search/search-utils.js';
 import { addDays, formatISO } from 'date-fns';
-import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
-import type { ProjectAccess } from '../private-project/privateProjectStore';
-import type { IAccessReadModel } from '../access/access-read-model-type';
-import { isEqual } from 'lodash';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
+import type { ProjectAccess } from '../private-project/privateProjectStore.js';
+import type { IAccessReadModel } from '../access/access-read-model-type.js';
+import lodash from 'lodash';
+const { isEqual } = lodash;
 
 export default class EventService {
     private logger: Logger;

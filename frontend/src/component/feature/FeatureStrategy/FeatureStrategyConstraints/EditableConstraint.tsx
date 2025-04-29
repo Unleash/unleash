@@ -17,14 +17,14 @@ import {
     CURRENT_TIME_CONTEXT_FIELD,
     operatorsForContext,
 } from 'utils/operatorsForContext';
-import { ConstraintOperatorSelect } from './ConstraintOperatorSelect';
+import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import Delete from '@mui/icons-material/Delete';
-import { ValueList } from './ValueList';
+import { ValueList } from './ValueList.tsx';
 import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive.svg';
 import { ReactComponent as CaseInsensitiveIcon } from 'assets/icons/case-insensitive.svg';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
-import { AddValuesWidget } from './AddValuesWidget';
+import { AddValuesWidget } from './AddValuesWidget.tsx';
 import { ResolveInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/ResolveInput/ResolveInput';
 import { ReactComponent as EqualsIcon } from 'assets/icons/constraint-equals.svg';
 import { ReactComponent as NotEqualsIcon } from 'assets/icons/constraint-not-equals.svg';

@@ -13,7 +13,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Badge } from 'component/common/Badge/Badge';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import theme from 'themes/theme';
-import type { ProjectDoraMetricsSchema } from '../../../../../openapi';
+import type { ProjectDoraMetricsSchema } from '../../../../../openapi.ts';
 
 const Container = styled(Box)(({ theme }) => ({
     display: 'flex',

@@ -8,7 +8,7 @@ import {
     UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
     UPDATE_FEATURE_STRATEGY,
 } from 'component/providers/AccessProvider/permissions';
-import { FeatureStrategyCreate } from './FeatureStrategyCreate';
+import { FeatureStrategyCreate } from './FeatureStrategyCreate.tsx';
 import {
     setupProjectEndpoint,
     setupSegmentsEndpoint,
@@ -16,7 +16,7 @@ import {
     setupFeaturesEndpoint,
     setupUiConfigEndpoint,
     setupContextEndpoint,
-} from './featureStrategyFormTestSetup';
+} from './featureStrategyFormTestSetup.ts';
 
 const featureName = 'my-new-feature';
 

@@ -20,12 +20,12 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { useSearch } from 'hooks/useSearch';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 import { useServiceAccountsApi } from 'hooks/api/actions/useServiceAccountsApi/useServiceAccountsApi';
-import { ServiceAccountModal } from './ServiceAccountModal/ServiceAccountModal';
-import { ServiceAccountDeleteDialog } from './ServiceAccountDeleteDialog/ServiceAccountDeleteDialog';
-import { ServiceAccountsActionsCell } from './ServiceAccountsActionsCell/ServiceAccountsActionsCell';
+import { ServiceAccountModal } from './ServiceAccountModal/ServiceAccountModal.tsx';
+import { ServiceAccountDeleteDialog } from './ServiceAccountDeleteDialog/ServiceAccountDeleteDialog.tsx';
+import { ServiceAccountsActionsCell } from './ServiceAccountsActionsCell/ServiceAccountsActionsCell.tsx';
 import type { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
-import { ServiceAccountTokenDialog } from './ServiceAccountTokenDialog/ServiceAccountTokenDialog';
-import { ServiceAccountTokensCell } from './ServiceAccountTokensCell/ServiceAccountTokensCell';
+import { ServiceAccountTokenDialog } from './ServiceAccountTokenDialog/ServiceAccountTokenDialog.tsx';
+import { ServiceAccountTokensCell } from './ServiceAccountTokensCell/ServiceAccountTokensCell.tsx';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import type { IServiceAccount } from 'interfaces/service-account';
 import { RoleCell } from 'component/common/Table/cells/RoleCell/RoleCell';

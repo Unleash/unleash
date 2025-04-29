@@ -1,10 +1,10 @@
 import { Knex } from 'knex';
 import type EventEmitter from 'events';
 import { v4 as uuidv4 } from 'uuid';
-import metricsHelper from '../../util/metrics-helper';
-import { DB_TIME } from '../../metric-events';
-import type { Logger, LogProvider } from '../../logger';
-import NotFoundError from '../../error/notfound-error';
+import metricsHelper from '../../util/metrics-helper.js';
+import { DB_TIME } from '../../metric-events.js';
+import type { Logger, LogProvider } from '../../logger.js';
+import NotFoundError from '../../error/notfound-error.js';
 import type {
     FeatureToggleWithEnvironment,
     IConstraint,
@@ -19,11 +19,15 @@ import type {
     ITag,
     PartialDeep,
     PartialSome,
-} from '../../types';
-import FeatureToggleStore from './feature-toggle-store';
-import { ensureStringValue, generateImageUrl, mapValues } from '../../util';
-import type { IFeatureProjectUserParams } from './feature-toggle-controller';
-import type { Db } from '../../db/db';
+} from '../../types/index.js';
+import FeatureToggleStore from './feature-toggle-store.js';
+import {
+    ensureStringValue,
+    generateImageUrl,
+    mapValues,
+} from '../../util/index.js';
+import type { IFeatureProjectUserParams } from './feature-toggle-controller.js';
+import type { Db } from '../../db/db.js';
 import { isAfter } from 'date-fns';
 import merge from 'deepmerge';
 import Raw = Knex.Raw;
@@ -956,6 +960,4 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return rows.length;
     }
 }
-
-module.exports = FeatureStrategiesStore;
 export default FeatureStrategiesStore;

@@ -1,5 +1,5 @@
-import { validateSchema } from '../validate';
-import type { AddonsSchema } from './addons-schema';
+import { validateSchema } from '../validate.js';
+import type { AddonsSchema } from './addons-schema.js';
 
 test('addonsSchema', () => {
     const data: AddonsSchema = {

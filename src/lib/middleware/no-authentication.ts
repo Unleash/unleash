@@ -1,13 +1,13 @@
 import type { Application } from 'express';
-import NoAuthUser from '../types/no-auth-user';
-import { ApiTokenType } from '../types/models/api-token';
+import NoAuthUser from '../types/no-auth-user.js';
+import { ApiTokenType } from '../types/models/api-token.js';
 import {
     ApiUser,
     type IApiRequest,
     type IAuthRequest,
     permissions,
-} from '../server-impl';
-import { DEFAULT_ENV } from '../util';
+} from '../server-impl.js';
+import { DEFAULT_ENV } from '../util/index.js';
 
 // eslint-disable-next-line
 function noneAuthentication(baseUriPath: string, app: Application): void {

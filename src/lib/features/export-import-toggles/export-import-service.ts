@@ -1,7 +1,7 @@
-import type { Logger } from '../../logger';
-import type { IStrategy } from '../../types/stores/strategy-store';
-import type { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
-import type { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type';
+import type { Logger } from '../../logger.js';
+import type { IStrategy } from '../../types/stores/strategy-store.js';
+import type { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type.js';
+import type { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
 import {
     FeaturesExportedEvent,
     FeaturesImportedEvent,
@@ -21,16 +21,16 @@ import {
     type IUnleashStores,
     type IVariant,
     type WithRequired,
-} from '../../types';
+} from '../../types/index.js';
 import type {
     ExportQuerySchema,
     ExportResultSchema,
     FeatureStrategySchema,
     ImportTogglesSchema,
     ImportTogglesValidateSchema,
-} from '../../openapi';
-import type { IUser } from '../../types/user';
-import { BadDataError } from '../../error';
+} from '../../openapi/index.js';
+import type { IUser } from '../../types/user.js';
+import { BadDataError } from '../../error/index.js';
 import type {
     AccessService,
     ContextService,
@@ -40,24 +40,24 @@ import type {
     FeatureToggleService,
     StrategyService,
     TagTypeService,
-} from '../../services';
-import { isValidField } from './import-context-validation';
+} from '../../services/index.js';
+import { isValidField } from './import-context-validation.js';
 import type {
     IImportTogglesStore,
     ProjectFeaturesLimit,
-} from './import-toggles-store-type';
+} from './import-toggles-store-type.js';
 import {
     ImportPermissionsService,
     type Mode,
-} from './import-permissions-service';
-import { ImportValidationMessages } from './import-validation-messages';
-import { findDuplicates } from '../../util/findDuplicates';
-import type { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feature-toggle-service';
-import type { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
+} from './import-permissions-service.js';
+import { ImportValidationMessages } from './import-validation-messages.js';
+import { findDuplicates } from '../../util/findDuplicates.js';
+import type { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feature-toggle-service.js';
+import type { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type.js';
 import groupBy from 'lodash.groupby';
-import { allSettledWithRejection } from '../../util/allSettledWithRejection';
-import type { ISegmentReadModel } from '../segment/segment-read-model-type';
-import { readFile } from '../../util/read-file';
+import { allSettledWithRejection } from '../../util/allSettledWithRejection.js';
+import type { ISegmentReadModel } from '../segment/segment-read-model-type.js';
+import { readFile } from '../../util/read-file.js';
 
 export type IImportService = {
     validate(
@@ -1000,4 +1000,3 @@ export default class ExportImportService
         });
     }
 }
-module.exports = ExportImportService;

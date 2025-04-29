@@ -7,15 +7,15 @@ import {
     type IEvent,
     serializeDates,
     type IFlagKey,
-} from '../types';
-import type { Logger } from '../logger';
+} from '../types/index.js';
+import type { Logger } from '../logger.js';
 
-import NewRelicAddon, { type INewRelicParameters } from './new-relic';
+import NewRelicAddon, { type INewRelicParameters } from './new-relic.js';
 
-import noLogger from '../../test/fixtures/no-logger';
+import noLogger from '../../test/fixtures/no-logger.js';
 import { gunzip } from 'node:zlib';
 import { promisify } from 'util';
-import type { IntegrationEventsService } from '../services';
+import type { IntegrationEventsService } from '../services/index.js';
 
 const asyncGunzip = promisify(gunzip);
 

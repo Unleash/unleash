@@ -1,12 +1,12 @@
 import type {
     IInactiveUserRow,
     IInactiveUsersStore,
-} from './types/inactive-users-store-type';
-import type { Db } from '../../db/db';
+} from './types/inactive-users-store-type.js';
+import type { Db } from '../../db/db.js';
 import type EventEmitter from 'events';
-import type { Logger, LogProvider } from '../../logger';
-import metricsHelper from '../../util/metrics-helper';
-import { DB_TIME } from '../../metric-events';
+import type { Logger, LogProvider } from '../../logger.js';
+import metricsHelper from '../../util/metrics-helper.js';
+import { DB_TIME } from '../../metric-events.js';
 
 const TABLE = 'users';
 export class InactiveUsersStore implements IInactiveUsersStore {

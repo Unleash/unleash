@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ConstraintSchemaOperator } from './constraintSchemaOperator';
+import type { ConstraintSchemaOperator } from './constraintSchemaOperator.js';
 
 /**
  * A strategy constraint. For more information, refer to [the strategy constraint reference documentation](https://docs.getunleash.io/reference/activation-strategies#constraints)

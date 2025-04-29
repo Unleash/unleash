@@ -1,5 +1,5 @@
 import { Switch, Tooltip } from '@mui/material';
-import { TextCell } from '../TextCell/TextCell';
+import { TextCell } from '../TextCell/TextCell.tsx';
 
 interface IToggleCellProps {
     checked: boolean;

@@ -10,15 +10,15 @@ import {
     UPDATE_PROJECT,
 } from 'component/providers/AccessProvider/permissions';
 import { Alert, styled } from '@mui/material';
-import LegacyProjectEnvironment from './ProjectEnvironment/LegacyProjectEnvironment';
+import LegacyProjectEnvironment from './ProjectEnvironment/LegacyProjectEnvironment.tsx';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import EditDefaultStrategy from './ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';
+import EditDefaultStrategy from './ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy.tsx';
 import useProjectOverview, {
     useProjectOverviewNameOrId,
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { ProjectEnvironment } from './ProjectEnvironment/ProjectEnvironment';
+import { ProjectEnvironment } from './ProjectEnvironment/ProjectEnvironment.tsx';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),

@@ -1,4 +1,4 @@
-import { normalizeTopLevelPath } from './useInitialPathname';
+import { normalizeTopLevelPath } from './useInitialPathname.js';
 
 test('normalization test', () => {
     expect(normalizeTopLevelPath('/')).toBe('/projects');

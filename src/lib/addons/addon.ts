@@ -1,13 +1,13 @@
 import fetch from 'make-fetch-happen';
-import { addonDefinitionSchema } from './addon-schema';
-import type { Logger } from '../logger';
-import type { IAddonConfig, IAddonDefinition } from '../types/model';
-import type { IEvent } from '../types/events';
-import type { IntegrationEventsService } from '../features/integration-events/integration-events-service';
-import type { IntegrationEventWriteModel } from '../features/integration-events/integration-events-store';
+import { addonDefinitionSchema } from './addon-schema.js';
+import type { Logger } from '../logger.js';
+import type { IAddonConfig, IAddonDefinition } from '../types/model.js';
+import type { IEvent } from '../types/events.js';
+import type { IntegrationEventsService } from '../features/integration-events/integration-events-service.js';
+import type { IntegrationEventWriteModel } from '../features/integration-events/integration-events-store.js';
 import type EventEmitter from 'events';
-import type { IFlagResolver } from '../types';
-import { ADDON_EVENTS_HANDLED } from '../metric-events';
+import type { IFlagResolver } from '../types/index.js';
+import { ADDON_EVENTS_HANDLED } from '../metric-events.js';
 
 export default abstract class Addon {
     logger: Logger;

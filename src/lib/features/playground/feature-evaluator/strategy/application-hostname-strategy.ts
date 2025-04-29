@@ -1,5 +1,5 @@
 import { hostname } from 'os';
-import { Strategy } from './strategy';
+import { Strategy } from './strategy.js';
 
 export default class ApplicationHostnameStrategy extends Strategy {
     private hostname: string;

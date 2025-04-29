@@ -1,4 +1,4 @@
-import type { IProjectStaleFlagsReadModel } from './project-stale-flags-read-model-type';
+import type { IProjectStaleFlagsReadModel } from './project-stale-flags-read-model-type.js';
 
 export class FakeProjectStaleFlagsReadModel
     implements IProjectStaleFlagsReadModel

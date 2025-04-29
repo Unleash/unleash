@@ -26,7 +26,7 @@ import {
     useProjectApplications,
 } from 'hooks/api/getters/useProjectApplications/useProjectApplications';
 import { StringArrayCell } from 'component/common/Table/cells/StringArrayCell';
-import { SdkCell } from './SdkCell';
+import { SdkCell } from './SdkCell.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useNavigate } from 'react-router-dom';
 

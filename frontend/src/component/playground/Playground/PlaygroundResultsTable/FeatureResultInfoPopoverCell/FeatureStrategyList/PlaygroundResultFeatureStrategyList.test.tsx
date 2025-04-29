@@ -1,9 +1,9 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
-import { PlaygroundResultFeatureStrategyList as LegacyPlaygroundResultFeatureStrategyList } from './LegacyPlaygroundResultFeatureStrategyList';
+import { PlaygroundResultFeatureStrategyList as LegacyPlaygroundResultFeatureStrategyList } from './LegacyPlaygroundResultFeatureStrategyList.tsx';
 import { vi } from 'vitest';
-import { PlaygroundResultFeatureStrategyList } from './PlaygroundResultsFeatureStrategyList';
+import { PlaygroundResultFeatureStrategyList } from './PlaygroundResultsFeatureStrategyList.tsx';
 
 const testCases = [
     {

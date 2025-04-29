@@ -2,7 +2,7 @@ import { useFeaturesArchive } from 'hooks/api/getters/useFeaturesArchive/useFeat
 import type { FC } from 'react';
 import type { SortingRule } from 'react-table';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import { ArchiveTable } from './ArchiveTable/ArchiveTable';
+import { ArchiveTable } from './ArchiveTable/ArchiveTable.tsx';
 
 const defaultSort: SortingRule<string> = { id: 'archivedAt' };
 

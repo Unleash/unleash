@@ -1,7 +1,7 @@
-import type { IUnleashStores } from '../types/stores';
-import type { IUnleashConfig } from '../types/option';
-import type { Logger } from '../logger';
-import type { ISession, ISessionStore } from '../types/stores/session-store';
+import type { IUnleashStores } from '../types/stores.js';
+import type { IUnleashConfig } from '../types/option.js';
+import type { Logger } from '../logger.js';
+import type { ISession, ISessionStore } from '../types/stores/session-store.js';
 import { compareDesc, minutesToMilliseconds } from 'date-fns';
 import memoizee from 'memoizee';
 
@@ -84,5 +84,3 @@ export default class SessionService {
         return this.resolveMaxSessions();
     }
 }
-
-module.exports = SessionService;

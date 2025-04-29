@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { LicenseCheckSchemaMessageType } from './licenseCheckSchemaMessageType';
+import type { LicenseCheckSchemaMessageType } from './licenseCheckSchemaMessageType.js';
 
 /**
  * A model representing a license check response.

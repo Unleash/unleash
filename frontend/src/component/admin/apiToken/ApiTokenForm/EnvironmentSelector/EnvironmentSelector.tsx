@@ -1,4 +1,4 @@
-import { TokenType } from '../../../../../interfaces/token';
+import { TokenType } from '../../../../../interfaces/token.ts';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import type React from 'react';
 import {

@@ -29,5 +29,3 @@ const down = function (db, cb) {
         cb,
     );
 };
-
-module.exports = { up, down };

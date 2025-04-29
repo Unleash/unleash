@@ -12,7 +12,18 @@
         "useExhaustiveDependencies": "off",
         "noUnusedImports": "warn",
         "useJsxKeyInIterable": "off",
-        "useHookAtTopLevel": "error"
+        "useHookAtTopLevel": "error",
+        "useImportExtensions": {
+          "level": "error",
+          "options": {
+            "suggestedExtensions": {
+              "ts": {
+                "module": "js",
+                "component": "jsx"
+              }
+            }
+          }
+        }
       },
       "complexity": {
         "noBannedTypes": "off",

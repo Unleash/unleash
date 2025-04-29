@@ -5,12 +5,12 @@ import {
     FeatureCreatedEvent,
     FeatureDeletedEvent,
     type IEvent,
-} from '../../../lib/types/events';
+} from '../../../lib/types/events.js';
 
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
-import type { IEventStore } from '../../../lib/types/stores/event-store';
-import type { IAuditUser, IUnleashStores } from '../../../lib/types';
+import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import getLogger from '../../fixtures/no-logger.js';
+import type { IEventStore } from '../../../lib/types/stores/event-store.js';
+import type { IAuditUser, IUnleashStores } from '../../../lib/types/index.js';
 
 let db: ITestDb;
 let stores: IUnleashStores;

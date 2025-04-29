@@ -6,7 +6,7 @@ import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import {
     StrategyDiff,
     StrategyTooltipLink,
-} from '../../StrategyTooltipLink/StrategyTooltipLink';
+} from '../../StrategyTooltipLink/StrategyTooltipLink.tsx';
 import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
 import type {
     ChangeRequestState,
@@ -14,12 +14,12 @@ import type {
     IChangeRequestDeleteStrategy,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
-import { useCurrentStrategy } from './hooks/useCurrentStrategy';
+import { useCurrentStrategy } from './hooks/useCurrentStrategy.ts';
 import { Badge } from 'component/common/Badge/Badge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flexRow } from 'themes/themeStyles';
 import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
-import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning';
+import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning.tsx';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { useUiFlag } from 'hooks/useUiFlag';
 

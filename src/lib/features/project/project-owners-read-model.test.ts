@@ -1,9 +1,11 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
-import { type IUser, RoleName, type IGroup } from '../../types';
-import { randomId } from '../../util';
-import { ProjectOwnersReadModel } from './project-owners-read-model';
-import type { ProjectForUi } from './project-read-model-type';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import { type IUser, RoleName, type IGroup } from '../../types/index.js';
+import { randomId } from '../../util/index.js';
+import { ProjectOwnersReadModel } from './project-owners-read-model.js';
+import type { ProjectForUi } from './project-read-model-type.js';
 
 jest.mock('../../util', () => ({
     ...jest.requireActual('../../util'),

@@ -1,5 +1,5 @@
-import { Strategy } from './strategy';
-import type { Context } from '../context';
+import { Strategy } from './strategy.js';
+import type { Context } from '../context.js';
 import { Address4 } from 'ip-address';
 
 export default class RemoteAddressStrategy extends Strategy {

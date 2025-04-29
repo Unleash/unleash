@@ -1,31 +1,31 @@
 import type { Request, Response } from 'express';
-import type { IUnleashConfig } from '../../types/option';
-import type { IUnleashServices } from '../../types/services';
-import type EventService from '../../features/events/event-service';
-import { ADMIN, NONE } from '../../types/permissions';
-import type { IEvent, IEventList } from '../../types/events';
-import Controller from '../controller';
-import { anonymiseKeys } from '../../util/anonymise';
-import type { OpenApiService } from '../../services/openapi-service';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashServices } from '../../types/services.js';
+import type EventService from '../../features/events/event-service.js';
+import { ADMIN, NONE } from '../../types/permissions.js';
+import type { IEvent, IEventList } from '../../types/events.js';
+import Controller from '../controller.js';
+import { anonymiseKeys } from '../../util/anonymise.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
+import { createResponseSchema } from '../../openapi/util/create-response-schema.js';
 import {
     eventsSchema,
     type EventsSchema,
-} from '../../../lib/openapi/spec/events-schema';
-import { serializeDates } from '../../../lib/types/serialize-dates';
+} from '../../../lib/openapi/spec/events-schema.js';
+import { serializeDates } from '../../../lib/types/serialize-dates.js';
 import {
     featureEventsSchema,
     type FeatureEventsSchema,
-} from '../../../lib/openapi/spec/feature-events-schema';
-import { getStandardResponses } from '../../../lib/openapi/util/standard-responses';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import type { DeprecatedSearchEventsSchema } from '../../openapi/spec/deprecated-search-events-schema';
-import type { IFlagResolver } from '../../types/experimental';
-import type { IAuthRequest } from '../unleash-types';
+} from '../../../lib/openapi/spec/feature-events-schema.js';
+import { getStandardResponses } from '../../../lib/openapi/util/standard-responses.js';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
+import type { DeprecatedSearchEventsSchema } from '../../openapi/spec/deprecated-search-events-schema.js';
+import type { IFlagResolver } from '../../types/experimental.js';
+import type { IAuthRequest } from '../unleash-types.js';
 import {
     eventCreatorsSchema,
     type ProjectFlagCreatorsSchema,
-} from '../../openapi';
+} from '../../openapi/index.js';
 
 const ANON_KEYS = ['email', 'username', 'createdBy'];
 const version = 1 as const;

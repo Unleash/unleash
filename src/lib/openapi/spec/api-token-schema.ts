@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { ApiTokenType } from '../../types/models/api-token';
+import { ApiTokenType } from '../../types/models/api-token.js';
 
 export const apiTokenSchema = {
     $id: '#/components/schemas/apiTokenSchema',

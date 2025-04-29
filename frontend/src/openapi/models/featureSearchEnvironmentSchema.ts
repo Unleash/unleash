@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureStrategySchema } from './featureStrategySchema';
-import type { VariantSchema } from './variantSchema';
+import type { FeatureStrategySchema } from './featureStrategySchema.js';
+import type { VariantSchema } from './variantSchema.js';
 
 /**
  * A detailed description of the feature environment

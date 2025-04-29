@@ -14,9 +14,9 @@ import type { ISignalEndpoint } from 'interfaces/signal';
 import {
     type SignalEndpointsFormErrors,
     TokenGeneration,
-} from './useSignalEndpointsForm';
-import { SignalEndpointsFormURL } from './SignalEndpointsFormURL';
-import { SignalEndpointsTokens } from './SignalEndpointsTokens/SignalEndpointsTokens';
+} from './useSignalEndpointsForm.ts';
+import { SignalEndpointsFormURL } from './SignalEndpointsFormURL.tsx';
+import { SignalEndpointsTokens } from './SignalEndpointsTokens/SignalEndpointsTokens.tsx';
 
 const StyledRaisedSection = styled('div')(({ theme }) => ({
     background: theme.palette.background.elevation1,

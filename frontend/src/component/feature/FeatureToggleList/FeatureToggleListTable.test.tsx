@@ -1,8 +1,8 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { FeatureToggleListTable } from './FeatureToggleListTable';
-import { FeedbackProvider } from '../../feedbackNew/FeedbackProvider';
+import { FeatureToggleListTable } from './FeatureToggleListTable.tsx';
+import { FeedbackProvider } from '../../feedbackNew/FeedbackProvider.tsx';
 
 type APIFeature = {
     name: string;

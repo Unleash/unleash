@@ -1,30 +1,30 @@
-import type { Logger } from '../../../logger';
+import type { Logger } from '../../../logger.js';
 import {
     CLIENT_METRICS_ADDED,
     type IFlagResolver,
     type IUnleashConfig,
-} from '../../../types';
-import type { ISdkHeartbeat, IUnleashStores } from '../../../types';
-import type { ToggleMetricsSummary } from '../../../types/models/metrics';
+} from '../../../types/index.js';
+import type { ISdkHeartbeat, IUnleashStores } from '../../../types/index.js';
+import type { ToggleMetricsSummary } from '../../../types/models/metrics.js';
 import type {
     IClientMetricsEnv,
     IClientMetricsStoreV2,
-} from './client-metrics-store-v2-type';
-import { clientMetricsSchema } from '../shared/schema';
+} from './client-metrics-store-v2-type.js';
+import { clientMetricsSchema } from '../shared/schema.js';
 import { compareAsc, secondsToMilliseconds } from 'date-fns';
-import { CLIENT_METRICS, CLIENT_REGISTER } from '../../../types/events';
-import ApiUser, { type IApiUser } from '../../../types/api-user';
-import { ALL } from '../../../types/models/api-token';
-import type { IUser } from '../../../types/user';
-import { collapseHourlyMetrics } from './collapseHourlyMetrics';
-import type { LastSeenService } from '../last-seen/last-seen-service';
+import { CLIENT_METRICS, CLIENT_REGISTER } from '../../../types/events.js';
+import ApiUser, { type IApiUser } from '../../../types/api-user.js';
+import { ALL } from '../../../types/models/api-token.js';
+import type { IUser } from '../../../types/user.js';
+import { collapseHourlyMetrics } from './collapseHourlyMetrics.js';
+import type { LastSeenService } from '../last-seen/last-seen-service.js';
 import {
     generateDayBuckets,
     generateHourBuckets,
     type HourBucket,
-} from '../../../util/time-utils';
-import type { ClientMetricsSchema } from '../../../../lib/openapi';
-import { nameSchema } from '../../../schema/feature-schema';
+} from '../../../util/time-utils.js';
+import type { ClientMetricsSchema } from '../../../../lib/openapi/index.js';
+import { nameSchema } from '../../../schema/feature-schema.js';
 import memoizee from 'memoizee';
 
 export default class ClientMetricsServiceV2 {

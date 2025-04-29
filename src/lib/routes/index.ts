@@ -1,18 +1,18 @@
-import { BackstageController } from './backstage';
-import ResetPasswordController from './auth/reset-password-controller';
-import { SimplePasswordProvider } from './auth/simple-password-provider';
-import type { IUnleashConfig, IUnleashServices } from '../types';
-import LogoutController from './logout';
+import { BackstageController } from './backstage.js';
+import ResetPasswordController from './auth/reset-password-controller.js';
+import { SimplePasswordProvider } from './auth/simple-password-provider.js';
+import type { IUnleashConfig, IUnleashServices } from '../types/index.js';
+import LogoutController from './logout.js';
 import rateLimit from 'express-rate-limit';
-import Controller from './controller';
-import { AdminApi } from './admin-api';
-import ClientApi from './client-api';
+import Controller from './controller.js';
+import { AdminApi } from './admin-api/index.js';
+import ClientApi from './client-api/index.js';
 
-import { HealthCheckController } from './health-check';
-import FrontendAPIController from '../features/frontend-api/frontend-api-controller';
-import EdgeController from './edge-api';
-import { PublicInviteController } from './public-invite';
-import type { Db } from '../db/db';
+import { HealthCheckController } from './health-check.js';
+import FrontendAPIController from '../features/frontend-api/frontend-api-controller.js';
+import EdgeController from './edge-api/index.js';
+import { PublicInviteController } from './public-invite.js';
+import type { Db } from '../db/db.js';
 import { minutesToMilliseconds } from 'date-fns';
 
 class IndexRouter extends Controller {
@@ -55,5 +55,3 @@ class IndexRouter extends Controller {
 }
 
 export default IndexRouter;
-
-module.exports = IndexRouter;

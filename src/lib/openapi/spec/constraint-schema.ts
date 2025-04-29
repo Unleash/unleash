@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { ALL_OPERATORS } from '../../util/constants';
+import { ALL_OPERATORS } from '../../util/constants.js';
 
 export const constraintSchemaBase = {
     type: 'object',

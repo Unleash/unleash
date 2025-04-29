@@ -4,9 +4,11 @@ import {
     startOfMonth,
     subMonths,
 } from 'date-fns';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
-import type { ITrafficDataUsageStore, IUnleashStores } from '../../types';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import type { ITrafficDataUsageStore, IUnleashStores } from '../../types/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

@@ -17,7 +17,7 @@ import {
     semVerValidatorGenerator,
     dateValidatorGenerator,
     type ConstraintValidatorOutput,
-} from './constraintValidators';
+} from './constraintValidators.ts';
 import { nonEmptyArray } from 'utils/nonEmptyArray';
 
 interface IUseConstraintInputProps {

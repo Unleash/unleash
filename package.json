@@ -29,10 +29,10 @@
   },
   "types": "./dist/lib/server-impl.d.ts",
   "engines": {
-    "node": ">=18 <21"
+    "node": ">=20"
   },
   "license": "Apache-2.0",
-  "main": "./dist/lib/server-impl.js",
+  "exports": "./dist/lib/server-impl.js",
   "scripts": {
     "start": "TZ=UTC node ./dist/server.js",
     "copy-templates": "copyfiles -u 1 src/mailtemplates/**/* dist/",
@@ -112,8 +112,8 @@
   "dependencies": {
     "@slack/web-api": "^7.9.1",
     "@wesleytodd/openapi": "^1.1.0",
-    "ajv": "^8.12.0",
-    "ajv-formats": "^2.1.1",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
     "async": "^3.2.4",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
@@ -189,6 +189,7 @@
     "@types/jest": "29.5.14",
     "@types/js-yaml": "4.0.9",
     "@types/lodash.groupby": "4.6.9",
+    "@types/lodash.isequal": "^4.5.8",
     "@types/make-fetch-happen": "10.0.4",
     "@types/memoizee": "0.4.11",
     "@types/mime": "4.0.0",
@@ -222,7 +223,7 @@
     "supertest": "7.0.0",
     "ts-node": "10.9.2",
     "tsc-watch": "6.2.1",
-    "typescript": "5.8.2",
+    "typescript": "5.8.3",
     "wait-on": "^8.0.0"
   },
   "resolutions": {

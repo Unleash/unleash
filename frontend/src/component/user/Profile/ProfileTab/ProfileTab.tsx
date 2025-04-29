@@ -20,7 +20,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { RoleBadge } from 'component/common/RoleBadge/RoleBadge';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { ProductivityEmailSubscription } from './ProductivityEmailSubscription';
+import { ProductivityEmailSubscription } from './ProductivityEmailSubscription.tsx';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',

@@ -1,5 +1,5 @@
 import type { ProjectOverviewSchema, ProjectStatsSchema } from 'openapi';
-import type { IFeatureFlagListItem } from './featureToggle';
+import type { IFeatureFlagListItem } from './featureToggle.js';
 import type { ProjectEnvironmentType } from 'component/project/Project/ProjectFeatureToggles/hooks/useEnvironmentsRef';
 import type { ProjectMode } from 'component/project/Project/hooks/useProjectEnterpriseSettingsForm';
 

@@ -1,30 +1,30 @@
 import { ValidationError } from 'joi';
 
-import getLogger from '../../test/fixtures/no-logger';
-import TagTypeService from '../features/tag-type/tag-type-service';
+import getLogger from '../../test/fixtures/no-logger.js';
+import TagTypeService from '../features/tag-type/tag-type-service.js';
 import {
     ADDON_CONFIG_CREATED,
     ADDON_CONFIG_DELETED,
     ADDON_CONFIG_UPDATED,
     FEATURE_CREATED,
-} from '../types/events';
-import createStores from '../../test/fixtures/store';
+} from '../types/events.js';
+import createStores from '../../test/fixtures/store.js';
 
-import AddonService from './addon-service';
-import type { IAddonDto } from '../types/stores/addon-store';
-import SimpleAddon from './addon-service-test-simple-addon';
-import type { IAddonProviders } from '../addons';
+import AddonService from './addon-service.js';
+import type { IAddonDto } from '../types/stores/addon-store.js';
+import SimpleAddon from './addon-service-test-simple-addon.js';
+import type { IAddonProviders } from '../addons/index.js';
 import {
     type IFlagResolver,
     type IUnleashConfig,
     SYSTEM_USER,
     TEST_AUDIT_USER,
-} from '../types';
+} from '../types/index.js';
 import {
     createFakeEventsService,
     IntegrationEventsService,
-} from '../internals';
-import { createTestConfig } from '../../test/config/test-config';
+} from '../internals.js';
+import { createTestConfig } from '../../test/config/test-config.js';
 
 const MASKED_VALUE = '*****';
 
@@ -51,6 +51,7 @@ function getSetup() {
     return {
         addonService: new AddonService(
             stores,
+            // @ts-ignore
             {
                 getLogger,
                 // @ts-ignore

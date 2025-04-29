@@ -2,7 +2,7 @@ import { Tooltip, Typography } from '@mui/material';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import type { FC } from 'react';
 import { formatDateYMD } from 'utils/formatDate';
-import { TextCell } from '../TextCell/TextCell';
+import { TextCell } from '../TextCell/TextCell.tsx';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 
 interface ITimeAgoCellProps {

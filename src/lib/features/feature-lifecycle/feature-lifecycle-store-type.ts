@@ -1,4 +1,4 @@
-import type { IFeatureLifecycleStage, StageName } from '../../types';
+import type { IFeatureLifecycleStage, StageName } from '../../types/index.js';
 
 export type FeatureLifecycleStage = {
     feature: string;

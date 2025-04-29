@@ -1,14 +1,16 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
 import {
     insertFeatureEnvironmentsLastSeen,
     insertLastSeenAt,
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../test/e2e/helpers/test-helper';
-import getLogger from '../../../test/fixtures/no-logger';
+} from '../../../test/e2e/helpers/test-helper.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 
-import type { IProjectStore } from '../../types';
-import { DEFAULT_ENV } from '../../util';
+import type { IProjectStore } from '../../types/index.js';
+import { DEFAULT_ENV } from '../../util/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

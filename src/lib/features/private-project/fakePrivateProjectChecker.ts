@@ -1,5 +1,8 @@
-import type { IPrivateProjectChecker } from './privateProjectCheckerType';
-import { ALL_PROJECT_ACCESS, type ProjectAccess } from './privateProjectStore';
+import type { IPrivateProjectChecker } from './privateProjectCheckerType.js';
+import {
+    ALL_PROJECT_ACCESS,
+    type ProjectAccess,
+} from './privateProjectStore.js';
 
 export class FakePrivateProjectChecker implements IPrivateProjectChecker {
     async filterUserAccessibleProjects(

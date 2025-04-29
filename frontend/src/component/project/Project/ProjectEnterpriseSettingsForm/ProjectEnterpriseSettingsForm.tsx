@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import Select from 'component/common/select';
-import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
+import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm.ts';
 import { Box, InputAdornment, styled, TextField } from '@mui/material';
-import { CollaborationModeTooltip } from './CollaborationModeTooltip';
+import { CollaborationModeTooltip } from './CollaborationModeTooltip.tsx';
 import Input from 'component/common/Input/Input';
-import { FeatureFlagNamingTooltip } from './FeatureFlagNamingTooltip';
+import { FeatureFlagNamingTooltip } from './FeatureFlagNamingTooltip.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IProjectEnterpriseSettingsForm {

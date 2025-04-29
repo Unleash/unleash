@@ -3,12 +3,12 @@ import { styled } from '@mui/material';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import { useInsights } from 'hooks/api/getters/useInsights/useInsights';
-import { InsightsHeader } from './components/InsightsHeader/InsightsHeader';
-import { useInsightsData } from './hooks/useInsightsData';
-import { InsightsCharts } from './InsightsCharts';
+import { InsightsHeader } from './components/InsightsHeader/InsightsHeader.tsx';
+import { useInsightsData } from './hooks/useInsightsData.ts';
+import { InsightsCharts } from './InsightsCharts.tsx';
 import { Sticky } from 'component/common/Sticky/Sticky';
-import { InsightsFilters } from './InsightsFilters';
-import { FilterItemParam } from '../../utils/serializeQueryParams';
+import { InsightsFilters } from './InsightsFilters.tsx';
+import { FilterItemParam } from '../../utils/serializeQueryParams.ts';
 import { format, subMonths } from 'date-fns';
 import { withDefault } from 'use-query-params';
 

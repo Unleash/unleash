@@ -1,7 +1,8 @@
-import type { ApiTokenType } from './models/api-token';
-import { ValidationError } from 'joi';
+import type { ApiTokenType } from './models/api-token.js';
+import pkg from 'joi';
+const { ValidationError } = pkg;
 
-import { CLIENT } from './permissions';
+import { CLIENT } from './permissions.js';
 
 export interface IApiUserData {
     permissions?: string[];

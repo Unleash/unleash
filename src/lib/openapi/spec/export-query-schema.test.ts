@@ -1,5 +1,5 @@
-import { validateSchema } from '../validate';
-import type { ExportQuerySchema } from './export-query-schema';
+import { validateSchema } from '../validate.js';
+import type { ExportQuerySchema } from './export-query-schema.js';
 
 test('exportQuerySchema', () => {
     const data: ExportQuerySchema = {

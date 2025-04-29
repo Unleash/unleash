@@ -1,8 +1,14 @@
-import type { ISegmentStore } from './segment-store-type';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
-import NotFoundError from '../../error/notfound-error';
-import { type IUnleashStores, type IUser, TEST_AUDIT_USER } from '../../types';
+import type { ISegmentStore } from './segment-store-type.js';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import NotFoundError from '../../error/notfound-error.js';
+import {
+    type IUnleashStores,
+    type IUser,
+    TEST_AUDIT_USER,
+} from '../../types/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

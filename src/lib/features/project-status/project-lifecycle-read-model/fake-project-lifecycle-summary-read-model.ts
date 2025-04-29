@@ -1,7 +1,7 @@
 import type {
     IProjectLifecycleSummaryReadModel,
     ProjectLifecycleSummary,
-} from './project-lifecycle-read-model-type';
+} from './project-lifecycle-read-model-type.js';
 
 export class FakeProjectLifecycleSummaryReadModel
     implements IProjectLifecycleSummaryReadModel

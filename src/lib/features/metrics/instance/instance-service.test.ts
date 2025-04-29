@@ -1,13 +1,16 @@
-import ClientInstanceService from './instance-service';
-import type { IClientApp } from '../../../types/model';
-import FakeEventStore from '../../../../test/fixtures/fake-event-store';
-import { createTestConfig } from '../../../../test/config/test-config';
-import { FakePrivateProjectChecker } from '../../private-project/fakePrivateProjectChecker';
-import type { IClientApplicationsStore, IUnleashConfig } from '../../../types';
-import FakeClientMetricsStoreV2 from '../client-metrics/fake-client-metrics-store-v2';
-import FakeStrategiesStore from '../../../../test/fixtures/fake-strategies-store';
-import FakeFeatureToggleStore from '../../feature-toggle/fakes/fake-feature-toggle-store';
-import type { IApplicationOverview } from './models';
+import ClientInstanceService from './instance-service.js';
+import type { IClientApp } from '../../../types/model.js';
+import FakeEventStore from '../../../../test/fixtures/fake-event-store.js';
+import { createTestConfig } from '../../../../test/config/test-config.js';
+import { FakePrivateProjectChecker } from '../../private-project/fakePrivateProjectChecker.js';
+import type {
+    IClientApplicationsStore,
+    IUnleashConfig,
+} from '../../../types/index.js';
+import FakeClientMetricsStoreV2 from '../client-metrics/fake-client-metrics-store-v2.js';
+import FakeStrategiesStore from '../../../../test/fixtures/fake-strategies-store.js';
+import FakeFeatureToggleStore from '../../feature-toggle/fakes/fake-feature-toggle-store.js';
+import type { IApplicationOverview } from './models.js';
 
 let config: IUnleashConfig;
 beforeAll(() => {

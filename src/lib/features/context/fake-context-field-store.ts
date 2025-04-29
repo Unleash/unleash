@@ -2,8 +2,8 @@ import type {
     IContextField,
     IContextFieldDto,
     IContextFieldStore,
-} from './context-field-store-type';
-import NotFoundError from '../../error/notfound-error';
+} from './context-field-store-type.js';
+import NotFoundError from '../../error/notfound-error.js';
 
 export default class FakeContextFieldStore implements IContextFieldStore {
     count(): Promise<number> {

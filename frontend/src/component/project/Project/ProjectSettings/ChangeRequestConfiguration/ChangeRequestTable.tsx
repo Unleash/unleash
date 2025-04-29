@@ -24,13 +24,13 @@ import {
 import { UPDATE_PROJECT } from '@server/types/permissions';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { ChangeRequestProcessHelp } from './ChangeRequestProcessHelp/ChangeRequestProcessHelp';
+import { ChangeRequestProcessHelp } from './ChangeRequestProcessHelp/ChangeRequestProcessHelp.tsx';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { useTheme } from '@mui/material/styles';
 import AccessContext from 'contexts/AccessContext';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { PROJECT_CHANGE_REQUEST_WRITE } from '../../../../providers/AccessProvider/permissions';
+import { PROJECT_CHANGE_REQUEST_WRITE } from '../../../../providers/AccessProvider/permissions.ts';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1),

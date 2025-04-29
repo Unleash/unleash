@@ -3,20 +3,20 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_ENVIRONMENT_DISABLED,
     type IEvent,
-} from '../types/events';
-import type { Logger } from '../logger';
+} from '../types/events.js';
+import type { Logger } from '../logger.js';
 
-import SlackAddon from './slack';
+import SlackAddon from './slack.js';
 
-import noLogger from '../../test/fixtures/no-logger';
+import noLogger from '../../test/fixtures/no-logger.js';
 import {
     type IAddonConfig,
     type IFlagKey,
     type IFlagResolver,
     serializeDates,
     SYSTEM_USER_ID,
-} from '../types';
-import type { IntegrationEventsService } from '../services';
+} from '../types/index.js';
+import type { IntegrationEventsService } from '../services/index.js';
 
 let fetchRetryCalls: any[] = [];
 const registerEventMock = jest.fn();

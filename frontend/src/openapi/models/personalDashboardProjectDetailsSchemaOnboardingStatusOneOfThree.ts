@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PersonalDashboardProjectDetailsSchemaOnboardingStatusOneOfThreeStatus } from './personalDashboardProjectDetailsSchemaOnboardingStatusOneOfThreeStatus';
+import type { PersonalDashboardProjectDetailsSchemaOnboardingStatusOneOfThreeStatus } from './personalDashboardProjectDetailsSchemaOnboardingStatusOneOfThreeStatus.js';
 
 export type PersonalDashboardProjectDetailsSchemaOnboardingStatusOneOfThree = {
     /** The name of the feature flag */

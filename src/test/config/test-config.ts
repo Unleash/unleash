@@ -3,9 +3,9 @@ import {
     IAuthType,
     type IUnleashConfig,
     type IUnleashOptions,
-} from '../../lib/types/option';
-import getLogger from '../fixtures/no-logger';
-import { createConfig } from '../../lib/create-config';
+} from '../../lib/types/option.js';
+import getLogger from '../fixtures/no-logger.js';
+import { createConfig } from '../../lib/create-config.js';
 import path from 'path';
 
 function mergeAll<T>(objects: Partial<T>[]): T {

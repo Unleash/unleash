@@ -1,20 +1,20 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { featureSchema } from './feature-schema';
-import { featureStrategySchema } from './feature-strategy-schema';
-import { featureEnvironmentSchema } from './feature-environment-schema';
-import { contextFieldSchema } from './context-field-schema';
-import { featureTagSchema } from './feature-tag-schema';
-import { parametersSchema } from './parameters-schema';
-import { legalValueSchema } from './legal-value-schema';
-import { variantSchema } from './variant-schema';
-import { overrideSchema } from './override-schema';
-import { variantsSchema } from './variants-schema';
-import { constraintSchema } from './constraint-schema';
-import { tagTypeSchema } from './tag-type-schema';
-import { strategyVariantSchema } from './strategy-variant-schema';
-import { featureDependenciesSchema } from './feature-dependencies-schema';
-import { dependentFeatureSchema } from './dependent-feature-schema';
-import { tagSchema } from './tag-schema';
+import { featureSchema } from './feature-schema.js';
+import { featureStrategySchema } from './feature-strategy-schema.js';
+import { featureEnvironmentSchema } from './feature-environment-schema.js';
+import { contextFieldSchema } from './context-field-schema.js';
+import { featureTagSchema } from './feature-tag-schema.js';
+import { parametersSchema } from './parameters-schema.js';
+import { legalValueSchema } from './legal-value-schema.js';
+import { variantSchema } from './variant-schema.js';
+import { overrideSchema } from './override-schema.js';
+import { variantsSchema } from './variants-schema.js';
+import { constraintSchema } from './constraint-schema.js';
+import { tagTypeSchema } from './tag-type-schema.js';
+import { strategyVariantSchema } from './strategy-variant-schema.js';
+import { featureDependenciesSchema } from './feature-dependencies-schema.js';
+import { dependentFeatureSchema } from './dependent-feature-schema.js';
+import { tagSchema } from './tag-schema.js';
 
 export const exportResultSchema = {
     $id: '#/components/schemas/exportResultSchema',

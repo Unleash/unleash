@@ -1,4 +1,4 @@
-import InvoiceList from './InvoiceList';
+import InvoiceList from './InvoiceList.tsx';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 

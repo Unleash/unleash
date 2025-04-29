@@ -1,4 +1,4 @@
-import { generateSelectablePeriodsFromDate } from './selectable-periods';
+import { generateSelectablePeriodsFromDate } from './selectable-periods.js';
 
 test('marks months before May 2024 as unselectable', () => {
     const now = new Date('2025-01-01');

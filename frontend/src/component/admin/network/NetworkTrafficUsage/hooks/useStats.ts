@@ -1,19 +1,22 @@
-import { type ChartDataSelection, toDateRange } from '../chart-data-selection';
+import {
+    type ChartDataSelection,
+    toDateRange,
+} from '../chart-data-selection.js';
 import { useTrafficSearch } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
-import { currentDate } from '../dates';
+import { currentDate } from '../dates.js';
 import { useMemo } from 'react';
 import {
     toConnectionChartData,
     toRequestChartData,
     toTrafficUsageChartData,
-} from '../chart-functions';
+} from '../chart-functions.js';
 import {
     calculateEstimatedMonthlyCost,
     calculateOverageCost,
     calculateTotalUsage,
 } from 'utils/traffic-calculations';
-import { BILLING_TRAFFIC_PRICE } from '../../../billing/BillingDashboard/BillingPlan/BillingPlan';
-import { averageTrafficPreviousMonths } from '../average-traffic-previous-months';
+import { BILLING_TRAFFIC_PRICE } from '../../../billing/BillingDashboard/BillingPlan/BillingPlan.jsx';
+import { averageTrafficPreviousMonths } from '../average-traffic-previous-months.js';
 import { useConnectionsConsumption } from 'hooks/api/getters/useConnectionsConsumption/useConnectionsConsumption';
 import { useRequestsConsumption } from 'hooks/api/getters/useRequestsConsumption/useRequestsConsumption';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';

@@ -1,4 +1,4 @@
-import { getBrowserTimezoneInHumanReadableUTCOffset } from './utils';
+import { getBrowserTimezoneInHumanReadableUTCOffset } from './utils.js';
 import { vi } from 'vitest';
 
 describe('getBrowserTimezoneInHumanReadableUTCOffset', () => {

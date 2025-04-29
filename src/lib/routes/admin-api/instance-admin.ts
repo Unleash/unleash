@@ -1,21 +1,21 @@
 import { Parser } from 'json2csv';
 import type { Response } from 'express';
-import type { AuthedRequest } from '../../types/core';
-import type { IUnleashServices } from '../../types/services';
-import type { IUnleashConfig } from '../../types/option';
-import Controller from '../controller';
-import { NONE } from '../../types/permissions';
+import type { AuthedRequest } from '../../types/core.js';
+import type { IUnleashServices } from '../../types/services.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import Controller from '../controller.js';
+import { NONE } from '../../types/permissions.js';
 import type {
     InstanceStatsService,
     InstanceStatsSigned,
-} from '../../features/instance-stats/instance-stats-service';
-import type { OpenApiService } from '../../services/openapi-service';
+} from '../../features/instance-stats/instance-stats-service.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
 import {
     createCsvResponseSchema,
     createResponseSchema,
-} from '../../openapi/util/create-response-schema';
-import type { InstanceAdminStatsSchema } from '../../openapi';
-import { serializeDates } from '../../types';
+} from '../../openapi/util/create-response-schema.js';
+import type { InstanceAdminStatsSchema } from '../../openapi/index.js';
+import { serializeDates } from '../../types/index.js';
 
 class InstanceAdminController extends Controller {
     private instanceStatsService: InstanceStatsService;

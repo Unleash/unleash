@@ -2,8 +2,8 @@ import { writeHeapSnapshot } from 'v8';
 import { tmpdir } from 'os';
 import { join } from 'path';
 import { register as prometheusRegister } from 'prom-client';
-import Controller from './controller';
-import type { IUnleashConfig } from '../types/option';
+import Controller from './controller.js';
+import type { IUnleashConfig } from '../types/option.js';
 
 class BackstageController extends Controller {
     logger: any;

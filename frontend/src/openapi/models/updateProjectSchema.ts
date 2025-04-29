@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UpdateProjectSchemaMode } from './updateProjectSchemaMode';
+import type { UpdateProjectSchemaMode } from './updateProjectSchemaMode.js';
 
 /**
  * Data used to update a [project](https://docs.getunleash.io/reference/projects)

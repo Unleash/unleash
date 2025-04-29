@@ -1,8 +1,8 @@
 import type React from 'react';
 import type { VFC } from 'react';
 import { Box, styled } from '@mui/material';
-import PermissionIconButton from '../../../../common/PermissionIconButton/PermissionIconButton';
-import { ADMIN } from '../../../../providers/AccessProvider/permissions';
+import PermissionIconButton from '../../../../common/PermissionIconButton/PermissionIconButton.tsx';
+import { ADMIN } from '../../../../providers/AccessProvider/permissions.ts';
 import Delete from '@mui/icons-material/Delete';
 
 const StyledBox = styled(Box)(() => ({

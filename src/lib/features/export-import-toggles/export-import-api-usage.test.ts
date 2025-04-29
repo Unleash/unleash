@@ -1,11 +1,13 @@
-import { setupAppWithCustomAuth } from '../../../test/e2e/helpers/test-helper';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
-import { DEFAULT_PROJECT } from '../../types';
-import { DEFAULT_ENV } from '../../util';
-import type { ImportTogglesSchema } from '../../openapi';
-import { ApiTokenType } from '../../types/models/api-token';
-import { ApiUser } from '../../server-impl';
+import { setupAppWithCustomAuth } from '../../../test/e2e/helpers/test-helper.js';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import { DEFAULT_PROJECT } from '../../types/index.js';
+import { DEFAULT_ENV } from '../../util/index.js';
+import type { ImportTogglesSchema } from '../../openapi/index.js';
+import { ApiTokenType } from '../../types/models/api-token.js';
+import { ApiUser } from '../../server-impl.js';
 
 let db: ITestDb;
 

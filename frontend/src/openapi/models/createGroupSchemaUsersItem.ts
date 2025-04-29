@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateGroupSchemaUsersItemUser } from './createGroupSchemaUsersItemUser';
+import type { CreateGroupSchemaUsersItemUser } from './createGroupSchemaUsersItemUser.js';
 
 /**
  * A minimal user object

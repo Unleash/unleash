@@ -4,8 +4,8 @@ import {
     FEATURE_STRATEGY_UPDATE,
     type IConstraint,
     type IEvent,
-} from '../types';
-import { EVENT_MAP } from './feature-event-formatter-md-events';
+} from '../types/index.js';
+import { EVENT_MAP } from './feature-event-formatter-md-events.js';
 
 export interface IFormattedEventData {
     label: string;

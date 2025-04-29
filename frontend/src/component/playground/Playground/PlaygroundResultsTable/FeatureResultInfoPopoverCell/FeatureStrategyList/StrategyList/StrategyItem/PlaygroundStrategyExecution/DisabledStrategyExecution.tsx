@@ -6,13 +6,13 @@ import type {
     PlaygroundRequestSchema,
     PlaygroundStrategySchema,
 } from 'openapi';
-import { PlaygroundResultStrategyExecutionParameters } from './StrategyExecutionParameters/StrategyExecutionParameters';
-import { CustomStrategyParams } from './CustomStrategyParams/CustomStrategyParams';
+import { PlaygroundResultStrategyExecutionParameters } from './StrategyExecutionParameters/StrategyExecutionParameters.tsx';
+import { CustomStrategyParams } from './CustomStrategyParams/CustomStrategyParams.tsx';
 import { formattedStrategyNames } from 'utils/strategyNames';
 import { StyledBoxSummary } from './StrategyExecution.styles';
 import { Badge } from 'component/common/Badge/Badge';
-import { ConstraintExecutionWithoutResults } from './ConstraintExecution/ConstraintExecutionWithoutResults';
-import { SegmentExecutionWithoutResult } from './SegmentExecution/SegmentExecutionWithoutResult';
+import { ConstraintExecutionWithoutResults } from './ConstraintExecution/ConstraintExecutionWithoutResults.tsx';
+import { SegmentExecutionWithoutResult } from './SegmentExecution/SegmentExecutionWithoutResult.tsx';
 
 interface IDisabledStrategyExecutionProps {
     strategyResult: PlaygroundStrategySchema;

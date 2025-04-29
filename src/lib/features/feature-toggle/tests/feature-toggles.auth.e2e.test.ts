@@ -1,17 +1,17 @@
 import dbInit, {
     type ITestDb,
-} from '../../../../test/e2e/helpers/database-init';
+} from '../../../../test/e2e/helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithAuth,
-} from '../../../../test/e2e/helpers/test-helper';
-import getLogger from '../../../../test/fixtures/no-logger';
-import { DEFAULT_ENV } from '../../../util';
+} from '../../../../test/e2e/helpers/test-helper.js';
+import getLogger from '../../../../test/fixtures/no-logger.js';
+import { DEFAULT_ENV } from '../../../util/index.js';
 import {
     CREATE_FEATURE_STRATEGY,
     RoleName,
     TEST_AUDIT_USER,
-} from '../../../types';
+} from '../../../types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

@@ -1,6 +1,9 @@
-import { createTestConfig } from '../../test/config/test-config';
-import type { IUnleashConfig, IUnleashOptions, IUser } from '../server-impl';
-import { ApiTokenType, type IApiTokenCreate } from '../types/models/api-token';
+import { createTestConfig } from '../../test/config/test-config.js';
+import type { IUnleashConfig, IUnleashOptions, IUser } from '../server-impl.js';
+import {
+    ApiTokenType,
+    type IApiTokenCreate,
+} from '../types/models/api-token.js';
 import {
     ADMIN_TOKEN_USER,
     API_TOKEN_CREATED,
@@ -8,10 +11,10 @@ import {
     API_TOKEN_UPDATED,
     SYSTEM_USER,
     TEST_AUDIT_USER,
-} from '../types';
+} from '../types/index.js';
 import { addDays, minutesToMilliseconds, subDays } from 'date-fns';
-import { extractAuditInfoFromUser } from '../util';
-import { createFakeApiTokenService } from '../features/api-tokens/createApiTokenService';
+import { extractAuditInfoFromUser } from '../util/index.js';
+import { createFakeApiTokenService } from '../features/api-tokens/createApiTokenService.js';
 
 test('Should init api token', async () => {
     const token = {

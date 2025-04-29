@@ -1,19 +1,19 @@
 import type { Request, Response } from 'express';
-import Controller from '../../controller';
-import type { IUnleashServices } from '../../../types/services';
-import type { IUnleashConfig } from '../../../types/option';
-import type ProjectHealthService from '../../../services/project-health-service';
-import type { Logger } from '../../../logger';
-import type { IProjectParam } from '../../../types/model';
-import { NONE } from '../../../types/permissions';
-import type { OpenApiService } from '../../../services/openapi-service';
-import { createResponseSchema } from '../../../openapi/util/create-response-schema';
-import { getStandardResponses } from '../../../openapi/util/standard-responses';
-import { serializeDates } from '../../../types/serialize-dates';
+import Controller from '../../controller.js';
+import type { IUnleashServices } from '../../../types/services.js';
+import type { IUnleashConfig } from '../../../types/option.js';
+import type ProjectHealthService from '../../../services/project-health-service.js';
+import type { Logger } from '../../../logger.js';
+import type { IProjectParam } from '../../../types/model.js';
+import { NONE } from '../../../types/permissions.js';
+import type { OpenApiService } from '../../../services/openapi-service.js';
+import { createResponseSchema } from '../../../openapi/util/create-response-schema.js';
+import { getStandardResponses } from '../../../openapi/util/standard-responses.js';
+import { serializeDates } from '../../../types/serialize-dates.js';
 import {
     healthReportSchema,
     type HealthReportSchema,
-} from '../../../openapi/spec/health-report-schema';
+} from '../../../openapi/spec/health-report-schema.js';
 
 export default class ProjectHealthReport extends Controller {
     private projectHealthService: ProjectHealthService;

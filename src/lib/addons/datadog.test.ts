@@ -3,19 +3,19 @@ import {
     FEATURE_CREATED,
     FEATURE_ENVIRONMENT_DISABLED,
     type IEvent,
-} from '../types/events';
-import type { Logger } from '../logger';
+} from '../types/events.js';
+import type { Logger } from '../logger.js';
 
-import DatadogAddon from './datadog';
+import DatadogAddon from './datadog.js';
 
-import noLogger from '../../test/fixtures/no-logger';
+import noLogger from '../../test/fixtures/no-logger.js';
 import {
     type IFlagKey,
     serializeDates,
     type IAddonConfig,
     type IFlagResolver,
-} from '../types';
-import type { IntegrationEventsService } from '../services';
+} from '../types/index.js';
+import type { IntegrationEventsService } from '../services/index.js';
 
 let fetchRetryCalls: any[] = [];
 const registerEventMock = jest.fn();

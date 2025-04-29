@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { projectActivitySchema } from './project-activity-schema';
+import { projectActivitySchema } from './project-activity-schema.js';
 
 const stageDataWithAverageDaysSchema = {
     type: 'object',

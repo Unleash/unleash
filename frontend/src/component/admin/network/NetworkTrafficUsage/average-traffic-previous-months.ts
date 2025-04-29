@@ -1,6 +1,6 @@
 import { differenceInCalendarMonths } from 'date-fns';
 import type { TrafficUsageDataSegmentedCombinedSchema } from 'openapi';
-import { currentMonth } from './dates';
+import { currentMonth } from './dates.js';
 
 export const averageTrafficPreviousMonths = (
     traffic: TrafficUsageDataSegmentedCombinedSchema,

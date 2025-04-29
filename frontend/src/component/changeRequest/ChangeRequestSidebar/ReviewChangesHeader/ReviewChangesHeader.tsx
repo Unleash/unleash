@@ -1,7 +1,7 @@
 import { Box, styled, Tooltip } from '@mui/material';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import type { FC } from 'react';
-import { PageHeader } from '../../../common/PageHeader/PageHeader';
+import { PageHeader } from '../../../common/PageHeader/PageHeader.tsx';
 
 const StyledHelpOutline = styled(HelpOutline)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,

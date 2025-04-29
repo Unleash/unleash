@@ -8,11 +8,11 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { StrategyExecution } from './StrategyExecution/StrategyExecution';
+import { StrategyExecution } from './StrategyExecution/StrategyExecution.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { CopyStrategyIconMenu } from './CopyStrategyIconMenu/CopyStrategyIconMenu';
+import { CopyStrategyIconMenu } from './CopyStrategyIconMenu/CopyStrategyIconMenu.tsx';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/LegacyStrategyItemContainer';
-import MenuStrategyRemove from './MenuStrategyRemove/MenuStrategyRemove';
+import MenuStrategyRemove from './MenuStrategyRemove/MenuStrategyRemove.tsx';
 import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';
 import { Box } from '@mui/material';
 interface IStrategyItemProps {

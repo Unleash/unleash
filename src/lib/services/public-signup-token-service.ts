@@ -1,29 +1,29 @@
 import crypto from 'node:crypto';
-import type { Logger } from '../logger';
+import type { Logger } from '../logger.js';
 import {
     type IAuditUser,
     type IUnleashConfig,
     type IUnleashStores,
     SYSTEM_USER_AUDIT,
-} from '../types';
-import type { IPublicSignupTokenStore } from '../types/stores/public-signup-token-store';
-import type { PublicSignupTokenSchema } from '../openapi/spec/public-signup-token-schema';
-import type { IRoleStore } from '../types/stores/role-store';
-import type { IPublicSignupTokenCreate } from '../types/models/public-signup-token';
-import type { PublicSignupTokenCreateSchema } from '../openapi/spec/public-signup-token-create-schema';
-import type { CreateInvitedUserSchema } from '../openapi/spec/create-invited-user-schema';
-import { RoleName } from '../types/model';
+} from '../types/index.js';
+import type { IPublicSignupTokenStore } from '../types/stores/public-signup-token-store.js';
+import type { PublicSignupTokenSchema } from '../openapi/spec/public-signup-token-schema.js';
+import type { IRoleStore } from '../types/stores/role-store.js';
+import type { IPublicSignupTokenCreate } from '../types/models/public-signup-token.js';
+import type { PublicSignupTokenCreateSchema } from '../openapi/spec/public-signup-token-create-schema.js';
+import type { CreateInvitedUserSchema } from '../openapi/spec/create-invited-user-schema.js';
+import { RoleName } from '../types/model.js';
 import {
     PublicSignupTokenCreatedEvent,
     PublicSignupTokenUpdatedEvent,
     PublicSignupTokenUserAddedEvent,
-} from '../types/events';
-import type UserService from './user-service';
-import type { IUser } from '../types/user';
+} from '../types/events.js';
+import type UserService from './user-service.js';
+import type { IUser } from '../types/user.js';
 import { URL } from 'url';
 import { add } from 'date-fns';
-import type EventService from '../features/events/event-service';
-import { NotFoundError } from '../error';
+import type EventService from '../features/events/event-service.js';
+import { NotFoundError } from '../error/index.js';
 
 export class PublicSignupTokenService {
     private store: IPublicSignupTokenStore;

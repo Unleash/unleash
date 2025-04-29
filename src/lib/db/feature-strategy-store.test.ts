@@ -1,12 +1,12 @@
-import dbInit, { type ITestDb } from '../../test/e2e/helpers/database-init';
-import getLogger from '../../test/fixtures/no-logger';
+import dbInit, { type ITestDb } from '../../test/e2e/helpers/database-init.js';
+import getLogger from '../../test/fixtures/no-logger.js';
 import type {
     IFeatureStrategiesStore,
     IFeatureStrategy,
     IFeatureToggleStore,
     IStrategyStore,
     PartialSome,
-} from '../types';
+} from '../types/index.js';
 
 let db: ITestDb;
 

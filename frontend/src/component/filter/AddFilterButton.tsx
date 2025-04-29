@@ -6,7 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { Icon, styled } from '@mui/material';
 import FilterList from '@mui/icons-material/FilterList';
 import { Box } from '@mui/system';
-import type { IFilterItem } from './Filters/Filters';
+import type { IFilterItem } from './Filters/Filters.tsx';
 import { FILTERS_MENU } from 'utils/testIds';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';

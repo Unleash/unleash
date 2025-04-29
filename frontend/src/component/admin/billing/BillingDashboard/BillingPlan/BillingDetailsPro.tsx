@@ -3,7 +3,7 @@ import { Divider, Grid, styled, Typography } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import { GridRow } from 'component/common/GridRow/GridRow';
 import { GridCol } from 'component/common/GridCol/GridCol';
-import { GridColLink } from './GridColLink/GridColLink';
+import { GridColLink } from './GridColLink/GridColLink.tsx';
 import type { IInstanceStatus } from 'interfaces/instance';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
@@ -13,8 +13,8 @@ import {
     BILLING_PRO_BASE_PRICE,
     BILLING_PRO_SEAT_PRICE,
     BILLING_TRAFFIC_PRICE,
-} from './BillingPlan';
-import { useOverageCost } from './useOverageCost';
+} from './BillingPlan.tsx';
+import { useOverageCost } from './useOverageCost.ts';
 
 const StyledInfoLabel = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,

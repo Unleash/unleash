@@ -3,7 +3,7 @@ import {
     modifyContent,
     getRepoData,
     getUrls,
-} from './shared';
+} from './shared.js';
 
 // Type definitions
 //

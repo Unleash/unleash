@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import { batchExecute } from './batchExecute';
+import { batchExecute } from './batchExecute.js';
 
 jest.useFakeTimers();
 

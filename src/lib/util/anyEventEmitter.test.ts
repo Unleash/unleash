@@ -1,4 +1,4 @@
-import { AnyEventEmitter } from './anyEventEmitter';
+import { AnyEventEmitter } from './anyEventEmitter.js';
 
 test('AnyEventEmitter', () => {
     const events: string[] = [];

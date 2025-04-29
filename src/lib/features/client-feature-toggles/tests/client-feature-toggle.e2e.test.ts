@@ -1,15 +1,15 @@
 import supertest, { type Test } from 'supertest';
-import createStores from '../../../../test/fixtures/store';
-import getLogger from '../../../../test/fixtures/no-logger';
-import getApp from '../../../app';
-import { createServices } from '../../../services';
-import FeatureController from '../client-feature-toggle.controller';
-import { createTestConfig } from '../../../../test/config/test-config';
+import createStores from '../../../../test/fixtures/store.js';
+import getLogger from '../../../../test/fixtures/no-logger.js';
+import getApp from '../../../app.js';
+import { createServices } from '../../../services/index.js';
+import FeatureController from '../client-feature-toggle.controller.js';
+import { createTestConfig } from '../../../../test/config/test-config.js';
 import { secondsToMilliseconds } from 'date-fns';
-import { ClientSpecService } from '../../../services/client-spec-service';
+import { ClientSpecService } from '../../../services/client-spec-service.js';
 import type { Application } from 'express';
-import type { IFlagResolver } from '../../../types';
-import type TestAgent from 'supertest/lib/agent';
+import type { IFlagResolver } from '../../../types/index.js';
+import type TestAgent from 'supertest/lib/agent.d.ts';
 
 let app: Application;
 

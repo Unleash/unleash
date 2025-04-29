@@ -1,16 +1,16 @@
 import type { Response } from 'express';
-import Controller from '../controller';
-import type { Logger } from '../../logger';
-import type { IUnleashConfig } from '../../types/option';
-import type { IUnleashServices } from '../../types/services';
-import type UserSplashService from '../../services/user-splash-service';
-import type { IAuthRequest } from '../unleash-types';
-import { NONE } from '../../types/permissions';
-import type { OpenApiService } from '../../services/openapi-service';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { splashRequestSchema } from '../../openapi/spec/splash-request-schema';
-import { getStandardResponses } from '../../openapi';
-import type { SplashResponseSchema } from '../../openapi/spec/splash-response-schema';
+import Controller from '../controller.js';
+import type { Logger } from '../../logger.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashServices } from '../../types/services.js';
+import type UserSplashService from '../../services/user-splash-service.js';
+import type { IAuthRequest } from '../unleash-types.js';
+import { NONE } from '../../types/permissions.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
+import { createResponseSchema } from '../../openapi/util/create-response-schema.js';
+import { splashRequestSchema } from '../../openapi/spec/splash-request-schema.js';
+import { getStandardResponses } from '../../openapi/index.js';
+import type { SplashResponseSchema } from '../../openapi/spec/splash-response-schema.js';
 
 class UserSplashController extends Controller {
     private logger: Logger;
@@ -74,6 +74,4 @@ class UserSplashController extends Controller {
         );
     }
 }
-
-module.exports = UserSplashController;
 export default UserSplashController;

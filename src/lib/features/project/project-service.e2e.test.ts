@@ -1,23 +1,25 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
-import type FeatureToggleService from '../feature-toggle/feature-toggle-service';
-import type ProjectService from './project-service';
-import type { AccessService } from '../../services/access-service';
-import { MOVE_FEATURE_TOGGLE } from '../../types/permissions';
-import { createTestConfig } from '../../../test/config/test-config';
-import { RoleName } from '../../types/model';
-import { randomId } from '../../util/random-id';
-import EnvironmentService from '../project-environments/environment-service';
-import IncompatibleProjectError from '../../error/incompatible-project-error';
-import type { ApiTokenService, EventService } from '../../services';
-import { FeatureEnvironmentEvent } from '../../types/events';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import type FeatureToggleService from '../feature-toggle/feature-toggle-service.js';
+import type ProjectService from './project-service.js';
+import type { AccessService } from '../../services/access-service.js';
+import { MOVE_FEATURE_TOGGLE } from '../../types/permissions.js';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import { RoleName } from '../../types/model.js';
+import { randomId } from '../../util/random-id.js';
+import EnvironmentService from '../project-environments/environment-service.js';
+import IncompatibleProjectError from '../../error/incompatible-project-error.js';
+import type { ApiTokenService, EventService } from '../../services/index.js';
+import { FeatureEnvironmentEvent } from '../../types/events.js';
 import { addDays, subDays } from 'date-fns';
 import {
     createAccessService,
     createEventsService,
     createFeatureToggleService,
     createProjectService,
-} from '../index';
+} from '../index.js';
 import {
     type IAuditUser,
     type IGroup,
@@ -26,12 +28,12 @@ import {
     SYSTEM_USER_AUDIT,
     SYSTEM_USER_ID,
     TEST_AUDIT_USER,
-} from '../../types';
-import type { User } from '../../server-impl';
-import { BadDataError, InvalidOperationError } from '../../error';
-import { DEFAULT_ENV, extractAuditInfoFromUser } from '../../util';
-import { ApiTokenType } from '../../types/models/api-token';
-import { createApiTokenService } from '../api-tokens/createApiTokenService';
+} from '../../types/index.js';
+import type { User } from '../../server-impl.js';
+import { BadDataError, InvalidOperationError } from '../../error/index.js';
+import { DEFAULT_ENV, extractAuditInfoFromUser } from '../../util/index.js';
+import { ApiTokenType } from '../../types/models/api-token.js';
+import { createApiTokenService } from '../api-tokens/createApiTokenService.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

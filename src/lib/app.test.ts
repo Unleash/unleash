@@ -1,5 +1,5 @@
 import express from 'express';
-import { createTestConfig } from '../test/config/test-config';
+import { createTestConfig } from '../test/config/test-config.js';
 import compression from 'compression';
 
 jest.mock('compression', () =>
@@ -18,7 +18,7 @@ jest.mock(
         },
 );
 
-import getApp from './app';
+import getApp from './app.js';
 test('should not throw when valid config', async () => {
     const config = createTestConfig();
     // @ts-expect-error - We're passing in empty stores and services

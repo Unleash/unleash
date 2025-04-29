@@ -16,8 +16,3 @@ const timer = {
 };
 
 export default timer;
-
-module.exports = {
-    seconds,
-    new: newTimer,
-};

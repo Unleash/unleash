@@ -1,7 +1,7 @@
 import { Box, Chip, styled } from '@mui/material';
 import type { FC } from 'react';
-import type { FilterItemParamHolder } from '../../../filter/Filters/Filters';
-import type { LifecycleStage } from '../../FeatureView/FeatureOverview/FeatureLifecycle/LifecycleStage';
+import type { FilterItemParamHolder } from '../../../filter/Filters/Filters.tsx';
+import type { LifecycleStage } from '../../FeatureView/FeatureOverview/FeatureLifecycle/LifecycleStage.tsx';
 import { useLifecycleCount } from 'hooks/api/getters/useLifecycleCount/useLifecycleCount';
 import type { FeatureLifecycleCountSchema } from 'openapi';
 

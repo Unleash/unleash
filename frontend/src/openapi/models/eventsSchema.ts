@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { EventSchema } from './eventSchema';
-import type { EventsSchemaVersion } from './eventsSchemaVersion';
+import type { EventSchema } from './eventSchema.js';
+import type { EventsSchemaVersion } from './eventsSchemaVersion.js';
 
 /**
  * A list of events that has happened in the system

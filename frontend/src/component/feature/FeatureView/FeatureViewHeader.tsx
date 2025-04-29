@@ -32,19 +32,19 @@ import { FeatureStatusChip } from 'component/common/FeatureStatusChip/FeatureSta
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
-import { ChildrenTooltip } from './FeatureOverview/FeatureOverviewMetaData/ChildrenTooltip';
+import { ChildrenTooltip } from './FeatureOverview/FeatureOverviewMetaData/ChildrenTooltip.tsx';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import { useUiFlag } from 'hooks/useUiFlag';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
-import { Collaborators } from './Collaborators';
+import { Collaborators } from './Collaborators.tsx';
 import StarBorder from '@mui/icons-material/StarBorder';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
-import { ManageTagsDialog } from './FeatureOverview/ManageTagsDialog/ManageTagsDialog';
+import { ManageTagsDialog } from './FeatureOverview/ManageTagsDialog/ManageTagsDialog.tsx';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
-import { FeatureCopyName } from './FeatureCopyName/FeatureCopyName';
+import { FeatureCopyName } from './FeatureCopyName/FeatureCopyName.tsx';
 
 const NewStyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: 'none',

@@ -1,15 +1,15 @@
-import type { IFlagResolver } from '../../types';
+import type { IFlagResolver } from '../../types/index.js';
 import { Knex } from 'knex';
-import type { Db } from '../../db/db';
+import type { Db } from '../../db/db.js';
 import type {
     IProjectReadModel,
     ProjectForInsights,
     ProjectForUi,
-} from './project-read-model-type';
-import type { IProjectQuery, IProjectsQuery } from './project-store-type';
-import metricsHelper from '../../util/metrics-helper';
+} from './project-read-model-type.js';
+import type { IProjectQuery, IProjectsQuery } from './project-store-type.js';
+import metricsHelper from '../../util/metrics-helper.js';
 import type EventEmitter from 'events';
-import type { IProjectMembersCount } from './project-store';
+import type { IProjectMembersCount } from './project-store.js';
 import Raw = Knex.Raw;
 
 const TABLE = 'projects';

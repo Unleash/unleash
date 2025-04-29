@@ -3,7 +3,7 @@ import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { styled } from '@mui/material';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { FeatureOverviewSidePanelEnvironmentHider } from './FeatureOverviewSidePanelEnvironmentHider';
+import { FeatureOverviewSidePanelEnvironmentHider } from './FeatureOverviewSidePanelEnvironmentHider.tsx';
 import { FeatureToggleSwitch } from 'component/project/Project/ProjectFeatureToggles/FeatureToggleSwitch/FeatureToggleSwitch';
 import { useFeatureToggleSwitch } from 'component/project/Project/ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';

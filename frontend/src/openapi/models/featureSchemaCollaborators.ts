@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSchemaCollaboratorsUsersItem } from './featureSchemaCollaboratorsUsersItem';
+import type { FeatureSchemaCollaboratorsUsersItem } from './featureSchemaCollaboratorsUsersItem.js';
 
 /**
  * Information related to users who have made changes to this feature flage.

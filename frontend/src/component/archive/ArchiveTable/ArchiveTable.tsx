@@ -23,17 +23,17 @@ import { featuresPlaceholder } from 'component/feature/FeatureToggleList/Feature
 import theme from 'themes/theme';
 import type { ArchivedFeatureSchema } from 'openapi';
 import { useSearch } from 'hooks/useSearch';
-import { FeatureArchivedCell } from './FeatureArchivedCell/FeatureArchivedCell';
+import { FeatureArchivedCell } from './FeatureArchivedCell/FeatureArchivedCell.tsx';
 import { useSearchParams } from 'react-router-dom';
-import { ArchivedFeatureDeleteConfirm } from './ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm';
+import { ArchivedFeatureDeleteConfirm } from './ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm.tsx';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
-import { RowSelectCell } from '../../project/Project/ProjectFeatureToggles/RowSelectCell/RowSelectCell';
-import { BatchSelectionActionsBar } from '../../common/BatchSelectionActionsBar/BatchSelectionActionsBar';
-import { ArchiveBatchActions } from './ArchiveBatchActions';
+import { RowSelectCell } from '../../project/Project/ProjectFeatureToggles/RowSelectCell/RowSelectCell.tsx';
+import { BatchSelectionActionsBar } from '../../common/BatchSelectionActionsBar/BatchSelectionActionsBar.tsx';
+import { ArchiveBatchActions } from './ArchiveBatchActions.tsx';
 import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ArchivedFeatureReviveConfirm } from './ArchivedFeatureActionCell/ArchivedFeatureReviveConfirm/ArchivedFeatureReviveConfirm';
+import { ArchivedFeatureReviveConfirm } from './ArchivedFeatureActionCell/ArchivedFeatureReviveConfirm/ArchivedFeatureReviveConfirm.tsx';
 
 export interface IFeaturesArchiveTableProps {
     archivedFeatures: ArchivedFeatureSchema[];

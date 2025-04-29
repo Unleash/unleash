@@ -1,12 +1,12 @@
-import { createTestConfig } from '../../../test/config/test-config';
-import { BadDataError } from '../../error';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import { BadDataError } from '../../error/index.js';
 import {
     type IFlagResolver,
     type ProjectCreated,
     RoleName,
     TEST_AUDIT_USER,
-} from '../../types';
-import { createFakeProjectService } from './createProjectService';
+} from '../../types/index.js';
+import { createFakeProjectService } from './createProjectService.js';
 
 describe('enterprise extension: enable change requests', () => {
     const createService = (mode: 'oss' | 'enterprise' = 'enterprise') => {

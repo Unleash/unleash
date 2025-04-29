@@ -5,11 +5,11 @@ import {
     type IFeatureTagStore,
     type IUnleashConfig,
     USER_UPDATED,
-} from '../../internals';
-import type { IAccessReadModel } from '../access/access-read-model-type';
-import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
-import type { ProjectAccess } from '../private-project/privateProjectStore';
-import EventService, { filterAccessibleProjects } from './event-service';
+} from '../../internals.js';
+import type { IAccessReadModel } from '../access/access-read-model-type.js';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
+import type { ProjectAccess } from '../private-project/privateProjectStore.js';
+import EventService, { filterAccessibleProjects } from './event-service.js';
 
 describe('filterPrivateProjectsFromParams', () => {
     it('should return IS_ANY_OF with allowed projects when projectParam is undefined and mode is limited', () => {

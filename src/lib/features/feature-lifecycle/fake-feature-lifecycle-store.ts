@@ -3,7 +3,7 @@ import type {
     IFeatureLifecycleStore,
     FeatureLifecycleView,
     NewStage,
-} from './feature-lifecycle-store-type';
+} from './feature-lifecycle-store-type.js';
 
 export class FakeFeatureLifecycleStore implements IFeatureLifecycleStore {
     private lifecycles: Record<string, FeatureLifecycleView> = {};

@@ -6,7 +6,7 @@ import useSWRInfinite, {
 import { formatApiPath } from 'utils/formatPath';
 import type { IntegrationEvents } from 'interfaces/integrationEvent';
 import AccessContext from 'contexts/AccessContext';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 
 const fetcher = async (url: string) => {
     const response = await fetch(url);

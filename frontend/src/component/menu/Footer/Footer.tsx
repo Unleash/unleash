@@ -3,8 +3,8 @@
 import type { VFC } from 'react';
 import { List, ListItem, ListItemText, Grid, styled } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ApiDetails } from './ApiDetails/ApiDetails';
-import { FooterTitle } from './FooterTitle';
+import { ApiDetails } from './ApiDetails/ApiDetails.tsx';
+import { FooterTitle } from './FooterTitle.tsx';
 import { focusable } from 'themes/themeStyles';
 
 const StyledFooter = styled('footer')(({ theme }) => ({

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { ConfigButton, type ConfigButtonProps } from './ConfigButton';
-import { DropdownList, type DropdownListProps } from './DropdownList';
+import { ConfigButton, type ConfigButtonProps } from './ConfigButton.tsx';
+import { DropdownList, type DropdownListProps } from './DropdownList.tsx';
 
 type MultiSelectConfigButtonProps<T> = Pick<
     ConfigButtonProps,

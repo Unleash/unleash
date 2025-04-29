@@ -8,8 +8,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import { styled } from '@mui/material';
 import { ConstraintAccordionView } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
-import { ConstraintError } from './ConstraintError/LegacyConstraintError';
-import { ConstraintOk } from './ConstraintOk/LegacyConstraintOk';
+import { ConstraintError } from './ConstraintError/LegacyConstraintError.tsx';
+import { ConstraintOk } from './ConstraintOk/LegacyConstraintOk.tsx';
 
 interface IConstraintExecutionProps {
     constraints?: PlaygroundConstraintSchema[];

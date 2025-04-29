@@ -4,7 +4,7 @@ import Input from 'component/common/Input/Input';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import type React from 'react';
 import { useState } from 'react';
-import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
+import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader.tsx';
 import { parseParameterStrings } from 'utils/parseParameter';
 
 interface IFreeTextInputProps {

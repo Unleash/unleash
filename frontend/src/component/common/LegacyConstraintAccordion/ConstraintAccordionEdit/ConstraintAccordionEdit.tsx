@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { IConstraint } from 'interfaces/strategy';
-import { ConstraintAccordionEditBody } from './ConstraintAccordionEditBody/ConstraintAccordionEditBody';
-import { ConstraintAccordionEditHeader } from './ConstraintAccordionEditHeader/ConstraintAccordionEditHeader';
+import { ConstraintAccordionEditBody } from './ConstraintAccordionEditBody/ConstraintAccordionEditBody.tsx';
+import { ConstraintAccordionEditHeader } from './ConstraintAccordionEditHeader/ConstraintAccordionEditHeader.tsx';
 import {
     Accordion,
     AccordionDetails,
@@ -13,9 +13,9 @@ import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import type { IUnleashContextDefinition } from 'interfaces/context';
-import { useConstraintInput } from './ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
+import { useConstraintInput } from './ConstraintAccordionEditBody/useConstraintInput/useConstraintInput.ts';
 import type { Operator } from 'constants/operators';
-import { ResolveInput } from './ConstraintAccordionEditBody/ResolveInput/ResolveInput';
+import { ResolveInput } from './ConstraintAccordionEditBody/ResolveInput/ResolveInput.tsx';
 
 interface IConstraintAccordionEditProps {
     constraint: IConstraint;

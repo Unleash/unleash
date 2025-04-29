@@ -1,6 +1,6 @@
 import { render } from 'utils/testRenderer';
 import { Route, Routes } from 'react-router-dom';
-import { ProjectFeatureToggles } from './ProjectFeatureToggles';
+import { ProjectFeatureToggles } from './ProjectFeatureToggles.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { fireEvent, screen } from '@testing-library/react';
 import { BATCH_SELECTED_COUNT } from 'utils/testIds';

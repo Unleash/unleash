@@ -1,8 +1,8 @@
 import { type ReactNode, useState } from 'react';
 import { ListItem } from '@mui/material';
-import { NewInUnleashTooltip } from './NewInUnleashTooltip';
-import { NewInUnleashDialog } from './NewInUnleashDialog';
-import { NewInUnleashSideBarItem } from './NewInUnleashSideBarItem';
+import { NewInUnleashTooltip } from './NewInUnleashTooltip.tsx';
+import { NewInUnleashDialog } from './NewInUnleashDialog.tsx';
+import { NewInUnleashSideBarItem } from './NewInUnleashSideBarItem.tsx';
 
 export type NewInUnleashItemDetails = {
     label: string;

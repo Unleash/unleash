@@ -1,17 +1,17 @@
 import type React from 'react';
 import type { FC } from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
-import type { NavigationMode } from './NavigationMode';
-import { ShowAdmin } from './ShowHide';
+import type { NavigationMode } from './NavigationMode.tsx';
+import { ShowAdmin } from './ShowHide.tsx';
 import {
     ExternalFullListItem,
     FullListItem,
     MiniListItem,
     SignOutItem,
-} from './ListItems';
+} from './ListItems.tsx';
 import { Box, List, Typography } from '@mui/material';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { IconRenderer } from './IconRenderer';
+import { IconRenderer } from './IconRenderer.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -23,7 +23,7 @@ import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectO
 import { useShowBadge } from 'component/layout/components/EnterprisePlanBadge/useShowBadge';
 import { EnterprisePlanBadge } from 'component/layout/components/EnterprisePlanBadge/EnterprisePlanBadge';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
-import { AdminMenuNavigation } from '../AdminMenu/AdminNavigationItems';
+import { AdminMenuNavigation } from '../AdminMenu/AdminNavigationItems.tsx';
 
 export const SecondaryNavigationList: FC<{
     routes: INavigationMenuItem[];

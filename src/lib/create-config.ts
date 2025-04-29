@@ -1,4 +1,5 @@
-import { parse } from 'pg-connection-string';
+import pgs from 'pg-connection-string';
+const { parse } = pgs;
 import merge from 'deepmerge';
 import { readFileSync, existsSync } from 'fs';
 import {
@@ -22,10 +23,14 @@ import {
     type IVersionOption,
     type ISSLOption,
     type UsernameAdminUser,
-} from './types/option';
-import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
-import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
-import { formatBaseUri } from './util/format-base-uri';
+} from './types/option.js';
+import {
+    getDefaultLogProvider,
+    LogLevel,
+    validateLogProvider,
+} from './logger.js';
+import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all.js';
+import { formatBaseUri } from './util/format-base-uri.js';
 import {
     hoursToMilliseconds,
     minutesToMilliseconds,
@@ -36,24 +41,24 @@ import {
     ApiTokenType,
     mapLegacyToken,
     validateApiToken,
-} from './types/models/api-token';
+} from './types/models/api-token.js';
 import {
     parseEnvVarBoolean,
     parseEnvVarJSON,
     parseEnvVarNumber,
     parseEnvVarStrings,
-} from './util/parseEnvVar';
+} from './util/parseEnvVar.js';
 import {
     defaultExperimentalOptions,
     type IExperimentalOptions,
-} from './types/experimental';
+} from './types/experimental.js';
 import {
     DEFAULT_SEGMENT_VALUES_LIMIT,
     DEFAULT_STRATEGY_SEGMENTS_LIMIT,
-} from './util/segments';
-import FlagResolver from './util/flag-resolver';
-import { validateOrigins } from './util/validateOrigin';
-import type { ResourceLimitsSchema } from './openapi/spec/resource-limits-schema';
+} from './util/segments.js';
+import FlagResolver from './util/flag-resolver.js';
+import { validateOrigins } from './util/validateOrigin.js';
+import type { ResourceLimitsSchema } from './openapi/spec/resource-limits-schema.js';
 
 const safeToUpper = (s?: string) => (s ? s.toUpperCase() : s);
 
@@ -813,9 +818,3 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         unleashFrontendToken,
     };
 }
-
-module.exports = {
-    createConfig,
-    resolveIsOss,
-    authTypeFromString,
-};

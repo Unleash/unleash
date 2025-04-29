@@ -1,29 +1,29 @@
-import NameExistsError from '../error/name-exists-error';
-import getLogger from '../../test/fixtures/no-logger';
-import { createFakeAccessService } from '../features/access/createAccessService';
+import NameExistsError from '../error/name-exists-error.js';
+import getLogger from '../../test/fixtures/no-logger.js';
+import { createFakeAccessService } from '../features/access/createAccessService.js';
 import {
     AccessService,
     type IRoleCreation,
     type IRoleValidation,
-} from './access-service';
-import { createTestConfig } from '../../test/config/test-config';
-import { CUSTOM_ROOT_ROLE_TYPE } from '../util/constants';
-import FakeGroupStore from '../../test/fixtures/fake-group-store';
-import { FakeAccountStore } from '../../test/fixtures/fake-account-store';
-import FakeRoleStore from '../../test/fixtures/fake-role-store';
-import FakeEnvironmentStore from '../features/project-environments/fake-environment-store';
-import FakeAccessStore from '../../test/fixtures/fake-access-store';
-import { GroupService } from '../services/group-service';
-import type { IRole } from '../../lib/types/stores/access-store';
+} from './access-service.js';
+import { createTestConfig } from '../../test/config/test-config.js';
+import { CUSTOM_ROOT_ROLE_TYPE } from '../util/constants.js';
+import FakeGroupStore from '../../test/fixtures/fake-group-store.js';
+import { FakeAccountStore } from '../../test/fixtures/fake-account-store.js';
+import FakeRoleStore from '../../test/fixtures/fake-role-store.js';
+import FakeEnvironmentStore from '../features/project-environments/fake-environment-store.js';
+import FakeAccessStore from '../../test/fixtures/fake-access-store.js';
+import { GroupService } from '../services/group-service.js';
+import type { IRole } from '../../lib/types/stores/access-store.js';
 import {
     type IGroup,
     ROLE_CREATED,
     SYSTEM_USER,
     SYSTEM_USER_AUDIT,
-} from '../../lib/types';
-import BadDataError from '../../lib/error/bad-data-error';
-import { createFakeEventsService } from '../../lib/features/events/createEventsService';
-import { createFakeAccessReadModel } from '../features/access/createAccessReadModel';
+} from '../../lib/types/index.js';
+import BadDataError from '../../lib/error/bad-data-error.js';
+import { createFakeEventsService } from '../../lib/features/events/createEventsService.js';
+import { createFakeAccessReadModel } from '../features/access/createAccessReadModel.js';
 
 function getSetup() {
     const config = createTestConfig({

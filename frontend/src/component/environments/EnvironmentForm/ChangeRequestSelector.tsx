@@ -6,7 +6,7 @@ import {
     styled,
 } from '@mui/material';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
-import GeneralSelect from '../../common/GeneralSelect/GeneralSelect';
+import GeneralSelect from '../../common/GeneralSelect/GeneralSelect.tsx';
 import { useTheme } from '@mui/material/styles';
 
 interface IEnvironmentChangeRequestProps {

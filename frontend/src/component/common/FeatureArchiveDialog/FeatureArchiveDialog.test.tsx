@@ -2,7 +2,7 @@ import { vi } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { FeatureArchiveDialog } from './FeatureArchiveDialog';
+import { FeatureArchiveDialog } from './FeatureArchiveDialog.tsx';
 
 const server = testServerSetup();
 const setupHappyPathForChangeRequest = () => {

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { GetTrafficDataUsageForPeriodGrouping } from './getTrafficDataUsageForPeriodGrouping';
+import type { GetTrafficDataUsageForPeriodGrouping } from './getTrafficDataUsageForPeriodGrouping.js';
 
 export type GetTrafficDataUsageForPeriodParams = {
     /**

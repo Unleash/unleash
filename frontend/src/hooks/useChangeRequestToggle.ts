@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useChangeRequestApi } from './api/actions/useChangeRequestApi/useChangeRequestApi';
-import { usePendingChangeRequests } from './api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import { useChangeRequestApi } from './api/actions/useChangeRequestApi/useChangeRequestApi.js';
+import { usePendingChangeRequests } from './api/getters/usePendingChangeRequests/usePendingChangeRequests.js';
 
 export const useChangeRequestToggle = (project: string) => {
     const { setToastData, setToastApiError } = useToast();

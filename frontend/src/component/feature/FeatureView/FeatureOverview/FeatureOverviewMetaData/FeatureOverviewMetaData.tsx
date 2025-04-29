@@ -5,17 +5,17 @@ import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/Feat
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { formatDateYMD } from 'utils/formatDate';
 import { parseISO } from 'date-fns';
-import { DependencyRow } from './DependencyRow';
+import { DependencyRow } from './DependencyRow.tsx';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { useShowDependentFeatures } from './useShowDependentFeatures';
-import { FeatureLifecycle } from '../FeatureLifecycle/FeatureLifecycle';
-import { MarkCompletedDialogue } from '../FeatureLifecycle/MarkCompletedDialogue';
-import { TagRow } from './TagRow';
+import { useShowDependentFeatures } from './useShowDependentFeatures.ts';
+import { FeatureLifecycle } from '../FeatureLifecycle/FeatureLifecycle.tsx';
+import { MarkCompletedDialogue } from '../FeatureLifecycle/MarkCompletedDialogue.tsx';
+import { TagRow } from './TagRow.tsx';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
-import { Collaborators } from './Collaborators';
-import { EnvironmentVisibilityMenu } from './EnvironmentVisibilityMenu/EnvironmentVisibilityMenu';
+import { Collaborators } from './Collaborators.tsx';
+import { EnvironmentVisibilityMenu } from './EnvironmentVisibilityMenu/EnvironmentVisibilityMenu.tsx';
 import { Truncator } from 'component/common/Truncator/Truncator';
-import type { IFeatureToggle } from '../../../../../interfaces/featureToggle';
+import type { IFeatureToggle } from '../../../../../interfaces/featureToggle.ts';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),

@@ -6,7 +6,7 @@ import PermissionButton, {
 } from 'component/common/PermissionButton/PermissionButton';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { Popover, styled } from '@mui/material';
-import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrategyCreate';
+import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrategyCreate.tsx';
 import MoreVert from '@mui/icons-material/MoreVert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
@@ -20,7 +20,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { OldFeatureStrategyMenuCards } from './FeatureStrategyMenuCards/OldFeatureStrategyMenuCards';
+import { OldFeatureStrategyMenuCards } from './FeatureStrategyMenuCards/OldFeatureStrategyMenuCards.tsx';
 
 interface IFeatureStrategyMenuProps {
     label: string;

@@ -1,33 +1,34 @@
 import memoizee from 'memoizee';
-import { ValidationError } from 'joi';
-import { getAddons, type IAddonProviders } from '../addons';
-import * as events from '../types/events';
+import joi from 'joi';
+const { ValidationError } = joi;
+import { getAddons, type IAddonProviders } from '../addons/index.js';
+import * as events from '../types/events.js';
 import {
     AddonConfigCreatedEvent,
     AddonConfigDeletedEvent,
     AddonConfigUpdatedEvent,
-} from '../types/events';
-import { addonSchema } from './addon-schema';
-import NameExistsError from '../error/name-exists-error';
-import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
-import type { Logger } from '../logger';
-import type TagTypeService from '../features/tag-type/tag-type-service';
+} from '../types/events.js';
+import { addonSchema } from './addon-schema.js';
+import NameExistsError from '../error/name-exists-error.js';
+import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type.js';
+import type { Logger } from '../logger.js';
+import type TagTypeService from '../features/tag-type/tag-type-service.js';
 import type {
     IAddon,
     IAddonDto,
     IAddonStore,
-} from '../types/stores/addon-store';
+} from '../types/stores/addon-store.js';
 import {
     type IAuditUser,
     type IUnleashConfig,
     type IUnleashStores,
     SYSTEM_USER_AUDIT,
-} from '../types';
-import type { IAddonDefinition } from '../types/model';
+} from '../types/index.js';
+import type { IAddonDefinition } from '../types/model.js';
 import { minutesToMilliseconds } from 'date-fns';
-import type EventService from '../features/events/event-service';
-import { omitKeys } from '../util';
-import { NotFoundError } from '../error';
+import type EventService from '../features/events/event-service.js';
+import { omitKeys } from '../util/index.js';
+import { NotFoundError } from '../error/index.js';
 
 const SUPPORTED_EVENTS = Object.keys(events).map((k) => events[k]);
 

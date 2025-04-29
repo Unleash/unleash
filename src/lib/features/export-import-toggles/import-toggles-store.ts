@@ -1,8 +1,8 @@
 import type {
     IImportTogglesStore,
     ProjectFeaturesLimit,
-} from './import-toggles-store-type';
-import type { Db } from '../../db/db';
+} from './import-toggles-store-type.js';
+import type { Db } from '../../db/db.js';
 
 const T = {
     featureStrategies: 'feature_strategies',

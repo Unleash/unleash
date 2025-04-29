@@ -8,12 +8,12 @@ import {
 } from '@mui/material';
 import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ReleasePlanMilestoneStrategy } from './ReleasePlanMilestoneStrategy';
+import { ReleasePlanMilestoneStrategy } from './ReleasePlanMilestoneStrategy.tsx';
 import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import {
     ReleasePlanMilestoneStatus,
     type MilestoneStatus,
-} from './ReleasePlanMilestoneStatus';
+} from './ReleasePlanMilestoneStatus.tsx';
 import { useState } from 'react';
 
 const StyledAccordion = styled(Accordion, {

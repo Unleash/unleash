@@ -1,6 +1,6 @@
 import { type IInstanceStatus, InstancePlan } from 'interfaces/instance';
-import { BillingDetailsPro } from './BillingDetailsPro';
-import { BillingDetailsPAYG } from './BillingDetailsPAYG';
+import { BillingDetailsPro } from './BillingDetailsPro.tsx';
+import { BillingDetailsPAYG } from './BillingDetailsPAYG.tsx';
 
 interface IBillingDetailsProps {
     instanceStatus: IInstanceStatus;

@@ -1,12 +1,12 @@
 import type { Application } from 'express';
-import AuthenticationRequired from '../types/authentication-required';
-import type { IUnleashServices } from '../types/services';
-import type { IUnleashConfig } from '../types/option';
-import ApiUser from '../types/api-user';
-import { ApiTokenType } from '../types/models/api-token';
-import type { IAuthRequest, IUser } from '../server-impl';
-import type { IApiRequest } from '../routes/unleash-types';
-import { encrypt } from '../util';
+import AuthenticationRequired from '../types/authentication-required.js';
+import type { IUnleashServices } from '../types/services.js';
+import type { IUnleashConfig } from '../types/option.js';
+import ApiUser from '../types/api-user.js';
+import { ApiTokenType } from '../types/models/api-token.js';
+import type { IAuthRequest, IUser } from '../server-impl.js';
+import type { IApiRequest } from '../routes/unleash-types.js';
+import { encrypt } from '../util/index.js';
 
 function demoAuthentication(
     app: Application,

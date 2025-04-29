@@ -1,8 +1,8 @@
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
-import type { IUnleashStores } from '../../../lib/types';
-import { ApiTokenType } from '../../../lib/types/models/api-token';
-import { randomId } from '../../../lib/util';
+import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import getLogger from '../../fixtures/no-logger.js';
+import type { IUnleashStores } from '../../../lib/types/index.js';
+import { ApiTokenType } from '../../../lib/types/models/api-token.js';
+import { randomId } from '../../../lib/util/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

@@ -1,9 +1,9 @@
-import type { IUser } from '../../server-impl';
+import type { IUser } from '../../server-impl.js';
 import type {
     BasePersonalProject,
     IPersonalDashboardReadModel,
     PersonalFeature,
-} from './personal-dashboard-read-model-type';
+} from './personal-dashboard-read-model-type.js';
 
 export class FakePersonalDashboardReadModel
     implements IPersonalDashboardReadModel

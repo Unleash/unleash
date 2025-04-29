@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { UPDATE_TAG_TYPE } from 'component/providers/AccessProvider/permissions';
-import useTagTypeForm from '../TagTypeForm/useTagTypeForm';
-import TagForm from '../TagTypeForm/TagTypeForm';
+import useTagTypeForm from '../TagTypeForm/useTagTypeForm.ts';
+import TagForm from '../TagTypeForm/TagTypeForm.tsx';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import useTagTypesApi from 'hooks/api/actions/useTagTypesApi/useTagTypesApi';
 import useTagType from 'hooks/api/getters/useTagType/useTagType';

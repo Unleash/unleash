@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { encodeQueryParams, useQueryParams } from 'use-query-params';
 import type { QueryParamConfigMap } from 'serialize-query-params/src/types';
-import { reorderObject } from '../utils/reorderObject';
+import { reorderObject } from '../utils/reorderObject.js';
 
 const usePersistentSearchParams = <T extends QueryParamConfigMap>(
     key: string,

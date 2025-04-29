@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ArchivedFeatureSchemaEnvironmentsItem } from './archivedFeatureSchemaEnvironmentsItem';
+import type { ArchivedFeatureSchemaEnvironmentsItem } from './archivedFeatureSchemaEnvironmentsItem.js';
 
 /**
  * An archived project feature flag definition

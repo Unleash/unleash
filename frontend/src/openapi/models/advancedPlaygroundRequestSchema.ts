@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SdkContextSchema } from './sdkContextSchema';
-import type { AdvancedPlaygroundRequestSchemaProjects } from './advancedPlaygroundRequestSchemaProjects';
+import type { SdkContextSchema } from './sdkContextSchema.js';
+import type { AdvancedPlaygroundRequestSchemaProjects } from './advancedPlaygroundRequestSchemaProjects.js';
 
 /**
  * Data for the playground API to evaluate toggles in advanced mode with environment and context multi selection

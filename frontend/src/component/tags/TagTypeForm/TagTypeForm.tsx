@@ -1,6 +1,6 @@
 import Input from 'component/common/Input/Input';
 import { TextField, Button, styled, Typography } from '@mui/material';
-import { TagTypeColorPicker } from './TagTypeColorPicker';
+import { TagTypeColorPicker } from './TagTypeColorPicker.tsx';
 import type React from 'react';
 import { trim } from 'component/common/util';
 import { EDIT } from 'constants/misc';

@@ -1,13 +1,13 @@
 import { useTheme } from '@mui/material';
-import { PlaygroundResultChip } from '../../../../PlaygroundResultChip/LegacyPlaygroundResultChip';
+import { PlaygroundResultChip } from '../../../../PlaygroundResultChip/LegacyPlaygroundResultChip.tsx';
 import type {
     PlaygroundStrategySchema,
     PlaygroundRequestSchema,
 } from 'openapi';
-import { StrategyExecution } from './PlaygroundStrategyExecution/LegacyStrategyExecution';
+import { StrategyExecution } from './PlaygroundStrategyExecution/LegacyStrategyExecution.tsx';
 import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { DisabledStrategyExecution } from './PlaygroundStrategyExecution/DisabledStrategyExecution';
+import { DisabledStrategyExecution } from './PlaygroundStrategyExecution/DisabledStrategyExecution.tsx';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/LegacyStrategyItemContainer';
 
 interface IFeatureStrategyItemProps {

@@ -1,8 +1,8 @@
-import createStores from '../../../../../test/fixtures/store';
+import createStores from '../../../../../test/fixtures/store.js';
 import EventEmitter from 'events';
-import getLogger from '../../../../../test/fixtures/no-logger';
-import type { IUnleashConfig } from '../../../../types';
-import { LastSeenService } from '../last-seen-service';
+import getLogger from '../../../../../test/fixtures/no-logger.js';
+import type { IUnleashConfig } from '../../../../types/index.js';
+import { LastSeenService } from '../last-seen-service.js';
 
 function initLastSeenService(flagEnabled = true) {
     const stores = createStores();

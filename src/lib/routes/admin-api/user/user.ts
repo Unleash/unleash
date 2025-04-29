@@ -1,38 +1,38 @@
 import type { Response } from 'express';
-import type { IAuthRequest } from '../../unleash-types';
-import Controller from '../../controller';
-import type { AccessService } from '../../../services/access-service';
-import { IAuthType, type IUnleashConfig } from '../../../types/option';
-import type { IUnleashServices } from '../../../types/services';
-import type UserService from '../../../services/user-service';
-import type UserFeedbackService from '../../../services/user-feedback-service';
-import type UserSplashService from '../../../services/user-splash-service';
-import { ADMIN, NONE } from '../../../types/permissions';
-import type { OpenApiService } from '../../../services/openapi-service';
-import { createRequestSchema } from '../../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../../openapi/util/create-response-schema';
-import { meSchema, type MeSchema } from '../../../openapi/spec/me-schema';
-import { serializeDates } from '../../../types/serialize-dates';
+import type { IAuthRequest } from '../../unleash-types.js';
+import Controller from '../../controller.js';
+import type { AccessService } from '../../../services/access-service.js';
+import { IAuthType, type IUnleashConfig } from '../../../types/option.js';
+import type { IUnleashServices } from '../../../types/services.js';
+import type UserService from '../../../services/user-service.js';
+import type UserFeedbackService from '../../../services/user-feedback-service.js';
+import type UserSplashService from '../../../services/user-splash-service.js';
+import { ADMIN, NONE } from '../../../types/permissions.js';
+import type { OpenApiService } from '../../../services/openapi-service.js';
+import { createRequestSchema } from '../../../openapi/util/create-request-schema.js';
+import { createResponseSchema } from '../../../openapi/util/create-response-schema.js';
+import { meSchema, type MeSchema } from '../../../openapi/spec/me-schema.js';
+import { serializeDates } from '../../../types/serialize-dates.js';
 import type {
     IRole,
     IUserPermission,
-} from '../../../types/stores/access-store';
-import type { PasswordSchema } from '../../../openapi/spec/password-schema';
+} from '../../../types/stores/access-store.js';
+import type { PasswordSchema } from '../../../openapi/spec/password-schema.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../../openapi/util/standard-responses';
+} from '../../../openapi/util/standard-responses.js';
 import {
     profileSchema,
     type ProfileSchema,
-} from '../../../openapi/spec/profile-schema';
-import type ProjectService from '../../../features/project/project-service';
+} from '../../../openapi/spec/profile-schema.js';
+import type ProjectService from '../../../features/project/project-service.js';
 import {
     rolesSchema,
     type RolesSchema,
-} from '../../../openapi/spec/roles-schema';
-import type { IFlagResolver } from '../../../types';
-import type { UserSubscriptionsService } from '../../../features/user-subscriptions/user-subscriptions-service';
+} from '../../../openapi/spec/roles-schema.js';
+import type { IFlagResolver } from '../../../types/index.js';
+import type { UserSubscriptionsService } from '../../../features/user-subscriptions/user-subscriptions-service.js';
 
 class UserController extends Controller {
     private accessService: AccessService;
@@ -283,6 +283,4 @@ class UserController extends Controller {
         }
     }
 }
-
-module.exports = UserController;
 export default UserController;

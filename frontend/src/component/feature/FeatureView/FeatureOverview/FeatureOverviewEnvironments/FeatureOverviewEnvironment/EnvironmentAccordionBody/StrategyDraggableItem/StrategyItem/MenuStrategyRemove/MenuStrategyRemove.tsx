@@ -11,8 +11,8 @@ import {
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { DialogStrategyRemove } from './DialogStrategyRemove';
-import { DisableEnableStrategyDialog } from './DisableEnableStrategyDialog/DisableEnableStrategyDialog';
+import { DialogStrategyRemove } from './DialogStrategyRemove.tsx';
+import { DisableEnableStrategyDialog } from './DisableEnableStrategyDialog/DisableEnableStrategyDialog.tsx';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import DeleteIcon from '@mui/icons-material/Delete';
 import BlockIcon from '@mui/icons-material/Block';

@@ -1,4 +1,4 @@
-import * as logger from './logger';
+import * as logger from './logger.js';
 
 test('should require custom logger to implement info', () => {
     const loggerImpl = {

@@ -1,7 +1,7 @@
 import {
     advancedPlaygroundViewModel,
     playgroundViewModel,
-} from './playground-view-model';
+} from './playground-view-model.js';
 
 describe('playground result to view model', () => {
     it('adds edit links to playground models', () => {

@@ -1,15 +1,18 @@
 import type { Response } from 'express';
-import Controller from '../../routes/controller';
-import type { Logger } from '../../logger';
-import type { IExportService, IImportService } from './export-import-service';
-import type { OpenApiService } from '../../services';
-import type { WithTransactional } from '../../db/transaction';
+import Controller from '../../routes/controller.js';
+import type { Logger } from '../../logger.js';
+import type {
+    IExportService,
+    IImportService,
+} from './export-import-service.js';
+import type { OpenApiService } from '../../services/index.js';
+import type { WithTransactional } from '../../db/transaction.js';
 import {
     type IUnleashConfig,
     type IUnleashServices,
     NONE,
     serializeDates,
-} from '../../types';
+} from '../../types/index.js';
 import {
     createRequestSchema,
     createResponseSchema,
@@ -19,11 +22,11 @@ import {
     getStandardResponses,
     type ImportTogglesSchema,
     importTogglesValidateSchema,
-} from '../../openapi';
-import type { IAuthRequest } from '../../routes/unleash-types';
-import { extractUsername } from '../../util';
-import { BadDataError } from '../../error';
-import ApiUser from '../../types/api-user';
+} from '../../openapi/index.js';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
+import { extractUsername } from '../../util/index.js';
+import { BadDataError } from '../../error/index.js';
+import ApiUser from '../../types/api-user.js';
 
 class ExportImportController extends Controller {
     private logger: Logger;

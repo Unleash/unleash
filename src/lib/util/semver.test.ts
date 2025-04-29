@@ -1,4 +1,4 @@
-import { mustParseStrictSemVer, parseStrictSemVer } from './semver';
+import { mustParseStrictSemVer, parseStrictSemVer } from './semver.js';
 
 test('parseStrictSemVer', () => {
     expect(parseStrictSemVer('')).toEqual(null);

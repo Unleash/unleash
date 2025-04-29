@@ -6,7 +6,7 @@ import {
     FeedbackContext,
     type FeedbackMode,
     type IFeedbackContext,
-} from './FeedbackContext';
+} from './FeedbackContext.tsx';
 import { useContext } from 'react';
 
 type OpenFeedbackParams = {

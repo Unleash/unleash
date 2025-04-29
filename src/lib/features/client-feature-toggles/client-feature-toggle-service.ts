@@ -4,13 +4,13 @@ import type {
     ISegmentReadModel,
     IUnleashConfig,
     IUnleashStores,
-} from '../../types';
+} from '../../types/index.js';
 
-import type { Logger } from '../../logger';
+import type { Logger } from '../../logger.js';
 
-import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type';
-import type { ClientFeatureToggleDelta } from './delta/client-feature-toggle-delta';
-import type { ClientFeaturesDeltaSchema } from '../../openapi';
+import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
+import type { ClientFeatureToggleDelta } from './delta/client-feature-toggle-delta.js';
+import type { ClientFeaturesDeltaSchema } from '../../openapi/index.js';
 
 export class ClientFeatureToggleService {
     private logger: Logger;

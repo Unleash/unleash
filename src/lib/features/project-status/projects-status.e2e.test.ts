@@ -1,21 +1,23 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../test/e2e/helpers/test-helper';
-import getLogger from '../../../test/fixtures/no-logger';
+} from '../../../test/e2e/helpers/test-helper.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 import {
     FEATURE_CREATED,
     type IUser,
     RoleName,
     type IAuditUser,
     type IUnleashConfig,
-} from '../../types';
-import type { EventService } from '../../services';
-import { createEventsService } from '../events/createEventsService';
-import { createTestConfig } from '../../../test/config/test-config';
-import { randomId } from '../../util';
-import { ApiTokenType } from '../../types/models/api-token';
+} from '../../types/index.js';
+import type { EventService } from '../../services/index.js';
+import { createEventsService } from '../events/createEventsService.js';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import { randomId } from '../../util/index.js';
+import { ApiTokenType } from '../../types/models/api-token.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

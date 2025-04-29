@@ -1,5 +1,5 @@
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
-import { ReleasePlan } from './ReleasePlan';
+import { ReleasePlan } from './ReleasePlan.tsx';
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
 import {
     styled,

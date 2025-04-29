@@ -1,6 +1,6 @@
 import { render, cleanup } from '@testing-library/react';
-import { StickyProvider } from './StickyProvider';
-import { type IStickyContext, StickyContext } from './StickyContext';
+import { StickyProvider } from './StickyProvider.tsx';
+import { type IStickyContext, StickyContext } from './StickyContext.tsx';
 import { expect } from 'vitest';
 import { act } from 'react';
 

@@ -1,5 +1,5 @@
-import ConfirmUserEmail from './ConfirmUserEmail/ConfirmUserEmail';
-import ConfirmUserLink from './ConfirmUserLink/ConfirmUserLink';
+import ConfirmUserEmail from './ConfirmUserEmail/ConfirmUserEmail.tsx';
+import ConfirmUserLink from './ConfirmUserLink/ConfirmUserLink.tsx';
 
 interface IConfirmUserAddedProps {
     open: boolean;

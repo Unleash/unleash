@@ -1,5 +1,5 @@
-import type { IFeatureEnvironment, IVariant } from '../model';
-import type { Store } from './store';
+import type { IFeatureEnvironment, IVariant } from '../model.js';
+import type { Store } from './store.js';
 
 export interface FeatureEnvironmentKey {
     featureName: string;

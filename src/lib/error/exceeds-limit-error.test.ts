@@ -1,9 +1,9 @@
 import type EventEmitter from 'events';
-import { EXCEEDS_LIMIT } from '../metric-events';
+import { EXCEEDS_LIMIT } from '../metric-events.js';
 import {
     ExceedsLimitError,
     throwExceedsLimitError,
-} from './exceeds-limit-error';
+} from './exceeds-limit-error.js';
 
 it('emits events event when created through the external function', () => {
     const emitEvent = jest.fn();

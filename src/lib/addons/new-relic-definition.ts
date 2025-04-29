@@ -14,8 +14,8 @@ import {
     FEATURE_STRATEGY_REMOVE,
     FEATURE_STRATEGY_UPDATE,
     FEATURE_UPDATED,
-} from '../types/events';
-import type { IAddonDefinition } from '../types/model';
+} from '../types/events.js';
+import type { IAddonDefinition } from '../types/model.js';
 
 const newRelicDefinition: IAddonDefinition = {
     name: 'new-relic',

@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import type { IHighlightContext } from './HighlightProvider';
+import type { IHighlightContext } from './HighlightProvider.tsx';
 
 export const HighlightContext = createContext<IHighlightContext | undefined>(
     undefined,

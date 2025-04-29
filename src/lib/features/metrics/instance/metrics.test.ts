@@ -1,21 +1,21 @@
 import supertest, { type Test } from 'supertest';
-import getApp from '../../../app';
-import { createTestConfig } from '../../../../test/config/test-config';
-import { clientMetricsSchema } from '../shared/schema';
-import { createServices } from '../../../services';
+import getApp from '../../../app.js';
+import { createTestConfig } from '../../../../test/config/test-config.js';
+import { clientMetricsSchema } from '../shared/schema.js';
+import { createServices } from '../../../services/index.js';
 import {
     IAuthType,
     type IUnleashConfig,
     type IUnleashOptions,
     type IUnleashServices,
     type IUnleashStores,
-} from '../../../types';
+} from '../../../types/index.js';
 import dbInit, {
     type ITestDb,
-} from '../../../../test/e2e/helpers/database-init';
+} from '../../../../test/e2e/helpers/database-init.js';
 import { startOfHour } from 'date-fns';
-import { ApiTokenType } from '../../../types/models/api-token';
-import type TestAgent from 'supertest/lib/agent';
+import { ApiTokenType } from '../../../types/models/api-token.js';
+import type TestAgent from 'supertest/lib/agent.d.ts';
 
 let db: ITestDb;
 let config: IUnleashConfig;

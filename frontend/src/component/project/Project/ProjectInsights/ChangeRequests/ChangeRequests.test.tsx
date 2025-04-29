@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { Route, Routes } from 'react-router-dom';
-import { ChangeRequests } from './ChangeRequests';
+import { ChangeRequests } from './ChangeRequests.tsx';
 
 const server = testServerSetup();
 

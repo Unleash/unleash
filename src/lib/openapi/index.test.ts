@@ -1,4 +1,8 @@
-import { createOpenApiSchema, removeJsonSchemaProps, schemas } from './index';
+import {
+    createOpenApiSchema,
+    removeJsonSchemaProps,
+    schemas,
+} from './index.js';
 import fs from 'fs';
 import path from 'path';
 

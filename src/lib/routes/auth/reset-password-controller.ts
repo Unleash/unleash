@@ -1,22 +1,22 @@
 import type { Request, Response } from 'express';
-import Controller from '../controller';
-import type UserService from '../../services/user-service';
-import type { Logger } from '../../logger';
-import type { IUnleashConfig } from '../../types/option';
-import type { IUnleashServices } from '../../types';
-import { NONE } from '../../types/permissions';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import type { OpenApiService } from '../../services/openapi-service';
+import Controller from '../controller.js';
+import type UserService from '../../services/user-service.js';
+import type { Logger } from '../../logger.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashServices } from '../../types/index.js';
+import { NONE } from '../../types/permissions.js';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
+import { createResponseSchema } from '../../openapi/util/create-response-schema.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
 import {
     tokenUserSchema,
     type TokenUserSchema,
-} from '../../openapi/spec/token-user-schema';
-import type { EmailSchema } from '../../openapi/spec/email-schema';
+} from '../../openapi/spec/token-user-schema.js';
+import type { EmailSchema } from '../../openapi/spec/email-schema.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../openapi/util/standard-responses';
+} from '../../openapi/util/standard-responses.js';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
 

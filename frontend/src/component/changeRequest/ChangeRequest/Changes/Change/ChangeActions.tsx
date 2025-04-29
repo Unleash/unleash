@@ -27,7 +27,7 @@ import {
 import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
 import MoreVert from '@mui/icons-material/MoreVert';
-import { EditChange } from './EditChange';
+import { EditChange } from './EditChange.tsx';
 
 const useShowActions = (changeRequest: ChangeRequestType, change: IChange) => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(

@@ -10,7 +10,7 @@ import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFe
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { StrategyDraggableItem } from './StrategyDraggableItem/LegacyStrategyDraggableItem';
+import { StrategyDraggableItem } from './StrategyDraggableItem/LegacyStrategyDraggableItem.tsx';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { FeatureStrategyEmpty } from 'component/feature/FeatureStrategy/FeatureStrategyEmpty/FeatureStrategyEmpty';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -23,9 +23,9 @@ import type { IFeatureStrategy } from 'interfaces/strategy';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
-import { ReleasePlan } from '../../../ReleasePlan/LegacyReleasePlan';
+import { ReleasePlan } from '../../../ReleasePlan/LegacyReleasePlan.tsx';
 import { Badge } from 'component/common/Badge/Badge';
-import { SectionSeparator } from '../SectionSeparator/SectionSeparator';
+import { SectionSeparator } from '../SectionSeparator/SectionSeparator.tsx';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;

@@ -1,9 +1,11 @@
-import type { IEnvironmentStore } from '../project-environments/environment-store-type';
+import type { IEnvironmentStore } from '../project-environments/environment-store-type.js';
 
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
-import type { IProjectStore, IUnleashStores } from '../../types';
-import type { IProjectInsert } from './project-store-type';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import type { IProjectStore, IUnleashStores } from '../../types/index.js';
+import type { IProjectInsert } from './project-store-type.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

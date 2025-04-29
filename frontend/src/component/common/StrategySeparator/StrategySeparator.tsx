@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { disabledStrategyClassName } from '../StrategyItemContainer/disabled-strategy-utils';
+import { disabledStrategyClassName } from '../StrategyItemContainer/disabled-strategy-utils.ts';
 
 const Chip = styled('div')(({ theme }) => ({
     padding: theme.spacing(0.75, 1),

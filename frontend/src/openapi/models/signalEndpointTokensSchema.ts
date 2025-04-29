@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SignalEndpointTokenSchema } from './signalEndpointTokenSchema';
+import type { SignalEndpointTokenSchema } from './signalEndpointTokenSchema.js';
 
 /**
  * A response model with a list of signal endpoint tokens.

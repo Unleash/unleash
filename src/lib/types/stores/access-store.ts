@@ -1,7 +1,11 @@
-import type { PermissionRef } from '../../services/access-service';
-import type { IGroupModelWithAddedAt } from '../group';
-import type { IPermission, IUserAccessOverview, IUserWithRole } from '../model';
-import type { Store } from './store';
+import type { PermissionRef } from '../../services/access-service.js';
+import type { IGroupModelWithAddedAt } from '../group.js';
+import type {
+    IPermission,
+    IUserAccessOverview,
+    IUserWithRole,
+} from '../model.js';
+import type { Store } from './store.js';
 
 export interface IUserPermission {
     project?: string;

@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { archivedFeatureSchema } from './archived-feature-schema';
+import { archivedFeatureSchema } from './archived-feature-schema.js';
 
 export const archivedFeaturesSchema = {
     $id: '#/components/schemas/archivedFeaturesSchema',

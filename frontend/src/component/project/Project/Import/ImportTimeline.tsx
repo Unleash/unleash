@@ -6,7 +6,7 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineContent from '@mui/lab/TimelineContent';
 import Timeline from '@mui/lab/Timeline';
-import type { StageName } from './StageName';
+import type { StageName } from './StageName.tsx';
 
 const StyledTimeline = styled(Timeline)(() => ({
     padding: 0,

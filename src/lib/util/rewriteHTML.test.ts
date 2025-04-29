@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { rewriteHTML } from './rewriteHTML';
+import { rewriteHTML } from './rewriteHTML.js';
 
 const input = fs
     .readFileSync(

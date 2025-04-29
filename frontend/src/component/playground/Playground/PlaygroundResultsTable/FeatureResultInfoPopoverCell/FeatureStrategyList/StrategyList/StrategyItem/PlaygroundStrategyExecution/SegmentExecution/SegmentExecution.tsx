@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { PlaygroundSegmentSchema, PlaygroundRequestSchema } from 'openapi';
-import { ConstraintExecution } from '../ConstraintExecution/ConstraintExecution';
+import { ConstraintExecution } from '../ConstraintExecution/ConstraintExecution.tsx';
 import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
 import { objectId } from 'utils/objectId';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';

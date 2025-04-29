@@ -16,8 +16,8 @@ import { Button } from '@mui/material';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import type { IPermissionButtonProps } from 'component/common/PermissionButton/PermissionButton';
 import type { FeatureNamingType } from 'interfaces/project';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
-import { NamingPatternInfo } from './NamingPatternInfo';
+import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
+import { NamingPatternInfo } from './NamingPatternInfo.tsx';
 
 type NamingPattern = FeatureNamingType;
 

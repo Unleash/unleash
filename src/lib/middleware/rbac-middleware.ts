@@ -4,12 +4,12 @@ import {
     DELETE_FEATURE,
     UPDATE_FEATURE,
     UPDATE_PROJECT_SEGMENT,
-} from '../types/permissions';
-import type { IUnleashConfig } from '../types/option';
-import type { IUnleashStores } from '../types/stores';
-import type User from '../types/user';
+} from '../types/permissions.js';
+import type { IUnleashConfig } from '../types/option.js';
+import type { IUnleashStores } from '../types/stores.js';
+import type User from '../types/user.js';
 import type { Request } from 'express';
-import { extractUserId } from '../util';
+import { extractUserId } from '../util/index.js';
 
 interface PermissionChecker {
     hasPermission(

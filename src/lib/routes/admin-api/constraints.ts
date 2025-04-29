@@ -1,13 +1,13 @@
 import type { Request, Response } from 'express';
-import type FeatureToggleService from '../../features/feature-toggle/feature-toggle-service';
-import type { IUnleashConfig } from '../../types/option';
-import type { IUnleashServices } from '../../types';
-import { NONE } from '../../types/permissions';
-import Controller from '../controller';
-import type { Logger } from '../../logger';
-import type { OpenApiService } from '../../services/openapi-service';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { type ConstraintSchema, getStandardResponses } from '../../openapi';
+import type FeatureToggleService from '../../features/feature-toggle/feature-toggle-service.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashServices } from '../../types/index.js';
+import { NONE } from '../../types/permissions.js';
+import Controller from '../controller.js';
+import type { Logger } from '../../logger.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
+import { type ConstraintSchema, getStandardResponses } from '../../openapi/index.js';
 
 export default class ConstraintController extends Controller {
     private featureService: FeatureToggleService;

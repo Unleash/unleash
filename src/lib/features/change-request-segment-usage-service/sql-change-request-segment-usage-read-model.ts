@@ -1,8 +1,8 @@
-import type { Db } from '../../db/db';
+import type { Db } from '../../db/db.js';
 import type {
     ChangeRequestStrategy,
     IChangeRequestSegmentUsageReadModel,
-} from './change-request-segment-usage-read-model';
+} from './change-request-segment-usage-read-model.js';
 
 export class ChangeRequestSegmentUsageReadModel
     implements IChangeRequestSegmentUsageReadModel

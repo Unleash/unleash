@@ -1,5 +1,5 @@
 import type { Response } from 'express';
-import Controller from '../../routes/controller';
+import Controller from '../../routes/controller.js';
 import {
     type IFlagResolver,
     type IProjectParam,
@@ -7,16 +7,16 @@ import {
     type IUnleashServices,
     NONE,
     serializeDates,
-} from '../../types';
-import type { ProjectInsightsService } from './project-insights-service';
+} from '../../types/index.js';
+import type { ProjectInsightsService } from './project-insights-service.js';
 import {
     createResponseSchema,
     projectInsightsSchema,
     type ProjectInsightsSchema,
-} from '../../openapi';
-import { getStandardResponses } from '../../openapi/util/standard-responses';
-import type { OpenApiService } from '../../services';
-import type { IAuthRequest } from '../../routes/unleash-types';
+} from '../../openapi/index.js';
+import { getStandardResponses } from '../../openapi/util/standard-responses.js';
+import type { OpenApiService } from '../../services/index.js';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
 
 export default class ProjectInsightsController extends Controller {
     private projectInsightsService: ProjectInsightsService;

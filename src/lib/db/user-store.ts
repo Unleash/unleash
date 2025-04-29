@@ -1,17 +1,17 @@
 /* eslint camelcase: "off" */
 
-import type { Logger, LogProvider } from '../logger';
-import User from '../types/user';
+import type { Logger, LogProvider } from '../logger.js';
+import User from '../types/user.js';
 
-import NotFoundError from '../error/notfound-error';
+import NotFoundError from '../error/notfound-error.js';
 import type {
     ICreateUser,
     IUserLookup,
     IUserStore,
     IUserUpdateFields,
-} from '../types/stores/user-store';
-import type { Db } from './db';
-import type { IFlagResolver } from '../types';
+} from '../types/stores/user-store.js';
+import type { Db } from './db.js';
+import type { IFlagResolver } from '../types/index.js';
 
 const TABLE = 'users';
 const PASSWORD_HASH_TABLE = 'used_passwords';
@@ -333,6 +333,4 @@ class UserStore implements IUserStore {
         return firstInstanceUser ? firstInstanceUser.created_at : null;
     }
 }
-
-module.exports = UserStore;
 export default UserStore;

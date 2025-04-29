@@ -1,7 +1,7 @@
 import type React from 'react';
 import { FormControlLabel, Switch, TextField } from '@mui/material';
-import StrategyInputList from '../StrategyInputList/StrategyInputList';
-import RolloutSlider from '../RolloutSlider/RolloutSlider';
+import StrategyInputList from '../StrategyInputList/StrategyInputList.tsx';
+import RolloutSlider from '../RolloutSlider/RolloutSlider.tsx';
 import type {
     IFeatureStrategyParameters,
     IStrategyParameter,

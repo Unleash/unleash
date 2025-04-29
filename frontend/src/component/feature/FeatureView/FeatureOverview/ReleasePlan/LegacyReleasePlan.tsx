@@ -12,15 +12,15 @@ import type {
 } from 'interfaces/releasePlans';
 import { useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { ReleasePlanRemoveDialog } from './ReleasePlanRemoveDialog';
-import { ReleasePlanMilestone } from './ReleasePlanMilestone/LegacyReleasePlanMilestone';
+import { ReleasePlanRemoveDialog } from './ReleasePlanRemoveDialog.tsx';
+import { ReleasePlanMilestone } from './ReleasePlanMilestone/LegacyReleasePlanMilestone.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { RemoveReleasePlanChangeRequestDialog } from './ChangeRequest/RemoveReleasePlanChangeRequestDialog';
-import { StartMilestoneChangeRequestDialog } from './ChangeRequest/StartMilestoneChangeRequestDialog';
+import { RemoveReleasePlanChangeRequestDialog } from './ChangeRequest/RemoveReleasePlanChangeRequestDialog.tsx';
+import { StartMilestoneChangeRequestDialog } from './ChangeRequest/StartMilestoneChangeRequestDialog.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Truncator } from 'component/common/Truncator/Truncator';
 

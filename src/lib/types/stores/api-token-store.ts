@@ -1,5 +1,5 @@
-import type { IApiToken, IApiTokenCreate } from '../models/api-token';
-import type { Store } from './store';
+import type { IApiToken, IApiTokenCreate } from '../models/api-token.js';
+import type { Store } from './store.js';
 
 export interface IApiTokenStore extends Store<IApiToken, string> {
     getAllActive(): Promise<IApiToken[]>;

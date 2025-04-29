@@ -4,8 +4,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { useNavigate } from 'react-router-dom';
-import { OldFeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/OldFeatureStrategyMenuCard';
-import { OldFeatureReleasePlanCard } from '../FeatureReleasePlanCard/OldFeatureReleasePlanCard';
+import { OldFeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/OldFeatureStrategyMenuCard.tsx';
+import { OldFeatureReleasePlanCard } from '../FeatureReleasePlanCard/OldFeatureReleasePlanCard.tsx';
 
 interface IFeatureStrategyMenuCardsProps {
     projectId: string;

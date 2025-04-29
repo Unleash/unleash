@@ -1,13 +1,13 @@
-import { SchedulerService } from './scheduler-service';
-import type { LogProvider } from '../../logger';
-import MaintenanceService from '../maintenance/maintenance-service';
-import { createTestConfig } from '../../../test/config/test-config';
-import SettingService from '../../services/setting-service';
-import FakeSettingStore from '../../../test/fixtures/fake-setting-store';
-import type EventService from '../events/event-service';
-import { SCHEDULER_JOB_TIME } from '../../metric-events';
+import { SchedulerService } from './scheduler-service.js';
+import type { LogProvider } from '../../logger.js';
+import MaintenanceService from '../maintenance/maintenance-service.js';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import SettingService from '../../services/setting-service.js';
+import FakeSettingStore from '../../../test/fixtures/fake-setting-store.js';
+import type EventService from '../events/event-service.js';
+import { SCHEDULER_JOB_TIME } from '../../metric-events.js';
 import EventEmitter from 'events';
-import { TEST_AUDIT_USER } from '../../types';
+import { TEST_AUDIT_USER } from '../../types/index.js';
 
 function ms(timeMs) {
     return new Promise((resolve) => setTimeout(resolve, timeMs));

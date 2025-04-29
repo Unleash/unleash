@@ -28,8 +28,8 @@ import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import { MultiSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/MultiSelectConfigButton';
 import type { ITag } from 'interfaces/tags';
 import { ToggleConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/ToggleConfigButton';
-import { useFlagLimits } from './useFlagLimits';
-import { useFeatureCreatedFeedback } from './hooks/useFeatureCreatedFeedback';
+import { useFlagLimits } from './useFlagLimits.ts';
+import { useFeatureCreatedFeedback } from './hooks/useFeatureCreatedFeedback.ts';
 import { formatTag } from 'utils/format-tag';
 
 interface ICreateFeatureDialogProps {

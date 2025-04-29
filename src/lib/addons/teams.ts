@@ -1,17 +1,17 @@
-import Addon from './addon';
+import Addon from './addon.js';
 
-import teamsDefinition from './teams-definition';
+import teamsDefinition from './teams-definition.js';
 import {
     type IAddonConfig,
     type IFlagResolver,
     serializeDates,
-} from '../types';
+} from '../types/index.js';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
-} from './feature-event-formatter-md';
-import type { IEvent } from '../types/events';
-import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
+} from './feature-event-formatter-md.js';
+import type { IEvent } from '../types/events.js';
+import type { IntegrationEventState } from '../features/integration-events/integration-events-store.js';
 
 import {
     CHANGE_ADDED,
@@ -29,7 +29,7 @@ import {
     CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS,
     CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
     CHANGE_REQUEST_SCHEDULE_SUSPENDED,
-} from '../types/events';
+} from '../types/events.js';
 
 interface ITeamsParameters {
     url: string;

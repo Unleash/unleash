@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { AccountTypes } from '../../types';
+import { AccountTypes } from '../../types/index.js';
 
 export const userSchema = {
     $id: '#/components/schemas/userSchema',

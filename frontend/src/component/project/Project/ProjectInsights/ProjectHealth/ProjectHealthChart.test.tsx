@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
-import { ProjectHealthChart } from './ProjectHealthChart';
-import { render } from '../../../../../utils/testRenderer';
+import { ProjectHealthChart } from './ProjectHealthChart.tsx';
+import { render } from '../../../../../utils/testRenderer.ts';
 import { screen } from '@testing-library/react';
 
 describe('ProjectHealthChart', () => {

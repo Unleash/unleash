@@ -5,10 +5,10 @@ import {
     Tooltip,
     styled,
 } from '@mui/material';
-import type { ActionsFilterState } from '../../useProjectActionsForm';
+import type { ActionsFilterState } from '../../useProjectActionsForm.ts';
 import Delete from '@mui/icons-material/Delete';
 import Input from 'component/common/Input/Input';
-import { ProjectActionsFormItem } from '../ProjectActionsFormItem';
+import { ProjectActionsFormItem } from '../ProjectActionsFormItem.tsx';
 import { ConstraintOperatorSelect } from 'component/common/NewConstraintAccordion/ConstraintOperatorSelect';
 import {
     type Operator,

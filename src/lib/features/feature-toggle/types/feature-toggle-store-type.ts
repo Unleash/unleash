@@ -4,12 +4,12 @@ import type {
     IFeatureToggleQuery,
     IFeatureTypeCount,
     IVariant,
-} from '../../../types/model';
-import type { FeatureToggleInsert } from '../feature-toggle-store';
-import type { Store } from '../../../types/stores/store';
-import type { LastSeenInput } from '../../metrics/last-seen/last-seen-service';
-import type { FeatureConfigurationClient } from './feature-toggle-strategies-store-type';
-import type { IFeatureProjectUserParams } from '../feature-toggle-controller';
+} from '../../../types/model.js';
+import type { FeatureToggleInsert } from '../feature-toggle-store.js';
+import type { Store } from '../../../types/stores/store.js';
+import type { LastSeenInput } from '../../metrics/last-seen/last-seen-service.js';
+import type { FeatureConfigurationClient } from './feature-toggle-strategies-store-type.js';
+import type { IFeatureProjectUserParams } from '../feature-toggle-controller.js';
 
 export interface IFeatureToggleStoreQuery {
     archived: boolean;

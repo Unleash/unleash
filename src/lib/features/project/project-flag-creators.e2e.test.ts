@@ -1,9 +1,11 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithAuth,
-} from '../../../test/e2e/helpers/test-helper';
-import getLogger from '../../../test/fixtures/no-logger';
+} from '../../../test/e2e/helpers/test-helper.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

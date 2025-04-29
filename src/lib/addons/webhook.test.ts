@@ -1,18 +1,18 @@
-import type { Logger } from '../logger';
+import type { Logger } from '../logger.js';
 
-import { FEATURE_CREATED, type IEvent } from '../types/events';
+import { FEATURE_CREATED, type IEvent } from '../types/events.js';
 
-import WebhookAddon from './webhook';
+import WebhookAddon from './webhook.js';
 
-import noLogger from '../../test/fixtures/no-logger';
+import noLogger from '../../test/fixtures/no-logger.js';
 import {
     type IAddonConfig,
     type IFlagKey,
     type IFlagResolver,
     serializeDates,
     SYSTEM_USER_ID,
-} from '../types';
-import type { IntegrationEventsService } from '../services';
+} from '../types/index.js';
+import type { IntegrationEventsService } from '../services/index.js';
 
 let fetchRetryCalls: any[] = [];
 const registerEventMock = jest.fn();

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SearchFeaturesSortOrder } from './searchFeaturesSortOrder';
+import type { SearchFeaturesSortOrder } from './searchFeaturesSortOrder.js';
 
 export type SearchFeaturesParams = {
     /**

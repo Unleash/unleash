@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react';
 import { Route, Routes } from 'react-router-dom';
 
 import { render } from 'utils/testRenderer';
-import { ChangeRequest } from './ChangeRequest';
+import { ChangeRequest } from './ChangeRequest.tsx';
 import type {
     ChangeRequestType,
     IChangeRequestAddStrategy,

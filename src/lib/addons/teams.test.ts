@@ -1,23 +1,23 @@
-import type { Logger } from '../logger';
+import type { Logger } from '../logger.js';
 
 import {
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_ENVIRONMENT_DISABLED,
     type IEvent,
-} from '../types/events';
+} from '../types/events.js';
 
-import TeamsAddon from './teams';
+import TeamsAddon from './teams.js';
 
-import noLogger from '../../test/fixtures/no-logger';
+import noLogger from '../../test/fixtures/no-logger.js';
 import {
     type IAddonConfig,
     type IFlagKey,
     type IFlagResolver,
     serializeDates,
     SYSTEM_USER_ID,
-} from '../types';
-import type { IntegrationEventsService } from '../services';
+} from '../types/index.js';
+import type { IntegrationEventsService } from '../services/index.js';
 
 let fetchRetryCalls: any[];
 const registerEventMock = jest.fn();

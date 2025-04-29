@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { customJoi } from '../routes/util';
+import { customJoi } from '../routes/util.js';
 
 export const tagTypeSchema = Joi.object()
     .keys({
@@ -16,5 +16,3 @@ export const tagTypeSchema = Joi.object()
         stripUnknown: true,
         abortEarly: false,
     });
-
-module.exports = { tagTypeSchema };

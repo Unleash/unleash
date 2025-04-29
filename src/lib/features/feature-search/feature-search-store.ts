@@ -1,27 +1,27 @@
 import { Knex } from 'knex';
 import type EventEmitter from 'events';
-import metricsHelper from '../../util/metrics-helper';
-import { DB_TIME } from '../../metric-events';
-import type { Logger, LogProvider } from '../../logger';
+import metricsHelper from '../../util/metrics-helper.js';
+import { DB_TIME } from '../../metric-events.js';
+import type { Logger, LogProvider } from '../../logger.js';
 import type {
     IFeatureSearchOverview,
     IFeatureSearchStore,
     IFlagResolver,
     ITag,
-} from '../../types';
-import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
-import type { Db } from '../../db/db';
+} from '../../types/index.js';
+import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
+import type { Db } from '../../db/db.js';
 import type {
     IFeatureSearchParams,
     IQueryParam,
-} from '../feature-toggle/types/feature-toggle-strategies-store-type';
+} from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
 import {
     applyGenericQueryParams,
     applySearchFilters,
     parseSearchOperatorValue,
-} from './search-utils';
-import type { FeatureSearchEnvironmentSchema } from '../../openapi/spec/feature-search-environment-schema';
-import { generateImageUrl } from '../../util';
+} from './search-utils.js';
+import type { FeatureSearchEnvironmentSchema } from '../../openapi/spec/feature-search-environment-schema.js';
+import { generateImageUrl } from '../../util/index.js';
 import Raw = Knex.Raw;
 
 const sortEnvironments = (overview: IFeatureSearchOverview[]) => {
@@ -891,5 +891,4 @@ const createSegmentBaseQuery = (segments: string[]) => {
     };
 };
 
-module.exports = FeatureSearchStore;
 export default FeatureSearchStore;

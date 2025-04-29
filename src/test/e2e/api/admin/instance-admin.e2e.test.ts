@@ -1,12 +1,12 @@
-import dbInit, { type ITestDb } from '../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import getLogger from '../../../fixtures/no-logger';
-import type { IUnleashStores } from '../../../../lib/types';
-import { ApiTokenType } from '../../../../lib/types/models/api-token';
-import { registerPrometheusMetrics } from '../../../../lib/metrics';
+} from '../../helpers/test-helper.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import type { IUnleashStores } from '../../../../lib/types/index.js';
+import { ApiTokenType } from '../../../../lib/types/models/api-token.js';
+import { registerPrometheusMetrics } from '../../../../lib/metrics.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

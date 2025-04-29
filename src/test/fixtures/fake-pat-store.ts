@@ -1,5 +1,5 @@
-import type { IPatStore } from '../../lib/types/stores/pat-store';
-import type { CreatePatSchema, PatSchema } from '../../lib/openapi';
+import type { IPatStore } from '../../lib/types/stores/pat-store.js';
+import type { CreatePatSchema, PatSchema } from '../../lib/openapi/index.js';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export default class FakePatStore implements IPatStore {
     create(

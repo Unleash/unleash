@@ -1,21 +1,24 @@
 import type { Response } from 'express';
-import Controller from '../controller';
-import type { Logger } from '../../logger';
-import type { IUnleashConfig } from '../../types/option';
-import type { IUnleashServices } from '../../types/services';
-import type UserFeedbackService from '../../services/user-feedback-service';
-import type { IAuthRequest } from '../unleash-types';
-import { NONE } from '../../types/permissions';
-import type { OpenApiService } from '../../services/openapi-service';
-import type { FeedbackCreateSchema } from '../../openapi/spec/feedback-create-schema';
-import type { FeedbackUpdateSchema } from '../../openapi/spec/feedback-update-schema';
-import type { FeedbackResponseSchema } from '../../openapi/spec/feedback-response-schema';
-import { serializeDates } from '../../types/serialize-dates';
+import Controller from '../controller.js';
+import type { Logger } from '../../logger.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashServices } from '../../types/services.js';
+import type UserFeedbackService from '../../services/user-feedback-service.js';
+import type { IAuthRequest } from '../unleash-types.js';
+import { NONE } from '../../types/permissions.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
+import type { FeedbackCreateSchema } from '../../openapi/spec/feedback-create-schema.js';
+import type { FeedbackUpdateSchema } from '../../openapi/spec/feedback-update-schema.js';
+import type { FeedbackResponseSchema } from '../../openapi/spec/feedback-response-schema.js';
+import { serializeDates } from '../../types/serialize-dates.js';
 import { parseISO } from 'date-fns';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import BadDataError from '../../error/bad-data-error';
-import { feedbackResponseSchema, getStandardResponses } from '../../openapi';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
+import { createResponseSchema } from '../../openapi/util/create-response-schema.js';
+import BadDataError from '../../error/bad-data-error.js';
+import {
+    feedbackResponseSchema,
+    getStandardResponses,
+} from '../../openapi/index.js';
 
 class UserFeedbackController extends Controller {
     private logger: Logger;
@@ -121,6 +124,4 @@ class UserFeedbackController extends Controller {
         );
     }
 }
-
-module.exports = UserFeedbackController;
 export default UserFeedbackController;

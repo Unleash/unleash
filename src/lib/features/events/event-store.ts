@@ -7,24 +7,24 @@ import {
     SEGMENT_CREATED,
     SEGMENT_DELETED,
     SEGMENT_UPDATED,
-} from '../../types/events';
-import type { Logger, LogProvider } from '../../logger';
+} from '../../types/events.js';
+import type { Logger, LogProvider } from '../../logger.js';
 import type {
     IEventSearchParams,
     IEventStore,
-} from '../../types/stores/event-store';
-import type { ITag } from '../../types/model';
-import { sharedEventEmitter } from '../../util/anyEventEmitter';
-import type { Db } from '../../db/db';
+} from '../../types/stores/event-store.js';
+import type { ITag } from '../../types/model.js';
+import { sharedEventEmitter } from '../../util/anyEventEmitter.js';
+import type { Db } from '../../db/db.js';
 import type { Knex } from 'knex';
 import type EventEmitter from 'events';
-import { ADMIN_TOKEN_USER, SYSTEM_USER, SYSTEM_USER_ID } from '../../types';
+import { ADMIN_TOKEN_USER, SYSTEM_USER, SYSTEM_USER_ID } from '../../types/index.js';
 import type {
     DeprecatedSearchEventsSchema,
     ProjectActivitySchema,
-} from '../../openapi';
-import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type';
-import { applyGenericQueryParams } from '../feature-search/search-utils';
+} from '../../openapi/index.js';
+import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
+import { applyGenericQueryParams } from '../feature-search/search-utils.js';
 
 const EVENT_COLUMNS = [
     'id',

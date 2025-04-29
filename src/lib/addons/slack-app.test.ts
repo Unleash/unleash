@@ -1,5 +1,5 @@
-import { type IEvent, FEATURE_ENVIRONMENT_ENABLED } from '../types/events';
-import SlackAppAddon from './slack-app';
+import { type IEvent, FEATURE_ENVIRONMENT_ENABLED } from '../types/events.js';
+import SlackAppAddon from './slack-app.js';
 import { type ChatPostMessageArguments, ErrorCode } from '@slack/web-api';
 import {
     type IAddonConfig,
@@ -7,9 +7,9 @@ import {
     type IFlagResolver,
     serializeDates,
     SYSTEM_USER_ID,
-} from '../types';
-import type { IntegrationEventsService } from '../services';
-import type { Logger } from '../logger';
+} from '../types/index.js';
+import type { IntegrationEventsService } from '../services/index.js';
+import type { Logger } from '../logger.js';
 
 const slackApiCalls: ChatPostMessageArguments[] = [];
 

@@ -1,5 +1,5 @@
 import { headers } from 'utils/apiUtils';
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.ts';
 import type { UserSchema } from 'openapi';
 
 type PasswordLogin = (

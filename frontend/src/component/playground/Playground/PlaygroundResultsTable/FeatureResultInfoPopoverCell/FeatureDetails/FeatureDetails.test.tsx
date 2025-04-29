@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { FeatureDetails as LegacyFeatureDetails } from './LegacyFeatureDetails';
+import { FeatureDetails as LegacyFeatureDetails } from './LegacyFeatureDetails.tsx';
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
-import { FeatureDetails } from './FeatureDetails';
+import { FeatureDetails } from './FeatureDetails.tsx';
 
 const testCases = [
     {

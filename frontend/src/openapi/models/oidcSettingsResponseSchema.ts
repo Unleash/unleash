@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { OidcSettingsResponseSchemaDefaultRootRole } from './oidcSettingsResponseSchemaDefaultRootRole';
-import type { OidcSettingsResponseSchemaIdTokenSigningAlgorithm } from './oidcSettingsResponseSchemaIdTokenSigningAlgorithm';
+import type { OidcSettingsResponseSchemaDefaultRootRole } from './oidcSettingsResponseSchemaDefaultRootRole.js';
+import type { OidcSettingsResponseSchemaIdTokenSigningAlgorithm } from './oidcSettingsResponseSchemaIdTokenSigningAlgorithm.js';
 
 /**
  * Response for OpenID Connect settings

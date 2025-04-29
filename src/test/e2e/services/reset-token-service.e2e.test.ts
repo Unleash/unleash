@@ -1,19 +1,19 @@
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
-import ResetTokenService from '../../../lib/services/reset-token-service';
-import UserService from '../../../lib/services/user-service';
-import { AccessService } from '../../../lib/services/access-service';
-import { EmailService } from '../../../lib/services/email-service';
-import type { IUnleashConfig } from '../../../lib/types/option';
-import { createTestConfig } from '../../config/test-config';
-import SessionService from '../../../lib/services/session-service';
-import InvalidTokenError from '../../../lib/error/invalid-token-error';
-import type { IUser, IUserWithRootRole } from '../../../lib/types/user';
-import SettingService from '../../../lib/services/setting-service';
-import FakeSettingStore from '../../fixtures/fake-setting-store';
-import { GroupService } from '../../../lib/services/group-service';
-import { type IUnleashStores, TEST_AUDIT_USER } from '../../../lib/types';
-import { createEventsService } from '../../../lib/features';
+import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import getLogger from '../../fixtures/no-logger.js';
+import ResetTokenService from '../../../lib/services/reset-token-service.js';
+import UserService from '../../../lib/services/user-service.js';
+import { AccessService } from '../../../lib/services/access-service.js';
+import { EmailService } from '../../../lib/services/email-service.js';
+import type { IUnleashConfig } from '../../../lib/types/option.js';
+import { createTestConfig } from '../../config/test-config.js';
+import SessionService from '../../../lib/services/session-service.js';
+import InvalidTokenError from '../../../lib/error/invalid-token-error.js';
+import type { IUser, IUserWithRootRole } from '../../../lib/types/user.js';
+import SettingService from '../../../lib/services/setting-service.js';
+import FakeSettingStore from '../../fixtures/fake-setting-store.js';
+import { GroupService } from '../../../lib/services/group-service.js';
+import { type IUnleashStores, TEST_AUDIT_USER } from '../../../lib/types/index.js';
+import { createEventsService } from '../../../lib/features/index.js';
 
 const config: IUnleashConfig = createTestConfig();
 

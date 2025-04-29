@@ -8,7 +8,7 @@ import {
     RouterProvider,
     createMemoryRouter,
 } from 'react-router-dom';
-import { useRecentlyVisited } from './useRecentlyVisited';
+import { useRecentlyVisited } from './useRecentlyVisited.ts';
 import { RecentlyVisitedRecorder } from 'component/commandBar/RecentlyVisitedRecorder';
 
 const RouteNameRender: FC<{}> = () => {

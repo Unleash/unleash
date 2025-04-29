@@ -8,8 +8,8 @@ import {
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { PROJECT_ENVIRONMENT_ACCORDION } from 'utils/testIds';
-import type { ProjectEnvironmentType } from '../../../../../../interfaces/environments';
-import LegacyProjectEnvironmentDefaultStrategy from './ProjectEnvironmentDefaultStrategy/LegacyProjectEnvironmentDefaultStrategy';
+import type { ProjectEnvironmentType } from '../../../../../../interfaces/environments.ts';
+import LegacyProjectEnvironmentDefaultStrategy from './ProjectEnvironmentDefaultStrategy/LegacyProjectEnvironmentDefaultStrategy.tsx';
 
 interface IProjectEnvironmentProps {
     environment: ProjectEnvironmentType;

@@ -1,4 +1,4 @@
-import timer from './timer';
+import timer from './timer.js';
 
 function timeout(fn, ms): Promise<void> {
     return new Promise((resolve) =>

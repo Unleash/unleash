@@ -1,14 +1,14 @@
 import { Alert, IconButton, Tooltip, styled } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import type { ActionsActionState } from '../../useProjectActionsForm';
-import { ProjectActionsFormItem } from '../ProjectActionsFormItem';
+import type { ActionsActionState } from '../../useProjectActionsForm.ts';
+import { ProjectActionsFormItem } from '../ProjectActionsFormItem.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useServiceAccountAccessOverview } from 'hooks/api/getters/useServiceAccountAccessOverview/useServiceAccountAccessOverview';
 import { useEffect, useMemo } from 'react';
-import { ProjectActionsActionParameter } from './ProjectActionsActionParameter/ProjectActionsActionParameter';
+import { ProjectActionsActionParameter } from './ProjectActionsActionParameter/ProjectActionsActionParameter.tsx';
 import type { ActionConfigurations } from 'interfaces/action';
-import { ProjectActionsActionSelect } from './ProjectActionsActionSelect';
+import { ProjectActionsActionSelect } from './ProjectActionsActionSelect.tsx';
 
 const StyledItemBody = styled('div')(({ theme }) => ({
     display: 'flex',

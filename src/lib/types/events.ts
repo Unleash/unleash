@@ -5,12 +5,12 @@ import type {
     IStrategyConfig,
     ITag,
     IVariant,
-} from './model';
-import type { IApiToken } from './models/api-token';
-import type { IAuditUser, IUserWithRootRole } from './user';
-import type { ITagType } from '../features/tag-type/tag-type-store-type';
-import type { IFeatureAndTag } from './stores/feature-tag-store';
-import type { FeatureLifecycleCompletedSchema } from '../openapi';
+} from './model.js';
+import type { IApiToken } from './models/api-token.js';
+import type { IAuditUser, IUserWithRootRole } from './user.js';
+import type { ITagType } from '../features/tag-type/tag-type-store-type.js';
+import type { IFeatureAndTag } from './stores/feature-tag-store.js';
+import type { FeatureLifecycleCompletedSchema } from '../openapi/index.js';
 
 export const APPLICATION_CREATED = 'application-created' as const;
 

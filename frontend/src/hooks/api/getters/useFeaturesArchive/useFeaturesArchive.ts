@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 import type { ArchivedFeaturesSchema } from 'openapi';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import { formatApiPath } from 'utils/formatPath';
 
 const fetcher = (path: string) => {

@@ -3,7 +3,7 @@ import {
     RecentlyVisitedFeatureButton,
     RecentlyVisitedPathButton,
     RecentlyVisitedProjectButton,
-} from './RecentlyVisited/CommandResultGroup';
+} from './RecentlyVisited/CommandResultGroup.tsx';
 import {
     useRecentlyVisited,
     type LastViewedPage,

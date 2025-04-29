@@ -1,9 +1,9 @@
 import supertest from 'supertest';
-import { createServices } from '../services';
-import { createTestConfig } from '../../test/config/test-config';
+import { createServices } from '../services/index.js';
+import { createTestConfig } from '../../test/config/test-config.js';
 
-import createStores from '../../test/fixtures/store';
-import getApp from '../app';
+import createStores from '../../test/fixtures/store.js';
+import getApp from '../app.js';
 
 test('should enable prometheus', async () => {
     expect.assertions(0);

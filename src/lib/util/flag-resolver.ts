@@ -6,8 +6,8 @@ import type {
     IFlags,
     IFlagResolver,
     IFlagKey,
-} from '../types/experimental';
-import { getDefaultVariant } from 'unleash-client/lib/variant';
+} from '../types/experimental.js';
+import { getDefaultVariant } from 'unleash-client/lib/variant.js';
 
 export default class FlagResolver implements IFlagResolver {
     private experiments: IFlags;

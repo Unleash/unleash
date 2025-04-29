@@ -2,13 +2,13 @@ import {
     type IUnleashTest,
     setupApp,
     setupAppWithBaseUrl,
-} from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
+} from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
 import SwaggerParser from '@apidevtools/swagger-parser';
 import enforcer from 'openapi-enforcer';
 import semver from 'semver';
-import { openApiTags } from '../../../../lib/openapi/util/openapi-tags';
+import { openApiTags } from '../../../../lib/openapi/util/openapi-tags.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -32,7 +32,7 @@ test('should serve the OpenAPI UI', async () => {
 
 test('should serve the OpenAPI spec', async () => {
     return app.request
-        .get('/docs/openapi.json')
+        .get('/docs/openapi/index.json')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
@@ -45,7 +45,7 @@ test('should serve the OpenAPI spec', async () => {
 
 test('should serve the OpenAPI spec with a `version` property', async () => {
     return app.request
-        .get('/docs/openapi.json')
+        .get('/docs/openapi/index.json')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
@@ -77,7 +77,7 @@ describe('subpath handling', () => {
         const {
             body: { servers },
         } = await appWithSubPath.request
-            .get(`${subPath}/docs/openapi.json`)
+            .get(`${subPath}/docs/openapi/index.json`)
             .expect('Content-Type', /json/)
             .expect(200);
 
@@ -88,7 +88,7 @@ describe('subpath handling', () => {
         const {
             body: { paths },
         } = await appWithSubPath.request
-            .get(`${subPath}/docs/openapi.json`)
+            .get(`${subPath}/docs/openapi/index.json`)
             .expect('Content-Type', /json/)
             .expect(200);
 
@@ -104,7 +104,7 @@ describe('subpath handling', () => {
 
 test('the generated OpenAPI spec is valid', async () => {
     const { body } = await app.request
-        .get('/docs/openapi.json')
+        .get('/docs/openapi/index.json')
         .expect('Content-Type', /json/)
         .expect(200);
     // this throws if the swagger parser can't parse it correctly
@@ -153,7 +153,7 @@ test('the generated OpenAPI spec is valid', async () => {
 
 test('all root-level tags are "approved tags"', async () => {
     const { body: spec } = await app.request
-        .get('/docs/openapi.json')
+        .get('/docs/openapi/index.json')
         .expect('Content-Type', /json/)
         .expect(200);
 
@@ -178,7 +178,7 @@ test('all root-level tags are "approved tags"', async () => {
 // creating a new tag.
 test('all tags are listed in the root "tags" list', async () => {
     const { body: spec } = await app.request
-        .get('/docs/openapi.json')
+        .get('/docs/openapi/index.json')
         .expect('Content-Type', /json/)
         .expect(200);
 
@@ -242,7 +242,7 @@ test('all tags are listed in the root "tags" list', async () => {
 
 test('all API operations have non-empty summaries and descriptions', async () => {
     const { body: spec } = await app.request
-        .get('/docs/openapi.json')
+        .get('/docs/openapi/index.json')
         .expect('Content-Type', /json/)
         .expect(200);
 

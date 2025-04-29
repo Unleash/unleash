@@ -4,7 +4,7 @@ import type {
     PlaygroundStrategySchema,
     StrategyVariantSchema,
 } from 'openapi';
-import { ConstraintExecution } from './ConstraintExecution/ConstraintExecution';
+import { ConstraintExecution } from './ConstraintExecution/ConstraintExecution.tsx';
 import { formattedStrategyNames } from 'utils/strategyNames';
 import { StyledBoxSummary } from './StrategyExecution.styles';
 import { Badge } from 'component/common/Badge/Badge';
@@ -14,7 +14,7 @@ import {
 } from 'component/common/ConstraintsList/ConstraintsList';
 import { objectId } from 'utils/objectId';
 import type { FC } from 'react';
-import { SegmentExecution } from './SegmentExecution/SegmentExecution';
+import { SegmentExecution } from './SegmentExecution/SegmentExecution.tsx';
 import { useStrategyParameters } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/hooks/useStrategyParameters';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { useCustomStrategyParameters } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/hooks/useCustomStrategyParameters';

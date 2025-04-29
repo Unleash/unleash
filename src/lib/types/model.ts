@@ -1,18 +1,18 @@
-import type { ITagType } from '../features/tag-type/tag-type-store-type';
-import type { LogProvider } from '../logger';
-import type { IRole } from './stores/access-store';
-import type { IUser } from './user';
-import type { ALL_OPERATORS } from '../util';
-import type { IProjectStats } from '../features/project/project-service';
+import type { ITagType } from '../features/tag-type/tag-type-store-type.js';
+import type { LogProvider } from '../logger.js';
+import type { IRole } from './stores/access-store.js';
+import type { IUser } from './user.js';
+import type { ALL_OPERATORS } from '../util/index.js';
+import type { IProjectStats } from '../features/project/project-service.js';
 import type {
     CreateFeatureStrategySchema,
     ProjectOverviewSchema,
-} from '../openapi';
-import type { ProjectEnvironment } from '../features/project/project-store-type';
-import type { FeatureSearchEnvironmentSchema } from '../openapi/spec/feature-search-environment-schema';
-import type { IntegrationEventsService } from '../features/integration-events/integration-events-service';
-import type { IFlagResolver } from './experimental';
-import type { Collaborator } from '../features/feature-toggle/types/feature-collaborators-read-model-type';
+} from '../openapi/index.js';
+import type { ProjectEnvironment } from '../features/project/project-store-type.js';
+import type { FeatureSearchEnvironmentSchema } from '../openapi/spec/feature-search-environment-schema.js';
+import type { IntegrationEventsService } from '../features/integration-events/integration-events-service.js';
+import type { IFlagResolver } from './experimental.js';
+import type { Collaborator } from '../features/feature-toggle/types/feature-collaborators-read-model-type.js';
 import type { EventEmitter } from 'events';
 
 export type Operator = (typeof ALL_OPERATORS)[number];

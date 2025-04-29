@@ -1,4 +1,4 @@
-import type { Db } from '../../server-impl';
+import type { Db } from '../../server-impl.js';
 
 export type GetActiveUsers = () => Promise<{
     last7: number;

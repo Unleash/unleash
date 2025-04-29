@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { environmentProjectSchema } from './environment-project-schema';
+import { environmentProjectSchema } from './environment-project-schema.js';
 
 export const environmentsProjectSchema = {
     $id: '#/components/schemas/environmentsProjectSchema',

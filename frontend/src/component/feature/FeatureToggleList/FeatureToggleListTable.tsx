@@ -11,13 +11,13 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import type { FeatureSchema, FeatureSearchResponseSchema } from 'openapi';
-import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
+import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell.tsx';
 import { Search } from 'component/common/Search/Search';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
-import { ExportDialog } from './ExportDialog';
+import { ExportDialog } from './ExportDialog.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { focusable } from 'themes/themeStyles';
 import {
@@ -25,23 +25,23 @@ import {
     FeatureLifecycleCell,
 } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
-import { FeatureToggleFilters } from './FeatureToggleFilters/FeatureToggleFilters';
+import { FeatureToggleFilters } from './FeatureToggleFilters/FeatureToggleFilters.tsx';
 import { withTableState } from 'utils/withTableState';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { FeatureSegmentCell } from 'component/common/Table/cells/FeatureSegmentCell/FeatureSegmentCell';
-import { FeatureToggleListActions } from './FeatureToggleListActions/FeatureToggleListActions';
+import { FeatureToggleListActions } from './FeatureToggleListActions/FeatureToggleListActions.tsx';
 import useLoading from 'hooks/useLoading';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import {
     useGlobalFeatureSearch,
     useTableStateFilter,
-} from './useGlobalFeatureSearch';
+} from './useGlobalFeatureSearch.ts';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { LifecycleFilters } from './FeatureToggleFilters/LifecycleFilters';
-import { ExportFlags } from './ExportFlags';
+import { LifecycleFilters } from './FeatureToggleFilters/LifecycleFilters.tsx';
+import { ExportFlags } from './ExportFlags.tsx';
 import { createFeatureOverviewCell } from 'component/common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 import { AvatarCell } from 'component/project/Project/PaginatedProjectFeatureToggles/AvatarCell';
-import { StatusCell } from './StatusCell/StatusCell';
+import { StatusCell } from './StatusCell/StatusCell.tsx';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',

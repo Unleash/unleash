@@ -1,11 +1,11 @@
 import type { VFC } from 'react';
 import { Box, Typography, styled } from '@mui/material';
 import type { AddonTypeSchema } from 'openapi';
-import { IntegrationCard } from '../IntegrationCard/IntegrationCard';
-import { JIRA_INFO } from '../../ViewIntegration/JiraIntegration/JiraIntegration';
+import { IntegrationCard } from '../IntegrationCard/IntegrationCard.tsx';
+import { JIRA_INFO } from '../../ViewIntegration/JiraIntegration/JiraIntegration.tsx';
 import { StyledCardsGrid } from '../IntegrationList.styles';
-import { RequestIntegrationCard } from '../RequestIntegrationCard/RequestIntegrationCard';
-import { OFFICIAL_SDKS } from './SDKs';
+import { RequestIntegrationCard } from '../RequestIntegrationCard/RequestIntegrationCard.tsx';
+import { OFFICIAL_SDKS } from './SDKs.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

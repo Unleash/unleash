@@ -1,12 +1,12 @@
 import dbInit, {
     type ITestDb,
-} from '../../../../test/e2e/helpers/database-init';
+} from '../../../../test/e2e/helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../../test/e2e/helpers/test-helper';
-import getLogger from '../../../../test/fixtures/no-logger';
-import { DEFAULT_ENV } from '../../../util/constants';
+} from '../../../../test/e2e/helpers/test-helper.js';
+import getLogger from '../../../../test/fixtures/no-logger.js';
+import { DEFAULT_ENV } from '../../../util/constants.js';
 import {
     FEATURE_ENVIRONMENT_DISABLED,
     FEATURE_ENVIRONMENT_ENABLED,
@@ -14,25 +14,28 @@ import {
     FEATURE_STALE_OFF,
     FEATURE_STALE_ON,
     FEATURE_STRATEGY_REMOVE,
-} from '../../../types/events';
-import ApiUser from '../../../types/api-user';
-import { ApiTokenType, type IApiToken } from '../../../types/models/api-token';
-import IncompatibleProjectError from '../../../error/incompatible-project-error';
+} from '../../../types/events.js';
+import ApiUser from '../../../types/api-user.js';
+import {
+    ApiTokenType,
+    type IApiToken,
+} from '../../../types/models/api-token.js';
+import IncompatibleProjectError from '../../../error/incompatible-project-error.js';
 import {
     type IStrategyConfig,
     type IVariant,
     RoleName,
     WeightType,
-} from '../../../types/model';
+} from '../../../types/model.js';
 import { v4 as uuidv4 } from 'uuid';
 import type supertest from 'supertest';
-import { randomId } from '../../../util/random-id';
-import { DEFAULT_PROJECT, TEST_AUDIT_USER } from '../../../types';
+import { randomId } from '../../../util/random-id.js';
+import { DEFAULT_PROJECT, TEST_AUDIT_USER } from '../../../types/index.js';
 import type {
     FeatureStrategySchema,
     SetStrategySortOrderSchema,
-} from '../../../openapi';
-import { ForbiddenError } from '../../../error';
+} from '../../../openapi/index.js';
+import { ForbiddenError } from '../../../error/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

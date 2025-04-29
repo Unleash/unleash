@@ -1,14 +1,14 @@
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
-import { createTestConfig } from '../../config/test-config';
-import AddonService from '../../../lib/services/addon-service';
-import { type IUnleashStores, TEST_AUDIT_USER } from '../../../lib/types';
+import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import getLogger from '../../fixtures/no-logger.js';
+import { createTestConfig } from '../../config/test-config.js';
+import AddonService from '../../../lib/services/addon-service.js';
+import { type IUnleashStores, TEST_AUDIT_USER } from '../../../lib/types/index.js';
 
-import SimpleAddon from '../../../lib/services/addon-service-test-simple-addon';
-import TagTypeService from '../../../lib/features/tag-type/tag-type-service';
-import { FEATURE_CREATED } from '../../../lib/types/events';
-import { IntegrationEventsService } from '../../../lib/services';
-import { createEventsService } from '../../../lib/features';
+import SimpleAddon from '../../../lib/services/addon-service-test-simple-addon.js';
+import TagTypeService from '../../../lib/features/tag-type/tag-type-service.js';
+import { FEATURE_CREATED } from '../../../lib/types/events.js';
+import { IntegrationEventsService } from '../../../lib/services/index.js';
+import { createEventsService } from '../../../lib/features/index.js';
 
 const addonProvider = { simple: new SimpleAddon() };
 

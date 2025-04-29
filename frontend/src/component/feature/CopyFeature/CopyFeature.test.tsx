@@ -1,5 +1,5 @@
 import { render } from 'utils/testRenderer';
-import { CopyFeatureToggle } from './CopyFeature';
+import { CopyFeatureToggle } from './CopyFeature.tsx';
 import { Route, Routes } from 'react-router-dom';
 import { screen } from '@testing-library/react';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';

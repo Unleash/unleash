@@ -1,8 +1,8 @@
 import * as responseTime from 'response-time';
 import type EventEmitter from 'events';
-import { REQUEST_TIME, SDK_CONNECTION_ID_RECEIVED } from '../metric-events';
-import type { IFlagResolver } from '../types/experimental';
-import type { InstanceStatsService } from '../services';
+import { REQUEST_TIME, SDK_CONNECTION_ID_RECEIVED } from '../metric-events.js';
+import type { IFlagResolver } from '../types/experimental.js';
+import type { InstanceStatsService } from '../services/index.js';
 import type { RequestHandler } from 'express';
 
 const _responseTime = responseTime.default;

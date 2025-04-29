@@ -1,8 +1,8 @@
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { adminRoutes as oldAdminRoutes } from './oldAdminRoutes';
-import { adminRoutes } from './adminRoutes';
+import { adminRoutes as oldAdminRoutes } from './oldAdminRoutes.js';
+import { adminRoutes } from './adminRoutes.js';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
-import { filterRoutesByPlanData } from './filterRoutesByPlanData';
+import { filterRoutesByPlanData } from './filterRoutesByPlanData.js';
 import { filterByConfig, mapRouteLink } from 'component/common/util';
 import { useUiFlag } from 'hooks/useUiFlag';
 

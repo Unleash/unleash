@@ -1,5 +1,5 @@
-import { Strategy } from './strategy';
-import type { Context } from '../context';
+import { Strategy } from './strategy.js';
+import type { Context } from '../context.js';
 
 export default class UserWithIdStrategy extends Strategy {
     constructor() {

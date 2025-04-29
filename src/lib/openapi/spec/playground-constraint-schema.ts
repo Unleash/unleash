@@ -1,4 +1,4 @@
-import { constraintSchemaBase } from './constraint-schema';
+import { constraintSchemaBase } from './constraint-schema.js';
 import type { FromSchema } from 'json-schema-to-ts';
 
 export const playgroundConstraintSchema = {

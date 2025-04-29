@@ -1,5 +1,5 @@
 import { useFeaturesArchive } from 'hooks/api/getters/useFeaturesArchive/useFeaturesArchive';
-import { ArchiveTable } from './ArchiveTable/ArchiveTable';
+import { ArchiveTable } from './ArchiveTable/ArchiveTable.tsx';
 import type { SortingRule } from 'react-table';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { createLocalStorage } from 'utils/createLocalStorage';

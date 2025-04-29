@@ -1,12 +1,17 @@
-import type { IOnboardingReadModel, IUnleashStores } from '../../../lib/types';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
+import type {
+    IOnboardingReadModel,
+    IUnleashStores,
+} from '../../../lib/types/index.js';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 import { minutesToMilliseconds } from 'date-fns';
-import type { OnboardingService } from './onboarding-service';
-import { createTestConfig } from '../../../test/config/test-config';
-import { createOnboardingService } from './createOnboardingService';
+import type { OnboardingService } from './onboarding-service.js';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import { createOnboardingService } from './createOnboardingService.js';
 import type EventEmitter from 'events';
-import { STAGE_ENTERED, USER_LOGIN } from '../../metric-events';
+import { STAGE_ENTERED, USER_LOGIN } from '../../metric-events.js';
 
 let db: ITestDb;
 let stores: IUnleashStores;

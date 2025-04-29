@@ -8,8 +8,8 @@ import {
     styled,
 } from '@mui/material';
 import type { IConstraint } from 'interfaces/strategy';
-import { ConstraintAccordionViewBody } from './ConstraintAccordionViewBody/ConstraintAccordionViewBody';
-import { ConstraintAccordionViewHeader } from './ConstraintAccordionViewHeader/ConstraintAccordionViewHeader';
+import { ConstraintAccordionViewBody } from './ConstraintAccordionViewBody/ConstraintAccordionViewBody.tsx';
+import { ConstraintAccordionViewHeader } from './ConstraintAccordionViewHeader/ConstraintAccordionViewHeader.tsx';
 import { oneOf } from 'utils/oneOf';
 import {
     dateOperators,

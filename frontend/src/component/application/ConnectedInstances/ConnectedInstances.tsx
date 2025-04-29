@@ -1,11 +1,11 @@
 import { type FC, useEffect, useMemo } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useConnectedInstancesTable } from './useConnectedInstancesTable';
-import { ConnectedInstancesTable } from './ConnectedInstancesTable';
+import { useConnectedInstancesTable } from './useConnectedInstancesTable.ts';
+import { ConnectedInstancesTable } from './ConnectedInstancesTable.tsx';
 import { Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { useApplicationOverview } from 'hooks/api/getters/useApplicationOverview/useApplicationOverview';
 import { useConnectedInstances } from 'hooks/api/getters/useConnectedInstances/useConnectedInstances';
-import type { ApplicationEnvironmentInstancesSchemaInstancesItem } from '../../../openapi';
+import type { ApplicationEnvironmentInstancesSchemaInstancesItem } from '../../../openapi.ts';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';

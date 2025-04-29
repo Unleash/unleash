@@ -1,6 +1,6 @@
-import type { Logger } from '../../server-impl';
-import type { JobStore } from './job-store';
-import type { LogProvider } from '../../logger';
+import type { Logger } from '../../server-impl.js';
+import type { JobStore } from './job-store.js';
+import type { LogProvider } from '../../logger.js';
 import { subMinutes } from 'date-fns';
 
 export class JobService {

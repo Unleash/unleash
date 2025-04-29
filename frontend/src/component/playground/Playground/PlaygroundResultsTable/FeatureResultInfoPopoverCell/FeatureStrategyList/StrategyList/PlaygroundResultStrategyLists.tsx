@@ -4,7 +4,7 @@ import type {
     PlaygroundRequestSchema,
 } from 'openapi';
 
-import { FeatureStrategyItem } from './StrategyItem/FeatureStrategyItem';
+import { FeatureStrategyItem } from './StrategyItem/FeatureStrategyItem.tsx';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { StrategyList } from 'component/common/StrategyList/StrategyList';
 import { StrategyListItem } from 'component/common/StrategyList/StrategyListItem';

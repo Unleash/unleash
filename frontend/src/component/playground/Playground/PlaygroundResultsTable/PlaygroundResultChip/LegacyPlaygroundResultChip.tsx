@@ -7,7 +7,7 @@ import { ReactComponent as FeatureDisabledIcon } from 'assets/icons/isenabled-fa
 import WarningOutlined from '@mui/icons-material/WarningOutlined';
 import { Badge } from 'component/common/Badge/Badge';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { PlaygroundResultChip as NewPlaygroundResultChip } from './PlaygroundResultChip';
+import { PlaygroundResultChip as NewPlaygroundResultChip } from './PlaygroundResultChip.tsx';
 
 interface IResultChipProps {
     enabled: boolean | 'unevaluated' | 'unknown';

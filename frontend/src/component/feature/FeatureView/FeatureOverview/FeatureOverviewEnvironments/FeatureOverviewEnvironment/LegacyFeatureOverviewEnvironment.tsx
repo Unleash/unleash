@@ -13,16 +13,16 @@ import { getFeatureMetrics } from 'utils/getFeatureMetrics';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import EnvironmentAccordionBody from './EnvironmentAccordionBody/LegacyEnvironmentAccordionBody';
-import { EnvironmentFooter } from './EnvironmentFooter/EnvironmentFooter';
-import FeatureOverviewEnvironmentMetrics from './EnvironmentHeader/FeatureOverviewEnvironmentMetrics/LegacyFeatureOverviewEnvironmentMetrics';
+import EnvironmentAccordionBody from './EnvironmentAccordionBody/LegacyEnvironmentAccordionBody.tsx';
+import { EnvironmentFooter } from './EnvironmentFooter/EnvironmentFooter.tsx';
+import FeatureOverviewEnvironmentMetrics from './EnvironmentHeader/FeatureOverviewEnvironmentMetrics/LegacyFeatureOverviewEnvironmentMetrics.tsx';
 import { FeatureStrategyMenuWrapper } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
 import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureStrategyIcons } from 'component/feature/FeatureStrategy/FeatureStrategyIcons/FeatureStrategyIcons';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 import { Badge } from 'component/common/Badge/Badge';
-import { UpgradeChangeRequests } from './UpgradeChangeRequests/UpgradeChangeRequests';
+import { UpgradeChangeRequests } from './UpgradeChangeRequests/UpgradeChangeRequests.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFeatureOverviewEnvironmentProps {

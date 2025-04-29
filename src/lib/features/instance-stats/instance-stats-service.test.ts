@@ -1,17 +1,17 @@
-import { createTestConfig } from '../../../test/config/test-config';
-import { InstanceStatsService } from './instance-stats-service';
-import createStores from '../../../test/fixtures/store';
-import VersionService from '../../services/version-service';
-import { createFakeGetActiveUsers } from './getActiveUsers';
-import { createFakeGetProductionChanges } from './getProductionChanges';
-import { registerPrometheusMetrics } from '../../metrics';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import { InstanceStatsService } from './instance-stats-service.js';
+import createStores from '../../../test/fixtures/store.js';
+import VersionService from '../../services/version-service.js';
+import { createFakeGetActiveUsers } from './getActiveUsers.js';
+import { createFakeGetProductionChanges } from './getProductionChanges.js';
+import { registerPrometheusMetrics } from '../../metrics.js';
 import { register } from 'prom-client';
 import type {
     IClientInstanceStore,
     IFlagResolver,
     IUnleashStores,
-} from '../../types';
-import { createFakeGetLicensedUsers } from './getLicensedUsers';
+} from '../../types/index.js';
+import { createFakeGetLicensedUsers } from './getLicensedUsers.js';
 let instanceStatsService: InstanceStatsService;
 let versionService: VersionService;
 let clientInstanceStore: IClientInstanceStore;

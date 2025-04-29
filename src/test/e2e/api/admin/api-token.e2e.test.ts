@@ -1,11 +1,11 @@
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import { ALL, ApiTokenType } from '../../../../lib/types/models/api-token';
-import { DEFAULT_ENV } from '../../../../lib/util';
+} from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { ALL, ApiTokenType } from '../../../../lib/types/models/api-token.js';
+import { DEFAULT_ENV } from '../../../../lib/util/index.js';
 import { addDays } from 'date-fns';
 
 let db: ITestDb;

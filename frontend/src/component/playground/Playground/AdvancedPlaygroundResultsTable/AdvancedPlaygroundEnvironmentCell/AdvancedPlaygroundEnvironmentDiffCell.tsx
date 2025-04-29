@@ -1,9 +1,9 @@
 import { Button, Popover, styled, Typography, useTheme } from '@mui/material';
-import { flexRow } from '../../../../../themes/themeStyles';
+import { flexRow } from '../../../../../themes/themeStyles.ts';
 import type React from 'react';
 import { useState } from 'react';
 import type { AdvancedPlaygroundFeatureSchemaEnvironments } from 'openapi';
-import { PlaygroundEnvironmentDiffTable } from '../../PlaygroundEnvironmentTable/PlaygroundEnvironmentDiffTable';
+import { PlaygroundEnvironmentDiffTable } from '../../PlaygroundEnvironmentTable/PlaygroundEnvironmentDiffTable.tsx';
 
 const StyledContainer = styled(
     'div',

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { TagSchema } from './tagSchema';
+import type { TagSchema } from './tagSchema.js';
 
 /**
  * Represents a set of changes to a feature's tags, such as adding or removing tags.

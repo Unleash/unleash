@@ -4,7 +4,7 @@ import {
     modifyContent,
     getRepoData,
     getUrls,
-} from './shared';
+} from './shared.js';
 
 const DOCS = mapObject(enrich)({
     'unleash-proxy': {

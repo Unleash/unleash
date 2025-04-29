@@ -1,4 +1,4 @@
-import { aggregateDataPerDate } from './aggregate-metrics-by-day';
+import { aggregateDataPerDate } from './aggregate-metrics-by-day.js';
 
 describe('aggregateDataPerDate', () => {
     it('should correctly aggregate data for a single item', () => {

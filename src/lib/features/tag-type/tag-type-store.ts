@@ -1,10 +1,10 @@
 import type { EventEmitter } from 'events';
-import type { LogProvider, Logger } from '../../logger';
-import { DB_TIME } from '../../metric-events';
-import metricsHelper from '../../util/metrics-helper';
-import NotFoundError from '../../error/notfound-error';
-import type { ITagType, ITagTypeStore } from './tag-type-store-type';
-import type { Db } from '../../db/db';
+import type { LogProvider, Logger } from '../../logger.js';
+import { DB_TIME } from '../../metric-events.js';
+import metricsHelper from '../../util/metrics-helper.js';
+import NotFoundError from '../../error/notfound-error.js';
+import type { ITagType, ITagTypeStore } from './tag-type-store-type.js';
+import type { Db } from '../../db/db.js';
 
 const COLUMNS = ['name', 'description', 'icon', 'color'];
 const TABLE = 'tag_types';
@@ -121,5 +121,3 @@ export default class TagTypeStore implements ITagTypeStore {
         };
     }
 }
-
-module.exports = TagTypeStore;

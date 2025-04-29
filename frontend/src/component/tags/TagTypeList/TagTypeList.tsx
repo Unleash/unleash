@@ -29,7 +29,7 @@ import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { sortTypes } from 'utils/sortTypes';
-import { AddTagTypeButton } from './AddTagTypeButton/AddTagTypeButton';
+import { AddTagTypeButton } from './AddTagTypeButton/AddTagTypeButton.tsx';
 import { Search } from 'component/common/Search/Search';
 import { useUiFlag } from 'hooks/useUiFlag';
 

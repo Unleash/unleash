@@ -1,6 +1,6 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { addonParameterSchema } from './addon-parameter-schema';
-import { tagTypeSchema } from './tag-type-schema';
+import { addonParameterSchema } from './addon-parameter-schema.js';
+import { tagTypeSchema } from './tag-type-schema.js';
 
 export const addonTypeSchema = {
     $id: '#/components/schemas/addonTypeSchema',

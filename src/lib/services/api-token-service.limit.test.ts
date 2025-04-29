@@ -1,8 +1,8 @@
-import { createTestConfig } from '../../test/config/test-config';
-import type { IUnleashConfig } from '../server-impl';
-import { ApiTokenType } from '../types/models/api-token';
-import { ExceedsLimitError } from '../error/exceeds-limit-error';
-import { createFakeApiTokenService } from '../features/api-tokens/createApiTokenService';
+import { createTestConfig } from '../../test/config/test-config.js';
+import type { IUnleashConfig } from '../server-impl.js';
+import { ApiTokenType } from '../types/models/api-token.js';
+import { ExceedsLimitError } from '../error/exceeds-limit-error.js';
+import { createFakeApiTokenService } from '../features/api-tokens/createApiTokenService.js';
 
 const createServiceWithLimit = (limit: number) => {
     const config: IUnleashConfig = createTestConfig({

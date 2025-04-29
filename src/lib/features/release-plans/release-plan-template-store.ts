@@ -1,10 +1,10 @@
 import { ulid } from 'ulidx';
-import type { ReleasePlanTemplate } from './release-plan-template';
-import type { ReleasePlanMilestone } from './release-plan-milestone';
-import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store';
-import type { Row } from '../../db/crud/row-type';
-import type { Db } from '../../db/db';
-import { NotFoundError } from '../../error';
+import type { ReleasePlanTemplate } from './release-plan-template.js';
+import type { ReleasePlanMilestone } from './release-plan-milestone.js';
+import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store.js';
+import type { Row } from '../../db/crud/row-type.js';
+import type { Db } from '../../db/db.js';
+import { NotFoundError } from '../../error/index.js';
 
 const TABLE = 'release_plan_definitions';
 

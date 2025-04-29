@@ -1,26 +1,26 @@
-import type FeatureToggleService from '../../../features/feature-toggle/feature-toggle-service';
-import type { Logger } from '../../../logger';
-import Controller from '../../controller';
-import type { IUnleashConfig } from '../../../types/option';
-import type { IUnleashServices } from '../../../types';
+import type FeatureToggleService from '../../../features/feature-toggle/feature-toggle-service.js';
+import type { Logger } from '../../../logger.js';
+import Controller from '../../controller.js';
+import type { IUnleashConfig } from '../../../types/option.js';
+import type { IUnleashServices } from '../../../types/index.js';
 import type { Request, Response } from 'express';
 import type { Operation } from 'fast-json-patch';
 import {
     NONE,
     UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
     UPDATE_FEATURE_VARIANTS,
-} from '../../../types/permissions';
-import { type IVariant, WeightType } from '../../../types/model';
-import { extractUsername } from '../../../util/extract-user';
-import type { IAuthRequest } from '../../unleash-types';
-import type { FeatureVariantsSchema } from '../../../openapi/spec/feature-variants-schema';
-import { createRequestSchema } from '../../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../../openapi/util/create-response-schema';
-import type { AccessService } from '../../../services';
-import { BadDataError, PermissionError } from '../../../../lib/error';
-import type { IUser } from '../../../server-impl';
-import type { PushVariantsSchema } from '../../../openapi/spec/push-variants-schema';
-import { getStandardResponses } from '../../../openapi';
+} from '../../../types/permissions.js';
+import { type IVariant, WeightType } from '../../../types/model.js';
+import { extractUsername } from '../../../util/extract-user.js';
+import type { IAuthRequest } from '../../unleash-types.js';
+import type { FeatureVariantsSchema } from '../../../openapi/spec/feature-variants-schema.js';
+import { createRequestSchema } from '../../../openapi/util/create-request-schema.js';
+import { createResponseSchema } from '../../../openapi/util/create-response-schema.js';
+import type { AccessService } from '../../../services/index.js';
+import { BadDataError, PermissionError } from '../../../../lib/error/index.js';
+import type { IUser } from '../../../server-impl.js';
+import type { PushVariantsSchema } from '../../../openapi/spec/push-variants-schema.js';
+import { getStandardResponses } from '../../../openapi/index.js';
 
 const PREFIX = '/:projectId/features/:featureName/variants';
 const ENV_PREFIX =

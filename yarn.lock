@@ -2034,6 +2034,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash.isequal@npm:^4.5.8":
+  version: 4.5.8
+  resolution: "@types/lodash.isequal@npm:4.5.8"
+  dependencies:
+    "@types/lodash": "npm:*"
+  checksum: 10c0/6db28cacf165d55421fbf2970ccfb1682a7b82b743bb7aba4398fa8ab98f1711fca2fe4afa1aa2b7b4afb3eff76c8aca13b22206f5efeb038d99e41300589bca
+  languageName: node
+  linkType: hard
+
 "@types/lodash@npm:*":
   version: 4.14.195
   resolution: "@types/lodash@npm:4.14.195"
@@ -2401,6 +2410,20 @@ __metadata:
     ajv:
       optional: true
   checksum: 10c0/e43ba22e91b6a48d96224b83d260d3a3a561b42d391f8d3c6d2c1559f9aa5b253bfb306bc94bbeca1d967c014e15a6efe9a207309e95b3eaae07fcbcdc2af662
+  languageName: node
+  linkType: hard
+
+"ajv-formats@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "ajv-formats@npm:3.0.1"
+  dependencies:
+    ajv: "npm:^8.0.0"
+  peerDependencies:
+    ajv: ^8.0.0
+  peerDependenciesMeta:
+    ajv:
+      optional: true
+  checksum: 10c0/168d6bca1ea9f163b41c8147bae537e67bd963357a5488a1eaf3abe8baa8eec806d4e45f15b10767e6020679315c7e1e5e6803088dfb84efa2b4e9353b83dd0a
   languageName: node
   linkType: hard
 
@@ -9268,23 +9291,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.8.2":
-  version: 5.8.2
-  resolution: "typescript@npm:5.8.2"
+"typescript@npm:5.8.3":
+  version: 5.8.3
+  resolution: "typescript@npm:5.8.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/5c4f6fbf1c6389b6928fe7b8fcd5dc73bb2d58cd4e3883f1d774ed5bd83b151cbac6b7ecf11723de56d4676daeba8713894b1e9af56174f2f9780ae7848ec3c6
+  checksum: 10c0/5f8bb01196e542e64d44db3d16ee0e4063ce4f3e3966df6005f2588e86d91c03e1fb131c2581baf0fb65ee79669eea6e161cd448178986587e9f6844446dbb48
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A5.8.2#optional!builtin<compat/typescript>":
-  version: 5.8.2
-  resolution: "typescript@patch:typescript@npm%3A5.8.2#optional!builtin<compat/typescript>::version=5.8.2&hash=5786d5"
+"typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>":
+  version: 5.8.3
+  resolution: "typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/5448a08e595cc558ab321e49d4cac64fb43d1fa106584f6ff9a8d8e592111b373a995a1d5c7f3046211c8a37201eb6d0f1566f15cdb7a62a5e3be01d087848e2
+  checksum: 10c0/39117e346ff8ebd87ae1510b3a77d5d92dae5a89bde588c747d25da5c146603a99c8ee588c7ef80faaf123d89ed46f6dbd918d534d641083177d5fac38b8a1cb
   languageName: node
   linkType: hard
 
@@ -9388,6 +9411,7 @@ __metadata:
     "@types/jest": "npm:29.5.14"
     "@types/js-yaml": "npm:4.0.9"
     "@types/lodash.groupby": "npm:4.6.9"
+    "@types/lodash.isequal": "npm:^4.5.8"
     "@types/make-fetch-happen": "npm:10.0.4"
     "@types/memoizee": "npm:0.4.11"
     "@types/mime": "npm:4.0.0"
@@ -9403,8 +9427,8 @@ __metadata:
     "@types/type-is": "npm:1.6.7"
     "@types/uuid": "npm:9.0.8"
     "@wesleytodd/openapi": "npm:^1.1.0"
-    ajv: "npm:^8.12.0"
-    ajv-formats: "npm:^2.1.1"
+    ajv: "npm:^8.17.1"
+    ajv-formats: "npm:^3.0.1"
     async: "npm:^3.2.4"
     bcryptjs: "npm:^2.4.3"
     compression: "npm:^1.7.4"
@@ -9479,7 +9503,7 @@ __metadata:
     ts-toolbelt: "npm:^9.6.0"
     tsc-watch: "npm:6.2.1"
     type-is: "npm:^1.6.18"
-    typescript: "npm:5.8.2"
+    typescript: "npm:5.8.3"
     ulidx: "npm:^2.4.1"
     unleash-client: "npm:^6.6.0"
     uuid: "npm:^9.0.0"

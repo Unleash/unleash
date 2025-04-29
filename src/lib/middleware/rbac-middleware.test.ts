@@ -1,14 +1,14 @@
-import rbacMiddleware from './rbac-middleware';
-import User from '../types/user';
-import * as perms from '../types/permissions';
-import type { IUnleashConfig } from '../types/option';
-import { createTestConfig } from '../../test/config/test-config';
-import ApiUser from '../types/api-user';
-import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
-import FakeFeatureToggleStore from '../features/feature-toggle/fakes/fake-feature-toggle-store';
-import { ApiTokenType } from '../types/models/api-token';
-import { type ISegmentStore, SYSTEM_USER_ID } from '../types';
-import FakeSegmentStore from '../../test/fixtures/fake-segment-store';
+import rbacMiddleware from './rbac-middleware.js';
+import User from '../types/user.js';
+import * as perms from '../types/permissions.js';
+import type { IUnleashConfig } from '../types/option.js';
+import { createTestConfig } from '../../test/config/test-config.js';
+import ApiUser from '../types/api-user.js';
+import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type.js';
+import FakeFeatureToggleStore from '../features/feature-toggle/fakes/fake-feature-toggle-store.js';
+import { ApiTokenType } from '../types/models/api-token.js';
+import { type ISegmentStore, SYSTEM_USER_ID } from '../types/index.js';
+import FakeSegmentStore from '../../test/fixtures/fake-segment-store.js';
 
 let config: IUnleashConfig;
 let featureToggleStore: IFeatureToggleStore;

@@ -7,8 +7,8 @@ import {
     Typography,
 } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { TagTypeSelect } from './TagTypeSelect';
-import { type TagOption, TagsInput } from './TagsInput';
+import { TagTypeSelect } from './TagTypeSelect.tsx';
+import { type TagOption, TagsInput } from './TagsInput.tsx';
 import useTags from 'hooks/api/getters/useTags/useTags';
 import useTagTypes from 'hooks/api/getters/useTagTypes/useTagTypes';
 import type { ITagType } from 'interfaces/tags';

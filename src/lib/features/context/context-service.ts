@@ -1,15 +1,15 @@
-import type { Logger } from '../../logger';
+import type { Logger } from '../../logger.js';
 import type {
     IContextField,
     IContextFieldDto,
     IContextFieldStore,
-} from './context-field-store-type';
+} from './context-field-store-type.js';
 import type {
     IFeatureStrategiesStore,
     IUnleashStores,
-} from '../../types/stores';
-import type { IUnleashConfig } from '../../types/option';
-import type { ContextFieldStrategiesSchema } from '../../openapi/spec/context-field-strategies-schema';
+} from '../../types/stores.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { ContextFieldStrategiesSchema } from '../../openapi/spec/context-field-strategies-schema.js';
 import {
     CONTEXT_FIELD_CREATED,
     CONTEXT_FIELD_DELETED,
@@ -17,13 +17,16 @@ import {
     type IAuditUser,
     type IFeatureStrategy,
     type IFlagResolver,
-} from '../../types';
-import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
-import type EventService from '../events/event-service';
-import { contextSchema, legalValueSchema } from '../../services/context-schema';
-import { NameExistsError, NotFoundError } from '../../error';
-import { nameSchema } from '../../schema/feature-schema';
-import type { LegalValueSchema } from '../../openapi';
+} from '../../types/index.js';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
+import type EventService from '../events/event-service.js';
+import {
+    contextSchema,
+    legalValueSchema,
+} from '../../services/context-schema.js';
+import { NameExistsError, NotFoundError } from '../../error/index.js';
+import { nameSchema } from '../../schema/feature-schema.js';
+import type { LegalValueSchema } from '../../openapi/index.js';
 
 class ContextService {
     private eventService: EventService;
@@ -267,4 +270,3 @@ class ContextService {
     }
 }
 export default ContextService;
-module.exports = ContextService;

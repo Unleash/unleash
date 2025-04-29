@@ -1,4 +1,4 @@
-import { ArchiveTable } from './ArchiveTable';
+import { ArchiveTable } from './ArchiveTable.tsx';
 import { render } from 'utils/testRenderer';
 import { useState } from 'react';
 import { screen, fireEvent, waitFor } from '@testing-library/react';

@@ -10,21 +10,21 @@ import {
     type KnownBlock,
     type Block,
 } from '@slack/web-api';
-import Addon from './addon';
+import Addon from './addon.js';
 
-import slackAppDefinition from './slack-app-definition';
+import slackAppDefinition from './slack-app-definition.js';
 import {
     type IAddonConfig,
     type IFlagResolver,
     serializeDates,
-} from '../types';
+} from '../types/index.js';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
     LinkStyle,
-} from './feature-event-formatter-md';
-import type { IEvent } from '../types/events';
-import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
+} from './feature-event-formatter-md.js';
+import type { IEvent } from '../types/events.js';
+import type { IntegrationEventState } from '../features/integration-events/integration-events-store.js';
 
 interface ISlackAppAddonParameters {
     accessToken: string;
@@ -254,5 +254,3 @@ export default class SlackAppAddon extends Addon {
         return error.message;
     }
 }
-
-module.exports = SlackAppAddon;

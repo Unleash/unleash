@@ -3,7 +3,7 @@ import { Alert, Box, Chip, Link, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
-import { ConstraintItem } from './ConstraintItem/LegacyConstraintItem';
+import { ConstraintItem } from './ConstraintItem/LegacyConstraintItem.tsx';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { FeatureOverviewSegment } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSegment/FeatureOverviewSegment';

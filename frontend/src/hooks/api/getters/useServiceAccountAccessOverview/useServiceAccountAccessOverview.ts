@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { IRole } from 'interfaces/role';
 import type { IServiceAccount } from 'interfaces/service-account';
 import type { IAccessOverviewPermission } from 'interfaces/permissions';
 import type { IPermission } from 'interfaces/user';
-import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
 
 interface IServiceAccountAccessOverview {
     root: IAccessOverviewPermission[];

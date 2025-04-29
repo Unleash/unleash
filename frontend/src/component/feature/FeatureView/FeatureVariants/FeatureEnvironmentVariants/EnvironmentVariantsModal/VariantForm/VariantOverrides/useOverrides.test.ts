@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useOverrides } from './useOverrides';
+import { useOverrides } from './useOverrides.js';
 import { act } from 'react';
 
 describe('useOverrides', () => {

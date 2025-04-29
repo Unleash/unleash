@@ -1,6 +1,6 @@
 import joi from 'joi';
-import { ALL, ApiTokenType } from '../types/models/api-token';
-import { DEFAULT_ENV } from '../util/constants';
+import { ALL, ApiTokenType } from '../types/models/api-token.js';
+import { DEFAULT_ENV } from '../util/constants.js';
 
 export const createApiToken = joi
     .object()

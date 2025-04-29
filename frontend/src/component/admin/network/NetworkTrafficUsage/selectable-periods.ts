@@ -1,5 +1,5 @@
 import { getDaysInMonth, startOfMonth, subMonths } from 'date-fns';
-import { currentDate, formatMonth } from './dates';
+import { currentDate, formatMonth } from './dates.js';
 import { TRAFFIC_MEASUREMENT_START_DATE } from 'utils/traffic-calculations';
 
 export type Period = {

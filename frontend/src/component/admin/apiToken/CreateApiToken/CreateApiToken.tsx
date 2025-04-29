@@ -2,22 +2,22 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import ApiTokenForm from '../ApiTokenForm/ApiTokenForm';
+import ApiTokenForm from '../ApiTokenForm/ApiTokenForm.tsx';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useApiTokenForm } from 'component/admin/apiToken/ApiTokenForm/useApiTokenForm';
-import { ConfirmToken } from '../ConfirmToken/ConfirmToken';
+import { ConfirmToken } from '../ConfirmToken/ConfirmToken.tsx';
 import { scrollToTop } from 'component/common/util';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { GO_BACK } from 'constants/navigate';
 import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
-import { TokenInfo } from '../ApiTokenForm/TokenInfo/TokenInfo';
-import { TokenTypeSelector } from '../ApiTokenForm/TokenTypeSelector/TokenTypeSelector';
-import { ProjectSelector } from '../ApiTokenForm/ProjectSelector/ProjectSelector';
-import { EnvironmentSelector } from '../ApiTokenForm/EnvironmentSelector/EnvironmentSelector';
+import { TokenInfo } from '../ApiTokenForm/TokenInfo/TokenInfo.tsx';
+import { TokenTypeSelector } from '../ApiTokenForm/TokenTypeSelector/TokenTypeSelector.tsx';
+import { ProjectSelector } from '../ApiTokenForm/ProjectSelector/ProjectSelector.tsx';
+import { EnvironmentSelector } from '../ApiTokenForm/EnvironmentSelector/EnvironmentSelector.tsx';
 import {
     ADMIN,
     CREATE_CLIENT_API_TOKEN,

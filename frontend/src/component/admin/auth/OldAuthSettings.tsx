@@ -1,11 +1,11 @@
 import { Tab, Tabs } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { OidcAuth } from './OidcAuth/OidcAuth';
-import { SamlAuth } from './SamlAuth/SamlAuth';
-import { ScimSettings } from './ScimSettings/ScimSettings';
-import { PasswordAuth } from './PasswordAuth/PasswordAuth';
-import { GoogleAuth } from './GoogleAuth/GoogleAuth';
+import { OidcAuth } from './OidcAuth/OidcAuth.tsx';
+import { SamlAuth } from './SamlAuth/SamlAuth.tsx';
+import { ScimSettings } from './ScimSettings/ScimSettings.tsx';
+import { PasswordAuth } from './PasswordAuth/PasswordAuth.tsx';
+import { GoogleAuth } from './GoogleAuth/GoogleAuth.tsx';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { ADMIN, UPDATE_AUTH_CONFIGURATION } from '@server/types/permissions';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';

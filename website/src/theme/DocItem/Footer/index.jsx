@@ -2,7 +2,7 @@
 import React from 'react';
 import Footer from '@theme-original/DocItem/Footer';
 import { useDoc } from '@docusaurus/plugin-content-docs/client';
-import GitHubContributors from './GitHubContributors';
+import GitHubContributors from './GitHubContributors.jsx';
 import GitUrlParse from 'git-url-parse';
 
 export default function FooterWrapper(props) {

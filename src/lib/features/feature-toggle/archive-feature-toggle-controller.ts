@@ -1,29 +1,33 @@
 import type { Request, Response } from 'express';
-import type { IUnleashConfig } from '../../types/option';
-import type { IUnleashServices } from '../../types';
-import Controller from '../../routes/controller';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashServices } from '../../types/index.js';
+import Controller from '../../routes/controller.js';
 import {
     extractUserIdFromUser,
     extractUsername,
-} from '../../util/extract-user';
-import { DELETE_FEATURE, NONE, UPDATE_FEATURE } from '../../types/permissions';
-import type FeatureToggleService from './feature-toggle-service';
-import type { IAuthRequest } from '../../routes/unleash-types';
-import { serializeDates } from '../../types/serialize-dates';
-import type { OpenApiService } from '../../services/openapi-service';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
+} from '../../util/extract-user.js';
+import {
+    DELETE_FEATURE,
+    NONE,
+    UPDATE_FEATURE,
+} from '../../types/permissions.js';
+import type FeatureToggleService from './feature-toggle-service.js';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
+import { serializeDates } from '../../types/serialize-dates.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
+import { createResponseSchema } from '../../openapi/util/create-response-schema.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../openapi/util/standard-responses';
+} from '../../openapi/util/standard-responses.js';
 import type {
     TransactionCreator,
     UnleashTransaction,
-} from '../../db/transaction';
+} from '../../db/transaction.js';
 import {
     archivedFeaturesSchema,
     type ArchivedFeaturesSchema,
-} from '../../openapi';
+} from '../../openapi/index.js';
 
 export default class ArchiveController extends Controller {
     private featureService: FeatureToggleService;
@@ -213,5 +217,3 @@ export default class ArchiveController extends Controller {
         res.status(200).end();
     }
 }
-
-module.exports = ArchiveController;

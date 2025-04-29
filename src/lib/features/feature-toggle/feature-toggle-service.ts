@@ -48,71 +48,73 @@ import {
     SYSTEM_USER_AUDIT,
     type Unsaved,
     WeightType,
-} from '../../types';
-import type { Logger } from '../../logger';
+} from '../../types/index.js';
+import type { Logger } from '../../logger.js';
 import {
     ForbiddenError,
     FOREIGN_KEY_VIOLATION,
     OperationDeniedError,
     PatternError,
     PermissionError,
-} from '../../error';
-import BadDataError from '../../error/bad-data-error';
-import NameExistsError from '../../error/name-exists-error';
-import InvalidOperationError from '../../error/invalid-operation-error';
+    BadDataError,
+    NameExistsError,
+    InvalidOperationError,
+} from '../../error/index.js';
 import {
     constraintSchema,
     featureMetadataSchema,
     nameSchema,
     variantsArraySchema,
-} from '../../schema/feature-schema';
-import NotFoundError from '../../error/notfound-error';
+} from '../../schema/feature-schema.js';
+import NotFoundError from '../../error/notfound-error.js';
 import type {
     FeatureConfigurationClient,
     IFeatureStrategiesStore,
-} from './types/feature-toggle-strategies-store-type';
+} from './types/feature-toggle-strategies-store-type.js';
 import {
     DATE_OPERATORS,
     DEFAULT_ENV,
     NUM_OPERATORS,
     SEMVER_OPERATORS,
     STRING_OPERATORS,
-} from '../../util';
-import { applyPatch, deepClone, type Operation } from 'fast-json-patch';
+} from '../../util/index.js';
+import type { Operation } from 'fast-json-patch';
+import fastJsonPatch from 'fast-json-patch';
+const { applyPatch, deepClone } = fastJsonPatch;
 import {
     validateDate,
     validateLegalValues,
     validateNumber,
     validateSemver,
     validateString,
-} from '../../util/validators/constraint-types';
-import type { IContextFieldStore } from '../context/context-field-store-type';
-import type { SetStrategySortOrderSchema } from '../../openapi/spec/set-strategy-sort-order-schema';
+} from '../../util/validators/constraint-types.js';
+import type { IContextFieldStore } from '../context/context-field-store-type.js';
+import type { SetStrategySortOrderSchema } from '../../openapi/spec/set-strategy-sort-order-schema.js';
 import {
     getDefaultStrategy,
     getProjectDefaultStrategy,
-} from '../playground/feature-evaluator/helpers';
-import type { AccessService } from '../../services/access-service';
-import type { IUser } from '../../server-impl';
-import type { IFeatureProjectUserParams } from './feature-toggle-controller';
-import { unique } from '../../util/unique';
-import type { ISegmentService } from '../segment/segment-service-interface';
-import type { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model';
-import { checkFeatureFlagNamesAgainstPattern } from '../feature-naming-pattern/feature-naming-validation';
-import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
-import type { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
-import type EventService from '../events/event-service';
-import type { DependentFeaturesService } from '../dependent-features/dependent-features-service';
-import type { FeatureToggleInsert } from './feature-toggle-store';
-import ArchivedFeatureError from '../../error/archivedfeature-error';
-import { FEATURES_CREATED_BY_PROCESSED } from '../../metric-events';
-import { allSettledWithRejection } from '../../util/allSettledWithRejection';
+} from '../playground/feature-evaluator/helpers.js';
+import type { AccessService } from '../../services/access-service.js';
+import type { IUser } from '../../server-impl.js';
+import type { IFeatureProjectUserParams } from './feature-toggle-controller.js';
+import { unique } from '../../util/unique.js';
+import type { ISegmentService } from '../segment/segment-service-interface.js';
+import type { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model.js';
+import { checkFeatureFlagNamesAgainstPattern } from '../feature-naming-pattern/feature-naming-validation.js';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
+import type { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type.js';
+import type EventService from '../events/event-service.js';
+import type { DependentFeaturesService } from '../dependent-features/dependent-features-service.js';
+import type { FeatureToggleInsert } from './feature-toggle-store.js';
+import ArchivedFeatureError from '../../error/archivedfeature-error.js';
+import { FEATURES_CREATED_BY_PROCESSED } from '../../metric-events.js';
+import { allSettledWithRejection } from '../../util/allSettledWithRejection.js';
 import type EventEmitter from 'node:events';
-import type { IFeatureLifecycleReadModel } from '../feature-lifecycle/feature-lifecycle-read-model-type';
-import type { ResourceLimitsSchema } from '../../openapi';
-import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
-import type { Collaborator } from './types/feature-collaborators-read-model-type';
-import { sortStrategies } from '../../util/sortStrategies';
+import type { IFeatureLifecycleReadModel } from '../feature-lifecycle/feature-lifecycle-read-model-type.js';
+import type { ResourceLimitsSchema } from '../../openapi/index.js';
+import { throwExceedsLimitError } from '../../error/exceeds-limit-error.js';
+import type { Collaborator } from './types/feature-collaborators-read-model-type.js';
+import { sortStrategies } from '../../util/sortStrategies.js';
 
 interface IFeatureContext {
     featureName: string;

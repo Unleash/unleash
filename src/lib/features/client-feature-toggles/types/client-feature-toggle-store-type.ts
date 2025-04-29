@@ -1,7 +1,7 @@
 import type {
     IFeatureToggleClient,
     IFeatureToggleQuery,
-} from '../../../types/model';
+} from '../../../types/model.js';
 
 export interface IFeatureToggleClientStore {
     getClient(

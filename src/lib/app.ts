@@ -4,33 +4,37 @@ import favicon from 'serve-favicon';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import errorHandler from 'errorhandler';
-import { responseTimeMetrics } from './middleware/response-time-metrics';
-import { corsOriginMiddleware } from './middleware/cors-origin-middleware';
-import rbacMiddleware from './middleware/rbac-middleware';
-import apiTokenMiddleware from './middleware/api-token-middleware';
-import type { IUnleashServices } from './types/services';
-import { IAuthType, type IUnleashConfig } from './types/option';
-import type { IUnleashStores } from './types';
+import {
+    responseTimeMetrics,
+    corsOriginMiddleware,
+} from './middleware/index.js';
+import rbacMiddleware from './middleware/rbac-middleware.js';
+import apiTokenMiddleware from './middleware/api-token-middleware.js';
+import type { IUnleashServices } from './types/services.js';
+import { IAuthType, type IUnleashConfig } from './types/option.js';
+import type { IUnleashStores } from './types/index.js';
 
-import IndexRouter from './routes';
+import IndexRouter from './routes/index.js';
 
-import requestLogger from './middleware/request-logger';
-import demoAuthentication from './middleware/demo-authentication';
-import ossAuthentication from './middleware/oss-authentication';
-import noAuthentication, { noApiToken } from './middleware/no-authentication';
-import secureHeaders from './middleware/secure-headers';
+import requestLogger from './middleware/request-logger.js';
+import demoAuthentication from './middleware/demo-authentication.js';
+import ossAuthentication from './middleware/oss-authentication.js';
+import noAuthentication, {
+    noApiToken,
+} from './middleware/no-authentication.js';
+import secureHeaders from './middleware/secure-headers.js';
 
-import { loadIndexHTML } from './util/load-index-html';
-import { findPublicFolder } from './util/findPublicFolder';
-import patMiddleware from './middleware/pat-middleware';
+import { loadIndexHTML } from './util/load-index-html.js';
+import { findPublicFolder } from './util/findPublicFolder.js';
+import patMiddleware from './middleware/pat-middleware.js';
 import type { Knex } from 'knex';
-import maintenanceMiddleware from './features/maintenance/maintenance-middleware';
-import { unless } from './middleware/unless-middleware';
-import { catchAllErrorHandler } from './middleware/catch-all-error-handler';
-import NotFoundError from './error/notfound-error';
-import { bearerTokenMiddleware } from './middleware/bearer-token-middleware';
-import { auditAccessMiddleware } from './middleware';
-import { originMiddleware } from './middleware/origin-middleware';
+import maintenanceMiddleware from './features/maintenance/maintenance-middleware.js';
+import { unless } from './middleware/unless-middleware.js';
+import { catchAllErrorHandler } from './middleware/catch-all-error-handler.js';
+import NotFoundError from './error/notfound-error.js';
+import { bearerTokenMiddleware } from './middleware/bearer-token-middleware.js';
+import { auditAccessMiddleware } from './middleware/index.js';
+import { originMiddleware } from './middleware/origin-middleware.js';
 
 export default async function getApp(
     config: IUnleashConfig,

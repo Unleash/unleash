@@ -2,11 +2,11 @@ import { useRef, useState } from 'react';
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { IconButton, Popover, styled } from '@mui/material';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
-import { FeatureDetails as LegacyFeatureDetails } from './FeatureDetails/LegacyFeatureDetails';
-import { PlaygroundResultFeatureStrategyList as LegacyPlaygroundResultFeatureStrategyList } from './FeatureStrategyList/LegacyPlaygroundResultFeatureStrategyList';
+import { FeatureDetails as LegacyFeatureDetails } from './FeatureDetails/LegacyFeatureDetails.tsx';
+import { PlaygroundResultFeatureStrategyList as LegacyPlaygroundResultFeatureStrategyList } from './FeatureStrategyList/LegacyPlaygroundResultFeatureStrategyList.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { FeatureDetails } from './FeatureDetails/FeatureDetails';
-import { PlaygroundResultFeatureStrategyList } from './FeatureStrategyList/PlaygroundResultsFeatureStrategyList';
+import { FeatureDetails } from './FeatureDetails/FeatureDetails.tsx';
+import { PlaygroundResultFeatureStrategyList } from './FeatureStrategyList/PlaygroundResultsFeatureStrategyList.tsx';
 
 interface FeatureResultInfoPopoverCellProps {
     feature: PlaygroundFeatureSchema;

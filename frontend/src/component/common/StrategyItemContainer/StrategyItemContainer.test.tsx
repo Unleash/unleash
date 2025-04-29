@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { StrategyItemContainer as LegacyStrategyItemContainer } from './LegacyStrategyItemContainer';
+import { StrategyItemContainer as LegacyStrategyItemContainer } from './LegacyStrategyItemContainer.tsx';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { StrategyItemContainer } from './StrategyItemContainer';
+import { StrategyItemContainer } from './StrategyItemContainer.tsx';
 
 // todo: remove this test along with the flag flagOverviewRedesign
 test('(deprecated) should render strategy name, custom title and description', async () => {

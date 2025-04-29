@@ -1,4 +1,4 @@
-import { tagTypeSchema } from './tag-type-schema';
+import { tagTypeSchema } from './tag-type-schema.js';
 
 test('should require a URLFriendly name but allow empty description and icon', () => {
     const simpleTagType = {

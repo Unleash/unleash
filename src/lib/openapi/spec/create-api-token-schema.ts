@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { mergeAllOfs } from '../util/all-of';
+import { mergeAllOfs } from '../util/all-of.js';
 const adminSchema = {
     required: ['type'],
     type: 'object',

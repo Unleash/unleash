@@ -1,6 +1,6 @@
 import type { Response } from 'express';
 
-import Controller from '../controller';
+import Controller from '../controller.js';
 import {
     ADMIN,
     CREATE_CLIENT_API_TOKEN,
@@ -11,38 +11,38 @@ import {
     READ_FRONTEND_API_TOKEN,
     UPDATE_CLIENT_API_TOKEN,
     UPDATE_FRONTEND_API_TOKEN,
-} from '../../types/permissions';
-import type { ApiTokenService } from '../../services/api-token-service';
-import type { Logger } from '../../logger';
-import type { AccessService } from '../../services/access-service';
-import type { IAuthRequest } from '../unleash-types';
-import type { IUser } from '../../types/user';
-import type { IUnleashConfig } from '../../types/option';
-import { ApiTokenType, type IApiToken } from '../../types/models/api-token';
-import { createApiToken } from '../../schema/api-token-schema';
-import type { OpenApiService } from '../../services/openapi-service';
-import type { IFlagResolver, IUnleashServices } from '../../types';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
+} from '../../types/permissions.js';
+import type { ApiTokenService } from '../../services/api-token-service.js';
+import type { Logger } from '../../logger.js';
+import type { AccessService } from '../../services/access-service.js';
+import type { IAuthRequest } from '../unleash-types.js';
+import type { IUser } from '../../types/user.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import { ApiTokenType, type IApiToken } from '../../types/models/api-token.js';
+import { createApiToken } from '../../schema/api-token-schema.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
+import type { IFlagResolver, IUnleashServices } from '../../types/index.js';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
 import {
     createResponseSchema,
     resourceCreatedResponseSchema,
-} from '../../openapi/util/create-response-schema';
+} from '../../openapi/util/create-response-schema.js';
 import {
     apiTokensSchema,
     type ApiTokensSchema,
-} from '../../openapi/spec/api-tokens-schema';
-import { serializeDates } from '../../types/serialize-dates';
+} from '../../openapi/spec/api-tokens-schema.js';
+import { serializeDates } from '../../types/serialize-dates.js';
 import {
     apiTokenSchema,
     type ApiTokenSchema,
-} from '../../openapi/spec/api-token-schema';
-import type { UpdateApiTokenSchema } from '../../openapi/spec/update-api-token-schema';
+} from '../../openapi/spec/api-token-schema.js';
+import type { UpdateApiTokenSchema } from '../../openapi/spec/update-api-token-schema.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../openapi/util/standard-responses';
-import type { FrontendApiService } from '../../features/frontend-api/frontend-api-service';
-import { OperationDeniedError } from '../../error';
+} from '../../openapi/util/standard-responses.js';
+import type { FrontendApiService } from '../../features/frontend-api/frontend-api-service.js';
+import { OperationDeniedError } from '../../error/index.js';
 
 interface TokenParam {
     token: string;

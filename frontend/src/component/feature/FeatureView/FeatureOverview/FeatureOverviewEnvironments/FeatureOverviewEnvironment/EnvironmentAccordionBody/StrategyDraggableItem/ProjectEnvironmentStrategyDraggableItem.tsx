@@ -3,18 +3,18 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useStrategyChangesFromRequest } from './StrategyItem/useStrategyChangesFromRequest';
+import { useStrategyChangesFromRequest } from './StrategyItem/useStrategyChangesFromRequest.ts';
 import { ChangesScheduledBadge } from 'component/changeRequest/ModifiedInChangeRequestStatusBadge/ChangesScheduledBadge';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { ChangeRequestDraftStatusBadge } from 'component/changeRequest/ChangeRequestStatusBadge/ChangeRequestDraftStatusBadge';
-import { CopyStrategyIconMenu } from './StrategyItem/CopyStrategyIconMenu/CopyStrategyIconMenu';
+import { CopyStrategyIconMenu } from './StrategyItem/CopyStrategyIconMenu/CopyStrategyIconMenu.tsx';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import Edit from '@mui/icons-material/Edit';
-import MenuStrategyRemove from './StrategyItem/MenuStrategyRemove/MenuStrategyRemove';
+import MenuStrategyRemove from './StrategyItem/MenuStrategyRemove/MenuStrategyRemove.tsx';
 import { Link } from 'react-router-dom';
 import { UPDATE_FEATURE_STRATEGY } from '@server/types/permissions';
-import { StrategyDraggableItem } from './StrategyDraggableItem';
+import { StrategyDraggableItem } from './StrategyDraggableItem.tsx';
 
 type ProjectEnvironmentStrategyDraggableItemProps = {
     strategy: IFeatureStrategy;

@@ -2,7 +2,7 @@ import { Typography, type TypographyProps, styled } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Badge } from 'component/common/Badge/Badge';
 import type { Step } from 'react-joyride';
-import { specificUser, gradualRollout, variants } from './demo-setup';
+import { specificUser, gradualRollout, variants } from './demo-setup.ts';
 import { basePath, formatAssetPath } from 'utils/formatPath';
 import demoUserId from 'assets/img/demo-userid.png';
 

@@ -1,5 +1,5 @@
 import type { Operator } from 'constants/operators';
-import type { IFeatureVariant } from './featureToggle';
+import type { IFeatureVariant } from './featureToggle.js';
 import { constraintId } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 
 export interface IFeatureStrategy {

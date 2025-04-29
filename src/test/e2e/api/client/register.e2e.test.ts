@@ -1,8 +1,8 @@
 import faker from 'faker';
-import { type IUnleashTest, setupApp } from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import version from '../../../../lib/util/version';
+import { type IUnleashTest, setupApp } from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import version from '../../../../lib/util/version.js';
 
 const asyncFilter = async (arr, predicate) => {
     const results = await Promise.all(arr.map(predicate));

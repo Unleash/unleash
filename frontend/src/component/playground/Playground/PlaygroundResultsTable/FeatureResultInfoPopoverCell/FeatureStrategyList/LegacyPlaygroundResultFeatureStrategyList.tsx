@@ -1,7 +1,7 @@
 import {
     PlaygroundResultStrategyLists,
     WrappedPlaygroundResultStrategyList,
-} from './StrategyList/LegacyPlaygroundResultStrategyLists';
+} from './StrategyList/LegacyPlaygroundResultStrategyLists.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { Alert } from '@mui/material';

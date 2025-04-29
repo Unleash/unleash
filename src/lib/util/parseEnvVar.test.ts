@@ -2,7 +2,7 @@ import {
     parseEnvVarBoolean,
     parseEnvVarNumber,
     parseEnvVarStrings,
-} from './parseEnvVar';
+} from './parseEnvVar.js';
 
 test('parseEnvVarNumber', () => {
     expect(parseEnvVarNumber('', 1)).toEqual(1);

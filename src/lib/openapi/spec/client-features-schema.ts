@@ -1,15 +1,15 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { clientFeaturesQuerySchema } from './client-features-query-schema';
-import { clientSegmentSchema } from './client-segment-schema';
-import { constraintSchema } from './constraint-schema';
-import { environmentSchema } from './environment-schema';
-import { overrideSchema } from './override-schema';
-import { parametersSchema } from './parameters-schema';
-import { featureStrategySchema } from './feature-strategy-schema';
-import { clientFeatureSchema } from './client-feature-schema';
-import { variantSchema } from './variant-schema';
-import { strategyVariantSchema } from './strategy-variant-schema';
-import { dependentFeatureSchema } from './dependent-feature-schema';
+import { clientFeaturesQuerySchema } from './client-features-query-schema.js';
+import { clientSegmentSchema } from './client-segment-schema.js';
+import { constraintSchema } from './constraint-schema.js';
+import { environmentSchema } from './environment-schema.js';
+import { overrideSchema } from './override-schema.js';
+import { parametersSchema } from './parameters-schema.js';
+import { featureStrategySchema } from './feature-strategy-schema.js';
+import { clientFeatureSchema } from './client-feature-schema.js';
+import { variantSchema } from './variant-schema.js';
+import { strategyVariantSchema } from './strategy-variant-schema.js';
+import { dependentFeatureSchema } from './dependent-feature-schema.js';
 
 export const clientFeaturesSchema = {
     $id: '#/components/schemas/clientFeaturesSchema',

@@ -1,6 +1,6 @@
 import theme from 'themes/theme';
 import { screen } from '@testing-library/react';
-import { useDefaultColumnVisibility } from './useDefaultColumnVisibility';
+import { useDefaultColumnVisibility } from './useDefaultColumnVisibility.ts';
 import { render } from 'utils/testRenderer';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import { resizeScreen } from 'utils/resizeScreen';

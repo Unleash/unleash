@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ArchivedFeatureSchema } from './archivedFeatureSchema';
+import type { ArchivedFeatureSchema } from './archivedFeatureSchema.js';
 
 /**
  * A list of archived features

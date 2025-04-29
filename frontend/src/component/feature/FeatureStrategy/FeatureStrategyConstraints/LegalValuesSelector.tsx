@@ -6,7 +6,7 @@ import {
     filterLegalValues,
     LegalValueLabel,
 } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/LegalValueLabel/LegalValueLabel';
-import { ConstraintValueSearch } from './ConstraintValueSearch';
+import { ConstraintValueSearch } from './ConstraintValueSearch.tsx';
 
 interface IRestrictiveLegalValuesProps {
     data: {

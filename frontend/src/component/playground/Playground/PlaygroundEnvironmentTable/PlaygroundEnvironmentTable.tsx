@@ -14,10 +14,10 @@ import type {
 } from 'openapi';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
-import { FeatureStatusCell } from '../PlaygroundResultsTable/FeatureStatusCell/FeatureStatusCell';
-import { FeatureResultInfoPopoverCell } from '../PlaygroundResultsTable/FeatureResultInfoPopoverCell/FeatureResultInfoPopoverCell';
-import { VariantCell } from '../PlaygroundResultsTable/VariantCell/VariantCell';
-import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell';
+import { FeatureStatusCell } from '../PlaygroundResultsTable/FeatureStatusCell/FeatureStatusCell.tsx';
+import { FeatureResultInfoPopoverCell } from '../PlaygroundResultsTable/FeatureResultInfoPopoverCell/FeatureResultInfoPopoverCell.tsx';
+import { VariantCell } from '../PlaygroundResultsTable/VariantCell/VariantCell.tsx';
+import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell.tsx';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
 
 interface IPlaygroundEnvironmentTableProps {

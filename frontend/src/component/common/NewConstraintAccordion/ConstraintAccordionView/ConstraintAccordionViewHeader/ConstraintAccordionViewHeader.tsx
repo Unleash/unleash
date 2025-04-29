@@ -1,8 +1,8 @@
 import { ConstraintIcon } from 'component/common/LegacyConstraintAccordion/ConstraintIcon';
 import type { IConstraint } from 'interfaces/strategy';
-import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo';
-import { ConstraintAccordionViewHeaderInfo as LegacyConstraintAccordionViewHeaderInfo } from './LegacyConstraintAccordionViewHeaderInfo';
-import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';
+import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo.tsx';
+import { ConstraintAccordionViewHeaderInfo as LegacyConstraintAccordionViewHeaderInfo } from './LegacyConstraintAccordionViewHeaderInfo.tsx';
+import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions.tsx';
 import { styled } from '@mui/system';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { useUiFlag } from 'hooks/useUiFlag';

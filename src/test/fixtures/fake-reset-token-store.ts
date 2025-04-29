@@ -1,11 +1,11 @@
-import NotFoundError from '../../lib/error/notfound-error';
+import NotFoundError from '../../lib/error/notfound-error.js';
 import type {
     IResetQuery,
     IResetToken,
     IResetTokenCreate,
     IResetTokenQuery,
     IResetTokenStore,
-} from '../../lib/types/stores/reset-token-store';
+} from '../../lib/types/stores/reset-token-store.js';
 
 export default class FakeResetTokenStore implements IResetTokenStore {
     data: IResetToken[];

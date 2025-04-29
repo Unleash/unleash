@@ -1,11 +1,11 @@
-import { SYSTEM_USER, SYSTEM_USER_AUDIT } from '../../lib/types';
+import { SYSTEM_USER, SYSTEM_USER_AUDIT } from '../../lib/types/index.js';
 import type {
     IApiRequest,
     IApiUser,
     IAuditUser,
     IAuthRequest,
     IUser,
-} from '../server-impl';
+} from '../server-impl.js';
 
 export function extractUsernameFromUser(user: IUser | IApiUser): string {
     return (

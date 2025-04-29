@@ -1,7 +1,7 @@
 import { render } from 'utils/testRenderer';
 import { screen, waitFor } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { CreateApiToken } from './CreateApiToken';
+import { CreateApiToken } from './CreateApiToken.tsx';
 import {
     ADMIN,
     CREATE_CLIENT_API_TOKEN,

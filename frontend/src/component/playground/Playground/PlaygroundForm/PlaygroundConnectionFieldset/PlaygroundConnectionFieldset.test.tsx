@@ -1,7 +1,7 @@
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { render } from 'utils/testRenderer';
 import { fireEvent, screen, within } from '@testing-library/react';
-import { PlaygroundConnectionFieldset } from './PlaygroundConnectionFieldset';
+import { PlaygroundConnectionFieldset } from './PlaygroundConnectionFieldset.tsx';
 import { useState } from 'react';
 import userEvent from '@testing-library/user-event';
 

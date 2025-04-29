@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateSchemaOneOfOnesixAction } from './changeRequestCreateSchemaOneOfOnesixAction';
+import type { ChangeRequestCreateSchemaOneOfOnesixAction } from './changeRequestCreateSchemaOneOfOnesixAction.js';
 
 /**
  * Archive a feature.

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectSchemaMode } from './projectSchemaMode';
-import type { ProjectSchemaOwners } from './projectSchemaOwners';
+import type { ProjectSchemaMode } from './projectSchemaMode.js';
+import type { ProjectSchemaOwners } from './projectSchemaOwners.js';
 
 /**
  * A definition of the project used for projects listing purposes

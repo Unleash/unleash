@@ -25,8 +25,8 @@ import {
     useFlexLayout,
 } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
-import { SignalEndpointsTokensCreateDialog } from './SignalEndpointsTokensCreateDialog';
-import { SignalEndpointsTokensDialog } from './SignalEndpointsTokensDialog';
+import { SignalEndpointsTokensCreateDialog } from './SignalEndpointsTokensCreateDialog.tsx';
+import { SignalEndpointsTokensDialog } from './SignalEndpointsTokensDialog.tsx';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';

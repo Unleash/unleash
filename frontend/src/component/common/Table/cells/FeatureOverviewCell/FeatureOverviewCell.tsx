@@ -2,20 +2,20 @@ import type { FC } from 'react';
 import type {
     FeatureSearchResponseSchema,
     TagSchema,
-} from '../../../../../openapi';
+} from '../../../../../openapi.ts';
 import { Box, IconButton, styled, Chip } from '@mui/material';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
-import { useSearchHighlightContext } from '../../SearchHighlightContext/SearchHighlightContext';
-import { Highlighter } from '../../../Highlighter/Highlighter';
+import { useSearchHighlightContext } from '../../SearchHighlightContext/SearchHighlightContext.tsx';
+import { Highlighter } from '../../../Highlighter/Highlighter.tsx';
 import { StyledDescription, StyledTitle } from '../LinkCell/LinkCell.styles';
 import { Link } from 'react-router-dom';
-import { Badge } from '../../../Badge/Badge';
-import { HtmlTooltip } from '../../../HtmlTooltip/HtmlTooltip';
+import { Badge } from '../../../Badge/Badge.tsx';
+import { HtmlTooltip } from '../../../HtmlTooltip/HtmlTooltip.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { getLocalizedDateString } from '../../../util';
+import { getLocalizedDateString } from '../../../util.ts';
 import { Tag } from 'component/common/Tag/Tag';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { formatTag } from 'utils/format-tag';

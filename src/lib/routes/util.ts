@@ -1,8 +1,8 @@
 import joi from 'joi';
 import type { Response } from 'express';
-import type { Logger } from '../logger';
-import { UnleashError } from '../error/unleash-error';
-import { fromLegacyError } from '../error/from-legacy-error';
+import type { Logger } from '../logger.js';
+import { UnleashError } from '../error/unleash-error.js';
+import { fromLegacyError } from '../error/from-legacy-error.js';
 import createError from 'http-errors';
 
 export const customJoi = joi.extend((j) => ({

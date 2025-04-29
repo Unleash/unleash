@@ -1,4 +1,4 @@
-import { useUiFlag } from './useUiFlag';
+import { useUiFlag } from './useUiFlag.js';
 import { useLocation } from 'react-router';
 
 export const useNewAdminMenu = () => {

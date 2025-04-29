@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import {
     FeatureMetricsStats,
     type IFeatureMetricsStatsProps,
-} from './FeatureMetricsStats';
+} from './FeatureMetricsStats.tsx';
 
 interface IFeatureMetricsStatsRawProps
     extends Omit<IFeatureMetricsStatsProps, 'totalYes' | 'totalNo'> {

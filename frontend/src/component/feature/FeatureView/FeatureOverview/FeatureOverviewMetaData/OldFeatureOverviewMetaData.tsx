@@ -10,16 +10,16 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useState } from 'react';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
-import { StyledDetail } from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow';
+import { StyledDetail } from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow.tsx';
 import { formatDateYMD } from 'utils/formatDate';
 import { parseISO } from 'date-fns';
-import { FeatureEnvironmentSeen } from '../../FeatureEnvironmentSeen/FeatureEnvironmentSeen';
-import { OldDependencyRow } from './OldDependencyRow';
+import { FeatureEnvironmentSeen } from '../../FeatureEnvironmentSeen/FeatureEnvironmentSeen.tsx';
+import { OldDependencyRow } from './OldDependencyRow.tsx';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { useShowDependentFeatures } from './useShowDependentFeatures';
+import { useShowDependentFeatures } from './useShowDependentFeatures.ts';
 import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
-import { FeatureLifecycle } from '../FeatureLifecycle/FeatureLifecycle';
-import { MarkCompletedDialogue } from '../FeatureLifecycle/MarkCompletedDialogue';
+import { FeatureLifecycle } from '../FeatureLifecycle/FeatureLifecycle.tsx';
+import { MarkCompletedDialogue } from '../FeatureLifecycle/MarkCompletedDialogue.tsx';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 
 const StyledContainer = styled('div')(({ theme }) => ({

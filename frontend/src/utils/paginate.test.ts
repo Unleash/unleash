@@ -1,4 +1,4 @@
-import { paginate } from './paginate';
+import { paginate } from './paginate.js';
 
 const createInput = (count: number) => {
     const result = [];

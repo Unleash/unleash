@@ -1,6 +1,6 @@
 import { render } from 'utils/testRenderer';
 import { fireEvent, screen } from '@testing-library/react';
-import { RestrictiveLegalValues } from './RestrictiveLegalValues';
+import { RestrictiveLegalValues } from './RestrictiveLegalValues.tsx';
 import { vi } from 'vitest';
 
 vi.mock('../../../../../../hooks/useUiFlag', () => ({

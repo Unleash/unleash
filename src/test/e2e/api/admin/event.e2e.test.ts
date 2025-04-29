@@ -1,15 +1,18 @@
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import { FEATURE_CREATED, type IBaseEvent } from '../../../../lib/types/events';
-import { randomId } from '../../../../lib/util/random-id';
-import type { EventService } from '../../../../lib/services';
-import { type IUnleashConfig, SYSTEM_USER } from '../../../../lib/types';
-import { createEventsService } from '../../../../lib/features';
-import { createTestConfig } from '../../../config/test-config';
+} from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import {
+    FEATURE_CREATED,
+    type IBaseEvent,
+} from '../../../../lib/types/events.js';
+import { randomId } from '../../../../lib/util/random-id.js';
+import type { EventService } from '../../../../lib/services/index.js';
+import { type IUnleashConfig, SYSTEM_USER } from '../../../../lib/types/index.js';
+import { createEventsService } from '../../../../lib/features/index.js';
+import { createTestConfig } from '../../../config/test-config.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

@@ -6,7 +6,7 @@ import { trialHasExpired, isTrialInstance } from 'utils/instanceTrial';
 import { GridRow } from 'component/common/GridRow/GridRow';
 import { GridCol } from 'component/common/GridCol/GridCol';
 import { Badge } from 'component/common/Badge/Badge';
-import { BillingDetails } from './BillingDetails';
+import { BillingDetails } from './BillingDetails.tsx';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 
 export const BILLING_PRO_BASE_PRICE = 80;

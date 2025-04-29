@@ -6,7 +6,7 @@ import type {
     PlaygroundFeatureSchema,
 } from 'openapi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { FeatureStrategyItem } from './StrategyItem/LegacyFeatureStrategyItem';
+import { FeatureStrategyItem } from './StrategyItem/LegacyFeatureStrategyItem.tsx';
 import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 
 const StyledAlertWrapper = styled('div')(({ theme }) => ({

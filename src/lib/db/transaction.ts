@@ -1,5 +1,5 @@
 import type { Knex } from 'knex';
-import type { IUnleashConfig } from '../server-impl';
+import type { IUnleashConfig } from '../server-impl.js';
 
 export type KnexTransaction = Knex.Transaction;
 

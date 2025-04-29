@@ -1,5 +1,5 @@
 import type { Response } from 'express';
-import Controller from '../../routes/controller';
+import Controller from '../../routes/controller.js';
 import {
     type IFlagResolver,
     type IProjectParam,
@@ -7,17 +7,17 @@ import {
     type IUnleashServices,
     NONE,
     serializeDates,
-} from '../../types';
+} from '../../types/index.js';
 
-import { getStandardResponses } from '../../openapi/util/standard-responses';
-import type { OpenApiService } from '../../services';
-import type { IAuthRequest } from '../../routes/unleash-types';
+import { getStandardResponses } from '../../openapi/util/standard-responses.js';
+import type { OpenApiService } from '../../services/index.js';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
 import {
     createResponseSchema,
     projectStatusSchema,
     type ProjectStatusSchema,
-} from '../../openapi';
-import type { ProjectStatusService } from './project-status-service';
+} from '../../openapi/index.js';
+import type { ProjectStatusService } from './project-status-service.js';
 
 export default class ProjectStatusController extends Controller {
     private projectStatusService: ProjectStatusService;

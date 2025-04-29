@@ -1,4 +1,4 @@
-import { reorderObject } from './reorderObject';
+import { reorderObject } from './reorderObject.js';
 
 describe('reorderObject', () => {
     it('correctly reorders the object based on provided keys', () => {

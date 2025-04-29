@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { overrideSchema } from './override-schema';
+import { overrideSchema } from './override-schema.js';
 
 export const variantSchema = {
     $id: '#/components/schemas/variantSchema',

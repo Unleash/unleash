@@ -1,15 +1,15 @@
-import type { Db, IUnleashConfig } from '../../server-impl';
-import { PlaygroundService } from './playground-service';
+import type { Db, IUnleashConfig } from '../../server-impl.js';
+import { PlaygroundService } from './playground-service.js';
 import {
     createFakeFeatureToggleService,
     createFeatureToggleService,
-} from '../feature-toggle/createFeatureToggleService';
+} from '../feature-toggle/createFeatureToggleService.js';
 import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
-} from '../private-project/createPrivateProjectChecker';
-import { SegmentReadModel } from '../segment/segment-read-model';
-import { FakeSegmentReadModel } from '../segment/fake-segment-read-model';
+} from '../private-project/createPrivateProjectChecker.js';
+import { SegmentReadModel } from '../segment/segment-read-model.js';
+import { FakeSegmentReadModel } from '../segment/fake-segment-read-model.js';
 
 export const createPlaygroundService = (
     db: Db,

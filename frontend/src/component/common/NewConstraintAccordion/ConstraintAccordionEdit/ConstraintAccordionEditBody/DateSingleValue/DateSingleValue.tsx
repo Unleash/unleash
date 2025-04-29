@@ -1,4 +1,4 @@
-import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
+import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader.tsx';
 import Input from 'component/common/Input/Input';
 import { parseDateValue, parseValidDate } from 'component/common/util';
 

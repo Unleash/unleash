@@ -3,15 +3,15 @@ import {
     type IUnleashConfig,
     type IUnleashServices,
     NONE,
-} from '../../types';
-import type { OpenApiService } from '../../services';
-import { createResponseSchema, getStandardResponses } from '../../openapi';
-import Controller from '../../routes/controller';
+} from '../../types/index.js';
+import type { OpenApiService } from '../../services/index.js';
+import { createResponseSchema, getStandardResponses } from '../../openapi/index.js';
+import Controller from '../../routes/controller.js';
 import type { Request, Response } from 'express';
 import {
     type FeatureLifecycleCountSchema,
     featureLifecycleCountSchema,
-} from '../../openapi/spec/feature-lifecycle-count-schema';
+} from '../../openapi/spec/feature-lifecycle-count-schema.js';
 
 export default class FeatureLifecycleCountController extends Controller {
     private featureLifecycleReadModel: IFeatureLifecycleReadModel;

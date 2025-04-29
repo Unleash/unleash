@@ -1,4 +1,4 @@
-import type { IProjectFlagCreatorsReadModel } from './project-flag-creators-read-model.type';
+import type { IProjectFlagCreatorsReadModel } from './project-flag-creators-read-model.type.js';
 
 export class FakeProjectFlagCreatorsReadModel
     implements IProjectFlagCreatorsReadModel

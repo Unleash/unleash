@@ -9,7 +9,7 @@ import {
     useState,
 } from 'react';
 import { parseParameterStrings } from 'utils/parseParameter';
-import { baseChipStyles } from './ValueList';
+import { baseChipStyles } from './ValueList.tsx';
 
 const AddValuesButton = styled('button')(({ theme }) => ({
     ...baseChipStyles(theme),

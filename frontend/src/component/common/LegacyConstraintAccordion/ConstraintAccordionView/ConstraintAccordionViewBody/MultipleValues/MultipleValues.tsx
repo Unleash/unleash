@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Chip, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { ConstraintValueSearch } from '../../../ConstraintValueSearch/ConstraintValueSearch';
+import { ConstraintValueSearch } from '../../../ConstraintValueSearch/ConstraintValueSearch.tsx';
 
 interface IMultipleValuesProps {
     values: string[] | undefined;

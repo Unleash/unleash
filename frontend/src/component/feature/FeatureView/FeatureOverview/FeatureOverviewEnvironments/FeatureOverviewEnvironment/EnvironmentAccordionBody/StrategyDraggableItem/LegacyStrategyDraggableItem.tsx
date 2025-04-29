@@ -5,12 +5,12 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { StrategyItem } from './StrategyItem/LegacyStrategyItem';
+import { StrategyItem } from './StrategyItem/LegacyStrategyItem.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import {
     useStrategyChangesFromRequest,
     type UseStrategyChangeFromRequestResult,
-} from './StrategyItem/useStrategyChangesFromRequest';
+} from './StrategyItem/useStrategyChangesFromRequest.ts';
 import { ChangesScheduledBadge } from 'component/changeRequest/ModifiedInChangeRequestStatusBadge/ChangesScheduledBadge';
 import type { IFeatureChange } from 'component/changeRequest/changeRequest.types';
 import { Badge } from 'component/common/Badge/Badge';

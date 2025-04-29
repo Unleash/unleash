@@ -1,5 +1,5 @@
-import type { EventSearchQueryParameters } from '../../../../lib/openapi/spec/event-search-query-parameters';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
+import type { EventSearchQueryParameters } from '../../../../lib/openapi/spec/event-search-query-parameters.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 
 import {
     FEATURE_CREATED,
@@ -7,13 +7,16 @@ import {
     type IUnleashStores,
     RoleName,
     USER_CREATED,
-} from '../../../../lib/types';
-import type { AccessService, EventService } from '../../../../lib/services';
-import getLogger from '../../../fixtures/no-logger';
-import { type IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
-import { createEventsService } from '../../../../lib/features';
-import { createTestConfig } from '../../../config/test-config';
-import type { IRole } from '../../../../lib/types/stores/access-store';
+} from '../../../../lib/types/index.js';
+import type { AccessService, EventService } from '../../../../lib/services/index.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import {
+    type IUnleashTest,
+    setupAppWithAuth,
+} from '../../helpers/test-helper.js';
+import { createEventsService } from '../../../../lib/features/index.js';
+import { createTestConfig } from '../../../config/test-config.js';
+import type { IRole } from '../../../../lib/types/stores/access-store.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

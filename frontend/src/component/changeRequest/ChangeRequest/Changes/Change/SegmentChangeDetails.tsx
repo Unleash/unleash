@@ -7,11 +7,11 @@ import type {
     IChangeRequestUpdateSegment,
 } from 'component/changeRequest/changeRequest.types';
 import { useSegment } from 'hooks/api/getters/useSegment/useSegment';
-import { SegmentDiff, SegmentTooltipLink } from '../../SegmentTooltipLink';
+import { SegmentDiff, SegmentTooltipLink } from '../../SegmentTooltipLink.tsx';
 import { ConstraintAccordionList } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
 import { ViewableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/ViewableConstraintsList';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning';
+import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning.tsx';
 
 const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
     display: 'grid',

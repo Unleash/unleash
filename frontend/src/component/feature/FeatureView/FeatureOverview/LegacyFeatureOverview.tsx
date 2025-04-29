@@ -1,4 +1,4 @@
-import { FeatureOverviewEnvironments } from './FeatureOverviewEnvironments/FeatureOverviewEnvironments';
+import { FeatureOverviewEnvironments } from './FeatureOverviewEnvironments/FeatureOverviewEnvironments.tsx';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import {
@@ -12,7 +12,7 @@ import { styled } from '@mui/material';
 import { FeatureStrategyCreate } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
 import { useEffect } from 'react';
 import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
-import OldFeatureOverviewMetaData from './FeatureOverviewMetaData/OldFeatureOverviewMetaData';
+import OldFeatureOverviewMetaData from './FeatureOverviewMetaData/OldFeatureOverviewMetaData.tsx';
 import { OldFeatureOverviewSidePanel } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/OldFeatureOverviewSidePanel';
 
 const StyledContainer = styled('div')(({ theme }) => ({

@@ -43,7 +43,7 @@ import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useToast from 'hooks/useToast';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ProjectGroupView } from '../ProjectGroupView/ProjectGroupView';
+import { ProjectGroupView } from '../ProjectGroupView/ProjectGroupView.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { IUser } from 'interfaces/user';
 import type { IGroup } from 'interfaces/group';

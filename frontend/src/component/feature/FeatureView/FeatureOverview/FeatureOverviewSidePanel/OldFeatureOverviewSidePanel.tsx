@@ -2,8 +2,8 @@ import { Box, Divider, styled } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { FeatureOverviewSidePanelEnvironmentSwitches } from './FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitches';
-import { FeatureOverviewSidePanelTags } from './FeatureOverviewSidePanelTags/FeatureOverviewSidePanelTags';
+import { FeatureOverviewSidePanelEnvironmentSwitches } from './FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitches.tsx';
+import { FeatureOverviewSidePanelTags } from './FeatureOverviewSidePanelTags/FeatureOverviewSidePanelTags.tsx';
 import { Sticky } from 'component/common/Sticky/Sticky';
 
 const StyledContainer = styled(Box)(({ theme }) => ({

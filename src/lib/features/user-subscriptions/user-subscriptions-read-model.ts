@@ -1,9 +1,9 @@
-import type { Db } from '../../db/db';
+import type { Db } from '../../db/db.js';
 import {
     SUBSCRIPTION_TYPES,
     type IUserSubscriptionsReadModel,
     type Subscriber,
-} from './user-subscriptions-read-model-type';
+} from './user-subscriptions-read-model-type.js';
 
 const USERS_TABLE = 'users';
 const USER_COLUMNS = [

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { TagSchema } from './tagSchema';
+import type { TagSchema } from './tagSchema.js';
 
 /**
  * A tag with a version number representing the schema used to model the tag.

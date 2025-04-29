@@ -1,10 +1,10 @@
-import type { LogProvider } from '../logger';
-import { SchedulerService } from '../features/scheduler/scheduler-service';
-import { createTestConfig } from '../../test/config/test-config';
-import FakeSettingStore from '../../test/fixtures/fake-setting-store';
-import SettingService from './setting-service';
-import type EventService from '../features/events/event-service';
-import MaintenanceService from '../features/maintenance/maintenance-service';
+import type { LogProvider } from '../logger.js';
+import { SchedulerService } from '../features/scheduler/scheduler-service.js';
+import { createTestConfig } from '../../test/config/test-config.js';
+import FakeSettingStore from '../../test/fixtures/fake-setting-store.js';
+import SettingService from './setting-service.js';
+import type EventService from '../features/events/event-service.js';
+import MaintenanceService from '../features/maintenance/maintenance-service.js';
 
 function ms(timeMs: number) {
     return new Promise((resolve) => setTimeout(resolve, timeMs));

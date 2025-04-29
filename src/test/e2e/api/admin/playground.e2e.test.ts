@@ -1,22 +1,22 @@
 import fc, { type Arbitrary } from 'fast-check';
-import { clientFeature, clientFeatures } from '../../../arbitraries.test';
-import { generate as generateRequest } from '../../../../lib/openapi/spec/playground-request-schema.test';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
+import { clientFeature, clientFeatures } from '../../../arbitraries.test.js';
+import { generate as generateRequest } from '../../../../lib/openapi/spec/playground-request-schema.test.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import { type FeatureToggle, WeightType } from '../../../../lib/types/model';
-import getLogger from '../../../fixtures/no-logger';
+} from '../../helpers/test-helper.js';
+import { type FeatureToggle, WeightType } from '../../../../lib/types/model.js';
+import getLogger from '../../../fixtures/no-logger.js';
 import {
     ALL,
     ApiTokenType,
     type IApiToken,
-} from '../../../../lib/types/models/api-token';
-import type { PlaygroundFeatureSchema } from '../../../../lib/openapi/spec/playground-feature-schema';
-import type { ClientFeatureSchema } from '../../../../lib/openapi/spec/client-feature-schema';
-import type { PlaygroundResponseSchema } from '../../../../lib/openapi/spec/playground-response-schema';
-import type { PlaygroundRequestSchema } from '../../../../lib/openapi/spec/playground-request-schema';
+} from '../../../../lib/types/models/api-token.js';
+import type { PlaygroundFeatureSchema } from '../../../../lib/openapi/spec/playground-feature-schema.js';
+import type { ClientFeatureSchema } from '../../../../lib/openapi/spec/client-feature-schema.js';
+import type { PlaygroundResponseSchema } from '../../../../lib/openapi/spec/playground-response-schema.js';
+import type { PlaygroundRequestSchema } from '../../../../lib/openapi/spec/playground-request-schema.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

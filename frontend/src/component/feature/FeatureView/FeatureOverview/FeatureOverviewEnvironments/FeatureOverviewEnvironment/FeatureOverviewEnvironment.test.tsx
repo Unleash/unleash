@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { FeatureOverviewEnvironment } from './FeatureOverviewEnvironment';
+import { FeatureOverviewEnvironment } from './FeatureOverviewEnvironment.tsx';
 import { Route, Routes } from 'react-router-dom';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 

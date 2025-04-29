@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 
 import { ReactComponent as EmailIcon } from 'assets/icons/email.svg';
-import { LinkField } from '../LinkField';
+import { LinkField } from '../LinkField.tsx';
 
 interface IConfirmUserEmailProps {
     open: boolean;

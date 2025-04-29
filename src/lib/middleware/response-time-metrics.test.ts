@@ -2,8 +2,8 @@ import { EventEmitter } from 'stream';
 import {
     responseTimeMetrics,
     storeRequestedRoute,
-} from './response-time-metrics';
-import { REQUEST_TIME } from '../metric-events';
+} from './response-time-metrics.js';
+import { REQUEST_TIME } from '../metric-events.js';
 
 const fixedResponseTime = 100;
 // mock response-time library

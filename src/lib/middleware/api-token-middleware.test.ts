@@ -1,13 +1,13 @@
-import getLogger from '../../test/fixtures/no-logger';
-import { CLIENT } from '../types/permissions';
-import { createTestConfig } from '../../test/config/test-config';
-import ApiUser from '../types/api-user';
-import { ALL, ApiTokenType } from '../types/models/api-token';
+import getLogger from '../../test/fixtures/no-logger.js';
+import { CLIENT } from '../types/permissions.js';
+import { createTestConfig } from '../../test/config/test-config.js';
+import ApiUser from '../types/api-user.js';
+import { ALL, ApiTokenType } from '../types/models/api-token.js';
 import apiTokenMiddleware, {
     TOKEN_TYPE_ERROR_MESSAGE,
-} from './api-token-middleware';
-import type { ApiTokenService } from '../services';
-import type { IUnleashConfig } from '../types';
+} from './api-token-middleware.js';
+import type { ApiTokenService } from '../services/index.js';
+import type { IUnleashConfig } from '../types/index.js';
 
 let config: IUnleashConfig;
 

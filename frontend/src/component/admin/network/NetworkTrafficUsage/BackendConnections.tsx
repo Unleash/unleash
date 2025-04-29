@@ -9,12 +9,12 @@ import {
     Tooltip as TooltipComponent,
     Typography,
 } from '@mui/material';
-import { PeriodSelector } from './PeriodSelector';
+import { PeriodSelector } from './PeriodSelector.tsx';
 import { Bar } from 'react-chartjs-2';
 import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin';
-import { getChartLabel } from './chart-functions';
-import { useConsumptionStats } from './hooks/useStats';
-import { StyledBox, TopRow } from './SharedComponents';
+import { getChartLabel } from './chart-functions.ts';
+import { useConsumptionStats } from './hooks/useStats.ts';
+import { StyledBox, TopRow } from './SharedComponents.tsx';
 import {
     BarElement,
     CategoryScale,
@@ -25,7 +25,7 @@ import {
     Tooltip,
 } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import { useChartDataSelection } from './hooks/useChartDataSelection';
+import { useChartDataSelection } from './hooks/useChartDataSelection.ts';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 
 const ConnectionExplanationBox = styled(Box)(({ theme }) => ({

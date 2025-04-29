@@ -2,19 +2,19 @@ import type { FC } from 'react';
 import type { FeatureStrategySchema } from 'openapi';
 import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { StrategyExecution as LegacyStrategyExecution } from './LegacyStrategyExecution';
+import { StrategyExecution as LegacyStrategyExecution } from './LegacyStrategyExecution.tsx';
 import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { objectId } from 'utils/objectId';
-import { useCustomStrategyParameters } from './hooks/useCustomStrategyParameters';
-import { useStrategyParameters } from './hooks/useStrategyParameters';
+import { useCustomStrategyParameters } from './hooks/useCustomStrategyParameters.ts';
+import { useStrategyParameters } from './hooks/useStrategyParameters.ts';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
 import {
     ConstraintListItem,
     ConstraintsList,
 } from 'component/common/ConstraintsList/ConstraintsList';
-import { RolloutVariants } from './RolloutVariants/RolloutVariants';
+import { RolloutVariants } from './RolloutVariants/RolloutVariants.tsx';
 
 type StrategyExecutionProps = {
     strategy: IFeatureStrategyPayload | FeatureStrategySchema;

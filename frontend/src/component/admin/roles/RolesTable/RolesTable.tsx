@@ -14,13 +14,13 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { useSearch } from 'hooks/useSearch';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import SupervisedUserCircle from '@mui/icons-material/SupervisedUserCircle';
-import { RolesActionsCell } from './RolesActionsCell/RolesActionsCell';
-import { RolesCell } from './RolesCell/RolesCell';
-import { RoleDeleteDialog } from './RoleDeleteDialog/RoleDeleteDialog';
+import { RolesActionsCell } from './RolesActionsCell/RolesActionsCell.tsx';
+import { RolesCell } from './RolesCell/RolesCell.tsx';
+import { RoleDeleteDialog } from './RoleDeleteDialog/RoleDeleteDialog.tsx';
 import { useRolesApi } from 'hooks/api/actions/useRolesApi/useRolesApi';
 import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
-import { RoleModal } from '../RoleModal/RoleModal';
-import { RolePermissionsCell } from './RolePermissionsCell/RolePermissionsCell';
+import { RoleModal } from '../RoleModal/RoleModal.tsx';
+import { RolePermissionsCell } from './RolePermissionsCell/RolePermissionsCell.tsx';
 import { ROOT_ROLE_TYPE } from '@server/util/constants';
 
 interface IRolesTableProps {

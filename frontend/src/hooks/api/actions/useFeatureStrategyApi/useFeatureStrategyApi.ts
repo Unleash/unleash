@@ -3,7 +3,7 @@ import type {
     IFeatureStrategy,
     IFeatureStrategySortOrder,
 } from 'interfaces/strategy';
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
 const useFeatureStrategyApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({

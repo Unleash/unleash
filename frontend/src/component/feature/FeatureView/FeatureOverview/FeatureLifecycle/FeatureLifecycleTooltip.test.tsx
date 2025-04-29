@@ -1,9 +1,9 @@
 import { screen } from '@testing-library/react';
-import { FeatureLifecycleTooltip } from './FeatureLifecycleTooltip';
+import { FeatureLifecycleTooltip } from './FeatureLifecycleTooltip.tsx';
 import { render } from 'utils/testRenderer';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
-import type { LifecycleStage } from './LifecycleStage';
+import type { LifecycleStage } from './LifecycleStage.tsx';
 import {
     DELETE_FEATURE,
     UPDATE_FEATURE,

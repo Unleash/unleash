@@ -61,7 +61,7 @@ import {
     RELEASE_PLAN_ADDED,
     RELEASE_PLAN_REMOVED,
     RELEASE_PLAN_MILESTONE_STARTED,
-} from '../types';
+} from '../types/index.js';
 
 interface IEventData {
     label: string;

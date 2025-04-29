@@ -1,9 +1,9 @@
-import { getDbConfig } from './helpers/database-config';
-import { createTestConfig } from '../config/test-config';
+import { getDbConfig } from './helpers/database-config.js';
+import { createTestConfig } from '../config/test-config.js';
 import { getInstance } from 'db-migrate';
 import { log } from 'db-migrate-shared';
 import { Client } from 'pg';
-import type { IDBOption } from '../../lib/types';
+import type { IDBOption } from '../../lib/types/index.js';
 
 log.setLogLevel('error');
 

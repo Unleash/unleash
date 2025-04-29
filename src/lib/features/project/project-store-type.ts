@@ -1,16 +1,16 @@
 import type {
     IEnvironmentProjectLink,
     ProjectModeCount,
-} from './project-store';
+} from './project-store.js';
 import type {
     IEnvironment,
     IFeatureNaming,
     IProject,
     IProjectApplications,
     ProjectMode,
-} from '../../types/model';
-import type { Store } from '../../types/stores/store';
-import type { CreateFeatureStrategySchema } from '../../openapi';
+} from '../../types/model.js';
+import type { Store } from '../../types/stores/store.js';
+import type { CreateFeatureStrategySchema } from '../../openapi/index.js';
 
 export interface IProjectInsert {
     id: string;

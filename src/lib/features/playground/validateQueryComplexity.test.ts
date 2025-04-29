@@ -1,5 +1,5 @@
-import { validateQueryComplexity } from './validateQueryComplexity';
-import { BadDataError } from '../../error';
+import { validateQueryComplexity } from './validateQueryComplexity.js';
+import { BadDataError } from '../../error/index.js';
 
 test('should not throw error when total combinations are under MAX_COMPLEXITY', () => {
     const environmentsCount = 10;

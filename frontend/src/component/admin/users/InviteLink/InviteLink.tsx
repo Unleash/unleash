@@ -15,7 +15,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useInviteTokenApi } from 'hooks/api/actions/useInviteTokenApi/useInviteTokenApi';
 import { useInviteTokens } from 'hooks/api/getters/useInviteTokens/useInviteTokens';
-import { LinkField } from '../LinkField/LinkField';
+import { LinkField } from '../LinkField/LinkField.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 

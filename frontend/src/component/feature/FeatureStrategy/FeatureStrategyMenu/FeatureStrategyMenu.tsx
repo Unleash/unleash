@@ -6,8 +6,8 @@ import PermissionButton, {
 } from 'component/common/PermissionButton/PermissionButton';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { Dialog, styled } from '@mui/material';
-import { FeatureStrategyMenuCards } from './FeatureStrategyMenuCards/FeatureStrategyMenuCards';
-import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrategyCreate';
+import { FeatureStrategyMenuCards } from './FeatureStrategyMenuCards/FeatureStrategyMenuCards.tsx';
+import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrategyCreate.tsx';
 import MoreVert from '@mui/icons-material/MoreVert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
@@ -20,8 +20,8 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ReleasePlanReviewDialog } from '../../FeatureView/FeatureOverview/ReleasePlan/ReleasePlanReviewDialog';
-import { OldFeatureStrategyMenu } from './OldFeatureStrategyMenu';
+import { ReleasePlanReviewDialog } from '../../FeatureView/FeatureOverview/ReleasePlan/ReleasePlanReviewDialog.tsx';
+import { OldFeatureStrategyMenu } from './OldFeatureStrategyMenu.tsx';
 
 interface IFeatureStrategyMenuProps {
     label: string;

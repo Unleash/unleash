@@ -7,12 +7,12 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmutable';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { CopyButton } from './CopyButton/CopyButton';
+import { CopyButton } from './CopyButton/CopyButton.tsx';
 import { useChangeRequestAddStrategy } from 'hooks/useChangeRequestAddStrategy';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
 import { CopyStrategiesMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/CopyStrategiesMessage';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { FeatureStrategyMenuWrapper } from '../FeatureStrategyMenu/FeatureStrategyMenu';
+import { FeatureStrategyMenuWrapper } from '../FeatureStrategyMenu/FeatureStrategyMenu.tsx';
 
 interface IFeatureStrategyEmptyProps {
     projectId: string;

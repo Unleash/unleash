@@ -1,4 +1,4 @@
-import { ensureStringValue } from './ensureStringValue';
+import { ensureStringValue } from './ensureStringValue.js';
 
 test('ensureStringValue', () => {
     expect(ensureStringValue(null)).toEqual('');

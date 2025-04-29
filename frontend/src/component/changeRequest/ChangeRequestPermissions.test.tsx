@@ -1,16 +1,16 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import { FeatureView } from '../feature/FeatureView/FeatureView';
+import { FeatureView } from '../feature/FeatureView/FeatureView.tsx';
 import { ThemeProvider } from 'themes/ThemeProvider';
-import { AccessProvider } from '../providers/AccessProvider/AccessProvider';
-import { AnnouncerProvider } from '../common/Announcer/AnnouncerProvider/AnnouncerProvider';
-import { testServerRoute, testServerSetup } from '../../utils/testServer';
-import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer';
+import { AccessProvider } from '../providers/AccessProvider/AccessProvider.tsx';
+import { AnnouncerProvider } from '../common/Announcer/AnnouncerProvider/AnnouncerProvider.tsx';
+import { testServerRoute, testServerSetup } from '../../utils/testServer.ts';
+import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer.tsx';
 import type React from 'react';
 import type { FC } from 'react';
-import type { IPermission } from '../../interfaces/user';
+import type { IPermission } from '../../interfaces/user.ts';
 import { SWRConfig } from 'swr';
-import type { ProjectMode } from '../project/Project/hooks/useProjectEnterpriseSettingsForm';
+import type { ProjectMode } from '../project/Project/hooks/useProjectEnterpriseSettingsForm.ts';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';
 

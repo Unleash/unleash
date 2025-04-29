@@ -1,14 +1,14 @@
-import Addon from '../addons/addon';
-import getLogger from '../../test/fixtures/no-logger';
-import type { IAddonConfig, IAddonDefinition } from '../types/model';
+import Addon from '../addons/addon.js';
+import getLogger from '../../test/fixtures/no-logger.js';
+import type { IAddonConfig, IAddonDefinition } from '../types/model.js';
 import {
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_REVIVED,
     FEATURE_UPDATED,
     type IEvent,
-} from '../types/events';
-import type { IFlagResolver, IntegrationEventsService } from '../internals';
+} from '../types/events.js';
+import type { IFlagResolver, IntegrationEventsService } from '../internals.js';
 
 const ARGS: IAddonConfig = {
     getLogger,

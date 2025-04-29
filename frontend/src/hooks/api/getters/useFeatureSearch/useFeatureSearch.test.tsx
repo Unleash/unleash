@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { useFeatureSearch } from './useFeatureSearch';
+import { useFeatureSearch } from './useFeatureSearch.ts';
 import { useSWRConfig } from 'swr';
 
 const server = testServerSetup();

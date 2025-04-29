@@ -1,8 +1,8 @@
 import { render } from 'utils/testRenderer';
-import { ProjectList } from './ProjectList';
+import { ProjectList } from './ProjectList.tsx';
 import { screen, waitFor } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { CREATE_PROJECT } from '../../providers/AccessProvider/permissions';
+import { CREATE_PROJECT } from '../../providers/AccessProvider/permissions.ts';
 
 const server = testServerSetup();
 

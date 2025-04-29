@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { useRef } from 'react';
-import { useOnBlur } from './useOnBlur';
+import { useOnBlur } from './useOnBlur.ts';
 
 function TestComponent(props: { onBlurHandler: () => void }) {
     const divRef = useRef(null);

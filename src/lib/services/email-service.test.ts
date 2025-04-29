@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
-import { EmailService } from './email-service';
-import noLoggerProvider from '../../test/fixtures/no-logger';
-import type { IUnleashConfig } from '../types';
+import { EmailService } from './email-service.js';
+import noLoggerProvider from '../../test/fixtures/no-logger.js';
+import type { IUnleashConfig } from '../types/index.js';
 
 test('Can send reset email', async () => {
     const emailService = new EmailService({

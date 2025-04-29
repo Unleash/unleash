@@ -1,12 +1,12 @@
 import type { Request, Response } from 'express';
-import Controller from '../../routes/controller';
+import Controller from '../../routes/controller.js';
 
 import type {
     IAuthRequest,
     IUnleashConfig,
     IUnleashServices,
     Logger,
-} from '../../server-impl';
+} from '../../server-impl.js';
 import {
     type AdminSegmentSchema,
     adminSegmentSchema,
@@ -16,14 +16,14 @@ import {
     updateFeatureStrategySchema,
     type UpdateFeatureStrategySegmentsSchema,
     type UpsertSegmentSchema,
-} from '../../openapi';
+} from '../../openapi/index.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../openapi/util/standard-responses';
-import type { ISegmentService } from './segment-service-interface';
-import type { SegmentStrategiesSchema } from '../../openapi/spec/segment-strategies-schema';
-import type { AccessService, OpenApiService } from '../../services';
+} from '../../openapi/util/standard-responses.js';
+import type { ISegmentService } from './segment-service-interface.js';
+import type { SegmentStrategiesSchema } from '../../openapi/spec/segment-strategies-schema.js';
+import type { AccessService, OpenApiService } from '../../services/index.js';
 import {
     CREATE_SEGMENT,
     DELETE_SEGMENT,
@@ -33,14 +33,14 @@ import {
     UPDATE_FEATURE_STRATEGY,
     UPDATE_PROJECT_SEGMENT,
     UPDATE_SEGMENT,
-} from '../../types';
+} from '../../types/index.js';
 import {
     segmentsSchema,
     type SegmentsSchema,
-} from '../../openapi/spec/segments-schema';
+} from '../../openapi/spec/segments-schema.js';
 
-import { anonymiseKeys, extractUserIdFromUser } from '../../util';
-import { BadDataError } from '../../error';
+import { anonymiseKeys, extractUserIdFromUser } from '../../util/index.js';
+import { BadDataError } from '../../error/index.js';
 
 type IUpdateFeatureStrategySegmentsRequest = IAuthRequest<
     {},

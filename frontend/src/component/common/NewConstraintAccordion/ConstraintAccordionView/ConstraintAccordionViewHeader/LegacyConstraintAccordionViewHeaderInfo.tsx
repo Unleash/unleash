@@ -1,8 +1,8 @@
 import { styled, Tooltip } from '@mui/material';
-import { ConstraintViewHeaderOperator } from './ConstraintViewHeaderOperator';
+import { ConstraintViewHeaderOperator } from './ConstraintViewHeaderOperator.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ConstraintAccordionViewHeaderSingleValue } from './ConstraintAccordionViewHeaderSingleValue';
-import { ConstraintAccordionViewHeaderMultipleValues } from './ConstraintAccordionViewHeaderMultipleValues';
+import { ConstraintAccordionViewHeaderSingleValue } from './ConstraintAccordionViewHeaderSingleValue.tsx';
+import { ConstraintAccordionViewHeaderMultipleValues } from './ConstraintAccordionViewHeaderMultipleValues.tsx';
 import type { IConstraint } from 'interfaces/strategy';
 
 const StyledHeaderText = styled('span')(({ theme }) => ({

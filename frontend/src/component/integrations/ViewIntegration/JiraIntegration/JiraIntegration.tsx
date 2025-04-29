@@ -4,7 +4,7 @@ import LaunchIcon from '@mui/icons-material/Launch';
 import cr from './assets/cr.png';
 import connect from './assets/connect.png';
 import manage from './assets/manage.png';
-import { JiraImageContainer } from './JiraImageContainer';
+import { JiraImageContainer } from './JiraImageContainer.tsx';
 import { IntegrationHowToSection } from 'component/integrations/IntegrationHowToSection/IntegrationHowToSection';
 
 const StyledContainer = styled('div')(({ theme }) => ({

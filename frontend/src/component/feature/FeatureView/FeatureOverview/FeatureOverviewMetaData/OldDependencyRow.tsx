@@ -7,11 +7,11 @@ import {
     StyledDetail,
     StyledLabel,
     StyledLink,
-} from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow';
-import { OldDependencyActions } from './OldDependencyActions';
+} from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow.tsx';
+import { OldDependencyActions } from './OldDependencyActions.tsx';
 import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { ChildrenTooltip } from './ChildrenTooltip';
+import { ChildrenTooltip } from './ChildrenTooltip.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE_DEPENDENCY } from 'component/providers/AccessProvider/permissions';
 import { useCheckProjectAccess } from 'hooks/useHasAccess';
@@ -22,7 +22,7 @@ import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPe
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { VariantsTooltip } from './VariantsTooltip';
+import { VariantsTooltip } from './VariantsTooltip.tsx';
 
 const useDeleteDependency = (project: string, featureId: string) => {
     const { trackEvent } = usePlausibleTracker();

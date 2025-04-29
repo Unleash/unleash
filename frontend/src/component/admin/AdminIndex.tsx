@@ -1,11 +1,11 @@
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import type { VFC } from 'react';
-import { adminGroups } from './oldAdminRoutes';
+import { adminGroups } from './oldAdminRoutes.ts';
 import type { INavigationMenuItem } from 'interfaces/route';
 import { Box, Link, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { useAdminRoutes } from './useAdminRoutes';
+import { useAdminRoutes } from './useAdminRoutes.ts';
 
 export const AdminIndex: VFC = () => {
     const adminRoutes = useAdminRoutes();

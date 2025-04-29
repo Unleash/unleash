@@ -1,9 +1,9 @@
-import NotImplementedError from '../../lib/error/not-implemented-error';
+import NotImplementedError from '../../lib/error/not-implemented-error.js';
 import type {
     IUserSplashKey,
     IUserSplash,
     IUserSplashStore,
-} from '../../lib/types/stores/user-splash-store';
+} from '../../lib/types/stores/user-splash-store.js';
 
 export default class FakeUserSplashStore implements IUserSplashStore {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

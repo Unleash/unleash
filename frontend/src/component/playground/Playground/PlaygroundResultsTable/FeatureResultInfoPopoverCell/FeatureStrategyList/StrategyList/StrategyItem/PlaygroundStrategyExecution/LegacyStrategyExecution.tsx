@@ -6,10 +6,10 @@ import type {
     PlaygroundRequestSchema,
     PlaygroundStrategySchema,
 } from 'openapi';
-import { ConstraintExecution } from './ConstraintExecution/LegacyConstraintExecution';
-import { SegmentExecution } from './SegmentExecution/LegacySegmentExecution';
-import { PlaygroundResultStrategyExecutionParameters } from './StrategyExecutionParameters/StrategyExecutionParameters';
-import { CustomStrategyParams } from './CustomStrategyParams/CustomStrategyParams';
+import { ConstraintExecution } from './ConstraintExecution/LegacyConstraintExecution.tsx';
+import { SegmentExecution } from './SegmentExecution/LegacySegmentExecution.tsx';
+import { PlaygroundResultStrategyExecutionParameters } from './StrategyExecutionParameters/StrategyExecutionParameters.tsx';
+import { CustomStrategyParams } from './CustomStrategyParams/CustomStrategyParams.tsx';
 import { formattedStrategyNames } from 'utils/strategyNames';
 import { StyledBoxSummary } from './StrategyExecution.styles';
 import { Badge } from 'component/common/Badge/Badge';

@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 import { useState } from 'react';
 import { screen, fireEvent, waitFor } from '@testing-library/react';
-import FlexibleStrategy from './FlexibleStrategy';
+import FlexibleStrategy from './FlexibleStrategy.tsx';
 import { render } from 'utils/testRenderer';
 import { Route, Routes } from 'react-router-dom';
 import { testServerSetup, testServerRoute } from 'utils/testServer';

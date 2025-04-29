@@ -1,10 +1,10 @@
 import supertest from 'supertest';
-import { createServices } from '../../../services';
-import { createTestConfig } from '../../../../test/config/test-config';
+import { createServices } from '../../../services/index.js';
+import { createTestConfig } from '../../../../test/config/test-config.js';
 
-import createStores from '../../../../test/fixtures/store';
-import getApp from '../../../app';
-import User from '../../../types/user';
+import createStores from '../../../../test/fixtures/store.js';
+import getApp from '../../../app.js';
+import User from '../../../types/user.js';
 import bcrypt from 'bcryptjs';
 
 const currentUser = new User({ id: 1337, email: 'test@mail.com' });

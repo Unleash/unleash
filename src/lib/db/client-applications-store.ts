@@ -1,18 +1,18 @@
 import type EventEmitter from 'events';
-import NotFoundError from '../error/notfound-error';
+import NotFoundError from '../error/notfound-error.js';
 import type {
     IClientApplication,
     IClientApplications,
     IClientApplicationsSearchParams,
     IClientApplicationsStore,
-} from '../types/stores/client-applications-store';
-import type { Logger, LogProvider } from '../logger';
-import type { Db } from './db';
-import type { IApplicationOverview } from '../features/metrics/instance/models';
-import { applySearchFilters } from '../features/feature-search/search-utils';
-import type { IFlagResolver } from '../types';
-import metricsHelper from '../util/metrics-helper';
-import { DB_TIME } from '../metric-events';
+} from '../types/stores/client-applications-store.js';
+import type { Logger, LogProvider } from '../logger.js';
+import type { Db } from './db.js';
+import type { IApplicationOverview } from '../features/metrics/instance/models.js';
+import { applySearchFilters } from '../features/feature-search/search-utils.js';
+import type { IFlagResolver } from '../types/index.js';
+import metricsHelper from '../util/metrics-helper.js';
+import { DB_TIME } from '../metric-events.js';
 
 const COLUMNS = [
     'app_name',

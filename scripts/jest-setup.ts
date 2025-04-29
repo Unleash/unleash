@@ -1,7 +1,7 @@
 import { Client, type ClientConfig } from 'pg';
-import { migrateDb } from '../src/migrator';
-import { getDbConfig } from '../src/test/e2e/helpers/database-config';
-import { testDbPrefix } from '../src/test/e2e/helpers/database-init';
+import { migrateDb } from '../src/migrator.js';
+import { getDbConfig } from '../src/test/e2e/helpers/database-config.js';
+import { testDbPrefix } from '../src/test/e2e/helpers/database-init.js';
 
 let initializationPromise: Promise<void> | null = null;
 

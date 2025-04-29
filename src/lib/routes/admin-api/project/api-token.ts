@@ -7,9 +7,9 @@ import {
     createResponseSchema,
     emptyResponse,
     resourceCreatedResponseSchema,
-} from '../../../openapi';
-import { getStandardResponses } from '../../../openapi/util/standard-responses';
-import type { IUser } from '../../../types/user';
+} from '../../../openapi/index.js';
+import { getStandardResponses } from '../../../openapi/util/standard-responses.js';
+import type { IUser } from '../../../types/user.js';
 import {
     ADMIN,
     CREATE_PROJECT_API_TOKEN,
@@ -18,22 +18,25 @@ import {
     type IUnleashServices,
     READ_PROJECT_API_TOKEN,
     serializeDates,
-} from '../../../types';
-import { ApiTokenType, type IApiToken } from '../../../types/models/api-token';
+} from '../../../types/index.js';
+import {
+    ApiTokenType,
+    type IApiToken,
+} from '../../../types/models/api-token.js';
 import type {
     AccessService,
     ApiTokenService,
     OpenApiService,
     ProjectService,
     FrontendApiService,
-} from '../../../services';
-import type { IAuthRequest } from '../../unleash-types';
-import Controller from '../../controller';
-import type { Logger } from '../../../logger';
+} from '../../../services/index.js';
+import type { IAuthRequest } from '../../unleash-types.js';
+import Controller from '../../controller.js';
+import type { Logger } from '../../../logger.js';
 import type { Response } from 'express';
 import { timingSafeEqual } from 'crypto';
-import { createApiToken } from '../../../schema/api-token-schema';
-import { OperationDeniedError } from '../../../error';
+import { createApiToken } from '../../../schema/api-token-schema.js';
+import { OperationDeniedError } from '../../../error/index.js';
 
 interface ProjectTokenParam {
     token: string;

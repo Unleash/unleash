@@ -30,6 +30,7 @@ import { ResolveInput } from 'component/common/NewConstraintAccordion/Constraint
 import { ReactComponent as EqualsIcon } from 'assets/icons/constraint-equals.svg';
 import { ReactComponent as NotEqualsIcon } from 'assets/icons/constraint-not-equals.svg';
 import { AddSingleValueWidget } from './AddSingleValueWidget';
+import { DateSingleValue } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/DateSingleValue/DateSingleValue';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -208,6 +209,7 @@ export const EditableConstraint: FC<Props> = ({
     const showSingleValueButton = SINGLE_VALUE_OPERATORS.includes(input);
     const showAddValuesButton =
         OPERATORS_WITH_ADD_VALUES_WIDGET.includes(input);
+    const showDateInput = input.includes('DATE');
     const showInputField = input.includes('LEGAL_VALUES');
 
     /* We need a special case to handle the currentTime context field. Since
@@ -360,6 +362,14 @@ export const EditableConstraint: FC<Props> = ({
                             }}
                             removeValue={() => setValue('')}
                             currentValue={localConstraint.value}
+                        />
+                    ) : null}
+                    {showDateInput ? (
+                        <DateSingleValue
+                            setValue={setValue}
+                            value={localConstraint.value}
+                            error={error}
+                            setError={setError}
                         />
                     ) : null}
                 </ConstraintDetails>

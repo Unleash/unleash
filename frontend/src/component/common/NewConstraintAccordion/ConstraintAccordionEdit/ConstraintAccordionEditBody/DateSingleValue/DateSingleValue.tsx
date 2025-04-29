@@ -1,4 +1,3 @@
-import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
 import Input from 'component/common/Input/Input';
 import { parseDateValue, parseValidDate } from 'component/common/util';
 
@@ -19,6 +18,17 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(1),
     alignItems: 'center',
     gap: theme.spacing(1),
+}));
+
+const StyledInput = styled(Input)(({ theme }) => ({
+    border: 'none',
+    '*': {
+        border: 'none',
+        padding: 0,
+    },
+    // '&::before': {
+    //     border: 'none',
+    // },
 }));
 
 export const DateSingleValue = ({
@@ -52,30 +62,27 @@ export const DateSingleValue = ({
     if (!value) return null;
 
     return (
-        <>
-            <ConstraintFormHeader>Select a date</ConstraintFormHeader>
-            <StyledWrapper>
-                <Input
-                    id='date'
-                    label='Date'
-                    type='datetime-local'
-                    value={parseDateValue(pickedDate)}
-                    onChange={(e) => {
-                        setError('');
-                        const parsedDate = parseValidDate(e.target.value);
-                        const dateString = parsedDate?.toISOString();
-                        dateString && setPickedDate(dateString);
-                        dateString && setValue(dateString);
-                    }}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    error={Boolean(error)}
-                    errorText={error}
-                    required
-                />
-                <p>{timezoneText}</p>
-            </StyledWrapper>
-        </>
+        <StyledInput
+            // variant='standard'
+            id='date'
+            hiddenLabel
+            label=''
+            size='small'
+            type='datetime-local'
+            value={parseDateValue(pickedDate)}
+            onChange={(e) => {
+                setError('');
+                const parsedDate = parseValidDate(e.target.value);
+                const dateString = parsedDate?.toISOString();
+                dateString && setPickedDate(dateString);
+                dateString && setValue(dateString);
+            }}
+            InputLabelProps={{
+                shrink: true,
+            }}
+            error={Boolean(error)}
+            errorText={error}
+            required
+        />
     );
 };

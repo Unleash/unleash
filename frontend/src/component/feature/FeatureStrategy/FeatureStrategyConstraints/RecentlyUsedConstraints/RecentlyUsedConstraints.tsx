@@ -26,7 +26,6 @@ const StyledConstraintsContainer = styled('div')(({ theme }) => ({
 export const RecentlyUsedConstraints = ({
     temporary,
 }: IRecentlyUsedConstraintsProps) => {
-    // Mock constraint for now
     const mockConstraints: IConstraint[] = [
         {
             contextName: 'userId',

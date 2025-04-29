@@ -28,6 +28,7 @@ import { AddValuesWidget } from './AddValuesWidget';
 import { ResolveInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/ResolveInput/ResolveInput';
 import { ReactComponent as EqualsIcon } from 'assets/icons/constraint-equals.svg';
 import { ReactComponent as NotEqualsIcon } from 'assets/icons/constraint-not-equals.svg';
+import { SingleValueWidget } from './SingleValueWidget';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -365,6 +366,13 @@ export const EditableConstraint: FC<Props> = ({
                                 }}
                             />
                         ) : null}
+                        <SingleValueWidget
+                            onAddValue={(newValue) => {
+                                setValue(newValue);
+                            }}
+                            removeValue={() => setValue('')}
+                            currentValue={localConstraint.value}
+                        />
                     </ValueList>
                 </ConstraintDetails>
                 <ButtonPlaceholder />

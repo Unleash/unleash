@@ -27,7 +27,7 @@ export const baseChipStyles = (theme: Theme) => ({
     transition: 'all 0.3s ease',
 });
 
-const ValueChip = styled(
+export const ValueChip = styled(
     forwardRef<HTMLDivElement, ChipProps>((props, ref) => (
         <Chip size='small' {...props} ref={ref} deleteIcon={<Clear />} />
     )),

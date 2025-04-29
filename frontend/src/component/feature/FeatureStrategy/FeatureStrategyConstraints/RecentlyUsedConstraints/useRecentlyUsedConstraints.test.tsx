@@ -91,9 +91,7 @@ describe('useRecentlyUsedConstraints', () => {
     });
 
     it('should initialize with empty array when no items in localStorage', () => {
-        const { result } = renderHook(() =>
-            useRecentlyUsedConstraints('test-key'),
-        );
+        const { result } = renderHook(() => useRecentlyUsedConstraints());
 
         expect(result.current.items).toEqual([]);
     });
@@ -101,16 +99,14 @@ describe('useRecentlyUsedConstraints', () => {
     it('should initialize with initial items if provided', () => {
         const initialItems = [createTestConstraint('userId')];
         const { result } = renderHook(() =>
-            useRecentlyUsedConstraints('test-key', initialItems),
+            useRecentlyUsedConstraints(initialItems),
         );
 
         expect(result.current.items).toEqual(initialItems);
     });
 
     it('should add new items to the beginning of the list', () => {
-        const { result } = renderHook(() =>
-            useRecentlyUsedConstraints('test-key'),
-        );
+        const { result } = renderHook(() => useRecentlyUsedConstraints());
 
         act(() => {
             result.current.addItem(createTestConstraint('userId'));
@@ -125,9 +121,7 @@ describe('useRecentlyUsedConstraints', () => {
     });
 
     it('should limit stored items to maximum of 3', () => {
-        const { result } = renderHook(() =>
-            useRecentlyUsedConstraints('test-key'),
-        );
+        const { result } = renderHook(() => useRecentlyUsedConstraints());
 
         act(() => {
             result.current.addItem(createTestConstraint('userId'));
@@ -143,9 +137,7 @@ describe('useRecentlyUsedConstraints', () => {
     });
 
     it('should not add duplicate constraints', () => {
-        const { result } = renderHook(() =>
-            useRecentlyUsedConstraints('test-key'),
-        );
+        const { result } = renderHook(() => useRecentlyUsedConstraints());
 
         const constraint1 = createTestConstraint('userId', IN, [
             'user1',
@@ -173,9 +165,7 @@ describe('useRecentlyUsedConstraints', () => {
     });
 
     it('should not add duplicate constraints with values in different order', () => {
-        const { result } = renderHook(() =>
-            useRecentlyUsedConstraints('test-key'),
-        );
+        const { result } = renderHook(() => useRecentlyUsedConstraints());
 
         const constraint1 = {
             contextName: 'userId',
@@ -211,16 +201,14 @@ describe('useRecentlyUsedConstraints', () => {
     });
 
     it('should persist items to localStorage', () => {
-        const { result } = renderHook(() =>
-            useRecentlyUsedConstraints('test-key'),
-        );
+        const { result } = renderHook(() => useRecentlyUsedConstraints());
 
         act(() => {
             result.current.addItem(createTestConstraint('userId'));
         });
 
         const { result: newResult } = renderHook(() =>
-            useRecentlyUsedConstraints('test-key'),
+            useRecentlyUsedConstraints(),
         );
 
         expect(newResult.current.items[0].contextName).toBe('userId');

@@ -31,11 +31,10 @@ export const areConstraintsEqual = (
 };
 
 export const useRecentlyUsedConstraints = (
-    key: string,
     initialItems: IConstraint[] = [],
 ) => {
     const [items, setItems] = useLocalStorageState<IConstraint[]>(
-        `recently-used-constraints-${key}`,
+        'recently-used-constraints-global',
         initialItems,
     );
 

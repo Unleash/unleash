@@ -26,8 +26,10 @@ import { ReactComponent as CaseInsensitiveIcon } from 'assets/icons/case-insensi
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { AddValuesWidget } from './AddValuesWidget';
 import { ResolveInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/ResolveInput/ResolveInput';
+
 import { ReactComponent as EqualsIcon } from 'assets/icons/constraint-equals.svg';
 import { ReactComponent as NotEqualsIcon } from 'assets/icons/constraint-not-equals.svg';
+import { AddSingleValueWidget } from './AddSingleValueWidget';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -151,14 +153,14 @@ const StyledCaseSensitiveIcon = styled(CaseSensitiveIcon)(({ theme }) => ({
     fill: 'currentcolor',
 }));
 
-const CaseButton = styled(StyledButton)(({ theme }) => ({
-    display: 'grid',
-    placeItems: 'center',
-}));
-
 const OPERATORS_WITH_ADD_VALUES_WIDGET = [
     'IN_OPERATORS_FREETEXT',
     'STRING_OPERATORS_FREETEXT',
+];
+
+const SINGLE_VALUE_OPERATORS = [
+    'NUM_OPERATORS_SINGLE_VALUE',
+    'SEMVER_OPERATORS_SINGLE_VALUE',
 ];
 
 type Props = {
@@ -212,9 +214,10 @@ export const EditableConstraint: FC<Props> = ({
         useState(false);
     const deleteButtonRef = useRef<HTMLButtonElement>(null);
     const addValuesButtonRef = useRef<HTMLButtonElement>(null);
+    const showSingleValueButton = SINGLE_VALUE_OPERATORS.includes(input);
     const showAddValuesButton =
         OPERATORS_WITH_ADD_VALUES_WIDGET.includes(input);
-    const showInputField = !showAddValuesButton;
+    const showInputField = input.includes('LEGAL_VALUES');
 
     /* We need a special case to handle the currentTime context field. Since
     this field will be the only one to allow DATE_BEFORE and DATE_AFTER operators
@@ -359,6 +362,15 @@ export const EditableConstraint: FC<Props> = ({
                             />
                         ) : null}
                     </ValueList>
+                    {showSingleValueButton ? (
+                        <AddSingleValueWidget
+                            onAddValue={(newValue) => {
+                                setValue(newValue);
+                            }}
+                            removeValue={() => setValue('')}
+                            currentValue={localConstraint.value}
+                        />
+                    ) : null}
                 </ConstraintDetails>
                 <ButtonPlaceholder />
                 <HtmlTooltip title='Delete constraint' arrow>

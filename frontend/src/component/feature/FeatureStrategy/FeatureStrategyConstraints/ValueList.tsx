@@ -27,9 +27,9 @@ export const baseChipStyles = (theme: Theme) => ({
     transition: 'all 0.3s ease',
 });
 
-const ValueChipBase = styled(
+export const ValueChip = styled(
     forwardRef<HTMLDivElement, ChipProps>((props, ref) => (
-        <Chip size='small' {...props} ref={ref} />
+        <Chip size='small' {...props} ref={ref} deleteIcon={<Clear />} />
     )),
 )(({ theme }) => ({
     ...baseChipStyles(theme),
@@ -44,9 +44,6 @@ const ValueChipBase = styled(
     '& .MuiChip-deleteIcon': {
         marginRight: theme.spacing(1),
     },
-}));
-
-const ValueChip = styled(ValueChipBase)(({ theme }) => ({
     svg: {
         fill: theme.palette.secondary.dark,
         borderRadius: '50%',
@@ -105,7 +102,6 @@ export const ValueList: FC<PropsWithChildren<Props>> = ({
                                     whiteSpace: 'normal',
                                 },
                             }}
-                            deleteIcon={<Clear />}
                             label={value}
                             onDelete={() => {
                                 nextFocusTarget(index)?.focus();

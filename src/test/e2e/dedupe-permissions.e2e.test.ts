@@ -36,7 +36,7 @@ test('Dedupe permissions migration correctly dedupes permissions', async () => {
     // disable Intellij/WebStorm from setting verbose CLI argument to db-migrator
     process.argv = process.argv.filter((it) => !it.includes('--verbose'));
     const dbm = getInstance(true, {
-        cwd: `${__dirname}/../../`, // relative to src/test/e2e
+        cwd: `${import.meta.dirname}/../../`, // relative to src/test/e2e
         config: { custom },
         env: 'custom',
     });

@@ -30,7 +30,7 @@ export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
                 embedProxyFrontend: true,
             },
         },
-        publicFolder: path.join(__dirname, '../examples'),
+        publicFolder: path.join(import.meta.dirname, '../examples'),
     };
     const options = mergeAll<IUnleashOptions>([testConfig, config || {}]);
     return createConfig(options);

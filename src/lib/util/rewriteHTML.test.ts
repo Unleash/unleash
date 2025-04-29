@@ -3,7 +3,9 @@ import path from 'path';
 import { rewriteHTML } from './rewriteHTML';
 
 const input = fs
-    .readFileSync(path.join(__dirname, '../../test/examples', 'index.html'))
+    .readFileSync(
+        path.join(import.meta.dirname, '../../test/examples', 'index.html'),
+    )
     .toString();
 
 test('rewriteHTML substitutes meta tag with existing rewrite value', () => {

@@ -26,7 +26,7 @@ export async function migrateDb(
         // disable Intellij/WebStorm from setting verbose CLI argument to db-migrator
         process.argv = process.argv.filter((it) => !it.includes('--verbose'));
         const dbm = getInstance(true, {
-            cwd: __dirname,
+            cwd: import.meta.dirname,
             config: { custom },
             env: 'custom',
         });
@@ -44,7 +44,7 @@ export async function resetDb({ db }: IUnleashConfig): Promise<void> {
         };
 
         const dbm = getInstance(true, {
-            cwd: __dirname,
+            cwd: import.meta.dirname,
             config: { custom },
             env: 'custom',
         });

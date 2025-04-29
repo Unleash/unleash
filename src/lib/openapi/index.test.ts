@@ -4,7 +4,7 @@ import path from 'path';
 
 test('all schema files should be added to the schemas object', () => {
     const schemaFileNames = fs
-        .readdirSync(path.join(__dirname, 'spec'))
+        .readdirSync(path.join(import.meta.dirname, 'spec'))
         .filter((fileName) => fileName.endsWith('-schema.ts'));
 
     const expectedSchemaNames = schemaFileNames.map((fileName) => {

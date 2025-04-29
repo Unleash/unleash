@@ -4,11 +4,17 @@ import type {
     IFeatureStrategySortOrder,
 } from 'interfaces/strategy';
 import useAPI from '../useApi/useApi';
+import { useRecentlyUsedConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/RecentlyUsedConstraints/useRecentlyUsedConstraints';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const useFeatureStrategyApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
+
+    const { addItem: addToRecentlyUsedConstraints } =
+        useRecentlyUsedConstraints();
+    const addEditStrategyEnabled = useUiFlag('addEditStrategy');
 
     const addStrategyToFeature = async (
         projectId: string,
@@ -22,7 +28,17 @@ const useFeatureStrategyApi = () => {
             { method: 'POST', body: JSON.stringify(payload) },
             'addStrategyToFeature',
         );
-        return (await makeRequest(req.caller, req.id)).json();
+        const result = await makeRequest(req.caller, req.id);
+
+        if (
+            addEditStrategyEnabled &&
+            payload.constraints &&
+            payload.constraints.length > 0
+        ) {
+            addToRecentlyUsedConstraints(payload.constraints);
+        }
+
+        return result.json();
     };
 
     const deleteStrategyFromFeature = async (
@@ -54,6 +70,14 @@ const useFeatureStrategyApi = () => {
             'updateStrategyOnFeature',
         );
         await makeRequest(req.caller, req.id);
+
+        if (
+            addEditStrategyEnabled &&
+            payload.constraints &&
+            payload.constraints.length > 0
+        ) {
+            addToRecentlyUsedConstraints(payload.constraints);
+        }
     };
 
     const setStrategiesSortOrder = async (

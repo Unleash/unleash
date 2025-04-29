@@ -5,7 +5,6 @@ export const areConstraintsEqual = (
     a: IConstraint,
     b: IConstraint,
 ): boolean => {
-    // Sort the values arrays if they exist
     const sortedValues = (values?: string[]) =>
         values ? [...values].sort() : undefined;
 
@@ -31,21 +30,25 @@ export const areConstraintsEqual = (
 };
 
 export const useRecentlyUsedConstraints = (
-    key: string,
     initialItems: IConstraint[] = [],
 ) => {
     const [items, setItems] = useLocalStorageState<IConstraint[]>(
-        `recently-used-constraints-${key}`,
+        'recently-used-constraints',
         initialItems,
     );
 
-    const addItem = (newItem: IConstraint) => {
+    const addItem = (newItem: IConstraint | IConstraint[]) => {
         setItems((prevItems) => {
-            const filteredItems = prevItems.filter(
-                (item) => !areConstraintsEqual(item, newItem),
-            );
+            const itemsToAdd = Array.isArray(newItem) ? newItem : [newItem];
 
-            const updatedItems = [newItem, ...filteredItems];
+            let updatedItems = [...prevItems];
+
+            itemsToAdd.forEach((item) => {
+                updatedItems = updatedItems.filter(
+                    (existingItem) => !areConstraintsEqual(existingItem, item),
+                );
+                updatedItems = [item, ...updatedItems];
+            });
             return updatedItems.slice(0, 3);
         });
     };

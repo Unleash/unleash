@@ -152,11 +152,6 @@ const StyledCaseSensitiveIcon = styled(CaseSensitiveIcon)(({ theme }) => ({
     fill: 'currentcolor',
 }));
 
-const CaseButton = styled(StyledButton)(({ theme }) => ({
-    display: 'grid',
-    placeItems: 'center',
-}));
-
 const OPERATORS_WITH_ADD_VALUES_WIDGET = [
     'IN_OPERATORS_FREETEXT',
     'STRING_OPERATORS_FREETEXT',
@@ -218,10 +213,9 @@ export const EditableConstraint: FC<Props> = ({
         useState(false);
     const deleteButtonRef = useRef<HTMLButtonElement>(null);
     const addValuesButtonRef = useRef<HTMLButtonElement>(null);
+    const showSingleValueButton = SINGLE_VALUE_OPERATORS.includes(input);
     const showAddValuesButton =
-        OPERATORS_WITH_ADD_VALUES_WIDGET.includes(input) ||
-        (SINGLE_VALUE_OPERATORS.includes(input) &&
-            !localConstraint.values?.length);
+        OPERATORS_WITH_ADD_VALUES_WIDGET.includes(input);
     const showInputField = input.includes('LEGAL_VALUES');
 
     /* We need a special case to handle the currentTime context field. Since
@@ -366,6 +360,8 @@ export const EditableConstraint: FC<Props> = ({
                                 }}
                             />
                         ) : null}
+                    </ValueList>
+                    {showSingleValueButton ? (
                         <SingleValueWidget
                             onAddValue={(newValue) => {
                                 setValue(newValue);
@@ -373,7 +369,7 @@ export const EditableConstraint: FC<Props> = ({
                             removeValue={() => setValue('')}
                             currentValue={localConstraint.value}
                         />
-                    </ValueList>
+                    ) : null}
                 </ConstraintDetails>
                 <ButtonPlaceholder />
                 <HtmlTooltip title='Delete constraint' arrow>

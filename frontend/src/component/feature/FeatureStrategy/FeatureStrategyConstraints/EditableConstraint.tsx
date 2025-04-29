@@ -161,6 +161,11 @@ const OPERATORS_WITH_ADD_VALUES_WIDGET = [
     'STRING_OPERATORS_FREETEXT',
 ];
 
+const SINGLE_VALUE_OPERATORS = [
+    'NUM_OPERATORS_SINGLE_VALUE',
+    'SEMVER_OPERATORS_SINGLE_VALUE',
+];
+
 type Props = {
     constraint: IConstraint;
     localConstraint: IConstraint;
@@ -213,8 +218,10 @@ export const EditableConstraint: FC<Props> = ({
     const deleteButtonRef = useRef<HTMLButtonElement>(null);
     const addValuesButtonRef = useRef<HTMLButtonElement>(null);
     const showAddValuesButton =
-        OPERATORS_WITH_ADD_VALUES_WIDGET.includes(input);
-    const showInputField = !showAddValuesButton;
+        OPERATORS_WITH_ADD_VALUES_WIDGET.includes(input) ||
+        (SINGLE_VALUE_OPERATORS.includes(input) &&
+            !localConstraint.values?.length);
+    const showInputField = input.includes('LEGAL_VALUES');
 
     /* We need a special case to handle the currentTime context field. Since
     this field will be the only one to allow DATE_BEFORE and DATE_AFTER operators

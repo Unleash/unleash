@@ -22,4 +22,6 @@ export interface ApplicationOverviewEnvironmentSchema {
     name: string;
     /** SDKs used in the application environment */
     sdks: string[];
+    backendSdks: string[];
+    frontendSdks: string[];
 }

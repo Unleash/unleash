@@ -47,6 +47,7 @@
     "prepare:backend": "concurrently \"yarn:copy-templates\" \"yarn:build:backend\"",
     "start:dev": "yarn run clean && TZ=UTC NODE_ENV=development tsc-watch --onSuccess \"node dist/server-dev.js\"",
     "db-migrate": "db-migrate --migrations-dir ./src/migrations",
+    "knex-migration": "tsc-watch --onSuccess \"node dist/knex-migration.js\"",
     "lint": "biome check .",
     "lint:fix": "biome check . --write",
     "local:package": "del-cli --force build && mkdir build && cp -r dist docs CHANGELOG.md LICENSE README.md package.json build",
@@ -223,6 +224,7 @@
     "supertest": "7.0.0",
     "ts-node": "10.9.2",
     "tsc-watch": "6.2.1",
+    "tsx": "^4.19.4",
     "typescript": "5.8.3",
     "wait-on": "^8.0.0"
   },

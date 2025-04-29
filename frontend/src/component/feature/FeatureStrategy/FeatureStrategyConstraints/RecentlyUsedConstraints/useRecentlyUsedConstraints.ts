@@ -5,7 +5,6 @@ export const areConstraintsEqual = (
     a: IConstraint,
     b: IConstraint,
 ): boolean => {
-    // Sort the values arrays if they exist
     const sortedValues = (values?: string[]) =>
         values ? [...values].sort() : undefined;
 
@@ -34,7 +33,7 @@ export const useRecentlyUsedConstraints = (
     initialItems: IConstraint[] = [],
 ) => {
     const [items, setItems] = useLocalStorageState<IConstraint[]>(
-        'recently-used-constraints-global',
+        'recently-used-constraints',
         initialItems,
     );
 

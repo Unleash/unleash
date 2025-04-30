@@ -33,9 +33,9 @@ const StrategyEvalChipLessInlinePadding = styled(StrategyEvaluationChip)(
             paddingInline: theme.spacing(0),
         },
         svg: {
-            fontSize: theme.typography.h2.fontSize,
-            width: '1em',
-            height: '1em',
+            '--size': theme.spacing(2.5),
+            width: 'var(--size)',
+            height: 'var(--size)',
         },
     }),
 );

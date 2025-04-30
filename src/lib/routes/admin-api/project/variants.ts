@@ -18,7 +18,7 @@ import { createRequestSchema } from '../../../openapi/util/create-request-schema
 import { createResponseSchema } from '../../../openapi/util/create-response-schema.js';
 import type { AccessService } from '../../../services/index.js';
 import { BadDataError, PermissionError } from '../../../../lib/error/index.js';
-import type { IUser } from '../../../server-impl.js';
+import type { IUser } from '../../../types/index.js';
 import type { PushVariantsSchema } from '../../../openapi/spec/push-variants-schema.js';
 import { getStandardResponses } from '../../../openapi/index.js';
 

@@ -1,4 +1,4 @@
-import type { Db, IUnleashConfig } from '../../server-impl.js';
+import type { Db, IUnleashConfig } from '../../types/index.js';
 import { ProjectStatusService } from './project-status-service.js';
 import EventStore from '../events/event-store.js';
 import FakeEventStore from '../../../test/fixtures/fake-event-store.js';

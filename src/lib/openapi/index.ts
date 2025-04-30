@@ -112,6 +112,5 @@ export const createOpenApiSchema = ({
         tags: openApiTags,
     };
 };
-
 export * from './util/index.js';
 export * from './spec/index.js';

@@ -4,7 +4,7 @@ import type { IUnleashServices } from '../services/index.js';
 import type { IUnleashConfig } from '../types/option.js';
 import ApiUser from '../types/api-user.js';
 import { ApiTokenType } from '../types/models/api-token.js';
-import type { IAuthRequest, IUser } from '../server-impl.js';
+import type { IAuthRequest, IUser } from '../types/index.js';
 import type { IApiRequest } from '../routes/unleash-types.js';
 import { encrypt } from '../util/index.js';
 

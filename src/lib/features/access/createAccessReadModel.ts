@@ -1,4 +1,4 @@
-import type { Db, IUnleashConfig } from '../../server-impl.js';
+import type { Db, IUnleashConfig } from '../../types/index.js';
 import type { IAccessReadModel } from './access-read-model-type.js';
 import { AccessReadModel } from './access-read-model.js';
 import { AccessStore } from '../../db/access-store.js';

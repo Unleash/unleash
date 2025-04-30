@@ -5,35 +5,94 @@ import { migrateDb } from '../migrator.js';
 import getApp from './app.js';
 import { createMetricsMonitor } from './metrics.js';
 import { createStores } from './db/index.js';
-import { createServices, type IUnleashServices } from './services/index.js';
+import {
+    type AccessService,
+    createServices,
+    type ProjectService,
+    type OpenApiService,
+    type EventService,
+    type SessionService,
+    type FeatureToggleService,
+    type DependentFeaturesService,
+    type UserService,
+    type SettingService,
+    type ClientSpecService,
+    type ClientFeatureToggleService,
+} from './services/index.js';
 import { createConfig } from './create-config.js';
 import registerGracefulShutdown from './util/graceful-shutdown.js';
 import { createDb } from './db/db-pool.js';
 import sessionDb from './middleware/session-db.js';
 // Types
-import {
-    type CustomAuthHandler,
-    IAuthType,
-    type IUnleash,
-    type IUnleashConfig,
-    type IUnleashOptions,
-    RoleName,
+import type {
+    Db,
+    IImportTogglesStore,
+    IUnleash,
+    IUnleashConfig,
+    IUnleashOptions,
+    IUnleashServices,
+    IUnleashStores,
 } from './types/index.js';
 
-import User, { type IAuditUser, type IUser } from './types/user.js';
-import ApiUser, { type IApiUser } from './types/api-user.js';
-import { type Logger, LogLevel } from './logger.js';
-import AuthenticationRequired from './types/authentication-required.js';
-import Controller from './routes/controller.js';
-import type { IApiRequest, IAuthRequest } from './routes/unleash-types.js';
-import type { SimpleAuthSettings } from './types/settings/simple-auth-settings.js';
-import type { Knex } from 'knex';
-import * as permissions from './types/permissions.js';
-import * as eventType from './types/events.js';
-import { Db } from './db/db.js';
 import { defaultLockKey, defaultTimeout, withDbLock } from './util/db-lock.js';
 import { scheduleServices } from './features/scheduler/schedule-services.js';
 import { compareAndLogPostgresVersion } from './util/postgres-version-checker.js';
+import {
+    type WithRollbackTransaction,
+    withRollbackTransaction,
+    type WithTransactional,
+    withTransactional,
+} from './db/transaction.js';
+import Controller from './routes/controller.js';
+import { createClientFeatureToggleDelta } from './features/client-feature-toggles/delta/createClientFeatureToggleDelta.js';
+import { CRUDStore } from './db/crud/crud-store.js';
+import type { CrudStoreConfig } from './db/crud/crud-store.js';
+import { Logger, LogLevel, type LogProvider } from './logger.js';
+import { ImportTogglesStore } from './features/export-import-toggles/import-toggles-store.js';
+import { ALL_PROJECTS, CUSTOM_ROOT_ROLE_TYPE } from './util/constants.js';
+import {
+    extractAuditInfoFromUser,
+    getVariantValue,
+    isDefined,
+    parseEnvVarBoolean,
+    randomId,
+} from './util/index.js';
+import type { IRole } from './types/stores/access-store.js';
+import { createTestConfig } from '../test/config/test-config.js';
+import NoAuthUser from './types/no-auth-user.js';
+import { ALL, ApiTokenType, isAllProjects } from './types/models/api-token.js';
+import type { Store } from './types/stores/store.js';
+import { defaultFromRow, defaultToRow } from './db/crud/default-mappings.js';
+import type {
+    IUserLookup,
+    IUserUpdateFields,
+} from './types/stores/user-store.js';
+import type { ICreateUser, IUpdateUser } from './services/user-service.js';
+import type { FromQueryParams } from './openapi/util/from-query-params.js';
+import type { ISegmentService } from './features/segment/segment-service-interface.js';
+import type { IAccessReadModel } from './features/access/access-read-model-type.js';
+import type { IStatMonthlyTrafficUsage } from './features/traffic-data-usage/traffic-data-usage-store-type.js';
+import type { Row } from './db/crud/row-type.js';
+import { querySchema } from './schema/feature-schema.js';
+import {
+    type BasePaginationParameters,
+    basePaginationParameters,
+} from './openapi/spec/base-pagination-parameters.js';
+import type { AccessReadModel } from './features/access/access-read-model.js';
+import { flattenPayload } from './util/flattenPayload.js';
+import type { Constraint } from 'unleash-client/lib/strategy/strategy.js';
+import {
+    type ClientFeatureToggleDelta,
+    type DeltaEvent,
+    UPDATE_DELTA,
+} from './features/client-feature-toggles/delta/client-feature-toggle-delta.js';
+import type { IQueryParam } from './features/feature-toggle/types/feature-toggle-strategies-store-type.js';
+import {
+    applyGenericQueryParams,
+    normalizeQueryParams,
+    parseSearchOperatorValue,
+} from './features/feature-search/search-utils.js';
+import { createEventsService } from './internals.js';
 
 export async function initialServiceSetup(
     { authentication }: Pick<IUnleashConfig, 'authentication'>,
@@ -48,7 +107,7 @@ export async function initialServiceSetup(
     }
 }
 
-async function createApp(
+export async function createApp(
     config: IUnleashConfig,
     startApp: boolean,
 ): Promise<IUnleash> {
@@ -208,30 +267,81 @@ async function create(opts: IUnleashOptions): Promise<IUnleash> {
 export {
     start,
     create,
+    createDb,
     Controller,
-    AuthenticationRequired,
-    User,
-    ApiUser,
+    Logger,
     LogLevel,
-    RoleName,
-    IAuthType,
-    type Knex,
-    Db,
-    permissions,
-    eventType,
+    withRollbackTransaction,
+    withTransactional,
+    createClientFeatureToggleDelta,
+    CRUDStore,
+    ImportTogglesStore,
+    ALL_PROJECTS,
+    ALL,
+    isAllProjects,
+    extractAuditInfoFromUser,
+    createTestConfig,
+    NoAuthUser,
+    ApiTokenType,
+    defaultFromRow,
+    defaultToRow,
+    isDefined,
+    parseEnvVarBoolean,
+    querySchema,
+    basePaginationParameters,
+    migrateDb,
+    flattenPayload,
+    randomId,
+    CUSTOM_ROOT_ROLE_TYPE,
+    getVariantValue,
+    UPDATE_DELTA,
+    applyGenericQueryParams,
+    normalizeQueryParams,
+    parseSearchOperatorValue,
+    createEventsService,
 };
 
 export type {
-    Logger,
-    IUnleash,
-    IUnleashOptions,
+    Db,
+    Row,
+    CrudStoreConfig,
     IUnleashConfig,
-    IUser,
-    IApiUser,
-    IAuditUser,
+    IUnleashOptions,
     IUnleashServices,
-    IAuthRequest,
-    IApiRequest,
-    SimpleAuthSettings,
-    CustomAuthHandler,
+    IUnleashStores,
+    LogProvider,
+    IImportTogglesStore,
+    WithRollbackTransaction,
+    WithTransactional,
+    OpenApiService,
+    AccessService,
+    ProjectService,
+    EventService,
+    SessionService,
+    IRole,
+    Store,
+    ICreateUser,
+    IUpdateUser,
+    IUserUpdateFields,
+    IUserLookup,
+    FromQueryParams,
+    FeatureToggleService,
+    DependentFeaturesService,
+    ISegmentService,
+    IAccessReadModel,
+    IStatMonthlyTrafficUsage,
+    UserService,
+    SettingService,
+    ClientSpecService,
+    BasePaginationParameters,
+    AccessReadModel,
+    Constraint,
+    ClientFeatureToggleDelta,
+    ClientFeatureToggleService,
+    DeltaEvent,
+    IQueryParam,
 };
+export * from './openapi/index.js';
+export * from './types/index.js';
+export * from './error/index.js';
+export * from './util/index.js';

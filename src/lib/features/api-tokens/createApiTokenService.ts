@@ -1,4 +1,4 @@
-import type { Db, IUnleashConfig } from '../../server-impl.js';
+import type { Db, IUnleashConfig } from '../../types/index.js';
 import EnvironmentStore from '../project-environments/environment-store.js';
 import { ApiTokenService, type EventService } from '../../services/index.js';
 import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';

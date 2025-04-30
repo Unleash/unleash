@@ -24,7 +24,7 @@ export interface IApiUser {
     secret: string;
 }
 
-export default class ApiUser implements IApiUser {
+export class ApiUser implements IApiUser {
     readonly isAPI: boolean = true;
 
     readonly permissions: string[];
@@ -63,3 +63,5 @@ export default class ApiUser implements IApiUser {
         }
     }
 }
+
+export default ApiUser;

@@ -33,6 +33,7 @@ const ARGS: IAddonConfig = {
 };
 
 let postMessage = jest.fn().mockImplementation((options) => {
+    // @ts-ignore
     slackApiCalls.push(options);
     return Promise.resolve();
 });
@@ -197,6 +198,7 @@ describe('SlackAppAddon', () => {
     });
 
     it('should log error when an API call fails', async () => {
+        // @ts-ignore
         postMessage = jest.fn().mockRejectedValue(mockError);
 
         await addon.handleEvent(
@@ -225,8 +227,11 @@ describe('SlackAppAddon', () => {
 
         postMessage = jest
             .fn()
+            // @ts-ignore
             .mockResolvedValueOnce({ ok: true })
+            // @ts-ignore
             .mockResolvedValueOnce({ ok: true })
+            // @ts-ignore
             .mockRejectedValueOnce(mockError);
 
         await addon.handleEvent(

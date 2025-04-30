@@ -6,7 +6,7 @@ import {
     type IUnleashStores,
     TEST_AUDIT_USER,
 } from '../../../lib/types/index.js';
-import type { IUser } from '../../../lib/server-impl.js';
+import type { IUser } from '../../../lib/types/index.js';
 import { createProjectService } from '../../../lib/features/index.js';
 import type { ProjectService } from '../../../lib/services/index.js';
 

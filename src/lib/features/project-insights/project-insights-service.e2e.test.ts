@@ -9,7 +9,7 @@ import type {
     EventService,
     ProjectInsightsService,
 } from '../../../lib/services/index.js';
-import { FeatureEnvironmentEvent } from '../../../lib/types/events.js';
+import { FeatureEnvironmentEvent } from '../../types/index.js';
 import { subDays } from 'date-fns';
 import {
     createEventsService,
@@ -20,8 +20,8 @@ import {
     type IUnleashStores,
     type IUser,
     TEST_AUDIT_USER,
-} from '../../../lib/types/index.js';
-import type { User } from '../../../lib/server-impl.js';
+} from '../../types/index.js';
+import type { User } from '../../types/user.js';
 import { createProjectInsightsService } from './createProjectInsightsService.js';
 import { extractAuditInfoFromUser } from '../../util/index.js';
 

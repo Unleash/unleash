@@ -95,7 +95,7 @@ import {
     getProjectDefaultStrategy,
 } from '../playground/feature-evaluator/helpers.js';
 import type { AccessService } from '../../services/access-service.js';
-import type { IUser } from '../../server-impl.js';
+import type { IUser } from '../../types/index.js';
 import type { IFeatureProjectUserParams } from './feature-toggle-controller.js';
 import { unique } from '../../util/unique.js';
 import type { ISegmentService } from '../segment/segment-service-interface.js';

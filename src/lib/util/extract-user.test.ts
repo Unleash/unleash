@@ -1,5 +1,5 @@
 import { SYSTEM_USER } from '../../lib/types/index.js';
-import type { IUser } from '../server-impl.js';
+import type { IUser } from '../types/index.js';
 import {
     extractUserIdFromUser,
     extractUsernameFromUser,

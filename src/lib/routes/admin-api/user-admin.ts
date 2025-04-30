@@ -10,7 +10,7 @@ import type { IUnleashServices } from '../../services/index.js';
 import type ResetTokenService from '../../services/reset-token-service.js';
 import type { IAuthRequest } from '../unleash-types.js';
 import type SettingService from '../../services/setting-service.js';
-import type { IUser } from '../../server-impl.js';
+import type { IUser } from '../../types/index.js';
 import { anonymise } from '../../util/anonymise.js';
 import type { OpenApiService } from '../../services/openapi-service.js';
 import { createRequestSchema } from '../../openapi/util/create-request-schema.js';

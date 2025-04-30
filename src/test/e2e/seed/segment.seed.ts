@@ -1,7 +1,7 @@
 import dbInit from '../helpers/database-init.js';
 import getLogger from '../../fixtures/no-logger.js';
 import assert from 'assert';
-import { randomId } from '../../../lib/util/random-id.js';
+import { randomId } from '../../../lib/util/index.js';
 import type {
     IConstraint,
     IFeatureToggleClient,

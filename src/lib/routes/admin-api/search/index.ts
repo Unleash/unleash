@@ -4,7 +4,7 @@ import type {
     Db,
     IUnleashConfig,
     IUnleashServices,
-} from '../../../server-impl.js';
+} from '../../../types/index.js';
 import Controller from '../../controller.js';
 
 export class SearchApi extends Controller {

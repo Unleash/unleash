@@ -3,7 +3,7 @@ import {
     minutesToMilliseconds,
     secondsToMilliseconds,
 } from 'date-fns';
-import type { IUnleashConfig, IUnleashServices } from '../../server-impl.js';
+import type { IUnleashConfig, IUnleashServices } from '../../types/index.js';
 
 /**
  * Schedules service methods.

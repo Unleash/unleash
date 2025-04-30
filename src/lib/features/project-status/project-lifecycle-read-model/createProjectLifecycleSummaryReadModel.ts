@@ -1,4 +1,4 @@
-import type { Db, IUnleashConfig } from '../../../server-impl.js';
+import type { Db, IUnleashConfig } from '../../../types/index.js';
 import FeatureToggleStore from '../../feature-toggle/feature-toggle-store.js';
 import { FakeProjectLifecycleSummaryReadModel } from './fake-project-lifecycle-summary-read-model.js';
 import type { IProjectLifecycleSummaryReadModel } from './project-lifecycle-read-model-type.js';

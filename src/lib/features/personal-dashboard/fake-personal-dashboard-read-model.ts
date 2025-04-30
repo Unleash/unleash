@@ -1,4 +1,4 @@
-import type { IUser } from '../../server-impl.js';
+import type { IUser } from '../../types/index.js';
 import type {
     BasePersonalProject,
     IPersonalDashboardReadModel,

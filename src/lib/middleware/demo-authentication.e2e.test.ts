@@ -1,5 +1,5 @@
 import dbInit from '../../test/e2e/helpers/database-init.js';
-import { IAuthType } from '../server-impl.js';
+import { IAuthType } from '../types/index.js';
 import { setupAppWithCustomAuth } from '../../test/e2e/helpers/test-helper.js';
 import type { ITestDb } from '../../test/e2e/helpers/database-init.js';
 import type { IUnleashStores } from '../types/index.js';

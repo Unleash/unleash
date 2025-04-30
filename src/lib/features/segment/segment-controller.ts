@@ -5,8 +5,7 @@ import type {
     IAuthRequest,
     IUnleashConfig,
     IUnleashServices,
-    Logger,
-} from '../../server-impl.js';
+} from '../../types/index.js';
 import {
     type AdminSegmentSchema,
     adminSegmentSchema,
@@ -41,6 +40,7 @@ import {
 
 import { anonymiseKeys, extractUserIdFromUser } from '../../util/index.js';
 import { BadDataError } from '../../error/index.js';
+import type { Logger } from '../../logger.js';
 
 type IUpdateFeatureStrategySegmentsRequest = IAuthRequest<
     {},

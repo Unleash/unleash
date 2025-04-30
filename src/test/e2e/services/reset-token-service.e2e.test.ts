@@ -19,7 +19,8 @@ import {
 import { createEventsService } from '../../../lib/features/index.js';
 
 const config: IUnleashConfig = createTestConfig();
-
+import { test } from 'node:test';
+import assert from 'node:assert';
 let stores: IUnleashStores;
 let db: ITestDb;
 let adminUser: IUserWithRootRole;
@@ -90,7 +91,8 @@ test('Should create a reset link', async () => {
         adminUser.username!,
     );
 
-    expect(url.toString().substring(0, url.toString().indexOf('='))).toBe(
+    assert.strictEqual(
+        url.toString().substring(0, url.toString().indexOf('=')),
         `${config.server.unleashUrl}/reset-password?token`,
     );
 });

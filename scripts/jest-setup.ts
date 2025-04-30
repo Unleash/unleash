@@ -1,11 +1,11 @@
-import { Client, type ClientConfig } from 'pg';
-import { migrateDb } from '../src/migrator.js';
-import { getDbConfig } from '../src/test/e2e/helpers/database-config.js';
-import { testDbPrefix } from '../src/test/e2e/helpers/database-init.js';
+import { Client } from 'pg';
+import { migrateDb } from '../src/migrator.ts';
+import { getDbConfig } from '../src/test/e2e/helpers/database-config.ts';
+import { testDbPrefix } from '../src/test/e2e/helpers/database-init.ts';
 
-let initializationPromise: Promise<void> | null = null;
+let initializationPromise = null;
 
-const initializeTemplateDb = (db: ClientConfig): Promise<void> => {
+const initializeTemplateDb = (db) => {
     if (!initializationPromise) {
         initializationPromise = (async () => {
             const testDBTemplateName = process.env.TEST_DB_TEMPLATE_NAME;
@@ -17,7 +17,7 @@ const initializeTemplateDb = (db: ClientConfig): Promise<void> => {
             const result = await client.query(
                 `select datname from pg_database where datname like '${testDbPrefix}%';`,
             );
-            result.rows.forEach(async (row: any) => {
+            result.rows.forEach(async (row) => {
                 console.log(`Dropping test database ${row.datname}`);
                 await client.query(`DROP DATABASE ${row.datname}`);
             });
@@ -26,7 +26,7 @@ const initializeTemplateDb = (db: ClientConfig): Promise<void> => {
             await client.end();
             await migrateDb({
                 db: { ...db, database: testDBTemplateName },
-            } as any);
+            });
             console.log(`Template database ${testDBTemplateName} migrated`);
         })();
     }

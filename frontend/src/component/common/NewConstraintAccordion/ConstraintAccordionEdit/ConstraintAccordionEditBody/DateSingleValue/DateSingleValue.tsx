@@ -1,9 +1,10 @@
 import Input from 'component/common/Input/Input';
 import { parseDateValue, parseValidDate } from 'component/common/util';
 
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { styled } from '@mui/material';
 import TimezoneCountries from 'countries-and-timezones';
+import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 
 interface IDateSingleValueProps {
     setValue: (value: string) => void;
@@ -47,6 +48,7 @@ export const DateSingleValue = ({
     const { timeZone: localTimezoneName } =
         Intl.DateTimeFormat().resolvedOptions();
     const [pickedDate, setPickedDate] = useState(value || '');
+    const inputId = useId();
 
     const timezoneText = useMemo<string>(() => {
         const localTimezone = timezones.find(
@@ -62,27 +64,31 @@ export const DateSingleValue = ({
     if (!value) return null;
 
     return (
-        <StyledInput
-            // variant='standard'
-            id='date'
-            hiddenLabel
-            label=''
-            size='small'
-            type='datetime-local'
-            value={parseDateValue(pickedDate)}
-            onChange={(e) => {
-                setError('');
-                const parsedDate = parseValidDate(e.target.value);
-                const dateString = parsedDate?.toISOString();
-                dateString && setPickedDate(dateString);
-                dateString && setValue(dateString);
-            }}
-            InputLabelProps={{
-                shrink: true,
-            }}
-            error={Boolean(error)}
-            errorText={error}
-            required
-        />
+        <>
+            <label htmlFor={inputId}>
+                <ScreenReaderOnly>Date</ScreenReaderOnly>
+            </label>
+            <StyledInput
+                id={inputId}
+                hiddenLabel
+                label=''
+                size='small'
+                type='datetime-local'
+                value={parseDateValue(pickedDate)}
+                onChange={(e) => {
+                    setError('');
+                    const parsedDate = parseValidDate(e.target.value);
+                    const dateString = parsedDate?.toISOString();
+                    dateString && setPickedDate(dateString);
+                    dateString && setValue(dateString);
+                }}
+                InputLabelProps={{
+                    shrink: true,
+                }}
+                error={Boolean(error)}
+                errorText={error}
+                required
+            />
+        </>
     );
 };

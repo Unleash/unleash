@@ -36,10 +36,7 @@ const Container = styled('article')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadiusLarge,
     border: `1px solid ${theme.palette.divider}`,
-    containerType: 'inline-size',
 }));
-
-const onNarrowContainer = '@container (max-width: 700px)';
 
 const TopRow = styled('div')(({ theme }) => ({
     '--gap': theme.spacing(1),

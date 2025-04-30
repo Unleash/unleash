@@ -1,7 +1,7 @@
-import type { IConstraint } from 'interfaces/strategy';
 import { styled, Typography } from '@mui/material';
 import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
 import { constraintId } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
+import { useRecentlyUsedConstraints } from './useRecentlyUsedConstraints';
 
 type IRecentlyUsedConstraintsProps = {
     temporary?: string;
@@ -26,26 +26,17 @@ const StyledConstraintsContainer = styled('div')(({ theme }) => ({
 export const RecentlyUsedConstraints = ({
     temporary,
 }: IRecentlyUsedConstraintsProps) => {
-    const mockConstraints: IConstraint[] = [
-        {
-            contextName: 'userId',
-            operator: 'IN',
-            values: ['123', '456', '789'],
-            value: '',
-        },
-        {
-            contextName: 'environment',
-            operator: 'STR_CONTAINS',
-            values: ['production'],
-            value: '',
-        },
-    ];
+    const { items: recentlyUsedConstraints } = useRecentlyUsedConstraints();
+
+    if (recentlyUsedConstraints.length === 0) {
+        return null;
+    }
 
     return (
         <StyledContainer>
             <StyledHeader>Recently used constraints</StyledHeader>
             <StyledConstraintsContainer>
-                {mockConstraints.map((constraint) => (
+                {recentlyUsedConstraints.map((constraint) => (
                     <ConstraintAccordionView
                         key={constraint[constraintId]}
                         constraint={constraint}

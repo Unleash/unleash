@@ -14,7 +14,6 @@ interface IInputProps extends Omit<OutlinedTextFieldProps, 'variant'> {
     onBlur?: (e: any) => any;
     multiline?: boolean;
     rows?: number;
-    variant?: 'outlined' | 'filled' | 'standard';
 }
 
 const StyledDiv = styled('div')({
@@ -31,7 +30,6 @@ const Input = ({
     value,
     onChange,
     size = 'small',
-    variant = 'outlined',
     ...rest
 }: IInputProps) => {
     const { classes: styles } = useStyles();
@@ -39,7 +37,7 @@ const Input = ({
         <StyledDiv data-loading>
             <TextField
                 size={size}
-                variant={variant}
+                variant='outlined'
                 label={label}
                 placeholder={placeholder}
                 error={error}

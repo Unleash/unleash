@@ -1,11 +1,10 @@
+import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
 import Input from 'component/common/Input/Input';
 import { parseDateValue, parseValidDate } from 'component/common/util';
 
-import { useId, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { styled } from '@mui/material';
 import TimezoneCountries from 'countries-and-timezones';
-import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
-import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 interface IDateSingleValueProps {
     setValue: (value: string) => void;
@@ -14,18 +13,12 @@ interface IDateSingleValueProps {
     setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const StyledInput = styled(Input)({
-    border: 'none',
-    '*': {
-        border: 'none',
-        padding: 0,
-    },
-});
-
-const Container = styled('div')(({ theme }) => ({
+const StyledWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
-    flexFlow: 'row nowrap',
+    flexDirection: 'row',
+    marginBottom: theme.spacing(1),
     alignItems: 'center',
+    gap: theme.spacing(1),
 }));
 
 export const DateSingleValue = ({
@@ -35,9 +28,7 @@ export const DateSingleValue = ({
     setError,
 }: IDateSingleValueProps) => {
     const timezones = Object.values(
-        TimezoneCountries.getAllTimezones({ deprecated: false }) as {
-            [timezone: string]: { name: string; utcOffsetStr: string };
-        },
+        TimezoneCountries.getAllTimezones({ deprecated: false }),
     ).map((timezone) => ({
         key: timezone.name,
         label: `${timezone.name}`,
@@ -46,8 +37,6 @@ export const DateSingleValue = ({
     const { timeZone: localTimezoneName } =
         Intl.DateTimeFormat().resolvedOptions();
     const [pickedDate, setPickedDate] = useState(value || '');
-    const inputId = useId();
-    const helpId = useId();
 
     const timezoneText = useMemo<string>(() => {
         const localTimezone = timezones.find(
@@ -63,33 +52,30 @@ export const DateSingleValue = ({
     if (!value) return null;
 
     return (
-        <Container>
-            <label htmlFor={inputId}>
-                <ScreenReaderOnly>Date</ScreenReaderOnly>
-            </label>
-            <StyledInput
-                id={inputId}
-                aria-describedby={helpId}
-                hiddenLabel
-                label=''
-                size='small'
-                type='datetime-local'
-                value={parseDateValue(pickedDate)}
-                onChange={(e) => {
-                    setError('');
-                    const parsedDate = parseValidDate(e.target.value);
-                    const dateString = parsedDate?.toISOString();
-                    dateString && setPickedDate(dateString);
-                    dateString && setValue(dateString);
-                }}
-                InputLabelProps={{
-                    shrink: true,
-                }}
-                error={Boolean(error)}
-                errorText={error}
-                required
-            />
-            <HelpIcon htmlTooltip tooltip={<p id={helpId}>{timezoneText}</p>} />
-        </Container>
+        <>
+            <ConstraintFormHeader>Select a date</ConstraintFormHeader>
+            <StyledWrapper>
+                <Input
+                    id='date'
+                    label='Date'
+                    type='datetime-local'
+                    value={parseDateValue(pickedDate)}
+                    onChange={(e) => {
+                        setError('');
+                        const parsedDate = parseValidDate(e.target.value);
+                        const dateString = parsedDate?.toISOString();
+                        dateString && setPickedDate(dateString);
+                        dateString && setValue(dateString);
+                    }}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    error={Boolean(error)}
+                    errorText={error}
+                    required
+                />
+                <p>{timezoneText}</p>
+            </StyledWrapper>
+        </>
     );
 };

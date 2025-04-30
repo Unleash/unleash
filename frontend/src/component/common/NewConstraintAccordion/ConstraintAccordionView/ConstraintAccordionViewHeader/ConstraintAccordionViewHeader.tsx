@@ -74,7 +74,7 @@ export const ConstraintAccordionViewHeader = ({
             {onUse ? (
                 <ConstraintAccordionViewActions onUse={onUse} />
             ) : (
-                // @deprecated : remove onEdit and onDelete from this file together with NewConstraintAccordionList and addEditStrategy flag
+                // @deprecated : remove onEdit and onDelete from current file together with NewConstraintAccordionList and addEditStrategy flag
                 <ConstraintAccordionEditActions
                     onEdit={onEdit}
                     onDelete={onDelete}

@@ -2,16 +2,12 @@ import Clear from '@mui/icons-material/Clear';
 import { Chip, type ChipProps, styled, type Theme } from '@mui/material';
 import { type FC, forwardRef, type PropsWithChildren, useRef } from 'react';
 
-const ValueListWrapper = styled('div')(({ theme }) => ({
-    // display: 'flex',
-    flexFlow: 'row wrap',
-    gap: theme.spacing(1),
+const ValueListWrapper = styled('div')({
     display: 'contents',
-}));
+});
 
 const StyledList = styled('ul')({
     listStyle: 'none',
-    padding: 0,
     display: 'contents',
 });
 

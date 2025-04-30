@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import type { IApiTokenCreate } from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import { TokenType } from 'interfaces/token';
@@ -14,10 +13,8 @@ import type { SelectOption } from './TokenTypeSelector/TokenTypeSelector';
 export type ApiTokenFormErrorType = 'username' | 'projects';
 export const useApiTokenForm = (project?: string) => {
     const { environments } = useEnvironments();
-    const { uiConfig } = useUiConfig();
     const initialEnvironment = environments?.find((e) => e.enabled)?.name;
 
-    const hasCreateTokenPermission = useHasRootAccess(CREATE_CLIENT_API_TOKEN);
     const hasCreateProjectTokenPermission = useHasRootAccess(
         CREATE_PROJECT_API_TOKEN,
         project,
@@ -29,24 +26,18 @@ export const useApiTokenForm = (project?: string) => {
             label: `Server-side SDK (${TokenType.CLIENT})`,
             title: 'Connect server-side SDK or Unleash Proxy/Edge',
             enabled:
-                hasCreateTokenPermission || hasCreateProjectTokenPermission,
+                useHasRootAccess(CREATE_CLIENT_API_TOKEN) ||
+                hasCreateProjectTokenPermission,
         },
-    ];
-
-    const hasCreateFrontendAccess = useHasRootAccess(CREATE_FRONTEND_API_TOKEN);
-    const hasCreateFrontendTokenAccess = useHasRootAccess(
-        CREATE_PROJECT_API_TOKEN,
-        project,
-    );
-
-    if (uiConfig.flags.embedProxyFrontend) {
-        apiTokenTypes.splice(1, 0, {
+        {
             key: TokenType.FRONTEND,
             label: `Client-side SDK (${TokenType.FRONTEND})`,
             title: 'Connect web and mobile SDK directly to Unleash',
-            enabled: hasCreateFrontendAccess || hasCreateFrontendTokenAccess,
-        });
-    }
+            enabled:
+                useHasRootAccess(CREATE_FRONTEND_API_TOKEN) ||
+                hasCreateProjectTokenPermission,
+        },
+    ];
 
     const firstAccessibleType = apiTokenTypes.find((t) => t.enabled)?.key;
 

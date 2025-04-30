@@ -24,12 +24,6 @@ export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
         clientFeatureCaching: {
             enabled: false,
         },
-        experimental: {
-            flags: {
-                embedProxy: true,
-                embedProxyFrontend: true,
-            },
-        },
         publicFolder: path.join(__dirname, '../examples'),
     };
     const options = mergeAll<IUnleashOptions>([testConfig, config || {}]);

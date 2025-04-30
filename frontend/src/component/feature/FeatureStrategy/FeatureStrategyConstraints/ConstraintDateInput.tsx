@@ -24,7 +24,7 @@ const StyledInput = styled(Input)({
 
 const Container = styled('div')(({ theme }) => ({
     display: 'flex',
-    flexFlow: 'row nowrap',
+    flexFlow: 'row wrap',
     alignItems: 'center',
 }));
 

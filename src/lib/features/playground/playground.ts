@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import type { IUnleashConfig } from '../../types/option.js';
-import type { IUnleashServices } from '../../types/services.js';
+import type { IUnleashServices } from '../../services/index.js';
 import { NONE } from '../../types/permissions.js';
 import Controller from '../../routes/controller.js';
 import type { OpenApiService } from '../../services/openapi-service.js';

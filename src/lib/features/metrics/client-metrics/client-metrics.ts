@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import Controller from '../../../routes/controller.js';
 import type { IUnleashConfig } from '../../../types/option.js';
-import type { IFlagResolver, IUnleashServices } from '../../../types/index.js';
+import type { IFlagResolver } from '../../../types/index.js';
 import type { Logger } from '../../../logger.js';
 import type ClientMetricsServiceV2 from './metrics-service-v2.js';
 import { NONE } from '../../../types/permissions.js';
@@ -17,6 +17,7 @@ import {
     type FeatureMetricsSchema,
 } from '../../../openapi/spec/feature-metrics-schema.js';
 import { getStandardResponses } from '../../../openapi/index.js';
+import type { IUnleashServices } from '../../../services/index.js';
 
 interface IName {
     name: string;

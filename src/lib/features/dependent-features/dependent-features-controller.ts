@@ -1,10 +1,9 @@
 import type { Response } from 'express';
 import Controller from '../../routes/controller.js';
-import type { OpenApiService } from '../../services/index.js';
+import type { IUnleashServices, OpenApiService } from '../../services/index.js';
 import {
     type IFlagResolver,
     type IUnleashConfig,
-    type IUnleashServices,
     NONE,
     UPDATE_FEATURE_DEPENDENCY,
 } from '../../types/index.js';

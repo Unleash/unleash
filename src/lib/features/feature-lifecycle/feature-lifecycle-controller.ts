@@ -2,12 +2,11 @@ import type { FeatureLifecycleService } from './feature-lifecycle-service.js';
 import {
     type IFlagResolver,
     type IUnleashConfig,
-    type IUnleashServices,
     NONE,
     serializeDates,
     UPDATE_FEATURE,
 } from '../../types/index.js';
-import type { OpenApiService } from '../../services/index.js';
+import type { IUnleashServices, OpenApiService } from '../../services/index.js';
 import {
     createRequestSchema,
     createResponseSchema,

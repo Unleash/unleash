@@ -3,7 +3,7 @@ import Controller from '../controller.js';
 import type UserService from '../../services/user-service.js';
 import type { Logger } from '../../logger.js';
 import type { IUnleashConfig } from '../../types/option.js';
-import type { IUnleashServices } from '../../types/index.js';
+import type { IUnleashServices } from '../../services/index.js';
 import { NONE } from '../../types/permissions.js';
 import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
 import { createResponseSchema } from '../../openapi/util/create-response-schema.js';

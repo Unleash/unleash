@@ -1,6 +1,6 @@
 import type { Response } from 'express';
 import type { AuthedRequest } from '../../types/core.js';
-import type { IUnleashServices } from '../../types/services.js';
+import type { IUnleashServices } from '../../services/index.js';
 import { IAuthType, type IUnleashConfig } from '../../types/option.js';
 import version from '../../util/version.js';
 import Controller from '../controller.js';

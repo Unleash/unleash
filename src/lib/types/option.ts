@@ -8,9 +8,9 @@ import type {
     IFlagResolver,
     IFlags,
 } from './experimental.js';
-import type { IUnleashServices } from './services.js';
 import type { ResourceLimitsSchema } from '../openapi/spec/resource-limits-schema.js';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js';
+import type { IUnleashServices } from '../services/index.js';
 
 export interface ISSLOption {
     rejectUnauthorized: boolean;

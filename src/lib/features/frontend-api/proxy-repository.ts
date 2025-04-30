@@ -5,10 +5,9 @@ import type {
     EnhancedFeatureInterface,
     FeatureInterface,
 } from 'unleash-client/lib/feature.js';
-import type { IApiUser } from '../../types/api-user.js';
 import type {
     IUnleashConfig,
-    IUnleashServices,
+    IApiUser,
     IUnleashStores,
 } from '../../types/index.js';
 import {
@@ -25,6 +24,7 @@ import {
     PROXY_FEATURES_FOR_TOKEN_TIME,
 } from '../../metric-events.js';
 import metricsHelper from '../../util/metrics-helper.js';
+import type { IUnleashServices } from '../../services/index.js';
 
 type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi' | 'eventBus'>;
 

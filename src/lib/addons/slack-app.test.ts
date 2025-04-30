@@ -10,7 +10,6 @@ import {
 } from '../types/index.js';
 import type { IntegrationEventsService } from '../services/index.js';
 import type { Logger } from '../logger.js';
-import { jest } from '@jest/globals';
 const slackApiCalls: ChatPostMessageArguments[] = [];
 
 const loggerMock = {

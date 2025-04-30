@@ -1,12 +1,12 @@
 import type { Response } from 'express';
 import Controller from '../controller.js';
-import type { FavoritesService, OpenApiService } from '../../services/index.js';
+import type {
+    FavoritesService,
+    IUnleashServices,
+    OpenApiService,
+} from '../../services/index.js';
 import type { Logger } from '../../logger.js';
-import {
-    type IUnleashConfig,
-    type IUnleashServices,
-    NONE,
-} from '../../types/index.js';
+import { type IUnleashConfig, NONE } from '../../types/index.js';
 import { emptyResponse, getStandardResponses } from '../../openapi/index.js';
 import type { IAuthRequest } from '../unleash-types.js';
 

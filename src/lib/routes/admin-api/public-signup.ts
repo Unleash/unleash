@@ -4,12 +4,12 @@ import Controller from '../controller.js';
 import {
     ADMIN,
     type IUnleashConfig,
-    type IUnleashServices,
     serializeDates,
 } from '../../types/index.js';
 import type { Logger } from '../../logger.js';
 import type {
     AccessService,
+    IUnleashServices,
     OpenApiService,
     PublicSignupTokenService,
 } from '../../services/index.js';

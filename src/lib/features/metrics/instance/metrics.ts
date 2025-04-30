@@ -4,14 +4,16 @@ import {
     CLIENT_METRICS,
     type IFlagResolver,
     type IUnleashConfig,
-    type IUnleashServices,
 } from '../../../types/index.js';
 import type ClientInstanceService from './instance-service.js';
 import type { Logger } from '../../../logger.js';
 import type { IAuthRequest } from '../../../routes/unleash-types.js';
 import type ClientMetricsServiceV2 from '../client-metrics/metrics-service-v2.js';
 import { NONE } from '../../../types/permissions.js';
-import type { OpenApiService } from '../../../services/openapi-service.js';
+import type {
+    IUnleashServices,
+    OpenApiService,
+} from '../../../services/index.js';
 import { createRequestSchema } from '../../../openapi/util/create-request-schema.js';
 import {
     emptyResponse,

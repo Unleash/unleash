@@ -2,7 +2,6 @@ import {
     ADMIN,
     UPDATE_MAINTENANCE_MODE,
     type IUnleashConfig,
-    type IUnleashServices,
 } from '../../types/index.js';
 import type { Request, Response } from 'express';
 import Controller from '../../routes/controller.js';
@@ -13,7 +12,7 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/index.js';
-import type { OpenApiService } from '../../services/index.js';
+import type { IUnleashServices, OpenApiService } from '../../services/index.js';
 import type { IAuthRequest } from '../../routes/unleash-types.js';
 import {
     type MaintenanceSchema,

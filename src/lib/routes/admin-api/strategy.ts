@@ -1,5 +1,5 @@
 import type { IUnleashConfig } from '../../types/option.js';
-import type { IUnleashServices } from '../../types/services.js';
+import type { IUnleashServices } from '../../services/index.js';
 import type StrategyService from '../../services/strategy-service.js';
 import type { Logger } from '../../logger.js';
 import Controller from '../controller.js';

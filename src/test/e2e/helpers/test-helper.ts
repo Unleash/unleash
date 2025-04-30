@@ -10,7 +10,7 @@ import {
     type FeatureToggleDTO,
     type IUnleashStores,
 } from '../../../lib/types/index.js';
-import type { IUnleashServices } from '../../../lib/types/services.js';
+import type { IUnleashServices } from '../../../lib/services/index.js';
 import type { Db } from '../../../lib/db/db.js';
 import type { IContextFieldDto } from '../../../lib/features/context/context-field-store-type.js';
 import { DEFAULT_ENV } from '../../../lib/util/index.js';

@@ -17,7 +17,6 @@ import {
     type IFlagResolver,
     type ITagTypeStore,
     type IUnleashConfig,
-    type IUnleashServices,
     type IUnleashStores,
     type IVariant,
     type WithRequired,
@@ -38,6 +37,7 @@ import type {
     EventService,
     FeatureTagService,
     FeatureToggleService,
+    IUnleashServices,
     StrategyService,
     TagTypeService,
 } from '../../services/index.js';

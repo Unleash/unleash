@@ -1,10 +1,9 @@
 import {
     type IUnleashConfig,
-    type IUnleashServices,
     NONE,
     serializeDates,
 } from '../../types/index.js';
-import type { OpenApiService } from '../../services/index.js';
+import type { IUnleashServices, OpenApiService } from '../../services/index.js';
 import {
     createResponseSchema,
     getStandardResponses,

@@ -2,7 +2,7 @@ import type { Response } from 'express';
 import Controller from '../controller.js';
 import type { Logger } from '../../logger.js';
 import type { IUnleashConfig } from '../../types/option.js';
-import type { IUnleashServices } from '../../types/services.js';
+import type { IUnleashServices } from '../../services/index.js';
 import type UserFeedbackService from '../../services/user-feedback-service.js';
 import type { IAuthRequest } from '../unleash-types.js';
 import { NONE } from '../../types/permissions.js';

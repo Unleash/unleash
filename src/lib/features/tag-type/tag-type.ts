@@ -8,7 +8,7 @@ import {
     UPDATE_TAG_TYPE,
 } from '../../types/permissions.js';
 import type { IUnleashConfig } from '../../types/option.js';
-import type { IUnleashServices } from '../../types/services.js';
+import type { IUnleashServices } from '../../services/index.js';
 import type TagTypeService from './tag-type-service.js';
 import type { Logger } from '../../logger.js';
 import type { IAuthRequest } from '../../routes/unleash-types.js';

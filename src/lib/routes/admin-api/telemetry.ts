@@ -4,7 +4,7 @@ import type { IAuthRequest } from '../unleash-types.js';
 import type { IUnleashConfig } from '../../types/option.js';
 import Controller from '../controller.js';
 import { NONE } from '../../types/permissions.js';
-import type { IUnleashServices } from '../../types/index.js';
+import type { IUnleashServices } from '../../services/index.js';
 import { createResponseSchema } from '../../openapi/util/create-response-schema.js';
 import {
     telemetrySettingsSchema,

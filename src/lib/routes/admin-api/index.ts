@@ -1,5 +1,5 @@
 import Controller from '../controller.js';
-import type { IUnleashServices, IUnleashConfig } from '../../types/index.js';
+import type { IUnleashConfig, IUnleashStores } from '../../types/index.js';
 import FeatureController from '../../features/feature-toggle/legacy/feature-toggle-legacy-controller.js';
 import { FeatureTypeController } from './feature-type.js';
 import ArchiveController from '../../features/feature-toggle/archive-feature-toggle-controller.js';
@@ -37,9 +37,15 @@ import { UiObservabilityController } from '../../features/ui-observability-contr
 import { SearchApi } from './search/index.js';
 import PersonalDashboardController from '../../features/personal-dashboard/personal-dashboard-controller.js';
 import FeatureLifecycleCountController from '../../features/feature-lifecycle/feature-lifecycle-count-controller.js';
+import type { IUnleashServices } from '../../services/index.js';
 
 export class AdminApi extends Controller {
-    constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
+    constructor(
+        config: IUnleashConfig,
+        services: IUnleashServices,
+        stores: IUnleashStores,
+        db: Db,
+    ) {
         super(config);
 
         this.app.use(
@@ -124,7 +130,8 @@ export class AdminApi extends Controller {
         );
         this.app.use(
             '/lifecycle',
-            new FeatureLifecycleCountController(config, services).router,
+            new FeatureLifecycleCountController(config, services, stores)
+                .router,
         );
         this.app.use(
             '/personal-dashboard',

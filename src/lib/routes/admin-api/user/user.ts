@@ -3,7 +3,7 @@ import type { IAuthRequest } from '../../unleash-types.js';
 import Controller from '../../controller.js';
 import type { AccessService } from '../../../services/access-service.js';
 import { IAuthType, type IUnleashConfig } from '../../../types/option.js';
-import type { IUnleashServices } from '../../../types/services.js';
+import type { IUnleashServices } from '../../../services/index.js';
 import type UserService from '../../../services/user-service.js';
 import type UserFeedbackService from '../../../services/user-feedback-service.js';
 import type UserSplashService from '../../../services/user-splash-service.js';

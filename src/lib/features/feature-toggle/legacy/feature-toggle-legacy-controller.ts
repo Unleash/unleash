@@ -3,7 +3,6 @@ import type { Request, Response } from 'express';
 import Controller from '../../../routes/controller.js';
 import { NONE, UPDATE_FEATURE } from '../../../types/permissions.js';
 import type { IUnleashConfig } from '../../../types/option.js';
-import type { IUnleashServices } from '../../../types/index.js';
 import type FeatureToggleService from '../feature-toggle-service.js';
 import { querySchema } from '../../../schema/feature-schema.js';
 import type { IFeatureToggleQuery } from '../../../types/model.js';
@@ -11,7 +10,10 @@ import type FeatureTagService from '../../../services/feature-tag-service.js';
 import type { IAuthRequest } from '../../../routes/unleash-types.js';
 import type { TagSchema } from '../../../openapi/spec/tag-schema.js';
 import type { TagsSchema } from '../../../openapi/spec/tags-schema.js';
-import type { OpenApiService } from '../../../services/openapi-service.js';
+import type {
+    IUnleashServices,
+    OpenApiService,
+} from '../../../services/index.js';
 import { createRequestSchema } from '../../../openapi/util/create-request-schema.js';
 import {
     createResponseSchema,

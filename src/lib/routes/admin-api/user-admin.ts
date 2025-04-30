@@ -5,11 +5,8 @@ import type UserService from '../../services/user-service.js';
 import type { AccountService } from '../../services/account-service.js';
 import type { AccessService } from '../../services/access-service.js';
 import type { Logger } from '../../logger.js';
-import type {
-    IUnleashConfig,
-    IUnleashServices,
-    RoleName,
-} from '../../types/index.js';
+import type { IUnleashConfig, RoleName } from '../../types/index.js';
+import type { IUnleashServices } from '../../services/index.js';
 import type ResetTokenService from '../../services/reset-token-service.js';
 import type { IAuthRequest } from '../unleash-types.js';
 import type SettingService from '../../services/setting-service.js';

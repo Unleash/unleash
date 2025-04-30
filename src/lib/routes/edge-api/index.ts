@@ -1,6 +1,6 @@
 import type { Response } from 'express';
 import Controller from '../controller.js';
-import type { IUnleashConfig, IUnleashServices } from '../../types/index.js';
+import type { IUnleashConfig } from '../../types/index.js';
 import type { Logger } from '../../logger.js';
 import { NONE } from '../../types/permissions.js';
 import { createResponseSchema } from '../../openapi/util/create-response-schema.js';
@@ -14,6 +14,7 @@ import type EdgeService from '../../services/edge-service.js';
 import type { OpenApiService } from '../../services/openapi-service.js';
 import { getStandardResponses } from '../../openapi/util/standard-responses.js';
 import type { TokenStringListSchema } from '../../openapi/index.js';
+import type { IUnleashServices } from '../../services/index.js';
 
 export default class EdgeController extends Controller {
     private readonly logger: Logger;

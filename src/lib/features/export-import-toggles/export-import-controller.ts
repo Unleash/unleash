@@ -5,11 +5,10 @@ import type {
     IExportService,
     IImportService,
 } from './export-import-service.js';
-import type { OpenApiService } from '../../services/index.js';
+import type { OpenApiService, IUnleashServices } from '../../services/index.js';
 import type { WithTransactional } from '../../db/transaction.js';
 import {
     type IUnleashConfig,
-    type IUnleashServices,
     NONE,
     serializeDates,
 } from '../../types/index.js';

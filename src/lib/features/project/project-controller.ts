@@ -5,7 +5,6 @@ import {
     type IFlagResolver,
     type IProjectParam,
     type IUnleashConfig,
-    type IUnleashServices,
     NONE,
     serializeDates,
 } from '../../types/index.js';
@@ -27,7 +26,7 @@ import {
     projectsSchema,
 } from '../../openapi/index.js';
 import { getStandardResponses } from '../../openapi/util/standard-responses.js';
-import type { OpenApiService } from '../../services/index.js';
+import type { IUnleashServices, OpenApiService } from '../../services/index.js';
 import type { IAuthRequest } from '../../routes/unleash-types.js';
 import { ProjectApiTokenController } from '../../routes/admin-api/project/api-token.js';
 import ProjectArchiveController from '../../routes/admin-api/project/project-archive.js';

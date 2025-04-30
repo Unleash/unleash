@@ -1,10 +1,6 @@
 import type { Request, Response } from 'express';
 import Controller from '../controller.js';
-import type {
-    IFlagResolver,
-    IUnleashConfig,
-    IUnleashServices,
-} from '../../types/index.js';
+import type { IFlagResolver, IUnleashConfig } from '../../types/index.js';
 import type { Logger } from '../../logger.js';
 import type AddonService from '../../services/addon-service.js';
 
@@ -42,7 +38,10 @@ import {
     integrationEventsSchema,
 } from '../../openapi/spec/integration-events-schema.js';
 import { BadDataError } from '../../error/index.js';
-import type { IntegrationEventsService } from '../../services/index.js';
+import type {
+    IntegrationEventsService,
+    IUnleashServices,
+} from '../../services/index.js';
 
 type AddonServices = Pick<
     IUnleashServices,

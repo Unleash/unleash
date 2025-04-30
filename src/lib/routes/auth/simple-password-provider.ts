@@ -3,7 +3,7 @@ import type { OpenApiService } from '../../services/openapi-service.js';
 import type { Logger } from '../../logger.js';
 import type { IUnleashConfig } from '../../server-impl.js';
 import type UserService from '../../services/user-service.js';
-import type { IUnleashServices } from '../../types/index.js';
+import type { IUnleashServices } from '../../services/index.js';
 import { NONE } from '../../types/permissions.js';
 import Controller from '../controller.js';
 import type { IAuthRequest } from '../unleash-types.js';

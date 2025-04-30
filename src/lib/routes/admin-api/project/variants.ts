@@ -2,7 +2,7 @@ import type FeatureToggleService from '../../../features/feature-toggle/feature-
 import type { Logger } from '../../../logger.js';
 import Controller from '../../controller.js';
 import type { IUnleashConfig } from '../../../types/option.js';
-import type { IUnleashServices } from '../../../types/index.js';
+import type { IUnleashServices } from '../../../services/index.js';
 import type { Request, Response } from 'express';
 import type { Operation } from 'fast-json-patch';
 import {

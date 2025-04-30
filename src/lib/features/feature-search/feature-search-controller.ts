@@ -3,12 +3,12 @@ import Controller from '../../routes/controller.js';
 import type {
     FeatureSearchService,
     OpenApiService,
+    IUnleashServices,
 } from '../../services/index.js';
 import {
     type IFeatureSearchOverview,
     type IFlagResolver,
     type IUnleashConfig,
-    type IUnleashServices,
     NONE,
     serializeDates,
 } from '../../types/index.js';

@@ -1,6 +1,6 @@
 import type { Response } from 'express';
 import Controller from '../../../routes/controller.js';
-import type { IFlagResolver, IUnleashServices } from '../../../types/index.js';
+import type { IFlagResolver } from '../../../types/index.js';
 import type { IUnleashConfig } from '../../../types/option.js';
 import type { Logger } from '../../../logger.js';
 import type ClientInstanceService from './instance-service.js';
@@ -9,7 +9,10 @@ import type { IClientApp } from '../../../types/model.js';
 import ApiUser, { type IApiUser } from '../../../types/api-user.js';
 import { ALL } from '../../../types/models/api-token.js';
 import { NONE } from '../../../types/permissions.js';
-import type { OpenApiService } from '../../../services/openapi-service.js';
+import type {
+    IUnleashServices,
+    OpenApiService,
+} from '../../../services/index.js';
 import { emptyResponse } from '../../../openapi/util/standard-responses.js';
 import { createRequestSchema } from '../../../openapi/util/create-request-schema.js';
 import type { ClientApplicationSchema } from '../../../openapi/spec/client-application-schema.js';

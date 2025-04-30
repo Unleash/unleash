@@ -4,13 +4,12 @@ import {
     type IFlagResolver,
     type IProjectParam,
     type IUnleashConfig,
-    type IUnleashServices,
     NONE,
     serializeDates,
 } from '../../types/index.js';
 
 import { getStandardResponses } from '../../openapi/util/standard-responses.js';
-import type { OpenApiService } from '../../services/index.js';
+import type { OpenApiService, IUnleashServices } from '../../services/index.js';
 import type { IAuthRequest } from '../../routes/unleash-types.js';
 import {
     createResponseSchema,

@@ -2,15 +2,13 @@ import { ConstraintIcon } from 'component/common/LegacyConstraintAccordion/Const
 import type { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo';
 import { ConstraintAccordionViewHeaderInfo as LegacyConstraintAccordionViewHeaderInfo } from './LegacyConstraintAccordionViewHeaderInfo';
-import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';
 import { styled } from '@mui/system';
-import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { ConstraintAccordionViewActions } from '../../ConstraintAccordionViewActions/ConstraintAccordionViewActions';
 
 interface IConstraintAccordionViewHeaderProps {
     constraint: IConstraint;
-    onDelete?: () => void;
-    onEdit?: () => void;
+    onUse?: () => void;
     singleValue: boolean;
     expanded: boolean;
     allowExpand: (shouldExpand: boolean) => void;
@@ -31,21 +29,14 @@ const StyledContainer = styled('div')(({ theme }) => ({
 
 export const ConstraintAccordionViewHeader = ({
     constraint,
-    onEdit,
-    onDelete,
+    onUse,
     singleValue,
     allowExpand,
     expanded,
     compact,
     disabled,
 }: IConstraintAccordionViewHeaderProps) => {
-    const { context } = useUnleashContext();
     const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
-    const { contextName } = constraint;
-
-    const disableEdit = !context
-        .map((contextDefinition) => contextDefinition.name)
-        .includes(contextName);
 
     return (
         <StyledContainer>
@@ -68,11 +59,7 @@ export const ConstraintAccordionViewHeader = ({
                     disabled={disabled}
                 />
             )}
-            <ConstraintAccordionHeaderActions
-                onEdit={onEdit}
-                onDelete={onDelete}
-                disableEdit={disableEdit}
-            />
+            <ConstraintAccordionViewActions onUse={onUse} />
         </StyledContainer>
     );
 };

@@ -139,7 +139,11 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                         </Button>
                         <ConditionallyRender
                             condition={Boolean(addEditStrategy)}
-                            show={<RecentlyUsedConstraints />}
+                            show={
+                                <RecentlyUsedConstraints
+                                    setConstraints={setConstraints}
+                                />
+                            }
                         />
                     </div>
                 }

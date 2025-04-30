@@ -19,8 +19,7 @@ import {
 
 interface IConstraintAccordionViewProps {
     constraint: IConstraint;
-    onDelete?: () => void;
-    onEdit?: () => void;
+    onUse?: () => void;
     sx?: SxProps<Theme>;
     compact?: boolean;
     disabled?: boolean;
@@ -65,8 +64,7 @@ const StyledWrapper = styled('div')({
 
 export const ConstraintAccordionView = ({
     constraint,
-    onEdit,
-    onDelete,
+    onUse,
     sx = undefined,
     compact = false,
     disabled = false,
@@ -101,8 +99,7 @@ export const ConstraintAccordionView = ({
                 <StyledWrapper>
                     <ConstraintAccordionViewHeader
                         constraint={constraint}
-                        onEdit={onEdit}
-                        onDelete={onDelete}
+                        onUse={onUse}
                         singleValue={singleValue}
                         allowExpand={setExpandable}
                         disabled={disabled}

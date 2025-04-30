@@ -166,8 +166,6 @@ export const NewConstraintAccordionList = forwardRef<
                                 <ConstraintAccordionView
                                     key={constraint[constraintId]}
                                     constraint={constraint}
-                                    onEdit={onEdit?.bind(null, constraint)}
-                                    onDelete={onRemove?.bind(null, index)}
                                 />
                             )
                         ) : (

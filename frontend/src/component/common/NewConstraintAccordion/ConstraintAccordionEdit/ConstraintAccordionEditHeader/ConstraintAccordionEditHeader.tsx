@@ -22,7 +22,7 @@ import {
 } from 'utils/operatorsForContext';
 import { InvertedOperatorButton } from '../StyledToggleButton/InvertedOperatorButton/InvertedOperatorButton';
 import { CaseSensitiveButton } from '../StyledToggleButton/CaseSensitiveButton/CaseSensitiveButton';
-import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';
+import { ConstraintAccordionEditActions } from '../../ConstraintAccordionEditActions/ConstraintAccordionEditActions';
 import { styled } from '@mui/material';
 
 interface IConstraintAccordionViewHeader {
@@ -207,7 +207,7 @@ export const ConstraintAccordionEditHeader = ({
                     </StyledHeaderText>
                 }
             />
-            <ConstraintAccordionHeaderActions
+            <ConstraintAccordionEditActions
                 onDelete={onDelete}
                 onUndo={onUndo}
                 constraintChanges={constraintChanges}

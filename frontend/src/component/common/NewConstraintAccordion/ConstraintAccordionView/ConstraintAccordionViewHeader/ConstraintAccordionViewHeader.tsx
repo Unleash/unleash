@@ -2,15 +2,17 @@ import { ConstraintIcon } from 'component/common/LegacyConstraintAccordion/Const
 import type { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo';
 import { ConstraintAccordionViewHeaderInfo as LegacyConstraintAccordionViewHeaderInfo } from './LegacyConstraintAccordionViewHeaderInfo';
-import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';
 import { styled } from '@mui/system';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { ConstraintAccordionViewActions } from '../../ConstraintAccordionViewActions/ConstraintAccordionViewActions';
+import { ConstraintAccordionEditActions } from '../../ConstraintAccordionEditActions/ConstraintAccordionEditActions';
 
 interface IConstraintAccordionViewHeaderProps {
     constraint: IConstraint;
     onDelete?: () => void;
     onEdit?: () => void;
+    onUse?: () => void;
     singleValue: boolean;
     expanded: boolean;
     allowExpand: (shouldExpand: boolean) => void;
@@ -33,6 +35,7 @@ export const ConstraintAccordionViewHeader = ({
     constraint,
     onEdit,
     onDelete,
+    onUse,
     singleValue,
     allowExpand,
     expanded,
@@ -68,11 +71,16 @@ export const ConstraintAccordionViewHeader = ({
                     disabled={disabled}
                 />
             )}
-            <ConstraintAccordionHeaderActions
-                onEdit={onEdit}
-                onDelete={onDelete}
-                disableEdit={disableEdit}
-            />
+            {onUse ? (
+                <ConstraintAccordionViewActions onUse={onUse} />
+            ) : (
+                // @deprecated : remove onEdit and onDelete from current file together with NewConstraintAccordionList and addEditStrategy flag
+                <ConstraintAccordionEditActions
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                    disableEdit={disableEdit}
+                />
+            )}
         </StyledContainer>
     );
 };

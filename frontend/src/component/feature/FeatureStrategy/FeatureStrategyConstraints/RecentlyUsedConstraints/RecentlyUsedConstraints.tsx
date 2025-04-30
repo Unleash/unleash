@@ -2,9 +2,10 @@ import { styled, Typography } from '@mui/material';
 import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
 import { constraintId } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { useRecentlyUsedConstraints } from './useRecentlyUsedConstraints';
+import type { IConstraint } from 'interfaces/strategy';
 
 type IRecentlyUsedConstraintsProps = {
-    temporary?: string;
+    setConstraints?: React.Dispatch<React.SetStateAction<IConstraint[]>>;
 };
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -24,11 +25,11 @@ const StyledConstraintsContainer = styled('div')(({ theme }) => ({
 }));
 
 export const RecentlyUsedConstraints = ({
-    temporary,
+    setConstraints,
 }: IRecentlyUsedConstraintsProps) => {
     const { items: recentlyUsedConstraints } = useRecentlyUsedConstraints();
 
-    if (recentlyUsedConstraints.length === 0) {
+    if (recentlyUsedConstraints.length === 0 || !setConstraints) {
         return null;
     }
 
@@ -40,6 +41,9 @@ export const RecentlyUsedConstraints = ({
                     <ConstraintAccordionView
                         key={constraint[constraintId]}
                         constraint={constraint}
+                        onUse={() => {
+                            setConstraints((prev) => [...prev, constraint]);
+                        }}
                     />
                 ))}
             </StyledConstraintsContainer>

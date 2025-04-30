@@ -6,7 +6,7 @@ import Undo from '@mui/icons-material/Undo';
 import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
 import type { IConstraint } from 'interfaces/strategy';
 
-interface ConstraintAccordionHeaderActionsProps {
+interface ConstraintAccordionEditActionsProps {
     onDelete?: () => void;
     onEdit?: () => void;
     onUndo?: () => void;
@@ -23,14 +23,14 @@ const StyledHeaderActions = styled('div')(({ theme }) => ({
     },
 }));
 
-export const ConstraintAccordionHeaderActions = ({
+export const ConstraintAccordionEditActions = ({
     onEdit,
     onDelete,
     onUndo,
     constraintChanges = [],
     disableDelete = false,
     disableEdit = false,
-}: ConstraintAccordionHeaderActionsProps) => {
+}: ConstraintAccordionEditActionsProps) => {
     const onEditClick =
         onEdit &&
         ((event: React.SyntheticEvent) => {

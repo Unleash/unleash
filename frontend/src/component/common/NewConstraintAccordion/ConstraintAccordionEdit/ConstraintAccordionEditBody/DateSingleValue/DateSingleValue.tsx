@@ -5,6 +5,7 @@ import { useId, useMemo, useState } from 'react';
 import { styled } from '@mui/material';
 import TimezoneCountries from 'countries-and-timezones';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 interface IDateSingleValueProps {
     setValue: (value: string) => void;
@@ -27,9 +28,12 @@ const StyledInput = styled(Input)(({ theme }) => ({
         border: 'none',
         padding: 0,
     },
-    // '&::before': {
-    //     border: 'none',
-    // },
+}));
+
+const Container = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
 }));
 
 export const DateSingleValue = ({
@@ -39,7 +43,9 @@ export const DateSingleValue = ({
     setError,
 }: IDateSingleValueProps) => {
     const timezones = Object.values(
-        TimezoneCountries.getAllTimezones({ deprecated: false }),
+        TimezoneCountries.getAllTimezones({ deprecated: false }) as {
+            [timezone: string]: { name: string; utcOffsetStr: string };
+        },
     ).map((timezone) => ({
         key: timezone.name,
         label: `${timezone.name}`,
@@ -49,6 +55,7 @@ export const DateSingleValue = ({
         Intl.DateTimeFormat().resolvedOptions();
     const [pickedDate, setPickedDate] = useState(value || '');
     const inputId = useId();
+    const helpId = useId();
 
     const timezoneText = useMemo<string>(() => {
         const localTimezone = timezones.find(
@@ -64,12 +71,13 @@ export const DateSingleValue = ({
     if (!value) return null;
 
     return (
-        <>
+        <Container>
             <label htmlFor={inputId}>
                 <ScreenReaderOnly>Date</ScreenReaderOnly>
             </label>
             <StyledInput
                 id={inputId}
+                aria-describedby={helpId}
                 hiddenLabel
                 label=''
                 size='small'
@@ -89,6 +97,7 @@ export const DateSingleValue = ({
                 errorText={error}
                 required
             />
-        </>
+            <HelpIcon htmlTooltip tooltip={<p id={helpId}>{timezoneText}</p>} />
+        </Container>
     );
 };

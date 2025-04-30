@@ -3,7 +3,7 @@ import { promisify } from 'util';
 import { type IUnleashConfig, NONE } from '../types/index.js';
 import Controller from './controller.js';
 import type { IAuthRequest } from './unleash-types.js';
-import type { IUnleashServices } from '../types/index.js';
+import type { IUnleashServices } from '../services/index.js';
 import type SessionService from '../services/session-service.js';
 
 class LogoutController extends Controller {

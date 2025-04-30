@@ -1,6 +1,6 @@
 import type { Application } from 'express';
 import AuthenticationRequired from '../types/authentication-required.js';
-import type { IUnleashServices } from '../types/services.js';
+import type { IUnleashServices } from '../services/index.js';
 import type { IUnleashConfig } from '../types/option.js';
 import ApiUser from '../types/api-user.js';
 import { ApiTokenType } from '../types/models/api-token.js';

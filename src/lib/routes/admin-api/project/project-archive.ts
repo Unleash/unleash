@@ -3,7 +3,6 @@ import type { IUnleashConfig } from '../../../types/option.js';
 import {
     type IFlagResolver,
     type IProjectParam,
-    type IUnleashServices,
     UPDATE_FEATURE,
 } from '../../../types/index.js';
 import type { Logger } from '../../../logger.js';
@@ -25,6 +24,7 @@ import type {
     TransactionCreator,
     UnleashTransaction,
 } from '../../../db/transaction.js';
+import type { IUnleashServices } from '../../../services/index.js';
 
 const PATH = '/:projectId';
 const PATH_ARCHIVE = `${PATH}/archive`;

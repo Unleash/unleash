@@ -9,7 +9,7 @@ import {
     NONE,
 } from '../../types/permissions.js';
 import type { IUnleashConfig } from '../../types/option.js';
-import type { IUnleashServices } from '../../types/services.js';
+import type { IUnleashServices } from '../../services/index.js';
 import type ContextService from './context-service.js';
 import type { Logger } from '../../logger.js';
 import type { IAuthRequest } from '../../routes/unleash-types.js';

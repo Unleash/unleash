@@ -6,7 +6,7 @@ import type User from './user.js';
 import type { IAuditUser, IUser } from './user.js';
 import type { IUnleashConfig } from './option.js';
 import type { IUnleashStores } from './stores.js';
-import type { IUnleashServices } from './services.js';
+import type { IUnleashServices } from '../services/index.js';
 
 export interface AuthedRequest extends Request {
     user: User;

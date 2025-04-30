@@ -3,7 +3,7 @@ import Controller from '../../routes/controller.js';
 
 import { NONE } from '../../types/permissions.js';
 import type { IUnleashConfig } from '../../types/option.js';
-import type { IUnleashServices } from '../../types/services.js';
+import type { IUnleashServices } from '../../services/index.js';
 import type { Logger } from '../../logger.js';
 
 import {

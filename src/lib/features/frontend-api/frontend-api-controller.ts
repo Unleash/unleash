@@ -3,7 +3,6 @@ import Controller from '../../routes/controller.js';
 import {
     type IFlagResolver,
     type IUnleashConfig,
-    type IUnleashServices,
     type IUser,
     NONE,
 } from '../../types/index.js';
@@ -28,6 +27,7 @@ import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
 import metricsHelper from '../../util/metrics-helper.js';
 import { FUNCTION_TIME } from '../../metric-events.js';
+import type { IUnleashServices } from '../../services/index.js';
 
 interface ApiUserRequest<
     PARAM = any,

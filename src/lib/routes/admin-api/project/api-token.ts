@@ -15,7 +15,6 @@ import {
     CREATE_PROJECT_API_TOKEN,
     DELETE_PROJECT_API_TOKEN,
     type IUnleashConfig,
-    type IUnleashServices,
     READ_PROJECT_API_TOKEN,
     serializeDates,
 } from '../../../types/index.js';
@@ -29,6 +28,7 @@ import type {
     OpenApiService,
     ProjectService,
     FrontendApiService,
+    IUnleashServices,
 } from '../../../services/index.js';
 import type { IAuthRequest } from '../../unleash-types.js';
 import Controller from '../../controller.js';

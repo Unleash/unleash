@@ -6,7 +6,7 @@ import {
 import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import getLogger from '../../../fixtures/no-logger.js';
 import type { IUnleashConfig } from '../../../../lib/types/option.js';
-import type { IUnleashServices } from '../../../../lib/types/services.js';
+import type { IUnleashServices } from '../../../../lib/services/index.js';
 import type { IUnleashStores } from '../../../../lib/types/index.js';
 
 let stores: IUnleashStores;

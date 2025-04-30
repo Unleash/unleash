@@ -7,7 +7,6 @@ import type {
     IClientSegment,
     IFlagResolver,
     IUnleashConfig,
-    IUnleashServices,
 } from '../../types/index.js';
 import type FeatureToggleService from '../feature-toggle/feature-toggle-service.js';
 import type { Logger } from '../../logger.js';
@@ -41,6 +40,7 @@ import {
 } from '../../internals.js';
 import isEqual from 'lodash.isequal';
 import { diff } from 'json-diff';
+import type { IUnleashServices } from '../../services/index.js';
 
 const version = 2;
 

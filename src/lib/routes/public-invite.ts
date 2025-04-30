@@ -4,7 +4,7 @@ import Controller from './controller.js';
 import { NONE } from '../types/permissions.js';
 import type { Logger } from '../logger.js';
 import type { IAuthRequest } from './unleash-types.js';
-import type { IUnleashConfig, IUnleashServices } from '../types/index.js';
+import type { IUnleashConfig } from '../types/index.js';
 import type { OpenApiService } from '../services/openapi-service.js';
 import { createRequestSchema } from '../openapi/util/create-request-schema.js';
 import { createResponseSchema } from '../openapi/util/create-response-schema.js';
@@ -16,6 +16,7 @@ import {
 import type { PublicSignupTokenService } from '../services/public-signup-token-service.js';
 import { type UserSchema, userSchema } from '../openapi/spec/user-schema.js';
 import type { CreateInvitedUserSchema } from '../openapi/spec/create-invited-user-schema.js';
+import type { IUnleashServices } from '../services/index.js';
 
 interface TokenParam {
     token: string;

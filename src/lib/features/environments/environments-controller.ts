@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import Controller from '../../routes/controller.js';
-import type { IUnleashServices } from '../../types/services.js';
+import type { IUnleashServices } from '../../services/index.js';
 import type { IUnleashConfig } from '../../types/option.js';
 import type EnvironmentService from '../project-environments/environment-service.js';
 import type { Logger } from '../../logger.js';

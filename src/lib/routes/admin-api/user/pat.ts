@@ -1,11 +1,7 @@
 import type { Response } from 'express';
 import Controller from '../../controller.js';
 import type { Logger } from '../../../logger.js';
-import type {
-    IFlagResolver,
-    IUnleashConfig,
-    IUnleashServices,
-} from '../../../types/index.js';
+import type { IFlagResolver, IUnleashConfig } from '../../../types/index.js';
 import { createRequestSchema } from '../../../openapi/util/create-request-schema.js';
 import {
     createResponseSchema,
@@ -31,6 +27,7 @@ import {
     createPatSchema,
 } from '../../../openapi/spec/create-pat-schema.js';
 import { ForbiddenError, NotFoundError } from '../../../error/index.js';
+import type { IUnleashServices } from '../../../services/index.js';
 
 export default class PatController extends Controller {
     private patService: PatService;

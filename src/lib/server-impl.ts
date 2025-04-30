@@ -5,7 +5,7 @@ import { migrateDb } from '../migrator.js';
 import getApp from './app.js';
 import { createMetricsMonitor } from './metrics.js';
 import { createStores } from './db/index.js';
-import { createServices } from './services/index.js';
+import { createServices, type IUnleashServices } from './services/index.js';
 import { createConfig } from './create-config.js';
 import registerGracefulShutdown from './util/graceful-shutdown.js';
 import { createDb } from './db/db-pool.js';
@@ -17,7 +17,6 @@ import {
     type IUnleash,
     type IUnleashConfig,
     type IUnleashOptions,
-    type IUnleashServices,
     RoleName,
 } from './types/index.js';
 

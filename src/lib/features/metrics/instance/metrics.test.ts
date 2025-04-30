@@ -2,12 +2,14 @@ import supertest, { type Test } from 'supertest';
 import getApp from '../../../app.js';
 import { createTestConfig } from '../../../../test/config/test-config.js';
 import { clientMetricsSchema } from '../shared/schema.js';
-import { createServices } from '../../../services/index.js';
+import {
+    type IUnleashServices,
+    createServices,
+} from '../../../services/index.js';
 import {
     IAuthType,
     type IUnleashConfig,
     type IUnleashOptions,
-    type IUnleashServices,
     type IUnleashStores,
 } from '../../../types/index.js';
 import dbInit, {

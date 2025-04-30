@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import type { IUnleashServices } from '../../types/services.js';
+import type { IUnleashServices } from '../../services/index.js';
 import type FeatureTypeService from '../../services/feature-type-service.js';
 import type { Logger } from '../../logger.js';
 import type { IUnleashConfig } from '../../types/option.js';

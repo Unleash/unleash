@@ -2,7 +2,6 @@ import crypto from 'node:crypto';
 import type {
     IAuditUser,
     IUnleashConfig,
-    IUnleashServices,
     IUnleashStores,
 } from '../../types/index.js';
 import type { Logger } from '../../logger.js';
@@ -28,6 +27,7 @@ import { BadDataError, InvalidTokenError } from '../../error/index.js';
 import { FRONTEND_API_REPOSITORY_CREATED } from '../../metric-events.js';
 import { FrontendApiRepository } from './frontend-api-repository.js';
 import type { GlobalFrontendApiCache } from './global-frontend-api-cache.js';
+import type { IUnleashServices } from '../../services/index.js';
 
 export type Config = Pick<
     IUnleashConfig,

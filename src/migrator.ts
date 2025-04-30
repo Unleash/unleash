@@ -14,7 +14,7 @@ async function noDatabaseUrl<T>(fn: () => Promise<T>): Promise<T> {
     return result;
 }
 export async function migrateDb(
-    { db }: IUnleashConfig,
+    { db }: Pick<IUnleashConfig, 'db'>,
     stopAt?: string,
 ): Promise<void> {
     return noDatabaseUrl(async () => {

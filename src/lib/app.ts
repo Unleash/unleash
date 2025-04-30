@@ -10,7 +10,7 @@ import {
 } from './middleware/index.js';
 import rbacMiddleware from './middleware/rbac-middleware.js';
 import apiTokenMiddleware from './middleware/api-token-middleware.js';
-import type { IUnleashServices } from './types/services.js';
+import type { IUnleashServices } from './services/index.js';
 import { IAuthType, type IUnleashConfig } from './types/option.js';
 import type { IUnleashStores } from './types/index.js';
 

@@ -20,8 +20,8 @@ import type { IUser } from '../../types/user.js';
 import type { IUnleashConfig } from '../../types/option.js';
 import { ApiTokenType, type IApiToken } from '../../types/models/api-token.js';
 import { createApiToken } from '../../schema/api-token-schema.js';
-import type { OpenApiService } from '../../services/openapi-service.js';
-import type { IFlagResolver, IUnleashServices } from '../../types/index.js';
+import type { OpenApiService, IUnleashServices } from '../../services/index.js';
+import type { IFlagResolver } from '../../types/index.js';
 import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
 import {
     createResponseSchema,

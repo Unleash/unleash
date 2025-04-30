@@ -4,7 +4,7 @@ import {
     TemplateFormat,
 } from '../../services/email-service.js';
 import type { IUnleashConfig } from '../../types/option.js';
-import type { IUnleashServices } from '../../types/services.js';
+import type { IUnleashServices } from '../../services/index.js';
 import type { Request, Response } from 'express';
 import Controller from '../controller.js';
 import type { Logger } from '../../logger.js';

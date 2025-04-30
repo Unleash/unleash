@@ -11,7 +11,6 @@ import {
     type FeatureToggleView,
     type IFlagResolver,
     type IUnleashConfig,
-    type IUnleashServices,
     NONE,
     serializeDates,
     UPDATE_FEATURE,
@@ -47,6 +46,7 @@ import type {
     FeatureTagService,
     FeatureToggleService,
     OpenApiService,
+    IUnleashServices,
 } from '../../services/index.js';
 import { querySchema } from '../../schema/feature-schema.js';
 import type { BatchStaleSchema } from '../../openapi/spec/batch-stale-schema.js';

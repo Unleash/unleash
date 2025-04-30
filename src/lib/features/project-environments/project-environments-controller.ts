@@ -2,7 +2,6 @@ import type { Response } from 'express';
 import Controller from '../../routes/controller.js';
 import {
     type IUnleashConfig,
-    type IUnleashServices,
     serializeDates,
     UPDATE_PROJECT,
     PROJECT_DEFAULT_STRATEGY_WRITE,
@@ -18,7 +17,11 @@ import {
     getStandardResponses,
     type ProjectEnvironmentSchema,
 } from '../../openapi/index.js';
-import type { OpenApiService, ProjectService } from '../../services/index.js';
+import type {
+    IUnleashServices,
+    OpenApiService,
+    ProjectService,
+} from '../../services/index.js';
 import type { IAuthRequest } from '../../routes/unleash-types.js';
 import type { WithTransactional } from '../../db/transaction.js';
 

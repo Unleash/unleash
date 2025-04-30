@@ -1,7 +1,7 @@
 import { Parser } from 'json2csv';
 import type { Response } from 'express';
 import type { AuthedRequest } from '../../types/core.js';
-import type { IUnleashServices } from '../../types/services.js';
+import type { IUnleashServices } from '../../services/index.js';
 import type { IUnleashConfig } from '../../types/option.js';
 import Controller from '../controller.js';
 import { NONE } from '../../types/permissions.js';

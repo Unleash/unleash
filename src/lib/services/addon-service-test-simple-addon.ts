@@ -8,7 +8,8 @@ import {
     FEATURE_UPDATED,
     type IEvent,
 } from '../types/events.js';
-import type { IFlagResolver, IntegrationEventsService } from '../internals.js';
+import type { IFlagResolver } from '../internals.js';
+import type { IntegrationEventsService } from './index.js';
 
 const ARGS: IAddonConfig = {
     getLogger,

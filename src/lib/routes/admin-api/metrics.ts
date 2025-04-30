@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import Controller from '../controller.js';
 import { NONE, UPDATE_APPLICATION } from '../../types/permissions.js';
 import type { IUnleashConfig } from '../../types/option.js';
-import type { IUnleashServices } from '../../types/services.js';
+import type { IUnleashServices } from '../../services/index.js';
 import type { Logger } from '../../logger.js';
 import type ClientInstanceService from '../../features/metrics/instance/instance-service.js';
 import { createRequestSchema } from '../../openapi/util/create-request-schema.js';

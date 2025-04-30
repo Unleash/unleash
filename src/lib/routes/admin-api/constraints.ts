@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import type FeatureToggleService from '../../features/feature-toggle/feature-toggle-service.js';
 import type { IUnleashConfig } from '../../types/option.js';
-import type { IUnleashServices } from '../../types/index.js';
+import type { IUnleashServices } from '../../services/index.js';
 import { NONE } from '../../types/permissions.js';
 import Controller from '../controller.js';
 import type { Logger } from '../../logger.js';

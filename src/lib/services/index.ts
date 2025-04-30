@@ -1,8 +1,4 @@
-import type {
-    IUnleashConfig,
-    IUnleashServices,
-    IUnleashStores,
-} from '../types/index.js';
+import type { IUnleashConfig, IUnleashStores } from '../types/index.js';
 import FeatureTypeService from './feature-type-service.js';
 import EventService from '../features/events/event-service.js';
 import HealthService from './health-service.js';
@@ -52,7 +48,11 @@ import {
     deferredExportImportTogglesService,
 } from '../features/export-import-toggles/createExportImportService.js';
 import type { Db } from '../db/db.js';
-import { withFakeTransactional, withTransactional } from '../db/transaction.js';
+import {
+    withFakeTransactional,
+    type WithTransactional,
+    withTransactional,
+} from '../db/transaction.js';
 import {
     createChangeRequestAccessReadModel,
     createFakeChangeRequestAccessService,
@@ -158,6 +158,12 @@ import {
     createFakeContextService,
 } from '../features/context/createContextService.js';
 import { UniqueConnectionService } from '../features/unique-connection/unique-connection-service.js';
+import type { ISegmentService } from '../internals.js';
+import type {
+    IExportService,
+    IImportService,
+} from '../features/export-import-toggles/export-import-service.js';
+import type { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType.js';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -490,7 +496,6 @@ export const createServices = (
         projectStatusService,
         transactionalUserSubscriptionsService,
         uniqueConnectionService,
-        featureLifecycleReadModel,
     };
 };
 
@@ -547,3 +552,75 @@ export {
     UniqueConnectionService,
     FeatureLifecycleReadModel,
 };
+
+export interface IUnleashServices {
+    transactionalAccessService: WithTransactional<AccessService>;
+    accessService: AccessService;
+    accountService: AccountService;
+    addonService: AddonService;
+    apiTokenService: ApiTokenService;
+    clientInstanceService: ClientInstanceService;
+    clientMetricsServiceV2: ClientMetricsServiceV2;
+    contextService: ContextService;
+    transactionalContextService: WithTransactional<ContextService>;
+    emailService: EmailService;
+    environmentService: EnvironmentService;
+    transactionalEnvironmentService: WithTransactional<EnvironmentService>;
+    eventService: EventService;
+    edgeService: EdgeService;
+    featureTagService: FeatureTagService;
+    featureToggleService: FeatureToggleService;
+    featureTypeService: FeatureTypeService;
+    groupService: GroupService;
+    healthService: HealthService;
+    projectHealthService: ProjectHealthService;
+    projectService: ProjectService;
+    transactionalProjectService: WithTransactional<ProjectService>;
+    playgroundService: PlaygroundService;
+    frontendApiService: FrontendApiService;
+    publicSignupTokenService: PublicSignupTokenService;
+    resetTokenService: ResetTokenService;
+    sessionService: SessionService;
+    settingService: SettingService;
+    strategyService: StrategyService;
+    tagService: TagService;
+    tagTypeService: TagTypeService;
+    transactionalTagTypeService: WithTransactional<TagTypeService>;
+    userFeedbackService: UserFeedbackService;
+    userService: UserService;
+    versionService: VersionService;
+    userSplashService: UserSplashService;
+    segmentService: ISegmentService;
+    openApiService: OpenApiService;
+    clientSpecService: ClientSpecService;
+    patService: PatService;
+    lastSeenService: LastSeenService;
+    instanceStatsService: InstanceStatsService;
+    favoritesService: FavoritesService;
+    maintenanceService: MaintenanceService;
+    exportService: IExportService;
+    importService: WithTransactional<IImportService>;
+    configurationRevisionService: ConfigurationRevisionService;
+    schedulerService: SchedulerService;
+    eventAnnouncerService: EventAnnouncerService;
+    transactionalFeatureToggleService: (
+        db: Knex.Transaction,
+    ) => FeatureToggleService;
+    transactionalGroupService: (db: Knex.Transaction) => GroupService;
+    privateProjectChecker: IPrivateProjectChecker;
+    dependentFeaturesService: DependentFeaturesService;
+    transactionalDependentFeaturesService: WithTransactional<DependentFeaturesService>;
+    clientFeatureToggleService: ClientFeatureToggleService;
+    featureSearchService: FeatureSearchService;
+    inactiveUsersService: InactiveUsersService;
+    projectInsightsService: ProjectInsightsService;
+    jobService: JobService;
+    featureLifecycleService: FeatureLifecycleService;
+    transactionalFeatureLifecycleService: WithTransactional<FeatureLifecycleService>;
+    integrationEventsService: IntegrationEventsService;
+    onboardingService: OnboardingService;
+    personalDashboardService: PersonalDashboardService;
+    projectStatusService: ProjectStatusService;
+    transactionalUserSubscriptionsService: WithTransactional<UserSubscriptionsService>;
+    uniqueConnectionService: UniqueConnectionService;
+}

@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import type { IUnleashConfig } from '../../types/option.js';
-import type { IUnleashServices } from '../../types/services.js';
+import type { IUnleashServices } from '../../services/index.js';
 import type EventService from '../../features/events/event-service.js';
 import { ADMIN, NONE } from '../../types/permissions.js';
 import type { IEvent, IEventList } from '../../types/events.js';

@@ -4,7 +4,6 @@ import {
     type IFlagResolver,
     type IProjectParam,
     type IUnleashConfig,
-    type IUnleashServices,
     NONE,
     serializeDates,
 } from '../../types/index.js';
@@ -15,7 +14,7 @@ import {
     type ProjectInsightsSchema,
 } from '../../openapi/index.js';
 import { getStandardResponses } from '../../openapi/util/standard-responses.js';
-import type { OpenApiService } from '../../services/index.js';
+import type { IUnleashServices, OpenApiService } from '../../services/index.js';
 import type { IAuthRequest } from '../../routes/unleash-types.js';
 
 export default class ProjectInsightsController extends Controller {

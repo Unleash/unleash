@@ -16,7 +16,8 @@ import type {
     IUnleashOptions,
     Knex,
 } from '../../../lib/server-impl.js';
-import { Client } from 'pg';
+import postgresPkg from 'pg';
+const { Client } = postgresPkg;
 import { v4 as uuidv4 } from 'uuid';
 
 // require('db-migrate-shared').log.silence(false);

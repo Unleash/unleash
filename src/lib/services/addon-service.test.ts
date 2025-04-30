@@ -20,11 +20,9 @@ import {
     SYSTEM_USER,
     TEST_AUDIT_USER,
 } from '../types/index.js';
-import {
-    createFakeEventsService,
-    IntegrationEventsService,
-} from '../internals.js';
+import { createFakeEventsService } from '../internals.js';
 import { createTestConfig } from '../../test/config/test-config.js';
+import { IntegrationEventsService } from './index.js';
 
 const MASKED_VALUE = '*****';
 

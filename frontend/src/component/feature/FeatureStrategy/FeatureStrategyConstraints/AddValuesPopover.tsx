@@ -22,12 +22,6 @@ const InputRow = styled('div')(({ theme }) => ({
     width: '100%',
 }));
 
-const ErrorMessage = styled('div')(({ theme }) => ({
-    color: theme.palette.error.main,
-    fontSize: theme.typography.caption.fontSize,
-    marginBottom: theme.spacing(1),
-}));
-
 export type OnAddActions = {
     setError: (error: string) => void;
     clearInput: () => void;
@@ -93,7 +87,6 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
                     }
                 }}
             >
-                {error && <ErrorMessage>{error}</ErrorMessage>}
                 <InputRow>
                     <ScreenReaderOnly>
                         <label htmlFor={inputId}>Constraint Value</label>
@@ -111,6 +104,8 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
                         fullWidth
                         inputRef={inputRef}
                         autoFocus
+                        error={!!error}
+                        helperText={error}
                     />
                     <Button
                         variant='text'

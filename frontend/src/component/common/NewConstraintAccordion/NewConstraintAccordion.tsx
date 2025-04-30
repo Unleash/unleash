@@ -39,5 +39,11 @@ export const NewConstraintAccordion = ({
         );
     }
 
-    return <ConstraintAccordionView constraint={constraint} />;
+    return (
+        <ConstraintAccordionView
+            constraint={constraint}
+            onEdit={onEdit}
+            onDelete={onDelete}
+        />
+    );
 };

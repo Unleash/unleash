@@ -3,11 +3,15 @@ import type { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo';
 import { ConstraintAccordionViewHeaderInfo as LegacyConstraintAccordionViewHeaderInfo } from './LegacyConstraintAccordionViewHeaderInfo';
 import { styled } from '@mui/system';
+import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ConstraintAccordionViewActions } from '../../ConstraintAccordionViewActions/ConstraintAccordionViewActions';
+import { ConstraintAccordionEditActions } from '../../ConstraintAccordionEditActions/ConstraintAccordionEditActions';
 
 interface IConstraintAccordionViewHeaderProps {
     constraint: IConstraint;
+    onDelete?: () => void;
+    onEdit?: () => void;
     onUse?: () => void;
     singleValue: boolean;
     expanded: boolean;
@@ -29,6 +33,8 @@ const StyledContainer = styled('div')(({ theme }) => ({
 
 export const ConstraintAccordionViewHeader = ({
     constraint,
+    onEdit,
+    onDelete,
     onUse,
     singleValue,
     allowExpand,
@@ -36,7 +42,13 @@ export const ConstraintAccordionViewHeader = ({
     compact,
     disabled,
 }: IConstraintAccordionViewHeaderProps) => {
+    const { context } = useUnleashContext();
     const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
+    const { contextName } = constraint;
+
+    const disableEdit = !context
+        .map((contextDefinition) => contextDefinition.name)
+        .includes(contextName);
 
     return (
         <StyledContainer>
@@ -59,7 +71,15 @@ export const ConstraintAccordionViewHeader = ({
                     disabled={disabled}
                 />
             )}
-            <ConstraintAccordionViewActions onUse={onUse} />
+            {onUse ? (
+                <ConstraintAccordionViewActions onUse={onUse} />
+            ) : (
+                <ConstraintAccordionEditActions
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                    disableEdit={disableEdit}
+                />
+            )}
         </StyledContainer>
     );
 };

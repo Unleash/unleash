@@ -13,7 +13,7 @@ readdir(directoryPath, (err, files) => {
 
     const exports = files
         .filter((file) => file.includes('schema.ts')) // Filter files by 'schema.ts'
-        .map((file) => `export * from './${file.replace('.ts', '')}';`) // Create export statements
+        .map((file) => `export * from './${file.replace('.ts', '.js')}';`) // Create export statements
         .join('\n');
 
     // Append export statements to index.ts

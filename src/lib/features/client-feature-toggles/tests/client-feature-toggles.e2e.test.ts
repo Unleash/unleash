@@ -8,7 +8,10 @@ import {
 } from '../../../../test/e2e/helpers/test-helper.js';
 import getLogger from '../../../../test/fixtures/no-logger.js';
 import { DEFAULT_ENV } from '../../../util/constants.js';
-import { type IUserWithRootRole, TEST_AUDIT_USER } from '../../../types/index.js';
+import {
+    type IUserWithRootRole,
+    TEST_AUDIT_USER,
+} from '../../../types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

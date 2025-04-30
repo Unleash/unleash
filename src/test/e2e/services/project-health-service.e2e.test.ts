@@ -2,7 +2,10 @@ import dbInit, { type ITestDb } from '../helpers/database-init.js';
 import getLogger from '../../fixtures/no-logger.js';
 import ProjectHealthService from '../../../lib/services/project-health-service.js';
 import { createTestConfig } from '../../config/test-config.js';
-import { type IUnleashStores, TEST_AUDIT_USER } from '../../../lib/types/index.js';
+import {
+    type IUnleashStores,
+    TEST_AUDIT_USER,
+} from '../../../lib/types/index.js';
 import type { IUser } from '../../../lib/server-impl.js';
 import { createProjectService } from '../../../lib/features/index.js';
 import type { ProjectService } from '../../../lib/services/index.js';

@@ -21,7 +21,10 @@ import {
     UPDATE_CLIENT_API_TOKEN,
 } from '../../../../lib/types/index.js';
 import { addDays } from 'date-fns';
-import type { AccessService, UserService } from '../../../../lib/services/index.js';
+import type {
+    AccessService,
+    UserService,
+} from '../../../../lib/services/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

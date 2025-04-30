@@ -10,7 +10,10 @@ import {
 } from '../../../../lib/types/events.js';
 import { randomId } from '../../../../lib/util/random-id.js';
 import type { EventService } from '../../../../lib/services/index.js';
-import { type IUnleashConfig, SYSTEM_USER } from '../../../../lib/types/index.js';
+import {
+    type IUnleashConfig,
+    SYSTEM_USER,
+} from '../../../../lib/types/index.js';
 import { createEventsService } from '../../../../lib/features/index.js';
 import { createTestConfig } from '../../../config/test-config.js';
 

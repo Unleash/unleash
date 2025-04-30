@@ -8,7 +8,10 @@ import {
     RoleName,
     USER_CREATED,
 } from '../../../../lib/types/index.js';
-import type { AccessService, EventService } from '../../../../lib/services/index.js';
+import type {
+    AccessService,
+    EventService,
+} from '../../../../lib/services/index.js';
 import getLogger from '../../../fixtures/no-logger.js';
 import {
     type IUnleashTest,

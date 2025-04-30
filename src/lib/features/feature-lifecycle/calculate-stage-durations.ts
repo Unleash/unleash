@@ -1,4 +1,7 @@
-import type { IProjectLifecycleStageDuration, StageName } from '../../types/index.js';
+import type {
+    IProjectLifecycleStageDuration,
+    StageName,
+} from '../../types/index.js';
 import type { FeatureLifecycleProjectItem } from './feature-lifecycle-store-type.js';
 import { differenceInMinutes } from 'date-fns';
 import { median } from '../../util/median.js';

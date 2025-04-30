@@ -6,7 +6,10 @@ import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import getLogger from '../../../fixtures/no-logger.js';
 import { DEFAULT_ENV } from '../../../../lib/util/constants.js';
 import type User from '../../../../lib/types/user.js';
-import { SYSTEM_USER_AUDIT, TEST_AUDIT_USER } from '../../../../lib/types/index.js';
+import {
+    SYSTEM_USER_AUDIT,
+    TEST_AUDIT_USER,
+} from '../../../../lib/types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

@@ -4,7 +4,6 @@ import {
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper.js';
 import getLogger from '../../../fixtures/no-logger.js';
-
 const MASKED_VALUE = '*****';
 
 let app: IUnleashTest;

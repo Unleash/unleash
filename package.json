@@ -85,7 +85,12 @@
     "globalSetup": "./scripts/jest-setup.ts",
     "transform": {
       "^.+\\.tsx?$": [
-        "@swc/jest"
+        "@swc/jest",
+        {
+          "jsc": {
+            "target": "ESNext"
+          }
+        }
       ]
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
@@ -107,7 +112,8 @@
       "/dist/",
       "/src/migrations",
       "/src/test"
-    ]
+    ],
+    "extensionsToTreatAsEsm": [".ts", ".tsx"]
   },
   "dependencies": {
     "@slack/web-api": "^7.9.1",

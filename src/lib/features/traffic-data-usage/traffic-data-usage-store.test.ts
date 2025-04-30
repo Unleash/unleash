@@ -8,7 +8,10 @@ import dbInit, {
     type ITestDb,
 } from '../../../test/e2e/helpers/database-init.js';
 import getLogger from '../../../test/fixtures/no-logger.js';
-import type { ITrafficDataUsageStore, IUnleashStores } from '../../types/index.js';
+import type {
+    ITrafficDataUsageStore,
+    IUnleashStores,
+} from '../../types/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

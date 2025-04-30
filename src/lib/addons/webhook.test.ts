@@ -3,6 +3,7 @@ import type { Logger } from '../logger.js';
 import { FEATURE_CREATED, type IEvent } from '../types/events.js';
 
 import WebhookAddon from './webhook.js';
+import { jest } from '@jest/globals';
 
 import noLogger from '../../test/fixtures/no-logger.js';
 import {

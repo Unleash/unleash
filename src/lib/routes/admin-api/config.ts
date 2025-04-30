@@ -24,7 +24,10 @@ import NotFoundError from '../../error/notfound-error.js';
 import type { SetUiConfigSchema } from '../../openapi/spec/set-ui-config-schema.js';
 import type { SetCorsSchema } from '../../openapi/spec/set-cors-schema.js';
 import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
-import type { FrontendApiService, SessionService } from '../../services/index.js';
+import type {
+    FrontendApiService,
+    SessionService,
+} from '../../services/index.js';
 import type MaintenanceService from '../../features/maintenance/maintenance-service.js';
 import type ClientInstanceService from '../../features/metrics/instance/instance-service.js';
 import type { IFlagResolver } from '../../types/index.js';

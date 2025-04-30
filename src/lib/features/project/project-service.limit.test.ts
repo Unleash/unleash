@@ -1,4 +1,8 @@
-import type { IAuditUser, IFlagResolver, IUnleashConfig } from '../../types/index.js';
+import type {
+    IAuditUser,
+    IFlagResolver,
+    IUnleashConfig,
+} from '../../types/index.js';
 import { createFakeProjectService } from './createProjectService.js';
 import type { IUser } from '../../types/index.js';
 import { createTestConfig } from '../../../test/config/test-config.js';

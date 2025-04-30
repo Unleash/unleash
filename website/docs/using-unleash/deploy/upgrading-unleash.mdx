@@ -1,109 +1,96 @@
 ---
 title: Upgrading Unleash
+description: "Migration guides and breaking changes for upgrading Unleash versions."
+toc_max_heading_level: 2
 ---
 import VideoContent from '@site/src/components/VideoContent.jsx'
 
-Generally, the intention is that `unleash-server` should always provide support for clients one major version lower than the current one. This should make it possible to upgrade `unleash` gradually.
+This guide provides recommendations for upgrading your self-hosted Unleash instance, particularly when moving between major versions using Docker deployments.
 
-## Upgrading to v6 from v5
+Unleash aims to support client SDKs connecting to a server version that is one major version newer than the client, facilitating gradual upgrades.
 
-[Unleash v6](https://github.com/Unleash/unleash/issues/4380) was released on June 6th, 2024. **We expect this upgrade to be straightforward**, provided you have followed the previous migration guides on this page. We're removing some features that were deprecated in version 5 and marking some features as deprecated, but these will continue to be supported during version 6. Here's the list of the outstanding changes you need to take into account when migrating from v5 to v6:
+Before you begin any major version upgrade, we strongly recommend performing a full backup of your PostgreSQL database. This ensures you can restore your instance if issues occur during the upgrade.
 
-### Self-hosted enterprise customers are now required to use a License Key
+## Upgrading from v5 to v6
 
-Before upgrading you should make sure to get a valid license key. More information in [this page](../deploy/license-keys.mdx).
+[Unleash v6](https://github.com/Unleash/unleash/issues/4380), released in June 2024, introduced several key changes. Ensure you address the following before or during your upgrade to v6.
 
-- For Unleash hosted (Pro/Enterprise), license management is not necessary and is handled automatically.
-- For Unleash Open Source, no license is necessary and these steps do not apply.
+### Database requirement: PostgreSQL v13+
 
-### Remove Passport libs from the official open source Docker distribution
+Unleash v6 requires **PostgreSQL version 13 or later**. Running v6 with older PostgreSQL versions (10, 11, 12) is unsupported, though the server might start with a warning message.
+Plan to upgrade your PostgreSQL instance to a supported version before or alongside your Unleash upgrade.
 
-*If you're not using the official open source image, you can safely ignore this change.* 
+### License key required for self-hosted Enterprise
 
-The [official open source Docker image](https://hub.docker.com/r/unleashorg/unleash-server) no longer includes these custom authentication libraries. If you're using this feature, there is a [community image](https://github.com/Unleash/unleash-docker-community) that contains (and will continue to contain) these dependencies. 
+Starting with v6, self-hosted Unleash Enterprise instances require a valid license key to function. Obtain your [license key](/using-unleash/deploy/license-keys) before upgrading and ensure the license key is configured correctly.
 
-### Drop support for PostgreSQL versions 10, 11 and 12
+### Passport libraries removed from Open Source Docker distribution
 
-*If you're using PostgreSQL 13 or above you can safely ignore this change.*
+The official `unleashorg/unleash-server` Docker image for Unleash Open Source no longer includes libraries previously used for certain custom authentication methods.
 
-Unleash v6 will output an error message when starting with an unsupported version but continue to run. We recommend upgrading to a supported version as soon as possible.
+If you were relying on these libraries via a custom authentication hook built into a custom image based on the official one, your authentication will break.
 
-### Update to Node.js version 20+
+Consider migrating to [Unleash Enterprise](https://www.getunleash.io/pricing) to use [single sign-on](/reference/sso), use password-based authentication, or explore [community-maintained images](https://github.com/Unleash/unleash-docker-community) that may still include these dependencies if absolutely necessary.
 
-Unleash v6 drops support for Node.js versions below 20, which is the [active LTS at the time of release](https://github.com/nodejs/Release/blob/6209d04302e62156b964a605f619283582334c95/README.md#release-schedule).
+### API changes
 
-### Remove /edge/metrics endpoint
+- The Unleash Edge metrics endpoint `/edge/metrics` has been removed. If you use Unleash Edge, ensure your Edge instances are upgraded to **version 19.1.3 or later** before upgrading the Unleash server to v6 to maintain metrics collection. Core flag evaluation will still work with older Edge versions.
+- The legacy feature endpoint `/api/feature`, [deprecated in v4](#legacy-v2-routes-removed), has been removed. Update any integrations still using this endpoint.
+- Deprecated import service: The older file-based import functionality at startup has been removed. Use the current [environment import/export features](/reference/environment-import-export) or associated APIs.
 
-*If you're not using Unleash Edge, you can safely ignore this change.*
+### Dropped Internet Explorer (IE) Support
 
-If you're using Unleash Edge to connect to Unleash, make sure to first upgrade Unleash Edge to version 19.1.3 or above. If you're using an older version of Edge, the core feature flag functionality will still work, but you will not be able to gather any metrics.
+Support for Internet Explorer has been removed, aligning with upstream dependencies (React v18) and Microsoft's end-of-support for the browser.
 
-### Remove legacy `/api/feature` endpoint
+### Deprecated custom strategies
 
-If you're still using this endpoint, check out the [deprecation notice in v4](#4-legacy-v2-routes-removed).
+While still functional in v6, custom strategies are deprecated in favor of using standard strategies combined with [strategy constraints](/reference/strategy-constraints).
+Consider migrating if possible, as constraints offer similar flexibility without requiring custom code distribution with SDKs.
 
-### Remove deprecated [import service](../../how-to/how-to-import-export)
+### High availability upgrade considerations
 
-Unleash v6 drops support for file based import at startup. If you're using this functionality, please check out the issue about adding this functionality to the current import service ([#7128](https://github.com/Unleash/unleash/issues/7128)).
+If you run multiple Unleash instances in a high-availability setup and are upgrading from a version **below 5.6.11** directly to **version 5.7 or higher**, you might experience temporary UI unavailability during a rolling upgrade while instances with different versions (`<5.7` and `>=5.7`) are running simultaneously.
+SDKs are not affected.
 
-If you're using that endpoint for a custom integration, you should migrate to the [new import service](../../how-to/how-to-environment-import-export) ([new import/export api docs](../../reference/api/unleash/import-export)). 
-For a comparison between the two, refer to the [environment import/export vs instance import/export](../../how-to/how-to-environment-import-export#environment-importexport-vs-the-instance-importexport-api) section at the bottom of this page.
+To avoid UI downtime, perform a two-step upgrade: first, upgrade all instances to `v5.6.11`. Once all instances are running `v5.6.11`, proceed with the upgrade to `v5.7` or later.
 
-### Deprecate custom strategies
+Downgrading from v5.7+ to versions below v5.7 is not straightforward and requires manual database intervention.
 
-Using custom strategies has the drawback of requiring you to distribute the strategy's code with the Unleash client SDK. In contrast, [strategy constraints](../../reference/activation-strategies#constraints) function without needing additional code or maintenance. In most cases, [strategy constraints](../../reference/activation-strategies#constraints) offer sufficient control you need without added complexity. 
+### Requires Node.js version 20+
 
-If you can't accomplish the same functionality with strategy constraints, please let us know about your use case on [Slack](https://slack.unleash.run/).
+If you run Unleash from source or using a custom build environment (not the official Docker image), you must ensure your environment uses Node.js version 20 or later. Unleash v6 drops support for Node.js versions below 20, which is the [active LTS at the time of release](https://github.com/nodejs/Release/blob/6209d04302e62156b964a605f619283582334c95/README.md#release-schedule).
 
-### Dropping Internet Explorer (IE) Support
+## Upgrading from v4 to v5
 
-With Unleash v6, Internet Explorer is no longer supported. React v18, used in Unleash, has dropped support for IE, aligning with Microsoft's end of support for IE on June 15, 2022. Users are encouraged to switch to modern browsers for the best experience.
-
-## Upgrading to 5.7 and later from versions < 5.6.11
-
-When running on high-availability (multiple Unleash instances), upgrading from versions lower than 5.6.11 to version 5.7 or higher will cause a temporary UI unavailability while old versions and new versions are both serving traffic, due to a compatibility issue. If you can afford having a small period of time with the UI unavailable (note the SDKs will not be affected), then  you can safely upgrade.
-
-If you rather want to avoid that, you should first update to 5.6.11 and ensure all your Unleash instances are running 5.6.11 before upgrading to 5.7 or later. Any Unleash instances left on earlier versions after the backing database has been updated will continue to work, but you will not be able to log in to them, but the SDKs will continue working fine.
-
-Once you have upgraded to version 5.7 and above, you can no longer downgrade to versions before 5.7 without manual changes to the database.
-
-## Upgrading directly from v3.x to v5.x
-
-<VideoContent videoUrls={["https://www.youtube.com/embed/qmusq_9mE2E"]}/>
-
-Ivar Østhus, Unleash CTO and Co-Founder, demonstrates how to update Unleash 3.x to Unleash 5.x in just a few minutes with no downtime. You can also [watch this on YouTube with a transcript](https://www.youtube.com/watch?v=qmusq_9mE2E&cc_load_policy=1).
-
-##  Upgrading from v4.x to v5.x {#upgrading-from-v4x-to-v5x}
-
-Unleash v5 was released on April 27th, 2023. It contains a few breaking changes.
+Unleash v5, released on April 27th, 2023, introduced several key changes. Ensure you address the following before or during your upgrade to v5.
 
 ### Requires Node.js version 18+
 
-Unleash v5 drops support Node.js versions below 18, which is the current active LTS at the time of release. Unleash v4 officially supported Node.js v14 and v16, but both of these will reach end of life in 2023.
+If you run Unleash from source or using a custom build environment (not the official Docker image), you must ensure your environment uses Node.js version 18 or later.
+Unleash v5 drops support for Node.js versions below 18, which was the active LTS at the time of release. Unleash v4 officially supported Node.js v14 and v16, both of which reached end of life in 2023.
 
-### The Google Authenticator provider for SSO has been removed
+### The Google Authenticator provider for SSO removed
 
-The Google Authenticator provider is now hidden by default. We recommend using [OpenID Connect](../../how-to/how-to-add-sso-open-id-connect.md) instead.
+The Google Authenticator, deprecated in v4, has now been removed. Migrate to using [OpenID Connect](../../how-to/how-to-add-sso-open-id-connect.md) instead.
 
-However, if you are running a self hosted version of Unleash and you need to temporarily re-enable Google SSO, you can do so by setting the `GOOGLE_AUTH_ENABLED` environment variable to `true`. If you're running a hosted version of Unleash, you'll need to reach out to us and ask us to re-enable the flag. However, the ability to do this will be removed in a future release and this is not safe to depend on.
+If you are running a self-hosted version of Unleash and you need to temporarily re-enable the Google Authenticator SSO, you can do so by setting the `GOOGLE_AUTH_ENABLED` environment variable to `true`. If you're running a hosted version of Unleash, you'll need to contact support to request re-enabling the flag.
 
-This provider was deprecated in v4.
+### Default database password updated
 
-### Default database password
+The Unleash default database password was updated to `password`.
 
-The Unleash default database password is now `password` instead of `passord`. Turns out that the Norwegian word for password is too similar to the English word, and that people would think it was a typo.
+This change should only impact development builds and initial setup. You should never use the default password in production environments.
 
-This should only impact dev builds and initial setup. You should never use the default password in any production environments.
+### The /api/admin/features API removed
 
-### The /api/admin/features API is gone
-
-Most of the old features API was deprecated in v4.3 and superseded by the project API instead. In v5, the deprecated parts have been completely removed. The only operations on that API that are still active are the operations to add or remove a tag from a feature flag.
+Most of the old features API was deprecated in v4.3 and superseded by the project API. In v5, the deprecated parts have been completely removed. The only operations remaining on that API path are those to add or remove a tag from a feature flag.
 
 ### Error message structure
 
-Some of Unleash's API error messages have changed their structure. Specifically, this applies to error messages generated by our OpenAPI validation layer. However, only their structure has changed (and they now contain more human-friendly messages); the error codes should still be the same.
+Some Unleash API error messages changed their structure in v5, specifically those generated by the OpenAPI validation layer. While the structure changed to provide more human-friendly messages and align with other Unleash errors, the error codes remain the same.
 
-Previously, they would look like this:
+
+Previously, validation errors looked like this:
 
 ``` json
 {
@@ -122,7 +109,7 @@ Previously, they would look like this:
 }
 ```
 
-Now they look like this instead, and are more in line with the rest of Unleash's error messages.
+Now they look like this:
 
 ```json
 {
@@ -138,30 +125,34 @@ Now they look like this instead, and are more in line with the rest of Unleash's
 }
 ```
 
-As such, if you're relying on the specifics of the error structure for those API errors, you might need to update your handling.
+If your integrations rely on the specific structure of these validation error messages, you might need to update your error handling logic.
 
-## Upgrading from v3.x to v4.x {#upgrading-from-v3x-to-v4x}
+## Upgrading from v3 to v5
 
-Before you upgrade we strongly recommend that you take a full database backup, to make sure you can downgrade to version 3.
+Follow along with our video demonstration on upgrading from v3 to v5 with no downtime in just a few minutes.
 
-### 1. All API calls now require a token. {#1-all-api-calls-now-requires-token}
+<VideoContent videoUrls={["https://www.youtube.com/embed/qmusq_9mE2E"]}/>
 
-If you are upgrading from Unleash Open-Source v3 client SDKs did not need to use an API token in order to connect to Unleash-server. Starting from v4 we have back-ported the API token handling for Enterprise in to the Open-Source version. This means that all client SDKs now need to use a client token in order to connect to Unleash.
+## Upgrading from v3 to v4
 
-Read more in the [API token documentation](../../how-to/how-to-create-api-tokens.mdx).
+### All API calls now require a token
 
-### 2. Configuring Unleash {#2-configuring-unleash}
+In Unleash Open Source v3, client SDKs did not require an API token to connect to the Unleash server. Starting with v4, API token handling, previously an Enterprise feature, was added to the Open Source version. This means that all client SDKs now need to use a client token to connect to Unleash.
 
-We have done a lot of changes to the options you can pass in to Unleash. If you are manually configuring Unleash you should have a look on the updated [configuring Unleash documentation](./configuring-unleash).
+Read more in the [API token documentation](../../how-to/how-to-create-api-tokens).
 
-### 3. Role-based Access Control (RBAC) {#3-role-based-access-control-rbac}
+### Configuring Unleash
 
-We have implemented RBAC in Unleash v4. This has totally changed the permission system in Unleash.
+The options for configuring Unleash changed significantly in v4. If you are manually configuring Unleash, review the updated [configuring Unleash](/using-unleash/deploy/configuring-unleash) documentation.
 
-**Required actions:** If you have implemented "custom authentication" for your users you will need to make changes to your integration:
+### Introduced role-based access control
 
-- _extendedPermissions_ option has been removed. You can no longer specify custom permission per-user basis. All "logged_in users" must belong to a "root" role. This can be "Admin", "Editor" or "Viewer". This is taken care of when you create new users via userService.
-- All "logged-in users" needs to be defined in Unleash and have a unique ID. This can be achieved by calling "createUser" on "userService".
+Unleash v4 introduced role-based access control (RBAC), which significantly changed the permission system.
+
+If you implemented custom authentication for your users, you need to make the following changes to your integration:
+
+- The `extendedPermissions` option has been removed. You can no longer specify custom permissions on a per-user basis. All logged-in users must belong to a root role (Admin, Editor, or Viewer). This is handled when creating users via the `userService`.
+- All logged-in users need to be defined in Unleash and have a unique ID. This can be achieved by calling `createUser` on the `userService`.
 
 Code example:
 
@@ -175,17 +166,15 @@ const user = userService.loginUserWithoutPassword(
 req.session.user = user;
 ```
 
-- [Read more about Securing Unleash v4](./securing-unleash.md)
-- [Read more about RBAC](../../reference/rbac.md)
+[Read more about RBAC in our reference documentation](/reference/rbac).
 
-### 4. Legacy v2 routes removed {#4-legacy-v2-routes-removed}
+### Legacy v2 routes removed
 
-Only relevant if you use the `enableLegacyRoutes` option.
+This is only relevant if you previously used the `enableLegacyRoutes` option.
 
-In v2 you could query feature flags on `/api/features`. This was deprecated in v4 and we introduced two different endpoints (`/api/admin/features` and `/api/client/features`) to be able to optimize performance and security. In v3 you could still enable the legacy routes via the `enableLegacyRoutes` option. This was removed in v4.
+In v2 you could query feature flags on `/api/features`. This endpoint was deprecated in v4 and we introduced two different endpoints (`/api/admin/features` and `/api/client/features`) to optimize performance and security.
+In v3 you could still enable the legacy routes via the `enableLegacyRoutes` option. This was removed in v4.
 
-### 5. Unleash CLI has been removed {#5-unleash-cli-has-been-removed}
+### Unleash CLI removed
 
-Unleash no longer ships with a binary that allows you to start Unleash directly from the command line. From v4 you need to either use Unleash via docker or programmatically.
-
-Read more in our [getting started documentation](./getting-started.md)
+Unleash no longer ships with a binary that allows you to start Unleash directly from the command line. We recommend that you run Unleash [using Docker](/using-unleash/deploy/getting-started).

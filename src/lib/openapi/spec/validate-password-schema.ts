@@ -6,7 +6,7 @@ export const validatePasswordSchema = {
     additionalProperties: false,
     required: ['password'],
     description:
-        'Used to validate passwords obeying [Unleash password guidelines](https://docs.getunleash.io/reference/deploy/securing-unleash#password-requirements)',
+        'Used to validate passwords obeying [Unleash password guidelines](https://docs.getunleash.io/using-unleash/deploy/configuring-unleash#securing-unleash)',
     properties: {
         password: {
             description: 'The password to validate',

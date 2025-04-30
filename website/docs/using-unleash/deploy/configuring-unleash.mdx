@@ -6,7 +6,7 @@ toc_max_heading_level: 3
 
 import Tabs from '@theme/Tabs'; import TabItem from '@theme/TabItem';
 
-This guide explains how to configure your self-hosted Unleash instance when running it via [Docker Compose or the Docker CLI](/understanding-unleash/deploy/getting-started).
+This guide explains how to configure your self-hosted Unleash instance when running it via [Docker Compose or the Docker CLI](/using-unleash/deploy/getting-started).
 
 When running Unleash using Docker, configuration is managed through environment variables.
 
@@ -163,7 +163,7 @@ If emails fail to send or contain errors:
 | :--------------------------------- | :-------------- | :--------------------------------------------------------------------------------------------------------- |
 | `UNLEASH_DEFAULT_ADMIN_USERNAME` | `admin`         | Sets the username for the initial admin user created on first startup.                                     |
 | `UNLEASH_DEFAULT_ADMIN_PASSWORD` | `unleash4all`   | Sets the password for the initial admin user. **Change this for any non-local setup.** |
-| `INIT_CLIENT_API_TOKENS`         | N/A             | Comma-separated list of [Client tokens](reference/api-tokens-and-client-keys#client-tokens) to create on first startup (if no tokens exist in the database).                   |
+| `INIT_CLIENT_API_TOKENS`         | N/A             | Comma-separated list of [Client tokens](/reference/api-tokens-and-client-keys#client-tokens) to create on first startup (if no tokens exist in the database).                   |
 | `INIT_FRONTEND_API_TOKENS`       | N/A             | Comma-separated list of [Frontend tokens](/reference/api-tokens-and-client-keys#frontend-tokens) to create on first startup (if no tokens exist in the database).                 |
 
 ### Server behavior
@@ -258,4 +258,20 @@ For example, you might consider some of the following managed PostgreSQL service
 - **GCP Cloud SQL for PostgreSQL:** `db-n1-standard-1` (1 vCPU / 3.75 GiB RAM) as the starting point.
 
 Monitor resource usage and adjust based on your specific load.
+
+## Next steps
+
+### Securing Unleash
+
+By default, Unleash uses password-based login. When using passwords, Unleash enforces strong passwords:
+- Minimum 10 characters long
+- Contains at least one uppercase letter
+- Contains at least one number
+- Contains at least one special character
+
+To learn more about managing users, [implementing single sign-on](/reference/sso) instead of passwords, setting up access controls, and using audit logs, read the [User Management, Access Controls and Auditing guide](/feature-flag-tutorials/use-cases/user-management-access-controls-auditing).
+
+### Scaling Unleash
+
+As your feature flag usage grows, ensuring your Unleash setup can handle the load is crucial. To learn how to implement high availability, improve resilience, and apply other scaling strategies, read the [Scaling Unleash guide](/feature-flag-tutorials/use-cases/scaling-unleash).
 

@@ -591,9 +591,7 @@ const sidebars: SidebarsConfig = {
                     items: [
                         'using-unleash/deploy/getting-started',
                         'using-unleash/deploy/configuring-unleash',
-                        'using-unleash/deploy/google-auth-hook',
                         'using-unleash/deploy/upgrading-unleash',
-                        'using-unleash/deploy/securing-unleash',
                         'using-unleash/deploy/license-keys',
                     ],
                 },

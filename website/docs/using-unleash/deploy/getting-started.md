@@ -1,5 +1,8 @@
 ---
 title: Getting started
+description: "Initial steps for setting up a self-hosted Unleash instance with Docker."
+toc_max_heading_level: 3
+pagination_next: using-unleash/deploy/configuring-unleash
 ---
 
 import Tabs from '@theme/Tabs';
@@ -145,7 +148,7 @@ The first time Unleash starts, it creates this default `admin` user. To use diff
 
 ### Install your license
 
-If you are running Unleash Enterprise, you need to install a [license key](/understanding-unleash/deploy/license-keys#get-a-new-license). You'll receive a license key as part of your trial or from your account representative.
+If you are running Unleash Enterprise, you need to install a [license key](/using-unleash/deploy/license-keys#get-a-new-license). You'll receive a license key as part of your trial or from your account representative.
 
 In the Admin UI, go to **Admin > License**, copy the license key you received by email and click **Update license key**.
 

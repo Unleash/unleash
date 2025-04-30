@@ -873,12 +873,17 @@
     },
     {
       "source": "/reference/deploy/google-auth-hook",
-      "destination": "/using-unleash/deploy/google-auth-hook",
+      "destination": "/using-unleash/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/deploy/google_auth",
-      "destination": "/using-unleash/deploy/google-auth-hook",
+      "destination": "/using-unleash/deploy/getting-started",
+      "permanent": true
+    },
+    {
+      "source": "'/using-unleash/deploy/google-auth-hook",
+      "destination": "/using-unleash/deploy/getting-started",
       "permanent": true
     },
     {
@@ -893,12 +898,12 @@
     },
     {
       "source": "/reference/deploy/securing-unleash",
-      "destination": "/using-unleash/deploy/securing-unleash",
+      "destination": "/using-unleash/deploy/configuring-unleash#securing-unleash",
       "permanent": true
     },
     {
       "source": "/deploy/securing_unleash",
-      "destination": "/using-unleash/deploy/securing-unleash",
+      "destination": "/using-unleash/deploy/configuring-unleash#securing-unleash",
       "permanent": true
     },
     {

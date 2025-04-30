@@ -20,7 +20,7 @@ unleash.start(options).then((unleash) => {
 
 1. Go to the credentials section in the [Google Cloud Platform Console](https://console.cloud.google.com/apis/credentials?_ga=2.77615956.-1991581217.1542834301).
 
-2. Click **OAuth consent screen**. Type a product name. Fill in any relevant optional fields. Click **Save**.
+2. Click **OAuth consent screen**. Type a product name. Fill in the optional fields. Click **Save**.
 
 3. Click **Create credentials > OAuth client ID**.
 

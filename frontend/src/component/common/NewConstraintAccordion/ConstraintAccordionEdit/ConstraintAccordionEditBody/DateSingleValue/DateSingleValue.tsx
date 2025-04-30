@@ -21,6 +21,10 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
+/**
+ * @deprecated use `component/feature/FeatureStrategy/FeatureStrategyConstraints/ConstraintDateInput.tsx`
+ * Remove with flag `addEditStrategy`
+ */
 export const DateSingleValue = ({
     setValue,
     value,

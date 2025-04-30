@@ -30,7 +30,7 @@ import { ResolveInput } from 'component/common/NewConstraintAccordion/Constraint
 import { ReactComponent as EqualsIcon } from 'assets/icons/constraint-equals.svg';
 import { ReactComponent as NotEqualsIcon } from 'assets/icons/constraint-not-equals.svg';
 import { AddSingleValueWidget } from './AddSingleValueWidget';
-import { DateSingleValue } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/DateSingleValue/DateSingleValue';
+import { ConstraintDateInput } from './ConstraintDateInput';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -365,7 +365,7 @@ export const EditableConstraint: FC<Props> = ({
                         />
                     ) : null}
                     {showDateInput ? (
-                        <DateSingleValue
+                        <ConstraintDateInput
                             setValue={setValue}
                             value={localConstraint.value}
                             error={error}

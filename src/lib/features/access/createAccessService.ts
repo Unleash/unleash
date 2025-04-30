@@ -11,7 +11,11 @@ import { FakeAccountStore } from '../../../test/fixtures/fake-account-store.js';
 import FakeRoleStore from '../../../test/fixtures/fake-role-store.js';
 import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';
 import FakeAccessStore from '../../../test/fixtures/fake-access-store.js';
-import type { IAccessStore, IEventStore, IRoleStore } from '../../types/index.js';
+import type {
+    IAccessStore,
+    IEventStore,
+    IRoleStore,
+} from '../../types/index.js';
 import {
     createEventsService,
     createFakeEventsService,

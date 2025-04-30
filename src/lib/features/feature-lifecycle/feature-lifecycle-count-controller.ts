@@ -5,7 +5,10 @@ import {
     NONE,
 } from '../../types/index.js';
 import type { OpenApiService } from '../../services/index.js';
-import { createResponseSchema, getStandardResponses } from '../../openapi/index.js';
+import {
+    createResponseSchema,
+    getStandardResponses,
+} from '../../openapi/index.js';
 import Controller from '../../routes/controller.js';
 import type { Request, Response } from 'express';
 import {

@@ -4,7 +4,10 @@ import {
     createFeatureToggleService,
 } from '../../lib/features/index.js';
 import { FEATURES_CREATED_BY_PROCESSED } from '../../lib/metric-events.js';
-import type { EventService, FeatureToggleService } from '../../lib/services/index.js';
+import type {
+    EventService,
+    FeatureToggleService,
+} from '../../lib/services/index.js';
 import {
     ADMIN_TOKEN_USER,
     type IUnleashConfig,

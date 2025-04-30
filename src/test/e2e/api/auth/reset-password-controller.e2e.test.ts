@@ -20,7 +20,10 @@ import { RoleName } from '../../../../lib/types/model.js';
 import SettingService from '../../../../lib/services/setting-service.js';
 import FakeSettingStore from '../../../fixtures/fake-setting-store.js';
 import { GroupService } from '../../../../lib/services/group-service.js';
-import { type IUnleashStores, TEST_AUDIT_USER } from '../../../../lib/types/index.js';
+import {
+    type IUnleashStores,
+    TEST_AUDIT_USER,
+} from '../../../../lib/types/index.js';
 import { createEventsService } from '../../../../lib/features/index.js';
 
 let app: IUnleashTest;

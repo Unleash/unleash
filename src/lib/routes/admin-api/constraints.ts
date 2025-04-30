@@ -7,7 +7,10 @@ import Controller from '../controller.js';
 import type { Logger } from '../../logger.js';
 import type { OpenApiService } from '../../services/openapi-service.js';
 import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
-import { type ConstraintSchema, getStandardResponses } from '../../openapi/index.js';
+import {
+    type ConstraintSchema,
+    getStandardResponses,
+} from '../../openapi/index.js';
 
 export default class ConstraintController extends Controller {
     private featureService: FeatureToggleService;

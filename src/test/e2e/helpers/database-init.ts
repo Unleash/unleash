@@ -1,5 +1,3 @@
-import { log } from 'db-migrate-shared';
-import { migrateDb } from '../../../migrator.js';
 import { createStores } from '../../../lib/db/index.js';
 import { createDb } from '../../../lib/db/db-pool.js';
 import { getDbConfig } from './database-config.js';
@@ -18,6 +16,7 @@ import type {
 } from '../../../lib/server-impl.js';
 import { Client } from 'pg';
 import { v4 as uuidv4 } from 'uuid';
+import { migrateDb } from '../../../migrator.js';
 
 // require('db-migrate-shared').log.silence(false);
 
@@ -126,8 +125,6 @@ export default async function init(
         ...configOverride,
         getLogger,
     });
-
-    log.setLogLevel('error');
 
     if (useDbTemplate) {
         if (!testDBTemplateName) {

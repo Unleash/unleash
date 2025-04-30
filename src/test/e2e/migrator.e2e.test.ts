@@ -2,12 +2,9 @@ import dbInit, { type ITestDb } from '../../test/e2e/helpers/database-init.js';
 
 import getLogger from '../../test/fixtures/no-logger.js';
 
-import { log } from 'db-migrate-shared';
 import { Client } from 'pg';
 import type { IDBOption } from '../../lib/types/index.js';
 import { resetDb } from '../../migrator.js';
-
-log.setLogLevel('error');
 
 async function validateTablesHavePrimaryKeys(db: IDBOption) {
     const client = new Client(db);

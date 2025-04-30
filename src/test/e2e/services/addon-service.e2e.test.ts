@@ -2,7 +2,10 @@ import dbInit, { type ITestDb } from '../helpers/database-init.js';
 import getLogger from '../../fixtures/no-logger.js';
 import { createTestConfig } from '../../config/test-config.js';
 import AddonService from '../../../lib/services/addon-service.js';
-import { type IUnleashStores, TEST_AUDIT_USER } from '../../../lib/types/index.js';
+import {
+    type IUnleashStores,
+    TEST_AUDIT_USER,
+} from '../../../lib/types/index.js';
 
 import SimpleAddon from '../../../lib/services/addon-service-test-simple-addon.js';
 import TagTypeService from '../../../lib/features/tag-type/tag-type-service.js';

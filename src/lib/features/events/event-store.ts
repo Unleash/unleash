@@ -18,7 +18,11 @@ import { sharedEventEmitter } from '../../util/anyEventEmitter.js';
 import type { Db } from '../../db/db.js';
 import type { Knex } from 'knex';
 import type EventEmitter from 'events';
-import { ADMIN_TOKEN_USER, SYSTEM_USER, SYSTEM_USER_ID } from '../../types/index.js';
+import {
+    ADMIN_TOKEN_USER,
+    SYSTEM_USER,
+    SYSTEM_USER_ID,
+} from '../../types/index.js';
 import type {
     DeprecatedSearchEventsSchema,
     ProjectActivitySchema,

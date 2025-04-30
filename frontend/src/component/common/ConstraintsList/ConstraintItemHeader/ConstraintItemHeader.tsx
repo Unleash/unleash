@@ -26,8 +26,16 @@ const Operator: FC<{
 
 const StrategyEvalChipLessInlinePadding = styled(StrategyEvaluationChip)(
     ({ theme }) => ({
+        alignSelf: 'stretch',
+        height: 'auto',
+        padding: 0,
         '> span': {
-            paddingInline: theme.spacing(0.5),
+            paddingInline: theme.spacing(0),
+        },
+        svg: {
+            fontSize: theme.typography.h2.fontSize,
+            width: '1em',
+            height: '1em',
         },
     }),
 );

@@ -56,9 +56,9 @@ const ConstraintOptions = styled('div')(({ theme }) => ({
     flexFlow: 'row nowrap',
     gap: 'var(--gap)',
     alignSelf: 'flex-start',
-    [onNarrowContainer]: {
-        flexFlow: 'row wrap',
-    },
+    // [onNarrowContainer]: {
+    //     flexFlow: 'row wrap',
+    // },
 }));
 
 const OperatorOptions = styled(ConstraintOptions)(({ theme }) => ({
@@ -68,12 +68,12 @@ const OperatorOptions = styled(ConstraintOptions)(({ theme }) => ({
 const ConstraintDetails = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: 'var(--gap)',
-    flexFlow: 'row nowrap',
+    flexFlow: 'row wrap',
     width: '100%',
     height: 'min-content',
-    [onNarrowContainer]: {
-        flexDirection: 'column',
-    },
+    // [onNarrowContainer]: {
+    //     flexDirection: 'column',
+    // },
 }));
 
 const InputContainer = styled('div')(({ theme }) => ({

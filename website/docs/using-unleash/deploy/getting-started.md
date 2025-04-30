@@ -182,4 +182,4 @@ curl --location --request POST 'http://localhost:4242/api/admin/features' \
 
 By default, your self-hosted Unleash instance periodically checks https://version.unleash.run to inform you about new releases. This check sends a unique, anonymous instance ID.
  
-If you prefer to disable this version check, set the environment variable CHECK_VERSION to false before starting the Unleash server.
+If you prefer to disable this version check, set the environment variable `CHECK_VERSION` to `false` before starting the Unleash server.

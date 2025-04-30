@@ -175,7 +175,7 @@ Configure the following:
   
   SDK caching provides resilience against temporary database unavailability for flag evaluations, but we still recommend that you configure high-availability for the database to maintain key functionality like flag configuration updates and Admin UI access.
   
-  Configure automatic failover for your database (managed services typically handle this). Failover within a region should ideally complete in less than a few minutes. Ensure full database backups are regularly taken and stored securely, preferably in a separate region.
+  Configure automatic failover for your database (managed services typically handle this). Failover within a region should ideally complete in less than a few minutes. Ensure [full database backups](/using-unleash/deploy/configuring-unleash#back-up-and-restore-the-database) are regularly taken and stored securely, preferably in a separate region.
 
   In the rare event of a complete primary region failure (disaster recovery scenario):
   1. Promote the database read replica (or restore from backup) in the standby region to become the new primary database.

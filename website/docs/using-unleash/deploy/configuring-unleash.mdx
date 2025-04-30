@@ -1,5 +1,5 @@
 ---
-title: Configuration options
+title: Configure Unleash
 description: "Steps and options for configuring your self-hosted Unleash instance."
 toc_max_heading_level: 3
 ---
@@ -11,7 +11,7 @@ This guide explains how to configure your self-hosted Unleash instance when runn
 When running Unleash using Docker, configuration is managed through environment variables.
 
 ## Configuration method
-###  Docker Compose
+### Docker Compose
 
 <Tabs groupId="setup-method">
 <TabItem value="docker-compose-enterprise" label="Unleash Enterprise">
@@ -43,7 +43,7 @@ services:
 </TabItem>
 </Tabs>
 
-###  Docker CLI
+### Docker CLI
 <Tabs groupId="setup-method">
 
 <TabItem value="docker-cli-enterprise" label="Unleash Enterprise">
@@ -56,7 +56,7 @@ docker run -e DATABASE_HOST=mydbhost -e DATABASE_SSL=false ... unleashorg/unleas
 </TabItem>
 
 
-<TabItem value="docker-cli-iss" label="Unleash OSS">
+<TabItem value="docker-cli-oss" label="Unleash OSS">
 
 Use the `-e` flag in your `docker run` command. For example:
 
@@ -67,7 +67,7 @@ docker run -e DATABASE_HOST=mydbhost -e DATABASE_SSL=false ... unleashorg/unleas
 
 </Tabs>
 
-## Configure the database connection
+## Configure the database
 
 Unleash requires a PostgreSQL database to store its data. You must provide connection details using environment variables.
 
@@ -81,7 +81,7 @@ Unleash requires a PostgreSQL database to store its data. You must provide conne
 | `DATABASE_USERNAME`                   | `unleash_user`     | Database username.                                                                                                                      |
 | `DATABASE_PASSWORD`                   | `password`         | Database password.                                                                                                                      |
 | `DATABASE_SCHEMA`                     | `public`           | Database schema Unleash should use.                                                                                                     |
-| `DATABASE_SSL`                     | N/A           | Enables/configures SSL. Expects a stringified JSON object with SSL options.  |
+| `DATABASE_SSL`                     | `false`          | Enables/configures SSL. Expects a stringified JSON object with SSL options.  |
 | `DATABASE_SSL_CA_CONFIG`           | N/A           | Alternative SSL config via JSON string. Requires `rejectUnauthorized`, `ca`, `cert`, `key` properties, where `ca`, `cert`, `key` values contain the certificate strings directly. |
 | `DATABASE_SSL_REJECT_UNAUTHORIZED`    | (varies)           | Set to `false` only if using self-signed certificates. Defaults to `true` if `DATABASE_SSL_CA_FILE` is set.        |
 | `DATABASE_SSL_CA_FILE`                | N/A                | Path within the container to a valid SSL CA file in PEM format.                                                                           |
@@ -110,6 +110,23 @@ If you experience intermittent database connection errors or timeouts, particula
 
 </details>
 
+### Back up and restore the database
+
+It is highly recommended to back up your Unleash database, especially before [upgrades](/using-unleash/deploy/upgrading-unleash) or significant changes. When running PostgreSQL within a Docker container, use `docker exec` to run the standard `pg_dump` (backup) and `psql` (restore) commands inside the container.
+
+1. **Identify container name**: Find your PostgreSQL container's name or ID (for example, using `docker ps`).
+
+2. **Create a backup**: Run the following command on your host machine. It executes `pg_dump` inside the container and saves the output to a `.dump` file on your host.
+
+    ```shell
+    docker exec -t <your_postgres_container_name> pg_dump --clean -U <your_db_user> -d <your_db_name> > unleash-db-$(date +%Y%m%d_%H%M%S).dump
+    ```
+
+3. **Restore from backup**: Run the following command on your host machine. It executes `psql` inside the container, reading the specified backup file from your host.
+
+    ```shell
+    docker exec -i <your_postgres_container_name> psql -U <your_db_user> -d <your_db_name> < <your_backup_file.dump>
+    ```
 
 ### Enable self-signed certificates
 
@@ -132,7 +149,7 @@ Configure an SMTP server to enable password resets and user welcome emails. If n
 | `EMAIL_SECURE`       | `false`                        | Set to `true` to use SMTPS (SSL).                                                  |
 | `EMAIL_USER`         | N/A                            | The username to authenticate against your SMTP server.                             |
 | `EMAIL_PASSWORD`     | N/A                            | The password for your SMTP user.                                                   |
-| `EMAIL_SENDER`       | `noreply@unleash-hosted.com` | The email address used as the sender; update accordingly. |
+| `EMAIL_SENDER`       | `noreply@unleash-hosted.com` | The email address used as the sender. Must be updated to your own address to work correctly. |
 
 
 <details>
@@ -144,6 +161,7 @@ If emails fail to send or contain errors:
 - **Check email links:** Ensure `UNLEASH_URL` is the complete public URL for your instance, including the `http://` or `https://` protocol prefix.
 - **Fix SSL/TLS errors:**
     * Confirm `EMAIL_PORT` and `EMAIL_SECURE` match your SMTP server's requirements (for example, port 587 or 465 often requires `EMAIL_SECURE=true`).
+- **Custom CA certificates for SMTP:** If using a custom SMTP CA certificate with `EMAIL_SECURE=true`, ensure it's trusted by mounting the PEM file into the container and setting the `NODE_EXTRA_CA_CERTS` environment variable to its path inside the container.
 
 </details>
 
@@ -153,7 +171,7 @@ If emails fail to send or contain errors:
 
 | Environment Variable            | Default Value   | Description                                                                                                                      |
 | :------------------------------ | :-------------- | :------------------------------------------------------------------------------------------------------------------------------- |
-| `AUTH_TYPE`                     | `open-source`   | Authentication type. `open-source`: sign in with username and password, `demo`: sign in with email only, `custom`: sign in using custom authentication hook).                                                             |
+| `AUTH_TYPE`                     | `open-source`   | Authentication type. `open-source`: sign in with username and password, `demo`: sign in with email only, `custom`: sign in using custom authentication hook.                                                             |
 | `AUTH_ENABLE_API_TOKEN`         | `true`          | Whether API endpoints require tokens. Setting to `false` is highly discouraged.                                                    |
 | `AUTH_DEMO_ALLOW_ADMIN_LOGIN`   | `false`         | Allows logging in as `admin` (using email field) when `AUTH_TYPE` is `demo`.                                                       |
 
@@ -185,7 +203,7 @@ If emails fail to send or contain errors:
 | Environment Variable                  | Default Value       | Description                                                                                                      |
 | :------------------------------------ | :------------------ | :--------------------------------------------------------------------------------------------------------------- |
 | `SECURE_HEADERS`                      | `false`             | Set to `true` to enable security headers like HSTS, CSP (recommended if serving over HTTPS).                       |
-| `CSP_ALLOWED_*`                       | N/A                 | Comma-separated lists for specific [CSP directives](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy#directives) when `SECURE_HEADERS` is true. For example: `CSP_ALLOWED_SCRIPT` for `script-src`).     |
+| `CSP_ALLOWED_*`                       | N/A                 | Comma-separated lists for specific [CSP directives](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy#directives) when `SECURE_HEADERS` is true. For example: `CSP_ALLOWED_SCRIPT` for `script-src`.     |
 | `SESSION_TTL_HOURS`                   | `48`                | User session duration in hours.                                                                                    |
 | `SESSION_CLEAR_SITE_DATA_ON_LOGOUT` | `true`              | Whether to send `Clear-Site-Data` header on logout.                                                              |                                                                            |
 | `MAX_PARALLEL_SESSIONS`             | N/A                 | Maximum number of parallel user sessions allowed with password-based login.                                                                |

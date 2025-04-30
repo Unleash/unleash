@@ -1,5 +1,5 @@
 ---
-title: Upgrading Unleash
+title: Upgrade Unleash
 description: "Migration guides and breaking changes for upgrading Unleash versions."
 toc_max_heading_level: 2
 ---
@@ -9,7 +9,7 @@ This guide provides recommendations for upgrading your self-hosted Unleash insta
 
 Unleash aims to support client SDKs connecting to a server version that is one major version newer than the client, facilitating gradual upgrades.
 
-Before you begin any major version upgrade, we strongly recommend performing a full backup of your PostgreSQL database. This ensures you can restore your instance if issues occur during the upgrade.
+Before you begin any major version upgrade, we strongly recommend performing a [full backup of your PostgreSQL database](/using-unleash/deploy/configuring-unleash#back-up-and-restore-the-database). This ensures you can restore your instance if issues occur during the upgrade.
 
 ## Upgrading from v5 to v6
 
@@ -38,13 +38,13 @@ Consider migrating to [Unleash Enterprise](https://www.getunleash.io/pricing) to
 - The legacy feature endpoint `/api/feature`, [deprecated in v4](#legacy-v2-routes-removed), has been removed. Update any integrations still using this endpoint.
 - Deprecated import service: The older file-based import functionality at startup has been removed. Use the current [environment import/export features](/how-to/how-to-environment-import-export) or associated APIs.
 
-### Dropped Internet Explorer (IE) Support
+### Dropped Internet Explorer support
 
 Support for Internet Explorer has been removed, aligning with upstream dependencies (React v18) and Microsoft's end-of-support for the browser.
 
 ### Deprecated custom strategies
 
-While still functional in v6, custom strategies are deprecated in favor of using standard strategies combined with [strategy constraints](/reference/activation-strategies#constraints-constraints).
+While still functional in v6, custom strategies are deprecated in favor of using standard strategies combined with [strategy constraints](/reference/activation-strategies#constraints).
 Consider migrating if possible, as constraints offer similar flexibility without requiring custom code distribution with SDKs.
 
 ### High availability upgrade considerations

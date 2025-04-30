@@ -8,6 +8,7 @@ const StyledChip = styled(ValueChip, {
     shouldForwardProp: (prop) => prop !== 'hasValue',
 })<{ hasValue: boolean }>(({ theme, hasValue }) => ({
     color: hasValue ? 'inherit' : theme.palette.primary.main,
+    width: 'max-content',
     '.MuiChip-icon': {
         transform: 'translateX(50%)',
         fill: theme.palette.primary.main,

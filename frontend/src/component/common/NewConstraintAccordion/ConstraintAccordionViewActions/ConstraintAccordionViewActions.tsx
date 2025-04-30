@@ -14,6 +14,10 @@ const StyledHeaderActions = styled('div')(({ theme }) => ({
     },
 }));
 
+const StyledButton = styled(Button)(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
+}));
+
 export const ConstraintAccordionViewActions = ({
     onUse,
 }: ConstraintAccordionHeaderActionsProps) => {
@@ -30,14 +34,14 @@ export const ConstraintAccordionViewActions = ({
                 condition={Boolean(onUseClick)}
                 show={
                     <Tooltip title='Use constraint' arrow>
-                        <Button
+                        <StyledButton
                             variant='text'
                             color='primary'
                             onClick={onUseClick}
                             data-testid='USE_CONSTRAINT_BUTTON'
                         >
                             Use this
-                        </Button>
+                        </StyledButton>
                     </Tooltip>
                 }
             />

@@ -22,13 +22,13 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const StyledInput = styled(Input)(({ theme }) => ({
+const StyledInput = styled(Input)({
     border: 'none',
     '*': {
         border: 'none',
         padding: 0,
     },
-}));
+});
 
 const Container = styled('div')(({ theme }) => ({
     display: 'flex',

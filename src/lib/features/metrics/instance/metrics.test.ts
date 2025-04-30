@@ -303,6 +303,7 @@ describe('bulk metrics', () => {
             instanceId: 'instance5678',
             environment: 'development',
             sdkVersion: 'unleash-client-java',
+            sdkType: null,
             started: '1952-03-11T12:00:00.000Z',
             interval: 15000,
         };

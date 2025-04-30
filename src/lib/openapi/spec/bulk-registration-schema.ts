@@ -74,7 +74,8 @@ export const bulkRegistrationSchema = {
             description: 'The sdk type',
             example: 'backend',
             type: 'string',
-            enum: ['frontend', 'backend'],
+            enum: ['frontend', 'backend', null],
+            nullable: true,
         },
     },
     components: {

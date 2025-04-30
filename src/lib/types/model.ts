@@ -488,7 +488,7 @@ export interface IClientApp {
     platformVersion?: string;
     yggdrasilVersion?: string;
     specVersion?: string;
-    sdkType?: 'frontend' | 'backend';
+    sdkType?: 'frontend' | 'backend' | null;
 }
 
 export interface IAppFeature {

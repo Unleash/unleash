@@ -2,7 +2,7 @@ import { styled, Typography } from '@mui/material';
 import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
 import { constraintId } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { useRecentlyUsedConstraints } from './useRecentlyUsedConstraints';
-import type { IConstraint } from '../../../../../interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 
 type IRecentlyUsedConstraintsProps = {
     setConstraints?: React.Dispatch<React.SetStateAction<IConstraint[]>>;

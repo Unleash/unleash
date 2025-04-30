@@ -865,66 +865,6 @@ class="header-github-link"
                             to: '/using-unleash/troubleshooting/feature-not-available',
                         },
                         {
-                            from: ['/reference/deploy', '/deploy'],
-                            to: '/using-unleash/deploy',
-                        },
-                        {
-                            from: [
-                                '/reference/deploy/getting-started',
-                                '/deploy/getting_started',
-                            ],
-                            to: '/using-unleash/deploy/getting-started',
-                        },
-                        {
-                            from: [
-                                '/reference/deploy/configuring-unleash',
-                                '/deploy/configuring_unleash',
-                            ],
-                            to: '/using-unleash/deploy/configuring-unleash',
-                        },
-                        {
-                            from: [
-                                '/reference/deploy/database-setup',
-                                '/deploy/database-setup',
-                            ],
-                            to: '/using-unleash/deploy/database-setup',
-                        },
-                        {
-                            from: [
-                                '/reference/deploy/database-backup',
-                                '/deploy/database-backup',
-                            ],
-                            to: '/using-unleash/deploy/database-backup',
-                        },
-                        {
-                            from: [
-                                '/reference/deploy/email-service',
-                                '/deploy/email',
-                            ],
-                            to: '/using-unleash/deploy/email-service',
-                        },
-                        {
-                            from: [
-                                '/reference/deploy/google-auth-hook',
-                                '/deploy/google_auth',
-                            ],
-                            to: '/using-unleash/deploy/google-auth-hook',
-                        },
-                        {
-                            from: [
-                                '/deploy/migration_guide',
-                                '/reference/deploy/migration-guide',
-                            ],
-                            to: '/using-unleash/deploy/upgrading-unleash',
-                        },
-                        {
-                            from: [
-                                '/reference/deploy/securing-unleash',
-                                '/deploy/securing_unleash',
-                            ],
-                            to: '/using-unleash/deploy/securing-unleash',
-                        },
-                        {
                             from: [
                                 '/reference/deploy/import-export',
                                 '/deploy/import_export',

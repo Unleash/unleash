@@ -14,14 +14,6 @@ interface IDateSingleValueProps {
     setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const StyledWrapper = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'row',
-    marginBottom: theme.spacing(1),
-    alignItems: 'center',
-    gap: theme.spacing(1),
-}));
-
 const StyledInput = styled(Input)({
     border: 'none',
     '*': {

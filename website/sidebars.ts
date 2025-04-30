@@ -585,7 +585,7 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'using-unleash/deploy/getting-started'
+                        id: 'using-unleash/deploy/getting-started',
                     },
                     label: 'Self-hosting Unleash',
                     items: [

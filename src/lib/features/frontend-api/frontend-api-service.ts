@@ -1,17 +1,17 @@
 import crypto from 'node:crypto';
 import type {
     IAuditUser,
+    IFlagResolver,
     IUnleashConfig,
     IUnleashServices,
-    IUnleashStores,
+    IUser,
 } from '../../types';
 import type { Logger } from '../../logger';
 import type {
     ClientMetricsSchema,
     FrontendApiFeatureSchema,
 } from '../../openapi';
-import type ApiUser from '../../types/api-user';
-import type { IApiUser } from '../../types/api-user';
+import ApiUser, { type IApiUser } from '../../types/api-user';
 import {
     type Context,
     InMemStorageProvider,
@@ -31,17 +31,16 @@ import type { GlobalFrontendApiCache } from './global-frontend-api-cache';
 
 export type Config = Pick<
     IUnleashConfig,
-    'getLogger' | 'frontendApi' | 'frontendApiOrigins' | 'eventBus'
+    | 'getLogger'
+    | 'frontendApi'
+    | 'frontendApiOrigins'
+    | 'eventBus'
+    | 'flagResolver'
 >;
-
-export type Stores = Pick<IUnleashStores, 'segmentReadModel'>;
 
 export type Services = Pick<
     IUnleashServices,
-    | 'featureToggleService'
-    | 'clientMetricsServiceV2'
-    | 'settingService'
-    | 'configurationRevisionService'
+    'clientMetricsServiceV2' | 'settingService' | 'clientInstanceService'
 >;
 
 export class FrontendApiService {
@@ -49,9 +48,9 @@ export class FrontendApiService {
 
     private readonly logger: Logger;
 
-    private readonly stores: Stores;
-
     private readonly services: Services;
+
+    private flagResolver: IFlagResolver;
 
     private readonly globalFrontendApiCache: GlobalFrontendApiCache;
 
@@ -67,14 +66,13 @@ export class FrontendApiService {
 
     constructor(
         config: Config,
-        stores: Stores,
         services: Services,
         globalFrontendApiCache: GlobalFrontendApiCache,
     ) {
         this.config = config;
         this.logger = config.getLogger('services/frontend-api-service.ts');
-        this.stores = stores;
         this.services = services;
+        this.flagResolver = config.flagResolver;
         this.globalFrontendApiCache = globalFrontendApiCache;
     }
 
@@ -107,11 +105,19 @@ export class FrontendApiService {
         return resultDefinitions;
     }
 
+    private resolveProject(user: IUser | IApiUser) {
+        if (user instanceof ApiUser) {
+            return user.projects;
+        }
+        return ['default'];
+    }
+
     async registerFrontendApiMetrics(
         token: IApiUser,
         metrics: ClientMetricsSchema,
         ip: string,
-    ): Promise<string> {
+        sdkVersion?: string | string[],
+    ): Promise<void> {
         FrontendApiService.assertExpectedTokenType(token);
 
         const environment =
@@ -128,7 +134,21 @@ export class FrontendApiService {
             ip,
         );
 
-        return environment;
+        if (
+            metrics.instanceId &&
+            typeof sdkVersion === 'string' &&
+            this.flagResolver.isEnabled('registerFrontendClient')
+        ) {
+            const client = {
+                appName: metrics.appName,
+                instanceId: metrics.instanceId,
+                sdkVersion: sdkVersion,
+                sdkType: 'frontend' as const,
+                environment: environment,
+                projects: this.resolveProject(token),
+            };
+            this.services.clientInstanceService.registerFrontendClient(client);
+        }
     }
 
     private async clientForFrontendApiToken(token: IApiUser): Promise<Unleash> {

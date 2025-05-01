@@ -478,6 +478,7 @@ export interface IClientApp {
     seenToggles?: string[];
     metricsCount?: number;
     strategies?: string[] | Record<string, string>[];
+    projects?: string[];
     count?: number;
     started?: string | number | Date;
     interval?: number;

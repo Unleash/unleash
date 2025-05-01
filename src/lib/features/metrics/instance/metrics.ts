@@ -158,6 +158,7 @@ export default class ClientMetricsController extends Controller {
                                 environment: app.environment,
                                 sdkType: app.sdkType,
                                 sdkVersion: app.sdkVersion,
+                                projects: app.projects,
                             });
                         }
                     } else {

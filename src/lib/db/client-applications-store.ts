@@ -91,7 +91,7 @@ const reduceRows = (rows: any[]): IClientApplication[] => {
     return Object.values(appsObj);
 };
 
-const remapRow = (input) => {
+const remapRow = (input: Partial<IClientApplication>) => {
     const temp = {
         app_name: input.appName,
         updated_at: input.updatedAt || new Date(),
@@ -152,10 +152,28 @@ export default class ClientApplicationsStore
 
     async bulkUpsert(apps: Partial<IClientApplication>[]): Promise<void> {
         const rows = apps.map(remapRow);
+        const uniqueRows = Object.values(
+            rows.reduce((acc, row) => {
+                if (row.app_name) {
+                    acc[row.app_name] = row;
+                }
+                return acc;
+            }, {}),
+        );
         const usageRows = apps.flatMap(this.remapUsageRow);
-        await this.db(TABLE).insert(rows).onConflict('app_name').merge();
+        const uniqueUsageRows = Object.values(
+            usageRows.reduce((acc, row) => {
+                if (row.app_name) {
+                    acc[`${row.app_name} ${row.project} ${row.environment}`] =
+                        row;
+                }
+                return acc;
+            }, {}),
+        );
+
+        await this.db(TABLE).insert(uniqueRows).onConflict('app_name').merge();
         await this.db(TABLE_USAGE)
-            .insert(usageRows)
+            .insert(uniqueUsageRows)
             .onConflict(['app_name', 'project', 'environment'])
             .merge();
     }
@@ -444,7 +462,7 @@ export default class ClientApplicationsStore
         };
     }
 
-    private remapUsageRow = (input) => {
+    private remapUsageRow = (input: Partial<IClientApplication>) => {
         if (!input.projects || input.projects.length === 0) {
             return [
                 {

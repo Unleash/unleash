@@ -21,10 +21,11 @@ interface AddValuesProps {
     onAddValue: (newValue: string) => void;
     removeValue: () => void;
     currentValue?: string;
+    helpText?: string;
 }
 
 export const AddSingleValueWidget = forwardRef<HTMLDivElement, AddValuesProps>(
-    ({ currentValue, onAddValue, removeValue }, ref) => {
+    ({ currentValue, onAddValue, removeValue, helpText }, ref) => {
         const [open, setOpen] = useState(false);
         const positioningRef = useRef<HTMLDivElement>(null);
         useImperativeHandle(
@@ -56,6 +57,7 @@ export const AddSingleValueWidget = forwardRef<HTMLDivElement, AddValuesProps>(
                 <AddValuesPopover
                     initialValue={currentValue}
                     onAdd={handleAdd}
+                    helpText={helpText}
                     open={open}
                     anchorEl={positioningRef.current}
                     onClose={() => setOpen(false)}

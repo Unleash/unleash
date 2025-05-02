@@ -146,21 +146,28 @@ const StyledCaseSensitiveIcon = styled(CaseSensitiveIcon)(({ theme }) => ({
     fill: 'currentcolor',
 }));
 
-const getInputType = (input: Input) => {
+type InputType =
+    | { input: 'legal values' }
+    | { input: 'date' }
+    | { input: 'single value'; type: 'number' | 'semver' }
+    | { input: 'multiple values' };
+
+const getInputType = (input: Input): InputType => {
     switch (input) {
         case 'IN_OPERATORS_LEGAL_VALUES':
         case 'STRING_OPERATORS_LEGAL_VALUES':
         case 'NUM_OPERATORS_LEGAL_VALUES':
         case 'SEMVER_OPERATORS_LEGAL_VALUES':
-            return 'legal values';
+            return { input: 'legal values' };
         case 'DATE_OPERATORS_SINGLE_VALUE':
-            return 'date input';
+            return { input: 'date' };
         case 'NUM_OPERATORS_SINGLE_VALUE':
+            return { input: 'single value', type: 'number' };
         case 'SEMVER_OPERATORS_SINGLE_VALUE':
-            return 'single text value';
+            return { input: 'single value', type: 'semver' };
         case 'IN_OPERATORS_FREETEXT':
         case 'STRING_OPERATORS_FREETEXT':
-            return 'free text';
+            return { input: 'multiple values' };
     }
 };
 
@@ -273,8 +280,8 @@ export const EditableConstraint: FC<Props> = ({
     };
 
     const TopRowInput = () => {
-        switch (inputType) {
-            case 'date input':
+        switch (inputType.input) {
+            case 'date':
                 return (
                     <ConstraintDateInput
                         setValue={setValue}
@@ -283,7 +290,7 @@ export const EditableConstraint: FC<Props> = ({
                         setError={setError}
                     />
                 );
-            case 'single text value':
+            case 'single value':
                 return (
                     <AddSingleValueWidget
                         onAddValue={(newValue) => {
@@ -291,11 +298,17 @@ export const EditableConstraint: FC<Props> = ({
                         }}
                         removeValue={() => setValue('')}
                         currentValue={localConstraint.value}
+                        helpText={
+                            inputType.type === 'number'
+                                ? 'Add a single number'
+                                : 'A semver value should be of the format X.Y.Z'
+                        }
                     />
                 );
-            case 'free text':
+            case 'multiple values':
                 return (
                     <AddValuesWidget
+                        helpText='Maximum 100 char length per value'
                         ref={addValuesButtonRef}
                         onAddValues={(newValues) => {
                             // todo (`addEditStrategy`): move deduplication logic higher up in the context handling
@@ -400,7 +413,7 @@ export const EditableConstraint: FC<Props> = ({
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
-            {inputType === 'legal values' ? (
+            {inputType.input === 'legal values' ? (
                 <LegalValuesContainer>
                     <LegalValuesSelector
                         data={resolveLegalValues(
@@ -411,7 +424,7 @@ export const EditableConstraint: FC<Props> = ({
                         values={localConstraint.values || []}
                         setValuesWithRecord={setValuesWithRecord}
                         setValues={setValues}
-                    />{' '}
+                    />
                 </LegalValuesContainer>
             ) : null}
         </Container>

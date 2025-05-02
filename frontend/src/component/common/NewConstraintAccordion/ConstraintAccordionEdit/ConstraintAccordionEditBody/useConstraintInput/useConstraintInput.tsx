@@ -68,7 +68,7 @@ export const useConstraintInput = ({
     contextDefinition,
     localConstraint,
 }: IUseConstraintInputProps): IUseConstraintOutput => {
-    const [input, setInput] = useState<Input>(IN_OPERATORS_LEGAL_VALUES);
+    const [input, setInput] = useState<Input>(IN_OPERATORS_FREETEXT);
     const [validator, setValidator] = useState<Validator>(
         STRING_ARRAY_VALIDATOR,
     );

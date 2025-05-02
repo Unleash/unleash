@@ -212,14 +212,6 @@ export const EditableConstraint: FC<Props> = ({
     const showDateInput = input.includes('DATE');
     const showInputField = input.includes('LEGAL_VALUES');
 
-    const helpText = input.includes('FREETEXT')
-        ? 'Maximum 100 char length per value'
-        : input.includes('NUM')
-          ? 'Add a single number'
-          : input.includes('SEMVER')
-            ? 'A semver value should be of the format X.Y.Z'
-            : '';
-
     /* We need a special case to handle the currentTime context field. Since
     this field will be the only one to allow DATE_BEFORE and DATE_AFTER operators
     this will check if the context field is the current time context field AND check
@@ -349,7 +341,7 @@ export const EditableConstraint: FC<Props> = ({
                     >
                         {showAddValuesButton ? (
                             <AddValuesWidget
-                                helpText={helpText}
+                                helpText='Maximum 100 char length per value'
                                 ref={addValuesButtonRef}
                                 onAddValues={(newValues) => {
                                     // todo (`addEditStrategy`): move deduplication logic higher up in the context handling
@@ -366,7 +358,13 @@ export const EditableConstraint: FC<Props> = ({
                     </ValueList>
                     {showSingleValueButton ? (
                         <AddSingleValueWidget
-                            helpText={helpText}
+                            helpText={
+                                input.includes('NUM')
+                                    ? 'Add a single number'
+                                    : input.includes('SEMVER')
+                                      ? 'A semver value should be of the format X.Y.Z'
+                                      : undefined
+                            }
                             onAddValue={(newValue) => {
                                 setValue(newValue);
                             }}

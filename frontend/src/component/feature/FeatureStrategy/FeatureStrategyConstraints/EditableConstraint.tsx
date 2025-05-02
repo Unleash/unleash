@@ -147,10 +147,10 @@ const StyledCaseSensitiveIcon = styled(CaseSensitiveIcon)(({ theme }) => ({
 }));
 
 type InputType =
-    | { type: 'legal values' }
-    | { type: 'date input' }
-    | { type: 'single value'; variant: 'number' | 'semver' }
-    | { type: 'free text' };
+    | { input: 'legal values' }
+    | { input: 'date' }
+    | { input: 'single value'; type: 'number' | 'semver' }
+    | { input: 'multiple values' };
 
 const getInputType = (input: Input): InputType => {
     switch (input) {
@@ -158,16 +158,16 @@ const getInputType = (input: Input): InputType => {
         case 'STRING_OPERATORS_LEGAL_VALUES':
         case 'NUM_OPERATORS_LEGAL_VALUES':
         case 'SEMVER_OPERATORS_LEGAL_VALUES':
-            return { type: 'legal values' };
+            return { input: 'legal values' };
         case 'DATE_OPERATORS_SINGLE_VALUE':
-            return { type: 'date input' };
+            return { input: 'date' };
         case 'NUM_OPERATORS_SINGLE_VALUE':
-            return { type: 'single value', variant: 'number' };
+            return { input: 'single value', type: 'number' };
         case 'SEMVER_OPERATORS_SINGLE_VALUE':
-            return { type: 'single value', variant: 'semver' };
+            return { input: 'single value', type: 'semver' };
         case 'IN_OPERATORS_FREETEXT':
         case 'STRING_OPERATORS_FREETEXT':
-            return { type: 'free text' };
+            return { input: 'multiple values' };
     }
 };
 
@@ -280,8 +280,8 @@ export const EditableConstraint: FC<Props> = ({
     };
 
     const TopRowInput = () => {
-        switch (inputType.type) {
-            case 'date input':
+        switch (inputType.input) {
+            case 'date':
                 return (
                     <ConstraintDateInput
                         setValue={setValue}
@@ -299,13 +299,13 @@ export const EditableConstraint: FC<Props> = ({
                         removeValue={() => setValue('')}
                         currentValue={localConstraint.value}
                         helpText={
-                            inputType.variant === 'number'
+                            inputType.type === 'number'
                                 ? 'Add a single number'
                                 : 'A semver value should be of the format X.Y.Z'
                         }
                     />
                 );
-            case 'free text':
+            case 'multiple values':
                 return (
                     <AddValuesWidget
                         helpText='Maximum 100 char length per value'
@@ -413,7 +413,7 @@ export const EditableConstraint: FC<Props> = ({
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
-            {inputType === 'legal values' ? (
+            {inputType.input === 'legal values' ? (
                 <LegalValuesContainer>
                     <LegalValuesSelector
                         data={resolveLegalValues(

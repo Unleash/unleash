@@ -118,7 +118,7 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
                         autoFocus
                         error={!!error}
                         helperText={error}
-                        aria-describedby={helpText ? helpTextId : undefined}
+                        aria-describedby={helpTextId}
                     />
                     <AddButton
                         variant='text'

@@ -41,6 +41,10 @@ const HelpText = styled('p')(({ theme }) => ({
     fontSize: theme.typography.caption.fontSize,
 }));
 
+const AddButton = styled(Button)(({ theme }) => ({
+    minWidth: theme.spacing(4),
+}));
+
 export const AddValuesPopover: FC<AddValuesProps> = ({
     initialValue,
     onAdd,
@@ -116,7 +120,7 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
                         helperText={error}
                         aria-describedby={helpText ? helpTextId : undefined}
                     />
-                    <Button
+                    <AddButton
                         variant='text'
                         type='submit'
                         size='small'
@@ -124,7 +128,7 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
                         disabled={!inputValue?.trim()}
                     >
                         Add
-                    </Button>
+                    </AddButton>
                 </InputRow>
                 <HelpText id={helpTextId}>{helpText}</HelpText>
             </form>

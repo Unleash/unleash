@@ -1,11 +1,7 @@
 import type { Request, Response } from 'express';
 import Controller from '../../routes/controller.js';
 
-import type {
-    IAuthRequest,
-    IUnleashConfig,
-    IUnleashServices,
-} from '../../types/index.js';
+import type { IAuthRequest, IUnleashConfig } from '../../types/index.js';
 import {
     type AdminSegmentSchema,
     adminSegmentSchema,
@@ -22,7 +18,11 @@ import {
 } from '../../openapi/util/standard-responses.js';
 import type { ISegmentService } from './segment-service-interface.js';
 import type { SegmentStrategiesSchema } from '../../openapi/spec/segment-strategies-schema.js';
-import type { AccessService, OpenApiService } from '../../services/index.js';
+import type {
+    AccessService,
+    IUnleashServices,
+    OpenApiService,
+} from '../../services/index.js';
 import {
     CREATE_SEGMENT,
     DELETE_SEGMENT,

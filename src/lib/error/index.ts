@@ -19,6 +19,7 @@ import PatternError from './pattern-error.js';
 import ForbiddenError from './forbidden-error.js';
 import NotFoundError from './notfound-error.js';
 import { throwExceedsLimitError } from './exceeds-limit-error.js';
+import { GenericUnleashError } from './unleash-error.js';
 export {
     BadDataError,
     UNIQUE_CONSTRAINT_VIOLATION,
@@ -39,4 +40,5 @@ export {
     PatternError,
     PasswordMismatchError,
     throwExceedsLimitError,
+    GenericUnleashError,
 };

@@ -1,7 +1,7 @@
 import { ApiTokenType } from '../types/models/api-token.js';
 import type { IUnleashConfig } from '../types/option.js';
 import type { IApiRequest, IAuthRequest } from '../routes/unleash-types.js';
-import type { IUnleashServices } from '../types/index.js';
+import type { IUnleashServices } from '../services/index.js';
 
 const isClientApi = ({ path }) => {
     return path && path.indexOf('/api/client') > -1;

@@ -114,7 +114,10 @@
       "/src/migrations",
       "/src/test"
     ],
-    "extensionsToTreatAsEsm": [".ts", ".tsx"]
+    "extensionsToTreatAsEsm": [
+      ".ts",
+      ".tsx"
+    ]
   },
   "dependencies": {
     "@slack/web-api": "^7.9.1",

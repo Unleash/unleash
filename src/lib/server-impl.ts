@@ -5,20 +5,6 @@ import { migrateDb } from '../migrator.js';
 import getApp from './app.js';
 import { createMetricsMonitor } from './metrics.js';
 import { createStores } from './db/index.js';
-import {
-    type AccessService,
-    createServices,
-    type ProjectService,
-    type OpenApiService,
-    type EventService,
-    type SessionService,
-    type FeatureToggleService,
-    type DependentFeaturesService,
-    type UserService,
-    type SettingService,
-    type ClientSpecService,
-    type ClientFeatureToggleService,
-} from './services/index.js';
 import { createConfig } from './create-config.js';
 import registerGracefulShutdown from './util/graceful-shutdown.js';
 import { createDb } from './db/db-pool.js';
@@ -30,14 +16,19 @@ import type {
     IUnleash,
     IUnleashConfig,
     IUnleashOptions,
-    IUnleashServices,
     IUnleashStores,
 } from './types/index.js';
-
+import {
+    createServices,
+    type IUnleashServices,
+    type PatService,
+} from './services/index.js';
 import { defaultLockKey, defaultTimeout, withDbLock } from './util/db-lock.js';
 import { scheduleServices } from './features/scheduler/schedule-services.js';
 import { compareAndLogPostgresVersion } from './util/postgres-version-checker.js';
 import {
+    type TransactionCreator,
+    type UnleashTransaction,
     type WithRollbackTransaction,
     withRollbackTransaction,
     type WithTransactional,
@@ -57,17 +48,24 @@ import {
     parseEnvVarBoolean,
     randomId,
 } from './util/index.js';
-import type { IRole } from './types/stores/access-store.js';
+import type {
+    IRole,
+    IRoleWithPermissions,
+} from './types/stores/access-store.js';
 import { createTestConfig } from '../test/config/test-config.js';
 import NoAuthUser from './types/no-auth-user.js';
 import { ALL, ApiTokenType, isAllProjects } from './types/models/api-token.js';
 import type { Store } from './types/stores/store.js';
 import { defaultFromRow, defaultToRow } from './db/crud/default-mappings.js';
 import type {
+    ICreateUser,
     IUserLookup,
     IUserUpdateFields,
 } from './types/stores/user-store.js';
-import type { ICreateUser, IUpdateUser } from './services/user-service.js';
+import type {
+    ICreateUserWithRole,
+    IUpdateUser,
+} from './services/user-service.js';
 import type { FromQueryParams } from './openapi/util/from-query-params.js';
 import type { ISegmentService } from './features/segment/segment-service-interface.js';
 import type { IAccessReadModel } from './features/access/access-read-model-type.js';
@@ -92,7 +90,19 @@ import {
     normalizeQueryParams,
     parseSearchOperatorValue,
 } from './features/feature-search/search-utils.js';
-import { createEventsService } from './internals.js';
+import {
+    createAccessService,
+    createChangeRequestAccessReadModel,
+    createEventsService,
+    createFeatureToggleService,
+    DB_TIME,
+} from './internals.js';
+import SessionStore from './db/session-store.js';
+import metricsHelper from './util/metrics-helper.js';
+import type { ReleasePlanMilestoneWriteModel } from './features/release-plans/release-plan-milestone-store.js';
+import type { ReleasePlanMilestoneStrategyWriteModel } from './features/release-plans/release-plan-milestone-strategy-store.js';
+import type { IChangeRequestAccessReadModel } from './features/change-request-access-service/change-request-access-read-model.js';
+import EventStore from './db/event-store.js';
 
 export async function initialServiceSetup(
     { authentication }: Pick<IUnleashConfig, 'authentication'>,
@@ -299,6 +309,13 @@ export {
     normalizeQueryParams,
     parseSearchOperatorValue,
     createEventsService,
+    SessionStore,
+    createAccessService,
+    metricsHelper,
+    DB_TIME,
+    EventStore,
+    createChangeRequestAccessReadModel,
+    createFeatureToggleService,
 };
 
 export type {
@@ -313,35 +330,33 @@ export type {
     IImportTogglesStore,
     WithRollbackTransaction,
     WithTransactional,
-    OpenApiService,
-    AccessService,
-    ProjectService,
-    EventService,
-    SessionService,
     IRole,
     Store,
+    ICreateUserWithRole,
     ICreateUser,
     IUpdateUser,
     IUserUpdateFields,
     IUserLookup,
     FromQueryParams,
-    FeatureToggleService,
-    DependentFeaturesService,
     ISegmentService,
     IAccessReadModel,
     IStatMonthlyTrafficUsage,
-    UserService,
-    SettingService,
-    ClientSpecService,
     BasePaginationParameters,
     AccessReadModel,
     Constraint,
     ClientFeatureToggleDelta,
-    ClientFeatureToggleService,
     DeltaEvent,
     IQueryParam,
+    PatService,
+    IRoleWithPermissions,
+    TransactionCreator,
+    UnleashTransaction,
+    ReleasePlanMilestoneWriteModel,
+    ReleasePlanMilestoneStrategyWriteModel,
+    IChangeRequestAccessReadModel,
 };
 export * from './openapi/index.js';
 export * from './types/index.js';
 export * from './error/index.js';
 export * from './util/index.js';
+export * from './services/index.js';

@@ -3,13 +3,15 @@ import {
     minutesToMilliseconds,
     secondsToMilliseconds,
 } from 'date-fns';
-import type { IUnleashConfig, IUnleashServices } from '../../types/index.js';
+import type { IUnleashConfig } from '../../types/index.js';
+import type { IUnleashServices } from '../../services/index.js';
 
 /**
  * Schedules service methods.
  *
  * In order to promote runtime control, you should **not use** a flagResolver inside this method. Instead, implement your flag usage inside the scheduled methods themselves.
  * @param services
+ * @param config
  */
 export const scheduleServices = async (
     services: IUnleashServices,

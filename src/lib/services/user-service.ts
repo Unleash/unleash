@@ -53,7 +53,7 @@ import { RateLimitError } from '../error/rate-limit-error.js';
 import type EventEmitter from 'events';
 import { USER_LOGIN } from '../metric-events.js';
 
-export interface ICreateUser {
+export interface ICreateUserWithRole {
     name?: string;
     email?: string;
     username?: string;
@@ -255,7 +255,7 @@ class UserService {
     }
 
     async createUser(
-        { username, email, name, password, rootRole }: ICreateUser,
+        { username, email, name, password, rootRole }: ICreateUserWithRole,
         auditUser: IAuditUser = SYSTEM_USER_AUDIT,
     ): Promise<IUserWithRootRole> {
         if (!username && !email) {

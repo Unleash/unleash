@@ -33,7 +33,13 @@ type AddValuesProps = {
     open: boolean;
     anchorEl: HTMLElement | null;
     onClose: () => void;
+    helpText?: string;
 };
+
+const HelpText = styled('p')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.caption.fontSize,
+}));
 
 export const AddValuesPopover: FC<AddValuesProps> = ({
     initialValue,
@@ -41,11 +47,13 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
     anchorEl,
     open,
     onClose,
+    helpText,
 }) => {
     const [inputValue, setInputValue] = useState(initialValue || '');
     const [error, setError] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
     const inputId = useId();
+    const helpTextId = useId();
 
     return (
         <StyledPopover
@@ -106,16 +114,19 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
                         autoFocus
                         error={!!error}
                         helperText={error}
+                        aria-describedby={helpText ? helpTextId : undefined}
                     />
                     <Button
                         variant='text'
                         type='submit'
+                        size='small'
                         color='primary'
                         disabled={!inputValue?.trim()}
                     >
                         Add
                     </Button>
                 </InputRow>
+                <HelpText id={helpTextId}>{helpText}</HelpText>
             </form>
         </StyledPopover>
     );

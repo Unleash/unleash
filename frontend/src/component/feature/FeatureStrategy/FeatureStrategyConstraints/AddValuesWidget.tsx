@@ -28,10 +28,11 @@ const AddValuesButton = styled('button')(({ theme }) => ({
 
 interface AddValuesProps {
     onAddValues: (newValues: string[]) => void;
+    helpText?: string;
 }
 
 export const AddValuesWidget = forwardRef<HTMLButtonElement, AddValuesProps>(
-    ({ onAddValues }, ref) => {
+    ({ onAddValues, helpText }, ref) => {
         const [open, setOpen] = useState(false);
         const positioningRef = useRef<HTMLButtonElement>(null);
         useImperativeHandle(
@@ -73,6 +74,7 @@ export const AddValuesWidget = forwardRef<HTMLButtonElement, AddValuesProps>(
 
                 <AddValuesPopover
                     onAdd={handleAdd}
+                    helpText={helpText}
                     open={open}
                     anchorEl={positioningRef.current}
                     onClose={() => setOpen(false)}

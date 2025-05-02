@@ -64,6 +64,14 @@ export const bulkRegistrationSchema = {
                 type: 'string',
             },
         },
+        projects: {
+            description: 'The list of projects used in the application',
+            type: 'array',
+            example: ['projectA', 'projectB'],
+            items: {
+                type: 'string',
+            },
+        },
         sdkVersion: {
             description:
                 'The version the sdk is running. Typically <client>:<version>',

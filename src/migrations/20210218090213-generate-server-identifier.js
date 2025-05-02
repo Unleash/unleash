@@ -1,8 +1,8 @@
 'use strict';
 
-const { v4: uuidv4 } = require('uuid');
+import { v4 as uuidv4 } from 'uuid';
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     const instanceId = uuidv4();
     db.runSql(
         `
@@ -12,7 +12,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
         DELETE FROM settings WHERE name = 'instanceInfo'

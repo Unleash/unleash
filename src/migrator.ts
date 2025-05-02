@@ -2,6 +2,7 @@ import { log } from 'db-migrate-shared';
 import { getInstance } from 'db-migrate';
 import type { IUnleashConfig } from './lib/types/option.js';
 import { secondsToMilliseconds } from 'date-fns';
+import path from 'path';
 
 log.setLogLevel('error');
 
@@ -26,7 +27,7 @@ export async function migrateDb(
         // disable Intellij/WebStorm from setting verbose CLI argument to db-migrator
         process.argv = process.argv.filter((it) => !it.includes('--verbose'));
         const dbm = getInstance(true, {
-            cwd: import.meta.dirname,
+            cwd: path.resolve(process.cwd(), './src/'),
             config: { custom },
             env: 'custom',
         });

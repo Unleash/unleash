@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
           ALTER TABLE feature_strategies ALTER COLUMN parameters SET DEFAULT '{}';
@@ -11,6 +11,6 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     cb();
 };

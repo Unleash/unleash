@@ -6,7 +6,7 @@ const DESCRIPTION = {
     MEMBER: 'Users with this role within a project are allowed to view, create and update feature toggles, but have limited permissions in regards to managing the projects user access and can not archive or delete the project.',
 };
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
     UPDATE roles set name = 'Editor', description = '${DESCRIPTION.EDITOR}' where name = 'Regular' AND type = 'root';
@@ -18,7 +18,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
     UPDATE roles set name = 'Regular' where name = 'Editor' AND type = 'root';

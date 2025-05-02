@@ -2,7 +2,7 @@
 
 'use strict';
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.createTable(
         'client_applications',
         {
@@ -25,6 +25,6 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     return db.dropTable('client_applications', cb);
 };

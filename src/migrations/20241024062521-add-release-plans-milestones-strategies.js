@@ -1,4 +1,4 @@
-exports.up = function(db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
         CREATE TABLE IF NOT EXISTS release_plan_definitions
@@ -47,7 +47,7 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function(db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
         DROP INDEX IF EXISTS idx_milestone_strategies_strategy_name;

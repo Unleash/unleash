@@ -30,7 +30,7 @@ import type { SimpleAuthSettings } from './types/settings/simple-auth-settings.j
 import type { Knex } from 'knex';
 import * as permissions from './types/permissions.js';
 import * as eventType from './shared/index.js';
-import { Db } from './db/db.js';
+import type { Db } from './db/db.js';
 import { defaultLockKey, defaultTimeout, withDbLock } from './util/db-lock.js';
 import { scheduleServices } from './features/scheduler/schedule-services.js';
 import { compareAndLogPostgresVersion } from './util/postgres-version-checker.js';
@@ -216,7 +216,7 @@ export {
     RoleName,
     IAuthType,
     type Knex,
-    Db,
+    type Db,
     permissions,
     eventType,
 };

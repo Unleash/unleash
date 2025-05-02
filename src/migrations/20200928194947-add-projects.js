@@ -2,9 +2,9 @@
 
 'use strict';
 
-const async = require('async');
+import async from 'async';
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     async.series(
         [
             db.createTable.bind(db, 'projects', {
@@ -29,6 +29,6 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     return db.dropTable('projects', cb);
 };

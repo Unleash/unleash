@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function (db, callback) {
+export async function up(db, callback) {
     db.runSql(
         `
           UPDATE permissions SET display_name='Update variants' WHERE permission = 'UPDATE_FEATURE_ENVIRONMENT_VARIANTS';
@@ -13,7 +13,7 @@ exports.up = function (db, callback) {
     );
 };
 
-exports.down = function (db, callback) {
+export async function down(db, callback) {
     db.runSql(
         `
         `,

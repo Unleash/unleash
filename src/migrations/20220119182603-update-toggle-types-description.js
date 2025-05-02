@@ -13,7 +13,7 @@ const DESCRIPTION = {
         'Permission feature toggles are used to control permissions in your system.',
 };
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
         UPDATE feature_types set description = '${DESCRIPTION.RELEASE}' where id = 'release';
@@ -26,7 +26,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
     `,

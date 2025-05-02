@@ -82,6 +82,7 @@
     "automock": false,
     "maxWorkers": 4,
     "testTimeout": 20000,
+    "globalSetup": "./dist/jest-setup.js",
     "transform": {
       "^.+\\.tsx?$": [
         "@swc/jest",

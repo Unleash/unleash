@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function(db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
         ALTER TABLE IF EXISTS flag_trends
@@ -13,7 +13,7 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function(db, cb) {
+export async function down(db, cb) {
     db.runSql(`ALTER TABLE IF EXISTS flag_trends
         DROP COLUMN IF EXISTS total_no,
         DROP COLUMN IF EXISTS total_apps,

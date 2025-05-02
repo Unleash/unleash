@@ -1,4 +1,4 @@
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
             delete from group_role where project not in (select id from projects);
@@ -10,7 +10,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
             ALTER TABLE group_role DROP CONSTRAINT fk_group_role_project;

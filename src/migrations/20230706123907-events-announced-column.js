@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     // mark existing events as announced, set the default to false for future events.
     db.runSql(
         `
@@ -12,7 +12,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
         ALTER TABLE events DROP COLUMN IF EXISTS "announced";

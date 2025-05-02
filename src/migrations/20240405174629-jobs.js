@@ -1,4 +1,4 @@
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
 -- this function rounds a date to the nearest interval
@@ -24,7 +24,7 @@ CREATE INDEX IF NOT EXISTS idx_job_stage ON jobs(stage);
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
             DROP INDEX IF EXISTS idx_job_finished;

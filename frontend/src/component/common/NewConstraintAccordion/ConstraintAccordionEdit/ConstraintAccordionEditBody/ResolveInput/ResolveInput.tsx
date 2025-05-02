@@ -69,7 +69,7 @@ const resolveLegalValues = (
  *
  * For the case of `ProjectActionsFilterItem.tsx`: it already excludes legal
  * values and date operators. This leaves only free text and single value
- * text/numeric operators.
+ * text/numeric operators. Alternatively, consider rewriting this component to only handle those cases.
  */
 export const ResolveInput = ({
     input,

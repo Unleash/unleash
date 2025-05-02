@@ -27,8 +27,10 @@ import { defaultLockKey, defaultTimeout, withDbLock } from './util/db-lock.js';
 import { scheduleServices } from './features/scheduler/schedule-services.js';
 import { compareAndLogPostgresVersion } from './util/postgres-version-checker.js';
 import {
+    createKnexTransactionStarter,
     type TransactionCreator,
     type UnleashTransaction,
+    withFakeTransactional,
     type WithRollbackTransaction,
     withRollbackTransaction,
     type WithTransactional,
@@ -51,6 +53,8 @@ import {
 import type {
     IRole,
     IRoleWithPermissions,
+    IRoleWithProject,
+    IUserPermission,
 } from './types/stores/access-store.js';
 import { createTestConfig } from '../test/config/test-config.js';
 import NoAuthUser from './types/no-auth-user.js';
@@ -93,9 +97,26 @@ import {
 import {
     createAccessService,
     createChangeRequestAccessReadModel,
+    createContextService,
     createEventsService,
+    createFakeInstanceStatsService,
+    createFakeProjectService,
     createFeatureToggleService,
+    createInstanceStatsService,
+    createProjectService,
+    createTagTypeService,
+    createExportImportTogglesService,
     DB_TIME,
+    findParam,
+    conditionalMiddleware,
+    createPlaygroundService,
+    createSegmentService,
+    createFakeEventsService,
+    createFakeFeatureToggleService,
+    createFakeSegmentService,
+    createDependentFeaturesService,
+    createFakeDependentFeaturesService,
+    createFakeAccessService,
 } from './internals.js';
 import SessionStore from './db/session-store.js';
 import metricsHelper from './util/metrics-helper.js';
@@ -103,6 +124,57 @@ import type { ReleasePlanMilestoneWriteModel } from './features/release-plans/re
 import type { ReleasePlanMilestoneStrategyWriteModel } from './features/release-plans/release-plan-milestone-strategy-store.js';
 import type { IChangeRequestAccessReadModel } from './features/change-request-access-service/change-request-access-read-model.js';
 import EventStore from './db/event-store.js';
+import RoleStore from './db/role-store.js';
+import { AccessStore } from './db/access-store.js';
+import {
+    addAjvSchema,
+    type ISchemaValidationErrors,
+    validateSchema,
+} from './openapi/validate.js';
+import type { Counter, Gauge } from './util/metrics/index.js';
+import { createCounter, createGauge } from './util/metrics/index.js';
+import FakeEventStore from '../test/fixtures/fake-event-store.js';
+import type { Subscriber } from './features/user-subscriptions/user-subscriptions-read-model-type.js';
+import { UserSubscriptionsReadModel } from './features/user-subscriptions/user-subscriptions-read-model.js';
+import { FakeUserSubscriptionsReadModel } from './features/user-subscriptions/fake-user-subscriptions-read-model.js';
+import type { IPrivateProjectChecker } from './features/private-project/privateProjectCheckerType.js';
+import type { ProjectAccess } from './features/private-project/privateProjectStore.js';
+import { FakePrivateProjectChecker } from './features/private-project/fakePrivateProjectChecker.js';
+import {
+    createFakeProjectReadModel,
+    createProjectReadModel,
+} from './features/project/createProjectReadModel.js';
+import {
+    createFakePrivateProjectChecker,
+    createPrivateProjectChecker,
+} from './features/private-project/createPrivateProjectChecker.js';
+import type { ProductivityReportMetrics } from './features/productivity-report/productivity-report-view-model.js';
+import { IProjectStats } from './features/project/project-service.js';
+import type { IImportService } from './features/export-import-toggles/export-import-service.js';
+import type { IContextFieldDto } from './features/context/context-field-store-type.js';
+import { SegmentReadModel } from './features/segment/segment-read-model.js';
+import type ExportImportService from './features/export-import-toggles/export-import-service.js';
+import { FeatureEnvironmentStore } from './db/feature-environment-store.js';
+import StrategyStore from './db/strategy-store.js';
+import { ChangeRequestAccessReadModel } from './features/change-request-access-service/sql-change-request-access-read-model.js';
+import { ImportPermissionsService } from './features/export-import-toggles/import-permissions-service.js';
+import FeatureStrategiesStore from './features/feature-toggle/feature-toggle-strategies-store.js';
+import TagStore from './db/tag-store.js';
+import FeatureToggleStore from './features/feature-toggle/feature-toggle-store.js';
+import FeatureTagStore from './db/feature-tag-store.js';
+import ExportImportController from './features/export-import-toggles/export-import-controller.js';
+import type { QueryOverride } from './features/client-feature-toggles/client-feature-toggle.controller.js';
+import { DELTA_EVENT_TYPES } from './features/client-feature-toggles/delta/client-feature-toggle-delta-types.js';
+import { AdvancedPlaygroundFeatureEvaluationResult } from './features/playground/playground-service.js';
+import { advancedPlaygroundViewModel } from './features/playground/playground-view-model.js';
+import {
+    createAccessReadModel,
+    createFakeAccessReadModel,
+} from './features/access/createAccessReadModel.js';
+import {
+    getDefaultStrategy,
+    getProjectDefaultStrategy,
+} from './features/playground/feature-evaluator/helpers.js';
 
 export async function initialServiceSetup(
     { authentication }: Pick<IUnleashConfig, 'authentication'>,
@@ -314,8 +386,59 @@ export {
     metricsHelper,
     DB_TIME,
     EventStore,
+    FakeEventStore,
     createChangeRequestAccessReadModel,
     createFeatureToggleService,
+    createProjectService,
+    createFakeProjectService,
+    findParam,
+    RoleStore,
+    AccessStore,
+    validateSchema,
+    addAjvSchema,
+    createCounter,
+    createGauge,
+    UserSubscriptionsReadModel,
+    FakeUserSubscriptionsReadModel,
+    FakePrivateProjectChecker,
+    createFakeProjectReadModel,
+    createFakePrivateProjectChecker,
+    createProjectReadModel,
+    createPrivateProjectChecker,
+    IProjectStats,
+    createFakeInstanceStatsService,
+    createInstanceStatsService,
+    SegmentReadModel,
+    FeatureEnvironmentStore,
+    ChangeRequestAccessReadModel,
+    StrategyStore,
+    ImportPermissionsService,
+    FeatureStrategiesStore,
+    TagStore,
+    FeatureToggleStore,
+    createTagTypeService,
+    createContextService,
+    createExportImportTogglesService,
+    FeatureTagStore,
+    ExportImportController,
+    conditionalMiddleware,
+    DELTA_EVENT_TYPES,
+    createKnexTransactionStarter,
+    createPlaygroundService,
+    AdvancedPlaygroundFeatureEvaluationResult,
+    advancedPlaygroundViewModel,
+    withFakeTransactional,
+    createAccessReadModel,
+    createFakeAccessService,
+    createFakeAccessReadModel,
+    createFakeSegmentService,
+    createSegmentService,
+    createFakeFeatureToggleService,
+    createFakeEventsService,
+    createDependentFeaturesService,
+    createFakeDependentFeaturesService,
+    getProjectDefaultStrategy,
+    getDefaultStrategy,
 };
 
 export type {
@@ -354,6 +477,19 @@ export type {
     ReleasePlanMilestoneWriteModel,
     ReleasePlanMilestoneStrategyWriteModel,
     IChangeRequestAccessReadModel,
+    IRoleWithProject,
+    ISchemaValidationErrors,
+    IImportService,
+    IContextFieldDto,
+    Gauge,
+    Counter,
+    Subscriber,
+    ProjectAccess,
+    IPrivateProjectChecker,
+    ProductivityReportMetrics,
+    ExportImportService,
+    QueryOverride,
+    IUserPermission,
 };
 export * from './openapi/index.js';
 export * from './types/index.js';

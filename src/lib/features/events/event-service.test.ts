@@ -1,11 +1,10 @@
 import { getLogger } from 'log4js';
-import {
-    type IBaseEvent,
-    type IEventStore,
-    type IFeatureTagStore,
-    type IUnleashConfig,
-    USER_UPDATED,
+import type {
+    IEventStore,
+    IFeatureTagStore,
+    IUnleashConfig,
 } from '../../internals.js';
+import { type IBaseEvent, USER_UPDATED } from '../../shared/index.js';
 import type { IAccessReadModel } from '../access/access-read-model-type.js';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import type { ProjectAccess } from '../private-project/privateProjectStore.js';

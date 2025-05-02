@@ -18,7 +18,7 @@ import {
 import { normalizeQueryParams } from '../feature-search/search-utils.js';
 import Controller from '../../routes/controller.js';
 import type { IAuthRequest } from '../../server-impl.js';
-import type { IEnrichedEvent, IEvent } from '../../types/index.js';
+import type { IEnrichedEvent, IEvent } from '../../shared/index.js';
 import { anonymiseKeys, extractUserIdFromUser } from '../../util/index.js';
 import {
     FeatureEventFormatterMd,

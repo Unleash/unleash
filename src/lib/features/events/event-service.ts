@@ -5,10 +5,10 @@ import type {
     IEventSearchParams,
     IEventStore,
 } from '../../types/stores/event-store.js';
-import type { IBaseEvent, IEventList } from '../../types/events.js';
+import type { IBaseEvent, ITag, IEventList } from '../../shared/index.js';
 import type { DeprecatedSearchEventsSchema } from '../../openapi/spec/deprecated-search-events-schema.js';
 import type EventEmitter from 'events';
-import type { IApiUser, ITag, IUser } from '../../types/index.js';
+import type { IApiUser, IUser } from '../../types/index.js';
 import { ApiTokenType } from '../../types/models/api-token.js';
 import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events.js';
 import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';

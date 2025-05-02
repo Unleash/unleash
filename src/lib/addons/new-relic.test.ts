@@ -2,9 +2,11 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_ENVIRONMENT_DISABLED,
+    type IEvent,
+} from '../shared/index.js';
+import {
     type IFlagResolver,
     type IAddonConfig,
-    type IEvent,
     serializeDates,
     type IFlagKey,
 } from '../types/index.js';

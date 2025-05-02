@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { IEventTypes } from '../../types/index.js';
+import { IEventTypes } from '../../shared/index.js';
 
 export const deprecatedSearchEventsSchema = {
     $id: '#/components/schemas/deprecatedSearchEventsSchema',

@@ -21,12 +21,8 @@ import type { ISegmentStore } from '../segment/segment-store-type.js';
 import type { IRoleStore } from '../../types/stores/role-store.js';
 import type VersionService from '../../services/version-service.js';
 import type { ISettingStore } from '../../types/stores/settings-store.js';
-import {
-    FEATURES_EXPORTED,
-    FEATURES_IMPORTED,
-    type IApiTokenStore,
-    type IFlagResolver,
-} from '../../types/index.js';
+import type { IApiTokenStore, IFlagResolver } from '../../types/index.js';
+import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../../shared/index.js';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../util/index.js';
 import type { GetActiveUsers } from './getActiveUsers.js';
 import type { ProjectModeCount } from '../project/project-store.js';

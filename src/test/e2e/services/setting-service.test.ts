@@ -6,7 +6,7 @@ import {
     SETTING_CREATED,
     SETTING_DELETED,
     SETTING_UPDATED,
-} from '../../../lib/types/events.js';
+} from '../../../lib/shared/index.js';
 import { TEST_AUDIT_USER } from '../../../lib/types/index.js';
 import { createEventsService } from '../../../lib/features/index.js';
 

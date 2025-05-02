@@ -23,7 +23,7 @@ import {
     PROJECT_ARCHIVED,
     PROJECT_REVIVED,
     PROJECT_DELETED,
-} from './types/events.js';
+} from './shared/index.js';
 import type { IUnleashConfig } from './types/option.js';
 import type { IUnleashStores } from './types/stores.js';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';

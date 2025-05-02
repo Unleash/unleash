@@ -22,10 +22,12 @@ import {
     type IUserStore,
     SYSTEM_USER_AUDIT,
     TEST_AUDIT_USER,
+} from '../../../lib/types/index.js';
+import {
     USER_CREATED,
     USER_DELETED,
     USER_UPDATED,
-} from '../../../lib/types/index.js';
+} from '../../../lib/shared/index.js';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../../lib/util/index.js';
 import { PasswordPreviouslyUsedError } from '../../../lib/error/password-previously-used.js';
 import { createEventsService } from '../../../lib/features/index.js';

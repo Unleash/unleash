@@ -8,7 +8,6 @@ import type {
     IFlagResolver,
     IFlags,
 } from './experimental.js';
-import type { ResourceLimitsSchema } from '../openapi/spec/resource-limits-schema.js';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js';
 import type { IUnleashServices } from '../services/index.js';
 
@@ -119,6 +118,25 @@ export interface IClientCachingOption {
     maxAge: number;
 }
 
+export interface ResourceLimits {
+    apiTokens: number;
+    constraints: number;
+    constraintValues: number;
+    environments: number;
+    featureFlags: number;
+    featureEnvironmentStrategies: number;
+    projects: number;
+    segments: number;
+    segmentValues: number;
+    strategySegments: number;
+    actionSetActions: number;
+    actionSetsPerProject: number;
+    actionSetFilters: number;
+    actionSetFilterValues: number;
+    signalEndpoints: number;
+    signalTokensPerEndpoint: number;
+}
+
 export interface IUnleashOptions {
     databaseUrl?: string;
     databaseUrlFile?: string;
@@ -152,19 +170,7 @@ export interface IUnleashOptions {
     dailyMetricsStorageDays?: number;
     rateLimiting?: Partial<IRateLimiting>;
     isOss?: boolean;
-    resourceLimits?: Partial<
-        Pick<
-            ResourceLimitsSchema,
-            | 'apiTokens'
-            | 'constraintValues'
-            | 'constraints'
-            | 'environments'
-            | 'featureEnvironmentStrategies'
-            | 'featureFlags'
-            | 'projects'
-            | 'segments'
-        >
-    >;
+    resourceLimits?: Partial<ResourceLimits>;
     userInactivityThresholdInDays?: number;
     unleashFrontendToken?: string;
 }
@@ -276,7 +282,7 @@ export interface IUnleashConfig {
     segmentValuesLimit: number;
     /** @deprecated: use resourceLimits.strategySegments */
     strategySegmentsLimit: number;
-    resourceLimits: ResourceLimitsSchema;
+    resourceLimits: ResourceLimits;
     metricsRateLimiting: IMetricsRateLimiting;
     dailyMetricsStorageDays: number;
     clientFeatureCaching: IClientCachingOption;

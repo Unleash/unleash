@@ -1,10 +1,6 @@
 import type { Response } from 'express';
 import Controller from '../../../routes/controller.js';
-import {
-    CLIENT_METRICS,
-    type IFlagResolver,
-    type IUnleashConfig,
-} from '../../../types/index.js';
+import type { IFlagResolver, IUnleashConfig } from '../../../types/index.js';
 import type ClientInstanceService from './instance-service.js';
 import type { Logger } from '../../../logger.js';
 import type { IAuthRequest } from '../../../routes/unleash-types.js';
@@ -24,6 +20,7 @@ import { minutesToMilliseconds } from 'date-fns';
 import type { BulkMetricsSchema } from '../../../openapi/spec/bulk-metrics-schema.js';
 import { clientMetricsEnvBulkSchema } from '../shared/schema.js';
 import type { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v2-type.js';
+import { CLIENT_METRICS } from '../../../shared/index.js';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;

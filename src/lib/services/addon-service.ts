@@ -2,12 +2,12 @@ import memoizee from 'memoizee';
 import joi from 'joi';
 const { ValidationError } = joi;
 import { getAddons, type IAddonProviders } from '../addons/index.js';
-import * as events from '../types/events.js';
+import * as events from '../shared/index.js';
 import {
     AddonConfigCreatedEvent,
     AddonConfigDeletedEvent,
     AddonConfigUpdatedEvent,
-} from '../types/events.js';
+} from '../types/index.js';
 import { addonSchema } from './addon-schema.js';
 import NameExistsError from '../error/name-exists-error.js';
 import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type.js';

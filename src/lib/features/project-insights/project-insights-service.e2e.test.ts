@@ -9,7 +9,7 @@ import type {
     EventService,
     ProjectInsightsService,
 } from '../../../lib/services/index.js';
-import { FeatureEnvironmentEvent } from '../../../lib/types/events.js';
+import { FeatureEnvironmentEvent } from '../../../lib/types/index.js';
 import { subDays } from 'date-fns';
 import {
     createEventsService,

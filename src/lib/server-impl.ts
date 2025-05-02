@@ -29,7 +29,7 @@ import type { IApiRequest, IAuthRequest } from './routes/unleash-types.js';
 import type { SimpleAuthSettings } from './types/settings/simple-auth-settings.js';
 import type { Knex } from 'knex';
 import * as permissions from './types/permissions.js';
-import * as eventType from './types/events.js';
+import * as eventType from './shared/index.js';
 import { Db } from './db/db.js';
 import { defaultLockKey, defaultTimeout, withDbLock } from './util/db-lock.js';
 import { scheduleServices } from './features/scheduler/schedule-services.js';

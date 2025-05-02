@@ -1,6 +1,6 @@
 import type { Logger } from '../logger.js';
 
-import { FEATURE_CREATED, type IEvent } from '../types/events.js';
+import { FEATURE_CREATED, type IEvent } from '../shared/index.js';
 
 import WebhookAddon from './webhook.js';
 import { jest } from '@jest/globals';

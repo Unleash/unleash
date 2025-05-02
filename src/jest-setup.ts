@@ -1,9 +1,9 @@
 import postgresPkg from 'pg';
 const { Client } = postgresPkg;
-import { migrateDb } from '../src/migrator.ts';
-import { getDbConfig } from '../src/test/e2e/helpers/database-config.ts';
-import { testDbPrefix } from '../src/test/e2e/helpers/database-init.ts';
-import type { IUnleashConfig } from '../src/lib/internals.ts';
+import { migrateDb } from './migrator.js';
+import { getDbConfig } from './test/e2e/helpers/database-config.js';
+import { testDbPrefix } from './test/e2e/helpers/database-init.js';
+import type { IUnleashConfig } from './lib/internals.js';
 
 let initializationPromise: Promise<void> | null = null;
 
@@ -42,7 +42,7 @@ const initializeTemplateDb = (db: IUnleashConfig['db']): Promise<void> => {
     return initializationPromise;
 };
 
-export async function globalSetup() {
+export default async function globalSetup() {
     process.env.TZ = 'UTC';
     process.env.TEST_DB_TEMPLATE_NAME = 'unleash_template_db';
     await initializeTemplateDb(getDbConfig());

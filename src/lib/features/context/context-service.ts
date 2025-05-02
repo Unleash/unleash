@@ -10,14 +10,16 @@ import type {
 } from '../../types/stores.js';
 import type { IUnleashConfig } from '../../types/option.js';
 import type { ContextFieldStrategiesSchema } from '../../openapi/spec/context-field-strategies-schema.js';
+import type {
+    IAuditUser,
+    IFeatureStrategy,
+    IFlagResolver,
+} from '../../types/index.js';
 import {
     CONTEXT_FIELD_CREATED,
     CONTEXT_FIELD_DELETED,
     CONTEXT_FIELD_UPDATED,
-    type IAuditUser,
-    type IFeatureStrategy,
-    type IFlagResolver,
-} from '../../types/index.js';
+} from '../../shared/index.js';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import type EventService from '../events/event-service.js';
 import {

@@ -1,8 +1,4 @@
 import {
-    CLIENT_METRICS_ADDED,
-    FEATURE_ARCHIVED,
-    FEATURE_CREATED,
-    FEATURE_REVIVED,
     FeatureCompletedEvent,
     FeatureUncompletedEvent,
     type IAuditUser,
@@ -12,6 +8,12 @@ import {
     type IFlagResolver,
     type IUnleashConfig,
 } from '../../types/index.js';
+import {
+    CLIENT_METRICS_ADDED,
+    FEATURE_ARCHIVED,
+    FEATURE_CREATED,
+    FEATURE_REVIVED,
+} from '../../shared/index.js';
 import type {
     FeatureLifecycleView,
     IFeatureLifecycleStore,

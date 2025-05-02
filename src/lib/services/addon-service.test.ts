@@ -7,7 +7,7 @@ import {
     ADDON_CONFIG_DELETED,
     ADDON_CONFIG_UPDATED,
     FEATURE_CREATED,
-} from '../types/events.js';
+} from '../shared/index.js';
 import createStores from '../../test/fixtures/store.js';
 
 import AddonService from './addon-service.js';

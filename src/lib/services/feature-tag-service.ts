@@ -3,9 +3,8 @@ import type { Logger } from '../logger.js';
 import {
     FEATURE_TAGGED,
     FEATURE_UNTAGGED,
-    FeatureTaggedEvent,
     TAG_CREATED,
-} from '../types/events.js';
+} from '../shared/index.js';
 import type { IUnleashConfig } from '../types/option.js';
 import type { IFeatureToggleStore, IUnleashStores } from '../types/stores.js';
 import { tagSchema } from './tag-schema.js';
@@ -15,10 +14,10 @@ import type {
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store.js';
 import type { ITagStore } from '../types/stores/tag-store.js';
-import type { ITag } from '../types/model.js';
+import type { ITag } from '../shared/index.js';
 import { BadDataError, FOREIGN_KEY_VIOLATION } from '../../lib/error/index.js';
 import type EventService from '../features/events/event-service.js';
-import type { IAuditUser } from '../types/index.js';
+import { FeatureTaggedEvent, type IAuditUser } from '../types/index.js';
 
 class FeatureTagService {
     private tagStore: ITagStore;

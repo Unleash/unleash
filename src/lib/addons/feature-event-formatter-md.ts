@@ -2,10 +2,10 @@ import Mustache from 'mustache';
 import {
     FEATURE_ARCHIVED,
     FEATURE_STRATEGY_UPDATE,
-    type IConstraint,
     type IEvent,
-} from '../types/index.js';
+} from '../shared/index.js';
 import { EVENT_MAP } from './feature-event-formatter-md-events.js';
+import type { IConstraint } from '../internals.js';
 
 export interface IFormattedEventData {
     label: string;

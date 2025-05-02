@@ -52,7 +52,7 @@
     "local:package": "del-cli --force build && mkdir build && cp -r dist docs CHANGELOG.md LICENSE README.md package.json build",
     "build:watch": "tsc -w",
     "prepare": "husky && yarn --cwd ./frontend install && if [ ! -d ./dist ]; then yarn build; fi",
-    "test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test PORT=4243 node --trace-warnings node_modules/.bin/jest",
+    "test": "node dist/jest-setup.js && NODE_ENV=test PORT=4243 node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:unit": "NODE_ENV=test PORT=4243 jest --testPathIgnorePatterns=src/test/e2e --testPathIgnorePatterns=dist",
     "test:docker": "./scripts/docker-postgres.sh",
     "test:report": "NODE_ENV=test PORT=4243 jest --reporters=\"default\" --reporters=\"jest-junit\"",
@@ -82,7 +82,6 @@
     "automock": false,
     "maxWorkers": 4,
     "testTimeout": 20000,
-    "globalSetup": "./scripts/jest-setup.ts",
     "transform": {
       "^.+\\.tsx?$": [
         "@swc/jest",
@@ -113,7 +112,11 @@
       "/src/migrations",
       "/src/test"
     ],
-    "extensionsToTreatAsEsm": [".ts", ".tsx"]
+    "extensionsToTreatAsEsm": [".ts", ".tsx"],
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "transformIgnorePatterns": ["node_modules"]
   },
   "dependencies": {
     "@slack/web-api": "^7.9.1",
@@ -192,7 +195,7 @@
     "@types/express-session": "1.18.1",
     "@types/faker": "5.5.9",
     "@types/hash-sum": "^1.0.0",
-    "@types/jest": "29.5.14",
+    "@types/jest": "^29.5.14",
     "@types/js-yaml": "4.0.9",
     "@types/lodash.groupby": "4.6.9",
     "@types/lodash.isequal": "^4.5.8",
@@ -227,8 +230,10 @@
     "source-map-support": "0.5.21",
     "superagent": "10.2.0",
     "supertest": "7.0.0",
+    "ts-jest": "^29.3.2",
     "ts-node": "10.9.2",
     "tsc-watch": "6.2.1",
+    "tsx": "^4.19.4",
     "typescript": "5.8.3",
     "wait-on": "^8.0.0"
   },

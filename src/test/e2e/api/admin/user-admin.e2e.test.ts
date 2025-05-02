@@ -8,7 +8,7 @@ import {
     USER_CREATED,
     USER_DELETED,
     USER_UPDATED,
-} from '../../../../lib/types/events.js';
+} from '../../../../lib/shared/index.js';
 import type { IRole } from '../../../../lib/types/stores/access-store.js';
 import type { IEventStore } from '../../../../lib/types/stores/event-store.js';
 import type { IUserStore } from '../../../../lib/types/stores/user-store.js';

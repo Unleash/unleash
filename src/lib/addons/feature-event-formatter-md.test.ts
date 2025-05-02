@@ -8,8 +8,7 @@ import {
     FEATURE_STRATEGY_UPDATE,
     type IEvent,
     PROJECT_ARCHIVED,
-    SYSTEM_USER_ID,
-} from '../types/index.js';
+} from '../shared/index.js';
 
 import { FeatureEventFormatterMd } from './feature-event-formatter-md.js';
 import {
@@ -29,6 +28,7 @@ import {
     STR_ENDS_WITH,
     STR_STARTS_WITH,
 } from '../util/index.js';
+import { SYSTEM_USER_ID } from '../internals.js';
 
 const testCases: [string, IEvent][] = [
     [

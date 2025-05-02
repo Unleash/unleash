@@ -16,7 +16,6 @@ import type {
     IFlagResolver,
     IStrategyConfig,
     IStrategyVariant,
-    ITag,
     PartialDeep,
     PartialSome,
 } from '../../types/index.js';
@@ -31,6 +30,7 @@ import type { Db } from '../../db/db.js';
 import { isAfter } from 'date-fns';
 import merge from 'deepmerge';
 import Raw = Knex.Raw;
+import type { ITag } from '../../shared/index.js';
 
 const COLUMNS = [
     'id',

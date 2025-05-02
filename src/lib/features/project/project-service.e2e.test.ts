@@ -12,7 +12,7 @@ import { randomId } from '../../util/random-id.js';
 import EnvironmentService from '../project-environments/environment-service.js';
 import IncompatibleProjectError from '../../error/incompatible-project-error.js';
 import type { ApiTokenService, EventService } from '../../services/index.js';
-import { FeatureEnvironmentEvent } from '../../types/events.js';
+import { FeatureEnvironmentEvent } from '../../types/index.js';
 import { addDays, subDays } from 'date-fns';
 import {
     createAccessService,

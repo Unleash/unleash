@@ -4,11 +4,10 @@ import definition from './new-relic-definition.js';
 import Mustache from 'mustache';
 import {
     type IAddonConfig,
-    type IEvent,
-    type IEventType,
     type IFlagResolver,
     serializeDates,
 } from '../types/index.js';
+import type { IEvent, IEventType } from '../shared/index.js';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,

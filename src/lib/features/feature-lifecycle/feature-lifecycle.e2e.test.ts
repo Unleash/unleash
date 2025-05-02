@@ -6,15 +6,17 @@ import {
     setupAppWithAuth,
 } from '../../../test/e2e/helpers/test-helper.js';
 import getLogger from '../../../test/fixtures/no-logger.js';
+import type {
+    IEventStore,
+    IFeatureLifecycleStore,
+    StageName,
+} from '../../types/index.js';
 import {
     CLIENT_METRICS_ADDED,
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_REVIVED,
-    type IEventStore,
-    type IFeatureLifecycleStore,
-    type StageName,
-} from '../../types/index.js';
+} from '../../shared/index.js';
 import type EventEmitter from 'events';
 import type { FeatureLifecycleCompletedSchema } from '../../openapi/index.js';
 import { FeatureLifecycleReadModel } from './feature-lifecycle-read-model.js';

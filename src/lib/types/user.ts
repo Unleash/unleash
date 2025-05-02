@@ -1,9 +1,7 @@
 import Joi from 'joi';
 const { ValidationError } = Joi;
 import { generateImageUrl } from '../util/generateImageUrl.js';
-
-export const AccountTypes = ['User', 'Service Account'] as const;
-type AccountType = (typeof AccountTypes)[number];
+import type { AccountType } from '../shared/index.js';
 
 export interface UserData {
     id: number;

@@ -3,6 +3,7 @@ import { useRecentlyUsedSegments } from './useRecentlyUsedSegments';
 import type { ISegment } from 'interfaces/segment';
 import { FeatureStrategySegmentChip } from '../FeatureStrategySegmentChip';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 type IRecentlyUsedSegmentsProps = {
     setSegments?: React.Dispatch<React.SetStateAction<ISegment[]>>;
@@ -29,12 +30,17 @@ export const RecentlyUsedSegments = ({
 }: IRecentlyUsedSegmentsProps) => {
     const { items: recentlyUsedSegmentIds } = useRecentlyUsedSegments();
     const { segments: allSegments } = useSegments();
+    const addEditStrategyEnabled = useUiFlag('addEditStrategy');
 
-    if (recentlyUsedSegmentIds.length === 0 || !setSegments || !allSegments) {
+    if (
+        !addEditStrategyEnabled ||
+        recentlyUsedSegmentIds.length === 0 ||
+        !setSegments ||
+        !allSegments
+    ) {
         return null;
     }
 
-    // Get the full segment objects from the IDs
     const segmentObjects = recentlyUsedSegmentIds
         .map((id) => allSegments.find((segment) => segment.id === id))
         .filter((segment) => segment !== undefined) as ISegment[];

@@ -9,12 +9,9 @@ import {
     type Operator,
 } from 'constants/operators';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import type {
-    ILegalValue,
-    IUnleashContextDefinition,
-} from 'interfaces/context';
+import type { IUnleashContextDefinition } from 'interfaces/context';
 import type { IConstraint } from 'interfaces/strategy';
-import { useEffect, useMemo, useRef, useState, type FC } from 'react';
+import { useEffect, useRef, useState, type FC } from 'react';
 import { oneOf } from 'utils/oneOf';
 import {
     CURRENT_TIME_CONTEXT_FIELD,
@@ -34,6 +31,7 @@ import { ReactComponent as NotEqualsIcon } from 'assets/icons/constraint-not-equ
 import { AddSingleValueWidget } from './AddSingleValueWidget';
 import { ConstraintDateInput } from './ConstraintDateInput';
 import { LegalValuesSelector } from './LegalValuesSelector';
+import { resolveLegalValues } from './resolve-legal-values';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -71,7 +69,7 @@ const ConstraintDetails = styled('div')(({ theme }) => ({
     height: 'min-content',
 }));
 
-const InputContainer = styled('div')(({ theme }) => ({
+const LegalValuesContainer = styled('div')(({ theme }) => ({
     padding: 'var(--padding)',
     borderTop: `1px dashed ${theme.palette.divider}`,
 }));
@@ -166,32 +164,6 @@ const getInputType = (input: Input) => {
     }
 };
 
-const resolveLegalValues = (
-    values: IConstraint['values'],
-    legalValues: IUnleashContextDefinition['legalValues'],
-): { legalValues: ILegalValue[]; deletedLegalValues: ILegalValue[] } => {
-    if (legalValues?.length === 0) {
-        return {
-            legalValues: [],
-            deletedLegalValues: [],
-        };
-    }
-
-    const deletedLegalValues = (values || [])
-        .filter(
-            (value) =>
-                !(legalValues || []).some(
-                    ({ value: legalValue }) => legalValue === value,
-                ),
-        )
-        .map((v) => ({ value: v, description: '' }));
-
-    return {
-        legalValues: legalValues || [],
-        deletedLegalValues,
-    };
-};
-
 type Props = {
     constraint: IConstraint;
     localConstraint: IConstraint;
@@ -243,11 +215,6 @@ export const EditableConstraint: FC<Props> = ({
         useState(false);
     const deleteButtonRef = useRef<HTMLButtonElement>(null);
     const addValuesButtonRef = useRef<HTMLButtonElement>(null);
-    const resolvedLegalValues = useMemo(
-        () =>
-            resolveLegalValues(constraintValues, contextDefinition.legalValues),
-        [constraintValues, JSON.stringify(contextDefinition.legalValues)],
-    );
     const inputType = getInputType(input);
 
     /* We need a special case to handle the currentTime context field. Since
@@ -434,15 +401,18 @@ export const EditableConstraint: FC<Props> = ({
                 </HtmlTooltip>
             </TopRow>
             {inputType === 'legal values' ? (
-                <InputContainer>
+                <LegalValuesContainer>
                     <LegalValuesSelector
-                        data={resolvedLegalValues}
+                        data={resolveLegalValues(
+                            constraintValues,
+                            contextDefinition.legalValues,
+                        )}
                         constraintValues={constraintValues}
                         values={localConstraint.values || []}
                         setValuesWithRecord={setValuesWithRecord}
                         setValues={setValues}
                     />{' '}
-                </InputContainer>
+                </LegalValuesContainer>
             ) : null}
         </Container>
     );

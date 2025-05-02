@@ -25,12 +25,13 @@ import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive
 import { ReactComponent as CaseInsensitiveIcon } from 'assets/icons/case-insensitive.svg';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { AddValuesWidget } from './AddValuesWidget';
-import { ResolveInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/ResolveInput/ResolveInput';
 
 import { ReactComponent as EqualsIcon } from 'assets/icons/constraint-equals.svg';
 import { ReactComponent as NotEqualsIcon } from 'assets/icons/constraint-not-equals.svg';
 import { AddSingleValueWidget } from './AddSingleValueWidget';
 import { ConstraintDateInput } from './ConstraintDateInput';
+import { LegalValuesSelector } from './LegalValuesSelector';
+import { resolveLegalValues } from './resolve-legal-values';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -68,7 +69,7 @@ const ConstraintDetails = styled('div')(({ theme }) => ({
     height: 'min-content',
 }));
 
-const InputContainer = styled('div')(({ theme }) => ({
+const LegalValuesContainer = styled('div')(({ theme }) => ({
     padding: 'var(--padding)',
     borderTop: `1px dashed ${theme.palette.divider}`,
 }));
@@ -145,15 +146,23 @@ const StyledCaseSensitiveIcon = styled(CaseSensitiveIcon)(({ theme }) => ({
     fill: 'currentcolor',
 }));
 
-const OPERATORS_WITH_ADD_VALUES_WIDGET = [
-    'IN_OPERATORS_FREETEXT',
-    'STRING_OPERATORS_FREETEXT',
-];
-
-const SINGLE_VALUE_OPERATORS = [
-    'NUM_OPERATORS_SINGLE_VALUE',
-    'SEMVER_OPERATORS_SINGLE_VALUE',
-];
+const getInputType = (input: Input) => {
+    switch (input) {
+        case 'IN_OPERATORS_LEGAL_VALUES':
+        case 'STRING_OPERATORS_LEGAL_VALUES':
+        case 'NUM_OPERATORS_LEGAL_VALUES':
+        case 'SEMVER_OPERATORS_LEGAL_VALUES':
+            return 'legal values';
+        case 'DATE_OPERATORS_SINGLE_VALUE':
+            return 'date input';
+        case 'NUM_OPERATORS_SINGLE_VALUE':
+        case 'SEMVER_OPERATORS_SINGLE_VALUE':
+            return 'single text value';
+        case 'IN_OPERATORS_FREETEXT':
+        case 'STRING_OPERATORS_FREETEXT':
+            return 'free text';
+    }
+};
 
 type Props = {
     constraint: IConstraint;
@@ -206,11 +215,7 @@ export const EditableConstraint: FC<Props> = ({
         useState(false);
     const deleteButtonRef = useRef<HTMLButtonElement>(null);
     const addValuesButtonRef = useRef<HTMLButtonElement>(null);
-    const showSingleValueButton = SINGLE_VALUE_OPERATORS.includes(input);
-    const showAddValuesButton =
-        OPERATORS_WITH_ADD_VALUES_WIDGET.includes(input);
-    const showDateInput = input.includes('DATE');
-    const showInputField = input.includes('LEGAL_VALUES');
+    const inputType = getInputType(input);
 
     /* We need a special case to handle the currentTime context field. Since
     this field will be the only one to allow DATE_BEFORE and DATE_AFTER operators
@@ -264,6 +269,46 @@ export const EditableConstraint: FC<Props> = ({
             }));
         } else {
             setOperator(operator);
+        }
+    };
+
+    const TopRowInput = () => {
+        switch (inputType) {
+            case 'date input':
+                return (
+                    <ConstraintDateInput
+                        setValue={setValue}
+                        value={localConstraint.value}
+                        error={error}
+                        setError={setError}
+                    />
+                );
+            case 'single text value':
+                return (
+                    <AddSingleValueWidget
+                        onAddValue={(newValue) => {
+                            setValue(newValue);
+                        }}
+                        removeValue={() => setValue('')}
+                        currentValue={localConstraint.value}
+                    />
+                );
+            case 'free text':
+                return (
+                    <AddValuesWidget
+                        ref={addValuesButtonRef}
+                        onAddValues={(newValues) => {
+                            // todo (`addEditStrategy`): move deduplication logic higher up in the context handling
+                            const combinedValues = new Set([
+                                ...(localConstraint.values || []),
+                                ...newValues,
+                            ]);
+                            setValuesWithRecord(Array.from(combinedValues));
+                        }}
+                    />
+                );
+            default:
+                return null;
         }
     };
 
@@ -339,39 +384,8 @@ export const EditableConstraint: FC<Props> = ({
                             deleteButtonRef.current
                         }
                     >
-                        {showAddValuesButton ? (
-                            <AddValuesWidget
-                                ref={addValuesButtonRef}
-                                onAddValues={(newValues) => {
-                                    // todo (`addEditStrategy`): move deduplication logic higher up in the context handling
-                                    const combinedValues = new Set([
-                                        ...(localConstraint.values || []),
-                                        ...newValues,
-                                    ]);
-                                    setValuesWithRecord(
-                                        Array.from(combinedValues),
-                                    );
-                                }}
-                            />
-                        ) : null}
+                        <TopRowInput />
                     </ValueList>
-                    {showSingleValueButton ? (
-                        <AddSingleValueWidget
-                            onAddValue={(newValue) => {
-                                setValue(newValue);
-                            }}
-                            removeValue={() => setValue('')}
-                            currentValue={localConstraint.value}
-                        />
-                    ) : null}
-                    {showDateInput ? (
-                        <ConstraintDateInput
-                            setValue={setValue}
-                            value={localConstraint.value}
-                            error={error}
-                            setError={setError}
-                        />
-                    ) : null}
                 </ConstraintDetails>
                 <ButtonPlaceholder />
                 <HtmlTooltip title='Delete constraint' arrow>
@@ -386,22 +400,19 @@ export const EditableConstraint: FC<Props> = ({
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
-            {showInputField ? (
-                <InputContainer>
-                    <ResolveInput
-                        setValues={setValues}
+            {inputType === 'legal values' ? (
+                <LegalValuesContainer>
+                    <LegalValuesSelector
+                        data={resolveLegalValues(
+                            constraintValues,
+                            contextDefinition.legalValues,
+                        )}
+                        constraintValues={constraintValues}
+                        values={localConstraint.values || []}
                         setValuesWithRecord={setValuesWithRecord}
-                        setValue={setValue}
-                        setError={setError}
-                        localConstraint={localConstraint}
-                        constraintValues={constraint?.values || []}
-                        constraintValue={constraint?.value || ''}
-                        input={input}
-                        error={error}
-                        contextDefinition={contextDefinition}
-                        removeValue={removeValue}
-                    />
-                </InputContainer>
+                        setValues={setValues}
+                    />{' '}
+                </LegalValuesContainer>
             ) : null}
         </Container>
     );

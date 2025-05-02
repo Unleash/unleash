@@ -12,6 +12,7 @@ import {
 let app: IUnleashTest;
 let db: ITestDb;
 let defaultToken: IApiToken;
+let frontendToken: IApiToken;
 
 const metrics = {
     appName: 'appName',
@@ -56,6 +57,7 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
+                    registerFrontendClient: true,
                 },
             },
         },
@@ -65,6 +67,14 @@ beforeAll(async () => {
     defaultToken =
         await app.services.apiTokenService.createApiTokenWithProjects({
             type: ApiTokenType.CLIENT,
+            projects: ['default'],
+            environment: 'default',
+            tokenName: 'tester',
+        });
+
+    frontendToken =
+        await app.services.apiTokenService.createApiTokenWithProjects({
+            type: ApiTokenType.FRONTEND,
             projects: ['default'],
             environment: 'default',
             tokenName: 'tester',
@@ -175,6 +185,32 @@ test('should show correct application metrics', async () => {
             {
                 sdkVersion: 'unleash-client-node:3.2.2',
                 applications: ['appName'],
+            },
+        ],
+    });
+});
+
+test('should report frontend application instances', async () => {
+    await app.request
+        .post('/api/frontend/client/metrics')
+        .set('Authorization', frontendToken.secret)
+        .set('Unleash-Sdk', 'unleash-client-js:1.0.0')
+        .send(metrics)
+        .expect(200);
+    await app.services.clientInstanceService.bulkAdd();
+
+    const { body } = await app.request
+        .get(
+            `/api/admin/metrics/instances/${metrics.appName}/environment/default`,
+        )
+        .expect(200);
+
+    expect(body).toMatchObject({
+        instances: [
+            {
+                instanceId: metrics.instanceId,
+                clientIp: null,
+                sdkVersion: 'unleash-client-js:1.0.0',
             },
         ],
     });

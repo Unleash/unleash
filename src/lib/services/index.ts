@@ -358,11 +358,13 @@ export const createServices = (
               config,
               clientMetricsServiceV2,
               configurationRevisionService,
+              clientInstanceService,
           )
         : createFakeFrontendApiService(
               config,
               clientMetricsServiceV2,
               configurationRevisionService,
+              clientInstanceService,
           );
 
     const edgeService = new EdgeService({ apiTokenService }, config);

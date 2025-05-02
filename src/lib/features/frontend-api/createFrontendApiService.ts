@@ -3,12 +3,7 @@ import { SegmentReadModel } from '../segment/segment-read-model';
 import type ClientMetricsServiceV2 from '../metrics/client-metrics/metrics-service-v2';
 import SettingService from '../../services/setting-service';
 import SettingStore from '../../db/setting-store';
-import {
-    createEventsService,
-    createFakeEventsService,
-    createFakeFeatureToggleService,
-    createFeatureToggleService,
-} from '../index';
+import { createEventsService, createFakeEventsService } from '../index';
 import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service';
 import { GlobalFrontendApiCache } from './global-frontend-api-cache';
 import ClientFeatureToggleReadModel from './client-feature-toggle-read-model';
@@ -17,6 +12,7 @@ import FakeSettingStore from '../../../test/fixtures/fake-setting-store';
 import FakeClientFeatureToggleReadModel from './fake-client-feature-toggle-read-model';
 import type { IUnleashConfig } from '../../types';
 import type { Db } from '../../db/db';
+import type ClientInstanceService from '../metrics/instance/instance-service';
 
 export const createFrontendApiService = (
     db: Db,
@@ -24,6 +20,7 @@ export const createFrontendApiService = (
     // client metrics service needs to be shared because it uses in-memory cache
     clientMetricsServiceV2: ClientMetricsServiceV2,
     configurationRevisionService: ConfigurationRevisionService,
+    clientInstanceService: ClientInstanceService,
 ): FrontendApiService => {
     const segmentReadModel = new SegmentReadModel(db);
     const settingStore = new SettingStore(db, config.getLogger);
@@ -33,8 +30,6 @@ export const createFrontendApiService = (
         config,
         eventService,
     );
-    // TODO: remove this dependency after we migrate frontend API
-    const featureToggleService = createFeatureToggleService(db, config);
     const clientFeatureToggleReadModel = new ClientFeatureToggleReadModel(
         db,
         config.eventBus,
@@ -47,12 +42,10 @@ export const createFrontendApiService = (
     );
     return new FrontendApiService(
         config,
-        { segmentReadModel },
         {
-            featureToggleService,
             clientMetricsServiceV2,
             settingService,
-            configurationRevisionService,
+            clientInstanceService,
         },
         globalFrontendApiCache,
     );
@@ -62,6 +55,7 @@ export const createFakeFrontendApiService = (
     config: IUnleashConfig,
     clientMetricsServiceV2: ClientMetricsServiceV2,
     configurationRevisionService: ConfigurationRevisionService,
+    clientInstanceService: ClientInstanceService,
 ): FrontendApiService => {
     const segmentReadModel = new FakeSegmentReadModel();
     const settingStore = new FakeSettingStore();
@@ -71,9 +65,6 @@ export const createFakeFrontendApiService = (
         config,
         eventService,
     );
-    // TODO: remove this dependency after we migrate frontend API
-    const featureToggleService =
-        createFakeFeatureToggleService(config).featureToggleService;
     const clientFeatureToggleReadModel = new FakeClientFeatureToggleReadModel();
     const globalFrontendApiCache = new GlobalFrontendApiCache(
         config,
@@ -83,12 +74,10 @@ export const createFakeFrontendApiService = (
     );
     return new FrontendApiService(
         config,
-        { segmentReadModel },
         {
-            featureToggleService,
             clientMetricsServiceV2,
             settingService,
-            configurationRevisionService,
+            clientInstanceService,
         },
         globalFrontendApiCache,
     );

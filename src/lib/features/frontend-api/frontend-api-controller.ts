@@ -4,11 +4,10 @@ import {
     type IFlagResolver,
     type IUnleashConfig,
     type IUnleashServices,
-    type IUser,
     NONE,
 } from '../../types';
 import type { Logger } from '../../logger';
-import ApiUser, { type IApiUser } from '../../types/api-user';
+import type { IApiUser } from '../../types/api-user';
 import {
     type ClientMetricsSchema,
     createRequestSchema,
@@ -228,13 +227,6 @@ export default class FrontendAPIController extends Controller {
         );
     }
 
-    private resolveProject(user: IUser | IApiUser) {
-        if (user instanceof ApiUser) {
-            return user.projects;
-        }
-        return ['default'];
-    }
-
     private async registerFrontendApiMetrics(
         req: ApiUserRequest<unknown, unknown, ClientMetricsSchema>,
         res: Response,
@@ -248,28 +240,12 @@ export default class FrontendAPIController extends Controller {
             return;
         }
 
-        const environment =
-            await this.services.frontendApiService.registerFrontendApiMetrics(
-                req.user,
-                req.body,
-                req.ip,
-            );
-
-        if (
-            req.body.instanceId &&
-            req.headers['unleash-sdk'] &&
-            this.flagResolver.isEnabled('registerFrontendClient')
-        ) {
-            const client = {
-                appName: req.body.appName,
-                instanceId: req.body.instanceId,
-                sdkVersion: req.headers['unleash-sdk'] as string,
-                sdkType: 'frontend' as const,
-                environment: environment,
-                projects: this.resolveProject(req.user),
-            };
-            this.services.clientInstanceService.registerFrontendClient(client);
-        }
+        await this.services.frontendApiService.registerFrontendApiMetrics(
+            req.user,
+            req.body,
+            req.ip,
+            req.headers['unleash-sdk'],
+        );
 
         res.sendStatus(200);
     }

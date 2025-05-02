@@ -9,8 +9,9 @@ import { type ISettingStore, TEST_AUDIT_USER } from '../../lib/types';
 import { frontendSettingsKey } from '../../lib/types/settings/frontend-settings';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 import { createFakeEventsService } from '../features';
+import type { GlobalFrontendApiCache } from '../features/frontend-api/global-frontend-api-cache';
+import type { Services } from '../features/frontend-api/frontend-api-service';
 
-const TEST_USER_ID = -9999;
 const createSettingService = (
     frontendApiOrigins: string[],
 ): { frontendApiService: FrontendApiService; settingStore: ISettingStore } => {
@@ -30,8 +31,11 @@ const createSettingService = (
     };
 
     return {
-        //@ts-ignore
-        frontendApiService: new FrontendApiService(config, stores, services),
+        frontendApiService: new FrontendApiService(
+            config,
+            services as Services,
+            {} as GlobalFrontendApiCache,
+        ),
         settingStore: stores.settingStore,
     };
 };

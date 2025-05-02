@@ -1,4 +1,4 @@
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
         DROP INDEX IF EXISTS idx_ai_chats_user_id;
@@ -8,7 +8,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
         CREATE TABLE IF NOT EXISTS ai_chats

@@ -1,4 +1,4 @@
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
     ALTER TABLE projects ADD COLUMN health integer DEFAULT 100;
@@ -7,7 +7,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
     ALTER TABLE projects DROP COLUMN health;
@@ -16,6 +16,6 @@ exports.down = function (db, cb) {
     );
 };
 
-exports._meta = {
+export const _meta = {
     version: 1,
 };

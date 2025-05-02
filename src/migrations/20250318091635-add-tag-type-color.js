@@ -1,4 +1,4 @@
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
         ALTER TABLE tag_types
@@ -12,7 +12,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
         ALTER TABLE tag_types

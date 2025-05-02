@@ -1,4 +1,4 @@
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     // add root role Viewer (id 3) to all users who don't have a root role
     db.runSql(
         `INSERT INTO role_user(role_id, user_id, project) SELECT 3, u.id, 'default'
@@ -14,7 +14,7 @@ WHERE u.id > 0 AND u.deleted_at IS NULL AND NOT EXISTS (
     );
 };
 
-exports.down = function (db, callback) {
+export async function down(db, callback) {
     // No rollback
     callback();
 };

@@ -1,4 +1,4 @@
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
     UPDATE role_user set project = 'default' where role_id 
@@ -8,7 +8,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
       UPDATE role_user set project = '*' where role_id 

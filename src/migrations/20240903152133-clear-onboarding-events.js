@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
             DELETE FROM onboarding_events_instance;
@@ -10,7 +10,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         ``,
         cb);

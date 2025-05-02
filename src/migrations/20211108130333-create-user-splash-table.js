@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
         CREATE TABLE IF NOT EXISTS user_splash 
@@ -14,7 +14,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
     DROP INDEX user_splash_user_id_idx;

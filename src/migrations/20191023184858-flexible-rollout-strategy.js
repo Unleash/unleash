@@ -1,7 +1,30 @@
 'use strict';
 
-const async = require('async');
-const flexibleRollout = require('./flexible-rollout-strategy.json');
+import async from 'async';
+const flexibleRollout = {
+    "name": "flexibleRollout",
+    "description": "Gradually activate feature toggle based on sane stickiness",
+    "parameters": [
+      {
+        "name": "rollout",
+        "type": "percentage",
+        "description": "",
+        "required": false
+      },
+      {
+        "name": "stickiness",
+        "type": "string",
+        "description": "Used define stickiness. Possible values: default, userId, sessionId, random",
+        "required": true
+      },
+      {
+        "name": "groupId",
+        "type": "string",
+        "description": "Used to define a activation groups, which allows you to correlate across feature toggles.",
+        "required": true
+      }
+    ]
+  };
 
 function insertStrategySQL(strategy) {
     return `
@@ -43,7 +66,7 @@ function removeStrategySQL(strategy) {
         WHERE name = '${strategy.name}' AND built_in = 1`;
 }
 
-exports.up = function (db, callback) {
+export async function up(db, callback) {
     async.series(
         [
             db.runSql.bind(db, insertEventsSQL(flexibleRollout)),
@@ -53,7 +76,7 @@ exports.up = function (db, callback) {
     );
 };
 
-exports.down = function (db, callback) {
+export async function down(db, callback) {
     async.series(
         [
             db.runSql.bind(db, removeEventsSQL(flexibleRollout)),

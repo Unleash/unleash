@@ -1,4 +1,4 @@
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
         CREATE TABLE IF NOT EXISTS login_events (
@@ -16,7 +16,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
         DROP INDEX IF EXISTS login_events_ip_idx;

@@ -1,4 +1,4 @@
-exports.up = function(db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
             INSERT INTO feature_lifecycles (feature, stage, created_at)
@@ -11,7 +11,7 @@ exports.up = function(db, cb) {
     );
 }
 
-exports.down = function(db, cb) {
+export async function down(db, cb) {
     db.runSql(
         ``,
         cb,

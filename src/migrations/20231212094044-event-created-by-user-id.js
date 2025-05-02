@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function (db, callback) {
+export async function up(db, callback) {
     db.runSql(
         `
         ALTER TABLE events ADD COLUMN IF NOT EXISTS created_by_user_id INTEGER;
@@ -10,7 +10,7 @@ exports.up = function (db, callback) {
     );
 };
 
-exports.down = function (db, callback) {
+export async function down(db, callback) {
     db.runSql(
         `
         DROP INDEX IF EXISTS events_created_by_user_id_idx;

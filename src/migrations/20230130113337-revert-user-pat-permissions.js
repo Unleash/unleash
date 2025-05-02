@@ -1,4 +1,4 @@
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
         DELETE FROM permissions WHERE permission = 'READ_USER_PAT';
@@ -9,7 +9,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
         INSERT INTO permissions (permission, display_name, type) VALUES ('READ_USER_PAT', 'Read PATs for a specific user', 'root');

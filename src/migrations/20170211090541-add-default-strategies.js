@@ -1,7 +1,50 @@
 'use strict';
 
-const async = require('async');
-const strategies = require('./default-strategies.json');
+import async from 'async';
+const strategies = [
+    {
+      "name": "default",
+      "description": "Default on/off strategy.",
+      "parameters": []
+    },
+    {
+      "name": "userWithId",
+      "description": "Active for users with a userId defined in the userIds-list",
+      "parameters": [
+        {
+          "name": "userIds",
+          "type": "list",
+          "description": "",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "applicationHostname",
+      "description": "Active for client instances with a hostName in the hostNames-list.",
+      "parameters": [
+        {
+          "name": "hostNames",
+          "type": "list",
+          "description": "List of hostnames to enable the feature toggle for.",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "remoteAddress",
+      "description": "Active for remote addresses defined in the IPs list.",
+      "parameters": [
+        {
+          "name": "IPs",
+          "type": "list",
+          "description": "List of IPs to enable the feature toggle for.",
+          "required": true
+        }
+      ]
+    }
+  ]
+;  
 
 function insertStrategySQL(strategy) {
     return `
@@ -43,7 +86,7 @@ function removeStrategySQL(strategy) {
         WHERE name = '${strategy.name}' AND built_in = 1`;
 }
 
-exports.up = function (db, callback) {
+export async function up(db, callback) {
     const insertStrategies = strategies.map((s) => (cb) => {
         async.series(
             [
@@ -56,7 +99,7 @@ exports.up = function (db, callback) {
     async.series(insertStrategies, callback);
 };
 
-exports.down = function (db, callback) {
+export async function down(db, callback) {
     const removeStrategies = strategies
         .filter((s) => s.name !== 'default')
         .map((s) => (cb) => {

@@ -6,7 +6,7 @@ const DESCRIPTION = {
     VIEWER: 'Users with this role can only read root resources in Unleash. The viewer can be added to specific projects as project member.',
 };
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
     UPDATE roles set description = '${DESCRIPTION.EDITOR}' where name = 'Editor' AND type = 'root';
@@ -17,7 +17,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
     `,

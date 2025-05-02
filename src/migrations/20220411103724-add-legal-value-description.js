@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
         -- 1. Convert '1,2,3'::text to "1,2,3"::json
@@ -26,7 +26,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
         -- 1. Revert []::json to null.

@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `ALTER TABLE environments
         DROP COLUMN display_name`,
@@ -8,7 +8,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `ALTER TABLE environments
         ADD COLUMN display_name TEXT`,

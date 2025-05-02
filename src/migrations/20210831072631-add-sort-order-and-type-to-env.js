@@ -1,4 +1,4 @@
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
     ALTER TABLE environments ADD COLUMN sort_order integer DEFAULT 9999, ADD COLUMN type text;
@@ -7,7 +7,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
     ALTER TABLE environments DROP COLUMN sort_order, DROP COLUMN type;
@@ -16,6 +16,6 @@ exports.down = function (db, cb) {
     );
 };
 
-exports._meta = {
+export const _meta = {
     version: 1,
 };

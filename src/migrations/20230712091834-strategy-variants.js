@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function (db, callback) {
+export async function up(db, callback) {
     db.runSql(
         `
           ALTER TABLE feature_strategies ADD COLUMN IF NOT EXISTS variants JSONB DEFAULT '[]'::jsonb NOT NULL;
@@ -43,7 +43,7 @@ exports.up = function (db, callback) {
     );
 };
 
-exports.down = function (db, callback) {
+export async function down(db, callback) {
     db.runSql(
         `
           DROP VIEW features_view;

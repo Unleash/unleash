@@ -1,4 +1,4 @@
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
         CREATE INDEX IF NOT EXISTS idx_action_states_action_id ON action_states(action_id);
@@ -9,7 +9,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
         DROP INDEX IF EXISTS idx_action_states_action_id;

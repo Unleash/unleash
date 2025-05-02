@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
         DO $$
@@ -21,7 +21,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     // We can't just remove roles for users as we don't know if there has been any manual additions.
     cb();
 };

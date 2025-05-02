@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function (db, callback) {
+export async function up(db, callback) {
     db.runSql(
         `
         ALTER TABLE feature_strategies ADD COLUMN IF NOT EXISTS created_by INTEGER;
@@ -9,7 +9,7 @@ exports.up = function (db, callback) {
     );
 };
 
-exports.down = function (db, callback) {
+export async function down(db, callback) {
     db.runSql(
         `
         ALTER TABLE feature_strategies DROP COLUMN IF EXISTS created_by;

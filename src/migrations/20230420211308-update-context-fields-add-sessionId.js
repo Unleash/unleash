@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function (db, callback) {
+export async function up(db, callback) {
     db.runSql(
         `
             INSERT INTO context_fields(name, description, sort_order, stickiness) VALUES('sessionId', 'Allows you to constrain on sessionId', 4, true) ON CONFLICT DO NOTHING;
@@ -13,7 +13,7 @@ exports.up = function (db, callback) {
     );
 };
 
-exports.down = function (db, callback) {
+export async function down(db, callback) {
     db.runSql(
         `
         `,

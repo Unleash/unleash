@@ -1,4 +1,4 @@
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(`
         UPDATE permissions SET display_name = 'Create feature flags' WHERE permission = 'CREATE_FEATURE' AND type = 'project';
         UPDATE permissions SET display_name = 'Update feature flags' WHERE permission = 'UPDATE_FEATURE' AND type = 'project';
@@ -8,7 +8,7 @@ exports.up = function (db, cb) {
     `, cb);
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
             UPDATE permissions

@@ -1,4 +1,4 @@
-exports.up = function(db, cb) {
+export async function up(db, cb) {
     db.runSql(`
     CREATE TABLE IF NOT EXISTS unique_connections
     (
@@ -9,6 +9,6 @@ exports.up = function(db, cb) {
 `, cb)
 };
 
-exports.down = function(db, cb) {
+export async function down(db, cb) {
     db.runSql(`DROP TABLE unique_connections;`, cb);
 };

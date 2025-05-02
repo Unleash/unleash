@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
         ALTER TABLE features ADD COLUMN IF NOT EXISTS potentially_stale boolean;
@@ -15,7 +15,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
         ALTER table features DROP COLUMN IF EXISTS potentially_stale;

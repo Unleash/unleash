@@ -146,21 +146,28 @@ const StyledCaseSensitiveIcon = styled(CaseSensitiveIcon)(({ theme }) => ({
     fill: 'currentcolor',
 }));
 
-const getInputType = (input: Input) => {
+type InputType =
+    | { type: 'legal values' }
+    | { type: 'date input' }
+    | { type: 'single value'; variant: 'number' | 'semver' }
+    | { type: 'free text' };
+
+const getInputType = (input: Input): InputType => {
     switch (input) {
         case 'IN_OPERATORS_LEGAL_VALUES':
         case 'STRING_OPERATORS_LEGAL_VALUES':
         case 'NUM_OPERATORS_LEGAL_VALUES':
         case 'SEMVER_OPERATORS_LEGAL_VALUES':
-            return 'legal values';
+            return { type: 'legal values' };
         case 'DATE_OPERATORS_SINGLE_VALUE':
-            return 'date input';
+            return { type: 'date input' };
         case 'NUM_OPERATORS_SINGLE_VALUE':
+            return { type: 'single value', variant: 'number' };
         case 'SEMVER_OPERATORS_SINGLE_VALUE':
-            return 'single text value';
+            return { type: 'single value', variant: 'semver' };
         case 'IN_OPERATORS_FREETEXT':
         case 'STRING_OPERATORS_FREETEXT':
-            return 'free text';
+            return { type: 'free text' };
     }
 };
 
@@ -273,7 +280,7 @@ export const EditableConstraint: FC<Props> = ({
     };
 
     const TopRowInput = () => {
-        switch (inputType) {
+        switch (inputType.type) {
             case 'date input':
                 return (
                     <ConstraintDateInput
@@ -283,7 +290,7 @@ export const EditableConstraint: FC<Props> = ({
                         setError={setError}
                     />
                 );
-            case 'single text value':
+            case 'single value':
                 return (
                     <AddSingleValueWidget
                         onAddValue={(newValue) => {
@@ -292,11 +299,9 @@ export const EditableConstraint: FC<Props> = ({
                         removeValue={() => setValue('')}
                         currentValue={localConstraint.value}
                         helpText={
-                            input.includes('NUM')
+                            inputType.variant === 'number'
                                 ? 'Add a single number'
-                                : input.includes('SEMVER')
-                                  ? 'A semver value should be of the format X.Y.Z'
-                                  : undefined
+                                : 'A semver value should be of the format X.Y.Z'
                         }
                     />
                 );

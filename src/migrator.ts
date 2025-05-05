@@ -1,5 +1,7 @@
-import { log } from 'db-migrate-shared';
-import { getInstance } from 'db-migrate';
+import dbMigrateShared from 'db-migrate-shared';
+const { log } = dbMigrateShared;
+import dbMigrate from 'db-migrate';
+const { getInstance } = dbMigrate;
 import type { IUnleashConfig } from './lib/types/option.js';
 import { secondsToMilliseconds } from 'date-fns';
 import path from 'path';

@@ -1,4 +1,4 @@
-exports.up = (db, cb) => {
+export async function up (db, cb) {
   db.runSql(`
         WITH user_events AS (
           SELECT
@@ -79,7 +79,7 @@ exports.up = (db, cb) => {
 
 };
 
-exports.down = (db, cb) => {
+export async function down (db, cb) {
   db.runSql(``, cb);
 };
 

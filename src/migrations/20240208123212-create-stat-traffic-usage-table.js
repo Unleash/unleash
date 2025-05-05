@@ -1,5 +1,5 @@
 
-exports.up = (db, callback) => {
+export async function up (db, callback) {
     db.runSql(
         `
         CREATE TABLE IF NOT EXISTS stat_traffic_usage(
@@ -17,7 +17,7 @@ exports.up = (db, callback) => {
     );
 };
 
-exports.down = (db, callback) => {
+export async function down (db, callback) {
     db.runSql(
         `
         DROP INDEX IF EXISTS stat_traffic_usage_day_idx;

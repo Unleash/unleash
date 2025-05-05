@@ -40,7 +40,7 @@ import Controller from './routes/controller.js';
 import { createClientFeatureToggleDelta } from './features/client-feature-toggles/delta/createClientFeatureToggleDelta.js';
 import { CRUDStore } from './db/crud/crud-store.js';
 import type { CrudStoreConfig } from './db/crud/crud-store.js';
-import { Logger, LogLevel, type LogProvider } from './logger.js';
+import { type Logger, LogLevel, type LogProvider } from './logger.js';
 import { ImportTogglesStore } from './features/export-import-toggles/import-toggles-store.js';
 import { ALL_PROJECTS, CUSTOM_ROOT_ROLE_TYPE } from './util/constants.js';
 import {
@@ -149,7 +149,7 @@ import {
     createPrivateProjectChecker,
 } from './features/private-project/createPrivateProjectChecker.js';
 import type { ProductivityReportMetrics } from './features/productivity-report/productivity-report-view-model.js';
-import { IProjectStats } from './features/project/project-service.js';
+import type { IProjectStats } from './features/project/project-service.js';
 import type { IImportService } from './features/export-import-toggles/export-import-service.js';
 import type { IContextFieldDto } from './features/context/context-field-store-type.js';
 import { SegmentReadModel } from './features/segment/segment-read-model.js';
@@ -165,7 +165,7 @@ import FeatureTagStore from './db/feature-tag-store.js';
 import ExportImportController from './features/export-import-toggles/export-import-controller.js';
 import type { QueryOverride } from './features/client-feature-toggles/client-feature-toggle.controller.js';
 import { DELTA_EVENT_TYPES } from './features/client-feature-toggles/delta/client-feature-toggle-delta-types.js';
-import { AdvancedPlaygroundFeatureEvaluationResult } from './features/playground/playground-service.js';
+import type { AdvancedPlaygroundFeatureEvaluationResult } from './features/playground/playground-service.js';
 import { advancedPlaygroundViewModel } from './features/playground/playground-view-model.js';
 import {
     createAccessReadModel,
@@ -351,7 +351,6 @@ export {
     create,
     createDb,
     Controller,
-    Logger,
     LogLevel,
     withRollbackTransaction,
     withTransactional,
@@ -405,7 +404,6 @@ export {
     createFakePrivateProjectChecker,
     createProjectReadModel,
     createPrivateProjectChecker,
-    IProjectStats,
     createFakeInstanceStatsService,
     createInstanceStatsService,
     SegmentReadModel,
@@ -425,7 +423,6 @@ export {
     DELTA_EVENT_TYPES,
     createKnexTransactionStarter,
     createPlaygroundService,
-    AdvancedPlaygroundFeatureEvaluationResult,
     advancedPlaygroundViewModel,
     withFakeTransactional,
     createAccessReadModel,
@@ -477,12 +474,15 @@ export type {
     ReleasePlanMilestoneWriteModel,
     ReleasePlanMilestoneStrategyWriteModel,
     IChangeRequestAccessReadModel,
+    AdvancedPlaygroundFeatureEvaluationResult,
+    IProjectStats,
     IRoleWithProject,
     ISchemaValidationErrors,
     IImportService,
     IContextFieldDto,
     Gauge,
     Counter,
+    Logger,
     Subscriber,
     ProjectAccess,
     IPrivateProjectChecker,

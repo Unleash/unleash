@@ -1,4 +1,12 @@
-import { Button, Popover, styled, TextField } from '@mui/material';
+import {
+    Button,
+    type FilledInputProps,
+    type InputProps,
+    type OutlinedInputProps,
+    Popover,
+    styled,
+    TextField,
+} from '@mui/material';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { type FC, useId, useRef, useState } from 'react';
 
@@ -34,6 +42,11 @@ type AddValuesProps = {
     anchorEl: HTMLElement | null;
     onClose: () => void;
     helpText?: string;
+    InputProps?:
+        | Partial<FilledInputProps>
+        | Partial<OutlinedInputProps>
+        | Partial<InputProps>
+        | undefined;
 };
 
 const HelpText = styled('p')(({ theme }) => ({
@@ -52,6 +65,7 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
     open,
     onClose,
     helpText,
+    InputProps,
 }) => {
     const [inputValue, setInputValue] = useState(initialValue || '');
     const [error, setError] = useState('');
@@ -119,6 +133,7 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
                         error={!!error}
                         helperText={error}
                         aria-describedby={helpTextId}
+                        slotProps={{ input: InputProps }}
                     />
                     <AddButton
                         variant='text'

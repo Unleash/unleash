@@ -55,6 +55,11 @@ export const AddSingleValueWidget = forwardRef<HTMLDivElement, AddValuesProps>(
                     onDelete={currentValue ? removeValue : undefined}
                 />
                 <AddValuesPopover
+                    InputProps={{
+                        type: 'text',
+                        inputMode: 'numeric',
+                        pattern: '[0-9]*',
+                    }}
                     initialValue={currentValue}
                     onAdd={handleAdd}
                     helpText={helpText}

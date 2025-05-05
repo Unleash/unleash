@@ -26,8 +26,8 @@ export const TokenInfo = ({
                 onChange={(e) => setTokenName(e.target.value)}
                 label='Token name'
                 error={errors.tokenName !== undefined}
-                errorText={errors.tokenname}
-                onFocus={() => clearErrors('tokenname')}
+                errorText={errors.tokenName}
+                onFocus={() => clearErrors('tokenName')}
                 autoFocus
             />
         </>

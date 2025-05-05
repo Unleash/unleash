@@ -11,7 +11,7 @@ import {
 import { useHasRootAccess } from 'hooks/useHasAccess';
 import type { SelectOption } from './TokenTypeSelector/TokenTypeSelector';
 
-export type ApiTokenFormErrorType = 'tokenname' | 'projects';
+export type ApiTokenFormErrorType = 'tokenName' | 'projects';
 export const useApiTokenForm = (project?: string) => {
     const { environments } = useEnvironments();
     const { uiConfig } = useUiConfig();
@@ -89,7 +89,7 @@ export const useApiTokenForm = (project?: string) => {
     const isValid = () => {
         const newErrors: Partial<Record<ApiTokenFormErrorType, string>> = {};
         if (!tokenName) {
-            newErrors.tokenname = 'Tokenname is required';
+            newErrors.tokenName = 'Tokenname is required';
         }
         if (projects.length === 0) {
             newErrors.projects = 'At least one project is required';

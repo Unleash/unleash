@@ -175,6 +175,8 @@ import {
     getDefaultStrategy,
     getProjectDefaultStrategy,
 } from './features/playground/feature-evaluator/helpers.js';
+import { getDbConfig } from '../test/e2e/helpers/database-config.js';
+import { testDbPrefix } from '../test/e2e/helpers/database-init.js';
 
 export async function initialServiceSetup(
     { authentication }: Pick<IUnleashConfig, 'authentication'>,
@@ -350,6 +352,8 @@ export {
     start,
     create,
     createDb,
+    getDbConfig,
+    testDbPrefix,
     Controller,
     LogLevel,
     withRollbackTransaction,

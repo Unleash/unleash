@@ -353,6 +353,10 @@ class="header-github-link"
                                 href: 'https://www.getunleash.io/pricing',
                             },
                             {
+                                label: 'Product vision',
+                                href: 'https://www.getunleash.io/product-vision',
+                            },
+                            {
                                 label: 'Open live demo',
                                 href: 'https://app.unleash-hosted.com/demo/login',
                             },
@@ -380,10 +384,6 @@ class="header-github-link"
                             {
                                 label: 'Status',
                                 href: 'https://unleash.instatus.com',
-                            },
-                            {
-                                label: 'Roadmap',
-                                href: 'https://github.com/orgs/Unleash/projects/10/views/1',
                             },
                             {
                                 label: 'Changelog',

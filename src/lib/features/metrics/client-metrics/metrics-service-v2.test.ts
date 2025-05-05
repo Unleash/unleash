@@ -18,7 +18,7 @@ function initClientMetrics(flagEnabled = true) {
     const stores = createStores();
 
     const eventBus = new EventEmitter();
-    eventBus.emit = jest.fn();
+    eventBus.emit = jest.fn(() => true);
 
     const config = {
         eventBus,

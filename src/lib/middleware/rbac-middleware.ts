@@ -11,7 +11,7 @@ import type User from '../types/user.js';
 import type { Request } from 'express';
 import { extractUserId } from '../util/index.js';
 
-interface PermissionChecker {
+export interface PermissionChecker {
     hasPermission(
         user: User,
         permissions: string[],

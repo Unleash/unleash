@@ -51,45 +51,45 @@ beforeEach(() => {
 });
 
 test('Schedules job immediately', async () => {
-    const job = jest.fn();
+    const job = jest.fn() as () => Promise<void> as () => Promise<void>;
     await schedulerService.schedule(job, 10, 'test-id');
 
-    expect(job).toBeCalledTimes(1);
+    expect(job).toHaveBeenCalledTimes(1);
     schedulerService.stop();
 });
 
 test('Can schedule a single regular job', async () => {
-    const job = jest.fn();
+    const job = jest.fn() as () => Promise<void>;
     await schedulerService.schedule(job, 50, 'test-id-3');
     await ms(75);
 
-    expect(job).toBeCalledTimes(2);
+    expect(job).toHaveBeenCalledTimes(2);
     schedulerService.stop();
 });
 
 test('Can schedule multiple jobs at the same interval', async () => {
-    const job = jest.fn();
-    const anotherJob = jest.fn();
+    const job = jest.fn() as () => Promise<void>;
+    const anotherJob = jest.fn() as () => Promise<void>;
 
     await schedulerService.schedule(job, 50, 'test-id-6');
     await schedulerService.schedule(anotherJob, 50, 'test-id-7');
     await ms(75);
 
-    expect(job).toBeCalledTimes(2);
-    expect(anotherJob).toBeCalledTimes(2);
+    expect(job).toHaveBeenCalledTimes(2);
+    expect(anotherJob).toHaveBeenCalledTimes(2);
     schedulerService.stop();
 });
 
 test('Can schedule multiple jobs at the different intervals', async () => {
-    const job = jest.fn();
-    const anotherJob = jest.fn();
+    const job = jest.fn() as () => Promise<void>;
+    const anotherJob = jest.fn() as () => Promise<void>;
 
     await schedulerService.schedule(job, 100, 'test-id-8');
     await schedulerService.schedule(anotherJob, 200, 'test-id-9');
     await ms(250);
 
-    expect(job).toBeCalledTimes(3);
-    expect(anotherJob).toBeCalledTimes(2);
+    expect(job).toHaveBeenCalledTimes(3);
+    expect(anotherJob).toHaveBeenCalledTimes(2);
     schedulerService.stop();
 });
 

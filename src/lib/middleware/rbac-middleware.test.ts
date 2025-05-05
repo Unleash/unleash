@@ -1,4 +1,4 @@
-import rbacMiddleware from './rbac-middleware.js';
+import rbacMiddleware, { type PermissionChecker } from './rbac-middleware.js';
 import User from '../types/user.js';
 import * as perms from '../types/permissions.js';
 import type { IUnleashConfig } from '../types/option.js';
@@ -25,7 +25,7 @@ beforeEach(() => {
 test('should add checkRbac to request', () => {
     const accessService = {
         hasPermission: jest.fn(),
-    };
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
@@ -48,7 +48,7 @@ test('should add checkRbac to request', () => {
 test('should give api-user ADMIN permission', async () => {
     const accessService = {
         hasPermission: jest.fn(),
-    };
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
@@ -80,7 +80,7 @@ describe('ADMIN tokens should have user id -1337 when only passed through rbac-m
     test('Should give ADMIN api-user userid -1337 (SYSTEM_USER_ID)', async () => {
         const accessService = {
             hasPermission: jest.fn(),
-        };
+        } as PermissionChecker;
 
         const func = rbacMiddleware(
             config,
@@ -108,7 +108,7 @@ describe('ADMIN tokens should have user id -1337 when only passed through rbac-m
     test('Also when checking against permission NONE, userid should still be -1337', async () => {
         const accessService = {
             hasPermission: jest.fn(),
-        };
+        } as PermissionChecker;
 
         const func = rbacMiddleware(
             config,
@@ -137,7 +137,7 @@ describe('ADMIN tokens should have user id -1337 when only passed through rbac-m
 test('should not give api-user ADMIN permission', async () => {
     const accessService = {
         hasPermission: jest.fn(),
-    };
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
@@ -169,7 +169,7 @@ test('should not allow user to miss userId', async () => {
     jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
     const accessService = {
         hasPermission: jest.fn(),
-    };
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
@@ -195,7 +195,7 @@ test('should return false for missing user', async () => {
     jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
     const accessService = {
         hasPermission: jest.fn(),
-    };
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
@@ -217,7 +217,7 @@ test('should return false for missing user', async () => {
 test('should verify permission for root resource', async () => {
     const accessService = {
         hasPermission: jest.fn(),
-    };
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
@@ -250,7 +250,7 @@ test('should verify permission for root resource', async () => {
 test('should lookup projectId from params', async () => {
     const accessService = {
         hasPermission: jest.fn(),
-    };
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
@@ -287,8 +287,9 @@ test('should lookup projectId from feature flag', async () => {
 
     const accessService = {
         hasPermission: jest.fn(),
-    };
+    } as PermissionChecker;
 
+    // @ts-expect-error unknown fn type
     featureToggleStore.getProjectId = jest.fn().mockReturnValue(projectId);
 
     const func = rbacMiddleware(
@@ -326,7 +327,7 @@ test('should lookup projectId from data', async () => {
 
     const accessService = {
         hasPermission: jest.fn(),
-    };
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
@@ -364,7 +365,8 @@ test('Does not double check permission if not changing project when updating fla
     const featureName = 'some-feature-flag';
     const accessService = {
         hasPermission: jest.fn().mockReturnValue(true),
-    };
+    } as PermissionChecker;
+    // @ts-expect-error unknown fn type
     featureToggleStore.getProjectId = jest.fn().mockReturnValue(oldProjectId);
 
     const func = rbacMiddleware(
@@ -393,7 +395,7 @@ test('Does not double check permission if not changing project when updating fla
 test('CREATE_TAG_TYPE does not need projectId', async () => {
     const accessService = {
         hasPermission: jest.fn().mockReturnValue(true),
-    };
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
@@ -421,7 +423,7 @@ test('CREATE_TAG_TYPE does not need projectId', async () => {
 test('UPDATE_TAG_TYPE does not need projectId', async () => {
     const accessService = {
         hasPermission: jest.fn().mockReturnValue(true),
-    };
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
@@ -449,7 +451,7 @@ test('UPDATE_TAG_TYPE does not need projectId', async () => {
 test('DELETE_TAG_TYPE does not need projectId', async () => {
     const accessService = {
         hasPermission: jest.fn().mockReturnValue(true),
-    };
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
@@ -479,7 +481,7 @@ test('should not expect featureName for UPDATE_FEATURE when projectId specified'
 
     const accessService = {
         hasPermission: jest.fn(),
-    };
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,

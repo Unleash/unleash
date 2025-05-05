@@ -11,7 +11,9 @@ import { jest } from '@jest/globals';
 jest.mock('../../util', () => ({
     // @ts-ignore spread can only be called on objects and this is unknown
     ...jest.requireActual('../../util'),
-    generateImageUrl: jest.fn((input) => `https://${input.image_url}`),
+    generateImageUrl: jest.fn(
+        (input: { image_url: string }) => `https://${input.image_url}`,
+    ),
 }));
 
 const mockProjectData = (name: string): ProjectForUi => ({

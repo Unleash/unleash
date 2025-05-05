@@ -22,9 +22,15 @@ test('Scheduler should run scheduled functions if maintenance mode is off', asyn
 
     const job = jest.fn();
 
-    await schedulerService.schedule(job, 10, 'test-id');
+    await schedulerService.schedule(
+        async () => {
+            job();
+        },
+        10,
+        'test-id',
+    );
 
-    expect(job).toBeCalledTimes(1);
+    expect(job).toHaveBeenCalledTimes(1);
     schedulerService.stop();
 });
 
@@ -48,8 +54,14 @@ test('Scheduler should not run scheduled functions if maintenance mode is on', a
 
     const job = jest.fn();
 
-    await schedulerService.schedule(job, 10, 'test-id');
+    await schedulerService.schedule(
+        async () => {
+            job();
+        },
+        10,
+        'test-id',
+    );
 
-    expect(job).toBeCalledTimes(0);
+    expect(job).toHaveBeenCalledTimes(0);
     schedulerService.stop();
 });

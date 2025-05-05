@@ -19,8 +19,8 @@ describe('Public Signup API', () => {
 
         stores.accessStore = {
             ...stores.accessStore,
-            addUserToRole: jest.fn(),
-            removeRolesOfTypeForUser: jest.fn(),
+            addUserToRole: jest.fn() as () => Promise<void>,
+            removeRolesOfTypeForUser: jest.fn() as () => Promise<void>,
             getRolesForUserId: () => Promise.resolve([]),
             getRootRoleForUser: () =>
                 Promise.resolve({

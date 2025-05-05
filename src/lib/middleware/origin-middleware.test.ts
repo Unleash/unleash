@@ -22,7 +22,7 @@ describe('originMiddleware', () => {
     };
     const getLogger = jest.fn(() => loggerMock);
     const eventBus = new EventEmitter();
-    eventBus.emit = jest.fn();
+    eventBus.emit = jest.fn() as () => boolean;
 
     let config: IUnleashConfig;
 

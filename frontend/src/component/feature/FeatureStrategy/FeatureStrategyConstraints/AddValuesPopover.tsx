@@ -1,8 +1,6 @@
 import {
     Button,
-    type FilledInputProps,
-    type InputProps,
-    type OutlinedInputProps,
+    type InputBaseComponentProps,
     Popover,
     styled,
     TextField,
@@ -42,11 +40,7 @@ type AddValuesProps = {
     anchorEl: HTMLElement | null;
     onClose: () => void;
     helpText?: string;
-    InputProps?:
-        | Partial<FilledInputProps>
-        | Partial<OutlinedInputProps>
-        | Partial<InputProps>
-        | undefined;
+    inputProps?: InputBaseComponentProps;
 };
 
 const HelpText = styled('p')(({ theme }) => ({
@@ -65,7 +59,7 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
     open,
     onClose,
     helpText,
-    InputProps,
+    inputProps,
 }) => {
     const [inputValue, setInputValue] = useState(initialValue || '');
     const [error, setError] = useState('');
@@ -133,7 +127,9 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
                         error={!!error}
                         helperText={error}
                         aria-describedby={helpTextId}
-                        slotProps={{ input: InputProps }}
+                        inputProps={{
+                            ...inputProps,
+                        }}
                     />
                     <AddButton
                         variant='text'

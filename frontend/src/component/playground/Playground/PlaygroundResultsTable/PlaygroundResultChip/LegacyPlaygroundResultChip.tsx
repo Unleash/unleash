@@ -1,4 +1,3 @@
-
 import type { VFC } from 'react';
 import { PlaygroundResultChip as NewPlaygroundResultChip } from './PlaygroundResultChip';
 

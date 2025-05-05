@@ -1,6 +1,5 @@
 import { createTheme } from '@mui/material/styles';
 import { colors } from './colors';
-import { alpha } from '@mui/material';
 import { focusable } from 'themes/themeStyles';
 
 export const baseTheme = {

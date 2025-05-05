@@ -18,14 +18,12 @@ import {
     StyledFlexAlignCenterBox,
     StyledSuccessIcon,
 } from '../ChangeRequestSidebar';
-import CloudCircle from '@mui/icons-material/CloudCircle';
 import { AddCommentField } from '../../ChangeRequestOverview/ChangeRequestComments/AddCommentField';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import Input from 'component/common/Input/Input';
 import { ChangeRequestTitle } from './ChangeRequestTitle';
 import { UpdateCount } from 'component/changeRequest/UpdateCount';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const SubmitChangeRequestButton: FC<{
     onClick: () => void;
@@ -70,7 +68,6 @@ export const EnvironmentChangeRequest: FC<{
     children?: React.ReactNode;
 }> = ({ environmentChangeRequest, onClose, onReview, onDiscard, children }) => {
     const theme = useTheme();
-    const showCloudIcon = !useUiFlag('flagOverviewRedesign');
     const [commentText, setCommentText] = useState('');
     const { user } = useAuthUser();
     const [title, setTitle] = useState(environmentChangeRequest.title);
@@ -98,14 +95,6 @@ export const EnvironmentChangeRequest: FC<{
                             alignItems: 'center',
                         }}
                     >
-                        {showCloudIcon ? (
-                            <CloudCircle
-                                sx={(theme) => ({
-                                    color: theme.palette.primary.light,
-                                    mr: 0.5,
-                                })}
-                            />
-                        ) : null}
                         <Typography component='span' variant='h2'>
                             {environmentChangeRequest.environment}
                         </Typography>

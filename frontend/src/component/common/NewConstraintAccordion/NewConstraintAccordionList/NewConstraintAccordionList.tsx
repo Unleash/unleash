@@ -1,5 +1,5 @@
 import type React from 'react';
-import { forwardRef, Fragment, useImperativeHandle } from 'react';
+import { forwardRef, useImperativeHandle } from 'react';
 import { styled } from '@mui/material';
 import type { IConstraint } from 'interfaces/strategy';
 import produce from 'immer';
@@ -9,8 +9,6 @@ import {
     constraintId,
     createEmptyConstraint,
 } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import { NewConstraintAccordion } from 'component/common/NewConstraintAccordion/NewConstraintAccordion';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
 import { useUiFlag } from 'hooks/useUiFlag';
@@ -87,7 +85,6 @@ export const NewConstraintAccordionList = forwardRef<
     IConstraintList
 >(({ constraints, setConstraints, state }, ref) => {
     const { context } = useUnleashContext();
-    const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
     const addEditStrategy = useUiFlag('addEditStrategy');
 
     const onEdit =
@@ -145,7 +142,6 @@ export const NewConstraintAccordionList = forwardRef<
         return null;
     }
 
-    if (flagOverviewRedesign) {
         return (
             <StyledContainer id={constraintAccordionListId}>
                 <ConstraintsList>
@@ -189,33 +185,5 @@ export const NewConstraintAccordionList = forwardRef<
                 </ConstraintsList>
             </StyledContainer>
         );
-    }
 
-    return (
-        <StyledContainer id={constraintAccordionListId}>
-            {constraints.map((constraint, index) => {
-                const id = constraint[constraintId];
-
-                return (
-                    <Fragment key={id}>
-                        <ConditionallyRender
-                            condition={index > 0}
-                            show={<StrategySeparator text='AND' />}
-                        />
-
-                        <NewConstraintAccordion
-                            constraint={constraint}
-                            onEdit={onEdit?.bind(null, constraint)}
-                            onCancel={onCancel.bind(null, index)}
-                            onDelete={onRemove?.bind(null, index)}
-                            onSave={onSave?.bind(null, index)}
-                            onAutoSave={onAutoSave?.(id)}
-                            editing={Boolean(state.get(constraint)?.editing)}
-                            compact
-                        />
-                    </Fragment>
-                );
-            })}
-        </StyledContainer>
-    );
 });

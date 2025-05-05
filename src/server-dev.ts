@@ -50,7 +50,6 @@ process.nextTick(async () => {
                         webhookDomainLogging: true,
                         releasePlans: false,
                         showUserDeviceCount: true,
-                        flagOverviewRedesign: true,
                         deltaApi: true,
                         uniqueSdkTracking: true,
                         filterExistingFlagNames: true,

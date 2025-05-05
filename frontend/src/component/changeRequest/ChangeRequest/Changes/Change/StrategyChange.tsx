@@ -21,7 +21,6 @@ import { flexRow } from 'themes/themeStyles';
 import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -271,55 +270,37 @@ const UpdateStrategy: FC<{
 const AddStrategy: FC<{
     change: IChangeRequestAddStrategy;
     actions?: ReactNode;
-}> = ({ change, actions }) => {
-    const showOldStrategyVariants = !useUiFlag('flagOverviewRedesign');
-    return (
-        <>
-            <ChangeItemCreateEditDeleteWrapper>
-                <ChangeItemInfo>
-                    <Typography
-                        color={
-                            change.payload?.disabled
-                                ? 'action.disabled'
-                                : 'success.dark'
-                        }
-                    >
-                        + Adding strategy:
-                    </Typography>
-                    <StrategyTooltipLink
-                        name={change.payload.name}
-                        title={change.payload.title}
-                    >
-                        <StrategyDiff
-                            change={change}
-                            currentStrategy={undefined}
-                        />
-                    </StrategyTooltipLink>
-                    <div>
-                        <DisabledEnabledState
-                            disabled
-                            show={change.payload?.disabled === true}
-                        />
-                    </div>
-                </ChangeItemInfo>
-                <div>{actions}</div>
-            </ChangeItemCreateEditDeleteWrapper>
-            <StrategyExecution strategy={change.payload} />
-            {showOldStrategyVariants &&
-                change.payload.variants &&
-                change.payload.variants.length > 0 && (
-                    <StyledBox>
-                        <StyledTypography>
-                            Setting strategy variants to:
-                        </StyledTypography>
-                        <EnvironmentVariantsTable
-                            variants={change.payload.variants}
-                        />
-                    </StyledBox>
-                )}
-        </>
-    );
-};
+}> = ({ change, actions }) => (
+    <>
+        <ChangeItemCreateEditDeleteWrapper>
+            <ChangeItemInfo>
+                <Typography
+                    color={
+                        change.payload?.disabled
+                            ? 'action.disabled'
+                            : 'success.dark'
+                    }
+                >
+                    + Adding strategy:
+                </Typography>
+                <StrategyTooltipLink
+                    name={change.payload.name}
+                    title={change.payload.title}
+                >
+                    <StrategyDiff change={change} currentStrategy={undefined} />
+                </StrategyTooltipLink>
+                <div>
+                    <DisabledEnabledState
+                        disabled
+                        show={change.payload?.disabled === true}
+                    />
+                </div>
+            </ChangeItemInfo>
+            <div>{actions}</div>
+        </ChangeItemCreateEditDeleteWrapper>
+        <StrategyExecution strategy={change.payload} />
+    </>
+);
 
 export const StrategyChange: FC<{
     actions?: ReactNode;

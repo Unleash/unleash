@@ -13,7 +13,6 @@ import { useEffect, useState } from 'react';
 import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureOverviewEnvironments } from './FeatureOverviewEnvironments/FeatureOverviewEnvironments';
-import { default as LegacyFleatureOverview } from './LegacyFeatureOverview';
 import { useEnvironmentVisibility } from './FeatureOverviewMetaData/EnvironmentVisibilityMenu/hooks/useEnvironmentVisibility';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
@@ -50,18 +49,12 @@ export const FeatureOverview = () => {
     useEffect(() => {
         setLastViewed({ featureId, projectId });
     }, [featureId]);
-    const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
     const { setSplashSeen } = useSplashApi();
     const { splash } = useAuthSplash();
     const [showTooltip, setShowTooltip] = useState(false);
     const [hasClosedTooltip, setHasClosedTooltip] = useState(false);
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const cleanupReminderEnabled = useUiFlag('cleanupReminder');
-
-    if (!flagOverviewRedesign) {
-        return <LegacyFleatureOverview />;
-    }
-
     const dragTooltipSplashId = 'strategy-drag-tooltip';
     const shouldShowStrategyDragTooltip = !splash?.[dragTooltipSplashId];
     const toggleShowTooltip = (envIsOpen: boolean) => {

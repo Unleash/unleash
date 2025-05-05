@@ -1,8 +1,6 @@
 import type { ComponentProps, FC } from 'react';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { FeatureOverviewEnvironment } from './FeatureOverviewEnvironment/FeatureOverviewEnvironment';
-import LegacyFeatureOverviewEnvironment from './FeatureOverviewEnvironment/LegacyFeatureOverviewEnvironment';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
 import { getFeatureMetrics } from 'utils/getFeatureMetrics';
@@ -40,22 +38,8 @@ export const FeatureOverviewEnvironments: FC<
     const { feature } = useFeature(projectId, featureId);
     const { metrics } = useFeatureMetrics(projectId, featureId);
     const featureMetrics = getFeatureMetrics(feature?.environments, metrics);
-    const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
 
     if (!feature) return null;
-
-    if (!flagOverviewRedesign) {
-        return (
-            <>
-                {feature.environments?.map((env) => (
-                    <LegacyFeatureOverviewEnvironment
-                        env={env}
-                        key={env.name}
-                    />
-                ))}
-            </>
-        );
-    }
 
     return feature.environments
         ?.filter((env) => !hiddenEnvironments.includes(env.name))

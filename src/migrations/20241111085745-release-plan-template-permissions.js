@@ -1,4 +1,4 @@
-exports.up = (db, cb) => {
+export async function up (db, cb) {
   db.runSql(`
     INSERT INTO permissions(permission, display_name, type) VALUES
     ('RELEASE_PLAN_TEMPLATE_VIEW_OVERVIEW', 'View overview of release plan templates', 'root'),
@@ -18,7 +18,7 @@ exports.up = (db, cb) => {
 
 };
 
-exports.down = (db, cb) => {
+export async function down (db, cb) {
   db.runSql(`
       DELETE
       FROM permissions

@@ -1,4 +1,4 @@
-exports.up = (db, cb) => {
+export async function up (db, cb) {
     db.runSql(`
         UPDATE users
         SET
@@ -9,6 +9,6 @@ exports.up = (db, cb) => {
 
   };
 
-  exports.down = (db, cb) => {
+  export async function down (db, cb) {
     cb();
   };

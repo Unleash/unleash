@@ -303,6 +303,9 @@ export const EditableConstraint: FC<Props> = ({
                                 ? 'Add a single number'
                                 : 'A semver value should be of the format X.Y.Z'
                         }
+                        inputType={
+                            inputType.type === 'number' ? 'number' : 'text'
+                        }
                     />
                 );
             case 'multiple values':

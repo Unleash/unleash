@@ -17,15 +17,16 @@ const StyledChip = styled(ValueChip, {
     },
 }));
 
-interface AddValuesProps {
+type Props = {
     onAddValue: (newValue: string) => void;
     removeValue: () => void;
     currentValue?: string;
     helpText?: string;
-}
+    inputType: 'text' | 'number';
+};
 
-export const AddSingleValueWidget = forwardRef<HTMLDivElement, AddValuesProps>(
-    ({ currentValue, onAddValue, removeValue, helpText }, ref) => {
+export const AddSingleValueWidget = forwardRef<HTMLDivElement, Props>(
+    ({ currentValue, onAddValue, removeValue, helpText, inputType }, ref) => {
         const [open, setOpen] = useState(false);
         const positioningRef = useRef<HTMLDivElement>(null);
         useImperativeHandle(
@@ -56,8 +57,7 @@ export const AddSingleValueWidget = forwardRef<HTMLDivElement, AddValuesProps>(
                 />
                 <AddValuesPopover
                     inputProps={{
-                        type: 'text',
-                        inputMode: 'numeric',
+                        inputMode: inputType === 'number' ? 'decimal' : 'text',
                     }}
                     initialValue={currentValue}
                     onAdd={handleAdd}

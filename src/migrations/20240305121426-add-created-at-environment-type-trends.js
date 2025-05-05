@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, cb) {
+exports.up = function(db, cb) {
     db.runSql(
         `
         ALTER TABLE IF EXISTS environment_type_trends
@@ -9,6 +10,6 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function(db, cb) {
     db.runSql('ALTER TABLE IF EXISTS environment_type_trends DROP COLUMN IF EXISTS created_at;', cb);
 };

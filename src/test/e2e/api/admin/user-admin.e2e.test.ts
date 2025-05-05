@@ -19,6 +19,7 @@ import { omitKeys } from '../../../../lib/util/omit-keys.js';
 import type { ISessionStore } from '../../../../lib/types/stores/session-store.js';
 import type { IUnleashStores } from '../../../../lib/types/index.js';
 import { createHash } from 'crypto';
+import { jest } from '@jest/globals';
 
 let stores: IUnleashStores;
 let db: ITestDb;

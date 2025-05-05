@@ -6,6 +6,8 @@ import SettingService from './setting-service.js';
 import type EventService from '../features/events/event-service.js';
 import MaintenanceService from '../features/maintenance/maintenance-service.js';
 
+import { jest } from '@jest/globals';
+
 function ms(timeMs: number) {
     return new Promise((resolve) => setTimeout(resolve, timeMs));
 }

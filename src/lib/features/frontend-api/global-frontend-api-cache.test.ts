@@ -14,6 +14,8 @@ import type {
 } from '../../types/index.js';
 import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service.js';
 
+import { jest } from '@jest/globals';
+
 const state = async (
     cache: GlobalFrontendApiCache,
     state: GlobalFrontendApiCacheState,

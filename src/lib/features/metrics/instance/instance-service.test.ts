@@ -12,6 +12,8 @@ import FakeStrategiesStore from '../../../../test/fixtures/fake-strategies-store
 import FakeFeatureToggleStore from '../../feature-toggle/fakes/fake-feature-toggle-store.js';
 import type { IApplicationOverview } from './models.js';
 
+import { jest } from '@jest/globals';
+
 let config: IUnleashConfig;
 beforeAll(() => {
     config = createTestConfig({});

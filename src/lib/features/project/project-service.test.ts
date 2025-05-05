@@ -8,6 +8,8 @@ import {
 } from '../../types/index.js';
 import { createFakeProjectService } from './createProjectService.js';
 
+import { jest } from '@jest/globals';
+
 describe('enterprise extension: enable change requests', () => {
     const createService = (mode: 'oss' | 'enterprise' = 'enterprise') => {
         const config = createTestConfig();

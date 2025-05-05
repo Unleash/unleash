@@ -10,6 +10,8 @@ import { ApiTokenType } from '../types/models/api-token.js';
 import { type ISegmentStore, SYSTEM_USER_ID } from '../types/index.js';
 import FakeSegmentStore from '../../test/fixtures/fake-segment-store.js';
 
+import { jest } from '@jest/globals';
+
 let config: IUnleashConfig;
 let featureToggleStore: IFeatureToggleStore;
 let segmentStore: ISegmentStore;

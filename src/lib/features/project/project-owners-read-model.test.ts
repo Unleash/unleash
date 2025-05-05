@@ -6,8 +6,10 @@ import { type IUser, RoleName, type IGroup } from '../../types/index.js';
 import { randomId } from '../../util/index.js';
 import { ProjectOwnersReadModel } from './project-owners-read-model.js';
 import type { ProjectForUi } from './project-read-model-type.js';
+import { jest } from '@jest/globals';
 
 jest.mock('../../util', () => ({
+    // @ts-ignore spread can only be called on objects and this is unknown
     ...jest.requireActual('../../util'),
     generateImageUrl: jest.fn((input) => `https://${input.image_url}`),
 }));

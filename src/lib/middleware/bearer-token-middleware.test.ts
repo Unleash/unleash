@@ -3,6 +3,7 @@ import type { IUnleashConfig } from '../types/index.js';
 import { createTestConfig } from '../../test/config/test-config.js';
 import getLogger from '../../test/fixtures/no-logger.js';
 import type { Request, Response } from 'express';
+import { jest } from '@jest/globals';
 
 const exampleSignalToken = 'signal_tokensecret';
 

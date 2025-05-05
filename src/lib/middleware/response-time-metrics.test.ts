@@ -4,6 +4,7 @@ import {
     storeRequestedRoute,
 } from './response-time-metrics.js';
 import { REQUEST_TIME } from '../metric-events.js';
+import { jest } from '@jest/globals';
 
 const fixedResponseTime = 100;
 // mock response-time library

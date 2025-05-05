@@ -17,6 +17,7 @@ import {
     API_TOKEN_DELETED,
     API_TOKEN_UPDATED,
 } from '../events/index.js';
+import { jest } from '@jest/globals';
 
 test('Should init api token', async () => {
     const token = {

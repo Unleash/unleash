@@ -8,6 +8,7 @@ import type EventService from '../events/event-service.js';
 import { SCHEDULER_JOB_TIME } from '../../metric-events.js';
 import EventEmitter from 'events';
 import { TEST_AUDIT_USER } from '../../types/index.js';
+import { jest } from '@jest/globals';
 
 function ms(timeMs) {
     return new Promise((resolve) => setTimeout(resolve, timeMs));

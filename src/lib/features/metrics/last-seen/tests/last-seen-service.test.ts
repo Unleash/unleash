@@ -3,6 +3,7 @@ import EventEmitter from 'events';
 import getLogger from '../../../../../test/fixtures/no-logger.js';
 import type { IUnleashConfig } from '../../../../types/index.js';
 import { LastSeenService } from '../last-seen-service.js';
+import { jest } from '@jest/globals';
 
 function initLastSeenService(flagEnabled = true) {
     const stores = createStores();

@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
         ALTER TABLE group_user DROP COLUMN IF EXISTS role;
@@ -8,7 +9,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
             ALTER TABLE group_user ADD COLUMN role text check(role in ('Owner', 'Member')) default 'Member';

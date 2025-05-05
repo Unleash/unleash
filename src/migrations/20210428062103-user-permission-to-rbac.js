@@ -1,5 +1,6 @@
+'use strict';
 
-import async from 'async';
+const async = require('async');
 
 function resolveRoleName(permissions) {
     if (!permissions || permissions.length === 0) {
@@ -11,7 +12,7 @@ function resolveRoleName(permissions) {
     return 'Editor';
 }
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         'SELECT id, permissions from users WHERE id NOT IN (select user_id from role_user);',
         (err, results) => {
@@ -35,7 +36,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     // We can't just remove roles for users as we don't know if there has been any manual additions.
     cb();
 };

@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function(db, cb) {
     db.runSql(`
         ALTER TABLE release_plan_definitions ADD COLUMN release_plan_template_id TEXT REFERENCES release_plan_definitions(id) ON DELETE CASCADE;
         CREATE INDEX idx_release_plan_template_definition_id ON release_plan_definitions (release_plan_template_id) WHERE release_plan_template_id IS NOT NULL;
@@ -17,7 +17,7 @@ export async function up(db, cb) {
     `, cb)
 };
 
-export async function down(db, cb) {
+exports.down = function(db, cb) {
     db.runSql(`
         ALTER TABLE release_plan_definitions DROP COLUMN release_plan_template_id;
         ALTER TABLE feature_strategies DROP COLUMN milestone_id;

@@ -14,6 +14,8 @@ import getLogger from '../../fixtures/no-logger.js';
 import type { IEventStore } from '../../../lib/types/stores/event-store.js';
 import type { IAuditUser, IUnleashStores } from '../../../lib/types/index.js';
 
+import { jest } from '@jest/globals';
+
 let db: ITestDb;
 let stores: IUnleashStores;
 let eventStore: IEventStore;

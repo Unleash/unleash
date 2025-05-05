@@ -7,6 +7,7 @@ import permissions from '../../test/fixtures/permissions.js';
 import { RoleName, RoleType } from '../types/model.js';
 import type { IUnleashStores } from '../types/index.js';
 import type TestAgent from 'supertest/lib/agent.d.ts';
+import { jest } from '@jest/globals';
 
 describe('Public Signup API', () => {
     async function getSetup() {

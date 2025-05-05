@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
         DELETE FROM permissions WHERE permission IN ('CREATE_API_TOKEN', 'UPDATE_API_TOKEN', 'DELETE_API_TOKEN', 'READ_API_TOKEN');
@@ -11,7 +11,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
         `,

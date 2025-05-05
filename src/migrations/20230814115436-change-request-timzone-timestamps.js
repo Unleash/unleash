@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, callback) {
+exports.up = function (db, callback) {
     db.runSql(
         `
             ALTER TABLE change_request_rejections ALTER COLUMN created_at TYPE TIMESTAMP WITH TIME ZONE;
@@ -13,6 +14,6 @@ export async function up(db, callback) {
     );
 };
 
-export async function down(db, callback) {
+exports.down = function (db, callback) {
     callback();
 };

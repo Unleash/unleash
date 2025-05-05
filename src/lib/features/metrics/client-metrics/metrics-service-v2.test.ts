@@ -12,6 +12,8 @@ import type {
 import { endOfDay, startOfHour, subDays, subHours } from 'date-fns';
 import type { IClientMetricsEnv } from './client-metrics-store-v2-type.js';
 
+import { jest } from '@jest/globals';
+
 function initClientMetrics(flagEnabled = true) {
     const stores = createStores();
 

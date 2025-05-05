@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, cb) {
+exports.up = function(db, cb) {
     db.runSql(
         `
             CREATE INDEX IF NOT EXISTS idx_events_feature_type_id ON events (id)
@@ -11,7 +12,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function(db, cb) {
     db.runSql(`
         DROP INDEX IF EXISTS idx_events_feature_type_id;
     `, cb);

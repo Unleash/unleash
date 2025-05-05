@@ -16,6 +16,7 @@ import {
     type IFlagResolver,
 } from '../types/index.js';
 import type { IntegrationEventsService } from '../services/index.js';
+import { jest } from '@jest/globals';
 
 let fetchRetryCalls: any[] = [];
 const registerEventMock = jest.fn();

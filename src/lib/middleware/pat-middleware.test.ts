@@ -4,6 +4,8 @@ import User from '../types/user.js';
 import NotFoundError from '../error/notfound-error.js';
 import type { AccountService } from '../services/account-service.js';
 
+import { jest } from '@jest/globals';
+
 let config: any;
 
 beforeEach(() => {

@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `CREATE TABLE IF NOT EXISTS tag_types
          (
@@ -30,7 +30,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `DROP TABLE feature_tag;
         DROP TABLE tags;

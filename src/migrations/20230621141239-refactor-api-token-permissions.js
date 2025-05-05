@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
     UPDATE permissions SET display_name = 'Create CLIENT API tokens' WHERE permission = 'CREATE_CLIENT_API_TOKEN';
@@ -15,7 +15,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
         `,

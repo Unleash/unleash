@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
           UPDATE feature_strategies
@@ -12,6 +13,6 @@ export async function up(db, cb) {
 };
 
 // This is a fix for a broken state, we don't want this to be rolled back
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     cb();
 };

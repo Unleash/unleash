@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
   db.runSql(`
         CREATE TYPE change_request_schedule_status AS ENUM ('pending', 'failed');
 
@@ -12,7 +13,7 @@ export async function up(db, cb) {
     `, cb);
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
   db.runSql(`
       ALTER TABLE change_request_schedule
           DROP COLUMN IF EXISTS created_by;

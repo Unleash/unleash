@@ -1,5 +1,5 @@
 
-export async function up (db, callback) {
+exports.up = (db, callback) => {
     db.runSql(
         `
         CREATE TABLE IF NOT EXISTS request_count_consumption(
@@ -13,7 +13,7 @@ export async function up (db, callback) {
     );
 };
 
-export async function down (db, callback) {
+exports.down = (db, callback) => {
     db.runSql(
         `
         DROP TABLE IF EXISTS request_count_consumption;

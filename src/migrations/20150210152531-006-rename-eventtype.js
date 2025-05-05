@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, callback) {
+exports.up = function (db, callback) {
     db.runSql(
         `
 UPDATE events SET type='feature-revived' WHERE type='feature-revive';
@@ -9,7 +10,7 @@ UPDATE events SET type='feature-archived' WHERE type='feature-archive';
     );
 };
 
-export async function down(db, callback) {
+exports.down = function (db, callback) {
     db.runSql(
         `
 UPDATE events SET type='feature-revive' WHERE type='feature-revived';

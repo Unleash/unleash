@@ -18,6 +18,7 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_ENVIRONMENT_DISABLED,
 } from '../events/index.js';
+import { jest } from '@jest/globals';
 
 const asyncGunzip = promisify(gunzip);
 

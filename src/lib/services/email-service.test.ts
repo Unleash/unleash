@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 import { EmailService } from './email-service.js';
 import noLoggerProvider from '../../test/fixtures/no-logger.js';
 import type { IUnleashConfig } from '../types/index.js';
+import { jest } from '@jest/globals';
 
 test('Can send reset email', async () => {
     const emailService = new EmailService({

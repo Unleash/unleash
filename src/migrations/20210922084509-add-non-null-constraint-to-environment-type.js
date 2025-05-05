@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
     UPDATE environments SET type = 'production' WHERE type IS null;
@@ -8,6 +9,6 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(`ALTER TABLE environments ALTER COLUMN type DROP NOT NULL`, cb);
 };

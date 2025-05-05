@@ -8,6 +8,7 @@ import apiTokenMiddleware, {
 } from './api-token-middleware.js';
 import type { ApiTokenService } from '../services/index.js';
 import type { IUnleashConfig } from '../types/index.js';
+import { jest } from '@jest/globals';
 
 let config: IUnleashConfig;
 

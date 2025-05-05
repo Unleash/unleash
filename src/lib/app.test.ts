@@ -1,6 +1,7 @@
 import express from 'express';
 import { createTestConfig } from '../test/config/test-config.js';
 import compression from 'compression';
+import { jest } from '@jest/globals';
 
 jest.mock('compression', () =>
     jest.fn().mockImplementation(() => (req, res, next) => {

@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
         ALTER TABLE users ADD COLUMN scim_external_id TEXT;
@@ -10,7 +10,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
     DROP INDEX IF EXISTS users_scim_external_id_uniq_idx;

@@ -1,4 +1,5 @@
 /* eslint camelcase: "off" */
+'use strict';
 
 const DESCRIPTION = {
     RELEASE: 'Release feature toggles are used to release new features.',
@@ -12,7 +13,7 @@ const DESCRIPTION = {
         'Permission feature toggles are used to control permissions in your system.',
 };
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
         UPDATE feature_types set description = '${DESCRIPTION.RELEASE}' where id = 'release';
@@ -25,7 +26,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
     `,

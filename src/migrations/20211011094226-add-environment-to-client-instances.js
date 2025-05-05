@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
     ALTER TABLE client_instances DROP CONSTRAINT client_instances_pkey;
@@ -11,7 +12,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
       DROP INDEX client_instances_environment_idx;
@@ -23,6 +24,6 @@ export async function down(db, cb) {
     );
 };
 
-export const _meta = {
+exports._meta = {
     version: 1,
 };

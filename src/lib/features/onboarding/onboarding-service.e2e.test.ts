@@ -12,6 +12,7 @@ import { createTestConfig } from '../../../test/config/test-config.js';
 import { createOnboardingService } from './createOnboardingService.js';
 import type EventEmitter from 'events';
 import { STAGE_ENTERED, USER_LOGIN } from '../../metric-events.js';
+import { jest } from '@jest/globals';
 
 let db: ITestDb;
 let stores: IUnleashStores;

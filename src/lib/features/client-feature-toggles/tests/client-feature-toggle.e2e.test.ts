@@ -11,6 +11,8 @@ import type { Application } from 'express';
 import type { IFlagResolver } from '../../../types/index.js';
 import type TestAgent from 'supertest/lib/agent.d.ts';
 
+import { jest } from '@jest/globals';
+
 let app: Application;
 
 async function getSetup() {

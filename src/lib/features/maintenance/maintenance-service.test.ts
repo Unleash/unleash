@@ -5,6 +5,7 @@ import { createTestConfig } from '../../../test/config/test-config.js';
 import FakeSettingStore from '../../../test/fixtures/fake-setting-store.js';
 import type EventService from '../events/event-service.js';
 import { TEST_AUDIT_USER } from '../../types/index.js';
+import { jest } from '@jest/globals';
 
 test('Scheduler should run scheduled functions if maintenance mode is off', async () => {
     const config = createTestConfig();

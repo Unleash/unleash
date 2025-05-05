@@ -1,4 +1,4 @@
-export async function up (db, cb) {
+exports.up = (db, cb) => {
   db.runSql(`CREATE TABLE stat_edge_traffic_usage(
     instance_id TEXT NOT NULL,
     day DATE NOT NULL,
@@ -11,6 +11,6 @@ export async function up (db, cb) {
 `, cb);
 };
 
-export async function down (db, cb) {
+exports.down = (db, cb) => {
   db.runSql(`DROP TABLE stat_edge_traffic_usage;`, cb);
 };

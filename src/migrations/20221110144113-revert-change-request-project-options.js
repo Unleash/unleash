@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, callback) {
+exports.up = function (db, callback) {
     db.runSql(
         `
             ALTER TABLE project_environments drop column if exists change_request_enabled;
@@ -9,7 +10,7 @@ export async function up(db, callback) {
     );
 };
 
-export async function down(db, callback) {
+exports.down = function (db, callback) {
     db.runSql(
         `
             ALTER TABLE project_environments add column if not exists change_request_enabled bool default false;

@@ -10,6 +10,8 @@ import type { ProjectAccess } from '../private-project/privateProjectStore.js';
 import EventService, { filterAccessibleProjects } from './event-service.js';
 import { type IBaseEvent, USER_UPDATED } from '../../events/index.js';
 
+import { jest } from '@jest/globals';
+
 describe('filterPrivateProjectsFromParams', () => {
     it('should return IS_ANY_OF with allowed projects when projectParam is undefined and mode is limited', () => {
         const projectAccess: ProjectAccess = {

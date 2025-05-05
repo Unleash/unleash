@@ -3,6 +3,8 @@ import { createTestConfig } from '../../test/config/test-config.js';
 import { compareAndLogPostgresVersion } from './postgres-version-checker.js';
 import FakeSettingStore from '../../test/fixtures/fake-setting-store.js';
 
+import { jest } from '@jest/globals';
+
 let config: IUnleashConfig;
 let settingStore: ISettingStore;
 let infoMessages: string[];

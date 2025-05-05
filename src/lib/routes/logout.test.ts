@@ -8,6 +8,7 @@ import SessionService from '../services/session-service.js';
 import FakeSessionStore from '../../test/fixtures/fake-session-store.js';
 import noLogger from '../../test/fixtures/no-logger.js';
 import { addDays } from 'date-fns';
+import { jest } from '@jest/globals';
 
 test('should redirect to "/" after logout', async () => {
     const baseUriPath = '';

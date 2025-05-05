@@ -19,7 +19,7 @@ import {
     CONTEXT_FIELD_CREATED,
     CONTEXT_FIELD_DELETED,
     CONTEXT_FIELD_UPDATED,
-} from '../../shared/index.js';
+} from '../../types/index.js';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import type EventService from '../events/event-service.js';
 import {

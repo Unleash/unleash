@@ -13,7 +13,7 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_REVIVED,
-} from '../../shared/index.js';
+} from '../../types/index.js';
 import type {
     FeatureLifecycleView,
     IFeatureLifecycleStore,

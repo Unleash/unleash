@@ -6,8 +6,8 @@ import {
     SETTING_CREATED,
     SETTING_DELETED,
     SETTING_UPDATED,
-} from '../../../lib/shared/index.js';
-import { TEST_AUDIT_USER } from '../../../lib/types/index.js';
+    TEST_AUDIT_USER,
+} from '../../../lib/types/index.js';
 import { createEventsService } from '../../../lib/features/index.js';
 
 let stores: IUnleashStores;

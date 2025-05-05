@@ -8,12 +8,12 @@ import {
 } from '../../../test/e2e/helpers/test-helper.js';
 import getLogger from '../../../test/fixtures/no-logger.js';
 import type { CreateDependentFeatureSchema } from '../../openapi/index.js';
-import type { IEventStore } from '../../types/index.js';
 import {
     FEATURE_DEPENDENCIES_REMOVED,
     FEATURE_DEPENDENCY_ADDED,
     FEATURE_DEPENDENCY_REMOVED,
-} from '../../shared/index.js';
+    type IEventStore,
+} from '../../types/index.js';
 import { DEFAULT_ENV } from '../../util/index.js';
 
 let app: IUnleashTest;

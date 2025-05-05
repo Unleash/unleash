@@ -3,7 +3,7 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_STRATEGY_UPDATE,
     type IEvent,
-} from '../shared/index.js';
+} from '../types/index.js';
 import { EVENT_MAP } from './feature-event-formatter-md-events.js';
 import type { IConstraint } from '../internals.js';
 

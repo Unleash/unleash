@@ -30,7 +30,7 @@ import type { Db } from '../../db/db.js';
 import { isAfter } from 'date-fns';
 import merge from 'deepmerge';
 import Raw = Knex.Raw;
-import type { ITag } from '../../shared/index.js';
+import type { ITag } from '../../types/index.js';
 
 const COLUMNS = [
     'id',

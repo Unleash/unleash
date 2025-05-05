@@ -1,4 +1,4 @@
-import type { IBaseEvent, IEvent } from '../../shared/index.js';
+import type { IBaseEvent, IEvent } from '../index.js';
 import type { Store } from './store.js';
 import type {
     DeprecatedSearchEventsSchema,

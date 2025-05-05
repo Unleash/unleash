@@ -7,7 +7,7 @@ import getLogger from '../../../fixtures/no-logger.js';
 import {
     FEATURE_CREATED,
     type IBaseEvent,
-} from '../../../../lib/shared/index.js';
+} from '../../../../lib/types/index.js';
 import { randomId } from '../../../../lib/util/random-id.js';
 import type { EventService } from '../../../../lib/services/index.js';
 import {

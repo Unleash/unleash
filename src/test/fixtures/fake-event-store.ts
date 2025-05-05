@@ -1,5 +1,5 @@
 import type { IEventStore } from '../../lib/types/stores/event-store.js';
-import type { IBaseEvent, IEvent } from '../../lib/shared/index.js';
+import type { IBaseEvent, IEvent } from '../../lib/types/index.js';
 import { sharedEventEmitter } from '../../lib/util/anyEventEmitter.js';
 import type { IQueryOperations } from '../../lib/features/events/event-store.js';
 import type {

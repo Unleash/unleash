@@ -1,6 +1,6 @@
 import type { ITagStore } from '../../lib/types/stores/tag-store.js';
 import NotFoundError from '../../lib/error/notfound-error.js';
-import type { ITag } from '../../lib/shared/index.js';
+import type { ITag } from '../../lib/types/index.js';
 
 export default class FakeTagStore implements ITagStore {
     tags: ITag[] = [];

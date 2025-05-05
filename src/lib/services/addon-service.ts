@@ -2,7 +2,7 @@ import memoizee from 'memoizee';
 import joi from 'joi';
 const { ValidationError } = joi;
 import { getAddons, type IAddonProviders } from '../addons/index.js';
-import * as events from '../shared/index.js';
+import * as events from '../types/index.js';
 import {
     AddonConfigCreatedEvent,
     AddonConfigDeletedEvent,

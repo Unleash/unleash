@@ -12,7 +12,7 @@ import {
     FeatureEventFormatterMd,
     LinkStyle,
 } from './feature-event-formatter-md.js';
-import type { IEvent } from '../shared/index.js';
+import type { IEvent } from '../types/index.js';
 import type { IntegrationEventState } from '../features/integration-events/integration-events-store.js';
 
 interface ISlackAddonParameters {

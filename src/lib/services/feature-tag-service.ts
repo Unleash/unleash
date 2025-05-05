@@ -4,7 +4,7 @@ import {
     FEATURE_TAGGED,
     FEATURE_UNTAGGED,
     TAG_CREATED,
-} from '../shared/index.js';
+} from '../types/index.js';
 import type { IUnleashConfig } from '../types/option.js';
 import type { IFeatureToggleStore, IUnleashStores } from '../types/stores.js';
 import { tagSchema } from './tag-schema.js';
@@ -14,7 +14,7 @@ import type {
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store.js';
 import type { ITagStore } from '../types/stores/tag-store.js';
-import type { ITag } from '../shared/index.js';
+import type { ITag } from '../types/index.js';
 import { BadDataError, FOREIGN_KEY_VIOLATION } from '../../lib/error/index.js';
 import type EventService from '../features/events/event-service.js';
 import { FeatureTaggedEvent, type IAuditUser } from '../types/index.js';

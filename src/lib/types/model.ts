@@ -9,7 +9,6 @@ import type { IntegrationEventsService } from '../features/integration-events/in
 import type { IFlagResolver } from './experimental.js';
 import type { Collaborator } from '../features/feature-toggle/types/feature-collaborators-read-model-type.js';
 import type { EventEmitter } from 'events';
-import type { ITag } from '../shared/index.js';
 
 export type Operator = (typeof ALL_OPERATORS)[number];
 
@@ -381,6 +380,12 @@ export interface IFeatureToggleQuery {
 export interface IFeatureToggleDeltaQuery extends IFeatureToggleQuery {
     toggleNames?: string[];
     environment: string;
+}
+
+export interface ITag {
+    value: string;
+    type: string;
+    color?: string | null;
 }
 
 export interface IAddonParameterDefinition {

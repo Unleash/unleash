@@ -22,7 +22,7 @@ import {
 } from './search-utils.js';
 import { generateImageUrl } from '../../util/index.js';
 import Raw = Knex.Raw;
-import type { ITag } from '../../shared/index.js';
+import type { ITag } from '../../types/index.js';
 
 const sortEnvironments = (overview: IFeatureSearchOverview[]) => {
     return overview.map((data: IFeatureSearchOverview) => ({

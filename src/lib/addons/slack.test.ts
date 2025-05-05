@@ -3,7 +3,7 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_ENVIRONMENT_DISABLED,
     type IEvent,
-} from '../shared/index.js';
+} from '../types/index.js';
 import type { Logger } from '../logger.js';
 
 import SlackAddon from './slack.js';

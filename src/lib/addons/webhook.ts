@@ -1,7 +1,7 @@
 import Mustache from 'mustache';
 import Addon from './addon.js';
 import definition from './webhook-definition.js';
-import type { IEvent } from '../shared/index.js';
+import type { IEvent } from '../types/index.js';
 import {
     type IAddonConfig,
     type IFlagResolver,

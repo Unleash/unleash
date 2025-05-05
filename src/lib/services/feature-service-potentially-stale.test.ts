@@ -1,12 +1,10 @@
-import type {
-    IFeatureCollaboratorsReadModel,
-    IUnleashConfig,
-    IUnleashStores,
-} from '../types/index.js';
 import {
     FEATURE_POTENTIALLY_STALE_ON,
     type IBaseEvent,
-} from '../shared/index.js';
+    type IFeatureCollaboratorsReadModel,
+    type IUnleashConfig,
+    type IUnleashStores,
+} from '../types/index.js';
 import { createTestConfig } from '../../test/config/test-config.js';
 import FeatureToggleService from '../features/feature-toggle/feature-toggle-service.js';
 import type { AccessService } from './access-service.js';

@@ -25,7 +25,7 @@ import {
     isDeltaFeatureUpdatedEvent,
     isDeltaSegmentEvent,
 } from './client-feature-toggle-delta-types.js';
-import { FEATURE_PROJECT_CHANGE } from '../../../shared/index.js';
+import { FEATURE_PROJECT_CHANGE } from '../../../types/index.js';
 
 type EnvironmentRevisions = Record<string, DeltaCache>;
 

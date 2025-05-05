@@ -1,4 +1,3 @@
-'use strict';
 
 export async function up(db, cb) {
     // mark existing events as announced, set the default to false for future events.

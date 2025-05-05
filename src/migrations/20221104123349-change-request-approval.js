@@ -1,4 +1,3 @@
-'use strict';
 
 export async function up(db, callback) {
     db.runSql(

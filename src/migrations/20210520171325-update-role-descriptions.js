@@ -1,4 +1,3 @@
-'use strict';
 
 const DESCRIPTION = {
     EDITOR: 'Users with the editor role have access to most features in Unleash, but can not manage users and roles in the global scope. Editors will be added as project owner when creating projects and get superuser rights within the context of these projects.',

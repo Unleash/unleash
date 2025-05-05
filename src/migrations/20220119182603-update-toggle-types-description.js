@@ -1,5 +1,4 @@
 /* eslint camelcase: "off" */
-'use strict';
 
 const DESCRIPTION = {
     RELEASE: 'Release feature toggles are used to release new features.',

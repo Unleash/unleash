@@ -42,7 +42,7 @@ import { CRUDStore } from './db/crud/crud-store.js';
 import type { CrudStoreConfig } from './db/crud/crud-store.js';
 import { type Logger, LogLevel, type LogProvider } from './logger.js';
 import { ImportTogglesStore } from './features/export-import-toggles/import-toggles-store.js';
-import { ALL_PROJECTS, CUSTOM_ROOT_ROLE_TYPE } from './util/constants.js';
+import { ALL_PROJECTS, CUSTOM_ROOT_ROLE_TYPE } from './util/index.js';
 import {
     extractAuditInfoFromUser,
     getVariantValue,
@@ -190,7 +190,6 @@ export async function initialServiceSetup(
         await apiTokenService.initApiTokens(authentication.initApiTokens);
     }
 }
-
 export async function createApp(
     config: IUnleashConfig,
     startApp: boolean,

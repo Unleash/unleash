@@ -12,8 +12,8 @@ import type {
     ITag,
     IEventList,
 } from '../../types/index.js';
-import type { DeprecatedSearchEventsSchema } from '../../openapi/spec/deprecated-search-events-schema.js';
-import type EventEmitter from 'events';
+import type { DeprecatedSearchEventsSchema } from '../../openapi/index.js';
+import type EventEmitter from 'node:events';
 import { ApiTokenType } from '../../types/models/api-token.js';
 import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events.js';
 import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
@@ -124,10 +124,10 @@ export default class EventService {
         };
     }
 
-    async onEvent(
+    onEvent(
         eventName: string | symbol,
         listener: (...args: any[]) => void,
-    ): Promise<EventEmitter> {
+    ): EventEmitter {
         return this.eventStore.on(eventName, listener);
     }
 

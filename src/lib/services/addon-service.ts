@@ -29,8 +29,9 @@ import { minutesToMilliseconds } from 'date-fns';
 import type EventService from '../features/events/event-service.js';
 import { omitKeys } from '../util/index.js';
 import { NotFoundError } from '../error/index.js';
+import type { IntegrationEventsService } from '../features/integration-events/integration-events-service.js';
 
-const SUPPORTED_EVENTS = Object.keys(events).map((k) => events[k]);
+const SUPPORTED_EVENTS = Object.keys(events.IEventTypes).map((k) => events[k]);
 
 const MASKED_VALUE = '*****';
 
@@ -73,7 +74,7 @@ export default class AddonService {
         >,
         tagTypeService: TagTypeService,
         eventService: EventService,
-        integrationEventsService,
+        integrationEventsService: IntegrationEventsService,
         addons?: IAddonProviders,
     ) {
         this.addonStore = addonStore;

@@ -14,7 +14,7 @@ import type {
     IEventSearchParams,
     IEventStore,
 } from '../../types/stores/event-store.js';
-import { sharedEventEmitter } from '../../util/anyEventEmitter.js';
+import { sharedEventEmitter } from '../../util/index.js';
 import type { Db } from '../../db/db.js';
 import type { Knex } from 'knex';
 import type EventEmitter from 'events';

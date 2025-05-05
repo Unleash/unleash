@@ -4,6 +4,7 @@ import {
     type IBaseEvent,
     type IEvent,
     type IEventType,
+    type ITag,
     SEGMENT_CREATED,
     SEGMENT_DELETED,
     SEGMENT_UPDATED,
@@ -13,7 +14,6 @@ import type {
     IEventSearchParams,
     IEventStore,
 } from '../../types/stores/event-store.js';
-import type { ITag } from '../../types/index.js';
 import { sharedEventEmitter } from '../../util/anyEventEmitter.js';
 import type { Db } from '../../db/db.js';
 import type { Knex } from 'knex';

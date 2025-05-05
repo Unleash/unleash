@@ -1,10 +1,11 @@
-import type {
-    IEventStore,
-    IFeatureToggleDeltaQuery,
-    IFeatureToggleQuery,
-    IFlagResolver,
-    ISegmentReadModel,
-    IUnleashConfig,
+import {
+    FEATURE_PROJECT_CHANGE,
+    type IEventStore,
+    type IFeatureToggleDeltaQuery,
+    type IFeatureToggleQuery,
+    type IFlagResolver,
+    type ISegmentReadModel,
+    type IUnleashConfig,
 } from '../../../types/index.js';
 import type ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service.js';
 import { UPDATE_REVISION } from '../../feature-toggle/configuration-revision-service.js';
@@ -25,7 +26,6 @@ import {
     isDeltaFeatureUpdatedEvent,
     isDeltaSegmentEvent,
 } from './client-feature-toggle-delta-types.js';
-import { FEATURE_PROJECT_CHANGE } from '../../../types/index.js';
 
 type EnvironmentRevisions = Record<string, DeltaCache>;
 

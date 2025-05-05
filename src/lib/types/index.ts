@@ -8,6 +8,7 @@ export * from './group.js';
 export * from './model.js';
 export * from './mutable.js';
 export * from './no-auth-user.js';
+export * from './option.js';
 export * from './partial.js';
 export * from './project.js';
 export * from './query.js';

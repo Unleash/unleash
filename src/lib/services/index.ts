@@ -158,6 +158,7 @@ import {
     createFakeContextService,
 } from '../features/context/createContextService';
 import { UniqueConnectionService } from '../features/unique-connection/unique-connection-service';
+import { createFakeFeatureLinkService } from '../features/feature-links/createFeatureLinkService';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -424,6 +425,11 @@ export const createServices = (
         ? withTransactional(createUserSubscriptionsService(config), db)
         : withFakeTransactional(createFakeUserSubscriptionsService(config));
 
+    const transactionalFeatureLinkService = withFakeTransactional(
+        createFakeFeatureLinkService(config).featureLinkService,
+    );
+    const featureLinkService = transactionalFeatureLinkService;
+
     return {
         transactionalAccessService,
         accessService,
@@ -493,6 +499,8 @@ export const createServices = (
         transactionalUserSubscriptionsService,
         uniqueConnectionService,
         featureLifecycleReadModel,
+        featureLinkService,
+        transactionalFeatureLinkService,
     };
 };
 

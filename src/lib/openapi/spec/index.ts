@@ -85,6 +85,7 @@ export * from './feature-events-schema';
 export * from './feature-lifecycle-completed-schema';
 export * from './feature-lifecycle-count-schema';
 export * from './feature-lifecycle-schema';
+export * from './feature-link-schema';
 export * from './feature-metrics-schema';
 export * from './feature-schema';
 export * from './feature-search-environment-schema';

@@ -65,6 +65,7 @@ import { UserUnsubscribeStore } from '../features/user-subscriptions/user-unsubs
 import { UserSubscriptionsReadModel } from '../features/user-subscriptions/user-subscriptions-read-model';
 import { UniqueConnectionStore } from '../features/unique-connection/unique-connection-store';
 import { UniqueConnectionReadModel } from '../features/unique-connection/unique-connection-read-model';
+import FakeFeatureLinkStore from '../features/feature-links/fake-feature-link-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -201,6 +202,7 @@ export const createStores = (
         releasePlanMilestoneStore: new ReleasePlanMilestoneStore(db, config),
         releasePlanMilestoneStrategyStore:
             new ReleasePlanMilestoneStrategyStore(db, config),
+        featureLinkStore: new FakeFeatureLinkStore(),
     };
 };
 

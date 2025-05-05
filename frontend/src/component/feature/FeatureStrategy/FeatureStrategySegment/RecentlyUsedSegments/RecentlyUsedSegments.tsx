@@ -5,7 +5,7 @@ import { FeatureStrategySegmentChip } from '../FeatureStrategySegmentChip';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useUiFlag } from 'hooks/useUiFlag';
 
-type IRecentlyUsedSegmentsProps = {
+type RecentlyUsedSegmentsProps = {
     setSegments?: React.Dispatch<React.SetStateAction<ISegment[]>>;
 };
 
@@ -27,7 +27,7 @@ const StyledSegmentsContainer = styled('div')(({ theme }) => ({
 
 export const RecentlyUsedSegments = ({
     setSegments,
-}: IRecentlyUsedSegmentsProps) => {
+}: RecentlyUsedSegmentsProps) => {
     const { items: recentlyUsedSegmentIds } = useRecentlyUsedSegments();
     const { segments: allSegments } = useSegments();
     const addEditStrategyEnabled = useUiFlag('addEditStrategy');

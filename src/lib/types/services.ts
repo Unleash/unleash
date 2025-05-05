@@ -134,6 +134,5 @@ export interface IUnleashServices {
     transactionalUserSubscriptionsService: WithTransactional<UserSubscriptionsService>;
     uniqueConnectionService: UniqueConnectionService;
     featureLifecycleReadModel: IFeatureLifecycleReadModel;
-    featureLinkService: FeatureLinkService;
     transactionalFeatureLinkService: WithTransactional<FeatureLinkService>;
 }

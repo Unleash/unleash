@@ -428,7 +428,6 @@ export const createServices = (
     const transactionalFeatureLinkService = withFakeTransactional(
         createFakeFeatureLinkService(config).featureLinkService,
     );
-    const featureLinkService = transactionalFeatureLinkService;
 
     return {
         transactionalAccessService,
@@ -499,7 +498,6 @@ export const createServices = (
         transactionalUserSubscriptionsService,
         uniqueConnectionService,
         featureLifecycleReadModel,
-        featureLinkService,
         transactionalFeatureLinkService,
     };
 };

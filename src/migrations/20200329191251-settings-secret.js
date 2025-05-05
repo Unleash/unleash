@@ -1,6 +1,5 @@
 /* eslint camelcase: "off" */
 
-'use strict';
 
 import crypto from 'crypto';
 

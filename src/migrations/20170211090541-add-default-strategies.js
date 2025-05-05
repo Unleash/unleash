@@ -1,4 +1,3 @@
-'use strict';
 
 import async from 'async';
 const strategies = [

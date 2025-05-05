@@ -1,6 +1,5 @@
 /* eslint camelcase: "off" */
 
-'use strict';
 
 export async function up(db, cb) {
     return db.createTable(

@@ -1,6 +1,5 @@
 /* eslint camelcase: "off" */
 
-'use strict';
 
 import async from 'async';
 

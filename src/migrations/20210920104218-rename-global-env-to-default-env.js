@@ -1,4 +1,3 @@
-'use strict';
 
 export const up = function (db, cb) {
     db.runSql(

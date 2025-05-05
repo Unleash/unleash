@@ -1,4 +1,3 @@
-'use strict';
 
 export async function up(db, cb) {
     return db.addColumn(

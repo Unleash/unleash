@@ -1,4 +1,3 @@
-'use strict';
 
 const DESCRIPTION = {
     EDITOR: 'Users with this role have access most features in Unleash, but can not manage users and roles in the global scope. If a user with a global regular role creates a project, they will become a project admin and receive superuser rights within the context of that project.',

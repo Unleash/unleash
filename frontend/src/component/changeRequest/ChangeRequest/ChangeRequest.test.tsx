@@ -226,7 +226,7 @@ test('Display default disable feature', async () => {
     expect(screen.getByText('Feature status will change')).toBeInTheDocument();
 });
 
-test('Displays feature strategy variants table when addStrategy action with variants', async () => {
+test('Displays strategy variant split if addStrategy action with variants', async () => {
     render(
         <Routes>
             <Route
@@ -269,7 +269,7 @@ test('Displays feature strategy variants table when addStrategy action with vari
         },
     );
 
-    await screen.findByText('Setting strategy variants to:');
+    await screen.findByText('Adding strategy variants:');
 });
 
 test('Displays feature strategy variants table when there is a change in the variants array', async () => {

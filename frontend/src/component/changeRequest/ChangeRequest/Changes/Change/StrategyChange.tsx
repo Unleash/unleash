@@ -162,21 +162,6 @@ const DeleteStrategy: FC<{
             {referenceStrategy && (
                 <StrategyExecution strategy={referenceStrategy} />
             )}
-            <ConditionallyRender
-                condition={Boolean(referenceStrategy?.variants?.length)}
-                show={
-                    referenceStrategy?.variants && (
-                        <StyledBox>
-                            <StyledTypography>
-                                Deleting strategy variants:
-                            </StyledTypography>
-                            <EnvironmentVariantsTable
-                                variants={referenceStrategy.variants}
-                            />
-                        </StyledBox>
-                    )
-                }
-            />
         </>
     );
 };
@@ -250,19 +235,26 @@ const UpdateStrategy: FC<{
                 }
             />
             <StrategyExecution strategy={change.payload} />
-            <ConditionallyRender
-                condition={Boolean(hasVariantDiff)}
-                show={
-                    <StyledBox>
+            {hasVariantDiff ? (
+                <StyledBox>
+                    {change.payload.variants?.length ? (
+                        <>
+                            <StyledTypography>
+                                {currentStrategy?.variants?.length
+                                    ? 'Updating strategy variants to:'
+                                    : 'Adding strategy variants:'}
+                            </StyledTypography>
+                            <EnvironmentVariantsTable
+                                variants={change.payload.variants || []}
+                            />
+                        </>
+                    ) : (
                         <StyledTypography>
-                            Updating strategy variants to:
+                            Removed all strategy variants.
                         </StyledTypography>
-                        <EnvironmentVariantsTable
-                            variants={change.payload.variants || []}
-                        />
-                    </StyledBox>
-                }
-            />
+                    )}
+                </StyledBox>
+            ) : null}
         </>
     );
 };
@@ -299,6 +291,14 @@ const AddStrategy: FC<{
             <div>{actions}</div>
         </ChangeItemCreateEditDeleteWrapper>
         <StrategyExecution strategy={change.payload} />
+        {change.payload.variants?.length ? (
+            <StyledBox>
+                <StyledTypography>Adding strategy variants:</StyledTypography>
+                <EnvironmentVariantsTable
+                    variants={change.payload.variants || []}
+                />
+            </StyledBox>
+        ) : null}
     </>
 );
 

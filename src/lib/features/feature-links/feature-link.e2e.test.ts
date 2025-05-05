@@ -48,7 +48,7 @@ beforeEach(async () => {
 const addLink = async (
     featureName: string,
     link: FeatureLinkSchema,
-    expectedCode = 201,
+    expectedCode = 204,
 ) => {
     return app.request
         .post(`/api/admin/projects/default/features/${featureName}/link`)
@@ -59,9 +59,5 @@ const addLink = async (
 test('should add feature links', async () => {
     await app.createFeature('my_feature');
 
-    await addLink(
-        'my_feature',
-        { url: 'example.com', title: 'feature link' },
-        201,
-    );
+    await addLink('my_feature', { url: 'example.com', title: 'feature link' });
 });

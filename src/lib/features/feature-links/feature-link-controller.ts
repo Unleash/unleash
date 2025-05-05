@@ -115,7 +115,7 @@ export default class FeatureLinkController extends Controller {
             ),
         );
 
-        res.status(201).end();
+        res.status(204).end();
     }
 
     async updateFeatureLink(
@@ -136,7 +136,7 @@ export default class FeatureLinkController extends Controller {
             ),
         );
 
-        res.status(201).end();
+        res.status(204).end();
     }
 
     async deleteFeatureLink(

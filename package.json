@@ -113,11 +113,16 @@
       "/src/migrations",
       "/src/test"
     ],
-    "extensionsToTreatAsEsm": [".ts", ".tsx"],
+    "extensionsToTreatAsEsm": [
+      ".ts",
+      ".tsx"
+    ],
     "moduleNameMapper": {
       "^(\\.{1,2}/.*)\\.js$": "$1"
     },
-    "transformIgnorePatterns": ["node_modules"]
+    "transformIgnorePatterns": [
+      "node_modules"
+    ]
   },
   "dependencies": {
     "@slack/web-api": "^7.9.1",

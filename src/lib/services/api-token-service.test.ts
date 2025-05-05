@@ -1,5 +1,5 @@
 import { createTestConfig } from '../../test/config/test-config.js';
-import type { IUnleashConfig, IUnleashOptions, IUser } from '../server-impl.js';
+import type { IUnleashConfig, IUnleashOptions, IUser } from '../types/index.js';
 import {
     ApiTokenType,
     type IApiTokenCreate,

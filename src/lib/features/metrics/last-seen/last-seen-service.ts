@@ -1,5 +1,5 @@
 import type { Logger } from '../../../logger.js';
-import type { IUnleashConfig } from '../../../server-impl.js';
+import type { IUnleashConfig } from '../../../types/index.js';
 import type { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v2-type.js';
 import type { ILastSeenStore } from './types/last-seen-store-type.js';
 import type { IUnleashStores } from '../../../types/index.js';

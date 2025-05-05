@@ -1,4 +1,4 @@
-import type { Db, IUnleashConfig } from '../../server-impl.js';
+import type { Db, IUnleashConfig } from '../../types/index.js';
 import EventStore from '../events/event-store.js';
 import GroupStore from '../../db/group-store.js';
 import { AccountStore } from '../../db/account-store.js';

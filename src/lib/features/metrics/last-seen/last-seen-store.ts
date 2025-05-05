@@ -1,7 +1,7 @@
 import type EventEmitter from 'events';
 import type { LogProvider, Logger } from '../../../logger.js';
 import { DB_TIME } from '../../../metric-events.js';
-import type { Db } from '../../../server-impl.js';
+import type { Db } from '../../../types/index.js';
 import metricsHelper from '../../../util/metrics-helper.js';
 import type { LastSeenInput } from './last-seen-service.js';
 import type { ILastSeenStore } from './types/last-seen-store-type.js';

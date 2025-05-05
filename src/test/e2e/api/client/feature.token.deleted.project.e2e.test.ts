@@ -4,11 +4,11 @@ import {
 } from '../../helpers/test-helper.js';
 import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import getLogger from '../../../fixtures/no-logger.js';
-import type { ApiTokenService } from '../../../../lib/services/api-token-service.js';
+import type { ApiTokenService } from '../../../../lib/services/index.js';
 import { ApiTokenType } from '../../../../lib/types/models/api-token.js';
-import { DEFAULT_ENV } from '../../../../lib/util/constants.js';
+import { DEFAULT_ENV } from '../../../../lib/util/index.js';
 import { TEST_AUDIT_USER } from '../../../../lib/types/index.js';
-import { User } from '../../../../lib/server-impl.js';
+import User from '../../../../lib/types/user.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

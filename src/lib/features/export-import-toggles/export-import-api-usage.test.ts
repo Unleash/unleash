@@ -7,7 +7,7 @@ import { DEFAULT_PROJECT } from '../../types/index.js';
 import { DEFAULT_ENV } from '../../util/index.js';
 import type { ImportTogglesSchema } from '../../openapi/index.js';
 import { ApiTokenType } from '../../types/models/api-token.js';
-import { ApiUser } from '../../server-impl.js';
+import { ApiUser } from '../../types/index.js';
 
 let db: ITestDb;
 

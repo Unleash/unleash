@@ -7,7 +7,7 @@ import type {
 } from './dependent-features.js';
 import type { IDependentFeaturesReadModel } from './dependent-features-read-model-type.js';
 import type { EventService } from '../../services/index.js';
-import type { IAuditUser, IUser } from '../../server-impl.js';
+import type { IAuditUser, IUser } from '../../types/index.js';
 import {
     FeatureDependenciesRemovedEvent,
     FeatureDependencyAddedEvent,

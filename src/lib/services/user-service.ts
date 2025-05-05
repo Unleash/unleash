@@ -29,15 +29,17 @@ import {
     UserDeletedEvent,
     UserUpdatedEvent,
 } from '../types/index.js';
-import type { IUserStore } from '../types/stores/user-store.js';
+import type { IUserStore } from '../types/index.js';
 import { RoleName } from '../types/model.js';
 import type SettingService from './setting-service.js';
-import type { SimpleAuthSettings } from '../server-impl.js';
-import { simpleAuthSettingsKey } from '../types/settings/simple-auth-settings.js';
+import {
+    type SimpleAuthSettings,
+    simpleAuthSettingsKey,
+} from '../types/settings/simple-auth-settings.js';
 import DisabledError from '../error/disabled-error.js';
 import BadDataError from '../error/bad-data-error.js';
-import { isDefined } from '../util/isDefined.js';
-import type { TokenUserSchema } from '../openapi/spec/token-user-schema.js';
+import { isDefined } from '../util/index.js';
+import type { TokenUserSchema } from '../openapi/index.js';
 import PasswordMismatch from '../error/password-mismatch.js';
 import type EventService from '../features/events/event-service.js';
 
@@ -51,7 +53,7 @@ import { RateLimitError } from '../error/rate-limit-error.js';
 import type EventEmitter from 'events';
 import { USER_LOGIN } from '../metric-events.js';
 
-export interface ICreateUser {
+export interface ICreateUserWithRole {
     name?: string;
     email?: string;
     username?: string;
@@ -253,7 +255,7 @@ class UserService {
     }
 
     async createUser(
-        { username, email, name, password, rootRole }: ICreateUser,
+        { username, email, name, password, rootRole }: ICreateUserWithRole,
         auditUser: IAuditUser = SYSTEM_USER_AUDIT,
     ): Promise<IUserWithRootRole> {
         if (!username && !email) {

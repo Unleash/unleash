@@ -1,4 +1,4 @@
-import type { IUser } from '../../server-impl.js';
+import type { IUser } from '../../types/index.js';
 import dbInit, {
     type ITestDb,
 } from '../../../test/e2e/helpers/database-init.js';

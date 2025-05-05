@@ -49,7 +49,7 @@ export interface IAuditUser {
     ip: string;
 }
 
-export default class User implements IUser {
+export class User implements IUser {
     isAPI: boolean = false;
 
     id: number;
@@ -110,3 +110,5 @@ export default class User implements IUser {
 export interface IUserWithRootRole extends IUser {
     rootRole: number;
 }
+
+export default User;

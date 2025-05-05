@@ -1,4 +1,4 @@
-import type { ITag } from '../../../shared/index.js';
+import type { ITag } from '../../../types/shared.js';
 import type {
     PartialDeep,
     IFeatureToggleClient,

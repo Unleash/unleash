@@ -1,4 +1,4 @@
-import type { ITag } from '../../shared/index.js';
+import type { ITag } from '../shared.js';
 import type { Store } from './store.js';
 
 export interface IFeatureTag {

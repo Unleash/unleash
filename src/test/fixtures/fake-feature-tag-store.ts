@@ -1,4 +1,4 @@
-import type { ITag } from '../../lib/shared/index.js';
+import type { ITag } from '../../lib/types/shared.js';
 import type {
     IFeatureAndTag,
     IFeatureTag,

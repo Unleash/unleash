@@ -7,6 +7,7 @@ import {
 } from '../../../test/e2e/helpers/test-helper.js';
 import getLogger from '../../../test/fixtures/no-logger.js';
 import {
+    FEATURE_CREATED,
     type IUser,
     RoleName,
     type IAuditUser,
@@ -17,7 +18,6 @@ import { createEventsService } from '../events/createEventsService.js';
 import { createTestConfig } from '../../../test/config/test-config.js';
 import { randomId } from '../../util/index.js';
 import { ApiTokenType } from '../../types/models/api-token.js';
-import { FEATURE_CREATED } from '../../shared/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

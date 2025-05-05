@@ -5,7 +5,7 @@ import {
     FEATURE_CREATED,
     FEATURE_ENVIRONMENT_DISABLED,
     type IEvent,
-} from '../shared/index.js';
+} from '../types/index.js';
 
 import TeamsAddon from './teams.js';
 

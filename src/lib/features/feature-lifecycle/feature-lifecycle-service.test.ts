@@ -1,14 +1,12 @@
-import type {
-    IEnvironment,
-    IUnleashConfig,
-    StageName,
-} from '../../types/index.js';
 import {
     CLIENT_METRICS_ADDED,
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_REVIVED,
-} from '../../shared/index.js';
+    type IEnvironment,
+    type IUnleashConfig,
+    type StageName,
+} from '../../types/index.js';
 import { createFakeFeatureLifecycleService } from './createFeatureLifecycle.js';
 import EventEmitter from 'events';
 import noLoggerProvider from '../../../test/fixtures/no-logger.js';

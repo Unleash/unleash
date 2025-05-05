@@ -57,7 +57,7 @@ import {
     CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS,
     CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
     PROJECT_ARCHIVED,
-} from '../shared/index.js';
+} from '../types/shared.js';
 import type { IAddonDefinition } from '../types/model.js';
 
 const slackAppDefinition: IAddonDefinition = {

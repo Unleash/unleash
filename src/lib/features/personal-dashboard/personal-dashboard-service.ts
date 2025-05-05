@@ -21,7 +21,7 @@ import { generateImageUrl } from '../../util/index.js';
 import type { PersonalDashboardProjectDetailsSchema } from '../../openapi/index.js';
 import type { IRoleWithProject } from '../../types/stores/access-store.js';
 import { NotFoundError } from '../../error/index.js';
-import type { IEvent } from '../../shared/index.js';
+import type { IEvent } from '../../types/shared.js';
 
 type PersonalDashboardProjectDetailsUnserialized = Omit<
     PersonalDashboardProjectDetailsSchema,

@@ -1,6 +1,6 @@
 import type { FromSchema } from 'json-schema-to-ts';
 import { tagSchema } from './tag-schema.js';
-import { IEventTypes } from '../../shared/index.js';
+import { IEventTypes } from '../../types/shared.js';
 import { variantSchema } from './variant-schema.js';
 
 const eventDataSchema = {

@@ -3,7 +3,7 @@ import { DB_TIME } from '../metric-events.js';
 import metricsHelper from '../util/metrics-helper.js';
 import type { LogProvider, Logger } from '../logger.js';
 import NotFoundError from '../error/notfound-error.js';
-import type { ITag } from '../shared/index.js';
+import type { ITag } from '../types/shared.js';
 import type { ITagStore } from '../types/stores/tag-store.js';
 import type { Db } from './db.js';
 

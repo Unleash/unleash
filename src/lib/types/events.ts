@@ -120,7 +120,7 @@ import {
     type IEventType,
     type IBaseEvent,
     type ITag,
-} from '../shared/index.js';
+} from './shared.js';
 
 export class BaseEvent implements IBaseEvent {
     readonly type: IEventType;

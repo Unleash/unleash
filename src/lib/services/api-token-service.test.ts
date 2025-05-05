@@ -6,14 +6,12 @@ import {
 } from '../types/models/api-token.js';
 import {
     ADMIN_TOKEN_USER,
-    SYSTEM_USER,
-    TEST_AUDIT_USER,
-} from '../types/index.js';
-import {
     API_TOKEN_CREATED,
     API_TOKEN_DELETED,
     API_TOKEN_UPDATED,
-} from '../shared/index.js';
+    SYSTEM_USER,
+    TEST_AUDIT_USER,
+} from '../types/index.js';
 import { addDays, minutesToMilliseconds, subDays } from 'date-fns';
 import { extractAuditInfoFromUser } from '../util/index.js';
 import { createFakeApiTokenService } from '../features/api-tokens/createApiTokenService.js';

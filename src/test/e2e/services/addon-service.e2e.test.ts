@@ -9,7 +9,7 @@ import {
 
 import SimpleAddon from '../../../lib/services/addon-service-test-simple-addon.js';
 import TagTypeService from '../../../lib/features/tag-type/tag-type-service.js';
-import { FEATURE_CREATED } from '../../../lib/shared/index.js';
+import { FEATURE_CREATED } from '../../../lib/types/index.js';
 import { IntegrationEventsService } from '../../../lib/services/index.js';
 import { createEventsService } from '../../../lib/features/index.js';
 

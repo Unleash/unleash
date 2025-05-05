@@ -22,7 +22,7 @@ import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
 import type { Db } from '../../db/db.js';
 import Raw = Knex.Raw;
 import { sortStrategies } from '../../util/sortStrategies.js';
-import type { ITag } from '../../shared/index.js';
+import type { ITag } from '../../types/shared.js';
 
 export interface IGetAllFeatures {
     featureQuery?: IFeatureToggleQuery;

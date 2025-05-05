@@ -2,11 +2,9 @@ import {
     APPLICATION_CREATED,
     FEATURE_CREATED,
     FEATURE_DELETED,
-    type IEvent,
-} from '../../../lib/shared/index.js';
-import {
     FeatureCreatedEvent,
     FeatureDeletedEvent,
+    type IEvent,
 } from '../../../lib/types/index.js';
 
 import dbInit, { type ITestDb } from '../helpers/database-init.js';

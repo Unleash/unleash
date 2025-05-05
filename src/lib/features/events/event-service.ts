@@ -5,7 +5,7 @@ import type {
     IEventSearchParams,
     IEventStore,
 } from '../../types/stores/event-store.js';
-import type { IBaseEvent, ITag, IEventList } from '../../shared/index.js';
+import type { IBaseEvent, ITag, IEventList } from '../../types/shared.js';
 import type { DeprecatedSearchEventsSchema } from '../../openapi/spec/deprecated-search-events-schema.js';
 import type EventEmitter from 'events';
 import type { IApiUser, IUser } from '../../types/index.js';

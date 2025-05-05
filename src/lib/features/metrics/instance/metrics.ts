@@ -20,7 +20,7 @@ import { minutesToMilliseconds } from 'date-fns';
 import type { BulkMetricsSchema } from '../../../openapi/spec/bulk-metrics-schema.js';
 import { clientMetricsEnvBulkSchema } from '../shared/schema.js';
 import type { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v2-type.js';
-import { CLIENT_METRICS } from '../../../shared/index.js';
+import { CLIENT_METRICS } from '../../../types/shared.js';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;

@@ -9,7 +9,7 @@ import type { IntegrationEventsService } from '../features/integration-events/in
 import type { IFlagResolver } from './experimental.js';
 import type { Collaborator } from '../features/feature-toggle/types/feature-collaborators-read-model-type.js';
 import type { EventEmitter } from 'events';
-import type { ITag } from '../shared/index.js';
+import type { ITag } from './shared.js';
 
 export type Operator = (typeof ALL_OPERATORS)[number];
 

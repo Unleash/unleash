@@ -52,7 +52,7 @@ How you set up Unleash to scale depends significantly on the [hosting option](/u
 
 - **How it works**: You deploy, manage, and scale all Unleash components (Unleash API server, database, [Admin UI](/understanding-unleash/unleash-overview#the-unleash-admin-ui), [Unleash Edge](/reference/unleash-edge)) within your own infrastructure (cloud or on-premises).
 - **Ideal for**: Organizations with strict regulatory environments requiring full data and infrastructure control, air-gapped networks, or those with strong preferences and capabilities for managing their own software infrastructure.
-- **Scaling and infrastructure**: You are responsible for architecting for high availability (for example, Multi-AZ API deployment, database clusters), scaling [compute resources](/using-unleash/deploy/configuring-unleash#minimum-and-recommended-specifications), [database capacity planning](/using-unleash/deploy/database-setup#sizing), backups, disaster recovery strategies, monitoring, handling upgrades of Unleash and Unleash Edge and other and security updates.
+- **Scaling and infrastructure**: You are responsible for architecting for high availability (for example, Multi-AZ API deployment, database clusters), scaling [compute resources and database capacity planning](/using-unleash/deploy/configuring-unleash#resource-recommendations), backups, disaster recovery strategies, monitoring, handling upgrades of Unleash and Unleash Edge and other and security updates.
 - **Key tradeoff**: Maximum control over data and infrastructure, at the cost of significant SRE/DevOps expertise, resources, and ongoing operational effort.
 
 </TabItem>
@@ -79,7 +79,7 @@ Utilize Auto Scaling Groups (ASGs) or similar mechanisms in cloud environments t
 
 ### Database
 
-A [PostgreSQL database](/using-unleash/deploy/database-setup#requirements) that stores all configurations, feature flags, strategies, context fields, metrics, and audit logs. It is the critical stateful component.
+A [PostgreSQL database](/using-unleash/deploy/configuring-unleash#resource-recommendations) that stores all configurations, feature flags, strategies, context fields, metrics, and audit logs. It is the critical stateful component.
 
 The database layer must be performant and highly available. Use managed database services (such as AWS RDS for PostgreSQL) configured for high availability and backups.
 
@@ -144,7 +144,7 @@ Key benefits:
 
     Scale the number of Unleash API instances horizontally (by increasing the replica count behind a load balancer) or vertically (by increasing the CPU and memory limits and requests per instance) based on observed bottlenecks and traffic patterns.
 
-    Read more details in the [Unleash deployment and self-hosting guides](/using-unleash/deploy).
+    Read more details in the [Unleash deployment and self-hosting guides](/using-unleash/deploy/getting-started).
 
 </details>
 
@@ -167,7 +167,7 @@ Configure the following:
     
     Scale the database instance vertically (to a larger instance size) or horizontally (by adding read replicas) based on observed bottlenecks.
     
-    Read more details in the [self-hosting guide](/using-unleash/deploy).
+    Read more details in the [self-hosting guide](/using-unleash/deploy/getting-started).
 </details>
 
 
@@ -175,7 +175,7 @@ Configure the following:
   
   SDK caching provides resilience against temporary database unavailability for flag evaluations, but we still recommend that you configure high-availability for the database to maintain key functionality like flag configuration updates and Admin UI access.
   
-  Configure automatic failover for your database (managed services typically handle this). Failover within a region should ideally complete in less than a few minutes. Ensure full database backups are regularly taken and stored securely, preferably in a separate region.
+  Configure automatic failover for your database (managed services typically handle this). Failover within a region should ideally complete in less than a few minutes. Ensure [full database backups](/using-unleash/deploy/configuring-unleash#back-up-and-restore-the-database) are regularly taken and stored securely, preferably in a separate region.
 
   In the rare event of a complete primary region failure (disaster recovery scenario):
   1. Promote the database read replica (or restore from backup) in the standby region to become the new primary database.

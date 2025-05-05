@@ -712,6 +712,31 @@
       "permanent": true
     },
     {
+      "source": "/using-unleash/deploy",
+      "destination": "/using-unleash/deploy/getting-started",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/deploy/database-backup",
+      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/deploy/database-setup",
+      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/deploy/email-service",
+      "destination": "/using-unleash/deploy/configuring-unleash#configure-an-email-server",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/troubleshooting/email-service",
+      "destination": "/using-unleash/deploy/configuring-unleash#configure-an-email-server",
+      "permanent": true
+    },
+    {
       "source": "/understanding-unleash/proxy-hosting",
       "destination": "/understanding-unleash/hosting-options",
       "permanent": true
@@ -778,12 +803,12 @@
     },
     {
       "source": "/reference/deploy",
-      "destination": "/using-unleash/deploy",
+      "destination": "/using-unleash/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/deploy",
-      "destination": "/using-unleash/deploy",
+      "destination": "/using-unleash/deploy/getting-started",
       "permanent": true
     },
     {
@@ -818,42 +843,47 @@
     },
     {
       "source": "/reference/deploy/database-setup",
-      "destination": "/using-unleash/deploy/database-setup",
+      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/deploy/database-setup",
-      "destination": "/using-unleash/deploy/database-setup",
+      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/reference/deploy/database-backup",
-      "destination": "/using-unleash/deploy/database-backup",
+      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/deploy/database-backup",
-      "destination": "/using-unleash/deploy/database-backup",
+      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/reference/deploy/email-service",
-      "destination": "/using-unleash/deploy/email-service",
+      "destination": "/using-unleash/deploy/configuring-unleash#configure-an-email-server",
       "permanent": true
     },
     {
       "source": "/deploy/email",
-      "destination": "/using-unleash/deploy/email-service",
+      "destination": "/using-unleash/deploy/configuring-unleash#configure-an-email-server",
       "permanent": true
     },
     {
       "source": "/reference/deploy/google-auth-hook",
-      "destination": "/using-unleash/deploy/google-auth-hook",
+      "destination": "/using-unleash/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/deploy/google_auth",
-      "destination": "/using-unleash/deploy/google-auth-hook",
+      "destination": "/using-unleash/deploy/getting-started",
+      "permanent": true
+    },
+    {
+      "source": "'/using-unleash/deploy/google-auth-hook",
+      "destination": "/using-unleash/deploy/getting-started",
       "permanent": true
     },
     {
@@ -868,12 +898,12 @@
     },
     {
       "source": "/reference/deploy/securing-unleash",
-      "destination": "/using-unleash/deploy/securing-unleash",
+      "destination": "/using-unleash/deploy/configuring-unleash#securing-unleash",
       "permanent": true
     },
     {
       "source": "/deploy/securing_unleash",
-      "destination": "/using-unleash/deploy/securing-unleash",
+      "destination": "/using-unleash/deploy/configuring-unleash#securing-unleash",
       "permanent": true
     },
     {

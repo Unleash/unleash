@@ -61,7 +61,6 @@ export type IFlagKey =
     | 'consumptionModel'
     | 'teamsIntegrationChangeRequests'
     | 'edgeObservability'
-    | 'simplifyDisableFeature'
     | 'adminNavUI'
     | 'tagTypeColor'
     | 'addEditStrategy'
@@ -293,10 +292,6 @@ const flags: IFlags = {
     ),
     edgeObservability: parseEnvVarBoolean(
         process.env.EXPERIMENTAL_EDGE_OBSERVABILITY,
-        false,
-    ),
-    simplifyDisableFeature: parseEnvVarBoolean(
-        process.env.EXPERIMENTAL_SIMPLIFY_DISABLE_FEATURE,
         false,
     ),
     adminNavUI: parseEnvVarBoolean(

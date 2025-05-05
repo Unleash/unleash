@@ -48,7 +48,7 @@ export default class FeatureLinkController extends Controller {
                     summary: 'Create a feature link',
                     description: 'Create a new link for a feature.',
                     responses: {
-                        201: emptyResponse,
+                        204: emptyResponse,
                         ...getStandardResponses(400, 401, 403, 415),
                     },
                     requestBody: createRequestSchema('featureLinkSchema'),
@@ -68,7 +68,7 @@ export default class FeatureLinkController extends Controller {
                     summary: 'Update a feature link',
                     description: 'Update an existing feature link.',
                     responses: {
-                        201: emptyResponse,
+                        204: emptyResponse,
                         ...getStandardResponses(400, 401, 403, 404, 415),
                     },
                     requestBody: createRequestSchema('featureLinkSchema'),

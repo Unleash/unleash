@@ -46,8 +46,8 @@ export const FeatureToggleSwitch: VFC<FeatureToggleSwitchProps> = ({
                 <PermissionSwitch
                     tooltip={
                         isChecked
-                            ? `Disable feature in ${environmentName}`
-                            : `Enable feature in ${environmentName}`
+                            ? `Disable flag in ${environmentName}`
+                            : `Enable flag in ${environmentName}`
                     }
                     checked={value}
                     environmentId={environmentName}

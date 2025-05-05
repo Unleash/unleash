@@ -271,13 +271,6 @@ const verifyBannerForPendingChangeRequest = async () => {
     return screen.findByText('Change request mode', {}, { timeout: 5000 });
 };
 
-const changeFlag = async (environment: string) => {
-    const featureFlagStatusBox = screen.getByTestId('feature-flag-status');
-    await within(featureFlagStatusBox).findByText(environment);
-    const flag = screen.getAllByRole('checkbox')[1];
-    fireEvent.click(flag);
-};
-
 const verifyChangeRequestDialog = async (bannerMainText: string) => {
     await screen.findByText('Your suggestion:');
     const message = screen.getByTestId('update-enabled-message').textContent;
@@ -298,7 +291,8 @@ test('add flag change to pending change request', async () => {
 
     await verifyBannerForPendingChangeRequest();
 
-    await changeFlag('production');
+    const flag = screen.getByLabelText('production');
+    fireEvent.click(flag);
 
     await verifyChangeRequestDialog('Enable feature flag test in production');
 }, 10000);

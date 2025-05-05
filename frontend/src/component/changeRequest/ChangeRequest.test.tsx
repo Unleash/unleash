@@ -1,6 +1,6 @@
 import type React from 'react';
 import type { FC } from 'react';
-import { render, screen, within, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';

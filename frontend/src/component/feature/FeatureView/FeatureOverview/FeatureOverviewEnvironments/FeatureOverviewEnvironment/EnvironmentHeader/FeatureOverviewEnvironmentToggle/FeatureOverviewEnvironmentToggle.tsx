@@ -46,7 +46,7 @@ export const FeatureOverviewEnvironmentToggle = ({
         });
 
     return (
-        <StyledContainer onClick={(event) => event.stopPropagation()} data-testid='feature-toggle-switch'>
+        <StyledContainer onClick={(event) => event.stopPropagation()}>
             <FeatureToggleSwitch
                 projectId={projectId}
                 value={enabled}

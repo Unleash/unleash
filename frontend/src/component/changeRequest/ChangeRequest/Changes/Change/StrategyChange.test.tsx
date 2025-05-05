@@ -329,7 +329,8 @@ test('Adding strategy always diffs against undefined strategy', async () => {
     const viewDiff = await screen.findByText('View Diff');
     await userEvent.hover(viewDiff);
     await screen.findByText(`+ name: "flexibleRollout"`);
-    await screen.findByText('change_variant');
+    const variants = await screen.findAllByText('change_variant');
+    expect(variants).toHaveLength(2);
 });
 
 test('Segments order does not matter for diff calculation', async () => {

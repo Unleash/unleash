@@ -327,6 +327,8 @@ export const StrategyChange: FC<{
         environmentName,
     );
 
+    console.log('currentStrategy', currentStrategy);
+
     return (
         <>
             {change.action === 'addStrategy' && (

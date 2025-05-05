@@ -18,3 +18,7 @@ export * from './user.js';
 export * from './permissions.js';
 export * from './events.js';
 export * from './stores.js';
+export * from '../db/db.js';
+export * from '../routes/unleash-types.js';
+export * as permissions from './permissions.js';
+export * as events from './events.js';

@@ -1,4 +1,4 @@
-import type { Db, IUnleashConfig } from '../../server-impl.js';
+import type { Db, IUnleashConfig } from '../../types/index.js';
 import { ChangeRequestAccessReadModel } from './sql-change-request-access-read-model.js';
 import { createAccessService } from '../access/createAccessService.js';
 import { FakeChangeRequestAccessReadModel } from './fake-change-request-access-read-model.js';

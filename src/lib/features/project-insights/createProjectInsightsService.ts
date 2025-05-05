@@ -1,4 +1,4 @@
-import type { Db, IUnleashConfig } from '../../server-impl.js';
+import type { Db, IUnleashConfig } from '../../types/index.js';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
 import ProjectStatsStore from '../../db/project-stats-store.js';
 import FakeProjectStore from '../../../test/fixtures/fake-project-store.js';

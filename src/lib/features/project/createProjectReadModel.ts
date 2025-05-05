@@ -1,5 +1,5 @@
 import type EventEmitter from 'events';
-import type { Db } from '../../server-impl.js';
+import type { Db } from '../../types/index.js';
 import type { IProjectReadModel } from './project-read-model-type.js';
 import type { IFlagResolver } from '../../types/index.js';
 import { ProjectReadModel } from './project-read-model.js';

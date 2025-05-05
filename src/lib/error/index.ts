@@ -18,6 +18,12 @@ import PasswordMismatchError from './password-mismatch.js';
 import PatternError from './pattern-error.js';
 import ForbiddenError from './forbidden-error.js';
 import NotFoundError from './notfound-error.js';
+import {
+    ExceedsLimitError,
+    throwExceedsLimitError,
+} from './exceeds-limit-error.js';
+import { GenericUnleashError } from './unleash-error.js';
+import NotImplementedError from './not-implemented-error.js';
 export {
     BadDataError,
     UNIQUE_CONSTRAINT_VIOLATION,
@@ -29,6 +35,7 @@ export {
     InvalidOperationError,
     InvalidTokenError,
     NameExistsError,
+    NotImplementedError,
     PermissionError,
     ForbiddenError,
     OperationDeniedError,
@@ -37,4 +44,7 @@ export {
     PasswordUndefinedError,
     PatternError,
     PasswordMismatchError,
+    throwExceedsLimitError,
+    GenericUnleashError,
+    ExceedsLimitError,
 };

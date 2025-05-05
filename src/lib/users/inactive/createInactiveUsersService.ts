@@ -1,6 +1,6 @@
 import { InactiveUsersService } from './inactive-users-service.js';
-import type { IUnleashConfig } from '../../server-impl.js';
-import type { Db } from '../../server-impl.js';
+import type { IUnleashConfig } from '../../types/index.js';
+import type { Db } from '../../types/index.js';
 import { InactiveUsersStore } from './inactive-users-store.js';
 import { FakeInactiveUsersStore } from './fakes/fake-inactive-users-store.js';
 import type { UserService } from '../../services/index.js';

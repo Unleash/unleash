@@ -14,10 +14,10 @@ import { DEFAULT_ENV } from '../../../lib/util/constants.js';
 import type {
     IUnleashConfig,
     IUnleashOptions,
-    Knex,
 } from '../../../lib/server-impl.js';
 import postgresPkg from 'pg';
 const { Client } = postgresPkg;
+import type { Knex } from 'knex';
 import { v4 as uuidv4 } from 'uuid';
 
 // require('db-migrate-shared').log.silence(false);

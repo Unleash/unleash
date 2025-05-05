@@ -1,4 +1,4 @@
-import type { Db } from '../../server-impl.js';
+import type { Db } from '../../types/index.js';
 import { ChangeRequestSegmentUsageReadModel } from './sql-change-request-segment-usage-read-model.js';
 import { FakeChangeRequestSegmentUsageReadModel } from './fake-change-request-segment-usage-read-model.js';
 import type { IChangeRequestSegmentUsageReadModel } from './change-request-segment-usage-read-model.js';

@@ -1,4 +1,4 @@
-import type { Db, IUnleashConfig } from '../../server-impl.js';
+import type { Db, IUnleashConfig } from '../../types/index.js';
 import { PlaygroundService } from './playground-service.js';
 import {
     createFakeFeatureToggleService,

@@ -5,35 +5,176 @@ import { migrateDb } from '../migrator.js';
 import getApp from './app.js';
 import { createMetricsMonitor } from './metrics.js';
 import { createStores } from './db/index.js';
-import { createServices, type IUnleashServices } from './services/index.js';
 import { createConfig } from './create-config.js';
 import registerGracefulShutdown from './util/graceful-shutdown.js';
 import { createDb } from './db/db-pool.js';
 import sessionDb from './middleware/session-db.js';
 // Types
-import {
-    type CustomAuthHandler,
-    IAuthType,
-    type IUnleash,
-    type IUnleashConfig,
-    type IUnleashOptions,
-    RoleName,
+import type {
+    Db,
+    IImportTogglesStore,
+    IUnleash,
+    IUnleashConfig,
+    IUnleashOptions,
+    IUnleashStores,
 } from './types/index.js';
-
-import User, { type IAuditUser, type IUser } from './types/user.js';
-import ApiUser, { type IApiUser } from './types/api-user.js';
-import { type Logger, LogLevel } from './logger.js';
-import AuthenticationRequired from './types/authentication-required.js';
-import Controller from './routes/controller.js';
-import type { IApiRequest, IAuthRequest } from './routes/unleash-types.js';
-import type { SimpleAuthSettings } from './types/settings/simple-auth-settings.js';
-import type { Knex } from 'knex';
-import * as permissions from './types/permissions.js';
-import * as eventType from './types/events.js';
-import { Db } from './db/db.js';
+import {
+    createServices,
+    type IUnleashServices,
+    type PatService,
+} from './services/index.js';
 import { defaultLockKey, defaultTimeout, withDbLock } from './util/db-lock.js';
 import { scheduleServices } from './features/scheduler/schedule-services.js';
 import { compareAndLogPostgresVersion } from './util/postgres-version-checker.js';
+import {
+    createKnexTransactionStarter,
+    type TransactionCreator,
+    type UnleashTransaction,
+    withFakeTransactional,
+    type WithRollbackTransaction,
+    withRollbackTransaction,
+    type WithTransactional,
+    withTransactional,
+} from './db/transaction.js';
+import Controller from './routes/controller.js';
+import { createClientFeatureToggleDelta } from './features/client-feature-toggles/delta/createClientFeatureToggleDelta.js';
+import { CRUDStore } from './db/crud/crud-store.js';
+import type { CrudStoreConfig } from './db/crud/crud-store.js';
+import { Logger, LogLevel, type LogProvider } from './logger.js';
+import { ImportTogglesStore } from './features/export-import-toggles/import-toggles-store.js';
+import { ALL_PROJECTS, CUSTOM_ROOT_ROLE_TYPE } from './util/constants.js';
+import {
+    extractAuditInfoFromUser,
+    getVariantValue,
+    isDefined,
+    parseEnvVarBoolean,
+    randomId,
+} from './util/index.js';
+import type {
+    IRole,
+    IRoleWithPermissions,
+    IRoleWithProject,
+    IUserPermission,
+} from './types/stores/access-store.js';
+import { createTestConfig } from '../test/config/test-config.js';
+import NoAuthUser from './types/no-auth-user.js';
+import { ALL, ApiTokenType, isAllProjects } from './types/models/api-token.js';
+import type { Store } from './types/stores/store.js';
+import { defaultFromRow, defaultToRow } from './db/crud/default-mappings.js';
+import type {
+    ICreateUser,
+    IUserLookup,
+    IUserUpdateFields,
+} from './types/stores/user-store.js';
+import type {
+    ICreateUserWithRole,
+    IUpdateUser,
+} from './services/user-service.js';
+import type { FromQueryParams } from './openapi/util/from-query-params.js';
+import type { ISegmentService } from './features/segment/segment-service-interface.js';
+import type { IAccessReadModel } from './features/access/access-read-model-type.js';
+import type { IStatMonthlyTrafficUsage } from './features/traffic-data-usage/traffic-data-usage-store-type.js';
+import type { Row } from './db/crud/row-type.js';
+import { querySchema } from './schema/feature-schema.js';
+import {
+    type BasePaginationParameters,
+    basePaginationParameters,
+} from './openapi/spec/base-pagination-parameters.js';
+import type { AccessReadModel } from './features/access/access-read-model.js';
+import { flattenPayload } from './util/flattenPayload.js';
+import type { Constraint } from 'unleash-client/lib/strategy/strategy.js';
+import {
+    type ClientFeatureToggleDelta,
+    type DeltaEvent,
+    UPDATE_DELTA,
+} from './features/client-feature-toggles/delta/client-feature-toggle-delta.js';
+import type { IQueryParam } from './features/feature-toggle/types/feature-toggle-strategies-store-type.js';
+import {
+    applyGenericQueryParams,
+    normalizeQueryParams,
+    parseSearchOperatorValue,
+} from './features/feature-search/search-utils.js';
+import {
+    createAccessService,
+    createChangeRequestAccessReadModel,
+    createContextService,
+    createEventsService,
+    createFakeInstanceStatsService,
+    createFakeProjectService,
+    createFeatureToggleService,
+    createInstanceStatsService,
+    createProjectService,
+    createTagTypeService,
+    createExportImportTogglesService,
+    DB_TIME,
+    findParam,
+    conditionalMiddleware,
+    createPlaygroundService,
+    createSegmentService,
+    createFakeEventsService,
+    createFakeFeatureToggleService,
+    createFakeSegmentService,
+    createDependentFeaturesService,
+    createFakeDependentFeaturesService,
+    createFakeAccessService,
+} from './internals.js';
+import SessionStore from './db/session-store.js';
+import metricsHelper from './util/metrics-helper.js';
+import type { ReleasePlanMilestoneWriteModel } from './features/release-plans/release-plan-milestone-store.js';
+import type { ReleasePlanMilestoneStrategyWriteModel } from './features/release-plans/release-plan-milestone-strategy-store.js';
+import type { IChangeRequestAccessReadModel } from './features/change-request-access-service/change-request-access-read-model.js';
+import EventStore from './db/event-store.js';
+import RoleStore from './db/role-store.js';
+import { AccessStore } from './db/access-store.js';
+import {
+    addAjvSchema,
+    type ISchemaValidationErrors,
+    validateSchema,
+} from './openapi/validate.js';
+import type { Counter, Gauge } from './util/metrics/index.js';
+import { createCounter, createGauge } from './util/metrics/index.js';
+import FakeEventStore from '../test/fixtures/fake-event-store.js';
+import type { Subscriber } from './features/user-subscriptions/user-subscriptions-read-model-type.js';
+import { UserSubscriptionsReadModel } from './features/user-subscriptions/user-subscriptions-read-model.js';
+import { FakeUserSubscriptionsReadModel } from './features/user-subscriptions/fake-user-subscriptions-read-model.js';
+import type { IPrivateProjectChecker } from './features/private-project/privateProjectCheckerType.js';
+import type { ProjectAccess } from './features/private-project/privateProjectStore.js';
+import { FakePrivateProjectChecker } from './features/private-project/fakePrivateProjectChecker.js';
+import {
+    createFakeProjectReadModel,
+    createProjectReadModel,
+} from './features/project/createProjectReadModel.js';
+import {
+    createFakePrivateProjectChecker,
+    createPrivateProjectChecker,
+} from './features/private-project/createPrivateProjectChecker.js';
+import type { ProductivityReportMetrics } from './features/productivity-report/productivity-report-view-model.js';
+import { IProjectStats } from './features/project/project-service.js';
+import type { IImportService } from './features/export-import-toggles/export-import-service.js';
+import type { IContextFieldDto } from './features/context/context-field-store-type.js';
+import { SegmentReadModel } from './features/segment/segment-read-model.js';
+import type ExportImportService from './features/export-import-toggles/export-import-service.js';
+import { FeatureEnvironmentStore } from './db/feature-environment-store.js';
+import StrategyStore from './db/strategy-store.js';
+import { ChangeRequestAccessReadModel } from './features/change-request-access-service/sql-change-request-access-read-model.js';
+import { ImportPermissionsService } from './features/export-import-toggles/import-permissions-service.js';
+import FeatureStrategiesStore from './features/feature-toggle/feature-toggle-strategies-store.js';
+import TagStore from './db/tag-store.js';
+import FeatureToggleStore from './features/feature-toggle/feature-toggle-store.js';
+import FeatureTagStore from './db/feature-tag-store.js';
+import ExportImportController from './features/export-import-toggles/export-import-controller.js';
+import type { QueryOverride } from './features/client-feature-toggles/client-feature-toggle.controller.js';
+import { DELTA_EVENT_TYPES } from './features/client-feature-toggles/delta/client-feature-toggle-delta-types.js';
+import { AdvancedPlaygroundFeatureEvaluationResult } from './features/playground/playground-service.js';
+import { advancedPlaygroundViewModel } from './features/playground/playground-view-model.js';
+import {
+    createAccessReadModel,
+    createFakeAccessReadModel,
+} from './features/access/createAccessReadModel.js';
+import {
+    getDefaultStrategy,
+    getProjectDefaultStrategy,
+} from './features/playground/feature-evaluator/helpers.js';
 
 export async function initialServiceSetup(
     { authentication }: Pick<IUnleashConfig, 'authentication'>,
@@ -48,7 +189,7 @@ export async function initialServiceSetup(
     }
 }
 
-async function createApp(
+export async function createApp(
     config: IUnleashConfig,
     startApp: boolean,
 ): Promise<IUnleash> {
@@ -208,30 +349,150 @@ async function create(opts: IUnleashOptions): Promise<IUnleash> {
 export {
     start,
     create,
+    createDb,
     Controller,
-    AuthenticationRequired,
-    User,
-    ApiUser,
+    Logger,
     LogLevel,
-    RoleName,
-    IAuthType,
-    type Knex,
-    Db,
-    permissions,
-    eventType,
+    withRollbackTransaction,
+    withTransactional,
+    createClientFeatureToggleDelta,
+    CRUDStore,
+    ImportTogglesStore,
+    ALL_PROJECTS,
+    ALL,
+    isAllProjects,
+    extractAuditInfoFromUser,
+    createTestConfig,
+    NoAuthUser,
+    ApiTokenType,
+    defaultFromRow,
+    defaultToRow,
+    isDefined,
+    parseEnvVarBoolean,
+    querySchema,
+    basePaginationParameters,
+    migrateDb,
+    flattenPayload,
+    randomId,
+    CUSTOM_ROOT_ROLE_TYPE,
+    getVariantValue,
+    UPDATE_DELTA,
+    applyGenericQueryParams,
+    normalizeQueryParams,
+    parseSearchOperatorValue,
+    createEventsService,
+    SessionStore,
+    createAccessService,
+    metricsHelper,
+    DB_TIME,
+    EventStore,
+    FakeEventStore,
+    createChangeRequestAccessReadModel,
+    createFeatureToggleService,
+    createProjectService,
+    createFakeProjectService,
+    findParam,
+    RoleStore,
+    AccessStore,
+    validateSchema,
+    addAjvSchema,
+    createCounter,
+    createGauge,
+    UserSubscriptionsReadModel,
+    FakeUserSubscriptionsReadModel,
+    FakePrivateProjectChecker,
+    createFakeProjectReadModel,
+    createFakePrivateProjectChecker,
+    createProjectReadModel,
+    createPrivateProjectChecker,
+    IProjectStats,
+    createFakeInstanceStatsService,
+    createInstanceStatsService,
+    SegmentReadModel,
+    FeatureEnvironmentStore,
+    ChangeRequestAccessReadModel,
+    StrategyStore,
+    ImportPermissionsService,
+    FeatureStrategiesStore,
+    TagStore,
+    FeatureToggleStore,
+    createTagTypeService,
+    createContextService,
+    createExportImportTogglesService,
+    FeatureTagStore,
+    ExportImportController,
+    conditionalMiddleware,
+    DELTA_EVENT_TYPES,
+    createKnexTransactionStarter,
+    createPlaygroundService,
+    AdvancedPlaygroundFeatureEvaluationResult,
+    advancedPlaygroundViewModel,
+    withFakeTransactional,
+    createAccessReadModel,
+    createFakeAccessService,
+    createFakeAccessReadModel,
+    createFakeSegmentService,
+    createSegmentService,
+    createFakeFeatureToggleService,
+    createFakeEventsService,
+    createDependentFeaturesService,
+    createFakeDependentFeaturesService,
+    getProjectDefaultStrategy,
+    getDefaultStrategy,
 };
 
 export type {
-    Logger,
-    IUnleash,
-    IUnleashOptions,
+    Db,
+    Row,
+    CrudStoreConfig,
     IUnleashConfig,
-    IUser,
-    IApiUser,
-    IAuditUser,
+    IUnleashOptions,
     IUnleashServices,
-    IAuthRequest,
-    IApiRequest,
-    SimpleAuthSettings,
-    CustomAuthHandler,
+    IUnleashStores,
+    LogProvider,
+    IImportTogglesStore,
+    WithRollbackTransaction,
+    WithTransactional,
+    IRole,
+    Store,
+    ICreateUserWithRole,
+    ICreateUser,
+    IUpdateUser,
+    IUserUpdateFields,
+    IUserLookup,
+    FromQueryParams,
+    ISegmentService,
+    IAccessReadModel,
+    IStatMonthlyTrafficUsage,
+    BasePaginationParameters,
+    AccessReadModel,
+    Constraint,
+    ClientFeatureToggleDelta,
+    DeltaEvent,
+    IQueryParam,
+    PatService,
+    IRoleWithPermissions,
+    TransactionCreator,
+    UnleashTransaction,
+    ReleasePlanMilestoneWriteModel,
+    ReleasePlanMilestoneStrategyWriteModel,
+    IChangeRequestAccessReadModel,
+    IRoleWithProject,
+    ISchemaValidationErrors,
+    IImportService,
+    IContextFieldDto,
+    Gauge,
+    Counter,
+    Subscriber,
+    ProjectAccess,
+    IPrivateProjectChecker,
+    ProductivityReportMetrics,
+    ExportImportService,
+    QueryOverride,
+    IUserPermission,
 };
+export * from './openapi/index.js';
+export * from './types/index.js';
+export * from './error/index.js';
+export * from './util/index.js';
+export * from './services/index.js';

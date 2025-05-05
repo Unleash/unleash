@@ -4,7 +4,7 @@ import type { IFlagResolver } from '../../../types/index.js';
 import type { IUnleashConfig } from '../../../types/option.js';
 import type { Logger } from '../../../logger.js';
 import type ClientInstanceService from './instance-service.js';
-import type { IAuthRequest, IUser } from '../../../server-impl.js';
+import type { IAuthRequest, IUser } from '../../../types/index.js';
 import type { IClientApp } from '../../../types/model.js';
 import ApiUser, { type IApiUser } from '../../../types/api-user.js';
 import { ALL } from '../../../types/models/api-token.js';

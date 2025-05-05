@@ -1,4 +1,4 @@
-import type { Db, IUnleashConfig } from '../../server-impl.js';
+import type { Db, IUnleashConfig } from '../../types/index.js';
 import { UserSubscriptionsService } from './user-subscriptions-service.js';
 import { UserUnsubscribeStore } from './user-unsubscribe-store.js';
 import {

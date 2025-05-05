@@ -1,5 +1,5 @@
 import { createTestConfig } from '../../test/config/test-config.js';
-import type { IUnleashConfig } from '../server-impl.js';
+import type { IUnleashConfig } from '../types/index.js';
 import { ApiTokenType } from '../types/models/api-token.js';
 import { ExceedsLimitError } from '../error/exceeds-limit-error.js';
 import { createFakeApiTokenService } from '../features/api-tokens/createApiTokenService.js';

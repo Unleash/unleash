@@ -1,4 +1,4 @@
-import type { Db, IUnleashConfig } from '../../server-impl.js';
+import type { Db, IUnleashConfig } from '../../types/index.js';
 import { SegmentService } from '../../services/index.js';
 import type { ISegmentService } from './segment-service-interface.js';
 import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store.js';

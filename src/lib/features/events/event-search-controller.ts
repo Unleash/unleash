@@ -17,13 +17,13 @@ import {
 } from '../../openapi/index.js';
 import { normalizeQueryParams } from '../feature-search/search-utils.js';
 import Controller from '../../routes/controller.js';
-import type { IAuthRequest } from '../../server-impl.js';
 import type { IEnrichedEvent, IEvent } from '../../types/index.js';
 import { anonymiseKeys, extractUserIdFromUser } from '../../util/index.js';
 import {
     FeatureEventFormatterMd,
     type FeatureEventFormatter,
 } from '../../addons/feature-event-formatter-md.js';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
 
 const ANON_KEYS = ['email', 'username', 'createdBy'];
 const version = 1 as const;

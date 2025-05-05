@@ -1,7 +1,7 @@
 import type { Response } from 'express';
 import type { OpenApiService } from '../../services/openapi-service.js';
 import type { Logger } from '../../logger.js';
-import type { IUnleashConfig } from '../../server-impl.js';
+import type { IUnleashConfig } from '../../types/index.js';
 import type UserService from '../../services/user-service.js';
 import type { IUnleashServices } from '../../services/index.js';
 import { NONE } from '../../types/permissions.js';

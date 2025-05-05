@@ -1,6 +1,5 @@
-'use strict';
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(`
         ALTER TABLE project_settings
             ALTER COLUMN project_mode SET DEFAULT 'open';
@@ -18,7 +17,7 @@ exports.up = function (db, cb) {
     `, cb);
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(`
         ALTER TABLE project_settings
             ALTER COLUMN project_mode DROP DEFAULT;

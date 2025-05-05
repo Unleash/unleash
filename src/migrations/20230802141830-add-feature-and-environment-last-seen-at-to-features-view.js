@@ -1,6 +1,5 @@
-'use strict';
 
-exports.up = function (db, callback) {
+export async function up(db, callback) {
     db.runSql(
         `
           ALTER TABLE feature_environments ADD COLUMN IF NOT EXISTS last_seen_at timestamp with time zone;
@@ -46,7 +45,7 @@ exports.up = function (db, callback) {
     );
 };
 
-exports.down = function (db, callback) {
+export async function down(db, callback) {
     db.runSql(
         `
           DROP VIEW features_view;

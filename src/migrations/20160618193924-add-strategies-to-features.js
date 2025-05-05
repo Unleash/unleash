@@ -1,6 +1,5 @@
-'use strict';
 
-exports.up = function (db, callback) {
+export async function up(db, callback) {
     db.runSql(
         `
 --create new strategies-column
@@ -20,7 +19,7 @@ ALTER TABLE features DROP COLUMN "parameters";
     );
 };
 
-exports.down = function (db, callback) {
+export async function down(db, callback) {
     db.runSql(
         `
 --create old columns

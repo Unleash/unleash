@@ -1,6 +1,5 @@
-'use strict';
 
-exports.up = function (db, callback) {
+export async function up(db, callback) {
     db.runSql(
         `
         ALTER TABLE features ADD "variants" json;
@@ -10,6 +9,6 @@ exports.up = function (db, callback) {
     );
 };
 
-exports.down = function (db, callback) {
+export async function down(db, callback) {
     db.runSql('ALTER TABLE features DROP COLUMN "variants";', callback);
 };

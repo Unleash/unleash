@@ -1,8 +1,7 @@
-'use strict';
 
-const async = require('async');
+import async from 'async';
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     async.series(
         [
             db.addColumn.bind(db, 'strategies', 'built_in', {
@@ -18,6 +17,6 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     return db.removeColumn('strategies', 'built_in', cb);
 };

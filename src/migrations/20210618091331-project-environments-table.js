@@ -1,4 +1,4 @@
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
         CREATE TABLE project_environments (
@@ -11,10 +11,10 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql('DROP TABLE project_environments', cb);
 };
 
-exports._meta = {
+export const _meta = {
     version: 1,
 };

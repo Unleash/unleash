@@ -1,4 +1,4 @@
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
         CREATE INDEX feature_environments_feature_name_idx ON feature_environments(feature_name);
@@ -15,7 +15,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
     DROP INDEX feature_environments_feature_name_idx;
@@ -32,6 +32,6 @@ exports.down = function (db, cb) {
     );
 };
 
-exports._meta = {
+export const _meta = {
     version: 1,
 };

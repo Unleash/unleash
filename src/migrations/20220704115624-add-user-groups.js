@@ -1,6 +1,5 @@
-'use strict';
 
-exports.up = function (db, callback) {
+export async function up(db, callback) {
     db.runSql(
         `
             create table IF NOT EXISTS groups
@@ -35,7 +34,7 @@ exports.up = function (db, callback) {
     );
 };
 
-exports.down = function (db, callback) {
+export async function down(db, callback) {
     db.runSql(
         `
         drop table group_role;

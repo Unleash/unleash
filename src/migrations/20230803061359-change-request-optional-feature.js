@@ -1,6 +1,5 @@
-'use strict';
 
-exports.up = function (db, callback) {
+export async function up(db, callback) {
     db.runSql(
         `
             ALTER TABLE change_request_events ALTER COLUMN feature DROP NOT NULL;
@@ -9,7 +8,7 @@ exports.up = function (db, callback) {
     );
 };
 
-exports.down = function (db, callback) {
+export async function down(db, callback) {
     db.runSql(
         `
             DELETE FROM change_request_events WHERE feature IS NULL;

@@ -1,6 +1,5 @@
-'use strict';
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
     ALTER TABLE strategies ADD COLUMN deprecated boolean default false
@@ -9,10 +8,10 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql('ALTER TABLE strategies DROP COLUMN deprecated', cb);
 };
 
-exports._meta = {
+export const _meta = {
     version: 1,
 };

@@ -1,4 +1,4 @@
-exports.up = function (db, cb) {
+export async function up(db, cb) {
 	db.runSql(
 		`
   ALTER TABLE groups ADD COLUMN scim_id TEXT;
@@ -8,7 +8,7 @@ exports.up = function (db, cb) {
 	);
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
 	db.runSql(
 		`
   DROP INDEX IF EXISTS groups_scim_id_unique_idx;

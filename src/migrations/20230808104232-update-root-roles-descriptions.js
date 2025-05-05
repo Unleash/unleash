@@ -1,4 +1,4 @@
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
         UPDATE roles SET description = 'Users with the root admin role have superuser access to Unleash and can perform any operation within the Unleash platform.' WHERE name = 'Admin';
@@ -11,7 +11,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
         `,

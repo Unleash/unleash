@@ -1,4 +1,3 @@
-'use strict';
 
 const DESCRIPTION = {
     EDITOR: 'Users with this role have access most features in Unleash, but can not manage users and roles in the global scope. If a user with a global regular role creates a project, they will become a project admin and receive superuser rights within the context of that project.',
@@ -6,7 +5,7 @@ const DESCRIPTION = {
     MEMBER: 'Users with this role within a project are allowed to view, create and update feature toggles, but have limited permissions in regards to managing the projects user access and can not archive or delete the project.',
 };
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
     UPDATE roles set name = 'Editor', description = '${DESCRIPTION.EDITOR}' where name = 'Regular' AND type = 'root';
@@ -18,7 +17,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
     UPDATE roles set name = 'Regular' where name = 'Editor' AND type = 'root';

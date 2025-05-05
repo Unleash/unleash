@@ -1,6 +1,5 @@
-'use strict';
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
     ALTER TABLE strategies ADD COLUMN sort_order integer DEFAULT 9999;
@@ -14,6 +13,6 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql('ALTER TABLE strategies DROP COLUMN sort_order;', cb);
 };

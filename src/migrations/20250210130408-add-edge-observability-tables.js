@@ -1,4 +1,4 @@
-exports.up = (db, cb) => {
+export async function up (db, cb) {
   db.runSql(`
     CREATE TABLE stat_edge_observability (
         instance_id TEXT NOT NULL PRIMARY KEY,
@@ -27,6 +27,6 @@ exports.up = (db, cb) => {
   `, cb);
 };
 
-exports.down = (db, cb) => {
+export async function down (db, cb) {
   db.runSql(`DROP TABLE IF EXISTS stat_edge_observability;`, cb);
 };

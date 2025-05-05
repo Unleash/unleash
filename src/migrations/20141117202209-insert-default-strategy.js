@@ -1,6 +1,5 @@
-'use strict';
 
-exports.up = function (db, callback) {
+export async function up(db, callback) {
     db.runSql(
         `
 INSERT INTO strategies(name, description) 
@@ -10,7 +9,7 @@ VALUES ('default', 'Default on/off strategy.');
     );
 };
 
-exports.down = function (db, callback) {
+export async function down(db, callback) {
     db.runSql(
         `
 DELETE FROM strategies where name='default';`,

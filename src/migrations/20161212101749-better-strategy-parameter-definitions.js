@@ -1,10 +1,9 @@
 /* eslint camelcase: "off" */
 
-'use strict';
 
-const async = require('async');
+import async from 'async';
 
-exports.up = function (db, callback) {
+export async function up(db, callback) {
     const populateNewData = (cb) => {
         db.all(
             'select name, parameters_template from strategies',
@@ -45,7 +44,7 @@ exports.up = function (db, callback) {
     );
 };
 
-exports.down = function (db, callback) {
+export async function down(db, callback) {
     const populateOldData = (cb) => {
         db.all('select name, parameters from strategies', (err, results) => {
             const updateSQL = results

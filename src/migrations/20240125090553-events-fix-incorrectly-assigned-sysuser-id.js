@@ -1,4 +1,4 @@
-exports.up = function (db, cb) {
+export async function up(db, cb) {
   db.runSql(
       `
       UPDATE events SET created_by_user_id = null
@@ -15,6 +15,6 @@ exports.up = function (db, cb) {
   );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     cb();
 };

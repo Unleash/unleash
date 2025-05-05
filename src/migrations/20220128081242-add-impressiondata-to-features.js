@@ -1,6 +1,5 @@
-'use strict';
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
         ALTER TABLE features ADD COLUMN "impression_data" BOOLEAN DEFAULT FALSE;
@@ -9,7 +8,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
         ALTER TABLE features DROP COLUMN "impression_data";

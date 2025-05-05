@@ -1,6 +1,5 @@
-'use strict';
 
-exports.up = function (db, callback) {
+export async function up(db, callback) {
     db.runSql(
         `
         UPDATE events SET created_by_user_id = -1337 WHERE created_by_user_id = -1;
@@ -9,6 +8,6 @@ exports.up = function (db, callback) {
     );
 };
 
-exports.down = function (db, callback) {
+export async function down(db, callback) {
     callback();
 };

@@ -1,6 +1,6 @@
-const { v4: uuid } = require('uuid');
+import { v4 as uuid } from 'uuid';
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `SELECT *
                                    FROM features`,
@@ -30,7 +30,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         'DELETE FROM feature_strategies; DELETE FROM feature_environments;',
         cb,

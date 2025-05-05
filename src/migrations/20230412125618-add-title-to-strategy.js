@@ -1,6 +1,5 @@
-'use strict';
 
-exports.up = function (db, callback) {
+export async function up(db, callback) {
     db.runSql(
         `
           ALTER TABLE strategies ADD COLUMN IF NOT EXISTS title TEXT;
@@ -42,7 +41,7 @@ exports.up = function (db, callback) {
     );
 };
 
-exports.down = function (db, callback) {
+export async function down(db, callback) {
     db.runSql(
         `
           DROP VIEW features_view;

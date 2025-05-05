@@ -1,6 +1,5 @@
-'use strict';
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
     ALTER TABLE client_applications ADD COLUMN announced boolean DEFAULT false;
@@ -10,7 +9,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
             ALTER TABLE client_applications DROP COLUMN announced;
@@ -19,6 +18,6 @@ exports.down = function (db, cb) {
     );
 };
 
-exports._meta = {
+export const _meta = {
     version: 1,
 };

@@ -1,6 +1,5 @@
-'use strict';
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
         ALTER TABLE client_applications ALTER COLUMN created_at SET DEFAULT now();
@@ -14,7 +13,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
         ALTER TABLE client_applications ALTER COLUMN created_at SET DEFAULT 'now()';

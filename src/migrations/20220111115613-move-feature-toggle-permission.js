@@ -1,4 +1,4 @@
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
         INSERT INTO permissions (permission, display_name, type) VALUES ('MOVE_FEATURE_TOGGLE', 'Change feature toggle project', 'project');
@@ -25,7 +25,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
         DELETE FROM permissions WHERE permission = 'MOVE_FEATURE_TOGGLE';

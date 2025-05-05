@@ -1,4 +1,4 @@
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
       ALTER TABLE roles ADD CONSTRAINT unique_name UNIQUE (name);
@@ -7,7 +7,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
       ALTER TABLE roles DROP CONSTRAINT unique_name;

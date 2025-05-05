@@ -1,6 +1,5 @@
-'use strict';
 
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
     UPDATE api_tokens SET environment = 'default' WHERE environment = ':global:';
@@ -10,7 +9,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
   UPDATE api_tokens SET environment = null WHERE type='client' AND environment = 'default';

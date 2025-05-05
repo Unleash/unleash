@@ -1,4 +1,4 @@
-exports.up = function (db, cb) {
+export async function up(db, cb) {
     db.runSql(
         `
     INSERT INTO permissions(permission, display_name, type) VALUES
@@ -19,7 +19,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+export async function down(db, cb) {
     db.runSql(
         `
         DELETE FROM permissions WHERE permission IN ('CREATE_ADMIN_API_TOKEN', 'UPDATE_ADMIN_API_TOKEN', 'DELETE_ADMIN_API_TOKEN', 'READ_ADMIN_API_TOKEN');

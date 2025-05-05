@@ -17,7 +17,7 @@ import {
 import type { IGroupStore } from '../types/stores/group-store.js';
 import type { Logger } from '../logger.js';
 import BadDataError from '../error/bad-data-error.js';
-import { GROUP_CREATED, type IBaseEvent } from '../types/index.js';
+import { GROUP_CREATED, type IBaseEvent } from '../events/index.js';
 import {
     GroupUserAdded,
     GroupUserRemoved,

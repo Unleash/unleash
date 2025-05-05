@@ -30,7 +30,7 @@ import {
     CHANGE_REQUEST_SCHEDULED,
     CHANGE_REQUEST_SCHEDULE_SUSPENDED,
     FEATURE_COMPLETED,
-} from '../types/index.js';
+} from '../events/index.js';
 import type { IAddonDefinition } from '../types/model.js';
 
 const webhookDefinition: IAddonDefinition = {

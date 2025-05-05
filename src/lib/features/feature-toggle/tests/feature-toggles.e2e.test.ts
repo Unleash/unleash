@@ -14,7 +14,7 @@ import {
     FEATURE_STALE_OFF,
     FEATURE_STALE_ON,
     FEATURE_STRATEGY_REMOVE,
-} from '../../../types/index.js';
+} from '../../../events/index.js';
 import ApiUser from '../../../types/api-user.js';
 import {
     ApiTokenType,

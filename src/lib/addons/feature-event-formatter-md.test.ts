@@ -8,8 +8,8 @@ import {
     FEATURE_STRATEGY_UPDATE,
     type IEvent,
     PROJECT_ARCHIVED,
-    SYSTEM_USER_ID,
-} from '../types/index.js';
+} from '../events/index.js';
+import { SYSTEM_USER_ID } from '../types/index.js';
 
 import { FeatureEventFormatterMd } from './feature-event-formatter-md.js';
 import {

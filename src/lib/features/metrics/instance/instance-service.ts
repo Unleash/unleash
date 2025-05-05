@@ -1,5 +1,5 @@
 import type EventEmitter from 'events';
-import { APPLICATION_CREATED, CLIENT_REGISTER } from '../../../types/index.js';
+import { APPLICATION_CREATED, CLIENT_REGISTER } from '../../../events/index.js';
 import type { IApplication, IApplicationOverview } from './models.js';
 import type { IUnleashStores } from '../../../types/stores.js';
 import type { IUnleashConfig } from '../../../types/option.js';

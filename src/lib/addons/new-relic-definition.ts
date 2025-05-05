@@ -14,7 +14,7 @@ import {
     FEATURE_STRATEGY_REMOVE,
     FEATURE_STRATEGY_UPDATE,
     FEATURE_UPDATED,
-} from '../types/index.js';
+} from '../events/index.js';
 import type { IAddonDefinition } from '../types/model.js';
 
 const newRelicDefinition: IAddonDefinition = {

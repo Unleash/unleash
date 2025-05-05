@@ -7,7 +7,7 @@ import {
     FEATURE_REVIVED,
     FEATURE_UPDATED,
     type IEvent,
-} from '../types/index.js';
+} from '../events/index.js';
 import type { IFlagResolver } from '../internals.js';
 import type { IntegrationEventsService } from './index.js';
 

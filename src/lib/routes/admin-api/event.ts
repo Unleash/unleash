@@ -3,7 +3,7 @@ import type { IUnleashConfig } from '../../types/option.js';
 import type { IUnleashServices } from '../../services/index.js';
 import type EventService from '../../features/events/event-service.js';
 import { ADMIN, NONE } from '../../types/permissions.js';
-import type { IEvent, IEventList } from '../../types/index.js';
+import type { IEvent, IEventList } from '../../events/index.js';
 import Controller from '../controller.js';
 import { anonymiseKeys } from '../../util/anonymise.js';
 import type { OpenApiService } from '../../services/openapi-service.js';

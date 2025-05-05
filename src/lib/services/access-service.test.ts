@@ -17,13 +17,13 @@ import { GroupService } from '../services/group-service.js';
 import type { IRole } from '../../lib/types/stores/access-store.js';
 import {
     type IGroup,
-    ROLE_CREATED,
     SYSTEM_USER,
     SYSTEM_USER_AUDIT,
 } from '../../lib/types/index.js';
 import BadDataError from '../../lib/error/bad-data-error.js';
 import { createFakeEventsService } from '../../lib/features/events/createEventsService.js';
 import { createFakeAccessReadModel } from '../features/access/createAccessReadModel.js';
+import { ROLE_CREATED } from '../events/index.js';
 
 function getSetup() {
     const config = createTestConfig({

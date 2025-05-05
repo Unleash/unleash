@@ -1,11 +1,10 @@
 import NotFoundError from '../error/notfound-error.js';
 import type { Logger } from '../logger.js';
 import {
-    FeatureTaggedEvent,
     FEATURE_TAGGED,
     FEATURE_UNTAGGED,
     TAG_CREATED,
-} from '../types/index.js';
+} from '../events/index.js';
 import type {
     ITagStore,
     IFeatureToggleStore,
@@ -17,9 +16,14 @@ import type {
     IFeatureTagInsert,
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store.js';
-import type { ITag, IAuditUser, IUnleashConfig } from '../types/index.js';
+import {
+    type IAuditUser,
+    type IUnleashConfig,
+    FeatureTaggedEvent,
+} from '../types/index.js';
 import { BadDataError, FOREIGN_KEY_VIOLATION } from '../../lib/error/index.js';
 import type EventService from '../features/events/event-service.js';
+import type { ITag } from '../tags/index.js';
 
 class FeatureTagService {
     private tagStore: ITagStore;

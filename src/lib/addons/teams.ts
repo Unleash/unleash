@@ -10,7 +10,7 @@ import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
 } from './feature-event-formatter-md.js';
-import type { IEvent } from '../types/index.js';
+import type { IEvent } from '../events/index.js';
 import type { IntegrationEventState } from '../features/integration-events/integration-events-store.js';
 
 import {
@@ -29,7 +29,7 @@ import {
     CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS,
     CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
     CHANGE_REQUEST_SCHEDULE_SUSPENDED,
-} from '../types/index.js';
+} from '../events/index.js';
 
 interface ITeamsParameters {
     url: string;

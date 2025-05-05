@@ -15,7 +15,7 @@ import {
     FEATURE_ENVIRONMENT_ENABLED,
     FEATURE_UPDATED,
     PROJECT_ENVIRONMENT_REMOVED,
-} from './types/index.js';
+} from './events/index.js';
 import {
     createMetricsMonitor,
     registerPrometheusMetrics,

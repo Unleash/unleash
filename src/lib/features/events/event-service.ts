@@ -5,13 +5,7 @@ import type {
     IEventSearchParams,
     IEventStore,
 } from '../../types/stores/event-store.js';
-import type {
-    IApiUser,
-    IUser,
-    IBaseEvent,
-    ITag,
-    IEventList,
-} from '../../types/index.js';
+import type { IApiUser, IUser } from '../../types/index.js';
 import type { DeprecatedSearchEventsSchema } from '../../openapi/index.js';
 import type EventEmitter from 'node:events';
 import { ApiTokenType } from '../../types/models/api-token.js';
@@ -23,6 +17,8 @@ import type { IPrivateProjectChecker } from '../private-project/privateProjectCh
 import type { ProjectAccess } from '../private-project/privateProjectStore.js';
 import type { IAccessReadModel } from '../access/access-read-model-type.js';
 import lodash from 'lodash';
+import type { IEventList, IBaseEvent } from '../../events/index.js';
+import type { ITag } from '../../tags/index.js';
 const { isEqual } = lodash;
 
 export default class EventService {

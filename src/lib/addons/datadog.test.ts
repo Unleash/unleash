@@ -3,7 +3,7 @@ import {
     FEATURE_CREATED,
     FEATURE_ENVIRONMENT_DISABLED,
     type IEvent,
-} from '../types/index.js';
+} from '../events/index.js';
 import type { Logger } from '../logger.js';
 
 import DatadogAddon from './datadog.js';

@@ -12,7 +12,7 @@ import {
     CLIENT_METRICS,
     CLIENT_METRICS_ADDED,
     CLIENT_REGISTER,
-} from '../../../types/index.js';
+} from '../../../events/index.js';
 import ApiUser, { type IApiUser } from '../../../types/api-user.js';
 import { ALL } from '../../../types/models/api-token.js';
 import type { IUser } from '../../../types/user.js';

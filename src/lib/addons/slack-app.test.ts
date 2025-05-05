@@ -1,4 +1,4 @@
-import { type IEvent, FEATURE_ENVIRONMENT_ENABLED } from '../types/index.js';
+import { type IEvent, FEATURE_ENVIRONMENT_ENABLED } from '../events/index.js';
 import SlackAppAddon from './slack-app.js';
 import { type ChatPostMessageArguments, ErrorCode } from '@slack/web-api';
 import {

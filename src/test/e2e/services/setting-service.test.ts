@@ -6,9 +6,9 @@ import {
     SETTING_CREATED,
     SETTING_DELETED,
     SETTING_UPDATED,
-    TEST_AUDIT_USER,
-} from '../../../lib/types/index.js';
+} from '../../../lib/events/index.js';
 import { createEventsService } from '../../../lib/features/index.js';
+import { TEST_AUDIT_USER } from '../../../lib/types/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

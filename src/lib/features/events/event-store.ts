@@ -4,11 +4,10 @@ import {
     type IBaseEvent,
     type IEvent,
     type IEventType,
-    type ITag,
     SEGMENT_CREATED,
     SEGMENT_DELETED,
     SEGMENT_UPDATED,
-} from '../../types/index.js';
+} from '../../events/index.js';
 import type { Logger, LogProvider } from '../../logger.js';
 import type {
     IEventSearchParams,
@@ -29,6 +28,7 @@ import type {
 } from '../../openapi/index.js';
 import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
 import { applyGenericQueryParams } from '../feature-search/search-utils.js';
+import type { ITag } from '../../tags/index.js';
 
 const EVENT_COLUMNS = [
     'id',

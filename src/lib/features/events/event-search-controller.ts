@@ -17,7 +17,7 @@ import {
 } from '../../openapi/index.js';
 import { normalizeQueryParams } from '../feature-search/search-utils.js';
 import Controller from '../../routes/controller.js';
-import type { IEnrichedEvent, IEvent } from '../../types/index.js';
+import type { IEnrichedEvent, IEvent } from '../../events/index.js';
 import { anonymiseKeys, extractUserIdFromUser } from '../../util/index.js';
 import {
     FeatureEventFormatterMd,

@@ -7,7 +7,7 @@ import {
     type IFlagResolver,
     serializeDates,
 } from '../types/index.js';
-import type { IEvent, IEventType } from '../types/index.js';
+import type { IEvent, IEventType } from '../events/index.js';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,

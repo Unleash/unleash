@@ -92,14 +92,14 @@ test('should manage feature links', async () => {
     const links = await featureLinkStore.getAll();
     expect(links).toMatchObject([
         {
-            url: 'example.com',
+            url: 'https://example.com',
             title: 'feature link',
             featureName: 'my_feature',
         },
     ]);
     const { body } = await app.getProjectFeatures('default', 'my_feature');
     expect(body.links).toMatchObject([
-        { id: links[0].id, title: 'feature link', url: 'example.com' },
+        { id: links[0].id, title: 'feature link', url: 'https://example.com' },
     ]);
 
     await updatedLink('my_feature', links[0].id, {
@@ -110,7 +110,7 @@ test('should manage feature links', async () => {
     const updatedLinks = await featureLinkStore.getAll();
     expect(updatedLinks).toMatchObject([
         {
-            url: 'example_updated.com',
+            url: 'https://example_updated.com',
             title: 'feature link updated',
             featureName: 'my_feature',
         },
@@ -127,7 +127,7 @@ test('should manage feature links', async () => {
             type: 'feature-link-removed',
             data: null,
             preData: {
-                url: 'example_updated.com',
+                url: 'https://example_updated.com',
                 title: 'feature link updated',
             },
             featureName: 'my_feature',
@@ -135,14 +135,17 @@ test('should manage feature links', async () => {
         },
         {
             type: 'feature-link-updated',
-            data: { url: 'example_updated.com', title: 'feature link updated' },
-            preData: { url: 'example.com', title: 'feature link' },
+            data: {
+                url: 'https://example_updated.com',
+                title: 'feature link updated',
+            },
+            preData: { url: 'https://example.com', title: 'feature link' },
             featureName: 'my_feature',
             project: 'default',
         },
         {
             type: 'feature-link-added',
-            data: { url: 'example.com', title: 'feature link' },
+            data: { url: 'https://example.com', title: 'feature link' },
             preData: null,
             featureName: 'my_feature',
             project: 'default',

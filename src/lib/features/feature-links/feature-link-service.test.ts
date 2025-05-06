@@ -1,7 +1,7 @@
 import { createFakeFeatureLinkService } from './createFeatureLinkService';
 import type { IAuditUser, IUnleashConfig } from '../../types';
 import getLogger from '../../../test/fixtures/no-logger';
-import { NotFoundError } from '../../error';
+import { BadDataError, NotFoundError } from '../../error';
 
 test('create, update and delete feature link', async () => {
     const { featureLinkStore, featureLinkService } =
@@ -16,18 +16,22 @@ test('create, update and delete feature link', async () => {
     );
     expect(link).toMatchObject({
         featureName: 'feature',
-        url: 'example.com',
+        url: 'https://example.com',
         title: 'some title',
     });
 
     const newLink = await featureLinkService.updateLink(
         { projectId: 'default', linkId: link.id },
-        { title: 'new title', url: 'example1.com', featureName: 'feature' },
+        {
+            title: 'new title',
+            url: 'https://example1.com',
+            featureName: 'feature',
+        },
         {} as IAuditUser,
     );
     expect(newLink).toMatchObject({
         featureName: 'feature',
-        url: 'example1.com',
+        url: 'https://example1.com',
         title: 'new title',
     });
 
@@ -39,22 +43,55 @@ test('create, update and delete feature link', async () => {
 });
 
 test('cannot delete/update non existent link', async () => {
-    const { featureLinkStore, featureLinkService } =
-        createFakeFeatureLinkService({
-            getLogger,
-        } as unknown as IUnleashConfig);
+    const { featureLinkService } = createFakeFeatureLinkService({
+        getLogger,
+    } as unknown as IUnleashConfig);
 
     await expect(
         featureLinkService.updateLink(
-            { projectId: 'default', linkId: 'nonexitent' },
-            { title: 'new title', url: 'example1.com', featureName: 'feature' },
+            { projectId: 'default', linkId: 'nonexistent' },
+            {
+                title: 'new title',
+                url: 'https://example1.com',
+                featureName: 'feature',
+            },
             {} as IAuditUser,
         ),
     ).rejects.toThrow(NotFoundError);
     await expect(
         featureLinkService.deleteLink(
-            { projectId: 'default', linkId: 'nonexitent' },
+            { projectId: 'default', linkId: 'nonexistent' },
             {} as IAuditUser,
         ),
     ).rejects.toThrow(NotFoundError);
+});
+
+test('cannot create/update invalid link', async () => {
+    const { featureLinkService } = createFakeFeatureLinkService({
+        getLogger,
+    } as unknown as IUnleashConfig);
+
+    await expect(
+        featureLinkService.createLink(
+            'irrelevant',
+            {
+                featureName: 'irrelevant',
+                url: '%example.com',
+                title: 'irrelevant',
+            },
+            {} as IAuditUser,
+        ),
+    ).rejects.toThrow(BadDataError);
+
+    await expect(
+        featureLinkService.updateLink(
+            { projectId: 'irrelevant', linkId: 'irrelevant' },
+            {
+                title: 'irrelevant',
+                url: '%example.com',
+                featureName: 'irrelevant',
+            },
+            {} as IAuditUser,
+        ),
+    ).rejects.toThrow(BadDataError);
 });

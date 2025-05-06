@@ -153,6 +153,7 @@
     "murmurhash3js": "^3.0.1",
     "mustache": "^4.1.0",
     "nodemailer": "^6.9.9",
+    "normalize-url": "^6.1.0",
     "openapi-types": "^12.1.3",
     "owasp-password-strength-test": "^1.3.0",
     "parse-database-url": "^0.3.0",

@@ -11,16 +11,11 @@ interface IRecentlyUsedSegmentChipProps {
 const StyledChip = styled(Chip)(({ theme }) => ({
     background: 'transparent',
     height: 'auto',
-    '.MuiChip-label': {
-        fontSize: theme.typography.body2.fontSize,
-        padding: theme.spacing(0.5, 1),
-    },
-    '&.MuiChip-outlined': {
-        border: `1px dashed ${theme.palette.divider}`,
-    },
+    fontSize: theme.typography.body2.fontSize,
+    padding: theme.spacing(0.5),
+    border: `1px dashed ${theme.palette.divider}`,
     '& .MuiChip-icon': {
         color: theme.palette.neutral.main,
-        marginLeft: theme.spacing(1),
     },
 }));
 
@@ -43,8 +38,8 @@ export const RecentlyUsedSegmentChip = ({
                 label={segment.name}
                 icon={<AddIcon />}
                 onClick={onAdd}
+                size='small'
                 variant='outlined'
-                clickable
             />
         </Tooltip>
     );

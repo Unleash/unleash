@@ -1,6 +1,7 @@
 import express from 'express';
 import { createTestConfig } from '../test/config/test-config.js';
 import { create, start } from './server-impl.js';
+import { jest } from '@jest/globals';
 
 jest.mock(
     './routes',

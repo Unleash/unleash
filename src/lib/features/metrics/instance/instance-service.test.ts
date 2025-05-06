@@ -12,6 +12,8 @@ import FakeStrategiesStore from '../../../../test/fixtures/fake-strategies-store
 import FakeFeatureToggleStore from '../../feature-toggle/fakes/fake-feature-toggle-store.js';
 import type { IApplicationOverview } from './models.js';
 
+import { jest } from '@jest/globals';
+
 let config: IUnleashConfig;
 beforeAll(() => {
     config = createTestConfig({});
@@ -54,7 +56,8 @@ test('Multiple registrations of same appname and instanceid within same time per
     expect(appStoreSpy).toHaveBeenCalledTimes(1);
     expect(bulkSpy).toHaveBeenCalledTimes(1);
 
-    const registrations = appStoreSpy.mock.calls[0][0];
+    const registrations: IClientApp[] = appStoreSpy.mock
+        .calls[0][0] as IClientApp[];
 
     expect(registrations.length).toBe(1);
     expect(registrations[0].appName).toBe(client1.appName);
@@ -109,8 +112,8 @@ test('Multiple unique clients causes multiple registrations', async () => {
     await clientMetrics.registerClient(client2, '127.0.0.1');
 
     await clientMetrics.bulkAdd(); // in prod called by a SchedulerService
-
-    const registrations = appStoreSpy.mock.calls[0][0];
+    const registrations: IClientApp[] = appStoreSpy.mock
+        .calls[0][0] as IClientApp[];
 
     expect(registrations.length).toBe(2);
 });
@@ -159,7 +162,9 @@ test('Same client registered outside of dedup interval will be registered twice'
     expect(appStoreSpy).toHaveBeenCalledTimes(2);
     expect(bulkSpy).toHaveBeenCalledTimes(2);
 
+    // @ts-expect-error unknown type
     const firstRegistrations = appStoreSpy.mock.calls[0][0][0];
+    // @ts-expect-error unknown type
     const secondRegistrations = appStoreSpy.mock.calls[1][0][0];
 
     expect(firstRegistrations.appName).toBe(secondRegistrations.appName);

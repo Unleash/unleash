@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function(db, cb) {
   db.runSql(`
     INSERT INTO permissions(permission, display_name, type) VALUES
         ('PROJECT_USER_ACCESS_READ', 'View only access to Project User Access', 'project'),
@@ -12,7 +12,7 @@ export async function up(db, cb) {
   `, cb);
 };
 
-export async function down(db, cb) {
+exports.down = function(db, cb) {
     db.runSql(`
         DELETE FROM permissions WHERE permission IN ('PROJECT_USER_ACCESS_READ',
                                                      'PROJECT_DEFAULT_STRATEGY_READ',

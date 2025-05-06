@@ -7,6 +7,7 @@ import permissions from '../../test/fixtures/permissions.js';
 import { RoleName, RoleType } from '../types/model.js';
 import type { IUnleashStores } from '../types/index.js';
 import type TestAgent from 'supertest/lib/agent.d.ts';
+import { jest } from '@jest/globals';
 
 describe('Public Signup API', () => {
     async function getSetup() {
@@ -18,8 +19,8 @@ describe('Public Signup API', () => {
 
         stores.accessStore = {
             ...stores.accessStore,
-            addUserToRole: jest.fn(),
-            removeRolesOfTypeForUser: jest.fn(),
+            addUserToRole: jest.fn() as () => Promise<void>,
+            removeRolesOfTypeForUser: jest.fn() as () => Promise<void>,
             getRolesForUserId: () => Promise.resolve([]),
             getRootRoleForUser: () =>
                 Promise.resolve({

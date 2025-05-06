@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
 -- STEP 1: Ensure 'permission' column contains unique values
@@ -211,7 +211,7 @@ SELECT assign_unleash_permission_to_role('UPDATE_FEATURE_DEPENDENCY', 'Member');
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
 -- STEP 1: Undo foreign key constraint on 'role_permission'

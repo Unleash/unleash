@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, callback) {
+exports.up = function (db, callback) {
     db.runSql(
         `
         ALTER TABLE groups ADD COLUMN root_role_id INTEGER DEFAULT NULL;
@@ -12,7 +13,7 @@ export async function up(db, callback) {
     );
 };
 
-export async function down(db, callback) {
+exports.down = function (db, callback) {
     db.runSql(
         `
           ALTER TABLE groups DROP CONSTRAINT fk_group_role_id;

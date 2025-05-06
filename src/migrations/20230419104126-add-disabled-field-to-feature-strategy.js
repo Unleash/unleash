@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, callback) {
+exports.up = function (db, callback) {
     db.runSql(
         `
           ALTER TABLE feature_strategies ADD COLUMN IF NOT EXISTS disabled BOOLEAN default false;
@@ -41,7 +42,7 @@ export async function up(db, callback) {
     );
 };
 
-export async function down(db, callback) {
+exports.down = function (db, callback) {
     db.runSql(
         `
           DROP VIEW features_view;

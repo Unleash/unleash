@@ -1,15 +1,16 @@
 import { getLogger } from 'log4js';
-import {
-    type IBaseEvent,
-    type IEventStore,
-    type IFeatureTagStore,
-    type IUnleashConfig,
-    USER_UPDATED,
+import type {
+    IEventStore,
+    IFeatureTagStore,
+    IUnleashConfig,
 } from '../../internals.js';
 import type { IAccessReadModel } from '../access/access-read-model-type.js';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import type { ProjectAccess } from '../private-project/privateProjectStore.js';
 import EventService, { filterAccessibleProjects } from './event-service.js';
+import { type IBaseEvent, USER_UPDATED } from '../../events/index.js';
+
+import { jest } from '@jest/globals';
 
 describe('filterPrivateProjectsFromParams', () => {
     it('should return IS_ANY_OF with allowed projects when projectParam is undefined and mode is limited', () => {

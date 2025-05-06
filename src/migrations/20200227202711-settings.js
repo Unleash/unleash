@@ -1,7 +1,8 @@
 /* eslint camelcase: "off" */
 
+'use strict';
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     return db.createTable(
         'settings',
         {
@@ -17,6 +18,6 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     return db.dropTable('settings', cb);
 };

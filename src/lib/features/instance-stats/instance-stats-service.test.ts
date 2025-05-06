@@ -12,6 +12,8 @@ import type {
     IUnleashStores,
 } from '../../types/index.js';
 import { createFakeGetLicensedUsers } from './getLicensedUsers.js';
+import { jest } from '@jest/globals';
+
 let instanceStatsService: InstanceStatsService;
 let versionService: VersionService;
 let clientInstanceStore: IClientInstanceStore;

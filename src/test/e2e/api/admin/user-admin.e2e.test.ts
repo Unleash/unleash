@@ -8,7 +8,7 @@ import {
     USER_CREATED,
     USER_DELETED,
     USER_UPDATED,
-} from '../../../../lib/types/events.js';
+} from '../../../../lib/events/index.js';
 import type { IRole } from '../../../../lib/types/stores/access-store.js';
 import type { IEventStore } from '../../../../lib/types/stores/event-store.js';
 import type { IUserStore } from '../../../../lib/types/stores/user-store.js';
@@ -19,6 +19,7 @@ import { omitKeys } from '../../../../lib/util/omit-keys.js';
 import type { ISessionStore } from '../../../../lib/types/stores/session-store.js';
 import type { IUnleashStores } from '../../../../lib/types/index.js';
 import { createHash } from 'crypto';
+import { jest } from '@jest/globals';
 
 let stores: IUnleashStores;
 let db: ITestDb;

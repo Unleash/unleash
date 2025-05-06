@@ -4,16 +4,12 @@ import type { IRole } from './stores/access-store.js';
 import type { IUser } from './user.js';
 import type { ALL_OPERATORS } from '../util/index.js';
 import type { IProjectStats } from '../features/project/project-service.js';
-import type {
-    CreateFeatureStrategySchema,
-    ProjectOverviewSchema,
-} from '../openapi/index.js';
 import type { ProjectEnvironment } from '../features/project/project-store-type.js';
-import type { FeatureSearchEnvironmentSchema } from '../openapi/spec/feature-search-environment-schema.js';
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service.js';
 import type { IFlagResolver } from './experimental.js';
 import type { Collaborator } from '../features/feature-toggle/types/feature-collaborators-read-model-type.js';
 import type { EventEmitter } from 'events';
+import type { ITag } from '../tags/index.js';
 
 export type Operator = (typeof ALL_OPERATORS)[number];
 
@@ -106,12 +102,21 @@ export interface IFeatureToggleClient {
     favorite?: boolean;
 }
 
+export interface CreateFeatureStrategy {
+    name: string;
+    title?: string | null;
+    disabled?: boolean | null;
+    sortOrder?: number;
+    constraints?: IConstraint[];
+    variants?: IStrategyVariant[];
+    parameters?: { [key: string]: string };
+}
 export interface IFeatureEnvironmentInfo {
     name: string;
     environment: string;
     enabled: boolean;
     strategies: IFeatureStrategy[];
-    defaultStrategy: CreateFeatureStrategySchema | null;
+    defaultStrategy: CreateFeatureStrategy | null;
 }
 
 export interface FeatureToggleWithEnvironment extends FeatureToggle {
@@ -204,7 +209,7 @@ export interface IEnvironment {
 export interface IProjectEnvironment extends IEnvironment {
     projectApiTokenCount?: number;
     projectEnabledToggleCount?: number;
-    defaultStrategy?: CreateFeatureStrategySchema;
+    defaultStrategy?: CreateFeatureStrategy;
 }
 
 export interface IProjectsAvailableOnEnvironment extends IProjectEnvironment {
@@ -256,13 +261,33 @@ export interface IFeatureOverview {
     environments: IEnvironmentOverview[];
     lifecycle?: IFeatureLifecycleStage;
 }
+export interface FeatureEnvironment {
+    name: string;
+    featureName?: string;
+    environment?: string;
+    type?: string;
+    enabled: boolean;
+    sortOrder?: number;
+    variantCount: number;
+    changeRequestIds?: number[];
+    milestoneName?: string;
+    milestoneOrder?: number;
+    totalMilestones?: number;
+    lastSeenAt?: Date;
+    hasStrategies?: boolean;
+    hasEnabledStrategies?: boolean;
+}
+export interface FeatureSearchEnvironment extends FeatureEnvironment {
+    yes: number;
+    no: number;
+}
 
 export type IFeatureSearchOverview = Exclude<
     IFeatureOverview,
     'environments'
 > & {
     dependencyType: 'parent' | 'child' | null;
-    environments: FeatureSearchEnvironmentSchema[];
+    environments: FeatureSearchEnvironment[];
     archivedAt: string;
     createdBy: {
         id: number;
@@ -302,6 +327,12 @@ export interface IProjectHealth {
     defaultStickiness: string;
 }
 
+export type ProjectOnboardingStatus =
+    | {
+          status: 'onboarding-started' | 'onboarded';
+      }
+    | { status: 'first-flag-created'; feature: string };
+
 export interface IProjectOverview {
     name: string;
     description: string;
@@ -319,7 +350,7 @@ export interface IProjectOverview {
     featureLimit?: number;
     featureNaming?: IFeatureNaming;
     defaultStickiness: string;
-    onboardingStatus: ProjectOverviewSchema['onboardingStatus'];
+    onboardingStatus: ProjectOnboardingStatus;
 }
 
 export interface IProjectHealthReport extends IProjectHealth {
@@ -350,12 +381,6 @@ export interface IFeatureToggleQuery {
 export interface IFeatureToggleDeltaQuery extends IFeatureToggleQuery {
     toggleNames?: string[];
     environment: string;
-}
-
-export interface ITag {
-    value: string;
-    type: string;
-    color?: string | null;
 }
 
 export interface IAddonParameterDefinition {

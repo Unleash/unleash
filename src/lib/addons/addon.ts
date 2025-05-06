@@ -2,7 +2,7 @@ import fetch from 'make-fetch-happen';
 import { addonDefinitionSchema } from './addon-schema.js';
 import type { Logger } from '../logger.js';
 import type { IAddonConfig, IAddonDefinition } from '../types/model.js';
-import type { IEvent } from '../types/events.js';
+import type { IEvent } from '../events/index.js';
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service.js';
 import type { IntegrationEventWriteModel } from '../features/integration-events/integration-events-store.js';
 import type EventEmitter from 'events';

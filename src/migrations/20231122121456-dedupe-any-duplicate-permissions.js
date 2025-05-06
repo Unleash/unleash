@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
 -- STEP 1: Update references in the role_permission table, setting the permission to the lowest ID for each duplicate permission
@@ -67,6 +67,6 @@ AND permission IN (
     );
 };
 
-export async function down(db, callback) {
+exports.down = function (db, callback) {
     callback();
 };

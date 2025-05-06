@@ -5,10 +5,9 @@ import type {
     IEventSearchParams,
     IEventStore,
 } from '../../types/stores/event-store.js';
-import type { IBaseEvent, IEventList } from '../../types/events.js';
-import type { DeprecatedSearchEventsSchema } from '../../openapi/spec/deprecated-search-events-schema.js';
-import type EventEmitter from 'events';
-import type { IApiUser, ITag, IUser } from '../../types/index.js';
+import type { IApiUser, IUser } from '../../types/index.js';
+import type { DeprecatedSearchEventsSchema } from '../../openapi/index.js';
+import type EventEmitter from 'node:events';
 import { ApiTokenType } from '../../types/models/api-token.js';
 import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events.js';
 import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
@@ -18,6 +17,8 @@ import type { IPrivateProjectChecker } from '../private-project/privateProjectCh
 import type { ProjectAccess } from '../private-project/privateProjectStore.js';
 import type { IAccessReadModel } from '../access/access-read-model-type.js';
 import lodash from 'lodash';
+import type { IEventList, IBaseEvent } from '../../events/index.js';
+import type { ITag } from '../../tags/index.js';
 const { isEqual } = lodash;
 
 export default class EventService {
@@ -119,10 +120,10 @@ export default class EventService {
         };
     }
 
-    async onEvent(
+    onEvent(
         eventName: string | symbol,
         listener: (...args: any[]) => void,
-    ): Promise<EventEmitter> {
+    ): EventEmitter {
         return this.eventStore.on(eventName, listener);
     }
 

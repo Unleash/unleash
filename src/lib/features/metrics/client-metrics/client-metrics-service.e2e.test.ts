@@ -2,11 +2,8 @@ import ClientInstanceService from '../instance/instance-service.js';
 import type { IClientApp } from '../../../types/model.js';
 import { secondsToMilliseconds } from 'date-fns';
 import { createTestConfig } from '../../../../test/config/test-config.js';
-import {
-    APPLICATION_CREATED,
-    type IUnleashConfig,
-    type IUnleashStores,
-} from '../../../types/index.js';
+import type { IUnleashConfig, IUnleashStores } from '../../../types/index.js';
+import { APPLICATION_CREATED } from '../../../events/index.js';
 import { FakePrivateProjectChecker } from '../../private-project/fakePrivateProjectChecker.js';
 import type { ITestDb } from '../../../../test/e2e/helpers/database-init.js';
 import dbInit from '../../../../test/e2e/helpers/database-init.js';

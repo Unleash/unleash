@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, callback) {
+exports.up = function (db, callback) {
     db.runSql(
         `
         ALTER TABLE feature_types ADD COLUMN IF NOT EXISTS created_by INTEGER;
@@ -8,7 +9,7 @@ export async function up(db, callback) {
     );
 };
 
-export async function down(db, callback) {
+exports.down = function (db, callback) {
     db.runSql(
         `
         ALTER TABLE feature_types DROP COLUMN IF EXISTS created_by;

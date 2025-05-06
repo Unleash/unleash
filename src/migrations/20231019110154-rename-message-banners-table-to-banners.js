@@ -1,8 +1,9 @@
+'use strict';
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(`ALTER TABLE message_banners RENAME TO banners`, cb);
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(`ALTER TABLE banners RENAME TO message_banners`, cb);
 };

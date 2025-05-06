@@ -3,6 +3,7 @@ import { type IUnleashTest, setupApp } from '../../helpers/test-helper.js';
 import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import getLogger from '../../../fixtures/no-logger.js';
 import version from '../../../../lib/util/version.js';
+import { jest } from '@jest/globals';
 
 const asyncFilter = async (arr, predicate) => {
     const results = await Promise.all(arr.map(predicate));

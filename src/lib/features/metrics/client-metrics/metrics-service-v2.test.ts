@@ -12,11 +12,13 @@ import type {
 import { endOfDay, startOfHour, subDays, subHours } from 'date-fns';
 import type { IClientMetricsEnv } from './client-metrics-store-v2-type.js';
 
+import { jest } from '@jest/globals';
+
 function initClientMetrics(flagEnabled = true) {
     const stores = createStores();
 
     const eventBus = new EventEmitter();
-    eventBus.emit = jest.fn();
+    eventBus.emit = jest.fn(() => true);
 
     const config = {
         eventBus,

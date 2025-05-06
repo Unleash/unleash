@@ -1,4 +1,4 @@
-import type { ITag } from '../model.js';
+import type { ITag } from '../../tags/index.js';
 import type { Store } from './store.js';
 
 export interface ITagStore extends Store<ITag, ITag> {

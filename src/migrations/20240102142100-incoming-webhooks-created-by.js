@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
         ALTER TABLE incoming_webhooks ALTER COLUMN created_by_user_id DROP NOT NULL;
@@ -8,6 +8,6 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, callback) {
+exports.down = function (db, callback) {
     callback();
 };

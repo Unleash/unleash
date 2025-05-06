@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
         CREATE TABLE IF NOT EXISTS api_token_project
@@ -19,7 +20,7 @@ export async function up(db, cb) {
 };
 
 //This is a lossy down migration, tokens with multiple projects are discarded
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
         ALTER TABLE api_tokens ADD COLUMN project VARCHAR REFERENCES PROJECTS(id) ON DELETE CASCADE;

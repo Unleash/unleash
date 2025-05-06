@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, callback) {
+exports.up = function (db, callback) {
     db.runSql(
         `
        DELETE FROM user_feedback WHERE feedback_id = 'pnps' AND given < NOW() - INTERVAL '3 months';
@@ -8,6 +9,6 @@ export async function up(db, callback) {
     );
 };
 
-export async function down(db, callback) {
+exports.down = function (db, callback) {
     callback();
 };

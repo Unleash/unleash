@@ -10,13 +10,10 @@ import type {
 } from '../../types/stores.js';
 import type { IUnleashConfig } from '../../types/option.js';
 import type { ContextFieldStrategiesSchema } from '../../openapi/spec/context-field-strategies-schema.js';
-import {
-    CONTEXT_FIELD_CREATED,
-    CONTEXT_FIELD_DELETED,
-    CONTEXT_FIELD_UPDATED,
-    type IAuditUser,
-    type IFeatureStrategy,
-    type IFlagResolver,
+import type {
+    IAuditUser,
+    IFeatureStrategy,
+    IFlagResolver,
 } from '../../types/index.js';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import type EventService from '../events/event-service.js';
@@ -27,6 +24,11 @@ import {
 import { NameExistsError, NotFoundError } from '../../error/index.js';
 import { nameSchema } from '../../schema/feature-schema.js';
 import type { LegalValueSchema } from '../../openapi/index.js';
+import {
+    CONTEXT_FIELD_CREATED,
+    CONTEXT_FIELD_UPDATED,
+    CONTEXT_FIELD_DELETED,
+} from '../../events/index.js';
 
 class ContextService {
     private eventService: EventService;

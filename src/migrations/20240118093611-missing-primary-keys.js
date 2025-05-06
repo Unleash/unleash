@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, callback) {
+exports.up = function (db, callback) {
     db.runSql(
         `
         ALTER TABLE project_stats ADD PRIMARY KEY (project);
@@ -10,7 +11,7 @@ export async function up(db, callback) {
     );
 };
 
-export async function down(db, callback) {
+exports.down = function (db, callback) {
     db.runSql(
         `
         ALTER TABLE project_stats DROP CONSTRAINT project_stats_pkey;

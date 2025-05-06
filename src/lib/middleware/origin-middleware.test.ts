@@ -4,6 +4,7 @@ import { createTestConfig } from '../../test/config/test-config.js';
 import type { Request, Response } from 'express';
 import { EventEmitter } from 'events';
 import { REQUEST_ORIGIN } from '../metric-events.js';
+import { jest } from '@jest/globals';
 
 const TEST_UNLEASH_TOKEN = 'TEST_UNLEASH_TOKEN';
 const TEST_USER_AGENT = 'TEST_USER_AGENT';
@@ -21,7 +22,7 @@ describe('originMiddleware', () => {
     };
     const getLogger = jest.fn(() => loggerMock);
     const eventBus = new EventEmitter();
-    eventBus.emit = jest.fn();
+    eventBus.emit = jest.fn() as () => boolean;
 
     let config: IUnleashConfig;
 

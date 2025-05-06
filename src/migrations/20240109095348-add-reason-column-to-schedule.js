@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `ALTER TABLE change_request_schedule ADD COLUMN reason TEXT;
          UPDATE change_request_schedule SET reason = failure_reason;`,
@@ -7,7 +8,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `ALTER TABLE change_request_schedule DROP COLUMN reason;`,
         cb,

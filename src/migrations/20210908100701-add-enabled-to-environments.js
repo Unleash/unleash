@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
     ALTER TABLE environments ADD COLUMN enabled BOOLEAN DEFAULT true;
@@ -7,7 +7,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
     ALTER TABLE environments DROP COLUMN enabled;
@@ -16,6 +16,6 @@ export async function down(db, cb) {
     );
 };
 
-export const _meta = {
+exports._meta = {
     version: 1,
 };

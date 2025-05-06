@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
     DELETE FROM client_instances a USING client_instances b WHERE a.app_name = b.app_name AND a.instance_id = b.instance_id AND a.created_at < b.created_at;
@@ -9,7 +10,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
         ALTER TABLE client_instances DROP CONSTRAINT client_instances_pkey;

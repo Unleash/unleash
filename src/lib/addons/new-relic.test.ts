@@ -1,10 +1,6 @@
 import {
-    FEATURE_ARCHIVED,
-    FEATURE_CREATED,
-    FEATURE_ENVIRONMENT_DISABLED,
     type IFlagResolver,
     type IAddonConfig,
-    type IEvent,
     serializeDates,
     type IFlagKey,
 } from '../types/index.js';
@@ -16,6 +12,13 @@ import noLogger from '../../test/fixtures/no-logger.js';
 import { gunzip } from 'node:zlib';
 import { promisify } from 'util';
 import type { IntegrationEventsService } from '../services/index.js';
+import {
+    FEATURE_CREATED,
+    type IEvent,
+    FEATURE_ARCHIVED,
+    FEATURE_ENVIRONMENT_DISABLED,
+} from '../events/index.js';
+import { jest } from '@jest/globals';
 
 const asyncGunzip = promisify(gunzip);
 

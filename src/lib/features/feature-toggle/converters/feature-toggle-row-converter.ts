@@ -1,9 +1,9 @@
+import type { ITag } from '../../../tags/index.js';
 import type {
     PartialDeep,
     IFeatureToggleClient,
     IStrategyConfig,
     IFeatureToggleQuery,
-    ITag,
     IFlagResolver,
     IFeatureToggleListItem,
 } from '../../../types/index.js';

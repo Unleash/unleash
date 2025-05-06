@@ -7,7 +7,7 @@ import {
     TagTypeCreatedEvent,
     TagTypeDeletedEvent,
     TagTypeUpdatedEvent,
-} from '../../types/events.js';
+} from '../../types/index.js';
 
 import type { Logger } from '../../logger.js';
 import type { ITagType, ITagTypeStore } from './tag-type-store-type.js';

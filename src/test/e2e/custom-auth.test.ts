@@ -2,6 +2,7 @@ import dbInit, { type ITestDb } from './helpers/database-init.js';
 import { setupAppWithCustomAuth } from './helpers/test-helper.js';
 import { type IUnleashStores, RoleName } from '../../lib/types/index.js';
 import type { IUnleashServices } from '../../lib/services/index.js';
+import { jest } from '@jest/globals';
 
 let db: ITestDb;
 let stores: IUnleashStores;

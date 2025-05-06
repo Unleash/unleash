@@ -17,7 +17,7 @@ import {
     PublicSignupTokenCreatedEvent,
     PublicSignupTokenUpdatedEvent,
     PublicSignupTokenUserAddedEvent,
-} from '../types/events.js';
+} from '../types/index.js';
 import type UserService from './user-service.js';
 import type { IUser } from '../types/user.js';
 import { URL } from 'url';

@@ -1,10 +1,10 @@
-import async from 'async';
+const async = require('async');
 
 const DESCRIPTION = {
     OWNER: 'Users with this role have full control over the project, and can add and manage other users within the project context, manage feature toggles within the project, and control advanced project features like archiving and deleting the project.',
     MEMBER: 'Users with this role within a project are allowed to view, create and update feature toggles, but have limited permissions in regards to managing the projects user access and can not archive or delete the project.',
 };
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         'SELECT id AS name from projects WHERE id NOT IN (SELECT DISTINCT project FROM roles WHERE project IS NOT null)',
         (err, results) => {
@@ -53,6 +53,6 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     cb(); // Can't really roll this back since more roles could have been added afterwards
 };

@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
             ALTER TABLE feature_tag
@@ -10,7 +10,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `ALTER TABLE feature_tag
         DROP constraint feature_tag_pkey;
@@ -20,6 +20,6 @@ export async function down(db, cb) {
     );
 };
 
-export const _meta = {
+exports._meta = {
     version: 1,
 };

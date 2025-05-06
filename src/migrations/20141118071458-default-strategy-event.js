@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, callback) {
+exports.up = function (db, callback) {
     db.runSql(
         `
 INSERT INTO events(type, created_by, data) 
@@ -9,7 +10,7 @@ VALUES ('strategy-created', 'migration', '{"name":"default","description":"Defau
     );
 };
 
-export async function down(db, callback) {
+exports.down = function (db, callback) {
     db.runSql(
         `
 delete from events where type='strategy-created' and data->>'name' = 'default';`,

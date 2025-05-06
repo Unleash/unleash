@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
     CREATE OR REPLACE FUNCTION assign_unleash_permission_to_role(permission_name text, role_name text) returns void as
@@ -19,7 +19,7 @@ $$ language plpgsql;
         cb,
     );
 };
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `DROP FUNCTION IF EXISTS assign_unleash_permission_to_role(text, text)`,
         cb,

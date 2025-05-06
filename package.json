@@ -52,16 +52,15 @@
     "local:package": "del-cli --force build && mkdir build && cp -r dist docs CHANGELOG.md LICENSE README.md package.json build",
     "build:watch": "tsc -w",
     "prepare": "husky && yarn --cwd ./frontend install && if [ ! -d ./dist ]; then yarn build; fi",
-    "nodetest": "NODE_ENV=test PORT=4243 node --trace-warnings --test ./src/**/*.test.ts",
-    "test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test PORT=4243 node --trace-warnings node_modules/.bin/jest",
-    "test:unit": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test PORT=4243 jest --testPathIgnorePatterns=src/test/e2e --testPathIgnorePatterns=dist",
+    "test": "NODE_ENV=test PORT=4243 node --experimental-vm-modules node_modules/.bin/jest",
+    "test:unit": "NODE_ENV=test PORT=4243 node --experimental-vm-modules node_modules/.bin/jest --testPathIgnorePatterns=src/test/e2e",
     "test:docker": "./scripts/docker-postgres.sh",
-    "test:report": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test PORT=4243 jest --reporters=\"default\" --reporters=\"jest-junit\"",
+    "test:report": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test PORT=4243 node --experimental-vm-modules node_modules/.bin/jest --reporters=\"default\" --reporters=\"jest-junit\"",
     "test:docker:cleanup": "docker rm -f unleash-postgres",
     "test:watch": "yarn test --watch",
-    "test:coverage": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test PORT=4243 jest --coverage --testLocationInResults --outputFile=\"coverage/report.json\" --forceExit",
-    "test:coverage:jest": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test PORT=4243 jest --silent --ci --json --coverage --testLocationInResults --outputFile=\"report.json\" --forceExit",
-    "test:updateSnapshot": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test PORT=4243 jest --updateSnapshot",
+    "test:coverage": "NODE_ENV=test PORT=4243 node --experimental-vm-modules node_modules/.bin/jest --coverage --testLocationInResults --outputFile=\"coverage/report.json\" --forceExit",
+    "test:coverage:jest": "NODE_ENV=test PORT=4243 node --experimental-vm-modules node_modules/.bin/jest --silent --ci --json --coverage --testLocationInResults --outputFile=\"report.json\" --forceExit",
+    "test:updateSnapshot": "NODE_ENV=test PORT=4243 node --experimental-vm-modules node_modules/.bin/jest --updateSnapshot",
     "seed:setup": "ts-node src/test/e2e/seed/segment.seed.ts",
     "seed:serve": "UNLEASH_DATABASE_NAME=unleash_test UNLEASH_DATABASE_SCHEMA=seed yarn run start:dev",
     "clean": "del-cli --force dist",
@@ -83,7 +82,7 @@
     "automock": false,
     "maxWorkers": 4,
     "testTimeout": 20000,
-    "globalSetup": "./scripts/jest-setup.ts",
+    "globalSetup": "./src/jest-setup.ts",
     "transform": {
       "^.+\\.tsx?$": [
         "@swc/jest",
@@ -117,6 +116,12 @@
     "extensionsToTreatAsEsm": [
       ".ts",
       ".tsx"
+    ],
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "transformIgnorePatterns": [
+      "node_modules"
     ]
   },
   "dependencies": {

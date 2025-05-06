@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
           ALTER TABLE api_tokens DROP CONSTRAINT api_tokens_environment_fkey;
@@ -8,7 +9,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
           ALTER TABLE api_tokens ADD CONSTRAINT api_tokens_environment_fkey FOREIGN KEY(environment) REFERENCES environments(name) ON DELETE CASCADE;

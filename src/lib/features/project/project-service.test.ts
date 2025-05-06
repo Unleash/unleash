@@ -8,6 +8,8 @@ import {
 } from '../../types/index.js';
 import { createFakeProjectService } from './createProjectService.js';
 
+import { jest } from '@jest/globals';
+
 describe('enterprise extension: enable change requests', () => {
     const createService = (mode: 'oss' | 'enterprise' = 'enterprise') => {
         const config = createTestConfig();
@@ -73,7 +75,9 @@ describe('enterprise extension: enable change requests', () => {
     test("it does not call the change request enablement function if we're not enterprise", async () => {
         const { service } = createService('oss');
 
-        const fn = jest.fn();
+        const fn = jest.fn() as () => Promise<
+            { name: string; requiredApprovals: number }[] | undefined
+        >;
 
         const projectId = 'fake-project-id';
         await service.createProject(

@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, callback) {
+exports.up = function (db, callback) {
     db.runSql(
         `
             CREATE TABLE IF NOT EXISTS favorite_features
@@ -22,7 +23,7 @@ export async function up(db, callback) {
     );
 };
 
-export async function down(db, callback) {
+exports.down = function (db, callback) {
     db.runSql(
         `
             DROP TABLE IF EXISTS favorite_features;

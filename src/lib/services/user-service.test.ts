@@ -3,7 +3,7 @@ import UserService from './user-service.js';
 import UserStoreMock from '../../test/fixtures/fake-user-store.js';
 import AccessServiceMock from '../../test/fixtures/access-service-mock.js';
 import ResetTokenService from './reset-token-service.js';
-import { EmailService } from './email-service.js';
+import { EmailService, type IEmailEnvelope } from './email-service.js';
 import OwaspValidationError from '../error/owasp-validation-error.js';
 import type { IUnleashConfig } from '../types/option.js';
 import { createTestConfig } from '../../test/config/test-config.js';
@@ -15,6 +15,8 @@ import SettingService from './setting-service.js';
 import FakeSettingStore from '../../test/fixtures/fake-setting-store.js';
 import { extractAuditInfoFromUser } from '../util/index.js';
 import { createFakeEventsService } from '../features/index.js';
+import { jest } from '@jest/globals';
+
 const config: IUnleashConfig = createTestConfig();
 
 const systemUser = new User({ id: -1, username: 'system' });
@@ -74,7 +76,8 @@ describe('Default admin initialization', () => {
     const CUSTOM_ADMIN_PASSWORD = 'custom-password';
 
     let userService: UserService;
-    const sendGettingStartedMailMock = jest.fn();
+    const sendGettingStartedMailMock =
+        jest.fn() as () => Promise<IEmailEnvelope>;
 
     beforeEach(() => {
         jest.clearAllMocks();

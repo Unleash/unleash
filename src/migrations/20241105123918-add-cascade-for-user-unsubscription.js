@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
     ALTER TABLE user_unsubscription DROP CONSTRAINT user_unsubscription_user_id_fkey;
@@ -11,6 +11,6 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql('', cb);
 };

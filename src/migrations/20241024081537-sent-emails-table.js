@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function(db, cb) {
     db.runSql(`
     CREATE TABLE IF NOT EXISTS emails_sent
     (
@@ -11,6 +11,6 @@ export async function up(db, cb) {
 `, cb)
 };
 
-export async function down(db, cb) {
+exports.down = function(db, cb) {
     db.runSql(`DROP TABLE emails_sent;`, cb);
 };

@@ -7,14 +7,13 @@ import {
     SEGMENT_CREATED,
     SEGMENT_DELETED,
     SEGMENT_UPDATED,
-} from '../../types/events.js';
+} from '../../events/index.js';
 import type { Logger, LogProvider } from '../../logger.js';
 import type {
     IEventSearchParams,
     IEventStore,
 } from '../../types/stores/event-store.js';
-import type { ITag } from '../../types/model.js';
-import { sharedEventEmitter } from '../../util/anyEventEmitter.js';
+import { sharedEventEmitter } from '../../util/index.js';
 import type { Db } from '../../db/db.js';
 import type { Knex } from 'knex';
 import type EventEmitter from 'events';
@@ -29,6 +28,7 @@ import type {
 } from '../../openapi/index.js';
 import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
 import { applyGenericQueryParams } from '../feature-search/search-utils.js';
+import type { ITag } from '../../tags/index.js';
 
 const EVENT_COLUMNS = [
     'id',

@@ -1,10 +1,10 @@
-export async function up(db, callback) {
+exports.up = function (db, callback) {
     db.runSql(
         'ALTER TABLE features ADD "last_seen_at" TIMESTAMP WITH TIME ZONE;',
         callback,
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     return db.removeColumn('features', 'last_seen_at', cb);
 };

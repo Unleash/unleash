@@ -6,7 +6,7 @@ import {
     SettingCreatedEvent,
     SettingDeletedEvent,
     SettingUpdatedEvent,
-} from '../types/events.js';
+} from '../types/index.js';
 import type EventService from '../features/events/event-service.js';
 import type { IAuditUser } from '../types/index.js';
 

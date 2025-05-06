@@ -2,13 +2,14 @@ import createStores from '../../../../../test/fixtures/store.js';
 import EventEmitter from 'events';
 import getLogger from '../../../../../test/fixtures/no-logger.js';
 import type { IUnleashConfig } from '../../../../types/index.js';
-import { LastSeenService } from '../last-seen-service.js';
+import { type LastSeenInput, LastSeenService } from '../last-seen-service.js';
+import { jest } from '@jest/globals';
 
 function initLastSeenService(flagEnabled = true) {
     const stores = createStores();
 
     const eventBus = new EventEmitter();
-    eventBus.emit = jest.fn();
+    eventBus.emit = jest.fn() as () => boolean;
 
     const config = {
         eventBus,
@@ -94,7 +95,9 @@ test('should call last seen at store with correct data', async () => {
             timestamp: new Date(),
         },
     ]);
-    lastSeenStore.setLastSeen = jest.fn();
+    lastSeenStore.setLastSeen = jest.fn() as (
+        data: LastSeenInput[],
+    ) => Promise<void>;
     await lastSeenService.store();
 
     expect(lastSeenStore.setLastSeen).toHaveBeenCalledWith([

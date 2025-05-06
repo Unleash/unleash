@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, callback) {
+exports.up = function (db, callback) {
     db.runSql(
         `
         SELECT * FROM migrations WHERE name = '/20230426110026-rename-api-token-username-field';
@@ -27,7 +28,7 @@ export async function up(db, callback) {
     );
 };
 
-export async function down(db, callback) {
+exports.down = function (db, callback) {
     db.runSql(
         `ALTER TABLE api_tokens DROP COLUMN IF EXISTS "token_name";`,
         callback,

@@ -5,6 +5,8 @@ import {
     throwExceedsLimitError,
 } from './exceeds-limit-error.js';
 
+import { jest } from '@jest/globals';
+
 it('emits events event when created through the external function', () => {
     const emitEvent = jest.fn();
     const resource = 'some-resource';

@@ -53,23 +53,24 @@ export const MobileNavigationSidebar: FC<{
     );
 };
 
-export const StretchContainer = styled(Box)<{ mode: string; admin: boolean }>(
-    ({ theme, mode, admin }) => ({
-        backgroundColor: admin
-            ? theme.palette.background.application
-            : theme.palette.background.paper,
-        borderRight: admin ? `2px solid ${theme.palette.divider}` : 'none',
-        padding: theme.spacing(2),
-        alignSelf: 'stretch',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: theme.spacing(2),
-        zIndex: 1,
-        overflowAnchor: 'none',
-        minWidth: mode === 'full' ? theme.spacing(32) : 'auto',
-        width: mode === 'full' ? theme.spacing(32) : 'auto',
-    }),
-);
+export const StretchContainer = styled(Box, {
+    shouldForwardProp: (propName) =>
+        propName !== 'mode' && propName !== 'admin',
+})<{ mode: string; admin: boolean }>(({ theme, mode, admin }) => ({
+    backgroundColor: admin
+        ? theme.palette.background.application
+        : theme.palette.background.paper,
+    borderRight: admin ? `2px solid ${theme.palette.divider}` : 'none',
+    padding: theme.spacing(2),
+    alignSelf: 'stretch',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+    zIndex: 1,
+    overflowAnchor: 'none',
+    minWidth: mode === 'full' ? theme.spacing(32) : 'auto',
+    width: mode === 'full' ? theme.spacing(32) : 'auto',
+}));
 
 const StyledLink = styled(Link)(({ theme }) => focusable(theme));
 
@@ -92,7 +93,9 @@ const StyledUnleashLogoOnlyWhite = styled(LogoOnlyWhite)(({ theme }) => ({
 }));
 
 // This component is needed when the sticky item could overlap with nav items. You can replicate it on a short screen.
-const StickyContainer = styled(Box)<{ admin: boolean }>(({ theme, admin }) => ({
+const StickyContainer = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'admin',
+})<{ admin: boolean }>(({ theme, admin }) => ({
     position: 'sticky',
     paddingBottom: theme.spacing(1.5),
     paddingTop: theme.spacing(1),

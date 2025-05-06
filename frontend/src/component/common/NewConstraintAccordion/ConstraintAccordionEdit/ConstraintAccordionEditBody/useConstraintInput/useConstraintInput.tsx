@@ -64,6 +64,9 @@ type Validator =
     | 'STRING_ARRAY_VALIDATOR'
     | 'DATE_VALIDATOR';
 
+/**
+ * @deprecated; remove with `addEditStrategy` flag. This component requires a lot of state and mixes many components. Better off using dedicated pieces where you need them.
+ */
 export const useConstraintInput = ({
     contextDefinition,
     localConstraint,

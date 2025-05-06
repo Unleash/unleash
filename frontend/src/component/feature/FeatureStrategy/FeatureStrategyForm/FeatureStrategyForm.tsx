@@ -32,6 +32,7 @@ import type { IFormErrors } from 'hooks/useFormErrors';
 import { validateParameterValue } from 'utils/validateParameterValue';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { FeatureStrategyChangeRequestAlert } from './FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert';
+
 import {
     FeatureStrategyProdGuard,
     useFeatureStrategyProdGuard,
@@ -48,6 +49,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests';
 import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -202,14 +204,29 @@ export const FeatureStrategyForm = ({
 }: IFeatureStrategyFormProps) => {
     const { trackEvent } = usePlausibleTracker();
     const [showProdGuard, setShowProdGuard] = useState(false);
-    const hasValidConstraints = useConstraintsValidation(strategy.constraints);
     const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
+    const hasValidConstraints = useConstraintsValidation(strategy.constraints);
     const access = useHasProjectEnvironmentAccess(
         permission,
         projectId,
         environmentId,
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
+    const validateConstraintsOutsideFormErrors = !useUiFlag('addEditStrategy');
+
+    useEffect(() => {
+        if (validateConstraintsOutsideFormErrors) {
+            return;
+        }
+        if (hasValidConstraints) {
+            errors.setFormError(
+                'constraints',
+                'The constraint configuration is invalid',
+            );
+        } else {
+            errors.removeFormError('constraints');
+        }
+    }, [JSON.stringify(strategy.constraints)]);
 
     useEffect(() => {
         trackEvent('new-strategy-form', {
@@ -544,7 +561,8 @@ export const FeatureStrategyForm = ({
                         disabled={
                             disabled ||
                             loading ||
-                            !hasValidConstraints ||
+                            (validateConstraintsOutsideFormErrors &&
+                                hasValidConstraints) ||
                             errors.hasFormErrors()
                         }
                         data-testid={STRATEGY_FORM_SUBMIT_ID}

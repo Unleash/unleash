@@ -89,7 +89,7 @@ export const useApiTokenForm = (project?: string) => {
     const isValid = () => {
         const newErrors: Partial<Record<ApiTokenFormErrorType, string>> = {};
         if (!tokenName) {
-            newErrors.tokenName = 'Tokenname is required';
+            newErrors.tokenName = 'Token name is required';
         }
         if (projects.length === 0) {
             newErrors.projects = 'At least one project is required';

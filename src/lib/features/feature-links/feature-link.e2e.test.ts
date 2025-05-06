@@ -99,7 +99,7 @@ test('should manage feature links', async () => {
     ]);
 
     await updatedLink('my_feature', links[0].id, {
-        url: 'https://example_updated.com',
+        url: 'example_updated.com',
         title: 'feature link updated',
     });
 

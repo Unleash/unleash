@@ -88,8 +88,13 @@
         "@swc/jest",
         {
           "jsc": {
-            "target": "ESNext"
-          }
+            "target": "ESNext",
+            "parser": {
+              "syntax": "typescript",
+              "importMeta": true
+            }
+          },
+          "isModule": true
         }
       ]
     },

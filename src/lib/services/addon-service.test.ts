@@ -1,5 +1,3 @@
-import { ValidationError } from 'joi';
-
 import getLogger from '../../test/fixtures/no-logger.js';
 import TagTypeService from '../features/tag-type/tag-type-service.js';
 import {
@@ -23,6 +21,7 @@ import {
 import { createFakeEventsService } from '../internals.js';
 import { createTestConfig } from '../../test/config/test-config.js';
 import { IntegrationEventsService } from './index.js';
+import { ValidationError } from 'joi';
 
 const MASKED_VALUE = '*****';
 

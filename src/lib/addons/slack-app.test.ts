@@ -11,6 +11,7 @@ import {
 import type { IntegrationEventsService } from '../services/index.js';
 import type { Logger } from '../logger.js';
 const slackApiCalls: ChatPostMessageArguments[] = [];
+import { jest } from '@jest/globals';
 
 const loggerMock = {
     debug: jest.fn(),

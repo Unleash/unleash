@@ -16,7 +16,7 @@ import type {
 import { sharedEventEmitter } from '../../util/index.js';
 import type { Db } from '../../db/db.js';
 import type { Knex } from 'knex';
-import type EventEmitter from 'events';
+import type EventEmitter from 'node:events';
 import {
     ADMIN_TOKEN_USER,
     SYSTEM_USER,

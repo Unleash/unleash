@@ -16,6 +16,7 @@ import EventService from '../features/events/event-service';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 import type { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
 import type { IFeatureLifecycleReadModel } from '../features/feature-lifecycle/feature-lifecycle-read-model-type';
+import type { IFeatureLinksReadModel } from '../features/feature-links/feature-links-read-model-type';
 
 test('Should only store events for potentially stale on', async () => {
     expect.assertions(2);
@@ -72,6 +73,7 @@ test('Should only store events for potentially stale on', async () => {
         {} as DependentFeaturesService,
         {} as IFeatureLifecycleReadModel,
         {} as IFeatureCollaboratorsReadModel,
+        {} as IFeatureLinksReadModel,
     );
 
     await featureToggleService.updatePotentiallyStaleFeatures();

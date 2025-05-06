@@ -2,7 +2,6 @@ import type React from 'react';
 import type { FC } from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
 import type { NavigationMode } from './NavigationMode';
-import { ShowAdmin } from './ShowHide';
 import {
     ExternalFullListItem,
     FullListItem,
@@ -237,7 +236,7 @@ export const AdminSettingsNavigation: FC<{
     activeItem,
     mode,
 }) => {
-    const { showOnlyAdminMenu, newAdminUIEnabled } = useNewAdminMenu();
+    const { showOnlyAdminMenu } = useNewAdminMenu();
     if (showOnlyAdminMenu) {
         return <AdminMenuNavigation onClick={() => onClick('/admin')} />;
     }
@@ -247,40 +246,7 @@ export const AdminSettingsNavigation: FC<{
         onClick(activeItem);
     };
 
-    if (newAdminUIEnabled) {
-        return <AdminSettingsLink mode={mode} onClick={setFullModeOnClick} />;
-    }
-
-    return (
-        <>
-            {mode === 'full' && (
-                <SecondaryNavigation
-                    expanded={expanded}
-                    onExpandChange={(expand) => {
-                        onExpandChange(expand);
-                    }}
-                    mode={mode}
-                    title='Admin'
-                >
-                    <SecondaryNavigationList
-                        routes={routes}
-                        mode={mode}
-                        onClick={onClick}
-                        activeItem={activeItem}
-                    />
-                </SecondaryNavigation>
-            )}
-
-            {mode === 'mini' && (
-                <ShowAdmin
-                    onChange={() => {
-                        onExpandChange(true);
-                        onSetFullMode();
-                    }}
-                />
-            )}
-        </>
-    );
+    return <AdminSettingsLink mode={mode} onClick={setFullModeOnClick} />;
 };
 
 export const AdminSettingsLink: FC<{

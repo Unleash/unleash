@@ -113,6 +113,10 @@ import type { ResourceLimitsSchema } from '../../openapi';
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
 import type { Collaborator } from './types/feature-collaborators-read-model-type';
 import { sortStrategies } from '../../util/sortStrategies';
+import type {
+    IFeatureLink,
+    IFeatureLinksReadModel,
+} from '../feature-links/feature-links-read-model-type';
 
 interface IFeatureContext {
     featureName: string;
@@ -182,6 +186,8 @@ class FeatureToggleService {
 
     private featureCollaboratorsReadModel: IFeatureCollaboratorsReadModel;
 
+    private featureLinksReadModel: IFeatureLinksReadModel;
+
     private dependentFeaturesService: DependentFeaturesService;
 
     private eventBus: EventEmitter;
@@ -227,6 +233,7 @@ class FeatureToggleService {
         dependentFeaturesService: DependentFeaturesService,
         featureLifecycleReadModel: IFeatureLifecycleReadModel,
         featureCollaboratorsReadModel: IFeatureCollaboratorsReadModel,
+        featureLinksReadModel: IFeatureLinksReadModel,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;
@@ -247,6 +254,7 @@ class FeatureToggleService {
         this.dependentFeaturesService = dependentFeaturesService;
         this.featureLifecycleReadModel = featureLifecycleReadModel;
         this.featureCollaboratorsReadModel = featureCollaboratorsReadModel;
+        this.featureLinksReadModel = featureLinksReadModel;
         this.eventBus = eventBus;
         this.resourceLimits = resourceLimits;
     }
@@ -442,6 +450,7 @@ class FeatureToggleService {
             });
         }
     }
+
     async validateStrategyType(
         strategyName: string | undefined,
     ): Promise<void> {
@@ -1074,14 +1083,19 @@ class FeatureToggleService {
         let children: string[] = [];
         let lifecycle: IFeatureLifecycleStage | undefined = undefined;
         let collaborators: Collaborator[] = [];
-        [dependencies, children, lifecycle, collaborators] = await Promise.all([
-            this.dependentFeaturesReadModel.getParents(featureName),
-            this.dependentFeaturesReadModel.getChildren([featureName]),
-            this.featureLifecycleReadModel.findCurrentStage(featureName),
-            this.featureCollaboratorsReadModel.getFeatureCollaborators(
-                featureName,
-            ),
-        ]);
+        let links: IFeatureLink[] = [];
+        [dependencies, children, lifecycle, collaborators, links] =
+            await Promise.all([
+                this.dependentFeaturesReadModel.getParents(featureName),
+                this.dependentFeaturesReadModel.getChildren([featureName]),
+                this.featureLifecycleReadModel.findCurrentStage(featureName),
+                this.featureCollaboratorsReadModel.getFeatureCollaborators(
+                    featureName,
+                ),
+                this.flagResolver.isEnabled('featureLinks')
+                    ? this.featureLinksReadModel.getLinks(featureName)
+                    : Promise.resolve([]),
+            ]);
 
         if (environmentVariants) {
             const result =
@@ -1095,6 +1109,7 @@ class FeatureToggleService {
                 dependencies,
                 children,
                 lifecycle,
+                links,
                 collaborators: { users: collaborators },
             };
         } else {
@@ -1110,6 +1125,7 @@ class FeatureToggleService {
                 dependencies,
                 children,
                 lifecycle,
+                links,
                 collaborators: { users: collaborators },
             };
         }

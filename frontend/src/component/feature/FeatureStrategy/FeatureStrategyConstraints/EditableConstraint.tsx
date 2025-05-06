@@ -1,6 +1,9 @@
 import { IconButton, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import type { Input } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
+import {
+    useConstraintInput,
+    type Input,
+} from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
 import {
     DATE_AFTER,
     dateOperators,
@@ -11,7 +14,7 @@ import {
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IUnleashContextDefinition } from 'interfaces/context';
 import type { IConstraint } from 'interfaces/strategy';
-import { useEffect, useRef, useState, type FC } from 'react';
+import { useEffect, useMemo, useRef, useState, type FC } from 'react';
 import { oneOf } from 'utils/oneOf';
 import {
     CURRENT_TIME_CONTEXT_FIELD,
@@ -32,6 +35,7 @@ import { AddSingleValueWidget } from './AddSingleValueWidget';
 import { ConstraintDateInput } from './ConstraintDateInput';
 import { LegalValuesSelector } from './LegalValuesSelector';
 import { resolveLegalValues } from './resolve-legal-values';
+import { constraintValidator } from './constraint-validator';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -177,7 +181,6 @@ type Props = {
     setContextName: (contextName: string) => void;
     setOperator: (operator: Operator) => void;
     setLocalConstraint: React.Dispatch<React.SetStateAction<IConstraint>>;
-    action: string;
     onDelete?: () => void;
     toggleInvertedOperator: () => void;
     toggleCaseSensitivity: () => void;
@@ -189,11 +192,9 @@ type Props = {
     setValue: (value: string) => void;
     setValues: (values: string[]) => void;
     setValuesWithRecord: (values: string[]) => void;
-    setError: React.Dispatch<React.SetStateAction<string>>;
     removeValue: (index: number) => void;
-    input: Input;
-    error: string;
 };
+
 export const EditableConstraint: FC<Props> = ({
     constraintChanges,
     constraint,
@@ -205,17 +206,19 @@ export const EditableConstraint: FC<Props> = ({
     onUndo,
     toggleInvertedOperator,
     toggleCaseSensitivity,
-    input,
     contextDefinition,
     constraintValues,
     constraintValue,
     setValue,
     setValues,
     setValuesWithRecord,
-    setError,
     removeValue,
-    error,
 }) => {
+    const { input } = useConstraintInput({
+        contextDefinition,
+        localConstraint,
+    });
+
     const { context } = useUnleashContext();
     const { contextName, operator } = localConstraint;
     const [showCaseSensitiveButton, setShowCaseSensitiveButton] =
@@ -279,6 +282,7 @@ export const EditableConstraint: FC<Props> = ({
         }
     };
 
+    const validator = useMemo(() => constraintValidator(input), [input]);
     const TopRowInput = () => {
         switch (inputType.input) {
             case 'date':
@@ -286,13 +290,13 @@ export const EditableConstraint: FC<Props> = ({
                     <ConstraintDateInput
                         setValue={setValue}
                         value={localConstraint.value}
-                        error={error}
-                        setError={setError}
+                        validator={validator}
                     />
                 );
             case 'single value':
                 return (
                     <AddSingleValueWidget
+                        validator={validator}
                         onAddValue={(newValue) => {
                             setValue(newValue);
                         }}
@@ -311,6 +315,7 @@ export const EditableConstraint: FC<Props> = ({
             case 'multiple values':
                 return (
                     <AddValuesWidget
+                        validator={validator}
                         helpText='Maximum 100 char length per value'
                         ref={addValuesButtonRef}
                         onAddValues={(newValues) => {

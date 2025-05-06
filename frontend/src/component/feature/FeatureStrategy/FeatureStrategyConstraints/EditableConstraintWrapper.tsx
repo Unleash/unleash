@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { IConstraint } from 'interfaces/strategy';
 import { cleanConstraint } from 'utils/cleanConstraint';
-import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IUnleashContextDefinition } from 'interfaces/context';
 import type { Operator } from 'constants/operators';
 import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint';
-import { useConstraintInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
 
 interface IConstraintAccordionEditProps {
     constraint: IConstraint;
@@ -55,23 +53,12 @@ export const EditableConstraintWrapper = ({
     const [contextDefinition, setContextDefinition] = useState(
         resolveContextDefinition(context, localConstraint.contextName),
     );
-    const { validateConstraint } = useFeatureApi();
-    const [action, setAction] = useState('');
-
-    const { input, validator, setError, error } = useConstraintInput({
-        contextDefinition,
-        localConstraint,
-    });
 
     useEffect(() => {
         setContextDefinition(
             resolveContextDefinition(context, localConstraint.contextName),
         );
     }, [localConstraint.contextName, context]);
-
-    useEffect(() => {
-        setError('');
-    }, [setError]);
 
     const onUndo = () => {
         if (constraintChanges.length < 2) return;
@@ -190,7 +177,6 @@ export const EditableConstraintWrapper = ({
             setLocalConstraint={setLocalConstraint}
             setContextName={setContextName}
             setOperator={setOperator}
-            action={action}
             toggleInvertedOperator={setInvertedOperator}
             toggleCaseSensitivity={setCaseInsensitive}
             onDelete={onDelete}
@@ -199,11 +185,8 @@ export const EditableConstraintWrapper = ({
             setValues={setValues}
             setValuesWithRecord={setValuesWithRecord}
             setValue={setValue}
-            setError={setError}
             constraintValues={constraint?.values || []}
             constraintValue={constraint?.value || ''}
-            input={input}
-            error={error}
             contextDefinition={contextDefinition}
             removeValue={removeValue}
             constraint={constraint}

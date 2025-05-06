@@ -14,6 +14,7 @@ export interface IUnknownFlagsStore {
     getAll(): Promise<UnknownFlag[]>;
     clear(hoursAgo: number): Promise<void>;
     deleteAll(): Promise<void>;
+    count(): Promise<number>;
 }
 
 export class UnknownFlagsStore implements IUnknownFlagsStore {
@@ -57,5 +58,10 @@ export class UnknownFlagsStore implements IUnknownFlagsStore {
 
     async deleteAll(): Promise<void> {
         await this.db(TABLE).delete();
+    }
+
+    async count(): Promise<number> {
+        const row = await this.db(TABLE).count('* as count').first();
+        return Number(row?.count ?? 0);
     }
 }

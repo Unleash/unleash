@@ -30,4 +30,8 @@ export class FakeUnknownFlagsStore implements IUnknownFlagsStore {
     async deleteAll(): Promise<void> {
         this.unknownFlagMap.clear();
     }
+
+    async count(): Promise<number> {
+        return this.unknownFlagMap.size;
+    }
 }

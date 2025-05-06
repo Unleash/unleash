@@ -125,37 +125,49 @@ export default class ClientMetricsServiceV2 {
         validatedToggleNames: string[];
         unknownToggleNames: string[];
     }> {
+        let toggleNamesToValidate: string[] = toggleNames;
         let unknownToggleNames: string[] = [];
 
-        if (this.flagResolver.isEnabled('filterExistingFlagNames')) {
+        const shouldFilter = this.flagResolver.isEnabled(
+            'filterExistingFlagNames',
+        );
+        const shouldReport = this.flagResolver.isEnabled('reportUnknownFlags');
+
+        if (shouldFilter || shouldReport) {
             try {
-                const validNames = await this.cachedFeatureNames();
+                const existingFlags = await this.cachedFeatureNames();
 
                 const existingNames = toggleNames.filter((name) =>
-                    validNames.includes(name),
+                    existingFlags.includes(name),
                 );
-                if (this.flagResolver.isEnabled('reportUnknownFlags')) {
-                    unknownToggleNames = toggleNames
-                        .filter((name) => !existingNames.includes(name))
-                        .slice(0, MAX_UNKNOWN_FLAGS);
+                const nonExistingNames = toggleNames.filter(
+                    (name) => !existingFlags.includes(name),
+                );
+
+                if (shouldFilter) {
+                    toggleNamesToValidate = existingNames;
+
+                    if (existingNames.length !== toggleNames.length) {
+                        this.logger.info(
+                            `Filtered out ${toggleNames.length - existingNames.length} toggles with non-existing names`,
+                        );
+                    }
                 }
-                if (existingNames.length !== toggleNames.length) {
-                    this.logger.info(
-                        `Filtered out ${toggleNames.length - existingNames.length} toggles with non-existing names`,
+
+                if (shouldReport) {
+                    unknownToggleNames = nonExistingNames.slice(
+                        0,
+                        MAX_UNKNOWN_FLAGS,
                     );
                 }
-
-                const validatedToggleNames =
-                    await this.filterValidToggleNames(existingNames);
-
-                return { validatedToggleNames, unknownToggleNames };
             } catch (e) {
                 this.logger.error(e);
             }
         }
 
-        const validatedToggleNames =
-            await this.filterValidToggleNames(toggleNames);
+        const validatedToggleNames = await this.filterValidToggleNames(
+            toggleNamesToValidate,
+        );
 
         return { validatedToggleNames, unknownToggleNames };
     }

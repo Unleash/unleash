@@ -1,14 +1,18 @@
 import type { Logger } from '../../../logger';
-import type { IUnknownFlagsStore, IUnleashConfig } from '../../../types';
+import type {
+    IFlagResolver,
+    IUnknownFlagsStore,
+    IUnleashConfig,
+} from '../../../types';
 import type { IUnleashStores } from '../../../types';
 import type { UnknownFlag } from './unknown-flags-store';
 
 export const MAX_UNKNOWN_FLAGS = 10;
 
 export class UnknownFlagsService {
-    private config: IUnleashConfig;
-
     private logger: Logger;
+
+    private flagResolver: IFlagResolver;
 
     private unknownFlagsStore: IUnknownFlagsStore;
 
@@ -19,7 +23,7 @@ export class UnknownFlagsService {
         config: IUnleashConfig,
     ) {
         this.unknownFlagsStore = unknownFlagsStore;
-        this.config = config;
+        this.flagResolver = config.flagResolver;
         this.logger = config.getLogger(
             '/features/metrics/unknown-flags/unknown-flags-service.ts',
         );
@@ -51,6 +55,7 @@ export class UnknownFlagsService {
     }
 
     async flush(): Promise<void> {
+        if (!this.flagResolver.isEnabled('reportUnknownFlags')) return;
         if (this.unknownFlagsCache.size === 0) return;
 
         const existing = await this.unknownFlagsStore.getAll();
@@ -96,6 +101,7 @@ export class UnknownFlagsService {
     }
 
     async clear(hoursAgo: number) {
+        if (!this.flagResolver.isEnabled('reportUnknownFlags')) return;
         return this.unknownFlagsStore.clear(hoursAgo);
     }
 }

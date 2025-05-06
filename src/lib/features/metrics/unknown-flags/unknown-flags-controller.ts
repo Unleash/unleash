@@ -13,6 +13,7 @@ import { NONE } from '../../../types/permissions';
 import { serializeDates } from '../../../types/serialize-dates';
 import type { IUnleashServices } from '../../../types/services';
 import type { UnknownFlagsService } from './unknown-flags-service';
+import { NotFoundError } from '../../../error';
 
 export default class UnknownFlagsController extends Controller {
     private unknownFlagsService: UnknownFlagsService;
@@ -54,9 +55,12 @@ export default class UnknownFlagsController extends Controller {
     }
 
     async getUnknownFlags(
-        req: IAuthRequest,
+        _: IAuthRequest,
         res: Response<UnknownFlagsResponseSchema>,
     ): Promise<void> {
+        if (!this.flagResolver.isEnabled('reportUnknownFlags')) {
+            throw new NotFoundError();
+        }
         const unknownFlags =
             await this.unknownFlagsService.getGroupedUnknownFlags();
 

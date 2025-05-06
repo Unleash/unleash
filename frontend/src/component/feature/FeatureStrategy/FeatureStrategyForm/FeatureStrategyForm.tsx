@@ -215,20 +215,6 @@ export const FeatureStrategyForm = ({
     const validateConstraintsOutsideFormErrors = !useUiFlag('addEditStrategy');
 
     useEffect(() => {
-        if (validateConstraintsOutsideFormErrors) {
-            return;
-        }
-        if (hasValidConstraints) {
-            errors.setFormError(
-                'constraints',
-                'The constraint configuration is invalid',
-            );
-        } else {
-            errors.removeFormError('constraints');
-        }
-    }, [JSON.stringify(strategy.constraints)]);
-
-    useEffect(() => {
         trackEvent('new-strategy-form', {
             props: {
                 eventType: 'seen',
@@ -561,8 +547,7 @@ export const FeatureStrategyForm = ({
                         disabled={
                             disabled ||
                             loading ||
-                            (validateConstraintsOutsideFormErrors &&
-                                hasValidConstraints) ||
+                            !hasValidConstraints ||
                             errors.hasFormErrors()
                         }
                         data-testid={STRATEGY_FORM_SUBMIT_ID}

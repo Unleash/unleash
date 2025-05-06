@@ -12,6 +12,7 @@ import {
 } from '../../openapi/util/standard-responses';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import type { IFeatureLink } from './feature-link-store-type';
+import type { IFlagResolver } from '../../types';
 
 interface FeatureLinkServices {
     transactionalFeatureLinkService: WithTransactional<FeatureLinkService>;
@@ -24,6 +25,7 @@ const PATH_LINK = '/:projectId/features/:featureName/link/:linkId';
 export default class FeatureLinkController extends Controller {
     private transactionalFeatureLinkService: WithTransactional<FeatureLinkService>;
     private openApiService: OpenApiService;
+    private flagResolver: IFlagResolver;
 
     constructor(
         config: IUnleashConfig,
@@ -35,6 +37,7 @@ export default class FeatureLinkController extends Controller {
         super(config);
         this.transactionalFeatureLinkService = transactionalFeatureLinkService;
         this.openApiService = openApiService;
+        this.flagResolver = config.flagResolver;
 
         this.route({
             method: 'post',
@@ -105,6 +108,9 @@ export default class FeatureLinkController extends Controller {
         >,
         res: Response,
     ): Promise<void> {
+        if (!this.flagResolver.isEnabled('featureLinks')) {
+            res.status(404).end();
+        }
         const { projectId, featureName } = req.params;
 
         await this.transactionalFeatureLinkService.transactional((service) =>
@@ -126,6 +132,9 @@ export default class FeatureLinkController extends Controller {
         >,
         res: Response,
     ): Promise<void> {
+        if (!this.flagResolver.isEnabled('featureLinks')) {
+            res.status(404).end();
+        }
         const { projectId, linkId, featureName } = req.params;
 
         await this.transactionalFeatureLinkService.transactional((service) =>
@@ -147,6 +156,9 @@ export default class FeatureLinkController extends Controller {
         >,
         res: Response,
     ): Promise<void> {
+        if (!this.flagResolver.isEnabled('featureLinks')) {
+            res.status(404).end();
+        }
         const { projectId, linkId } = req.params;
 
         await this.transactionalFeatureLinkService.transactional((service) =>

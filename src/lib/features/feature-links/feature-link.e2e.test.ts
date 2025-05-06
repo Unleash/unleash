@@ -99,7 +99,7 @@ test('should manage feature links', async () => {
     ]);
     const { body } = await app.getProjectFeatures('default', 'my_feature');
     expect(body.links).toMatchObject([
-        { id: links[0].id, title: 'feature link', url: 'example.com' },
+        { id: links[0].id, title: 'feature link', url: 'https://example.com' },
     ]);
 
     await updatedLink('my_feature', links[0].id, {

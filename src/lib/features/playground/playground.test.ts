@@ -1,6 +1,6 @@
-import fc from 'fast-check';
+import * as fc from 'fast-check';
 
-import supertest from 'supertest';
+import * as supertest from 'supertest';
 import { createServices } from '../../services/index.js';
 import { createTestConfig } from '../../../test/config/test-config.js';
 

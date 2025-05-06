@@ -30,7 +30,7 @@ const AddValuesButton = styled('button')(({ theme }) => ({
 interface AddValuesProps {
     onAddValues: (newValues: string[]) => void;
     helpText?: string;
-    validator: () => ConstraintValidatorOutput;
+    validator: (...values: string[]) => ConstraintValidatorOutput;
 }
 
 export const AddValuesWidget = forwardRef<HTMLButtonElement, AddValuesProps>(
@@ -58,7 +58,7 @@ export const AddValuesWidget = forwardRef<HTMLButtonElement, AddValuesProps>(
                 return;
             }
 
-            const [isValid, errorMessage] = validator();
+            const [isValid, errorMessage] = validator(...newValues);
             if (isValid) {
                 onAddValues(newValues);
                 clearInput();

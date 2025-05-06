@@ -24,7 +24,7 @@ type Props = {
     currentValue?: string;
     helpText?: string;
     inputType: 'text' | 'number';
-    validator: () => ConstraintValidatorOutput;
+    validator: (value: string) => ConstraintValidatorOutput;
 };
 
 export const AddSingleValueWidget = forwardRef<HTMLDivElement, Props>(
@@ -52,7 +52,7 @@ export const AddSingleValueWidget = forwardRef<HTMLDivElement, Props>(
                 return;
             }
 
-            const [isValid, errorMessage] = validator();
+            const [isValid, errorMessage] = validator(newValue);
             if (isValid) {
                 onAddValue(newValue);
                 setError('');

@@ -11,7 +11,7 @@ import type { ConstraintValidatorOutput } from 'component/common/NewConstraintAc
 interface IDateSingleValueProps {
     setValue: (value: string) => void;
     value?: string;
-    validator: () => ConstraintValidatorOutput;
+    validator: (value: string) => ConstraintValidatorOutput;
 }
 
 const StyledInput = styled(Input)({
@@ -79,12 +79,17 @@ export const ConstraintDateInput = ({
                     setError('');
                     const parsedDate = parseValidDate(e.target.value);
                     const dateString = parsedDate?.toISOString();
-                    dateString && setPickedDate(dateString);
-                    const [isValid, errorMessage] = validator();
-                    if (isValid) {
-                        dateString && setValue(dateString);
+                    if (!dateString) {
+                        setError('Invalid date format');
                     } else {
-                        setError(errorMessage);
+                        setPickedDate(dateString);
+
+                        const [isValid, errorMessage] = validator(dateString);
+                        if (isValid) {
+                            dateString && setValue(dateString);
+                        } else {
+                            setError(errorMessage);
+                        }
                     }
                 }}
                 InputLabelProps={{

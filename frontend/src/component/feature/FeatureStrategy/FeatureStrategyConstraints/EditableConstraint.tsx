@@ -1,6 +1,9 @@
 import { IconButton, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import type { Input } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
+import {
+    useConstraintInput,
+    type Input,
+} from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
 import {
     DATE_AFTER,
     dateOperators,
@@ -11,7 +14,7 @@ import {
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IUnleashContextDefinition } from 'interfaces/context';
 import type { IConstraint } from 'interfaces/strategy';
-import { useEffect, useRef, useState, type FC } from 'react';
+import { useEffect, useMemo, useRef, useState, type FC } from 'react';
 import { oneOf } from 'utils/oneOf';
 import {
     CURRENT_TIME_CONTEXT_FIELD,
@@ -32,6 +35,7 @@ import { AddSingleValueWidget } from './AddSingleValueWidget';
 import { ConstraintDateInput } from './ConstraintDateInput';
 import { LegalValuesSelector } from './LegalValuesSelector';
 import { resolveLegalValues } from './resolve-legal-values';
+import { constraintValidator } from './constraint-validator';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -210,7 +214,7 @@ export const EditableConstraint: FC<Props> = ({
     setValuesWithRecord,
     removeValue,
 }) => {
-    const { input, validator } = useConstraintInput({
+    const { input } = useConstraintInput({
         contextDefinition,
         localConstraint,
     });
@@ -278,6 +282,7 @@ export const EditableConstraint: FC<Props> = ({
         }
     };
 
+    const validator = useMemo(() => constraintValidator(input), [input]);
     const TopRowInput = () => {
         switch (inputType.input) {
             case 'date':

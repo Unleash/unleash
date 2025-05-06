@@ -1,3 +1,4 @@
+// todo: (flag: `addEditStrategy`) see if this type is better duplicated or extracted to somewhere else
 import type { Input } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
 import { isValid, parseISO } from 'date-fns';
 import semver from 'semver';

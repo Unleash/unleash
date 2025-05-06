@@ -119,7 +119,8 @@ test('Editing strategy before change request is applied diffs against current st
     await screen.findByText('+ variants.0.name: "change_variant"');
 
     await screen.findByText('Updating strategy variants to:');
-    await screen.findByText('change_variant');
+    const variants = await screen.findAllByText('change_variant');
+    expect(variants).toHaveLength(2);
 });
 
 test('Editing strategy after change request is applied diffs against the snapshot', async () => {
@@ -189,7 +190,8 @@ test('Editing strategy after change request is applied diffs against the snapsho
     await screen.findByText('+ variants.0.name: "change_variant"');
 
     await screen.findByText('Updating strategy variants to:');
-    await screen.findByText('change_variant');
+    const variants = await screen.findAllByText('change_variant');
+    expect(variants).toHaveLength(2);
 });
 
 test('Deleting strategy before change request is applied diffs against current strategy', async () => {
@@ -226,7 +228,6 @@ test('Deleting strategy before change request is applied diffs against current s
     await userEvent.hover(viewDiff);
     await screen.findByText('- constraints (deleted)');
 
-    await screen.findByText('Deleting strategy variants:');
     await screen.findByText('current_variant');
 });
 
@@ -281,7 +282,6 @@ test('Deleting strategy after change request is applied diffs against the snapsh
     await userEvent.hover(viewDiff);
     await screen.findByText('- constraints (deleted)');
 
-    await screen.findByText('Deleting strategy variants:');
     await screen.findByText('snapshot_variant');
 });
 
@@ -329,9 +329,8 @@ test('Adding strategy always diffs against undefined strategy', async () => {
     const viewDiff = await screen.findByText('View Diff');
     await userEvent.hover(viewDiff);
     await screen.findByText(`+ name: "flexibleRollout"`);
-
-    await screen.findByText('Setting strategy variants to:');
-    await screen.findByText('change_variant');
+    const variants = await screen.findAllByText('change_variant');
+    expect(variants).toHaveLength(2);
 });
 
 test('Segments order does not matter for diff calculation', async () => {

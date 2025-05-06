@@ -29,6 +29,9 @@ const StyledCenteredContent = styled(StyledContent)(({ theme }) => ({
     padding: theme.spacing(0.75, 1.5),
 }));
 
+/**
+ * @deprecated remove with 'flagOverviewRedesign' flag. This pollutes a lot of places in the codebase 😞
+ */
 export const StrategySeparator = ({ text }: IStrategySeparatorProps) => {
     const theme = useTheme();
 

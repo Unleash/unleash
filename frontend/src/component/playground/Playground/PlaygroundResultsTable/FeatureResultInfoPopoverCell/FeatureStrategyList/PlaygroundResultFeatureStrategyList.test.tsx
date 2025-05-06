@@ -1,8 +1,7 @@
+import { vi } from 'vitest';
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
-import { PlaygroundResultFeatureStrategyList as LegacyPlaygroundResultFeatureStrategyList } from './LegacyPlaygroundResultFeatureStrategyList';
-import { vi } from 'vitest';
 import { PlaygroundResultFeatureStrategyList } from './PlaygroundResultsFeatureStrategyList';
 
 const testCases = [
@@ -139,7 +138,7 @@ afterAll(() => {
 testCases.forEach(({ name, feature, expectedText }) => {
     test(`${name} (legacy)`, async () => {
         render(
-            <LegacyPlaygroundResultFeatureStrategyList
+            <PlaygroundResultFeatureStrategyList
                 feature={feature}
                 input={
                     { environment: 'development' } as PlaygroundRequestSchema

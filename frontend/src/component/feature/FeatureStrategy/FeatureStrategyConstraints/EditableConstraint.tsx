@@ -188,10 +188,8 @@ type Props = {
     setValue: (value: string) => void;
     setValues: (values: string[]) => void;
     setValuesWithRecord: (values: string[]) => void;
-    setError: React.Dispatch<React.SetStateAction<string>>;
     removeValue: (index: number) => void;
     input: Input;
-    error: string;
 };
 export const EditableConstraint: FC<Props> = ({
     constraintChanges,
@@ -211,9 +209,7 @@ export const EditableConstraint: FC<Props> = ({
     setValue,
     setValues,
     setValuesWithRecord,
-    setError,
     removeValue,
-    error,
 }) => {
     const { context } = useUnleashContext();
     const { contextName, operator } = localConstraint;

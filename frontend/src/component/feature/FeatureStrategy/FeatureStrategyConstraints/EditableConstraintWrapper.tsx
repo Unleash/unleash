@@ -55,7 +55,7 @@ export const EditableConstraintWrapper = ({
         resolveContextDefinition(context, localConstraint.contextName),
     );
 
-    const { input, validator, setError, error } = useConstraintInput({
+    const { input, validator } = useConstraintInput({
         contextDefinition,
         localConstraint,
     });
@@ -65,10 +65,6 @@ export const EditableConstraintWrapper = ({
             resolveContextDefinition(context, localConstraint.contextName),
         );
     }, [localConstraint.contextName, context]);
-
-    useEffect(() => {
-        setError('');
-    }, [setError]);
 
     const onUndo = () => {
         if (constraintChanges.length < 2) return;
@@ -195,11 +191,9 @@ export const EditableConstraintWrapper = ({
             setValues={setValues}
             setValuesWithRecord={setValuesWithRecord}
             setValue={setValue}
-            setError={setError}
             constraintValues={constraint?.values || []}
             constraintValue={constraint?.value || ''}
             input={input}
-            error={error}
             contextDefinition={contextDefinition}
             removeValue={removeValue}
             constraint={constraint}

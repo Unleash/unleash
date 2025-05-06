@@ -189,8 +189,8 @@ type Props = {
     setValues: (values: string[]) => void;
     setValuesWithRecord: (values: string[]) => void;
     removeValue: (index: number) => void;
-    input: Input;
 };
+
 export const EditableConstraint: FC<Props> = ({
     constraintChanges,
     constraint,
@@ -202,7 +202,6 @@ export const EditableConstraint: FC<Props> = ({
     onUndo,
     toggleInvertedOperator,
     toggleCaseSensitivity,
-    input,
     contextDefinition,
     constraintValues,
     constraintValue,
@@ -211,6 +210,11 @@ export const EditableConstraint: FC<Props> = ({
     setValuesWithRecord,
     removeValue,
 }) => {
+    const { input, validator } = useConstraintInput({
+        contextDefinition,
+        localConstraint,
+    });
+
     const { context } = useUnleashContext();
     const { contextName, operator } = localConstraint;
     const [showCaseSensitiveButton, setShowCaseSensitiveButton] =
@@ -281,13 +285,13 @@ export const EditableConstraint: FC<Props> = ({
                     <ConstraintDateInput
                         setValue={setValue}
                         value={localConstraint.value}
-                        error={error}
-                        setError={setError}
+                        validator={validator}
                     />
                 );
             case 'single value':
                 return (
                     <AddSingleValueWidget
+                        validator={validator}
                         onAddValue={(newValue) => {
                             setValue(newValue);
                         }}
@@ -306,6 +310,7 @@ export const EditableConstraint: FC<Props> = ({
             case 'multiple values':
                 return (
                     <AddValuesWidget
+                        validator={validator}
                         helpText='Maximum 100 char length per value'
                         ref={addValuesButtonRef}
                         onAddValues={(newValues) => {

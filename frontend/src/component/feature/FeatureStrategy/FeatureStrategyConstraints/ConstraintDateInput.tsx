@@ -6,12 +6,12 @@ import { styled } from '@mui/material';
 import TimezoneCountries from 'countries-and-timezones';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import type { ConstraintValidatorOutput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/constraintValidators';
 
 interface IDateSingleValueProps {
     setValue: (value: string) => void;
     value?: string;
-    error: string;
-    setError: React.Dispatch<React.SetStateAction<string>>;
+    validator: () => ConstraintValidatorOutput;
 }
 
 const StyledInput = styled(Input)({
@@ -31,9 +31,9 @@ const Container = styled('div')(({ theme }) => ({
 export const ConstraintDateInput = ({
     setValue,
     value,
-    error,
-    setError,
+    validator,
 }: IDateSingleValueProps) => {
+    const [error, setError] = useState('');
     const timezones = Object.values(
         TimezoneCountries.getAllTimezones({ deprecated: false }) as {
             [timezone: string]: { name: string; utcOffsetStr: string };
@@ -80,7 +80,12 @@ export const ConstraintDateInput = ({
                     const parsedDate = parseValidDate(e.target.value);
                     const dateString = parsedDate?.toISOString();
                     dateString && setPickedDate(dateString);
-                    dateString && setValue(dateString);
+                    const [isValid, errorMessage] = validator();
+                    if (isValid) {
+                        dateString && setValue(dateString);
+                    } else {
+                        setError(errorMessage);
+                    }
                 }}
                 InputLabelProps={{
                     shrink: true,

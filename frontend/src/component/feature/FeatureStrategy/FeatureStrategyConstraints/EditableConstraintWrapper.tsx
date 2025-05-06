@@ -5,7 +5,6 @@ import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashCon
 import type { IUnleashContextDefinition } from 'interfaces/context';
 import type { Operator } from 'constants/operators';
 import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint';
-import { useConstraintInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
 
 interface IConstraintAccordionEditProps {
     constraint: IConstraint;
@@ -54,11 +53,6 @@ export const EditableConstraintWrapper = ({
     const [contextDefinition, setContextDefinition] = useState(
         resolveContextDefinition(context, localConstraint.contextName),
     );
-
-    const { input, validator } = useConstraintInput({
-        contextDefinition,
-        localConstraint,
-    });
 
     useEffect(() => {
         setContextDefinition(
@@ -193,7 +187,6 @@ export const EditableConstraintWrapper = ({
             setValue={setValue}
             constraintValues={constraint?.values || []}
             constraintValue={constraint?.value || ''}
-            input={input}
             contextDefinition={contextDefinition}
             removeValue={removeValue}
             constraint={constraint}

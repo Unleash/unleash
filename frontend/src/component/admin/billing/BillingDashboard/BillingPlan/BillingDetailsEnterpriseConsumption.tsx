@@ -1,9 +1,7 @@
 import { styled, Typography, Grid, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
 import { GridRow } from 'component/common/GridRow/GridRow';
 import { GridCol } from 'component/common/GridCol/GridCol';
 import LaunchIcon from '@mui/icons-material/Launch';
-import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { formatApiPath } from 'utils/formatPath';
 
 const StyledInfoLabel = styled(Typography)(({ theme }) => ({

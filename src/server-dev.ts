@@ -54,7 +54,6 @@ process.nextTick(async () => {
                         uniqueSdkTracking: true,
                         filterExistingFlagNames: true,
                         teamsIntegrationChangeRequests: true,
-                        adminNavUI: true,
                         tagTypeColor: true,
                         newStrategyDropdown: true,
                         addEditStrategy: true,

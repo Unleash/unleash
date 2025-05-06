@@ -590,10 +590,7 @@ export class EmailService {
         path: string;
         cid: string;
     } {
-        const topPath = path.resolve(
-            import.meta.dirname,
-            '../../mailtemplates',
-        );
+        const topPath = path.resolve(__dirname, '../../mailtemplates');
         const attachment = path.join(topPath, templateName, filename);
         if (existsSync(attachment)) {
             return {

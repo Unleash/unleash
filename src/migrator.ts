@@ -49,7 +49,7 @@ export async function resetDb({ db }: IUnleashConfig): Promise<void> {
         };
 
         const dbm = getInstance(true, {
-            cwd: import.meta.dirname,
+            cwd: __dirname,
             config: { custom },
             env: 'custom',
         });

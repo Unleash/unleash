@@ -1,6 +1,6 @@
 import { Alert, Grid, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { InstanceState } from 'interfaces/instance';
+import { InstancePlan, InstanceState } from 'interfaces/instance';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { trialHasExpired, isTrialInstance } from 'utils/instanceTrial';
 import { GridRow } from 'component/common/GridRow/GridRow';
@@ -65,8 +65,12 @@ export const BillingPlan = () => {
     } = useUiConfig();
     const { instanceStatus } = useInstanceStatus();
 
+    const isPro =
+        instanceStatus?.plan && instanceStatus?.plan === InstancePlan.PRO;
     const isPAYG = billing === 'pay-as-you-go';
     const isEnterpriseConsumption = billing === 'enterprise-consumption';
+
+    console.log('ISPRO', isPro);
 
     if (!instanceStatus)
         return (
@@ -131,7 +135,7 @@ export const BillingPlan = () => {
                         </GridCol>
                         <GridCol>
                             <ConditionallyRender
-                                condition={!isPAYG && !isEnterpriseConsumption}
+                                condition={Boolean(isPro)}
                                 show={
                                     <StyledPriceSpan>
                                         ${baseProPrice.toFixed(2)}

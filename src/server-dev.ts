@@ -36,8 +36,6 @@ process.nextTick(async () => {
                 experimental: {
                     // externalResolver: unleash,
                     flags: {
-                        embedProxy: true,
-                        embedProxyFrontend: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
                         outdatedSdksBanner: true,

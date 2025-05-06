@@ -160,6 +160,8 @@ import {
 } from '../features/context/createContextService';
 import { UniqueConnectionService } from '../features/unique-connection/unique-connection-service';
 import { createFakeFeatureLinkService } from '../features/feature-links/createFeatureLinkService';
+import { FeatureLinksReadModel } from '../features/feature-links/feature-links-read-model';
+import { FakeFeatureLinksReadModel } from '../features/feature-links/fake-feature-links-read-model';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -284,6 +286,10 @@ export const createServices = (
         ? new FeatureCollaboratorsReadModel(db)
         : new FakeFeatureCollaboratorsReadModel();
 
+    const featureLinkReadModel = db
+        ? new FeatureLinksReadModel(db)
+        : new FakeFeatureLinksReadModel();
+
     const featureToggleService = new FeatureToggleService(
         stores,
         config,
@@ -296,6 +302,7 @@ export const createServices = (
         dependentFeaturesService,
         featureLifecycleReadModel,
         featureCollaboratorsReadModel,
+        featureLinkReadModel,
     );
     const transactionalEnvironmentService = db
         ? withTransactional(createEnvironmentService(config), db)

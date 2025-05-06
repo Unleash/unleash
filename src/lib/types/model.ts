@@ -14,6 +14,7 @@ import type { IntegrationEventsService } from '../features/integration-events/in
 import type { IFlagResolver } from './experimental';
 import type { Collaborator } from '../features/feature-toggle/types/feature-collaborators-read-model-type';
 import type { EventEmitter } from 'events';
+import type { IFeatureLink } from '../features/feature-links/feature-links-read-model-type';
 
 export type Operator = (typeof ALL_OPERATORS)[number];
 
@@ -123,6 +124,7 @@ export interface FeatureToggleView extends FeatureToggleWithEnvironment {
     children: string[];
     lifecycle: IFeatureLifecycleStage | undefined;
     collaborators?: { users: Collaborator[] };
+    links: IFeatureLink[];
 }
 
 export interface IEnvironmentDetail extends IEnvironmentBase {

@@ -3,7 +3,7 @@ exports.up = (db, callback) => {
     db.runSql(
         `
         CREATE TABLE IF NOT EXISTS feature_link(
-            id TEXT NOT NULL,
+            id TEXT NOT NULL PRIMARY KEY,
             feature_name VARCHAR(255) NOT NULL,
             url TEXT NOT NULL,
             title TEXT,

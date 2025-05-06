@@ -91,7 +91,7 @@ export default class FeatureLinkService {
             new FeatureLinkUpdatedEvent({
                 featureName: updatedLink.featureName,
                 project: projectId,
-                data: { url: link.url, title: link.title },
+                data: { url: normalizedUrl, title: link.title },
                 preData: { url: preData.url, title: preData.title },
                 auditUser,
             }),

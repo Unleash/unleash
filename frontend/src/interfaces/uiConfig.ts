@@ -19,7 +19,7 @@ export interface IUiConfig {
     name: string;
     slogan: string;
     environment?: string;
-    billing?: 'subscription' | 'pay-as-you-go';
+    billing?: 'subscription' | 'pay-as-you-go' | 'enterprise-consumption';
     unleashUrl?: string;
     version: string;
     versionInfo?: IVersionInfo;

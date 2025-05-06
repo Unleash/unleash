@@ -1,5 +1,5 @@
 import type { Logger, LogProvider } from '../logger.js';
-import type { ITag } from '../types/index.js';
+import type { ITag } from '../tags/index.js';
 import type EventEmitter from 'events';
 import metricsHelper from '../util/metrics-helper.js';
 import { DB_TIME } from '../metric-events.js';

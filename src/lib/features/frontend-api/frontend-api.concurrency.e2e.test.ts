@@ -9,6 +9,8 @@ import getLogger from '../../../test/fixtures/no-logger.js';
 import { randomId } from '../../util/index.js';
 import { ApiTokenType } from '../../types/models/api-token.js';
 
+import { jest } from '@jest/globals';
+
 let app: IUnleashNoSupertest;
 let db: ITestDb;
 let appErrorLogs: string[] = [];

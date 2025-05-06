@@ -17,13 +17,12 @@ import {
 import type { IGroupStore } from '../types/stores/group-store.js';
 import type { Logger } from '../logger.js';
 import BadDataError from '../error/bad-data-error.js';
+import { GROUP_CREATED, type IBaseEvent } from '../events/index.js';
 import {
-    GROUP_CREATED,
     GroupUserAdded,
     GroupUserRemoved,
     ScimGroupsDeleted,
-    type IBaseEvent,
-} from '../types/events.js';
+} from '../types/index.js';
 import NameExistsError from '../error/name-exists-error.js';
 import type { IAccountStore } from '../types/stores/account-store.js';
 import type { IUser } from '../types/user.js';

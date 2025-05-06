@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
       ALTER TABLE change_requests ADD COLUMN min_approvals INTEGER DEFAULT 1;
@@ -7,7 +7,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
       ALTER TABLE change_requests DROP COLUMN min_approvals;

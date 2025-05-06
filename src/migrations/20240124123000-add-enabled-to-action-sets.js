@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
         ALTER TABLE action_sets ADD COLUMN enabled BOOLEAN DEFAULT true;
@@ -7,7 +7,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
         ALTER TABLE action_sets DROP COLUMN enabled;

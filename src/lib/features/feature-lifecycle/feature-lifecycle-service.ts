@@ -3,6 +3,8 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_REVIVED,
+} from '../../events/index.js';
+import {
     FeatureCompletedEvent,
     FeatureUncompletedEvent,
     type IAuditUser,

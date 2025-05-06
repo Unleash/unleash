@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
     DELETE FROM events WHERE type = 'application-created';
@@ -9,6 +10,6 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     cb();
 };

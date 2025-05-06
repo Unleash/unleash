@@ -9,9 +9,11 @@ import {
 
 import SimpleAddon from '../../../lib/services/addon-service-test-simple-addon.js';
 import TagTypeService from '../../../lib/features/tag-type/tag-type-service.js';
-import { FEATURE_CREATED } from '../../../lib/types/events.js';
+import { FEATURE_CREATED } from '../../../lib/events/index.js';
 import { IntegrationEventsService } from '../../../lib/services/index.js';
 import { createEventsService } from '../../../lib/features/index.js';
+
+import { jest } from '@jest/globals';
 
 const addonProvider = { simple: new SimpleAddon() };
 

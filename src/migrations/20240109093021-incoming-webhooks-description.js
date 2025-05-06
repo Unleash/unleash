@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
         ALTER TABLE incoming_webhooks ADD COLUMN IF NOT EXISTS description TEXT;
@@ -7,6 +7,6 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, callback) {
+exports.down = function (db, callback) {
     callback();
 };

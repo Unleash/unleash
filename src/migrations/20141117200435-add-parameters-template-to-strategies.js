@@ -1,12 +1,13 @@
+'use strict';
 
-export async function up(db, callback) {
+exports.up = function (db, callback) {
     db.runSql(
         'ALTER TABLE strategies ADD "parameters_template" json;',
         callback,
     );
 };
 
-export async function down(db, callback) {
+exports.down = function (db, callback) {
     db.runSql(
         'ALTER TABLE strategies DROP COLUMN "parameters_template";',
         callback,

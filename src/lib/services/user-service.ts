@@ -28,7 +28,7 @@ import {
     UserCreatedEvent,
     UserDeletedEvent,
     UserUpdatedEvent,
-} from '../types/events.js';
+} from '../types/index.js';
 import type { IUserStore } from '../types/index.js';
 import { RoleName } from '../types/model.js';
 import type SettingService from './setting-service.js';

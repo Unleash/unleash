@@ -4,10 +4,10 @@ import metricsHelper from '../../util/metrics-helper.js';
 import { DB_TIME } from '../../metric-events.js';
 import type { Logger, LogProvider } from '../../logger.js';
 import type {
+    FeatureSearchEnvironment,
     IFeatureSearchOverview,
     IFeatureSearchStore,
     IFlagResolver,
-    ITag,
 } from '../../types/index.js';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
 import type { Db } from '../../db/db.js';
@@ -20,9 +20,9 @@ import {
     applySearchFilters,
     parseSearchOperatorValue,
 } from './search-utils.js';
-import type { FeatureSearchEnvironmentSchema } from '../../openapi/spec/feature-search-environment-schema.js';
 import { generateImageUrl } from '../../util/index.js';
 import Raw = Knex.Raw;
+import type { ITag } from '../../tags/index.js';
 
 const sortEnvironments = (overview: IFeatureSearchOverview[]) => {
     return overview.map((data: IFeatureSearchOverview) => ({
@@ -63,7 +63,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
             });
     }
 
-    private static getEnvironment(r: any): FeatureSearchEnvironmentSchema {
+    private static getEnvironment(r: any): FeatureSearchEnvironment {
         return {
             name: r.environment,
             enabled: r.enabled,

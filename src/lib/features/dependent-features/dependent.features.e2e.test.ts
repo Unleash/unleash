@@ -12,9 +12,9 @@ import {
     FEATURE_DEPENDENCIES_REMOVED,
     FEATURE_DEPENDENCY_ADDED,
     FEATURE_DEPENDENCY_REMOVED,
-    type IEventStore,
-} from '../../types/index.js';
+} from '../../events/index.js';
 import { DEFAULT_ENV } from '../../util/index.js';
+import type { IEventStore } from '../../server-impl.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

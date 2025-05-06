@@ -3,22 +3,27 @@ import type { Logger } from '../logger.js';
 import {
     FEATURE_TAGGED,
     FEATURE_UNTAGGED,
-    FeatureTaggedEvent,
     TAG_CREATED,
-} from '../types/events.js';
-import type { IUnleashConfig } from '../types/option.js';
-import type { IFeatureToggleStore, IUnleashStores } from '../types/stores.js';
+} from '../events/index.js';
+import type {
+    ITagStore,
+    IFeatureToggleStore,
+    IUnleashStores,
+} from '../types/stores.js';
 import { tagSchema } from './tag-schema.js';
 import type {
     IFeatureTag,
     IFeatureTagInsert,
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store.js';
-import type { ITagStore } from '../types/stores/tag-store.js';
-import type { ITag } from '../types/model.js';
+import {
+    type IAuditUser,
+    type IUnleashConfig,
+    FeatureTaggedEvent,
+} from '../types/index.js';
 import { BadDataError, FOREIGN_KEY_VIOLATION } from '../../lib/error/index.js';
 import type EventService from '../features/events/event-service.js';
-import type { IAuditUser } from '../types/index.js';
+import type { ITag } from '../tags/index.js';
 
 class FeatureTagService {
     private tagStore: ITagStore;

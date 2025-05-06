@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
         ALTER TABLE project_settings
@@ -11,7 +12,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
         ALTER TABLE project_settings DROP COLUMN IF EXISTS "feature_naming_pattern";

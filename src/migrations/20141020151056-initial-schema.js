@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, callback) {
+exports.up = function (db, callback) {
     db.runSql(
         `
 CREATE TABLE strategies (
@@ -28,7 +29,7 @@ CREATE TABLE events (
     );
 };
 
-export async function down(db, callback) {
+exports.down = function (db, callback) {
     db.runSql(
         `
 DROP TABLE events;

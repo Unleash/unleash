@@ -5,6 +5,7 @@ import { log } from 'db-migrate-shared';
 import postgresPkg from 'pg';
 const { Client } = postgresPkg;
 import type { IDBOption } from '../../lib/types/index.js';
+import { jest } from '@jest/globals';
 
 log.setLogLevel('error');
 

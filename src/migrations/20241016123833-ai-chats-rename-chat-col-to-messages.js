@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
         ALTER TABLE ai_chats RENAME COLUMN chat TO messages;
@@ -7,7 +7,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
         ALTER TABLE ai_chats RENAME COLUMN messages TO chat;

@@ -5,7 +5,7 @@ import {
     FEATURE_CREATED,
     FEATURE_ENVIRONMENT_DISABLED,
     type IEvent,
-} from '../types/events.js';
+} from '../events/index.js';
 
 import TeamsAddon from './teams.js';
 
@@ -18,6 +18,8 @@ import {
     SYSTEM_USER_ID,
 } from '../types/index.js';
 import type { IntegrationEventsService } from '../services/index.js';
+
+import { jest } from '@jest/globals';
 
 let fetchRetryCalls: any[];
 const registerEventMock = jest.fn();

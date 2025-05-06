@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
 	db.runSql(
 		`
         UPDATE role_permission SET environment = null where environment = '';
@@ -9,7 +9,7 @@ export async function up(db, cb) {
 	);
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
 	db.runSql(
 		`
         ALTER TABLE role_permission

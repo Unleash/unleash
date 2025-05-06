@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, callback) {
+exports.up = function (db, callback) {
     db.runSql(
         `
             ALTER TABLE change_request_settings ADD COLUMN required_approvals integer default 1;
@@ -12,7 +13,7 @@ export async function up(db, callback) {
     );
 };
 
-export async function down(db, callback) {
+exports.down = function (db, callback) {
     db.runSql(
         `
             ALTER TABLE change_request_settings DROP COLUMN IF EXISTS required_approvals;

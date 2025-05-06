@@ -1,4 +1,5 @@
 import timer from './timer.js';
+import { jest } from '@jest/globals';
 
 function timeout(fn, ms): Promise<void> {
     return new Promise((resolve) =>

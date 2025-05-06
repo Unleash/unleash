@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     // TODO: foreign key on env.
     db.runSql(
         `
@@ -18,7 +18,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
         DROP TABLE client_metrics_env;

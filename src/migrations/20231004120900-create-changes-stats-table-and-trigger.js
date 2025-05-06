@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function(db, cb) {
   db.runSql(`
     CREATE TABLE stat_environment_updates(
         day DATE NOT NULL,
@@ -23,7 +23,7 @@ export async function up(db, cb) {
   `, cb);
 };
 
-export async function down(db, cb) {
+exports.down = function(db, cb) {
   db.runSql(`
     DROP TRIGGER IF EXISTS unleash_update_stat_environment_changes ON events;
     DROP FUNCTION IF EXISTS unleash_update_stat_environment_changes_counter;

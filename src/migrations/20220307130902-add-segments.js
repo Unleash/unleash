@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
         create table segments
@@ -48,7 +49,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
         delete from role_permission where permission_id in (

@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
             UPDATE environments set sort_order = 100 where name = 'development' AND sort_order = 9999;
@@ -9,6 +10,6 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     cb();
 };

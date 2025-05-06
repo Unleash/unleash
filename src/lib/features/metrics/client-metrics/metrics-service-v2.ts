@@ -1,9 +1,5 @@
 import type { Logger } from '../../../logger.js';
-import {
-    CLIENT_METRICS_ADDED,
-    type IFlagResolver,
-    type IUnleashConfig,
-} from '../../../types/index.js';
+import type { IFlagResolver, IUnleashConfig } from '../../../types/index.js';
 import type { ISdkHeartbeat, IUnleashStores } from '../../../types/index.js';
 import type { ToggleMetricsSummary } from '../../../types/models/metrics.js';
 import type {
@@ -12,7 +8,11 @@ import type {
 } from './client-metrics-store-v2-type.js';
 import { clientMetricsSchema } from '../shared/schema.js';
 import { compareAsc, secondsToMilliseconds } from 'date-fns';
-import { CLIENT_METRICS, CLIENT_REGISTER } from '../../../types/events.js';
+import {
+    CLIENT_METRICS,
+    CLIENT_METRICS_ADDED,
+    CLIENT_REGISTER,
+} from '../../../events/index.js';
 import ApiUser, { type IApiUser } from '../../../types/api-user.js';
 import { ALL } from '../../../types/models/api-token.js';
 import type { IUser } from '../../../types/user.js';

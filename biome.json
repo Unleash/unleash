@@ -20,6 +20,10 @@
               "ts": {
                 "module": "js",
                 "component": "jsx"
+              },
+              "tsx": {
+                "module": "js",
+                "component": "jsx"
               }
             }
           }

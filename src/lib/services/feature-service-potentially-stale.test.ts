@@ -1,9 +1,7 @@
-import {
-    FEATURE_POTENTIALLY_STALE_ON,
-    type IBaseEvent,
-    type IFeatureCollaboratorsReadModel,
-    type IUnleashConfig,
-    type IUnleashStores,
+import type {
+    IFeatureCollaboratorsReadModel,
+    IUnleashConfig,
+    IUnleashStores,
 } from '../types/index.js';
 import { createTestConfig } from '../../test/config/test-config.js';
 import FeatureToggleService from '../features/feature-toggle/feature-toggle-service.js';
@@ -16,6 +14,10 @@ import EventService from '../features/events/event-service.js';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store.js';
 import type { DependentFeaturesService } from '../features/dependent-features/dependent-features-service.js';
 import type { IFeatureLifecycleReadModel } from '../features/feature-lifecycle/feature-lifecycle-read-model-type.js';
+import {
+    FEATURE_POTENTIALLY_STALE_ON,
+    type IBaseEvent,
+} from '../events/index.js';
 
 test('Should only store events for potentially stale on', async () => {
     expect.assertions(2);

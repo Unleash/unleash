@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
     ALTER TABLE client_applications ADD COLUMN created_by TEXT;
@@ -8,11 +9,10 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql('ALTER TABLE client_applications DROP COLUMN created_by;', cb);
 };
 
-export const _meta = {
+exports._meta = {
     version: 1,
 };
-

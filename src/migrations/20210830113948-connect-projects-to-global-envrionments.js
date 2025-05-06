@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `SELECT id
                                    FROM projects`,
@@ -14,6 +14,6 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql('DELETE FROM project_environments', cb);
 };

@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
     ALTER TABLE strategies ADD COLUMN display_name text;
@@ -13,6 +14,6 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql('ALTER TABLE strategies DROP COLUMN display_name;', cb);
 };

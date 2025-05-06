@@ -1,9 +1,11 @@
-import { EventEmitter } from 'stream';
 import {
     responseTimeMetrics,
     storeRequestedRoute,
 } from './response-time-metrics.js';
 import { REQUEST_TIME } from '../metric-events.js';
+import { jest } from '@jest/globals';
+import type { IFlagResolver } from '../server-impl.js';
+import EventEmitter from 'events';
 
 const fixedResponseTime = 100;
 // mock response-time library
@@ -32,7 +34,7 @@ const flagResolver = {
     getAll: jest.fn(),
     getVariant: jest.fn(),
     getStaticContext: jest.fn(),
-};
+} as IFlagResolver;
 
 // Make sure it's always cleaned up
 let res: any;
@@ -45,7 +47,7 @@ beforeEach(() => {
 
 describe('responseTimeMetrics new behavior', () => {
     const instanceStatsService = {
-        getAppCountSnapshot: jest.fn(),
+        getAppCountSnapshot: jest.fn() as () => number | undefined,
     };
     const eventBus = new EventEmitter();
 
@@ -141,7 +143,7 @@ describe('responseTimeMetrics new behavior', () => {
         // @ts-expect-error req and res doesn't have all properties
         storeRequestedRoute(req, res, () => {});
         // @ts-expect-error req and res doesn't have all properties
-        middleware(reqWithoutRoute, res);
+        middleware(reqWithoutRoute, res, () => {});
 
         await isDefined(timeInfo);
         expect(timeInfo).toMatchObject({
@@ -221,7 +223,7 @@ describe('responseTimeMetrics new behavior', () => {
             // @ts-expect-error req and res doesn't have all properties
             storeRequestedRoute(req, res, () => {});
             // @ts-expect-error req and res doesn't have all properties
-            middleware(reqWithoutRoute, res);
+            middleware(reqWithoutRoute, res, () => {});
 
             await isDefined(timeInfo);
             expect(timeInfo).toMatchObject({

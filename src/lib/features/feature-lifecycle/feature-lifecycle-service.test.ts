@@ -3,9 +3,11 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_REVIVED,
-    type IEnvironment,
-    type IUnleashConfig,
-    type StageName,
+} from '../../events/index.js';
+import type {
+    IEnvironment,
+    IUnleashConfig,
+    StageName,
 } from '../../types/index.js';
 import { createFakeFeatureLifecycleService } from './createFeatureLifecycle.js';
 import EventEmitter from 'events';

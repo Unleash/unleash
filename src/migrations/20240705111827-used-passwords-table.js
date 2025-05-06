@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function(db, cb) {
   db.runSql(`
     CREATE TABLE used_passwords(user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
                                 password_hash TEXT NOT NULL,
@@ -10,6 +10,6 @@ export async function up(db, cb) {
 `, cb)
 };
 
-export async function down(db, cb) {
+exports.down = function(db, cb) {
   db.runSql(`DROP TABLE used_passwords;`, cb);
 };

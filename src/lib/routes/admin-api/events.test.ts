@@ -10,7 +10,7 @@ import {
     ProjectAccessAddedEvent,
     ProjectUserAddedEvent,
     ProjectUserRemovedEvent,
-} from '../../types/events.js';
+} from '../../types/index.js';
 import { TEST_AUDIT_USER } from '../../types/index.js';
 
 const TEST_USER_ID = -9999;

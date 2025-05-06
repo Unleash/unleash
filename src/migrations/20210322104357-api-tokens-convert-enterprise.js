@@ -1,5 +1,6 @@
+'use strict';
 
-import async from 'async';
+const async = require('async');
 
 const settingsId = 'unleash.enterprise.api.keys';
 
@@ -12,7 +13,7 @@ const toApiToken = (legacyToken) => ({
         : 'client',
 });
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `SELECT * from settings where name = '${settingsId}';`,
         (err, results) => {
@@ -35,6 +36,6 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     cb();
 };

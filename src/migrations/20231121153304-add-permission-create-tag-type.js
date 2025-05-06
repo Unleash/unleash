@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
         INSERT INTO permissions (permission, display_name, type) VALUES ('CREATE_TAG_TYPE', 'Create tag types', 'root');
@@ -8,7 +8,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
         DELETE FROM permissions WHERE permission = 'CREATE_TAG_TYPE';

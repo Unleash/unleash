@@ -10,7 +10,7 @@ import UnknownStrategy from './unknown-strategy.js';
 import ApplicationHostnameStrategy from './application-hostname-strategy.js';
 
 export { Strategy } from './strategy.js';
-export { StrategyTransportInterface } from './strategy.js';
+export type { StrategyTransportInterface } from './strategy.js';
 
 export const defaultStrategies: Array<Strategy> = [
     new DefaultStrategy(),

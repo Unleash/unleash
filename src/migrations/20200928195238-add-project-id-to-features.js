@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     return db.addColumn(
         'features',
         'project',
@@ -11,6 +12,6 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     return db.removeColumn('features', 'project', cb);
 };

@@ -1,9 +1,10 @@
 /* eslint camelcase: "off" */
 
+'use strict';
 
-import async from 'async';
+const async = require('async');
 
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     async.series(
         [
             db.createTable.bind(db, 'projects', {
@@ -28,6 +29,6 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     return db.dropTable('projects', cb);
 };

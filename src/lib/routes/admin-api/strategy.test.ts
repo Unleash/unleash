@@ -4,6 +4,7 @@ import createStores from '../../../test/fixtures/store.js';
 import permissions from '../../../test/fixtures/permissions.js';
 import getApp from '../../app.js';
 import { createServices } from '../../services/index.js';
+import { jest } from '@jest/globals';
 
 async function getSetup() {
     const randomBase = `/random${Math.round(Math.random() * 1000)}`;

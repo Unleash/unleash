@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, callback) {
+exports.up = function (db, callback) {
     db.runSql(
         `
         -- delete deprecated strategies still present in v4
@@ -20,7 +21,7 @@ export async function up(db, callback) {
     );
 };
 
-export async function down(db, callback) {
+exports.down = function (db, callback) {
     db.runSql(
         `
 

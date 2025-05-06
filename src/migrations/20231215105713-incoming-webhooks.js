@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
         CREATE TABLE IF NOT EXISTS incoming_webhooks
@@ -26,7 +26,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
         DROP INDEX IF EXISTS incoming_webhooks_enabled_idx;

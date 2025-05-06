@@ -8,7 +8,6 @@ import type {
     IFeatureToggleQuery,
     IFlagResolver,
     IStrategyConfig,
-    ITag,
     IUnleashConfig,
     PartialDeep,
 } from '../../types/index.js';
@@ -23,6 +22,7 @@ import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
 import type { Db } from '../../db/db.js';
 import Raw = Knex.Raw;
 import { sortStrategies } from '../../util/sortStrategies.js';
+import type { ITag } from '../../tags/index.js';
 
 export interface IGetAllFeatures {
     featureQuery?: IFeatureToggleQuery;

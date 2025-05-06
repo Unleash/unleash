@@ -21,6 +21,8 @@ import {
 } from '../../types/index.js';
 import type { FrontendApiService } from './frontend-api-service.js';
 
+import { jest } from '@jest/globals';
+
 let app: IUnleashTest;
 let db: ITestDb;
 let frontendApiService: FrontendApiService;

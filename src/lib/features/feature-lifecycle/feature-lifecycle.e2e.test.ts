@@ -11,9 +11,11 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_REVIVED,
-    type IEventStore,
-    type IFeatureLifecycleStore,
-    type StageName,
+} from '../../events/index.js';
+import type {
+    IEventStore,
+    IFeatureLifecycleStore,
+    StageName,
 } from '../../types/index.js';
 import type EventEmitter from 'events';
 import type { FeatureLifecycleCompletedSchema } from '../../openapi/index.js';

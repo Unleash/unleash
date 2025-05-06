@@ -1,5 +1,6 @@
+'use strict';
 
-export async function up(db, callback) {
+exports.up = function (db, callback) {
     db.runSql(
         `
           CREATE INDEX idx_events_project_feature_created
@@ -9,7 +10,7 @@ export async function up(db, callback) {
     );
 };
 
-export async function down(db, callback) {
+exports.down = function (db, callback) {
     db.runSql(
         `
            DROP INDEX idx_events_project_feature_created;

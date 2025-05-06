@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `CREATE TABLE IF NOT EXISTS project_stats (
              project VARCHAR(255) NOT NULL,
@@ -18,7 +18,7 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
         DROP TABLE project_stats;

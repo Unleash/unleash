@@ -1,4 +1,4 @@
-export async function up(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
             CREATE TABLE IF NOT EXISTS reset_tokens
@@ -17,10 +17,10 @@ export async function up(db, cb) {
     );
 };
 
-export async function down(db, cb) {
+exports.down = function (db, cb) {
     db.runSql('DROP TABLE reset_tokens;', cb);
 };
 
-export const _meta = {
+exports._meta = {
     version: 1,
 };

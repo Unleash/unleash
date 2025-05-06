@@ -89,7 +89,6 @@ export type UiFlags = {
     showUserDeviceCount?: boolean;
     consumptionModel?: boolean;
     edgeObservability?: boolean;
-    adminNavUI?: boolean;
     tagTypeColor?: boolean;
     addEditStrategy?: boolean;
     newStrategyDropdown?: boolean;

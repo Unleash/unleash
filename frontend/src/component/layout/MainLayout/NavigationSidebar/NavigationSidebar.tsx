@@ -30,7 +30,6 @@ import { ReactComponent as LogoOnlyWhite } from 'assets/img/logo.svg';
 import { ReactComponent as LogoOnly } from 'assets/img/logoDark.svg';
 import { Link } from 'react-router-dom';
 import { useFlag } from '@unleash/proxy-client-react';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 
 export const MobileNavigationSidebar: FC<{
@@ -38,7 +37,6 @@ export const MobileNavigationSidebar: FC<{
     NewInUnleash?: typeof NewInUnleash;
 }> = ({ onClick, NewInUnleash }) => {
     const { routes } = useRoutes();
-    const newAdminUIEnabled = useUiFlag('adminNavUI');
 
     return (
         <>
@@ -49,15 +47,7 @@ export const MobileNavigationSidebar: FC<{
                 mode='full'
                 onClick={onClick}
             />
-            {newAdminUIEnabled ? (
-                <AdminSettingsLink mode={'full'} onClick={onClick} />
-            ) : (
-                <SecondaryNavigationList
-                    routes={routes.adminRoutes}
-                    mode='full'
-                    onClick={onClick}
-                />
-            )}
+            <AdminSettingsLink mode={'full'} onClick={onClick} />
             <OtherLinksList />
         </>
     );
@@ -248,19 +238,17 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
                     </>
                 }
                 elseShow={
-                    <>
-                        <AdminSettingsNavigation
-                            onClick={setActiveItem}
-                            mode={mode}
-                            onSetFullMode={() => setMode('full')}
-                            activeItem={activeItem}
-                            onExpandChange={(expand) => {
-                                changeExpanded('admin', expand);
-                            }}
-                            expanded={expanded.includes('admin')}
-                            routes={routes.adminRoutes}
-                        />
-                    </>
+                    <AdminSettingsNavigation
+                        onClick={setActiveItem}
+                        mode={mode}
+                        onSetFullMode={() => setMode('full')}
+                        activeItem={activeItem}
+                        onExpandChange={(expand) => {
+                            changeExpanded('admin', expand);
+                        }}
+                        expanded={expanded.includes('admin')}
+                        routes={routes.adminRoutes}
+                    />
                 }
             />
         </StretchContainer>

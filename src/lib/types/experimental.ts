@@ -60,7 +60,6 @@ export type IFlagKey =
     | 'consumptionModel'
     | 'teamsIntegrationChangeRequests'
     | 'edgeObservability'
-    | 'adminNavUI'
     | 'tagTypeColor'
     | 'addEditStrategy'
     | 'newStrategyDropdown'
@@ -288,10 +287,6 @@ const flags: IFlags = {
     ),
     edgeObservability: parseEnvVarBoolean(
         process.env.EXPERIMENTAL_EDGE_OBSERVABILITY,
-        false,
-    ),
-    adminNavUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ADMIN_NAV_UI,
         false,
     ),
     tagTypeColor: parseEnvVarBoolean(

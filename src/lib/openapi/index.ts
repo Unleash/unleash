@@ -3,7 +3,7 @@ import type { OpenAPIV3 } from 'openapi-types';
 import type { IServerOption } from '../types/index.js';
 import { mapValues, omitKeys } from '../util/index.js';
 import { openApiTags } from './util/index.js';
-import { URL } from 'url';
+import { URL } from 'node:url';
 import apiVersion from '../util/version.js';
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".

@@ -6,9 +6,12 @@ import postgresPkg from 'pg';
 const { Client } = postgresPkg;
 import type { IDBOption } from '../../lib/types/index.js';
 import { jest } from '@jest/globals';
+import { fileURLToPath } from 'node:url';
+import path from 'path';
 
 log.setLogLevel('error');
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 async function initSchema(db: IDBOption): Promise<void> {
     const client = new Client(db);
     await client.connect();
@@ -38,7 +41,7 @@ test('Dedupe permissions migration correctly dedupes permissions', async () => {
     // disable Intellij/WebStorm from setting verbose CLI argument to db-migrator
     process.argv = process.argv.filter((it) => !it.includes('--verbose'));
     const dbm = getInstance(true, {
-        cwd: `${import.meta.dirname}/../../`, // relative to src/test/e2e
+        cwd: `${__dirname}/../../`, // relative to src/test/e2e
         config: { custom },
         env: 'custom',
     });

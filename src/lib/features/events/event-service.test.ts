@@ -1,4 +1,5 @@
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
+const { getLogger } = log4js;
 import type {
     IEventStore,
     IFeatureTagStore,

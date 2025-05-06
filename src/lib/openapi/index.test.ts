@@ -5,10 +5,13 @@ import {
 } from './index.js';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'node:url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 test('all schema files should be added to the schemas object', () => {
     const schemaFileNames = fs
-        .readdirSync(path.join(import.meta.dirname, 'spec'))
+        .readdirSync(path.join(__dirname, 'spec'))
         .filter((fileName) => fileName.endsWith('-schema.ts'));
 
     const expectedSchemaNames = schemaFileNames.map((fileName) => {

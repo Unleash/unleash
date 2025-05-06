@@ -4,7 +4,7 @@ import {
 } from '../../../helpers/test-helper.js';
 import dbInit, { type ITestDb } from '../../../helpers/database-init.js';
 import getLogger from '../../../../fixtures/no-logger.js';
-import * as jsonpatch from 'fast-json-patch';
+import * as jsonpatch from 'fast-json-patch/index.mjs';
 import { type IVariant, WeightType } from '../../../../../lib/types/model.js';
 
 let app: IUnleashTest;

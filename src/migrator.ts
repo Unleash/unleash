@@ -5,9 +5,11 @@ const { getInstance } = dbMigrate;
 import type { IUnleashConfig } from './lib/types/option.js';
 import { secondsToMilliseconds } from 'date-fns';
 import path from 'path';
+import { fileURLToPath } from 'node:url';
 
 log.setLogLevel('error');
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 async function noDatabaseUrl<T>(fn: () => Promise<T>): Promise<T> {
     // unset DATABASE_URL so it doesn't take presedence over the provided db config
     const dbUrlEnv = process.env.DATABASE_URL;
@@ -29,7 +31,7 @@ export async function migrateDb(
         // disable Intellij/WebStorm from setting verbose CLI argument to db-migrator
         process.argv = process.argv.filter((it) => !it.includes('--verbose'));
         const dbm = getInstance(true, {
-            cwd: path.resolve(process.cwd(), './src/'),
+            cwd: __dirname,
             config: { custom },
             env: 'custom',
         });

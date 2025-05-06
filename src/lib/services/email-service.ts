@@ -9,6 +9,10 @@ import {
     type ProductivityReportMetrics,
     productivityReportViewModel,
 } from '../features/productivity-report/productivity-report-view-model.js';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export interface IAuthOptions {
     user: string;
@@ -565,10 +569,7 @@ export class EmailService {
         templateName: string,
         format: TemplateFormat,
     ): string {
-        const topPath = path.resolve(
-            import.meta.dirname,
-            '../../mailtemplates',
-        );
+        const topPath = path.resolve(__dirname, '../../mailtemplates');
         const template = path.join(
             topPath,
             templateName,

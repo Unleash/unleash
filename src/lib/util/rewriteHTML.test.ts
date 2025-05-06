@@ -1,11 +1,11 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import { rewriteHTML } from './rewriteHTML.js';
-
+import { fileURLToPath } from 'node:url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const input = fs
-    .readFileSync(
-        path.join(import.meta.dirname, '../../test/examples', 'index.html'),
-    )
+    .readFileSync(path.join(__dirname, '../../test/examples', 'index.html'))
     .toString();
 
 test('rewriteHTML substitutes meta tag with existing rewrite value', () => {

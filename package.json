@@ -55,7 +55,7 @@
     "test": "NODE_ENV=test PORT=4243 node --experimental-vm-modules node_modules/.bin/jest",
     "test:unit": "NODE_ENV=test PORT=4243 node --experimental-vm-modules node_modules/.bin/jest --testPathIgnorePatterns=src/test/e2e",
     "test:docker": "./scripts/docker-postgres.sh",
-    "test:report": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test PORT=4243 node --experimental-vm-modules node_modules/.bin/jest --reporters=\"default\" --reporters=\"jest-junit\"",
+    "test:report": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test PORT=4243 node node_modules/.bin/jest --reporters=\"default\" --reporters=\"jest-junit\"",
     "test:docker:cleanup": "docker rm -f unleash-postgres",
     "test:watch": "yarn test --watch",
     "test:coverage": "NODE_ENV=test PORT=4243 node --experimental-vm-modules node_modules/.bin/jest --coverage --testLocationInResults --outputFile=\"coverage/report.json\" --forceExit",
@@ -90,8 +90,7 @@
           "jsc": {
             "target": "ESNext",
             "parser": {
-              "syntax": "typescript",
-              "importMeta": true
+              "syntax": "typescript"
             }
           },
           "isModule": true
@@ -198,8 +197,8 @@
     "@babel/core": "7.26.10",
     "@biomejs/biome": "^1.9.4",
     "@cyclonedx/yarn-plugin-cyclonedx": "^2.0.0",
-    "@swc/core": "1.11.8",
-    "@swc/jest": "0.2.37",
+    "@swc/core": "1.11.24",
+    "@swc/jest": "0.2.38",
     "@types/bcryptjs": "2.4.6",
     "@types/cors": "2.8.17",
     "@types/express": "4.17.21",
@@ -213,6 +212,7 @@
     "@types/make-fetch-happen": "10.0.4",
     "@types/memoizee": "0.4.11",
     "@types/mime": "4.0.0",
+    "@types/murmurhash3js": "^3.0.7",
     "@types/mustache": "^4.2.5",
     "@types/node": "20.17.24",
     "@types/nodemailer": "6.4.17",

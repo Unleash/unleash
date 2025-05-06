@@ -18,7 +18,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 export const BillingDetailsEnterpriseConsumption = () => {
-    const PORTAL_URL = `${formatApiPath('api/admin/invoices')}/portal`;
+    const PORTAL_URL = formatApiPath('api/admin/invoices/portal');
 
     return (
         <>

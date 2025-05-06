@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { IConstraint } from 'interfaces/strategy';
 import { cleanConstraint } from 'utils/cleanConstraint';
-import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IUnleashContextDefinition } from 'interfaces/context';
 import type { Operator } from 'constants/operators';
@@ -55,8 +54,6 @@ export const EditableConstraintWrapper = ({
     const [contextDefinition, setContextDefinition] = useState(
         resolveContextDefinition(context, localConstraint.contextName),
     );
-    const { validateConstraint } = useFeatureApi();
-    const [action, setAction] = useState('');
 
     const { input, validator, setError, error } = useConstraintInput({
         contextDefinition,
@@ -190,7 +187,6 @@ export const EditableConstraintWrapper = ({
             setLocalConstraint={setLocalConstraint}
             setContextName={setContextName}
             setOperator={setOperator}
-            action={action}
             toggleInvertedOperator={setInvertedOperator}
             toggleCaseSensitivity={setCaseInsensitive}
             onDelete={onDelete}

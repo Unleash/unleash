@@ -287,7 +287,10 @@ const copyButtonsActiveInOtherEnv = async () => {
 
 const openEnvironments = async (envNames: string[]) => {
     for (const env of envNames) {
-        (await screen.findAllByText(env))[1].click();
+        const environmentHeader = await screen.findByRole('heading', {
+            name: env,
+        });
+        fireEvent.click(environmentHeader);
     }
 };
 
@@ -313,7 +316,6 @@ test('open mode + non-project member can perform basic change request actions', 
             <FeatureView />
         </UnleashUiSetup>,
     );
-
     await openEnvironments(['development', 'production', 'custom']);
 
     await strategiesAreDisplayed('UserIDs', 'Standard');

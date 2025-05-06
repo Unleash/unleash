@@ -87,7 +87,6 @@ export type UiFlags = {
     'enterprise-payg'?: boolean;
     productivityReportEmail?: boolean;
     showUserDeviceCount?: boolean;
-    flagOverviewRedesign?: boolean;
     consumptionModel?: boolean;
     edgeObservability?: boolean;
     adminNavUI?: boolean;

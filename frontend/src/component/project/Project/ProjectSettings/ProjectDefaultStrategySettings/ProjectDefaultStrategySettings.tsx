@@ -10,14 +10,12 @@ import {
     UPDATE_PROJECT,
 } from 'component/providers/AccessProvider/permissions';
 import { Alert, styled } from '@mui/material';
-import LegacyProjectEnvironment from './ProjectEnvironment/LegacyProjectEnvironment';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import EditDefaultStrategy from './ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';
 import useProjectOverview, {
     useProjectOverviewNameOrId,
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { ProjectEnvironment } from './ProjectEnvironment/ProjectEnvironment';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
@@ -30,7 +28,6 @@ export const ProjectDefaultStrategySettings = () => {
     const { project } = useProjectOverview(projectId);
     const navigate = useNavigate();
     usePageTitle(`Project default strategy configuration – ${projectName}`);
-    const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
 
     if (
         !hasAccess(
@@ -64,19 +61,12 @@ export const ProjectDefaultStrategySettings = () => {
                     specific environment. These will be used when you enable a
                     toggle environment that has no strategies defined
                 </StyledAlert>
-                {project?.environments.map((environment) =>
-                    flagOverviewRedesign ? (
-                        <ProjectEnvironment
-                            environment={environment}
-                            key={environment.environment}
-                        />
-                    ) : (
-                        <LegacyProjectEnvironment
-                            environment={environment}
-                            key={environment.environment}
-                        />
-                    ),
-                )}
+                {project?.environments.map((environment) => (
+                    <ProjectEnvironment
+                        environment={environment}
+                        key={environment.environment}
+                    />
+                ))}
             </PageContent>
             <Routes>
                 <Route

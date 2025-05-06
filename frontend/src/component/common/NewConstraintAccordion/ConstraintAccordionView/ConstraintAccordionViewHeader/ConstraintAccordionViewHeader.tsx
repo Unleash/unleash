@@ -1,10 +1,7 @@
-import { ConstraintIcon } from 'component/common/LegacyConstraintAccordion/ConstraintIcon';
 import type { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo';
-import { ConstraintAccordionViewHeaderInfo as LegacyConstraintAccordionViewHeaderInfo } from './LegacyConstraintAccordionViewHeaderInfo';
 import { styled } from '@mui/system';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { ConstraintAccordionViewActions } from '../../ConstraintAccordionViewActions/ConstraintAccordionViewActions';
 import { ConstraintAccordionEditActions } from '../../ConstraintAccordionEditActions/ConstraintAccordionEditActions';
 
@@ -13,9 +10,15 @@ interface IConstraintAccordionViewHeaderProps {
     onDelete?: () => void;
     onEdit?: () => void;
     onUse?: () => void;
+    /**
+     * @deprecated
+     */
     singleValue: boolean;
     expanded: boolean;
     allowExpand: (shouldExpand: boolean) => void;
+    /**
+     * @deprecated
+     */
     compact?: boolean;
     disabled?: boolean;
 }
@@ -43,7 +46,6 @@ export const ConstraintAccordionViewHeader = ({
     disabled,
 }: IConstraintAccordionViewHeaderProps) => {
     const { context } = useUnleashContext();
-    const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
     const { contextName } = constraint;
 
     const disableEdit = !context
@@ -52,25 +54,12 @@ export const ConstraintAccordionViewHeader = ({
 
     return (
         <StyledContainer>
-            {!flagOverviewRedesign ? (
-                <ConstraintIcon compact={compact} disabled={disabled} />
-            ) : null}
-            {flagOverviewRedesign ? (
-                <ConstraintAccordionViewHeaderInfo
-                    constraint={constraint}
-                    allowExpand={allowExpand}
-                    expanded={expanded}
-                    disabled={disabled}
-                />
-            ) : (
-                <LegacyConstraintAccordionViewHeaderInfo
-                    constraint={constraint}
-                    singleValue={singleValue}
-                    allowExpand={allowExpand}
-                    expanded={expanded}
-                    disabled={disabled}
-                />
-            )}
+            <ConstraintAccordionViewHeaderInfo
+                constraint={constraint}
+                allowExpand={allowExpand}
+                expanded={expanded}
+                disabled={disabled}
+            />
             {onUse ? (
                 <ConstraintAccordionViewActions onUse={onUse} />
             ) : (

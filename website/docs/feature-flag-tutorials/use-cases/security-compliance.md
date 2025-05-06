@@ -163,7 +163,7 @@ Now that we covered change requests as a practical tool for both feature managem
 
 Highly regulated industries like finance and healthcare typically require extensive log preservation, maintaining detailed records for up to seven years. For most enterprise environments, a three-year retention period provides a balance between compliance and operational efficiency. Unleash provides this insight for your teams and security reviewers in a transparent, detailed, and searchable way. You can also track changes using the global [event timeline](/reference/events#event-timeline) to review recent events for up to 48 hours per environment. Event logs also capture API calls that come in from your applications and services.
 
-In the Unleash Admin UI, go to **Admin > Event log** to see chronological events with metadata and change diffs. You can use the filter or the search bar to narrow down specific events you may be looking for. And not only are your events visible in Unleash, they’re also reportable. You can export your events as a CSV or JSON file to send to analytics tools.
+In the Unleash Admin UI, go to **Admin settings > Event log** to see chronological events with metadata and change diffs. You can use the filter or the search bar to narrow down specific events you may be looking for. And not only are your events visible in Unleash, they’re also reportable. You can export your events as a CSV or JSON file to send to analytics tools.
 
 ### Integrate SIEM for advanced audit compliance
 

@@ -58,8 +58,90 @@ const addLink = async (
         .expect(expectedCode);
 };
 
-test('should add feature links', async () => {
+const updatedLink = async (
+    featureName: string,
+    linkId: string,
+    link: FeatureLinkSchema,
+    expectedCode = 204,
+) => {
+    return app.request
+        .put(
+            `/api/admin/projects/default/features/${featureName}/link/${linkId}`,
+        )
+        .send(link)
+        .expect(expectedCode);
+};
+
+const deleteLink = async (
+    featureName: string,
+    linkId: string,
+    expectedCode = 204,
+) => {
+    return app.request
+        .delete(
+            `/api/admin/projects/default/features/${featureName}/link/${linkId}`,
+        )
+        .expect(expectedCode);
+};
+
+test('should manage feature links', async () => {
     await app.createFeature('my_feature');
 
     await addLink('my_feature', { url: 'example.com', title: 'feature link' });
+
+    const links = await featureLinkStore.getAll();
+    expect(links).toMatchObject([
+        {
+            url: 'example.com',
+            title: 'feature link',
+            featureName: 'my_feature',
+        },
+    ]);
+
+    await updatedLink('my_feature', links[0].id, {
+        url: 'example_updated.com',
+        title: 'feature link updated',
+    });
+
+    const updatedLinks = await featureLinkStore.getAll();
+    expect(updatedLinks).toMatchObject([
+        {
+            url: 'example_updated.com',
+            title: 'feature link updated',
+            featureName: 'my_feature',
+        },
+    ]);
+
+    await deleteLink('my_feature', links[0].id);
+
+    const deletedLinks = await featureLinkStore.getAll();
+    expect(deletedLinks).toMatchObject([]);
+
+    const [event1, event2, event3] = await eventStore.getEvents();
+    expect([event1, event2, event3]).toMatchObject([
+        {
+            type: 'feature-link-removed',
+            data: null,
+            preData: {
+                url: 'example_updated.com',
+                title: 'feature link updated',
+            },
+            featureName: 'my_feature',
+            project: 'default',
+        },
+        {
+            type: 'feature-link-updated',
+            data: { url: 'example_updated.com', title: 'feature link updated' },
+            preData: { url: 'example.com', title: 'feature link' },
+            featureName: 'my_feature',
+            project: 'default',
+        },
+        {
+            type: 'feature-link-added',
+            data: { url: 'example.com', title: 'feature link' },
+            preData: null,
+            featureName: 'my_feature',
+            project: 'default',
+        },
+    ]);
 });

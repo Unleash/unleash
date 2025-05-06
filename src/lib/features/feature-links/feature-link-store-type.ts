@@ -8,6 +8,6 @@ export interface IFeatureLink {
 }
 
 export interface IFeatureLinkStore extends Store<IFeatureLink, string> {
-    create(link: Omit<IFeatureLink, 'id'>): Promise<IFeatureLink>;
-    update(link: IFeatureLink): Promise<IFeatureLink>;
+    insert(link: Omit<IFeatureLink, 'id'>): Promise<IFeatureLink>;
+    update(id: string, link: Omit<IFeatureLink, 'id'>): Promise<IFeatureLink>;
 }

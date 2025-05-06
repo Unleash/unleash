@@ -72,6 +72,7 @@ import {
     createFakeProjectService,
     createFakeUserSubscriptionsService,
     createFeatureLifecycleService,
+    createFeatureLinkService,
     createFeatureToggleService,
     createProjectService,
     createUserSubscriptionsService,
@@ -425,9 +426,11 @@ export const createServices = (
         ? withTransactional(createUserSubscriptionsService(config), db)
         : withFakeTransactional(createFakeUserSubscriptionsService(config));
 
-    const transactionalFeatureLinkService = withFakeTransactional(
-        createFakeFeatureLinkService(config).featureLinkService,
-    );
+    const transactionalFeatureLinkService = db
+        ? withTransactional(createFeatureLinkService(config), db)
+        : withFakeTransactional(
+              createFakeFeatureLinkService(config).featureLinkService,
+          );
 
     return {
         transactionalAccessService,

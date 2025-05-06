@@ -41,7 +41,7 @@ export default class FeatureLinkService {
         newLink: Omit<IFeatureLink, 'id'>,
         auditUser: IAuditUser,
     ): Promise<IFeatureLink> {
-        const link = await this.featureLinkStore.create(newLink);
+        const link = await this.featureLinkStore.insert(newLink);
 
         await this.eventService.storeEvent(
             new FeatureLinkAddedEvent({
@@ -66,10 +66,7 @@ export default class FeatureLinkService {
             throw new NotFoundError(`Could not find link with id ${linkId}`);
         }
 
-        const link = await this.featureLinkStore.update({
-            ...updatedLink,
-            id: linkId,
-        });
+        const link = await this.featureLinkStore.update(linkId, updatedLink);
 
         await this.eventService.storeEvent(
             new FeatureLinkUpdatedEvent({

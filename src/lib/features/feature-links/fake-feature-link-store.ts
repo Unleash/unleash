@@ -7,7 +7,7 @@ import type {
 export default class FakeFeatureLinkStore implements IFeatureLinkStore {
     private links: IFeatureLink[] = [];
 
-    async create(link: Omit<IFeatureLink, 'id'>): Promise<IFeatureLink> {
+    async insert(link: Omit<IFeatureLink, 'id'>): Promise<IFeatureLink> {
         const newLink: IFeatureLink = {
             ...link,
             id: String(Math.random()),
@@ -45,9 +45,13 @@ export default class FakeFeatureLinkStore implements IFeatureLinkStore {
         return this.links;
     }
 
-    async update(link: IFeatureLink): Promise<IFeatureLink> {
-        await this.delete(link.id);
-        this.links.push(link);
-        return link;
+    async update(
+        id: string,
+        link: Omit<IFeatureLink, 'id'>,
+    ): Promise<IFeatureLink> {
+        await this.delete(id);
+        const fullLink = { ...link, id };
+        this.links.push(fullLink);
+        return fullLink;
     }
 }

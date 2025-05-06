@@ -26,10 +26,17 @@ interface IConstraintAccordionViewProps {
     compact?: boolean;
     disabled?: boolean;
     renderAfter?: JSX.Element;
+    borderStyle?: 'solid' | 'dashed';
 }
 
-const StyledAccordion = styled(Accordion)(({ theme }) => ({
-    border: `1px solid ${theme.palette.divider}`,
+interface StyledAccordionProps {
+    borderStyle?: 'solid' | 'dashed';
+}
+
+const StyledAccordion = styled(Accordion, {
+    shouldForwardProp: (prop) => prop !== 'borderStyle',
+})<StyledAccordionProps>(({ theme, borderStyle = 'solid' }) => ({
+    border: `1px ${borderStyle} ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
     boxShadow: 'none',
     margin: 0,
@@ -73,6 +80,7 @@ export const ConstraintAccordionView = ({
     compact = false,
     disabled = false,
     renderAfter,
+    borderStyle = 'solid',
 }: IConstraintAccordionViewProps) => {
     const [expandable, setExpandable] = useState(true);
     const [expanded, setExpanded] = useState(false);
@@ -88,7 +96,7 @@ export const ConstraintAccordionView = ({
     };
 
     return (
-        <StyledAccordion expanded={expanded} sx={sx}>
+        <StyledAccordion expanded={expanded} sx={sx} borderStyle={borderStyle}>
             <StyledAccordionSummary
                 expandIcon={null}
                 onClick={handleClick}

@@ -1,17 +1,18 @@
 import type { Logger } from '../../logger';
 import {
-    type IUnleashConfig,
-    type IAuditUser,
     FeatureLinkAddedEvent,
-    FeatureLinkUpdatedEvent,
     FeatureLinkRemovedEvent,
+    FeatureLinkUpdatedEvent,
+    type IAuditUser,
+    type IUnleashConfig,
 } from '../../types';
 import type {
     IFeatureLink,
     IFeatureLinkStore,
 } from './feature-link-store-type';
 import type EventService from '../events/event-service';
-import { NotFoundError } from '../../error';
+import { BadDataError, NotFoundError } from '../../error';
+import normalizeUrl from 'normalize-url';
 
 interface IFeatureLinkStoreObj {
     featureLinkStore: IFeatureLinkStore;
@@ -36,18 +37,31 @@ export default class FeatureLinkService {
         return this.featureLinkStore.getAll();
     }
 
+    private normalize(url: string) {
+        try {
+            return normalizeUrl(url, { defaultProtocol: 'https:' });
+        } catch (e) {
+            throw new BadDataError(`Invalid URL: ${url}`);
+        }
+    }
+
     async createLink(
         projectId: string,
         newLink: Omit<IFeatureLink, 'id'>,
         auditUser: IAuditUser,
     ): Promise<IFeatureLink> {
-        const link = await this.featureLinkStore.insert(newLink);
+        const normalizedUrl = this.normalize(newLink.url);
+
+        const link = await this.featureLinkStore.insert({
+            ...newLink,
+            url: normalizedUrl,
+        });
 
         await this.eventService.storeEvent(
             new FeatureLinkAddedEvent({
                 featureName: newLink.featureName,
                 project: projectId,
-                data: { url: newLink.url, title: newLink.title },
+                data: { url: normalizedUrl, title: newLink.title },
                 auditUser,
             }),
         );
@@ -60,13 +74,18 @@ export default class FeatureLinkService {
         updatedLink: Omit<IFeatureLink, 'id'>,
         auditUser: IAuditUser,
     ): Promise<IFeatureLink> {
+        const normalizedUrl = this.normalize(updatedLink.url);
+
         const preData = await this.featureLinkStore.get(linkId);
 
         if (!preData) {
             throw new NotFoundError(`Could not find link with id ${linkId}`);
         }
 
-        const link = await this.featureLinkStore.update(linkId, updatedLink);
+        const link = await this.featureLinkStore.update(linkId, {
+            ...updatedLink,
+            url: normalizedUrl,
+        });
 
         await this.eventService.storeEvent(
             new FeatureLinkUpdatedEvent({

@@ -70,8 +70,6 @@ export const BillingPlan = () => {
     const isPAYG = billing === 'pay-as-you-go';
     const isEnterpriseConsumption = billing === 'enterprise-consumption';
 
-    console.log('ISPRO', isPro);
-
     if (!instanceStatus)
         return (
             <Grid item xs={12} md={7}>

@@ -8,8 +8,8 @@ import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStr
 
 interface IConstraintAccordionEditProps {
     constraint: IConstraint;
-    onCancel?: () => void;
-    onDelete?: () => void;
+    onDelete: () => void;
+    onAutoSave: (constraint: IConstraint) => void;
 }
 
 export const CANCEL = 'cancel';
@@ -37,6 +37,7 @@ const resolveContextDefinition = (
 export const EditableConstraintWrapper = ({
     constraint,
     onDelete,
+    onAutoSave,
 }: IConstraintAccordionEditProps) => {
     const [localConstraint, setLocalConstraint] = useState<IConstraint>(
         cleanConstraint(constraint),
@@ -62,6 +63,7 @@ export const EditableConstraintWrapper = ({
                 value: '',
             });
 
+            onAutoSave(localConstraint);
             return localConstraint;
         });
     }, []);
@@ -75,6 +77,7 @@ export const EditableConstraintWrapper = ({
                 value: '',
             });
 
+            onAutoSave(localConstraint);
             return localConstraint;
         });
     }, []);
@@ -83,6 +86,7 @@ export const EditableConstraintWrapper = ({
         setLocalConstraint((prev) => {
             const localConstraint = { ...prev, values };
 
+            onAutoSave(localConstraint);
             return localConstraint;
         });
     }, []);
@@ -91,6 +95,7 @@ export const EditableConstraintWrapper = ({
         setLocalConstraint((prev) => {
             const localConstraint = { ...prev, value };
 
+            onAutoSave(localConstraint);
             return localConstraint;
         });
     }, []);
@@ -99,6 +104,7 @@ export const EditableConstraintWrapper = ({
         setLocalConstraint((prev) => {
             const localConstraint = { ...prev, inverted: !prev.inverted };
 
+            onAutoSave(localConstraint);
             return localConstraint;
         });
     };
@@ -110,6 +116,7 @@ export const EditableConstraintWrapper = ({
                 caseInsensitive: !prev.caseInsensitive,
             };
 
+            onAutoSave(localConstraint);
             return localConstraint;
         });
     }, []);

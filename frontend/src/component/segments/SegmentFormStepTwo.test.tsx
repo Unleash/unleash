@@ -19,10 +19,6 @@ const setupRoutes = () => {
         { name: 'environment' },
     ]);
 
-    testServerRoute(server, '/api/admin/segment-limits', {
-        segmentValuesLimit: 1000,
-    });
-
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
             addEditStrategy: true,

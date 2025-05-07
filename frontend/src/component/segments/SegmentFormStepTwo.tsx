@@ -134,7 +134,6 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
     }));
 
     const onChange = ([option]: IAutocompleteBoxOption[]) => {
-        console.log('calling');
         constraintsAccordionListRef.current?.addConstraint?.(option.value);
     };
 

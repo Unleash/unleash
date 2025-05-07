@@ -43,6 +43,7 @@ import {
 } from '../../openapi/util/standard-responses';
 import type { FrontendApiService } from '../../features/frontend-api/frontend-api-service';
 import { OperationDeniedError } from '../../error';
+import type { CreateApiTokenSchema } from '../../internals';
 
 interface TokenParam {
     token: string;
@@ -299,7 +300,7 @@ export class ApiTokenController extends Controller {
     }
 
     async createApiToken(
-        req: IAuthRequest,
+        req: IAuthRequest<CreateApiTokenSchema>,
         res: Response<ApiTokenSchema>,
     ): Promise<any> {
         const createToken = await createApiToken.validateAsync(req.body);
@@ -317,7 +318,10 @@ export class ApiTokenController extends Controller {
         );
         if (hasPermission) {
             const token = await this.apiTokenService.createApiToken(
-                createToken,
+                {
+                    ...createToken,
+                    projects: createToken.projects ?? [createToken.project],
+                },
                 req.audit,
             );
             this.openApiService.respondWithValidation(

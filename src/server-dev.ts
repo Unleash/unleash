@@ -67,7 +67,7 @@ process.nextTick(async () => {
                     initApiTokens: [
                         {
                             environment: '*',
-                            project: '*',
+                            projects: ['*'],
                             secret: '*:*.964a287e1b728cb5f4f3e0120df92cb5',
                             type: ApiTokenType.ADMIN,
                             tokenName: 'some-user',

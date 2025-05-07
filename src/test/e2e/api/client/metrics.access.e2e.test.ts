@@ -30,7 +30,7 @@ test('should enrich metrics with environment from api-token', async () => {
         type: ApiTokenType.CLIENT,
         tokenName: 'test',
         environment: 'some',
-        project: '*',
+        projects: ['*'],
     });
 
     await app.request

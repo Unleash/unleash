@@ -5,7 +5,7 @@ test('should reject token with projects and project', async () => {
     expect.assertions(1);
     try {
         await createApiToken.validateAsync({
-            username: 'test',
+            tokenName: 'test',
             type: 'admin',
             project: 'default',
             projects: ['default'],
@@ -19,7 +19,7 @@ test('should reject token with projects and project', async () => {
 
 test('should not have default project set if projects is present', async () => {
     const token = await createApiToken.validateAsync({
-        username: 'test',
+        tokenName: 'test',
         type: 'admin',
         projects: ['default'],
     });
@@ -28,7 +28,7 @@ test('should not have default project set if projects is present', async () => {
 
 test('should have project set to default if projects is missing', async () => {
     const token = await createApiToken.validateAsync({
-        username: 'test',
+        tokenName: 'test',
         type: 'admin',
     });
     expect(token.project).toBe(ALL);
@@ -36,7 +36,7 @@ test('should have project set to default if projects is missing', async () => {
 
 test('should not have projects set if project is present', async () => {
     const token = await createApiToken.validateAsync({
-        username: 'test',
+        tokenName: 'test',
         type: 'admin',
         project: 'default',
     });
@@ -45,7 +45,7 @@ test('should not have projects set if project is present', async () => {
 
 test('should allow for embedded proxy (frontend) key', async () => {
     const token = await createApiToken.validateAsync({
-        username: 'test',
+        tokenName: 'test',
         type: 'frontend',
         project: 'default',
     });
@@ -54,7 +54,7 @@ test('should allow for embedded proxy (frontend) key', async () => {
 
 test('should set environment to default for frontend key', async () => {
     const token = await createApiToken.validateAsync({
-        username: 'test',
+        tokenName: 'test',
         type: 'frontend',
         project: 'default',
     });

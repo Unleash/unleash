@@ -5,14 +5,7 @@ export const apiTokenSchema = {
     $id: '#/components/schemas/apiTokenSchema',
     type: 'object',
     additionalProperties: false,
-    required: [
-        'secret',
-        'tokenName',
-        'type',
-        'project',
-        'projects',
-        'createdAt',
-    ],
+    required: ['secret', 'tokenName', 'type', 'projects', 'createdAt'],
     description:
         'An overview of an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).',
     properties: {
@@ -20,13 +13,6 @@ export const apiTokenSchema = {
             type: 'string',
             description: 'The token used for authentication.',
             example: 'project:environment.xyzrandomstring',
-        },
-        username: {
-            type: 'string',
-            deprecated: true,
-            description:
-                'This property was deprecated in Unleash v5. Prefer the `tokenName` property instead.',
-            example: 'a-name',
         },
         tokenName: {
             type: 'string',

@@ -1,7 +1,7 @@
 import type { Express } from 'express';
 import type EventEmitter from 'events';
 import type { LogLevel, LogProvider } from '../logger';
-import type { ILegacyApiTokenCreate } from './models/api-token';
+import type { IApiTokenCreate } from './models/api-token';
 import type {
     IExperimentalOptions,
     IFlagContext,
@@ -86,7 +86,7 @@ export interface IAuthOption {
     customAuthHandler?: CustomAuthHandler;
     createAdminUser?: boolean;
     initialAdminUser?: UsernameAdminUser;
-    initApiTokens: ILegacyApiTokenCreate[];
+    initApiTokens: IApiTokenCreate[];
 }
 
 export interface IImportOption {

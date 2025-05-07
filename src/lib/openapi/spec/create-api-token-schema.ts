@@ -25,20 +25,6 @@ const tokenNameSchema = {
     },
 } as const;
 
-const usernameSchema = {
-    type: 'object',
-    required: ['username'],
-    properties: {
-        username: {
-            deprecated: true,
-            type: 'string',
-            description:
-                'The name of the token. This property was deprecated in v5. Use `tokenName` instead.',
-            example: 'token-64523',
-        },
-    },
-} as const;
-
 const clientFrontendSchema = {
     required: ['type'],
     type: 'object',
@@ -102,9 +88,7 @@ export const createApiTokenSchema = {
         'The data required to create an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).',
     oneOf: [
         mergeAllOfs([expireSchema, adminSchema, tokenNameSchema]),
-        mergeAllOfs([expireSchema, adminSchema, usernameSchema]),
         mergeAllOfs([expireSchema, clientFrontendSchema, tokenNameSchema]),
-        mergeAllOfs([expireSchema, clientFrontendSchema, usernameSchema]),
     ],
     components: {},
 } as const;

@@ -55,6 +55,7 @@ export * from './create-feature-strategy-schema';
 export * from './create-group-schema';
 export * from './create-invited-user-schema';
 export * from './create-pat-schema';
+export * from './create-project-api-token-schema';
 export * from './create-strategy-schema';
 export * from './create-strategy-variant-schema';
 export * from './create-tag-schema';

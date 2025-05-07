@@ -16,7 +16,7 @@ import { createFakeApiTokenService } from '../features/api-tokens/createApiToken
 test('Should init api token', async () => {
     const token = {
         environment: '*',
-        project: '*',
+        projects: ['*'],
         secret: '*:*:some-random-string',
         type: ApiTokenType.ADMIN,
         tokenName: 'admin',

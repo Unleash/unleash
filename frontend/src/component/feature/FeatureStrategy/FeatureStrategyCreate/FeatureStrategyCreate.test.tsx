@@ -310,6 +310,10 @@ describe('NewFeatureStrategyCreate', () => {
 
         // first constraint
         fireEvent.click(addValueEls[0]);
+        await waitFor(() => {
+            const inputElement = screen.getByPlaceholderText('Enter value');
+            expect(inputElement).toBeInTheDocument();
+        });
         const firstEnterElement = screen.getByPlaceholderText('Enter value');
         fireEvent.change(firstEnterElement, {
             target: { value: '123' },
@@ -319,6 +323,13 @@ describe('NewFeatureStrategyCreate', () => {
 
         // second constraint
         fireEvent.click(addValueEls[1]);
+
+        await waitFor(() => {
+            const inputElement = screen.getByPlaceholderText('Enter value');
+            expect(inputElement).toBeInTheDocument();
+        });
+
+        // const secondEnterElement = screen.getByPlaceholderText('Enter value');
         const secondEnterElement = screen.getByPlaceholderText('Enter value');
         fireEvent.change(secondEnterElement, {
             target: { value: '456' },

@@ -1,4 +1,4 @@
-import * as fc from 'fast-check';
+import fc from 'fast-check';
 
 import supertest from 'supertest';
 import { createServices } from '../../services/index.js';

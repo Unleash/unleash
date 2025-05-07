@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 import { createConfig, authTypeFromString } from '../../lib/create-config.js';
 import { IAuthType, type IDBOption } from '../../lib/types/option.js';
 

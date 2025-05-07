@@ -1,11 +1,10 @@
-import * as responseTime from 'response-time';
+import responseTime from 'response-time';
 import type EventEmitter from 'events';
 import { REQUEST_TIME, SDK_CONNECTION_ID_RECEIVED } from '../metric-events.js';
 import type { IFlagResolver } from '../types/experimental.js';
 import type { InstanceStatsService } from '../services/index.js';
 import type { RequestHandler } from 'express';
 
-const _responseTime = responseTime.default;
 const appNameReportingThreshold = 1000;
 
 export const storeRequestedRoute: RequestHandler = (req, res, next) => {
@@ -44,7 +43,7 @@ export function responseTimeMetrics(
     flagResolver: IFlagResolver,
     instanceStatsService: Pick<InstanceStatsService, 'getAppCountSnapshot'>,
 ): RequestHandler {
-    return _responseTime((req, res, time) => {
+    return responseTime((req, res, time) => {
         const { statusCode } = res;
         let pathname: string | undefined = undefined;
         if (res.locals.route) {

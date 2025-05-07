@@ -28,7 +28,7 @@ const AddValuesButton = styled('button')(({ theme }) => ({
 }));
 
 interface AddValuesProps {
-    onAddValues: (newValues: Set<string>) => void;
+    onAddValues: (newValues: string[]) => void;
     helpText?: string;
     validator: (...values: string[]) => ConstraintValidatorOutput;
 }

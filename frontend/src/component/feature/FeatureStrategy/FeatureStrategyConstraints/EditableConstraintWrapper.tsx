@@ -84,6 +84,7 @@ export const EditableConstraintWrapper = ({
                 ) {
                     return cleanConstraint({
                         ...state,
+                        contextName: action.payload,
                         operator: DATE_AFTER,
                         values: new Set(),
                         value: new Date().toISOString(),
@@ -95,8 +96,8 @@ export const EditableConstraintWrapper = ({
                     return cleanConstraint({
                         ...state,
                         operator: IN,
+                        contextName: action.payload,
                         values: new Set(),
-
                         value: '',
                     });
                 }
@@ -109,11 +110,20 @@ export const EditableConstraintWrapper = ({
                     value: '',
                 });
             case 'set operator':
+                if (
+                    dateOperators.includes(state.operator) &&
+                    dateOperators.includes(action.payload)
+                ) {
+                    return cleanConstraint({
+                        ...state,
+                        operator: action.payload,
+                        value: state.value,
+                    });
+                }
                 return cleanConstraint({
                     ...state,
                     operator: action.payload,
                     values: new Set(),
-
                     value: '',
                 });
             case 'add value(s)': {

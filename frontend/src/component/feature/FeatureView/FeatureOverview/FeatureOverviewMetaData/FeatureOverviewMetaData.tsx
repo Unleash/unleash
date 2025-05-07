@@ -1,6 +1,5 @@
 import { type FC, useState } from 'react';
 import {
-    Button,
     List,
     ListItemButton,
     ListItemIcon,
@@ -94,15 +93,60 @@ type FeatureOverviewMetaDataProps = {
     onChange: () => void;
 };
 
-const FeatureLinks: FC<{
+interface FeatureLinksProps {
     links: FeatureLink[];
     project: string;
     feature: string;
-}> = ({ links, project, feature }) => {
+}
+
+const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
     const [showAddLinkDialogue, setShowAddLinkDialogue] = useState(false);
 
-    return links.length === 0 ? (
-        <StyledMetaDataContainer>
+    const addLinkButton = (
+        <PermissionButton
+            size='small'
+            startIcon={<AddIcon />}
+            permission={UPDATE_FEATURE}
+            projectId={project}
+            variant='text'
+            onClick={() => setShowAddLinkDialogue(true)}
+        >
+            Add link
+        </PermissionButton>
+    );
+
+    const renderLinkItems = () => (
+        <List>
+            {links.map((link) => (
+                <ListItemButton
+                    key={link.id}
+                    component='a'
+                    href={link.url}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                >
+                    <StyledListItemIcon>
+                        <LinkIcon color='primary' />
+                    </StyledListItemIcon>
+                    <ListItemText
+                        primary={link.title}
+                        secondary={link.url}
+                        secondaryTypographyProps={{
+                            sx: {
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                                display: 'block',
+                            },
+                        }}
+                    />
+                </ListItemButton>
+            ))}
+        </List>
+    );
+
+    const emptyStateContent = (
+        <>
             <StyledTitle>
                 You can now add links{' '}
                 <Badge color='success' sx={{ ml: 1 }}>
@@ -113,76 +157,31 @@ const FeatureLinks: FC<{
                 Gather relevant links for external resources such as issue
                 trackers, code repositories or analytics tooling
             </StyledMetaDataItem>
-            <div>
-                <PermissionButton
-                    size='small'
-                    startIcon={<AddIcon />}
-                    permission={UPDATE_FEATURE}
-                    projectId={project}
-                    variant='text'
-                    onClick={() => {
-                        setShowAddLinkDialogue(true);
-                    }}
-                >
-                    Add parent flag
-                </PermissionButton>
-                <Button
-                    size='small'
-                    variant='text'
-                    startIcon={<AddIcon />}
-                    onClick={() => {}}
-                >
-                    Add link
-                </Button>
-            </div>
-        </StyledMetaDataContainer>
-    ) : (
-        <StyledMetaDataContainer>
-            <StyledTitle>Resources</StyledTitle>
-            <List>
-                {links.map((link) => (
-                    <ListItemButton
-                        component='a'
-                        href={link.url}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                    >
-                        <StyledListItemIcon>
-                            <LinkIcon color='primary' />
-                        </StyledListItemIcon>
-                        <ListItemText
-                            primary={link.title}
-                            secondary={link.url}
-                            secondaryTypographyProps={{
-                                sx: {
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    display: 'block',
-                                },
-                            }}
-                        />
-                    </ListItemButton>
-                ))}
-            </List>
+            <div>{addLinkButton}</div>
+        </>
+    );
 
-            <div>
-                <Button
-                    size='small'
-                    variant='text'
-                    startIcon={<AddIcon />}
-                    onClick={() => setShowAddLinkDialogue(true)}
-                >
-                    Add link
-                </Button>
-            </div>
+    const linksContent = (
+        <>
+            <StyledTitle>Resources</StyledTitle>
+            {renderLinkItems()}
+            <div>{addLinkButton}</div>
+        </>
+    );
+
+    return (
+        <>
+            <StyledMetaDataContainer>
+                {links.length === 0 ? emptyStateContent : linksContent}
+            </StyledMetaDataContainer>
+
             <AddLinkDialogue
                 project={project}
                 featureId={feature}
                 showAddLinkDialogue={showAddLinkDialogue}
                 onClose={() => setShowAddLinkDialogue(false)}
             />
-        </StyledMetaDataContainer>
+        </>
     );
 };
 

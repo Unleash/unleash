@@ -132,6 +132,7 @@ export default class TeamsAddon extends Addon {
             headers: { 'Content-Type': 'application/json', ...extraHeaders },
             body: JSON.stringify(body),
         };
+        console.log(`${url} Request options: ${JSON.stringify(requestOpts)}`);
         const res = await this.fetchRetry(url, requestOpts);
 
         this.logger.info(`Handled event "${event.type}".`);

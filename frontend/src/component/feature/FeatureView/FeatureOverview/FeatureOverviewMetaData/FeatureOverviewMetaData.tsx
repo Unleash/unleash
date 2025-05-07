@@ -33,11 +33,11 @@ import LinkIcon from '@mui/icons-material/Link';
 import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { AddLinkDialogue } from './AddLinkDialogue';
-import { LinkActions } from './LinkActions';
 import { useFeatureLinkApi } from 'hooks/api/actions/useFeatureLinkApi/useFeatureLinkApi';
 import useToast from 'hooks/useToast';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { ExtraActions } from './ExtraActions';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -129,7 +129,8 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
             {links.map((link) => (
                 <ListItem
                     secondaryAction={
-                        <LinkActions
+                        <ExtraActions
+                            capabilityId='link'
                             feature={feature}
                             onEdit={() => {}}
                             onDelete={async () => {

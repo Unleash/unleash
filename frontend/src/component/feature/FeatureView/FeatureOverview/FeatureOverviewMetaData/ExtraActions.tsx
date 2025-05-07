@@ -26,18 +26,20 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
     padding: theme.spacing(1, 1.5),
 }));
 
-interface ILinkActionsProps {
+interface IDependencyActionsProps {
+    capabilityId: string;
     feature: string;
     onEdit: () => void;
     onDelete: () => void;
 }
 
-export const LinkActions = ({
+export const ExtraActions = ({
+    capabilityId,
     feature,
     onEdit,
     onDelete,
-}: ILinkActionsProps) => {
-    const id = `${feature}-link-actions`;
+}: IDependencyActionsProps) => {
+    const id = `${capabilityId}-${feature}-actions`;
     const menuId = `${id}-menu`;
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -52,7 +54,7 @@ export const LinkActions = ({
 
     return (
         <Box>
-            <Tooltip title='Link actions' arrow describeChild>
+            <Tooltip title='Dependency actions' arrow describeChild>
                 <StyledIconButton
                     id={id}
                     aria-controls={open ? menuId : undefined}

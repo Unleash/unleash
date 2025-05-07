@@ -3,6 +3,7 @@ import {
     ErrorCode,
     WebClientEvent,
     type CodedError,
+    type Methods as SlackSDK,
     type WebAPIPlatformError,
     type WebAPIRequestError,
     type WebAPIRateLimitedError,
@@ -31,6 +32,11 @@ interface ISlackAppAddonParameters {
     defaultChannels: string;
 }
 
+export type SlackClientProvider = (accessToken: string) => SlackSDK;
+const defaultClientProvider: SlackClientProvider = (accessToken: string) => {
+    return new WebClient(accessToken);
+};
+
 export default class SlackAppAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
@@ -38,9 +44,12 @@ export default class SlackAppAddon extends Addon {
 
     private accessToken?: string;
 
-    private slackClient?: WebClient;
+    private slackClient?: SlackSDK;
 
-    constructor(args: IAddonConfig) {
+    constructor(
+        args: IAddonConfig,
+        readonly clientProvider: SlackClientProvider = defaultClientProvider,
+    ) {
         super(slackAppDefinition, args);
         this.msgFormatter = new FeatureEventFormatterMd({
             unleashUrl: args.unleashUrl,
@@ -93,7 +102,7 @@ export default class SlackAppAddon extends Addon {
             );
 
             if (!this.slackClient || this.accessToken !== accessToken) {
-                const client = new WebClient(accessToken);
+                const client = this.clientProvider(accessToken);
                 client.on(WebClientEvent.RATE_LIMITED, (numSeconds) => {
                     this.logger.debug(
                         `Rate limit reached for event ${event.type}. Retry scheduled after ${numSeconds} seconds`,

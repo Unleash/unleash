@@ -1,6 +1,7 @@
 import { type FC, useState } from 'react';
 import {
     List,
+    ListItem,
     ListItemButton,
     ListItemIcon,
     ListItemText,
@@ -32,6 +33,11 @@ import LinkIcon from '@mui/icons-material/Link';
 import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { AddLinkDialogue } from './AddLinkDialogue';
+import { useFeatureLinkApi } from 'hooks/api/actions/useFeatureLinkApi/useFeatureLinkApi';
+import useToast from 'hooks/useToast';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import { ExtraActions } from './ExtraActions';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -101,6 +107,9 @@ interface FeatureLinksProps {
 
 const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
     const [showAddLinkDialogue, setShowAddLinkDialogue] = useState(false);
+    const { deleteLink, loading } = useFeatureLinkApi(project, feature);
+    const { setToastData, setToastApiError } = useToast();
+    const { refetchFeature } = useFeature(project, feature);
 
     const addLinkButton = (
         <PermissionButton
@@ -118,29 +127,54 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
     const renderLinkItems = () => (
         <List>
             {links.map((link) => (
-                <ListItemButton
+                <ListItem
+                    secondaryAction={
+                        <ExtraActions
+                            capabilityId='link'
+                            feature={feature}
+                            onEdit={() => {}}
+                            onDelete={async () => {
+                                try {
+                                    await deleteLink(link.id);
+                                    setToastData({
+                                        text: 'Link removed',
+                                        type: 'success',
+                                    });
+                                    refetchFeature();
+                                } catch (error) {
+                                    setToastApiError(formatUnknownError(error));
+                                }
+                            }}
+                        />
+                    }
                     key={link.id}
-                    component='a'
-                    href={link.url}
-                    target='_blank'
-                    rel='noopener noreferrer'
+                    disablePadding
+                    dense
                 >
-                    <StyledListItemIcon>
-                        <LinkIcon color='primary' />
-                    </StyledListItemIcon>
-                    <ListItemText
-                        primary={link.title}
-                        secondary={link.url}
-                        secondaryTypographyProps={{
-                            sx: {
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap',
-                                display: 'block',
-                            },
-                        }}
-                    />
-                </ListItemButton>
+                    <ListItemButton
+                        component='a'
+                        href={link.url}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        disableGutters
+                    >
+                        <StyledListItemIcon>
+                            <LinkIcon color='primary' />
+                        </StyledListItemIcon>
+                        <ListItemText
+                            primary={link.title}
+                            secondary={link.url}
+                            secondaryTypographyProps={{
+                                sx: {
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    display: 'block',
+                                },
+                            }}
+                        />
+                    </ListItemButton>
+                </ListItem>
             ))}
         </List>
     );

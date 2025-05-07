@@ -8,6 +8,7 @@ import type { FeatureSchemaCreatedBy } from './featureSchemaCreatedBy';
 import type { FeatureSchemaDependenciesItem } from './featureSchemaDependenciesItem';
 import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
 import type { FeatureSchemaLifecycle } from './featureSchemaLifecycle';
+import type { FeatureSchemaLinksItem } from './featureSchemaLinksItem';
 import type { FeatureSchemaStrategiesItem } from './featureSchemaStrategiesItem';
 import type { TagSchema } from './tagSchema';
 import type { VariantSchema } from './variantSchema';
@@ -57,6 +58,8 @@ export interface FeatureSchema {
     lastSeenAt?: string | null;
     /** Current lifecycle stage of the feature */
     lifecycle?: FeatureSchemaLifecycle;
+    /** The list of links. This is an experimental field and may change. */
+    links?: FeatureSchemaLinksItem[];
     /** Unique feature name */
     name: string;
     /** Name of the project the feature belongs to */

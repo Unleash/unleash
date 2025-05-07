@@ -34,10 +34,10 @@ import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { AddLinkDialogue } from './AddLinkDialogue';
 import { LinkActions } from './LinkActions';
-import { useFeatureLinkApi } from '../../../../../hooks/api/actions/useFeatureLinkApi/useFeatureLinkApi';
-import useToast from '../../../../../hooks/useToast';
-import { useFeature } from '../../../../../hooks/api/getters/useFeature/useFeature';
-import { formatUnknownError } from '../../../../../utils/formatUnknownError';
+import { useFeatureLinkApi } from 'hooks/api/actions/useFeatureLinkApi/useFeatureLinkApi';
+import useToast from 'hooks/useToast';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),

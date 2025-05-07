@@ -30,6 +30,9 @@ import AddIcon from '@mui/icons-material/Add';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { Badge } from 'component/common/Badge/Badge';
 import LinkIcon from '@mui/icons-material/Link';
+import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { AddLinkDialogue } from './AddLinkDialogue';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -91,7 +94,13 @@ type FeatureOverviewMetaDataProps = {
     onChange: () => void;
 };
 
-const FeatureLinks: FC<{ links: FeatureLink[] }> = ({ links }) => {
+const FeatureLinks: FC<{
+    links: FeatureLink[];
+    project: string;
+    feature: string;
+}> = ({ links, project, feature }) => {
+    const [showAddLinkDialogue, setShowAddLinkDialogue] = useState(false);
+
     return links.length === 0 ? (
         <StyledMetaDataContainer>
             <StyledTitle>
@@ -105,6 +114,18 @@ const FeatureLinks: FC<{ links: FeatureLink[] }> = ({ links }) => {
                 trackers, code repositories or analytics tooling
             </StyledMetaDataItem>
             <div>
+                <PermissionButton
+                    size='small'
+                    startIcon={<AddIcon />}
+                    permission={UPDATE_FEATURE}
+                    projectId={project}
+                    variant='text'
+                    onClick={() => {
+                        setShowAddLinkDialogue(true);
+                    }}
+                >
+                    Add parent flag
+                </PermissionButton>
                 <Button
                     size='small'
                     variant='text'
@@ -150,11 +171,17 @@ const FeatureLinks: FC<{ links: FeatureLink[] }> = ({ links }) => {
                     size='small'
                     variant='text'
                     startIcon={<AddIcon />}
-                    onClick={() => {}}
+                    onClick={() => setShowAddLinkDialogue(true)}
                 >
                     Add link
                 </Button>
             </div>
+            <AddLinkDialogue
+                project={project}
+                featureId={feature}
+                showAddLinkDialogue={showAddLinkDialogue}
+                onClose={() => setShowAddLinkDialogue(false)}
+            />
         </StyledMetaDataContainer>
     );
 };
@@ -181,7 +208,11 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
     return (
         <>
             {featureLinksEnabled ? (
-                <FeatureLinks links={feature.links || []} />
+                <FeatureLinks
+                    links={feature.links || []}
+                    project={feature.project}
+                    feature={feature.name}
+                />
             ) : null}
             <StyledMetaDataContainer>
                 <div>

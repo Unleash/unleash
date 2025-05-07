@@ -1,25 +1,20 @@
 import express from 'express';
 import { createTestConfig } from '../test/config/test-config.js';
-import compression from 'compression';
 import { jest } from '@jest/globals';
 
-jest.mock('compression', () =>
-    jest.fn().mockImplementation(() => (req, res, next) => {
-        next();
-    }),
-);
+jest.unstable_mockModule('compression', () => ({
+    default: jest.fn().mockImplementation(() => (req, res, next) => next()),
+}));
+jest.unstable_mockModule('./routes', () => ({
+    default: class Index {
+        router() {
+            return express.Router();
+        }
+    },
+}));
+const { default: compression } = await import('compression');
+const { default: getApp } = await import('./app.js');
 
-jest.mock(
-    './routes',
-    () =>
-        class Index {
-            router() {
-                return express.Router();
-            }
-        },
-);
-
-import getApp from './app.js';
 test('should not throw when valid config', async () => {
     const config = createTestConfig();
     // @ts-expect-error - We're passing in empty stores and services

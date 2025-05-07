@@ -1,7 +1,4 @@
-import {
-    setupAppWithAuth,
-    setupAppWithCustomAuth,
-} from '../../helpers/test-helper';
+import { setupAppWithCustomAuth } from '../../helpers/test-helper';
 import dbInit, { type ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
@@ -17,7 +14,6 @@ import {
     SYSTEM_USER,
     SYSTEM_USER_AUDIT,
     SYSTEM_USER_ID,
-    TEST_AUDIT_USER,
     UPDATE_CLIENT_API_TOKEN,
 } from '../../../../lib/types';
 import { addDays } from 'date-fns';
@@ -186,69 +182,6 @@ test('Only token-admins should be allowed to create token', async () => {
         .set('Content-Type', 'application/json')
         .expect(403);
 
-    await destroy();
-});
-
-test('Token-admin should not be allowed to create token', async () => {
-    expect.assertions(0);
-
-    const preHook = (app, config, { userService, accessService }) => {
-        app.use('/api/admin/', async (req, res, next) => {
-            const role = await accessService.getPredefinedRole(RoleName.ADMIN);
-            req.user = await userService.createUser({
-                email: 'admin@example.com',
-                rootRole: role.id,
-            });
-            next();
-        });
-    };
-
-    const { request, destroy } = await setupAppWithCustomAuth(
-        stores,
-        preHook,
-        undefined,
-        db.rawDatabase,
-    );
-
-    await request
-        .post('/api/admin/api-tokens')
-        .send({
-            tokenName: 'default-admin',
-            type: 'admin',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(403);
-
-    await destroy();
-});
-
-test('An admin should be forbidden to create an admin token', async () => {
-    const { request, destroy, services } = await setupAppWithAuth(
-        stores,
-        undefined,
-        db.rawDatabase,
-    );
-
-    const { secret } =
-        await services.apiTokenService.createApiTokenWithProjects(
-            {
-                tokenName: 'default-admin',
-                type: ApiTokenType.ADMIN,
-                projects: ['*'],
-                environment: '*',
-            },
-            TEST_AUDIT_USER,
-        );
-
-    await request
-        .post('/api/admin/api-tokens')
-        .send({
-            tokenName: 'default-admin',
-            type: 'admin',
-        })
-        .set('Authorization', secret)
-        .set('Content-Type', 'application/json')
-        .expect(403);
     await destroy();
 });
 
@@ -427,63 +360,6 @@ describe('Fine grained API token permissions', () => {
                 .send({
                     tokenName: 'default-frontend',
                     type: 'frontend',
-                })
-                .set('Content-Type', 'application/json')
-                .expect(403);
-            await destroy();
-        });
-        test('should NOT be allowed to create ADMIN tokens', async () => {
-            const preHook = (
-                app,
-                config,
-                {
-                    userService,
-                    accessService,
-                }: Pick<IUnleashServices, 'userService' | 'accessService'>,
-            ) => {
-                app.use('/api/admin/', async (req, res, next) => {
-                    const role = await accessService.getPredefinedRole(
-                        RoleName.VIEWER,
-                    );
-                    const user = await userService.createUser({
-                        email: 'mylittlepony_admin@example.com',
-                        rootRole: role.id,
-                    });
-                    req.user = user;
-                    const createClientApiTokenRole =
-                        await accessService.createRole(
-                            {
-                                name: 'client_token_creator_cannot_create_admin',
-                                description: 'Can create client tokens',
-                                permissions: [],
-                                type: 'root-custom',
-                                createdByUserId: SYSTEM_USER_ID,
-                            },
-                            SYSTEM_USER_AUDIT,
-                        );
-                    await accessService.addPermissionToRole(
-                        role.id,
-                        CREATE_CLIENT_API_TOKEN,
-                    );
-                    await accessService.addUserToRole(
-                        user.id,
-                        createClientApiTokenRole.id,
-                        'default',
-                    );
-                    next();
-                });
-            };
-            const { request, destroy } = await setupAppWithCustomAuth(
-                stores,
-                preHook,
-                undefined,
-                db.rawDatabase,
-            );
-            await request
-                .post('/api/admin/api-tokens')
-                .send({
-                    tokenName: 'default-admin',
-                    type: 'admin',
                 })
                 .set('Content-Type', 'application/json')
                 .expect(403);

@@ -4,22 +4,12 @@ import {
     useConstraintInput,
     type Input,
 } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
-import {
-    DATE_AFTER,
-    dateOperators,
-    IN,
-    stringOperators,
-    type Operator,
-} from 'constants/operators';
+import { stringOperators, type Operator } from 'constants/operators';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IUnleashContextDefinition } from 'interfaces/context';
 import type { IConstraint } from 'interfaces/strategy';
-import { useEffect, useMemo, useRef, useState, type FC } from 'react';
-import { oneOf } from 'utils/oneOf';
-import {
-    CURRENT_TIME_CONTEXT_FIELD,
-    operatorsForContext,
-} from 'utils/operatorsForContext';
+import { useMemo, useRef, type FC } from 'react';
+import { operatorsForContext } from 'utils/operatorsForContext';
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import Delete from '@mui/icons-material/Delete';
@@ -136,6 +126,8 @@ const ButtonPlaceholder = styled('div')(({ theme }) => ({
     // screens), but still retain necessary space for the button when it's all
     // on one line.
     width: theme.spacing(2),
+    // fontSize: theme.typography.body1.fontSize
+    fontSize: theme.fontSizes.extraLargeHeader,
 }));
 
 const StyledCaseInsensitiveIcon = styled(CaseInsensitiveIcon)(({ theme }) => ({
@@ -175,36 +167,48 @@ const getInputType = (input: Input): InputType => {
     }
 };
 
+type ConstraintUpdateAction =
+    | { type: 'add value(s)'; payload: string[] }
+    | { type: 'set value'; payload: string }
+    | { type: 'clear values' }
+    | { type: 'remove value from list'; payload: string }
+    | { type: 'set context field'; payload: string }
+    | { type: 'set operator'; payload: Operator }
+    | { type: 'toggle case sensitivity' }
+    | { type: 'toggle inverted operator' };
+
 type Props = {
     localConstraint: IConstraint;
-    setContextName: (contextName: string) => void;
-    setOperator: (operator: Operator) => void;
-    setLocalConstraint: React.Dispatch<React.SetStateAction<IConstraint>>;
+    // setContextName: (contextName: string) => void;
+    // setOperator: (operator: Operator) => void;
+    // setLocalConstraint: React.Dispatch<React.SetStateAction<IConstraint>>;
     onDelete?: () => void;
-    toggleInvertedOperator: () => void;
-    toggleCaseSensitivity: () => void;
+    // toggleInvertedOperator: () => void;
+    // toggleCaseSensitivity: () => void;
     contextDefinition: Pick<IUnleashContextDefinition, 'legalValues'>;
     constraintValues: string[];
     constraintValue: string;
-    setValue: (value: string) => void;
-    setValues: (values: string[]) => void;
-    removeValue: (index: number) => void;
+    // setValue: (value: string) => void;
+    // setValues: (values: string[]) => void;
+    // removeValue: (index: number) => void;
+    updateConstraint: (action: ConstraintUpdateAction) => void;
 };
 
 export const EditableConstraint: FC<Props> = ({
     localConstraint,
-    setLocalConstraint,
-    setContextName,
-    setOperator,
+    // setLocalConstraint,
+    // setContextName,
+    // setOperator,
     onDelete,
-    toggleInvertedOperator,
-    toggleCaseSensitivity,
+    // toggleInvertedOperator,
+    // toggleCaseSensitivity,
     contextDefinition,
     constraintValues,
     constraintValue,
-    setValue,
-    setValues,
-    removeValue,
+    // setValue,
+    // setValues,
+    // removeValue,
+    updateConstraint,
 }) => {
     const { input } = useConstraintInput({
         contextDefinition,
@@ -213,8 +217,7 @@ export const EditableConstraint: FC<Props> = ({
 
     const { context } = useUnleashContext();
     const { contextName, operator } = localConstraint;
-    const [showCaseSensitiveButton, setShowCaseSensitiveButton] =
-        useState(false);
+    const showCaseSensitiveButton = stringOperators.includes(operator);
     const deleteButtonRef = useRef<HTMLButtonElement>(null);
     const addValuesButtonRef = useRef<HTMLButtonElement>(null);
     const inputType = getInputType(input);
@@ -224,29 +227,28 @@ export const EditableConstraint: FC<Props> = ({
     this will check if the context field is the current time context field AND check
     if it is not already using one of the date operators (to not overwrite if there is existing
     data). */
-    useEffect(() => {
-        if (
-            contextName === CURRENT_TIME_CONTEXT_FIELD &&
-            !oneOf(dateOperators, operator)
-        ) {
-            setLocalConstraint((prev) => ({
-                ...prev,
-                operator: DATE_AFTER,
-                value: new Date().toISOString(),
-            }));
-        } else if (
-            contextName !== CURRENT_TIME_CONTEXT_FIELD &&
-            oneOf(dateOperators, operator)
-        ) {
-            setOperator(IN);
-        }
-
-        if (oneOf(stringOperators, operator)) {
-            setShowCaseSensitiveButton(true);
-        } else {
-            setShowCaseSensitiveButton(false);
-        }
-    }, [contextName, setOperator, operator, setLocalConstraint]);
+    // useEffect(() => {
+    // if (
+    //     contextName === CURRENT_TIME_CONTEXT_FIELD &&
+    //     !oneOf(dateOperators, operator)
+    // ) {
+    //     setLocalConstraint((prev) => ({
+    //         ...prev,
+    //         operator: DATE_AFTER,
+    //         value: new Date().toISOString(),
+    //     }));
+    // } else if (
+    //     contextName !== CURRENT_TIME_CONTEXT_FIELD &&
+    //     oneOf(dateOperators, operator)
+    // ) {
+    //     setOperator(IN);
+    // }
+    // if (oneOf(stringOperators, operator)) {
+    //     setShowCaseSensitiveButton(true);
+    // } else {
+    //     setShowCaseSensitiveButton(false);
+    // }
+    // }, [contextName, setOperator, operator, setLocalConstraint]);
 
     if (!context) {
         return null;
@@ -257,21 +259,21 @@ export const EditableConstraint: FC<Props> = ({
     });
 
     const onOperatorChange = (operator: Operator) => {
-        if (oneOf(stringOperators, operator)) {
-            setShowCaseSensitiveButton(true);
-        } else {
-            setShowCaseSensitiveButton(false);
-        }
-
-        if (oneOf(dateOperators, operator)) {
-            setLocalConstraint((prev) => ({
-                ...prev,
-                operator: operator,
-                value: new Date().toISOString(),
-            }));
-        } else {
-            setOperator(operator);
-        }
+        updateConstraint({ type: 'set operator', payload: operator });
+        // if (oneOf(stringOperators, operator)) {
+        //     setShowCaseSensitiveButton(true);
+        // } else {
+        //     setShowCaseSensitiveButton(false);
+        // }
+        // if (oneOf(dateOperators, operator)) {
+        //     setLocalConstraint((prev) => ({
+        //         ...prev,
+        //         operator: operator,
+        //         value: new Date().toISOString(),
+        //     }));
+        // } else {
+        //     setOperator(operator);
+        // }
     };
 
     const validator = useMemo(() => constraintValidator(input), [input]);
@@ -280,7 +282,12 @@ export const EditableConstraint: FC<Props> = ({
             case 'date':
                 return (
                     <ConstraintDateInput
-                        setValue={setValue}
+                        setValue={(value: string) =>
+                            updateConstraint({
+                                type: 'set value',
+                                payload: value,
+                            })
+                        }
                         value={localConstraint.value}
                         validator={validator}
                     />
@@ -290,9 +297,14 @@ export const EditableConstraint: FC<Props> = ({
                     <AddSingleValueWidget
                         validator={validator}
                         onAddValue={(newValue) => {
-                            setValue(newValue);
+                            updateConstraint({
+                                type: 'set value',
+                                payload: newValue,
+                            });
                         }}
-                        removeValue={() => setValue('')}
+                        removeValue={() =>
+                            updateConstraint({ type: 'clear values' })
+                        }
                         currentValue={localConstraint.value}
                         helpText={
                             inputType.type === 'number'
@@ -311,12 +323,10 @@ export const EditableConstraint: FC<Props> = ({
                         helpText='Maximum 100 char length per value'
                         ref={addValuesButtonRef}
                         onAddValues={(newValues) => {
-                            // todo (`addEditStrategy`): move deduplication logic higher up in the context handling
-                            const combinedValues = new Set([
-                                ...(localConstraint.values || []),
-                                ...newValues,
-                            ]);
-                            setValues(Array.from(combinedValues));
+                            updateConstraint({
+                                type: 'add value(s)',
+                                payload: newValues,
+                            });
                         }}
                     />
                 );
@@ -338,14 +348,23 @@ export const EditableConstraint: FC<Props> = ({
                             autoFocus
                             options={constraintNameOptions}
                             value={contextName || ''}
-                            onChange={setContextName}
+                            onChange={(contextField) =>
+                                updateConstraint({
+                                    type: 'set context field',
+                                    payload: contextField,
+                                })
+                            }
                             variant='standard'
                         />
 
                         <OperatorOptions>
                             <StyledButton
                                 type='button'
-                                onClick={toggleInvertedOperator}
+                                onClick={() =>
+                                    updateConstraint({
+                                        type: 'toggle inverted operator',
+                                    })
+                                }
                             >
                                 {localConstraint.inverted ? (
                                     <StyledNotEqualsIcon aria-label='The constraint operator is exclusive.' />
@@ -370,7 +389,11 @@ export const EditableConstraint: FC<Props> = ({
                             {showCaseSensitiveButton ? (
                                 <StyledButton
                                     type='button'
-                                    onClick={toggleCaseSensitivity}
+                                    onClick={() =>
+                                        updateConstraint({
+                                            type: 'toggle case sensitivity',
+                                        })
+                                    }
                                 >
                                     {localConstraint.caseInsensitive ? (
                                         <StyledCaseInsensitiveIcon aria-label='The match is not case sensitive.' />
@@ -390,8 +413,12 @@ export const EditableConstraint: FC<Props> = ({
                     </ConstraintOptions>
                     <ValueList
                         values={localConstraint.values}
-                        removeValue={removeValue}
-                        setValues={setValues}
+                        removeValue={(value) =>
+                            updateConstraint({
+                                type: 'remove value from list',
+                                payload: value,
+                            })
+                        }
                         getExternalFocusTarget={() =>
                             addValuesButtonRef.current ??
                             deleteButtonRef.current
@@ -422,8 +449,23 @@ export const EditableConstraint: FC<Props> = ({
                         )}
                         constraintValues={constraintValues}
                         values={localConstraint.values || []}
-                        setValuesWithRecord={setValues}
-                        setValues={setValues}
+                        clearAll={() =>
+                            updateConstraint({
+                                type: 'clear values',
+                            })
+                        }
+                        addValues={(newValues) =>
+                            updateConstraint({
+                                type: 'add value(s)',
+                                payload: newValues,
+                            })
+                        }
+                        removeValue={(value) =>
+                            updateConstraint({
+                                type: 'remove value from list',
+                                payload: value,
+                            })
+                        }
                     />
                 </LegalValuesContainer>
             ) : null}

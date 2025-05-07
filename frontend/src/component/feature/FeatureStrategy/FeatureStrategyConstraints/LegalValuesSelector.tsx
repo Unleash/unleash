@@ -15,8 +15,9 @@ interface IRestrictiveLegalValuesProps {
     };
     constraintValues: string[];
     values: string[];
-    setValues: (values: string[]) => void;
-    setValuesWithRecord: (values: string[]) => void;
+    addValues: (values: string[]) => void;
+    removeValue: (values: string) => void;
+    clearAll: () => void;
     beforeValues?: JSX.Element;
 }
 
@@ -72,8 +73,11 @@ const LegalValuesSelectorWidget = styled('article')(({ theme }) => ({
 export const LegalValuesSelector = ({
     data,
     values,
-    setValues,
-    setValuesWithRecord,
+    // setValues,
+    addValues,
+    removeValue,
+    clearAll,
+    // setValuesWithRecord,
     constraintValues,
 }: IRestrictiveLegalValuesProps) => {
     const [filter, setFilter] = useState('');
@@ -103,20 +107,23 @@ export const LegalValuesSelector = ({
 
     useEffect(() => {
         if (illegalValues.length > 0) {
-            setValues(cleanDeletedLegalValues(values));
+            console.log('would clean deleted values here');
+            // setValues(cleanDeletedLegalValues(values));
         }
     }, []);
 
     const onChange = (legalValue: string) => {
         if (valuesMap[legalValue]) {
-            const index = values.findIndex((value) => value === legalValue);
-            const newValues = [...values];
-            newValues.splice(index, 1);
-            setValuesWithRecord(newValues);
+            removeValue(legalValue);
+            // const index = values.findIndex((value) => value === legalValue);
+            // const newValues = [...values];
+            // newValues.splice(index, 1);
+            // setValuesWithRecord(newValues);
             return;
         }
 
-        setValuesWithRecord([...cleanDeletedLegalValues(values), legalValue]);
+        addValues([legalValue]);
+        // setValuesWithRecord([...cleanDeletedLegalValues(values), legalValue]);
     };
 
     const isAllSelected = legalValues.every((value) =>
@@ -125,11 +132,15 @@ export const LegalValuesSelector = ({
 
     const onSelectAll = () => {
         if (isAllSelected) {
-            return setValuesWithRecord([]);
+            clearAll();
+            return;
+            // return setValuesWithRecord([]);
+        } else {
+            addValues(legalValues.map(({ value }) => value));
         }
-        setValuesWithRecord([
-            ...legalValues.map((legalValue) => legalValue.value),
-        ]);
+        // setValuesWithRecord([
+        //     ...legalValues.map((legalValue) => legalValue.value),
+        // ]);
     };
 
     const handleSearchKeyDown = (event: React.KeyboardEvent) => {

@@ -1,10 +1,16 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { IConstraint } from 'interfaces/strategy';
 import { cleanConstraint } from 'utils/cleanConstraint';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IUnleashContextDefinition } from 'interfaces/context';
-import type { Operator } from 'constants/operators';
+import {
+    DATE_AFTER,
+    dateOperators,
+    IN,
+    type Operator,
+} from 'constants/operators';
 import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint';
+import { CURRENT_TIME_CONTEXT_FIELD } from 'utils/operatorsForContext';
 
 interface IConstraintAccordionEditProps {
     constraint: IConstraint;
@@ -34,14 +40,101 @@ const resolveContextDefinition = (
     );
 };
 
+type ConstraintUpdateAction =
+    | { type: 'add value(s)'; payload: string[] }
+    | { type: 'set value'; payload: string }
+    | { type: 'clear values' }
+    | { type: 'remove value from list'; payload: string }
+    | { type: 'set context field'; payload: string }
+    | { type: 'set operator'; payload: Operator }
+    | { type: 'toggle case sensitivity' }
+    | { type: 'toggle inverted operator' };
+
 export const EditableConstraintWrapper = ({
     constraint,
     onDelete,
     onAutoSave,
 }: IConstraintAccordionEditProps) => {
-    const [localConstraint, setLocalConstraint] = useState<IConstraint>(
+    const constraintReducer = (
+        state: IConstraint,
+        action: ConstraintUpdateAction,
+    ): IConstraint => {
+        switch (action.type) {
+            case 'set context field':
+                if (
+                    action.payload === CURRENT_TIME_CONTEXT_FIELD &&
+                    !dateOperators.includes(state.operator)
+                ) {
+                    return cleanConstraint({
+                        ...state,
+                        operator: DATE_AFTER,
+                        values: [],
+                        value: new Date().toISOString(),
+                    });
+                } else if (
+                    action.payload !== CURRENT_TIME_CONTEXT_FIELD &&
+                    dateOperators.includes(state.operator)
+                ) {
+                    return cleanConstraint({
+                        ...state,
+                        operator: IN,
+                        values: [],
+                        value: '',
+                    });
+                }
+
+                return cleanConstraint({
+                    ...state,
+                    contextName: action.payload,
+                    values: [],
+                    value: '',
+                });
+            case 'set operator':
+                return cleanConstraint({
+                    ...state,
+                    operator: action.payload,
+                    values: [],
+                    value: '',
+                });
+            case 'add value(s)': {
+                const combinedValues = new Set([
+                    ...(state.values || []),
+                    ...action.payload,
+                ]);
+                return { ...state, values: Array.from(combinedValues) };
+            }
+            case 'set value':
+                return { ...state, value: action.payload };
+            case 'toggle inverted operator':
+                return { ...state, inverted: !state.inverted };
+            case 'toggle case sensitivity':
+                return { ...state, caseInsensitive: !state.inverted };
+            case 'remove value from list':
+                return {
+                    ...state,
+                    values: (state.values ?? []).filter(
+                        (value) => value !== action.payload,
+                    ),
+                };
+            case 'clear values':
+                return cleanConstraint({ ...state, values: [], value: '' });
+        }
+    };
+
+    // const [state, dispatch] = useReducer(
+    //     constraintReducer,
+    //     cleanConstraint(constraint),
+    // );
+
+    const [localConstraint, setLocalConstraint] = useState(
         cleanConstraint(constraint),
     );
+
+    const updateConstraint = (action: ConstraintUpdateAction) => {
+        const nextState = constraintReducer(localConstraint, action);
+        setLocalConstraint(nextState);
+        onAutoSave(nextState);
+    };
 
     const { context } = useUnleashContext();
     const [contextDefinition, setContextDefinition] = useState(
@@ -54,97 +147,14 @@ export const EditableConstraintWrapper = ({
         );
     }, [localConstraint.contextName, context]);
 
-    const setContextName = useCallback((contextName: string) => {
-        setLocalConstraint((prev) => {
-            const localConstraint = cleanConstraint({
-                ...prev,
-                contextName,
-                values: [],
-                value: '',
-            });
-
-            onAutoSave(localConstraint);
-            return localConstraint;
-        });
-    }, []);
-
-    const setOperator = useCallback((operator: Operator) => {
-        setLocalConstraint((prev) => {
-            const localConstraint = cleanConstraint({
-                ...prev,
-                operator,
-                values: [],
-                value: '',
-            });
-
-            onAutoSave(localConstraint);
-            return localConstraint;
-        });
-    }, []);
-
-    const setValues = useCallback((values: string[]) => {
-        setLocalConstraint((prev) => {
-            const localConstraint = { ...prev, values };
-
-            onAutoSave(localConstraint);
-            return localConstraint;
-        });
-    }, []);
-
-    const setValue = useCallback((value: string) => {
-        setLocalConstraint((prev) => {
-            const localConstraint = { ...prev, value };
-
-            onAutoSave(localConstraint);
-            return localConstraint;
-        });
-    }, []);
-
-    const setInvertedOperator = () => {
-        setLocalConstraint((prev) => {
-            const localConstraint = { ...prev, inverted: !prev.inverted };
-
-            onAutoSave(localConstraint);
-            return localConstraint;
-        });
-    };
-
-    const setCaseInsensitive = useCallback(() => {
-        setLocalConstraint((prev) => {
-            const localConstraint = {
-                ...prev,
-                caseInsensitive: !prev.caseInsensitive,
-            };
-
-            onAutoSave(localConstraint);
-            return localConstraint;
-        });
-    }, []);
-
-    const removeValue = useCallback(
-        (index: number) => {
-            const valueCopy = [...localConstraint.values!];
-            valueCopy.splice(index, 1);
-            setValues(valueCopy);
-        },
-        [localConstraint],
-    );
-
     return (
         <EditableConstraint
             localConstraint={localConstraint}
-            setLocalConstraint={setLocalConstraint}
-            setContextName={setContextName}
-            setOperator={setOperator}
-            toggleInvertedOperator={setInvertedOperator}
-            toggleCaseSensitivity={setCaseInsensitive}
             onDelete={onDelete}
-            setValues={setValues}
-            setValue={setValue}
             constraintValues={constraint?.values || []}
             constraintValue={constraint?.value || ''}
             contextDefinition={contextDefinition}
-            removeValue={removeValue}
+            updateConstraint={updateConstraint}
         />
     );
 };

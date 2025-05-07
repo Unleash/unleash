@@ -1,17 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
 import { mergeAllOfs } from '../util/all-of';
-const adminSchema = {
-    required: ['type'],
-    type: 'object',
-    properties: {
-        type: {
-            type: 'string',
-            pattern: '^[Aa][Dd][Mm][Ii][Nn]$',
-            description: `An admin token. Must be the string "admin" (not case sensitive).`,
-            example: 'admin',
-        },
-    },
-} as const;
 
 const tokenNameSchema = {
     type: 'object',
@@ -86,10 +74,7 @@ export const createApiTokenSchema = {
     type: 'object',
     description:
         'The data required to create an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).',
-    oneOf: [
-        mergeAllOfs([expireSchema, adminSchema, tokenNameSchema]),
-        mergeAllOfs([expireSchema, clientFrontendSchema, tokenNameSchema]),
-    ],
+    oneOf: [mergeAllOfs([expireSchema, clientFrontendSchema, tokenNameSchema])],
     components: {},
 } as const;
 

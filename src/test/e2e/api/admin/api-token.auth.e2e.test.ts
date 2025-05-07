@@ -241,9 +241,6 @@ test('A role with only CREATE_PROJECT_API_TOKEN can create project tokens', asyn
             type: 'client',
         })
         .set('Content-Type', 'application/json')
-        .expect((res) => {
-            console.log(res.body);
-        })
         .expect(201);
     await destroy();
 });

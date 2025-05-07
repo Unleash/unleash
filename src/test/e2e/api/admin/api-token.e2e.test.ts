@@ -176,7 +176,7 @@ test('creates new client token with project & environment set', async () => {
         .send({
             tokenName: 'default-client',
             type: 'client',
-            project: 'default',
+            projects: ['default'],
             environment: DEFAULT_ENV,
         })
         .set('Content-Type', 'application/json')
@@ -209,7 +209,7 @@ test('should prefix token with "project:environment."', async () => {
         .send({
             tokenName: 'default-client',
             type: 'client',
-            project: 'default',
+            projects: ['default'],
             environment: DEFAULT_ENV,
         })
         .set('Content-Type', 'application/json')
@@ -225,7 +225,7 @@ test('should not create token for invalid projectId', async () => {
         .send({
             tokenName: 'default-client',
             type: 'client',
-            project: 'bogus-project-something',
+            projects: ['bogus-project-something'],
         })
         .set('Content-Type', 'application/json')
         .expect(400)
@@ -264,19 +264,15 @@ test('needs tokenName property set', async () => {
         .expect(400);
 });
 
-test('username can not be set', async () => {
+test('can not create token with admin type', async () => {
     return app.request
         .post('/api/admin/api-tokens')
         .send({
-            username: 'default-client-name',
-            tokenName: 'default-token-name',
-            type: 'client',
+            tokenName: 'default-client',
+            type: 'admin',
             environment: '*',
         })
         .set('Content-Type', 'application/json')
-        .expect((res) => {
-            console.log(res.body);
-        })
         .expect(400);
 });
 
@@ -307,9 +303,6 @@ test('should create token for disabled environment', async () => {
             environment: 'disabledEnvironment',
         })
         .set('Content-Type', 'application/json')
-        .expect((res) => {
-            console.log(res.body);
-        })
         .expect(201);
 });
 

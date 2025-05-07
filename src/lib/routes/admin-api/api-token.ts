@@ -307,11 +307,6 @@ export class ApiTokenController extends Controller {
         const permissionRequired = tokenTypeToCreatePermission(
             createToken.type,
         );
-        if (createToken.type.toUpperCase() === 'ADMIN') {
-            throw new OperationDeniedError(
-                `Admin tokens are disabled in this instance. Use a Service account or a PAT to access admin operations instead`,
-            );
-        }
         const hasPermission = await this.accessService.hasPermission(
             req.user,
             permissionRequired,

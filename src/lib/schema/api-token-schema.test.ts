@@ -24,7 +24,7 @@ test('should not have default project set if projects is present', async () => {
     expect(token.project).not.toBeDefined();
 });
 
-test('should have project set to default if projects is missing', async () => {
+test('should have a projects entry consisting of ALL if projects is missing', async () => {
     const token = await createApiToken.validateAsync({
         tokenName: 'test',
         type: 'client',
@@ -32,7 +32,7 @@ test('should have project set to default if projects is missing', async () => {
     expect(token.projects).toMatchObject([ALL]);
 });
 
-test('should not have project set if project is present', async () => {
+test('should not have project set after validation if project is present', async () => {
     const token = await createApiToken.validateAsync({
         tokenName: 'test',
         type: 'client',

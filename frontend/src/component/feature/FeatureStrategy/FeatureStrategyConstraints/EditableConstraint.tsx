@@ -176,7 +176,6 @@ const getInputType = (input: Input): InputType => {
 };
 
 type Props = {
-    constraint: IConstraint;
     localConstraint: IConstraint;
     setContextName: (contextName: string) => void;
     setOperator: (operator: Operator) => void;
@@ -184,26 +183,20 @@ type Props = {
     onDelete?: () => void;
     toggleInvertedOperator: () => void;
     toggleCaseSensitivity: () => void;
-    onUndo: () => void;
-    constraintChanges: IConstraint[];
     contextDefinition: Pick<IUnleashContextDefinition, 'legalValues'>;
     constraintValues: string[];
     constraintValue: string;
     setValue: (value: string) => void;
     setValues: (values: string[]) => void;
-    setValuesWithRecord: (values: string[]) => void;
     removeValue: (index: number) => void;
 };
 
 export const EditableConstraint: FC<Props> = ({
-    constraintChanges,
-    constraint,
     localConstraint,
     setLocalConstraint,
     setContextName,
     setOperator,
     onDelete,
-    onUndo,
     toggleInvertedOperator,
     toggleCaseSensitivity,
     contextDefinition,
@@ -211,7 +204,6 @@ export const EditableConstraint: FC<Props> = ({
     constraintValue,
     setValue,
     setValues,
-    setValuesWithRecord,
     removeValue,
 }) => {
     const { input } = useConstraintInput({
@@ -324,7 +316,7 @@ export const EditableConstraint: FC<Props> = ({
                                 ...(localConstraint.values || []),
                                 ...newValues,
                             ]);
-                            setValuesWithRecord(Array.from(combinedValues));
+                            setValues(Array.from(combinedValues));
                         }}
                     />
                 );
@@ -399,7 +391,7 @@ export const EditableConstraint: FC<Props> = ({
                     <ValueList
                         values={localConstraint.values}
                         removeValue={removeValue}
-                        setValues={setValuesWithRecord}
+                        setValues={setValues}
                         getExternalFocusTarget={() =>
                             addValuesButtonRef.current ??
                             deleteButtonRef.current
@@ -430,7 +422,7 @@ export const EditableConstraint: FC<Props> = ({
                         )}
                         constraintValues={constraintValues}
                         values={localConstraint.values || []}
-                        setValuesWithRecord={setValuesWithRecord}
+                        setValuesWithRecord={setValues}
                         setValues={setValues}
                     />
                 </LegalValuesContainer>

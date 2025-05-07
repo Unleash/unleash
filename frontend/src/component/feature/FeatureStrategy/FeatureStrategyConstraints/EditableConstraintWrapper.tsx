@@ -118,6 +118,7 @@ export const EditableConstraintWrapper = ({
         (index: number) => {
             const valueCopy = [...localConstraint.values!];
             valueCopy.splice(index, 1);
+            setValues(valueCopy);
         },
         [localConstraint],
     );
@@ -131,15 +132,12 @@ export const EditableConstraintWrapper = ({
             toggleInvertedOperator={setInvertedOperator}
             toggleCaseSensitivity={setCaseInsensitive}
             onDelete={onDelete}
-            constraintChanges={constraintChanges}
             setValues={setValues}
-            setValuesWithRecord={setValuesWithRecord}
             setValue={setValue}
             constraintValues={constraint?.values || []}
             constraintValue={constraint?.value || ''}
             contextDefinition={contextDefinition}
             removeValue={removeValue}
-            constraint={constraint}
         />
     );
 };

@@ -153,10 +153,6 @@ export const NewConstraintAccordionList = forwardRef<
                                 constraint={constraint}
                                 onCancel={onCancel?.bind(null, index)}
                                 onDelete={onRemove?.bind(null, index)}
-                                onSave={onSave!.bind(null, index)}
-                                onAutoSave={onAutoSave?.(
-                                    constraint[constraintId],
-                                )}
                             />
                         ) : (
                             <ConstraintAccordionView

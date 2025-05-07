@@ -161,12 +161,13 @@ export const EditableConstraintWrapper = ({
                     value: '',
                 });
             case 'add value(s)': {
-                const combinedValues = state.values?.union(
-                    new Set(action.payload),
-                );
+                const newValues = new Set(action.payload);
+                const combinedValues = state.values
+                    ? state.values.union(newValues)
+                    : newValues;
                 const filteredValues = deletedLegalValues
-                    ? combinedValues?.difference(deletedLegalValues)
-                    : deletedLegalValues;
+                    ? combinedValues.difference(deletedLegalValues)
+                    : combinedValues;
                 return {
                     ...state,
                     values: filteredValues,

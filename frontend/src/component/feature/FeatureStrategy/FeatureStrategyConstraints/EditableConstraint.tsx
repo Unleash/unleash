@@ -167,6 +167,9 @@ const getInputType = (input: Input): InputType => {
     }
 };
 
+type ConstraintWithValueSet = Omit<IConstraint, 'values'> & {
+    values?: Set<string>;
+};
 type ConstraintUpdateAction =
     | { type: 'add value(s)'; payload: string[] }
     | { type: 'set value'; payload: string }
@@ -178,7 +181,7 @@ type ConstraintUpdateAction =
     | { type: 'toggle inverted operator' };
 
 type Props = {
-    localConstraint: IConstraint;
+    localConstraint: ConstraintWithValueSet;
     onDelete?: () => void;
     contextDefinition: Pick<IUnleashContextDefinition, 'legalValues'>;
     constraintValues: string[];
@@ -194,6 +197,7 @@ export const EditableConstraint: FC<Props> = ({
 }) => {
     const { input } = useConstraintInput({
         contextDefinition,
+        // @ts-ignore
         localConstraint,
     });
 
@@ -352,7 +356,11 @@ export const EditableConstraint: FC<Props> = ({
                         </OperatorOptions>
                     </ConstraintOptions>
                     <ValueList
-                        values={localConstraint.values}
+                        values={
+                            localConstraint.values
+                                ? Array.from(localConstraint.values)
+                                : undefined
+                        }
                         removeValue={(value) =>
                             updateConstraint({
                                 type: 'remove value from list',
@@ -388,7 +396,7 @@ export const EditableConstraint: FC<Props> = ({
                             contextDefinition.legalValues,
                         )}
                         constraintValues={constraintValues}
-                        values={localConstraint.values || []}
+                        values={localConstraint.values || new Set()}
                         clearAll={() =>
                             updateConstraint({
                                 type: 'clear values',

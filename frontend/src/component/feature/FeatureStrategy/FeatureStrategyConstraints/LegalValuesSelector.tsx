@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert, Button, Checkbox, styled } from '@mui/material';
 import type { ILegalValue } from 'interfaces/context';
@@ -14,9 +14,9 @@ interface IRestrictiveLegalValuesProps {
         deletedLegalValues: ILegalValue[];
     };
     constraintValues: string[];
-    values: string[];
+    values: Set<string>;
     addValues: (values: string[]) => void;
-    removeValue: (values: string) => void;
+    removeValue: (value: string) => void;
     clearAll: () => void;
     beforeValues?: JSX.Element;
 }
@@ -83,9 +83,6 @@ export const LegalValuesSelector = ({
 
     const filteredValues = filterLegalValues(legalValues, filter);
 
-    // Lazily initialise the values because there might be a lot of them.
-    const [valuesMap, setValuesMap] = useState(() => createValuesMap(values));
-
     const cleanDeletedLegalValues = (constraintValues: string[]): string[] => {
         const deletedValuesSet = getLegalValueSet(deletedLegalValues);
         return (
@@ -99,29 +96,25 @@ export const LegalValuesSelector = ({
         deletedLegalValues,
     );
 
-    useEffect(() => {
-        setValuesMap(createValuesMap(values));
-    }, [values, setValuesMap, createValuesMap]);
-
-    useEffect(() => {
-        if (illegalValues.length > 0) {
-            // todo: impl this
-            console.log('would clean deleted values here');
-            // setValues(cleanDeletedLegalValues(values));
-        }
-    }, []);
+    //todo: maybe move this up?
+    // useEffect(() => {
+    //     if (illegalValues.length > 0) {
+    //         removeValues(...illegalValues)
+    //         // todo: impl this
+    //         console.log('would clean deleted values here');
+    //         // setvalues(cleandeletedlegalvalues(values));
+    //     }
+    // }, []);
 
     const onChange = (legalValue: string) => {
-        if (valuesMap[legalValue]) {
+        if (values.has(legalValue)) {
             removeValue(legalValue);
         } else {
             addValues([legalValue]);
         }
     };
 
-    const isAllSelected = legalValues.every((value) =>
-        values.includes(value.value),
-    );
+    const isAllSelected = legalValues.every((value) => values.has(value.value));
 
     const onSelectAll = () => {
         if (isAllSelected) {
@@ -185,7 +178,7 @@ export const LegalValuesSelector = ({
                         filter={filter}
                         control={
                             <Checkbox
-                                checked={Boolean(valuesMap[match.value])}
+                                checked={Boolean(values.has(match.value))}
                                 onChange={() => onChange(match.value)}
                                 name='legal-value'
                                 color='primary'

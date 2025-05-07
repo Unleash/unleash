@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
 import type { IConstraint } from 'interfaces/strategy';
-import { cleanConstraint } from 'utils/cleanConstraint';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IUnleashContextDefinition } from 'interfaces/context';
 import {
     DATE_AFTER,
     dateOperators,
     IN,
+    singleValueOperators,
     type Operator,
 } from 'constants/operators';
 import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint';
 import { CURRENT_TIME_CONTEXT_FIELD } from 'utils/operatorsForContext';
+import produce from 'immer';
 
 interface IConstraintAccordionEditProps {
     constraint: IConstraint;
@@ -50,15 +51,31 @@ type ConstraintUpdateAction =
     | { type: 'toggle case sensitivity' }
     | { type: 'toggle inverted operator' };
 
+type ConstraintWithValueSet = Omit<IConstraint, 'values'> & {
+    values?: Set<string>;
+};
+
+const cleanConstraint = (
+    constraint: Readonly<ConstraintWithValueSet>,
+): ConstraintWithValueSet => {
+    return produce(constraint, (draft) => {
+        if (singleValueOperators.includes(constraint.operator)) {
+            delete draft.values;
+        } else {
+            delete draft.value;
+        }
+    });
+};
+
 export const EditableConstraintWrapper = ({
     constraint,
     onDelete,
     onAutoSave,
 }: IConstraintAccordionEditProps) => {
     const constraintReducer = (
-        state: IConstraint,
+        state: ConstraintWithValueSet,
         action: ConstraintUpdateAction,
-    ): IConstraint => {
+    ): ConstraintWithValueSet => {
         switch (action.type) {
             case 'set context field':
                 if (
@@ -68,7 +85,7 @@ export const EditableConstraintWrapper = ({
                     return cleanConstraint({
                         ...state,
                         operator: DATE_AFTER,
-                        values: [],
+                        values: new Set(),
                         value: new Date().toISOString(),
                     });
                 } else if (
@@ -78,7 +95,8 @@ export const EditableConstraintWrapper = ({
                     return cleanConstraint({
                         ...state,
                         operator: IN,
-                        values: [],
+                        values: new Set(),
+
                         value: '',
                     });
                 }
@@ -86,22 +104,23 @@ export const EditableConstraintWrapper = ({
                 return cleanConstraint({
                     ...state,
                     contextName: action.payload,
-                    values: [],
+                    values: new Set(),
+
                     value: '',
                 });
             case 'set operator':
                 return cleanConstraint({
                     ...state,
                     operator: action.payload,
-                    values: [],
+                    values: new Set(),
+
                     value: '',
                 });
             case 'add value(s)': {
-                const combinedValues = new Set([
-                    ...(state.values || []),
-                    ...action.payload,
-                ]);
-                return { ...state, values: Array.from(combinedValues) };
+                return {
+                    ...state,
+                    values: state.values?.union(new Set(action.payload)),
+                };
             }
             case 'set value':
                 return { ...state, value: action.payload };
@@ -110,25 +129,35 @@ export const EditableConstraintWrapper = ({
             case 'toggle case sensitivity':
                 return { ...state, caseInsensitive: !state.inverted };
             case 'remove value from list':
+                state.values?.delete(action.payload);
                 return {
                     ...state,
-                    values: (state.values ?? []).filter(
-                        (value) => value !== action.payload,
-                    ),
+                    values: state.values ?? new Set(),
                 };
             case 'clear values':
-                return cleanConstraint({ ...state, values: [], value: '' });
+                return cleanConstraint({
+                    ...state,
+                    values: new Set(),
+                    value: '',
+                });
         }
     };
 
-    const [localConstraint, setLocalConstraint] = useState(
-        cleanConstraint(constraint),
-    );
+    const [localConstraint, setLocalConstraint] = useState(() => {
+        const withSet = {
+            ...constraint,
+            values: new Set(constraint.values),
+        };
+        return cleanConstraint(withSet);
+    });
 
     const updateConstraint = (action: ConstraintUpdateAction) => {
         const nextState = constraintReducer(localConstraint, action);
         setLocalConstraint(nextState);
-        onAutoSave(nextState);
+        onAutoSave({
+            ...nextState,
+            values: Array.from(nextState.values ?? []),
+        });
     };
 
     const { context } = useUnleashContext();

@@ -15,8 +15,6 @@ import { createEventsService } from '../../../lib/features/index.js';
 
 import { jest } from '@jest/globals';
 
-const addonProvider = { simple: new SimpleAddon() };
-
 let db: ITestDb;
 let stores: IUnleashStores;
 let addonService: AddonService;
@@ -34,6 +32,15 @@ beforeAll(async () => {
         stores,
         config,
     );
+    const addonProvider = {
+        simple: new SimpleAddon({
+            getLogger,
+            unleashUrl: 'http://test',
+            integrationEventsService,
+            flagResolver: config.flagResolver,
+            eventBus: config.eventBus,
+        }),
+    };
     addonService = new AddonService(
         stores,
         config,

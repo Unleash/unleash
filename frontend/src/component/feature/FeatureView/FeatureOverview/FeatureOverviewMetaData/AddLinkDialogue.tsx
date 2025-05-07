@@ -1,10 +1,10 @@
 import { type FC, useState } from 'react';
 import { Box, styled, TextField } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { useFeatureLinkApi } from '../../../../../hooks/api/actions/useFeatureLinkApi/useFeatureLinkApi';
-import { useFeature } from '../../../../../hooks/api/getters/useFeature/useFeature';
-import useToast from '../../../../../hooks/useToast';
-import { formatUnknownError } from '../../../../../utils/formatUnknownError';
+import { useFeatureLinkApi } from 'hooks/api/actions/useFeatureLinkApi/useFeatureLinkApi';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IAddLinkDialogueProps {
     project: string;

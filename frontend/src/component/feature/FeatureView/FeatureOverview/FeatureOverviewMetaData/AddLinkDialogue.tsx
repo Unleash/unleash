@@ -41,11 +41,12 @@ export const AddLinkDialogue: FC<IAddLinkDialogueProps> = ({
                 try {
                     await addLink({ url, title: title ?? null });
                     setToastData({ text: 'Link added', type: 'success' });
+                    onClose();
+                    refetchFeature();
+                    setTitle('');
+                    setUrl('');
                 } catch (error) {
                     setToastApiError(formatUnknownError(error));
-                } finally {
-                    refetchFeature();
-                    onClose();
                 }
             }}
             primaryButtonText='Add'

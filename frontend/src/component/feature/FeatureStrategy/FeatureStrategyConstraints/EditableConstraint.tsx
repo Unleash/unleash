@@ -6,7 +6,10 @@ import {
 } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
 import { stringOperators, type Operator } from 'constants/operators';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import type { IUnleashContextDefinition } from 'interfaces/context';
+import type {
+    ILegalValue,
+    IUnleashContextDefinition,
+} from 'interfaces/context';
 import type { IConstraint } from 'interfaces/strategy';
 import { useMemo, useRef, type FC } from 'react';
 import { operatorsForContext } from 'utils/operatorsForContext';
@@ -24,7 +27,6 @@ import { ReactComponent as NotEqualsIcon } from 'assets/icons/constraint-not-equ
 import { AddSingleValueWidget } from './AddSingleValueWidget';
 import { ConstraintDateInput } from './ConstraintDateInput';
 import { LegalValuesSelector } from './LegalValuesSelector';
-import { resolveLegalValues } from './resolve-legal-values';
 import { constraintValidator } from './constraint-validator';
 
 const Container = styled('article')(({ theme }) => ({
@@ -186,14 +188,17 @@ type Props = {
     contextDefinition: Pick<IUnleashContextDefinition, 'legalValues'>;
     constraintValues: string[];
     updateConstraint: (action: ConstraintUpdateAction) => void;
+    deletedLegalValues?: Set<string>;
+    legalValues?: ILegalValue[];
 };
 
 export const EditableConstraint: FC<Props> = ({
     localConstraint,
     onDelete,
     contextDefinition,
-    constraintValues,
     updateConstraint,
+    deletedLegalValues,
+    legalValues,
 }) => {
     const { input } = useConstraintInput({
         contextDefinition,
@@ -391,11 +396,6 @@ export const EditableConstraint: FC<Props> = ({
             {inputType.input === 'legal values' ? (
                 <LegalValuesContainer>
                     <LegalValuesSelector
-                        data={resolveLegalValues(
-                            constraintValues,
-                            contextDefinition.legalValues,
-                        )}
-                        constraintValues={constraintValues}
                         values={localConstraint.values || new Set()}
                         clearAll={() =>
                             updateConstraint({
@@ -414,6 +414,8 @@ export const EditableConstraint: FC<Props> = ({
                                 payload: value,
                             })
                         }
+                        deletedLegalValues={deletedLegalValues}
+                        legalValues={legalValues ?? []}
                     />
                 </LegalValuesContainer>
             ) : null}

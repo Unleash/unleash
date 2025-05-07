@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { IConstraint } from 'interfaces/strategy';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IUnleashContextDefinition } from 'interfaces/context';
@@ -72,9 +72,43 @@ export const EditableConstraintWrapper = ({
     onDelete,
     onAutoSave,
 }: IConstraintAccordionEditProps) => {
+    const [localConstraint, setLocalConstraint] = useState(() => {
+        const withSet = {
+            ...constraint,
+            values: new Set(constraint.values),
+        };
+        return cleanConstraint(withSet);
+    });
+
+    const { context } = useUnleashContext();
+    const [contextDefinition, setContextDefinition] = useState(
+        resolveContextDefinition(context, localConstraint.contextName),
+    );
+
+    const deletedLegalValues = useMemo(() => {
+        if (
+            contextDefinition.legalValues?.length &&
+            constraint.values?.length
+        ) {
+            const currentLegalValues = new Set(
+                contextDefinition.legalValues.map(({ value }) => value),
+            );
+            const deletedValues = new Set(constraint.values).difference(
+                currentLegalValues,
+            );
+
+            return deletedValues;
+        }
+        return undefined;
+    }, [
+        JSON.stringify(contextDefinition.legalValues),
+        JSON.stringify(constraint.values),
+    ]);
+
     const constraintReducer = (
         state: ConstraintWithValueSet,
         action: ConstraintUpdateAction,
+        deletedLegalValues?: Set<string>,
     ): ConstraintWithValueSet => {
         switch (action.type) {
             case 'set context field':
@@ -127,9 +161,15 @@ export const EditableConstraintWrapper = ({
                     value: '',
                 });
             case 'add value(s)': {
+                const combinedValues = state.values?.union(
+                    new Set(action.payload),
+                );
+                const filteredValues = deletedLegalValues
+                    ? combinedValues?.difference(deletedLegalValues)
+                    : deletedLegalValues;
                 return {
                     ...state,
-                    values: state.values?.union(new Set(action.payload)),
+                    values: filteredValues,
                 };
             }
             case 'set value':
@@ -153,21 +193,12 @@ export const EditableConstraintWrapper = ({
         }
     };
 
-    const [localConstraint, setLocalConstraint] = useState(() => {
-        const withSet = {
-            ...constraint,
-            values: new Set(constraint.values),
-        };
-        return cleanConstraint(withSet);
-    });
-
-    const { context } = useUnleashContext();
-    const [contextDefinition, setContextDefinition] = useState(
-        resolveContextDefinition(context, localConstraint.contextName),
-    );
-
     const updateConstraint = (action: ConstraintUpdateAction) => {
-        const nextState = constraintReducer(localConstraint, action);
+        const nextState = constraintReducer(
+            localConstraint,
+            action,
+            deletedLegalValues,
+        );
         const contextFieldHasChanged =
             localConstraint.contextName !== nextState.contextName;
 
@@ -191,6 +222,8 @@ export const EditableConstraintWrapper = ({
             constraintValues={constraint?.values || []}
             contextDefinition={contextDefinition}
             updateConstraint={updateConstraint}
+            deletedLegalValues={deletedLegalValues}
+            legalValues={contextDefinition.legalValues}
         />
     );
 };

@@ -292,7 +292,7 @@ describe('NewFeatureStrategyCreate', () => {
         expect(screen.getByText(values[2])).toBeInTheDocument();
     });
 
-    test.skip('Should update multiple constraints correctly', async () => {
+    test('Should update multiple constraints correctly', async () => {
         setupComponent();
 
         const titleEl = await screen.findByText('Gradual rollout');
@@ -345,7 +345,7 @@ describe('NewFeatureStrategyCreate', () => {
         expect(screen.queryByText('789')).toBeInTheDocument();
     });
 
-    test.skip('Should update multiple constraints with the correct react key', async () => {
+    test('Should update multiple constraints with the correct react key', async () => {
         setupComponent();
 
         const titleEl = await screen.findByText('Gradual rollout');
@@ -359,24 +359,37 @@ describe('NewFeatureStrategyCreate', () => {
         fireEvent.click(addConstraintEl);
         fireEvent.click(addConstraintEl);
 
-        const inputElements = screen.getAllByPlaceholderText(
-            'value1, value2, value3...',
-        );
+        const addValueEls = await screen.findAllByText('Add values');
 
-        fireEvent.change(inputElements[0], {
+        // first constraint
+        fireEvent.click(addValueEls[0]);
+        const firstEnterElement = screen.getByPlaceholderText('Enter value');
+        fireEvent.change(firstEnterElement, {
             target: { value: '123' },
         });
-        fireEvent.change(inputElements[1], {
+        const firstAddElement = screen.getByText('Add');
+        fireEvent.click(firstAddElement);
+
+        // second constraint
+        fireEvent.click(addValueEls[1]);
+        screen.debug(undefined, 200000);
+        const secondEnterElement =
+            await screen.findByPlaceholderText('Enter value');
+        fireEvent.change(secondEnterElement, {
             target: { value: '456' },
         });
-        fireEvent.change(inputElements[2], {
+        const secondDoneElement = screen.getByText('Add');
+        fireEvent.click(secondDoneElement);
+
+        // third constraint
+        fireEvent.click(addValueEls[2]);
+
+        const thirdEnterElement = screen.getByPlaceholderText('Enter value');
+        fireEvent.change(thirdEnterElement, {
             target: { value: '789' },
         });
-
-        const addValueEls = await screen.findAllByText('Add values');
-        fireEvent.click(addValueEls[0]);
-        fireEvent.click(addValueEls[1]);
-        fireEvent.click(addValueEls[2]);
+        const thirdDoneElement = screen.getByText('Add');
+        fireEvent.click(thirdDoneElement);
 
         expect(screen.queryByText('123')).toBeInTheDocument();
 

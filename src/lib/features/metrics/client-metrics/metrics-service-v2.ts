@@ -26,6 +26,10 @@ import {
 import type { ClientMetricsSchema } from '../../../../lib/openapi';
 import { nameSchema } from '../../../schema/feature-schema';
 import memoizee from 'memoizee';
+import {
+    MAX_UNKNOWN_FLAGS,
+    type UnknownFlagsService,
+} from '../unknown-flags/unknown-flags-service';
 
 export default class ClientMetricsServiceV2 {
     private config: IUnleashConfig;
@@ -35,6 +39,8 @@ export default class ClientMetricsServiceV2 {
     private clientMetricsStoreV2: IClientMetricsStoreV2;
 
     private lastSeenService: LastSeenService;
+
+    private unknownFlagsService: UnknownFlagsService;
 
     private flagResolver: Pick<IFlagResolver, 'isEnabled' | 'getVariant'>;
 
@@ -46,9 +52,11 @@ export default class ClientMetricsServiceV2 {
         { clientMetricsStoreV2 }: Pick<IUnleashStores, 'clientMetricsStoreV2'>,
         config: IUnleashConfig,
         lastSeenService: LastSeenService,
+        unknownFlagsService: UnknownFlagsService,
     ) {
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
         this.lastSeenService = lastSeenService;
+        this.unknownFlagsService = unknownFlagsService;
         this.config = config;
         this.logger = config.getLogger(
             '/services/client-metrics/client-metrics-service-v2.ts',
@@ -113,25 +121,55 @@ export default class ClientMetricsServiceV2 {
         }
     }
 
-    async filterExistingToggleNames(toggleNames: string[]): Promise<string[]> {
-        if (this.flagResolver.isEnabled('filterExistingFlagNames')) {
+    async filterExistingToggleNames(toggleNames: string[]): Promise<{
+        validatedToggleNames: string[];
+        unknownToggleNames: string[];
+    }> {
+        let toggleNamesToValidate: string[] = toggleNames;
+        let unknownToggleNames: string[] = [];
+
+        const shouldFilter = this.flagResolver.isEnabled(
+            'filterExistingFlagNames',
+        );
+        const shouldReport = this.flagResolver.isEnabled('reportUnknownFlags');
+
+        if (shouldFilter || shouldReport) {
             try {
-                const validNames = await this.cachedFeatureNames();
+                const existingFlags = await this.cachedFeatureNames();
 
                 const existingNames = toggleNames.filter((name) =>
-                    validNames.includes(name),
+                    existingFlags.includes(name),
                 );
-                if (existingNames.length !== toggleNames.length) {
-                    this.logger.info(
-                        `Filtered out ${toggleNames.length - existingNames.length} toggles with non-existing names`,
+                const nonExistingNames = toggleNames.filter(
+                    (name) => !existingFlags.includes(name),
+                );
+
+                if (shouldFilter) {
+                    toggleNamesToValidate = existingNames;
+
+                    if (existingNames.length !== toggleNames.length) {
+                        this.logger.info(
+                            `Filtered out ${toggleNames.length - existingNames.length} toggles with non-existing names`,
+                        );
+                    }
+                }
+
+                if (shouldReport) {
+                    unknownToggleNames = nonExistingNames.slice(
+                        0,
+                        MAX_UNKNOWN_FLAGS,
                     );
                 }
-                return this.filterValidToggleNames(existingNames);
             } catch (e) {
                 this.logger.error(e);
             }
         }
-        return this.filterValidToggleNames(toggleNames);
+
+        const validatedToggleNames = await this.filterValidToggleNames(
+            toggleNamesToValidate,
+        );
+
+        return { validatedToggleNames, unknownToggleNames };
     }
 
     async filterValidToggleNames(toggleNames: string[]): Promise<string[]> {
@@ -181,7 +219,7 @@ export default class ClientMetricsServiceV2 {
                 ),
         );
 
-        const validatedToggleNames =
+        const { validatedToggleNames, unknownToggleNames } =
             await this.filterExistingToggleNames(toggleNames);
 
         this.logger.debug(
@@ -202,6 +240,15 @@ export default class ClientMetricsServiceV2 {
             };
 
             this.config.eventBus.emit(CLIENT_REGISTER, heartbeatEvent);
+        }
+
+        if (unknownToggleNames.length > 0) {
+            const unknownFlags = unknownToggleNames.map((name) => ({
+                name,
+                appName: value.appName,
+                seenAt: value.bucket.stop,
+            }));
+            this.unknownFlagsService.register(unknownFlags);
         }
 
         if (validatedToggleNames.length > 0) {

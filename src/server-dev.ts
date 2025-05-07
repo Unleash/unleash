@@ -62,6 +62,7 @@ process.nextTick(async () => {
                         strictSchemaValidation: true,
                         registerFrontendClient: true,
                         featureLinks: true,
+                        reportUnknownFlags: true,
                     },
                 },
                 authentication: {

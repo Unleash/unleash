@@ -162,6 +162,7 @@ import { UniqueConnectionService } from '../features/unique-connection/unique-co
 import { createFakeFeatureLinkService } from '../features/feature-links/createFeatureLinkService';
 import { FeatureLinksReadModel } from '../features/feature-links/feature-links-read-model';
 import { FakeFeatureLinksReadModel } from '../features/feature-links/fake-feature-links-read-model';
+import { UnknownFlagsService } from '../features/metrics/unknown-flags/unknown-flags-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -193,10 +194,14 @@ export const createServices = (
     const lastSeenService = db
         ? createLastSeenService(db, config)
         : createFakeLastSeenService(config);
+
+    const unknownFlagsService = new UnknownFlagsService(stores, config);
+
     const clientMetricsServiceV2 = new ClientMetricsServiceV2(
         stores,
         config,
         lastSeenService,
+        unknownFlagsService,
     );
     const dependentFeaturesReadModel = db
         ? new DependentFeaturesReadModel(db)
@@ -509,6 +514,7 @@ export const createServices = (
         uniqueConnectionService,
         featureLifecycleReadModel,
         transactionalFeatureLinkService,
+        unknownFlagsService,
     };
 };
 
@@ -564,4 +570,5 @@ export {
     UserSubscriptionsService,
     UniqueConnectionService,
     FeatureLifecycleReadModel,
+    UnknownFlagsService,
 };

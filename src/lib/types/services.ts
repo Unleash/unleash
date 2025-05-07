@@ -62,6 +62,7 @@ import type { UserSubscriptionsService } from '../features/user-subscriptions/us
 import type { UniqueConnectionService } from '../features/unique-connection/unique-connection-service';
 import type { IFeatureLifecycleReadModel } from '../features/feature-lifecycle/feature-lifecycle-read-model-type';
 import type FeatureLinkService from '../features/feature-links/feature-link-service';
+import type { UnknownFlagsService } from '../internals';
 
 export interface IUnleashServices {
     transactionalAccessService: WithTransactional<AccessService>;
@@ -135,4 +136,5 @@ export interface IUnleashServices {
     uniqueConnectionService: UniqueConnectionService;
     featureLifecycleReadModel: IFeatureLifecycleReadModel;
     transactionalFeatureLinkService: WithTransactional<FeatureLinkService>;
+    unknownFlagsService: UnknownFlagsService;
 }

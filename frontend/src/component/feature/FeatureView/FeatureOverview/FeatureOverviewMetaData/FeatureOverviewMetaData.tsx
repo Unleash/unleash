@@ -1,5 +1,12 @@
 import { type FC, useState } from 'react';
-import { Button, styled } from '@mui/material';
+import {
+    Button,
+    List,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    styled,
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
@@ -15,10 +22,14 @@ import { capitalizeFirst } from 'utils/capitalizeFirst';
 import { Collaborators } from './Collaborators';
 import { EnvironmentVisibilityMenu } from './EnvironmentVisibilityMenu/EnvironmentVisibilityMenu';
 import { Truncator } from 'component/common/Truncator/Truncator';
-import type { IFeatureToggle } from '../../../../../interfaces/featureToggle';
+import type {
+    FeatureLink,
+    IFeatureToggle,
+} from '../../../../../interfaces/featureToggle';
 import AddIcon from '@mui/icons-material/Add';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { Badge } from '../../../../common/Badge/Badge';
+import LinkIcon from '@mui/icons-material/Link';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -69,11 +80,88 @@ export const StyledMetaDataItemValue = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
+export const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({
+    minWidth: theme.spacing(5),
+}));
+
 type FeatureOverviewMetaDataProps = {
     hiddenEnvironments?: string[];
     onEnvironmentVisibilityChange?: (environment: string) => void;
     feature: IFeatureToggle;
     onChange: () => void;
+};
+
+const FeatureLinks: FC<{ links: FeatureLink[] }> = ({ links }) => {
+    return (
+        <>
+            {links.length === 0 ? (
+                <StyledMetaDataContainer>
+                    <StyledTitle>
+                        You can now add links{' '}
+                        <Badge color='success' sx={{ ml: 1 }}>
+                            New
+                        </Badge>
+                    </StyledTitle>
+                    <StyledMetaDataItem>
+                        Gather relevant links for external resources such as
+                        issue trackers, code repositories or analytics tooling
+                    </StyledMetaDataItem>
+                    <div>
+                        <Button
+                            size='small'
+                            variant='text'
+                            startIcon={<AddIcon />}
+                            onClick={() => {}}
+                        >
+                            Add link
+                        </Button>
+                    </div>
+                </StyledMetaDataContainer>
+            ) : null}
+            {links.length > 0 ? (
+                <StyledMetaDataContainer>
+                    <StyledTitle>Resources</StyledTitle>
+                    <List>
+                        {links.map((link) => (
+                            <ListItemButton
+                                component='a'
+                                href={link.url}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                            >
+                                <StyledListItemIcon>
+                                    <LinkIcon color='primary' />
+                                </StyledListItemIcon>
+                                <ListItemText
+                                    primary={link.title}
+                                    secondary={link.url}
+                                    secondaryTypographyProps={{
+                                        sx: {
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            whiteSpace: 'nowrap',
+                                            display: 'block',
+                                        },
+                                    }}
+                                />
+                            </ListItemButton>
+                        ))}
+                    </List>
+
+                    <div>
+                        <Button
+                            size='small'
+                            variant='text'
+                            startIcon={<AddIcon />}
+                            onClick={() => {}}
+                        >
+                            Add link
+                        </Button>
+                    </div>
+                </StyledMetaDataContainer>
+            ) : null}
+        </>
+    );
 };
 
 const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
@@ -98,28 +186,7 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
     return (
         <>
             {featureLinksEnabled ? (
-                <StyledMetaDataContainer>
-                    <StyledTitle>
-                        You can now add links{' '}
-                        <Badge color='success' sx={{ ml: 1 }}>
-                            New
-                        </Badge>
-                    </StyledTitle>
-                    <StyledMetaDataItem>
-                        Gather relevant links for external resources such as
-                        issue trackers, code repositories or analytics tooling
-                    </StyledMetaDataItem>
-                    <div>
-                        <Button
-                            size='small'
-                            variant='text'
-                            startIcon={<AddIcon />}
-                            onClick={() => {}}
-                        >
-                            Add link
-                        </Button>
-                    </div>
-                </StyledMetaDataContainer>
+                <FeatureLinks links={feature.links || []} />
             ) : null}
             <StyledMetaDataContainer>
                 <div>

@@ -147,12 +147,15 @@ export const NewConstraintAccordionList = forwardRef<
             <ConstraintsList>
                 {constraints.map((constraint, index) =>
                     addEditStrategy ? (
-                        state.get(constraint)?.editing ? (
+                        state.get(constraint)?.editing &&
+                        Boolean(setConstraints) ? (
                             <EditableConstraintWrapper
                                 key={constraint[constraintId]}
                                 constraint={constraint}
-                                onCancel={onCancel?.bind(null, index)}
-                                onDelete={onRemove?.bind(null, index)}
+                                // @ts-ignore todo: find a better way to do this
+                                onDelete={() => onRemove(index)}
+                                // @ts-ignore
+                                onAutoSave={onAutoSave(constraintId)}
                             />
                         ) : (
                             <ConstraintAccordionView

@@ -94,7 +94,10 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                             />
                         </StyledHelpIconBox>
                         <ConditionallyRender
-                            condition={Boolean(addEditStrategy)}
+                            condition={
+                                Boolean(addEditStrategy) &&
+                                Boolean(setConstraints)
+                            }
                             show={
                                 <EditableConstraintsList
                                     ref={ref}

@@ -14,7 +14,7 @@ export interface IEditableConstraintsListRef {
 
 export interface IEditableConstraintsListProps {
     constraints: IConstraint[];
-    setConstraints?: React.Dispatch<React.SetStateAction<IConstraint[]>>;
+    setConstraints: React.Dispatch<React.SetStateAction<IConstraint[]>>;
 }
 
 const StyledContainer = styled('div')({
@@ -29,29 +29,16 @@ export const EditableConstraintsList = forwardRef<
 >(({ constraints, setConstraints }, ref) => {
     const { context } = useUnleashContext();
 
-    const onRemove =
-        setConstraints &&
-        ((index: number) => {
-            setConstraints(
-                produce((draft) => {
-                    draft.splice(index, 1);
-                }),
-            );
-        });
-
-    const onSave =
-        setConstraints &&
-        ((index: number, constraint: IConstraint) => {
-            setConstraints(
-                produce((draft) => {
-                    draft[index] = constraint;
-                }),
-            );
-        });
+    const onDelete = (index: number) => {
+        setConstraints(
+            produce((draft) => {
+                draft.splice(index, 1);
+            }),
+        );
+    };
 
     const onAutoSave =
-        setConstraints &&
-        ((id: string | undefined) => (constraint: IConstraint) => {
+        (id: string | undefined) => (constraint: IConstraint) => {
             setConstraints(
                 produce((draft) => {
                     return draft.map((oldConstraint) => {
@@ -62,7 +49,7 @@ export const EditableConstraintsList = forwardRef<
                     });
                 }),
             );
-        });
+        };
 
     if (context.length === 0) {
         return null;
@@ -75,9 +62,8 @@ export const EditableConstraintsList = forwardRef<
                     <EditableConstraintWrapper
                         key={constraint[constraintId]}
                         constraint={constraint}
-                        onDelete={onRemove?.bind(null, index)}
-                        onSave={onSave!.bind(null, index)}
-                        onAutoSave={onAutoSave?.(constraint[constraintId])}
+                        onDelete={() => onDelete(index)}
+                        onAutoSave={onAutoSave(constraint[constraintId])}
                     />
                 ))}
             </ConstraintsList>

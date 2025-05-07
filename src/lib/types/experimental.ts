@@ -51,7 +51,6 @@ export type IFlagKey =
     | 'productivityReportEmail'
     | 'productivityReportUnsubscribers'
     | 'enterprise-payg'
-    | 'flagOverviewRedesign'
     | 'showUserDeviceCount'
     | 'memorizeStats'
     | 'streaming'
@@ -61,8 +60,6 @@ export type IFlagKey =
     | 'consumptionModel'
     | 'teamsIntegrationChangeRequests'
     | 'edgeObservability'
-    | 'simplifyDisableFeature'
-    | 'adminNavUI'
     | 'tagTypeColor'
     | 'addEditStrategy'
     | 'newStrategyDropdown'
@@ -70,7 +67,9 @@ export type IFlagKey =
     | 'flagsReleaseManagementUI'
     | 'cleanupReminder'
     | 'removeInactiveApplications'
-    | 'registerFrontendClient';
+    | 'registerFrontendClient'
+    | 'featureLinks'
+    | 'reportUnknownFlags';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -262,10 +261,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_SHOW_USER_DEVICE_COUNT,
         false,
     ),
-    flagOverviewRedesign: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FLAG_OVERVIEW_REDESIGN,
-        false,
-    ),
     streaming: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_STREAMING,
         false,
@@ -293,14 +288,6 @@ const flags: IFlags = {
     ),
     edgeObservability: parseEnvVarBoolean(
         process.env.EXPERIMENTAL_EDGE_OBSERVABILITY,
-        false,
-    ),
-    simplifyDisableFeature: parseEnvVarBoolean(
-        process.env.EXPERIMENTAL_SIMPLIFY_DISABLE_FEATURE,
-        false,
-    ),
-    adminNavUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ADMIN_NAV_UI,
         false,
     ),
     tagTypeColor: parseEnvVarBoolean(
@@ -333,6 +320,14 @@ const flags: IFlags = {
     ),
     registerFrontendClient: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REGISTER_FRONTEND_CLIENT,
+        false,
+    ),
+    featureLinks: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURE_LINKS,
+        false,
+    ),
+    reportUnknownFlags: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_REPORT_UNKNOWN_FLAGS,
         false,
     ),
 };

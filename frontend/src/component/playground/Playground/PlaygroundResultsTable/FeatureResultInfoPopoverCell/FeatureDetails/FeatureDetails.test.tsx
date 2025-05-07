@@ -1,6 +1,5 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { FeatureDetails as LegacyFeatureDetails } from './LegacyFeatureDetails';
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { FeatureDetails } from './FeatureDetails';
 
@@ -80,7 +79,7 @@ const testCases = [
 testCases.forEach(({ name, feature, expectedText1, expectedText2 }) => {
     test(`${name} (legacy)`, async () => {
         render(
-            <LegacyFeatureDetails
+            <FeatureDetails
                 feature={feature}
                 input={
                     { environment: 'development' } as PlaygroundRequestSchema

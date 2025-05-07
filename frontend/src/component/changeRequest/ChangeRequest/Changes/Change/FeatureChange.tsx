@@ -31,6 +31,7 @@ const StyledSingleChangeBox = styled(Box, {
         $isAfterWarning,
         $isLast,
     }) => ({
+        overflow: 'hidden',
         borderLeft: '1px solid',
         borderRight: '1px solid',
         borderTop: '1px solid',

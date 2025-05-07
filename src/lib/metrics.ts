@@ -736,6 +736,11 @@ export function registerPrometheusMetrics(
         labelNames: ['result', 'destination'],
     });
 
+    const unknownFlagsGauge = createGauge({
+        name: 'unknown_flags',
+        help: 'Number of unknown flags reported in the last 24 hours, if any. Maximum of 10.',
+    });
+
     // register event listeners
     eventBus.on(
         events.EXCEEDS_LIMIT,
@@ -1136,6 +1141,10 @@ export function registerPrometheusMetrics(
                 productionChanges60.set(productionChanges.last60);
                 productionChanges90.reset();
                 productionChanges90.set(productionChanges.last90);
+
+                const unknownFlags = await stores.unknownFlagsStore.count();
+                unknownFlagsGauge.reset();
+                unknownFlagsGauge.set(unknownFlags);
             } catch (e) {}
         },
     };

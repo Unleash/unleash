@@ -41,6 +41,7 @@ export const RecentlyUsedConstraints = ({
                     <ConstraintAccordionView
                         key={constraint[constraintId]}
                         constraint={constraint}
+                        borderStyle='dashed'
                         onUse={() => {
                             setConstraints((prev) => [...prev, constraint]);
                         }}

@@ -1,7 +1,11 @@
 import type React from 'react';
 import { type FC, useEffect } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import FlagProvider, { UnleashClient } from '@unleash/proxy-client-react';
+import FlagProvider, {
+    LocalStorageProvider,
+    UnleashClient,
+} from '@unleash/proxy-client-react';
+import { basePath } from '../../../utils/formatPath';
 
 const UNLEASH_API = 'https://hosted.edge.getunleash.io/api/frontend';
 const DEV_TOKEN = '';
@@ -27,6 +31,7 @@ export const UnleashFlagProvider: FC<{ children?: React.ReactNode }> = ({
         token = getUnleashFrontendToken();
 
         client = new UnleashClient({
+            storageProvider: new LocalStorageProvider(`${basePath}:unleash`),
             url: UNLEASH_API,
             clientKey: token || 'offline',
             appName: 'Unleash Cloud UI',
@@ -45,7 +50,7 @@ export const UnleashFlagProvider: FC<{ children?: React.ReactNode }> = ({
         } else {
             // nothing
         }
-    }, [uiConfig.unleashContext]);
+    }, [JSON.stringify(uiConfig.unleashContext)]);
 
     return (
         <FlagProvider unleashClient={client} startClient={false}>

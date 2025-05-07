@@ -1,7 +1,7 @@
 import { styled, Typography } from '@mui/material';
 import { useRecentlyUsedSegments } from './useRecentlyUsedSegments';
 import type { ISegment } from 'interfaces/segment';
-import { FeatureStrategySegmentChip } from '../FeatureStrategySegmentChip';
+import { RecentlyUsedSegmentChip } from './RecentlyUsedSegmentChip';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useUiFlag } from 'hooks/useUiFlag';
 
@@ -54,12 +54,10 @@ export const RecentlyUsedSegments = ({
             <StyledHeader>Recently used segments</StyledHeader>
             <StyledSegmentsContainer>
                 {segmentObjects.map((segment) => (
-                    <FeatureStrategySegmentChip
+                    <RecentlyUsedSegmentChip
                         key={segment.id}
                         segment={segment}
                         setSegments={setSegments}
-                        preview={undefined}
-                        setPreview={() => {}}
                     />
                 ))}
             </StyledSegmentsContainer>

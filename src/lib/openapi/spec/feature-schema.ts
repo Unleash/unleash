@@ -248,6 +248,35 @@ export const featureSchema = {
                 },
             },
         },
+        links: {
+            type: 'array',
+            items: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['id', 'url'],
+                properties: {
+                    id: {
+                        type: 'string',
+                        example: '01JTJNCJ5XVP2KPJFA03YRBZCA',
+                        description: 'The id of the link',
+                    },
+                    url: {
+                        type: 'string',
+                        example:
+                            'https://github.com/search?q=cleanupReminder&type=code',
+                        description: 'The URL the feature is linked to',
+                    },
+                    title: {
+                        type: 'string',
+                        example: 'Github cleanup',
+                        description: 'The description of the link',
+                        nullable: true,
+                    },
+                },
+            },
+            description:
+                'The list of links. This is an experimental field and may change.',
+        },
     },
     components: {
         schemas: {

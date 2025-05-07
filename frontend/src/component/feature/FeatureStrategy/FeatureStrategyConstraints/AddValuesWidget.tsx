@@ -4,6 +4,7 @@ import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { parseParameterStrings } from 'utils/parseParameter';
 import { baseChipStyles } from './ValueList';
 import { AddValuesPopover, type OnAddActions } from './AddValuesPopover';
+import type { ConstraintValidatorOutput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/constraintValidators';
 
 // todo: MUI v6 / v7 upgrade: consider changing this to a Chip to align with the rest of the values and the single value selector. There was a fix introduced in v6 that makes you not lose focus on pressing esc: https://mui.com/material-ui/migration/upgrade-to-v6/#chip talk to Thomas for more info.
 const AddValuesButton = styled('button')(({ theme }) => ({
@@ -29,10 +30,11 @@ const AddValuesButton = styled('button')(({ theme }) => ({
 interface AddValuesProps {
     onAddValues: (newValues: string[]) => void;
     helpText?: string;
+    validator: (...values: string[]) => ConstraintValidatorOutput;
 }
 
 export const AddValuesWidget = forwardRef<HTMLButtonElement, AddValuesProps>(
-    ({ onAddValues, helpText }, ref) => {
+    ({ onAddValues, helpText, validator }, ref) => {
         const [open, setOpen] = useState(false);
         const positioningRef = useRef<HTMLButtonElement>(null);
         useImperativeHandle(
@@ -56,9 +58,14 @@ export const AddValuesWidget = forwardRef<HTMLButtonElement, AddValuesProps>(
                 return;
             }
 
-            onAddValues(newValues);
-            clearInput();
-            setError('');
+            const [isValid, errorMessage] = validator(...newValues);
+            if (isValid) {
+                onAddValues(newValues);
+                clearInput();
+                setError('');
+            } else {
+                setError(errorMessage);
+            }
         };
 
         return (

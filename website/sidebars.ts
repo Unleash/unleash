@@ -584,22 +584,14 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     link: {
-                        type: 'generated-index',
-                        title: 'Self-Hosting Unleash',
-                        description:
-                            'All you need to learn how to deploy and manage your own Unleash instance.',
-                        slug: '/using-unleash/deploy',
+                        type: 'doc',
+                        id: 'using-unleash/deploy/getting-started',
                     },
-                    label: 'Self-hosting',
+                    label: 'Self-hosting Unleash',
                     items: [
                         'using-unleash/deploy/getting-started',
                         'using-unleash/deploy/configuring-unleash',
-                        'using-unleash/deploy/database-setup',
-                        'using-unleash/deploy/database-backup',
-                        'using-unleash/deploy/email-service',
-                        'using-unleash/deploy/google-auth-hook',
                         'using-unleash/deploy/upgrading-unleash',
-                        'using-unleash/deploy/securing-unleash',
                         'using-unleash/deploy/license-keys',
                     ],
                 },
@@ -690,7 +682,6 @@ const sidebars: SidebarsConfig = {
                     items: [
                         'using-unleash/troubleshooting/cors',
                         'using-unleash/troubleshooting/https',
-                        'using-unleash/troubleshooting/email-service',
                         'using-unleash/troubleshooting/feature-not-available',
                         'using-unleash/troubleshooting/flag-exposure',
                         'using-unleash/troubleshooting/flag-not-returned',

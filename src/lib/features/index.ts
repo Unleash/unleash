@@ -14,3 +14,4 @@ export * from './playground/createPlaygroundService';
 export * from './personal-dashboard/createPersonalDashboardService';
 export * from './user-subscriptions/createUserSubscriptionsService';
 export * from './context/createContextService';
+export * from './feature-links/createFeatureLinkService';

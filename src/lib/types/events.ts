@@ -18,6 +18,9 @@ export const APPLICATION_CREATED = 'application-created' as const;
 export const FEATURE_CREATED = 'feature-created' as const;
 export const FEATURE_DELETED = 'feature-deleted' as const;
 export const FEATURE_UPDATED = 'feature-updated' as const;
+export const FEATURE_LINK_ADDED = 'feature-link-added' as const;
+export const FEATURE_LINK_REMOVED = 'feature-link-removed' as const;
+export const FEATURE_LINK_UPDATED = 'feature-link-updated' as const;
 export const FEATURE_DEPENDENCY_ADDED = 'feature-dependency-added' as const;
 export const FEATURE_DEPENDENCY_REMOVED = 'feature-dependency-removed' as const;
 export const FEATURE_DEPENDENCIES_REMOVED =
@@ -242,6 +245,9 @@ export const IEventTypes = [
     FEATURE_TYPE_UPDATED,
     FEATURE_COMPLETED,
     FEATURE_UNCOMPLETED,
+    FEATURE_LINK_ADDED,
+    FEATURE_LINK_REMOVED,
+    FEATURE_LINK_UPDATED,
     STRATEGY_ORDER_CHANGED,
     DROP_FEATURE_TAGS,
     FEATURE_UNTAGGED,
@@ -1019,6 +1025,77 @@ export class FeatureMetadataUpdateEvent extends BaseEvent {
         this.project = project;
         this.featureName = featureName;
         this.data = data;
+        this.preData = preData;
+    }
+}
+
+export class FeatureLinkAddedEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly featureName: string;
+
+    readonly data: { url: string; title?: string };
+    readonly preData: null;
+
+    constructor(p: {
+        featureName: string;
+        project: string;
+        data: { url: string; title?: string };
+        auditUser: IAuditUser;
+    }) {
+        super(FEATURE_LINK_ADDED, p.auditUser);
+        const { project, featureName, data } = p;
+        this.project = project;
+        this.featureName = featureName;
+        this.data = data;
+        this.preData = null;
+    }
+}
+
+export class FeatureLinkUpdatedEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly featureName: string;
+
+    readonly data: { url: string; title?: string };
+
+    readonly preData: { url: string; title?: string };
+
+    constructor(p: {
+        featureName: string;
+        project: string;
+        data: { url: string; title?: string };
+        preData: { url: string; title?: string };
+        auditUser: IAuditUser;
+    }) {
+        super(FEATURE_LINK_UPDATED, p.auditUser);
+        const { project, featureName, data, preData } = p;
+        this.project = project;
+        this.featureName = featureName;
+        this.data = data;
+        this.preData = preData;
+    }
+}
+
+export class FeatureLinkRemovedEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly featureName: string;
+
+    readonly preData: { url: string; title?: string };
+    readonly data: null;
+
+    constructor(p: {
+        featureName: string;
+        project: string;
+        preData: { url: string; title?: string };
+        auditUser: IAuditUser;
+    }) {
+        super(FEATURE_LINK_REMOVED, p.auditUser);
+        const { project, featureName, preData } = p;
+        this.project = project;
+        this.featureName = featureName;
+        this.data = null;
         this.preData = preData;
     }
 }

@@ -17,7 +17,7 @@ import { EnvironmentVisibilityMenu } from './EnvironmentVisibilityMenu/Environme
 import { Truncator } from 'component/common/Truncator/Truncator';
 import type { IFeatureToggle } from '../../../../../interfaces/featureToggle';
 import AddIcon from '@mui/icons-material/Add';
-import { useUiFlag } from '../../../../../hooks/useUiFlag';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),

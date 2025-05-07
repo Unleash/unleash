@@ -30,8 +30,9 @@ import type EventService from '../features/events/event-service.js';
 import { omitKeys } from '../util/index.js';
 import { NotFoundError } from '../error/index.js';
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service.js';
+import type { IEvent } from '../events/index.js';
 
-const SUPPORTED_EVENTS = Object.keys(events.IEventTypes).map((k) => events[k]);
+const SUPPORTED_EVENTS = Object.keys(events).map((k) => events[k]);
 
 const MASKED_VALUE = '*****';
 
@@ -128,7 +129,7 @@ export default class AddonService {
         );
     }
 
-    handleEvent(eventName: string): (IEvent) => void {
+    handleEvent(eventName: string): (event: IEvent) => void {
         const { addonProviders } = this;
         return (event) => {
             this.fetchAddonConfigs().then((addonInstances) => {

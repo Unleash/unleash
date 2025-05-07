@@ -18,6 +18,7 @@ import { Truncator } from 'component/common/Truncator/Truncator';
 import type { IFeatureToggle } from '../../../../../interfaces/featureToggle';
 import AddIcon from '@mui/icons-material/Add';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { Badge } from '../../../../common/Badge/Badge';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -98,7 +99,12 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
         <>
             {featureLinksEnabled ? (
                 <StyledMetaDataContainer>
-                    <StyledTitle>You can now add links</StyledTitle>
+                    <StyledTitle>
+                        You can now add links{' '}
+                        <Badge color='success' sx={{ ml: 1 }}>
+                            New
+                        </Badge>
+                    </StyledTitle>
                     <StyledMetaDataItem>
                         Gather relevant links for external resources such as
                         issue trackers, code repositories or analytics tooling

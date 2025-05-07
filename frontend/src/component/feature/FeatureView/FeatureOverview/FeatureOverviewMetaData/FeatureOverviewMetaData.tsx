@@ -28,7 +28,7 @@ import type {
 } from '../../../../../interfaces/featureToggle';
 import AddIcon from '@mui/icons-material/Add';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { Badge } from '../../../../common/Badge/Badge';
+import { Badge } from 'component/common/Badge/Badge';
 import LinkIcon from '@mui/icons-material/Link';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({

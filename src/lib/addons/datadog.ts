@@ -15,7 +15,7 @@ import type { IEvent } from '../events/index.js';
 import type { IntegrationEventState } from '../features/integration-events/integration-events-store.js';
 
 interface IDatadogParameters {
-    url: string;
+    url?: string;
     apiKey: string;
     sourceTypeName?: string;
     customHeaders?: string;

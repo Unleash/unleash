@@ -4,7 +4,6 @@ import {
     FEATURE_ENVIRONMENT_DISABLED,
     type IEvent,
 } from '../events/index.js';
-import type { Logger } from '../logger.js';
 
 import DatadogAddon from './datadog.js';
 
@@ -16,50 +15,28 @@ import {
     type IFlagResolver,
 } from '../types/index.js';
 import type { IntegrationEventsService } from '../services/index.js';
+import nock from 'nock';
 import { jest } from '@jest/globals';
-
-let fetchRetryCalls: any[] = [];
-const registerEventMock = jest.fn();
 
 const INTEGRATION_ID = 1337;
 const ARGS: IAddonConfig = {
     getLogger: noLogger,
     unleashUrl: 'http://some-url.com',
-    integrationEventsService: {} as IntegrationEventsService,
+    integrationEventsService: {
+        registerEvent: jest.fn(),
+    } as unknown as IntegrationEventsService,
     flagResolver: { isEnabled: (expName: IFlagKey) => false } as IFlagResolver,
-    eventBus: {} as any,
+    eventBus: <any>{ emit: jest.fn() },
 };
-
-jest.mock(
-    './addon',
-    () =>
-        class Addon {
-            logger: Logger;
-
-            constructor(definition, { getLogger }) {
-                this.logger = getLogger('addon/test');
-                fetchRetryCalls = [];
-            }
-
-            async fetchRetry(url, options, retries, backoff) {
-                fetchRetryCalls.push({
-                    url,
-                    options,
-                    retries,
-                    backoff,
-                });
-                return Promise.resolve({ ok: true, status: 200 });
-            }
-
-            async registerEvent(event) {
-                return registerEventMock(event);
-            }
-        },
-);
 
 describe('Datadog integration', () => {
     beforeEach(() => {
-        registerEventMock.mockClear();
+        nock.disableNetConnect();
+    });
+
+    afterEach(() => {
+        nock.cleanAll();
+        nock.enableNetConnect();
     });
 
     test('Should call datadog webhook', async () => {
@@ -83,10 +60,21 @@ describe('Datadog integration', () => {
             apiKey: 'fakeKey',
         };
 
+        let body: any;
+        nock('http://api.datadoghq.com')
+            .post('/api/v1/events')
+            .matchHeader('Content-Type', 'application/json')
+            .matchHeader('dd-api-key', 'fakeKey')
+            .reply(200, (uri, requestBody) => {
+                body = requestBody;
+                return {
+                    status: 'ok',
+                    status_code: 200,
+                };
+            });
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
-        expect(fetchRetryCalls.length).toBe(1);
-        expect(fetchRetryCalls[0].url).toBe(parameters.url);
-        expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+        expect(JSON.stringify(body)).toMatchSnapshot();
+        expect(nock.isDone()).toBe(true);
     });
 
     test('Should call datadog webhook  for archived toggle', async () => {
@@ -108,10 +96,22 @@ describe('Datadog integration', () => {
             apiKey: 'fakeKey',
         };
 
+        let body: any;
+        nock('http://api.datadoghq.com')
+            .post('/api/v1/events')
+            .matchHeader('Content-Type', 'application/json')
+            .matchHeader('dd-api-key', 'fakeKey')
+            .reply(200, (uri, requestBody) => {
+                body = requestBody;
+                return {
+                    status: 'ok',
+                    status_code: 200,
+                };
+            });
+
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
-        expect(fetchRetryCalls.length).toBe(1);
-        expect(fetchRetryCalls[0].url).toBe(parameters.url);
-        expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+        expect(JSON.stringify(body)).toMatchSnapshot();
+        expect(nock.isDone()).toBe(true);
     });
 
     test('Should call datadog webhook  for archived toggle with project info', async () => {
@@ -133,11 +133,22 @@ describe('Datadog integration', () => {
             url: 'http://api.datadoghq.com/api/v1/events',
             apiKey: 'fakeKey',
         };
+        let body: any;
+        nock('http://api.datadoghq.com')
+            .post('/api/v1/events')
+            .matchHeader('Content-Type', 'application/json')
+            .matchHeader('dd-api-key', 'fakeKey')
+            .reply(200, (uri, requestBody) => {
+                body = requestBody;
+                return {
+                    status: 'ok',
+                    status_code: '200',
+                };
+            });
 
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
-        expect(fetchRetryCalls.length).toBe(1);
-        expect(fetchRetryCalls[0].url).toBe(parameters.url);
-        expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+        expect(JSON.stringify(body)).toMatchSnapshot();
+        expect(nock.isDone()).toBe(true);
     });
 
     test('Should call datadog webhook for toggled environment', async () => {
@@ -157,15 +168,26 @@ describe('Datadog integration', () => {
         };
 
         const parameters = {
-            url: 'http://hooks.slack.com',
             apiKey: 'fakeKey',
         };
 
+        let reqBody: any = { sample: 'disabled' };
+        nock('https://api.datadoghq.com')
+            .post('/api/v1/events')
+            .matchHeader('Content-Type', 'application/json')
+            .matchHeader('dd-api-key', 'fakeKey')
+            .reply(200, (uri, requestBody) => {
+                reqBody = requestBody;
+                return {
+                    status: 'ok',
+                    status_code: '200',
+                };
+            });
+
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
-        expect(fetchRetryCalls).toHaveLength(1);
-        expect(fetchRetryCalls[0].url).toBe(parameters.url);
-        expect(fetchRetryCalls[0].options.body).toMatch(/disabled/);
-        expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+        expect(JSON.stringify(reqBody)).toMatch(/disabled/);
+        expect(JSON.stringify(reqBody)).toMatchSnapshot();
+        expect(nock.isDone()).toBe(true);
     });
 
     test('Should include customHeaders in headers when calling service', async () => {
@@ -185,16 +207,28 @@ describe('Datadog integration', () => {
         };
 
         const parameters = {
-            url: 'http://hooks.slack.com',
             apiKey: 'fakeKey',
             customHeaders: `{ "MY_CUSTOM_HEADER": "MY_CUSTOM_VALUE" }`,
         };
+
+        let body: any;
+        nock('https://api.datadoghq.com')
+            .post('/api/v1/events')
+            .matchHeader('Content-Type', 'application/json')
+            .matchHeader('dd-api-key', 'fakeKey')
+            .matchHeader('MY_CUSTOM_HEADER', 'MY_CUSTOM_VALUE')
+            .reply(200, (uri, requestBody) => {
+                body = requestBody;
+                return {
+                    status: 'ok',
+                    status_code: '200',
+                };
+            });
+
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
-        expect(fetchRetryCalls).toHaveLength(1);
-        expect(fetchRetryCalls[0].url).toBe(parameters.url);
-        expect(fetchRetryCalls[0].options.body).toMatch(/disabled/);
-        expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
-        expect(fetchRetryCalls[0].options.headers).toMatchSnapshot();
+        expect(JSON.stringify(body)).toMatch(/disabled/);
+        expect(JSON.stringify(body)).toMatchSnapshot();
+        expect(nock.isDone()).toBe(true);
     });
 
     test('Should not include source_type_name when included in the config', async () => {
@@ -214,19 +248,29 @@ describe('Datadog integration', () => {
         };
 
         const parameters = {
-            url: 'http://hooks.slack.com',
             apiKey: 'fakeKey',
             sourceTypeName: 'my-custom-source-type',
         };
 
+        let body: any;
+        nock('https://api.datadoghq.com')
+            .post('/api/v1/events')
+            .matchHeader('Content-Type', 'application/json')
+            .matchHeader('dd-api-key', 'fakeKey')
+            .reply(200, (uri, requestBody) => {
+                body = requestBody;
+                return {
+                    status: 'ok',
+                    status_code: '200',
+                };
+            });
+
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
-        expect(fetchRetryCalls).toHaveLength(1);
-        expect(fetchRetryCalls[0].url).toBe(parameters.url);
-        expect(fetchRetryCalls[0].options.body).toMatch(
+        expect(JSON.stringify(body)).toMatch(
             /"source_type_name":"my-custom-source-type"/,
         );
-        expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
-        expect(fetchRetryCalls[0].options.headers).toMatchSnapshot();
+        expect(JSON.stringify(body)).toMatchSnapshot();
+        expect(nock.isDone()).toBe(true);
     });
 
     test('Should call datadog webhook with JSON when template set', async () => {
@@ -252,14 +296,28 @@ describe('Datadog integration', () => {
                 '{\n  "event": "{{event.type}}",\n  "createdBy": "{{event.createdBy}}"\n}',
         };
 
+        let body: any;
+        nock('http://api.datadoghq.com')
+            .post('/api/v1/events')
+            .matchHeader('Content-Type', 'application/json')
+            .matchHeader('dd-api-key', 'fakeKey')
+            .reply(200, (uri, requestBody) => {
+                body = requestBody;
+                return {
+                    status: 'ok',
+                    status_code: '200',
+                };
+            });
+
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
-        expect(fetchRetryCalls.length).toBe(1);
-        expect(fetchRetryCalls[0].url).toBe(parameters.url);
-        expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+
+        expect(nock.isDone()).toBe(true);
+        expect(JSON.stringify(body)).toMatchSnapshot();
     });
 
     test('Should call registerEvent', async () => {
         const addon = new DatadogAddon(ARGS);
+        const registerEventSpy = jest.spyOn(addon, 'registerEvent');
         const event: IEvent = {
             id: 1,
             createdAt: new Date(),
@@ -291,10 +349,23 @@ describe('Datadog integration', () => {
                 '{\n  "event": "{{event.type}}",\n  "createdBy": "{{event.createdBy}}"\n}',
         };
 
+        let body: any;
+        nock('http://api.datadoghq.com')
+            .post('/api/v1/events')
+            .matchHeader('Content-Type', 'application/json')
+            .matchHeader('dd-api-key', 'fakeKey')
+            .reply(200, (uri, requestBody) => {
+                body = requestBody;
+                return {
+                    status: 'ok',
+                    status_code: '200',
+                };
+            });
+
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
 
-        expect(registerEventMock).toHaveBeenCalledTimes(1);
-        expect(registerEventMock).toHaveBeenCalledWith({
+        expect(registerEventSpy).toHaveBeenCalledTimes(1);
+        expect(registerEventSpy).toHaveBeenCalledWith({
             integrationId: INTEGRATION_ID,
             state: 'success',
             stateDetails:

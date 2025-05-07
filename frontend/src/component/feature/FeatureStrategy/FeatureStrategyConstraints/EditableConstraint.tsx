@@ -1,16 +1,8 @@
 import { IconButton, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import {
-    useConstraintInput,
-    type Input,
-} from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
+import type { Input } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
 import { stringOperators, type Operator } from 'constants/operators';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import type {
-    ILegalValue,
-    IUnleashContextDefinition,
-} from 'interfaces/context';
-import type { IConstraint } from 'interfaces/strategy';
 import { useMemo, useRef, type FC } from 'react';
 import { operatorsForContext } from 'utils/operatorsForContext';
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect';
@@ -28,6 +20,8 @@ import { AddSingleValueWidget } from './AddSingleValueWidget';
 import { ConstraintDateInput } from './ConstraintDateInput';
 import { LegalValuesSelector } from './LegalValuesSelector';
 import { constraintValidator } from './constraint-validator';
+import { useEditableConstraint } from './useEditableConstraint/useEditableConstraint';
+import type { IConstraint } from 'interfaces/strategy';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -169,42 +163,39 @@ const getInputType = (input: Input): InputType => {
     }
 };
 
-type ConstraintWithValueSet = Omit<IConstraint, 'values'> & {
-    values?: Set<string>;
-};
-type ConstraintUpdateAction =
-    | { type: 'add value(s)'; payload: string[] }
-    | { type: 'set value'; payload: string }
-    | { type: 'clear values' }
-    | { type: 'remove value from list'; payload: string }
-    | { type: 'set context field'; payload: string }
-    | { type: 'set operator'; payload: Operator }
-    | { type: 'toggle case sensitivity' }
-    | { type: 'toggle inverted operator' };
-
 type Props = {
-    localConstraint: ConstraintWithValueSet;
-    onDelete?: () => void;
-    contextDefinition: Pick<IUnleashContextDefinition, 'legalValues'>;
-    constraintValues: string[];
-    updateConstraint: (action: ConstraintUpdateAction) => void;
-    deletedLegalValues?: Set<string>;
-    legalValues?: ILegalValue[];
+    // localConstraint: ConstraintWithValueSet;
+    // contextDefinition: Pick<IUnleashContextDefinition, 'legalValues'>;
+    // constraintValues: string[];
+    // updateConstraint: (action: ConstraintUpdateAction) => void;
+    // deletedLegalValues?: Set<string>;
+    // legalValues?: ILegalValue[];
+
+    constraint: IConstraint;
+    onDelete: () => void;
+    onAutoSave: (constraint: IConstraint) => void;
 };
 
 export const EditableConstraint: FC<Props> = ({
-    localConstraint,
+    // localConstraint,
     onDelete,
-    contextDefinition,
-    updateConstraint,
-    deletedLegalValues,
-    legalValues,
+    // contextDefinition,
+    // updateConstraint,
+    // deletedLegalValues,
+    // legalValues,
+    constraint,
+    onAutoSave,
 }) => {
-    const { input } = useConstraintInput({
-        contextDefinition,
-        // @ts-ignore
-        localConstraint,
-    });
+    const {
+        constraint: localConstraint,
+        updateConstraint,
+        ...constraintMetadata
+    } = useEditableConstraint(constraint, onAutoSave);
+    // const { input } = useConstraintInput({
+    //     contextDefinition,
+    //     // @ts-ignore
+    //     localConstraint,
+    // });
 
     const { context } = useUnleashContext();
     const { contextName, operator } = localConstraint;
@@ -227,7 +218,7 @@ export const EditableConstraint: FC<Props> = ({
 
     const validator = useMemo(() => constraintValidator(input), [input]);
     const TopRowInput = () => {
-        switch (inputType.input) {
+        switch (constraintMetadata.type) {
             case 'date':
                 return (
                     <ConstraintDateInput
@@ -256,12 +247,14 @@ export const EditableConstraint: FC<Props> = ({
                         }
                         currentValue={localConstraint.value}
                         helpText={
-                            inputType.type === 'number'
+                            constraintMetadata.variant === 'number'
                                 ? 'Add a single number'
                                 : 'A semver value should be of the format X.Y.Z'
                         }
                         inputType={
-                            inputType.type === 'number' ? 'number' : 'text'
+                            constraintMetadata.variant === 'number'
+                                ? 'number'
+                                : 'text'
                         }
                     />
                 );
@@ -393,7 +386,7 @@ export const EditableConstraint: FC<Props> = ({
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
-            {inputType.input === 'legal values' ? (
+            {constraintMetadata.type === 'legal values' ? (
                 <LegalValuesContainer>
                     <LegalValuesSelector
                         values={localConstraint.values || new Set()}
@@ -414,8 +407,10 @@ export const EditableConstraint: FC<Props> = ({
                                 payload: value,
                             })
                         }
-                        deletedLegalValues={deletedLegalValues}
-                        legalValues={legalValues ?? []}
+                        deletedLegalValues={
+                            constraintMetadata.deletedLegalValues
+                        }
+                        legalValues={constraintMetadata.legalValues}
                     />
                 </LegalValuesContainer>
             ) : null}

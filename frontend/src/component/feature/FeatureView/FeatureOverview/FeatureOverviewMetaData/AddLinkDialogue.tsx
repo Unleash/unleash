@@ -44,7 +44,7 @@ export const AddLinkDialogue: FC<IAddLinkDialogueProps> = ({
                 } catch (error) {
                     setToastApiError(formatUnknownError(error));
                 } finally {
-                    await refetchFeature();
+                    refetchFeature();
                     onClose();
                 }
             }}

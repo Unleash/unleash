@@ -92,75 +92,70 @@ type FeatureOverviewMetaDataProps = {
 };
 
 const FeatureLinks: FC<{ links: FeatureLink[] }> = ({ links }) => {
-    return (
-        <>
-            {links.length === 0 ? (
-                <StyledMetaDataContainer>
-                    <StyledTitle>
-                        You can now add links{' '}
-                        <Badge color='success' sx={{ ml: 1 }}>
-                            New
-                        </Badge>
-                    </StyledTitle>
-                    <StyledMetaDataItem>
-                        Gather relevant links for external resources such as
-                        issue trackers, code repositories or analytics tooling
-                    </StyledMetaDataItem>
-                    <div>
-                        <Button
-                            size='small'
-                            variant='text'
-                            startIcon={<AddIcon />}
-                            onClick={() => {}}
-                        >
-                            Add link
-                        </Button>
-                    </div>
-                </StyledMetaDataContainer>
-            ) : null}
-            {links.length > 0 ? (
-                <StyledMetaDataContainer>
-                    <StyledTitle>Resources</StyledTitle>
-                    <List>
-                        {links.map((link) => (
-                            <ListItemButton
-                                component='a'
-                                href={link.url}
-                                target='_blank'
-                                rel='noopener noreferrer'
-                            >
-                                <StyledListItemIcon>
-                                    <LinkIcon color='primary' />
-                                </StyledListItemIcon>
-                                <ListItemText
-                                    primary={link.title}
-                                    secondary={link.url}
-                                    secondaryTypographyProps={{
-                                        sx: {
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis',
-                                            whiteSpace: 'nowrap',
-                                            display: 'block',
-                                        },
-                                    }}
-                                />
-                            </ListItemButton>
-                        ))}
-                    </List>
+    return links.length === 0 ? (
+        <StyledMetaDataContainer>
+            <StyledTitle>
+                You can now add links{' '}
+                <Badge color='success' sx={{ ml: 1 }}>
+                    New
+                </Badge>
+            </StyledTitle>
+            <StyledMetaDataItem>
+                Gather relevant links for external resources such as issue
+                trackers, code repositories or analytics tooling
+            </StyledMetaDataItem>
+            <div>
+                <Button
+                    size='small'
+                    variant='text'
+                    startIcon={<AddIcon />}
+                    onClick={() => {}}
+                >
+                    Add link
+                </Button>
+            </div>
+        </StyledMetaDataContainer>
+    ) : (
+        <StyledMetaDataContainer>
+            <StyledTitle>Resources</StyledTitle>
+            <List>
+                {links.map((link) => (
+                    <ListItemButton
+                        component='a'
+                        href={link.url}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                    >
+                        <StyledListItemIcon>
+                            <LinkIcon color='primary' />
+                        </StyledListItemIcon>
+                        <ListItemText
+                            primary={link.title}
+                            secondary={link.url}
+                            secondaryTypographyProps={{
+                                sx: {
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    display: 'block',
+                                },
+                            }}
+                        />
+                    </ListItemButton>
+                ))}
+            </List>
 
-                    <div>
-                        <Button
-                            size='small'
-                            variant='text'
-                            startIcon={<AddIcon />}
-                            onClick={() => {}}
-                        >
-                            Add link
-                        </Button>
-                    </div>
-                </StyledMetaDataContainer>
-            ) : null}
-        </>
+            <div>
+                <Button
+                    size='small'
+                    variant='text'
+                    startIcon={<AddIcon />}
+                    onClick={() => {}}
+                >
+                    Add link
+                </Button>
+            </div>
+        </StyledMetaDataContainer>
     );
 };
 

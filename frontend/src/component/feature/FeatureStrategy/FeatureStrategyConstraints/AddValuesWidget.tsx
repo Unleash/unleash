@@ -60,7 +60,7 @@ export const AddValuesWidget = forwardRef<HTMLButtonElement, AddValuesProps>(
 
             const [isValid, errorMessage] = validator(...newValues);
             if (isValid) {
-                onAddValues(new Set(newValues));
+                onAddValues(newValues);
                 clearInput();
                 setError('');
             } else {

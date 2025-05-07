@@ -93,28 +93,20 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                                 }
                             />
                         </StyledHelpIconBox>
-                        <ConditionallyRender
-                            condition={
-                                Boolean(addEditStrategy) &&
-                                Boolean(setConstraints)
-                            }
-                            show={
-                                <EditableConstraintsList
-                                    ref={ref}
-                                    setConstraints={setConstraints}
-                                    constraints={constraints}
-                                />
-                            }
-                            elseShow={
-                                <NewConstraintAccordionList
-                                    ref={ref}
-                                    setConstraints={setConstraints}
-                                    constraints={constraints}
-                                    state={state}
-                                />
-                            }
-                        />
-
+                        {addEditStrategy && setConstraints ? (
+                            <EditableConstraintsList
+                                ref={ref}
+                                setConstraints={setConstraints}
+                                constraints={constraints}
+                            />
+                        ) : (
+                            <NewConstraintAccordionList
+                                ref={ref}
+                                setConstraints={setConstraints}
+                                constraints={constraints}
+                                state={state}
+                            />
+                        )}
                         <Box
                             sx={(theme) => ({
                                 marginTop: theme.spacing(2),

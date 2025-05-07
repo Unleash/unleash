@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { IConstraint } from 'interfaces/strategy';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IUnleashContextDefinition } from 'interfaces/context';
@@ -161,25 +161,28 @@ export const EditableConstraintWrapper = ({
         return cleanConstraint(withSet);
     });
 
-    const updateConstraint = (action: ConstraintUpdateAction) => {
-        const nextState = constraintReducer(localConstraint, action);
-        setLocalConstraint(nextState);
-        onAutoSave({
-            ...nextState,
-            values: Array.from(nextState.values ?? []),
-        });
-    };
-
     const { context } = useUnleashContext();
     const [contextDefinition, setContextDefinition] = useState(
         resolveContextDefinition(context, localConstraint.contextName),
     );
 
-    useEffect(() => {
-        setContextDefinition(
-            resolveContextDefinition(context, localConstraint.contextName),
-        );
-    }, [localConstraint.contextName, context]);
+    const updateConstraint = (action: ConstraintUpdateAction) => {
+        const nextState = constraintReducer(localConstraint, action);
+        const contextFieldHasChanged =
+            localConstraint.contextName !== nextState.contextName;
+
+        setLocalConstraint(nextState);
+        onAutoSave({
+            ...nextState,
+            values: Array.from(nextState.values ?? []),
+        });
+
+        if (contextFieldHasChanged) {
+            setContextDefinition(
+                resolveContextDefinition(context, nextState.contextName),
+            );
+        }
+    };
 
     return (
         <EditableConstraint

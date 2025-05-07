@@ -6,15 +6,6 @@ import { type IUser, RoleName, type IGroup } from '../../types/index.js';
 import { randomId } from '../../util/index.js';
 import { ProjectOwnersReadModel } from './project-owners-read-model.js';
 import type { ProjectForUi } from './project-read-model-type.js';
-import { jest } from '@jest/globals';
-
-jest.mock('../../util', () => ({
-    // @ts-ignore spread can only be called on objects and this is unknown
-    ...jest.requireActual('../../util'),
-    generateImageUrl: jest.fn(
-        (input: { image_url: string }) => `https://${input.image_url}`,
-    ),
-}));
 
 const mockProjectData = (name: string): ProjectForUi => ({
     name,
@@ -182,7 +173,9 @@ describe('integration tests', () => {
                     ownerType: 'user',
                     name: 'Owner Name',
                     email: 'owner@email.com',
-                    imageUrl: 'https://image-url-1',
+                    imageUrl: expect.stringContaining(
+                        'https://gravatar.com/avatar',
+                    ),
                 },
             ],
         });
@@ -260,7 +253,9 @@ describe('integration tests', () => {
             [projectId]: [
                 {
                     email: 'owner@email.com',
-                    imageUrl: 'https://image-url-1',
+                    imageUrl: expect.stringContaining(
+                        'https://gravatar.com/avatar',
+                    ),
                     name: 'Owner Name',
                     ownerType: 'user',
                 },
@@ -311,13 +306,17 @@ describe('integration tests', () => {
             [projectId]: [
                 {
                     email: 'owner2@email.com',
-                    imageUrl: 'https://image-url-3',
+                    imageUrl: expect.stringContaining(
+                        'https://gravatar.com/avatar',
+                    ),
                     name: 'Second Owner Name',
                     ownerType: 'user',
                 },
                 {
                     email: 'owner@email.com',
-                    imageUrl: 'https://image-url-1',
+                    imageUrl: expect.stringContaining(
+                        'https://gravatar.com/avatar',
+                    ),
                     name: 'Owner Name',
                     ownerType: 'user',
                 },
@@ -409,13 +408,17 @@ describe('integration tests', () => {
                 name: owner.name,
                 ownerType: 'user',
                 email: owner.email,
-                imageUrl: 'https://image-url-1',
+                imageUrl: expect.stringContaining(
+                    'https://gravatar.com/avatar',
+                ),
             },
             {
                 name: owner2.name,
                 ownerType: 'user',
                 email: owner2.email,
-                imageUrl: 'https://image-url-3',
+                imageUrl: expect.stringContaining(
+                    'https://gravatar.com/avatar',
+                ),
             },
         ]);
     });
@@ -455,7 +458,9 @@ describe('integration tests', () => {
                 name: owner.name,
                 ownerType: 'user',
                 email: owner.email,
-                imageUrl: 'https://image-url-1',
+                imageUrl: expect.stringContaining(
+                    'https://gravatar.com/avatar',
+                ),
             },
         ]);
     });

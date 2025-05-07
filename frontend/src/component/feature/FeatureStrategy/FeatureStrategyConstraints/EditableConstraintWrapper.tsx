@@ -9,9 +9,7 @@ import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStr
 interface IConstraintAccordionEditProps {
     constraint: IConstraint;
     onCancel?: () => void;
-    onSave: (constraint: IConstraint) => void;
     onDelete?: () => void;
-    onAutoSave?: (constraint: IConstraint) => void;
 }
 
 export const CANCEL = 'cancel';
@@ -38,16 +36,11 @@ const resolveContextDefinition = (
 
 export const EditableConstraintWrapper = ({
     constraint,
-    onSave,
     onDelete,
-    onAutoSave,
 }: IConstraintAccordionEditProps) => {
     const [localConstraint, setLocalConstraint] = useState<IConstraint>(
         cleanConstraint(constraint),
     );
-    const [constraintChanges, setConstraintChanges] = useState<IConstraint[]>([
-        cleanConstraint(constraint),
-    ]);
 
     const { context } = useUnleashContext();
     const [contextDefinition, setContextDefinition] = useState(
@@ -60,26 +53,6 @@ export const EditableConstraintWrapper = ({
         );
     }, [localConstraint.contextName, context]);
 
-    const onUndo = () => {
-        if (constraintChanges.length < 2) return;
-        const previousChange = constraintChanges[constraintChanges.length - 2];
-
-        setLocalConstraint(previousChange);
-        setConstraintChanges((prev) => prev.slice(0, prev.length - 1));
-        autoSave(previousChange);
-    };
-
-    const autoSave = (localConstraint: IConstraint) => {
-        if (onAutoSave) {
-            onAutoSave(localConstraint);
-        }
-    };
-
-    const recordChange = (localConstraint: IConstraint) => {
-        setConstraintChanges((prev) => [...prev, localConstraint]);
-        autoSave(localConstraint);
-    };
-
     const setContextName = useCallback((contextName: string) => {
         setLocalConstraint((prev) => {
             const localConstraint = cleanConstraint({
@@ -88,8 +61,6 @@ export const EditableConstraintWrapper = ({
                 values: [],
                 value: '',
             });
-
-            recordChange(localConstraint);
 
             return localConstraint;
         });
@@ -103,18 +74,6 @@ export const EditableConstraintWrapper = ({
                 values: [],
                 value: '',
             });
-
-            recordChange(localConstraint);
-
-            return localConstraint;
-        });
-    }, []);
-
-    const setValuesWithRecord = useCallback((values: string[]) => {
-        setLocalConstraint((prev) => {
-            const localConstraint = { ...prev, values };
-
-            recordChange(localConstraint);
 
             return localConstraint;
         });
@@ -132,8 +91,6 @@ export const EditableConstraintWrapper = ({
         setLocalConstraint((prev) => {
             const localConstraint = { ...prev, value };
 
-            recordChange(localConstraint);
-
             return localConstraint;
         });
     }, []);
@@ -141,8 +98,6 @@ export const EditableConstraintWrapper = ({
     const setInvertedOperator = () => {
         setLocalConstraint((prev) => {
             const localConstraint = { ...prev, inverted: !prev.inverted };
-
-            recordChange(localConstraint);
 
             return localConstraint;
         });
@@ -155,8 +110,6 @@ export const EditableConstraintWrapper = ({
                 caseInsensitive: !prev.caseInsensitive,
             };
 
-            recordChange(localConstraint);
-
             return localConstraint;
         });
     }, []);
@@ -165,10 +118,8 @@ export const EditableConstraintWrapper = ({
         (index: number) => {
             const valueCopy = [...localConstraint.values!];
             valueCopy.splice(index, 1);
-
-            setValuesWithRecord(valueCopy);
         },
-        [localConstraint, setValuesWithRecord],
+        [localConstraint],
     );
 
     return (
@@ -180,7 +131,6 @@ export const EditableConstraintWrapper = ({
             toggleInvertedOperator={setInvertedOperator}
             toggleCaseSensitivity={setCaseInsensitive}
             onDelete={onDelete}
-            onUndo={onUndo}
             constraintChanges={constraintChanges}
             setValues={setValues}
             setValuesWithRecord={setValuesWithRecord}

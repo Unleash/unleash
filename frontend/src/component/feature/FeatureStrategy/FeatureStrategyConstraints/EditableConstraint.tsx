@@ -179,35 +179,17 @@ type ConstraintUpdateAction =
 
 type Props = {
     localConstraint: IConstraint;
-    // setContextName: (contextName: string) => void;
-    // setOperator: (operator: Operator) => void;
-    // setLocalConstraint: React.Dispatch<React.SetStateAction<IConstraint>>;
     onDelete?: () => void;
-    // toggleInvertedOperator: () => void;
-    // toggleCaseSensitivity: () => void;
     contextDefinition: Pick<IUnleashContextDefinition, 'legalValues'>;
     constraintValues: string[];
-    constraintValue: string;
-    // setValue: (value: string) => void;
-    // setValues: (values: string[]) => void;
-    // removeValue: (index: number) => void;
     updateConstraint: (action: ConstraintUpdateAction) => void;
 };
 
 export const EditableConstraint: FC<Props> = ({
     localConstraint,
-    // setLocalConstraint,
-    // setContextName,
-    // setOperator,
     onDelete,
-    // toggleInvertedOperator,
-    // toggleCaseSensitivity,
     contextDefinition,
     constraintValues,
-    constraintValue,
-    // setValue,
-    // setValues,
-    // removeValue,
     updateConstraint,
 }) => {
     const { input } = useConstraintInput({
@@ -222,34 +204,6 @@ export const EditableConstraint: FC<Props> = ({
     const addValuesButtonRef = useRef<HTMLButtonElement>(null);
     const inputType = getInputType(input);
 
-    /* We need a special case to handle the currentTime context field. Since
-    this field will be the only one to allow DATE_BEFORE and DATE_AFTER operators
-    this will check if the context field is the current time context field AND check
-    if it is not already using one of the date operators (to not overwrite if there is existing
-    data). */
-    // useEffect(() => {
-    // if (
-    //     contextName === CURRENT_TIME_CONTEXT_FIELD &&
-    //     !oneOf(dateOperators, operator)
-    // ) {
-    //     setLocalConstraint((prev) => ({
-    //         ...prev,
-    //         operator: DATE_AFTER,
-    //         value: new Date().toISOString(),
-    //     }));
-    // } else if (
-    //     contextName !== CURRENT_TIME_CONTEXT_FIELD &&
-    //     oneOf(dateOperators, operator)
-    // ) {
-    //     setOperator(IN);
-    // }
-    // if (oneOf(stringOperators, operator)) {
-    //     setShowCaseSensitiveButton(true);
-    // } else {
-    //     setShowCaseSensitiveButton(false);
-    // }
-    // }, [contextName, setOperator, operator, setLocalConstraint]);
-
     if (!context) {
         return null;
     }
@@ -260,20 +214,6 @@ export const EditableConstraint: FC<Props> = ({
 
     const onOperatorChange = (operator: Operator) => {
         updateConstraint({ type: 'set operator', payload: operator });
-        // if (oneOf(stringOperators, operator)) {
-        //     setShowCaseSensitiveButton(true);
-        // } else {
-        //     setShowCaseSensitiveButton(false);
-        // }
-        // if (oneOf(dateOperators, operator)) {
-        //     setLocalConstraint((prev) => ({
-        //         ...prev,
-        //         operator: operator,
-        //         value: new Date().toISOString(),
-        //     }));
-        // } else {
-        //     setOperator(operator);
-        // }
     };
 
     const validator = useMemo(() => constraintValidator(input), [input]);

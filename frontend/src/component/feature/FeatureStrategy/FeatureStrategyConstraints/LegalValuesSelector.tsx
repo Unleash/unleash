@@ -73,11 +73,9 @@ const LegalValuesSelectorWidget = styled('article')(({ theme }) => ({
 export const LegalValuesSelector = ({
     data,
     values,
-    // setValues,
     addValues,
     removeValue,
     clearAll,
-    // setValuesWithRecord,
     constraintValues,
 }: IRestrictiveLegalValuesProps) => {
     const [filter, setFilter] = useState('');
@@ -107,6 +105,7 @@ export const LegalValuesSelector = ({
 
     useEffect(() => {
         if (illegalValues.length > 0) {
+            // todo: impl this
             console.log('would clean deleted values here');
             // setValues(cleanDeletedLegalValues(values));
         }
@@ -115,15 +114,9 @@ export const LegalValuesSelector = ({
     const onChange = (legalValue: string) => {
         if (valuesMap[legalValue]) {
             removeValue(legalValue);
-            // const index = values.findIndex((value) => value === legalValue);
-            // const newValues = [...values];
-            // newValues.splice(index, 1);
-            // setValuesWithRecord(newValues);
-            return;
+        } else {
+            addValues([legalValue]);
         }
-
-        addValues([legalValue]);
-        // setValuesWithRecord([...cleanDeletedLegalValues(values), legalValue]);
     };
 
     const isAllSelected = legalValues.every((value) =>
@@ -134,13 +127,9 @@ export const LegalValuesSelector = ({
         if (isAllSelected) {
             clearAll();
             return;
-            // return setValuesWithRecord([]);
         } else {
             addValues(legalValues.map(({ value }) => value));
         }
-        // setValuesWithRecord([
-        //     ...legalValues.map((legalValue) => legalValue.value),
-        // ]);
     };
 
     const handleSearchKeyDown = (event: React.KeyboardEvent) => {

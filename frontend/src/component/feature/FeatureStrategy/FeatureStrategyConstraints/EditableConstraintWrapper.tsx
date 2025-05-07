@@ -121,11 +121,6 @@ export const EditableConstraintWrapper = ({
         }
     };
 
-    // const [state, dispatch] = useReducer(
-    //     constraintReducer,
-    //     cleanConstraint(constraint),
-    // );
-
     const [localConstraint, setLocalConstraint] = useState(
         cleanConstraint(constraint),
     );
@@ -152,7 +147,6 @@ export const EditableConstraintWrapper = ({
             localConstraint={localConstraint}
             onDelete={onDelete}
             constraintValues={constraint?.values || []}
-            constraintValue={constraint?.value || ''}
             contextDefinition={contextDefinition}
             updateConstraint={updateConstraint}
         />

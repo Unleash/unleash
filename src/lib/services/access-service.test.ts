@@ -14,7 +14,10 @@ import FakeRoleStore from '../../test/fixtures/fake-role-store.js';
 import FakeEnvironmentStore from '../features/project-environments/fake-environment-store.js';
 import FakeAccessStore from '../../test/fixtures/fake-access-store.js';
 import { GroupService } from '../services/group-service.js';
-import type { IRole } from '../../lib/types/stores/access-store.js';
+import type {
+    IRole,
+    IRoleWithProject,
+} from '../../lib/types/stores/access-store.js';
 import {
     type IGroup,
     SYSTEM_USER,
@@ -326,26 +329,38 @@ test('should return true if user has admin role', async () => {
     const { accessReadModel, accessStore } = getSetup();
 
     const userId = 1;
-    accessStore.getRolesForUserId = jest
-        .fn()
-        .mockResolvedValue([{ id: 1, name: 'ADMIN', type: 'custom' }]);
+    let calledWithSameId = false;
+    // @ts-expect-error role is missing the project. Should admin have a project?
+    const role: IRoleWithProject = {
+        id: userId,
+        name: 'ADMIN',
+        type: 'custom',
+    };
+    accessStore.getRolesForUserId = (id: number) => {
+        calledWithSameId = id === userId;
+        return Promise.resolve([role]);
+    };
 
     const result = await accessReadModel.isRootAdmin(userId);
 
     expect(result).toBe(true);
-    expect(accessStore.getRolesForUserId).toHaveBeenCalledWith(userId);
+    expect(calledWithSameId).toBe(true);
 });
 
 test('should return false if user does not have admin role', async () => {
     const { accessReadModel, accessStore } = getSetup();
 
     const userId = 2;
-    accessStore.getRolesForUserId = jest
-        .fn()
-        .mockResolvedValue([{ id: 2, name: 'user', type: 'custom' }]);
+    let calledWithSameId = false;
+    // @ts-expect-error role is missing the project. Should admin have a project?
+    const role: IRoleWithProject = { id: userId, name: 'user', type: 'custom' };
+    accessStore.getRolesForUserId = (id: number) => {
+        calledWithSameId = id === userId;
+        return Promise.resolve([role]);
+    };
 
     const result = await accessReadModel.isRootAdmin(userId);
 
     expect(result).toBe(false);
-    expect(accessStore.getRolesForUserId).toHaveBeenCalledWith(userId);
+    expect(calledWithSameId).toBe(true);
 });

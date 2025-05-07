@@ -1,4 +1,4 @@
-import * as murmurHash3 from 'murmurhash3js';
+import murmurHash3 from 'murmurhash3js';
 
 function normalizedValue(
     id: string,

@@ -19,6 +19,16 @@ export const useFeatureLinkApi = (project: string, feature: string) => {
         await makeRequest(req.caller, req.id);
     };
 
+    const deleteLink = async (linkId: string) => {
+        const req = createRequest(
+            `/api/admin/projects/${project}/features/${feature}/link/${linkId}`,
+            {
+                method: 'DELETE',
+            },
+        );
+        await makeRequest(req.caller, req.id);
+    };
+
     const callbackDeps = [
         createRequest,
         makeRequest,
@@ -27,6 +37,7 @@ export const useFeatureLinkApi = (project: string, feature: string) => {
     ];
     return {
         addLink: useCallback(addLink, callbackDeps),
+        deleteLink: useCallback(deleteLink, callbackDeps),
         errors,
         loading,
     };

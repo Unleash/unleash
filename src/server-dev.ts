@@ -61,6 +61,7 @@ process.nextTick(async () => {
                         cleanupReminder: true,
                         strictSchemaValidation: true,
                         registerFrontendClient: true,
+                        featureLinks: true,
                     },
                 },
                 authentication: {

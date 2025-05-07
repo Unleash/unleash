@@ -1,5 +1,5 @@
 import { type FC, useState } from 'react';
-import { styled } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
@@ -16,6 +16,8 @@ import { Collaborators } from './Collaborators';
 import { EnvironmentVisibilityMenu } from './EnvironmentVisibilityMenu/EnvironmentVisibilityMenu';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import type { IFeatureToggle } from '../../../../../interfaces/featureToggle';
+import AddIcon from '@mui/icons-material/Add';
+import { useUiFlag } from '../../../../../hooks/useUiFlag';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -29,6 +31,7 @@ const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     [theme.breakpoints.down('md')]: {
         width: '100%',
     },
+    marginBottom: theme.spacing(2),
 }));
 
 const StyledTitle = styled('h2')(({ theme }) => ({
@@ -89,8 +92,29 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
 
     const showDependentFeatures = useShowDependentFeatures(project);
 
+    const featureLinksEnabled = useUiFlag('featureLinks');
+
     return (
         <>
+            {featureLinksEnabled ? (
+                <StyledMetaDataContainer>
+                    <StyledTitle>You can now add links</StyledTitle>
+                    <StyledMetaDataItem>
+                        Gather relevant links for external resources such as
+                        issue trackers, code repositories or analytics tooling
+                    </StyledMetaDataItem>
+                    <div>
+                        <Button
+                            size='small'
+                            variant='text'
+                            startIcon={<AddIcon />}
+                            onClick={() => {}}
+                        >
+                            Add link
+                        </Button>
+                    </div>
+                </StyledMetaDataContainer>
+            ) : null}
             <StyledMetaDataContainer>
                 <div>
                     <StyledTitle>Flag details</StyledTitle>

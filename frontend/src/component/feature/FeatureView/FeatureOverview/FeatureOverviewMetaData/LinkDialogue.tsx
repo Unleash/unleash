@@ -84,17 +84,23 @@ export const EditLinkDialogue: FC<IEditLinkDialogueProps> = ({
     featureId,
     link,
 }) => {
-    const [url, setUrl] = useState(link?.url || '');
-    const [title, setTitle] = useState(link?.title || '');
-    const [id, setId] = useState(link?.id || '');
+    const [url, setUrl] = useState('');
+    const [title, setTitle] = useState('');
+    const [id, setId] = useState('');
     const { editLink, loading } = useFeatureLinkApi(project, featureId);
     const { refetchFeature } = useFeature(project, featureId);
     const { setToastData, setToastApiError } = useToast();
 
     useEffect(() => {
-        setUrl(link?.url || '');
-        setTitle(link?.title || '');
-        setId(link?.id || '');
+        if (link) {
+            setUrl(link.url || '');
+            setTitle(link.title || '');
+            setId(link.id || '');
+        } else {
+            setUrl('');
+            setTitle('');
+            setId('');
+        }
     }, [JSON.stringify(link)]);
 
     return (

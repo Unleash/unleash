@@ -1,12 +1,10 @@
 import {
-    inOperators,
-    stringOperators,
+    isInOperator,
+    isStringOperator,
     type Operator,
 } from 'constants/operators';
 
 export const isCaseSensitive = (
     operator: Operator,
     caseInsensitive?: boolean,
-) =>
-    inOperators.includes(operator) ||
-    (stringOperators.includes(operator) && !caseInsensitive);
+) => isInOperator(operator) || (isStringOperator(operator) && !caseInsensitive);

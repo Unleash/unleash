@@ -10,67 +10,64 @@ import {
     isSingleValueOperator,
     isStringOperator,
     multipleValueOperators,
+    newOperators,
+    numOperators,
+    semVerOperators,
+    singleValueOperators,
+    stringOperators,
     type Operator,
 } from './operators';
 
 describe('operators are correctly identified', () => {
-    const allOperatorsAre = (
-        operators: Operator[],
-        types: Array<
-            | 'date'
-            | 'in'
-            | 'multi-value'
-            | 'new'
-            | 'number'
-            | 'semver'
-            | 'single-value'
-            | 'string'
-        >,
-    ) => {
-        expect(operators.every(isDateOperator)).toBe('date' in types);
-        expect(operators.every(isInOperator)).toBe('in' in types);
-        expect(operators.every(isMultiValueOperator)).toBe(
-            'multi-value' in types,
-        );
-        expect(operators.every(isNumOperator)).toBe('number' in types);
-        expect(operators.every(isSemVerOperator)).toBe('semver' in types);
-        expect(operators.every(isSingleValueOperator)).toBe(
-            'single-value' in types,
-        );
-        expect(operators.every(isStringOperator)).toBe('string' in types);
-        expect(operators.every(isNewOperator)).toBe('new' in types);
-    };
     test('date operators', () => {
-        allOperatorsAre(dateOperators, ['date', 'single-value']);
-        expect(dateOperators.every(isDateOperator)).toBe(true);
-        expect(dateOperators.every(isInOperator)).toBe(false);
-        expect(dateOperators.every(isMultiValueOperator)).toBe(false);
-        expect(dateOperators.every(isNumOperator)).toBe(false);
-        expect(dateOperators.every(isSemVerOperator)).toBe(false);
-        expect(dateOperators.every(isSingleValueOperator)).toBe(true);
-        expect(dateOperators.every(isStringOperator)).toBe(false);
+        expectOperatorTypes(dateOperators, ['date', 'single-value', 'new']);
     });
     test('in operators', () => {
-        expect(inOperators.every(isDateOperator)).toBe(false);
-        expect(inOperators.every(isInOperator)).toBe(true);
-        expect(inOperators.every(isMultiValueOperator)).toBe(true);
-        expect(inOperators.every(isNumOperator)).toBe(false);
-        expect(inOperators.every(isSemVerOperator)).toBe(false);
-        expect(inOperators.every(isSingleValueOperator)).toBe(false);
-        expect(inOperators.every(isStringOperator)).toBe(false);
+        expectOperatorTypes(inOperators, ['in', 'multi-value']);
     });
     test('multi-value operators', () => {
-        expect(multipleValueOperators.every(isDateOperator)).toBe(false);
-        expect(multipleValueOperators.every(isInOperator)).toBe(false);
-        expect(multipleValueOperators.every(isMultiValueOperator)).toBe(true);
-        expect(multipleValueOperators.every(isNumOperator)).toBe(false);
-        expect(multipleValueOperators.every(isSemVerOperator)).toBe(false);
-        expect(multipleValueOperators.every(isSingleValueOperator)).toBe(false);
-        expect(multipleValueOperators.every(isStringOperator)).toBe(false);
+        expectOperatorTypes(multipleValueOperators, ['multi-value']);
     });
-    test('new operators', () => {});
-    test('number operators', () => {});
-    test('semver operators', () => {});
-    test('single-value operators', () => {});
-    test('string operators', () => {});
+    test('new operators', () => {
+        expectOperatorTypes(newOperators, ['new']);
+    });
+    test('number operators', () => {
+        expectOperatorTypes(numOperators, ['single-value', 'number', 'new']);
+    });
+    test('semver operators', () => {
+        expectOperatorTypes(semVerOperators, ['single-value', 'semver', 'new']);
+    });
+    test('single-value operators', () => {
+        expectOperatorTypes(singleValueOperators, ['single-value', 'new']);
+    });
+    test('string operators', () => {
+        expectOperatorTypes(stringOperators, ['multi-value', 'string', 'new']);
+    });
 });
+
+const expectOperatorTypes = (
+    operators: Operator[],
+    types: Array<
+        | 'date'
+        | 'in'
+        | 'multi-value'
+        | 'new'
+        | 'number'
+        | 'semver'
+        | 'single-value'
+        | 'string'
+    >,
+) => {
+    expect(operators.every(isDateOperator)).toBe(types.includes('date'));
+    expect(operators.every(isInOperator)).toBe(types.includes('in'));
+    expect(operators.every(isMultiValueOperator)).toBe(
+        types.includes('multi-value'),
+    );
+    expect(operators.every(isNumOperator)).toBe(types.includes('number'));
+    expect(operators.every(isSemVerOperator)).toBe(types.includes('semver'));
+    expect(operators.every(isSingleValueOperator)).toBe(
+        types.includes('single-value'),
+    );
+    expect(operators.every(isStringOperator)).toBe(types.includes('string'));
+    expect(operators.every(isNewOperator)).toBe(types.includes('new'));
+};

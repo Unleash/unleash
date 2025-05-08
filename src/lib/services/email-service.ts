@@ -46,8 +46,6 @@ export interface IEmailEnvelope {
 
 const RESET_MAIL_SUBJECT = 'Unleash - Reset your password';
 const GETTING_STARTED_SUBJECT = 'Welcome to Unleash';
-const ORDER_ENVIRONMENTS_SUBJECT =
-    'Unleash - ordered environments successfully';
 const PRODUCTIVITY_REPORT = 'Unleash - productivity report';
 const SCHEDULED_CHANGE_CONFLICT_SUBJECT =
     'Unleash - Scheduled changes can no longer be applied';
@@ -78,6 +76,7 @@ export type ChangeRequestScheduleConflictData =
           environment: string;
       };
 
+export type TransportProvider = () => Transporter;
 export class EmailService {
     private logger: Logger;
     private config: IUnleashConfig;
@@ -86,16 +85,19 @@ export class EmailService {
 
     private readonly sender: string;
 
-    constructor(config: IUnleashConfig) {
+    constructor(config: IUnleashConfig, transportProvider?: TransportProvider) {
         this.config = config;
         this.logger = config.getLogger('services/email-service.ts');
         const { email } = config;
         if (email?.host) {
             this.sender = email.sender;
+            const provider = transportProvider
+                ? transportProvider
+                : createTransport;
             if (email.host === 'test') {
-                this.mailer = createTransport({ jsonTransport: true });
+                this.mailer = provider({ jsonTransport: true });
             } else {
-                this.mailer = createTransport({
+                this.mailer = provider({
                     host: email.host,
                     port: email.port,
                     secure: email.secure,

@@ -292,7 +292,7 @@ export const createServices = (
         : new FakeFeatureCollaboratorsReadModel();
 
     const featureLinkReadModel = db
-        ? new FeatureLinksReadModel(db)
+        ? new FeatureLinksReadModel(db, config.eventBus)
         : new FakeFeatureLinksReadModel();
 
     const featureToggleService = new FeatureToggleService(

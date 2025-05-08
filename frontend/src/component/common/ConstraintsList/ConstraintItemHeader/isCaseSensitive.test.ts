@@ -1,6 +1,8 @@
 import {
     allOperators,
     inOperators,
+    isInOperator,
+    isStringOperator,
     stringOperators,
 } from 'constants/operators';
 import { isCaseSensitive } from './isCaseSensitive';
@@ -20,7 +22,7 @@ test('`IN` and `NOT_IN` are always case sensitive', () => {
 test('If `caseInsensitive` is true, all operators except for `IN` and `NOT_IN` are considered case insensitive', () => {
     expect(
         allOperators
-            .filter((operator) => !inOperators.includes(operator))
+            .filter((operator) => !isInOperator(operator))
             .map((operator) => isCaseSensitive(operator, true))
             .every((result) => result === false),
     ).toBe(true);
@@ -35,7 +37,7 @@ test.each([false, undefined])(
         const nonStringResults = allOperators
             .filter(
                 (operator) =>
-                    ![...stringOperators, ...inOperators].includes(operator),
+                    !(isStringOperator(operator) || isInOperator(operator)),
             )
             .map((operator) => isCaseSensitive(operator, caseInsensitive));
 

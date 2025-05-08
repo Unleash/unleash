@@ -231,15 +231,16 @@ export class EnvironmentsController extends Controller {
         req: Request<ProjectParam>,
         res: Response<EnvironmentsProjectSchema>,
     ): Promise<void> {
+        const environments = await this.service.getProjectEnvironments(
+            req.params.projectId,
+        );
         this.openApiService.respondWithValidation(
             200,
             res,
             environmentsProjectSchema.$id,
             {
                 version: 1,
-                environments: (await this.service.getProjectEnvironments(
-                    req.params.projectId,
-                )) as any,
+                environments,
             },
         );
     }

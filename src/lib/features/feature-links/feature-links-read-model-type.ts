@@ -6,4 +6,5 @@ export interface IFeatureLink {
 
 export interface IFeatureLinksReadModel {
     getLinks(feature: string): Promise<IFeatureLink[]>;
+    getTopDomains(): Promise<{ domain: string; count: number }[]>;
 }

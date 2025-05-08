@@ -322,6 +322,7 @@ export interface IProjectOverview {
     featureNaming?: IFeatureNaming;
     defaultStickiness: string;
     onboardingStatus: ProjectOverviewSchema['onboardingStatus'];
+    linkTemplates?: IProjectLinkTemplate[];
 }
 
 export interface IProjectHealthReport extends IProjectHealth {

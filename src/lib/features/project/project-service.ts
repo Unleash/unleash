@@ -1508,6 +1508,7 @@ export default class ProjectService {
             mode: project.mode,
             featureLimit: project.featureLimit,
             featureNaming: project.featureNaming,
+            linkTemplates: project.linkTemplates,
             defaultStickiness: project.defaultStickiness,
             health: project.health || 0,
             favorite: favorite,

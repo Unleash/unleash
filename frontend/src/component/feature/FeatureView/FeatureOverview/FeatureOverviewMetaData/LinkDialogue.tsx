@@ -50,7 +50,7 @@ export const LinkDialogue: FC<IAddLinkDialogueProps> = ({
                     setToastApiError(formatUnknownError(error));
                 }
             }}
-            primaryButtonText='Add'
+            primaryButtonText='Save'
             secondaryButtonText='Cancel'
         >
             <Box>
@@ -121,7 +121,7 @@ export const EditLinkDialogue: FC<IEditLinkDialogueProps> = ({
                     setToastApiError(formatUnknownError(error));
                 }
             }}
-            primaryButtonText='Edit'
+            primaryButtonText='Save'
             secondaryButtonText='Cancel'
         >
             <Box>

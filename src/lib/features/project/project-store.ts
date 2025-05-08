@@ -45,6 +45,7 @@ const SETTINGS_COLUMNS = [
     'feature_naming_pattern',
     'feature_naming_example',
     'feature_naming_description',
+    'link_templates',
 ];
 const SETTINGS_TABLE = 'project_settings';
 const PROJECT_ENVIRONMENTS = 'project_environments';
@@ -248,6 +249,10 @@ class ProjectStore implements IProjectStore {
         data: IProjectEnterpriseSettingsUpdate,
     ): Promise<void> {
         try {
+            const link_templates = data.linkTemplates
+                ? JSON.stringify(data.linkTemplates)
+                : null;
+
             if (await this.hasProjectSettings(data.id)) {
                 await this.db(SETTINGS_TABLE)
                     .where({ project: data.id })
@@ -257,6 +262,7 @@ class ProjectStore implements IProjectStore {
                         feature_naming_example: data.featureNaming?.example,
                         feature_naming_description:
                             data.featureNaming?.description,
+                        link_templates,
                     });
             } else {
                 await this.db(SETTINGS_TABLE).insert({
@@ -265,6 +271,7 @@ class ProjectStore implements IProjectStore {
                     feature_naming_pattern: data.featureNaming?.pattern,
                     feature_naming_example: data.featureNaming?.example,
                     feature_naming_description: data.featureNaming?.description,
+                    link_templates,
                 });
             }
         } catch (err) {
@@ -640,6 +647,9 @@ class ProjectStore implements IProjectStore {
                 example: row.feature_naming_example,
                 description: row.feature_naming_description,
             },
+            linkTemplates: row.link_templates
+                ? JSON.parse(row.link_templates)
+                : [],
         };
     }
 

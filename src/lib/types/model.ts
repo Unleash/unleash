@@ -334,6 +334,11 @@ export interface IProjectParam {
     projectId: string;
 }
 
+export interface IProjectLinkTemplate {
+    title?: string;
+    template: string;
+}
+
 export interface IArchivedQuery {
     archived: boolean;
 }
@@ -561,6 +566,7 @@ export interface IProject {
     defaultStickiness: string;
     featureLimit?: number;
     featureNaming?: IFeatureNaming;
+    linkTemplates?: IProjectLinkTemplate[];
 }
 
 export interface IProjectApplications {

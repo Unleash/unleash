@@ -7,6 +7,7 @@ import type {
     IFeatureNaming,
     IProject,
     IProjectApplications,
+    IProjectLinkTemplate,
     ProjectMode,
 } from '../../types/model';
 import type { Store } from '../../types/stores/store';
@@ -21,12 +22,14 @@ export interface IProjectInsert {
     mode?: ProjectMode;
     featureLimit?: number;
     featureNaming?: IFeatureNaming;
+    linkTemplates?: IProjectLinkTemplate[];
 }
 
 export interface IProjectEnterpriseSettingsUpdate {
     id: string;
     mode?: ProjectMode;
     featureNaming?: IFeatureNaming;
+    linkTemplates?: IProjectLinkTemplate[];
 }
 
 export interface IProjectSettings {
@@ -36,6 +39,7 @@ export interface IProjectSettings {
     featureNamingPattern?: string;
     featureNamingExample?: string;
     featureNamingDescription?: string;
+    linkTemplates?: IProjectLinkTemplate[];
 }
 
 export interface IProjectHealthUpdate {

@@ -38,14 +38,6 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "menu": {},
-    "parent": "/archive",
-    "path": "/projects/:projectId/archived",
-    "title": ":projectId",
-    "type": "protected",
-  },
-  {
-    "component": [Function],
-    "menu": {},
     "parent": "/projects/:projectId/features/:featureId/",
     "path": "/projects/:projectId/features/:featureId/copy",
     "title": "Copy",

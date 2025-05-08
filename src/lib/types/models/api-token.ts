@@ -9,20 +9,6 @@ export enum ApiTokenType {
     FRONTEND = 'frontend',
 }
 
-export interface ILegacyApiTokenCreate {
-    secret: string;
-    /**
-     * @deprecated Use tokenName instead
-     */
-    username?: string;
-    type: ApiTokenType;
-    environment?: string;
-    project?: string;
-    projects?: string[];
-    expiresAt?: Date;
-    tokenName?: string;
-}
-
 export interface IApiTokenCreate {
     secret: string;
     tokenName: string;
@@ -31,10 +17,6 @@ export interface IApiTokenCreate {
     environment: string;
     projects: string[];
     expiresAt?: Date;
-    /**
-     * @deprecated Use tokenName instead
-     */
-    username?: string;
 }
 
 export interface IApiToken extends Omit<IApiTokenCreate, 'alias'> {
@@ -67,28 +49,6 @@ export const mapLegacyProjects = (
         );
     }
     return cleanedProjects;
-};
-
-export const mapLegacyToken = (
-    token: Omit<ILegacyApiTokenCreate, 'secret'>,
-): Omit<IApiTokenCreate, 'secret'> => {
-    const cleanedProjects = mapLegacyProjects(token.project, token.projects);
-    return {
-        tokenName: token.username ?? token.tokenName!,
-        type: token.type,
-        environment: token.environment || 'development',
-        projects: cleanedProjects,
-        expiresAt: token.expiresAt,
-    };
-};
-
-export const mapLegacyTokenWithSecret = (
-    token: ILegacyApiTokenCreate,
-): IApiTokenCreate => {
-    return {
-        ...mapLegacyToken(token),
-        secret: token.secret,
-    };
 };
 
 export const validateApiToken = ({

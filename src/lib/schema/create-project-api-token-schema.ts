@@ -1,8 +1,8 @@
 import joi from 'joi';
-import { ALL, ApiTokenType } from '../types/models/api-token';
+import { ApiTokenType } from '../types/models/api-token';
 import { DEFAULT_ENV } from '../util/constants';
 
-export const createApiToken = joi
+export const createProjectApiToken = joi
     .object()
     .keys({
         tokenName: joi.string().optional(),
@@ -12,11 +12,9 @@ export const createApiToken = joi
             .required()
             .valid(ApiTokenType.CLIENT, ApiTokenType.FRONTEND),
         expiresAt: joi.date().optional(),
-        projects: joi.array().min(0).optional().default([ALL]),
         environment: joi.when('type', {
             is: joi.string().valid(ApiTokenType.CLIENT, ApiTokenType.FRONTEND),
             then: joi.string().optional().default(DEFAULT_ENV),
-            otherwise: joi.string().optional().default(ALL),
         }),
     })
     .options({ stripUnknown: true, allowUnknown: false, abortEarly: false });

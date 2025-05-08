@@ -330,7 +330,7 @@ export const EditableConstraint: FC<Props> = ({
                     </ConstraintOptions>
                     <ValueList
                         values={
-                            localConstraint.values
+                            isMultiValueConstraint(localConstraint)
                                 ? Array.from(localConstraint.values)
                                 : undefined
                         }

@@ -89,33 +89,33 @@ export const newOperators = [
 export type NewOperator = (typeof newOperators)[number];
 
 export const isSingleValueOperator = (
-    operator: Operator,
+    operator: string,
 ): operator is SingleValueOperator =>
     singleValueOperators.includes(operator as SingleValueOperator);
 
 export const isMultiValueOperator = (
-    operator: Operator,
+    operator: string,
 ): operator is MultiValueOperator =>
     multipleValueOperators.includes(operator as MultiValueOperator);
 
 export const isStringOperator = (
-    operator: Operator,
+    operator: string,
 ): operator is StringOperator =>
     stringOperators.includes(operator as StringOperator);
 
-export const isInOperator = (operator: Operator): operator is InOperator =>
+export const isInOperator = (operator: string): operator is InOperator =>
     inOperators.includes(operator as InOperator);
 
-export const isNumOperator = (operator: Operator): operator is NumOperator =>
+export const isNumOperator = (operator: string): operator is NumOperator =>
     numOperators.includes(operator as NumOperator);
 
-export const isDateOperator = (operator: Operator): operator is DateOperator =>
+export const isDateOperator = (operator: string): operator is DateOperator =>
     dateOperators.includes(operator as DateOperator);
 
 export const isSemVerOperator = (
-    operator: Operator,
+    operator: string,
 ): operator is SemVerOperator =>
     semVerOperators.includes(operator as SemVerOperator);
 
-export const isNewOperator = (operator: Operator): operator is NewOperator =>
+export const isNewOperator = (operator: string): operator is NewOperator =>
     newOperators.includes(operator as NewOperator);

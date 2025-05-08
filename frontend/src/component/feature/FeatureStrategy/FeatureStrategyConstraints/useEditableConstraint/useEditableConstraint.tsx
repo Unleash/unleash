@@ -53,11 +53,9 @@ type LegalValueData = {
     deletedLegalValues?: Set<string>;
 };
 
-type LegalValueConstraintState =
-    | {
-          constraint: EditableMultiValueConstraint;
-      }
-    | LegalValueData;
+type LegalValueConstraintState = {
+    constraint: EditableMultiValueConstraint;
+} & LegalValueData;
 
 type EditableConstraintState = {
     updateConstraint: (action: ConstraintUpdateAction) => void;

@@ -1,9 +1,12 @@
 import {
     inOperators,
     stringOperators,
-    numOperators,
-    semVerOperators,
-    dateOperators,
+    isInOperator,
+    isStringOperator,
+    isNumOperator,
+    isSemVerOperator,
+    isDateOperator,
+    type Operator,
 } from 'constants/operators';
 import type { IUnleashContextDefinition } from 'interfaces/context';
 import type { IConstraint } from 'interfaces/strategy';
@@ -80,33 +83,33 @@ export const useConstraintInput = ({
     const resolveInputType = useCallback(() => {
         if (
             nonEmptyArray(contextDefinition.legalValues) &&
-            oneOf(inOperators, localConstraint.operator)
+            isInOperator(localConstraint.operator)
         ) {
             setInput(IN_OPERATORS_LEGAL_VALUES);
         } else if (
             nonEmptyArray(contextDefinition.legalValues) &&
-            oneOf(stringOperators, localConstraint.operator)
+            isStringOperator(localConstraint.operator)
         ) {
             setInput(STRING_OPERATORS_LEGAL_VALUES);
         } else if (
             nonEmptyArray(contextDefinition.legalValues) &&
-            oneOf(numOperators, localConstraint.operator)
+            isNumOperator(localConstraint.operator)
         ) {
             setInput(NUM_OPERATORS_LEGAL_VALUES);
         } else if (
             nonEmptyArray(contextDefinition.legalValues) &&
-            oneOf(semVerOperators, localConstraint.operator)
+            isSemVerOperator(localConstraint.operator)
         ) {
             setInput(SEMVER_OPERATORS_LEGAL_VALUES);
-        } else if (oneOf(dateOperators, localConstraint.operator)) {
+        } else if (isDateOperator(localConstraint.operator)) {
             setInput(DATE_OPERATORS_SINGLE_VALUE);
-        } else if (oneOf(inOperators, localConstraint.operator)) {
+        } else if (isInOperator(localConstraint.operator)) {
             setInput(IN_OPERATORS_FREETEXT);
-        } else if (oneOf(stringOperators, localConstraint.operator)) {
+        } else if (isStringOperator(localConstraint.operator)) {
             setInput(STRING_OPERATORS_FREETEXT);
-        } else if (oneOf(numOperators, localConstraint.operator)) {
+        } else if (isNumOperator(localConstraint.operator)) {
             setInput(NUM_OPERATORS_SINGLE_VALUE);
-        } else if (oneOf(semVerOperators, localConstraint.operator)) {
+        } else if (isSemVerOperator(localConstraint.operator)) {
             setInput(SEMVER_OPERATORS_SINGLE_VALUE);
         }
     }, [localConstraint, contextDefinition]);
@@ -126,7 +129,7 @@ export const useConstraintInput = ({
 
     const resolveValidatorType = useCallback(
         (operator: string) => {
-            if (oneOf(numOperators, operator)) {
+            if (isNumOperator(operator as Operator)) {
                 setValidator(NUMBER_VALIDATOR);
             }
 
@@ -134,11 +137,11 @@ export const useConstraintInput = ({
                 setValidator(STRING_ARRAY_VALIDATOR);
             }
 
-            if (oneOf(semVerOperators, operator)) {
+            if (isSemVerOperator(operator)) {
                 setValidator(SEMVER_VALIDATOR);
             }
 
-            if (oneOf(dateOperators, operator)) {
+            if (isDateOperator(operator)) {
                 setValidator(DATE_VALIDATOR);
             }
         },

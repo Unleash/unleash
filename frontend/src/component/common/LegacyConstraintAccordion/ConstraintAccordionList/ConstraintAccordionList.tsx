@@ -186,10 +186,7 @@ interface IConstraintList {
     state: IUseWeakMap<IConstraint, IConstraintAccordionListItemState>;
 }
 
-/**
- * @deprecated use NewConstraintAccordion components
- */
-export const ConstraintList = forwardRef<
+const ConstraintList = forwardRef<
     IConstraintAccordionListRef | undefined,
     IConstraintList
 >(({ constraints, setConstraints, state }, ref) => {

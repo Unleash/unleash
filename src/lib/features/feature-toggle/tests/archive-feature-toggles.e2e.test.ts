@@ -54,37 +54,42 @@ test('Should be allowed to reuse deleted toggle name', async () => {
 test('Should get archived toggles via project', async () => {
     await db.stores.featureToggleStore.deleteAll();
 
+    const proj1 = 'proj-1';
+    const proj2 = 'proj-2';
+
     await db.stores.projectStore.create({
-        id: 'proj-1',
-        name: 'proj-1',
+        id: proj1,
+        name: proj1,
         description: '',
         mode: 'open' as const,
     });
     await db.stores.projectStore.create({
-        id: 'proj-2',
-        name: 'proj-2',
+        id: proj2,
+        name: proj2,
         description: '',
         mode: 'open' as const,
     });
 
-    await db.stores.featureToggleStore.create('proj-1', {
+    await db.stores.featureToggleStore.create(proj1, {
         name: 'feat-proj-1',
         archived: true,
         createdByUserId: 9999,
     });
-    await db.stores.featureToggleStore.create('proj-2', {
+    await db.stores.featureToggleStore.create(proj2, {
         name: 'feat-proj-2',
         archived: true,
         createdByUserId: 9999,
     });
-    await db.stores.featureToggleStore.create('proj-2', {
+    await db.stores.featureToggleStore.create(proj2, {
         name: 'feat-proj-2-2',
         archived: true,
         createdByUserId: 9999,
     });
 
     await app.request
-        .get('/api/admin/archive/features/proj-1')
+        .get(
+            `/api/admin/search/features?project=IS%3A${proj1}&archived=IS%3Atrue`,
+        )
         .expect(200)
         .expect('Content-Type', /json/)
         .expect((res) => {
@@ -92,7 +97,9 @@ test('Should get archived toggles via project', async () => {
         });
 
     await app.request
-        .get('/api/admin/archive/features/proj-2')
+        .get(
+            `/api/admin/search/features?project=IS%3A${proj2}&archived=IS%3Atrue`,
+        )
         .expect(200)
         .expect('Content-Type', /json/)
         .expect((res) => {

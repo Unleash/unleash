@@ -1,14 +1,12 @@
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import type { IUnleashConfig } from '../../types/option';
 import type { IUnleashServices } from '../../types';
 import Controller from '../../routes/controller';
 import { extractUsername } from '../../util/extract-user';
-import { DELETE_FEATURE, NONE, UPDATE_FEATURE } from '../../types/permissions';
+import { DELETE_FEATURE, UPDATE_FEATURE } from '../../types/permissions';
 import type FeatureToggleService from './feature-toggle-service';
 import type { IAuthRequest } from '../../routes/unleash-types';
-import { serializeDates } from '../../types/serialize-dates';
 import type { OpenApiService } from '../../services/openapi-service';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {
     emptyResponse,
     getStandardResponses,
@@ -17,10 +15,6 @@ import type {
     TransactionCreator,
     UnleashTransaction,
 } from '../../db/transaction';
-import {
-    archivedFeaturesSchema,
-    type ArchivedFeaturesSchema,
-} from '../../openapi';
 
 export default class ArchiveController extends Controller {
     private featureService: FeatureToggleService;
@@ -50,28 +44,6 @@ export default class ArchiveController extends Controller {
         this.transactionalFeatureToggleService =
             transactionalFeatureToggleService;
         this.startTransaction = startTransaction;
-
-        this.route({
-            method: 'get',
-            path: '/features/:projectId',
-            handler: this.getArchivedFeaturesByProjectId,
-            permission: NONE,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Archive'],
-                    operationId: 'getArchivedFeaturesByProjectId',
-                    summary: 'Get archived features in project',
-                    description:
-                        'Retrieves a list of archived features that belong to the provided project.',
-                    responses: {
-                        200: createResponseSchema('archivedFeaturesSchema'),
-                        ...getStandardResponses(401, 403),
-                    },
-
-                    deprecated: true,
-                }),
-            ],
-        });
 
         this.route({
             method: 'delete',
@@ -114,21 +86,6 @@ export default class ArchiveController extends Controller {
                 }),
             ],
         });
-    }
-
-    async getArchivedFeaturesByProjectId(
-        req: Request<{ projectId: string }, any, any, any>,
-        res: Response<ArchivedFeaturesSchema>,
-    ): Promise<void> {
-        const { projectId } = req.params;
-        const features =
-            await this.featureService.getArchivedFeaturesByProjectId(projectId);
-        this.openApiService.respondWithValidation(
-            200,
-            res,
-            archivedFeaturesSchema.$id,
-            { version: 2, features: serializeDates(features) },
-        );
     }
 
     async deleteFeature(

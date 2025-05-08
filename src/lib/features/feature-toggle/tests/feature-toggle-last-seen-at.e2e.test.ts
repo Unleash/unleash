@@ -80,28 +80,6 @@ test('response should include last seen at per environment for multiple environm
     expect(production.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
 });
 
-test('response should include last seen at per environment for multiple environments in /api/admin/archive/features/:projectId', async () => {
-    const featureName = 'multiple-environment-last-seen-at-archived-project';
-    await setupLastSeenAtTest(featureName);
-
-    await app.request
-        .delete(`/api/admin/projects/default/features/${featureName}`)
-        .expect(202);
-
-    const { body } = await app.request.get(
-        `/api/admin/archive/features/default`,
-    );
-
-    const featureEnvironments = body.features[0].environments;
-    const [development, production] = featureEnvironments;
-
-    expect(development.name).toBe('development');
-    expect(development.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
-
-    expect(production.name).toBe('production');
-    expect(production.lastSeenAt).toEqual('2023-10-01T12:34:56.000Z');
-});
-
 test('response should include last seen at per environment correctly for a single toggle /api/admin/project/:projectId/features/:featureName', async () => {
     const featureName = 'multiple-environment-last-seen-at-single-toggle';
     await app.createFeature(featureName);

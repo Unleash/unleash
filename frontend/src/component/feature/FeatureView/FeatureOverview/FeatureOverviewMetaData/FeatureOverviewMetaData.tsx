@@ -32,7 +32,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import LinkIcon from '@mui/icons-material/Link';
 import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { AddLinkDialogue } from './AddLinkDialogue';
+import { EditLinkDialogue, AddLinkDialogue } from './LinkDialogue';
 import { useFeatureLinkApi } from 'hooks/api/actions/useFeatureLinkApi/useFeatureLinkApi';
 import useToast from 'hooks/useToast';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
@@ -107,6 +107,7 @@ interface FeatureLinksProps {
 
 const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
     const [showAddLinkDialogue, setShowAddLinkDialogue] = useState(false);
+    const [editLink, setEditLink] = useState<FeatureLink | null>(null);
     const { deleteLink, loading } = useFeatureLinkApi(project, feature);
     const { setToastData, setToastApiError } = useToast();
     const { refetchFeature } = useFeature(project, feature);
@@ -132,7 +133,9 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
                         <ExtraActions
                             capabilityId='link'
                             feature={feature}
-                            onEdit={() => {}}
+                            onEdit={() => {
+                                setEditLink(link);
+                            }}
                             onDelete={async () => {
                                 try {
                                     await deleteLink(link.id);
@@ -212,8 +215,14 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
             <AddLinkDialogue
                 project={project}
                 featureId={feature}
-                showAddLinkDialogue={showAddLinkDialogue}
+                showDialogue={showAddLinkDialogue}
                 onClose={() => setShowAddLinkDialogue(false)}
+            />
+            <EditLinkDialogue
+                project={project}
+                featureId={feature}
+                link={editLink}
+                onClose={() => setEditLink(null)}
             />
         </>
     );

@@ -2,7 +2,7 @@ import { AddDependencyDialogue } from 'component/feature/Dependencies/AddDepende
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { useState } from 'react';
 import { StyledLink } from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow';
-import { DependencyActions } from './DependencyActions';
+import { ExtraActions } from './ExtraActions';
 import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { ChildrenTooltip } from './ChildrenTooltip';
@@ -143,7 +143,8 @@ export const DependencyRow = ({ feature }: IDependencyRowProps) => {
                             </Truncator>
                         </StyledLink>
                         {checkAccess(UPDATE_FEATURE_DEPENDENCY, environment) ? (
-                            <DependencyActions
+                            <ExtraActions
+                                capabilityId='dependency'
                                 feature={feature.name}
                                 onEdit={() => setShowDependencyDialogue(true)}
                                 onDelete={deleteDependency}

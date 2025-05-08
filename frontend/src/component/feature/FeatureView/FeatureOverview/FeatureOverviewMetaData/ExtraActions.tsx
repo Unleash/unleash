@@ -27,17 +27,19 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
 }));
 
 interface IDependencyActionsProps {
+    capabilityId: string;
     feature: string;
     onEdit: () => void;
     onDelete: () => void;
 }
 
-export const DependencyActions = ({
+export const ExtraActions = ({
+    capabilityId,
     feature,
     onEdit,
     onDelete,
 }: IDependencyActionsProps) => {
-    const id = `dependency-${feature}-actions`;
+    const id = `${capabilityId}-${feature}-actions`;
     const menuId = `${id}-menu`;
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

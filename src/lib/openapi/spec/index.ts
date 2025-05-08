@@ -200,6 +200,8 @@ export * from './toggle-maintenance-schema';
 export * from './token-string-list-schema';
 export * from './token-user-schema';
 export * from './ui-config-schema';
+export * from './unknown-flag-schema';
+export * from './unknown-flags-response-schema';
 export * from './update-api-token-schema';
 export * from './update-context-field-schema';
 export * from './update-feature-schema';

@@ -11,6 +11,7 @@ import type {
 } from '../../../../lib/types';
 import { endOfDay, startOfHour, subDays, subHours } from 'date-fns';
 import type { IClientMetricsEnv } from './client-metrics-store-v2-type';
+import { UnknownFlagsService } from '../unknown-flags/unknown-flags-service';
 
 function initClientMetrics(flagEnabled = true) {
     const stores = createStores();
@@ -35,8 +36,19 @@ function initClientMetrics(flagEnabled = true) {
         config,
     );
     lastSeenService.updateLastSeen = jest.fn();
+    const unknownFlagsService = new UnknownFlagsService(
+        {
+            unknownFlagsStore: stores.unknownFlagsStore,
+        },
+        config,
+    );
 
-    const service = new ClientMetricsServiceV2(stores, config, lastSeenService);
+    const service = new ClientMetricsServiceV2(
+        stores,
+        config,
+        lastSeenService,
+        unknownFlagsService,
+    );
     return { clientMetricsService: service, eventBus, lastSeenService };
 }
 
@@ -161,10 +173,12 @@ test('get daily client metrics for a toggle', async () => {
         getLogger() {},
     } as unknown as IUnleashConfig;
     const lastSeenService = {} as LastSeenService;
+    const unknownFlagsService = {} as UnknownFlagsService;
     const service = new ClientMetricsServiceV2(
         { clientMetricsStoreV2 },
         config,
         lastSeenService,
+        unknownFlagsService,
     );
 
     const metrics = await service.getClientMetricsForToggle('feature', 3 * 24);
@@ -217,10 +231,12 @@ test('get hourly client metrics for a toggle', async () => {
         getLogger() {},
     } as unknown as IUnleashConfig;
     const lastSeenService = {} as LastSeenService;
+    const unknownFlagsService = {} as UnknownFlagsService;
     const service = new ClientMetricsServiceV2(
         { clientMetricsStoreV2 },
         config,
         lastSeenService,
+        unknownFlagsService,
     );
 
     const metrics = await service.getClientMetricsForToggle('feature', 2);
@@ -287,10 +303,12 @@ const setupMetricsService = ({
         },
     } as unknown as IUnleashConfig;
     const lastSeenService = {} as LastSeenService;
+    const unknownFlagsService = {} as UnknownFlagsService;
     const service = new ClientMetricsServiceV2(
         { clientMetricsStoreV2 },
         config,
         lastSeenService,
+        unknownFlagsService,
     );
     return {
         service,

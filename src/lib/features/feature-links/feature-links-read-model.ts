@@ -14,7 +14,8 @@ export class FeatureLinksReadModel implements IFeatureLinksReadModel {
     async getLinks(feature: string): Promise<IFeatureLink[]> {
         const links = await this.db
             .from('feature_link')
-            .where('feature_name', feature);
+            .where('feature_name', feature)
+            .orderBy('id', 'asc');
 
         return links.map((link) => ({
             id: link.id,

@@ -68,7 +68,8 @@ export type IFlagKey =
     | 'cleanupReminder'
     | 'removeInactiveApplications'
     | 'registerFrontendClient'
-    | 'featureLinks';
+    | 'featureLinks'
+    | 'reportUnknownFlags';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -323,6 +324,10 @@ const flags: IFlags = {
     ),
     featureLinks: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_LINKS,
+        false,
+    ),
+    reportUnknownFlags: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_REPORT_UNKNOWN_FLAGS,
         false,
     ),
 };

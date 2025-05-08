@@ -1,10 +1,14 @@
 import type React from 'react';
+import { useImperativeHandle } from 'react';
 import { forwardRef } from 'react';
 import { styled } from '@mui/material';
 import type { IConstraint } from 'interfaces/strategy';
 import produce from 'immer';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import { constraintId } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
+import {
+    constraintId,
+    createEmptyConstraint,
+} from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
 import { EditableConstraintWrapper } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraintWrapper';
 
@@ -28,6 +32,15 @@ export const EditableConstraintsList = forwardRef<
     IEditableConstraintsListProps
 >(({ constraints, setConstraints }, ref) => {
     const { context } = useUnleashContext();
+
+    useImperativeHandle(ref, () => ({
+        addConstraint(contextName: string) {
+            if (setConstraints) {
+                const constraint = createEmptyConstraint(contextName);
+                setConstraints((prev) => [...prev, constraint]);
+            }
+        },
+    }));
 
     const onDelete = (index: number) => {
         setConstraints(

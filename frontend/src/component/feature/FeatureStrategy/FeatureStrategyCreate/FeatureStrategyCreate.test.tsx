@@ -146,22 +146,16 @@ describe('NewFeatureStrategyCreate', () => {
         const addConstraintEl = await screen.findByText('Add constraint');
         fireEvent.click(addConstraintEl);
 
-        const popoverOpenButton = screen.getByRole('button', {
-            name: 'Add values',
-        });
-        fireEvent.click(popoverOpenButton);
+        const addValueEl = screen.getByText('Add values');
+        fireEvent.click(addValueEl);
 
-        const popoverInput = screen.getByRole('textbox', {
-            name: 'Constraint Value',
-        });
-        fireEvent.change(popoverInput, {
+        const inputElement = screen.getByPlaceholderText('Enter value');
+        fireEvent.change(inputElement, {
             target: { value: expectedConstraintValue },
         });
 
-        const addButton = screen.getByRole('button', {
-            name: 'Add',
-        });
-        fireEvent.click(addButton);
+        const doneEl = screen.getByText('Add');
+        fireEvent.click(doneEl);
 
         const selectElement = screen.getByPlaceholderText('Select segments');
         fireEvent.mouseDown(selectElement);
@@ -263,6 +257,41 @@ describe('NewFeatureStrategyCreate', () => {
         expect(variants2.length).toBe(0);
     });
 
+    test('Should autosave constraint settings when navigating between tabs', async () => {
+        const { expectedMultipleValues } = setupComponent();
+
+        const titleEl = await screen.findByText('Gradual rollout');
+        expect(titleEl).toBeInTheDocument();
+
+        const targetingEl = screen.getByText('Targeting');
+        fireEvent.click(targetingEl);
+
+        const addConstraintEl = await screen.findByText('Add constraint');
+        fireEvent.click(addConstraintEl);
+
+        const addValueEl = screen.getByText('Add values');
+        fireEvent.click(addValueEl);
+
+        const inputElement = screen.getByPlaceholderText('Enter value');
+        fireEvent.change(inputElement, {
+            target: { value: expectedMultipleValues },
+        });
+
+        const doneEl = screen.getByText('Add');
+        fireEvent.click(doneEl);
+
+        const variantsEl = screen.getByText('Variants');
+        fireEvent.click(variantsEl);
+
+        fireEvent.click(targetingEl);
+
+        const values = expectedMultipleValues.split(',');
+
+        expect(screen.getByText(values[0])).toBeInTheDocument();
+        expect(screen.getByText(values[1])).toBeInTheDocument();
+        expect(screen.getByText(values[2])).toBeInTheDocument();
+    });
+
     test.skip('Should update multiple constraints correctly', async () => {
         setupComponent();
 
@@ -277,36 +306,92 @@ describe('NewFeatureStrategyCreate', () => {
         fireEvent.click(addConstraintEl);
         fireEvent.click(addConstraintEl);
 
-        const popoverOpenButtons = screen.getAllByRole('button', {
-            name: 'Add values',
+        const addValueEls = await screen.findAllByText('Add values');
+
+        // first constraint
+        fireEvent.click(addValueEls[0]);
+        const firstEnterElement = screen.getByPlaceholderText('Enter value');
+        fireEvent.change(firstEnterElement, {
+            target: { value: '123' },
         });
+        const firstAddElement = screen.getByText('Add');
+        fireEvent.click(firstAddElement);
 
-        const values = ['123', '456', '789'];
-        for (const [index, popoverOpenButton] of popoverOpenButtons.entries()) {
-            fireEvent.click(popoverOpenButton);
+        // second constraint
+        fireEvent.click(addValueEls[1]);
+        const secondEnterElement = screen.getByPlaceholderText('Enter value');
+        fireEvent.change(secondEnterElement, {
+            target: { value: '456' },
+        });
+        const secondDoneElement = screen.getByText('Add');
+        fireEvent.click(secondDoneElement);
 
-            const popoverInput = screen.getByRole('textbox', {
-                name: 'Constraint Value',
-            });
-            fireEvent.change(popoverInput, {
-                target: { value: values[index] },
-            });
-            const addButton = screen.getByRole('button', {
-                name: 'Add',
-            });
-            fireEvent.click(addButton);
-            fireEvent.keyPress(popoverInput, { key: 'Escape' });
-        }
+        // third constraint
+        fireEvent.click(addValueEls[2]);
+
+        const thirdEnterElement = screen.getByPlaceholderText('Enter value');
+        fireEvent.change(thirdEnterElement, {
+            target: { value: '789' },
+        });
+        const thirdDoneElement = screen.getByText('Add');
+        fireEvent.click(thirdDoneElement);
 
         expect(screen.queryByText('123')).toBeInTheDocument();
+        const deleteBtns = await screen.findAllByTestId('CancelIcon');
+        fireEvent.click(deleteBtns[0]);
+
+        expect(screen.queryByText('123')).not.toBeInTheDocument();
         expect(screen.queryByText('456')).toBeInTheDocument();
         expect(screen.queryByText('789')).toBeInTheDocument();
+    });
 
-        const deleteBtns = await screen.findAllByTestId(
-            'DELETE_CONSTRAINT_BUTTON',
+    test.skip('Should update multiple constraints with the correct react key', async () => {
+        setupComponent();
+
+        const titleEl = await screen.findByText('Gradual rollout');
+        expect(titleEl).toBeInTheDocument();
+
+        const targetingEl = screen.getByText('Targeting');
+        fireEvent.click(targetingEl);
+
+        const addConstraintEl = await screen.findByText('Add constraint');
+        fireEvent.click(addConstraintEl);
+        fireEvent.click(addConstraintEl);
+        fireEvent.click(addConstraintEl);
+
+        const inputElements = screen.getAllByPlaceholderText(
+            'value1, value2, value3...',
         );
+
+        fireEvent.change(inputElements[0], {
+            target: { value: '123' },
+        });
+        fireEvent.change(inputElements[1], {
+            target: { value: '456' },
+        });
+        fireEvent.change(inputElements[2], {
+            target: { value: '789' },
+        });
+
+        const addValueEls = await screen.findAllByText('Add values');
+        fireEvent.click(addValueEls[0]);
+        fireEvent.click(addValueEls[1]);
+        fireEvent.click(addValueEls[2]);
+
+        expect(screen.queryByText('123')).toBeInTheDocument();
+
+        const deleteBtns = screen.getAllByTestId('DELETE_CONSTRAINT_BUTTON');
         fireEvent.click(deleteBtns[0]);
-        screen.debug(undefined, 200000);
+
+        const inputElements2 = screen.getAllByPlaceholderText(
+            'value1, value2, value3...',
+        );
+
+        fireEvent.change(inputElements2[0], {
+            target: { value: '666' },
+        });
+        const addValueEls2 = screen.getAllByText('Add values');
+        fireEvent.click(addValueEls2[0]);
 
         expect(screen.queryByText('123')).not.toBeInTheDocument();
         expect(screen.queryByText('456')).toBeInTheDocument();

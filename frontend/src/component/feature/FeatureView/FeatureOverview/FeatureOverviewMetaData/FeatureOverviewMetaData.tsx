@@ -1,5 +1,12 @@
 import { type FC, useState } from 'react';
-import { styled } from '@mui/material';
+import {
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    styled,
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
@@ -15,7 +22,22 @@ import { capitalizeFirst } from 'utils/capitalizeFirst';
 import { Collaborators } from './Collaborators';
 import { EnvironmentVisibilityMenu } from './EnvironmentVisibilityMenu/EnvironmentVisibilityMenu';
 import { Truncator } from 'component/common/Truncator/Truncator';
-import type { IFeatureToggle } from '../../../../../interfaces/featureToggle';
+import type {
+    FeatureLink,
+    IFeatureToggle,
+} from '../../../../../interfaces/featureToggle';
+import AddIcon from '@mui/icons-material/Add';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { Badge } from 'component/common/Badge/Badge';
+import LinkIcon from '@mui/icons-material/Link';
+import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { EditLinkDialogue, AddLinkDialogue } from './LinkDialogue';
+import { useFeatureLinkApi } from 'hooks/api/actions/useFeatureLinkApi/useFeatureLinkApi';
+import useToast from 'hooks/useToast';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import { ExtraActions } from './ExtraActions';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -29,6 +51,7 @@ const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     [theme.breakpoints.down('md')]: {
         width: '100%',
     },
+    marginBottom: theme.spacing(2),
 }));
 
 const StyledTitle = styled('h2')(({ theme }) => ({
@@ -65,11 +88,144 @@ export const StyledMetaDataItemValue = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
+export const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({
+    minWidth: theme.spacing(5),
+}));
+
 type FeatureOverviewMetaDataProps = {
     hiddenEnvironments?: string[];
     onEnvironmentVisibilityChange?: (environment: string) => void;
     feature: IFeatureToggle;
     onChange: () => void;
+};
+
+interface FeatureLinksProps {
+    links: FeatureLink[];
+    project: string;
+    feature: string;
+}
+
+const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
+    const [showAddLinkDialogue, setShowAddLinkDialogue] = useState(false);
+    const [editLink, setEditLink] = useState<FeatureLink | null>(null);
+    const { deleteLink, loading } = useFeatureLinkApi(project, feature);
+    const { setToastData, setToastApiError } = useToast();
+    const { refetchFeature } = useFeature(project, feature);
+
+    const addLinkButton = (
+        <PermissionButton
+            size='small'
+            startIcon={<AddIcon />}
+            permission={UPDATE_FEATURE}
+            projectId={project}
+            variant='text'
+            onClick={() => setShowAddLinkDialogue(true)}
+        >
+            Add link
+        </PermissionButton>
+    );
+
+    const renderLinkItems = () => (
+        <List>
+            {links.map((link) => (
+                <ListItem
+                    secondaryAction={
+                        <ExtraActions
+                            capabilityId='link'
+                            feature={feature}
+                            onEdit={() => {
+                                setEditLink(link);
+                            }}
+                            onDelete={async () => {
+                                try {
+                                    await deleteLink(link.id);
+                                    setToastData({
+                                        text: 'Link removed',
+                                        type: 'success',
+                                    });
+                                    refetchFeature();
+                                } catch (error) {
+                                    setToastApiError(formatUnknownError(error));
+                                }
+                            }}
+                        />
+                    }
+                    key={link.id}
+                    disablePadding
+                    dense
+                >
+                    <ListItemButton
+                        component='a'
+                        href={link.url}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        disableGutters
+                    >
+                        <StyledListItemIcon>
+                            <LinkIcon color='primary' />
+                        </StyledListItemIcon>
+                        <ListItemText
+                            primary={link.title}
+                            secondary={link.url}
+                            secondaryTypographyProps={{
+                                sx: {
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    display: 'block',
+                                },
+                            }}
+                        />
+                    </ListItemButton>
+                </ListItem>
+            ))}
+        </List>
+    );
+
+    const emptyStateContent = (
+        <>
+            <StyledTitle>
+                You can now add links{' '}
+                <Badge color='success' sx={{ ml: 1 }}>
+                    New
+                </Badge>
+            </StyledTitle>
+            <StyledMetaDataItem>
+                Gather relevant links for external resources such as issue
+                trackers, code repositories or analytics tooling
+            </StyledMetaDataItem>
+            <div>{addLinkButton}</div>
+        </>
+    );
+
+    const linksContent = (
+        <>
+            <StyledTitle>Resources</StyledTitle>
+            {renderLinkItems()}
+            <div>{addLinkButton}</div>
+        </>
+    );
+
+    return (
+        <>
+            <StyledMetaDataContainer>
+                {links.length === 0 ? emptyStateContent : linksContent}
+            </StyledMetaDataContainer>
+
+            <AddLinkDialogue
+                project={project}
+                featureId={feature}
+                showDialogue={showAddLinkDialogue}
+                onClose={() => setShowAddLinkDialogue(false)}
+            />
+            <EditLinkDialogue
+                project={project}
+                featureId={feature}
+                link={editLink}
+                onClose={() => setEditLink(null)}
+            />
+        </>
+    );
 };
 
 const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
@@ -89,8 +245,17 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
 
     const showDependentFeatures = useShowDependentFeatures(project);
 
+    const featureLinksEnabled = useUiFlag('featureLinks');
+
     return (
         <>
+            {featureLinksEnabled ? (
+                <FeatureLinks
+                    links={feature.links || []}
+                    project={feature.project}
+                    feature={feature.name}
+                />
+            ) : null}
             <StyledMetaDataContainer>
                 <div>
                     <StyledTitle>Flag details</StyledTitle>

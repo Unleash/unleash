@@ -217,7 +217,7 @@ export const GenerateApiKey = ({
                     environment,
                     type: sdkType,
                     projects: [project],
-                    username: `api-key-${project}-${environment}`,
+                    tokenName: `api-key-${project}-${environment}`,
                 },
                 project,
             );

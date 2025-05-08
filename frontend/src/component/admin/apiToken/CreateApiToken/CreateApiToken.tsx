@@ -62,11 +62,11 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
 
     const {
         getApiTokenPayload,
-        username,
+        tokenName,
         type,
         projects,
         environment,
-        setUsername,
+        setTokenName,
         setTokenType,
         setProjects,
         setEnvironment,
@@ -149,8 +149,8 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
                 }
             >
                 <TokenInfo
-                    username={username}
-                    setUsername={setUsername}
+                    tokenName={tokenName}
+                    setTokenName={setTokenName}
                     errors={errors}
                     clearErrors={clearErrors}
                 />

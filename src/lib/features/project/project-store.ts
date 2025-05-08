@@ -249,9 +249,9 @@ class ProjectStore implements IProjectStore {
         data: IProjectEnterpriseSettingsUpdate,
     ): Promise<void> {
         try {
-            const link_templates = data.linkTemplates
-                ? JSON.stringify(data.linkTemplates)
-                : null;
+            const link_templates = JSON.stringify(
+                data.linkTemplates ? data.linkTemplates : [],
+            );
 
             if (await this.hasProjectSettings(data.id)) {
                 await this.db(SETTINGS_TABLE)
@@ -647,9 +647,7 @@ class ProjectStore implements IProjectStore {
                 example: row.feature_naming_example,
                 description: row.feature_naming_description,
             },
-            linkTemplates: row.link_templates
-                ? JSON.parse(row.link_templates)
-                : [],
+            linkTemplates: row.link_templates,
         };
     }
 

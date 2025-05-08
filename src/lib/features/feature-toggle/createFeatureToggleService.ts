@@ -130,7 +130,7 @@ export const createFeatureToggleService = (
 
     const featureCollaboratorsReadModel = new FeatureCollaboratorsReadModel(db);
 
-    const featureLinksReadModel = new FeatureLinksReadModel(db);
+    const featureLinksReadModel = new FeatureLinksReadModel(db, eventBus);
 
     const featureToggleService = new FeatureToggleService(
         {

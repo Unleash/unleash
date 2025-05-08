@@ -47,45 +47,38 @@ export const allOperators = [
     SEMVER_EQ,
     SEMVER_GT,
     SEMVER_LT,
-] as const;
+];
 
-export const stringOperators = [
-    STR_CONTAINS,
-    STR_STARTS_WITH,
-    STR_ENDS_WITH,
-] as const;
+export const stringOperators = [STR_CONTAINS, STR_STARTS_WITH, STR_ENDS_WITH];
 export type StringOperator = (typeof stringOperators)[number];
 
-export const inOperators = [IN, NOT_IN] as const;
+export const inOperators = [IN, NOT_IN];
 export type InOperator = (typeof inOperators)[number];
 
-export const numOperators = [NUM_EQ, NUM_GT, NUM_GTE, NUM_LT, NUM_LTE] as const;
+export const numOperators = [NUM_EQ, NUM_GT, NUM_GTE, NUM_LT, NUM_LTE];
 export type NumOperator = (typeof numOperators)[number];
 
-export const dateOperators = [DATE_BEFORE, DATE_AFTER] as const;
+export const dateOperators = [DATE_BEFORE, DATE_AFTER];
 export type DateOperator = (typeof dateOperators)[number];
 
-export const semVerOperators = [SEMVER_EQ, SEMVER_GT, SEMVER_LT] as const;
+export const semVerOperators = [SEMVER_EQ, SEMVER_GT, SEMVER_LT];
 export type SemVerOperator = (typeof semVerOperators)[number];
 
 export const singleValueOperators = [
     ...semVerOperators,
     ...dateOperators,
     ...numOperators,
-] as const;
+];
 export type SingleValueOperator = (typeof singleValueOperators)[number];
 
-export const multipleValueOperators = [
-    ...stringOperators,
-    ...inOperators,
-] as const;
+export const multipleValueOperators = [...stringOperators, ...inOperators];
 export type MultiValueOperator = (typeof multipleValueOperators)[number];
 
 export const newOperators = [
     ...stringOperators,
     ...dateOperators,
     ...singleValueOperators,
-] as const;
+];
 export type NewOperator = (typeof newOperators)[number];
 
 export const isSingleValueOperator = (

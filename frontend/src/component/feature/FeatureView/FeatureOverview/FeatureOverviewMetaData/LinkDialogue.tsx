@@ -5,7 +5,7 @@ import { useFeatureLinkApi } from 'hooks/api/actions/useFeatureLinkApi/useFeatur
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import type { FeatureLink } from '../../../../../interfaces/featureToggle';
+import type { FeatureLink } from 'interfaces/featureToggle';
 
 interface IAddLinkDialogueProps {
     project: string;

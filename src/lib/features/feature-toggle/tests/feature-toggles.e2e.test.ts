@@ -1047,7 +1047,9 @@ test('Should archive feature flag', async () => {
 
     await app.request.get(`${url}/${name}`).expect(404);
     const { body } = await app.request
-        .get(`/api/admin/archive/features/${projectId}`)
+        .get(
+            `/api/admin/search/features?project=IS%3A${projectId}&archived=IS%3Atrue`,
+        )
         .expect(200);
 
     const flag = body.features.find((f) => f.name === name);

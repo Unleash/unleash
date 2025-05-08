@@ -2162,12 +2162,6 @@ class FeatureToggleService {
         );
     }
 
-    async getArchivedFeaturesByProjectId(
-        project: string,
-    ): Promise<FeatureToggle[]> {
-        return this.featureToggleStore.getArchivedFeatures(project);
-    }
-
     async getProjectId(name: string): Promise<string | undefined> {
         return this.featureToggleStore.getProjectId(name);
     }

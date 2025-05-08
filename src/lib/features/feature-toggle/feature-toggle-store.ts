@@ -258,32 +258,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return rows.map(this.rowToFeature);
     }
 
-    async getArchivedFeatures(project: string): Promise<FeatureToggle[]> {
-        const builder = new FeatureToggleListBuilder(this.db, [
-            ...commonSelectColumns,
-            'features.archived_at as archived_at',
-        ]);
-
-        const archived = true;
-        builder.query('features').withLastSeenByEnvironment(archived);
-
-        builder.addSelectColumn(
-            'last_seen_at_metrics.last_seen_at as env_last_seen_at',
-        );
-        builder.addSelectColumn(
-            'last_seen_at_metrics.environment as last_seen_at_env',
-        );
-
-        const rows = await builder.internalQuery
-            .select(builder.getSelectColumns())
-            .where({ project })
-            .whereNotNull('archived_at');
-
-        return this.featureToggleRowConverter.buildArchivedFeatureToggleListFromRows(
-            rows,
-        );
-    }
-
     async getFeatureTypeCounts({
         projectId,
         archived,

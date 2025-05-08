@@ -12,8 +12,8 @@ import {
 import { NewConstraintAccordion } from 'component/common/NewConstraintAccordion/NewConstraintAccordion';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { EditableConstraintWrapper } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraintWrapper';
 import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
+import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint';
 
 export interface IConstraintAccordionListProps {
     constraints: IConstraint[];
@@ -149,7 +149,7 @@ export const NewConstraintAccordionList = forwardRef<
                     addEditStrategy ? (
                         state.get(constraint)?.editing &&
                         Boolean(setConstraints) ? (
-                            <EditableConstraintWrapper
+                            <EditableConstraint
                                 key={constraint[constraintId]}
                                 constraint={constraint}
                                 // @ts-ignore todo: find a better way to do this

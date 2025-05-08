@@ -10,8 +10,7 @@ import {
     createEmptyConstraint,
 } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
-import { EditableConstraintWrapper } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraintWrapper';
-
+import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint';
 export interface IEditableConstraintsListRef {
     addConstraint?: (contextName: string) => void;
 }
@@ -72,7 +71,7 @@ export const EditableConstraintsList = forwardRef<
         <StyledContainer>
             <ConstraintsList>
                 {constraints.map((constraint, index) => (
-                    <EditableConstraintWrapper
+                    <EditableConstraint
                         key={constraint[constraintId]}
                         constraint={constraint}
                         onDelete={() => onDelete(index)}

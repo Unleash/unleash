@@ -7,49 +7,82 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import type { FeatureLink } from 'interfaces/featureToggle';
 
-interface IAddLinkDialogueProps {
-    project: string;
-    featureId: string;
-    showDialogue: boolean;
-    onClose: () => void;
-}
-
 const StyledTextField = styled(TextField)(({ theme }) => ({
     width: '100%',
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
 }));
 
-export const AddLinkDialogue: FC<IAddLinkDialogueProps> = ({
+interface ILinkDialogueProps {
+    project: string;
+    featureId: string;
+    onClose: () => void;
+    mode: 'add' | 'edit';
+    showDialogue: boolean;
+    link: FeatureLink | null;
+}
+
+const LinkDialogue: FC<ILinkDialogueProps> = ({
     showDialogue,
     onClose,
     project,
     featureId,
+    mode,
+    link,
 }) => {
     const [url, setUrl] = useState('');
     const [title, setTitle] = useState('');
-    const { addLink, loading } = useFeatureLinkApi(project, featureId);
+    const [id, setId] = useState('');
+    const { addLink, editLink, loading } = useFeatureLinkApi(
+        project,
+        featureId,
+    );
     const { refetchFeature } = useFeature(project, featureId);
     const { setToastData, setToastApiError } = useToast();
 
+    const isEditMode = mode === 'edit';
+    const dialogueTitle = isEditMode ? 'Edit link' : 'Add link';
+    const successMessage = isEditMode ? 'Link updated' : 'Link added';
+
+    useEffect(() => {
+        if (isEditMode && link) {
+            setUrl(link.url || '');
+            setTitle(link.title || '');
+            setId(link.id || '');
+        } else if (!isEditMode) {
+            setUrl('');
+            setTitle('');
+            setId('');
+        }
+    }, [isEditMode, link]);
+
+    const handleSubmit = async () => {
+        try {
+            if (isEditMode) {
+                await editLink(id, { url, title: title || null });
+            } else {
+                await addLink({ url, title: title || null });
+            }
+
+            setToastData({ text: successMessage, type: 'success' });
+            onClose();
+            refetchFeature();
+            setTitle('');
+            setUrl('');
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    const isOpen = isEditMode ? link !== null : showDialogue;
+
     return (
         <Dialogue
-            open={showDialogue}
-            title='Add link'
+            open={isOpen}
+            title={dialogueTitle}
             onClose={onClose}
             disabledPrimaryButton={url.trim() === '' || loading}
-            onClick={async () => {
-                try {
-                    await addLink({ url, title: title ?? null });
-                    setToastData({ text: 'Link added', type: 'success' });
-                    onClose();
-                    refetchFeature();
-                    setTitle('');
-                    setUrl('');
-                } catch (error) {
-                    setToastApiError(formatUnknownError(error));
-                }
-            }}
+            onClick={handleSubmit}
             primaryButtonText='Save'
             secondaryButtonText='Cancel'
         >
@@ -71,73 +104,20 @@ export const AddLinkDialogue: FC<IAddLinkDialogueProps> = ({
     );
 };
 
-interface IEditLinkDialogueProps {
-    project: string;
-    featureId: string;
-    onClose: () => void;
-    link: FeatureLink | null;
-}
+export const AddLinkDialogue: FC<Omit<ILinkDialogueProps, 'mode' | 'link'>> = (
+    props,
+) => {
+    return <LinkDialogue {...props} mode='add' link={null} />;
+};
 
-export const EditLinkDialogue: FC<IEditLinkDialogueProps> = ({
-    onClose,
-    project,
-    featureId,
-    link,
-}) => {
-    const [url, setUrl] = useState('');
-    const [title, setTitle] = useState('');
-    const [id, setId] = useState('');
-    const { editLink, loading } = useFeatureLinkApi(project, featureId);
-    const { refetchFeature } = useFeature(project, featureId);
-    const { setToastData, setToastApiError } = useToast();
-
-    useEffect(() => {
-        if (link) {
-            setUrl(link.url || '');
-            setTitle(link.title || '');
-            setId(link.id || '');
-        } else {
-            setUrl('');
-            setTitle('');
-            setId('');
-        }
-    }, [JSON.stringify(link)]);
-
+export const EditLinkDialogue: FC<
+    Omit<ILinkDialogueProps, 'mode' | 'showDialogue'>
+> = (props) => {
     return (
-        <Dialogue
-            open={link !== null}
-            title='Edit link'
-            onClose={onClose}
-            disabledPrimaryButton={url.trim() === '' || loading}
-            onClick={async () => {
-                try {
-                    await editLink(id, { url, title: title ?? null });
-                    setToastData({ text: 'Link updated', type: 'success' });
-                    onClose();
-                    refetchFeature();
-                    setTitle('');
-                    setUrl('');
-                } catch (error) {
-                    setToastApiError(formatUnknownError(error));
-                }
-            }}
-            primaryButtonText='Save'
-            secondaryButtonText='Cancel'
-        >
-            <Box>
-                <StyledTextField
-                    label='Link'
-                    variant='outlined'
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                />
-                <StyledTextField
-                    label='Title (optional)'
-                    variant='outlined'
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
-            </Box>
-        </Dialogue>
+        <LinkDialogue
+            {...props}
+            mode='edit'
+            showDialogue={props.link !== null}
+        />
     );
 };

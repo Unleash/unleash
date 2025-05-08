@@ -32,7 +32,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import LinkIcon from '@mui/icons-material/Link';
 import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { LinkDialogue, EditLinkDialogue } from './LinkDialogue';
+import { EditLinkDialogue, AddLinkDialogue } from './LinkDialogue';
 import { useFeatureLinkApi } from 'hooks/api/actions/useFeatureLinkApi/useFeatureLinkApi';
 import useToast from 'hooks/useToast';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
@@ -212,7 +212,7 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
                 {links.length === 0 ? emptyStateContent : linksContent}
             </StyledMetaDataContainer>
 
-            <LinkDialogue
+            <AddLinkDialogue
                 project={project}
                 featureId={feature}
                 showDialogue={showAddLinkDialogue}

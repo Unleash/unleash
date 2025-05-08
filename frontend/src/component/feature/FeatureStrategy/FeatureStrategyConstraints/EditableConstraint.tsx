@@ -127,8 +127,6 @@ const ButtonPlaceholder = styled('div')(({ theme }) => ({
     // screens), but still retain necessary space for the button when it's all
     // on one line.
     width: theme.spacing(2),
-    // fontSize: theme.typography.body1.fontSize
-    fontSize: theme.fontSizes.extraLargeHeader,
 }));
 
 const StyledCaseInsensitiveIcon = styled(CaseInsensitiveIcon)(({ theme }) => ({

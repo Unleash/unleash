@@ -54,14 +54,14 @@ export const ValueChip = styled(
 }));
 
 type Props = {
-    values: string[] | undefined;
+    values: Set<string> | undefined;
     removeValue: (value: string) => void;
     // the element that should receive focus when all value chips are deleted
     getExternalFocusTarget: () => HTMLElement | null;
 };
 
 export const ValueList: FC<PropsWithChildren<Props>> = ({
-    values = [],
+    values = new Set(),
     removeValue,
     getExternalFocusTarget,
     children,
@@ -71,7 +71,7 @@ export const ValueList: FC<PropsWithChildren<Props>> = ({
     > = useRef([]);
 
     const nextFocusTarget = (deletedIndex: number) => {
-        if (deletedIndex === values.length - 1) {
+        if (deletedIndex === values.size - 1) {
             if (deletedIndex === 0) {
                 return getExternalFocusTarget();
             } else {
@@ -85,7 +85,7 @@ export const ValueList: FC<PropsWithChildren<Props>> = ({
     return (
         <ValueListWrapper>
             <StyledList>
-                {values.map((value, index) => (
+                {[...values].map((value, index) => (
                     <li key={value}>
                         <ValueChip
                             ref={(el) => {

@@ -331,7 +331,7 @@ export const EditableConstraint: FC<Props> = ({
                     <ValueList
                         values={
                             isMultiValueConstraint(localConstraint)
-                                ? Array.from(localConstraint.values)
+                                ? localConstraint.values
                                 : undefined
                         }
                         removeValue={(value) =>
@@ -365,7 +365,7 @@ export const EditableConstraint: FC<Props> = ({
             isMultiValueConstraint(localConstraint) ? (
                 <LegalValuesContainer>
                     <LegalValuesSelector
-                        values={localConstraint.values || new Set()}
+                        values={localConstraint.values}
                         clearAll={() =>
                             updateConstraint({
                                 type: 'clear values',

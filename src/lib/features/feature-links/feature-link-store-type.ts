@@ -5,6 +5,7 @@ export interface IFeatureLink {
     featureName: string;
     url: string;
     title?: string;
+    domain: string | null;
 }
 
 export interface IFeatureLinkStore extends Store<IFeatureLink, string> {

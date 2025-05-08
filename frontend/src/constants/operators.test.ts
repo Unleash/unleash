@@ -45,29 +45,30 @@ describe('operators are correctly identified', () => {
     });
 });
 
+type OperatorCategory =
+    | 'date'
+    | 'in'
+    | 'multi-value'
+    | 'new'
+    | 'number'
+    | 'semver'
+    | 'single-value'
+    | 'string';
+
 const expectOperatorTypes = (
     operators: Operator[],
-    types: Array<
-        | 'date'
-        | 'in'
-        | 'multi-value'
-        | 'new'
-        | 'number'
-        | 'semver'
-        | 'single-value'
-        | 'string'
-    >,
+    categories: OperatorCategory[],
 ) => {
-    expect(operators.every(isDateOperator)).toBe(types.includes('date'));
-    expect(operators.every(isInOperator)).toBe(types.includes('in'));
-    expect(operators.every(isMultiValueOperator)).toBe(
-        types.includes('multi-value'),
-    );
-    expect(operators.every(isNumOperator)).toBe(types.includes('number'));
-    expect(operators.every(isSemVerOperator)).toBe(types.includes('semver'));
-    expect(operators.every(isSingleValueOperator)).toBe(
-        types.includes('single-value'),
-    );
-    expect(operators.every(isStringOperator)).toBe(types.includes('string'));
-    expect(operators.every(isNewOperator)).toBe(types.includes('new'));
+    const successfulChecks = [
+        operators.every(isDateOperator) && 'date',
+        operators.every(isInOperator) && 'in',
+        operators.every(isMultiValueOperator) && 'multi-value',
+        operators.every(isNumOperator) && 'number',
+        operators.every(isSemVerOperator) && 'semver',
+        operators.every(isSingleValueOperator) && 'single-value',
+        operators.every(isStringOperator) && 'string',
+        operators.every(isNewOperator) && 'new',
+    ].filter(Boolean);
+
+    expect(categories.toSorted()).toStrictEqual(successfulChecks.toSorted());
 };

@@ -220,30 +220,4 @@ export class FeatureToggleRowConverter {
 
         return this.formatToggles(result);
     };
-
-    buildArchivedFeatureToggleListFromRows = (
-        rows: any[],
-    ): IFeatureToggleListItem[] => {
-        const result = rows.reduce((acc, row) => {
-            const feature: PartialDeep<IFeatureToggleListItem> =
-                acc[row.name] ?? {};
-
-            feature.name = row.name;
-            feature.description = row.description;
-            feature.type = row.type;
-            feature.project = row.project;
-            feature.stale = row.stale;
-            feature.createdAt = row.created_at;
-            feature.impressionData = row.impression_data;
-            feature.lastSeenAt = row.last_seen_at;
-            feature.archivedAt = row.archived_at;
-
-            this.addLastSeenByEnvironment(feature, row);
-
-            acc[row.name] = feature;
-            return acc;
-        }, {});
-
-        return Object.values(result);
-    };
 }

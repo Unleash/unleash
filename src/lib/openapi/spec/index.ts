@@ -24,8 +24,6 @@ export * from './application-overview-schema';
 export * from './application-schema';
 export * from './application-usage-schema';
 export * from './applications-schema';
-export * from './archived-feature-schema';
-export * from './archived-features-schema';
 export * from './batch-features-schema';
 export * from './batch-stale-schema';
 export * from './bulk-metrics-schema';

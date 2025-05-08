@@ -27,7 +27,6 @@ import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
 import { useEffect, useState, type ReactNode } from 'react';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
-import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
 import ProjectFlags from './ProjectFlags';
 import ProjectHealth from './ProjectHealth/ProjectHealth';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -387,7 +386,6 @@ export const Project = () => {
                     }
                 />
                 <Route path='environments' element={<ProjectEnvironment />} />
-                <Route path='archive' element={<ProjectFeaturesArchive />} />
                 <Route path='insights' element={<ProjectInsights />} />
                 <Route path='logs' element={<ProjectLog />} />
                 <Route

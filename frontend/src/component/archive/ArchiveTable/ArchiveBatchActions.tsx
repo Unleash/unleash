@@ -7,7 +7,6 @@ import {
     UPDATE_FEATURE,
 } from 'component/providers/AccessProvider/permissions';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
-import { useFeaturesArchive } from 'hooks/api/getters/useFeaturesArchive/useFeaturesArchive';
 import { ArchivedFeatureDeleteConfirm } from './ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { ArchivedFeatureReviveConfirm } from './ArchivedFeatureActionCell/ArchivedFeatureReviveConfirm/ArchivedFeatureReviveConfirm';
@@ -23,7 +22,6 @@ export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
     projectId,
     onConfirm,
 }) => {
-    const { refetchArchived } = useFeaturesArchive(projectId);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [reviveModalOpen, setReviveModalOpen] = useState(false);
     const { trackEvent } = usePlausibleTracker();
@@ -70,7 +68,6 @@ export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
                 open={deleteModalOpen}
                 setOpen={setDeleteModalOpen}
                 refetch={() => {
-                    refetchArchived();
                     onConfirm?.();
                     trackEvent('batch_operations', {
                         props: {
@@ -85,7 +82,6 @@ export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
                 open={reviveModalOpen}
                 setOpen={setReviveModalOpen}
                 refetch={() => {
-                    refetchArchived();
                     onConfirm?.();
                     trackEvent('batch_operations', {
                         props: {

@@ -11,13 +11,18 @@ test('create, update and delete feature link', async () => {
 
     const link = await featureLinkService.createLink(
         'default',
-        { featureName: 'feature', url: 'example.com', title: 'some title' },
+        {
+            featureName: 'feature',
+            url: 'complex.example.com',
+            title: 'some title',
+        },
         {} as IAuditUser,
     );
     expect(link).toMatchObject({
         featureName: 'feature',
-        url: 'https://example.com',
+        url: 'https://complex.example.com',
         title: 'some title',
+        domain: 'example',
     });
 
     const newLink = await featureLinkService.updateLink(
@@ -33,6 +38,7 @@ test('create, update and delete feature link', async () => {
         featureName: 'feature',
         url: 'https://example1.com',
         title: 'new title',
+        domain: 'example1',
     });
 
     await featureLinkService.deleteLink(

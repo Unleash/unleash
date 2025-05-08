@@ -26,6 +26,7 @@ export class FeatureLinkStore
             feature_name: item.featureName,
             url: item.url,
             title: item.title,
+            domain: item.domain,
         };
         await this.db('feature_link').insert(featureLink);
         return { ...item, id };

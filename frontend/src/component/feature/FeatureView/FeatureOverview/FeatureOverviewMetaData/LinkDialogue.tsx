@@ -20,7 +20,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
-export const LinkDialogue: FC<IAddLinkDialogueProps> = ({
+export const AddLinkDialogue: FC<IAddLinkDialogueProps> = ({
     showDialogue,
     onClose,
     project,

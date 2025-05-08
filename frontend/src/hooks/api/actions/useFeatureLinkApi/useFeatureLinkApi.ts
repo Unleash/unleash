@@ -19,6 +19,17 @@ export const useFeatureLinkApi = (project: string, feature: string) => {
         await makeRequest(req.caller, req.id);
     };
 
+    const editLink = async (linkId: string, linkSchema: FeatureLinkSchema) => {
+        const req = createRequest(
+            `/api/admin/projects/${project}/features/${feature}/link/${linkId}`,
+            {
+                method: 'PUT',
+                body: JSON.stringify(linkSchema),
+            },
+        );
+        await makeRequest(req.caller, req.id);
+    };
+
     const deleteLink = async (linkId: string) => {
         const req = createRequest(
             `/api/admin/projects/${project}/features/${feature}/link/${linkId}`,
@@ -37,6 +48,7 @@ export const useFeatureLinkApi = (project: string, feature: string) => {
     ];
     return {
         addLink: useCallback(addLink, callbackDeps),
+        editLink: useCallback(editLink, callbackDeps),
         deleteLink: useCallback(deleteLink, callbackDeps),
         errors,
         loading,

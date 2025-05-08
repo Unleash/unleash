@@ -2,6 +2,7 @@ import {
     allOperators,
     inOperators,
     isInOperator,
+    isStringOperator,
     stringOperators,
 } from 'constants/operators';
 import { isCaseSensitive } from './isCaseSensitive';
@@ -36,9 +37,7 @@ test.each([false, undefined])(
         const nonStringResults = allOperators
             .filter(
                 (operator) =>
-                    !(
-                        [...stringOperators, ...inOperators] as string[]
-                    ).includes(operator),
+                    !(isStringOperator(operator) || isInOperator(operator)),
             )
             .map((operator) => isCaseSensitive(operator, caseInsensitive));
 

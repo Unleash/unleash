@@ -14,9 +14,6 @@ export default class FakeFeatureLinkStore implements IFeatureLinkStore {
 
         const filteredLinks = this.links.filter((link) => {
             return Object.entries(query).every(([key, value]) => {
-                if (value === undefined || value === null) {
-                    return true;
-                }
                 return link[key] === value;
             });
         });

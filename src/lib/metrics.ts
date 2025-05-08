@@ -656,6 +656,25 @@ export function registerPrometheusMetrics(
             })),
     });
 
+    dbMetrics.registerGaugeDbMetric({
+        name: 'feature_link_by_domain',
+        help: 'Count most popular domains used in feature links',
+        labelNames: ['domain'],
+        query: () => {
+            if (flagResolver.isEnabled('featureLinks')) {
+                return stores.featureLinkReadModel.getTopDomains();
+            }
+            return Promise.resolve([]);
+        },
+        map: (result) =>
+            result.map(({ domain, count }) => ({
+                value: count,
+                labels: {
+                    domain,
+                },
+            })),
+    });
+
     const featureLifecycleStageEnteredCounter = createCounter({
         name: 'feature_lifecycle_stage_entered',
         help: 'Count how many features entered a given stage',

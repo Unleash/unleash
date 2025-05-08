@@ -14,7 +14,7 @@ import { createStrategyVariantSchema } from './create-strategy-variant-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
 import { createFeatureNamingPatternSchema } from './create-feature-naming-pattern-schema';
 import { featureTypeCountSchema } from './feature-type-count-schema';
-import { projectLinkTemplateSchema } from './project-link-templates-schema';
+import { projectLinkTemplateSchema } from './project-link-template-schema';
 
 export const projectOverviewSchema = {
     $id: '#/components/schemas/projectOverviewSchema',

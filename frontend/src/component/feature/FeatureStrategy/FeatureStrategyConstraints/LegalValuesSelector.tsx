@@ -7,14 +7,14 @@ import {
 import { ConstraintValueSearch } from './ConstraintValueSearch';
 import type { ILegalValue } from 'interfaces/context';
 
-interface IRestrictiveLegalValuesProps {
+type LegalValuesSelectorProps = {
     values: Set<string>;
     addValues: (values: string[]) => void;
     removeValue: (value: string) => void;
     clearAll: () => void;
     deletedLegalValues?: Set<string>;
     legalValues: ILegalValue[];
-}
+};
 
 const StyledValuesContainer = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -44,7 +44,7 @@ export const LegalValuesSelector = ({
     removeValue,
     clearAll,
     deletedLegalValues,
-}: IRestrictiveLegalValuesProps) => {
+}: LegalValuesSelectorProps) => {
     const [filter, setFilter] = useState('');
 
     const filteredValues = filterLegalValues(legalValues, filter);

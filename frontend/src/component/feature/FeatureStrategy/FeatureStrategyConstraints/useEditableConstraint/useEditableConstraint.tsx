@@ -118,20 +118,29 @@ export const useEditableConstraint = (
         }
     };
 
-    if (isSingleValueConstraint(localConstraint)) {
-        return {
-            updateConstraint,
-            constraint: localConstraint,
-            validator: constraintValidator(localConstraint),
-        };
-    }
     if (contextDefinition.legalValues?.length) {
+        if (isSingleValueConstraint(localConstraint)) {
+            return {
+                updateConstraint,
+                constraint: localConstraint,
+                validator: constraintValidator(localConstraint),
+                legalValues: contextDefinition.legalValues,
+                deletedLegalValues,
+            };
+        }
         return {
             updateConstraint,
             constraint: localConstraint,
             validator: constraintValidator(localConstraint),
             legalValues: contextDefinition.legalValues,
             deletedLegalValues,
+        };
+    }
+    if (isSingleValueConstraint(localConstraint)) {
+        return {
+            updateConstraint,
+            constraint: localConstraint,
+            validator: constraintValidator(localConstraint),
         };
     }
 

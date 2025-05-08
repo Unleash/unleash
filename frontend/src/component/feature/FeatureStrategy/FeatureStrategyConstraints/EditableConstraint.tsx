@@ -329,15 +329,24 @@ export const EditableConstraint: FC<Props> = ({
                     <ValueList
                         values={
                             isMultiValueConstraint(localConstraint)
-                                ? localConstraint.values
-                                : undefined
+                                ? Array.from(localConstraint.values)
+                                : 'legalValues' in constraintMetadata
+                                  ? [localConstraint.value]
+                                  : undefined
                         }
-                        removeValue={(value) =>
-                            updateConstraint({
-                                type: 'remove value from list',
-                                payload: value,
-                            })
-                        }
+                        removeValue={(value) => {
+                            if (isMultiValueConstraint(localConstraint)) {
+                                updateConstraint({
+                                    type: 'remove value from list',
+                                    payload: value,
+                                });
+                            } else {
+                                updateConstraint({
+                                    type: 'set value',
+                                    payload: '',
+                                });
+                            }
+                        }}
                         getExternalFocusTarget={() =>
                             addValuesButtonRef.current ??
                             deleteButtonRef.current
@@ -359,8 +368,7 @@ export const EditableConstraint: FC<Props> = ({
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
-            {'legalValues' in constraintMetadata &&
-            isMultiValueConstraint(localConstraint) ? (
+            {'legalValues' in constraintMetadata ? (
                 <LegalValuesContainer>
                     <LegalValuesSelector
                         values={localConstraint.values}

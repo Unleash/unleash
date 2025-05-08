@@ -56,3 +56,14 @@ test('querying environments in OSS only returns environments that are included i
             expect(names).toEqual(['default', 'development', 'production']);
         });
 });
+
+test('querying project environments in OSS only returns environments that are included in oss', async () => {
+    await app.request
+        .get('/api/admin/environments/project/default')
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.environments).toHaveLength(3);
+            const names = res.body.environments.map((env) => env.name);
+            expect(names).toEqual(['default', 'development', 'production']);
+        });
+});

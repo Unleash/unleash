@@ -15,19 +15,19 @@ type EditableConstraintBase = Omit<
     IConstraint,
     'operator' | 'values' | 'value'
 >;
+type EditableSingleValueConstraintBase<T> = EditableConstraintBase & {
+    operator: T;
+    value: string;
+};
 
-export type EditableNumberConstraint = EditableConstraintBase & {
-    operator: NumOperator;
-    value: string;
-};
-export type EditableDateConstraint = EditableConstraintBase & {
-    operator: DateOperator;
-    value: string;
-};
-export type EditableSemVerConstraint = EditableConstraintBase & {
-    operator: SemVerOperator;
-    value: string;
-};
+export type EditableNumberConstraint =
+    EditableSingleValueConstraintBase<NumOperator>;
+
+export type EditableDateConstraint =
+    EditableSingleValueConstraintBase<DateOperator>;
+
+export type EditableSemVerConstraint =
+    EditableSingleValueConstraintBase<SemVerOperator>;
 
 export type EditableMultiValueConstraint = EditableConstraintBase & {
     operator: MultiValueOperator;

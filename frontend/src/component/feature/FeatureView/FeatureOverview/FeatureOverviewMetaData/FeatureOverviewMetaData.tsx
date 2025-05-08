@@ -107,8 +107,7 @@ interface FeatureLinksProps {
 
 const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
     const [showAddLinkDialogue, setShowAddLinkDialogue] = useState(false);
-    const [showEditLinkDialogue, setshowEditLinkDialogue] =
-        useState<FeatureLink | null>(null);
+    const [editLink, setEditLink] = useState<FeatureLink | null>(null);
     const { deleteLink, loading } = useFeatureLinkApi(project, feature);
     const { setToastData, setToastApiError } = useToast();
     const { refetchFeature } = useFeature(project, feature);
@@ -135,7 +134,7 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
                             capabilityId='link'
                             feature={feature}
                             onEdit={() => {
-                                setshowEditLinkDialogue(link);
+                                setEditLink(link);
                             }}
                             onDelete={async () => {
                                 try {
@@ -222,8 +221,8 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
             <EditLinkDialogue
                 project={project}
                 featureId={feature}
-                link={showEditLinkDialogue}
-                onClose={() => setshowEditLinkDialogue(null)}
+                link={editLink}
+                onClose={() => setEditLink(null)}
             />
         </>
     );

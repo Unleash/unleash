@@ -22,6 +22,7 @@ export const projectLinkTemplateSchema = {
         },
     },
     additionalProperties: false,
+    components: {},
 } as const;
 
 export type ProjectLinkTemplateSchema = FromSchema<

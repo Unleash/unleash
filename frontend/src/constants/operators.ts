@@ -31,7 +31,7 @@ export const SEMVER_EQ = 'SEMVER_EQ' as const;
 export const SEMVER_GT = 'SEMVER_GT' as const;
 export const SEMVER_LT = 'SEMVER_LT' as const;
 
-export const allOperators = [
+export const allOperators: Operator[] = [
     IN,
     NOT_IN,
     STR_CONTAINS,

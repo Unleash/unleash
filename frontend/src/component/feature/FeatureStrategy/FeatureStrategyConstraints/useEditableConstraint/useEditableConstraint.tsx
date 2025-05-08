@@ -6,10 +6,7 @@ import {
     fromIConstraint,
     toIConstraint,
 } from './editable-constraint-type';
-import type {
-    ILegalValue,
-    IUnleashContextDefinition,
-} from 'interfaces/context';
+import type { IUnleashContextDefinition } from 'interfaces/context';
 import {
     constraintReducer,
     type ConstraintUpdateAction,
@@ -21,12 +18,11 @@ import {
     type Operator,
     semVerOperators,
 } from 'constants/operators';
-
-type Props = {
-    constraint: IConstraint;
-    onDelete: () => void;
-    onAutoSave: (constraint: IConstraint) => void;
-};
+import type { ConstraintMetadata } from './constraint-metadata-type';
+import {
+    type ConstraintValidationResult,
+    constraintValidator,
+} from './constraint-validator';
 
 const resolveContextDefinition = (
     context: IUnleashContextDefinition[],
@@ -47,19 +43,10 @@ const resolveContextDefinition = (
     );
 };
 
-type ConstraintMetadata =
-    | {
-          type: 'legal values';
-          legalValues: ILegalValue[];
-          deletedLegalValues?: Set<string>;
-      }
-    | { type: 'date' }
-    | { type: 'single value'; variant: 'number' | 'semver' }
-    | { type: 'multiple values' };
-
 type EditableConstraintState = {
     constraint: EditableConstraint;
     updateConstraint: (action: ConstraintUpdateAction) => void;
+    validator: (...values: string[]) => ConstraintValidationResult;
 } & ConstraintMetadata;
 
 export const useEditableConstraint = (
@@ -139,9 +126,12 @@ export const useEditableConstraint = (
         return { type: 'multiple values' };
     };
 
+    const metadata = getMetadata(localConstraint.operator);
+
     return {
         updateConstraint,
         constraint: localConstraint,
-        ...getMetadata(localConstraint.operator),
+        validator: constraintValidator(metadata),
+        ...metadata,
     };
 };

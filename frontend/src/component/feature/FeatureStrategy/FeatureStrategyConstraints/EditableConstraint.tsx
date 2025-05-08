@@ -3,7 +3,7 @@ import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import type { Input } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
 import { stringOperators, type Operator } from 'constants/operators';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import { useMemo, useRef, type FC } from 'react';
+import { useRef, type FC } from 'react';
 import { operatorsForContext } from 'utils/operatorsForContext';
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
@@ -19,7 +19,6 @@ import { ReactComponent as NotEqualsIcon } from 'assets/icons/constraint-not-equ
 import { AddSingleValueWidget } from './AddSingleValueWidget';
 import { ConstraintDateInput } from './ConstraintDateInput';
 import { LegalValuesSelector } from './LegalValuesSelector';
-import { constraintValidator } from './constraint-validator';
 import { useEditableConstraint } from './useEditableConstraint/useEditableConstraint';
 import type { IConstraint } from 'interfaces/strategy';
 
@@ -164,45 +163,28 @@ const getInputType = (input: Input): InputType => {
 };
 
 type Props = {
-    // localConstraint: ConstraintWithValueSet;
-    // contextDefinition: Pick<IUnleashContextDefinition, 'legalValues'>;
-    // constraintValues: string[];
-    // updateConstraint: (action: ConstraintUpdateAction) => void;
-    // deletedLegalValues?: Set<string>;
-    // legalValues?: ILegalValue[];
-
     constraint: IConstraint;
     onDelete: () => void;
     onAutoSave: (constraint: IConstraint) => void;
 };
 
 export const EditableConstraint: FC<Props> = ({
-    // localConstraint,
     onDelete,
-    // contextDefinition,
-    // updateConstraint,
-    // deletedLegalValues,
-    // legalValues,
     constraint,
     onAutoSave,
 }) => {
     const {
         constraint: localConstraint,
         updateConstraint,
+        validator,
         ...constraintMetadata
     } = useEditableConstraint(constraint, onAutoSave);
-    // const { input } = useConstraintInput({
-    //     contextDefinition,
-    //     // @ts-ignore
-    //     localConstraint,
-    // });
 
     const { context } = useUnleashContext();
     const { contextName, operator } = localConstraint;
     const showCaseSensitiveButton = stringOperators.includes(operator);
     const deleteButtonRef = useRef<HTMLButtonElement>(null);
     const addValuesButtonRef = useRef<HTMLButtonElement>(null);
-    const inputType = getInputType(input);
 
     if (!context) {
         return null;
@@ -216,7 +198,6 @@ export const EditableConstraint: FC<Props> = ({
         updateConstraint({ type: 'set operator', payload: operator });
     };
 
-    const validator = useMemo(() => constraintValidator(input), [input]);
     const TopRowInput = () => {
         switch (constraintMetadata.type) {
             case 'date':

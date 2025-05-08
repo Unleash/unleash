@@ -14,7 +14,7 @@ When running Unleash using Docker, configuration is managed through environment 
 ### Docker Compose
 
 <Tabs groupId="setup-method">
-<TabItem value="docker-compose-enterprise" label="Unleash Enterprise">
+<TabItem value="docker-compose-enterprise" label="Enterprise">
 Update the `environment:` section of your `docker-compose-enterprise.yml` file. For example:
 ```yaml
 services:
@@ -28,7 +28,7 @@ services:
 
 </TabItem>
 
-<TabItem value="docker-compose-oss" label="Unleash OSS">
+<TabItem value="docker-compose-oss" label="Open Source">
 Update the `environment:` section of your `docker-compose.yml` file. For example:
 ```yaml
 services:
@@ -46,7 +46,7 @@ services:
 ### Docker CLI
 <Tabs groupId="setup-method">
 
-<TabItem value="docker-cli-enterprise" label="Unleash Enterprise">
+<TabItem value="docker-cli-enterprise" label="Enterprise">
 
 Use the `-e` flag in your `docker run` command. For example:
 
@@ -56,7 +56,7 @@ docker run -e DATABASE_HOST=mydbhost -e DATABASE_SSL=false ... unleashorg/unleas
 </TabItem>
 
 
-<TabItem value="docker-cli-oss" label="Unleash OSS">
+<TabItem value="docker-cli-oss" label="Open Source">
 
 Use the `-e` flag in your `docker run` command. For example:
 

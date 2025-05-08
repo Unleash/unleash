@@ -267,7 +267,7 @@ role that encapsulates the needed permissions.
 
 The access overview page helps administrators see exactly what a user can do in Unleash and which roles grant those permissions. You can explore permissions at the root level or for specific environments and projects.
 
-To view a user’s permissions, go to **Admin > Users**. Select a user and click **Access overview**.
+To view a user’s permissions, go to **Admin settings > User config > Users**. Select a user and click **Access overview**.
 
 
 ## User groups

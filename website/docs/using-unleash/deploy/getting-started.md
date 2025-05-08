@@ -82,22 +82,6 @@ docker run -d \
 This command starts the Unleash server, maps port `4242` on your host to the container, connects to the PostgreSQL database you started, disables database SSL, connects to the `unleash` network, and ensures you have the latest image.
 
 <Tabs groupId="setup-method">
-<TabItem value="oss" label="Open Source">
-
-```shell
-docker run -d -p 4242:4242 \
-  -e DATABASE_HOST=postgres \
-  -e DATABASE_NAME=unleash \
-  -e DATABASE_USERNAME=unleash_user \
-  -e DATABASE_PASSWORD=your_secure_password \
-  -e DATABASE_SSL=false \
-  --network unleash \
-  --name unleash \
-  --pull=always \
-  unleashorg/unleash-server
-```
-
-</TabItem>
 
 <TabItem value="enterprise" label="Enterprise">
 
@@ -115,24 +99,29 @@ docker run -d -p 4242:4242 \
 ```
 
 </TabItem>
+
+<TabItem value="oss" label="Open Source">
+
+```shell
+docker run -d -p 4242:4242 \
+  -e DATABASE_HOST=postgres \
+  -e DATABASE_NAME=unleash \
+  -e DATABASE_USERNAME=unleash_user \
+  -e DATABASE_PASSWORD=your_secure_password \
+  -e DATABASE_SSL=false \
+  --network unleash \
+  --name unleash \
+  --pull=always \
+  unleashorg/unleash-server
+```
+
+</TabItem>
+
 </Tabs>
 
 ## Log in to the Unleash Admin UI
 
 <Tabs groupId="setup-method">
-<TabItem value="oss" label="Open Source">
-
-In your browser, go to [http://localhost:4242](http://localhost:4242) and log in using the following credentials:
-- **username**: `admin`
-- **password**: `unleash4all`
-
-![Unleash Admin UI log in screen](/img/quickstart-login.png)
-
-The first time Unleash starts, it creates this default `admin` user. To use different credentials for the initial admin user, set the following environment variables before starting the Unleash container for the first time:
-- `UNLEASH_DEFAULT_ADMIN_USERNAME=<your_custom_username>`
-- `UNLEASH_DEFAULT_ADMIN_PASSWORD=<your_custom_secure_password>`
-
-</TabItem>
 
 <TabItem value="enterprise" label="Enterprise">
 
@@ -153,6 +142,21 @@ If you are running Unleash Enterprise, you need to install a [license key](/usin
 In the Admin UI, go to **Admin > License**, copy the license key you received by email and click **Update license key**.
 
 </TabItem>
+
+<TabItem value="oss" label="Open Source">
+
+In your browser, go to [http://localhost:4242](http://localhost:4242) and log in using the following credentials:
+- **username**: `admin`
+- **password**: `unleash4all`
+
+![Unleash Admin UI log in screen](/img/quickstart-login.png)
+
+The first time Unleash starts, it creates this default `admin` user. To use different credentials for the initial admin user, set the following environment variables before starting the Unleash container for the first time:
+- `UNLEASH_DEFAULT_ADMIN_USERNAME=<your_custom_username>`
+- `UNLEASH_DEFAULT_ADMIN_PASSWORD=<your_custom_secure_password>`
+
+</TabItem>
+
 </Tabs>
 
 ## Test your server connection

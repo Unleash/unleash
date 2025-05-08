@@ -1,6 +1,11 @@
 import { isValid, parseISO } from 'date-fns';
 import semver from 'semver';
-import type { ConstraintMetadata } from './constraint-metadata-type';
+import {
+    type EditableConstraint,
+    isDateConstraint,
+    isNumberConstraint,
+    isSemVerConstraint,
+} from './editable-constraint-type';
 export type ConstraintValidationResult = [boolean, string];
 
 const numberValidator = (value: string): ConstraintValidationResult => {
@@ -54,16 +59,15 @@ const dateValidator = (value: string): ConstraintValidationResult => {
     return [true, ''];
 };
 
-export const constraintValidator = (constraintMetadata: ConstraintMetadata) => {
-    switch (constraintMetadata.type) {
-        case 'legal values':
-        case 'multiple values':
-            return stringListValidator;
-        case 'date':
-            return dateValidator;
-        case 'single value':
-            return constraintMetadata.variant === 'number'
-                ? numberValidator
-                : semVerValidator;
+export const constraintValidator = (constraint: EditableConstraint) => {
+    if (isDateConstraint(constraint)) {
+        return dateValidator;
     }
+    if (isSemVerConstraint(constraint)) {
+        return semVerValidator;
+    }
+    if (isNumberConstraint(constraint)) {
+        return numberValidator;
+    }
+    return stringListValidator;
 };

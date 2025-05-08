@@ -1,9 +1,9 @@
 import {
-    dateOperators,
     DATE_AFTER,
     IN,
     type Operator,
-    singleValueOperators,
+    isSingleValueOperator,
+    isDateOperator,
 } from 'constants/operators';
 import { CURRENT_TIME_CONTEXT_FIELD } from 'utils/operatorsForContext';
 import type { EditableConstraint } from './editable-constraint-type';
@@ -21,9 +21,7 @@ export type ConstraintUpdateAction =
 const getValueOrValues = (
     operator: Operator,
 ): { value: string } | { values: Set<string> } =>
-    singleValueOperators.includes(operator)
-        ? { value: '' }
-        : { values: new Set() };
+    isSingleValueOperator(operator) ? { value: '' } : { values: new Set() };
 
 const resetValues = (state: EditableConstraint) => {
     const removeValues = () => {
@@ -50,7 +48,7 @@ export const constraintReducer = (
         case 'set context field':
             if (
                 action.payload === CURRENT_TIME_CONTEXT_FIELD &&
-                !dateOperators.includes(state.operator)
+                !isDateOperator(state.operator)
             ) {
                 return {
                     ...state,
@@ -60,7 +58,7 @@ export const constraintReducer = (
                 };
             } else if (
                 action.payload !== CURRENT_TIME_CONTEXT_FIELD &&
-                dateOperators.includes(state.operator)
+                isDateOperator(state.operator)
             ) {
                 return {
                     ...state,
@@ -76,8 +74,8 @@ export const constraintReducer = (
             });
         case 'set operator':
             if (
-                dateOperators.includes(state.operator) &&
-                dateOperators.includes(action.payload) &&
+                isDateOperator(state.operator) &&
+                isDateOperator(action.payload) &&
                 'value' in state
             ) {
                 return {

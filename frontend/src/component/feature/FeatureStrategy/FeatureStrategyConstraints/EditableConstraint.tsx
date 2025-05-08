@@ -1,7 +1,6 @@
 import { IconButton, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import type { Input } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
-import { stringOperators, type Operator } from 'constants/operators';
+import { isStringOperator, type Operator } from 'constants/operators';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { useRef, type FC } from 'react';
 import { operatorsForContext } from 'utils/operatorsForContext';
@@ -21,6 +20,13 @@ import { ConstraintDateInput } from './ConstraintDateInput';
 import { LegalValuesSelector } from './LegalValuesSelector';
 import { useEditableConstraint } from './useEditableConstraint/useEditableConstraint';
 import type { IConstraint } from 'interfaces/strategy';
+import {
+    isDateConstraint,
+    isMultiValueConstraint,
+    isNumberConstraint,
+    isSemVerConstraint,
+    isSingleValueConstraint,
+} from './useEditableConstraint/editable-constraint-type';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -137,31 +143,6 @@ const StyledCaseSensitiveIcon = styled(CaseSensitiveIcon)(({ theme }) => ({
     fill: 'currentcolor',
 }));
 
-type InputType =
-    | { input: 'legal values' }
-    | { input: 'date' }
-    | { input: 'single value'; type: 'number' | 'semver' }
-    | { input: 'multiple values' };
-
-const getInputType = (input: Input): InputType => {
-    switch (input) {
-        case 'IN_OPERATORS_LEGAL_VALUES':
-        case 'STRING_OPERATORS_LEGAL_VALUES':
-        case 'NUM_OPERATORS_LEGAL_VALUES':
-        case 'SEMVER_OPERATORS_LEGAL_VALUES':
-            return { input: 'legal values' };
-        case 'DATE_OPERATORS_SINGLE_VALUE':
-            return { input: 'date' };
-        case 'NUM_OPERATORS_SINGLE_VALUE':
-            return { input: 'single value', type: 'number' };
-        case 'SEMVER_OPERATORS_SINGLE_VALUE':
-            return { input: 'single value', type: 'semver' };
-        case 'IN_OPERATORS_FREETEXT':
-        case 'STRING_OPERATORS_FREETEXT':
-            return { input: 'multiple values' };
-    }
-};
-
 type Props = {
     constraint: IConstraint;
     onDelete: () => void;
@@ -182,7 +163,7 @@ export const EditableConstraint: FC<Props> = ({
 
     const { context } = useUnleashContext();
     const { contextName, operator } = localConstraint;
-    const showCaseSensitiveButton = stringOperators.includes(operator);
+    const showCaseSensitiveButton = isStringOperator(operator);
     const deleteButtonRef = useRef<HTMLButtonElement>(null);
     const addValuesButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -199,8 +180,8 @@ export const EditableConstraint: FC<Props> = ({
     };
 
     const TopRowInput = () => {
-        switch (constraintMetadata.type) {
-            case 'date':
+        if (isSingleValueConstraint(localConstraint)) {
+            if (isDateConstraint(localConstraint)) {
                 return (
                     <ConstraintDateInput
                         setValue={(value: string) =>
@@ -213,7 +194,8 @@ export const EditableConstraint: FC<Props> = ({
                         validator={validator}
                     />
                 );
-            case 'single value':
+            }
+            if (isSemVerConstraint(localConstraint)) {
                 return (
                     <AddSingleValueWidget
                         validator={validator}
@@ -228,34 +210,46 @@ export const EditableConstraint: FC<Props> = ({
                         }
                         currentValue={localConstraint.value}
                         helpText={
-                            constraintMetadata.variant === 'number'
-                                ? 'Add a single number'
-                                : 'A semver value should be of the format X.Y.Z'
+                            'A semver value should be of the format X.Y.Z'
                         }
-                        inputType={
-                            constraintMetadata.variant === 'number'
-                                ? 'number'
-                                : 'text'
-                        }
+                        inputType={'text'}
                     />
                 );
-            case 'multiple values':
+            }
+            if (isNumberConstraint(localConstraint)) {
                 return (
-                    <AddValuesWidget
+                    <AddSingleValueWidget
                         validator={validator}
-                        helpText='Maximum 100 char length per value'
-                        ref={addValuesButtonRef}
-                        onAddValues={(newValues) => {
+                        onAddValue={(newValue) => {
                             updateConstraint({
-                                type: 'add value(s)',
-                                payload: newValues,
+                                type: 'set value',
+                                payload: newValue,
                             });
                         }}
+                        removeValue={() =>
+                            updateConstraint({ type: 'clear values' })
+                        }
+                        currentValue={localConstraint.value}
+                        helpText={'Add a single number'}
+                        inputType={'number'}
                     />
                 );
-            default:
-                return null;
+            }
         }
+
+        return (
+            <AddValuesWidget
+                validator={validator}
+                helpText='Maximum 100 char length per value'
+                ref={addValuesButtonRef}
+                onAddValues={(newValues) => {
+                    updateConstraint({
+                        type: 'add value(s)',
+                        payload: newValues,
+                    });
+                }}
+            />
+        );
     };
 
     return (
@@ -367,7 +361,8 @@ export const EditableConstraint: FC<Props> = ({
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
-            {constraintMetadata.type === 'legal values' ? (
+            {'legalValues' in constraintMetadata &&
+            isMultiValueConstraint(localConstraint) ? (
                 <LegalValuesContainer>
                     <LegalValuesSelector
                         values={localConstraint.values || new Set()}

@@ -1,26 +1,85 @@
-import { singleValueOperators } from 'constants/operators';
+import {
+    type DateOperator,
+    isDateOperator,
+    isMultiValueOperator,
+    isSingleValueOperator,
+    type NumOperator,
+    type SemVerOperator,
+    type MultiValueOperator,
+    isNumOperator,
+    isSemVerOperator,
+} from 'constants/operators';
 import type { IConstraint } from 'interfaces/strategy';
 
-export type EditableConstraint = Omit<IConstraint, 'values' | 'value'> &
-    (
-        | {
-              values: Set<string>;
-          }
-        | { value: string }
-    );
+type EditableConstraintBase = Omit<
+    IConstraint,
+    'operator' | 'values' | 'value'
+>;
+
+export type EditableNumberConstraint = EditableConstraintBase & {
+    operator: NumOperator;
+    value: string;
+};
+export type EditableDateConstraint = EditableConstraintBase & {
+    operator: DateOperator;
+    value: string;
+};
+export type EditableSemVerConstraint = EditableConstraintBase & {
+    operator: SemVerOperator;
+    value: string;
+};
+
+export type EditableMultiValueConstraint = EditableConstraintBase & {
+    operator: MultiValueOperator;
+    values: Set<string>;
+};
+
+export type EditableSingleValueConstraint =
+    | EditableNumberConstraint
+    | EditableDateConstraint
+    | EditableSemVerConstraint;
+
+export type EditableConstraint =
+    | EditableSingleValueConstraint
+    | EditableMultiValueConstraint;
+
+export const isMultiValueConstraint = (
+    constraint: EditableConstraint,
+): constraint is EditableMultiValueConstraint =>
+    isMultiValueOperator(constraint.operator);
+
+export const isSingleValueConstraint = (
+    constraint: EditableConstraint,
+): constraint is EditableSingleValueConstraint =>
+    !isMultiValueConstraint(constraint);
+
+export const isDateConstraint = (
+    constraint: EditableConstraint,
+): constraint is EditableDateConstraint => isDateOperator(constraint.operator);
+
+export const isNumberConstraint = (
+    constraint: EditableConstraint,
+): constraint is EditableNumberConstraint => isNumOperator(constraint.operator);
+
+export const isSemVerConstraint = (
+    constraint: EditableConstraint,
+): constraint is EditableSemVerConstraint =>
+    isSemVerOperator(constraint.operator);
 
 export const fromIConstraint = (
     constraint: IConstraint,
 ): EditableConstraint => {
-    const { value, values, ...rest } = constraint;
-    if (singleValueOperators.includes(constraint.operator)) {
+    const { value, values, operator, ...rest } = constraint;
+    if (isSingleValueOperator(operator)) {
         return {
             ...rest,
+            operator,
             value: value ?? '',
         };
     } else {
         return {
             ...rest,
+            operator,
             values: new Set(values),
         };
     }

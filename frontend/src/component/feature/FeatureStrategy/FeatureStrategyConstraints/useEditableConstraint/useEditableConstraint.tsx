@@ -2,23 +2,20 @@ import { useMemo, useState } from 'react';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IConstraint } from 'interfaces/strategy';
 import {
-    type EditableConstraint,
+    type EditableMultiValueConstraint,
+    type EditableSingleValueConstraint,
     fromIConstraint,
+    isSingleValueConstraint,
     toIConstraint,
 } from './editable-constraint-type';
-import type { IUnleashContextDefinition } from 'interfaces/context';
+import type {
+    ILegalValue,
+    IUnleashContextDefinition,
+} from 'interfaces/context';
 import {
     constraintReducer,
     type ConstraintUpdateAction,
 } from './constraint-reducer';
-import {
-    dateOperators,
-    multipleValueOperators,
-    numOperators,
-    type Operator,
-    semVerOperators,
-} from 'constants/operators';
-import type { ConstraintMetadata } from './constraint-metadata-type';
 import {
     type ConstraintValidationResult,
     constraintValidator,
@@ -43,11 +40,33 @@ const resolveContextDefinition = (
     );
 };
 
+type SingleValueConstraintState = {
+    constraint: EditableSingleValueConstraint;
+};
+
+type MultiValueConstraintState = {
+    constraint: EditableMultiValueConstraint;
+};
+
+type LegalValueData = {
+    legalValues: ILegalValue[];
+    deletedLegalValues?: Set<string>;
+};
+
+type LegalValueConstraintState =
+    | {
+          constraint: EditableMultiValueConstraint;
+      }
+    | LegalValueData;
+
 type EditableConstraintState = {
-    constraint: EditableConstraint;
     updateConstraint: (action: ConstraintUpdateAction) => void;
     validator: (...values: string[]) => ConstraintValidationResult;
-} & ConstraintMetadata;
+} & (
+    | SingleValueConstraintState
+    | MultiValueConstraintState
+    | LegalValueConstraintState
+);
 
 export const useEditableConstraint = (
     constraint: IConstraint,
@@ -101,37 +120,26 @@ export const useEditableConstraint = (
         }
     };
 
-    const getMetadata = (operator: Operator): ConstraintMetadata => {
-        if (multipleValueOperators.includes(localConstraint.operator)) {
-            if (contextDefinition.legalValues?.length) {
-                return {
-                    type: 'legal values',
-                    deletedLegalValues,
-                    legalValues: contextDefinition.legalValues,
-                };
-            } else {
-                return {
-                    type: 'multiple values',
-                };
-            }
-        } else if (dateOperators.includes(localConstraint.operator)) {
-            return { type: 'date' };
-        } else if (numOperators.includes(localConstraint.operator)) {
-            return { type: 'single value', variant: 'number' };
-        } else if (semVerOperators.includes(localConstraint.operator)) {
-            return { type: 'single value', variant: 'semver' };
-        }
-
-        // shouldn't ever end up here? Todo: test
-        return { type: 'multiple values' };
-    };
-
-    const metadata = getMetadata(localConstraint.operator);
+    if (isSingleValueConstraint(localConstraint)) {
+        return {
+            updateConstraint,
+            constraint: localConstraint,
+            validator: constraintValidator(localConstraint),
+        };
+    }
+    if (contextDefinition.legalValues?.length) {
+        return {
+            updateConstraint,
+            constraint: localConstraint,
+            validator: constraintValidator(localConstraint),
+            legalValues: contextDefinition.legalValues,
+            deletedLegalValues,
+        };
+    }
 
     return {
         updateConstraint,
         constraint: localConstraint,
-        validator: constraintValidator(metadata),
-        ...metadata,
+        validator: constraintValidator(localConstraint),
     };
 };

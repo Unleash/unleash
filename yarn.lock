@@ -7192,7 +7192,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"on-headers@npm:~1.0.1, on-headers@npm:~1.0.2":
+"on-headers@npm:~1.0.2":
   version: 1.0.2
   resolution: "on-headers@npm:1.0.2"
   checksum: 10c0/f649e65c197bf31505a4c0444875db0258e198292f34b884d73c2f751e91792ef96bb5cf89aa0f4fecc2e4dc662461dda606b1274b0e564f539cae5d2f5fc32f
@@ -8202,16 +8202,6 @@ __metadata:
   bin:
     resolve: bin/resolve
   checksum: 10c0/dcf068c4391941734efda06b6f778c013fd349cd4340f126de17c265a7b006c67de7e80e7aa06ecd29f3922e49f5561622b9faf98531f16aa9a896d22148c661
-  languageName: node
-  linkType: hard
-
-"response-time@npm:^2.3.2":
-  version: 2.3.3
-  resolution: "response-time@npm:2.3.3"
-  dependencies:
-    depd: "npm:~2.0.0"
-    on-headers: "npm:~1.0.1"
-  checksum: 10c0/5e04c6a803fec93703b2bee8612f072fc3f2484220e6c3d69ed87bb5f6cda4b0f1354e057c114f860a0304550b874b00aeaeba48ac5942870fb6b05fa7d4acd5
   languageName: node
   linkType: hard
 
@@ -9524,7 +9514,6 @@ __metadata:
     pkginfo: "npm:^0.4.1"
     prom-client: "npm:^14.0.0"
     proxyquire: "npm:2.1.3"
-    response-time: "npm:^2.3.2"
     sanitize-filename: "npm:^1.6.3"
     semver: "npm:^7.6.3"
     serve-favicon: "npm:^2.5.0"

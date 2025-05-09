@@ -7,16 +7,6 @@ import { jest } from '@jest/globals';
 import type { IFlagResolver } from '../server-impl.js';
 import EventEmitter from 'events';
 
-const fixedResponseTime = 100;
-// mock response-time library
-jest.mock('response-time', () => {
-    return (responseTimeMetricsFn) => {
-        return (req, res) => {
-            return responseTimeMetricsFn(req, res, fixedResponseTime);
-        };
-    };
-});
-
 const isDefined = async (timeInfo: any, limit = 10) => {
     let counter = 0;
     while (timeInfo === undefined) {
@@ -42,6 +32,11 @@ beforeEach(() => {
     res = {
         statusCode: 200,
         locals: {}, // res will always have locals (according to express RequestHandler type)
+        once: jest.fn((event: string, callback: () => void) => {
+            if (event === 'finish') {
+                callback();
+            }
+        }),
     };
 });
 
@@ -72,48 +67,18 @@ describe('responseTimeMetrics new behavior', () => {
             headers: {},
         };
 
-        // @ts-expect-error req and res doesn't have all properties
-        middleware(req, res);
+        // @ts-expect-error req doesn't have all properties and we're not passing next
+        middleware(req, res, () => {});
 
         await isDefined(timeInfo);
         expect(timeInfo).toMatchObject({
             path: '/api/admin/features',
-        });
-    });
-
-    test('uses res.locals.route to report metrics when flag enabled', async () => {
-        let timeInfo: any;
-        // register a listener
-        eventBus.on(REQUEST_TIME, (data) => {
-            timeInfo = data;
-        });
-        const middleware = responseTimeMetrics(
-            eventBus,
-            flagResolver,
-            instanceStatsService,
-        );
-        const req = {
-            baseUrl: '/api/admin',
-            route: {
-                path: '/features',
-            },
             method: 'GET',
-            path: 'should-not-be-used',
-        };
-        const reqWithoutRoute = {
-            method: 'GET',
-            headers: {},
-        };
-
-        // @ts-expect-error req and res doesn't have all properties
-        storeRequestedRoute(req, res, () => {});
-        // @ts-expect-error req and res doesn't have all properties
-        middleware(reqWithoutRoute, res);
-
-        await isDefined(timeInfo);
-        expect(timeInfo).toMatchObject({
-            path: '/api/admin/features',
+            statusCode: 200,
+            time: expect.any(Number),
         });
+        expect(timeInfo.time).toBeGreaterThan(0);
+        expect(res.once).toHaveBeenCalledWith('finish', expect.any(Function));
     });
 
     test('uses res.locals.route to report metrics when flag enabled', async () => {
@@ -148,7 +113,12 @@ describe('responseTimeMetrics new behavior', () => {
         await isDefined(timeInfo);
         expect(timeInfo).toMatchObject({
             path: '/api/admin/features',
+            method: 'GET',
+            statusCode: 200,
+            time: expect.any(Number),
         });
+        expect(timeInfo.time).toBeGreaterThan(0);
+        expect(res.once).toHaveBeenCalledWith('finish', expect.any(Function));
     });
 
     test.each([undefined, '/'])(
@@ -178,12 +148,20 @@ describe('responseTimeMetrics new behavior', () => {
             // @ts-expect-error req and res doesn't have all properties
             storeRequestedRoute(req, res, () => {});
             // @ts-expect-error req and res doesn't have all properties
-            middleware(reqWithoutRoute, res);
+            middleware(reqWithoutRoute, res, () => {});
 
             await isDefined(timeInfo);
             expect(timeInfo).toMatchObject({
                 path: '(hidden)',
+                method: 'GET',
+                statusCode: 200,
+                time: expect.any(Number),
             });
+            expect(timeInfo.time).toBeGreaterThan(0);
+            expect(res.once).toHaveBeenCalledWith(
+                'finish',
+                expect.any(Function),
+            );
         },
     );
 
@@ -228,7 +206,11 @@ describe('responseTimeMetrics new behavior', () => {
             await isDefined(timeInfo);
             expect(timeInfo).toMatchObject({
                 path: expected,
+                time: expect.any(Number),
+                method: 'GET',
+                statusCode: 200,
             });
+            expect(timeInfo.time).toBeGreaterThan(0);
         },
     );
 });

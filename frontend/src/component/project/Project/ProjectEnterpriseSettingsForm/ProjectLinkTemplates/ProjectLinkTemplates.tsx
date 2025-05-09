@@ -130,7 +130,7 @@ const ProjectLinkTemplates = ({
                     {linkTemplates.map((template, index) => {
                         if (editingTemplateIndex === index) {
                             return (
-                                <li
+                                <StyledLinkTemplateItem
                                     key={index}
                                     style={{ listStyleType: 'none' }}
                                 >
@@ -140,7 +140,7 @@ const ProjectLinkTemplates = ({
                                         onCancel={handleCancelEdit}
                                         isAdding={false}
                                     />
-                                </li>
+                                </StyledLinkTemplateItem>
                             );
                         }
 

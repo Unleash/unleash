@@ -9,12 +9,11 @@ interface IProjectLinkTemplateEditorProps {
     isAdding: boolean;
 }
 
-const StyledDialogContent = styled('div')(({ theme }) => ({
+const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
     padding: theme.spacing(3),
-    backgroundColor: theme.palette.background.paper,
 }));
 
 const StyledDialogActions = styled('div')(({ theme }) => ({
@@ -57,7 +56,7 @@ const ProjectLinkTemplateEditor = ({
     };
 
     return (
-        <StyledDialogContent>
+        <StyledContainer>
             <Typography
                 variant='h5'
                 sx={(theme) => ({ fontSize: theme.typography.body1.fontSize })}
@@ -99,7 +98,7 @@ const ProjectLinkTemplateEditor = ({
                     {isAdding ? 'Add' : 'Update'}
                 </Button>
             </StyledDialogActions>
-        </StyledDialogContent>
+        </StyledContainer>
     );
 };
 

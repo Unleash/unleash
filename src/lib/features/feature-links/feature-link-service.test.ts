@@ -1,7 +1,7 @@
 import { createFakeFeatureLinkService } from './createFeatureLinkService';
 import type { IAuditUser, IUnleashConfig } from '../../types';
 import getLogger from '../../../test/fixtures/no-logger';
-import { BadDataError, NotFoundError } from '../../error';
+import { BadDataError, NotFoundError, OperationDeniedError } from '../../error';
 
 test('create, update and delete feature link', async () => {
     const { featureLinkStore, featureLinkService } =
@@ -100,4 +100,34 @@ test('cannot create/update invalid link', async () => {
             {} as IAuditUser,
         ),
     ).rejects.toThrow(BadDataError);
+});
+
+test('cannot exceed allowed link count', async () => {
+    const { featureLinkService } = createFakeFeatureLinkService({
+        getLogger,
+    } as unknown as IUnleashConfig);
+
+    for (let i = 0; i < 10; i++) {
+        await featureLinkService.createLink(
+            'default',
+            {
+                featureName: 'feature',
+                url: 'example.com',
+                title: 'some title',
+            },
+            {} as IAuditUser,
+        );
+    }
+
+    await expect(
+        featureLinkService.createLink(
+            'default',
+            {
+                featureName: 'feature',
+                url: 'example.com',
+                title: 'some title',
+            },
+            {} as IAuditUser,
+        ),
+    ).rejects.toThrow(OperationDeniedError);
 });

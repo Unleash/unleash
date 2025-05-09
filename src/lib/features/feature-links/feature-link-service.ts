@@ -11,7 +11,7 @@ import type {
     IFeatureLinkStore,
 } from './feature-link-store-type';
 import type EventService from '../events/event-service';
-import { BadDataError, NotFoundError } from '../../error';
+import { BadDataError, NotFoundError, OperationDeniedError } from '../../error';
 import normalizeUrl from 'normalize-url';
 import { parse } from 'tldts';
 
@@ -51,6 +51,14 @@ export default class FeatureLinkService {
         newLink: Omit<IFeatureLink, 'id' | 'domain'>,
         auditUser: IAuditUser,
     ): Promise<IFeatureLink> {
+        const countLinks = await this.featureLinkStore.count({
+            featureName: newLink.featureName,
+        });
+        if (countLinks >= 10) {
+            throw new OperationDeniedError(
+                'Too many links (10) exist for this feature',
+            );
+        }
         const normalizedUrl = this.normalize(newLink.url);
         const { domainWithoutSuffix } = parse(normalizedUrl);
 

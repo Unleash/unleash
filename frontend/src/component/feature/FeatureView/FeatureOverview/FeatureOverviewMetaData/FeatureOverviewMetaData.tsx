@@ -117,6 +117,7 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
             size='small'
             startIcon={<AddIcon />}
             permission={UPDATE_FEATURE}
+            disabled={links.length >= 10}
             projectId={project}
             variant='text'
             onClick={() => setShowAddLinkDialogue(true)}

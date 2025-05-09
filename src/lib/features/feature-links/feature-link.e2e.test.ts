@@ -154,6 +154,11 @@ test('should manage feature links', async () => {
             domain: 'example_another',
         },
     ]);
+    const topDomainsMemoized = await featureLinkReadModel.getTopDomains();
+    expect(topDomainsMemoized).toMatchObject([
+        { domain: 'example_another', count: 1 },
+        { domain: 'example', count: 1 },
+    ]);
 
     const [event1, event2, event3] = await eventStore.getEvents();
     expect([event1, event2, event3]).toMatchObject([

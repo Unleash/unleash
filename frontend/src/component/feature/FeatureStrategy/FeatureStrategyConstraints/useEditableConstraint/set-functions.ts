@@ -6,7 +6,7 @@
 // todo: replace the use of this methods with set.union and set.difference when
 // it's available.
 
-export const union = <T>(a: Iterable<T>, b: Set<T>) => {
+export const union = <T>(a: Iterable<T>, b: Set<T>): Set<T> => {
     const result = new Set(a);
     for (const element of b) {
         result.add(element);
@@ -14,8 +14,8 @@ export const union = <T>(a: Iterable<T>, b: Set<T>) => {
     return result;
 };
 
-export const difference = <T>(a: Iterable<T>, b: Set<T>) => {
-    const result = new Set();
+export const difference = <T>(a: Iterable<T>, b: Set<T>): Set<T> => {
+    const result = new Set<T>();
     for (const element of a) {
         if (!b.has(element)) {
             result.add(element);

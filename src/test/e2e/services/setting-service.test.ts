@@ -38,6 +38,8 @@ test('Can create new setting', async () => {
     const { eventStore } = stores;
     const createdEvents = await eventStore.deprecatedSearchEvents({
         type: SETTING_CREATED,
+        limit: 100,
+        offset: 0,
     });
     expect(createdEvents).toHaveLength(1);
     expect(createdEvents[0].data).toEqual({ id: 'some-setting', some: 'blob' });
@@ -53,6 +55,8 @@ test('Can delete setting', async () => {
     const { eventStore } = stores;
     const createdEvents = await eventStore.deprecatedSearchEvents({
         type: SETTING_DELETED,
+        limit: 100,
+        offset: 0,
     });
     expect(createdEvents).toHaveLength(1);
 });
@@ -68,6 +72,8 @@ test('Sentitive SSO settings are redacted in event log', async () => {
 
     const updatedEvents = await eventStore.deprecatedSearchEvents({
         type: SETTING_UPDATED,
+        limit: 100,
+        offset: 0,
     });
     expect(updatedEvents[0].preData).toEqual({ hideEventDetails: true });
     await service.delete(property, TEST_AUDIT_USER);
@@ -85,6 +91,8 @@ test('Can update setting', async () => {
     );
     const updatedEvents = await eventStore.deprecatedSearchEvents({
         type: SETTING_UPDATED,
+        limit: 100,
+        offset: 0,
     });
     expect(updatedEvents).toHaveLength(1);
     expect(updatedEvents[0].data).toEqual({

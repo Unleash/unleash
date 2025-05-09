@@ -25,7 +25,6 @@ import {
     isMultiValueConstraint,
     isNumberConstraint,
     isSemVerConstraint,
-    isSingleValueConstraint,
 } from './useEditableConstraint/editable-constraint-type';
 
 const Container = styled('article')(({ theme }) => ({
@@ -178,61 +177,57 @@ export const EditableConstraint: FC<Props> = ({
     };
 
     const TopRowInput = () => {
-        if (isSingleValueConstraint(localConstraint)) {
-            if (isDateConstraint(localConstraint)) {
-                return (
-                    <ConstraintDateInput
-                        setValue={(value: string) =>
-                            updateConstraint({
-                                type: 'set value',
-                                payload: value,
-                            })
-                        }
-                        value={localConstraint.value}
-                        validator={validator}
-                    />
-                );
-            }
-            if (isSemVerConstraint(localConstraint)) {
-                return (
-                    <AddSingleValueWidget
-                        validator={validator}
-                        onAddValue={(newValue) => {
-                            updateConstraint({
-                                type: 'set value',
-                                payload: newValue,
-                            });
-                        }}
-                        removeValue={() =>
-                            updateConstraint({ type: 'clear values' })
-                        }
-                        currentValue={localConstraint.value}
-                        helpText={
-                            'A semver value should be of the format X.Y.Z'
-                        }
-                        inputType={'text'}
-                    />
-                );
-            }
-            if (isNumberConstraint(localConstraint)) {
-                return (
-                    <AddSingleValueWidget
-                        validator={validator}
-                        onAddValue={(newValue) => {
-                            updateConstraint({
-                                type: 'set value',
-                                payload: newValue,
-                            });
-                        }}
-                        removeValue={() =>
-                            updateConstraint({ type: 'clear values' })
-                        }
-                        currentValue={localConstraint.value}
-                        helpText={'Add a single number'}
-                        inputType={'number'}
-                    />
-                );
-            }
+        if (isDateConstraint(localConstraint)) {
+            return (
+                <ConstraintDateInput
+                    setValue={(value: string) =>
+                        updateConstraint({
+                            type: 'set value',
+                            payload: value,
+                        })
+                    }
+                    value={localConstraint.value}
+                    validator={validator}
+                />
+            );
+        }
+        if (isSemVerConstraint(localConstraint)) {
+            return (
+                <AddSingleValueWidget
+                    validator={validator}
+                    onAddValue={(newValue) => {
+                        updateConstraint({
+                            type: 'set value',
+                            payload: newValue,
+                        });
+                    }}
+                    removeValue={() =>
+                        updateConstraint({ type: 'clear values' })
+                    }
+                    currentValue={localConstraint.value}
+                    helpText={'A semver value should be of the format X.Y.Z'}
+                    inputType={'text'}
+                />
+            );
+        }
+        if (isNumberConstraint(localConstraint)) {
+            return (
+                <AddSingleValueWidget
+                    validator={validator}
+                    onAddValue={(newValue) => {
+                        updateConstraint({
+                            type: 'set value',
+                            payload: newValue,
+                        });
+                    }}
+                    removeValue={() =>
+                        updateConstraint({ type: 'clear values' })
+                    }
+                    currentValue={localConstraint.value}
+                    helpText={'Add a single number'}
+                    inputType={'number'}
+                />
+            );
         }
 
         return (

@@ -33,7 +33,10 @@ export class UnknownFlagsStore implements IUnknownFlagsStore {
                     app_name: flag.appName,
                     seen_at: flag.seenAt,
                 }));
-                await tx(TABLE).insert(rows);
+                await tx(TABLE)
+                    .insert(rows)
+                    .onConflict(['name', 'app_name'])
+                    .merge();
             }
         });
     }

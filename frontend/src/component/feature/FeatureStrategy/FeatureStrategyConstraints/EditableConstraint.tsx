@@ -20,11 +20,14 @@ import { LegalValuesSelector } from './LegalValuesSelector';
 import { useEditableConstraint } from './useEditableConstraint/useEditableConstraint';
 import type { IConstraint } from 'interfaces/strategy';
 import {
+    type EditableConstraint as EditableConstraintType,
     isDateConstraint,
     isMultiValueConstraint,
     isNumberConstraint,
     isSemVerConstraint,
 } from './useEditableConstraint/editable-constraint-type';
+import type { ConstraintUpdateAction } from './useEditableConstraint/constraint-reducer';
+import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -139,6 +142,76 @@ const StyledCaseSensitiveIcon = styled(CaseSensitiveIcon)(({ theme }) => ({
     fill: 'currentcolor',
 }));
 
+const TopRowInput: FC<{
+    localConstraint: EditableConstraintType;
+    updateConstraint: (action: ConstraintUpdateAction) => void;
+    validator: (value: string) => ConstraintValidationResult;
+    addValuesButtonRef: React.RefObject<HTMLButtonElement>;
+}> = ({ localConstraint, updateConstraint, validator, addValuesButtonRef }) => {
+    if (isDateConstraint(localConstraint)) {
+        return (
+            <ConstraintDateInput
+                setValue={(value: string) =>
+                    updateConstraint({
+                        type: 'set value',
+                        payload: value,
+                    })
+                }
+                value={localConstraint.value}
+                validator={validator}
+            />
+        );
+    }
+    if (isSemVerConstraint(localConstraint)) {
+        return (
+            <AddSingleValueWidget
+                validator={validator}
+                onAddValue={(newValue) => {
+                    updateConstraint({
+                        type: 'set value',
+                        payload: newValue,
+                    });
+                }}
+                removeValue={() => updateConstraint({ type: 'clear values' })}
+                currentValue={localConstraint.value}
+                helpText={'A semver value should be of the format X.Y.Z'}
+                inputType={'text'}
+            />
+        );
+    }
+    if (isNumberConstraint(localConstraint)) {
+        return (
+            <AddSingleValueWidget
+                validator={validator}
+                onAddValue={(newValue) => {
+                    updateConstraint({
+                        type: 'set value',
+                        payload: newValue,
+                    });
+                }}
+                removeValue={() => updateConstraint({ type: 'clear values' })}
+                currentValue={localConstraint.value}
+                helpText={'Add a single number'}
+                inputType={'number'}
+            />
+        );
+    }
+
+    return (
+        <AddValuesWidget
+            validator={validator}
+            helpText='Maximum 100 char length per value'
+            ref={addValuesButtonRef}
+            onAddValues={(newValues) => {
+                updateConstraint({
+                    type: 'add value(s)',
+                    payload: newValues,
+                });
+            }}
+        />
+    );
+};
+
 type Props = {
     constraint: IConstraint;
     onDelete: () => void;
@@ -173,75 +246,6 @@ export const EditableConstraint: FC<Props> = ({
 
     const onOperatorChange = (operator: Operator) => {
         updateConstraint({ type: 'set operator', payload: operator });
-    };
-
-    const TopRowInput = () => {
-        if (isDateConstraint(localConstraint)) {
-            return (
-                <ConstraintDateInput
-                    setValue={(value: string) =>
-                        updateConstraint({
-                            type: 'set value',
-                            payload: value,
-                        })
-                    }
-                    value={localConstraint.value}
-                    validator={validator}
-                />
-            );
-        }
-        if (isSemVerConstraint(localConstraint)) {
-            return (
-                <AddSingleValueWidget
-                    validator={validator}
-                    onAddValue={(newValue) => {
-                        updateConstraint({
-                            type: 'set value',
-                            payload: newValue,
-                        });
-                    }}
-                    removeValue={() =>
-                        updateConstraint({ type: 'clear values' })
-                    }
-                    currentValue={localConstraint.value}
-                    helpText={'A semver value should be of the format X.Y.Z'}
-                    inputType={'text'}
-                />
-            );
-        }
-        if (isNumberConstraint(localConstraint)) {
-            return (
-                <AddSingleValueWidget
-                    validator={validator}
-                    onAddValue={(newValue) => {
-                        updateConstraint({
-                            type: 'set value',
-                            payload: newValue,
-                        });
-                    }}
-                    removeValue={() =>
-                        updateConstraint({ type: 'clear values' })
-                    }
-                    currentValue={localConstraint.value}
-                    helpText={'Add a single number'}
-                    inputType={'number'}
-                />
-            );
-        }
-
-        return (
-            <AddValuesWidget
-                validator={validator}
-                helpText='Maximum 100 char length per value'
-                ref={addValuesButtonRef}
-                onAddValues={(newValues) => {
-                    updateConstraint({
-                        type: 'add value(s)',
-                        payload: newValues,
-                    });
-                }}
-            />
-        );
     };
 
     return (
@@ -336,7 +340,12 @@ export const EditableConstraint: FC<Props> = ({
                             deleteButtonRef.current
                         }
                     >
-                        <TopRowInput />
+                        <TopRowInput
+                            localConstraint={localConstraint}
+                            updateConstraint={updateConstraint}
+                            validator={validator}
+                            addValuesButtonRef={addValuesButtonRef}
+                        />
                     </ValueList>
                 </ConstraintDetails>
                 <ButtonPlaceholder />

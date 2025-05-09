@@ -702,6 +702,21 @@
       "permanent": true
     },
     {
+      "source": "/understanding-unleash",
+      "destination": "/understanding-unleash/unleash-overview",
+      "permanent": true
+    },
+    {
+      "source": "/reference",
+      "destination": "/reference/projects",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash",
+      "destination": "/api-overview",
+      "permanent": true
+    },
+    {
       "source": "/tutorials/proxy-hosting",
       "destination": "/understanding-unleash/hosting-options",
       "permanent": true
@@ -819,6 +834,26 @@
     {
       "source": "/deploy/getting_started",
       "destination": "/using-unleash/deploy/getting-started",
+      "permanent": true
+    },
+    {
+      "source": "/topics",
+      "destination": "/topics/what-is-a-feature-flag",
+      "permanent": true
+    },
+    {
+      "source": "/use-cases",
+      "destination": "/feature-flag-tutorials/use-cases/gradual-rollout",
+      "permanent": true
+    },
+    {
+      "source": "/languages-and-frameworks",
+      "destination": "/feature-flag-tutorials/use-cases/gradual-rollout",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials",
+      "destination": "/feature-flag-tutorials/use-cases/gradual-rollout",
       "permanent": true
     },
     {

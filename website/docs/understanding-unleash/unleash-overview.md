@@ -1,5 +1,6 @@
 ---
 title: Unleash architecture
+pagination_next: understanding-unleash/the-anatomy-of-unleash
 ---
 
 Unleash is designed for privacy, speed, and resilience, enabling feature flag evaluations to occur locally within your applications. The architecture provides:

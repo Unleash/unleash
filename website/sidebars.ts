@@ -42,31 +42,24 @@ const sidebars: SidebarsConfig = {
             label: 'Feature Flags Developer Guide',
             type: 'category',
             link: {
-                type: 'generated-index',
-                title: 'Feature Flag Developer Guide',
-                description:
-                    'What are feature flags? And other concepts to get you started.',
-                slug: '/topics',
+                type: 'doc',
+                id: 'topics/what-is-a-feature-flag',
             },
             items: [
-                {
-                    label: 'Feature Flag Concepts',
-                    collapsed: true,
-                    type: 'category',
-                    items: ['topics/concepts/what-is-a-feature-flag'],
-                },
                 {
                     label: 'Feature Flag Best Practices',
                     collapsed: true,
                     type: 'category',
                     link: {
-                        type: 'generated-index',
-                        title: 'Feature Flag Best Practices',
-                        description:
-                            'Principles and recommendations for best practices of using feature flags.',
-                        slug: 'topics/feature-flags/',
+                        type: 'doc',
+                        id: 'topics/what-is-a-feature-flag',
                     },
                     items: [
+                        {
+                            type: 'doc',
+                            label: 'What is a feature flag',
+                            id: 'topics/what-is-a-feature-flag',
+                        },
                         {
                             type: 'doc',
                             label: 'Building and scaling feature flag systems',
@@ -89,21 +82,17 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     collapsed: true,
                     link: {
-                        type: 'generated-index',
-                        title: 'Feature Flag Tutorials',
-                        description:
-                            'Tutorials to implement feature flags with your framework.',
-                        slug: 'feature-flag-tutorials',
-                    },
+                        type: 'doc',
+                        id: 'feature-flag-tutorials/use-cases/gradual-rollout',
+                    },    
                     items: [
                         {
                             type: 'category',
                             label: 'Use Cases',
                             collapsed: true,
                             link: {
-                                type: 'generated-index',
-                                title: 'Use Cases',
-                                slug: 'use-cases',
+                                type: 'doc',
+                                id: 'feature-flag-tutorials/use-cases/gradual-rollout',
                             },
                             items: [
                                 {
@@ -148,9 +137,8 @@ const sidebars: SidebarsConfig = {
                             label: 'Languages and Frameworks',
                             collapsed: true,
                             link: {
-                                type: 'generated-index',
-                                title: 'Languages and Frameworks',
-                                slug: 'languages-and-frameworks',
+                                type: 'doc',
+                                id: 'feature-flag-tutorials/react/implementing-feature-flags',
                             },
                             items: [
                                 {
@@ -165,6 +153,26 @@ const sidebars: SidebarsConfig = {
                                             type: 'doc',
                                             label: 'Examples',
                                             id: 'feature-flag-tutorials/react/examples',
+                                        },
+                                    ],
+                                },
+                                {
+                                    type: 'category',
+                                    label: 'Java',
+                                    link: {
+                                        type: 'doc',
+                                        id: 'feature-flag-tutorials/java/implementing-feature-flags',
+                                    },
+                                    items: [
+                                        {
+                                            type: 'doc',
+                                            label: 'Spring Boot',
+                                            id: 'feature-flag-tutorials/java/spring-boot-implementing-feature-flags',
+                                        },
+                                        {
+                                            type: 'doc',
+                                            label: 'Spring Boot Examples',
+                                            id: 'feature-flag-tutorials/java/spring-boot-examples',
                                         },
                                     ],
                                 },
@@ -194,49 +202,9 @@ const sidebars: SidebarsConfig = {
                                     ],
                                 },
                                 {
-                                    type: 'category',
-                                    label: 'Java',
-                                    link: {
-                                        type: 'doc',
-                                        id: 'feature-flag-tutorials/java/implementing-feature-flags',
-                                    },
-                                    items: [
-                                        {
-                                            type: 'doc',
-                                            label: 'Spring Boot',
-                                            id: 'feature-flag-tutorials/java/spring-boot-implementing-feature-flags',
-                                        },
-                                        {
-                                            type: 'doc',
-                                            label: 'Spring Boot Examples',
-                                            id: 'feature-flag-tutorials/java/spring-boot-examples',
-                                        },
-                                    ],
-                                },
-                                {
-                                    type: 'category',
-                                    label: 'Ruby',
-                                    link: {
-                                        type: 'doc',
-                                        id: 'feature-flag-tutorials/ruby/implementing-feature-flags-ruby',
-                                    },
-                                    items: [
-                                        {
-                                            type: 'doc',
-                                            label: 'Ruby Examples',
-                                            id: 'feature-flag-tutorials/ruby/ruby-examples',
-                                        },
-                                        {
-                                            type: 'doc',
-                                            label: 'Rails Tutorial',
-                                            id: 'feature-flag-tutorials/rails/implementing-feature-flags-rails',
-                                        },
-                                        {
-                                            type: 'doc',
-                                            label: 'Rails Examples',
-                                            id: 'feature-flag-tutorials/rails/rails-examples',
-                                        },
-                                    ],
+                                    type: 'doc',
+                                    label: 'Next.js',
+                                    id: 'feature-flag-tutorials/nextjs/implementing-feature-flags-nextjs',
                                 },
                                 {
                                     type: 'category',
@@ -252,6 +220,11 @@ const sidebars: SidebarsConfig = {
                                             id: 'feature-flag-tutorials/golang/golang-examples',
                                         },
                                     ],
+                                },
+                                {
+                                    type: 'doc',
+                                    label: 'JavaScript',
+                                    id: 'feature-flag-tutorials/javascript/implementing-feature-flags-js',
                                 },
                                 {
                                     type: 'category',
@@ -284,6 +257,11 @@ const sidebars: SidebarsConfig = {
                                     ],
                                 },
                                 {
+                                    type: 'doc',
+                                    label: 'Serverless',
+                                    id: 'feature-flag-tutorials/serverless/implementing-feature-flags-in-aws-lambda',
+                                },
+                                {
                                     type: 'category',
                                     label: 'Rust',
                                     link: {
@@ -300,28 +278,38 @@ const sidebars: SidebarsConfig = {
                                 },
                                 {
                                     type: 'doc',
-                                    label: 'JavaScript',
-                                    id: 'feature-flag-tutorials/javascript/implementing-feature-flags-js',
-                                },
-                                {
-                                    type: 'doc',
-                                    label: 'Serverless',
-                                    id: 'feature-flag-tutorials/serverless/implementing-feature-flags-in-aws-lambda',
-                                },
-                                {
-                                    type: 'doc',
                                     label: 'Flutter',
                                     id: 'feature-flag-tutorials/flutter/a-b-testing',
                                 },
                                 {
                                     type: 'doc',
-                                    label: 'Next.js',
-                                    id: 'feature-flag-tutorials/nextjs/implementing-feature-flags-nextjs',
-                                },
-                                {
-                                    type: 'doc',
                                     label: 'SvelteKit',
                                     id: 'feature-flag-tutorials/sveltekit/implementing-feature-flags-sveltekit',
+                                },
+                                {
+                                    type: 'category',
+                                    label: 'Ruby',
+                                    link: {
+                                        type: 'doc',
+                                        id: 'feature-flag-tutorials/ruby/implementing-feature-flags-ruby',
+                                    },
+                                    items: [
+                                        {
+                                            type: 'doc',
+                                            label: 'Ruby Examples',
+                                            id: 'feature-flag-tutorials/ruby/ruby-examples',
+                                        },
+                                        {
+                                            type: 'doc',
+                                            label: 'Rails Tutorial',
+                                            id: 'feature-flag-tutorials/rails/implementing-feature-flags-rails',
+                                        },
+                                        {
+                                            type: 'doc',
+                                            label: 'Rails Examples',
+                                            id: 'feature-flag-tutorials/rails/rails-examples',
+                                        },
+                                    ],
                                 },
                             ],
                         },
@@ -335,11 +323,8 @@ const sidebars: SidebarsConfig = {
             collapsed: false,
             type: 'category',
             link: {
-                type: 'generated-index',
-                title: 'Understanding Unleash',
-                description:
-                    'Documentation on how Unleash works, high-level architecture and important concepts.',
-                slug: 'understanding-unleash',
+                type: 'doc',
+                id: 'understanding-unleash/unleash-overview',
             },
             items: [
                 'understanding-unleash/unleash-overview',
@@ -350,11 +335,8 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     link: {
-                        type: 'generated-index',
-                        title: 'Unleash Concepts',
-                        description:
-                            'Documents describing the inner parts of Unleash.',
-                        slug: '/reference',
+                        type: 'doc',
+                        id: 'reference/projects',
                     },
                     label: 'Unleash Concepts',
                     items: [
@@ -474,11 +456,8 @@ const sidebars: SidebarsConfig = {
             collapsed: false,
             type: 'category',
             link: {
-                type: 'generated-index',
-                title: 'Using Unleash',
-                description:
-                    'Documentation on how to accomplish specific tasks when building with Unleash, including API and SDK documentation.',
-                slug: '/using-unleash',
+                type: 'doc',
+                id: 'api-overview',
             },
             items: [
                 {
@@ -486,11 +465,8 @@ const sidebars: SidebarsConfig = {
                     collapsed: true,
                     type: 'category',
                     link: {
-                        title: 'Unleash Server APIs',
-                        type: 'generated-index',
-                        description:
-                            'Generated API docs based on the Unleash OpenAPI schema.',
-                        slug: '/reference/api/unleash',
+                        type: 'doc',
+                        id: 'api-overview',
                     },
                     items: [
                         docsSidebar,

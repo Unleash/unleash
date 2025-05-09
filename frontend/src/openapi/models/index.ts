@@ -1100,6 +1100,7 @@ export * from './projectFlagCreatorsSchemaItem';
 export * from './projectInsightsSchema';
 export * from './projectInsightsSchemaHealth';
 export * from './projectInsightsSchemaMembers';
+export * from './projectLinkTemplateSchema';
 export * from './projectOverviewSchema';
 export * from './projectOverviewSchemaMode';
 export * from './projectOverviewSchemaOnboardingStatus';

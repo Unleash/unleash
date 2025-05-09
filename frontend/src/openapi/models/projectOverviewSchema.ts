@@ -6,6 +6,7 @@
 import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema';
 import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema';
 import type { FeatureTypeCountSchema } from './featureTypeCountSchema';
+import type { ProjectLinkTemplateSchema } from './projectLinkTemplateSchema';
 import type { ProjectOverviewSchemaMode } from './projectOverviewSchemaMode';
 import type { ProjectOverviewSchemaOnboardingStatus } from './projectOverviewSchemaOnboardingStatus';
 import type { ProjectStatsSchema } from './projectStatsSchema';
@@ -45,6 +46,8 @@ export interface ProjectOverviewSchema {
     featureTypeCounts?: FeatureTypeCountSchema[];
     /** An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100 */
     health?: number;
+    /** A list of templates for links that will be automatically added to new feature flags. */
+    linkTemplates?: ProjectLinkTemplateSchema[];
     /** The number of members this project has */
     members?: number;
     /** The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not. */

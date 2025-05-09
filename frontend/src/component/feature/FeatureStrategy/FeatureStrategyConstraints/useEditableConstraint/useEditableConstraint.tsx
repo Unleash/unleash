@@ -20,6 +20,7 @@ import {
     type ConstraintValidationResult,
     constraintValidator,
 } from './constraint-validator';
+import { difference } from './set-functions';
 
 const resolveContextDefinition = (
     context: IUnleashContextDefinition[],
@@ -87,7 +88,8 @@ export const useEditableConstraint = (
             const currentLegalValues = new Set(
                 contextDefinition.legalValues.map(({ value }) => value),
             );
-            const deletedValues = new Set(constraint.values).difference(
+            const deletedValues = difference(
+                constraint.values,
                 currentLegalValues,
             );
 

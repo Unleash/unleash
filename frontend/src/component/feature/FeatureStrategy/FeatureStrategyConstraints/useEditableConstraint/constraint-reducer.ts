@@ -12,6 +12,7 @@ import {
     isSingleValueConstraint,
     type EditableConstraint,
 } from './editable-constraint-type';
+import { difference, union } from './set-functions';
 
 export type ConstraintUpdateAction =
     | { type: 'add value(s)'; payload: string[] }
@@ -49,28 +50,6 @@ const resetValues = (state: EditableConstraint): EditableConstraint => {
         ...state,
         values: new Set(),
     };
-};
-
-// because Set.prototype.union and difference are baseline available 2024, but
-// not available in GH actions yet. Caniuse also reports coverage at 87%. we can
-// likely remove these in favor of the native implementations the next time we
-// touch this code.
-const union = <T>(setA: Set<T>, setB: Set<T>) => {
-    const result = new Set(setA);
-    for (const element of setB) {
-        result.add(element);
-    }
-    return result;
-};
-
-const difference = <T>(setA: Set<T>, setB: Set<T>) => {
-    const result = new Set(setA);
-    for (const element of setA) {
-        if (!setB.has(element)) {
-            result.add(element);
-        }
-    }
-    return result;
 };
 
 export const constraintReducer = (

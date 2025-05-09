@@ -282,7 +282,7 @@ export const Project = () => {
                         <StyledDiv>
                             <StyledFavoriteIconButton
                                 onClick={onFavorite}
-                                isFavorite={project?.favorite}
+                                isFavorite={project?.favorite || false}
                             />
                             <StyledProjectTitle>
                                 <ConditionallyRender

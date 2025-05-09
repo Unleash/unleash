@@ -37,7 +37,7 @@ export const useDefaultStrategy = (
         },
     };
 
-    const strategy = project.environments.find(
+    const strategy = project.environments?.find(
         (env) => env.environment === environmentId,
     )?.defaultStrategy;
 

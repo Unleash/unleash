@@ -59,9 +59,11 @@ const ProjectOverview: FC = () => {
                 />
                 <StyledProjectToggles>
                     <ProjectFeatureToggles
-                        environments={project.environments.map(
-                            (environment) => environment.environment,
-                        )}
+                        environments={
+                            project.environments?.map(
+                                (environment) => environment.environment,
+                            ) || []
+                        }
                     />
                 </StyledProjectToggles>
             </StyledContentContainer>

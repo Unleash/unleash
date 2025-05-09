@@ -96,7 +96,6 @@ export function responseTimeMetrics(
 
             // include in the calculation the time of all the methods above
             const delta = performance.now() - start;
-            console.log(delta, start);
             eventBus.emit(REQUEST_TIME, {
                 path: pathname,
                 method,

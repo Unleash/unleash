@@ -1036,7 +1036,8 @@ test('Patching feature flags to active (turning stale to false) should trigger F
 });
 
 test('Should archive feature flag', async () => {
-    const url = '/api/admin/projects/default/features';
+    const projectId = 'default';
+    const url = `/api/admin/projects/${projectId}/features`;
     const name = 'new.flag.archive';
     await app.request
         .post(url)
@@ -1046,7 +1047,7 @@ test('Should archive feature flag', async () => {
 
     await app.request.get(`${url}/${name}`).expect(404);
     const { body } = await app.request
-        .get(`/api/admin/archive/features`)
+        .get(`/api/admin/archive/features/${projectId}`)
         .expect(200);
 
     const flag = body.features.find((f) => f.name === name);

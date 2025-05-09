@@ -32,16 +32,6 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('Should get empty features via admin', async () => {
-    await app.request
-        .get('/api/admin/archive/features')
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .expect((res) => {
-            expect(res.body.features).toHaveLength(0);
-        });
-});
-
 test('Should be allowed to reuse deleted toggle name', async () => {
     await app.request
         .post('/api/admin/projects/default/features')
@@ -59,30 +49,6 @@ test('Should be allowed to reuse deleted toggle name', async () => {
         .post('/api/admin/features/validate')
         .send({ name: 'ts.really.delete' })
         .expect(200);
-});
-
-test('Should get archived toggles via admin', async () => {
-    await app.request
-        .post('/api/admin/projects/default/features')
-        .send({
-            name: 'archived.test.1',
-            archived: true,
-        })
-        .expect(201);
-    await app.request
-        .post('/api/admin/projects/default/features')
-        .send({
-            name: 'archived.test.2',
-            archived: true,
-        })
-        .expect(201);
-    await app.request
-        .get('/api/admin/archive/features')
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .expect((res) => {
-            expect(res.body.features).toHaveLength(2);
-        });
 });
 
 test('Should get archived toggles via project', async () => {
@@ -131,14 +97,6 @@ test('Should get archived toggles via project', async () => {
         .expect('Content-Type', /json/)
         .expect((res) => {
             expect(res.body.features).toHaveLength(2);
-        });
-
-    await app.request
-        .get('/api/admin/archive/features')
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .expect((res) => {
-            expect(res.body.features).toHaveLength(3);
         });
 });
 

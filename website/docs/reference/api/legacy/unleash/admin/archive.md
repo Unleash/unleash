@@ -4,31 +4,6 @@ title: /api/admin/archive
 
 > In order to access the admin API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create an ADMIN token](/how-to/how-to-create-api-tokens) and add an Authorization header using the token.
 
-### Fetch archived flags {#fetch-archived-toggles}
-
-`GET http://unleash.host.com/api/admin/archive/features`
-
-Used to fetch list of archived feature flags
-
-**Example response:**
-
-```json
-{
-  "version": 1,
-  "features": [
-    {
-      "name": "Feature.A",
-      "description": "lorem ipsum",
-      "type": "release",
-      "stale": false,
-      "variants": [],
-      "tags": [],
-      "strategy": "default",
-      "parameters": {}
-    }
-  ]
-}
-```
 
 ### Revive feature flag {#revive-feature-toggle}
 

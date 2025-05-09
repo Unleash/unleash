@@ -68,7 +68,7 @@ afterAll(async () => {
 test('returns three archived flags', async () => {
     expect.assertions(1);
     return app.request
-        .get('/api/admin/archive/features')
+        .get(`/api/admin/archive/features/${DEFAULT_PROJECT}`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
@@ -79,7 +79,7 @@ test('returns three archived flags', async () => {
 test('returns three archived flags with archivedAt', async () => {
     expect.assertions(2);
     return app.request
-        .get('/api/admin/archive/features')
+        .get(`/api/admin/archive/features/${DEFAULT_PROJECT}`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {

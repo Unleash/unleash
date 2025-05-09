@@ -31,7 +31,6 @@ import { EditSegment } from 'component/segments/EditSegment/EditSegment';
 import type { INavigationMenuItem, IRoute } from 'interfaces/route';
 import { EnvironmentTable } from 'component/environments/EnvironmentTable/EnvironmentTable';
 import { SegmentTable } from '../segments/SegmentTable/SegmentTable';
-import { FeaturesArchiveTable } from '../archive/FeaturesArchiveTable';
 import { LazyPlayground } from 'component/playground/Playground/LazyPlayground';
 import { Profile } from 'component/user/Profile/Profile';
 import { LazyFeatureView } from 'component/feature/FeatureView/LazyFeatureView';
@@ -454,15 +453,6 @@ export const routes: IRoute[] = [
         component: LoginHistory,
         type: 'protected',
         menu: { adminSettings: true },
-    },
-
-    // Archive
-    {
-        path: '/archive',
-        title: 'Archived flags',
-        component: FeaturesArchiveTable,
-        type: 'protected',
-        menu: {},
     },
 
     // Admin

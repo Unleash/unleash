@@ -11,7 +11,7 @@ const StyledFeatureId = styled('strong')({
 export const FeatureNotFound = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const { archivedFeatures } = useFeaturesArchive();
+    const { archivedFeatures } = useFeaturesArchive(projectId);
 
     const createFeatureTogglePath = getCreateTogglePath(projectId, {
         name: featureId,

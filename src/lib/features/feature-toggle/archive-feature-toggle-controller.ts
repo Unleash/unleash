@@ -2,10 +2,7 @@ import type { Request, Response } from 'express';
 import type { IUnleashConfig } from '../../types/option';
 import type { IUnleashServices } from '../../types';
 import Controller from '../../routes/controller';
-import {
-    extractUserIdFromUser,
-    extractUsername,
-} from '../../util/extract-user';
+import { extractUsername } from '../../util/extract-user';
 import { DELETE_FEATURE, NONE, UPDATE_FEATURE } from '../../types/permissions';
 import type FeatureToggleService from './feature-toggle-service';
 import type { IAuthRequest } from '../../routes/unleash-types';
@@ -53,28 +50,6 @@ export default class ArchiveController extends Controller {
         this.transactionalFeatureToggleService =
             transactionalFeatureToggleService;
         this.startTransaction = startTransaction;
-
-        this.route({
-            method: 'get',
-            path: '/features',
-            handler: this.getArchivedFeatures,
-            permission: NONE,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Archive'],
-                    summary: 'Get archived features',
-                    description:
-                        'Retrieve a list of all [archived feature flags](https://docs.getunleash.io/reference/feature-toggles#archive-a-feature-flag).',
-                    operationId: 'getArchivedFeatures',
-                    responses: {
-                        200: createResponseSchema('archivedFeaturesSchema'),
-                        ...getStandardResponses(401, 403),
-                    },
-
-                    deprecated: true,
-                }),
-            ],
-        });
 
         this.route({
             method: 'get',
@@ -141,45 +116,13 @@ export default class ArchiveController extends Controller {
         });
     }
 
-    async getArchivedFeatures(
-        req: IAuthRequest,
-        res: Response<ArchivedFeaturesSchema>,
-    ): Promise<void> {
-        const { user } = req;
-        const features = await this.featureService.getAllArchivedFeatures(
-            true,
-            extractUserIdFromUser(user),
-        );
-
-        this.openApiService.respondWithValidation(
-            200,
-            res,
-            archivedFeaturesSchema.$id,
-            {
-                version: 2,
-                features: serializeDates(
-                    features.map((feature) => {
-                        return {
-                            ...feature,
-                            stale: feature.stale || false,
-                            archivedAt: feature.archivedAt!,
-                        };
-                    }),
-                ),
-            },
-        );
-    }
-
     async getArchivedFeaturesByProjectId(
         req: Request<{ projectId: string }, any, any, any>,
         res: Response<ArchivedFeaturesSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
         const features =
-            await this.featureService.getArchivedFeaturesByProjectId(
-                true,
-                projectId,
-            );
+            await this.featureService.getArchivedFeaturesByProjectId(projectId);
         this.openApiService.respondWithValidation(
             200,
             res,

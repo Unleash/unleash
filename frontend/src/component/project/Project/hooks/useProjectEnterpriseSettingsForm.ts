@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import type { ProjectLinkTemplateSchema } from 'openapi';
 
 export type ProjectMode = 'open' | 'protected' | 'private';
 const useProjectEnterpriseSettingsForm = (
@@ -6,6 +7,7 @@ const useProjectEnterpriseSettingsForm = (
     initialFeatureNamingPattern = '',
     initialFeatureNamingExample = '',
     initialFeatureNamingDescription = '',
+    initialLinkTemplates: ProjectLinkTemplateSchema[] = [],
 ) => {
     const [projectMode, setProjectMode] =
         useState<ProjectMode>(initialProjectMode);
@@ -18,6 +20,10 @@ const useProjectEnterpriseSettingsForm = (
 
     const [featureNamingDescription, setFeatureNamingDescription] = useState(
         initialFeatureNamingDescription,
+    );
+
+    const [linkTemplates, setLinkTemplates] = useState<ProjectLinkTemplateSchema[]>(
+        initialLinkTemplates,
     );
 
     const [errors, setErrors] = useState({});
@@ -38,6 +44,10 @@ const useProjectEnterpriseSettingsForm = (
         setFeatureNamingDescription(initialFeatureNamingDescription);
     }, [initialFeatureNamingDescription]);
 
+    useEffect(() => {
+        setLinkTemplates(initialLinkTemplates);
+    }, [initialLinkTemplates]);
+
     const getEnterpriseSettingsPayload = () => {
         return {
             mode: projectMode,
@@ -46,6 +56,7 @@ const useProjectEnterpriseSettingsForm = (
                 example: featureNamingExample,
                 description: featureNamingDescription,
             },
+            linkTemplates,
         };
     };
 
@@ -58,10 +69,12 @@ const useProjectEnterpriseSettingsForm = (
         featureNamingPattern,
         featureNamingExample,
         featureNamingDescription,
+        linkTemplates,
         setFeatureNamingPattern,
         setFeatureNamingExample,
         setFeatureNamingDescription,
         setProjectMode,
+        setLinkTemplates,
         getEnterpriseSettingsPayload,
         clearErrors,
         errors,

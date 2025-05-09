@@ -13,12 +13,12 @@ export const projectLinkTemplateSchema = {
             example: 'Code search',
             nullable: true,
         },
-        template: {
+        urlTemplate: {
             type: 'string',
             description:
-                'The URL to use as a template. Can contain {{project}} or {{flag}} as placeholders.',
+                'The URL to use as a template. Can contain {{project}} or {{feature}} as placeholders.',
             example:
-                'https://github.com/search?type=code&q=repo%3AUnleash%2F{{project}}+{{flag}}',
+                'https://github.com/search?type=code&q=repo%3AUnleash%2F{{project}}+{{feature}}',
         },
     },
     additionalProperties: false,

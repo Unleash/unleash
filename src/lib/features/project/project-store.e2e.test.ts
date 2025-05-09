@@ -203,7 +203,7 @@ test('should update project enterprise settings', async () => {
         linkTemplates: [
             {
                 title: 'My Link',
-                template: 'https://example.com/{{flag}}',
+                urlTemplate: 'https://example.com/{{flag}}',
             },
         ],
     });
@@ -221,7 +221,7 @@ test('should update project enterprise settings', async () => {
         expect.arrayContaining([
             expect.objectContaining({
                 title: 'My Link',
-                template: 'https://example.com/{{flag}}',
+                urlTemplate: 'https://example.com/{{flag}}',
             }),
         ]),
     );

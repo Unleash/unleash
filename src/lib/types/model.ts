@@ -337,7 +337,7 @@ export interface IProjectParam {
 
 export interface IProjectLinkTemplate {
     title?: string;
-    template: string;
+    urlTemplate: string;
 }
 
 export interface IArchivedQuery {

@@ -3,7 +3,6 @@ import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import type { Logger } from '../logger';
 import type {
-    IAccessInfo,
     IAccessStore,
     IProjectRoleUsage,
     IRole,
@@ -601,46 +600,6 @@ export class AccessStore implements IAccessStore {
                 this.db(T.ROLES).select('id as role_id').where('type', 'root'),
             )
             .update('role_id', roleId);
-    }
-
-    async addRoleAccessToProject(
-        users: IAccessInfo[],
-        groups: IAccessInfo[],
-        projectId: string,
-        roleId: number,
-        createdBy: string,
-    ): Promise<void> {
-        const userRows = users.map((user) => {
-            return {
-                user_id: user.id,
-                project: projectId,
-                role_id: roleId,
-            };
-        });
-
-        const groupRows = groups.map((group) => {
-            return {
-                group_id: group.id,
-                project: projectId,
-                role_id: roleId,
-                created_by: createdBy,
-            };
-        });
-
-        await inTransaction(this.db, async (tx) => {
-            if (userRows.length > 0) {
-                await tx(T.ROLE_USER)
-                    .insert(userRows)
-                    .onConflict(['project', 'role_id', 'user_id'])
-                    .merge();
-            }
-            if (groupRows.length > 0) {
-                await tx(T.GROUP_ROLE)
-                    .insert(groupRows)
-                    .onConflict(['project', 'role_id', 'group_id'])
-                    .merge();
-            }
-        });
     }
 
     async addAccessToProject(

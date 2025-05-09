@@ -56,7 +56,6 @@ import {
     type IOnboardingReadModel,
 } from '../../types';
 import type {
-    IProjectAccessModel,
     IRoleDescriptor,
     IRoleWithProject,
 } from '../../types/stores/access-store';
@@ -838,38 +837,6 @@ export default class ProjectService {
                     groupId: group.id,
                     projectId: project.id,
                     roleName: role.name,
-                },
-            }),
-        );
-    }
-
-    /**
-     * @deprecated use `addAccess` instead
-     */
-    async addRoleAccess(
-        projectId: string,
-        roleId: number,
-        usersAndGroups: IProjectAccessModel,
-        auditUser: IAuditUser,
-    ): Promise<void> {
-        await this.accessService.addRoleAccessToProject(
-            usersAndGroups.users,
-            usersAndGroups.groups,
-            projectId,
-            roleId,
-            auditUser,
-        );
-
-        await this.eventService.storeEvent(
-            new ProjectAccessAddedEvent({
-                project: projectId,
-                auditUser,
-                data: {
-                    roles: {
-                        roleId,
-                        groupIds: usersAndGroups.groups.map(({ id }) => id),
-                        userIds: usersAndGroups.users.map(({ id }) => id),
-                    },
                 },
             }),
         );

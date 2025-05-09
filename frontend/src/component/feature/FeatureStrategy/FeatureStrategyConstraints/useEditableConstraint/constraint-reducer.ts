@@ -51,6 +51,15 @@ const resetValues = (state: EditableConstraint): EditableConstraint => {
     };
 };
 
+// because Set.prototype union isn't supported in our GH Actions yet
+const union = <T>(setA: Set<T>, setB: Set<T>) => {
+    const result = new Set(setA);
+    for (const element of setB) {
+        result.add(element);
+    }
+    return result;
+};
+
 export const constraintReducer = (
     state: EditableConstraint,
     action: ConstraintUpdateAction,
@@ -110,7 +119,7 @@ export const constraintReducer = (
             }
 
             const newValues = new Set(action.payload);
-            const combinedValues = state.values.union(newValues);
+            const combinedValues = union(state.values, newValues);
             const filteredValues = deletedLegalValues
                 ? combinedValues.difference(deletedLegalValues)
                 : combinedValues;

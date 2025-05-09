@@ -190,8 +190,8 @@ const CreateFeatureDialogContent = ({
                 count: totalFlags ?? 0,
             },
             project: {
-                limit: projectInfo.featureLimit,
-                count: featuresCount(projectInfo),
+                limit: projectInfo.featureLimit || undefined,
+                count: featuresCount(projectInfo) ?? 0,
             },
         });
 

@@ -61,7 +61,7 @@ export const ProjectDefaultStrategySettings = () => {
                     specific environment. These will be used when you enable a
                     toggle environment that has no strategies defined
                 </StyledAlert>
-                {project?.environments.map((environment) => (
+                {project?.environments?.map((environment) => (
                     <ProjectEnvironment
                         environment={environment}
                         key={environment.environment}

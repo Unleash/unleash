@@ -96,6 +96,7 @@ export type UiFlags = {
     cleanupReminder?: boolean;
     registerFrontendClient?: boolean;
     featureLinks?: boolean;
+    projectLinkTemplates?: boolean;
 };
 
 export interface IVersionInfo {

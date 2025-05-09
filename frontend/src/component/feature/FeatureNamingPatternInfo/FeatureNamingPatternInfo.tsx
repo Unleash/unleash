@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import type { FeatureNamingType } from 'interfaces/project';
+import type { CreateFeatureNamingPatternSchema } from 'openapi';
 
 const StyledFlagNamingInfo = styled('article')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
@@ -25,7 +25,7 @@ const StyledFlagNamingInfo = styled('article')(({ theme }) => ({
 }));
 
 type Props = {
-    featureNaming: FeatureNamingType;
+    featureNaming: CreateFeatureNamingPatternSchema;
 };
 
 export const FeatureNamingPatternInfo: React.FC<Props> = ({

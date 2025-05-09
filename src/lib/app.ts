@@ -24,8 +24,7 @@ import noAuthentication, {
 } from './middleware/no-authentication.js';
 import secureHeaders from './middleware/secure-headers.js';
 
-import { loadIndexHTML } from './util/load-index-html.js';
-import { findPublicFolder } from './util/findPublicFolder.js';
+import { loadIndexHTML, findPublicFolder } from './util/index.js';
 import patMiddleware from './middleware/pat-middleware.js';
 import type { Knex } from 'knex';
 import maintenanceMiddleware from './features/maintenance/maintenance-middleware.js';
@@ -44,7 +43,6 @@ export default async function getApp(
     db?: Knex,
 ): Promise<Application> {
     const app = express();
-
     const baseUriPath = config.server.baseUriPath || '';
     const publicFolder = config.publicFolder || findPublicFolder();
     const indexHTML = await loadIndexHTML(config, publicFolder);

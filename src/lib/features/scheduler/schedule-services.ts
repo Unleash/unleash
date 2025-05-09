@@ -72,9 +72,7 @@ export const scheduleServices = async (
     );
 
     schedulerService.schedule(
-        clientInstanceService.removeInstancesOlderThanTwoDays.bind(
-            clientInstanceService,
-        ),
+        clientInstanceService.removeOldInstances.bind(clientInstanceService),
         hoursToMilliseconds(24),
         'removeInstancesOlderThanTwoDays',
     );

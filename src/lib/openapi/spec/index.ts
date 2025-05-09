@@ -157,6 +157,7 @@ export * from './project-feature-schema';
 export * from './project-features-schema';
 export * from './project-flag-creators-schema';
 export * from './project-insights-schema';
+export * from './project-link-template-schema';
 export * from './project-overview-schema';
 export * from './project-schema';
 export * from './project-stats-schema';

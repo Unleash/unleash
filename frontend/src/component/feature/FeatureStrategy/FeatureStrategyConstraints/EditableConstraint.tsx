@@ -10,7 +10,6 @@ import Delete from '@mui/icons-material/Delete';
 import { ValueList } from './ValueList';
 import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive.svg';
 import { ReactComponent as CaseInsensitiveIcon } from 'assets/icons/case-insensitive.svg';
-import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { AddValuesWidget } from './AddValuesWidget';
 
 import { ReactComponent as EqualsIcon } from 'assets/icons/constraint-equals.svg';
@@ -268,26 +267,26 @@ export const EditableConstraint: FC<Props> = ({
                         />
 
                         <OperatorOptions>
-                            <StyledButton
-                                type='button'
-                                onClick={() =>
-                                    updateConstraint({
-                                        type: 'toggle inverted operator',
-                                    })
-                                }
+                            <HtmlTooltip
+                                title={`Make the selected operator${localConstraint.inverted ? ' inclusive' : ' exclusive'}`}
+                                arrow
+                                describeChild
                             >
-                                {localConstraint.inverted ? (
-                                    <StyledNotEqualsIcon aria-label='The constraint operator is exclusive.' />
-                                ) : (
-                                    <StyledEqualsIcon aria-label='The constraint operator is inclusive.' />
-                                )}
-                                <ScreenReaderOnly>
-                                    Make the selected operator
-                                    {localConstraint.inverted
-                                        ? ' inclusive'
-                                        : ' exclusive'}
-                                </ScreenReaderOnly>
-                            </StyledButton>
+                                <StyledButton
+                                    type='button'
+                                    onClick={() =>
+                                        updateConstraint({
+                                            type: 'toggle inverted operator',
+                                        })
+                                    }
+                                >
+                                    {localConstraint.inverted ? (
+                                        <StyledNotEqualsIcon aria-label='The constraint operator is exclusive.' />
+                                    ) : (
+                                        <StyledEqualsIcon aria-label='The constraint operator is inclusive.' />
+                                    )}
+                                </StyledButton>
+                            </HtmlTooltip>
 
                             <ConstraintOperatorSelect
                                 options={operatorsForContext(contextName)}
@@ -297,27 +296,26 @@ export const EditableConstraint: FC<Props> = ({
                             />
 
                             {showCaseSensitiveButton ? (
-                                <StyledButton
-                                    type='button'
-                                    onClick={() =>
-                                        updateConstraint({
-                                            type: 'toggle case sensitivity',
-                                        })
-                                    }
+                                <HtmlTooltip
+                                    title={`Make match${localConstraint.caseInsensitive ? ' ' : ' not '}case sensitive`}
+                                    arrow
+                                    describeChild
                                 >
-                                    {localConstraint.caseInsensitive ? (
-                                        <StyledCaseInsensitiveIcon aria-label='The match is not case sensitive.' />
-                                    ) : (
-                                        <StyledCaseSensitiveIcon aria-label='The match is case sensitive.' />
-                                    )}
-                                    <ScreenReaderOnly>
-                                        Make match
-                                        {localConstraint.caseInsensitive
-                                            ? ' '
-                                            : ' not '}
-                                        case sensitive
-                                    </ScreenReaderOnly>
-                                </StyledButton>
+                                    <StyledButton
+                                        type='button'
+                                        onClick={() =>
+                                            updateConstraint({
+                                                type: 'toggle case sensitivity',
+                                            })
+                                        }
+                                    >
+                                        {localConstraint.caseInsensitive ? (
+                                            <StyledCaseInsensitiveIcon aria-label='The match is not case sensitive.' />
+                                        ) : (
+                                            <StyledCaseSensitiveIcon aria-label='The match is case sensitive.' />
+                                        )}
+                                    </StyledButton>
+                                </HtmlTooltip>
                             ) : null}
                         </OperatorOptions>
                     </ConstraintOptions>

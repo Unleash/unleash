@@ -122,12 +122,11 @@ class StrategyController extends Controller {
             permission: CREATE_STRATEGY,
             middleware: [
                 openApiService.validPath({
-                    deprecated: true,
                     tags: ['Strategies'],
                     operationId: 'createStrategy',
                     summary: 'Create a strategy',
                     description:
-                        'Creates a custom strategy type based on the supplied data. Custom strategies are deprecated and should not be used. Prefer using built in strategies with constraints instead.',
+                        'Creates a custom strategy type based on the supplied data.',
                     requestBody: createRequestSchema('createStrategySchema'),
                     responses: {
                         201: resourceCreatedResponseSchema('strategySchema'),

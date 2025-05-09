@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type {
-    IAccessInfo,
     IAccessStore,
     IProjectRoleUsage,
     IRole,
@@ -40,16 +39,6 @@ export class FakeAccessStore implements IAccessStore {
         userId: number,
         project: string,
     ): Promise<IRoleWithProject[]> {
-        throw new Error('Method not implemented.');
-    }
-
-    addRoleAccessToProject(
-        users: IAccessInfo[],
-        groups: IAccessInfo[],
-        projectId: string,
-        roleId: number,
-        createdBy: string,
-    ): Promise<void> {
         throw new Error('Method not implemented.');
     }
 

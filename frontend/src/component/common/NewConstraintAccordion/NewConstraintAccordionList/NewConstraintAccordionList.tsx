@@ -12,8 +12,8 @@ import {
 import { NewConstraintAccordion } from 'component/common/NewConstraintAccordion/NewConstraintAccordion';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { EditableConstraintWrapper } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraintWrapper';
 import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
+import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint';
 
 export interface IConstraintAccordionListProps {
     constraints: IConstraint[];
@@ -147,16 +147,15 @@ export const NewConstraintAccordionList = forwardRef<
             <ConstraintsList>
                 {constraints.map((constraint, index) =>
                     addEditStrategy ? (
-                        state.get(constraint)?.editing ? (
-                            <EditableConstraintWrapper
+                        state.get(constraint)?.editing &&
+                        Boolean(setConstraints) ? (
+                            <EditableConstraint
                                 key={constraint[constraintId]}
                                 constraint={constraint}
-                                onCancel={onCancel?.bind(null, index)}
-                                onDelete={onRemove?.bind(null, index)}
-                                onSave={onSave!.bind(null, index)}
-                                onAutoSave={onAutoSave?.(
-                                    constraint[constraintId],
-                                )}
+                                // @ts-ignore todo: find a better way to do this
+                                onDelete={() => onRemove(index)}
+                                // @ts-ignore
+                                onAutoSave={onAutoSave(constraintId)}
                             />
                         ) : (
                             <ConstraintAccordionView

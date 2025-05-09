@@ -202,31 +202,25 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                     }
                 />
                 <StyledConstraintContainer>
-                    <ConditionallyRender
-                        condition={addEditStrategy}
-                        show={
-                            <EditableConstraintsList
-                                ref={constraintsAccordionListRef}
-                                constraints={constraints}
-                                setConstraints={
-                                    hasAccess(modePermission, project)
-                                        ? setConstraints
-                                        : undefined
-                                }
-                            />
-                        }
-                        elseShow={
-                            <ConstraintAccordionList
-                                ref={constraintsAccordionListRef}
-                                constraints={constraints}
-                                setConstraints={
-                                    hasAccess(modePermission, project)
-                                        ? setConstraints
-                                        : undefined
-                                }
-                            />
-                        }
-                    />
+                    {addEditStrategy &&
+                    hasAccess(modePermission, project) &&
+                    setConstraints ? (
+                        <EditableConstraintsList
+                            ref={constraintsAccordionListRef}
+                            constraints={constraints}
+                            setConstraints={setConstraints}
+                        />
+                    ) : (
+                        <ConstraintAccordionList
+                            ref={constraintsAccordionListRef}
+                            constraints={constraints}
+                            setConstraints={
+                                hasAccess(modePermission, project)
+                                    ? setConstraints
+                                    : undefined
+                            }
+                        />
+                    )}
                 </StyledConstraintContainer>
             </StyledForm>
             <StyledButtonContainer>

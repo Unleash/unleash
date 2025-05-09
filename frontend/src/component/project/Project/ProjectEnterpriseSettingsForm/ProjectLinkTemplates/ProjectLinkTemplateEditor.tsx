@@ -15,8 +15,6 @@ const StyledDialogContent = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
     padding: theme.spacing(3),
     backgroundColor: theme.palette.background.paper,
-    borderRadius: theme.shape.borderRadius,
-    border: `1px solid ${theme.palette.divider}`,
 }));
 
 const StyledDialogActions = styled('div')(({ theme }) => ({

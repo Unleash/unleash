@@ -127,45 +127,69 @@ const ProjectLinkTemplates = ({
 
             {linkTemplates.length > 0 ? (
                 <StyledLinkTemplatesList>
-                    {linkTemplates.map((template, index) => (
-                        <StyledLinkTemplateItem key={index}>
-                            <ListItemText
-                                primary={
-                                    template.title ? (
-                                        <Truncator>{template.title}</Truncator>
-                                    ) : null
-                                }
-                                secondary={
-                                    <Truncator>
-                                        {template.urlTemplate}
-                                    </Truncator>
-                                }
-                            />
-                            <Box
-                                sx={(theme) => ({
-                                    display: 'flex',
-                                    marginRight: theme.spacing(-1),
-                                })}
-                            >
-                                <IconButton
-                                    edge='end'
-                                    aria-label='edit'
-                                    onClick={() => handleEditTemplate(index)}
-                                    sx={{ margin: 0 }}
+                    {linkTemplates.map((template, index) => {
+                        if (editingTemplateIndex === index) {
+                            return (
+                                <li
+                                    key={index}
+                                    style={{ listStyleType: 'none' }}
                                 >
-                                    <EditIcon />
-                                </IconButton>
-                                <IconButton
-                                    edge='end'
-                                    aria-label='delete'
-                                    onClick={() => handleDeleteTemplate(index)}
-                                    sx={{ margin: 0 }}
+                                    <ProjectLinkTemplateEditor
+                                        template={template}
+                                        onSave={handleSaveTemplate}
+                                        onCancel={handleCancelEdit}
+                                        isAdding={false}
+                                    />
+                                </li>
+                            );
+                        }
+
+                        return (
+                            <StyledLinkTemplateItem key={index}>
+                                <ListItemText
+                                    primary={
+                                        template.title ? (
+                                            <Truncator>
+                                                {template.title}
+                                            </Truncator>
+                                        ) : null
+                                    }
+                                    secondary={
+                                        <Truncator>
+                                            {template.urlTemplate}
+                                        </Truncator>
+                                    }
+                                />
+                                <Box
+                                    sx={(theme) => ({
+                                        display: 'flex',
+                                        marginRight: theme.spacing(-1),
+                                    })}
                                 >
-                                    <DeleteIcon />
-                                </IconButton>
-                            </Box>
-                        </StyledLinkTemplateItem>
-                    ))}
+                                    <IconButton
+                                        edge='end'
+                                        aria-label='edit'
+                                        onClick={() =>
+                                            handleEditTemplate(index)
+                                        }
+                                        sx={{ margin: 0 }}
+                                    >
+                                        <EditIcon />
+                                    </IconButton>
+                                    <IconButton
+                                        edge='end'
+                                        aria-label='delete'
+                                        onClick={() =>
+                                            handleDeleteTemplate(index)
+                                        }
+                                        sx={{ margin: 0 }}
+                                    >
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Box>
+                            </StyledLinkTemplateItem>
+                        );
+                    })}
                 </StyledLinkTemplatesList>
             ) : null}
 
@@ -177,14 +201,7 @@ const ProjectLinkTemplates = ({
                 />
             )}
 
-            {editingTemplateIndex !== null && (
-                <ProjectLinkTemplateEditor
-                    template={linkTemplates[editingTemplateIndex]}
-                    onSave={handleSaveTemplate}
-                    onCancel={handleCancelEdit}
-                    isAdding={false}
-                />
-            )}
+            {/* Editor for editingTemplateIndex is now rendered inline */}
 
             {!isAddingTemplate && editingTemplateIndex === null && (
                 <Box display='flex' justifyContent='flex-start'>

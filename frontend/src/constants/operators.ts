@@ -31,7 +31,7 @@ export const SEMVER_EQ = 'SEMVER_EQ' as const;
 export const SEMVER_GT = 'SEMVER_GT' as const;
 export const SEMVER_LT = 'SEMVER_LT' as const;
 
-export const allOperators = [
+export const allOperators: Operator[] = [
     IN,
     NOT_IN,
     STR_CONTAINS,
@@ -49,20 +49,30 @@ export const allOperators = [
     SEMVER_LT,
 ];
 
+const isOperator =
+    <T extends string>(operators: T[]) =>
+    (operator: string): operator is T =>
+        operators.includes(operator as T);
+
 export const stringOperators = [STR_CONTAINS, STR_STARTS_WITH, STR_ENDS_WITH];
 export type StringOperator = (typeof stringOperators)[number];
+export const isStringOperator = isOperator(stringOperators);
 
 export const inOperators = [IN, NOT_IN];
 export type InOperator = (typeof inOperators)[number];
+export const isInOperator = isOperator(inOperators);
 
 export const numOperators = [NUM_EQ, NUM_GT, NUM_GTE, NUM_LT, NUM_LTE];
 export type NumOperator = (typeof numOperators)[number];
+export const isNumOperator = isOperator(numOperators);
 
 export const dateOperators = [DATE_BEFORE, DATE_AFTER];
 export type DateOperator = (typeof dateOperators)[number];
+export const isDateOperator = isOperator(dateOperators);
 
 export const semVerOperators = [SEMVER_EQ, SEMVER_GT, SEMVER_LT];
 export type SemVerOperator = (typeof semVerOperators)[number];
+export const isSemVerOperator = isOperator(semVerOperators);
 
 export const singleValueOperators = [
     ...semVerOperators,
@@ -70,9 +80,11 @@ export const singleValueOperators = [
     ...numOperators,
 ];
 export type SingleValueOperator = (typeof singleValueOperators)[number];
+export const isSingleValueOperator = isOperator(singleValueOperators);
 
 export const multipleValueOperators = [...stringOperators, ...inOperators];
 export type MultiValueOperator = (typeof multipleValueOperators)[number];
+export const isMultiValueOperator = isOperator(multipleValueOperators);
 
 export const newOperators = [
     ...stringOperators,
@@ -80,35 +92,4 @@ export const newOperators = [
     ...singleValueOperators,
 ];
 export type NewOperator = (typeof newOperators)[number];
-
-export const isSingleValueOperator = (
-    operator: string,
-): operator is SingleValueOperator =>
-    singleValueOperators.includes(operator as SingleValueOperator);
-
-export const isMultiValueOperator = (
-    operator: string,
-): operator is MultiValueOperator =>
-    multipleValueOperators.includes(operator as MultiValueOperator);
-
-export const isStringOperator = (
-    operator: string,
-): operator is StringOperator =>
-    stringOperators.includes(operator as StringOperator);
-
-export const isInOperator = (operator: string): operator is InOperator =>
-    inOperators.includes(operator as InOperator);
-
-export const isNumOperator = (operator: string): operator is NumOperator =>
-    numOperators.includes(operator as NumOperator);
-
-export const isDateOperator = (operator: string): operator is DateOperator =>
-    dateOperators.includes(operator as DateOperator);
-
-export const isSemVerOperator = (
-    operator: string,
-): operator is SemVerOperator =>
-    semVerOperators.includes(operator as SemVerOperator);
-
-export const isNewOperator = (operator: string): operator is NewOperator =>
-    newOperators.includes(operator as NewOperator);
+export const isNewOperator = isOperator(newOperators);

@@ -6,11 +6,14 @@ import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import type { IEventStore, IFeatureLinkStore } from '../../types';
 import getLogger from '../../../test/fixtures/no-logger';
 import type { FeatureLinkSchema } from '../../openapi/spec/feature-link-schema';
+import type { IFeatureLinksReadModel } from './feature-links-read-model-type';
+import { FeatureLinksReadModel } from './feature-links-read-model';
 
 let app: IUnleashTest;
 let db: ITestDb;
 let featureLinkStore: IFeatureLinkStore;
 let eventStore: IEventStore;
+let featureLinkReadModel: IFeatureLinksReadModel;
 
 beforeAll(async () => {
     db = await dbInit('feature_link', getLogger, {
@@ -29,6 +32,10 @@ beforeAll(async () => {
     );
     eventStore = db.stores.eventStore;
     featureLinkStore = db.stores.featureLinkStore;
+    featureLinkReadModel = new FeatureLinksReadModel(
+        db.rawDatabase,
+        app.config.eventBus,
+    );
 
     await app.request
         .post(`/auth/demo/login`)
@@ -99,12 +106,19 @@ test('should manage feature links', async () => {
             url: 'https://example.com',
             title: 'feature link',
             featureName: 'my_feature',
+            domain: 'example',
         },
         {
             url: 'https://example_another.com',
             title: 'another feature link',
             featureName: 'my_feature',
+            domain: 'example_another',
         },
+    ]);
+    const topDomains = await featureLinkReadModel.getTopDomains();
+    expect(topDomains).toMatchObject([
+        { domain: 'example_another', count: 1 },
+        { domain: 'example', count: 1 },
     ]);
     const { body } = await app.getProjectFeatures('default', 'my_feature');
     expect(body.links).toMatchObject([
@@ -126,6 +140,7 @@ test('should manage feature links', async () => {
         url: 'https://example_updated.com',
         title: 'feature link updated',
         featureName: 'my_feature',
+        domain: 'example_updated',
     });
 
     await deleteLink('my_feature', links[0].id);
@@ -136,7 +151,13 @@ test('should manage feature links', async () => {
             id: links[1].id,
             title: 'another feature link',
             url: 'https://example_another.com',
+            domain: 'example_another',
         },
+    ]);
+    const topDomainsMemoized = await featureLinkReadModel.getTopDomains();
+    expect(topDomainsMemoized).toMatchObject([
+        { domain: 'example_another', count: 1 },
+        { domain: 'example', count: 1 },
     ]);
 
     const [event1, event2, event3] = await eventStore.getEvents();

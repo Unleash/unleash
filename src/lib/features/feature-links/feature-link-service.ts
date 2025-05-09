@@ -11,8 +11,9 @@ import type {
     IFeatureLinkStore,
 } from './feature-link-store-type';
 import type EventService from '../events/event-service';
-import { BadDataError, NotFoundError } from '../../error';
+import { BadDataError, NotFoundError, OperationDeniedError } from '../../error';
 import normalizeUrl from 'normalize-url';
+import { parse } from 'tldts';
 
 interface IFeatureLinkStoreObj {
     featureLinkStore: IFeatureLinkStore;
@@ -47,14 +48,24 @@ export default class FeatureLinkService {
 
     async createLink(
         projectId: string,
-        newLink: Omit<IFeatureLink, 'id'>,
+        newLink: Omit<IFeatureLink, 'id' | 'domain'>,
         auditUser: IAuditUser,
     ): Promise<IFeatureLink> {
+        const countLinks = await this.featureLinkStore.count({
+            featureName: newLink.featureName,
+        });
+        if (countLinks >= 10) {
+            throw new OperationDeniedError(
+                'Too many links (10) exist for this feature',
+            );
+        }
         const normalizedUrl = this.normalize(newLink.url);
+        const { domainWithoutSuffix } = parse(normalizedUrl);
 
         const link = await this.featureLinkStore.insert({
             ...newLink,
             url: normalizedUrl,
+            domain: domainWithoutSuffix,
         });
 
         await this.eventService.storeEvent(
@@ -71,10 +82,11 @@ export default class FeatureLinkService {
 
     async updateLink(
         { projectId, linkId }: { projectId: string; linkId: string },
-        updatedLink: Omit<IFeatureLink, 'id'>,
+        updatedLink: Omit<IFeatureLink, 'id' | 'domain'>,
         auditUser: IAuditUser,
     ): Promise<IFeatureLink> {
         const normalizedUrl = this.normalize(updatedLink.url);
+        const { domainWithoutSuffix } = parse(normalizedUrl);
 
         const preData = await this.featureLinkStore.get(linkId);
 
@@ -85,6 +97,7 @@ export default class FeatureLinkService {
         const link = await this.featureLinkStore.update(linkId, {
             ...updatedLink,
             url: normalizedUrl,
+            domain: domainWithoutSuffix,
         });
 
         await this.eventService.storeEvent(

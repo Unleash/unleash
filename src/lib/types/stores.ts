@@ -61,6 +61,7 @@ import { ReleasePlanMilestoneStore } from '../features/release-plans/release-pla
 import { ReleasePlanMilestoneStrategyStore } from '../features/release-plans/release-plan-milestone-strategy-store';
 import type { IFeatureLinkStore } from '../features/feature-links/feature-link-store-type';
 import { IUnknownFlagsStore } from '../features/metrics/unknown-flags/unknown-flags-store';
+import { IFeatureLinksReadModel } from '../features/feature-links/feature-links-read-model-type';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -126,6 +127,7 @@ export interface IUnleashStores {
     releasePlanMilestoneStrategyStore: ReleasePlanMilestoneStrategyStore;
     featureLinkStore: IFeatureLinkStore;
     unknownFlagsStore: IUnknownFlagsStore;
+    featureLinkReadModel: IFeatureLinksReadModel;
 }
 
 export {
@@ -189,4 +191,5 @@ export {
     ReleasePlanMilestoneStrategyStore,
     type IFeatureLinkStore,
     IUnknownFlagsStore,
+    IFeatureLinksReadModel,
 };

@@ -12,6 +12,7 @@ import {
     isSingleValueConstraint,
     type EditableConstraint,
 } from './editable-constraint-type';
+import { difference, union } from './set-functions';
 
 export type ConstraintUpdateAction =
     | { type: 'add value(s)'; payload: string[] }
@@ -110,9 +111,9 @@ export const constraintReducer = (
             }
 
             const newValues = new Set(action.payload);
-            const combinedValues = state.values.union(newValues);
+            const combinedValues = union(state.values, newValues);
             const filteredValues = deletedLegalValues
-                ? combinedValues.difference(deletedLegalValues)
+                ? difference(combinedValues, deletedLegalValues)
                 : combinedValues;
             return {
                 ...state,

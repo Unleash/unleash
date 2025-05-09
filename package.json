@@ -167,6 +167,7 @@
     "serve-favicon": "^2.5.0",
     "slug": "^9.0.0",
     "stoppable": "^1.1.0",
+    "tldts": "7.0.6",
     "ts-toolbelt": "^9.6.0",
     "type-is": "^1.6.18",
     "ulidx": "^2.4.1",

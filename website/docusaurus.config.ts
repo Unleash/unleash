@@ -163,7 +163,7 @@ class="header-github-link"
                     {
                         type: 'html',
                         position: 'right',
-                        value: '<a href="https://www.getunleash.io/plans/enterprise" target="_blank" rel="noopener noreferrer" class="navbar__link navbar-link-solid">Get a demo</a>',
+                        value: '<a href="https://www.getunleash.io/pricing" target="_blank" rel="noopener noreferrer" class="navbar__link navbar-link-solid">Start free trial</a>',
                         className: 'hide-at-small-sizes',
                     },
                 ],

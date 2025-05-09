@@ -3,6 +3,7 @@ import { promisify } from 'util';
 import version from './util/version.js';
 import { migrateDb } from '../migrator.js';
 import getApp from './app.js';
+import type MetricsMonitor from './metrics.js';
 import { createMetricsMonitor } from './metrics.js';
 import { createStores } from './db/index.js';
 import { createConfig } from './create-config.js';
@@ -177,6 +178,7 @@ import {
 } from './features/playground/feature-evaluator/helpers.js';
 import { getDbConfig } from '../test/e2e/helpers/database-config.js';
 import { testDbPrefix } from '../test/e2e/helpers/database-init.js';
+import type { RequestHandler } from 'express';
 
 export async function initialServiceSetup(
     { authentication }: Pick<IUnleashConfig, 'authentication'>,
@@ -190,25 +192,44 @@ export async function initialServiceSetup(
         await apiTokenService.initApiTokens(authentication.initApiTokens);
     }
 }
+export type UnleashFactoryMethods = {
+    // Factory methods: useful for testing
+    createDb: (config: IUnleashConfig) => Db;
+    createStores: (config: IUnleashConfig, db: Db) => IUnleashStores;
+    createServices: (
+        stores: IUnleashStores,
+        config: IUnleashConfig,
+        db: Db,
+    ) => IUnleashServices;
+    createSessionDb: (config: IUnleashConfig, db: Db) => RequestHandler;
+    createMetricsMonitor: () => MetricsMonitor;
+};
 export async function createApp(
     config: IUnleashConfig,
     startApp: boolean,
+    fm: UnleashFactoryMethods = {
+        createDb,
+        createStores,
+        createServices,
+        createSessionDb: sessionDb,
+        createMetricsMonitor,
+    },
 ): Promise<IUnleash> {
     // Database dependencies (stateful)
     const logger = config.getLogger('server-impl.js');
     const serverVersion = config.enterpriseVersion ?? version;
-    const db = createDb(config);
-    const stores = createStores(config, db);
+    const db = fm.createDb(config);
+    const stores = fm.createStores(config, db);
     await compareAndLogPostgresVersion(config, stores.settingStore);
-    const services = createServices(stores, config, db);
+    const services = fm.createServices(stores, config, db);
     await initialServiceSetup(config, services);
 
     if (!config.disableScheduler) {
         await scheduleServices(services, config);
     }
 
-    const metricsMonitor = createMetricsMonitor();
-    const unleashSession = sessionDb(config, db);
+    const metricsMonitor = fm.createMetricsMonitor();
+    const unleashSession = fm.createSessionDb(config, db);
 
     const stopUnleash = async (server?: StoppableServer) => {
         logger.info('Shutting down Unleash...');
@@ -294,7 +315,16 @@ export async function createApp(
     });
 }
 
-async function start(opts: IUnleashOptions = {}): Promise<IUnleash> {
+async function start(
+    opts: IUnleashOptions = {},
+    fm: UnleashFactoryMethods = {
+        createDb,
+        createStores,
+        createServices,
+        createSessionDb: sessionDb,
+        createMetricsMonitor,
+    },
+): Promise<IUnleash> {
     const config = createConfig(opts);
     const logger = config.getLogger('server-impl.js');
 
@@ -323,14 +353,23 @@ async function start(opts: IUnleashOptions = {}): Promise<IUnleash> {
         throw err;
     }
 
-    const unleash = await createApp(config, true);
+    const unleash = await createApp(config, true, fm);
     if (config.server.gracefulShutdownEnable) {
         registerGracefulShutdown(unleash, logger);
     }
     return unleash;
 }
 
-async function create(opts: IUnleashOptions): Promise<IUnleash> {
+async function create(
+    opts: IUnleashOptions,
+    fm: UnleashFactoryMethods = {
+        createDb,
+        createStores,
+        createServices,
+        createSessionDb: sessionDb,
+        createMetricsMonitor,
+    },
+): Promise<IUnleash> {
     const config = createConfig(opts);
     const logger = config.getLogger('server-impl.js');
 
@@ -344,7 +383,7 @@ async function create(opts: IUnleashOptions): Promise<IUnleash> {
         logger.error('Failed to migrate db', err);
         throw err;
     }
-    return createApp(config, false);
+    return createApp(config, false, fm);
 }
 
 export {

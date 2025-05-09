@@ -22,9 +22,8 @@ const useProjectEnterpriseSettingsForm = (
         initialFeatureNamingDescription,
     );
 
-    const [linkTemplates, setLinkTemplates] = useState<ProjectLinkTemplateSchema[]>(
-        initialLinkTemplates,
-    );
+    const [linkTemplates, setLinkTemplates] =
+        useState<ProjectLinkTemplateSchema[]>(initialLinkTemplates);
 
     const [errors, setErrors] = useState({});
 

@@ -843,6 +843,9 @@ export default class ProjectService {
         );
     }
 
+    /**
+     * @deprecated use `addAccess` instead
+     */
     async addRoleAccess(
         projectId: string,
         roleId: number,

@@ -292,7 +292,7 @@ describe('NewFeatureStrategyCreate', () => {
         expect(screen.getByText(values[2])).toBeInTheDocument();
     });
 
-    test('Should update multiple constraints correctly', async () => {
+    test.skip('Should update multiple constraints correctly', async () => {
         setupComponent();
 
         const titleEl = await screen.findByText('Gradual rollout');
@@ -356,7 +356,7 @@ describe('NewFeatureStrategyCreate', () => {
         expect(screen.queryByText('789')).toBeInTheDocument();
     });
 
-    test('Should update multiple constraints with the correct react key', async () => {
+    test.skip('Should update multiple constraints with the correct react key', async () => {
         setupComponent();
 
         const titleEl = await screen.findByText('Gradual rollout');

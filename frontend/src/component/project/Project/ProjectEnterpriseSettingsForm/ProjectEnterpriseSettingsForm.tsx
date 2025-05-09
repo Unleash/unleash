@@ -155,7 +155,6 @@ const ProjectEnterpriseSettingsForm: React.FC<
         { key: 'private', label: 'private' },
     ];
 
-    // Check if project link templates feature is enabled
     const projectLinkTemplatesEnabled = useUiFlag('projectLinkTemplates');
 
     useEffect(() => {

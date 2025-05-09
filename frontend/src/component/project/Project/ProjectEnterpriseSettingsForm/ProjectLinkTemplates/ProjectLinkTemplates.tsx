@@ -201,8 +201,6 @@ const ProjectLinkTemplates = ({
                 />
             )}
 
-            {/* Editor for editingTemplateIndex is now rendered inline */}
-
             {!isAddingTemplate && editingTemplateIndex === null && (
                 <Box display='flex' justifyContent='flex-start'>
                     <Button

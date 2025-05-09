@@ -158,14 +158,12 @@ If the constraint uses a standard Unleash context field, set the context field t
 
 Unleash SDKs expect all context values to be strings. If you use an operator that acts on non-string values, such as [numeric operators](#numeric-operators) or [date and time operators](#date-and-time-operators), the SDKs attempt to convert the string into the expected type. If the conversion fails, the constraint evaluates to `false`.
 
+## Custom activation strategies
+
+[Custom activation strategies](/reference/custom-activation-strategies)
+
 ## Predefined strategy types
 
 :::caution
 [Predefined strategy types](/reference/predefined-strategy-types), such as UserIDs, IPs, and Hosts are a legacy implementation. Please use the default strategy with constraints to achieve your desired targeting.
-:::
-
-## Custom activation strategies
-
-:::caution
-[Custom activation strategies](/reference/custom-activation-strategies) are deprecated. Please use the default strategy with constraints.
 :::

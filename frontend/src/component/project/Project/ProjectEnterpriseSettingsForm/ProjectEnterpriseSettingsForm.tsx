@@ -1,4 +1,9 @@
-import React, { useEffect } from 'react';
+import React, {
+    type Dispatch,
+    type ReactNode,
+    type SetStateAction,
+    useEffect,
+} from 'react';
 import Select from 'component/common/select';
 import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 import { Box, InputAdornment, styled, TextField } from '@mui/material';
@@ -17,17 +22,15 @@ interface IProjectEnterpriseSettingsForm {
     featureNamingExample?: string;
     featureNamingDescription?: string;
     linkTemplates?: ProjectLinkTemplateSchema[];
-    setFeatureNamingPattern?: React.Dispatch<React.SetStateAction<string>>;
-    setFeatureNamingExample?: React.Dispatch<React.SetStateAction<string>>;
-    setFeatureNamingDescription?: React.Dispatch<React.SetStateAction<string>>;
-    setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;
-    setLinkTemplates?: React.Dispatch<
-        React.SetStateAction<ProjectLinkTemplateSchema[]>
-    >;
+    setFeatureNamingPattern?: Dispatch<SetStateAction<string>>;
+    setFeatureNamingExample?: Dispatch<SetStateAction<string>>;
+    setFeatureNamingDescription?: Dispatch<SetStateAction<string>>;
+    setProjectMode?: Dispatch<SetStateAction<ProjectMode>>;
+    setLinkTemplates?: Dispatch<SetStateAction<ProjectLinkTemplateSchema[]>>;
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
     clearErrors: () => void;
-    children?: React.ReactNode;
+    children?: ReactNode;
 }
 
 const StyledForm = styled('form')(({ theme }) => ({
@@ -265,7 +268,7 @@ const ProjectEnterpriseSettingsForm: React.FC<
                         gap: 1,
                     }}
                 >
-                    <legend>Feature flag naming pattern?</legend>
+                    <legend>Feature flag naming pattern</legend>
                     <FeatureFlagNamingTooltip />
                 </Box>
                 <StyledSubtitle>

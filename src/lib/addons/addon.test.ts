@@ -10,6 +10,9 @@ beforeEach(() => {
     nock.disableNetConnect();
 });
 
+afterAll(() => {
+    nock.enableNetConnect();
+});
 const url = 'https://test.some.com';
 
 const ARGS: IAddonConfig = {

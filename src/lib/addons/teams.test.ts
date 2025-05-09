@@ -42,6 +42,10 @@ describe('Teams integration', () => {
         nock.cleanAll();
     });
 
+    afterAll(() => {
+        nock.enableNetConnect();
+    });
+
     test('Should call teams webhook', async () => {
         const addon = new TeamsAddon(ARGS);
         const event: IEvent = {

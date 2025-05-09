@@ -41,6 +41,10 @@ describe('Slack integration', () => {
         nock.cleanAll();
     });
 
+    afterAll(() => {
+        nock.enableNetConnect();
+    });
+
     test('Should call slack webhook', async () => {
         const addon = new SlackAddon(ARGS);
         const event: IEvent = {

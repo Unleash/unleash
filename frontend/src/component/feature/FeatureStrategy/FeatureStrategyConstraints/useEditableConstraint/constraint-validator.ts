@@ -1,8 +1,11 @@
-// todo: (flag: `addEditStrategy`) see if this type is better duplicated or extracted to somewhere else
-import type { Input } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
 import { isValid, parseISO } from 'date-fns';
 import semver from 'semver';
-
+import {
+    type EditableConstraint,
+    isDateConstraint,
+    isNumberConstraint,
+    isSemVerConstraint,
+} from './editable-constraint-type';
 export type ConstraintValidationResult = [boolean, string];
 
 const numberValidator = (value: string): ConstraintValidationResult => {
@@ -56,20 +59,15 @@ const dateValidator = (value: string): ConstraintValidationResult => {
     return [true, ''];
 };
 
-export const constraintValidator = (input: Input) => {
-    switch (input) {
-        case 'IN_OPERATORS_LEGAL_VALUES':
-        case 'STRING_OPERATORS_LEGAL_VALUES':
-        case 'NUM_OPERATORS_LEGAL_VALUES':
-        case 'SEMVER_OPERATORS_LEGAL_VALUES':
-        case 'IN_OPERATORS_FREETEXT':
-        case 'STRING_OPERATORS_FREETEXT':
-            return stringListValidator;
-        case 'DATE_OPERATORS_SINGLE_VALUE':
-            return dateValidator;
-        case 'NUM_OPERATORS_SINGLE_VALUE':
-            return numberValidator;
-        case 'SEMVER_OPERATORS_SINGLE_VALUE':
-            return semVerValidator;
+export const constraintValidator = (constraint: EditableConstraint) => {
+    if (isDateConstraint(constraint)) {
+        return dateValidator;
     }
+    if (isSemVerConstraint(constraint)) {
+        return semVerValidator;
+    }
+    if (isNumberConstraint(constraint)) {
+        return numberValidator;
+    }
+    return stringListValidator;
 };

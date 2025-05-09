@@ -1,31 +1,16 @@
 import { IconButton, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import {
-    useConstraintInput,
-    type Input,
-} from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
-import {
-    DATE_AFTER,
-    dateOperators,
-    IN,
-    stringOperators,
-    type Operator,
-} from 'constants/operators';
+import { isStringOperator, type Operator } from 'constants/operators';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import type { IUnleashContextDefinition } from 'interfaces/context';
-import type { IConstraint } from 'interfaces/strategy';
-import { useEffect, useMemo, useRef, useState, type FC } from 'react';
-import { oneOf } from 'utils/oneOf';
-import {
-    CURRENT_TIME_CONTEXT_FIELD,
-    operatorsForContext,
-} from 'utils/operatorsForContext';
+import { useRef, type FC } from 'react';
+import { operatorsForContext } from 'utils/operatorsForContext';
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import Delete from '@mui/icons-material/Delete';
 import { ValueList } from './ValueList';
 import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive.svg';
 import { ReactComponent as CaseInsensitiveIcon } from 'assets/icons/case-insensitive.svg';
+import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { AddValuesWidget } from './AddValuesWidget';
 
 import { ReactComponent as EqualsIcon } from 'assets/icons/constraint-equals.svg';
@@ -33,8 +18,14 @@ import { ReactComponent as NotEqualsIcon } from 'assets/icons/constraint-not-equ
 import { AddSingleValueWidget } from './AddSingleValueWidget';
 import { ConstraintDateInput } from './ConstraintDateInput';
 import { LegalValuesSelector } from './LegalValuesSelector';
-import { resolveLegalValues } from './resolve-legal-values';
-import { constraintValidator } from './constraint-validator';
+import { useEditableConstraint } from './useEditableConstraint/useEditableConstraint';
+import type { IConstraint } from 'interfaces/strategy';
+import {
+    isDateConstraint,
+    isMultiValueConstraint,
+    isNumberConstraint,
+    isSemVerConstraint,
+} from './useEditableConstraint/editable-constraint-type';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -149,111 +140,29 @@ const StyledCaseSensitiveIcon = styled(CaseSensitiveIcon)(({ theme }) => ({
     fill: 'currentcolor',
 }));
 
-type InputType =
-    | { input: 'legal values' }
-    | { input: 'date' }
-    | { input: 'single value'; type: 'number' | 'semver' }
-    | { input: 'multiple values' };
-
-const getInputType = (input: Input): InputType => {
-    switch (input) {
-        case 'IN_OPERATORS_LEGAL_VALUES':
-        case 'STRING_OPERATORS_LEGAL_VALUES':
-        case 'NUM_OPERATORS_LEGAL_VALUES':
-        case 'SEMVER_OPERATORS_LEGAL_VALUES':
-            return { input: 'legal values' };
-        case 'DATE_OPERATORS_SINGLE_VALUE':
-            return { input: 'date' };
-        case 'NUM_OPERATORS_SINGLE_VALUE':
-            return { input: 'single value', type: 'number' };
-        case 'SEMVER_OPERATORS_SINGLE_VALUE':
-            return { input: 'single value', type: 'semver' };
-        case 'IN_OPERATORS_FREETEXT':
-        case 'STRING_OPERATORS_FREETEXT':
-            return { input: 'multiple values' };
-    }
-};
-
 type Props = {
     constraint: IConstraint;
-    localConstraint: IConstraint;
-    setContextName: (contextName: string) => void;
-    setOperator: (operator: Operator) => void;
-    setLocalConstraint: React.Dispatch<React.SetStateAction<IConstraint>>;
-    onDelete?: () => void;
-    toggleInvertedOperator: () => void;
-    toggleCaseSensitivity: () => void;
-    onUndo: () => void;
-    constraintChanges: IConstraint[];
-    contextDefinition: Pick<IUnleashContextDefinition, 'legalValues'>;
-    constraintValues: string[];
-    constraintValue: string;
-    setValue: (value: string) => void;
-    setValues: (values: string[]) => void;
-    setValuesWithRecord: (values: string[]) => void;
-    removeValue: (index: number) => void;
+    onDelete: () => void;
+    onAutoSave: (constraint: IConstraint) => void;
 };
 
 export const EditableConstraint: FC<Props> = ({
-    constraintChanges,
-    constraint,
-    localConstraint,
-    setLocalConstraint,
-    setContextName,
-    setOperator,
     onDelete,
-    onUndo,
-    toggleInvertedOperator,
-    toggleCaseSensitivity,
-    contextDefinition,
-    constraintValues,
-    constraintValue,
-    setValue,
-    setValues,
-    setValuesWithRecord,
-    removeValue,
+    constraint,
+    onAutoSave,
 }) => {
-    const { input } = useConstraintInput({
-        contextDefinition,
-        localConstraint,
-    });
+    const {
+        constraint: localConstraint,
+        updateConstraint,
+        validator,
+        ...constraintMetadata
+    } = useEditableConstraint(constraint, onAutoSave);
 
     const { context } = useUnleashContext();
     const { contextName, operator } = localConstraint;
-    const [showCaseSensitiveButton, setShowCaseSensitiveButton] =
-        useState(false);
+    const showCaseSensitiveButton = isStringOperator(operator);
     const deleteButtonRef = useRef<HTMLButtonElement>(null);
     const addValuesButtonRef = useRef<HTMLButtonElement>(null);
-    const inputType = getInputType(input);
-
-    /* We need a special case to handle the currentTime context field. Since
-    this field will be the only one to allow DATE_BEFORE and DATE_AFTER operators
-    this will check if the context field is the current time context field AND check
-    if it is not already using one of the date operators (to not overwrite if there is existing
-    data). */
-    useEffect(() => {
-        if (
-            contextName === CURRENT_TIME_CONTEXT_FIELD &&
-            !oneOf(dateOperators, operator)
-        ) {
-            setLocalConstraint((prev) => ({
-                ...prev,
-                operator: DATE_AFTER,
-                value: new Date().toISOString(),
-            }));
-        } else if (
-            contextName !== CURRENT_TIME_CONTEXT_FIELD &&
-            oneOf(dateOperators, operator)
-        ) {
-            setOperator(IN);
-        }
-
-        if (oneOf(stringOperators, operator)) {
-            setShowCaseSensitiveButton(true);
-        } else {
-            setShowCaseSensitiveButton(false);
-        }
-    }, [contextName, setOperator, operator, setLocalConstraint]);
 
     if (!context) {
         return null;
@@ -264,72 +173,76 @@ export const EditableConstraint: FC<Props> = ({
     });
 
     const onOperatorChange = (operator: Operator) => {
-        if (oneOf(stringOperators, operator)) {
-            setShowCaseSensitiveButton(true);
-        } else {
-            setShowCaseSensitiveButton(false);
-        }
-
-        if (oneOf(dateOperators, operator)) {
-            setLocalConstraint((prev) => ({
-                ...prev,
-                operator: operator,
-                value: new Date().toISOString(),
-            }));
-        } else {
-            setOperator(operator);
-        }
+        updateConstraint({ type: 'set operator', payload: operator });
     };
 
-    const validator = useMemo(() => constraintValidator(input), [input]);
     const TopRowInput = () => {
-        switch (inputType.input) {
-            case 'date':
-                return (
-                    <ConstraintDateInput
-                        setValue={setValue}
-                        value={localConstraint.value}
-                        validator={validator}
-                    />
-                );
-            case 'single value':
-                return (
-                    <AddSingleValueWidget
-                        validator={validator}
-                        onAddValue={(newValue) => {
-                            setValue(newValue);
-                        }}
-                        removeValue={() => setValue('')}
-                        currentValue={localConstraint.value}
-                        helpText={
-                            inputType.type === 'number'
-                                ? 'Add a single number'
-                                : 'A semver value should be of the format X.Y.Z'
-                        }
-                        inputType={
-                            inputType.type === 'number' ? 'number' : 'text'
-                        }
-                    />
-                );
-            case 'multiple values':
-                return (
-                    <AddValuesWidget
-                        validator={validator}
-                        helpText='Maximum 100 char length per value'
-                        ref={addValuesButtonRef}
-                        onAddValues={(newValues) => {
-                            // todo (`addEditStrategy`): move deduplication logic higher up in the context handling
-                            const combinedValues = new Set([
-                                ...(localConstraint.values || []),
-                                ...newValues,
-                            ]);
-                            setValuesWithRecord(Array.from(combinedValues));
-                        }}
-                    />
-                );
-            default:
-                return null;
+        if (isDateConstraint(localConstraint)) {
+            return (
+                <ConstraintDateInput
+                    setValue={(value: string) =>
+                        updateConstraint({
+                            type: 'set value',
+                            payload: value,
+                        })
+                    }
+                    value={localConstraint.value}
+                    validator={validator}
+                />
+            );
         }
+        if (isSemVerConstraint(localConstraint)) {
+            return (
+                <AddSingleValueWidget
+                    validator={validator}
+                    onAddValue={(newValue) => {
+                        updateConstraint({
+                            type: 'set value',
+                            payload: newValue,
+                        });
+                    }}
+                    removeValue={() =>
+                        updateConstraint({ type: 'clear values' })
+                    }
+                    currentValue={localConstraint.value}
+                    helpText={'A semver value should be of the format X.Y.Z'}
+                    inputType={'text'}
+                />
+            );
+        }
+        if (isNumberConstraint(localConstraint)) {
+            return (
+                <AddSingleValueWidget
+                    validator={validator}
+                    onAddValue={(newValue) => {
+                        updateConstraint({
+                            type: 'set value',
+                            payload: newValue,
+                        });
+                    }}
+                    removeValue={() =>
+                        updateConstraint({ type: 'clear values' })
+                    }
+                    currentValue={localConstraint.value}
+                    helpText={'Add a single number'}
+                    inputType={'number'}
+                />
+            );
+        }
+
+        return (
+            <AddValuesWidget
+                validator={validator}
+                helpText='Maximum 100 char length per value'
+                ref={addValuesButtonRef}
+                onAddValues={(newValues) => {
+                    updateConstraint({
+                        type: 'add value(s)',
+                        payload: newValues,
+                    });
+                }}
+            />
+        );
     };
 
     return (
@@ -345,27 +258,36 @@ export const EditableConstraint: FC<Props> = ({
                             autoFocus
                             options={constraintNameOptions}
                             value={contextName || ''}
-                            onChange={setContextName}
+                            onChange={(contextField) =>
+                                updateConstraint({
+                                    type: 'set context field',
+                                    payload: contextField,
+                                })
+                            }
                             variant='standard'
                         />
 
                         <OperatorOptions>
-                            <HtmlTooltip
-                                title={`Make the selected operator${localConstraint.inverted ? ' inclusive' : ' exclusive'}`}
-                                arrow
-                                describeChild
+                            <StyledButton
+                                type='button'
+                                onClick={() =>
+                                    updateConstraint({
+                                        type: 'toggle inverted operator',
+                                    })
+                                }
                             >
-                                <StyledButton
-                                    type='button'
-                                    onClick={toggleInvertedOperator}
-                                >
-                                    {localConstraint.inverted ? (
-                                        <StyledNotEqualsIcon aria-label='The constraint operator is exclusive.' />
-                                    ) : (
-                                        <StyledEqualsIcon aria-label='The constraint operator is inclusive.' />
-                                    )}
-                                </StyledButton>
-                            </HtmlTooltip>
+                                {localConstraint.inverted ? (
+                                    <StyledNotEqualsIcon aria-label='The constraint operator is exclusive.' />
+                                ) : (
+                                    <StyledEqualsIcon aria-label='The constraint operator is inclusive.' />
+                                )}
+                                <ScreenReaderOnly>
+                                    Make the selected operator
+                                    {localConstraint.inverted
+                                        ? ' inclusive'
+                                        : ' exclusive'}
+                                </ScreenReaderOnly>
+                            </StyledButton>
 
                             <ConstraintOperatorSelect
                                 options={operatorsForContext(contextName)}
@@ -375,29 +297,42 @@ export const EditableConstraint: FC<Props> = ({
                             />
 
                             {showCaseSensitiveButton ? (
-                                <HtmlTooltip
-                                    title={`Make match${localConstraint.caseInsensitive ? ' ' : ' not '}case sensitive`}
-                                    arrow
-                                    describeChild
+                                <StyledButton
+                                    type='button'
+                                    onClick={() =>
+                                        updateConstraint({
+                                            type: 'toggle case sensitivity',
+                                        })
+                                    }
                                 >
-                                    <StyledButton
-                                        type='button'
-                                        onClick={toggleCaseSensitivity}
-                                    >
-                                        {localConstraint.caseInsensitive ? (
-                                            <StyledCaseInsensitiveIcon aria-label='The match is not case sensitive.' />
-                                        ) : (
-                                            <StyledCaseSensitiveIcon aria-label='The match is case sensitive.' />
-                                        )}
-                                    </StyledButton>
-                                </HtmlTooltip>
+                                    {localConstraint.caseInsensitive ? (
+                                        <StyledCaseInsensitiveIcon aria-label='The match is not case sensitive.' />
+                                    ) : (
+                                        <StyledCaseSensitiveIcon aria-label='The match is case sensitive.' />
+                                    )}
+                                    <ScreenReaderOnly>
+                                        Make match
+                                        {localConstraint.caseInsensitive
+                                            ? ' '
+                                            : ' not '}
+                                        case sensitive
+                                    </ScreenReaderOnly>
+                                </StyledButton>
                             ) : null}
                         </OperatorOptions>
                     </ConstraintOptions>
                     <ValueList
-                        values={localConstraint.values}
-                        removeValue={removeValue}
-                        setValues={setValuesWithRecord}
+                        values={
+                            isMultiValueConstraint(localConstraint)
+                                ? Array.from(localConstraint.values)
+                                : undefined
+                        }
+                        removeValue={(value) =>
+                            updateConstraint({
+                                type: 'remove value from list',
+                                payload: value,
+                            })
+                        }
                         getExternalFocusTarget={() =>
                             addValuesButtonRef.current ??
                             deleteButtonRef.current
@@ -419,17 +354,32 @@ export const EditableConstraint: FC<Props> = ({
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
-            {inputType.input === 'legal values' ? (
+            {'legalValues' in constraintMetadata &&
+            isMultiValueConstraint(localConstraint) ? (
                 <LegalValuesContainer>
                     <LegalValuesSelector
-                        data={resolveLegalValues(
-                            constraintValues,
-                            contextDefinition.legalValues,
-                        )}
-                        constraintValues={constraintValues}
-                        values={localConstraint.values || []}
-                        setValuesWithRecord={setValuesWithRecord}
-                        setValues={setValues}
+                        values={localConstraint.values}
+                        clearAll={() =>
+                            updateConstraint({
+                                type: 'clear values',
+                            })
+                        }
+                        addValues={(newValues) =>
+                            updateConstraint({
+                                type: 'add value(s)',
+                                payload: newValues,
+                            })
+                        }
+                        removeValue={(value) =>
+                            updateConstraint({
+                                type: 'remove value from list',
+                                payload: value,
+                            })
+                        }
+                        deletedLegalValues={
+                            constraintMetadata.deletedLegalValues
+                        }
+                        legalValues={constraintMetadata.legalValues}
                     />
                 </LegalValuesContainer>
             ) : null}

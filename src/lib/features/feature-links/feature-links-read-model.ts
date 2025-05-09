@@ -6,10 +6,15 @@ import type {
 import metricsHelper from '../../util/metrics-helper';
 import { DB_TIME } from '../../metric-events';
 import type EventEmitter from 'events';
+import memoizee from 'memoizee';
+import { hoursToMilliseconds } from 'date-fns';
 
 export class FeatureLinksReadModel implements IFeatureLinksReadModel {
     private db: Db;
     private timer: Function;
+    private _getTopDomainsMemoized: () => Promise<
+        { domain: string; count: number }[]
+    >;
 
     constructor(db: Db, eventBus: EventEmitter) {
         this.db = db;
@@ -18,9 +23,18 @@ export class FeatureLinksReadModel implements IFeatureLinksReadModel {
                 store: 'feature_links',
                 action,
             });
+
+        this._getTopDomainsMemoized = memoizee(this._getTopDomains.bind(this), {
+            promise: true,
+            maxAge: hoursToMilliseconds(1),
+        });
     }
 
-    async getTopDomains(): Promise<{ domain: string; count: number }[]> {
+    public getTopDomains(): Promise<{ domain: string; count: number }[]> {
+        return this._getTopDomainsMemoized();
+    }
+
+    async _getTopDomains(): Promise<{ domain: string; count: number }[]> {
         const stopTimer = this.timer('getTopDomains');
         const topDomains = await this.db
             .from('feature_link')
@@ -29,7 +43,7 @@ export class FeatureLinksReadModel implements IFeatureLinksReadModel {
             .whereNotNull('domain')
             .groupBy('domain')
             .orderBy('count', 'desc')
-            .limit(20);
+            .limit(3);
         stopTimer();
 
         return topDomains.map(({ domain, count }) => ({

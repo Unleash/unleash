@@ -117,7 +117,7 @@ export default class FakeClientInstanceStore implements IClientInstanceStore {
         this.instances.push({ createdAt: new Date(), ...details });
     }
 
-    removeInstancesOlderThanTwoDays(): Promise<void> {
+    removeOldInstances(): Promise<void> {
         return Promise.resolve(undefined);
     }
 }

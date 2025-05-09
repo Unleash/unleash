@@ -316,8 +316,8 @@ export default class ClientInstanceService {
         await this.clientApplicationsStore.upsert(input);
     }
 
-    async removeInstancesOlderThanTwoDays(): Promise<void> {
-        return this.clientInstanceStore.removeInstancesOlderThanTwoDays();
+    async removeOldInstances(): Promise<void> {
+        return this.clientInstanceStore.removeOldInstances();
     }
 
     async removeInactiveApplications(): Promise<number> {

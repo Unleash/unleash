@@ -5,7 +5,7 @@ export const projectLinkTemplateSchema = {
     type: 'object',
     description:
         'A template for a link that can be automatically added to new feature flags.',
-    required: ['template'],
+    required: ['urlTemplate'],
     properties: {
         title: {
             type: 'string',

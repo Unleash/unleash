@@ -304,30 +304,6 @@ export default class ProjectService {
         return featureNaming;
     };
 
-    private validateLinkTemplates = (
-        linkTemplates: IProject['linkTemplates'] | unknown,
-    ): IProject['linkTemplates'] => {
-        if (!linkTemplates || !Array.isArray(linkTemplates)) {
-            throw new BadDataError(
-                'The link templates you provided were invalid.',
-            );
-        }
-
-        for (const linkTemplate of linkTemplates) {
-            if (
-                typeof linkTemplate !== 'object' ||
-                typeof linkTemplate?.template !== 'string' ||
-                (linkTemplate?.title && typeof linkTemplate?.title !== 'string')
-            ) {
-                throw new BadDataError(
-                    'The link templates you provided were invalid.',
-                );
-            }
-        }
-
-        return linkTemplates as IProject['linkTemplates'];
-    };
-
     private async validateEnvironmentsExist(environments: string[]) {
         const projectsAndExistence = await Promise.all(
             environments.map(async (env) => [
@@ -510,10 +486,6 @@ export default class ProjectService {
             this.validateAndProcessFeatureNamingPattern(
                 updatedProject.featureNaming,
             );
-        }
-
-        if (updatedProject.linkTemplates) {
-            this.validateLinkTemplates(updatedProject.linkTemplates);
         }
 
         await this.projectStore.updateProjectEnterpriseSettings(updatedProject);

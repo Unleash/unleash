@@ -323,14 +323,23 @@ export const EditableConstraint: FC<Props> = ({
                         values={
                             isMultiValueConstraint(localConstraint)
                                 ? Array.from(localConstraint.values)
-                                : undefined
+                                : 'legalValues' in constraintMetadata
+                                  ? [localConstraint.value]
+                                  : undefined
                         }
-                        removeValue={(value) =>
-                            updateConstraint({
-                                type: 'remove value from list',
-                                payload: value,
-                            })
-                        }
+                        removeValue={(value) => {
+                            if (isMultiValueConstraint(localConstraint)) {
+                                updateConstraint({
+                                    type: 'remove value from list',
+                                    payload: value,
+                                });
+                            } else {
+                                updateConstraint({
+                                    type: 'set value',
+                                    payload: '',
+                                });
+                            }
+                        }}
                         getExternalFocusTarget={() =>
                             addValuesButtonRef.current ??
                             deleteButtonRef.current

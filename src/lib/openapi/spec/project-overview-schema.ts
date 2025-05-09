@@ -14,6 +14,7 @@ import { createStrategyVariantSchema } from './create-strategy-variant-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
 import { createFeatureNamingPatternSchema } from './create-feature-naming-pattern-schema';
 import { featureTypeCountSchema } from './feature-type-count-schema';
+import { projectLinkTemplateSchema } from './project-link-template-schema';
 
 export const projectOverviewSchema = {
     $id: '#/components/schemas/projectOverviewSchema',
@@ -66,6 +67,14 @@ export const projectOverviewSchema = {
         },
         featureNaming: {
             $ref: '#/components/schemas/createFeatureNamingPatternSchema',
+        },
+        linkTemplates: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/projectLinkTemplateSchema',
+            },
+            description:
+                'A list of templates for links that will be automatically added to new feature flags.',
         },
         members: {
             type: 'number',
@@ -188,6 +197,7 @@ export const projectOverviewSchema = {
             projectStatsSchema,
             createFeatureNamingPatternSchema,
             featureTypeCountSchema,
+            projectLinkTemplateSchema,
         },
     },
 } as const;

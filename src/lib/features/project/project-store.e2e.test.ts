@@ -12,7 +12,11 @@ let environmentStore: IEnvironmentStore;
 
 beforeAll(async () => {
     db = await dbInit('project_store_serial', getLogger, {
-        experimental: { flags: {} },
+        experimental: {
+            flags: {
+                projectLinkTemplates: true,
+            },
+        },
     });
     stores = db.stores;
     projectStore = stores.projectStore;
@@ -166,4 +170,63 @@ test('should add environment to project', async () => {
     const envs = await projectStore.getEnvironmentsForProject(project.id);
 
     expect(envs).toHaveLength(1);
+});
+
+test('should update project enterprise settings', async () => {
+    const project = {
+        id: 'test-enterprise-settings',
+        name: 'New project for enterprise settings',
+        description: 'Blah',
+        mode: 'open' as const,
+    };
+    await projectStore.create(project);
+
+    await projectStore.updateProjectEnterpriseSettings({
+        id: 'test-enterprise-settings',
+        mode: 'open' as const,
+    });
+
+    let updatedProject = await projectStore.get(project.id);
+
+    expect(updatedProject!.mode).toBe('open');
+    expect(updatedProject!.featureNaming).toEqual({
+        pattern: null,
+        example: null,
+        description: null,
+    });
+    expect(updatedProject!.linkTemplates).toEqual([]);
+
+    await projectStore.updateProjectEnterpriseSettings({
+        id: 'test-enterprise-settings',
+        mode: 'protected' as const,
+        featureNaming: {
+            pattern: 'custom-pattern-[A-Z]+',
+            example: 'custom-pattern-MYFLAG',
+            description: 'Custom description',
+        },
+        linkTemplates: [
+            {
+                title: 'My Link',
+                urlTemplate: 'https://example.com/{{flag}}',
+            },
+        ],
+    });
+
+    updatedProject = await projectStore.get(project.id);
+    expect(updatedProject!.mode).toBe('protected');
+    expect(updatedProject!.featureNaming).toEqual(
+        expect.objectContaining({
+            pattern: 'custom-pattern-[A-Z]+',
+            example: 'custom-pattern-MYFLAG',
+            description: 'Custom description',
+        }),
+    );
+    expect(updatedProject!.linkTemplates).toEqual(
+        expect.arrayContaining([
+            expect.objectContaining({
+                title: 'My Link',
+                urlTemplate: 'https://example.com/{{flag}}',
+            }),
+        ]),
+    );
 });

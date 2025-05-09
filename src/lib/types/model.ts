@@ -322,6 +322,7 @@ export interface IProjectOverview {
     featureNaming?: IFeatureNaming;
     defaultStickiness: string;
     onboardingStatus: ProjectOverviewSchema['onboardingStatus'];
+    linkTemplates?: IProjectLinkTemplate[];
 }
 
 export interface IProjectHealthReport extends IProjectHealth {
@@ -332,6 +333,11 @@ export interface IProjectHealthReport extends IProjectHealth {
 
 export interface IProjectParam {
     projectId: string;
+}
+
+export interface IProjectLinkTemplate {
+    title?: string;
+    urlTemplate: string;
 }
 
 export interface IArchivedQuery {
@@ -561,6 +567,7 @@ export interface IProject {
     defaultStickiness: string;
     featureLimit?: number;
     featureNaming?: IFeatureNaming;
+    linkTemplates?: IProjectLinkTemplate[];
 }
 
 export interface IProjectApplications {

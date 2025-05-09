@@ -69,6 +69,7 @@ export type IFlagKey =
     | 'removeInactiveApplications'
     | 'registerFrontendClient'
     | 'featureLinks'
+    | 'projectLinkTemplates'
     | 'reportUnknownFlags';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -324,6 +325,10 @@ const flags: IFlags = {
     ),
     featureLinks: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_LINKS,
+        false,
+    ),
+    projectLinkTemplates: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PROJECT_LINK_TEMPLATES,
         false,
     ),
     reportUnknownFlags: parseEnvVarBoolean(

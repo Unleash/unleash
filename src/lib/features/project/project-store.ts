@@ -45,6 +45,7 @@ const SETTINGS_COLUMNS = [
     'feature_naming_pattern',
     'feature_naming_example',
     'feature_naming_description',
+    'link_templates',
 ];
 const SETTINGS_TABLE = 'project_settings';
 const PROJECT_ENVIRONMENTS = 'project_environments';
@@ -135,7 +136,7 @@ class ProjectStore implements IProjectStore {
 
         const rows = await projects;
 
-        return rows.map(this.mapRow);
+        return rows.map(this.mapRow.bind(this));
     }
 
     async get(id: string): Promise<IProject> {
@@ -150,7 +151,7 @@ class ProjectStore implements IProjectStore {
                 `${TABLE}.id`,
             )
             .where({ id })
-            .then(this.mapRow);
+            .then(this.mapRow.bind(this));
     }
 
     async exists(id: string): Promise<boolean> {
@@ -248,6 +249,13 @@ class ProjectStore implements IProjectStore {
         data: IProjectEnterpriseSettingsUpdate,
     ): Promise<void> {
         try {
+            const projectLinkTemplatesEnabled = this.flagResolver.isEnabled(
+                'projectLinkTemplates',
+            );
+            const link_templates = JSON.stringify(
+                data.linkTemplates ? data.linkTemplates : [],
+            );
+
             if (await this.hasProjectSettings(data.id)) {
                 await this.db(SETTINGS_TABLE)
                     .where({ project: data.id })
@@ -257,6 +265,11 @@ class ProjectStore implements IProjectStore {
                         feature_naming_example: data.featureNaming?.example,
                         feature_naming_description:
                             data.featureNaming?.description,
+                        ...(projectLinkTemplatesEnabled
+                            ? {
+                                  link_templates,
+                              }
+                            : {}),
                     });
             } else {
                 await this.db(SETTINGS_TABLE).insert({
@@ -265,6 +278,11 @@ class ProjectStore implements IProjectStore {
                     feature_naming_pattern: data.featureNaming?.pattern,
                     feature_naming_example: data.featureNaming?.example,
                     feature_naming_description: data.featureNaming?.description,
+                    ...(projectLinkTemplatesEnabled
+                        ? {
+                              link_templates,
+                          }
+                        : {}),
                 });
             }
         } catch (err) {
@@ -290,7 +308,7 @@ class ProjectStore implements IProjectStore {
                     await this.addEnvironmentToProject(project.id, env.name);
                 });
             });
-            return rows.map(this.mapRow);
+            return rows.map(this.mapRow, this);
         }
         return [];
     }
@@ -333,7 +351,7 @@ class ProjectStore implements IProjectStore {
         const rows = await this.db('project_environments')
             .select(['project_id', 'environment_name'])
             .whereIn('environment_name', environments);
-        return rows.map(this.mapLinkRow);
+        return rows.map(this.mapLinkRow, this);
     }
 
     async deleteEnvironmentForProject(
@@ -397,7 +415,7 @@ class ProjectStore implements IProjectStore {
                 'project_environments.default_strategy',
             ]);
 
-        return rows.map(this.mapProjectEnvironmentRow);
+        return rows.map(this.mapProjectEnvironmentRow, this);
     }
 
     async getMembersCountByProject(projectId: string): Promise<number> {
@@ -624,6 +642,10 @@ class ProjectStore implements IProjectStore {
             throw new NotFoundError('No project found');
         }
 
+        const projectLinkTemplatesEnabled = this.flagResolver.isEnabled(
+            'projectLinkTemplates',
+        );
+
         return {
             id: row.id,
             name: row.name,
@@ -640,6 +662,9 @@ class ProjectStore implements IProjectStore {
                 example: row.feature_naming_example,
                 description: row.feature_naming_description,
             },
+            ...(projectLinkTemplatesEnabled
+                ? { linkTemplates: row.link_templates }
+                : {}),
         };
     }
 

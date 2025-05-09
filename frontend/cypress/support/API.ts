@@ -105,10 +105,10 @@ export const addUserToProject_API = (
     const project = projectName || 'default';
     return cy.request(
         'POST',
-        `${baseUrl}/api/admin/projects/${project}/role/${role}/access`,
+        `${baseUrl}/api/admin/projects/${project}/access`,
         {
-            groups: [],
-            users: [{ id }],
+            roles: [role],
+            users: [id],
         },
     );
 };

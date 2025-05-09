@@ -105,10 +105,9 @@ const ProjectLinkTemplates = ({
                             <p>
                                 Link templates can be automatically added to new
                                 feature flags. They can include placeholders
-                                like{' '}
-                                <code>&#123;&#123;project&#125;&#125;</code> and
-                                <code>&#123;&#123;feature&#125;&#125;</code>{' '}
-                                that will be replaced with actual values.
+                                like <code>{`{{project}}`}</code> and
+                                <code>{`{{feature}}`}</code> that will be
+                                replaced with actual values.
                             </p>
                         </Box>
                     }

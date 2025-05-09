@@ -15,7 +15,7 @@ export const union = <T>(a: Iterable<T>, b: Set<T>) => {
 };
 
 export const difference = <T>(a: Iterable<T>, b: Set<T>) => {
-    const result = new Set(a);
+    const result = new Set();
     for (const element of a) {
         if (!b.has(element)) {
             result.add(element);

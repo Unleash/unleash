@@ -1,5 +1,16 @@
 import { useState, type Dispatch, type SetStateAction } from 'react';
-import { Box, Button, IconButton, List, ListItem, ListItemText, styled, TextField, Tooltip, Typography } from '@mui/material';
+import {
+    Box,
+    Button,
+    IconButton,
+    List,
+    ListItem,
+    ListItemText,
+    styled,
+    TextField,
+    Tooltip,
+    Typography,
+} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -64,14 +75,17 @@ const ProjectLinkTemplates = ({
     linkTemplates = [],
     setLinkTemplates,
 }: IProjectLinkTemplatesProps) => {
-
-    // Link template form state
     const [isAddingTemplate, setIsAddingTemplate] = useState(false);
     const [isEditingTemplate, setIsEditingTemplate] = useState(false);
-    const [editingTemplateIndex, setEditingTemplateIndex] = useState<number | null>(null);
+    const [editingTemplateIndex, setEditingTemplateIndex] = useState<
+        number | null
+    >(null);
     const [templateTitle, setTemplateTitle] = useState('');
     const [templateUrl, setTemplateUrl] = useState('');
-    const [templateErrors, setTemplateErrors] = useState<{title?: string, url?: string}>({});
+    const [templateErrors, setTemplateErrors] = useState<{
+        title?: string;
+        url?: string;
+    }>({});
 
     const resetTemplateForm = () => {
         setTemplateTitle('');
@@ -83,8 +97,8 @@ const ProjectLinkTemplates = ({
     };
 
     const validateTemplateForm = () => {
-        const errors: {title?: string, url?: string} = {};
-        
+        const errors: { title?: string; url?: string } = {};
+
         if (!templateUrl) {
             errors.url = 'URL template is required';
         }
@@ -131,18 +145,21 @@ const ProjectLinkTemplates = ({
 
     return (
         <StyledLinkTemplatesContainer>
-            <Box display="flex" alignItems="center" mb={1}>
-                <Typography variant="h4">Project Link Templates</Typography>
-                <Tooltip title="Link templates can be automatically added to new feature flags. They can include placeholders like {{project}} and {{feature}} that will be replaced with actual values.">
-                    <IconButton size="small" sx={{ ml: 1 }}>
-                        <HelpOutlineIcon fontSize="small" />
+            <Box display='flex' alignItems='center' mb={1}>
+                <Typography variant='h4'>Project Link Templates</Typography>
+                <Tooltip title='Link templates can be automatically added to new feature flags. They can include placeholders like {{project}} and {{feature}} that will be replaced with actual values.'>
+                    <IconButton size='small' sx={{ ml: 1 }}>
+                        <HelpOutlineIcon fontSize='small' />
                     </IconButton>
                 </Tooltip>
             </Box>
             <StyledSubtitle>
                 <p>
-                    Define link templates that can be automatically added to new feature flags in this project.
-                    Use placeholders <code>&#123;&#123;project&#125;&#125;</code> and <code>&#123;&#123;feature&#125;&#125;</code> in the URL that will be replaced with the project and feature names.
+                    Define link templates that can be automatically added to new
+                    feature flags in this project. Use placeholders{' '}
+                    <code>&#123;&#123;project&#125;&#125;</code> and{' '}
+                    <code>&#123;&#123;feature&#125;&#125;</code> in the URL that
+                    will be replaced with the project and feature names.
                 </p>
             </StyledSubtitle>
 
@@ -153,10 +170,22 @@ const ProjectLinkTemplates = ({
                             key={index}
                             secondaryAction={
                                 <>
-                                    <IconButton edge="end" aria-label="edit" onClick={() => handleEditTemplate(index)}>
+                                    <IconButton
+                                        edge='end'
+                                        aria-label='edit'
+                                        onClick={() =>
+                                            handleEditTemplate(index)
+                                        }
+                                    >
                                         <EditIcon />
                                     </IconButton>
-                                    <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteTemplate(index)}>
+                                    <IconButton
+                                        edge='end'
+                                        aria-label='delete'
+                                        onClick={() =>
+                                            handleDeleteTemplate(index)
+                                        }
+                                    >
                                         <DeleteIcon />
                                     </IconButton>
                                 </>
@@ -171,52 +200,62 @@ const ProjectLinkTemplates = ({
                 </StyledLinkTemplatesList>
             ) : (
                 <Box py={2}>
-                    <Typography variant="body2" color="textSecondary">
-                        No link templates defined yet. Add your first template below.
+                    <Typography variant='body2' color='textSecondary'>
+                        No link templates defined yet. Add your first template
+                        below.
                     </Typography>
                 </Box>
             )}
 
             {isAddingTemplate || isEditingTemplate ? (
                 <StyledDialogContent>
-                    <Typography variant="h5">
-                        {isAddingTemplate ? 'Add new link template' : 'Edit link template'}
+                    <Typography variant='h5'>
+                        {isAddingTemplate
+                            ? 'Add new link template'
+                            : 'Edit link template'}
                     </Typography>
                     <TextField
-                        label="Title (optional)"
+                        label='Title (optional)'
                         fullWidth
                         value={templateTitle}
                         onChange={(e) => setTemplateTitle(e.target.value)}
-                        placeholder="e.g., Jira Ticket"
-                        helperText="A descriptive name for the link"
+                        placeholder='e.g., Jira Ticket'
+                        helperText='A descriptive name for the link'
                     />
                     <TextField
-                        label="URL Template"
+                        label='URL Template'
                         fullWidth
                         required
                         value={templateUrl}
                         onChange={(e) => setTemplateUrl(e.target.value)}
-                        placeholder="https://jira.example.com/browse/{{project}}-{{feature}}"
-                        helperText={templateErrors.url || "You can optionally use placeholders {{project}} and {{feature}} that will be replaced with actual values"}
+                        placeholder='https://jira.example.com/browse/{{project}}-{{feature}}'
+                        helperText={
+                            templateErrors.url ||
+                            'You can optionally use placeholders {{project}} and {{feature}} that will be replaced with actual values'
+                        }
                         error={Boolean(templateErrors.url)}
                     />
                     <StyledDialogActions>
-                        <Button variant="outlined" onClick={resetTemplateForm}>
+                        <Button variant='outlined' onClick={resetTemplateForm}>
                             Cancel
                         </Button>
                         <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={isAddingTemplate ? handleAddTemplate : handleUpdateTemplate}
+                            variant='contained'
+                            color='primary'
+                            onClick={
+                                isAddingTemplate
+                                    ? handleAddTemplate
+                                    : handleUpdateTemplate
+                            }
                         >
                             {isAddingTemplate ? 'Add' : 'Update'}
                         </Button>
                     </StyledDialogActions>
                 </StyledDialogContent>
             ) : (
-                <Button 
-                    startIcon={<AddIcon />} 
-                    variant="outlined" 
+                <Button
+                    startIcon={<AddIcon />}
+                    variant='outlined'
                     onClick={() => setIsAddingTemplate(true)}
                 >
                     Add link template

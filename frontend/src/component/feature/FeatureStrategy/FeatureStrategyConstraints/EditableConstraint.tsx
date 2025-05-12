@@ -16,7 +16,10 @@ import { ReactComponent as EqualsIcon } from 'assets/icons/constraint-equals.svg
 import { ReactComponent as NotEqualsIcon } from 'assets/icons/constraint-not-equals.svg';
 import { AddSingleValueWidget } from './AddSingleValueWidget';
 import { ConstraintDateInput } from './ConstraintDateInput';
-import { LegalValuesSelector } from './LegalValuesSelector';
+import {
+    LegalValuesSelector,
+    SingleLegalValueSelector,
+} from './LegalValuesSelector';
 import { useEditableConstraint } from './useEditableConstraint/useEditableConstraint';
 import type { IConstraint } from 'interfaces/strategy';
 import {
@@ -227,8 +230,10 @@ export const EditableConstraint: FC<Props> = ({
         constraint: localConstraint,
         updateConstraint,
         validator,
-        ...constraintMetadata
+        ...legalValueData
     } = useEditableConstraint(constraint, onAutoSave);
+
+    const isLegalValueConstraint = 'legalValues' in legalValueData;
 
     const { context } = useUnleashContext();
     const { contextName, operator } = localConstraint;
@@ -327,25 +332,37 @@ export const EditableConstraint: FC<Props> = ({
                         values={
                             isMultiValueConstraint(localConstraint)
                                 ? Array.from(localConstraint.values)
-                                : undefined
+                                : 'legalValues' in legalValueData &&
+                                    localConstraint.value
+                                  ? [localConstraint.value]
+                                  : undefined
                         }
-                        removeValue={(value) =>
-                            updateConstraint({
-                                type: 'remove value from list',
-                                payload: value,
-                            })
-                        }
+                        removeValue={(value) => {
+                            if (isMultiValueConstraint(localConstraint)) {
+                                updateConstraint({
+                                    type: 'remove value from list',
+                                    payload: value,
+                                });
+                            } else {
+                                updateConstraint({
+                                    type: 'set value',
+                                    payload: '',
+                                });
+                            }
+                        }}
                         getExternalFocusTarget={() =>
                             addValuesButtonRef.current ??
                             deleteButtonRef.current
                         }
                     >
-                        <TopRowInput
-                            localConstraint={localConstraint}
-                            updateConstraint={updateConstraint}
-                            validator={validator}
-                            addValuesButtonRef={addValuesButtonRef}
-                        />
+                        {isLegalValueConstraint ? null : (
+                            <TopRowInput
+                                localConstraint={localConstraint}
+                                updateConstraint={updateConstraint}
+                                validator={validator}
+                                addValuesButtonRef={addValuesButtonRef}
+                            />
+                        )}
                     </ValueList>
                 </ConstraintDetails>
                 <ButtonPlaceholder />
@@ -361,33 +378,47 @@ export const EditableConstraint: FC<Props> = ({
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
-            {'legalValues' in constraintMetadata &&
-            isMultiValueConstraint(localConstraint) ? (
+            {'legalValues' in legalValueData ? (
                 <LegalValuesContainer>
-                    <LegalValuesSelector
-                        values={localConstraint.values}
-                        clearAll={() =>
-                            updateConstraint({
-                                type: 'clear values',
-                            })
-                        }
-                        addValues={(newValues) =>
-                            updateConstraint({
-                                type: 'add value(s)',
-                                payload: newValues,
-                            })
-                        }
-                        removeValue={(value) =>
-                            updateConstraint({
-                                type: 'remove value from list',
-                                payload: value,
-                            })
-                        }
-                        deletedLegalValues={
-                            constraintMetadata.deletedLegalValues
-                        }
-                        legalValues={constraintMetadata.legalValues}
-                    />
+                    {isMultiValueConstraint(localConstraint) ? (
+                        <LegalValuesSelector
+                            values={localConstraint.values}
+                            clearAll={() =>
+                                updateConstraint({
+                                    type: 'clear values',
+                                })
+                            }
+                            addValues={(newValues) =>
+                                updateConstraint({
+                                    type: 'add value(s)',
+                                    payload: newValues,
+                                })
+                            }
+                            removeValue={(value) =>
+                                updateConstraint({
+                                    type: 'remove value from list',
+                                    payload: value,
+                                })
+                            }
+                            {...legalValueData}
+                        />
+                    ) : (
+                        <SingleLegalValueSelector
+                            value={localConstraint.value}
+                            clear={() =>
+                                updateConstraint({
+                                    type: 'clear values',
+                                })
+                            }
+                            addValue={(newValues) =>
+                                updateConstraint({
+                                    type: 'set value',
+                                    payload: newValues,
+                                })
+                            }
+                            {...legalValueData}
+                        />
+                    )}
                 </LegalValuesContainer>
             ) : null}
         </Container>

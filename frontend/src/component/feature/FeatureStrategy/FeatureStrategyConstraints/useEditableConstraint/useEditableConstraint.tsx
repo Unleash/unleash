@@ -52,6 +52,7 @@ type MultiValueConstraintState = {
 type LegalValueData = {
     legalValues: ILegalValue[];
     deletedLegalValues?: Set<string>;
+    invalidLegalValues?: Set<string>;
 };
 
 type LegalValueConstraintState = {
@@ -80,11 +81,14 @@ export const useEditableConstraint = (
         resolveContextDefinition(context, localConstraint.contextName),
     );
 
+    const validator = constraintValidator(localConstraint);
+
     const deletedLegalValues = useMemo(() => {
         if (
             contextDefinition.legalValues?.length &&
             constraint.values?.length
         ) {
+            // todo: extract and test
             const currentLegalValues = new Set(
                 contextDefinition.legalValues.map(({ value }) => value),
             );
@@ -99,6 +103,24 @@ export const useEditableConstraint = (
     }, [
         JSON.stringify(contextDefinition.legalValues),
         JSON.stringify(constraint.values),
+    ]);
+
+    const invalidLegalValues = useMemo(() => {
+        if (
+            contextDefinition.legalValues?.length &&
+            isSingleValueConstraint(localConstraint)
+        ) {
+            // todo: extract and test
+            return new Set(
+                contextDefinition.legalValues
+                    .filter(({ value }) => !validator(value)[0])
+                    .map(({ value }) => value),
+            );
+        }
+        return undefined;
+    }, [
+        JSON.stringify(contextDefinition.legalValues),
+        JSON.stringify(localConstraint.operator),
     ]);
 
     const updateConstraint = (action: ConstraintUpdateAction) => {
@@ -120,26 +142,37 @@ export const useEditableConstraint = (
         }
     };
 
+    if (contextDefinition.legalValues?.length) {
+        if (isSingleValueConstraint(localConstraint)) {
+            return {
+                updateConstraint,
+                constraint: localConstraint,
+                validator,
+                legalValues: contextDefinition.legalValues,
+                invalidLegalValues,
+                deletedLegalValues,
+            };
+        }
+        return {
+            updateConstraint,
+            constraint: localConstraint,
+            validator,
+            legalValues: contextDefinition.legalValues,
+            invalidLegalValues,
+            deletedLegalValues,
+        };
+    }
     if (isSingleValueConstraint(localConstraint)) {
         return {
             updateConstraint,
             constraint: localConstraint,
-            validator: constraintValidator(localConstraint),
-        };
-    }
-    if (contextDefinition.legalValues?.length) {
-        return {
-            updateConstraint,
-            constraint: localConstraint,
-            validator: constraintValidator(localConstraint),
-            legalValues: contextDefinition.legalValues,
-            deletedLegalValues,
+            validator,
         };
     }
 
     return {
         updateConstraint,
         constraint: localConstraint,
-        validator: constraintValidator(localConstraint),
+        validator,
     };
 };

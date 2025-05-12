@@ -81,7 +81,6 @@ const useTagTypeForm = (
         clearErrors,
         validateNameUniqueness,
         errors,
-        isTagTypeColorEnabled,
     };
 };
 

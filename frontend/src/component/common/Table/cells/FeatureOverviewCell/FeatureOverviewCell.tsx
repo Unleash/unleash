@@ -212,7 +212,6 @@ const RestTags: FC<{
             <CustomTagButton
                 sx={{
                     cursor: 'initial',
-
                     borderRadius: (theme) => theme.spacing(2),
                 }}
             >

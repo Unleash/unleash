@@ -17,7 +17,7 @@ import { Badge } from '../common/Badge/Badge.tsx';
 import { Link, useNavigate } from 'react-router-dom';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useEffect } from 'react';
-import { useFeedback } from '../feedbackNew/useFeedback.ts';
+import { useFeedback } from '../feedbackNew/useFeedback.tsx';
 import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
 
 const StyledDivider = styled(Divider)(({ theme }) => ({

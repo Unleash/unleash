@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import AccessContext from '../contexts/AccessContext.jsx';
-import { useChangeRequestsEnabled } from './useChangeRequestsEnabled.js';
+import AccessContext from '../contexts/AccessContext.ts';
+import { useChangeRequestsEnabled } from './useChangeRequestsEnabled.ts';
 import {
     CREATE_FEATURE_STRATEGY,
     DELETE_FEATURE_STRATEGY,

@@ -6,8 +6,8 @@ import { StrategyExecution as LegacyStrategyExecution } from './LegacyStrategyEx
 import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { objectId } from 'utils/objectId';
-import { useCustomStrategyParameters } from './hooks/useCustomStrategyParameters.ts';
-import { useStrategyParameters } from './hooks/useStrategyParameters.ts';
+import { useCustomStrategyParameters } from './hooks/useCustomStrategyParameters.tsx';
+import { useStrategyParameters } from './hooks/useStrategyParameters.tsx';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
 import {

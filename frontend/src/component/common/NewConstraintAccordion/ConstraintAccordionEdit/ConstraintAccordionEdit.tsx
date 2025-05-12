@@ -13,7 +13,7 @@ import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import type { IUnleashContextDefinition } from 'interfaces/context';
-import { useConstraintInput } from './ConstraintAccordionEditBody/useConstraintInput/useConstraintInput.ts';
+import { useConstraintInput } from './ConstraintAccordionEditBody/useConstraintInput/useConstraintInput.tsx';
 import type { Operator } from 'constants/operators';
 import { ResolveInput } from './ConstraintAccordionEditBody/ResolveInput/ResolveInput.tsx';
 

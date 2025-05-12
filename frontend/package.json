@@ -9,6 +9,7 @@
   "engines": {
     "node": ">=18"
   },
+  "type": "module",
   "scripts": {
     "build": "yarn run lint:material:icons && vite build",
     "dev": "vite",

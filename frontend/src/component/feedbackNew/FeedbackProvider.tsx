@@ -1,9 +1,9 @@
-import { FeedbackComponentWrapper } from './FeedbackComponent.tsx';
+import { FeedbackComponentWrapper } from './FeedbackComponent';
 import {
     FeedbackContext,
     type FeedbackData,
     type FeedbackMode,
-} from './FeedbackContext.tsx';
+} from './FeedbackContext';
 import { type FC, useState } from 'react';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 

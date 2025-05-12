@@ -19,7 +19,7 @@ import {
     DATE_OPERATORS_SINGLE_VALUE,
     IN_OPERATORS_FREETEXT,
     type Input,
-} from '../useConstraintInput/useConstraintInput.ts';
+} from '../useConstraintInput/useConstraintInput.tsx';
 import type React from 'react';
 
 interface IResolveInputProps {

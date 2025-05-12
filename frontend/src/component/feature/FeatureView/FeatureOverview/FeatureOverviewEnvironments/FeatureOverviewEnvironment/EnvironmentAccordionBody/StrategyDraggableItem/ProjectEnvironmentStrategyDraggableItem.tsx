@@ -3,7 +3,7 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useStrategyChangesFromRequest } from './StrategyItem/useStrategyChangesFromRequest.ts';
+import { useStrategyChangesFromRequest } from './StrategyItem/useStrategyChangesFromRequest.tsx';
 import { ChangesScheduledBadge } from 'component/changeRequest/ModifiedInChangeRequestStatusBadge/ChangesScheduledBadge';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';

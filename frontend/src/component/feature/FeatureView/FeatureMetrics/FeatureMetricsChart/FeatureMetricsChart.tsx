@@ -15,7 +15,7 @@ import {
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import 'chartjs-adapter-date-fns';
 import { createChartData } from './createChartData.ts';
-import { createChartOptions } from './createChartOptions.ts';
+import { createChartOptions } from './createChartOptions.tsx';
 import { useTheme } from '@mui/material';
 
 interface IFeatureMetricsChartProps {

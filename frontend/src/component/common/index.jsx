@@ -15,7 +15,7 @@ import {
 import Apps from '@mui/icons-material/Apps';
 
 import styles from './common.module.scss';
-import { ConditionallyRender } from './ConditionallyRender/ConditionallyRender.jsx';
+import { ConditionallyRender } from './ConditionallyRender/ConditionallyRender.tsx';
 
 export { styles };
 

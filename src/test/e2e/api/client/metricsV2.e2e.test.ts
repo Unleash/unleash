@@ -81,11 +81,10 @@ test('should pick up environment from token', async () => {
         tokenName: 'tester',
     });
 
-    await app.services.featureToggleService.createFeatureToggle(
-        'default',
-        { name: 'test' },
-        TEST_AUDIT_USER,
-    );
+    // @ts-expect-error
+    app.services.clientMetricsServiceV2.cachedFeatureNames = jest
+        .fn()
+        .mockResolvedValue(['test']);
 
     await app.request
         .post('/api/client/metrics')

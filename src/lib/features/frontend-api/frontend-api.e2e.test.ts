@@ -360,6 +360,12 @@ test('should store frontend api client metrics', async () => {
         projects: ['*'],
         environment: '*',
     });
+
+    // @ts-expect-error
+    app.services.clientMetricsServiceV2.cachedFeatureNames = jest
+        .fn()
+        .mockResolvedValue([featureName]);
+
     await app.request
         .get(`/api/admin/client-metrics/features/${featureName}`)
         .set('Authorization', adminToken.secret)

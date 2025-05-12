@@ -38,6 +38,12 @@ test('should enrich metrics with environment from api-token', async () => {
         project: '*',
     });
 
+    const featureName = Object.keys(metricsExample.bucket.toggles)[0];
+    // @ts-expect-error
+    app.services.clientMetricsServiceV2.cachedFeatureNames = jest
+        .fn()
+        .mockResolvedValue([featureName]);
+
     await app.request
         .post('/api/client/metrics')
         .set('Authorization', token.secret)

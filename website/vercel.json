@@ -82,8 +82,13 @@
       "permanent": true
     },
     {
+      "source": "/reference/api/unleash",
+      "destination": "/api-overview",
+      "permanent": true
+    },
+    {
       "source": "/api/open_api",
-      "destination": "/reference/api/unleash",
+      "destination": "/api-overview",
       "permanent": true
     },
     {
@@ -858,7 +863,7 @@
     },
     {
       "source": "/languages-and-frameworks",
-      "destination": "/feature-flag-tutorials/use-cases/gradual-rollout",
+      "destination": "/feature-flag-tutorials/react",
       "permanent": true
     },
     {

@@ -150,15 +150,6 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                         link='/integrations/view/edge'
                         configureActionText='Learn more'
                     />
-                    <IntegrationCard
-                        icon='unleash'
-                        title='Unleash Proxy'
-                        description='The Unleash Proxy is a lightweight, stateless proxy that sits between your Unleash client SDKs and the Unleash API.'
-                        link='https://docs.getunleash.io/reference/unleash-proxy'
-                        configureActionText='View documentation'
-                        deprecated='Try Unleash Edge instead. It has all the features of Unleash Proxy and more.'
-                        isExternal
-                    />
                 </StyledCardsGrid>
             </StyledSection>
             <StyledSection>

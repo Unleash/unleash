@@ -57,7 +57,6 @@ export const TagTypeList = () => {
     const { deleteTagType } = useTagTypesApi();
     const { tagTypes, refetch, loading } = useTagTypes();
     const { setToastData, setToastApiError } = useToast();
-    const isTagTypeColorEnabled = Boolean(useUiFlag('tagTypeColor'));
 
     const data = useMemo(() => {
         if (loading) {
@@ -105,9 +104,7 @@ export const TagTypeList = () => {
                     return (
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             <ConditionallyRender
-                                condition={
-                                    isTagTypeColorEnabled && Boolean(color)
-                                }
+                                condition={Boolean(color)}
                                 show={<StyledColorDot $color={color} />}
                             />
                             <LinkCell

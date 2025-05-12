@@ -25,7 +25,6 @@ const CreateTagType = () => {
         validateNameUniqueness,
         errors,
         clearErrors,
-        isTagTypeColorEnabled,
     } = useTagTypeForm();
     const { createTag, loading } = useTagTypesApi();
 
@@ -81,7 +80,6 @@ const CreateTagType = () => {
                 mode='Create'
                 clearErrors={clearErrors}
                 validateNameUniqueness={validateNameUniqueness}
-                isTagTypeColorEnabled={isTagTypeColorEnabled}
             >
                 <CreateButton name='type' permission={CREATE_TAG_TYPE} />
             </TagTypeForm>

@@ -162,58 +162,22 @@ interface ITagItemProps {
 }
 
 const TagItem = ({ tag, canUpdateTags, onTagRemove }: ITagItemProps) => {
-    const isTagTypeColorEnabled = useUiFlag('tagTypeColor');
     const tagLabel = formatTag(tag);
     const isOverflowing = tagLabel.length > 25;
-    const deleteIcon = (
-        <Tooltip title='Remove tag' arrow>
-            <DeleteTagIcon />
-        </Tooltip>
-    );
+
     const onDelete = canUpdateTags ? () => onTagRemove(tag) : undefined;
 
-    if (isTagTypeColorEnabled) {
-        const deleteIcon = (
-            <Tooltip title='Remove tag' arrow>
-                <ClearIcon sx={{ height: '20px', width: '20px' }} />
-            </Tooltip>
-        );
-
-        return (
-            <Tooltip key={tagLabel} title={isOverflowing ? tagLabel : ''} arrow>
-                <span>
-                    <Tag
-                        tag={tag}
-                        onDelete={onDelete}
-                        deleteIcon={deleteIcon}
-                    />
-                </span>
-            </Tooltip>
-        );
-    }
+    const deleteIcon = (
+        <Tooltip title='Remove tag' arrow>
+            <ClearIcon sx={{ height: '20px', width: '20px' }} />
+        </Tooltip>
+    );
 
     return (
-        <StyledTag
-            key={tagLabel}
-            label={
-                <Tooltip
-                    key={tagLabel}
-                    title={isOverflowing ? tagLabel : ''}
-                    arrow
-                >
-                    <span>
-                        {tagLabel.substring(0, 25)}
-                        {isOverflowing ? (
-                            <StyledEllipsis>…</StyledEllipsis>
-                        ) : (
-                            ''
-                        )}
-                    </span>
-                </Tooltip>
-            }
-            size='small'
-            deleteIcon={deleteIcon}
-            onDelete={onDelete}
-        />
+        <Tooltip key={tagLabel} title={isOverflowing ? tagLabel : ''} arrow>
+            <span>
+                <Tag tag={tag} onDelete={onDelete} deleteIcon={deleteIcon} />
+            </span>
+        </Tooltip>
     );
 };

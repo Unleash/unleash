@@ -4,7 +4,6 @@ import { TagTypeColorPicker } from './TagTypeColorPicker';
 import type React from 'react';
 import { trim } from 'component/common/util';
 import { EDIT } from 'constants/misc';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface ITagTypeForm {
     tagName: string;
@@ -19,7 +18,6 @@ interface ITagTypeForm {
     mode: 'Create' | 'Edit';
     clearErrors: () => void;
     validateNameUniqueness?: () => void;
-    isTagTypeColorEnabled: boolean;
     children?: React.ReactNode;
 }
 
@@ -71,7 +69,6 @@ const TagTypeForm: React.FC<ITagTypeForm> = ({
     mode,
     validateNameUniqueness,
     clearErrors,
-    isTagTypeColorEnabled,
 }) => {
     return (
         <StyledForm onSubmit={handleSubmit}>
@@ -102,20 +99,14 @@ const TagTypeForm: React.FC<ITagTypeForm> = ({
                     value={tagDesc}
                     onChange={(e) => setTagDesc(e.target.value)}
                 />
-                <ConditionallyRender
-                    condition={isTagTypeColorEnabled}
-                    show={
-                        <>
-                            <Typography variant='body2'>
-                                Tag color
-                                <TagTypeColorPicker
-                                    selectedColor={color}
-                                    onChange={setColor}
-                                />
-                            </Typography>
-                        </>
-                    }
-                />
+
+                <Typography variant='body2'>
+                    Tag color
+                    <TagTypeColorPicker
+                        selectedColor={color}
+                        onChange={setColor}
+                    />
+                </Typography>
             </StyledContainer>
             <StyledButtonContainer>
                 {children}

@@ -28,7 +28,6 @@ const EditTagType = () => {
         getTagPayload,
         errors,
         clearErrors,
-        isTagTypeColorEnabled,
     } = useTagTypeForm(tagType?.name, tagType?.description, tagType?.color);
     const { updateTagType, loading } = useTagTypesApi();
 
@@ -82,7 +81,6 @@ const EditTagType = () => {
                 setColor={setColor}
                 mode='Edit'
                 clearErrors={clearErrors}
-                isTagTypeColorEnabled={isTagTypeColorEnabled}
             >
                 <UpdateButton permission={UPDATE_TAG_TYPE} />
             </TagForm>

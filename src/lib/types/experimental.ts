@@ -58,7 +58,6 @@ export type IFlagKey =
     | 'consumptionModel'
     | 'teamsIntegrationChangeRequests'
     | 'edgeObservability'
-    | 'tagTypeColor'
     | 'addEditStrategy'
     | 'flagsOverviewSearch'
     | 'flagsReleaseManagementUI'
@@ -278,10 +277,6 @@ const flags: IFlags = {
     ),
     edgeObservability: parseEnvVarBoolean(
         process.env.EXPERIMENTAL_EDGE_OBSERVABILITY,
-        false,
-    ),
-    tagTypeColor: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_TAG_TYPE_COLOR,
         false,
     ),
     addEditStrategy: parseEnvVarBoolean(

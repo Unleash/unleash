@@ -52,7 +52,6 @@ process.nextTick(async () => {
                         uniqueSdkTracking: true,
                         filterExistingFlagNames: true,
                         teamsIntegrationChangeRequests: true,
-                        tagTypeColor: true,
                         addEditStrategy: true,
                         flagsOverviewSearch: true,
                         cleanupReminder: true,

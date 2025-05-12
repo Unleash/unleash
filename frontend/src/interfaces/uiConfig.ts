@@ -88,7 +88,6 @@ export type UiFlags = {
     showUserDeviceCount?: boolean;
     consumptionModel?: boolean;
     edgeObservability?: boolean;
-    tagTypeColor?: boolean;
     addEditStrategy?: boolean;
     flagsReleaseManagementUI?: boolean;
     cleanupReminder?: boolean;

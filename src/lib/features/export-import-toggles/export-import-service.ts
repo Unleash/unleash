@@ -949,10 +949,10 @@ export default class ExportImportService
         const mappedFeatureLinks = Object.entries(groupedFeatureLinks).map(
             ([feature, links]) => ({
                 feature,
-                links: links.map((l) => ({
-                    id: l.id,
-                    url: l.url,
-                    title: l.title,
+                links: links.map((link) => ({
+                    id: link.id,
+                    url: link.url,
+                    title: link.title,
                 })),
             }),
         );

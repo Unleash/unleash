@@ -464,7 +464,6 @@ test('should export custom context fields from strategies and variants', async (
         },
         strategy,
     );
-
     const variantStickinessContext = {
         name: 'variant-stickiness-context',
         legalValues: [

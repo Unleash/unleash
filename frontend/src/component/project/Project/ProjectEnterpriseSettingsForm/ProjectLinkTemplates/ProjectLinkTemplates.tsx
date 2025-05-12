@@ -15,7 +15,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import type { ProjectLinkTemplateSchema } from 'openapi';
-import ProjectLinkTemplateEditor from './ProjectLinkTemplateEditor';
+import ProjectLinkTemplateDialog from './ProjectLinkTemplateDialog';
 import { Truncator } from 'component/common/Truncator/Truncator';
 
 interface IProjectLinkTemplatesProps {
@@ -59,13 +59,16 @@ const ProjectLinkTemplates = ({
     linkTemplates = [],
     setLinkTemplates,
 }: IProjectLinkTemplatesProps) => {
-    const [isAddingTemplate, setIsAddingTemplate] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [isAdding, setIsAdding] = useState(false);
     const [editingTemplateIndex, setEditingTemplateIndex] = useState<
         number | null
     >(null);
 
     const handleEditTemplate = (index: number) => {
         setEditingTemplateIndex(index);
+        setIsAdding(false);
+        setDialogOpen(true);
     };
 
     const handleSaveTemplate = (template: ProjectLinkTemplateSchema) => {
@@ -73,16 +76,16 @@ const ProjectLinkTemplates = ({
             const updatedTemplates = [...linkTemplates];
             updatedTemplates[editingTemplateIndex] = template;
             setLinkTemplates?.(updatedTemplates);
-            setEditingTemplateIndex(null);
         } else {
             setLinkTemplates?.([...linkTemplates, template]);
-            setIsAddingTemplate(false);
         }
+        handleCancelEdit();
     };
 
     const handleCancelEdit = () => {
         setEditingTemplateIndex(null);
-        setIsAddingTemplate(false);
+        setIsAdding(false);
+        setDialogOpen(false);
     };
 
     const handleDeleteTemplate = (index: number) => {
@@ -127,22 +130,6 @@ const ProjectLinkTemplates = ({
             {linkTemplates.length > 0 ? (
                 <StyledLinkTemplatesList>
                     {linkTemplates.map((template, index) => {
-                        if (editingTemplateIndex === index) {
-                            return (
-                                <StyledLinkTemplateItem
-                                    key={index}
-                                    style={{ listStyleType: 'none' }}
-                                >
-                                    <ProjectLinkTemplateEditor
-                                        template={template}
-                                        onSave={handleSaveTemplate}
-                                        onCancel={handleCancelEdit}
-                                        isAdding={false}
-                                    />
-                                </StyledLinkTemplateItem>
-                            );
-                        }
-
                         return (
                             <StyledLinkTemplateItem key={index}>
                                 <ListItemText
@@ -192,25 +179,30 @@ const ProjectLinkTemplates = ({
                 </StyledLinkTemplatesList>
             ) : null}
 
-            {isAddingTemplate && (
-                <ProjectLinkTemplateEditor
-                    onSave={handleSaveTemplate}
-                    onCancel={handleCancelEdit}
-                    isAdding={true}
-                />
-            )}
+            <ProjectLinkTemplateDialog
+                open={dialogOpen}
+                onSave={handleSaveTemplate}
+                onCancel={handleCancelEdit}
+                isAdding={isAdding}
+                template={
+                    editingTemplateIndex !== null
+                        ? linkTemplates[editingTemplateIndex]
+                        : undefined
+                }
+            />
 
-            {!isAddingTemplate && editingTemplateIndex === null && (
-                <Box display='flex' justifyContent='flex-start'>
-                    <Button
-                        startIcon={<AddIcon />}
-                        variant='outlined'
-                        onClick={() => setIsAddingTemplate(true)}
-                    >
-                        Add link template
-                    </Button>
-                </Box>
-            )}
+            <Box display='flex' justifyContent='flex-start'>
+                <Button
+                    startIcon={<AddIcon />}
+                    variant='outlined'
+                    onClick={() => {
+                        setIsAdding(true);
+                        setDialogOpen(true);
+                    }}
+                >
+                    Add link template
+                </Button>
+            </Box>
         </StyledLinkTemplatesContainer>
     );
 };

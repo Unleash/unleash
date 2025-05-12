@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { Box, styled } from '@mui/material';
 import type { IFeatureStrategyParameters } from 'interfaces/strategy';
-import RolloutSlider from '../RolloutSlider/RolloutSlider';
+import ConditionalRolloutSlider from '../RolloutSlider/ConditionalRolloutSlider';
 import Input from 'component/common/Input/Input';
 import {
     FLEXIBLE_STRATEGY_GROUP_ID,
@@ -100,7 +100,7 @@ const FlexibleStrategy = ({
 
     return (
         <StyledBox>
-            <RolloutSlider
+            <ConditionalRolloutSlider
                 name='Rollout'
                 value={rollout}
                 disabled={!editable}

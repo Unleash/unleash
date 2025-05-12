@@ -1,6 +1,6 @@
 import { Box, styled } from '@mui/material';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
-import RolloutSlider from 'component/feature/StrategyTypes/RolloutSlider/RolloutSlider';
+import ConditionalRolloutSlider from '../../../../feature/StrategyTypes/RolloutSlider/ConditionalRolloutSlider';
 import type { IFormErrors } from 'hooks/useFormErrors';
 import type { IFeatureStrategyParameters } from 'interfaces/strategy';
 import { useMemo } from 'react';
@@ -79,7 +79,7 @@ export const MilestoneStrategyTypeFlexible = ({
 
     return (
         <StyledBox>
-            <RolloutSlider
+            <ConditionalRolloutSlider
                 name='Rollout'
                 value={rollout}
                 disabled={!editable}

@@ -1,7 +1,15 @@
-import { makeStyles, withStyles } from 'tss-react/mui';
-import { Slider, Typography, Box, styled } from '@mui/material';
+import { withStyles } from 'tss-react/mui';
+import {
+    Slider,
+    Typography,
+    Box,
+    styled,
+    TextField,
+    InputAdornment,
+} from '@mui/material';
 import { ROLLOUT_SLIDER_ID } from 'utils/testIds';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import { useState, useEffect } from 'react';
 
 const StyledSlider = withStyles(Slider, (theme) => ({
     root: {
@@ -37,17 +45,38 @@ const StyledSubheader = styled(Typography)(({ theme }) => ({
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
+    marginBottom: theme.spacing(2),
+}));
+
+const StyledSliderContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    gap: theme.spacing(4),
     marginBottom: theme.spacing(1),
 }));
 
-const useStyles = makeStyles()((theme) => ({
-    slider: {
-        width: '100%',
-        maxWidth: '100%',
-    },
-    margin: {
-        height: theme.spacing(3),
-    },
+const StyledInputBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    width: '100px',
+    flexShrink: 0,
+}));
+
+const SliderWrapper = styled('div')(({ theme }) => ({
+    width: '100%',
+    maxWidth: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+}));
+
+const SliderContent = styled('div')(({ theme }) => ({
+    flexGrow: 1,
+}));
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+    width: '90px',
 }));
 
 const marks = [
@@ -88,12 +117,36 @@ const RolloutSlider = ({
     onChange,
     disabled = false,
 }: IRolloutSliderProps) => {
-    const { classes } = useStyles();
+    const [inputValue, setInputValue] = useState(value.toString());
+
+    useEffect(() => {
+        setInputValue(value.toString());
+    }, [value]);
 
     const valuetext = (value: number) => `${value}%`;
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(e.target.value);
+    };
+
+    const handleInputBlur = () => {
+        const numValue = Number.parseInt(inputValue, 10);
+        if (!Number.isNaN(numValue) && numValue >= 0 && numValue <= 100) {
+            const event = new Event('input', { bubbles: true });
+            onChange(event, numValue);
+        } else {
+            setInputValue(value.toString());
+        }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            handleInputBlur();
+        }
+    };
+
     return (
-        <div className={classes.slider}>
+        <SliderWrapper>
             <StyledBox>
                 <Typography id='discrete-slider-always'>{name}</Typography>
                 <HelpIcon
@@ -104,18 +157,18 @@ const RolloutSlider = ({
                                 Rollout percentage
                             </StyledHeader>
                             <Typography variant='body2'>
-                                The rollout percentage determines the proportion
-                                of users exposed to a feature. It's based on the
-                                MurmurHash of a user's unique identifier,
-                                normalized to a number between 1 and 100. If the
-                                normalized hash is less than or equal to the
-                                rollout percentage, the user sees the feature.
-                                This ensures a consistent, random distribution
-                                of the feature among users.
+                                T2he rollout percentage determines the
+                                proportion of users exposed to a feature. It's
+                                based on the MurmurHash of a user's unique
+                                identifier, normalized to a number between 1 and
+                                100. If the normalized hash is less than or
+                                equal to the rollout percentage, the user sees
+                                the feature. This ensures a consistent, random
+                                distribution of the feature among users.
                             </Typography>
 
                             <StyledSubheader variant='h3'>
-                                Stickiness
+                                Stickiness1
                             </StyledSubheader>
                             <Typography variant='body2'>
                                 Stickiness refers to the value used for hashing
@@ -142,20 +195,47 @@ const RolloutSlider = ({
                     }
                 />
             </StyledBox>
-            <StyledSlider
-                min={0}
-                max={100}
-                value={value}
-                getAriaValueText={valuetext}
-                aria-labelledby='discrete-slider-always'
-                step={1}
-                data-testid={ROLLOUT_SLIDER_ID}
-                marks={marks}
-                onChange={onChange}
-                valueLabelDisplay='on'
-                disabled={disabled}
-            />
-        </div>
+            <StyledSliderContainer>
+                <SliderContent>
+                    <StyledSlider
+                        min={0}
+                        max={100}
+                        value={value}
+                        getAriaValueText={valuetext}
+                        aria-labelledby='discrete-slider-always'
+                        step={1}
+                        data-testid={ROLLOUT_SLIDER_ID}
+                        marks={marks}
+                        onChange={onChange}
+                        valueLabelDisplay='on'
+                        disabled={disabled}
+                    />
+                </SliderContent>
+                <StyledInputBox>
+                    <StyledTextField
+                        size='small'
+                        type='number'
+                        value={inputValue}
+                        onChange={handleInputChange}
+                        onBlur={handleInputBlur}
+                        onKeyDown={handleKeyDown}
+                        disabled={disabled}
+                        inputProps={{
+                            min: 0,
+                            max: 100,
+                            step: 1,
+                        }}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position='end'>
+                                    %
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                </StyledInputBox>
+            </StyledSliderContainer>
+        </SliderWrapper>
     );
 };
 

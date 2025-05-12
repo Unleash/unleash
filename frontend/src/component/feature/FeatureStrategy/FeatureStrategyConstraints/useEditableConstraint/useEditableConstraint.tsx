@@ -106,7 +106,10 @@ export const useEditableConstraint = (
     ]);
 
     const invalidLegalValues = useMemo(() => {
-        if (contextDefinition.legalValues?.length) {
+        if (
+            contextDefinition.legalValues?.length &&
+            isSingleValueConstraint(localConstraint)
+        ) {
             // todo: extract and test
             return new Set(
                 contextDefinition.legalValues
@@ -117,7 +120,7 @@ export const useEditableConstraint = (
         return undefined;
     }, [
         JSON.stringify(contextDefinition.legalValues),
-        JSON.stringify(constraint.operator),
+        JSON.stringify(localConstraint.operator),
     ]);
 
     const updateConstraint = (action: ConstraintUpdateAction) => {

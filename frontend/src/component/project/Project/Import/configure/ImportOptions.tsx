@@ -32,7 +32,7 @@ export const ImportOptions: FC<IImportOptionsProps> = ({
     onChange,
 }) => {
     const { project: projectInfo } = useProjectOverview(project);
-    const environmentOptions = projectInfo.environments.map(
+    const environmentOptions = projectInfo.environments?.map(
         ({ environment }) => ({
             key: environment,
             label: environment,
@@ -41,7 +41,7 @@ export const ImportOptions: FC<IImportOptionsProps> = ({
     );
 
     useEffect(() => {
-        if (environment === '' && environmentOptions[0]) {
+        if (environment === '' && environmentOptions?.[0]) {
             onChange(environmentOptions[0].key);
         }
     }, [JSON.stringify(environmentOptions)]);
@@ -54,7 +54,7 @@ export const ImportOptions: FC<IImportOptionsProps> = ({
             </ImportOptionsDescription>
             <GeneralSelect
                 sx={{ width: '180px' }}
-                options={environmentOptions}
+                options={environmentOptions || []}
                 onChange={onChange}
                 label={'Environment'}
                 value={environment}

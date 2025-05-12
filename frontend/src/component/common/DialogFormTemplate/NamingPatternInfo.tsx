@@ -5,8 +5,8 @@ import {
     styled,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import type { FeatureNamingType } from 'interfaces/project';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import type { CreateFeatureNamingPatternSchema } from 'openapi';
 
 const StyledFlagNamingInfo = styled('article')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
@@ -35,7 +35,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 }));
 
 type Props = {
-    naming: FeatureNamingType;
+    naming: CreateFeatureNamingPatternSchema;
 };
 
 export const NamingPatternInfo: React.FC<Props> = ({ naming }) => {

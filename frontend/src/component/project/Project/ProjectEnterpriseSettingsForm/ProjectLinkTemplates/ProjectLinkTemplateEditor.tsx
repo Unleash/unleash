@@ -1,0 +1,105 @@
+import { useState } from 'react';
+import { Button, styled, TextField, Typography } from '@mui/material';
+import type { ProjectLinkTemplateSchema } from 'openapi';
+
+interface IProjectLinkTemplateEditorProps {
+    template?: ProjectLinkTemplateSchema;
+    onSave: (template: ProjectLinkTemplateSchema) => void;
+    onCancel: () => void;
+    isAdding: boolean;
+}
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+    padding: theme.spacing(3),
+}));
+
+const StyledDialogActions = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-end',
+    gap: theme.spacing(1.5),
+}));
+
+const ProjectLinkTemplateEditor = ({
+    template,
+    onSave,
+    onCancel,
+    isAdding,
+}: IProjectLinkTemplateEditorProps) => {
+    const [templateTitle, setTemplateTitle] = useState(template?.title || '');
+    const [templateUrl, setTemplateUrl] = useState(template?.urlTemplate || '');
+    const [templateErrors, setTemplateErrors] = useState<{
+        title?: string;
+        url?: string;
+    }>({});
+
+    const validateTemplateForm = () => {
+        const errors: { title?: string; url?: string } = {};
+
+        if (!templateUrl) {
+            errors.url = 'URL template is required';
+        }
+
+        setTemplateErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
+
+    const handleSave = () => {
+        if (validateTemplateForm()) {
+            onSave({
+                title: templateTitle || null,
+                urlTemplate: templateUrl,
+            });
+        }
+    };
+
+    return (
+        <StyledContainer>
+            <Typography
+                variant='h5'
+                sx={(theme) => ({ fontSize: theme.typography.body1.fontSize })}
+            >
+                {isAdding ? 'Add new link template' : 'Edit link template'}
+            </Typography>
+            <TextField
+                label='Title (optional)'
+                fullWidth
+                value={templateTitle}
+                onChange={(e) => setTemplateTitle(e.target.value)}
+                placeholder='e.g., GitHub Issue, Ticket number'
+                helperText='A descriptive name for the link.'
+                size='small'
+            />
+            <TextField
+                label='URL Template'
+                fullWidth
+                required
+                value={templateUrl}
+                onChange={(e) => setTemplateUrl(e.target.value)}
+                placeholder='https://github.com/{{project}}/{{feature}}'
+                helperText={
+                    templateErrors.url ||
+                    'You can optionally use placeholders {{project}} and {{feature}} that will be replaced with actual values.'
+                }
+                size='small'
+                error={Boolean(templateErrors.url)}
+            />
+            <StyledDialogActions>
+                <Button variant='outlined' onClick={onCancel}>
+                    Cancel
+                </Button>
+                <Button
+                    variant='contained'
+                    color='primary'
+                    onClick={handleSave}
+                >
+                    {isAdding ? 'Add' : 'Update'}
+                </Button>
+            </StyledDialogActions>
+        </StyledContainer>
+    );
+};
+
+export default ProjectLinkTemplateEditor;

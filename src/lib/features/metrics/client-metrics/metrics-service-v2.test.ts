@@ -15,7 +15,7 @@ import { UnknownFlagsService } from '../unknown-flags/unknown-flags-service.js';
 
 import { jest } from '@jest/globals';
 
-function initClientMetrics(flagEnabled = true) {
+function initClientMetrics() {
     const stores = createStores();
 
     const eventBus = new EventEmitter();
@@ -25,9 +25,7 @@ function initClientMetrics(flagEnabled = true) {
         eventBus,
         getLogger,
         flagResolver: {
-            isEnabled: () => {
-                return flagEnabled;
-            },
+            isEnabled: () => true,
         },
     } as unknown as IUnleashConfig;
 
@@ -51,12 +49,17 @@ function initClientMetrics(flagEnabled = true) {
         lastSeenService,
         unknownFlagsService,
     );
-    return { clientMetricsService: service, eventBus, lastSeenService };
+    return { clientMetricsService: service, eventBus, lastSeenService, stores };
 }
 
 test('process metrics properly', async () => {
-    const { clientMetricsService, eventBus, lastSeenService } =
+    const { clientMetricsService, eventBus, lastSeenService, stores } =
         initClientMetrics();
+
+    stores.clientMetricsStoreV2.getFeatureFlagNames = jest
+        .fn()
+        .mockResolvedValue(['myCoolToggle', 'myOtherToggle']);
+
     await clientMetricsService.registerClientMetrics(
         {
             appName: 'test',
@@ -112,31 +115,6 @@ test('process metrics properly even when some names are not url friendly, filter
     // only toggle with a bad name gets filtered out
     expect(eventBus.emit).not.toHaveBeenCalled();
     expect(lastSeenService.updateLastSeen).not.toHaveBeenCalled();
-});
-
-test('process metrics properly even when some names are not url friendly, with default behavior when flag is off', async () => {
-    const { clientMetricsService, eventBus, lastSeenService } =
-        initClientMetrics(false);
-    await clientMetricsService.registerClientMetrics(
-        {
-            appName: 'test',
-            bucket: {
-                start: '1982-07-25T12:00:00.000Z',
-                stop: '2023-07-25T12:00:00.000Z',
-                toggles: {
-                    'not url friendly ☹': {
-                        yes: 0,
-                        no: 100,
-                    },
-                },
-            },
-            environment: 'test',
-        },
-        '127.0.0.1',
-    );
-
-    expect(eventBus.emit).toHaveBeenCalledTimes(1);
-    expect(lastSeenService.updateLastSeen).toHaveBeenCalledTimes(1);
 });
 
 test('get daily client metrics for a toggle', async () => {

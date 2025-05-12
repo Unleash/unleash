@@ -81,6 +81,12 @@ test('should pick up environment from token', async () => {
         tokenName: 'tester',
     });
 
+    await app.services.featureToggleService.createFeatureToggle(
+        'default',
+        { name: 'test' },
+        TEST_AUDIT_USER,
+    );
+
     await app.request
         .post('/api/client/metrics')
         .set('Authorization', token.secret)

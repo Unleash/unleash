@@ -59,6 +59,7 @@ import groupBy from 'lodash.groupby';
 import { allSettledWithRejection } from '../../util/allSettledWithRejection';
 import type { ISegmentReadModel } from '../segment/segment-read-model-type';
 import { readFile } from '../../util/read-file';
+import type FeatureLinkService from '../feature-links/feature-link-service';
 
 export type IImportService = {
     validate(
@@ -131,6 +132,8 @@ export default class ExportImportService
 
     private featureLinksReadModel: IFeatureLinksReadModel;
 
+    private featureLinkService: FeatureLinkService;
+
     constructor(
         stores: Pick<
             IUnleashStores,
@@ -155,6 +158,7 @@ export default class ExportImportService
             tagTypeService,
             featureTagService,
             dependentFeaturesService,
+            featureLinkService,
         }: Pick<
             IUnleashServices,
             | 'featureToggleService'
@@ -165,6 +169,7 @@ export default class ExportImportService
             | 'tagTypeService'
             | 'featureTagService'
             | 'dependentFeaturesService'
+            | 'featureLinkService'
         >,
         dependentFeaturesReadModel: IDependentFeaturesReadModel,
         segmentReadModel: ISegmentReadModel,
@@ -186,6 +191,7 @@ export default class ExportImportService
         this.tagTypeService = tagTypeService;
         this.featureTagService = featureTagService;
         this.dependentFeaturesService = dependentFeaturesService;
+        this.featureLinkService = featureLinkService;
         this.importPermissionsService = new ImportPermissionsService(
             this.importTogglesStore,
             this.accessService,
@@ -297,6 +303,9 @@ export default class ExportImportService
         await this.importTagTypes(dto, auditUser);
         await this.importTags(dto, auditUser);
         await this.importContextFields(dto, auditUser);
+        if (this.flagResolver.isEnabled('featureLinks')) {
+            await this.importLinks(dto, auditUser);
+        }
     }
 
     async import(
@@ -353,6 +362,27 @@ export default class ExportImportService
         await this.importStrategies(dto, auditUser);
         await this.importToggleStatuses(dto, user, auditUser);
         await this.importDependencies(dto, user, auditUser);
+    }
+
+    private async importLinks(dto: ImportTogglesSchema, auditUser: IAuditUser) {
+        await this.importTogglesStore.deleteLinksForFeatures(
+            (dto.data.links ?? []).map((featureLink) => featureLink.feature),
+        );
+
+        const links = dto.data.links || [];
+        for (const featureLink of links) {
+            for (const link of featureLink.links) {
+                await this.featureLinkService.createLink(
+                    dto.project,
+                    {
+                        featureName: featureLink.feature,
+                        url: link.url,
+                        title: link.title || undefined,
+                    },
+                    auditUser,
+                );
+            }
+        }
     }
 
     private async importDependencies(

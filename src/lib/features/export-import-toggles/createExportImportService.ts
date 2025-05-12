@@ -51,6 +51,10 @@ import {
 } from '../context/createContextService';
 import { FakeFeatureLinksReadModel } from '../feature-links/fake-feature-links-read-model';
 import { FeatureLinksReadModel } from '../feature-links/feature-links-read-model';
+import {
+    createFakeFeatureLinkService,
+    createFeatureLinkService,
+} from '../feature-links/createFeatureLinkService';
 
 export const createFakeExportImportTogglesService = (
     config: IUnleashConfig,
@@ -98,6 +102,9 @@ export const createFakeExportImportTogglesService = (
 
     const featureLinksReadModel = new FakeFeatureLinksReadModel();
 
+    const featureLinkService =
+        createFakeFeatureLinkService(config).featureLinkService;
+
     return new ExportImportService(
         {
             importTogglesStore,
@@ -118,6 +125,7 @@ export const createFakeExportImportTogglesService = (
             strategyService,
             tagTypeService,
             dependentFeaturesService,
+            featureLinkService,
         },
         dependentFeaturesReadModel,
         segmentReadModel,
@@ -191,6 +199,8 @@ export const deferredExportImportTogglesService = (
 
         const featureLinksReadModel = new FeatureLinksReadModel(db, eventBus);
 
+        const featureLinkService = createFeatureLinkService(config)(db);
+
         return new ExportImportService(
             {
                 importTogglesStore,
@@ -211,6 +221,7 @@ export const deferredExportImportTogglesService = (
                 strategyService,
                 tagTypeService,
                 dependentFeaturesService,
+                featureLinkService,
             },
             dependentFeaturesReadModel,
             segmentReadModel,

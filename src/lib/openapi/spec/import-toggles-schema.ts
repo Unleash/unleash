@@ -16,6 +16,8 @@ import { featureEnvironmentSchema } from './feature-environment-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
 import { featureDependenciesSchema } from './feature-dependencies-schema';
 import { dependentFeatureSchema } from './dependent-feature-schema';
+import { featureLinksSchema } from './feature-links-schema';
+import { featureLinkSchema } from './feature-link-schema';
 
 export const importTogglesSchema = {
     $id: '#/components/schemas/importTogglesSchema',
@@ -60,6 +62,8 @@ export const importTogglesSchema = {
             tagTypeSchema,
             featureDependenciesSchema,
             dependentFeatureSchema,
+            featureLinksSchema,
+            featureLinkSchema,
         },
     },
 } as const;

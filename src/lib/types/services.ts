@@ -136,5 +136,6 @@ export interface IUnleashServices {
     uniqueConnectionService: UniqueConnectionService;
     featureLifecycleReadModel: IFeatureLifecycleReadModel;
     transactionalFeatureLinkService: WithTransactional<FeatureLinkService>;
+    featureLinkService: FeatureLinkService;
     unknownFlagsService: UnknownFlagsService;
 }

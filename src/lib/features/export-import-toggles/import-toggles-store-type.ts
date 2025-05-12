@@ -28,6 +28,7 @@ export interface IImportTogglesStore {
     ): Promise<ProjectFeaturesLimit>;
 
     deleteTagsForFeatures(tags: string[]): Promise<void>;
+    deleteLinksForFeatures(tags: string[]): Promise<void>;
 
     strategiesExistForFeatures(
         featureNames: string[],

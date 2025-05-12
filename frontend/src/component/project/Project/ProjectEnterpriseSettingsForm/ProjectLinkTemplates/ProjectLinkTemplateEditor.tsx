@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, styled, TextField, Typography } from '@mui/material';
+import { Button, styled, TextField } from '@mui/material';
 import type { ProjectLinkTemplateSchema } from 'openapi';
 
 interface IProjectLinkTemplateEditorProps {
@@ -13,7 +13,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
-    padding: theme.spacing(3),
+    marginTop: theme.spacing(1),
 }));
 
 const StyledDialogActions = styled('div')(({ theme }) => ({
@@ -57,12 +57,6 @@ const ProjectLinkTemplateEditor = ({
 
     return (
         <StyledContainer>
-            <Typography
-                variant='h5'
-                sx={(theme) => ({ fontSize: theme.typography.body1.fontSize })}
-            >
-                {isAdding ? 'Add new link template' : 'Edit link template'}
-            </Typography>
             <TextField
                 label='Title (optional)'
                 fullWidth

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, Button, Checkbox, styled } from '@mui/material';
+import { Alert, Button, Checkbox, Radio, styled } from '@mui/material';
 import {
     filterLegalValues,
     LegalValueLabel,
@@ -118,6 +118,83 @@ export const LegalValuesSelector = ({
                         control={
                             <Checkbox
                                 checked={Boolean(values.has(match.value))}
+                                onChange={() => onChange(match.value)}
+                                name='legal-value'
+                                color='primary'
+                                disabled={deletedLegalValues?.has(match.value)}
+                            />
+                        }
+                    />
+                ))}
+            </StyledValuesContainer>
+        </LegalValuesSelectorWidget>
+    );
+};
+
+type SingleLegalValueSelectorProps = {
+    value: string;
+    setValue: (value: string) => void;
+    clear: () => void;
+    deletedLegalValues?: Set<string>;
+    legalValues: ILegalValue[];
+};
+
+export const SingleLegalValueSelector = ({
+    legalValues,
+    value,
+    setValue,
+    clear,
+    deletedLegalValues,
+}: SingleLegalValueSelectorProps) => {
+    const [filter, setFilter] = useState('');
+
+    const filteredValues = filterLegalValues(legalValues, filter);
+
+    const onChange = (legalValue: string) => {
+        setValue(legalValue);
+    };
+
+    const handleSearchKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            if (filteredValues.length > 0) {
+                const firstValue = filteredValues[0].value;
+                onChange(firstValue);
+            }
+        }
+    };
+
+    return (
+        <LegalValuesSelectorWidget>
+            {deletedLegalValues?.size ? (
+                <Alert severity='warning'>
+                    This constraint is using legal values that have been deleted
+                    as valid options. If you save changes on this constraint and
+                    then save the strategy the following values will be removed:
+                    <ul>
+                        {[...deletedLegalValues].map((value) => (
+                            <li key={value}>{value}</li>
+                        ))}
+                    </ul>
+                </Alert>
+            ) : null}
+            <p>Select values from a predefined set</p>
+            <Row>
+                <ConstraintValueSearch
+                    onKeyDown={handleSearchKeyDown}
+                    filter={filter}
+                    setFilter={setFilter}
+                />
+            </Row>
+            <StyledValuesContainer>
+                {filteredValues.map((match) => (
+                    <LegalValueLabel
+                        key={match.value}
+                        legal={match}
+                        filter={filter}
+                        control={
+                            <Radio
+                                checked={Boolean(value === match.value)}
                                 onChange={() => onChange(match.value)}
                                 name='legal-value'
                                 color='primary'

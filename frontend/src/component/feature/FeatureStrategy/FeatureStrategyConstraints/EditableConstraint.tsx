@@ -16,7 +16,10 @@ import { ReactComponent as EqualsIcon } from 'assets/icons/constraint-equals.svg
 import { ReactComponent as NotEqualsIcon } from 'assets/icons/constraint-not-equals.svg';
 import { AddSingleValueWidget } from './AddSingleValueWidget';
 import { ConstraintDateInput } from './ConstraintDateInput';
-import { LegalValuesSelector } from './LegalValuesSelector';
+import {
+    LegalValuesSelector,
+    SingleLegalValueSelector,
+} from './LegalValuesSelector';
 import { useEditableConstraint } from './useEditableConstraint/useEditableConstraint';
 import type { IConstraint } from 'interfaces/strategy';
 import {
@@ -230,6 +233,8 @@ export const EditableConstraint: FC<Props> = ({
         ...constraintMetadata
     } = useEditableConstraint(constraint, onAutoSave);
 
+    const isLegalValueConstraint = 'legalValues' in constraintMetadata;
+
     const { context } = useUnleashContext();
     const { contextName, operator } = localConstraint;
     const showCaseSensitiveButton = isStringOperator(operator);
@@ -327,7 +332,8 @@ export const EditableConstraint: FC<Props> = ({
                         values={
                             isMultiValueConstraint(localConstraint)
                                 ? Array.from(localConstraint.values)
-                                : 'legalValues' in constraintMetadata
+                                : 'legalValues' in constraintMetadata &&
+                                    localConstraint.value
                                   ? [localConstraint.value]
                                   : undefined
                         }
@@ -349,12 +355,14 @@ export const EditableConstraint: FC<Props> = ({
                             deleteButtonRef.current
                         }
                     >
-                        <TopRowInput
-                            localConstraint={localConstraint}
-                            updateConstraint={updateConstraint}
-                            validator={validator}
-                            addValuesButtonRef={addValuesButtonRef}
-                        />
+                        {isLegalValueConstraint ? null : (
+                            <TopRowInput
+                                localConstraint={localConstraint}
+                                updateConstraint={updateConstraint}
+                                validator={validator}
+                                addValuesButtonRef={addValuesButtonRef}
+                            />
+                        )}
                     </ValueList>
                 </ConstraintDetails>
                 <ButtonPlaceholder />
@@ -370,33 +378,53 @@ export const EditableConstraint: FC<Props> = ({
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
-            {'legalValues' in constraintMetadata &&
-            isMultiValueConstraint(localConstraint) ? (
+            {'legalValues' in constraintMetadata ? (
                 <LegalValuesContainer>
-                    <LegalValuesSelector
-                        values={localConstraint.values}
-                        clearAll={() =>
-                            updateConstraint({
-                                type: 'clear values',
-                            })
-                        }
-                        addValues={(newValues) =>
-                            updateConstraint({
-                                type: 'add value(s)',
-                                payload: newValues,
-                            })
-                        }
-                        removeValue={(value) =>
-                            updateConstraint({
-                                type: 'remove value from list',
-                                payload: value,
-                            })
-                        }
-                        deletedLegalValues={
-                            constraintMetadata.deletedLegalValues
-                        }
-                        legalValues={constraintMetadata.legalValues}
-                    />
+                    {isMultiValueConstraint(localConstraint) ? (
+                        <LegalValuesSelector
+                            values={localConstraint.values}
+                            clearAll={() =>
+                                updateConstraint({
+                                    type: 'clear values',
+                                })
+                            }
+                            addValues={(newValues) =>
+                                updateConstraint({
+                                    type: 'add value(s)',
+                                    payload: newValues,
+                                })
+                            }
+                            removeValue={(value) =>
+                                updateConstraint({
+                                    type: 'remove value from list',
+                                    payload: value,
+                                })
+                            }
+                            deletedLegalValues={
+                                constraintMetadata.deletedLegalValues
+                            }
+                            legalValues={constraintMetadata.legalValues}
+                        />
+                    ) : (
+                        <SingleLegalValueSelector
+                            value={localConstraint.value}
+                            clear={() =>
+                                updateConstraint({
+                                    type: 'clear values',
+                                })
+                            }
+                            setValue={(newValues) =>
+                                updateConstraint({
+                                    type: 'set value',
+                                    payload: newValues,
+                                })
+                            }
+                            deletedLegalValues={
+                                constraintMetadata.deletedLegalValues
+                            }
+                            legalValues={constraintMetadata.legalValues}
+                        />
+                    )}
                 </LegalValuesContainer>
             ) : null}
         </Container>

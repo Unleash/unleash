@@ -13,8 +13,8 @@ test('should return deleted legal values', () => {
 
 test('should return invalid legal values', () => {
     const invalidLegalValues = getInvalidLegalValues(
-        [{ value: 'A' }, { value: 'B' }],
         (value: string) => value === 'B',
+        [{ value: 'A' }, { value: 'B' }],
     );
     expect([...invalidLegalValues]).toEqual(['A']);
 });

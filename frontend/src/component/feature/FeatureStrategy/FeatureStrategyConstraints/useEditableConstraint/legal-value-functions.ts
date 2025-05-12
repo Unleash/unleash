@@ -14,8 +14,8 @@ export const getDeletedLegalValues = (
 };
 
 export const getInvalidLegalValues = (
-    allLegalValues: ILegalValue[],
     validate: (value: string) => boolean,
+    allLegalValues: ILegalValue[],
 ): Set<string> => {
     return new Set(
         allLegalValues

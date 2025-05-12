@@ -108,8 +108,8 @@ export const useEditableConstraint = (
             isSingleValueConstraint(localConstraint)
         ) {
             return getInvalidLegalValues(
-                contextDefinition.legalValues,
                 (value) => validator(value)[0],
+                contextDefinition.legalValues,
             );
         }
         return undefined;

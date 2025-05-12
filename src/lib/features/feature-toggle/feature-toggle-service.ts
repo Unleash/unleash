@@ -149,6 +149,36 @@ const oneOf = (values: string[], match: string) => {
     return values.some((value) => value === match);
 };
 
+export type Stores = Pick<
+    IUnleashStores,
+    | 'featureStrategiesStore'
+    | 'featureToggleStore'
+    | 'clientFeatureToggleStore'
+    | 'projectStore'
+    | 'featureTagStore'
+    | 'featureEnvironmentStore'
+    | 'contextFieldStore'
+    | 'strategyStore'
+>;
+
+export type Config = Pick<
+    IUnleashConfig,
+    'getLogger' | 'flagResolver' | 'eventBus' | 'resourceLimits'
+>;
+
+export type ServicesAndReadModels = {
+    segmentService: ISegmentService;
+    accessService: AccessService;
+    eventService: EventService;
+    changeRequestAccessReadModel: IChangeRequestAccessReadModel;
+    privateProjectChecker: IPrivateProjectChecker;
+    dependentFeaturesReadModel: IDependentFeaturesReadModel;
+    dependentFeaturesService: DependentFeaturesService;
+    featureLifecycleReadModel: IFeatureLifecycleReadModel;
+    featureCollaboratorsReadModel: IFeatureCollaboratorsReadModel;
+    featureLinksReadModel: IFeatureLinksReadModel;
+};
+
 class FeatureToggleService {
     private logger: Logger;
 
@@ -204,36 +234,20 @@ class FeatureToggleService {
             featureEnvironmentStore,
             contextFieldStore,
             strategyStore,
-        }: Pick<
-            IUnleashStores,
-            | 'featureStrategiesStore'
-            | 'featureToggleStore'
-            | 'clientFeatureToggleStore'
-            | 'projectStore'
-            | 'featureTagStore'
-            | 'featureEnvironmentStore'
-            | 'contextFieldStore'
-            | 'strategyStore'
-        >,
+        }: Stores,
+        { getLogger, flagResolver, eventBus, resourceLimits }: Config,
         {
-            getLogger,
-            flagResolver,
-            eventBus,
-            resourceLimits,
-        }: Pick<
-            IUnleashConfig,
-            'getLogger' | 'flagResolver' | 'eventBus' | 'resourceLimits'
-        >,
-        segmentService: ISegmentService,
-        accessService: AccessService,
-        eventService: EventService,
-        changeRequestAccessReadModel: IChangeRequestAccessReadModel,
-        privateProjectChecker: IPrivateProjectChecker,
-        dependentFeaturesReadModel: IDependentFeaturesReadModel,
-        dependentFeaturesService: DependentFeaturesService,
-        featureLifecycleReadModel: IFeatureLifecycleReadModel,
-        featureCollaboratorsReadModel: IFeatureCollaboratorsReadModel,
-        featureLinksReadModel: IFeatureLinksReadModel,
+            segmentService,
+            accessService,
+            eventService,
+            changeRequestAccessReadModel,
+            privateProjectChecker,
+            dependentFeaturesReadModel,
+            dependentFeaturesService,
+            featureLifecycleReadModel,
+            featureCollaboratorsReadModel,
+            featureLinksReadModel,
+        }: ServicesAndReadModels,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;

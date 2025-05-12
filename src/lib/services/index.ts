@@ -291,13 +291,11 @@ export const createServices = (
         ? new FeatureCollaboratorsReadModel(db)
         : new FakeFeatureCollaboratorsReadModel();
 
-    const featureLinkReadModel = db
+    const featureLinksReadModel = db
         ? new FeatureLinksReadModel(db, config.eventBus)
         : new FakeFeatureLinksReadModel();
 
-    const featureToggleService = new FeatureToggleService(
-        stores,
-        config,
+    const featureToggleService = new FeatureToggleService(stores, config, {
         segmentService,
         accessService,
         eventService,
@@ -307,8 +305,8 @@ export const createServices = (
         dependentFeaturesService,
         featureLifecycleReadModel,
         featureCollaboratorsReadModel,
-        featureLinkReadModel,
-    );
+        featureLinksReadModel,
+    });
     const transactionalEnvironmentService = db
         ? withTransactional(createEnvironmentService(config), db)
         : withFakeTransactional(createFakeEnvironmentService(config));

@@ -29,7 +29,7 @@ import { ApplyButton } from './ApplyButton/ApplyButton.tsx';
 import {
     ChangeRequestApplyScheduledDialogue,
     ChangeRequestRejectScheduledDialogue,
-} from './ChangeRequestScheduledDialogs/changeRequestScheduledDialogs.ts';
+} from './ChangeRequestScheduledDialogs/changeRequestScheduledDialogs.tsx';
 import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/ScheduleChangeRequestDialog.tsx';
 import type { PlausibleChangeRequestState } from '../changeRequest.types';
 import { useNavigate } from 'react-router-dom';

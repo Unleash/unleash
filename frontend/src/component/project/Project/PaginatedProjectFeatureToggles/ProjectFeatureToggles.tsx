@@ -19,7 +19,7 @@ import {
     MemoizedFeatureEnvironmentSeenCell,
 } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { useFeatureToggleSwitch } from '../ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch.ts';
+import { useFeatureToggleSwitch } from '../ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch.tsx';
 import useLoading from 'hooks/useLoading';
 import { ProjectFeatureTogglesHeader } from './ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader.tsx';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
@@ -33,7 +33,7 @@ import {
 import { ProjectOverviewFilters } from './ProjectOverviewFilters.tsx';
 import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility.ts';
 import { TableEmptyState } from './TableEmptyState/TableEmptyState.tsx';
-import { useRowActions } from './hooks/useRowActions.ts';
+import { useRowActions } from './hooks/useRowActions.tsx';
 import { useSelectedData } from './hooks/useSelectedData.ts';
 import { createFeatureOverviewCell } from 'component/common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 import {

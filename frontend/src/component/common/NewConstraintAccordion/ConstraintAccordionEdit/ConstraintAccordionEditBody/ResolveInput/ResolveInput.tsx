@@ -19,7 +19,7 @@ import {
     DATE_OPERATORS_SINGLE_VALUE,
     IN_OPERATORS_FREETEXT,
     type Input,
-} from '../useConstraintInput/useConstraintInput.ts';
+} from '../useConstraintInput/useConstraintInput.tsx';
 import type React from 'react';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { LegalValuesSelector } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/LegalValuesSelector';

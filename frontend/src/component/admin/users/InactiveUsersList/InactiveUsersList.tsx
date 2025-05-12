@@ -5,7 +5,7 @@ import {
 import { useUsers } from '../../../../hooks/api/getters/useUsers/useUsers.ts';
 import useAdminUsersApi from '../../../../hooks/api/actions/useAdminUsersApi/useAdminUsersApi.ts';
 import { useInactiveUsersApi } from '../../../../hooks/api/actions/useInactiveUsersApi/useInactiveUsersApi.ts';
-import useToast from '../../../../hooks/useToast.ts';
+import useToast from '../../../../hooks/useToast.tsx';
 import { formatUnknownError } from '../../../../utils/formatUnknownError.ts';
 import type { IUser } from '../../../../interfaces/user.ts';
 import type React from 'react';
@@ -19,7 +19,7 @@ import { PageHeader } from '../../../common/PageHeader/PageHeader.tsx';
 import { Button } from '@mui/material';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender.tsx';
-import { TablePlaceholder, VirtualizedTable } from '../../../common/Table.tsx';
+import { TablePlaceholder, VirtualizedTable } from '../../../common/Table';
 
 import { DateCell } from '../../../common/Table/cells/DateCell/DateCell.tsx';
 import { InactiveUsersActionCell } from './InactiveUsersActionCell/InactiveUsersActionCell.tsx';

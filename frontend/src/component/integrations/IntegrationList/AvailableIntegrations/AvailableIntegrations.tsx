@@ -5,7 +5,7 @@ import { IntegrationCard } from '../IntegrationCard/IntegrationCard.tsx';
 import { JIRA_INFO } from '../../ViewIntegration/JiraIntegration/JiraIntegration.tsx';
 import { StyledCardsGrid } from '../IntegrationList.styles';
 import { RequestIntegrationCard } from '../RequestIntegrationCard/RequestIntegrationCard.tsx';
-import { OFFICIAL_SDKS } from './SDKs.tsx';
+import { OFFICIAL_SDKS } from './SDKs.ts';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

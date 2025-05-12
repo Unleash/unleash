@@ -8,7 +8,7 @@ import {
     Tooltip,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useFeedbackContext } from './useFeedback.ts';
+import { useFeedbackContext } from './useFeedback';
 import type React from 'react';
 import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';

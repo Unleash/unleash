@@ -19,7 +19,7 @@ import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
 import { useDashboardState } from './useDashboardState.ts';
 import { MyFlags } from './MyFlags.tsx';
 import { usePageTitle } from 'hooks/usePageTitle';
-import { fromPersonalDashboardProjectDetailsOutput } from './RemoteData.tsx';
+import { fromPersonalDashboardProjectDetailsOutput } from './RemoteData.ts';
 import { useEffect } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { InfoSection } from './InfoSection.tsx';

@@ -1,6 +1,6 @@
 import type { ComponentProps, Dispatch, FC, SetStateAction } from 'react';
 import { Autocomplete, Chip, TextField } from '@mui/material';
-import { renderOption } from '../../renderOption.ts';
+import { renderOption } from '../../renderOption.tsx';
 
 interface IEnvironmentsFieldProps {
     environments: string[];

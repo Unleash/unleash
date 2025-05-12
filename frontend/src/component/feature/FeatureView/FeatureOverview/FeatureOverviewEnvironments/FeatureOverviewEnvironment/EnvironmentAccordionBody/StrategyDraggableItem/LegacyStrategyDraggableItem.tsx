@@ -10,7 +10,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import {
     useStrategyChangesFromRequest,
     type UseStrategyChangeFromRequestResult,
-} from './StrategyItem/useStrategyChangesFromRequest.ts';
+} from './StrategyItem/useStrategyChangesFromRequest.tsx';
 import { ChangesScheduledBadge } from 'component/changeRequest/ModifiedInChangeRequestStatusBadge/ChangesScheduledBadge';
 import type { IFeatureChange } from 'component/changeRequest/changeRequest.types';
 import { Badge } from 'component/common/Badge/Badge';

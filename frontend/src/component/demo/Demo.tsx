@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { DemoTopics } from './DemoTopics/DemoTopics.tsx';
 import { DemoSteps } from './DemoSteps/DemoSteps.tsx';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import { TOPICS } from './demo-topics.ts';
+import { TOPICS } from './demo-topics.js';
 import { DemoDialogWelcome } from './DemoDialog/DemoDialogWelcome/DemoDialogWelcome.tsx';
 import { DemoDialogFinish } from './DemoDialog/DemoDialogFinish/DemoDialogFinish.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

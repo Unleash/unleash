@@ -400,10 +400,7 @@ export const EditableConstraint: FC<Props> = ({
                                     payload: value,
                                 })
                             }
-                            deletedLegalValues={
-                                constraintMetadata.deletedLegalValues
-                            }
-                            legalValues={constraintMetadata.legalValues}
+                            {...constraintMetadata}
                         />
                     ) : (
                         <SingleLegalValueSelector
@@ -413,16 +410,13 @@ export const EditableConstraint: FC<Props> = ({
                                     type: 'clear values',
                                 })
                             }
-                            setValue={(newValues) =>
+                            addValue={(newValues) =>
                                 updateConstraint({
                                     type: 'set value',
                                     payload: newValues,
                                 })
                             }
-                            deletedLegalValues={
-                                constraintMetadata.deletedLegalValues
-                            }
-                            legalValues={constraintMetadata.legalValues}
+                            {...constraintMetadata}
                         />
                     )}
                 </LegalValuesContainer>

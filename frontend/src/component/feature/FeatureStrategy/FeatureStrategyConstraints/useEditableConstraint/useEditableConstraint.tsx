@@ -52,6 +52,7 @@ type MultiValueConstraintState = {
 type LegalValueData = {
     legalValues: ILegalValue[];
     deletedLegalValues?: Set<string>;
+    invalidLegalValues?: Set<string>;
 };
 
 type LegalValueConstraintState = {
@@ -80,6 +81,8 @@ export const useEditableConstraint = (
         resolveContextDefinition(context, localConstraint.contextName),
     );
 
+    const validator = constraintValidator(localConstraint);
+
     const deletedLegalValues = useMemo(() => {
         if (
             contextDefinition.legalValues?.length &&
@@ -99,6 +102,20 @@ export const useEditableConstraint = (
     }, [
         JSON.stringify(contextDefinition.legalValues),
         JSON.stringify(constraint.values),
+    ]);
+
+    const invalidLegalValues = useMemo(() => {
+        if (contextDefinition.legalValues?.length) {
+            return new Set(
+                contextDefinition.legalValues
+                    .filter(({ value }) => !validator(value)[0])
+                    .map(({ value }) => value),
+            );
+        }
+        return undefined;
+    }, [
+        JSON.stringify(contextDefinition.legalValues),
+        JSON.stringify(constraint.operator),
     ]);
 
     const updateConstraint = (action: ConstraintUpdateAction) => {
@@ -125,16 +142,18 @@ export const useEditableConstraint = (
             return {
                 updateConstraint,
                 constraint: localConstraint,
-                validator: constraintValidator(localConstraint),
+                validator,
                 legalValues: contextDefinition.legalValues,
+                invalidLegalValues,
                 deletedLegalValues,
             };
         }
         return {
             updateConstraint,
             constraint: localConstraint,
-            validator: constraintValidator(localConstraint),
+            validator,
             legalValues: contextDefinition.legalValues,
+            invalidLegalValues,
             deletedLegalValues,
         };
     }
@@ -142,13 +161,13 @@ export const useEditableConstraint = (
         return {
             updateConstraint,
             constraint: localConstraint,
-            validator: constraintValidator(localConstraint),
+            validator,
         };
     }
 
     return {
         updateConstraint,
         constraint: localConstraint,
-        validator: constraintValidator(localConstraint),
+        validator,
     };
 };

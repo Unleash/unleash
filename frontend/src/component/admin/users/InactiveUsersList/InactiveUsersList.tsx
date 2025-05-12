@@ -19,7 +19,7 @@ import { PageHeader } from '../../../common/PageHeader/PageHeader.tsx';
 import { Button } from '@mui/material';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender.tsx';
-import { TablePlaceholder, VirtualizedTable } from '../../../common/Table';
+import { TablePlaceholder, VirtualizedTable } from '../../../common/Table/index.ts';
 
 import { DateCell } from '../../../common/Table/cells/DateCell/DateCell.tsx';
 import { InactiveUsersActionCell } from './InactiveUsersActionCell/InactiveUsersActionCell.tsx';

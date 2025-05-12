@@ -53,6 +53,7 @@ const BaseLegalValueSelector: FC<BaseProps> = ({
     const labelId = useId();
     const descriptionId = useId();
     const groupNameId = useId();
+    const alertId = useId();
 
     const filteredValues = filterLegalValues(legalValues, filter);
 
@@ -75,7 +76,7 @@ const BaseLegalValueSelector: FC<BaseProps> = ({
     return (
         <LegalValuesSelectorWidget>
             {deletedLegalValues?.size ? (
-                <Alert severity='warning'>
+                <Alert id={alertId} severity='warning'>
                     This constraint is using legal values that have been deleted
                     as valid options. If you save changes on this constraint and
                     then save the strategy the following values will be removed:
@@ -123,6 +124,7 @@ const BaseLegalValueSelector: FC<BaseProps> = ({
             <StyledValuesContainer
                 aria-labelledby={labelId}
                 aria-describedby={descriptionId}
+                aria-details={alertId}
                 role={multiSelect ? undefined : 'radiogroup'}
             >
                 {filteredValues.map((match) => (

@@ -36,8 +36,6 @@ process.nextTick(async () => {
                 experimental: {
                     // externalResolver: unleash,
                     flags: {
-                        embedProxy: true,
-                        embedProxyFrontend: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
                         outdatedSdksBanner: true,
@@ -55,7 +53,6 @@ process.nextTick(async () => {
                         filterExistingFlagNames: true,
                         teamsIntegrationChangeRequests: true,
                         tagTypeColor: true,
-                        newStrategyDropdown: true,
                         addEditStrategy: true,
                         flagsOverviewSearch: true,
                         cleanupReminder: true,

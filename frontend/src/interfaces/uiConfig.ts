@@ -54,7 +54,6 @@ export type UiFlags = {
     T?: boolean;
     UNLEASH_CLOUD?: boolean;
     UG?: boolean;
-    embedProxyFrontend?: boolean;
     maintenanceMode?: boolean;
     messageBanner?: Variant;
     banner?: Variant;
@@ -91,11 +90,11 @@ export type UiFlags = {
     edgeObservability?: boolean;
     tagTypeColor?: boolean;
     addEditStrategy?: boolean;
-    newStrategyDropdown?: boolean;
     flagsReleaseManagementUI?: boolean;
     cleanupReminder?: boolean;
     registerFrontendClient?: boolean;
     featureLinks?: boolean;
+    projectLinkTemplates?: boolean;
 };
 
 export interface IVersionInfo {

@@ -49,7 +49,9 @@ const EditProject = () => {
                     condition={isEnterprise()}
                     show={<UpdateEnterpriseSettings project={project} />}
                 />
-                <ArchiveProjectForm featureCount={featuresCount(project)} />
+                <ArchiveProjectForm
+                    featureCount={featuresCount(project) ?? 0}
+                />
             </StyledFormContainer>
         </>
     );

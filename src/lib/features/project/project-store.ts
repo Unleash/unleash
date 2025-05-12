@@ -663,7 +663,7 @@ class ProjectStore implements IProjectStore {
                 description: row.feature_naming_description,
             },
             ...(projectLinkTemplatesEnabled
-                ? { linkTemplates: row.link_templates }
+                ? { linkTemplates: row.link_templates || [] }
                 : {}),
         };
     }

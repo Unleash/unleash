@@ -62,7 +62,6 @@ export type IFlagKey =
     | 'edgeObservability'
     | 'tagTypeColor'
     | 'addEditStrategy'
-    | 'newStrategyDropdown'
     | 'flagsOverviewSearch'
     | 'flagsReleaseManagementUI'
     | 'cleanupReminder'
@@ -297,10 +296,6 @@ const flags: IFlags = {
     ),
     addEditStrategy: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ADD_EDIT_STRATEGY,
-        false,
-    ),
-    newStrategyDropdown: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_STRATEGY_DROPDOWN,
         false,
     ),
     flagsOverviewSearch: parseEnvVarBoolean(

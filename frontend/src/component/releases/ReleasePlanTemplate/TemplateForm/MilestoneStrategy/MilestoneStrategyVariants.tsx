@@ -1,6 +1,6 @@
 import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
 import { useEffect, useState } from 'react';
-import { Box, styled, Typography, Button } from '@mui/material';
+import { Box, styled, Typography, Button, Alert } from '@mui/material';
 import { HelpIcon } from '../../../../common/HelpIcon/HelpIcon';
 import { StrategyVariantsUpgradeAlert } from 'component/common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
 import { VariantForm } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm';
@@ -22,11 +22,6 @@ const StyledHelpIconBox = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
-}));
-
-const StyledVariantsHeader = styled('div')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    marginTop: theme.spacing(1.5),
 }));
 
 interface IMilestoneStrategyVariantsProps {
@@ -115,10 +110,10 @@ export const MilestoneStrategyVariants = ({
 
     return (
         <>
-            <StyledVariantsHeader>
+            <Alert severity='info' sx={{ mb: 2 }} icon={false}>
                 Variants enhance a feature flag by providing a version of the
                 feature to be enabled
-            </StyledVariantsHeader>
+            </Alert>
             <StyledHelpIconBox>
                 <Typography>Variants</Typography>
                 <HelpIcon

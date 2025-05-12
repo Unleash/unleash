@@ -7,7 +7,7 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions';
 import { v4 as uuidv4 } from 'uuid';
 import { WeightType } from '../../../constants/variantTypes';
-import { Box, styled, Typography, useTheme } from '@mui/material';
+import { Box, styled, Typography, useTheme, Alert } from '@mui/material';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
@@ -26,11 +26,6 @@ const StyledHelpIconBox = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
-}));
-
-const StyledVariantsHeader = styled('div')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    marginTop: theme.spacing(1.5),
 }));
 
 export const NewStrategyVariants: FC<{
@@ -123,10 +118,10 @@ export const NewStrategyVariants: FC<{
 
     return (
         <>
-            <StyledVariantsHeader>
+            <Alert severity='info' sx={{ mb: 2 }} icon={false}>
                 Variants enhance a feature flag by providing a version of the
                 feature to be enabled
-            </StyledVariantsHeader>
+            </Alert>
             <StyledHelpIconBox>
                 <Typography>Variants</Typography>
                 <HelpIcon

@@ -68,7 +68,8 @@ export const LegalValuesSelector = ({
         }
     };
 
-    const isAllSelected = legalValues.every((value) => values.has(value.value));
+    const isAllSelected =
+        legalValues.length === values.size + (deletedLegalValues?.size ?? 0);
 
     const onSelectAll = () => {
         if (isAllSelected) {

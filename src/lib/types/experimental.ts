@@ -9,8 +9,6 @@ export type IFlagKey =
     | 'encryptEmails'
     | 'enableLicense'
     | 'enableLicenseChecker'
-    | 'embedProxy'
-    | 'embedProxyFrontend'
     | 'responseTimeWithAppNameKillSwitch'
     | 'maintenanceMode'
     | 'messageBanner'
@@ -77,14 +75,6 @@ const flags: IFlags = {
     anonymiseEventLog: false,
     enableLicense: false,
     enableLicenseChecker: false,
-    embedProxy: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
-        true,
-    ),
-    embedProxyFrontend: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,
-        true,
-    ),
     responseTimeWithAppNameKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_RESPONSE_TIME_WITH_APP_NAME_KILL_SWITCH,
         false,

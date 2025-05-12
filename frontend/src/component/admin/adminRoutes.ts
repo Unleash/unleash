@@ -80,7 +80,6 @@ export const adminRoutes: INavigationMenuItem[] = [
     {
         path: '/admin/cors',
         title: 'CORS origins',
-        flag: 'embedProxyFrontend',
         menu: { adminSettings: true },
         group: 'access',
     },

@@ -124,6 +124,11 @@ test('should set lastSeen for toggles with metrics both for toggle and toggle en
         TEST_AUDIT_USER,
     );
 
+    // @ts-expect-error
+    app.services.clientMetricsServiceV2.cachedFeatureNames = jest
+        .fn()
+        .mockResolvedValue(['t1', 't2']);
+
     const token = await app.services.apiTokenService.createApiToken({
         type: ApiTokenType.CLIENT,
         project: 'default',

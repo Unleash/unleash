@@ -139,12 +139,6 @@ const RolloutSlider = ({
         }
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            handleInputBlur();
-        }
-    };
-
     return (
         <SliderWrapper>
             <StyledBox>
@@ -157,18 +151,18 @@ const RolloutSlider = ({
                                 Rollout percentage
                             </StyledHeader>
                             <Typography variant='body2'>
-                                T2he rollout percentage determines the
-                                proportion of users exposed to a feature. It's
-                                based on the MurmurHash of a user's unique
-                                identifier, normalized to a number between 1 and
-                                100. If the normalized hash is less than or
-                                equal to the rollout percentage, the user sees
-                                the feature. This ensures a consistent, random
-                                distribution of the feature among users.
+                                The rollout percentage determines the proportion
+                                of users exposed to a feature. It's based on the
+                                MurmurHash of a user's unique identifier,
+                                normalized to a number between 1 and 100. If the
+                                normalized hash is less than or equal to the
+                                rollout percentage, the user sees the feature.
+                                This ensures a consistent, random distribution
+                                of the feature among users.
                             </Typography>
 
                             <StyledSubheader variant='h3'>
-                                Stickiness1
+                                Stickiness
                             </StyledSubheader>
                             <Typography variant='body2'>
                                 Stickiness refers to the value used for hashing
@@ -214,11 +208,11 @@ const RolloutSlider = ({
                 <StyledInputBox>
                     <StyledTextField
                         size='small'
+                        aria-labelledby='discrete-slider-always'
                         type='number'
                         value={inputValue}
                         onChange={handleInputChange}
                         onBlur={handleInputBlur}
-                        onKeyDown={handleKeyDown}
                         disabled={disabled}
                         inputProps={{
                             min: 0,

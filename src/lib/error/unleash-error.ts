@@ -37,7 +37,7 @@ export const UnleashApiErrorTypes = [
 export type UnleashApiErrorName = (typeof UnleashApiErrorTypes)[number];
 
 export abstract class UnleashError extends Error {
-    id: string;
+    declare readonly id: string; // tell TS the prop exists
 
     name: string;
 
@@ -46,10 +46,14 @@ export abstract class UnleashError extends Error {
     additionalParameters: object;
 
     constructor(message: string, name?: string) {
-        super();
-        this.id = uuidV4();
+        super(message);
+        Object.defineProperty(this, 'id', {
+            value: uuidV4(),
+            enumerable: false,
+            writable: false,
+            configurable: false,
+        });
         this.name = name || this.constructor.name;
-        super.message = message;
     }
 
     help(): string {

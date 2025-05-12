@@ -295,7 +295,7 @@ class UserService {
     }
 
     async newUserInviteLink(
-        user: IUserWithRootRole,
+        { id: userId }: Pick<IUserWithRootRole, 'id'>,
         auditUser: IAuditUser = SYSTEM_USER_AUDIT,
     ): Promise<string> {
         const passwordAuthSettings =
@@ -307,7 +307,7 @@ class UserService {
         let inviteLink = this.unleashUrl;
         if (!passwordAuthSettings.disabled) {
             const inviteUrl = await this.resetTokenService.createNewUserUrl(
-                user.id,
+                userId,
                 auditUser.username,
             );
             inviteLink = inviteUrl.toString();

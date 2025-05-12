@@ -230,10 +230,10 @@ export const EditableConstraint: FC<Props> = ({
         constraint: localConstraint,
         updateConstraint,
         validator,
-        ...constraintMetadata
+        ...legalValueData
     } = useEditableConstraint(constraint, onAutoSave);
 
-    const isLegalValueConstraint = 'legalValues' in constraintMetadata;
+    const isLegalValueConstraint = 'legalValues' in legalValueData;
 
     const { context } = useUnleashContext();
     const { contextName, operator } = localConstraint;
@@ -332,7 +332,7 @@ export const EditableConstraint: FC<Props> = ({
                         values={
                             isMultiValueConstraint(localConstraint)
                                 ? Array.from(localConstraint.values)
-                                : 'legalValues' in constraintMetadata &&
+                                : 'legalValues' in legalValueData &&
                                     localConstraint.value
                                   ? [localConstraint.value]
                                   : undefined
@@ -378,7 +378,7 @@ export const EditableConstraint: FC<Props> = ({
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
-            {'legalValues' in constraintMetadata ? (
+            {'legalValues' in legalValueData ? (
                 <LegalValuesContainer>
                     {isMultiValueConstraint(localConstraint) ? (
                         <LegalValuesSelector
@@ -400,7 +400,7 @@ export const EditableConstraint: FC<Props> = ({
                                     payload: value,
                                 })
                             }
-                            {...constraintMetadata}
+                            {...legalValueData}
                         />
                     ) : (
                         <SingleLegalValueSelector
@@ -416,7 +416,7 @@ export const EditableConstraint: FC<Props> = ({
                                     payload: newValues,
                                 })
                             }
-                            {...constraintMetadata}
+                            {...legalValueData}
                         />
                     )}
                 </LegalValuesContainer>

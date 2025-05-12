@@ -88,6 +88,7 @@ export const useEditableConstraint = (
             contextDefinition.legalValues?.length &&
             constraint.values?.length
         ) {
+            // todo: extract and test
             const currentLegalValues = new Set(
                 contextDefinition.legalValues.map(({ value }) => value),
             );
@@ -106,6 +107,7 @@ export const useEditableConstraint = (
 
     const invalidLegalValues = useMemo(() => {
         if (contextDefinition.legalValues?.length) {
+            // todo: extract and test
             return new Set(
                 contextDefinition.legalValues
                     .filter(({ value }) => !validator(value)[0])

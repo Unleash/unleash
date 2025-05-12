@@ -91,7 +91,6 @@ export type UiFlags = {
     edgeObservability?: boolean;
     tagTypeColor?: boolean;
     addEditStrategy?: boolean;
-    newStrategyDropdown?: boolean;
     flagsReleaseManagementUI?: boolean;
     cleanupReminder?: boolean;
     registerFrontendClient?: boolean;

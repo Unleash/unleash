@@ -538,3 +538,4 @@ export * from './types/index.js';
 export * from './error/index.js';
 export * from './util/index.js';
 export * from './services/index.js';
+export * as eventtypes from './events/index.js'

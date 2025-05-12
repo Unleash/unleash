@@ -22,7 +22,6 @@ import type { Context } from 'unleash-client';
 import { enrichContextWithIp } from './index';
 import { corsOriginMiddleware } from '../../middleware';
 import NotImplementedError from '../../error/not-implemented-error';
-import NotFoundError from '../../error/notfound-error';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
 import metricsHelper from '../../util/metrics-helper';

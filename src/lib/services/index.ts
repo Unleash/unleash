@@ -444,6 +444,8 @@ export const createServices = (
               createFakeFeatureLinkService(config).featureLinkService,
           );
 
+    const featureLinkService = transactionalFeatureLinkService;
+
     return {
         transactionalAccessService,
         accessService,
@@ -514,6 +516,7 @@ export const createServices = (
         uniqueConnectionService,
         featureLifecycleReadModel,
         transactionalFeatureLinkService,
+        featureLinkService,
         unknownFlagsService,
     };
 };

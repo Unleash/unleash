@@ -10,6 +10,7 @@ import {
     type IContextFieldStore,
     type IEnvironmentStore,
     type IEventStore,
+    type IFeatureLinkStore,
     type IFeatureToggleStore,
     type IProjectStore,
     type ISegment,
@@ -35,6 +36,7 @@ let contextFieldStore: IContextFieldStore;
 let projectStore: IProjectStore;
 let toggleStore: IFeatureToggleStore;
 let tagStore: ITagStore;
+let featureLinkStore: IFeatureLinkStore;
 
 const defaultStrategy: IStrategyConfig = {
     name: 'default',
@@ -179,6 +181,7 @@ beforeAll(async () => {
     contextFieldStore = db.stores.contextFieldStore;
     toggleStore = db.stores.featureToggleStore;
     tagStore = db.stores.tagStore;
+    featureLinkStore = db.stores.featureLinkStore;
 });
 
 beforeEach(async () => {
@@ -187,6 +190,7 @@ beforeEach(async () => {
     await projectStore.deleteAll();
     await environmentStore.deleteAll();
     await tagStore.deleteAll();
+    await featureLinkStore.deleteAll();
 
     await contextFieldStore.deleteAll();
     await app.createContextField({ name: 'appName' });
@@ -835,6 +839,15 @@ test('import features to existing project and environment', async () => {
                     ],
                 },
             ],
+            links: [
+                {
+                    feature: exportedFeature.name,
+                    links: [
+                        { url: 'http://example1.com', title: 'link title 1' },
+                        { url: 'http://example2.com' },
+                    ],
+                },
+            ],
         },
     });
 
@@ -856,6 +869,10 @@ test('import features to existing project and environment', async () => {
             {
                 feature: anotherExportedFeature.name,
             },
+        ],
+        links: [
+            { title: 'link title 1', url: 'http://example1.com' },
+            { title: null, url: 'http://example2.com' },
         ],
     });
 

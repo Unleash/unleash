@@ -1,12 +1,5 @@
-import { useId, useState } from 'react';
-import {
-    Alert,
-    Button,
-    Checkbox,
-    Radio,
-    RadioGroup,
-    styled,
-} from '@mui/material';
+import { type FC, useId, useState } from 'react';
+import { Alert, Button, Checkbox, Radio, styled } from '@mui/material';
 import {
     filterLegalValues,
     LegalValueLabel,
@@ -45,40 +38,56 @@ const LegalValuesSelectorWidget = styled('article')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-export const LegalValuesSelector = ({
+type BasePropsTmp =
+    | {
+          legalValues: ILegalValue[];
+          onChange: (value: string) => void;
+          deletedLegalValues?: Set<string>;
+          invalidLegalValues?: Set<string>;
+      }
+    | (
+          | {
+                values: Set<string>;
+                multiSelect?: {
+                    selectAll: () => void;
+                    clearAll: () => void;
+                };
+            }
+          | {
+                value: string;
+            }
+      );
+
+type BaseProps = {
+    legalValues: ILegalValue[];
+    values: Set<string>;
+    onChange: (value: string) => void;
+    deletedLegalValues?: Set<string>;
+    invalidLegalValues?: Set<string>;
+    multiSelect?: {
+        selectAll: () => void;
+        clearAll: () => void;
+    };
+};
+
+const LegalValuesSelectorBase: FC<BaseProps> = ({
     legalValues,
     values,
-    addValues,
-    removeValue,
-    clearAll,
+    onChange,
     deletedLegalValues,
     invalidLegalValues,
-}: LegalValuesSelectorProps) => {
+    multiSelect,
+}) => {
     const [filter, setFilter] = useState('');
-    const groupNameId = useId();
     const labelId = useId();
+    const descriptionId = useId();
+    const groupNameId = useId();
 
     const filteredValues = filterLegalValues(legalValues, filter);
 
-    const onChange = (legalValue: string) => {
-        if (values.has(legalValue)) {
-            removeValue(legalValue);
-        } else {
-            addValues([legalValue]);
-        }
-    };
-
     const isAllSelected =
+        multiSelect &&
         legalValues.length === values.size + (deletedLegalValues?.size ?? 0);
-
-    const onSelectAll = () => {
-        if (isAllSelected) {
-            clearAll();
-            return;
-        } else {
-            addValues(legalValues.map(({ value }) => value));
-        }
-    };
 
     const handleSearchKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Enter') {
@@ -89,6 +98,7 @@ export const LegalValuesSelector = ({
             }
         }
     };
+    const Control = multiSelect ? Checkbox : Radio;
 
     return (
         <LegalValuesSelectorWidget>
@@ -111,28 +121,41 @@ export const LegalValuesSelector = ({
                     filter={filter}
                     setFilter={setFilter}
                 />
-                <Button
-                    sx={{
-                        whiteSpace: 'nowrap',
-                    }}
-                    variant={'text'}
-                    onClick={onSelectAll}
-                >
-                    {isAllSelected ? 'Unselect all' : 'Select all'}
-                </Button>
+                {multiSelect ? (
+                    <Button
+                        sx={{
+                            whiteSpace: 'nowrap',
+                        }}
+                        variant={'text'}
+                        onClick={() => {
+                            if (isAllSelected) {
+                                multiSelect.clearAll();
+                                return;
+                            } else {
+                                multiSelect.selectAll();
+                            }
+                        }}
+                    >
+                        {isAllSelected ? 'Unselect all' : 'Select all'}
+                    </Button>
+                ) : null}
             </Row>
-            <StyledValuesContainer>
+            <StyledValuesContainer
+                aria-labelledby={labelId}
+                aria-describedby={descriptionId}
+                role={multiSelect ? undefined : 'radiogroup'}
+            >
                 {filteredValues.map((match) => (
                     <LegalValueLabel
                         key={match.value}
                         legal={match}
                         filter={filter}
                         control={
-                            <Checkbox
-                                checked={Boolean(values.has(match.value))}
-                                onChange={() => onChange(match.value)}
-                                name={`legal-value-${groupNameId}`}
+                            <Control
                                 color='primary'
+                                name={`legal-value-${groupNameId}`}
+                                checked={values.has(match.value)}
+                                onChange={() => onChange(match.value)}
                                 disabled={invalidLegalValues?.has(match.value)}
                             />
                         }
@@ -143,13 +166,37 @@ export const LegalValuesSelector = ({
     );
 };
 
-const StyledRadioContainer = styled(RadioGroup)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-    gap: theme.spacing(1),
-    maxHeight: '378px',
-    overflow: 'auto',
-}));
+export const LegalValuesSelector = ({
+    legalValues,
+    values,
+    addValues,
+    removeValue,
+    clearAll,
+    ...baseProps
+}: LegalValuesSelectorProps) => {
+    const onChange = (legalValue: string) => {
+        if (values.has(legalValue)) {
+            removeValue(legalValue);
+        } else {
+            addValues([legalValue]);
+        }
+    };
+
+    return (
+        <LegalValuesSelectorBase
+            legalValues={legalValues}
+            onChange={onChange}
+            multiSelect={{
+                clearAll,
+                selectAll: () => {
+                    addValues(legalValues.map(({ value }) => value));
+                },
+            }}
+            values={values}
+            {...baseProps}
+        />
+    );
+};
 
 type SingleLegalValueSelectorProps = {
     value: string;
@@ -161,90 +208,24 @@ type SingleLegalValueSelectorProps = {
 };
 
 export const SingleLegalValueSelector = ({
-    legalValues,
     value,
     addValue,
     clear,
-    deletedLegalValues,
-    invalidLegalValues,
+    ...baseProps
 }: SingleLegalValueSelectorProps) => {
-    const [filter, setFilter] = useState('');
-    const labelId = useId();
-    const descriptionId = useId();
-    const groupNameId = useId();
-
-    const filteredValues = filterLegalValues(legalValues, filter);
-
-    const onChange = (legalValue: string) => {
-        if (value === legalValue) {
+    const onChange = (newValue: string) => {
+        if (value === newValue) {
             clear();
         } else {
-            addValue(legalValue);
-        }
-    };
-
-    const handleSearchKeyDown = (event: React.KeyboardEvent) => {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            if (filteredValues.length > 0) {
-                const firstValue = filteredValues[0].value;
-                onChange(firstValue);
-            }
+            addValue(newValue);
         }
     };
 
     return (
-        <LegalValuesSelectorWidget>
-            {deletedLegalValues?.size ? (
-                <Alert severity='warning'>
-                    This constraint is using legal values that have been deleted
-                    as valid options. If you save changes on this constraint and
-                    then save the strategy the following values will be removed:
-                    <ul>
-                        {[...deletedLegalValues].map((value) => (
-                            <li key={value}>{value}</li>
-                        ))}
-                    </ul>
-                </Alert>
-            ) : null}
-            <div>
-                <span id={labelId}>Select values from a predefined set. </span>
-
-                {invalidLegalValues?.size ? (
-                    <span id={descriptionId}>
-                        Values that are not valid for your chosen operator have
-                        been disabled.
-                    </span>
-                ) : null}
-            </div>
-            <Row>
-                <ConstraintValueSearch
-                    onKeyDown={handleSearchKeyDown}
-                    filter={filter}
-                    setFilter={setFilter}
-                />
-            </Row>
-            <StyledRadioContainer
-                aria-labelledby={labelId}
-                aria-describedby={descriptionId}
-                name={`legal-value-${groupNameId}`}
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-            >
-                {filteredValues.map((match) => (
-                    <LegalValueLabel
-                        key={match.value}
-                        legal={match}
-                        filter={filter}
-                        control={
-                            <Radio
-                                color='primary'
-                                disabled={invalidLegalValues?.has(match.value)}
-                            />
-                        }
-                    />
-                ))}
-            </StyledRadioContainer>
-        </LegalValuesSelectorWidget>
+        <LegalValuesSelectorBase
+            onChange={onChange}
+            values={new Set([value])}
+            {...baseProps}
+        />
     );
 };

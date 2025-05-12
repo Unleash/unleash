@@ -13,7 +13,7 @@ Service accounts provide an identity for integration and automation tools to acc
 ## Create a service account
 
 To create service accounts in the Unleash Admin UI:
-1. Go to **Admin > Service accounts.**
+1. Go to **Admin settings > Service accounts.**
 2. Enter a name and username for the service account and select a root role. 
 3. Optionally, create and assign a service account token. You can also generate one later.
 4. Click **Save service account**.

@@ -22,7 +22,7 @@ Since the Frontend API shares the same API as Unleash Edge, you can start develo
 
 For web and hybrid mobile apps, allow traffic from your application's domains.
 
-For Unleash, you can update CORS settings in the Unleash Admin UI in **Admin > CORS origins**. For Unleash Edge, follow our [command-line for CORS settings](https://github.com/Unleash/unleash-edge/blob/243cfbdf2ef5f78a7312db6cc688cc74b7d5f318/CLI.md).
+For Unleash, you can update CORS settings in the Unleash Admin UI in **Admin settings > Access control > CORS origins**. For Unleash Edge, follow our [command-line for CORS settings](https://github.com/Unleash/unleash-edge/blob/243cfbdf2ef5f78a7312db6cc688cc74b7d5f318/CLI.md).
 
 ### Configure the API URL
 

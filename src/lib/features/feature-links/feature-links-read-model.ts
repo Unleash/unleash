@@ -52,16 +52,17 @@ export class FeatureLinksReadModel implements IFeatureLinksReadModel {
         }));
     }
 
-    async getLinks(feature: string): Promise<IFeatureLink[]> {
+    async getLinks(...features: string[]): Promise<IFeatureLink[]> {
         const links = await this.db
             .from('feature_link')
-            .where('feature_name', feature)
+            .whereIn('feature_name', features)
             .orderBy('id', 'asc');
 
         return links.map((link) => ({
             id: link.id,
             url: link.url,
             title: link.title,
+            feature: link.feature_name,
         }));
     }
 }

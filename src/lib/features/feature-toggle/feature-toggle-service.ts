@@ -1109,7 +1109,11 @@ class FeatureToggleService {
                 dependencies,
                 children,
                 lifecycle,
-                links,
+                links: links.map((link) => ({
+                    id: link.id,
+                    url: link.url,
+                    title: link.title,
+                })),
                 collaborators: { users: collaborators },
             };
         } else {

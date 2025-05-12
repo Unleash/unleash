@@ -164,7 +164,7 @@ export const EnvironmentCloneModal = ({
     });
 
     const getApiTokenCreatePayload = (): IApiTokenCreate => ({
-        username: `${name}_token`,
+        tokenName: `${name}_token`,
         type: 'CLIENT',
         environment: name,
         projects: tokenProjects,

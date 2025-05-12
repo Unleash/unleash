@@ -48,7 +48,6 @@ test('frontend api service fetching features from global cache', async () => {
     const frontendApiService = new FrontendApiService(
         { getLogger: noLogger, eventBus } as unknown as Config,
         irrelevant,
-        irrelevant,
         globalFrontendApiCache,
     );
 

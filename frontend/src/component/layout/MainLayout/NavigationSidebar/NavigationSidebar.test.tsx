@@ -23,7 +23,6 @@ test('switch full mode and mini mode', () => {
 
     expect(screen.queryByText('Projects')).toBeInTheDocument();
     expect(screen.queryByText('Applications')).toBeInTheDocument();
-    expect(screen.queryByText('Users')).toBeInTheDocument();
 
     const hide = screen.getByText('Hide (⌘ + B)');
 
@@ -31,14 +30,12 @@ test('switch full mode and mini mode', () => {
 
     expect(screen.queryByText('Projects')).not.toBeInTheDocument();
     expect(screen.queryByText('Applications')).not.toBeInTheDocument();
-    expect(screen.queryByText('Users')).not.toBeInTheDocument();
 
     const expand = screen.getByTestId('expand-navigation');
     fireEvent.click(expand);
 
     expect(screen.queryByText('Projects')).toBeInTheDocument();
     expect(screen.queryByText('Applications')).toBeInTheDocument();
-    expect(screen.queryByText('Users')).toBeInTheDocument();
 });
 
 test('persist navigation mode and expansion selection in storage', async () => {
@@ -48,9 +45,6 @@ test('persist navigation mode and expansion selection in storage', async () => {
 
     const configure = screen.getByText('Configure');
     configure.click(); // expand
-    configure.click(); // hide
-    const admin = screen.getByText('Admin');
-    admin.click();
 
     const hide = screen.getByText('Hide (⌘ + B)');
     hide.click();
@@ -63,7 +57,7 @@ test('persist navigation mode and expansion selection in storage', async () => {
             'navigation-expanded:v1',
             {},
         );
-        expect(expanded).toEqual(['admin']);
+        expect(expanded).toEqual(['configure']);
     });
 });
 
@@ -121,13 +115,6 @@ describe('order of items in navigation', () => {
         configureButton.click();
         await waitFor(() =>
             expect(configureButton.getAttribute('aria-expanded')).toBe('true'),
-        );
-        const adminButton = await screen.findByRole('button', {
-            name: /admin/i,
-        });
-        adminButton.click();
-        await waitFor(() =>
-            expect(adminButton.getAttribute('aria-expanded')).toBe('true'),
         );
 
         const links = await screen.findAllByRole('link');

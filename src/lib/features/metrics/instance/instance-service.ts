@@ -173,8 +173,19 @@ export default class ClientInstanceService {
             const uniqueRegistrations = Object.values(this.seenClients);
             const uniqueApps: Partial<IClientApplication>[] = Object.values(
                 uniqueRegistrations.reduce((soFar, reg) => {
-                    // eslint-disable-next-line no-param-reassign
-                    soFar[reg.appName] = reg;
+                    let existingProjects = [];
+                    if (soFar[`${reg.appName} ${reg.environment}`]) {
+                        existingProjects =
+                            soFar[`${reg.appName} ${reg.environment}`]
+                                .projects || [];
+                    }
+                    soFar[`${reg.appName} ${reg.environment}`] = {
+                        ...reg,
+                        projects: [
+                            ...existingProjects,
+                            ...(reg.projects || []),
+                        ],
+                    };
                     return soFar;
                 }, {}),
             );
@@ -305,8 +316,8 @@ export default class ClientInstanceService {
         await this.clientApplicationsStore.upsert(input);
     }
 
-    async removeInstancesOlderThanTwoDays(): Promise<void> {
-        return this.clientInstanceStore.removeInstancesOlderThanTwoDays();
+    async removeOldInstances(): Promise<void> {
+        return this.clientInstanceStore.removeOldInstances();
     }
 
     async removeInactiveApplications(): Promise<number> {

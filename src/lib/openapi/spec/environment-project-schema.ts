@@ -1,6 +1,8 @@
 import type { FromSchema } from 'json-schema-to-ts';
 import { createFeatureStrategySchema } from './create-feature-strategy-schema';
 import { createStrategyVariantSchema } from './create-strategy-variant-schema';
+import { constraintSchema } from './constraint-schema';
+import { parametersSchema } from './parameters-schema';
 
 export const environmentProjectSchema = {
     $id: '#/components/schemas/environmentProjectSchema',
@@ -63,11 +65,21 @@ export const environmentProjectSchema = {
             description:
                 'Indicates whether the environment can be enabled for feature flags in the project',
         },
+        requiredApprovals: {
+            type: 'integer',
+            nullable: true,
+            description:
+                'Experimental field. The number of approvals required before a change request can be applied in this environment.',
+            minimum: 1,
+            example: 3,
+        },
     },
     components: {
         schemas: {
             createFeatureStrategySchema,
             createStrategyVariantSchema,
+            constraintSchema,
+            parametersSchema,
         },
     },
 } as const;

@@ -32,6 +32,7 @@ import {
     outdatedSdksSchema,
     type OutdatedSdksSchema,
 } from '../../openapi/spec/outdated-sdks-schema';
+import UnknownFlagsController from '../../features/metrics/unknown-flags/unknown-flags-controller';
 
 class MetricsController extends Controller {
     private logger: Logger;
@@ -46,8 +47,12 @@ class MetricsController extends Controller {
         config: IUnleashConfig,
         {
             clientInstanceService,
+            unknownFlagsService,
             openApiService,
-        }: Pick<IUnleashServices, 'clientInstanceService' | 'openApiService'>,
+        }: Pick<
+            IUnleashServices,
+            'clientInstanceService' | 'unknownFlagsService' | 'openApiService'
+        >,
     ) {
         super(config);
         this.logger = config.getLogger('/admin-api/metrics.ts');
@@ -61,6 +66,14 @@ class MetricsController extends Controller {
         this.get('/seen-apps', this.deprecated);
         this.get('/feature-toggles', this.deprecated);
         this.get('/feature-toggles/:name', this.deprecated);
+
+        this.use(
+            '/unknown-flags',
+            new UnknownFlagsController(config, {
+                unknownFlagsService,
+                openApiService,
+            }).router,
+        );
 
         this.route({
             method: 'post',

@@ -7100,6 +7100,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"normalize-url@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "normalize-url@npm:6.1.0"
+  checksum: 10c0/95d948f9bdd2cfde91aa786d1816ae40f8262946e13700bf6628105994fe0ff361662c20af3961161c38a119dc977adeb41fc0b41b1745eb77edaaf9cb22db23
+  languageName: node
+  linkType: hard
+
 "npm-run-path@npm:^4.0.1":
   version: 4.0.1
   resolution: "npm-run-path@npm:4.0.1"
@@ -9054,6 +9061,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tldts-core@npm:^7.0.6":
+  version: 7.0.6
+  resolution: "tldts-core@npm:7.0.6"
+  checksum: 10c0/32910f8098bdbb313e3d5ff1ef80cac51568c7682ab5de44d244edf7a08e02b1f7918677c8bf7d52c79f864d4b972bcec83b46e439d0a447f6049423394000c3
+  languageName: node
+  linkType: hard
+
+"tldts@npm:7.0.6":
+  version: 7.0.6
+  resolution: "tldts@npm:7.0.6"
+  dependencies:
+    tldts-core: "npm:^7.0.6"
+  bin:
+    tldts: bin/cli.js
+  checksum: 10c0/9c23a74c017a4cc73323543dc372fb00fc5ee3d4851cdebb4d9d65e7a959c386fc4e40c96574aed8f8c1214956d3777cb9438edf34538e2f1501be94ab1b98fb
+  languageName: node
+  linkType: hard
+
 "tmpl@npm:1.0.5":
   version: 1.0.5
   resolution: "tmpl@npm:1.0.5"
@@ -9457,6 +9482,7 @@ __metadata:
     mustache: "npm:^4.1.0"
     nock: "npm:13.5.6"
     nodemailer: "npm:^6.9.9"
+    normalize-url: "npm:^6.1.0"
     openapi-enforcer: "npm:1.23.0"
     openapi-types: "npm:^12.1.3"
     owasp-password-strength-test: "npm:^1.3.0"
@@ -9475,6 +9501,7 @@ __metadata:
     stoppable: "npm:^1.1.0"
     superagent: "npm:10.2.0"
     supertest: "npm:7.0.0"
+    tldts: "npm:7.0.6"
     ts-node: "npm:10.9.2"
     ts-toolbelt: "npm:^9.6.0"
     tsc-watch: "npm:6.2.1"

@@ -4,6 +4,7 @@
  * See `gen:api` script in package.json
  */
 import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema';
+import type { ProjectLinkTemplateSchema } from './projectLinkTemplateSchema';
 import type { UpdateProjectEnterpriseSettingsSchemaMode } from './updateProjectEnterpriseSettingsSchemaMode';
 
 /**
@@ -11,6 +12,8 @@ import type { UpdateProjectEnterpriseSettingsSchemaMode } from './updateProjectE
  */
 export interface UpdateProjectEnterpriseSettingsSchema {
     featureNaming?: CreateFeatureNamingPatternSchema;
+    /** A list of link templates for the project. Templates are added to new flags as flag links automatically. */
+    linkTemplates?: ProjectLinkTemplateSchema[];
     /** A mode of the project affecting what actions are possible in this project */
     mode?: UpdateProjectEnterpriseSettingsSchemaMode;
 }

@@ -1,6 +1,5 @@
 import { createTheme } from '@mui/material/styles';
 import { colors } from './colors';
-import { alpha } from '@mui/material';
 import { focusable } from 'themes/themeStyles';
 
 export const baseTheme = {
@@ -516,17 +515,6 @@ export const lightTheme = createTheme({
                 root: ({ theme }) => ({
                     '&:first-of-type, &:last-of-type': {
                         borderRadius: theme.shape.borderRadiusLarge,
-                    },
-                    // Environment accordion -- remove with `flagOverviewRedesign` flag
-                    '&.environment-accordion.Mui-expanded': {
-                        outline: `2px solid ${alpha(
-                            theme.palette.background.alternative,
-                            0.6,
-                        )}`,
-                        boxShadow: `0px 2px 8px ${alpha(
-                            theme.palette.primary.main,
-                            0.2,
-                        )}`,
                     },
                 }),
             },

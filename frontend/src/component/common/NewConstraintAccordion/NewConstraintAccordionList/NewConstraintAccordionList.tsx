@@ -1,5 +1,5 @@
 import type React from 'react';
-import { forwardRef, Fragment, useImperativeHandle } from 'react';
+import { forwardRef, useImperativeHandle } from 'react';
 import { styled } from '@mui/material';
 import type { IConstraint } from 'interfaces/strategy';
 import produce from 'immer';
@@ -9,13 +9,11 @@ import {
     constraintId,
     createEmptyConstraint,
 } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import { NewConstraintAccordion } from 'component/common/NewConstraintAccordion/NewConstraintAccordion';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { EditableConstraintWrapper } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraintWrapper';
 import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
+import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint';
 
 export interface IConstraintAccordionListProps {
     constraints: IConstraint[];
@@ -87,7 +85,6 @@ export const NewConstraintAccordionList = forwardRef<
     IConstraintList
 >(({ constraints, setConstraints, state }, ref) => {
     const { context } = useUnleashContext();
-    const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
     const addEditStrategy = useUiFlag('addEditStrategy');
 
     const onEdit =
@@ -145,77 +142,42 @@ export const NewConstraintAccordionList = forwardRef<
         return null;
     }
 
-    if (flagOverviewRedesign) {
-        return (
-            <StyledContainer id={constraintAccordionListId}>
-                <ConstraintsList>
-                    {constraints.map((constraint, index) =>
-                        addEditStrategy ? (
-                            state.get(constraint)?.editing ? (
-                                <EditableConstraintWrapper
-                                    key={constraint[constraintId]}
-                                    constraint={constraint}
-                                    onCancel={onCancel?.bind(null, index)}
-                                    onDelete={onRemove?.bind(null, index)}
-                                    onSave={onSave!.bind(null, index)}
-                                    onAutoSave={onAutoSave?.(
-                                        constraint[constraintId],
-                                    )}
-                                />
-                            ) : (
-                                <ConstraintAccordionView
-                                    key={constraint[constraintId]}
-                                    constraint={constraint}
-                                />
-                            )
-                        ) : (
-                            <NewConstraintAccordion
-                                key={constraint[constraintId]}
-                                constraint={constraint}
-                                onEdit={onEdit?.bind(null, constraint)}
-                                onCancel={onCancel.bind(null, index)}
-                                onDelete={onRemove?.bind(null, index)}
-                                onSave={onSave?.bind(null, index)}
-                                onAutoSave={onAutoSave?.(
-                                    constraint[constraintId],
-                                )}
-                                editing={Boolean(
-                                    state.get(constraint)?.editing,
-                                )}
-                                compact
-                            />
-                        ),
-                    )}
-                </ConstraintsList>
-            </StyledContainer>
-        );
-    }
-
     return (
         <StyledContainer id={constraintAccordionListId}>
-            {constraints.map((constraint, index) => {
-                const id = constraint[constraintId];
-
-                return (
-                    <Fragment key={id}>
-                        <ConditionallyRender
-                            condition={index > 0}
-                            show={<StrategySeparator text='AND' />}
-                        />
-
+            <ConstraintsList>
+                {constraints.map((constraint, index) =>
+                    addEditStrategy ? (
+                        state.get(constraint)?.editing &&
+                        Boolean(setConstraints) ? (
+                            <EditableConstraint
+                                key={constraint[constraintId]}
+                                constraint={constraint}
+                                // @ts-ignore todo: find a better way to do this
+                                onDelete={() => onRemove(index)}
+                                // @ts-ignore
+                                onAutoSave={onAutoSave(constraintId)}
+                            />
+                        ) : (
+                            <ConstraintAccordionView
+                                key={constraint[constraintId]}
+                                constraint={constraint}
+                            />
+                        )
+                    ) : (
                         <NewConstraintAccordion
+                            key={constraint[constraintId]}
                             constraint={constraint}
                             onEdit={onEdit?.bind(null, constraint)}
                             onCancel={onCancel.bind(null, index)}
                             onDelete={onRemove?.bind(null, index)}
                             onSave={onSave?.bind(null, index)}
-                            onAutoSave={onAutoSave?.(id)}
+                            onAutoSave={onAutoSave?.(constraint[constraintId])}
                             editing={Boolean(state.get(constraint)?.editing)}
                             compact
                         />
-                    </Fragment>
-                );
-            })}
+                    ),
+                )}
+            </ConstraintsList>
         </StyledContainer>
     );
 });

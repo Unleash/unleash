@@ -59,6 +59,8 @@ import { FeatureLifecycleReadModel } from '../feature-lifecycle/feature-lifecycl
 import { FakeFeatureLifecycleReadModel } from '../feature-lifecycle/fake-feature-lifecycle-read-model';
 import { FakeFeatureCollaboratorsReadModel } from './fake-feature-collaborators-read-model';
 import { FeatureCollaboratorsReadModel } from './feature-collaborators-read-model';
+import { FeatureLinksReadModel } from '../feature-links/feature-links-read-model';
+import { FakeFeatureLinksReadModel } from '../feature-links/fake-feature-links-read-model';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -128,6 +130,8 @@ export const createFeatureToggleService = (
 
     const featureCollaboratorsReadModel = new FeatureCollaboratorsReadModel(db);
 
+    const featureLinksReadModel = new FeatureLinksReadModel(db, eventBus);
+
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -149,6 +153,7 @@ export const createFeatureToggleService = (
         dependentFeaturesService,
         featureLifecycleReadModel,
         featureCollaboratorsReadModel,
+        featureLinksReadModel,
     );
     return featureToggleService;
 };
@@ -189,6 +194,7 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
     const featureLifecycleReadModel = new FakeFeatureLifecycleReadModel();
     const featureCollaboratorsReadModel =
         new FakeFeatureCollaboratorsReadModel();
+    const featureLinksReadModel = new FakeFeatureLinksReadModel();
 
     const featureToggleService = new FeatureToggleService(
         {
@@ -216,6 +222,7 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
         dependentFeaturesService,
         featureLifecycleReadModel,
         featureCollaboratorsReadModel,
+        featureLinksReadModel,
     );
     return {
         featureToggleService,

@@ -5,6 +5,7 @@ import type {
 } from 'interfaces/strategy';
 import useAPI from '../useApi/useApi';
 import { useRecentlyUsedConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/RecentlyUsedConstraints/useRecentlyUsedConstraints';
+import { useRecentlyUsedSegments } from 'component/feature/FeatureStrategy/FeatureStrategySegment/RecentlyUsedSegments/useRecentlyUsedSegments';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 const useFeatureStrategyApi = () => {
@@ -14,6 +15,7 @@ const useFeatureStrategyApi = () => {
 
     const { addItem: addToRecentlyUsedConstraints } =
         useRecentlyUsedConstraints();
+    const { addItem: addToRecentlyUsedSegments } = useRecentlyUsedSegments();
     const addEditStrategyEnabled = useUiFlag('addEditStrategy');
 
     const addStrategyToFeature = async (
@@ -30,12 +32,14 @@ const useFeatureStrategyApi = () => {
         );
         const result = await makeRequest(req.caller, req.id);
 
-        if (
-            addEditStrategyEnabled &&
-            payload.constraints &&
-            payload.constraints.length > 0
-        ) {
-            addToRecentlyUsedConstraints(payload.constraints);
+        if (addEditStrategyEnabled) {
+            if (payload.constraints && payload.constraints.length > 0) {
+                addToRecentlyUsedConstraints(payload.constraints);
+            }
+
+            if (payload.segments && payload.segments.length > 0) {
+                addToRecentlyUsedSegments(payload.segments);
+            }
         }
 
         return result.json();
@@ -71,12 +75,14 @@ const useFeatureStrategyApi = () => {
         );
         await makeRequest(req.caller, req.id);
 
-        if (
-            addEditStrategyEnabled &&
-            payload.constraints &&
-            payload.constraints.length > 0
-        ) {
-            addToRecentlyUsedConstraints(payload.constraints);
+        if (addEditStrategyEnabled) {
+            if (payload.constraints && payload.constraints.length > 0) {
+                addToRecentlyUsedConstraints(payload.constraints);
+            }
+
+            if (payload.segments && payload.segments.length > 0) {
+                addToRecentlyUsedSegments(payload.segments);
+            }
         }
     };
 

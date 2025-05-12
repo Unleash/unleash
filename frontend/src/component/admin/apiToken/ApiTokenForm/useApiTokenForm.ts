@@ -10,7 +10,7 @@ import {
 import { useHasRootAccess } from 'hooks/useHasAccess';
 import type { SelectOption } from './TokenTypeSelector/TokenTypeSelector';
 
-export type ApiTokenFormErrorType = 'username' | 'projects';
+export type ApiTokenFormErrorType = 'tokenName' | 'projects';
 export const useApiTokenForm = (project?: string) => {
     const { environments } = useEnvironments();
     const initialEnvironment = environments?.find((e) => e.enabled)?.name;
@@ -41,7 +41,7 @@ export const useApiTokenForm = (project?: string) => {
 
     const firstAccessibleType = apiTokenTypes.find((t) => t.enabled)?.key;
 
-    const [username, setUsername] = useState('');
+    const [tokenName, setTokenName] = useState('');
     const [type, setType] = useState(firstAccessibleType || TokenType.CLIENT);
     const [projects, setProjects] = useState<string[]>([
         project ? project : '*',
@@ -71,7 +71,7 @@ export const useApiTokenForm = (project?: string) => {
     };
 
     const getApiTokenPayload = (): IApiTokenCreate => ({
-        username,
+        tokenName,
         type,
         environment,
         projects,
@@ -79,8 +79,8 @@ export const useApiTokenForm = (project?: string) => {
 
     const isValid = () => {
         const newErrors: Partial<Record<ApiTokenFormErrorType, string>> = {};
-        if (!username) {
-            newErrors.username = 'Username is required';
+        if (!tokenName) {
+            newErrors.tokenName = 'Token name is required';
         }
         if (projects.length === 0) {
             newErrors.projects = 'At least one project is required';
@@ -101,12 +101,12 @@ export const useApiTokenForm = (project?: string) => {
     };
 
     return {
-        username,
+        tokenName,
         type,
         apiTokenTypes,
         projects,
         environment,
-        setUsername,
+        setTokenName,
         setTokenType,
         setProjects,
         setEnvironment,

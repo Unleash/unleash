@@ -2,6 +2,89 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.10.0] - 2025-05-07
+
+### Bug Fixes
+
+- Appropriately size case icon for non-editing constraints ([#9869](https://github.com/Unleash/unleash/issues/9869))
+
+- Namespace flag-repo for unleash sdk ([#9910](https://github.com/Unleash/unleash/issues/9910))
+
+- Make setConstraints work in editable constraints list ([#9913](https://github.com/Unleash/unleash/issues/9913))
+
+
+### Documentation
+
+- Remove roadmap from footer ([#9890](https://github.com/Unleash/unleash/issues/9890))
+
+- Update self-hosting guide ([#9855](https://github.com/Unleash/unleash/issues/9855))
+
+
+### Features
+
+- View for recently used constraints ([#9860](https://github.com/Unleash/unleash/issues/9860))
+
+- Now updating/editing strategy will store constraints in recents ([#9861](https://github.com/Unleash/unleash/issues/9861))
+
+- Separate frontend and backend applications from edge ([#9863](https://github.com/Unleash/unleash/issues/9863))
+
+- Update search placement on flags overview screen ([#9854](https://github.com/Unleash/unleash/issues/9854))
+
+- Allow nullable client ip for frontend apps ([#9867](https://github.com/Unleash/unleash/issues/9867))
+
+- Now recent constraints work e2e ([#9868](https://github.com/Unleash/unleash/issues/9868))
+
+- Handle nullable sdk type ([#9872](https://github.com/Unleash/unleash/issues/9872))
+
+- Recently used constraints have use this button now ([#9871](https://github.com/Unleash/unleash/issues/9871))
+
+- Add date type input field for constraints. ([#9864](https://github.com/Unleash/unleash/issues/9864))
+
+- Bulk apps should respect multi projects and multi envs ([#9879](https://github.com/Unleash/unleash/issues/9879))
+
+- Recently used segments ([#9881](https://github.com/Unleash/unleash/issues/9881))
+
+- Feature link backend stub ([#9893](https://github.com/Unleash/unleash/issues/9893))
+
+- Recently used segment chip ([#9895](https://github.com/Unleash/unleash/issues/9895))
+
+- Feature link migration ([#9900](https://github.com/Unleash/unleash/issues/9900))
+
+- Sql feature link persistence ([#9901](https://github.com/Unleash/unleash/issues/9901))
+
+- Enterprise consumption billing ([#9862](https://github.com/Unleash/unleash/issues/9862))
+
+- Add links to feature read model ([#9905](https://github.com/Unleash/unleash/issues/9905))
+
+- Normalize urls in feature links ([#9911](https://github.com/Unleash/unleash/issues/9911))
+
+
+### Miscellaneous Tasks
+
+- Use numeric input mode for numbers. ([#9875](https://github.com/Unleash/unleash/issues/9875))
+
+- Flag cleanup simplifyDisableFeature ([#9892](https://github.com/Unleash/unleash/issues/9892))
+
+- Feature links flag ([#9896](https://github.com/Unleash/unleash/issues/9896))
+
+- Clean dead code ([#9903](https://github.com/Unleash/unleash/issues/9903))
+
+- Remove dead code ([#9906](https://github.com/Unleash/unleash/issues/9906))
+
+- Align recently used constraints to designs ([#9904](https://github.com/Unleash/unleash/issues/9904))
+
+- Clean up adminNavUI flag ([#9907](https://github.com/Unleash/unleash/issues/9907))
+
+- Constraint validation ([#9909](https://github.com/Unleash/unleash/issues/9909))
+
+
+### Refactor
+
+- Stabilize frontend apps reporting ([#9880](https://github.com/Unleash/unleash/issues/9880))
+
+- Remove flagOverviewRedesign flag ([#9888](https://github.com/Unleash/unleash/issues/9888))
+
+
 ## [6.9.2] - 2025-04-29
 
 ### Bug Fixes

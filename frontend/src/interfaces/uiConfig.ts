@@ -19,7 +19,7 @@ export interface IUiConfig {
     name: string;
     slogan: string;
     environment?: string;
-    billing?: 'subscription' | 'pay-as-you-go';
+    billing?: 'subscription' | 'pay-as-you-go' | 'enterprise-consumption';
     unleashUrl?: string;
     version: string;
     versionInfo?: IVersionInfo;
@@ -86,16 +86,15 @@ export type UiFlags = {
     'enterprise-payg'?: boolean;
     productivityReportEmail?: boolean;
     showUserDeviceCount?: boolean;
-    flagOverviewRedesign?: boolean;
     consumptionModel?: boolean;
     edgeObservability?: boolean;
-    adminNavUI?: boolean;
     tagTypeColor?: boolean;
     addEditStrategy?: boolean;
     newStrategyDropdown?: boolean;
     flagsReleaseManagementUI?: boolean;
     cleanupReminder?: boolean;
     registerFrontendClient?: boolean;
+    featureLinks?: boolean;
 };
 
 export interface IVersionInfo {

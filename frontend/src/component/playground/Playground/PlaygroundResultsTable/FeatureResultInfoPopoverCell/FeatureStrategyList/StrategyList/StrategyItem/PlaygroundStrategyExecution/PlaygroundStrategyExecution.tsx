@@ -75,7 +75,7 @@ export const PlaygroundStrategyExecution: FC<StrategyExecutionProps> = ({
                 <ConstraintListItem key={index}>{param}</ConstraintListItem>
             )),
         name === 'default' && (
-            <StyledBoxSummary sx={{ width: '100%' }}>
+            <StyledBoxSummary sx={{ width: '100%' }} key='default-on'>
                 The standard strategy is <Badge color='success'>ON</Badge> for
                 all users.
             </StyledBoxSummary>

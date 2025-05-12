@@ -21,8 +21,6 @@ import {
     type Input,
 } from '../useConstraintInput/useConstraintInput';
 import type React from 'react';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { LegalValuesSelector } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/LegalValuesSelector';
 
 interface IResolveInputProps {
     contextDefinition: Pick<IUnleashContextDefinition, 'legalValues'>;
@@ -64,6 +62,13 @@ const resolveLegalValues = (
     };
 };
 
+/**
+ * @deprecated; remove with `addEditStrategy` flag. Need an input? Prefer using specific input components.
+ *
+ * For the case of `ProjectActionsFilterItem.tsx`: it already excludes legal
+ * values and date operators. This leaves only free text and single value
+ * text/numeric operators. Alternatively, consider rewriting this component to only handle those cases.
+ */
 export const ResolveInput = ({
     input,
     contextDefinition,
@@ -77,23 +82,11 @@ export const ResolveInput = ({
     removeValue,
     error,
 }: IResolveInputProps) => {
-    const useNewLegalValueInput = useUiFlag('addEditStrategy');
     const resolveInput = () => {
         switch (input) {
             case IN_OPERATORS_LEGAL_VALUES:
             case STRING_OPERATORS_LEGAL_VALUES:
-                return useNewLegalValueInput ? (
-                    <LegalValuesSelector
-                        data={resolveLegalValues(
-                            constraintValues,
-                            contextDefinition.legalValues,
-                        )}
-                        constraintValues={constraintValues}
-                        values={localConstraint.values || []}
-                        setValuesWithRecord={setValuesWithRecord}
-                        setValues={setValues}
-                    />
-                ) : (
+                return (
                     <RestrictiveLegalValues
                         data={resolveLegalValues(
                             constraintValues,

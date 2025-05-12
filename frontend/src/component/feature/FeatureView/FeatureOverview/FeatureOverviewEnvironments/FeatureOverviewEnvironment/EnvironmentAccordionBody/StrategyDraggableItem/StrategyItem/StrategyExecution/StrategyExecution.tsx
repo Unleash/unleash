@@ -1,8 +1,6 @@
 import type { FC } from 'react';
 import type { FeatureStrategySchema } from 'openapi';
 import type { IFeatureStrategyPayload } from 'interfaces/strategy';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { StrategyExecution as LegacyStrategyExecution } from './LegacyStrategyExecution';
 import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { objectId } from 'utils/objectId';
@@ -37,16 +35,6 @@ export const StrategyExecution: FC<StrategyExecutionProps> = ({
     const strategySegments = segments?.filter((segment) =>
         strategy.segments?.includes(segment.id),
     );
-    const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
-
-    if (!flagOverviewRedesign) {
-        return (
-            <LegacyStrategyExecution
-                strategy={strategy}
-                displayGroupId={displayGroupId}
-            />
-        );
-    }
 
     return (
         <>

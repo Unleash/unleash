@@ -1,6 +1,5 @@
 import { adminGroups } from 'component/admin/adminRoutes';
 import { useRoutes } from 'component/layout/MainLayout/NavigationSidebar/useRoutes';
-import { useUiFlag } from 'hooks/useUiFlag';
 import type { INavigationMenuItem } from 'interfaces/route';
 import { useMemo } from 'react';
 
@@ -12,7 +11,6 @@ interface IPageRouteInfo {
 }
 
 export const useCommandBarRoutes = () => {
-    const newAdminUIEnabled = useUiFlag('adminNavUI');
     const { routes } = useRoutes();
     const getSearchText = (route: INavigationMenuItem, title: string) => {
         if (route.group && adminGroups[route.group]) {
@@ -41,15 +39,12 @@ export const useCommandBarRoutes = () => {
                 path: route.path,
                 route: route.route,
                 title: title,
-                searchText: newAdminUIEnabled
-                    ? getSearchText(route, title)
-                    : title,
+                searchText: getSearchText(route, title),
             };
         }
 
         return {
             allRoutes,
-            newAdminUIEnabled,
         };
     }, [routes]);
 };

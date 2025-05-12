@@ -1,150 +1,185 @@
 ---
-title: Getting Started
+title: Getting started
+description: "Initial steps for setting up a self-hosted Unleash instance with Docker."
+toc_max_heading_level: 3
+pagination_next: using-unleash/deploy/configuring-unleash
 ---
 
-> This section only applies if you plan to self-host Unleash. If you are looking for our hosted solution you should head over to [www.getunleash.io](https://www.getunleash.io/plans)
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-## Requirements {#requirements}
+Unleash offers several [hosting options](/understanding-unleash/hosting-options), including fully self-hosted setups. This guide helps you set up Unleash Open Source or Unleash Enterprise in your own environment using Docker.
 
-You will need:
+Alternatively, for Unleash Enterprise, you can sign up for a [cloud-hosted instance](https://www.getunleash.io/pricing).
 
-- [Node.js](https://nodejs.org/en/download/) v18.0+
-- [PostgreSQL](https://www.postgresql.org/download/) v13.0+
-- [Create an unleash user and database](./database-setup).
+You can set up Unleash in your environment using two main approaches with Docker:
 
-## Start Unleash server {#start-unleash-server}
+- **Docker Compose:** This method relies on a Docker Compose file to define and manage the Unleash server and its database, simplifying the setup and startup process.
+- **Docker CLI:** This method gives you more direct control by using individual `docker` commands to set up the network and run the Unleash and database containers separately.
 
-Whichever option you choose to start Unleash, you must specify a database URI (it can be set in the environment variable DATABASE_URL). If your database server is not set up to support SSL you'll also need to set the environment variable `DATABASE_SSL` to `false`
+## Start Unleash server
 
----
+### Using Docker Compose
 
-Once the server has started, you will see the message:
+To start the Unleash server, clone the Unleash repository and start the server with [Docker Compose](https://docs.docker.com/compose/):
 
-```sh
-Unleash started on http://localhost:4242
+<Tabs groupId="setup-method">
+<TabItem value="enterprise" label="Enterprise">
+
+```shell
+git clone git@github.com:Unleash/unleash.git
+
+cd unleash
+docker compose -f docker-compose-enterprise.yml up -d
 ```
 
-To run multiple replicas of Unleash simply point all instances to the same database.
+This pulls the `unleashorg/unleash-enterprise` Docker image and uses a Docker Compose file to configure the Unleash server and its database.
 
-The first time Unleash starts it will create a default user which you can use to sign-in to you Unleash instance and add more users with:
+</TabItem>
 
-- username: `admin`
-- password: `unleash4all`
+<TabItem value="oss" label="Open Source">
 
-If you'd like the default admin user to be created with a different username and password, you may define the following environment variables when running Unleash:
+```shell
+git clone git@github.com:Unleash/unleash.git
 
-- `UNLEASH_DEFAULT_ADMIN_USERNAME`
-- `UNLEASH_DEFAULT_ADMIN_PASSWORD`
-
-The way of defining these variables may vary depending on how you run Unleash.
-
-
-### Option 1 - use Docker {#option-one---use-docker}
-
-**Useful links:**
-
-- [Docker image on dockerhub](https://hub.docker.com/r/unleashorg/unleash-server/)
-- [Unleash Helm Chart on artifacthub](https://artifacthub.io/packages/helm/unleash/unleash)
-
-**Steps:**
-
-1. Create a network by running `docker network create unleash`
-2. Start a postgres database:
-
-```sh
-docker run -e POSTGRES_PASSWORD=some_password \
-  -e POSTGRES_USER=unleash_user -e POSTGRES_DB=unleash \
-  --network unleash --name postgres postgres
+cd unleash
+docker compose up -d
 ```
 
-3. Start Unleash via docker:
+This pulls the `unleashorg/unleash-server` Docker image and uses a Docker Compose file to configure the Unleash server and its database.
+</TabItem>
+</Tabs>
 
-```sh
-docker run -p 4242:4242 \
-  -e DATABASE_HOST=postgres -e DATABASE_NAME=unleash \
-  -e DATABASE_USERNAME=unleash_user -e DATABASE_PASSWORD=some_password \
+> This step uses `docker compose` (V2 syntax). If you have the older `docker-compose` (V1), use that command syntax instead.
+
+### Using Docker CLI
+
+This method involves running separate containers for PostgreSQL and Unleash and connecting them manually via a Docker network.
+
+#### Create Docker network
+
+This allows the Unleash container to communicate with the database container by name.
+
+```shell
+docker network create unleash
+```
+
+#### Start PostgreSQL database container
+
+This command starts a PostgreSQL container, sets up the necessary user, `unleash_user` and database `unleash`, assigns a password, and connects it to the `unleash` network.
+```shell
+docker run -d \
+  -e POSTGRES_PASSWORD=your_secure_password \
+  -e POSTGRES_USER=unleash_user \
+  -e POSTGRES_DB=unleash \
+  --network unleash \
+  --name postgres \
+  postgres:15 # or any 13+ version
+```
+
+#### Start Unleash server container
+
+This command starts the Unleash server, maps port `4242` on your host to the container, connects to the PostgreSQL database you started, disables database SSL, connects to the `unleash` network, and ensures you have the latest image.
+
+<Tabs groupId="setup-method">
+<TabItem value="oss" label="Open Source">
+
+```shell
+docker run -d -p 4242:4242 \
+  -e DATABASE_HOST=postgres \
+  -e DATABASE_NAME=unleash \
+  -e DATABASE_USERNAME=unleash_user \
+  -e DATABASE_PASSWORD=your_secure_password \
   -e DATABASE_SSL=false \
-  --network unleash --pull=always unleashorg/unleash-server
+  --network unleash \
+  --name unleash \
+  --pull=always \
+  unleashorg/unleash-server
 ```
 
-### Option 2 - use Docker-compose {#option-two---use-docker-compose}
+</TabItem>
 
-**Steps:**
+<TabItem value="enterprise" label="Enterprise">
 
-1. Clone the [Unleash repository](https://github.com/Unleash/unleash).
-2. Run `docker compose up -d` in repository root folder.
-
-### Option 3 - from Node.js {#option-three---from-nodejs}
-
-1. Create a new folder/directory on your development computer.
-2. From a terminal/bash shell, install the dependencies:
-
-   ```shell npm2yarn
-   npm init
-   npm install unleash-server --save
-   ```
-
-3. Create a file called _server.js_, paste the following into it and save.
-
-   ```js
-   const unleash = require('unleash-server');
-
-   unleash
-     .start({
-       db: {
-         ssl: false,
-         host: 'localhost',
-         port: 5432,
-         database: 'unleash',
-         user: 'unleash_user',
-         password: 'password',
-       },
-       server: {
-         port: 4242,
-       },
-     })
-     .then((unleash) => {
-       console.log(
-         `Unleash started on http://localhost:${unleash.app.get('port')}`,
-       );
-     });
-   ```
-
-4. Run _server.js_:
-   ```sh
-   node server.js
-   ```
-
-## Create an api token for your client {#create-an-api-token-for-your-client}
-
-- [Create an API token](/reference/api-tokens-and-client-keys#create-an-api-token).
-
-## Test your server and create a sample API call {#test-your-server-and-create-a-sample-api-call}
-
-Once the Unleash server has started, go to [localhost:4242](http://localhost:4242) in your browser. If you see an empty list of feature flags, try creating one with [curl](https://curl.se/) from a terminal/bash shell:
-
+```shell
+docker run -d -p 4242:4242 \
+  -e DATABASE_HOST=postgres \
+  -e DATABASE_NAME=unleash \
+  -e DATABASE_USERNAME=unleash_user \
+  -e DATABASE_PASSWORD=your_secure_password \
+  -e DATABASE_SSL=false \
+  --network unleash \
+  --name unleash \
+  --pull=always \
+  unleashorg/unleash-enterprise
 ```
-curl --location -H "Authorization: <apitoken from previous step>" \
-  --request POST 'http://localhost:4242/api/admin/features' \
-  --header 'Content-Type: application/json' --data-raw '{\
-  "name": "Feature.A",\
-  "description": "Dolor sit amet.",\
-  "type": "release",\
-  "enabled": false,\
-  "stale": false,\
-  "strategies": [\
-    {\
-      "name": "default",\
-      "parameters": {}\
-    }\
-  ]\
+
+</TabItem>
+</Tabs>
+
+## Log in to the Unleash Admin UI
+
+<Tabs groupId="setup-method">
+<TabItem value="oss" label="Open Source">
+
+In your browser, go to [http://localhost:4242](http://localhost:4242) and log in using the following credentials:
+- **username**: `admin`
+- **password**: `unleash4all`
+
+![Unleash Admin UI log in screen](/img/quickstart-login.png)
+
+The first time Unleash starts, it creates this default `admin` user. To use different credentials for the initial admin user, set the following environment variables before starting the Unleash container for the first time:
+- `UNLEASH_DEFAULT_ADMIN_USERNAME=<your_custom_username>`
+- `UNLEASH_DEFAULT_ADMIN_PASSWORD=<your_custom_secure_password>`
+
+</TabItem>
+
+<TabItem value="enterprise" label="Enterprise">
+
+In your browser, go to [http://localhost:4242](http://localhost:4242) and log in using the following credentials:
+- **username**: `admin`
+- **password**: `unleash4all`
+
+![Unleash Admin UI log in screen](/img/quickstart-login.png)
+
+The first time Unleash starts, it creates this default `admin` user. To use different credentials for the initial admin user, set the following environment variables before starting the Unleash container for the first time:
+- `UNLEASH_DEFAULT_ADMIN_USERNAME=<your_custom_username>`
+- `UNLEASH_DEFAULT_ADMIN_PASSWORD=<your_custom_secure_password>`
+
+### Install your license
+
+If you are running Unleash Enterprise, you need to install a [license key](/using-unleash/deploy/license-keys#get-a-new-license). You'll receive a license key as part of your trial or from your account representative.
+
+In the Admin UI, go to **Admin > License**, copy the license key you received by email and click **Update license key**.
+
+</TabItem>
+</Tabs>
+
+## Test your server connection
+
+You can quickly test if your server is running and accepting API requests using `curl`. For example, you can attempt creating a feature flag via the [Admin API](/understanding-unleash/unleash-overview#admin-api). Replace `<API_TOKEN>` with a valid [API token](/reference/api-tokens-and-client-keys) and adjust the URL `http://localhost:4242` if needed.
+
+```shell
+curl --location --request POST 'http://localhost:4242/api/admin/features' \
+--header 'Authorization: <API_TOKEN>' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "name": "Test Feature Flag",
+  "description": "Feature flag for testing",
+  "type": "release",
+  "enabled": false,
+  "stale": false,
+  "strategies": [
+    {
+      "name": "default",
+      "parameters": {}
+    }
+  ]
 }'
 ```
 
-## Version check {#version-check}
+## Disable version check
 
-- Unleash checks that it uses the latest version by making a call to https://version.unleash.run.
-  - This is a cloud function storing instance id to our database for statistics.
-- This request includes a unique instance id for your server.
-- If you do not wish to check for upgrades define the environment variable `CHECK_VERSION` to anything else other than `true` before starting, and Unleash won't make any calls
-  - `export CHECK_VERSION=false`
+By default, your self-hosted Unleash instance periodically checks https://version.unleash.run to inform you about new releases. This check sends a unique, anonymous instance ID.
+ 
+If you prefer to disable this version check, set the environment variable `CHECK_VERSION` to `false` before starting the Unleash server.

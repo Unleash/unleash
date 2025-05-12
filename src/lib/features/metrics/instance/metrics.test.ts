@@ -61,6 +61,7 @@ afterAll(async () => {
 
 afterEach(async () => {
     await stores.featureToggleStore.deleteAll();
+    await stores.clientApplicationsStore.deleteAll();
 });
 
 test('should validate client metrics', () => {
@@ -125,7 +126,7 @@ test('should accept client metrics with yes/no with metricsV2', async () => {
         })
         .expect(202);
 
-    testRunner.destroy();
+    await testRunner.destroy();
 });
 
 test('should accept client metrics with variants', () => {
@@ -338,6 +339,99 @@ describe('bulk metrics', () => {
                     instanceId: 'instance5678',
                     sdkVersion: 'unleash-client-java',
                     environment: 'development',
+                },
+            ],
+        });
+    });
+
+    test('should respect project from token', async () => {
+        const frontendApp: BulkRegistrationSchema = {
+            appName: 'application-name-token',
+            instanceId: 'browser',
+            environment: 'production',
+            sdkVersion: 'unleash-client-js:1.0.0',
+            sdkType: 'frontend',
+            projects: ['project-a', 'project-b'],
+        };
+        const backendApp: BulkRegistrationSchema = {
+            appName: 'application-name-token',
+            instanceId: 'instance1234',
+            environment: 'development',
+            sdkVersion: 'unleash-client-node',
+            sdkType: 'backend',
+            started: '1952-03-11T12:00:00.000Z',
+            interval: 15000,
+            projects: ['project-b', 'project-c'],
+        };
+        const defaultApp: BulkRegistrationSchema = {
+            appName: 'application-name-token',
+            instanceId: 'instance5678',
+            environment: 'development',
+            sdkVersion: 'unleash-client-java',
+            sdkType: null,
+            started: '1952-03-11T12:00:00.000Z',
+            interval: 15000,
+            projects: ['project-c', 'project-d'],
+        };
+        await request
+            .post('/api/client/metrics/bulk')
+            .send({
+                applications: [frontendApp, backendApp, defaultApp],
+                metrics: [],
+            })
+            .expect(202);
+
+        await services.clientInstanceService.bulkAdd();
+        const app = await services.clientInstanceService.getApplication(
+            'application-name-token',
+        );
+
+        expect(app).toMatchObject({
+            appName: 'application-name-token',
+            instances: [
+                {
+                    instanceId: 'instance1234',
+                    sdkVersion: 'unleash-client-node',
+                    environment: 'development',
+                },
+                {
+                    instanceId: 'instance5678',
+                    sdkVersion: 'unleash-client-java',
+                    environment: 'development',
+                },
+                {
+                    instanceId: 'browser',
+                    sdkVersion: 'unleash-client-js:1.0.0',
+                    environment: 'production',
+                },
+            ],
+        });
+
+        const applications =
+            await stores.clientApplicationsStore.getApplications({
+                limit: 10,
+                offset: 0,
+                sortBy: 'name',
+                sortOrder: 'asc',
+            });
+        expect(applications).toMatchObject({
+            applications: [
+                {
+                    usage: [
+                        {
+                            project: 'project-a',
+                            environments: ['production'],
+                        },
+                        {
+                            project: 'project-b',
+                            environments: ['production', 'development'],
+                        },
+                        {
+                            project: 'project-c',
+                            environments: ['development'],
+                        },
+                        { project: 'project-d', environments: ['development'] },
+                    ],
                 },
             ],
         });

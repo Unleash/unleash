@@ -1,4 +1,10 @@
-import { Button, Popover, styled, TextField } from '@mui/material';
+import {
+    Button,
+    type InputBaseComponentProps,
+    Popover,
+    styled,
+    TextField,
+} from '@mui/material';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { type FC, useId, useRef, useState } from 'react';
 
@@ -33,7 +39,18 @@ type AddValuesProps = {
     open: boolean;
     anchorEl: HTMLElement | null;
     onClose: () => void;
+    helpText?: string;
+    inputProps?: InputBaseComponentProps;
 };
+
+const HelpText = styled('p')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.caption.fontSize,
+}));
+
+const AddButton = styled(Button)(({ theme }) => ({
+    minWidth: theme.spacing(4),
+}));
 
 export const AddValuesPopover: FC<AddValuesProps> = ({
     initialValue,
@@ -41,11 +58,14 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
     anchorEl,
     open,
     onClose,
+    helpText,
+    inputProps,
 }) => {
     const [inputValue, setInputValue] = useState(initialValue || '');
     const [error, setError] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
     const inputId = useId();
+    const helpTextId = useId();
 
     return (
         <StyledPopover
@@ -106,16 +126,22 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
                         autoFocus
                         error={!!error}
                         helperText={error}
+                        aria-describedby={helpTextId}
+                        inputProps={{
+                            ...inputProps,
+                        }}
                     />
-                    <Button
+                    <AddButton
                         variant='text'
                         type='submit'
+                        size='small'
                         color='primary'
                         disabled={!inputValue?.trim()}
                     >
                         Add
-                    </Button>
+                    </AddButton>
                 </InputRow>
+                <HelpText id={helpTextId}>{helpText}</HelpText>
             </form>
         </StyledPopover>
     );

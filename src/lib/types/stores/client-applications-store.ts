@@ -19,6 +19,8 @@ export interface IClientApplication {
     icon: string;
     strategies: string[];
     usage?: IClientApplicationUsage[];
+    projects?: string[];
+    environment?: string;
 }
 
 export interface IClientApplications {

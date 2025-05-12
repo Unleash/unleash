@@ -34,11 +34,11 @@ export const CreateProjectApiTokenForm = () => {
 
     const {
         getApiTokenPayload,
-        username,
+        tokenName,
         type,
         apiTokenTypes,
         environment,
-        setUsername,
+        setTokenName,
         setTokenType,
         setEnvironment,
         isValid,
@@ -120,8 +120,8 @@ export const CreateProjectApiTokenForm = () => {
                 }
             >
                 <TokenInfo
-                    username={username}
-                    setUsername={setUsername}
+                    tokenName={tokenName}
+                    setTokenName={setTokenName}
                     errors={errors}
                     clearErrors={clearErrors}
                 />

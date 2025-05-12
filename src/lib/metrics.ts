@@ -656,6 +656,25 @@ export function registerPrometheusMetrics(
             })),
     });
 
+    dbMetrics.registerGaugeDbMetric({
+        name: 'feature_link_by_domain',
+        help: 'Count most popular domains used in feature links',
+        labelNames: ['domain'],
+        query: () => {
+            if (flagResolver.isEnabled('featureLinks')) {
+                return stores.featureLinkReadModel.getTopDomains();
+            }
+            return Promise.resolve([]);
+        },
+        map: (result) =>
+            result.map(({ domain, count }) => ({
+                value: count,
+                labels: {
+                    domain,
+                },
+            })),
+    });
+
     const featureLifecycleStageEnteredCounter = createCounter({
         name: 'feature_lifecycle_stage_entered',
         help: 'Count how many features entered a given stage',
@@ -734,6 +753,11 @@ export function registerPrometheusMetrics(
         name: 'addon_events_handled',
         help: 'Events handled by addons and the result.',
         labelNames: ['result', 'destination'],
+    });
+
+    const unknownFlagsGauge = createGauge({
+        name: 'unknown_flags',
+        help: 'Number of unknown flags reported in the last 24 hours, if any. Maximum of 10.',
     });
 
     // register event listeners
@@ -1136,6 +1160,10 @@ export function registerPrometheusMetrics(
                 productionChanges60.set(productionChanges.last60);
                 productionChanges90.reset();
                 productionChanges90.set(productionChanges.last90);
+
+                const unknownFlags = await stores.unknownFlagsStore.count();
+                unknownFlagsGauge.reset();
+                unknownFlagsGauge.set(unknownFlags);
             } catch (e) {}
         },
     };

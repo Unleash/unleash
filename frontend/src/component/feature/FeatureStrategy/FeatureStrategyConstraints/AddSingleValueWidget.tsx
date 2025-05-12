@@ -3,6 +3,7 @@ import { styled } from '@mui/material';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { ValueChip } from './ValueList';
 import { AddValuesPopover, type OnAddActions } from './AddValuesPopover';
+import type { ConstraintValidatorOutput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/constraintValidators';
 
 const StyledChip = styled(ValueChip, {
     shouldForwardProp: (prop) => prop !== 'hasValue',
@@ -17,14 +18,27 @@ const StyledChip = styled(ValueChip, {
     },
 }));
 
-interface AddValuesProps {
+type Props = {
     onAddValue: (newValue: string) => void;
     removeValue: () => void;
     currentValue?: string;
-}
+    helpText?: string;
+    inputType: 'text' | 'number';
+    validator: (value: string) => ConstraintValidatorOutput;
+};
 
-export const AddSingleValueWidget = forwardRef<HTMLDivElement, AddValuesProps>(
-    ({ currentValue, onAddValue, removeValue }, ref) => {
+export const AddSingleValueWidget = forwardRef<HTMLDivElement, Props>(
+    (
+        {
+            currentValue,
+            onAddValue,
+            removeValue,
+            helpText,
+            inputType,
+            validator,
+        },
+        ref,
+    ) => {
         const [open, setOpen] = useState(false);
         const positioningRef = useRef<HTMLDivElement>(null);
         useImperativeHandle(
@@ -38,9 +52,15 @@ export const AddSingleValueWidget = forwardRef<HTMLDivElement, AddValuesProps>(
                 return;
             }
 
-            onAddValue(newValue);
-            setError('');
-            setOpen(false);
+            const [isValid, errorMessage] = validator(newValue);
+            if (isValid) {
+                onAddValue(newValue);
+                setError('');
+                setOpen(false);
+            } else {
+                setError(errorMessage);
+                return;
+            }
         };
 
         return (
@@ -54,8 +74,12 @@ export const AddSingleValueWidget = forwardRef<HTMLDivElement, AddValuesProps>(
                     onDelete={currentValue ? removeValue : undefined}
                 />
                 <AddValuesPopover
+                    inputProps={{
+                        inputMode: inputType === 'number' ? 'decimal' : 'text',
+                    }}
                     initialValue={currentValue}
                     onAdd={handleAdd}
+                    helpText={helpText}
                     open={open}
                     anchorEl={positioningRef.current}
                     onClose={() => setOpen(false)}

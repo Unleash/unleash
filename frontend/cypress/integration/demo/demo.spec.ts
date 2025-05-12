@@ -40,7 +40,6 @@ describe('demo', () => {
                     res.body.flags = {
                         ...res.body.flags,
                         demo: true,
-                        flagOverviewRedesign: true,
                     };
                 }
             });

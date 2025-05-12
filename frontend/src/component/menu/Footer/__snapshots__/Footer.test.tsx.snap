@@ -26,7 +26,6 @@ exports[`should render DrawerMenu 1`] = `
              
              
             5.x
-             
           </h2>
           <br />
           <small>
@@ -255,26 +254,6 @@ exports[`should render DrawerMenu 1`] = `
               <ul
                 className="MuiList-root MuiList-padding MuiList-dense css-zin4jp-MuiList-root"
               >
-                <li
-                  className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding css-rw9v7e-MuiListItem-root"
-                  disabled={false}
-                >
-                  <div
-                    className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
-                  >
-                    <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
-                    >
-                      <a
-                        href="https://docs.getunleash.io/reference/unleash-proxy"
-                        rel="noreferrer"
-                        target="_blank"
-                      >
-                        Unleash Proxy
-                      </a>
-                    </span>
-                  </div>
-                </li>
                 <li
                   className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding css-rw9v7e-MuiListItem-root"
                   disabled={false}
@@ -573,7 +552,6 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
              
              
             5.x
-             
           </h2>
           <br />
           <small>
@@ -802,26 +780,6 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
               <ul
                 className="MuiList-root MuiList-padding MuiList-dense css-zin4jp-MuiList-root"
               >
-                <li
-                  className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding css-rw9v7e-MuiListItem-root"
-                  disabled={false}
-                >
-                  <div
-                    className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
-                  >
-                    <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
-                    >
-                      <a
-                        href="https://docs.getunleash.io/reference/unleash-proxy"
-                        rel="noreferrer"
-                        target="_blank"
-                      >
-                        Unleash Proxy
-                      </a>
-                    </span>
-                  </div>
-                </li>
                 <li
                   className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding css-rw9v7e-MuiListItem-root"
                   disabled={false}

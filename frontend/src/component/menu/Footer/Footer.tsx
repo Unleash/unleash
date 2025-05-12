@@ -182,19 +182,6 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href='https://docs.getunleash.io/reference/unleash-proxy'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    Unleash Proxy
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
                                                     href='https://docs.getunleash.io/reference/sdks/javascript-browser'
                                                     target='_blank'
                                                     rel='noreferrer'

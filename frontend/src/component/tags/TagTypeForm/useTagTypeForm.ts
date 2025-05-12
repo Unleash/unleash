@@ -19,7 +19,6 @@ const useTagTypeForm = (
     const [color, setColor] = useState(initialColor);
     const [errors, setErrors] = useState({});
     const { validateTagName } = useTagTypesApi();
-    const isTagTypeColorEnabled = Boolean(useUiFlag('tagTypeColor'));
 
     useEffect(() => {
         setTagName(initialTagName);
@@ -37,11 +36,8 @@ const useTagTypeForm = (
         const payload: TagTypePayload = {
             name: tagName,
             description: tagDesc,
+            color: color,
         };
-
-        if (isTagTypeColorEnabled && color) {
-            payload.color = color;
-        }
 
         return payload;
     };
@@ -85,7 +81,6 @@ const useTagTypeForm = (
         clearErrors,
         validateNameUniqueness,
         errors,
-        isTagTypeColorEnabled,
     };
 };
 

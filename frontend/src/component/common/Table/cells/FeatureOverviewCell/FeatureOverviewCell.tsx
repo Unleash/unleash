@@ -175,38 +175,18 @@ interface ITagItemProps {
 }
 
 const TagItem: FC<ITagItemProps> = ({ tag, onClick }) => {
-    const isTagTypeColorEnabled = useUiFlag('tagTypeColor');
     const tagFullText = formatTag(tag);
 
-    if (isTagTypeColorEnabled) {
-        const tagComponent = (
-            <Box onClick={() => onClick(tag)} sx={{ cursor: 'pointer' }}>
-                <Tag tag={tag} maxLength={30} />
-            </Box>
-        );
-
-        return (
-            <HtmlTooltip key={tagFullText} title={tagFullText} arrow>
-                <span>{tagComponent}</span>
-            </HtmlTooltip>
-        );
-    }
-
-    // For non-color tags, use the StyledTag approach
-    const isOverflowing = tagFullText.length > 30;
-    const displayText = isOverflowing
-        ? `${tagFullText.substring(0, 30)}...`
-        : tagFullText;
+    const tagComponent = (
+        <Box onClick={() => onClick(tag)} sx={{ cursor: 'pointer' }}>
+            <Tag tag={tag} maxLength={30} />
+        </Box>
+    );
 
     return (
-        <StyledTag
-            key={tagFullText}
-            label={displayText}
-            size='small'
-            onClick={() => onClick(tag)}
-            sx={{ cursor: 'pointer' }}
-            title={isOverflowing ? tagFullText : undefined}
-        />
+        <HtmlTooltip key={tagFullText} title={tagFullText} arrow>
+            <span>{tagComponent}</span>
+        </HtmlTooltip>
     );
 };
 
@@ -214,8 +194,6 @@ const RestTags: FC<{
     tags: TagSchema[];
     onClick: (tag: string) => void;
 }> = ({ tags, onClick }) => {
-    const isTagTypeColorEnabled = useUiFlag('tagTypeColor');
-
     return (
         <HtmlTooltip
             title={tags.map((tag) => {
@@ -226,11 +204,7 @@ const RestTags: FC<{
                         onClick={() => onClick(formattedTag)}
                         key={formattedTag}
                     >
-                        {isTagTypeColorEnabled ? (
-                            <Tag tag={tag} maxLength={30} />
-                        ) : (
-                            formattedTag
-                        )}
+                        <Tag tag={tag} maxLength={30} />
                     </Box>
                 );
             })}
@@ -238,9 +212,7 @@ const RestTags: FC<{
             <CustomTagButton
                 sx={{
                     cursor: 'initial',
-                    ...(isTagTypeColorEnabled && {
-                        borderRadius: (theme) => theme.spacing(2),
-                    }),
+                    borderRadius: (theme) => theme.spacing(2),
                 }}
             >
                 {tags.length} more...

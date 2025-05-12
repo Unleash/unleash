@@ -20,7 +20,10 @@ import {
     type ConstraintValidationResult,
     constraintValidator,
 } from './constraint-validator';
-import { difference } from './set-functions';
+import {
+    getDeletedLegalValues,
+    getInvalidLegalValues,
+} from './legal-value-functions';
 
 const resolveContextDefinition = (
     context: IUnleashContextDefinition[],
@@ -88,16 +91,10 @@ export const useEditableConstraint = (
             contextDefinition.legalValues?.length &&
             constraint.values?.length
         ) {
-            // todo: extract and test
-            const currentLegalValues = new Set(
-                contextDefinition.legalValues.map(({ value }) => value),
-            );
-            const deletedValues = difference(
+            return getDeletedLegalValues(
+                contextDefinition.legalValues,
                 constraint.values,
-                currentLegalValues,
             );
-
-            return deletedValues;
         }
         return undefined;
     }, [
@@ -110,11 +107,9 @@ export const useEditableConstraint = (
             contextDefinition.legalValues?.length &&
             isSingleValueConstraint(localConstraint)
         ) {
-            // todo: extract and test
-            return new Set(
-                contextDefinition.legalValues
-                    .filter(({ value }) => !validator(value)[0])
-                    .map(({ value }) => value),
+            return getInvalidLegalValues(
+                contextDefinition.legalValues,
+                (value) => validator(value)[0],
             );
         }
         return undefined;

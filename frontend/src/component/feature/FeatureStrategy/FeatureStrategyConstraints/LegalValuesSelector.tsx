@@ -7,16 +7,6 @@ import {
 import { ConstraintValueSearch } from './ConstraintValueSearch';
 import type { ILegalValue } from 'interfaces/context';
 
-type LegalValuesSelectorProps = {
-    values: Set<string>;
-    addValues: (values: string[]) => void;
-    removeValue: (value: string) => void;
-    clearAll: () => void;
-    deletedLegalValues?: Set<string>;
-    invalidLegalValues?: Set<string>;
-    legalValues: ILegalValue[];
-};
-
 const StyledValuesContainer = styled('div')(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
@@ -38,26 +28,6 @@ const LegalValuesSelectorWidget = styled('article')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-type BasePropsTmp =
-    | {
-          legalValues: ILegalValue[];
-          onChange: (value: string) => void;
-          deletedLegalValues?: Set<string>;
-          invalidLegalValues?: Set<string>;
-      }
-    | (
-          | {
-                values: Set<string>;
-                multiSelect?: {
-                    selectAll: () => void;
-                    clearAll: () => void;
-                };
-            }
-          | {
-                value: string;
-            }
-      );
-
 type BaseProps = {
     legalValues: ILegalValue[];
     onChange: (value: string) => void;
@@ -71,7 +41,7 @@ type BaseProps = {
     };
 };
 
-const LegalValuesSelectorBase: FC<BaseProps> = ({
+const BaseLegalValueSelector: FC<BaseProps> = ({
     legalValues,
     onChange,
     deletedLegalValues,
@@ -176,6 +146,16 @@ const LegalValuesSelectorBase: FC<BaseProps> = ({
     );
 };
 
+type LegalValuesSelectorProps = {
+    values: Set<string>;
+    addValues: (values: string[]) => void;
+    removeValue: (value: string) => void;
+    clearAll: () => void;
+    deletedLegalValues?: Set<string>;
+    invalidLegalValues?: Set<string>;
+    legalValues: ILegalValue[];
+};
+
 export const LegalValuesSelector = ({
     legalValues,
     values,
@@ -193,7 +173,7 @@ export const LegalValuesSelector = ({
     };
 
     return (
-        <LegalValuesSelectorBase
+        <BaseLegalValueSelector
             legalValues={legalValues}
             isInputSelected={(inputValue) => values.has(inputValue)}
             onChange={onChange}
@@ -233,7 +213,7 @@ export const SingleLegalValueSelector = ({
     };
 
     return (
-        <LegalValuesSelectorBase
+        <BaseLegalValueSelector
             onChange={onChange}
             isInputSelected={(inputValue) => inputValue === value}
             {...baseProps}

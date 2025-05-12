@@ -169,6 +169,7 @@ export const SingleLegalValueSelector = ({
 }: SingleLegalValueSelectorProps) => {
     const [filter, setFilter] = useState('');
     const labelId = useId();
+    const descriptionId = useId();
     const groupNameId = useId();
 
     const filteredValues = filterLegalValues(legalValues, filter);
@@ -205,7 +206,16 @@ export const SingleLegalValueSelector = ({
                     </ul>
                 </Alert>
             ) : null}
-            <p id={labelId}>Select values from a predefined set</p>
+            <div>
+                <span id={labelId}>Select values from a predefined set. </span>
+
+                {invalidLegalValues?.size ? (
+                    <span id={descriptionId}>
+                        Values that are not valid for your chosen operator have
+                        been disabled.
+                    </span>
+                ) : null}
+            </div>
             <Row>
                 <ConstraintValueSearch
                     onKeyDown={handleSearchKeyDown}
@@ -215,6 +225,7 @@ export const SingleLegalValueSelector = ({
             </Row>
             <StyledRadioContainer
                 aria-labelledby={labelId}
+                aria-describedby={descriptionId}
                 name={`legal-value-${groupNameId}`}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}

@@ -1,15 +1,7 @@
-import { withStyles } from 'tss-react/mui';
-import {
-    Slider,
-    Typography,
-    Box,
-    styled,
-    TextField,
-    InputAdornment,
-} from '@mui/material';
+import { makeStyles, withStyles } from 'tss-react/mui';
+import { Slider, Typography, Box, styled } from '@mui/material';
 import { ROLLOUT_SLIDER_ID } from 'utils/testIds';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { useState, useEffect } from 'react';
 
 const StyledSlider = withStyles(Slider, (theme) => ({
     root: {
@@ -45,38 +37,17 @@ const StyledSubheader = styled(Typography)(({ theme }) => ({
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    marginBottom: theme.spacing(2),
-}));
-
-const StyledSliderContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    gap: theme.spacing(4),
     marginBottom: theme.spacing(1),
 }));
 
-const StyledInputBox = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    width: '100px',
-    flexShrink: 0,
-}));
-
-const SliderWrapper = styled('div')(({ theme }) => ({
-    width: '100%',
-    maxWidth: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(2),
-}));
-
-const SliderContent = styled('div')(({ theme }) => ({
-    flexGrow: 1,
-}));
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-    width: '90px',
+const useStyles = makeStyles()((theme) => ({
+    slider: {
+        width: '100%',
+        maxWidth: '100%',
+    },
+    margin: {
+        height: theme.spacing(3),
+    },
 }));
 
 const marks = [
@@ -111,36 +82,18 @@ interface IRolloutSliderProps {
     disabled?: boolean;
 }
 
-const RolloutSlider = ({
+const LegacyRolloutSlider = ({
     name,
     value,
     onChange,
     disabled = false,
 }: IRolloutSliderProps) => {
-    const [inputValue, setInputValue] = useState(value.toString());
-
-    useEffect(() => {
-        setInputValue(value.toString());
-    }, [value]);
+    const { classes } = useStyles();
 
     const valuetext = (value: number) => `${value}%`;
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.target.value);
-    };
-
-    const handleInputBlur = () => {
-        const numValue = Number.parseInt(inputValue, 10);
-        if (!Number.isNaN(numValue) && numValue >= 0 && numValue <= 100) {
-            const event = new Event('input', { bubbles: true });
-            onChange(event, numValue);
-        } else {
-            setInputValue(value.toString());
-        }
-    };
-
     return (
-        <SliderWrapper>
+        <div className={classes.slider}>
             <StyledBox>
                 <Typography id='discrete-slider-always'>{name}</Typography>
                 <HelpIcon
@@ -189,48 +142,21 @@ const RolloutSlider = ({
                     }
                 />
             </StyledBox>
-            <StyledSliderContainer>
-                <SliderContent>
-                    <StyledSlider
-                        min={0}
-                        max={100}
-                        value={value}
-                        getAriaValueText={valuetext}
-                        aria-labelledby='discrete-slider-always'
-                        step={1}
-                        data-testid={ROLLOUT_SLIDER_ID}
-                        marks={marks}
-                        onChange={onChange}
-                        valueLabelDisplay='on'
-                        disabled={disabled}
-                    />
-                </SliderContent>
-                <StyledInputBox>
-                    <StyledTextField
-                        size='small'
-                        aria-labelledby='discrete-slider-always'
-                        type='number'
-                        value={inputValue}
-                        onChange={handleInputChange}
-                        onBlur={handleInputBlur}
-                        disabled={disabled}
-                        inputProps={{
-                            min: 0,
-                            max: 100,
-                            step: 1,
-                        }}
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position='end'>
-                                    %
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
-                </StyledInputBox>
-            </StyledSliderContainer>
-        </SliderWrapper>
+            <StyledSlider
+                min={0}
+                max={100}
+                value={value}
+                getAriaValueText={valuetext}
+                aria-labelledby='discrete-slider-always'
+                step={1}
+                data-testid={ROLLOUT_SLIDER_ID}
+                marks={marks}
+                onChange={onChange}
+                valueLabelDisplay='on'
+                disabled={disabled}
+            />
+        </div>
     );
 };
 
-export default RolloutSlider;
+export default LegacyRolloutSlider;

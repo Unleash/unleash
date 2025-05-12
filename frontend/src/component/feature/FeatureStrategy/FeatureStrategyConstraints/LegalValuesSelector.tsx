@@ -60,22 +60,23 @@ type BasePropsTmp =
 
 type BaseProps = {
     legalValues: ILegalValue[];
-    values: Set<string>;
     onChange: (value: string) => void;
     deletedLegalValues?: Set<string>;
     invalidLegalValues?: Set<string>;
+    isInputSelected: (value: string) => boolean;
     multiSelect?: {
         selectAll: () => void;
         clearAll: () => void;
+        values: Set<string>;
     };
 };
 
 const LegalValuesSelectorBase: FC<BaseProps> = ({
     legalValues,
-    values,
     onChange,
     deletedLegalValues,
     invalidLegalValues,
+    isInputSelected: isInputChecked,
     multiSelect,
 }) => {
     const [filter, setFilter] = useState('');
@@ -87,7 +88,8 @@ const LegalValuesSelectorBase: FC<BaseProps> = ({
 
     const isAllSelected =
         multiSelect &&
-        legalValues.length === values.size + (deletedLegalValues?.size ?? 0);
+        legalValues.length ===
+            multiSelect.values.size + (deletedLegalValues?.size ?? 0);
 
     const handleSearchKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Enter') {
@@ -114,7 +116,15 @@ const LegalValuesSelectorBase: FC<BaseProps> = ({
                     </ul>
                 </Alert>
             ) : null}
-            <p id={labelId}>Select values from a predefined set</p>
+            <p>
+                <span id={labelId}>Select values from a predefined set</span>
+                {invalidLegalValues?.size ? (
+                    <span id={descriptionId}>
+                        Values that are not valid for your chosen operator have
+                        been disabled.
+                    </span>
+                ) : null}
+            </p>
             <Row>
                 <ConstraintValueSearch
                     onKeyDown={handleSearchKeyDown}
@@ -154,7 +164,7 @@ const LegalValuesSelectorBase: FC<BaseProps> = ({
                             <Control
                                 color='primary'
                                 name={`legal-value-${groupNameId}`}
-                                checked={values.has(match.value)}
+                                checked={isInputChecked(match.value)}
                                 onChange={() => onChange(match.value)}
                                 disabled={invalidLegalValues?.has(match.value)}
                             />
@@ -185,14 +195,15 @@ export const LegalValuesSelector = ({
     return (
         <LegalValuesSelectorBase
             legalValues={legalValues}
+            isInputSelected={(inputValue) => values.has(inputValue)}
             onChange={onChange}
             multiSelect={{
                 clearAll,
                 selectAll: () => {
                     addValues(legalValues.map(({ value }) => value));
                 },
+                values,
             }}
-            values={values}
             {...baseProps}
         />
     );
@@ -224,7 +235,7 @@ export const SingleLegalValueSelector = ({
     return (
         <LegalValuesSelectorBase
             onChange={onChange}
-            values={new Set([value])}
+            isInputSelected={(inputValue) => inputValue === value}
             {...baseProps}
         />
     );

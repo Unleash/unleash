@@ -49,6 +49,8 @@ import {
     createContextService,
     createFakeContextService,
 } from '../context/createContextService';
+import { FakeFeatureLinksReadModel } from '../feature-links/fake-feature-links-read-model';
+import { FeatureLinksReadModel } from '../feature-links/feature-links-read-model';
 
 export const createFakeExportImportTogglesService = (
     config: IUnleashConfig,
@@ -94,6 +96,8 @@ export const createFakeExportImportTogglesService = (
 
     const dependentFeaturesService = createFakeDependentFeaturesService(config);
 
+    const featureLinksReadModel = new FakeFeatureLinksReadModel();
+
     return new ExportImportService(
         {
             importTogglesStore,
@@ -117,6 +121,7 @@ export const createFakeExportImportTogglesService = (
         },
         dependentFeaturesReadModel,
         segmentReadModel,
+        featureLinksReadModel,
     );
 };
 
@@ -184,6 +189,8 @@ export const deferredExportImportTogglesService = (
         const dependentFeaturesService =
             createDependentFeaturesService(config)(db);
 
+        const featureLinksReadModel = new FeatureLinksReadModel(db, eventBus);
+
         return new ExportImportService(
             {
                 importTogglesStore,
@@ -207,6 +214,7 @@ export const deferredExportImportTogglesService = (
             },
             dependentFeaturesReadModel,
             segmentReadModel,
+            featureLinksReadModel,
         );
     };
 };

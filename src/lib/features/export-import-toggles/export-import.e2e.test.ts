@@ -112,6 +112,17 @@ const createVariants = async (feature: string, variants: IVariant[]) => {
     );
 };
 
+const addLink = async (
+    feature: string,
+    link: { url: string; title: string },
+) => {
+    await app.services.transactionalFeatureLinkService.createLink(
+        DEFAULT_ENV,
+        { ...link, featureName: feature },
+        TEST_AUDIT_USER,
+    );
+};
+
 const createProjects = async (
     projects: string[] = [DEFAULT_PROJECT],
     featureLimit = 2,
@@ -155,7 +166,9 @@ beforeAll(async () => {
         db.stores,
         {
             experimental: {
-                flags: {},
+                flags: {
+                    featureLinks: true,
+                },
             },
         },
         db.rawDatabase,
@@ -290,6 +303,15 @@ test('exports features', async () => {
     );
 
     await app.addDependency(defaultFeatureName, 'second_feature');
+    await addLink(defaultFeatureName, {
+        url: 'http://example1.com',
+        title: 'link title 1',
+    });
+    await addLink(defaultFeatureName, {
+        url: 'http://example2.com',
+        title: 'link title 2',
+    });
+
     const { body } = await app.request
         .post('/api/admin/features-batch/export')
         .send({
@@ -328,6 +350,15 @@ test('exports features', async () => {
                         feature: 'second_feature',
                         enabled: true,
                     },
+                ],
+            },
+        ],
+        links: [
+            {
+                feature: defaultFeatureName,
+                links: [
+                    { url: 'http://example1.com', title: 'link title 1' },
+                    { url: 'http://example2.com', title: 'link title 2' },
                 ],
             },
         ],

@@ -15,6 +15,8 @@ import { strategyVariantSchema } from './strategy-variant-schema';
 import { featureDependenciesSchema } from './feature-dependencies-schema';
 import { dependentFeatureSchema } from './dependent-feature-schema';
 import { tagSchema } from './tag-schema';
+import { featureLinkSchema } from './feature-link-schema';
+import { featureLinksSchema } from './feature-links-schema';
 
 export const exportResultSchema = {
     $id: '#/components/schemas/exportResultSchema',
@@ -177,6 +179,13 @@ export const exportResultSchema = {
                 $ref: '#/components/schemas/featureDependenciesSchema',
             },
         },
+        links: {
+            type: 'array',
+            description: 'A list of links for features in `features` list.',
+            items: {
+                $ref: '#/components/schemas/featureLinksSchema',
+            },
+        },
     },
     components: {
         schemas: {
@@ -196,6 +205,8 @@ export const exportResultSchema = {
             featureDependenciesSchema,
             dependentFeatureSchema,
             tagSchema,
+            featureLinksSchema,
+            featureLinkSchema,
         },
     },
 } as const;

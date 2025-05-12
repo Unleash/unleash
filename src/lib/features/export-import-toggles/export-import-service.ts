@@ -21,6 +21,7 @@ import {
     type IUnleashStores,
     type IVariant,
     type WithRequired,
+    type IFeatureLinksReadModel,
 } from '../../types';
 import type {
     ExportQuerySchema,
@@ -128,6 +129,8 @@ export default class ExportImportService
 
     private dependentFeaturesService: DependentFeaturesService;
 
+    private featureLinksReadModel: IFeatureLinksReadModel;
+
     constructor(
         stores: Pick<
             IUnleashStores,
@@ -165,6 +168,7 @@ export default class ExportImportService
         >,
         dependentFeaturesReadModel: IDependentFeaturesReadModel,
         segmentReadModel: ISegmentReadModel,
+        featureLinksReadModel: IFeatureLinksReadModel,
     ) {
         this.toggleStore = stores.featureToggleStore;
         this.importTogglesStore = stores.importTogglesStore;
@@ -190,6 +194,7 @@ export default class ExportImportService
         );
         this.dependentFeaturesReadModel = dependentFeaturesReadModel;
         this.segmentReadModel = segmentReadModel;
+        this.featureLinksReadModel = featureLinksReadModel;
         this.logger = getLogger('services/state-service.js');
     }
 
@@ -872,6 +877,7 @@ export default class ExportImportService
             segments,
             tagTypes,
             featureDependencies,
+            featureLinks,
         ] = await Promise.all([
             this.toggleStore.getAllByNames(featureNames),
             await this.featureEnvironmentStore.getAllByFeatures(
@@ -888,6 +894,9 @@ export default class ExportImportService
             this.segmentReadModel.getAll(),
             this.tagTypeStore.getAll(),
             this.dependentFeaturesReadModel.getDependencies(featureNames),
+            this.flagResolver.isEnabled('featureLinks')
+                ? this.featureLinksReadModel.getLinks(...featureNames)
+                : Promise.resolve([]),
         ]);
         this.addSegmentsToStrategies(featureStrategies, strategySegments);
         const filteredContextFields = contextFields
@@ -929,13 +938,24 @@ export default class ExportImportService
             featureDependencies,
             'feature',
         );
-
         const mappedFeatureDependencies = Object.entries(
             groupedFeatureDependencies,
         ).map(([feature, dependencies]) => ({
             feature,
             dependencies: dependencies.map((d) => d.dependency),
         }));
+
+        const groupedFeatureLinks = groupBy(featureLinks, 'feature');
+        const mappedFeatureLinks = Object.entries(groupedFeatureLinks).map(
+            ([feature, links]) => ({
+                feature,
+                links: links.map((link) => ({
+                    id: link.id,
+                    url: link.url,
+                    title: link.title,
+                })),
+            }),
+        );
 
         const result = {
             features: features.map((item) => {
@@ -978,6 +998,7 @@ export default class ExportImportService
             }),
             tagTypes: filteredTagTypes,
             dependencies: mappedFeatureDependencies,
+            links: mappedFeatureLinks,
         };
         await this.eventService.storeEvent(
             new FeaturesExportedEvent({ data: result, auditUser }),

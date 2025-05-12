@@ -618,12 +618,22 @@
     },
     {
       "source": "/topics/feature-flags/tutorials",
-      "destination": "/feature-flag-tutorials",
+      "destination": "/feature-flag-tutorials/react",
+      "permanent": true
+    },
+    {
+      "source": "/reference",
+      "destination": "/reference/projects",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flags-tutorials",
+      "destination": "/feature-flag-tutorials/react",
       "permanent": true
     },
     {
       "source": "/tutorials",
-      "destination": "/feature-flag-tutorials",
+      "destination": "/feature-flag-tutorials/react",
       "permanent": true
     },
     {

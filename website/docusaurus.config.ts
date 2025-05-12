@@ -689,14 +689,6 @@ class="header-github-link"
                         },
                         {
                             from: [
-                                '/user_guide/important-concepts',
-                                '/tutorials/important-concepts',
-                                '/reference/concepts/',
-                            ],
-                            to: '/reference',
-                        },
-                        {
-                            from: [
                                 '/user_guide/quickstart',
                                 '/docs/getting_started',
                                 '/tutorials/quickstart',
@@ -791,13 +783,6 @@ class="header-github-link"
                         {
                             from: '/help',
                             to: '/',
-                        },
-                        {
-                            from: [
-                                '/topics/feature-flags/tutorials',
-                                '/tutorials',
-                            ],
-                            to: '/feature-flag-tutorials',
                         },
                         {
                             from: ['/tutorials/academy', '/unleash-academy'],

@@ -19,7 +19,7 @@ In this tutorial, you will:
 
 When an enterprise like a global banking platform considers implementing feature flags, keeping track of who can access your feature flag platform and handling authentication is critical. Traditional username and password approaches are insecure and [shared accounts pose a security risk](https://www.getunleash.io/blog/stop-sharing-accounts).
 
-To ensure proper user authentication and reduce risk exposure, Unleash provides [single sign-on](/how-to/sso) as the recommended centralized method for managing user access.
+To ensure proper user authentication and reduce risk exposure, Unleash provides [single sign-on](/how-to/how-to-add-sso-open-id-connect) as the recommended centralized method for managing user access.
 
 Unleash supports any SSO option through OpenID Connect or SAML 2.0, including identity providers like Okta, Microsoft Entra ID, and Keycloak to create a unified authentication process.
 

@@ -882,6 +882,26 @@
       "permanent": true
     },
     {
+      "source": "/using-unleash/troubleshooting",
+      "destination": "/using-unleash/troubleshooting/cors",
+      "permanent": true
+    },
+    {
+      "source": "/contributing",
+      "destination": "/contributing/developer-guide",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/sso",
+      "destination": "/how-to/how-to-add-sso-open-id-connect",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/provisioning",
+      "destination": "/how-to/how-to-setup-provisioning-with-okta",
+      "permanent": true
+    },
+    {
       "source": "/reference/deploy/configuring-unleash-v3",
       "destination": "/using-unleash/deploy/configuring-unleash-v3",
       "permanent": true

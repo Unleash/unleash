@@ -42,7 +42,7 @@ Your developers and other stakeholders need to securely access platforms used to
 
 To use single sign-on in Unleash, your users can authenticate themselves through OpenID Connect (OIDC) or SAML 2.0 protocols.
 
-We have integration guides to connect Unleash to enterprise identity providers like Okta, Microsoft Entra ID, and Keycloak, but you can use any identity provider that uses OIDC or SAML 2.0 protocol. Read our [how-to guide for single sign-on](/how-to/sso).
+We have integration guides to connect Unleash to enterprise identity providers like Okta, Microsoft Entra ID, and Keycloak, but you can use any identity provider that uses OIDC or SAML 2.0 protocol. Read our [how-to guide for single sign-on](/how-to/how-to-add-sso-open-id-connect).
 
 ![A diagram showing how Unleash integrates with authentication providers and identity providers.](/img/sso-idp-auth-provider.jpg)
 
@@ -65,7 +65,7 @@ By enabling [SCIM](/reference/scim) in Unleash, you can:
 -   Sync group membership.
 -   Ensure consistent access across multiple platforms.
 
-To unlock these benefits, set up [SCIM for automatic provisioning using our how-to guides](/how-to/provisioning).
+To unlock these benefits, set up [SCIM for automatic provisioning using our how-to guides](/how-to/how-to-setup-provisioning-with-okta).
 
 ## Configure role-based access control for administrators and developers
 

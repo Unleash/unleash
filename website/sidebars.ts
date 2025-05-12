@@ -582,10 +582,8 @@ const sidebars: SidebarsConfig = {
                     ],
                     type: 'category',
                     link: {
-                        type: 'generated-index',
-                        title: 'How-to: Single sign-on',
-                        description: 'Single sign-on guides.',
-                        slug: '/how-to/sso',
+                        type: 'doc',
+                        id: 'how-to/how-to-add-sso-open-id-connect',
                     },
                 },
                 {
@@ -596,10 +594,8 @@ const sidebars: SidebarsConfig = {
                     ],
                     type: 'category',
                     link: {
-                        type: 'generated-index',
-                        title: 'How to: Provisioning',
-                        description: 'Provisioning how-to guides.',
-                        slug: '/how-to/provisioning',
+                        type: 'doc',
+                        id: 'how-to/how-to-setup-provisioning-with-okta'
                     },
                 },
                 {
@@ -649,11 +645,8 @@ const sidebars: SidebarsConfig = {
                     label: 'Troubleshooting',
                     type: 'category',
                     link: {
-                        type: 'generated-index',
-                        title: 'How-to: troubleshooting',
-                        description:
-                            'Troubleshooting common problems. If you want to suggest new items, please phrase the title as a concrete problem',
-                        slug: '/using-unleash/troubleshooting',
+                        type: 'doc',
+                        id: '/using-unleash/troubleshooting/cors',
                     },
                     items: [
                         'using-unleash/troubleshooting/cors',
@@ -689,18 +682,6 @@ const sidebars: SidebarsConfig = {
                                 'how-to/how-to-use-the-admin-api',
                                 'how-to/how-to-enable-openapi',
                             ],
-                        },
-                        {
-                            label: 'Unleash Proxy guides',
-                            type: 'category',
-                            link: {
-                                type: 'generated-index',
-                                title: 'How-to: The Unleash Proxy',
-                                description:
-                                    'Learn how to work with the Unleash Proxy',
-                                slug: '/how-to/proxy',
-                            },
-                            items: ['how-to/how-to-run-the-unleash-proxy'],
                         },
                         {
                             label: 'Feature flags, strategies, context',
@@ -758,10 +739,8 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             collapsed: true,
             link: {
-                type: 'generated-index',
-                title: 'Contributing to Unleash',
-                description: 'Learn how to contribute to unleash.',
-                slug: '/contributing',
+                type: 'doc',
+                id: 'contributing/developer-guide',
             },
             items: [
                 'contributing/developer-guide',

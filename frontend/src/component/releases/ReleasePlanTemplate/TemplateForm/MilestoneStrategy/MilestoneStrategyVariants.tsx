@@ -110,7 +110,7 @@ export const MilestoneStrategyVariants = ({
 
     return (
         <>
-            <Alert severity='info' sx={{ mb: 2 }} icon={false}>
+            <Alert severity='info' icon={false}>
                 Variants enhance a feature flag by providing a version of the
                 feature to be enabled
             </Alert>

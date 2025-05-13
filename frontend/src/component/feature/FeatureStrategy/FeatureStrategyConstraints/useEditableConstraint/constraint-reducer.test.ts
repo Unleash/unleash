@@ -399,74 +399,40 @@ describe('removing / clearing values', () => {
     });
 });
 describe('toggle options', () => {
-    test('case sensitivity', () => {
-        const { caseInsensitive, ...input } =
-            multiValueConstraint('context-field');
-        expect(
-            constraintReducer(input, {
-                type: 'toggle case sensitivity',
-            }),
-        ).toStrictEqual({
-            ...input,
-            caseInsensitive: true,
-        });
-        expect(
-            constraintReducer(
-                { ...input, caseInsensitive },
-                {
+    const stateTransitions = [
+        [undefined, true],
+        [true, false],
+        [false, true],
+    ];
+    test.each(stateTransitions)(
+        'toggle case sensitivity: %s -> %s',
+        (from, to) => {
+            const input = {
+                ...multiValueConstraint('context-field'),
+                caseInsensitive: from,
+            };
+            expect(
+                constraintReducer(input, {
                     type: 'toggle case sensitivity',
-                },
-            ),
-        ).toStrictEqual({
-            ...input,
-            caseInsensitive: !caseInsensitive,
-        });
-        expect(
-            constraintReducer(
-                { ...input, caseInsensitive: !caseInsensitive },
-                {
-                    type: 'toggle case sensitivity',
-                },
-            ),
-        ).toStrictEqual({
-            ...input,
-            caseInsensitive: caseInsensitive,
-        });
-    });
-});
-
-describe('match inversion / inclusive/exclusive operator (`constraint.inverted`)', () => {
-    test('match inversion', () => {
-        const { inverted, ...input } = multiValueConstraint('context-field');
+                }),
+            ).toStrictEqual({
+                ...input,
+                caseInsensitive: to,
+            });
+        },
+    );
+    test.each(stateTransitions)('match inversion: %s -> %s', (from, to) => {
+        const input = {
+            ...multiValueConstraint('context-field'),
+            inverted: from,
+        };
         expect(
             constraintReducer(input, {
                 type: 'toggle inverted operator',
             }),
         ).toStrictEqual({
             ...input,
-            inverted: true,
-        });
-        expect(
-            constraintReducer(
-                { ...input, inverted },
-                {
-                    type: 'toggle inverted operator',
-                },
-            ),
-        ).toStrictEqual({
-            ...input,
-            inverted: !inverted,
-        });
-        expect(
-            constraintReducer(
-                { ...input, inverted: !inverted },
-                {
-                    type: 'toggle inverted operator',
-                },
-            ),
-        ).toStrictEqual({
-            ...input,
-            inverted: inverted,
+            inverted: to,
         });
     });
 });

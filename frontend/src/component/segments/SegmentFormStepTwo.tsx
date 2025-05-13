@@ -202,14 +202,14 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                     }
                 />
                 <StyledConstraintContainer>
-                    {addEditStrategy &&
-                    hasAccess(modePermission, project) &&
-                    setConstraints ? (
-                        <EditableConstraintsList
-                            ref={constraintsAccordionListRef}
-                            constraints={constraints}
-                            setConstraints={setConstraints}
-                        />
+                    {addEditStrategy ? (
+                        hasAccess(modePermission, project) && setConstraints ? (
+                            <EditableConstraintsList
+                                ref={constraintsAccordionListRef}
+                                constraints={constraints}
+                                setConstraints={setConstraints}
+                            />
+                        ) : null
                     ) : (
                         <ConstraintAccordionList
                             ref={constraintsAccordionListRef}

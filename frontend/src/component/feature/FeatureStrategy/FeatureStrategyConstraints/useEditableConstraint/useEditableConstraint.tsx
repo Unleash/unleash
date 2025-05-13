@@ -2,8 +2,7 @@ import { useMemo, useState } from 'react';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IConstraint } from 'interfaces/strategy';
 import {
-    type EditableMultiValueConstraint,
-    type EditableSingleValueConstraint,
+    type EditableConstraint,
     fromIConstraint,
     isSingleValueConstraint,
     toIConstraint,
@@ -44,44 +43,32 @@ const resolveContextDefinition = (
     );
 };
 
-type SingleValueConstraintState = {
-    constraint: EditableSingleValueConstraint;
-};
-
-type MultiValueConstraintState = {
-    constraint: EditableMultiValueConstraint;
-};
-
 type LegalValueData = {
     legalValues: ILegalValue[];
     deletedLegalValues?: Set<string>;
     invalidLegalValues?: Set<string>;
 };
 
-type LegalValueConstraintState = {
-    constraint: EditableMultiValueConstraint;
-} & LegalValueData;
-
 type EditableConstraintState = {
     updateConstraint: (action: ConstraintUpdateAction) => void;
     validator: (...values: string[]) => ConstraintValidationResult;
-} & (
-    | SingleValueConstraintState
-    | MultiValueConstraintState
-    | LegalValueConstraintState
-);
+    legalValueData?: LegalValueData;
+    constraint: EditableConstraint;
+};
 
 export const useEditableConstraint = (
     constraint: IConstraint,
-    onAutoSave: (constraint: IConstraint) => void,
+    onUpdate: (constraint: IConstraint) => void,
 ): EditableConstraintState => {
     const [localConstraint, setLocalConstraint] = useState(() => {
         return fromIConstraint(constraint);
     });
 
     const { context } = useUnleashContext();
-    const [contextDefinition, setContextDefinition] = useState(
-        resolveContextDefinition(context, localConstraint.contextName),
+
+    const contextDefinition = useMemo(
+        () => resolveContextDefinition(context, localConstraint.contextName),
+        [JSON.stringify(context), localConstraint.contextName],
     );
 
     const validator = constraintValidator(localConstraint);
@@ -124,50 +111,23 @@ export const useEditableConstraint = (
             action,
             deletedLegalValues,
         );
-        const contextFieldHasChanged =
-            localConstraint.contextName !== nextState.contextName;
 
         setLocalConstraint(nextState);
-        onAutoSave(toIConstraint(nextState));
-
-        if (contextFieldHasChanged) {
-            setContextDefinition(
-                resolveContextDefinition(context, nextState.contextName),
-            );
-        }
+        onUpdate(toIConstraint(nextState));
     };
 
-    if (contextDefinition.legalValues?.length) {
-        if (isSingleValueConstraint(localConstraint)) {
-            return {
-                updateConstraint,
-                constraint: localConstraint,
-                validator,
-                legalValues: contextDefinition.legalValues,
-                invalidLegalValues,
-                deletedLegalValues,
-            };
-        }
-        return {
-            updateConstraint,
-            constraint: localConstraint,
-            validator,
-            legalValues: contextDefinition.legalValues,
-            invalidLegalValues,
-            deletedLegalValues,
-        };
-    }
-    if (isSingleValueConstraint(localConstraint)) {
-        return {
-            updateConstraint,
-            constraint: localConstraint,
-            validator,
-        };
-    }
+    const legalValueData = contextDefinition.legalValues?.length
+        ? {
+              legalValues: contextDefinition.legalValues,
+              invalidLegalValues,
+              deletedLegalValues,
+          }
+        : undefined;
 
     return {
         updateConstraint,
         constraint: localConstraint,
         validator,
-    };
+        legalValueData,
+    } as EditableConstraintState;
 };

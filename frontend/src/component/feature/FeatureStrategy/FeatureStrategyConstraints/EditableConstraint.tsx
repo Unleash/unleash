@@ -218,22 +218,20 @@ const TopRowInput: FC<{
 type Props = {
     constraint: IConstraint;
     onDelete: () => void;
-    onAutoSave: (constraint: IConstraint) => void;
+    onUpdate: (constraint: IConstraint) => void;
 };
 
 export const EditableConstraint: FC<Props> = ({
     onDelete,
     constraint,
-    onAutoSave,
+    onUpdate,
 }) => {
     const {
         constraint: localConstraint,
         updateConstraint,
         validator,
-        ...legalValueData
-    } = useEditableConstraint(constraint, onAutoSave);
-
-    const isLegalValueConstraint = 'legalValues' in legalValueData;
+        legalValueData,
+    } = useEditableConstraint(constraint, onUpdate);
 
     const { context } = useUnleashContext();
     const { contextName, operator } = localConstraint;
@@ -332,8 +330,7 @@ export const EditableConstraint: FC<Props> = ({
                         values={
                             isMultiValueConstraint(localConstraint)
                                 ? Array.from(localConstraint.values)
-                                : 'legalValues' in legalValueData &&
-                                    localConstraint.value
+                                : legalValueData && localConstraint.value
                                   ? [localConstraint.value]
                                   : undefined
                         }
@@ -348,7 +345,7 @@ export const EditableConstraint: FC<Props> = ({
                             deleteButtonRef.current
                         }
                     >
-                        {isLegalValueConstraint ? null : (
+                        {legalValueData ? null : (
                             <TopRowInput
                                 localConstraint={localConstraint}
                                 updateConstraint={updateConstraint}
@@ -371,7 +368,7 @@ export const EditableConstraint: FC<Props> = ({
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
-            {'legalValues' in legalValueData ? (
+            {legalValueData ? (
                 <LegalValuesContainer>
                     {isMultiValueConstraint(localConstraint) ? (
                         <LegalValuesSelector

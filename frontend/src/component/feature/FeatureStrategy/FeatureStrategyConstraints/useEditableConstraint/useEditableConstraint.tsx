@@ -66,7 +66,7 @@ export const useEditableConstraint = (
     );
     useEffect(() => {
         onUpdate(toIConstraint(localConstraint));
-    }, [JSON.stringify(localConstraint), updateConstraint]);
+    }, [localConstraint, updateConstraint]);
 
     const { context } = useUnleashContext();
 

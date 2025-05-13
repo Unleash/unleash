@@ -396,14 +396,12 @@ export const EditableConstraint: FC<Props> = ({
                             toggleValue={toggleValue}
                             clearAll={clearAll}
                             addValues={addValues}
-                            removeValue={removeValue}
                             {...legalValueData}
                         />
                     ) : (
                         <SingleLegalValueSelector
+                            toggleValue={toggleValue}
                             value={localConstraint.value}
-                            clear={clearAll}
-                            addValue={addValues}
                             {...legalValueData}
                         />
                     )}

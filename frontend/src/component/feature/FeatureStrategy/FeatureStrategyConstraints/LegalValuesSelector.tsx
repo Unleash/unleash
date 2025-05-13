@@ -190,7 +190,6 @@ const MemoLabel = React.memo(function MemoLabel({
 type LegalValuesSelectorProps = {
     values: Set<string>;
     addValues: (value: string | string[]) => void;
-    removeValue: (value: string) => void;
     toggleValue: (value: string) => void;
     clearAll: () => void;
     deletedLegalValues?: Set<string>;
@@ -202,23 +201,10 @@ export const LegalValuesSelector = ({
     legalValues,
     values,
     addValues,
-    removeValue,
-    clearAll,
     toggleValue,
+    clearAll,
     ...baseProps
 }: LegalValuesSelectorProps) => {
-    // const onChange = useCallback(
-    //     (legalValue: string) => {
-    //         // toggleValue(legalValue)
-    //         // if (values.has(legalValue)) {
-    //         //     removeValue(legalValue);
-    //         // } else {
-    //         //     addValues(legalValue);
-    //         // }
-    //     },
-    //     [values, addValues, removeValue],
-    // );
-
     return (
         <BaseLegalValueSelector
             legalValues={legalValues}
@@ -238,8 +224,6 @@ export const LegalValuesSelector = ({
 
 type SingleLegalValueSelectorProps = {
     value: string;
-    addValue: (value: string) => void;
-    clear: () => void;
     deletedLegalValues?: Set<string>;
     legalValues: ILegalValue[];
     toggleValue: (value: string) => void;
@@ -249,20 +233,8 @@ type SingleLegalValueSelectorProps = {
 export const SingleLegalValueSelector = ({
     value,
     toggleValue,
-    clear,
     ...baseProps
 }: SingleLegalValueSelectorProps) => {
-    // const onChange = useCallback(
-    //     (newValue: string) => {
-    //         if (value === newValue) {
-    //             clear();
-    //         } else {
-    //             addValue(newValue);
-    //         }
-    //     },
-    //     [value, addValue, clear],
-    // );
-
     return (
         <BaseLegalValueSelector
             onChange={toggleValue}

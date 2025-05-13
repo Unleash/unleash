@@ -117,6 +117,7 @@ import type {
     IFeatureLink,
     IFeatureLinksReadModel,
 } from '../feature-links/feature-links-read-model-type';
+import type FeatureLinkService from '../feature-links/feature-link-service';
 
 interface IFeatureContext {
     featureName: string;
@@ -176,6 +177,7 @@ export type ServicesAndReadModels = {
     dependentFeaturesService: DependentFeaturesService;
     featureLifecycleReadModel: IFeatureLifecycleReadModel;
     featureCollaboratorsReadModel: IFeatureCollaboratorsReadModel;
+    featureLinkService: FeatureLinkService;
     featureLinksReadModel: IFeatureLinksReadModel;
 };
 
@@ -218,6 +220,8 @@ class FeatureToggleService {
 
     private featureLinksReadModel: IFeatureLinksReadModel;
 
+    private featureLinkService: FeatureLinkService;
+
     private dependentFeaturesService: DependentFeaturesService;
 
     private eventBus: EventEmitter;
@@ -247,6 +251,7 @@ class FeatureToggleService {
             featureLifecycleReadModel,
             featureCollaboratorsReadModel,
             featureLinksReadModel,
+            featureLinkService,
         }: ServicesAndReadModels,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
@@ -269,6 +274,7 @@ class FeatureToggleService {
         this.featureLifecycleReadModel = featureLifecycleReadModel;
         this.featureCollaboratorsReadModel = featureCollaboratorsReadModel;
         this.featureLinksReadModel = featureLinksReadModel;
+        this.featureLinkService = featureLinkService;
         this.eventBus = eventBus;
         this.resourceLimits = resourceLimits;
     }
@@ -1339,6 +1345,8 @@ class FeatureToggleService {
                     auditUser,
                 }),
             );
+
+            await this.addLinksFromTemplates(projectId, featureName, auditUser);
 
             return createdToggle;
         }
@@ -2542,6 +2550,32 @@ class FeatureToggleService {
                 updated,
             });
         }
+    }
+
+    async addLinksFromTemplates(
+        projectId: string,
+        featureName: string,
+        auditUser: IAuditUser,
+    ) {
+        if (!this.flagResolver.isEnabled('projectLinkTemplates')) {
+            return;
+        }
+
+        const featureLinksFromTemplates = (
+            await this.projectStore.getProjectLinkTemplates(projectId)
+        ).map((template) => ({
+            title: template.title,
+            url: template.urlTemplate
+                .replace(/{{project}}/g, projectId)
+                .replace(/{{feature}}/g, featureName),
+            featureName,
+        }));
+
+        return Promise.all(
+            featureLinksFromTemplates.map((link) =>
+                this.featureLinkService.createLink(projectId, link, auditUser),
+            ),
+        );
     }
 }
 

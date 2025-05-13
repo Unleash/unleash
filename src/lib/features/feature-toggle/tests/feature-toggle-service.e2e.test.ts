@@ -25,16 +25,19 @@ import {
 import type { ISegmentService } from '../../segment/segment-service-interface';
 import {
     createEventsService,
+    createFeatureLinkService,
     createFeatureToggleService,
     createSegmentService,
 } from '../..';
 import { insertLastSeenAt } from '../../../../test/e2e/helpers/test-helper';
 import type { EventService } from '../../../services';
+import type FeatureLinkService from '../../feature-links/feature-link-service';
 
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: FeatureToggleService;
 let segmentService: ISegmentService;
+let featureLinkService: FeatureLinkService;
 let eventService: EventService;
 let environmentService: EnvironmentService;
 let unleashConfig: IUnleashConfig;
@@ -49,18 +52,26 @@ const mockConstraints = (): IConstraint[] => {
 const irrelevantDate = new Date();
 
 beforeAll(async () => {
-    const config = createTestConfig({
-        experimental: { flags: {} },
-    });
+    const flags = {
+        featureLinks: true,
+        projectLinkTemplates: true,
+    };
+    const config = createTestConfig({ experimental: { flags } });
+
     db = await dbInit(
         'feature_toggle_service_v2_service_serial',
         config.getLogger,
-        { dbInitMethod: 'legacy' as const },
+        {
+            dbInitMethod: 'legacy' as const,
+            experimental: { flags },
+        },
     );
     unleashConfig = config;
     stores = db.stores;
 
     segmentService = createSegmentService(db.rawDatabase, config);
+
+    featureLinkService = createFeatureLinkService(config)(db.rawDatabase);
 
     service = createFeatureToggleService(db.rawDatabase, config);
 
@@ -877,4 +888,48 @@ test('Should enable disabled strategies on feature environment enabled', async (
 
     const strategy = await service.getStrategy(createdConfig.id);
     expect(strategy).toMatchObject({ ...config, disabled: false });
+});
+
+test('Should add links from templates when creating a feature flag', async () => {
+    const projectId = 'default';
+    const featureName = 'test-link-feature';
+
+    await stores.projectStore.updateProjectEnterpriseSettings({
+        id: projectId,
+        linkTemplates: [
+            {
+                title: 'Issue tracker',
+                urlTemplate:
+                    'https://issues.example.com/project/{{project}}/tasks/{{feature}}',
+            },
+            {
+                title: 'Docs',
+                urlTemplate: 'https://docs.example.com/{{project}}/{{feature}}',
+            },
+        ],
+    });
+
+    await service.createFeatureToggle(
+        projectId,
+        { name: featureName },
+        TEST_AUDIT_USER,
+    );
+
+    const links = await featureLinkService.getAll();
+
+    expect(links.length).toBe(2);
+    expect(links).toEqual(
+        expect.arrayContaining([
+            expect.objectContaining({
+                title: 'Issue tracker',
+                url: `https://issues.example.com/project/${projectId}/tasks/${featureName}`,
+                featureName,
+            }),
+            expect.objectContaining({
+                title: 'Docs',
+                url: `https://docs.example.com/${projectId}/${featureName}`,
+                featureName,
+            }),
+        ]),
+    );
 });

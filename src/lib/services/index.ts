@@ -69,6 +69,7 @@ import {
     createFakeAccessService,
     createFakeEnvironmentService,
     createFakeEventsService,
+    createFakeFeatureLinkService,
     createFakeFeatureToggleService,
     createFakeProjectService,
     createFakeUserSubscriptionsService,
@@ -158,7 +159,6 @@ import {
     createFakeContextService,
 } from '../features/context/createContextService';
 import { UniqueConnectionService } from '../features/unique-connection/unique-connection-service';
-import { createFakeFeatureLinkService } from '../features/feature-links/createFeatureLinkService';
 import { UnknownFlagsService } from '../features/metrics/unknown-flags/unknown-flags-service';
 
 export const createServices = (
@@ -323,6 +323,15 @@ export const createServices = (
     const importService = db
         ? withTransactional(deferredExportImportTogglesService(config), db)
         : withFakeTransactional(createFakeExportImportTogglesService(config));
+
+    const transactionalFeatureLinkService = db
+        ? withTransactional(createFeatureLinkService(config), db)
+        : withFakeTransactional(
+              createFakeFeatureLinkService(config).featureLinkService,
+          );
+
+    const featureLinkService = transactionalFeatureLinkService;
+
     const featureToggleService = db
         ? withTransactional((db) => createFeatureToggleService(db, config), db)
         : withFakeTransactional(
@@ -416,14 +425,6 @@ export const createServices = (
     const transactionalUserSubscriptionsService = db
         ? withTransactional(createUserSubscriptionsService(config), db)
         : withFakeTransactional(createFakeUserSubscriptionsService(config));
-
-    const transactionalFeatureLinkService = db
-        ? withTransactional(createFeatureLinkService(config), db)
-        : withFakeTransactional(
-              createFakeFeatureLinkService(config).featureLinkService,
-          );
-
-    const featureLinkService = transactionalFeatureLinkService;
 
     return {
         transactionalAccessService,

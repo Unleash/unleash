@@ -1,10 +1,19 @@
-import { IN, NOT_IN, NUM_EQ } from 'constants/operators';
+import {
+    allOperators,
+    IN,
+    isDateOperator,
+    isMultiValueOperator,
+    isSingleValueOperator,
+    NOT_IN,
+    NUM_EQ,
+} from 'constants/operators';
 import type {
+    EditableConstraint,
     EditableDateConstraint,
     EditableMultiValueConstraint,
     EditableSingleValueConstraint,
 } from './editable-constraint-type';
-import { DATE_AFTER } from '@server/util/constants';
+import { DATE_AFTER, DATE_BEFORE } from '@server/util/constants';
 import { constraintReducer } from './constraint-reducer';
 import { CURRENT_TIME_CONTEXT_FIELD } from 'utils/operatorsForContext';
 
@@ -29,6 +38,22 @@ const dateConstraint = (contextField: string): EditableDateConstraint => ({
     operator: DATE_AFTER,
     value: '2024-05-05T00:00:00Z',
 });
+
+const getConstraintForOperator = (
+    operator: string,
+    contextField: string,
+): EditableConstraint => {
+    if (isDateOperator(operator)) {
+        return { ...dateConstraint(contextField), operator };
+    }
+    if (isSingleValueOperator(operator)) {
+        return { ...singleValueConstraint(contextField), operator };
+    }
+    if (isMultiValueOperator(operator)) {
+        return { ...multiValueConstraint(contextField), operator };
+    }
+    return { ...multiValueConstraint(contextField), operator: IN };
+};
 
 describe('changing context field', () => {
     test.each([
@@ -114,10 +139,78 @@ describe('changing context field', () => {
     });
 });
 describe('changing operator', () => {
-    test('changing operator to the same operator field is a no-op', () => {});
-    test("changing the operator to anything that isn't date based clears the value", () => {});
-    test('changing the operator to a non-date operator to a date operator sets the value to the current time', () => {});
-    test('changing the operator from one date operator to another date operator leaves the value untouched', () => {});
+    test.each(allOperators)(
+        'changing operator to the same operator (%s) is a no-op',
+        (operator) => {
+            const constraint = getConstraintForOperator(
+                operator,
+                'context-field',
+            );
+            expect(
+                constraintReducer(constraint, {
+                    type: 'set operator',
+                    payload: operator,
+                }),
+            ).toStrictEqual(constraint);
+        },
+    );
+
+    const nonDateOperators = allOperators.filter((op) => !isDateOperator(op));
+    const allCombinations = nonDateOperators
+        .flatMap((a) => nonDateOperators.map((b) => [a, b]))
+        .filter(([a, b]) => a !== b);
+
+    test.each(allCombinations)(
+        "changing the operator to anything that isn't date based clears the value: %s -> %s",
+        (operatorA, operatorB) => {
+            const constraint = getConstraintForOperator(
+                operatorA,
+                'context-field',
+            );
+            // @ts-expect-error
+            const { value, values, ...result } = constraintReducer(constraint, {
+                type: 'set operator',
+                payload: operatorB,
+            });
+            const {
+                // @ts-expect-error
+                value: _v,
+                // @ts-expect-error
+                values: _values,
+                ...inputConstraint
+            } = constraint;
+            expect(result).toStrictEqual({
+                ...inputConstraint,
+                operator: operatorB,
+            });
+
+            if (isMultiValueOperator(operatorB)) {
+                expect(values).toStrictEqual(new Set());
+            } else if (isSingleValueOperator(operatorB)) {
+                expect(value).toBe('');
+            }
+        },
+    );
+
+    const dateTransititons = [
+        [DATE_BEFORE, DATE_AFTER],
+        [DATE_AFTER, DATE_BEFORE],
+    ] as const;
+    test.each(dateTransititons)(
+        'changing the operator from one date operator to another date operator leaves the value untouched: %s -> %s',
+        (operatorA, operatorB) => {
+            const input: EditableDateConstraint = {
+                ...dateConstraint('currentTime'),
+                operator: operatorA,
+            };
+            const output = constraintReducer(input, {
+                type: 'set operator',
+                payload: operatorB,
+            });
+            // @ts-expect-error
+            expect(input.value).toBe(output.value);
+        },
+    );
 });
 describe('adding values', () => {
     describe('single-value constraints', () => {

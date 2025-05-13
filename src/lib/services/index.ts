@@ -69,10 +69,10 @@ import {
     createFakeAccessService,
     createFakeEnvironmentService,
     createFakeEventsService,
+    createFakeFeatureToggleService,
     createFakeProjectService,
     createFakeUserSubscriptionsService,
     createFeatureLifecycleService,
-    createFeatureLinkService,
     createFeatureToggleService,
     createProjectService,
     createUserSubscriptionsService,
@@ -133,8 +133,6 @@ import {
     createFakeApiTokenService,
 } from '../features/api-tokens/createApiTokenService';
 import { IntegrationEventsService } from '../features/integration-events/integration-events-service';
-import { FeatureCollaboratorsReadModel } from '../features/feature-toggle/feature-collaborators-read-model';
-import { FakeFeatureCollaboratorsReadModel } from '../features/feature-toggle/fake-feature-collaborators-read-model';
 import {
     createFakePlaygroundService,
     createPlaygroundService,
@@ -159,9 +157,6 @@ import {
     createFakeContextService,
 } from '../features/context/createContextService';
 import { UniqueConnectionService } from '../features/unique-connection/unique-connection-service';
-import { createFakeFeatureLinkService } from '../features/feature-links/createFeatureLinkService';
-import { FeatureLinksReadModel } from '../features/feature-links/feature-links-read-model';
-import { FakeFeatureLinksReadModel } from '../features/feature-links/fake-feature-links-read-model';
 import { UnknownFlagsService } from '../features/metrics/unknown-flags/unknown-flags-service';
 
 export const createServices = (
@@ -287,35 +282,6 @@ export const createServices = (
         ? createFeatureSearchService(config)(db)
         : createFakeFeatureSearchService(config);
 
-    const featureCollaboratorsReadModel = db
-        ? new FeatureCollaboratorsReadModel(db)
-        : new FakeFeatureCollaboratorsReadModel();
-
-    const featureLinksReadModel = db
-        ? new FeatureLinksReadModel(db, config.eventBus)
-        : new FakeFeatureLinksReadModel();
-
-    const transactionalFeatureLinkService = db
-        ? withTransactional(createFeatureLinkService(config), db)
-        : withFakeTransactional(
-              createFakeFeatureLinkService(config).featureLinkService,
-          );
-
-    const featureLinkService = transactionalFeatureLinkService;
-
-    const featureToggleService = new FeatureToggleService(stores, config, {
-        segmentService,
-        accessService,
-        eventService,
-        changeRequestAccessReadModel,
-        privateProjectChecker,
-        dependentFeaturesReadModel,
-        dependentFeaturesService,
-        featureLifecycleReadModel,
-        featureCollaboratorsReadModel,
-        featureLinksReadModel,
-        featureLinkService,
-    });
     const transactionalEnvironmentService = db
         ? withTransactional(createEnvironmentService(config), db)
         : withFakeTransactional(createFakeEnvironmentService(config));
@@ -355,8 +321,21 @@ export const createServices = (
     const importService = db
         ? withTransactional(deferredExportImportTogglesService(config), db)
         : withFakeTransactional(createFakeExportImportTogglesService(config));
-    const transactionalFeatureToggleService = (txDb: Knex.Transaction) =>
-        createFeatureToggleService(txDb, config);
+
+    const transactionalFeatureLinkService = db
+        ? withTransactional(createFeatureLinkService(config), db)
+        : withFakeTransactional(
+              createFakeFeatureLinkService(config).featureLinkService,
+          );
+
+    const featureLinkService = transactionalFeatureLinkService;
+
+    const featureToggleService = db
+        ? withTransactional((db) => createFeatureToggleService(db, config), db)
+        : withFakeTransactional(
+              createFakeFeatureToggleService(config).featureToggleService,
+          );
+    const transactionalFeatureToggleService = featureToggleService;
     const transactionalGroupService = (txDb: Knex.Transaction) =>
         createGroupService(txDb, config);
     const userSplashService = new UserSplashService(stores, config);

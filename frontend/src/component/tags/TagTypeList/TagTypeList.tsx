@@ -31,7 +31,6 @@ import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { sortTypes } from 'utils/sortTypes';
 import { AddTagTypeButton } from './AddTagTypeButton/AddTagTypeButton';
 import { Search } from 'component/common/Search/Search';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledColorDot = styled('div')<{ $color: string }>(
     ({ theme, $color }) => ({

@@ -173,10 +173,10 @@ export const RestrictiveLegalValues = ({
                 condition={Boolean(illegalValues && illegalValues.length > 0)}
                 show={
                     <Alert severity='warning'>
-                        This constraint is using legal values that have been
-                        deleted as valid options. If you save changes on this
-                        constraint and then save the strategy the following
-                        values will be removed:
+                        This constraint is currently using values that were
+                        valid in the past but have since been deleted. If you
+                        save changes on this constraint and then save the
+                        strategy the following values will be removed:
                         <ul>
                             {illegalValues?.map((value) => (
                                 <li key={value}>{value}</li>

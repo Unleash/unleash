@@ -39,15 +39,6 @@ export interface IRoleDescriptor {
     type: string;
 }
 
-export interface IProjectAccessModel {
-    users: IAccessInfo[];
-    groups: IAccessInfo[];
-}
-
-export interface IAccessInfo {
-    id: number;
-}
-
 export interface IUserRole {
     roleId: number;
     userId: number;
@@ -113,14 +104,6 @@ export interface IAccessStore extends Store<IRole, number> {
         userId: number,
         roleId: number,
         projectId?: string,
-    ): Promise<void>;
-
-    addRoleAccessToProject(
-        users: IAccessInfo[],
-        groups: IAccessInfo[],
-        projectId: string,
-        roleId: number,
-        createdBy: string,
     ): Promise<void>;
 
     addAccessToProject(

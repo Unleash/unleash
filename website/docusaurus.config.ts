@@ -850,10 +850,6 @@ class="header-github-link"
                             to: '/using-unleash/troubleshooting/https',
                         },
                         {
-                            from: '/how-to/how-to-troubleshoot-feature-not-available',
-                            to: '/using-unleash/troubleshooting/feature-not-available',
-                        },
-                        {
                             from: [
                                 '/reference/deploy/import-export',
                                 '/deploy/import_export',

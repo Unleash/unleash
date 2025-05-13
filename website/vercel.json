@@ -802,8 +802,13 @@
       "permanent": true
     },
     {
-      "source": "/how-to/how-to-troubleshoot-feature-not-available",
-      "destination": "/using-unleash/troubleshooting/feature-not-available",
+      "source": "/using-unleash/troubleshooting/feature-not-available",
+      "destination": "/availability",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-download-login-history",
+      "destination": "/reference/login-history",
       "permanent": true
     },
     {

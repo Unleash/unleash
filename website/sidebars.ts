@@ -646,12 +646,11 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: '/using-unleash/troubleshooting/cors',
+                        id: 'using-unleash/troubleshooting/cors',
                     },
                     items: [
                         'using-unleash/troubleshooting/cors',
                         'using-unleash/troubleshooting/https',
-                        'using-unleash/troubleshooting/feature-not-available',
                         'using-unleash/troubleshooting/flag-exposure',
                         'using-unleash/troubleshooting/flag-not-returned',
                         'using-unleash/troubleshooting/flag-abn-test-unexpected-result',
@@ -678,7 +677,6 @@ const sidebars: SidebarsConfig = {
                                 slug: '/how-to/api',
                             },
                             items: [
-                                'how-to/how-to-download-login-history',
                                 'how-to/how-to-use-the-admin-api',
                                 'how-to/how-to-enable-openapi',
                             ],

@@ -3,7 +3,7 @@ import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { Route, Routes } from 'react-router-dom';
 import { ConnectedInstances } from './ConnectedInstances.tsx';
-import type { ApplicationEnvironmentInstancesSchemaInstancesItem } from '../../../openapi.ts';
+import type { ApplicationEnvironmentInstancesSchemaInstancesItem } from 'openapi';
 
 const server = testServerSetup();
 

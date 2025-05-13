@@ -65,6 +65,12 @@ const getConstraintForOperator = (
     return { ...multiValueConstraint(contextField), operator: IN };
 };
 
+// helper type to allow deconstruction to { value, values, ...rest }
+type Extractable = EditableConstraint & {
+    value?: string;
+    values?: Set<string>;
+};
+
 describe('changing context field', () => {
     test.each([
         ['multi-value', multiValueConstraint],
@@ -116,19 +122,21 @@ describe('changing context field', () => {
         (_, constraint) => {
             const now = new Date();
             const input = constraint('field-a');
-            // @ts-expect-error: we know we should get a value back here, and if not the test'll fail
             const { value, ...result } = constraintReducer(input, {
                 type: 'set context field',
                 payload: 'currentTime',
-            });
-            // @ts-expect-error extract any value fields
-            const { values: _vs, value: _v, ...inputBody } = input;
+            }) as Extractable;
+            const {
+                values: _vs,
+                value: _v,
+                ...inputBody
+            } = input as Extractable;
             expect(result).toStrictEqual({
                 ...inputBody,
                 contextName: 'currentTime',
                 operator: DATE_AFTER,
             });
-            expect(new Date(value).getTime()).toBeGreaterThanOrEqual(
+            expect(new Date(value as string).getTime()).toBeGreaterThanOrEqual(
                 now.getTime(),
             );
         },
@@ -171,18 +179,15 @@ describe('changing operator', () => {
         "changing the operator to anything that isn't date based clears the value: %s -> %s",
         (operatorA, operatorB) => {
             const constraint = getConstraintForOperator(operatorA);
-            // @ts-expect-error
             const { value, values, ...result } = constraintReducer(constraint, {
                 type: 'set operator',
                 payload: operatorB,
-            });
+            }) as Extractable;
             const {
-                // @ts-expect-error
                 value: _v,
-                // @ts-expect-error
                 values: _values,
                 ...inputConstraint
-            } = constraint;
+            } = constraint as Extractable;
             expect(result).toStrictEqual({
                 ...inputConstraint,
                 operator: operatorB,

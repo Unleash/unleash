@@ -188,6 +188,15 @@ export const constraintReducer = (
                         value: '',
                     };
                 } else {
+                    if (deletedLegalValues?.has(action.payload)) {
+                        if (deletedLegalValues?.has(state.value)) {
+                            return {
+                                ...state,
+                                value: '',
+                            };
+                        }
+                        return state;
+                    }
                     return {
                         ...state,
                         value: action.payload,

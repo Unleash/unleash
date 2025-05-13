@@ -338,6 +338,106 @@ describe('adding values', () => {
         });
     });
 });
+
+describe('toggling values', () => {
+    describe('single-value constraints', () => {
+        test('if the toggle value is the same as the existing value: clears the value', () => {
+            const input = singleValueConstraint();
+            const output = constraintReducer(input, {
+                type: 'toggle value',
+                payload: input.value,
+            });
+            expect(output).toStrictEqual({
+                ...input,
+                value: '',
+            });
+        });
+        test('if the toggle value is different from the existing value: replaces it', () => {
+            const input = singleValueConstraint();
+            const output = constraintReducer(input, {
+                type: 'toggle value',
+                payload: 'updated value',
+            });
+            expect(output).toStrictEqual({
+                ...input,
+                value: 'updated value',
+            });
+        });
+
+        test('trying to add a deleted legal value results in no change', () => {
+            const input = singleValueConstraint();
+            const output = constraintReducer(
+                input,
+                {
+                    type: 'toggle value',
+                    payload: 'deleted',
+                },
+                new Set(['deleted']),
+            );
+            expect(output).toStrictEqual(input);
+        });
+
+        test('if both the new value and the old value are deleted legal values, it clears the field', () => {
+            const input = singleValueConstraint();
+            const output = constraintReducer(
+                input,
+                {
+                    type: 'toggle value',
+                    payload: 'deleted',
+                },
+                new Set(['deleted', input.value]),
+            );
+            expect(output).toStrictEqual({
+                ...input,
+                value: '',
+            });
+        });
+    });
+    describe('multi-value constraints', () => {
+        test('if not present, it will be added', () => {
+            const input = multiValueConstraint();
+            const output = constraintReducer(input, {
+                type: 'toggle value',
+                payload: 'new-value',
+            });
+            expect(output).toStrictEqual({
+                ...input,
+                values: new Set([...input.values, 'new-value']),
+            });
+        });
+        test('if it is present, it will be removed', () => {
+            const input = multiValueConstraint();
+            const output = constraintReducer(input, {
+                type: 'toggle value',
+                payload: 'B',
+            });
+            expect(output).toStrictEqual({
+                ...input,
+                values: new Set(['A']),
+            });
+        });
+
+        test('deleted legal values are removed from the set before saving new values', () => {
+            const input = {
+                ...multiValueConstraint(),
+                values: new Set(['deleted-old', 'A']),
+            };
+            const output = constraintReducer(
+                input,
+                {
+                    type: 'toggle value',
+                    payload: 'deleted-new',
+                },
+                new Set(['deleted-old', 'deleted-new']),
+            );
+            expect(output).toStrictEqual({
+                ...input,
+                values: new Set(['A']),
+            });
+        });
+    });
+});
+
 describe('removing / clearing values', () => {
     describe('single-value constraints', () => {
         test('removing a value removes the existing value if it matches', () => {

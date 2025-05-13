@@ -3,14 +3,17 @@ import {
     IN,
     type Operator,
     isDateOperator,
+    isMultiValueOperator,
     isSingleValueOperator,
 } from 'constants/operators';
 import { CURRENT_TIME_CONTEXT_FIELD } from 'utils/operatorsForContext';
 import {
+    type EditableSingleValueConstraint,
     isDateConstraint,
     isMultiValueConstraint,
     isSingleValueConstraint,
     type EditableConstraint,
+    type EditableMultiValueConstraint,
 } from './editable-constraint-type';
 import { difference, union } from './set-functions';
 
@@ -52,6 +55,24 @@ const resetValues = (state: EditableConstraint): EditableConstraint => {
     };
 };
 
+const setValue = (
+    state: EditableConstraint,
+    value?: string,
+): EditableConstraint => {
+    // @ts-expect-error
+    const { value: _, values, ...rest } = state;
+    if (isMultiValueOperator(state.operator)) {
+        return {
+            ...rest,
+            values: new Set([value].filter(Boolean)),
+        } as EditableMultiValueConstraint;
+    }
+    return {
+        ...rest,
+        value: value ?? '',
+    } as EditableSingleValueConstraint;
+};
+
 export const constraintReducer = (
     state: EditableConstraint,
     action: ConstraintUpdateAction,
@@ -66,22 +87,24 @@ export const constraintReducer = (
                 action.payload === CURRENT_TIME_CONTEXT_FIELD &&
                 !isDateOperator(state.operator)
             ) {
-                return {
-                    ...state,
-                    contextName: action.payload,
-                    operator: DATE_AFTER,
-                    value: new Date().toISOString(),
-                };
+                return setValue(
+                    {
+                        ...state,
+                        contextName: action.payload,
+                        operator: DATE_AFTER,
+                    } as EditableConstraint,
+                    new Date().toISOString(),
+                );
             } else if (
                 action.payload !== CURRENT_TIME_CONTEXT_FIELD &&
                 isDateOperator(state.operator)
             ) {
-                return {
+                return resetValues({
                     ...state,
                     operator: IN,
                     contextName: action.payload,
                     values: new Set(),
-                };
+                });
             }
 
             return resetValues({

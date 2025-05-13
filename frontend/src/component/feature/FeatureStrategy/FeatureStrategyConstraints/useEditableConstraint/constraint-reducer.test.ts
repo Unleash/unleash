@@ -1,4 +1,4 @@
-import { NOT_IN, NUM_EQ } from 'constants/operators';
+import { IN, NOT_IN, NUM_EQ } from 'constants/operators';
 import type {
     EditableDateConstraint,
     EditableMultiValueConstraint,
@@ -6,13 +6,14 @@ import type {
 } from './editable-constraint-type';
 import { DATE_AFTER } from '@server/util/constants';
 import { constraintReducer } from './constraint-reducer';
+import { CURRENT_TIME_CONTEXT_FIELD } from 'utils/operatorsForContext';
 
 const multiValueConstraint = (
     contextField: string,
 ): EditableMultiValueConstraint => ({
     contextName: contextField,
     operator: NOT_IN,
-    values: new Set(['2023-01-01T00:00:00Z', '2023-01-02T00:00:00Z']),
+    values: new Set(['A', 'B']),
 });
 
 const singleValueConstraint = (
@@ -30,9 +31,13 @@ const dateConstraint = (contextField: string): EditableDateConstraint => ({
 });
 
 describe('changing context field', () => {
-    test.each([multiValueConstraint, singleValueConstraint, dateConstraint])(
-        'changing context field to the same field is a no-op',
-        (constraint) => {
+    test.each([
+        ['multi-value', multiValueConstraint],
+        ['single-value', singleValueConstraint],
+        ['date', dateConstraint],
+    ])(
+        'changing context field to the same field is a no-op for %s constraints',
+        (_, constraint) => {
             const input = constraint('test-context-field');
             expect(
                 constraintReducer(input, {
@@ -42,7 +47,71 @@ describe('changing context field', () => {
             ).toStrictEqual(input);
         },
     );
-    test('changing context field to anything except currentTime clears value/values', () => {});
+    test('changing context field for a single-value constraint clears the `value` prop', () => {
+        const input = singleValueConstraint('field-a');
+        const result = constraintReducer(input, {
+            type: 'set context field',
+            payload: 'field-b',
+        });
+        expect(result).toStrictEqual({
+            ...input,
+            contextName: 'field-b',
+            value: '',
+        });
+    });
+
+    test('changing context field for a multi-value constraint clears the `values` prop', () => {
+        const input = multiValueConstraint('field-a');
+        const result = constraintReducer(input, {
+            type: 'set context field',
+            payload: 'field-b',
+        });
+        expect(result).toStrictEqual({
+            ...input,
+            contextName: 'field-b',
+            values: new Set(),
+        });
+    });
+
+    test.each([
+        ['multi-value', multiValueConstraint],
+        ['single-value', singleValueConstraint],
+    ])(
+        'changing context field to currentTime from a %s constraint sets the current time as the value',
+        (_, constraint) => {
+            const now = new Date();
+            const input = constraint('field-a');
+            // @ts-expect-error: we know we should get a value back here, and if not the test'll fail
+            const { value, ...result } = constraintReducer(input, {
+                type: 'set context field',
+                payload: 'currentTime',
+            });
+            // @ts-expect-error extract any value fields
+            const { values: _vs, value: _v, ...inputBody } = input;
+            expect(result).toStrictEqual({
+                ...inputBody,
+                contextName: 'currentTime',
+                operator: DATE_AFTER,
+            });
+            expect(new Date(value).getTime()).toBeGreaterThanOrEqual(
+                now.getTime(),
+            );
+        },
+    );
+    test('changing context field from currentTime to something else sets a default operator', () => {
+        const input = dateConstraint(CURRENT_TIME_CONTEXT_FIELD);
+        const result = constraintReducer(input, {
+            type: 'set context field',
+            payload: 'somethingElse',
+        });
+        const { value: _, ...inputBody } = input;
+        expect(result).toStrictEqual({
+            ...inputBody,
+            contextName: 'somethingElse',
+            operator: IN,
+            values: new Set(),
+        });
+    });
 });
 describe('changing operator', () => {
     test('changing operator to the same operator field is a no-op', () => {});

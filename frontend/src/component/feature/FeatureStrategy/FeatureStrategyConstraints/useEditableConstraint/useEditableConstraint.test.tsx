@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
 import {
     dateOperators,
     IN,
@@ -11,13 +11,13 @@ import type { IConstraint } from 'interfaces/strategy';
 import { useEditableConstraint } from './useEditableConstraint';
 import { vi } from 'vitest';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
+import type { ContextFieldSchema } from 'openapi';
+import { NUM_EQ } from '@server/util/constants';
 
 const server = testServerSetup();
 
-const setupApi = (existingTokensCount: number) => {
-    testServerRoute(server, '/api/admin/context', {
-        what: 'mock me',
-    });
+const setupApi = (contextField?: ContextFieldSchema) => {
+    testServerRoute(server, '/api/admin/context', [contextField]);
 };
 
 test('calls onUpdate with new state', () => {
@@ -149,9 +149,99 @@ describe('validators', () => {
         },
     );
 });
+
 describe('legal values', () => {
-    test('provides them if present', () => {});
-    test('does not add them if no legal values', () => {});
-    test('identifies deleted legal values', () => {});
-    test('identifies invalid legal values', () => {});
+    const definition = {
+        name: 'context-field',
+        legalValues: [{ value: 'A' }, { value: '6' }],
+    };
+    setupApi(definition);
+
+    test('provides them if present', async () => {
+        const initial: IConstraint = {
+            contextName: definition.name,
+            operator: IN,
+            values: [],
+        };
+
+        const { result } = renderHook(() =>
+            useEditableConstraint(initial, () => {}),
+        );
+        await waitFor(() => {
+            expect(result.current.legalValues?.legalValues).toStrictEqual(
+                definition.legalValues,
+            );
+        });
+    });
+
+    test('updates context definition when changing context field', async () => {
+        const initial: IConstraint = {
+            contextName: definition.name,
+            operator: IN,
+            values: [],
+        };
+
+        const { result } = renderHook(() =>
+            useEditableConstraint(initial, () => {}),
+        );
+        await waitFor(() => {
+            expect(result.current.legalValues?.legalValues).toStrictEqual(
+                definition.legalValues,
+            );
+        });
+
+        result.current.updateConstraint({
+            type: 'set context field',
+            payload: 'field-without-legal-values',
+        });
+
+        await waitFor(() => {
+            expect(result.current.legalValues).toBeUndefined();
+        });
+    });
+    test('does not add them if no legal values', () => {
+        const initial: IConstraint = {
+            contextName: 'field-with-no-legal-values',
+            operator: IN,
+            values: [],
+        };
+
+        const { result } = renderHook(() =>
+            useEditableConstraint(initial, () => {}),
+        );
+
+        expect(result.current.legalValues).toBeUndefined();
+    });
+    test('identifies deleted legal values', async () => {
+        const initial: IConstraint = {
+            contextName: definition.name,
+            operator: IN,
+            values: ['A', 'B'],
+        };
+
+        const { result } = renderHook(() =>
+            useEditableConstraint(initial, () => {}),
+        );
+        await waitFor(() => {
+            expect(
+                result.current.legalValues?.deletedLegalValues,
+            ).toStrictEqual(new Set(['B']));
+        });
+    });
+    test('identifies invalid legal values', async () => {
+        const initial: IConstraint = {
+            contextName: definition.name,
+            operator: NUM_EQ,
+            values: [],
+        };
+
+        const { result } = renderHook(() =>
+            useEditableConstraint(initial, () => {}),
+        );
+        await waitFor(() => {
+            expect(
+                result.current.legalValues?.invalidLegalValues,
+            ).toStrictEqual(new Set(['A']));
+        });
+    });
 });

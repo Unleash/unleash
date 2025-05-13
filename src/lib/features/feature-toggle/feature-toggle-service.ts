@@ -2170,25 +2170,7 @@ class FeatureToggleService {
         );
     }
 
-    async getAllArchivedFeatures(
-        archived: boolean,
-        userId: number,
-    ): Promise<FeatureToggle[]> {
-        const features = await this.featureToggleStore.getArchivedFeatures();
-
-        const projectAccess =
-            await this.privateProjectChecker.getUserAccessibleProjects(userId);
-        if (projectAccess.mode === 'all') {
-            return features;
-        } else {
-            return features.filter((f) =>
-                projectAccess.projects.includes(f.project),
-            );
-        }
-    }
-
     async getArchivedFeaturesByProjectId(
-        archived: boolean,
         project: string,
     ): Promise<FeatureToggle[]> {
         return this.featureToggleStore.getArchivedFeatures(project);

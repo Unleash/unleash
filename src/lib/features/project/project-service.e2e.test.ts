@@ -2431,7 +2431,7 @@ test('should also delete api tokens that were only bound to deleted project', as
         type: ApiTokenType.CLIENT,
         tokenName,
         environment: DEFAULT_ENV,
-        project: project,
+        projects: [project],
     });
 
     await projectService.deleteProject(project, user, auditUser);

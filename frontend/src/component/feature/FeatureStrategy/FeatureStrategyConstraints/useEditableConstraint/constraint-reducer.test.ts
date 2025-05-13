@@ -293,12 +293,47 @@ describe('adding values', () => {
             });
             expect(output).toStrictEqual({
                 ...input,
-                value: new Set([...input.values, 'new-value']),
+                values: new Set([...input.values, 'new-value']),
             });
         });
-        test('adding a list to a multi-value constraint adds all new elements to the set', () => {});
-        test('adding an empty list to a multi-value constraint has no effect', () => {});
-        test('deleted legal values are removed from the set upon saving new values', () => {});
+        test('adding a list to a multi-value constraint adds all new elements to the set', () => {
+            const input = multiValueConstraint('context-field');
+            const output = constraintReducer(input, {
+                type: 'add value(s)',
+                payload: ['X', 'Y'],
+            });
+            expect(output).toStrictEqual({
+                ...input,
+                values: new Set([...input.values, 'X', 'Y']),
+            });
+        });
+        test('adding an empty list to a multi-value constraint has no effect', () => {
+            const input = multiValueConstraint('context-field');
+            const output = constraintReducer(input, {
+                type: 'add value(s)',
+                payload: [],
+            });
+            expect(output).toStrictEqual(input);
+        });
+
+        test('deleted legal values are removed from the set before saving new values', () => {
+            const input = {
+                ...multiValueConstraint('context-field'),
+                values: new Set(['deleted-old', 'A']),
+            };
+            const output = constraintReducer(
+                input,
+                {
+                    type: 'add value(s)',
+                    payload: ['deleted-new', 'B'],
+                },
+                new Set(['deleted-old', 'deleted-new']),
+            );
+            expect(output).toStrictEqual({
+                ...input,
+                values: new Set(['A', 'B']),
+            });
+        });
     });
 });
 describe('removing / clearing values', () => {

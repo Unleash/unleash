@@ -63,10 +63,10 @@ export const constraintReducer = (
                 return state;
             }
         }
-        state.values.delete(value);
+        const updatedValues = difference(state.values, new Set([value]));
         return {
             ...state,
-            values: state.values ?? new Set(),
+            values: updatedValues ?? new Set(),
         };
     };
 

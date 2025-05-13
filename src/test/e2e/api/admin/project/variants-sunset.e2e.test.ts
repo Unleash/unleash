@@ -11,14 +11,18 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('project_feature_variants_api_sunset', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
-                enableLegacyVariants: false,
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                    enableLegacyVariants: false,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
 });
 
 afterAll(async () => {

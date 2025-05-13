@@ -65,8 +65,10 @@ export const useEditableConstraint = (
     });
 
     const { context } = useUnleashContext();
-    const [contextDefinition, setContextDefinition] = useState(
-        resolveContextDefinition(context, localConstraint.contextName),
+
+    const contextDefinition = useMemo(
+        () => resolveContextDefinition(context, localConstraint.contextName),
+        [JSON.stringify(context), localConstraint.contextName],
     );
 
     const validator = constraintValidator(localConstraint);
@@ -109,17 +111,9 @@ export const useEditableConstraint = (
             action,
             deletedLegalValues,
         );
-        const contextFieldHasChanged =
-            localConstraint.contextName !== nextState.contextName;
 
         setLocalConstraint(nextState);
         onUpdate(toIConstraint(nextState));
-
-        if (contextFieldHasChanged) {
-            setContextDefinition(
-                resolveContextDefinition(context, nextState.contextName),
-            );
-        }
     };
 
     const legalValues = contextDefinition.legalValues?.length

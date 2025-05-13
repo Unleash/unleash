@@ -35,7 +35,11 @@ test('should not allow to create feature flags in maintenance mode', async () =>
 });
 
 test('maintenance mode is off by default', async () => {
-    const appWithMaintenanceMode = await setupApp(db.stores);
+    const appWithMaintenanceMode = await setupAppWithCustomConfig(
+        db.stores,
+        {},
+        db.rawDatabase,
+    );
 
     return appWithMaintenanceMode.request
         .post('/api/admin/projects/default/features')

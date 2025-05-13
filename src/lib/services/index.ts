@@ -306,6 +306,7 @@ export const createServices = (
         featureLifecycleReadModel,
         featureCollaboratorsReadModel,
         featureLinksReadModel,
+        featureLinkService,
     });
     const transactionalEnvironmentService = db
         ? withTransactional(createEnvironmentService(config), db)

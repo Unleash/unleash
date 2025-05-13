@@ -69,6 +69,7 @@ import {
     createFakeAccessService,
     createFakeEnvironmentService,
     createFakeEventsService,
+    createFakeFeatureToggleService,
     createFakeProjectService,
     createFakeUserSubscriptionsService,
     createFeatureLifecycleService,
@@ -346,8 +347,11 @@ export const createServices = (
     const importService = db
         ? withTransactional(deferredExportImportTogglesService(config), db)
         : withFakeTransactional(createFakeExportImportTogglesService(config));
-    const transactionalFeatureToggleService = (txDb: Knex.Transaction) =>
-        createFeatureToggleService(txDb, config);
+    const transactionalFeatureToggleService = db
+        ? withTransactional((db) => createFeatureToggleService(db, config), db)
+        : withFakeTransactional(
+              createFakeFeatureToggleService(config).featureToggleService,
+          );
     const transactionalGroupService = (txDb: Knex.Transaction) =>
         createGroupService(txDb, config);
     const userSplashService = new UserSplashService(stores, config);

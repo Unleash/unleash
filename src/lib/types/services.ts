@@ -114,9 +114,7 @@ export interface IUnleashServices {
     configurationRevisionService: ConfigurationRevisionService;
     schedulerService: SchedulerService;
     eventAnnouncerService: EventAnnouncerService;
-    transactionalFeatureToggleService: (
-        db: Knex.Transaction,
-    ) => FeatureToggleService;
+    transactionalFeatureToggleService: WithTransactional<FeatureToggleService>;
     transactionalGroupService: (db: Knex.Transaction) => GroupService;
     privateProjectChecker: IPrivateProjectChecker;
     dependentFeaturesService: DependentFeaturesService;

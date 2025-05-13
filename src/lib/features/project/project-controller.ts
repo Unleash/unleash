@@ -31,7 +31,6 @@ import type { OpenApiService } from '../../services';
 import type { IAuthRequest } from '../../routes/unleash-types';
 import { ProjectApiTokenController } from '../../routes/admin-api/project/api-token';
 import ProjectArchiveController from '../../routes/admin-api/project/project-archive';
-import { createKnexTransactionStarter } from '../../db/transaction';
 import type { Db } from '../../db/db';
 import DependentFeaturesController from '../dependent-features/dependent-features-controller';
 import type { ProjectOverviewSchema } from '../../openapi/spec/project-overview-schema';
@@ -222,14 +221,7 @@ export default class ProjectController extends Controller {
             ],
         });
 
-        this.use(
-            '/',
-            new ProjectFeaturesController(
-                config,
-                services,
-                createKnexTransactionStarter(db),
-            ).router,
-        );
+        this.use('/', new ProjectFeaturesController(config, services).router);
         this.use('/', new DependentFeaturesController(config, services).router);
         this.use(
             '/',
@@ -238,14 +230,7 @@ export default class ProjectController extends Controller {
         this.use('/', new ProjectHealthReport(config, services).router);
         this.use('/', new VariantsController(config, services).router);
         this.use('/', new ProjectApiTokenController(config, services).router);
-        this.use(
-            '/',
-            new ProjectArchiveController(
-                config,
-                services,
-                createKnexTransactionStarter(db),
-            ).router,
-        );
+        this.use('/', new ProjectArchiveController(config, services).router);
         this.use('/', new ProjectInsightsController(config, services).router);
         this.use('/', new ProjectStatusController(config, services).router);
         this.use('/', new FeatureLifecycleController(config, services).router);

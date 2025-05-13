@@ -48,10 +48,7 @@ import type {
 } from '../../services';
 import { querySchema } from '../../schema/feature-schema';
 import type { BatchStaleSchema } from '../../openapi/spec/batch-stale-schema';
-import type {
-    TransactionCreator,
-    UnleashTransaction,
-} from '../../db/transaction';
+import type { WithTransactional } from '../../db/transaction';
 import { BadDataError } from '../../error';
 import { anonymise } from '../../util';
 import { throwOnInvalidSchema } from '../../openapi/validate';
@@ -116,17 +113,13 @@ export default class ProjectFeaturesController extends Controller {
 
     private featureTagService: FeatureTagService;
 
-    private transactionalFeatureToggleService: (
-        db: UnleashTransaction,
-    ) => FeatureToggleService;
+    private transactionalFeatureToggleService: WithTransactional<FeatureToggleService>;
 
     private openApiService: OpenApiService;
 
     private flagResolver: IFlagResolver;
 
     private readonly logger: Logger;
-
-    private readonly startTransaction: TransactionCreator<UnleashTransaction>;
 
     constructor(
         config: IUnleashConfig,
@@ -136,13 +129,11 @@ export default class ProjectFeaturesController extends Controller {
             transactionalFeatureToggleService,
             featureTagService,
         }: ProjectFeaturesServices,
-        startTransaction: TransactionCreator<UnleashTransaction>,
     ) {
         super(config);
         this.featureService = featureToggleService;
         this.transactionalFeatureToggleService =
             transactionalFeatureToggleService;
-        this.startTransaction = startTransaction;
         this.openApiService = openApiService;
         this.featureTagService = featureTagService;
         this.flagResolver = config.flagResolver;
@@ -658,13 +649,17 @@ export default class ProjectFeaturesController extends Controller {
     ): Promise<void> {
         const { projectId, featureName } = req.params;
         const { name, replaceGroupId } = req.body;
-        const created = await this.featureService.cloneFeatureToggle(
-            featureName,
-            projectId,
-            name,
-            req.audit,
-            replaceGroupId,
-        );
+        const created =
+            await this.transactionalFeatureToggleService.transactional(
+                (service) =>
+                    service.cloneFeatureToggle(
+                        featureName,
+                        projectId,
+                        name,
+                        req.audit,
+                        replaceGroupId,
+                    ),
+            );
 
         this.openApiService.respondWithValidation(
             201,
@@ -680,14 +675,18 @@ export default class ProjectFeaturesController extends Controller {
     ): Promise<void> {
         const { projectId } = req.params;
 
-        const created = await this.featureService.createFeatureToggle(
-            projectId,
-            {
-                ...req.body,
-                description: req.body.description || undefined,
-            },
-            req.audit,
-        );
+        const created =
+            await this.transactionalFeatureToggleService.transactional(
+                (service) =>
+                    service.createFeatureToggle(
+                        projectId,
+                        {
+                            ...req.body,
+                            description: req.body.description || undefined,
+                        },
+                        req.audit,
+                    ),
+            );
 
         this.openApiService.respondWithValidation(
             201,
@@ -762,15 +761,19 @@ export default class ProjectFeaturesController extends Controller {
         if (data.name && data.name !== featureName) {
             throw new BadDataError('Cannot change name of feature flag');
         }
-        const created = await this.featureService.updateFeatureToggle(
-            projectId,
-            {
-                ...data,
-                name: featureName,
-            },
-            featureName,
-            req.audit,
-        );
+        const created =
+            await this.transactionalFeatureToggleService.transactional(
+                (service) =>
+                    service.updateFeatureToggle(
+                        projectId,
+                        {
+                            ...data,
+                            name: featureName,
+                        },
+                        featureName,
+                        req.audit,
+                    ),
+            );
 
         this.openApiService.respondWithValidation(
             200,
@@ -790,12 +793,16 @@ export default class ProjectFeaturesController extends Controller {
         res: Response<FeatureSchema>,
     ): Promise<void> {
         const { projectId, featureName } = req.params;
-        const updated = await this.featureService.patchFeature(
-            projectId,
-            featureName,
-            req.body,
-            req.audit,
-        );
+        const updated =
+            await this.transactionalFeatureToggleService.transactional(
+                (service) =>
+                    service.patchFeature(
+                        projectId,
+                        featureName,
+                        req.body,
+                        req.audit,
+                    ),
+            );
         this.openApiService.respondWithValidation(
             200,
             res,
@@ -814,13 +821,8 @@ export default class ProjectFeaturesController extends Controller {
         res: Response<void>,
     ): Promise<void> {
         const { featureName, projectId } = req.params;
-        await this.startTransaction(async (tx) =>
-            this.transactionalFeatureToggleService(tx).archiveToggle(
-                featureName,
-                req.user,
-                req.audit,
-                projectId,
-            ),
+        await this.transactionalFeatureToggleService.transactional((service) =>
+            service.archiveToggle(featureName, req.user, req.audit, projectId),
         );
         res.status(202).send();
     }
@@ -887,14 +889,16 @@ export default class ProjectFeaturesController extends Controller {
     ): Promise<void> {
         const { featureName, environment, projectId } = req.params;
         const { shouldActivateDisabledStrategies } = req.query;
-        await this.featureService.updateEnabled(
-            projectId,
-            featureName,
-            environment,
-            true,
-            req.audit,
-            req.user,
-            shouldActivateDisabledStrategies === 'true',
+        await this.transactionalFeatureToggleService.transactional((service) =>
+            service.updateEnabled(
+                projectId,
+                featureName,
+                environment,
+                true,
+                req.audit,
+                req.user,
+                shouldActivateDisabledStrategies === 'true',
+            ),
         );
         res.status(200).end();
     }
@@ -917,8 +921,8 @@ export default class ProjectFeaturesController extends Controller {
             return;
         }
 
-        await this.startTransaction(async (tx) =>
-            this.transactionalFeatureToggleService(tx).bulkUpdateEnabled(
+        await this.transactionalFeatureToggleService.transactional((service) =>
+            service.bulkUpdateEnabled(
                 projectId,
                 features,
                 environment,
@@ -949,8 +953,8 @@ export default class ProjectFeaturesController extends Controller {
             return;
         }
 
-        await this.startTransaction(async (tx) =>
-            this.transactionalFeatureToggleService(tx).bulkUpdateEnabled(
+        await this.transactionalFeatureToggleService.transactional((service) =>
+            service.bulkUpdateEnabled(
                 projectId,
                 features,
                 environment,
@@ -968,13 +972,15 @@ export default class ProjectFeaturesController extends Controller {
         res: Response<void>,
     ): Promise<void> {
         const { featureName, environment, projectId } = req.params;
-        await this.featureService.updateEnabled(
-            projectId,
-            featureName,
-            environment,
-            false,
-            req.audit,
-            req.user,
+        await this.transactionalFeatureToggleService.transactional((service) =>
+            service.updateEnabled(
+                projectId,
+                featureName,
+                environment,
+                false,
+                req.audit,
+                req.user,
+            ),
         );
         res.status(200).end();
     }
@@ -994,12 +1000,16 @@ export default class ProjectFeaturesController extends Controller {
             strategyConfig.segmentIds = [];
         }
 
-        const strategy = await this.featureService.createStrategy(
-            strategyConfig,
-            { environment, projectId, featureName },
-            req.audit,
-            req.user,
-        );
+        const strategy =
+            await this.transactionalFeatureToggleService.transactional(
+                (service) =>
+                    service.createStrategy(
+                        strategyConfig,
+                        { environment, projectId, featureName },
+                        req.audit,
+                        req.user,
+                    ),
+            );
 
         const updatedStrategy = await this.featureService.getStrategy(
             strategy.id,
@@ -1031,10 +1041,8 @@ export default class ProjectFeaturesController extends Controller {
         res: Response,
     ): Promise<void> {
         const { featureName, projectId, environment } = req.params;
-        await this.startTransaction(async (tx) =>
-            this.transactionalFeatureToggleService(
-                tx,
-            ).updateStrategiesSortOrder(
+        await this.transactionalFeatureToggleService.transactional((service) =>
+            service.updateStrategiesSortOrder(
                 {
                     featureName,
                     environment,
@@ -1058,15 +1066,17 @@ export default class ProjectFeaturesController extends Controller {
             req.body.segmentIds = [];
         }
 
-        const updatedStrategy = await this.startTransaction(async (tx) =>
-            this.transactionalFeatureToggleService(tx).updateStrategy(
-                strategyId,
-                req.body,
-                { environment, projectId, featureName },
-                req.audit,
-                req.user,
-            ),
-        );
+        const updatedStrategy =
+            await this.transactionalFeatureToggleService.transactional(
+                (service) =>
+                    service.updateStrategy(
+                        strategyId,
+                        req.body,
+                        { environment, projectId, featureName },
+                        req.audit,
+                        req.user,
+                    ),
+            );
 
         res.status(200).json(updatedStrategy);
     }
@@ -1083,15 +1093,17 @@ export default class ProjectFeaturesController extends Controller {
 
         throwOnInvalidSchema(featureStrategySchema.$id, newDocument);
 
-        const updatedStrategy = await this.startTransaction(async (tx) =>
-            this.transactionalFeatureToggleService(tx).updateStrategy(
-                strategyId,
-                newDocument,
-                { environment, projectId, featureName },
-                req.audit,
-                req.user,
-            ),
-        );
+        const updatedStrategy =
+            await this.transactionalFeatureToggleService.transactional(
+                (service) =>
+                    service.updateStrategy(
+                        strategyId,
+                        newDocument,
+                        { environment, projectId, featureName },
+                        req.audit,
+                        req.user,
+                    ),
+            );
 
         res.status(200).json(updatedStrategy);
     }
@@ -1115,36 +1127,17 @@ export default class ProjectFeaturesController extends Controller {
         const { environment, projectId, featureName } = req.params;
         const { strategyId } = req.params;
         this.logger.info(strategyId);
-        const strategy = await this.featureService.deleteStrategy(
-            strategyId,
-            { environment, projectId, featureName },
-            req.audit,
-            req.user,
-        );
-        res.status(200).json(strategy);
-    }
-
-    async updateStrategyParameter(
-        req: IAuthRequest<
-            StrategyIdParams,
-            any,
-            { name: string; value: string | number },
-            any
-        >,
-        res: Response<FeatureStrategySchema>,
-    ): Promise<void> {
-        const { strategyId, environment, projectId, featureName } = req.params;
-        const { name, value } = req.body;
-
-        const updatedStrategy =
-            await this.featureService.updateStrategyParameter(
-                strategyId,
-                name,
-                value,
-                { environment, projectId, featureName },
-                req.audit,
+        const strategy =
+            await this.transactionalFeatureToggleService.transactional(
+                (service) =>
+                    service.deleteStrategy(
+                        strategyId,
+                        { environment, projectId, featureName },
+                        req.audit,
+                        req.user,
+                    ),
             );
-        res.status(200).json(updatedStrategy);
+        res.status(200).json(strategy);
     }
 
     async updateFeaturesTags(

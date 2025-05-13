@@ -230,10 +230,8 @@ export const EditableConstraint: FC<Props> = ({
         constraint: localConstraint,
         updateConstraint,
         validator,
-        ...legalValueData
+        legalValues,
     } = useEditableConstraint(constraint, onUpdate);
-
-    const isLegalValueConstraint = 'legalValues' in legalValueData;
 
     const { context } = useUnleashContext();
     const { contextName, operator } = localConstraint;
@@ -332,8 +330,7 @@ export const EditableConstraint: FC<Props> = ({
                         values={
                             isMultiValueConstraint(localConstraint)
                                 ? Array.from(localConstraint.values)
-                                : 'legalValues' in legalValueData &&
-                                    localConstraint.value
+                                : legalValues && localConstraint.value
                                   ? [localConstraint.value]
                                   : undefined
                         }
@@ -348,7 +345,7 @@ export const EditableConstraint: FC<Props> = ({
                             deleteButtonRef.current
                         }
                     >
-                        {isLegalValueConstraint ? null : (
+                        {legalValues ? null : (
                             <TopRowInput
                                 localConstraint={localConstraint}
                                 updateConstraint={updateConstraint}
@@ -371,7 +368,7 @@ export const EditableConstraint: FC<Props> = ({
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
-            {'legalValues' in legalValueData ? (
+            {legalValues ? (
                 <LegalValuesContainer>
                     {isMultiValueConstraint(localConstraint) ? (
                         <LegalValuesSelector
@@ -393,7 +390,7 @@ export const EditableConstraint: FC<Props> = ({
                                     payload: value,
                                 })
                             }
-                            {...legalValueData}
+                            {...legalValues}
                         />
                     ) : (
                         <SingleLegalValueSelector
@@ -409,7 +406,7 @@ export const EditableConstraint: FC<Props> = ({
                                     payload: newValues,
                                 })
                             }
-                            {...legalValueData}
+                            {...legalValues}
                         />
                     )}
                 </LegalValuesContainer>

@@ -2,8 +2,7 @@ import { useMemo, useState } from 'react';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IConstraint } from 'interfaces/strategy';
 import {
-    type EditableMultiValueConstraint,
-    type EditableSingleValueConstraint,
+    type EditableConstraint,
     fromIConstraint,
     isSingleValueConstraint,
     toIConstraint,
@@ -44,32 +43,18 @@ const resolveContextDefinition = (
     );
 };
 
-type SingleValueConstraintState = {
-    constraint: EditableSingleValueConstraint;
-};
-
-type MultiValueConstraintState = {
-    constraint: EditableMultiValueConstraint;
-};
-
 type LegalValueData = {
     legalValues: ILegalValue[];
     deletedLegalValues?: Set<string>;
     invalidLegalValues?: Set<string>;
 };
 
-type LegalValueConstraintState = {
-    constraint: EditableMultiValueConstraint;
-} & LegalValueData;
-
 type EditableConstraintState = {
     updateConstraint: (action: ConstraintUpdateAction) => void;
     validator: (...values: string[]) => ConstraintValidationResult;
-} & (
-    | SingleValueConstraintState
-    | MultiValueConstraintState
-    | LegalValueConstraintState
-);
+    legalValues?: LegalValueData;
+    constraint: EditableConstraint;
+};
 
 export const useEditableConstraint = (
     constraint: IConstraint,
@@ -137,20 +122,18 @@ export const useEditableConstraint = (
         }
     };
 
-    if (contextDefinition.legalValues?.length) {
-        return {
-            updateConstraint,
-            constraint: localConstraint,
-            validator,
-            legalValues: contextDefinition.legalValues,
-            invalidLegalValues,
-            deletedLegalValues,
-        } as EditableConstraintState;
-    }
+    const legalValues = contextDefinition.legalValues?.length
+        ? {
+              legalValues: contextDefinition.legalValues,
+              invalidLegalValues,
+              deletedLegalValues,
+          }
+        : undefined;
 
     return {
         updateConstraint,
         constraint: localConstraint,
         validator,
+        legalValues,
     } as EditableConstraintState;
 };

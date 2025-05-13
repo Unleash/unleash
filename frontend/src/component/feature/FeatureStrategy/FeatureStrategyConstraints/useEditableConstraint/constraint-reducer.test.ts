@@ -17,9 +17,15 @@ import { DATE_AFTER, DATE_BEFORE } from '@server/util/constants';
 import { constraintReducer } from './constraint-reducer';
 import { CURRENT_TIME_CONTEXT_FIELD } from 'utils/operatorsForContext';
 
+const extraConstraintFields: Partial<EditableConstraint> = {
+    inverted: true,
+    caseInsensitive: true,
+};
+
 const multiValueConstraint = (
     contextField: string,
 ): EditableMultiValueConstraint => ({
+    ...extraConstraintFields,
     contextName: contextField,
     operator: NOT_IN,
     values: new Set(['A', 'B']),
@@ -28,12 +34,14 @@ const multiValueConstraint = (
 const singleValueConstraint = (
     contextField: string,
 ): EditableSingleValueConstraint => ({
+    ...extraConstraintFields,
     contextName: contextField,
     operator: NUM_EQ,
     value: '5',
 });
 
 const dateConstraint = (contextField: string): EditableDateConstraint => ({
+    ...extraConstraintFields,
     contextName: contextField,
     operator: DATE_AFTER,
     value: '2024-05-05T00:00:00Z',
@@ -214,11 +222,83 @@ describe('changing operator', () => {
 });
 describe('adding values', () => {
     describe('single-value constraints', () => {
-        test('adding a value replaces the existing value', () => {});
+        test('adding a value replaces the existing value', () => {
+            const input = singleValueConstraint('context-field');
+            const output = constraintReducer(input, {
+                type: 'add value(s)',
+                payload: 'new-value',
+            });
+            expect(output).toStrictEqual({
+                ...input,
+                value: 'new-value',
+            });
+        });
+        test('adding a list replaces the existing value with the first value of the list', () => {
+            const input = singleValueConstraint('context-field');
+            const output = constraintReducer(input, {
+                type: 'add value(s)',
+                payload: ['list-value'],
+            });
+            expect(output).toStrictEqual({
+                ...input,
+                value: 'list-value',
+            });
+        });
+        test('adding an empty list effectively clears the value', () => {
+            const input = singleValueConstraint('context-field');
+            const output = constraintReducer(input, {
+                type: 'add value(s)',
+                payload: [],
+            });
+            expect(output).toStrictEqual({
+                ...input,
+                value: '',
+            });
+        });
+
+        test('trying to add a deleted legal value results in no change', () => {
+            const input = singleValueConstraint('context-field');
+            const output = constraintReducer(
+                input,
+                {
+                    type: 'add value(s)',
+                    payload: 'deleted',
+                },
+                new Set(['deleted']),
+            );
+            expect(output).toStrictEqual(input);
+        });
+        test('if both the new value and the old value are deleted legal values, it clears the field', () => {
+            const input = singleValueConstraint('context-field');
+            const output = constraintReducer(
+                input,
+                {
+                    type: 'add value(s)',
+                    payload: 'deleted',
+                },
+                new Set(['deleted', input.value]),
+            );
+            expect(output).toStrictEqual({
+                ...input,
+                value: '',
+            });
+        });
     });
     describe('multi-value constraints', () => {
-        test('adding a value to a multi-value constraint adds it to the set', () => {});
-        test('adding a value to a multi-value constraint adds it to the list', () => {});
+        test('adding a single value to a multi-value constraint adds it to the set', () => {
+            const input = multiValueConstraint('context-field');
+            const output = constraintReducer(input, {
+                type: 'add value(s)',
+                payload: 'new-value',
+            });
+            expect(output).toStrictEqual({
+                ...input,
+                value: new Set([...input.values, 'new-value']),
+            });
+        });
+        test('adding a list to a multi-value constraint adds all new elements to the set', () => {});
+        test('adding an empty list to a multi-value constraint has no effect', () => {});
+        test('deleted legal values are removed from the set upon saving new values', () => {});
     });
 });
 describe('removing / clearing values', () => {

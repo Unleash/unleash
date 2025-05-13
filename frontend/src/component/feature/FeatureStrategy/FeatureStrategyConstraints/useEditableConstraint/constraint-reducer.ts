@@ -10,7 +10,6 @@ import { CURRENT_TIME_CONTEXT_FIELD } from 'utils/operatorsForContext';
 import {
     type EditableDateConstraint,
     isDateConstraint,
-    isMultiValueConstraint,
     isSingleValueConstraint,
     type EditableConstraint,
     type EditableMultiValueConstraint,
@@ -19,8 +18,7 @@ import {
 import { difference, union } from './set-functions';
 
 export type ConstraintUpdateAction =
-    | { type: 'add value(s)'; payload: string[] }
-    | { type: 'set value'; payload: string }
+    | { type: 'add value(s)'; payload: string | string[] }
     | { type: 'clear values' }
     | { type: 'remove value from list'; payload: string }
     | { type: 'set context field'; payload: string }
@@ -103,11 +101,30 @@ export const constraintReducer = (
                 operator: action.payload,
             } as EditableMultiValueConstraint);
         case 'add value(s)': {
-            if (!('values' in state)) {
-                return state;
+            if (isSingleValueConstraint(state)) {
+                const newValue = Array.isArray(action.payload)
+                    ? action.payload[0]
+                    : action.payload;
+                if (deletedLegalValues?.has(newValue)) {
+                    if (deletedLegalValues?.has(state.value)) {
+                        return {
+                            ...state,
+                            value: '',
+                        };
+                    }
+                    return state;
+                }
+                return {
+                    ...state,
+                    value: newValue ?? '',
+                };
             }
 
-            const newValues = new Set(action.payload);
+            const newValues = new Set(
+                Array.isArray(action.payload)
+                    ? action.payload
+                    : [action.payload],
+            );
             const combinedValues = union(state.values, newValues);
             const filteredValues = deletedLegalValues
                 ? difference(combinedValues, deletedLegalValues)
@@ -117,11 +134,6 @@ export const constraintReducer = (
                 values: filteredValues,
             };
         }
-        case 'set value':
-            if (isMultiValueConstraint(state)) {
-                return state;
-            }
-            return { ...state, value: action.payload };
         case 'toggle inverted operator':
             return { ...state, inverted: !state.inverted };
         case 'toggle case sensitivity':

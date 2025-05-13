@@ -12,23 +12,25 @@ import { useEventCreators } from 'hooks/api/getters/useEventCreators/useEventCre
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 
 export const useEventLogFilters = (
-    projectsToFilter: any[],
-    featuresToFilter: any[],
+    projects: ProjectSchema[],
+    features: FeatureSearchResponseSchema[],
 ) => {
     const { environments } = useEnvironments();
     const { eventCreators } = useEventCreators();
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
 
     useEffect(() => {
-        const projectOptions = projectsToFilter.map((project) => ({
-            label: project.name,
-            value: project.id,
-        }));
+        const projectOptions =
+            projects?.map((project: ProjectSchema) => ({
+                label: project.name,
+                value: project.id,
+            })) ?? [];
 
-        const flagOptions = featuresToFilter.map((feature) => ({
-            label: feature.name,
-            value: feature.name,
-        }));
+        const flagOptions =
+            features?.map((flag) => ({
+                label: flag.name,
+                value: flag.name,
+            })) ?? [];
 
         const eventCreatorOptions = eventCreators.map((creator) => ({
             label: creator.name,
@@ -42,14 +44,15 @@ export const useEventLogFilters = (
             }),
         );
 
-        const environmentOptions = environments.map((env) => ({
-            label: env.name,
-            value: env.name,
-        }));
+        const environmentOptions =
+            environments?.map((env) => ({
+                label: env.name,
+                value: env.name,
+            })) ?? [];
 
         const availableFilters: IFilterItem[] = [
             {
-                label: 'Created date',
+                label: 'Date From',
                 icon: 'today',
                 options: [],
                 filterKey: 'from',
@@ -59,7 +62,7 @@ export const useEventLogFilters = (
                 persistent: true,
             },
             {
-                label: 'Created date',
+                label: 'Date To',
                 icon: 'today',
                 options: [],
                 filterKey: 'to',
@@ -124,8 +127,9 @@ export const useEventLogFilters = (
 
         setAvailableFilters(availableFilters);
     }, [
-        JSON.stringify(featuresToFilter),
-        JSON.stringify(projectsToFilter),
+        JSON.stringify(features),
+        JSON.stringify(projects),
+        JSON.stringify(eventCreators),
         JSON.stringify(environments),
     ]);
 

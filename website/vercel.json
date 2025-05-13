@@ -683,7 +683,7 @@
     },
     {
       "source": "/developer-guide",
-      "destination": "/contributing",
+      "destination": "/contributing/developer-guide",
       "permanent": true
     },
     {

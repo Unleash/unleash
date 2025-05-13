@@ -19,7 +19,7 @@ beforeAll(async () => {
     getLogger.setMuteError(true);
     db = await dbInit('user_pat', getLogger);
     patStore = db.stores.patStore;
-    app = await setupAppWithAuth(db.stores);
+    app = await setupAppWithAuth(db.stores, {}, db.rawDatabase);
 
     await app.request
         .post(`/auth/demo/login`)

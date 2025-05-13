@@ -28,7 +28,6 @@ import InstanceAdminController from './instance-admin';
 import TelemetryController from './telemetry';
 import FavoritesController from './favorites';
 import MaintenanceController from '../../features/maintenance/maintenance-controller';
-import { createKnexTransactionStarter } from '../../db/transaction';
 import type { Db } from '../../db/db';
 import ExportImportController from '../../features/export-import-toggles/export-import-controller';
 import { SegmentsController } from '../../features/segment/segment-controller';
@@ -53,11 +52,7 @@ export class AdminApi extends Controller {
         );
         this.app.use(
             '/archive',
-            new ArchiveController(
-                config,
-                services,
-                createKnexTransactionStarter(db),
-            ).router,
+            new ArchiveController(config, services).router,
         );
         this.app.use(
             '/strategies',

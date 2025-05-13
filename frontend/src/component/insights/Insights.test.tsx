@@ -1,4 +1,4 @@
-import { render } from '../../utils/testRenderer.ts';
+import { render } from 'utils/testRenderer';
 import { fireEvent, screen } from '@testing-library/react';
 import { Insights } from './Insights.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';

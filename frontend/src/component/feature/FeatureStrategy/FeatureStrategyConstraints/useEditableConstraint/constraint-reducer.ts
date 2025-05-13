@@ -56,20 +56,22 @@ const resetValues = (state: EditableConstraint): EditableConstraint => {
 };
 
 const withValue = <T extends EditableConstraint>(
-    value: string | null,
+    newValue: string | null,
     constraint: T,
 ): T => {
-    // @ts-expect-error
-    const { value: _, values, ...rest } = constraint;
+    // @ts-expect-error only one of these will be exist, but we want to take
+    // both of them out. TS doesn't allow you to extract `undefined` properties
+    // of an object, but it's perfectly legal in JS.
+    const { value, values, ...rest } = constraint;
     if (isMultiValueOperator(constraint.operator)) {
         return {
             ...rest,
-            values: new Set([value].filter(Boolean)),
+            values: new Set([newValue].filter(Boolean)),
         } as T;
     }
     return {
         ...rest,
-        value: value ?? '',
+        value: newValue ?? '',
     } as T;
 };
 

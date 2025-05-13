@@ -74,19 +74,18 @@ const LegalValuesContainer = styled('div')(({ theme }) => ({
 }));
 
 const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
-    // fieldset: { border: 'none', borderRadius: 0 },
+    fieldset: { border: 'none', borderRadius: 0 },
     maxWidth: '25ch',
     ':focus-within .MuiSelect-select': {
         background: 'none',
     },
-    ':focus-within fieldset': { borderBottomColor: 'red' },
+    ':focus-within fieldset': { borderBottomStyle: 'solid' },
     'label + &': {
         // mui adds a margin top to 'standard' selects with labels
         margin: 0,
     },
     '&::before': {
         border: 'none',
-        // color: 'red',
     },
 }));
 

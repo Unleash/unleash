@@ -20,7 +20,7 @@ import { difference, union } from './set-functions';
 export type ConstraintUpdateAction =
     | { type: 'add value(s)'; payload: string | string[] }
     | { type: 'clear values' }
-    | { type: 'remove value from list'; payload: string }
+    | { type: 'remove value'; payload: string }
     | { type: 'set context field'; payload: string }
     | { type: 'set operator'; payload: Operator }
     | { type: 'toggle case sensitivity' }
@@ -138,9 +138,16 @@ export const constraintReducer = (
             return { ...state, inverted: !state.inverted };
         case 'toggle case sensitivity':
             return { ...state, caseInsensitive: !state.inverted };
-        case 'remove value from list':
+        case 'remove value':
             if (isSingleValueConstraint(state)) {
-                return state;
+                if (state.value === action.payload) {
+                    return {
+                        ...state,
+                        value: '',
+                    };
+                } else {
+                    return state;
+                }
             }
             state.values.delete(action.payload);
             return {

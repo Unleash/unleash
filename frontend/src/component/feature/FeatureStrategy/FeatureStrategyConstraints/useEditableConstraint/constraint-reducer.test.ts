@@ -338,12 +338,64 @@ describe('adding values', () => {
 });
 describe('removing / clearing values', () => {
     describe('single-value constraints', () => {
-        test('removing a value removes the existing value if it matches', () => {});
-        test('clearing a value removes the existing value', () => {});
+        test('removing a value removes the existing value if it matches', () => {
+            const input = singleValueConstraint('context-field');
+            const noChange = constraintReducer(input, {
+                type: 'remove value',
+                payload: '55422b90-9bc4-4847-8a61-17fc928069ff',
+            });
+            expect(noChange).toStrictEqual(input);
+
+            const removed = constraintReducer(input, {
+                type: 'remove value',
+                payload: input.value,
+            });
+
+            expect(removed).toStrictEqual({ ...input, value: '' });
+        });
+        test('clearing a value removes the existing value', () => {
+            const input = singleValueConstraint('context-field');
+            const cleared = constraintReducer(input, {
+                type: 'clear values',
+            });
+
+            expect(cleared).toStrictEqual({ ...input, value: '' });
+        });
     });
     describe('multi-value constraints', () => {
-        test('removing a value removes it from the set', () => {});
-        test('clearing values removes all values from the set', () => {});
+        test('removing a value removes it from the set if it exists', () => {
+            const values = ['A', 'B', 'C'];
+            const input = {
+                ...multiValueConstraint('context-field'),
+                values: new Set(values),
+            };
+            const noChange = constraintReducer(input, {
+                type: 'remove value',
+                payload: '55422b90-9bc4-4847-8a61-17fc928069ff',
+            });
+            expect(noChange).toStrictEqual(input);
+
+            const removed = constraintReducer(input, {
+                type: 'remove value',
+                payload: 'B',
+            });
+
+            expect(removed).toStrictEqual({
+                ...input,
+                values: new Set(['A', 'C']),
+            });
+        });
+        test('clearing values removes all values from the set', () => {
+            const input = multiValueConstraint('context-field');
+            const cleared = constraintReducer(input, {
+                type: 'clear values',
+            });
+
+            expect(cleared).toStrictEqual({
+                ...input,
+                values: new Set(),
+            });
+        });
     });
 });
 describe('toggle options', () => {

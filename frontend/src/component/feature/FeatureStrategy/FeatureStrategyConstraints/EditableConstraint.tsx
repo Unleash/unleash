@@ -340,7 +340,7 @@ export const EditableConstraint: FC<Props> = ({
                         removeValue={(value) => {
                             if (isMultiValueConstraint(localConstraint)) {
                                 updateConstraint({
-                                    type: 'remove value from list',
+                                    type: 'remove value',
                                     payload: value,
                                 });
                             } else {
@@ -396,7 +396,7 @@ export const EditableConstraint: FC<Props> = ({
                             }
                             removeValue={(value) =>
                                 updateConstraint({
-                                    type: 'remove value from list',
+                                    type: 'remove value',
                                     payload: value,
                                 })
                             }

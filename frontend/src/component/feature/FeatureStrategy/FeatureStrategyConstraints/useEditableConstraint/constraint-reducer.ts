@@ -14,6 +14,7 @@ import {
     type EditableConstraint,
     type EditableMultiValueConstraint,
     type EditableSingleValueConstraint,
+    isMultiValueConstraint,
 } from './editable-constraint-type';
 import { difference, union } from './set-functions';
 
@@ -24,7 +25,8 @@ export type ConstraintUpdateAction =
     | { type: 'set context field'; payload: string }
     | { type: 'set operator'; payload: Operator }
     | { type: 'toggle case sensitivity' }
-    | { type: 'toggle inverted operator' };
+    | { type: 'toggle inverted operator' }
+    | { type: 'toggle value'; payload: string };
 
 const withValue = <
     T extends EditableConstraint & { value?: string; values?: Set<string> },
@@ -156,5 +158,41 @@ export const constraintReducer = (
             };
         case 'clear values':
             return withValue(null, state);
+        case 'toggle value':
+            if (isMultiValueConstraint(state)) {
+                if (state.values.has(action.payload)) {
+                    state.values.delete(action.payload);
+                    return {
+                        ...state,
+                        values: state.values ?? new Set(),
+                    };
+                } else {
+                    const newValues = new Set(
+                        Array.isArray(action.payload)
+                            ? action.payload
+                            : [action.payload],
+                    );
+                    const combinedValues = union(state.values, newValues);
+                    const filteredValues = deletedLegalValues
+                        ? difference(combinedValues, deletedLegalValues)
+                        : combinedValues;
+                    return {
+                        ...state,
+                        values: filteredValues,
+                    };
+                }
+            } else {
+                if (state.value === action.payload) {
+                    return {
+                        ...state,
+                        value: '',
+                    };
+                } else {
+                    return {
+                        ...state,
+                        value: action.payload,
+                    };
+                }
+            }
     }
 };

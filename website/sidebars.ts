@@ -615,7 +615,6 @@ const sidebars: SidebarsConfig = {
                         'generated/unleash-edge/migration-guide',
                     ],
                 },
-                'generated/unleash-proxy',
                 {
                     type: 'category',
                     label: 'Compliance',
@@ -714,8 +713,6 @@ const sidebars: SidebarsConfig = {
                             label: 'Users and permissions',
                             items: [
                                 'how-to/how-to-add-users-to-unleash',
-                                'how-to/how-to-create-and-assign-custom-root-roles',
-                                'how-to/how-to-create-and-assign-custom-project-roles',
                                 'how-to/how-to-create-and-manage-user-groups',
                                 'how-to/how-to-set-up-group-sso-sync',
                             ],

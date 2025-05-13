@@ -40,14 +40,28 @@ own [custom root roles](#custom-root-roles) and [custom project roles](#custom-p
 
 Custom root roles let you define your own root roles with a specific set of root permissions. The roles can then be
 assigned to entities (users, service accounts, and groups) at the root level. This allows you to control access to
-resources in a more precise, fine-grained way. For a step-by-step walkthrough of how to create and assign custom root
-roles, refer to [_how to create and assign custom root roles_](../how-to/how-to-create-and-assign-custom-root-roles.md).
+resources in a more precise, fine-grained way.
 
 Each custom root role consists of:
 
 - a **name** (required)
 - a **role description** (required)
 - a set of **root permissions** (required)
+
+### Create and assign a custom root role
+
+To create a custom root role in the Admin UI, do the following:
+
+1. In **Admin settings > User config > Root roles**, click **New root role**.
+2. Give the role a name and description and select all permissions you want to assign to the role.
+3. Click **Add role** to save.
+
+Once you have the role set up, you can assign it a user:
+
+1. In **Admin settings > User config > Users**, select the user you want to assign the role to.
+2. Click **Edit user**.
+3. For **Role**, select the root role you want the user to have.
+4. Click **Save**.
 
 ### Root permissions
 
@@ -104,7 +118,7 @@ You can assign the following root permissions:
 | Change instance banners | Change instance [banners](./banners). |
 | Change maintenance mode state | Change [maintenance mode](./maintenance-mode) state. |
 | Update CORS settings | Update [CORS settings](./front-end-api#configure-cross-origin-resource-sharing-cors). |
-| Read instance logs and login history | Read instance logs and [login history](./login-history.md). |
+| Read instance logs and login history | Read instance logs and [login history](./login-history). |
 
 #### Integration permissions
 
@@ -173,15 +187,27 @@ You can assign the following root permissions:
 
 Custom project roles let you define your own project roles with a specific set of project permissions down to the
 environment level. The roles can then be assigned to users in specific projects. All users have viewer access to all
-projects and resources but must be assigned a project role to be allowed to edit a project's resources. For a
-step-by-step walkthrough of how to create and assign custom project roles, see [_how to create and assign custom project
-roles_](../how-to/how-to-create-and-assign-custom-project-roles).
+projects and resources but must be assigned a project role to be allowed to edit a project's resources.
 
 Each custom project role consists of:
 
 - a **name** (required)
 - a **role description** (required)
 - a set of **project and environment permissions** (required)
+
+### Create and assign a custom project role
+
+To create a custom project role in the Admin UI, do the following:
+
+1. In **Admin settings > User config > Project roles**, click **New project role**.
+2. Give the role a name and description and select all permissions you want to assign to the role.
+3. Click **Add role** to save.
+
+Once you have the role set up, you can assign it to individual users inside a project:
+
+1. In **Settings > User access**, click **Edit**.
+2. For **Role**, select the custom project roles you want to apply.
+3. Click **Save**.
 
 ### Project permissions
 

@@ -812,8 +812,23 @@
       "permanent": true
     },
     {
+      "source": "how-to/how-to-manage-public-invite-tokens",
+      "destination": "/reference/public-signup",
+      "permanent": true
+    },
+    {
       "source": "/how-to/how-to-create-feature-toggles",
       "destination": "/how-to-create-feature-flag",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-create-and-assign-custom-root-roles",
+      "destination": "/reference/rbac#create-and-assign-a-custom-root-role",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-create-and-assign-custom-project-roles",
+      "destination": "/reference/rbac#create-and-assign-a-custom-project-role",
       "permanent": true
     },
     {

@@ -1,5 +1,5 @@
 import { Button, Typography, styled } from '@mui/material';
-import { DemoDialog } from '../DemoDialog';
+import { DemoDialog } from '../DemoDialog.tsx';
 import Confetti from 'react-confetti';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 

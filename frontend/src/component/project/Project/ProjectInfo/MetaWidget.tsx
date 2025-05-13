@@ -6,7 +6,7 @@ import {
     StyledWidgetTitle,
 } from './ProjectInfo.styles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { WidgetFooterLink } from './WidgetFooterLink';
+import { WidgetFooterLink } from './WidgetFooterLink.tsx';
 
 interface IMetaWidgetProps {
     id?: string;

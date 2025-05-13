@@ -1,7 +1,7 @@
-import type { Db, IUnleashConfig } from '../../server-impl';
-import PrivateProjectStore from './privateProjectStore';
-import { PrivateProjectChecker } from './privateProjectChecker';
-import { FakePrivateProjectChecker } from './fakePrivateProjectChecker';
+import type { Db, IUnleashConfig } from '../../types/index.js';
+import PrivateProjectStore from './privateProjectStore.js';
+import { PrivateProjectChecker } from './privateProjectChecker.js';
+import { FakePrivateProjectChecker } from './fakePrivateProjectChecker.js';
 
 export const createPrivateProjectChecker = (
     db: Db,

@@ -1,12 +1,17 @@
-import { getDbConfig } from './helpers/database-config';
-import { createTestConfig } from '../config/test-config';
+import { getDbConfig } from './helpers/database-config.js';
+import { createTestConfig } from '../config/test-config.js';
 import { getInstance } from 'db-migrate';
 import { log } from 'db-migrate-shared';
-import { Client } from 'pg';
-import type { IDBOption } from '../../lib/types';
+import postgresPkg from 'pg';
+const { Client } = postgresPkg;
+import type { IDBOption } from '../../lib/types/index.js';
+import { jest } from '@jest/globals';
+import { fileURLToPath } from 'node:url';
+import path from 'path';
 
 log.setLogLevel('error');
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 async function initSchema(db: IDBOption): Promise<void> {
     const client = new Client(db);
     await client.connect();

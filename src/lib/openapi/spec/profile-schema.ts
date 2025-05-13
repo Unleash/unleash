@@ -1,6 +1,6 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { featureSchema } from './feature-schema';
-import { roleSchema } from './role-schema';
+import { featureSchema } from './feature-schema.js';
+import { roleSchema } from './role-schema.js';
 
 export const profileSchema = {
     $id: '#/components/schemas/profileSchema',

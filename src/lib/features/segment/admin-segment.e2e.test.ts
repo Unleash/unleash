@@ -1,18 +1,20 @@
-import { randomId } from '../../util/random-id';
-import type { ISegment } from '../../types/model';
-import { collectIds } from '../../util/collect-ids';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
+import { randomId } from '../../util/random-id.js';
+import type { ISegment } from '../../types/model.js';
+import { collectIds } from '../../util/collect-ids.js';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 import {
     addStrategyToFeatureEnv,
     createFeatureFlag,
-} from '../../../test/e2e/helpers/app.utils';
+} from '../../../test/e2e/helpers/app.utils.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../test/e2e/helpers/test-helper';
-import type { StrategiesUsingSegment } from './segment-service-interface';
-import type { IFeatureOverview, IUser } from '../../types';
+} from '../../../test/e2e/helpers/test-helper.js';
+import type { StrategiesUsingSegment } from './segment-service-interface.js';
+import type { IFeatureOverview, IUser } from '../../types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

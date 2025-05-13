@@ -1,13 +1,13 @@
 import { Box, styled } from '@mui/material';
-import { ChangeRequests } from './ChangeRequests/ChangeRequests';
-import { LeadTimeForChanges } from './LeadTimeForChanges/LeadTimeForChanges';
-import { ProjectHealth } from './ProjectHealth/ProjectHealth';
-import { FlagTypesUsed } from './FlagTypesUsed/FlagTypesUsed';
-import { ProjectInsightsStats } from './ProjectInsightsStats/ProjectInsightsStats';
+import { ChangeRequests } from './ChangeRequests/ChangeRequests.tsx';
+import { LeadTimeForChanges } from './LeadTimeForChanges/LeadTimeForChanges.tsx';
+import { ProjectHealth } from './ProjectHealth/ProjectHealth.tsx';
+import { FlagTypesUsed } from './FlagTypesUsed/FlagTypesUsed.tsx';
+import { ProjectInsightsStats } from './ProjectInsightsStats/ProjectInsightsStats.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useProjectInsights } from 'hooks/api/getters/useProjectInsights/useProjectInsights';
 import useLoading from 'hooks/useLoading';
-import { ProjectMembers } from './ProjectMembers/ProjectMembers';
+import { ProjectMembers } from './ProjectMembers/ProjectMembers.tsx';
 
 const Container = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,

@@ -1,5 +1,5 @@
 import { render } from 'utils/testRenderer';
-import { StatusCell } from './StatusCell';
+import { StatusCell } from './StatusCell.tsx';
 import { screen } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 

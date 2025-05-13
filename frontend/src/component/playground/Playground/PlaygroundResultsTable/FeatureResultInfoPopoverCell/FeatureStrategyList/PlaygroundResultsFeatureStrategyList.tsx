@@ -1,5 +1,5 @@
 import { Alert } from '@mui/material';
-import { PlaygroundResultStrategyLists } from './StrategyList/PlaygroundResultStrategyLists';
+import { PlaygroundResultStrategyLists } from './StrategyList/PlaygroundResultStrategyLists.tsx';
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import type { FC } from 'react';
 

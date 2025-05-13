@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { sdkContextSchema } from './sdk-context-schema';
+import { sdkContextSchema } from './sdk-context-schema.js';
 
 const { properties, ...standardProperties } = sdkContextSchema.properties;
 export const sdkFlatContextSchema = {

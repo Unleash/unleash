@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getLocalStorageItem, setLocalStorageItem } from '../utils/storage';
+import { getLocalStorageItem, setLocalStorageItem } from '../utils/storage.js';
 import { basePath } from 'utils/formatPath';
-import { useCustomEvent } from './useCustomEvent';
+import { useCustomEvent } from './useCustomEvent.js';
 
 const MAX_ITEMS = 3;
 

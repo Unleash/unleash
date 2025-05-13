@@ -1,15 +1,15 @@
 import { useContext } from 'react';
-import AccessContext from '../contexts/AccessContext';
-import { useChangeRequestsEnabled } from './useChangeRequestsEnabled';
+import AccessContext from '../contexts/AccessContext.ts';
+import { useChangeRequestsEnabled } from './useChangeRequestsEnabled.ts';
 import {
     CREATE_FEATURE_STRATEGY,
     DELETE_FEATURE_STRATEGY,
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
     UPDATE_FEATURE_STRATEGY,
-} from '../component/providers/AccessProvider/permissions';
-import { useAuthPermissions } from './api/getters/useAuth/useAuthPermissions';
-import useProjectOverview from './api/getters/useProjectOverview/useProjectOverview';
+} from '../component/providers/AccessProvider/permissions.js';
+import { useAuthPermissions } from './api/getters/useAuth/useAuthPermissions.js';
+import useProjectOverview from './api/getters/useProjectOverview/useProjectOverview.js';
 
 /**
  * This is for features not integrated with change request.

@@ -12,16 +12,19 @@ import {
     ProjectEnvironmentAdded,
     ProjectEnvironmentRemoved,
     SYSTEM_USER_AUDIT,
-} from '../../types';
-import type { Logger } from '../../logger';
-import { BadDataError, UNIQUE_CONSTRAINT_VIOLATION } from '../../error';
-import NameExistsError from '../../error/name-exists-error';
-import { sortOrderSchema } from '../../services/sort-order-schema';
-import NotFoundError from '../../error/notfound-error';
-import type { IProjectStore } from '../../features/project/project-store-type';
-import type { IFlagResolver } from '../../types/experimental';
-import type { CreateFeatureStrategySchema } from '../../openapi';
-import type EventService from '../events/event-service';
+} from '../../types/index.js';
+import type { Logger } from '../../logger.js';
+import {
+    BadDataError,
+    UNIQUE_CONSTRAINT_VIOLATION,
+} from '../../error/index.js';
+import NameExistsError from '../../error/name-exists-error.js';
+import { sortOrderSchema } from '../../services/sort-order-schema.js';
+import NotFoundError from '../../error/notfound-error.js';
+import type { IProjectStore } from '../../features/project/project-store-type.js';
+import type { IFlagResolver } from '../../types/experimental.js';
+import type { CreateFeatureStrategySchema } from '../../openapi/index.js';
+import type EventService from '../events/event-service.js';
 
 export default class EnvironmentService {
     private logger: Logger;

@@ -1,16 +1,16 @@
-import type { IFeatureStrategiesStore } from '../../../features/feature-toggle/types/feature-toggle-strategies-store-type';
-import type { IFeatureToggleStore } from '../../../features/feature-toggle/types/feature-toggle-store-type';
+import type { IFeatureStrategiesStore } from '../../../features/feature-toggle/types/feature-toggle-strategies-store-type.js';
+import type { IFeatureToggleStore } from '../../../features/feature-toggle/types/feature-toggle-store-type.js';
 import dbInit, {
     type ITestDb,
-} from '../../../../test/e2e/helpers/database-init';
-import getLogger from '../../../../test/fixtures/no-logger';
+} from '../../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../../test/fixtures/no-logger.js';
 import type {
     IConstraint,
     IFeatureStrategiesReadModel,
     IProjectStore,
     IUnleashStores,
-} from '../../../types';
-import { randomId } from '../../../util';
+} from '../../../types/index.js';
+import { randomId } from '../../../util/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

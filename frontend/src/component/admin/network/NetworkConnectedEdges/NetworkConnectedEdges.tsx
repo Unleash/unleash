@@ -8,7 +8,7 @@ import { ReactComponent as LogoIconWhite } from 'assets/icons/logoWhiteBg.svg';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useConnectedEdges } from 'hooks/api/getters/useConnectedEdges/useConnectedEdges';
 import type { ConnectedEdge } from 'interfaces/connectedEdge';
-import { NetworkConnectedEdgeInstance } from './NetworkConnectedEdgeInstance';
+import { NetworkConnectedEdgeInstance } from './NetworkConnectedEdgeInstance.tsx';
 
 const UNLEASH = 'Unleash';
 

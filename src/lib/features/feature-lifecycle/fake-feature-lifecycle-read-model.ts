@@ -2,11 +2,11 @@ import type {
     IFeatureLifecycleReadModel,
     StageCount,
     StageCountByProject,
-} from './feature-lifecycle-read-model-type';
+} from './feature-lifecycle-read-model-type.js';
 import type {
     IFeatureLifecycleStage,
     IProjectLifecycleStageDuration,
-} from '../../types';
+} from '../../types/index.js';
 
 export class FakeFeatureLifecycleReadModel
     implements IFeatureLifecycleReadModel

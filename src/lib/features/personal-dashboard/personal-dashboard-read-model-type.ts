@@ -1,4 +1,4 @@
-import type { ProjectOwners } from '../project/project-owners-read-model.type';
+import type { ProjectOwners } from '../project/project-owners-read-model.type.js';
 
 export type PersonalFeature = { name: string; type: string; project: string };
 export type BasePersonalProject = {

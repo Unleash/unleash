@@ -1,12 +1,12 @@
-import type { IBaseEvent, IEvent } from '../events';
-import type { Store } from './store';
+import type { IBaseEvent, IEvent } from '../../events/index.js';
+import type { Store } from './store.js';
 import type {
     DeprecatedSearchEventsSchema,
     ProjectActivitySchema,
-} from '../../openapi';
+} from '../../openapi/index.js';
 import type EventEmitter from 'events';
-import type { IQueryOperations } from '../../features/events/event-store';
-import type { IQueryParam } from '../../features/feature-toggle/types/feature-toggle-strategies-store-type';
+import type { IQueryOperations } from '../../features/events/event-store.js';
+import type { IQueryParam } from '../../features/feature-toggle/types/feature-toggle-strategies-store-type.js';
 
 export interface IEventSearchParams {
     project?: string;

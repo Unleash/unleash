@@ -18,7 +18,7 @@ import {
     StyledTableCell,
     StyledVisibleAbsoluteLayer,
 } from './CellSortable.styles';
-import { SortArrow } from './SortArrow/SortArrow';
+import { SortArrow } from './SortArrow/SortArrow.tsx';
 
 interface ICellSortableProps {
     isSortable?: boolean;

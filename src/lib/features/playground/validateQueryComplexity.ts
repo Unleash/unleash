@@ -1,4 +1,4 @@
-import { BadDataError } from '../../error';
+import { BadDataError } from '../../error/index.js';
 
 const MAX_COMPLEXITY = 30000;
 

@@ -4,11 +4,11 @@ import { useEffect, useMemo, useState } from 'react';
 import {
     FEATURE_METRIC_HOURS_BACK_DEFAULT,
     FeatureMetricsHours,
-} from './FeatureMetricsHours/FeatureMetricsHours';
+} from './FeatureMetricsHours/FeatureMetricsHours.tsx';
 import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { Grid } from '@mui/material';
-import { FeatureMetricsContent } from './FeatureMetricsContent/FeatureMetricsContent';
-import { FeatureMetricsChips } from './FeatureMetricsChips/FeatureMetricsChips';
+import { FeatureMetricsContent } from './FeatureMetricsContent/FeatureMetricsContent.tsx';
+import { FeatureMetricsChips } from './FeatureMetricsChips/FeatureMetricsChips.tsx';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePageTitle } from 'hooks/usePageTitle';
@@ -20,7 +20,7 @@ import {
     useQueryParams,
     withDefault,
 } from 'use-query-params';
-import { aggregateFeatureMetrics } from './aggregateFeatureMetrics';
+import { aggregateFeatureMetrics } from './aggregateFeatureMetrics.ts';
 
 export const FeatureMetrics = () => {
     const projectId = useRequiredPathParam('projectId');

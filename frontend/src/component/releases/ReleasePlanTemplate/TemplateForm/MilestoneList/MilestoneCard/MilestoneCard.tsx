@@ -12,10 +12,10 @@ import {
 import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
 import { type DragEventHandler, type RefObject, useState } from 'react';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import { MilestoneCardName } from './MilestoneCardName';
-import { MilestoneStrategyMenuCards } from './MilestoneStrategyMenu/MilestoneStrategyMenuCards';
+import { MilestoneCardName } from './MilestoneCardName.tsx';
+import { MilestoneStrategyMenuCards } from './MilestoneStrategyMenu/MilestoneStrategyMenuCards.tsx';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import { ReleasePlanTemplateAddStrategyForm } from '../../MilestoneStrategy/ReleasePlanTemplateAddStrategyForm';
+import { ReleasePlanTemplateAddStrategyForm } from '../../MilestoneStrategy/ReleasePlanTemplateAddStrategyForm.tsx';
 import { type OnMoveItem, useDragItem } from 'hooks/useDragItem';
 import type { IExtendedMilestonePayload } from 'component/releases/hooks/useTemplateForm';
 
@@ -25,7 +25,7 @@ import Delete from '@mui/icons-material/DeleteOutlined';
 import { StrategyDraggableItem } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyDraggableItem';
 import { StrategyList } from 'component/common/StrategyList/StrategyList';
 import { StrategyListItem } from 'component/common/StrategyList/StrategyListItem';
-import { MilestoneCardDragHandle } from './MilestoneCardDragHandle';
+import { MilestoneCardDragHandle } from './MilestoneCardDragHandle.tsx';
 
 const leftPadding = 3;
 

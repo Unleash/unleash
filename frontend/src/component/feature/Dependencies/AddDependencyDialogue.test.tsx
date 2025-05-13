@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { AddDependencyDialogue } from './AddDependencyDialogue';
+import { AddDependencyDialogue } from './AddDependencyDialogue.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { http, HttpResponse } from 'msw';
 import type { IDependency } from 'interfaces/featureToggle';

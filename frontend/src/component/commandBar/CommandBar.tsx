@@ -16,21 +16,21 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import {
     CommandResultGroup,
     type CommandResultGroupItem,
-} from './RecentlyVisited/CommandResultGroup';
-import { CommandPageSuggestions } from './CommandPageSuggestions';
+} from './RecentlyVisited/CommandResultGroup.tsx';
+import { CommandPageSuggestions } from './CommandPageSuggestions.tsx';
 import { useAsyncDebounce } from 'react-table';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import {
     type CommandQueryCounter,
     CommandSearchFeatures,
-} from './CommandSearchFeatures';
+} from './CommandSearchFeatures.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { CommandQuickSuggestions } from './CommandQuickSuggestions';
-import { CommandSearchPages } from './CommandSearchPages';
-import { CommandBarFeedback } from './CommandBarFeedback';
-import { RecentlyVisitedRecorder } from './RecentlyVisitedRecorder';
+import { CommandQuickSuggestions } from './CommandQuickSuggestions.tsx';
+import { CommandSearchPages } from './CommandSearchPages.tsx';
+import { CommandBarFeedback } from './CommandBarFeedback.tsx';
+import { RecentlyVisitedRecorder } from './RecentlyVisitedRecorder.tsx';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
-import { useCommandBarRoutes } from './useCommandBarRoutes';
+import { useCommandBarRoutes } from './useCommandBarRoutes.ts';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',

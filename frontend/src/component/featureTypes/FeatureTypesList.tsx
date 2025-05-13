@@ -21,7 +21,7 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import Edit from '@mui/icons-material/Edit';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import { FeatureTypeEdit } from './FeatureTypeEdit/FeatureTypeEdit';
+import { FeatureTypeEdit } from './FeatureTypeEdit/FeatureTypeEdit.tsx';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 
 const basePath = '/feature-toggle-type';

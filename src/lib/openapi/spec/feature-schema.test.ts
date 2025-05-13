@@ -1,5 +1,5 @@
-import { validateSchema } from '../validate';
-import type { FeatureSchema } from './feature-schema';
+import { validateSchema } from '../validate.js';
+import type { FeatureSchema } from './feature-schema.js';
 
 test('featureSchema', () => {
     const data: FeatureSchema = {

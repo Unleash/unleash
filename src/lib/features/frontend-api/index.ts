@@ -1,2 +1,2 @@
-export * from './create-context';
-export * from './proxy-repository';
+export * from './create-context.js';
+export * from './proxy-repository.js';

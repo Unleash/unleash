@@ -9,8 +9,8 @@ import {
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import type { IRole } from 'interfaces/role';
-import { RoleDescription } from '../RoleDescription/RoleDescription';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import { RoleDescription } from '../RoleDescription/RoleDescription.tsx';
+import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
 
 const StyledRoleOption = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(0.75),

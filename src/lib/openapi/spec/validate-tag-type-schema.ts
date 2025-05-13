@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { tagTypeSchema } from './tag-type-schema';
+import { tagTypeSchema } from './tag-type-schema.js';
 
 export const validateTagTypeSchema = {
     $id: '#/components/schemas/validateTagTypeSchema',

@@ -1,9 +1,9 @@
 import type { IConstraint } from 'interfaces/strategy';
-import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo';
+import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo.tsx';
 import { styled } from '@mui/system';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import { ConstraintAccordionViewActions } from '../../ConstraintAccordionViewActions/ConstraintAccordionViewActions';
-import { ConstraintAccordionEditActions } from '../../ConstraintAccordionEditActions/ConstraintAccordionEditActions';
+import { ConstraintAccordionViewActions } from '../../ConstraintAccordionViewActions/ConstraintAccordionViewActions.tsx';
+import { ConstraintAccordionEditActions } from '../../ConstraintAccordionEditActions/ConstraintAccordionEditActions.tsx';
 
 interface IConstraintAccordionViewHeaderProps {
     constraint: IConstraint;

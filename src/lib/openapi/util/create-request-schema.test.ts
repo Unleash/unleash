@@ -1,4 +1,4 @@
-import { createRequestSchema } from './create-request-schema';
+import { createRequestSchema } from './create-request-schema.js';
 
 test('createRequestSchema', () => {
     expect(createRequestSchema('schemaName')).toMatchInlineSnapshot(`

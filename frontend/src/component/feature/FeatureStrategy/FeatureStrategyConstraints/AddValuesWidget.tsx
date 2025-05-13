@@ -2,8 +2,8 @@ import Add from '@mui/icons-material/Add';
 import { styled } from '@mui/material';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { parseParameterStrings } from 'utils/parseParameter';
-import { baseChipStyles } from './ValueList';
-import { AddValuesPopover, type OnAddActions } from './AddValuesPopover';
+import { baseChipStyles } from './ValueList.tsx';
+import { AddValuesPopover, type OnAddActions } from './AddValuesPopover.tsx';
 import type { ConstraintValidatorOutput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/constraintValidators';
 
 // todo: MUI v6 / v7 upgrade: consider changing this to a Chip to align with the rest of the values and the single value selector. There was a fix introduced in v6 that makes you not lose focus on pressing esc: https://mui.com/material-ui/migration/upgrade-to-v6/#chip talk to Thomas for more info.

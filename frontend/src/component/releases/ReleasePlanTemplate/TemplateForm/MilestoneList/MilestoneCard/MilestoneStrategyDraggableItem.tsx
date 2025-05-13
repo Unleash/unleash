@@ -4,7 +4,7 @@ import { Box, IconButton } from '@mui/material';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/DeleteOutlined';
 import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
-import { MilestoneStrategyItem } from './MilestoneStrategyItem';
+import { MilestoneStrategyItem } from './MilestoneStrategyItem.tsx';
 
 interface IMilestoneStrategyDraggableItemProps {
     strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>;

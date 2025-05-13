@@ -1,4 +1,4 @@
-import { isDefined } from './isDefined';
+import { isDefined } from './isDefined.js';
 
 test('isDefined', () => {
     expect(isDefined(null)).toEqual(false);

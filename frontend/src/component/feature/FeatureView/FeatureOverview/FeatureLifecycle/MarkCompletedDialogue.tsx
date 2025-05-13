@@ -4,7 +4,7 @@ import { LegalValueLabel } from 'component/common/NewConstraintAccordion/Constra
 import { useState } from 'react';
 import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/useFeatureLifecycleApi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { SingleVariantOptions } from './SingleVariantOptions';
+import { SingleVariantOptions } from './SingleVariantOptions.tsx';
 import { useParentVariantOptions } from 'hooks/api/getters/useFeatureDependencyOptions/useFeatureDependencyOptions';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 

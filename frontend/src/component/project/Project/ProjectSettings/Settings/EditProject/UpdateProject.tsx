@@ -1,5 +1,5 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import ProjectForm from '../../../ProjectForm/ProjectForm';
+import ProjectForm from '../../../ProjectForm/ProjectForm.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import {
     PROJECT_SETTINGS_WRITE,
@@ -7,7 +7,7 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
-} from '../../../hooks/useProjectForm';
+} from '../../../hooks/useProjectForm.ts';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';

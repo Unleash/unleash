@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { Collaborators } from './Collaborators';
+import { Collaborators } from './Collaborators.tsx';
 
 test('renders nothing if collaborators is undefined', () => {
     const { container } = render(<Collaborators collaborators={undefined} />);

@@ -1,7 +1,10 @@
-import type { IUnleashConfig, IUnleashStores } from '../../types';
-import type { IPrivateProjectStore } from './privateProjectStoreType';
-import type { IPrivateProjectChecker } from './privateProjectCheckerType';
-import { ALL_PROJECT_ACCESS, type ProjectAccess } from './privateProjectStore';
+import type { IUnleashConfig, IUnleashStores } from '../../types/index.js';
+import type { IPrivateProjectStore } from './privateProjectStoreType.js';
+import type { IPrivateProjectChecker } from './privateProjectCheckerType.js';
+import {
+    ALL_PROJECT_ACCESS,
+    type ProjectAccess,
+} from './privateProjectStore.js';
 
 export class PrivateProjectChecker implements IPrivateProjectChecker {
     private privateProjectStore: IPrivateProjectStore;

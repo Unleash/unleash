@@ -1,4 +1,4 @@
-import type { ISettingStore, IUnleashConfig } from '../types';
+import type { ISettingStore, IUnleashConfig } from '../types/index.js';
 import semver, { lt, type SemVer } from 'semver';
 
 const MIN_SUPPORTED_POSTGRES_VERSION: SemVer = semver.parse('13.0.0')!;

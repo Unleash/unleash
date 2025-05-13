@@ -1,8 +1,8 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { createFeatureStrategySchema } from './create-feature-strategy-schema';
-import { createStrategyVariantSchema } from './create-strategy-variant-schema';
-import { constraintSchema } from './constraint-schema';
-import { parametersSchema } from './parameters-schema';
+import { constraintSchema } from './constraint-schema.js';
+import { parametersSchema } from './parameters-schema.js';
+import { featureStrategySchema } from './feature-strategy-schema.js';
+import { strategyVariantSchema } from './strategy-variant-schema.js';
 
 export const environmentProjectSchema = {
     $id: '#/components/schemas/environmentProjectSchema',
@@ -57,7 +57,7 @@ export const environmentProjectSchema = {
         defaultStrategy: {
             description:
                 'The strategy configuration to add when enabling a feature environment by default',
-            $ref: '#/components/schemas/createFeatureStrategySchema',
+            $ref: '#/components/schemas/featureStrategySchema',
         },
         visible: {
             type: 'boolean',
@@ -76,8 +76,8 @@ export const environmentProjectSchema = {
     },
     components: {
         schemas: {
-            createFeatureStrategySchema,
-            createStrategyVariantSchema,
+            featureStrategySchema,
+            strategyVariantSchema,
             constraintSchema,
             parametersSchema,
         },

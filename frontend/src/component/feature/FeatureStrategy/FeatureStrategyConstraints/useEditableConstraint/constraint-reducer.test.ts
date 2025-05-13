@@ -12,9 +12,9 @@ import type {
     EditableDateConstraint,
     EditableMultiValueConstraint,
     EditableSingleValueConstraint,
-} from './editable-constraint-type';
+} from './editable-constraint-type.js';
 import { DATE_AFTER, DATE_BEFORE } from '@server/util/constants';
-import { constraintReducer } from './constraint-reducer';
+import { constraintReducer } from './constraint-reducer.js';
 import { CURRENT_TIME_CONTEXT_FIELD } from 'utils/operatorsForContext';
 
 const extraConstraintFields: Partial<EditableConstraint> = {

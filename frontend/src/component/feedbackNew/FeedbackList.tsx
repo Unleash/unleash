@@ -91,7 +91,7 @@ export const FeedbackList = () => {
     const { headerGroups, rows, prepareRow } = useTable(
         {
             columns: columns as any,
-            data,
+            data: data as object[],
             initialState: {
                 sortBy: [
                     {

@@ -1,5 +1,5 @@
-import type { Db } from '../../db/db';
-import type { IFeatureStrategiesReadModel } from './types/feature-strategies-read-model-type';
+import type { Db } from '../../db/db.js';
+import type { IFeatureStrategiesReadModel } from './types/feature-strategies-read-model-type.js';
 
 export class FeatureStrategiesReadModel implements IFeatureStrategiesReadModel {
     private db: Db;

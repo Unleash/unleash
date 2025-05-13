@@ -11,7 +11,7 @@ import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentL
 import { Box, styled, Typography } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { RecentlyUsedSegments } from './RecentlyUsedSegments/RecentlyUsedSegments';
+import { RecentlyUsedSegments } from './RecentlyUsedSegments/RecentlyUsedSegments.tsx';
 
 interface IFeatureStrategySegmentProps {
     segments: ISegment[];

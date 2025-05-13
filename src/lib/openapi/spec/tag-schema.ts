@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { TAG_MAX_LENGTH, TAG_MIN_LENGTH } from '../../util';
+import { TAG_MIN_LENGTH, TAG_MAX_LENGTH } from '../../tags/index.js';
 
 export const tagSchema = {
     $id: '#/components/schemas/tagSchema',

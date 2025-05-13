@@ -27,11 +27,11 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import StarBorder from '@mui/icons-material/StarBorder';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
-import { ManageTagsDialog } from './FeatureOverview/ManageTagsDialog/ManageTagsDialog';
+import { ManageTagsDialog } from './FeatureOverview/ManageTagsDialog/ManageTagsDialog.tsx';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
-import { FeatureCopyName } from './FeatureCopyName/FeatureCopyName';
+import { FeatureCopyName } from './FeatureCopyName/FeatureCopyName.tsx';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: 'none',

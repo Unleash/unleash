@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { importTogglesValidateItemSchema } from './import-toggles-validate-item-schema';
+import { importTogglesValidateItemSchema } from './import-toggles-validate-item-schema.js';
 
 export const importTogglesValidateSchema = {
     $id: '#/components/schemas/importTogglesValidateSchema',

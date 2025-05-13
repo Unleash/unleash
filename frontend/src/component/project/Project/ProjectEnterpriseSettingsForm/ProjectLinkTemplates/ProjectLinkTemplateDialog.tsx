@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import type { ProjectLinkTemplateSchema } from 'openapi';
-import ProjectLinkTemplateEditor from './ProjectLinkTemplateEditor';
+import ProjectLinkTemplateEditor from './ProjectLinkTemplateEditor.tsx';
 
 interface IProjectLinkTemplateDialogProps {
     template?: ProjectLinkTemplateSchema;

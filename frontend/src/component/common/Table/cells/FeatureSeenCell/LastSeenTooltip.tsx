@@ -3,7 +3,7 @@ import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useLastSeenColors } from 'component/feature/FeatureView/FeatureEnvironmentSeen/useLastSeenColors';
-import { LastSeenProgress } from './LastSeenProgress/LastSeenProgress';
+import { LastSeenProgress } from './LastSeenProgress/LastSeenProgress.tsx';
 
 const StyledDescription = styled(
     'div',

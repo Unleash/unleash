@@ -1,11 +1,11 @@
 import { Alert } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { useEnableDisable } from './hooks/useEnableDisable';
-import { useSuggestEnableDisable } from './hooks/useSuggestEnableDisable';
+import { useEnableDisable } from './hooks/useEnableDisable.ts';
+import { useSuggestEnableDisable } from './hooks/useSuggestEnableDisable.ts';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategyChangeRequestAlert } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert';
-import type { IDisableEnableStrategyProps } from './IDisableEnableStrategyProps';
+import type { IDisableEnableStrategyProps } from './IDisableEnableStrategyProps.tsx';
 
 export const DisableEnableStrategyDialog = ({
     isOpen,

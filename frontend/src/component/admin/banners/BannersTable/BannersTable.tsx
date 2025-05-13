@@ -19,10 +19,10 @@ import { useBanners } from 'hooks/api/getters/useBanners/useBanners';
 import { useBannersApi } from 'hooks/api/actions/useBannersApi/useBannersApi';
 import type { IInternalBanner } from 'interfaces/banner';
 import { Banner } from 'component/banners/Banner/Banner';
-import { BannersActionsCell } from './BannersActionsCell';
-import { BannerDeleteDialog } from './BannerDeleteDialog';
+import { BannersActionsCell } from './BannersActionsCell.tsx';
+import { BannerDeleteDialog } from './BannerDeleteDialog.tsx';
 import { ToggleCell } from 'component/common/Table/cells/ToggleCell/ToggleCell';
-import { BannerModal } from '../BannerModal/BannerModal';
+import { BannerModal } from '../BannerModal/BannerModal.tsx';
 
 export const BannersTable = () => {
     const { setToastData, setToastApiError } = useToast();

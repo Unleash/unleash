@@ -1,10 +1,10 @@
 import type {
     IUniqueConnectionReadModel,
     IUniqueConnectionStore,
-} from '../../types';
+} from '../../types/index.js';
 
 import HyperLogLog from 'hyperloglog-lite';
-import { REGISTERS_EXPONENT } from './hyperloglog-config';
+import { REGISTERS_EXPONENT } from './hyperloglog-config.js';
 
 export class UniqueConnectionReadModel implements IUniqueConnectionReadModel {
     private uniqueConnectionStore: IUniqueConnectionStore;

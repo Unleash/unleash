@@ -7,12 +7,12 @@ import type {
 import type { IFeatureVariant } from 'interfaces/featureToggle';
 import type { ISegment } from 'interfaces/segment';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { OverwriteWarning } from './OverwriteWarning';
+import { OverwriteWarning } from './OverwriteWarning.tsx';
 import {
     getEnvVariantChangesThatWouldBeOverwritten,
     getSegmentChangesThatWouldBeOverwritten,
     getStrategyChangesThatWouldBeOverwritten,
-} from './strategy-change-diff-calculation';
+} from './strategy-change-diff-calculation.ts';
 
 type ChangeData =
     | {

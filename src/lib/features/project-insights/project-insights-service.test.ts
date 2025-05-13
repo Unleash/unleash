@@ -1,4 +1,4 @@
-import { createFakeProjectInsightsService } from './createProjectInsightsService';
+import { createFakeProjectInsightsService } from './createProjectInsightsService.js';
 
 test('Return basic insights', async () => {
     const {

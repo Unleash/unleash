@@ -1,10 +1,10 @@
-import type { ReleasePlan } from './release-plan';
-import type { ReleasePlanMilestoneStrategy } from './release-plan-milestone-strategy';
-import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store';
-import type { Row } from '../../db/crud/row-type';
-import type { Db } from '../../db/db';
-import { defaultToRow } from '../../db/crud/default-mappings';
-import type { IAuditUser } from '../../types';
+import type { ReleasePlan } from './release-plan.js';
+import type { ReleasePlanMilestoneStrategy } from './release-plan-milestone-strategy.js';
+import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store.js';
+import type { Row } from '../../db/crud/row-type.js';
+import type { Db } from '../../db/db.js';
+import { defaultToRow } from '../../db/crud/default-mappings.js';
+import type { IAuditUser } from '../../types/index.js';
 
 const TABLE = 'release_plan_definitions';
 

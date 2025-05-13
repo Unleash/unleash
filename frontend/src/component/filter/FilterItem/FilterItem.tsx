@@ -8,7 +8,7 @@ import {
     StyledPopover,
     StyledTextField,
 } from './FilterItem.styles';
-import { FilterItemChip } from './FilterItemChip/FilterItemChip';
+import { FilterItemChip } from './FilterItemChip/FilterItemChip.tsx';
 
 export interface IFilterItemProps {
     name: string;

@@ -1,7 +1,7 @@
-import type { IUnleashStores } from '../types/stores';
-import type { IUnleashConfig } from '../types/option';
-import type { Logger } from '../logger';
-import type { IFeatureTypeStore } from '../types/stores/feature-type-store';
+import type { IUnleashStores } from '../types/stores.js';
+import type { IUnleashConfig } from '../types/option.js';
+import type { Logger } from '../logger.js';
+import type { IFeatureTypeStore } from '../types/stores/feature-type-store.js';
 
 class HealthService {
     private featureTypeStore: IFeatureTypeStore;
@@ -23,4 +23,3 @@ class HealthService {
 }
 
 export default HealthService;
-module.exports = HealthService;

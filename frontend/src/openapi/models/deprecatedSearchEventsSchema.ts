@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { DeprecatedSearchEventsSchemaType } from './deprecatedSearchEventsSchemaType';
+import type { DeprecatedSearchEventsSchemaType } from './deprecatedSearchEventsSchemaType.js';
 
 /**
  * 

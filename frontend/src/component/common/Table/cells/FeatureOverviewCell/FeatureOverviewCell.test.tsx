@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { createFeatureOverviewCell } from './FeatureOverviewCell';
+import { createFeatureOverviewCell } from './FeatureOverviewCell.tsx';
 
 const noOp = () => {};
 

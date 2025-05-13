@@ -21,14 +21,14 @@ import theme from 'themes/theme';
 import { useSearch } from 'hooks/useSearch';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { ChangeRequestStatusCell } from './ChangeRequestStatusCell';
-import { AvatarCell } from './AvatarCell';
-import { ChangeRequestTitleCell } from './ChangeRequestTitleCell';
+import { ChangeRequestStatusCell } from './ChangeRequestStatusCell.tsx';
+import { AvatarCell } from './AvatarCell.tsx';
+import { ChangeRequestTitleCell } from './ChangeRequestTitleCell.tsx';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useStyles } from './ChangeRequestsTabs.styles';
-import { FeaturesCell } from './FeaturesCell';
-import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell';
+import { FeaturesCell } from './FeaturesCell.tsx';
+import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell.tsx';
 
 export interface IChangeRequestTableProps {
     changeRequests: any[];

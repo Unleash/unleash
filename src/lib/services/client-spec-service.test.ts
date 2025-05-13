@@ -1,5 +1,5 @@
-import { ClientSpecService } from './client-spec-service';
-import getLogger from '../../test/fixtures/no-logger';
+import { ClientSpecService } from './client-spec-service.js';
+import getLogger from '../../test/fixtures/no-logger.js';
 
 test('ClientSpecService validation', async () => {
     const service = new ClientSpecService({ getLogger });

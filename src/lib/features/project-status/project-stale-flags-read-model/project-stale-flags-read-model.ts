@@ -1,5 +1,5 @@
-import type { Db } from '../../../server-impl';
-import type { IProjectStaleFlagsReadModel } from './project-stale-flags-read-model-type';
+import type { Db } from '../../../types/index.js';
+import type { IProjectStaleFlagsReadModel } from './project-stale-flags-read-model-type.js';
 
 export class ProjectStaleFlagsReadModel implements IProjectStaleFlagsReadModel {
     constructor(private db: Db) {}

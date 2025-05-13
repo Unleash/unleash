@@ -1,5 +1,5 @@
-import RolloutSlider from './RolloutSlider';
-import LegacyRolloutSlider from './LegacyRolloutSlider';
+import RolloutSlider from './RolloutSlider.tsx';
+import LegacyRolloutSlider from './LegacyRolloutSlider.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IRolloutSliderProps {

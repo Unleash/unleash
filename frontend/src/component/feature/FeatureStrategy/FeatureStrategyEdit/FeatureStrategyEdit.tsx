@@ -26,7 +26,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm';
+import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 import { constraintId } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { v4 as uuidv4 } from 'uuid';
@@ -34,7 +34,7 @@ import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useSch
 import {
     getChangeRequestConflictCreatedData,
     getChangeRequestConflictCreatedDataFromScheduleData,
-} from './change-request-conflict-data';
+} from './change-request-conflict-data.ts';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');

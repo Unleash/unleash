@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import type { IEventTimelineContext } from './EventTimelineProvider';
+import type { IEventTimelineContext } from './EventTimelineProvider.tsx';
 
 export const EventTimelineContext = createContext<
     IEventTimelineContext | undefined

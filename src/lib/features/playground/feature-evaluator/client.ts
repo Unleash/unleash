@@ -1,17 +1,17 @@
-import type { Strategy } from './strategy';
-import type { FeatureInterface } from './feature';
-import type { RepositoryInterface } from './repository';
+import type { Strategy } from './strategy/index.js';
+import type { FeatureInterface } from './feature.js';
+import type { RepositoryInterface } from './repository/index.js';
 import {
     getDefaultVariant,
     selectVariant,
     type Variant,
     type VariantDefinition,
-} from './variant';
-import type { Context } from './context';
-import type { SegmentForEvaluation } from './strategy/strategy';
-import type { PlaygroundStrategySchema } from '../../../openapi/spec/playground-strategy-schema';
-import { playgroundStrategyEvaluation } from '../../../openapi/spec/playground-strategy-schema';
-import { randomId } from '../../../util';
+} from './variant.js';
+import type { Context } from './context.js';
+import type { SegmentForEvaluation } from './strategy/strategy.js';
+import type { PlaygroundStrategySchema } from '../../../openapi/index.js';
+import { playgroundStrategyEvaluation } from '../../../openapi/index.js';
+import { randomId } from '../../../util/index.js';
 
 export type EvaluatedPlaygroundStrategy = Omit<
     PlaygroundStrategySchema,

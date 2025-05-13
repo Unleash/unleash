@@ -18,13 +18,13 @@ import { BuiltInStrategies, formatStrategyName } from 'utils/strategyNames';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { useFormErrors } from 'hooks/useFormErrors';
 import produce from 'immer';
-import { MilestoneStrategySegment } from './MilestoneStrategySegment';
+import { MilestoneStrategySegment } from './MilestoneStrategySegment.tsx';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { MilestoneStrategyTitle } from './MilestoneStrategyTitle';
-import { MilestoneStrategyConstraints } from './MilestoneStrategyConstraints';
-import { MilestoneStrategyVariants } from './MilestoneStrategyVariants';
-import { MilestoneStrategyType } from './MilestoneStrategyType';
+import { MilestoneStrategyTitle } from './MilestoneStrategyTitle.tsx';
+import { MilestoneStrategyConstraints } from './MilestoneStrategyConstraints.tsx';
+import { MilestoneStrategyVariants } from './MilestoneStrategyVariants.tsx';
+import { MilestoneStrategyType } from './MilestoneStrategyType.tsx';
 import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
 import {
     featureStrategyDocsLink,

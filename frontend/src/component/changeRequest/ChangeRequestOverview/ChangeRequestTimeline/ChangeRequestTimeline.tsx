@@ -10,7 +10,7 @@ import type {
     ChangeRequestSchedule,
     ChangeRequestState,
 } from '../../changeRequest.types';
-import { HtmlTooltip } from '../../../common/HtmlTooltip/HtmlTooltip';
+import { HtmlTooltip } from '../../../common/HtmlTooltip/HtmlTooltip.tsx';
 import ErrorIcon from '@mui/icons-material/Error';
 import {
     type ILocationSettings,

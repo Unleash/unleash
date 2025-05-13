@@ -1,5 +1,5 @@
-import { validateSchema } from '../validate';
-import type { TokenUserSchema } from './token-user-schema';
+import { validateSchema } from '../validate.js';
+import type { TokenUserSchema } from './token-user-schema.js';
 
 test('tokenUserSchema', () => {
     const data: TokenUserSchema = {

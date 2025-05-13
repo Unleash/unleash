@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { EventSchema } from './eventSchema';
-import type { FeatureEventsSchemaVersion } from './featureEventsSchemaVersion';
+import type { EventSchema } from './eventSchema.js';
+import type { FeatureEventsSchemaVersion } from './featureEventsSchemaVersion.js';
 
 /**
  * One or more events happening to a specific feature flag

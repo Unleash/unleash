@@ -1,11 +1,11 @@
 import type EventEmitter from 'events';
-import type { Logger, LogProvider } from '../logger';
-import type { IFavoriteProject } from '../types/favorites';
+import type { Logger, LogProvider } from '../logger.js';
+import type { IFavoriteProject } from '../types/favorites.js';
 import type {
     IFavoriteProjectKey,
     IFavoriteProjectsStore,
-} from '../types/stores/favorite-projects';
-import type { Db } from './db';
+} from '../types/stores/favorite-projects.js';
+import type { Db } from './db.js';
 
 const T = {
     FAVORITE_PROJECTS: 'favorite_projects',

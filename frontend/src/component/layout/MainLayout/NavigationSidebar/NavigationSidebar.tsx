@@ -1,9 +1,9 @@
 import { Box, styled } from '@mui/material';
 import { type FC, useState, useEffect } from 'react';
-import { useNavigationMode } from './useNavigationMode';
-import { ShowHide } from './ShowHide';
-import { useRoutes } from './useRoutes';
-import { useExpanded } from './useExpanded';
+import { useNavigationMode } from './useNavigationMode.ts';
+import { ShowHide } from './ShowHide.tsx';
+import { useRoutes } from './useRoutes.ts';
+import { useExpanded } from './useExpanded.ts';
 import {
     OtherLinksList,
     PrimaryNavigationList,
@@ -13,12 +13,12 @@ import {
     SecondaryNavigationList,
     AdminSettingsNavigation,
     AdminSettingsLink,
-} from './NavigationList';
-import { FullListItem, MiniListItem } from './ListItems';
-import { useInitialPathname } from './useInitialPathname';
+} from './NavigationList.tsx';
+import { FullListItem, MiniListItem } from './ListItems.tsx';
+import { useInitialPathname } from './useInitialPathname.ts';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
-import type { NewInUnleash } from './NewInUnleash/NewInUnleash';
+import type { NewInUnleash } from './NewInUnleash/NewInUnleash.tsx';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flexRow, focusable } from 'themes/themeStyles';

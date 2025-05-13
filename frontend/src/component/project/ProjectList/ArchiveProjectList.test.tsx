@@ -1,7 +1,7 @@
 import { screen, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { ArchiveProjectList } from './ArchiveProjectList';
+import { ArchiveProjectList } from './ArchiveProjectList.tsx';
 import userEvent from '@testing-library/user-event';
 
 const server = testServerSetup();

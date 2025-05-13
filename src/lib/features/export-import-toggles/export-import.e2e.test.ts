@@ -1,9 +1,11 @@
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../test/e2e/helpers/test-helper';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
+} from '../../../test/e2e/helpers/test-helper.js';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 import {
     DEFAULT_PROJECT,
     type FeatureToggleDTO,
@@ -18,15 +20,15 @@ import {
     type ITagStore,
     type IVariant,
     TEST_AUDIT_USER,
-} from '../../types';
-import { DEFAULT_ENV } from '../../util';
+} from '../../types/index.js';
+import { DEFAULT_ENV } from '../../util/index.js';
 import type {
     ContextFieldSchema,
     ImportTogglesSchema,
     UpsertSegmentSchema,
     VariantsSchema,
-} from '../../openapi';
-import type { IContextFieldDto } from '../context/context-field-store-type';
+} from '../../openapi/index.js';
+import type { IContextFieldDto } from '../context/context-field-store-type.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

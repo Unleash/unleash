@@ -1,7 +1,7 @@
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { PersonalDashboardProjectDetailsSchema } from 'openapi';
-import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
 
 export interface IPersonalDashboardProjectDetailsOutput {
     personalDashboardProjectDetails?: PersonalDashboardProjectDetailsSchema;

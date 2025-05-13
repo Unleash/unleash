@@ -2,7 +2,7 @@ import useSWR, { mutate, type SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import type { IProjectHealthReport } from 'interfaces/project';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 
 interface IUseHealthReportOutput {
     healthReport: IProjectHealthReport | undefined;

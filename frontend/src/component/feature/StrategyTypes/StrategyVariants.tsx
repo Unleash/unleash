@@ -1,12 +1,12 @@
-import { VariantForm } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm';
+import { VariantForm } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm.tsx';
 import { updateWeightEdit } from 'component/common/util';
 import type React from 'react';
 import { type FC, useEffect, useState } from 'react';
-import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal';
+import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions';
+import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions.ts';
 import { v4 as uuidv4 } from 'uuid';
-import { WeightType } from '../../../constants/variantTypes';
+import { WeightType } from '../../../constants/variantTypes.ts';
 import { Link, styled, Typography, useTheme } from '@mui/material';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';

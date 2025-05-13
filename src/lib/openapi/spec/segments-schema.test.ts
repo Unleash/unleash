@@ -1,5 +1,5 @@
-import { validateSchema } from '../validate';
-import type { SegmentsSchema } from './segments-schema';
+import { validateSchema } from '../validate.js';
+import type { SegmentsSchema } from './segments-schema.js';
 
 test('updateEnvironmentSchema', () => {
     const data: SegmentsSchema = {

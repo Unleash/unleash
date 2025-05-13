@@ -2,7 +2,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Box, styled } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { InstancePrivacySection } from './InstancePrivacySection';
+import { InstancePrivacySection } from './InstancePrivacySection.tsx';
 import { useTelemetry } from 'hooks/api/getters/useTelemetry/useTelemetry';
 
 interface IFeatureActivenessManagementInfo {

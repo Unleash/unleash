@@ -14,7 +14,7 @@ import CloudCircle from '@mui/icons-material/CloudCircle';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { VariantForm } from './VariantForm/VariantForm';
+import { VariantForm } from './VariantForm/VariantForm.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from 'component/providers/AccessProvider/permissions';
 import { WeightType } from 'constants/variantTypes';

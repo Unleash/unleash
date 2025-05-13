@@ -1,10 +1,10 @@
-import type { IUnleashConfig } from '../types';
-import type { Logger } from '../logger';
-import type { EdgeTokenSchema } from '../openapi/spec/edge-token-schema';
-import type { ValidatedEdgeTokensSchema } from '../openapi/spec/validated-edge-tokens-schema';
-import type { ApiTokenService } from './api-token-service';
-import metricsHelper from '../util/metrics-helper';
-import { FUNCTION_TIME } from '../metric-events';
+import type { IUnleashConfig } from '../types/index.js';
+import type { Logger } from '../logger.js';
+import type { EdgeTokenSchema } from '../openapi/spec/edge-token-schema.js';
+import type { ValidatedEdgeTokensSchema } from '../openapi/spec/validated-edge-tokens-schema.js';
+import type { ApiTokenService } from './api-token-service.js';
+import metricsHelper from '../util/metrics-helper.js';
+import { FUNCTION_TIME } from '../metric-events.js';
 
 export default class EdgeService {
     private logger: Logger;
@@ -49,5 +49,3 @@ export default class EdgeService {
         return { tokens: validatedTokens };
     }
 }
-
-module.exports = EdgeService;

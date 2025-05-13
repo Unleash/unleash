@@ -1,5 +1,5 @@
-import { validateSchema } from '../validate';
-import type { SetStrategySortOrderSchema } from './set-strategy-sort-order-schema';
+import { validateSchema } from '../validate.js';
+import type { SetStrategySortOrderSchema } from './set-strategy-sort-order-schema.js';
 
 test('setStrategySortOrderSchema', () => {
     const data: SetStrategySortOrderSchema = [

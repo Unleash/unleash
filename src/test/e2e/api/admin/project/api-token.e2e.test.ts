@@ -1,10 +1,10 @@
-import dbInit, { type ITestDb } from '../../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../../helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../helpers/test-helper';
-import getLogger from '../../../../fixtures/no-logger';
-import type { IApiTokenStore } from '../../../../../lib/types';
+} from '../../../helpers/test-helper.js';
+import getLogger from '../../../../fixtures/no-logger.js';
+import type { IApiTokenStore } from '../../../../../lib/types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

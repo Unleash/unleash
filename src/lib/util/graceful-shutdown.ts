@@ -1,5 +1,5 @@
-import type { Logger } from '../logger';
-import type { IUnleash } from '../types/core';
+import type { Logger } from '../logger.js';
+import type { IUnleash } from '../types/core.js';
 
 function registerGracefulShutdown(unleash: IUnleash, logger: Logger): void {
     const unleashCloser = (signal: string) => async () => {

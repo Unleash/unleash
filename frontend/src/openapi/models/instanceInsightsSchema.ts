@@ -3,11 +3,11 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { InstanceInsightsSchemaEnvironmentTypeTrendsItem } from './instanceInsightsSchemaEnvironmentTypeTrendsItem';
-import type { InstanceInsightsSchemaFlagTrendsItem } from './instanceInsightsSchemaFlagTrendsItem';
-import type { InstanceInsightsSchemaMetricsSummaryTrendsItem } from './instanceInsightsSchemaMetricsSummaryTrendsItem';
-import type { InstanceInsightsSchemaProjectFlagTrendsItem } from './instanceInsightsSchemaProjectFlagTrendsItem';
-import type { InstanceInsightsSchemaUserTrendsItem } from './instanceInsightsSchemaUserTrendsItem';
+import type { InstanceInsightsSchemaEnvironmentTypeTrendsItem } from './instanceInsightsSchemaEnvironmentTypeTrendsItem.js';
+import type { InstanceInsightsSchemaFlagTrendsItem } from './instanceInsightsSchemaFlagTrendsItem.js';
+import type { InstanceInsightsSchemaMetricsSummaryTrendsItem } from './instanceInsightsSchemaMetricsSummaryTrendsItem.js';
+import type { InstanceInsightsSchemaProjectFlagTrendsItem } from './instanceInsightsSchemaProjectFlagTrendsItem.js';
+import type { InstanceInsightsSchemaUserTrendsItem } from './instanceInsightsSchemaUserTrendsItem.js';
 
 /**
  * A summary of this Unleash instance's usage statistics, including user and flag counts, and trends over time.

@@ -9,7 +9,7 @@ import {
     UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
     UPDATE_FEATURE_STRATEGY,
 } from 'component/providers/AccessProvider/permissions';
-import { FeatureStrategyEdit } from './FeatureStrategyEdit';
+import { FeatureStrategyEdit } from './FeatureStrategyEdit.tsx';
 import {
     setupContextEndpoint,
     setupFeaturesEndpoint,
@@ -17,7 +17,7 @@ import {
     setupSegmentsEndpoint,
     setupStrategyEndpoint,
     setupUiConfigEndpoint,
-} from '../FeatureStrategyCreate/featureStrategyFormTestSetup';
+} from '../FeatureStrategyCreate/featureStrategyFormTestSetup.ts';
 
 const featureName = 'my-new-feature';
 const variantName = 'Blue';

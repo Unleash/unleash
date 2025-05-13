@@ -17,7 +17,7 @@ import {
     featureStrategyDocsLinkLabel,
     featureStrategyHelp,
     formatFeaturePath,
-} from '../FeatureStrategyEdit/FeatureStrategyEdit';
+} from '../FeatureStrategyEdit/FeatureStrategyEdit.tsx';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import type { ISegment } from 'interfaces/segment';
 import { useFormErrors } from 'hooks/useFormErrors';
@@ -33,8 +33,8 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useQueryParams from 'hooks/useQueryParams';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { useDefaultStrategy } from '../../../project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';
-import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm';
+import { useDefaultStrategy } from '../../../project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy.tsx';
+import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 import { Limit } from 'component/common/Limit/Limit';
 

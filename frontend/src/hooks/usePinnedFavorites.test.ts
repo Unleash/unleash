@@ -1,5 +1,5 @@
 import type { Row } from 'react-table';
-import { sortTypesWithFavorites } from './usePinnedFavorites';
+import { sortTypesWithFavorites } from './usePinnedFavorites.js';
 
 const data = [
     {

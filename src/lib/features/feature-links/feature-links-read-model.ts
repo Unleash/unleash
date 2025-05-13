@@ -1,10 +1,10 @@
-import type { Db } from '../../db/db';
+import type { Db } from '../../db/db.js';
 import type {
     IFeatureLink,
     IFeatureLinksReadModel,
-} from './feature-links-read-model-type';
-import metricsHelper from '../../util/metrics-helper';
-import { DB_TIME } from '../../metric-events';
+} from './feature-links-read-model-type.js';
+import metricsHelper from '../../util/metrics-helper.js';
+import { DB_TIME } from '../../metric-events.js';
 import type EventEmitter from 'events';
 import memoizee from 'memoizee';
 import { hoursToMilliseconds } from 'date-fns';

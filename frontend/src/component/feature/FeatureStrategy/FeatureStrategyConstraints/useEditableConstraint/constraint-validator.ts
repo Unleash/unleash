@@ -5,7 +5,7 @@ import {
     isDateConstraint,
     isNumberConstraint,
     isSemVerConstraint,
-} from './editable-constraint-type';
+} from './editable-constraint-type.js';
 export type ConstraintValidationResult = [boolean, string];
 
 const numberValidator = (value: string): ConstraintValidationResult => {

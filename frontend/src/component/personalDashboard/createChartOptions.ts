@@ -1,12 +1,12 @@
 import type { Theme } from '@mui/material/styles/createTheme';
 import type { ChartOptions } from 'chart.js';
-import type { ILocationSettings } from '../../hooks/useLocationSettings';
-import type { IPoint } from '../feature/FeatureView/FeatureMetrics/FeatureMetricsChart/createChartData';
+import type { ILocationSettings } from '../../hooks/useLocationSettings.js';
+import type { IPoint } from '../feature/FeatureView/FeatureMetrics/FeatureMetricsChart/createChartData.js';
 import {
     formatDateHM,
     formatDateYMD,
     formatDateYMDHM,
-} from '../../utils/formatDate';
+} from '../../utils/formatDate.js';
 import { formatTickValue } from 'component/common/Chart/formatTickValue';
 
 const formatVariantEntry = (

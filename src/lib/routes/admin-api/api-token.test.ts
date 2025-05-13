@@ -1,8 +1,8 @@
-import permissions from '../../../test/fixtures/permissions';
-import { createTestConfig } from '../../../test/config/test-config';
-import createStores from '../../../test/fixtures/store';
-import { createServices } from '../../services';
-import getApp from '../../app';
+import permissions from '../../../test/fixtures/permissions.js';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import createStores from '../../../test/fixtures/store.js';
+import { createServices } from '../../services/index.js';
+import getApp from '../../app.js';
 import supertest from 'supertest';
 import { addDays } from 'date-fns';
 

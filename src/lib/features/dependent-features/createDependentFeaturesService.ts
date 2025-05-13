@@ -1,20 +1,20 @@
-import type { Db } from '../../db/db';
-import { DependentFeaturesService } from './dependent-features-service';
-import { DependentFeaturesStore } from './dependent-features-store';
-import { DependentFeaturesReadModel } from './dependent-features-read-model';
-import { FakeDependentFeaturesStore } from './fake-dependent-features-store';
-import { FakeDependentFeaturesReadModel } from './fake-dependent-features-read-model';
-import type { IUnleashConfig } from '../../types';
+import type { Db } from '../../db/db.js';
+import { DependentFeaturesService } from './dependent-features-service.js';
+import { DependentFeaturesStore } from './dependent-features-store.js';
+import { DependentFeaturesReadModel } from './dependent-features-read-model.js';
+import { FakeDependentFeaturesStore } from './fake-dependent-features-store.js';
+import { FakeDependentFeaturesReadModel } from './fake-dependent-features-read-model.js';
+import type { IUnleashConfig } from '../../types/index.js';
 import {
     createChangeRequestAccessReadModel,
     createFakeChangeRequestAccessService,
-} from '../change-request-access-service/createChangeRequestAccessReadModel';
-import { FeaturesReadModel } from '../feature-toggle/features-read-model';
-import { FakeFeaturesReadModel } from '../feature-toggle/fakes/fake-features-read-model';
+} from '../change-request-access-service/createChangeRequestAccessReadModel.js';
+import { FeaturesReadModel } from '../feature-toggle/features-read-model.js';
+import { FakeFeaturesReadModel } from '../feature-toggle/fakes/fake-features-read-model.js';
 import {
     createEventsService,
     createFakeEventsService,
-} from '../events/createEventsService';
+} from '../events/createEventsService.js';
 
 export const createDependentFeaturesService =
     (config: IUnleashConfig) =>

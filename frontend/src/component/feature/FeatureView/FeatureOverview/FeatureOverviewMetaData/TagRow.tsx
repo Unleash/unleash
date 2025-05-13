@@ -11,8 +11,8 @@ import type { ITag } from 'interfaces/tags';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { StyledMetaDataItem } from './FeatureOverviewMetaData';
-import { AddTagButton } from './AddTagButton';
+import { StyledMetaDataItem } from './FeatureOverviewMetaData.tsx';
+import { AddTagButton } from './AddTagButton.tsx';
 import { Tag } from 'component/common/Tag/Tag';
 import { formatTag } from 'utils/format-tag';
 

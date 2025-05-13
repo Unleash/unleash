@@ -2,7 +2,7 @@ import { render } from 'utils/testRenderer';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { SegmentFormStepTwo } from './SegmentFormStepTwo';
+import { SegmentFormStepTwo } from './SegmentFormStepTwo.tsx';
 import type { IConstraint } from 'interfaces/strategy';
 import { vi } from 'vitest';
 import {

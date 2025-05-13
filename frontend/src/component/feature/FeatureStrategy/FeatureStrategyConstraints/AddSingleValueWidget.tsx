@@ -1,8 +1,8 @@
 import Add from '@mui/icons-material/Add';
 import { styled } from '@mui/material';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
-import { ValueChip } from './ValueList';
-import { AddValuesPopover, type OnAddActions } from './AddValuesPopover';
+import { ValueChip } from './ValueList.tsx';
+import { AddValuesPopover, type OnAddActions } from './AddValuesPopover.tsx';
 import type { ConstraintValidatorOutput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/constraintValidators';
 
 const StyledChip = styled(ValueChip, {

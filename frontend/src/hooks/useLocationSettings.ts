@@ -1,5 +1,5 @@
 import { basePath } from 'utils/formatPath';
-import { createPersistentGlobalStateHook } from './usePersistentGlobalState';
+import { createPersistentGlobalStateHook } from './usePersistentGlobalState.js';
 import type React from 'react';
 
 export interface ILocationSettings {

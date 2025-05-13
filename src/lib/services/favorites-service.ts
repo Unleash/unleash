@@ -1,19 +1,22 @@
-import type { IUnleashConfig } from '../types/option';
-import type { IFavoriteProjectsStore, IUnleashStores } from '../types/stores';
-import type { Logger } from '../logger';
-import type { IFavoriteFeaturesStore } from '../types/stores/favorite-features';
-import type { IFavoriteFeature, IFavoriteProject } from '../types/favorites';
+import type { IUnleashConfig } from '../types/option.js';
+import type {
+    IFavoriteProjectsStore,
+    IUnleashStores,
+} from '../types/stores.js';
+import type { Logger } from '../logger.js';
+import type { IFavoriteFeaturesStore } from '../types/stores/favorite-features.js';
+import type { IFavoriteFeature, IFavoriteProject } from '../types/favorites.js';
 import {
     FeatureFavoritedEvent,
     FeatureUnfavoritedEvent,
     type IAuditUser,
     ProjectFavoritedEvent,
     ProjectUnfavoritedEvent,
-} from '../types';
-import type { IUser } from '../types/user';
-import type { IFavoriteProjectKey } from '../types/stores/favorite-projects';
-import type EventService from '../features/events/event-service';
-import { NotFoundError } from '../error';
+} from '../types/index.js';
+import type { IUser } from '../types/user.js';
+import type { IFavoriteProjectKey } from '../types/stores/favorite-projects.js';
+import type EventService from '../features/events/event-service.js';
+import { NotFoundError } from '../error/index.js';
 
 export interface IFavoriteFeatureProps {
     feature: string;

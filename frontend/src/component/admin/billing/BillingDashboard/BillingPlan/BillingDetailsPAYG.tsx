@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Divider, Grid, styled, Typography } from '@mui/material';
 import { GridRow } from 'component/common/GridRow/GridRow';
 import { GridCol } from 'component/common/GridCol/GridCol';
-import { GridColLink } from './GridColLink/GridColLink';
+import { GridColLink } from './GridColLink/GridColLink.tsx';
 import type { IInstanceStatus } from 'interfaces/instance';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import {
@@ -10,9 +10,9 @@ import {
     BILLING_PAYG_DEFAULT_MINIMUM_SEATS,
     BILLING_PAYG_SEAT_PRICE,
     BILLING_TRAFFIC_PRICE,
-} from './BillingPlan';
+} from './BillingPlan.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useOverageCost } from './useOverageCost';
+import { useOverageCost } from './useOverageCost.ts';
 
 const StyledInfoLabel = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,

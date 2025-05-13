@@ -1,4 +1,4 @@
-import type { IUser } from '../../types/user';
+import type { IUser } from '../../types/user.js';
 
 export interface IChangeRequestAccessReadModel {
     canBypassChangeRequest(

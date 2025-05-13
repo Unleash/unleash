@@ -8,7 +8,7 @@ import omit from 'lodash.omit';
 import {
     getSegmentChangesThatWouldBeOverwritten,
     getStrategyChangesThatWouldBeOverwritten,
-} from './strategy-change-diff-calculation';
+} from './strategy-change-diff-calculation.js';
 
 describe('Strategy change conflict detection', () => {
     const existingStrategy: IFeatureStrategy = {

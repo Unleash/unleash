@@ -1,5 +1,5 @@
-import { ALL } from '../types/models/api-token';
-import { createApiToken } from './api-token-schema';
+import { ALL } from '../types/models/api-token.js';
+import { createApiToken } from './api-token-schema.js';
 
 test('should reject token with projects and project', async () => {
     expect.assertions(1);

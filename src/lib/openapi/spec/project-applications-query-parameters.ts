@@ -1,4 +1,4 @@
-import type { FromQueryParams } from '../util/from-query-params';
+import type { FromQueryParams } from '../util/from-query-params.js';
 
 export const projectApplicationsQueryParameters = [
     {

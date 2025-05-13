@@ -1,5 +1,5 @@
-import handleErrorResponses from '../httpErrorResponseHandler';
-import { formatApiPath } from '../../../../utils/formatPath';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { formatApiPath } from '../../../../utils/formatPath.js';
 import useSWR from 'swr';
 import { useMemo } from 'react';
 

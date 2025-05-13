@@ -1,6 +1,6 @@
 import UIContext from 'contexts/UIContext';
 import { useContext } from 'react';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
 
 interface IThemeModeProps {
     darkmode: JSX.Element;

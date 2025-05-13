@@ -1,6 +1,8 @@
 import type { Request, Response } from 'express';
-import { applyPatch, type Operation } from 'fast-json-patch';
-import Controller from '../../routes/controller';
+import type { Operation } from 'fast-json-patch';
+import fastJsonPatch from 'fast-json-patch';
+const { applyPatch } = fastJsonPatch;
+import Controller from '../../routes/controller.js';
 import {
     CREATE_FEATURE,
     CREATE_FEATURE_STRATEGY,
@@ -9,15 +11,14 @@ import {
     type FeatureToggleView,
     type IFlagResolver,
     type IUnleashConfig,
-    type IUnleashServices,
     NONE,
     serializeDates,
     UPDATE_FEATURE,
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_STRATEGY,
-} from '../../types';
-import type { Logger } from '../../logger';
-import type { IAuthRequest } from '../../routes/unleash-types';
+} from '../../types/index.js';
+import type { Logger } from '../../logger.js';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
 import {
     type AdminFeaturesQuerySchema,
     type BulkToggleFeaturesSchema,
@@ -40,18 +41,19 @@ import {
     type TagSchema,
     type UpdateFeatureSchema,
     type UpdateFeatureStrategySchema,
-} from '../../openapi';
+} from '../../openapi/index.js';
 import type {
     FeatureTagService,
     FeatureToggleService,
     OpenApiService,
-} from '../../services';
-import { querySchema } from '../../schema/feature-schema';
-import type { BatchStaleSchema } from '../../openapi/spec/batch-stale-schema';
-import type { WithTransactional } from '../../db/transaction';
-import { BadDataError } from '../../error';
-import { anonymise } from '../../util';
-import { throwOnInvalidSchema } from '../../openapi/validate';
+    IUnleashServices,
+} from '../../services/index.js';
+import { querySchema } from '../../schema/feature-schema.js';
+import type { BatchStaleSchema } from '../../openapi/spec/batch-stale-schema.js';
+import type { WithTransactional } from '../../db/transaction.js';
+import { BadDataError } from '../../error/index.js';
+import { anonymise } from '../../util/index.js';
+import { throwOnInvalidSchema } from '../../openapi/validate.js';
 
 interface FeatureStrategyParams {
     projectId: string;

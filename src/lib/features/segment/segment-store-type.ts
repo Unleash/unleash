@@ -1,6 +1,6 @@
-import type { IFeatureStrategySegment, ISegment } from '../../types/model';
-import type { Store } from '../../types/stores/store';
-import type { IAuditUser } from '../../types/user';
+import type { IFeatureStrategySegment, ISegment } from '../../types/model.js';
+import type { Store } from '../../types/stores/store.js';
+import type { IAuditUser } from '../../types/user.js';
 
 export interface ISegmentStore extends Store<ISegment, number> {
     getAll(includeChangeRequestUsageData?: boolean): Promise<ISegment[]>;

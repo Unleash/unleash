@@ -7,11 +7,15 @@ import {
     ListItemText,
     type Theme,
 } from '@mui/material';
-import { OtherLinksList } from '../NavigationSidebar/NavigationList';
+import { OtherLinksList } from '../NavigationSidebar/NavigationList.tsx';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import StopRoundedIcon from '@mui/icons-material/StopRounded';
-import { AdminListItem, AdminSubListItem, MenuGroup } from './AdminListItem';
-import { IconRenderer } from './AdminMenuIcons';
+import {
+    AdminListItem,
+    AdminSubListItem,
+    MenuGroup,
+} from './AdminListItem.tsx';
+import { IconRenderer } from './AdminMenuIcons.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { Link, useLocation } from 'react-router-dom';

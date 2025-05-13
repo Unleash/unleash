@@ -1,4 +1,4 @@
-import { anonymise, anonymiseKeys } from './anonymise';
+import { anonymise, anonymiseKeys } from './anonymise.js';
 
 const REGEX_MATCH = /^[a-f0-9]{9}@unleash\.run$/;
 

@@ -8,7 +8,7 @@ import type {
     ChangeRequestType,
     ChangeRequestAction,
 } from 'component/changeRequest/changeRequest.types';
-import { ProjectEnvironmentStrategyDraggableItem } from './ProjectEnvironmentStrategyDraggableItem';
+import { ProjectEnvironmentStrategyDraggableItem } from './ProjectEnvironmentStrategyDraggableItem.tsx';
 
 const server = testServerSetup();
 

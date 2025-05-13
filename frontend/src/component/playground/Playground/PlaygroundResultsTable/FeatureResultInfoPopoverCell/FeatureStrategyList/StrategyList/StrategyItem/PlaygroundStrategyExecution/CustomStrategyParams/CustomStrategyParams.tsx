@@ -7,7 +7,7 @@ import {
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
-import { CustomParameterItem } from './CustomParameterItem/CustomParameterItem';
+import { CustomParameterItem } from './CustomParameterItem/CustomParameterItem.tsx';
 
 interface ICustomStrategyProps {
     parameters: { [key: string]: string };

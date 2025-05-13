@@ -1,6 +1,6 @@
 import type React from 'react';
 import { useState } from 'react';
-import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
+import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader.tsx';
 import { FormControl, RadioGroup, Radio, Alert } from '@mui/material';
 import { ConstraintValueSearch } from 'component/common/LegacyConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -9,8 +9,8 @@ import type { ILegalValue } from 'interfaces/context';
 import {
     LegalValueLabel,
     filterLegalValues,
-} from '../LegalValueLabel/LegalValueLabel';
-import { getIllegalValues } from '../RestrictiveLegalValues/RestrictiveLegalValues';
+} from '../LegalValueLabel/LegalValueLabel.tsx';
+import { getIllegalValues } from '../RestrictiveLegalValues/RestrictiveLegalValues.tsx';
 
 interface ISingleLegalValueProps {
     setValue: (value: string) => void;

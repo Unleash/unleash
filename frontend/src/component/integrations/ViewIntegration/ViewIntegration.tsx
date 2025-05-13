@@ -1,8 +1,8 @@
 import type { VFC } from 'react';
 import { useParams } from 'react-router-dom';
 import NotFound from 'component/common/NotFound/NotFound';
-import { JiraIntegration } from './JiraIntegration/JiraIntegration';
-import { EdgeIntegration } from './EdgeIntegration/EdgeIntegration';
+import { JiraIntegration } from './JiraIntegration/JiraIntegration.tsx';
+import { EdgeIntegration } from './EdgeIntegration/EdgeIntegration.tsx';
 
 type IViewIntegrationProps = {};
 

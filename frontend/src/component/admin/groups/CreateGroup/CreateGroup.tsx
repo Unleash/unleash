@@ -1,7 +1,7 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useNavigate } from 'react-router-dom';
-import { GroupForm } from '../GroupForm/GroupForm';
-import { useGroupForm } from '../hooks/useGroupForm';
+import { GroupForm } from '../GroupForm/GroupForm.tsx';
+import { useGroupForm } from '../hooks/useGroupForm.ts';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useGroupApi } from 'hooks/api/actions/useGroupApi/useGroupApi';

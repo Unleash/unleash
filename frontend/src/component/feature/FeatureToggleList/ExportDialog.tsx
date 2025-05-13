@@ -7,7 +7,7 @@ import useToast from 'hooks/useToast';
 import type { FeatureSchema } from 'openapi';
 
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender.tsx';
 
 interface IExportDialogProps {
     showExportDialog: boolean;

@@ -1,30 +1,30 @@
 import supertest from 'supertest';
 
-import getApp from '../../../lib/app';
-import { createTestConfig } from '../../config/test-config';
-import { IAuthType, type IUnleashConfig } from '../../../lib/types/option';
-import { createServices } from '../../../lib/services';
-import sessionDb from '../../../lib/middleware/session-db';
+import getApp from '../../../lib/app.js';
+import { createTestConfig } from '../../config/test-config.js';
+import { IAuthType, type IUnleashConfig } from '../../../lib/types/option.js';
+import { createServices } from '../../../lib/services/index.js';
+import sessionDb from '../../../lib/middleware/session-db.js';
 import {
     DEFAULT_PROJECT,
     type FeatureToggleDTO,
     type IUnleashStores,
-} from '../../../lib/types';
-import type { IUnleashServices } from '../../../lib/types/services';
-import type { Db } from '../../../lib/db/db';
-import type { IContextFieldDto } from '../../../lib/features/context/context-field-store-type';
-import { DEFAULT_ENV } from '../../../lib/util';
+} from '../../../lib/types/index.js';
+import type { IUnleashServices } from '../../../lib/services/index.js';
+import type { Db } from '../../../lib/db/db.js';
+import type { IContextFieldDto } from '../../../lib/features/context/context-field-store-type.js';
+import { DEFAULT_ENV } from '../../../lib/util/index.js';
 import type {
     CreateDependentFeatureSchema,
     CreateFeatureSchema,
     CreateFeatureStrategySchema,
     ImportTogglesSchema,
-} from '../../../lib/openapi';
+} from '../../../lib/openapi/index.js';
 import type { Knex } from 'knex';
-import type TestAgent from 'supertest/lib/agent';
-import type Test from 'supertest/lib/test';
+import type TestAgent from 'supertest/lib/agent.d.ts';
+import type Test from 'supertest/lib/test.d.ts';
 import type { Server } from 'node:http';
-import { initialServiceSetup } from '../../../lib/server-impl';
+import { initialServiceSetup } from '../../../lib/server-impl.js';
 process.env.NODE_ENV = 'test';
 
 export interface IUnleashTest extends IUnleashHttpAPI {

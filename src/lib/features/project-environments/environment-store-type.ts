@@ -2,8 +2,8 @@ import type {
     IEnvironment,
     IEnvironmentCreate,
     IProjectEnvironment,
-} from '../../types/model';
-import type { Store } from '../../types/stores/store';
+} from '../../types/model.js';
+import type { Store } from '../../types/stores/store.js';
 
 export interface IEnvironmentStore extends Store<IEnvironment, string> {
     exists(name: string): Promise<boolean>;

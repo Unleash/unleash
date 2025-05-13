@@ -1,6 +1,6 @@
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import { FeatureChange } from './FeatureChange';
+import { FeatureChange } from './FeatureChange.tsx';
 import type {
     ChangeRequestState,
     ChangeRequestType,

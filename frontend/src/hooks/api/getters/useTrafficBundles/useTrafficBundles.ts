@@ -1,9 +1,9 @@
-import { formatApiPath } from '../../../../utils/formatPath';
-import type { ITrafficBundles } from '../../../../interfaces/trafficBundles';
+import { formatApiPath } from '../../../../utils/formatPath.js';
+import type { ITrafficBundles } from '../../../../interfaces/trafficBundles.js';
 import useSWR from 'swr';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import { useMemo } from 'react';
-import useUiConfig from '../useUiConfig/useUiConfig';
+import useUiConfig from '../useUiConfig/useUiConfig.js';
 
 type IUseTrafficBundlesOutput = {
     trafficBundles: ITrafficBundles;

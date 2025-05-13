@@ -1,4 +1,4 @@
-import { type ApiErrorSchema, UnleashError } from './unleash-error';
+import { type ApiErrorSchema, UnleashError } from './unleash-error.js';
 
 class PatternError extends UnleashError {
     statusCode = 400;

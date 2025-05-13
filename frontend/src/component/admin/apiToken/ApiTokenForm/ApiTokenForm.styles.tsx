@@ -1,6 +1,6 @@
 import { Box, Button, styled } from '@mui/material';
-import Input from '../../../common/Input/Input';
-import GeneralSelect from '../../../common/GeneralSelect/GeneralSelect';
+import Input from '../../../common/Input/Input.tsx';
+import GeneralSelect from '../../../common/GeneralSelect/GeneralSelect.tsx';
 
 export const StyledContainer = styled('div')(() => ({
     maxWidth: '400px',

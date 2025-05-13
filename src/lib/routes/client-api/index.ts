@@ -1,8 +1,9 @@
-import Controller from '../controller';
-import FeatureController from '../../features/client-feature-toggles/client-feature-toggle.controller';
-import MetricsController from '../../features/metrics/instance/metrics';
-import RegisterController from '../../features/metrics/instance/register';
-import type { IUnleashConfig, IUnleashServices } from '../../types';
+import Controller from '../controller.js';
+import FeatureController from '../../features/client-feature-toggles/client-feature-toggle.controller.js';
+import MetricsController from '../../features/metrics/instance/metrics.js';
+import RegisterController from '../../features/metrics/instance/register.js';
+import type { IUnleashConfig } from '../../types/index.js';
+import type { IUnleashServices } from '../../services/index.js';
 
 export default class ClientApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
@@ -13,5 +14,3 @@ export default class ClientApi extends Controller {
         this.use('/register', new RegisterController(services, config).router);
     }
 }
-
-module.exports = ClientApi;

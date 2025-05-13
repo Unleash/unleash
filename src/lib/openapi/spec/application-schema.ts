@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { applicationUsageSchema } from './application-usage-schema';
+import { applicationUsageSchema } from './application-usage-schema.js';
 
 export const applicationSchema = {
     $id: '#/components/schemas/applicationSchema',

@@ -1,6 +1,6 @@
 import type React from 'react';
 import { createGlobalState } from 'react-hooks-global-state';
-import { getLocalStorageItem, setLocalStorageItem } from '../utils/storage';
+import { getLocalStorageItem, setLocalStorageItem } from '../utils/storage.js';
 
 type UsePersistentGlobalState<T> = () => [
     value: T,

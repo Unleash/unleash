@@ -1,9 +1,9 @@
 import type {
     FeatureEnvironmentKey,
     IFeatureEnvironmentStore,
-} from '../../lib/types/stores/feature-environment-store';
-import type { IFeatureEnvironment, IVariant } from '../../lib/types/model';
-import NotFoundError from '../../lib/error/notfound-error';
+} from '../../lib/types/stores/feature-environment-store.js';
+import type { IFeatureEnvironment, IVariant } from '../../lib/types/model.js';
+import NotFoundError from '../../lib/error/notfound-error.js';
 
 export default class FakeFeatureEnvironmentStore
     implements IFeatureEnvironmentStore

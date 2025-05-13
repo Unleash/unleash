@@ -1,4 +1,4 @@
-import { Banner } from '../Banner/Banner';
+import { Banner } from '../Banner/Banner.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { parseValidDate } from 'component/common/util';
 import { differenceInMonths } from 'date-fns';

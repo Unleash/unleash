@@ -1,4 +1,4 @@
-import type { Store } from '../../types/stores/store';
+import type { Store } from '../../types/stores/store.js';
 
 export interface IFeatureLink {
     id: string;

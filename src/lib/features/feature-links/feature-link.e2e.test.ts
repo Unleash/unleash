@@ -1,13 +1,15 @@
 import {
     type IUnleashTest,
     setupAppWithAuth,
-} from '../../../test/e2e/helpers/test-helper';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import type { IEventStore, IFeatureLinkStore } from '../../types';
-import getLogger from '../../../test/fixtures/no-logger';
-import type { FeatureLinkSchema } from '../../openapi/spec/feature-link-schema';
-import type { IFeatureLinksReadModel } from './feature-links-read-model-type';
-import { FeatureLinksReadModel } from './feature-links-read-model';
+} from '../../../test/e2e/helpers/test-helper.js';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import type { IEventStore, IFeatureLinkStore } from '../../types/index.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import type { FeatureLinkSchema } from '../../openapi/spec/feature-link-schema.js';
+import type { IFeatureLinksReadModel } from './feature-links-read-model-type.js';
+import { FeatureLinksReadModel } from './feature-links-read-model.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

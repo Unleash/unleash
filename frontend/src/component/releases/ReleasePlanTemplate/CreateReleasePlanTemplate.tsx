@@ -1,7 +1,7 @@
 import { usePageTitle } from 'hooks/usePageTitle';
 import { Button, styled } from '@mui/material';
-import { TemplateForm } from './TemplateForm/TemplateForm';
-import { useTemplateForm } from '../hooks/useTemplateForm';
+import { TemplateForm } from './TemplateForm/TemplateForm.tsx';
+import { useTemplateForm } from '../hooks/useTemplateForm.ts';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
 import { useNavigate } from 'react-router-dom';

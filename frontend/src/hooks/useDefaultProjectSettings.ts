@@ -1,4 +1,4 @@
-import useProjectOverview from './api/getters/useProjectOverview/useProjectOverview';
+import useProjectOverview from './api/getters/useProjectOverview/useProjectOverview.js';
 
 const DEFAULT_STICKINESS = 'default';
 export const useDefaultProjectSettings = (projectId: string) => {

@@ -15,7 +15,7 @@ import { EditableConstraintsList } from 'component/common/NewConstraintAccordion
 import { Limit } from 'component/common/Limit/Limit';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { RecentlyUsedConstraints } from '../RecentlyUsedConstraints/RecentlyUsedConstraints';
+import { RecentlyUsedConstraints } from '../RecentlyUsedConstraints/RecentlyUsedConstraints.tsx';
 
 interface IConstraintAccordionListProps {
     constraints: IConstraint[];

@@ -1,16 +1,16 @@
 import type { ComponentProps, FC, ReactNode } from 'react';
-import { StrategyEvaluationItem } from '../StrategyEvaluationItem/StrategyEvaluationItem';
+import { StrategyEvaluationItem } from '../StrategyEvaluationItem/StrategyEvaluationItem.tsx';
 import type { ConstraintSchema } from 'openapi';
 import { formatOperatorDescription } from 'component/common/LegacyConstraintAccordion/ConstraintOperator/formatOperatorDescription';
-import { StrategyEvaluationChip } from '../StrategyEvaluationChip/StrategyEvaluationChip';
+import { StrategyEvaluationChip } from '../StrategyEvaluationChip/StrategyEvaluationChip.tsx';
 import { styled, Tooltip } from '@mui/material';
 import { Truncator } from 'component/common/Truncator/Truncator';
-import { ValuesList } from '../ValuesList/ValuesList';
+import { ValuesList } from '../ValuesList/ValuesList.tsx';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatConstraintValue } from 'utils/formatConstraintValue';
-import { useConstraintTooltips } from './hooks/useConstraintTooltips';
+import { useConstraintTooltips } from './hooks/useConstraintTooltips.ts';
 import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive.svg';
-import { isCaseSensitive } from './isCaseSensitive';
+import { isCaseSensitive } from './isCaseSensitive.ts';
 
 const Operator: FC<{
     label: ConstraintSchema['operator'];

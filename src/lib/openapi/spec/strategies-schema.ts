@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { strategySchema } from './strategy-schema';
+import { strategySchema } from './strategy-schema.js';
 
 export const strategiesSchema = {
     $id: '#/components/schemas/strategiesSchema',

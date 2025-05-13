@@ -4,7 +4,7 @@ import {
     StyledProjectInfoWidgetContainer,
     StyledWidgetTitle,
 } from './ProjectInfo.styles';
-import { WidgetFooterLink } from './WidgetFooterLink';
+import { WidgetFooterLink } from './WidgetFooterLink.tsx';
 
 interface IHealthWidgetProps {
     projectId: string;

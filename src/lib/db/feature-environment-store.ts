@@ -2,15 +2,15 @@ import type EventEmitter from 'events';
 import type {
     FeatureEnvironmentKey,
     IFeatureEnvironmentStore,
-} from '../types/stores/feature-environment-store';
-import type { Logger } from '../logger';
-import metricsHelper from '../util/metrics-helper';
-import { DB_TIME } from '../metric-events';
-import type { IFeatureEnvironment, IVariant } from '../types/model';
-import NotFoundError from '../error/notfound-error';
+} from '../types/stores/feature-environment-store.js';
+import type { Logger } from '../logger.js';
+import metricsHelper from '../util/metrics-helper.js';
+import { DB_TIME } from '../metric-events.js';
+import type { IFeatureEnvironment, IVariant } from '../types/model.js';
+import NotFoundError from '../error/notfound-error.js';
 import { v4 as uuidv4 } from 'uuid';
-import type { Db } from './db';
-import type { IUnleashConfig } from '../types';
+import type { Db } from './db.js';
+import type { IUnleashConfig } from '../types/index.js';
 
 const T = {
     featureEnvs: 'feature_environments',

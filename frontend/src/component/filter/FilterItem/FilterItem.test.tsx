@@ -4,7 +4,7 @@ import {
     FilterItem,
     type FilterItemParams,
     type IFilterItemProps,
-} from './FilterItem';
+} from './FilterItem.tsx';
 
 const getOption = (option: string) =>
     screen.getByText(option).closest('li')!.querySelector('input')!;

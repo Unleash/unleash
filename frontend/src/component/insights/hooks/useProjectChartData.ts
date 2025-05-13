@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import type { InstanceInsightsSchema } from 'openapi';
-import { useProjectColor } from './useProjectColor';
+import { useProjectColor } from './useProjectColor.js';
 import { useTheme } from '@mui/material';
-import type { GroupedDataByProject } from './useGroupedProjectTrends';
+import type { GroupedDataByProject } from './useGroupedProjectTrends.js';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 
 type ProjectFlagTrends = InstanceInsightsSchema['projectFlagTrends'];

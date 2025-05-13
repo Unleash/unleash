@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
-import { BillingInformation } from './BillingInformation/BillingInformation';
-import { BillingPlan } from './BillingPlan/BillingPlan';
+import { BillingInformation } from './BillingInformation/BillingInformation.tsx';
+import { BillingPlan } from './BillingPlan/BillingPlan.tsx';
 
 export const BillingDashboard = () => {
     return (

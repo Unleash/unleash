@@ -1,13 +1,14 @@
 import supertest from 'supertest';
 import express from 'express';
-import { createTestConfig } from '../../test/config/test-config';
+import { createTestConfig } from '../../test/config/test-config.js';
 
-import LogoutController from './logout';
-import type { IAuthRequest } from './unleash-types';
-import SessionService from '../services/session-service';
-import FakeSessionStore from '../../test/fixtures/fake-session-store';
-import noLogger from '../../test/fixtures/no-logger';
+import LogoutController from './logout.js';
+import type { IAuthRequest } from './unleash-types.js';
+import SessionService from '../services/session-service.js';
+import FakeSessionStore from '../../test/fixtures/fake-session-store.js';
+import noLogger from '../../test/fixtures/no-logger.js';
 import { addDays } from 'date-fns';
+import { jest } from '@jest/globals';
 
 test('should redirect to "/" after logout', async () => {
     const baseUriPath = '';

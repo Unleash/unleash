@@ -5,7 +5,7 @@ import {
     isStringOperator,
     stringOperators,
 } from 'constants/operators';
-import { isCaseSensitive } from './isCaseSensitive';
+import { isCaseSensitive } from './isCaseSensitive.js';
 
 test('`IN` and `NOT_IN` are always case sensitive', () => {
     expect(

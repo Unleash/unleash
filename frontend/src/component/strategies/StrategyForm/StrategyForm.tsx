@@ -2,7 +2,7 @@ import Input from 'component/common/Input/Input';
 import { Button, styled } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { trim } from 'component/common/util';
-import { StrategyParameters } from './StrategyParameters/StrategyParameters';
+import { StrategyParameters } from './StrategyParameters/StrategyParameters.tsx';
 import type { IStrategyParameter } from 'interfaces/strategy';
 import type React from 'react';
 

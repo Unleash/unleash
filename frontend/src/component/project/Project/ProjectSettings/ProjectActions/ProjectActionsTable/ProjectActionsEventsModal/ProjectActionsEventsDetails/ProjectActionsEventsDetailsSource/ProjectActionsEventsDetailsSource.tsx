@@ -1,5 +1,5 @@
 import type { ISignal } from 'interfaces/signal';
-import { ProjectActionsEventsDetailsSourceSignalEndpoint } from './ProjectActionsEventsDetailsSourceSignalEndpoint';
+import { ProjectActionsEventsDetailsSourceSignalEndpoint } from './ProjectActionsEventsDetailsSourceSignalEndpoint.tsx';
 
 interface IProjectActionsEventsDetailsSourceProps {
     signal: ISignal;

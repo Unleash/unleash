@@ -15,7 +15,7 @@ import {
 import { Button } from '@mui/material';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import type { IPermissionButtonProps } from 'component/common/PermissionButton/PermissionButton';
-import { NamingPatternInfo } from './NamingPatternInfo';
+import { NamingPatternInfo } from './NamingPatternInfo.tsx';
 import type { CreateFeatureNamingPatternSchema } from 'openapi';
 
 type FormProps = {

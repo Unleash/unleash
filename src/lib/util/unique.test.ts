@@ -1,4 +1,4 @@
-import { uniqueByKey } from './unique';
+import { uniqueByKey } from './unique.js';
 
 test('should filter unique objects by key', () => {
     expect(

@@ -4,10 +4,10 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import type { IRole } from 'interfaces/role';
-import { RoleDeleteDialogUsers } from './RoleDeleteDialogUsers';
-import { RoleDeleteDialogServiceAccounts } from './RoleDeleteDialogServiceAccounts';
+import { RoleDeleteDialogUsers } from './RoleDeleteDialogUsers.tsx';
+import { RoleDeleteDialogServiceAccounts } from './RoleDeleteDialogServiceAccounts.tsx';
 import { useGroups } from 'hooks/api/getters/useGroups/useGroups';
-import { RoleDeleteDialogGroups } from './RoleDeleteDialogGroups';
+import { RoleDeleteDialogGroups } from './RoleDeleteDialogGroups.tsx';
 
 const StyledTableContainer = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(1.5),

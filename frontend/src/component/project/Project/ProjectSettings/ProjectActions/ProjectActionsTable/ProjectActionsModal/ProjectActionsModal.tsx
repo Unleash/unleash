@@ -11,8 +11,8 @@ import {
     type ActionSetPayload,
     useActionsApi,
 } from 'hooks/api/actions/useActionsApi/useActionsApi';
-import { ProjectActionsForm } from './ProjectActionsForm/ProjectActionsForm';
-import { useProjectActionsForm } from './ProjectActionsForm/useProjectActionsForm';
+import { ProjectActionsForm } from './ProjectActionsForm/ProjectActionsForm.tsx';
+import { useProjectActionsForm } from './ProjectActionsForm/useProjectActionsForm.ts';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 

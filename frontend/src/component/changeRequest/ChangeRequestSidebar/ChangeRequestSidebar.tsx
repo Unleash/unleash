@@ -4,14 +4,14 @@ import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal'
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import CheckCircle from '@mui/icons-material/CheckCircle';
-import { ChangeRequest } from '../ChangeRequest/ChangeRequest';
+import { ChangeRequest } from '../ChangeRequest/ChangeRequest.tsx';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { EnvironmentChangeRequest } from './EnvironmentChangeRequest/EnvironmentChangeRequest';
-import { ReviewChangesHeader } from './ReviewChangesHeader/ReviewChangesHeader';
-import { ChangeRequestPlausibleProvider } from '../ChangeRequestContext';
+import { EnvironmentChangeRequest } from './EnvironmentChangeRequest/EnvironmentChangeRequest.tsx';
+import { ReviewChangesHeader } from './ReviewChangesHeader/ReviewChangesHeader.tsx';
+import { ChangeRequestPlausibleProvider } from '../ChangeRequestContext.tsx';
 
 interface IChangeRequestSidebarProps {
     open: boolean;

@@ -1,9 +1,9 @@
 import type { VFC } from 'react';
 import { IconButton, type IconButtonProps } from '@mui/material';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
-import { TooltipResolver } from '../TooltipResolver/TooltipResolver';
+import { TooltipResolver } from '../TooltipResolver/TooltipResolver.tsx';
 
 interface IFavoriteIconButtonProps extends IconButtonProps {
     isFavorite: boolean;

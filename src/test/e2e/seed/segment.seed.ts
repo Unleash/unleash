@@ -1,15 +1,15 @@
-import dbInit from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
+import dbInit from '../helpers/database-init.js';
+import getLogger from '../../fixtures/no-logger.js';
 import assert from 'assert';
-import { randomId } from '../../../lib/util/random-id';
+import { randomId } from '../../../lib/util/index.js';
 import type {
     IConstraint,
     IFeatureToggleClient,
     ISegment,
-} from '../../../lib/types/model';
-import { type IUnleashTest, setupApp } from '../helpers/test-helper';
-import type { UpsertSegmentSchema } from '../../../lib/openapi';
-import { TEST_AUDIT_USER } from '../../../lib/types';
+} from '../../../lib/types/model.js';
+import { type IUnleashTest, setupApp } from '../helpers/test-helper.js';
+import type { UpsertSegmentSchema } from '../../../lib/openapi/index.js';
+import { TEST_AUDIT_USER } from '../../../lib/types/index.js';
 
 interface ISeedSegmentSpec {
     featuresCount: number;

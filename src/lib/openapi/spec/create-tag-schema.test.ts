@@ -1,5 +1,5 @@
-import { TAG_MAX_LENGTH, TAG_MIN_LENGTH } from '../../util';
-import { validateSchema } from '../validate';
+import { TAG_MAX_LENGTH, TAG_MIN_LENGTH } from '../../tags/index.js';
+import { validateSchema } from '../validate.js';
 
 describe('tag value validation', () => {
     test.each([

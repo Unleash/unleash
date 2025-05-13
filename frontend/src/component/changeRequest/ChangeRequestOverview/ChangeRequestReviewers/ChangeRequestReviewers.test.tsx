@@ -1,6 +1,6 @@
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import { ChangeRequestReviewers } from './ChangeRequestReviewers';
+import { ChangeRequestReviewers } from './ChangeRequestReviewers.tsx';
 
 test('Show approvers', async () => {
     render(

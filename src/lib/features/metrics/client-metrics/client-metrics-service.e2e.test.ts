@@ -1,16 +1,13 @@
-import ClientInstanceService from '../instance/instance-service';
-import type { IClientApp } from '../../../types/model';
+import ClientInstanceService from '../instance/instance-service.js';
+import type { IClientApp } from '../../../types/model.js';
 import { secondsToMilliseconds } from 'date-fns';
-import { createTestConfig } from '../../../../test/config/test-config';
-import {
-    APPLICATION_CREATED,
-    type IUnleashConfig,
-    type IUnleashStores,
-} from '../../../types';
-import { FakePrivateProjectChecker } from '../../private-project/fakePrivateProjectChecker';
-import type { ITestDb } from '../../../../test/e2e/helpers/database-init';
-import dbInit from '../../../../test/e2e/helpers/database-init';
-import { noLoggerProvider as getLogger } from '../../../../test/fixtures/no-logger';
+import { createTestConfig } from '../../../../test/config/test-config.js';
+import type { IUnleashConfig, IUnleashStores } from '../../../types/index.js';
+import { APPLICATION_CREATED } from '../../../events/index.js';
+import { FakePrivateProjectChecker } from '../../private-project/fakePrivateProjectChecker.js';
+import type { ITestDb } from '../../../../test/e2e/helpers/database-init.js';
+import dbInit from '../../../../test/e2e/helpers/database-init.js';
+import { noLoggerProvider as getLogger } from '../../../../test/fixtures/no-logger.js';
 import faker from 'faker';
 let stores: IUnleashStores;
 let db: ITestDb;

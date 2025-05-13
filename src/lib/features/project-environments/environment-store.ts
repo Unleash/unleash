@@ -1,18 +1,18 @@
 import type EventEmitter from 'events';
-import type { Db } from '../../db/db';
-import type { Logger } from '../../logger';
-import metricsHelper from '../../util/metrics-helper';
-import { DB_TIME } from '../../metric-events';
+import type { Db } from '../../db/db.js';
+import type { Logger } from '../../logger.js';
+import metricsHelper from '../../util/metrics-helper.js';
+import { DB_TIME } from '../../metric-events.js';
 import type {
     IEnvironment,
     IEnvironmentCreate,
     IProjectEnvironment,
-} from '../../types/model';
-import NotFoundError from '../../error/notfound-error';
-import type { IEnvironmentStore } from './environment-store-type';
-import { snakeCaseKeys } from '../../util/snakeCase';
-import type { CreateFeatureStrategySchema } from '../../openapi';
-import type { IFlagResolver, IUnleashConfig } from '../../types';
+} from '../../types/model.js';
+import NotFoundError from '../../error/notfound-error.js';
+import type { IEnvironmentStore } from './environment-store-type.js';
+import { snakeCaseKeys } from '../../util/snakeCase.js';
+import type { CreateFeatureStrategySchema } from '../../openapi/index.js';
+import type { IFlagResolver, IUnleashConfig } from '../../types/index.js';
 
 interface IEnvironmentsTable {
     name: string;

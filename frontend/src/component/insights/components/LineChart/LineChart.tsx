@@ -2,7 +2,7 @@ import { lazy } from 'react';
 import type { ScriptableContext } from 'chart.js';
 import { Typography } from '@mui/material';
 
-export const LineChart = lazy(() => import('./LineChartComponent'));
+export const LineChart = lazy(() => import('./LineChartComponent.tsx'));
 
 export const fillGradient =
     (a: string, b: string) => (context: ScriptableContext<'line'>) => {

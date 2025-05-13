@@ -2,8 +2,8 @@ import { useHealthReport } from 'hooks/api/getters/useHealthReport/useHealthRepo
 import ApiError from 'component/common/ApiError/ApiError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePageTitle } from 'hooks/usePageTitle';
-import { ReportCard } from './ReportTable/ReportCard/ReportCard';
-import { ReportTable } from './ReportTable/ReportTable';
+import { ReportCard } from './ReportTable/ReportCard/ReportCard.tsx';
+import { ReportTable } from './ReportTable/ReportTable.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 

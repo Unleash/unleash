@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react';
-import { AccessProviderMock } from '../component/providers/AccessProvider/AccessProviderMock';
-import { useChangeRequestsEnabled } from './useChangeRequestsEnabled';
+import { AccessProviderMock } from '../component/providers/AccessProvider/AccessProviderMock.tsx';
+import { useChangeRequestsEnabled } from './useChangeRequestsEnabled.ts';
 import type { FC } from 'react';
-import { testServerRoute, testServerSetup } from '../utils/testServer';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 import {
     SKIP_CHANGE_REQUEST,
     ADMIN,
-} from '../component/providers/AccessProvider/permissions';
+} from '../component/providers/AccessProvider/permissions.ts';
 
 const project = 'project';
 const environment = 'production';

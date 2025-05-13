@@ -1,14 +1,14 @@
-import type { Logger } from '../../logger';
+import type { Logger } from '../../logger.js';
 import type {
     IFeatureSearchStore,
     IUnleashConfig,
     IUnleashStores,
-} from '../../types';
+} from '../../types/index.js';
 import type {
     IFeatureSearchParams,
     IQueryParam,
-} from '../feature-toggle/types/feature-toggle-strategies-store-type';
-import { parseSearchOperatorValue } from './search-utils';
+} from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
+import { parseSearchOperatorValue } from './search-utils.js';
 
 export class FeatureSearchService {
     private featureSearchStore: IFeatureSearchStore;

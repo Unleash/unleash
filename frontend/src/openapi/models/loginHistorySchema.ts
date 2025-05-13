@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { LoginEventSchema } from './loginEventSchema';
+import type { LoginEventSchema } from './loginEventSchema.js';
 
 /**
  * A response model with a list of login events.

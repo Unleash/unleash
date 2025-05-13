@@ -1,5 +1,5 @@
 import type { IFeatureStrategyParameters } from 'interfaces/strategy';
-import StrategyInputList from '../StrategyInputList/StrategyInputList';
+import StrategyInputList from '../StrategyInputList/StrategyInputList.tsx';
 import { parseParameterStrings } from 'utils/parseParameter';
 import type { IFormErrors } from 'hooks/useFormErrors';
 

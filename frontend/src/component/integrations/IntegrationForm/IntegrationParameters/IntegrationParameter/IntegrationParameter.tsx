@@ -1,7 +1,7 @@
 import type { ChangeEventHandler } from 'react';
 import { StyledAddonParameterContainer } from '../../IntegrationForm.styles';
 import type { AddonParameterSchema, AddonSchema } from 'openapi';
-import { IntegrationParameterTextField } from './IntegrationParameterTextField';
+import { IntegrationParameterTextField } from './IntegrationParameterTextField.tsx';
 
 export interface IIntegrationParameterProps {
     parametersErrors: Record<string, string>;

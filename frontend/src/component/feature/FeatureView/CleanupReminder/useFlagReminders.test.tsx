@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { useFlagReminders } from './useFlagReminders';
+import { useFlagReminders } from './useFlagReminders.ts';
 
 const TestComponent = ({
     days = 7,

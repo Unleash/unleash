@@ -3,13 +3,13 @@ import { Box, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { DependenciesUpgradeAlert } from './DependenciesUpgradeAlert';
-import type { IDependency } from '../../../interfaces/featureToggle';
-import { ParentVariantOptions } from './ParentVariantOptions';
-import { type ParentValue, REMOVE_DEPENDENCY_OPTION } from './constants';
-import { FeatureStatusOptions } from './FeatureStatusOptions';
-import { useManageDependency } from './useManageDependency';
-import { LazyParentOptions } from './LazyParentOptions';
+import { DependenciesUpgradeAlert } from './DependenciesUpgradeAlert.tsx';
+import type { IDependency } from '../../../interfaces/featureToggle.ts';
+import { ParentVariantOptions } from './ParentVariantOptions.tsx';
+import { type ParentValue, REMOVE_DEPENDENCY_OPTION } from './constants.ts';
+import { FeatureStatusOptions } from './FeatureStatusOptions.tsx';
+import { useManageDependency } from './useManageDependency.ts';
+import { LazyParentOptions } from './LazyParentOptions.tsx';
 
 interface IAddDependencyDialogueProps {
     project: string;

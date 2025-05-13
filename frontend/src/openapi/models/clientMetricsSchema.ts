@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ClientMetricsSchemaBucket } from './clientMetricsSchemaBucket';
+import type { ClientMetricsSchemaBucket } from './clientMetricsSchemaBucket.js';
 
 /**
  * Client usage metrics, accumulated in buckets of hour by hour by default

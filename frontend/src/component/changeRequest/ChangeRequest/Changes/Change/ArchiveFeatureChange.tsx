@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from 'react';
 import { Box, styled } from '@mui/material';
-import { ChangeItemWrapper } from './StrategyChange';
+import { ChangeItemWrapper } from './StrategyChange.tsx';
 
 const ArchiveBox = styled(Box)(({ theme }) => ({
     display: 'flex',

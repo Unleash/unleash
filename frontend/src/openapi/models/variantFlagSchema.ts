@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { VariantFlagSchemaPayload } from './variantFlagSchemaPayload';
+import type { VariantFlagSchemaPayload } from './variantFlagSchemaPayload.js';
 
 /**
  * A representation of an evaluated Unleash feature variant.

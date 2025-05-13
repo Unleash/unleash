@@ -7,9 +7,9 @@ import {
     StyledListItemText,
     listItemButtonStyle,
     type CommandResultGroupItem,
-} from './RecentlyVisited/CommandResultGroup';
+} from './RecentlyVisited/CommandResultGroup.tsx';
 import { ListItemButton } from '@mui/material';
-import { ButtonItemIcon } from './ButtonItemIcon';
+import { ButtonItemIcon } from './ButtonItemIcon.tsx';
 
 export const CommandSearchPages = ({
     items,

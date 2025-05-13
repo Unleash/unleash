@@ -1,9 +1,9 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { parametersSchema } from './parameters-schema';
-import { playgroundConstraintSchema } from './playground-constraint-schema';
-import { playgroundSegmentSchema } from './playground-segment-schema';
-import { variantSchema } from './variant-schema';
-import { overrideSchema } from './override-schema';
+import { parametersSchema } from './parameters-schema.js';
+import { playgroundConstraintSchema } from './playground-constraint-schema.js';
+import { playgroundSegmentSchema } from './playground-segment-schema.js';
+import { variantSchema } from './variant-schema.js';
+import { overrideSchema } from './override-schema.js';
 
 export const playgroundStrategyEvaluation = {
     evaluationComplete: 'complete',

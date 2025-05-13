@@ -5,8 +5,8 @@ import {
     calculateProjectedUsage,
     calculateTotalUsage,
     cleanTrafficData,
-} from './traffic-calculations';
-import { toSelectablePeriod } from '../component/admin/network/NetworkTrafficUsage/selectable-periods';
+} from './traffic-calculations.js';
+import { toSelectablePeriod } from '../component/admin/network/NetworkTrafficUsage/selectable-periods.js';
 import type {
     TrafficUsageDataSegmentedCombinedSchema,
     TrafficUsageDataSegmentedCombinedSchemaApiDataItem,

@@ -3,12 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema';
-import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema';
-import type { ChangeRequestSchemaOneOfCreatedBy } from './changeRequestSchemaOneOfCreatedBy';
-import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema';
-import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema';
-import type { ChangeRequestSchemaOneOfState } from './changeRequestSchemaOneOfState';
+import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema.js';
+import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema.js';
+import type { ChangeRequestSchemaOneOfCreatedBy } from './changeRequestSchemaOneOfCreatedBy.js';
+import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema.js';
+import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema.js';
+import type { ChangeRequestSchemaOneOfState } from './changeRequestSchemaOneOfState.js';
 
 export type ChangeRequestSchemaOneOf = {
     /** A list of approvals that this change request has received. */

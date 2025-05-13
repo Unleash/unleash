@@ -9,14 +9,14 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import theme from 'themes/theme';
 import { StringParam, useQueryParams } from 'use-query-params';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { AccessOverviewSelect } from './AccessOverviewSelect';
+import { AccessOverviewSelect } from './AccessOverviewSelect.tsx';
 import { useUserAccessOverview } from 'hooks/api/getters/useUserAccessOverview/useUserAccessOverview';
-import { AccessOverviewAccordion } from './AccessOverviewAccordion/AccessOverviewAccordion';
+import { AccessOverviewAccordion } from './AccessOverviewAccordion/AccessOverviewAccordion.tsx';
 import {
     getCategorizedProjectPermissions,
     getCategorizedRootPermissions,
 } from 'utils/permissions';
-import type { IAccessOverviewPermissionCategory } from './AccessOverviewAccordion/AccessOverviewList';
+import type { IAccessOverviewPermissionCategory } from './AccessOverviewAccordion/AccessOverviewList.tsx';
 import { createProjectPermissionsStructure } from 'component/admin/roles/RoleForm/RolePermissionCategories/createProjectPermissionsStructure';
 import { Search } from 'component/common/Search/Search';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';

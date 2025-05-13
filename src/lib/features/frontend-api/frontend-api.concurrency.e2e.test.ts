@@ -1,11 +1,15 @@
 import {
     type IUnleashNoSupertest,
     setupAppWithoutSupertest,
-} from '../../../test/e2e/helpers/test-helper';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
-import { randomId } from '../../util';
-import { ApiTokenType } from '../../types/models/api-token';
+} from '../../../test/e2e/helpers/test-helper.js';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import { randomId } from '../../util/index.js';
+import { ApiTokenType } from '../../types/model.js';
+
+import { jest } from '@jest/globals';
 
 let app: IUnleashNoSupertest;
 let db: ITestDb;

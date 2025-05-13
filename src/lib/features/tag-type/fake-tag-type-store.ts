@@ -1,6 +1,6 @@
-import type { ITagType, ITagTypeStore } from './tag-type-store-type';
+import type { ITagType, ITagTypeStore } from './tag-type-store-type.js';
 
-import { NotFoundError } from '../../error';
+import { NotFoundError } from '../../error/index.js';
 
 export default class FakeTagTypeStore implements ITagTypeStore {
     tagTypes: ITagType[] = [];

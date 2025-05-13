@@ -1,9 +1,9 @@
 import type {
     IEnvironment,
     IProjectsAvailableOnEnvironment,
-} from '../../types/model';
-import NotFoundError from '../../error/notfound-error';
-import type { IEnvironmentStore } from './environment-store-type';
+} from '../../types/model.js';
+import NotFoundError from '../../error/notfound-error.js';
+import type { IEnvironmentStore } from './environment-store-type.js';
 
 export default class FakeEnvironmentStore implements IEnvironmentStore {
     importEnvironments(envs: IEnvironment[]): Promise<IEnvironment[]> {
@@ -168,5 +168,3 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
         return Promise.resolve(0);
     }
 }
-
-module.exports = FakeEnvironmentStore;

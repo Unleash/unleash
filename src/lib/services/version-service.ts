@@ -1,9 +1,9 @@
 import fetch from 'make-fetch-happen';
-import type { IUnleashStores } from '../types/stores';
-import type { IUnleashConfig } from '../types/option';
-import version from '../util/version';
-import type { Logger } from '../logger';
-import type { ISettingStore } from '../types/stores/settings-store';
+import type { IUnleashStores } from '../types/stores.js';
+import type { IUnleashConfig } from '../types/option.js';
+import version from '../util/version.js';
+import type { Logger } from '../logger.js';
+import type { ISettingStore } from '../types/stores/settings-store.js';
 
 export interface IVersionInfo {
     oss: string;

@@ -1,5 +1,5 @@
-import type { Store } from './store';
-import type { IApplicationOverview } from '../../features/metrics/instance/models';
+import type { Store } from './store.js';
+import type { IApplicationOverview } from '../../features/metrics/instance/models.js';
 
 export interface IClientApplicationUsage {
     project: string;

@@ -1,16 +1,16 @@
 import openapi, { type IExpressOpenApi } from '@wesleytodd/openapi';
 import type { Express, RequestHandler, Response } from 'express';
-import type { IUnleashConfig } from '../types/option';
+import type { IUnleashConfig } from '../types/option.js';
 import {
     createOpenApiSchema,
     type JsonSchemaProps,
     removeJsonSchemaProps,
     type SchemaId,
-} from '../openapi';
-import type { ApiOperation } from '../openapi/util/api-operation';
-import type { Logger } from '../logger';
-import { validateSchema } from '../openapi/validate';
-import type { IFlagResolver } from '../types';
+} from '../openapi/index.js';
+import type { ApiOperation } from '../openapi/util/api-operation.js';
+import type { Logger } from '../logger.js';
+import { validateSchema } from '../openapi/validate.js';
+import type { IFlagResolver } from '../types/index.js';
 
 export class OpenApiService {
     private readonly config: IUnleashConfig;

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectApplicationSdkSchema } from './projectApplicationSdkSchema';
+import type { ProjectApplicationSdkSchema } from './projectApplicationSdkSchema.js';
 
 /**
  * A project application instance.

@@ -6,7 +6,7 @@ import {
     fromIConstraint,
     isSingleValueConstraint,
     toIConstraint,
-} from './editable-constraint-type';
+} from './editable-constraint-type.ts';
 import type {
     ILegalValue,
     IUnleashContextDefinition,
@@ -14,15 +14,15 @@ import type {
 import {
     constraintReducer,
     type ConstraintUpdateAction,
-} from './constraint-reducer';
+} from './constraint-reducer.ts';
 import {
     type ConstraintValidationResult,
     constraintValidator,
-} from './constraint-validator';
+} from './constraint-validator.ts';
 import {
     getDeletedLegalValues,
     getInvalidLegalValues,
-} from './legal-value-functions';
+} from './legal-value-functions.ts';
 
 const resolveContextDefinition = (
     context: IUnleashContextDefinition[],

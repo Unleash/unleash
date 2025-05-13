@@ -2,7 +2,7 @@ import type {
     IReleasePlanTemplate,
     IReleasePlanTemplatePayload,
 } from 'interfaces/releasePlans';
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
 export const useReleasePlanTemplatesApi = () => {
     const { makeRequest, makeLightRequest, createRequest, errors, loading } =

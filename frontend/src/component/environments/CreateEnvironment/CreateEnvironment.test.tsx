@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { testServerRoute, testServerSetup } from '../../../utils/testServer';
-import CreateEnvironment from './CreateEnvironment';
-import { ADMIN } from '../../providers/AccessProvider/permissions';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
+import CreateEnvironment from './CreateEnvironment.tsx';
+import { ADMIN } from '../../providers/AccessProvider/permissions.ts';
 
 const server = testServerSetup();
 

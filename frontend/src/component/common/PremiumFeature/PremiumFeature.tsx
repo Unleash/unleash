@@ -2,10 +2,10 @@ import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-featu
 import { ReactComponent as ProPlanIconLight } from 'assets/icons/pro-enterprise-feature-badge-light.svg';
 import { Box, Button, Link, styled, Typography } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
-import { ThemeMode } from '../ThemeMode/ThemeMode';
-import { PageContent } from '../PageContent/PageContent';
-import { PageHeader } from '../PageHeader/PageHeader';
+import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
+import { ThemeMode } from '../ThemeMode/ThemeMode.tsx';
+import { PageContent } from '../PageContent/PageContent.tsx';
+import { PageHeader } from '../PageHeader/PageHeader.tsx';
 
 const PremiumFeatureWrapper = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'tooltip',

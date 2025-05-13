@@ -1,5 +1,5 @@
 import type { ExportQuerySchema } from 'openapi';
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 export const useExportApi = () => {

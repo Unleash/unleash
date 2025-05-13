@@ -1,16 +1,15 @@
 import {
     setupAppWithAuth,
     setupAppWithCustomAuth,
-} from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import { ApiTokenType } from '../../../../lib/types/models/api-token';
-import { RoleName } from '../../../../lib/types/model';
+} from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { ApiTokenType } from '../../../../lib/types/model.js';
+import { RoleName } from '../../../../lib/types/model.js';
 import {
     CREATE_CLIENT_API_TOKEN,
     CREATE_PROJECT_API_TOKEN,
     DELETE_CLIENT_API_TOKEN,
-    type IUnleashServices,
     type IUnleashStores,
     READ_CLIENT_API_TOKEN,
     READ_FRONTEND_API_TOKEN,
@@ -19,9 +18,13 @@ import {
     SYSTEM_USER_ID,
     TEST_AUDIT_USER,
     UPDATE_CLIENT_API_TOKEN,
-} from '../../../../lib/types';
+} from '../../../../lib/types/index.js';
 import { addDays } from 'date-fns';
-import type { AccessService, UserService } from '../../../../lib/services';
+import type {
+    AccessService,
+    IUnleashServices,
+    UserService,
+} from '../../../../lib/services/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

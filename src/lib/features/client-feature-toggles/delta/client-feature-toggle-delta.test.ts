@@ -1,5 +1,5 @@
-import type { DeltaEvent } from './client-feature-toggle-delta-types';
-import { filterEventsByQuery } from './client-feature-toggle-delta';
+import type { DeltaEvent } from './client-feature-toggle-delta-types.js';
+import { filterEventsByQuery } from './client-feature-toggle-delta.js';
 
 describe('filterEventsByQuery', () => {
     const mockEvents: DeltaEvent[] = [

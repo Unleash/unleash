@@ -11,7 +11,7 @@ import {
     type AddOrUpdateBanner,
     useBannersApi,
 } from 'hooks/api/actions/useBannersApi/useBannersApi';
-import { BannerForm } from './BannerForm';
+import { BannerForm } from './BannerForm.tsx';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',

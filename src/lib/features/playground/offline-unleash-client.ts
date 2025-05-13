@@ -1,13 +1,16 @@
-import type { SdkContextSchema } from '../../openapi/spec/sdk-context-schema';
-import { InMemStorageProvider, FeatureEvaluator } from './feature-evaluator';
-import type { FeatureConfigurationClient } from '../../features/feature-toggle/types/feature-toggle-strategies-store-type';
-import type { Segment } from './feature-evaluator/strategy/strategy';
-import type { ISegment } from '../../types/model';
-import { serializeDates } from '../../types/serialize-dates';
-import type { Operator } from './feature-evaluator/constraint';
+import type { SdkContextSchema } from '../../openapi/spec/sdk-context-schema.js';
+import {
+    InMemStorageProvider,
+    FeatureEvaluator,
+} from './feature-evaluator/index.js';
+import type { FeatureConfigurationClient } from '../../features/feature-toggle/types/feature-toggle-strategies-store-type.js';
+import type { Segment } from './feature-evaluator/strategy/strategy.js';
+import type { ISegment } from '../../types/model.js';
+import { serializeDates } from '../../types/serialize-dates.js';
+import type { Operator } from './feature-evaluator/constraint.js';
 import type { PayloadType } from 'unleash-client';
-import type { FeatureInterface } from 'unleash-client/lib/feature';
-import type { FeatureInterface as PlaygroundFeatureInterface } from './feature-evaluator/feature';
+import type { FeatureInterface } from 'unleash-client/lib/feature.js';
+import type { FeatureInterface as PlaygroundFeatureInterface } from './feature-evaluator/feature.js';
 
 type NonEmptyList<T> = [T, ...T[]];
 

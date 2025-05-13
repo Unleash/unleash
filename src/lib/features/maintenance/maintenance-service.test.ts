@@ -1,10 +1,11 @@
-import { SchedulerService } from '../scheduler/scheduler-service';
-import MaintenanceService from './maintenance-service';
-import SettingService from '../../services/setting-service';
-import { createTestConfig } from '../../../test/config/test-config';
-import FakeSettingStore from '../../../test/fixtures/fake-setting-store';
-import type EventService from '../events/event-service';
-import { TEST_AUDIT_USER } from '../../types';
+import { SchedulerService } from '../scheduler/scheduler-service.js';
+import MaintenanceService from './maintenance-service.js';
+import SettingService from '../../services/setting-service.js';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import FakeSettingStore from '../../../test/fixtures/fake-setting-store.js';
+import type EventService from '../events/event-service.js';
+import { TEST_AUDIT_USER } from '../../types/index.js';
+import { jest } from '@jest/globals';
 
 test('Scheduler should run scheduled functions if maintenance mode is off', async () => {
     const config = createTestConfig();
@@ -21,9 +22,15 @@ test('Scheduler should run scheduled functions if maintenance mode is off', asyn
 
     const job = jest.fn();
 
-    await schedulerService.schedule(job, 10, 'test-id');
+    await schedulerService.schedule(
+        async () => {
+            job();
+        },
+        10,
+        'test-id',
+    );
 
-    expect(job).toBeCalledTimes(1);
+    expect(job).toHaveBeenCalledTimes(1);
     schedulerService.stop();
 });
 
@@ -47,8 +54,14 @@ test('Scheduler should not run scheduled functions if maintenance mode is on', a
 
     const job = jest.fn();
 
-    await schedulerService.schedule(job, 10, 'test-id');
+    await schedulerService.schedule(
+        async () => {
+            job();
+        },
+        10,
+        'test-id',
+    );
 
-    expect(job).toBeCalledTimes(0);
+    expect(job).toHaveBeenCalledTimes(0);
     schedulerService.stop();
 });

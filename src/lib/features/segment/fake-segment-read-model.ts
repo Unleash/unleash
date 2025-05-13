@@ -2,8 +2,8 @@ import type {
     IClientSegment,
     IFeatureStrategySegment,
     ISegment,
-} from '../../types';
-import type { ISegmentReadModel } from './segment-read-model-type';
+} from '../../types/index.js';
+import type { ISegmentReadModel } from './segment-read-model-type.js';
 
 export class FakeSegmentReadModel implements ISegmentReadModel {
     constructor(private segments: ISegment[] = []) {}

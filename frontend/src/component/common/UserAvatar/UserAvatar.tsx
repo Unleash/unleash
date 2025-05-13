@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import type { IUser } from 'interfaces/user';
 import { forwardRef } from 'react';
-import { HtmlTooltip } from '../HtmlTooltip/HtmlTooltip';
+import { HtmlTooltip } from '../HtmlTooltip/HtmlTooltip.tsx';
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
     width: theme.spacing(3.5),

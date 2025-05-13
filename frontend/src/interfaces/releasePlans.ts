@@ -1,4 +1,4 @@
-import type { IFeatureStrategy } from './strategy';
+import type { IFeatureStrategy } from './strategy.js';
 
 export interface IReleasePlanTemplate {
     id: string;

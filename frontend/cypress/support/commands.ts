@@ -13,8 +13,7 @@ import {
     addUserIdStrategyToFeature_UI,
     updateFlexibleRolloutStrategy_UI,
     do_login,
-    //@ts-ignore
-} from './UI';
+} from './UI.ts';
 import {
     addUserToProject_API,
     createFeature_API,
@@ -24,8 +23,7 @@ import {
     deleteProject_API,
     updateUserPassword_API,
     createEnvironment_API,
-    //@ts-ignore
-} from './API';
+} from './API.ts';
 
 Cypress.on('window:before:load', (window) => {
     Object.defineProperty(window.navigator, 'language', { value: 'en' });

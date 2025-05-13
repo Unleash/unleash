@@ -3,7 +3,7 @@ import type { ITag } from 'interfaces/tags';
 import type { Operation } from 'fast-json-patch';
 import type { IConstraint } from 'interfaces/strategy';
 import type { CreateFeatureSchema, UpdateTagsSchema } from 'openapi';
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 import type { IFeatureVariant } from 'interfaces/featureToggle';
 
 const useFeatureApi = () => {

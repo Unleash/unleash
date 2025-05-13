@@ -1,7 +1,7 @@
 import { Accordion, AccordionDetails, styled } from '@mui/material';
 import { PROJECT_ENVIRONMENT_ACCORDION } from 'utils/testIds';
-import type { ProjectEnvironmentType } from '../../../../../../interfaces/environments';
-import { ProjectEnvironmentDefaultStrategy } from './ProjectEnvironmentDefaultStrategy/ProjectEnvironmentDefaultStrategy';
+import type { ProjectEnvironmentType } from '../../../../../../interfaces/environments.ts';
+import { ProjectEnvironmentDefaultStrategy } from './ProjectEnvironmentDefaultStrategy/ProjectEnvironmentDefaultStrategy.tsx';
 import { EnvironmentHeader } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentHeader/EnvironmentHeader';
 
 interface IProjectEnvironmentProps {

@@ -1,8 +1,8 @@
 import { ulid } from 'ulidx';
-import type { ReleasePlanMilestoneStrategy } from './release-plan-milestone-strategy';
-import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store';
-import type { Row } from '../../db/crud/row-type';
-import type { Db } from '../../db/db';
+import type { ReleasePlanMilestoneStrategy } from './release-plan-milestone-strategy.js';
+import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store.js';
+import type { Row } from '../../db/crud/row-type.js';
+import type { Db } from '../../db/db.js';
 
 const TABLE = 'milestone_strategies';
 

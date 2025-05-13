@@ -1,28 +1,31 @@
 import type { Response } from 'express';
-import Controller from '../../routes/controller';
-import type { FeatureSearchService, OpenApiService } from '../../services';
+import Controller from '../../routes/controller.js';
+import type {
+    FeatureSearchService,
+    OpenApiService,
+    IUnleashServices,
+} from '../../services/index.js';
 import {
     type IFeatureSearchOverview,
     type IFlagResolver,
     type IUnleashConfig,
-    type IUnleashServices,
     NONE,
     serializeDates,
-} from '../../types';
-import type { Logger } from '../../logger';
+} from '../../types/index.js';
+import type { Logger } from '../../logger.js';
 import {
     createResponseSchema,
     getStandardResponses,
     type SearchFeaturesSchema,
     searchFeaturesSchema,
-} from '../../openapi';
-import type { IAuthRequest } from '../../routes/unleash-types';
+} from '../../openapi/index.js';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
 import {
     type FeatureSearchQueryParameters,
     featureSearchQueryParameters,
-} from '../../openapi/spec/feature-search-query-parameters';
-import { normalizeQueryParams } from './search-utils';
-import { anonymise } from '../../util';
+} from '../../openapi/spec/feature-search-query-parameters.js';
+import { normalizeQueryParams } from './search-utils.js';
+import { anonymise } from '../../util/index.js';
 
 type FeatureSearchServices = Pick<
     IUnleashServices,

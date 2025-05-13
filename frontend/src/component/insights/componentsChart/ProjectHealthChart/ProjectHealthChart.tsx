@@ -1,7 +1,7 @@
 import 'chartjs-adapter-date-fns';
 import { type FC, useMemo } from 'react';
 import type { InstanceInsightsSchema } from 'openapi';
-import { HealthTooltip } from './HealthChartTooltip/HealthChartTooltip';
+import { HealthTooltip } from './HealthChartTooltip/HealthChartTooltip.tsx';
 import { useProjectChartData } from 'component/insights/hooks/useProjectChartData';
 import {
     fillGradientPrimary,

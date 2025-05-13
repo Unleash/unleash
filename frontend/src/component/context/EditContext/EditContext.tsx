@@ -9,8 +9,8 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { scrollToTop } from 'component/common/util';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { ContextForm } from '../ContextForm/ContextForm';
-import { useContextForm } from '../hooks/useContextForm';
+import { ContextForm } from '../ContextForm/ContextForm.tsx';
+import { useContextForm } from '../hooks/useContextForm.ts';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { GO_BACK } from 'constants/navigate';
 

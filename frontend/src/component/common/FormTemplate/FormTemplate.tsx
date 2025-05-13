@@ -1,5 +1,5 @@
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import Codebox from '../Codebox/Codebox';
+import Codebox from '../Codebox/Codebox.tsx';
 import {
     Collapse,
     IconButton,
@@ -11,7 +11,7 @@ import {
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import FileCopy from '@mui/icons-material/FileCopy';
 import Info from '@mui/icons-material/Info';
-import Loader from '../Loader/Loader';
+import Loader from '../Loader/Loader.tsx';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import React from 'react';

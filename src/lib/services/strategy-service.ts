@@ -1,13 +1,13 @@
-import type { Logger } from '../logger';
-import type { IUnleashConfig } from '../types/option';
-import type { IUnleashStores } from '../types/stores';
+import type { Logger } from '../logger.js';
+import type { IUnleashConfig } from '../types/option.js';
+import type { IUnleashStores } from '../types/stores.js';
 import type {
     IMinimalStrategy,
     IStrategy,
     IStrategyStore,
-} from '../types/stores/strategy-store';
-import NotFoundError from '../error/notfound-error';
-import type EventService from '../features/events/event-service';
+} from '../types/stores/strategy-store.js';
+import NotFoundError from '../error/notfound-error.js';
+import type EventService from '../features/events/event-service.js';
 import {
     type IAuditUser,
     StrategyCreatedEvent,
@@ -15,9 +15,9 @@ import {
     StrategyDeprecatedEvent,
     StrategyReactivatedEvent,
     StrategyUpdatedEvent,
-} from '../types';
-import strategySchema from './strategy-schema';
-import { NameExistsError } from '../error';
+} from '../types/index.js';
+import strategySchema from './strategy-schema.js';
+import { NameExistsError } from '../error/index.js';
 
 class StrategyService {
     private logger: Logger;
@@ -157,4 +157,3 @@ class StrategyService {
     }
 }
 export default StrategyService;
-module.exports = StrategyService;

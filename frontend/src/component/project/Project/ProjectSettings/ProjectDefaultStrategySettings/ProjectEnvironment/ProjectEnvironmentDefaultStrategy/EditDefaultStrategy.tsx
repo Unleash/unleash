@@ -16,7 +16,7 @@ import { formatStrategyName } from 'utils/strategyNames';
 import { sortStrategyParameters } from 'utils/sortStrategyParameters';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { ProjectDefaultStrategyForm } from './ProjectDefaultStrategyForm';
+import { ProjectDefaultStrategyForm } from './ProjectDefaultStrategyForm.tsx';
 import type { CreateFeatureStrategySchema } from 'openapi';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { UPDATE_PROJECT } from '@server/types/permissions';

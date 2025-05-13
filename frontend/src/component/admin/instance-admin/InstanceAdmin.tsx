@@ -1,4 +1,4 @@
-import { InstanceStats } from './InstanceStats/InstanceStats';
+import { InstanceStats } from './InstanceStats/InstanceStats.tsx';
 
 export const InstanceAdmin = () => {
     return (

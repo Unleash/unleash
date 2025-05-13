@@ -1,19 +1,18 @@
 import type { Response } from 'express';
-import Controller from '../../routes/controller';
+import Controller from '../../routes/controller.js';
 import {
     type IArchivedQuery,
     type IFlagResolver,
     type IProjectParam,
     type IUnleashConfig,
-    type IUnleashServices,
     NONE,
     serializeDates,
-} from '../../types';
-import ProjectFeaturesController from '../feature-toggle/feature-toggle-controller';
-import ProjectEnvironmentsController from '../project-environments/project-environments-controller';
-import ProjectHealthReport from '../../routes/admin-api/project/health-report';
-import type ProjectService from './project-service';
-import VariantsController from '../../routes/admin-api/project/variants';
+} from '../../types/index.js';
+import ProjectFeaturesController from '../feature-toggle/feature-toggle-controller.js';
+import ProjectEnvironmentsController from '../project-environments/project-environments-controller.js';
+import ProjectHealthReport from '../../routes/admin-api/project/health-report.js';
+import type ProjectService from './project-service.js';
+import VariantsController from '../../routes/admin-api/project/variants.js';
 import {
     createResponseSchema,
     type DeprecatedProjectOverviewSchema,
@@ -25,30 +24,30 @@ import {
     projectOverviewSchema,
     type ProjectsSchema,
     projectsSchema,
-} from '../../openapi';
-import { getStandardResponses } from '../../openapi/util/standard-responses';
-import type { OpenApiService } from '../../services';
-import type { IAuthRequest } from '../../routes/unleash-types';
-import { ProjectApiTokenController } from '../../routes/admin-api/project/api-token';
-import ProjectArchiveController from '../../routes/admin-api/project/project-archive';
-import type { Db } from '../../db/db';
-import DependentFeaturesController from '../dependent-features/dependent-features-controller';
-import type { ProjectOverviewSchema } from '../../openapi/spec/project-overview-schema';
+} from '../../openapi/index.js';
+import { getStandardResponses } from '../../openapi/util/standard-responses.js';
+import type { IUnleashServices, OpenApiService } from '../../services/index.js';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
+import { ProjectApiTokenController } from '../../routes/admin-api/project/api-token.js';
+import ProjectArchiveController from '../../routes/admin-api/project/project-archive.js';
+import type { Db } from '../../db/db.js';
+import DependentFeaturesController from '../dependent-features/dependent-features-controller.js';
+import type { ProjectOverviewSchema } from '../../openapi/spec/project-overview-schema.js';
 import {
     projectApplicationsSchema,
     type ProjectApplicationsSchema,
-} from '../../openapi/spec/project-applications-schema';
-import { projectApplicationsQueryParameters } from '../../openapi/spec/project-applications-query-parameters';
-import { normalizeQueryParams } from '../feature-search/search-utils';
-import ProjectInsightsController from '../project-insights/project-insights-controller';
-import FeatureLifecycleController from '../feature-lifecycle/feature-lifecycle-controller';
-import type ClientInstanceService from '../metrics/instance/instance-service';
+} from '../../openapi/spec/project-applications-schema.js';
+import { projectApplicationsQueryParameters } from '../../openapi/spec/project-applications-query-parameters.js';
+import { normalizeQueryParams } from '../feature-search/search-utils.js';
+import ProjectInsightsController from '../project-insights/project-insights-controller.js';
+import FeatureLifecycleController from '../feature-lifecycle/feature-lifecycle-controller.js';
+import type ClientInstanceService from '../metrics/instance/instance-service.js';
 import {
     projectFlagCreatorsSchema,
     type ProjectFlagCreatorsSchema,
-} from '../../openapi/spec/project-flag-creators-schema';
-import ProjectStatusController from '../project-status/project-status-controller';
-import FeatureLinkController from '../feature-links/feature-link-controller';
+} from '../../openapi/spec/project-flag-creators-schema.js';
+import ProjectStatusController from '../project-status/project-status-controller.js';
+import FeatureLinkController from '../feature-links/feature-link-controller.js';
 
 export default class ProjectController extends Controller {
     private projectService: ProjectService;

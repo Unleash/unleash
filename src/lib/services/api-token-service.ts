@@ -1,40 +1,40 @@
 import crypto from 'crypto';
-import type { Logger } from '../logger';
-import { ADMIN, CLIENT, FRONTEND } from '../types/permissions';
-import type { IUnleashStores } from '../types/stores';
-import type { IUnleashConfig } from '../types/option';
-import ApiUser, { type IApiUser } from '../types/api-user';
+import type { Logger } from '../logger.js';
+import { ADMIN, CLIENT, FRONTEND } from '../types/permissions.js';
+import type { IUnleashStores } from '../types/stores.js';
+import type { IUnleashConfig } from '../types/option.js';
+import ApiUser, { type IApiUser } from '../types/api-user.js';
 import {
-    ApiTokenType,
-    type IApiToken,
     type ILegacyApiTokenCreate,
-    type IApiTokenCreate,
     validateApiToken,
     validateApiTokenEnvironment,
     mapLegacyToken,
     mapLegacyTokenWithSecret,
-} from '../types/models/api-token';
-import type { IApiTokenStore } from '../types/stores/api-token-store';
-import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
-import BadDataError from '../error/bad-data-error';
-import type { IEnvironmentStore } from '../features/project-environments/environment-store-type';
-import { constantTimeCompare } from '../util/constantTimeCompare';
+} from '../types/models/api-token.js';
+import type { IApiTokenStore } from '../types/stores/api-token-store.js';
+import { FOREIGN_KEY_VIOLATION } from '../error/db-error.js';
+import BadDataError from '../error/bad-data-error.js';
+import type { IEnvironmentStore } from '../features/project-environments/environment-store-type.js';
+import { constantTimeCompare } from '../util/constantTimeCompare.js';
 import {
     ADMIN_TOKEN_USER,
     ApiTokenCreatedEvent,
     ApiTokenDeletedEvent,
+    ApiTokenType,
     ApiTokenUpdatedEvent,
+    type IApiToken,
+    type IApiTokenCreate,
     type IAuditUser,
     type IFlagResolver,
     SYSTEM_USER_AUDIT,
-} from '../types';
-import { omitKeys } from '../util';
-import type EventService from '../features/events/event-service';
+} from '../types/index.js';
+import { omitKeys } from '../util/index.js';
+import type EventService from '../features/events/event-service.js';
 import { addMinutes, isPast } from 'date-fns';
-import metricsHelper from '../util/metrics-helper';
-import { FUNCTION_TIME } from '../metric-events';
-import type { ResourceLimitsSchema } from '../openapi';
-import { throwExceedsLimitError } from '../error/exceeds-limit-error';
+import metricsHelper from '../util/metrics-helper.js';
+import { FUNCTION_TIME } from '../metric-events.js';
+import type { ResourceLimitsSchema } from '../openapi/index.js';
+import { throwExceedsLimitError } from '../error/exceeds-limit-error.js';
 import type EventEmitter from 'events';
 
 const resolveTokenPermissions = (tokenType: string) => {

@@ -1,7 +1,7 @@
-import type { Db } from '../../db/db';
-import type { Logger, LogProvider } from '../../logger';
-import type { IPrivateProjectStore } from './privateProjectStoreType';
-import { ADMIN_TOKEN_USER } from '../../types';
+import type { Db } from '../../db/db.js';
+import type { Logger, LogProvider } from '../../logger.js';
+import type { IPrivateProjectStore } from './privateProjectStoreType.js';
+import { ADMIN_TOKEN_USER } from '../../types/index.js';
 
 export type ProjectAccess =
     | {

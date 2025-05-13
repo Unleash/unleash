@@ -1,11 +1,11 @@
-import dbInit, { type ITestDb } from '../../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../../helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../helpers/test-helper';
-import getLogger from '../../../../fixtures/no-logger';
-import type { IUser } from '../../../../../lib/types';
-import { extractAuditInfoFromUser } from '../../../../../lib/util';
+} from '../../../helpers/test-helper.js';
+import getLogger from '../../../../fixtures/no-logger.js';
+import type { IUser } from '../../../../../lib/types/index.js';
+import { extractAuditInfoFromUser } from '../../../../../lib/util/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

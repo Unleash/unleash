@@ -1,6 +1,6 @@
 import type { IConstraint } from 'interfaces/strategy';
-import { SegmentFormStepOne } from './SegmentFormStepOne';
-import { SegmentFormStepTwo } from './SegmentFormStepTwo';
+import { SegmentFormStepOne } from './SegmentFormStepOne.tsx';
+import { SegmentFormStepTwo } from './SegmentFormStepTwo.tsx';
 import type React from 'react';
 import { useState } from 'react';
 import { SegmentFormStepList } from 'component/segments/SegmentFormStepList';

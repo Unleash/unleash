@@ -8,7 +8,7 @@ import {
     AutocompleteBox,
     type IAutocompleteBoxOption,
 } from 'component/common/AutocompleteBox/AutocompleteBox';
-import { MilestoneStrategySegmentList } from './MilestoneStrategySegmentList';
+import { MilestoneStrategySegmentList } from './MilestoneStrategySegmentList.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledHelpIconBox = styled(Box)(({ theme }) => ({

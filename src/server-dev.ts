@@ -1,7 +1,7 @@
-import { start } from './lib/server-impl';
-import { createConfig } from './lib/create-config';
-import { LogLevel } from './lib/logger';
-import { ApiTokenType } from './lib/types/models/api-token';
+import { start } from './lib/server-impl.js';
+import { createConfig } from './lib/create-config.js';
+import { LogLevel } from './lib/logger.js';
+import { ApiTokenType } from './lib/types/model.js';
 
 process.nextTick(async () => {
     try {

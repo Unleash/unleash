@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import FeatureOverviewMetaData from './FeatureOverviewMetaData';
+import FeatureOverviewMetaData from './FeatureOverviewMetaData.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { Route, Routes } from 'react-router-dom';
 import type { IDependency, IFeatureToggle } from 'interfaces/featureToggle';

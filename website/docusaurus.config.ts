@@ -801,10 +801,6 @@ class="header-github-link"
                             to: '/unleash-academy/managing-unleash-for-devops',
                         },
                         {
-                            from: '/developer-guide',
-                            to: '/contributing',
-                        },
-                        {
                             from: [
                                 '/tutorials/unleash-overview',
                                 '/user_guide/unleash_overview',

@@ -8,7 +8,7 @@ import {
 } from 'constants/operators';
 import { CURRENT_TIME_CONTEXT_FIELD } from 'utils/operatorsForContext';
 import {
-    type EditableSingleValueConstraint,
+    type EditableDateConstraint,
     isDateConstraint,
     isMultiValueConstraint,
     isSingleValueConstraint,
@@ -55,22 +55,22 @@ const resetValues = (state: EditableConstraint): EditableConstraint => {
     };
 };
 
-const setValue = (
-    state: EditableConstraint,
-    value?: string,
-): EditableConstraint => {
+const withValue = <T extends EditableConstraint>(
+    value: string | null,
+    constraint: T,
+): T => {
     // @ts-expect-error
-    const { value: _, values, ...rest } = state;
-    if (isMultiValueOperator(state.operator)) {
+    const { value: _, values, ...rest } = constraint;
+    if (isMultiValueOperator(constraint.operator)) {
         return {
             ...rest,
             values: new Set([value].filter(Boolean)),
-        } as EditableMultiValueConstraint;
+        } as T;
     }
     return {
         ...rest,
         value: value ?? '',
-    } as EditableSingleValueConstraint;
+    } as T;
 };
 
 export const constraintReducer = (
@@ -87,27 +87,23 @@ export const constraintReducer = (
                 action.payload === CURRENT_TIME_CONTEXT_FIELD &&
                 !isDateOperator(state.operator)
             ) {
-                return setValue(
-                    {
-                        ...state,
-                        contextName: action.payload,
-                        operator: DATE_AFTER,
-                    } as EditableConstraint,
-                    new Date().toISOString(),
-                );
+                return withValue(new Date().toISOString(), {
+                    ...state,
+                    contextName: action.payload,
+                    operator: DATE_AFTER,
+                } as EditableDateConstraint);
             } else if (
                 action.payload !== CURRENT_TIME_CONTEXT_FIELD &&
                 isDateOperator(state.operator)
             ) {
-                return resetValues({
+                return withValue(null, {
                     ...state,
                     operator: IN,
                     contextName: action.payload,
-                    values: new Set(),
-                });
+                } as EditableMultiValueConstraint);
             }
 
-            return resetValues({
+            return withValue(null, {
                 ...state,
                 contextName: action.payload,
             });

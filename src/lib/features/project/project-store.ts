@@ -7,6 +7,7 @@ import type {
     IProject,
     IProjectApplication,
     IProjectApplications,
+    IProjectLinkTemplate,
     IProjectUpdate,
     IUnleashConfig,
     ProjectMode,
@@ -120,6 +121,16 @@ class ProjectStore implements IProjectStore {
         );
         const { present } = result.rows[0];
         return present;
+    }
+
+    async getProjectLinkTemplates(id: string): Promise<IProjectLinkTemplate[]> {
+        const result = await this.db
+            .select('link_templates')
+            .from(SETTINGS_TABLE)
+            .where({ project: id })
+            .first();
+
+        return result?.link_templates || [];
     }
 
     async getAll(query: IProjectQuery = {}): Promise<IProject[]> {

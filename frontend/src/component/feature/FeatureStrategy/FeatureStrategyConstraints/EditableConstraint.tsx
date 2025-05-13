@@ -156,7 +156,7 @@ const TopRowInput: FC<{
             <ConstraintDateInput
                 setValue={(value: string) =>
                     updateConstraint({
-                        type: 'set value',
+                        type: 'add value(s)',
                         payload: value,
                     })
                 }
@@ -171,7 +171,7 @@ const TopRowInput: FC<{
                 validator={validator}
                 onAddValue={(newValue) => {
                     updateConstraint({
-                        type: 'set value',
+                        type: 'add value(s)',
                         payload: newValue,
                     });
                 }}
@@ -188,7 +188,7 @@ const TopRowInput: FC<{
                 validator={validator}
                 onAddValue={(newValue) => {
                     updateConstraint({
-                        type: 'set value',
+                        type: 'add value(s)',
                         payload: newValue,
                     });
                 }}
@@ -338,17 +338,10 @@ export const EditableConstraint: FC<Props> = ({
                                   : undefined
                         }
                         removeValue={(value) => {
-                            if (isMultiValueConstraint(localConstraint)) {
-                                updateConstraint({
-                                    type: 'remove value',
-                                    payload: value,
-                                });
-                            } else {
-                                updateConstraint({
-                                    type: 'set value',
-                                    payload: '',
-                                });
-                            }
+                            updateConstraint({
+                                type: 'remove value',
+                                payload: value,
+                            });
                         }}
                         getExternalFocusTarget={() =>
                             addValuesButtonRef.current ??
@@ -412,7 +405,7 @@ export const EditableConstraint: FC<Props> = ({
                             }
                             addValue={(newValues) =>
                                 updateConstraint({
-                                    type: 'set value',
+                                    type: 'add value(s)',
                                     payload: newValues,
                                 })
                             }

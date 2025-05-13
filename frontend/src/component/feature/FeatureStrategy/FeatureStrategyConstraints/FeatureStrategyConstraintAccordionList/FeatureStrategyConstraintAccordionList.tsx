@@ -93,12 +93,14 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                                 }
                             />
                         </StyledHelpIconBox>
-                        {addEditStrategy && setConstraints ? (
-                            <EditableConstraintsList
-                                ref={ref}
-                                setConstraints={setConstraints}
-                                constraints={constraints}
-                            />
+                        {addEditStrategy ? (
+                            setConstraints ? (
+                                <EditableConstraintsList
+                                    ref={ref}
+                                    setConstraints={setConstraints}
+                                    constraints={constraints}
+                                />
+                            ) : null
                         ) : (
                             <NewConstraintAccordionList
                                 ref={ref}

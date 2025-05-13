@@ -575,3 +575,82 @@ test('should show user creation events for admins', async () => {
         total: 2,
     });
 });
+
+test('should filter events by environment', async () => {
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        environment: 'production',
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        environment: 'staging',
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    const { body } = await searchEvents({ environment: 'IS:production' });
+
+    expect(body).toMatchObject({
+        events: [
+            {
+                type: 'feature-created',
+                environment: 'production',
+            },
+        ],
+        total: 1,
+    });
+});
+
+test('should filter events by environment using IS_ANY_OF', async () => {
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        environment: 'production',
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        environment: 'staging',
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        environment: 'development',
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    const { body } = await searchEvents({
+        environment: 'IS_ANY_OF:production,staging',
+    });
+
+    expect(body).toMatchObject({
+        events: [
+            {
+                type: 'feature-created',
+                environment: 'staging',
+            },
+            {
+                type: 'feature-created',
+                environment: 'production',
+            },
+        ],
+        total: 2,
+    });
+});

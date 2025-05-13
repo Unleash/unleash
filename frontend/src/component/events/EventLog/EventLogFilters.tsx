@@ -9,25 +9,26 @@ import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureS
 import { EventSchemaType, type FeatureSearchResponseSchema } from 'openapi';
 import type { ProjectSchema } from 'openapi';
 import { useEventCreators } from 'hooks/api/getters/useEventCreators/useEventCreators';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 
 export const useEventLogFilters = (
-    projects: ProjectSchema[],
-    features: FeatureSearchResponseSchema[],
+    projectsToFilter: any[],
+    featuresToFilter: any[],
 ) => {
+    const { environments } = useEnvironments();
     const { eventCreators } = useEventCreators();
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
-    useEffect(() => {
-        const projectOptions =
-            projects?.map((project: ProjectSchema) => ({
-                label: project.name,
-                value: project.id,
-            })) ?? [];
 
-        const flagOptions =
-            features?.map((flag) => ({
-                label: flag.name,
-                value: flag.name,
-            })) ?? [];
+    useEffect(() => {
+        const projectOptions = projectsToFilter.map((project) => ({
+            label: project.name,
+            value: project.id,
+        }));
+
+        const flagOptions = featuresToFilter.map((feature) => ({
+            label: feature.name,
+            value: feature.name,
+        }));
 
         const eventCreatorOptions = eventCreators.map((creator) => ({
             label: creator.name,
@@ -41,9 +42,14 @@ export const useEventLogFilters = (
             }),
         );
 
+        const environmentOptions = environments.map((env) => ({
+            label: env.name,
+            value: env.name,
+        }));
+
         const availableFilters: IFilterItem[] = [
             {
-                label: 'Date From',
+                label: 'Created date',
                 icon: 'today',
                 options: [],
                 filterKey: 'from',
@@ -53,7 +59,7 @@ export const useEventLogFilters = (
                 persistent: true,
             },
             {
-                label: 'Date To',
+                label: 'Created date',
                 icon: 'today',
                 options: [],
                 filterKey: 'to',
@@ -102,13 +108,25 @@ export const useEventLogFilters = (
                       },
                   ] as IFilterItem[])
                 : []),
+            ...(environmentOptions.length > 0
+                ? ([
+                      {
+                          label: 'Environment',
+                          icon: 'cloud',
+                          options: environmentOptions,
+                          filterKey: 'environment',
+                          singularOperators: ['IS'],
+                          pluralOperators: ['IS_ANY_OF'],
+                      },
+                  ] as IFilterItem[])
+                : []),
         ];
 
         setAvailableFilters(availableFilters);
     }, [
-        JSON.stringify(features),
-        JSON.stringify(projects),
-        JSON.stringify(eventCreators),
+        JSON.stringify(featuresToFilter),
+        JSON.stringify(projectsToFilter),
+        JSON.stringify(environments),
     ]);
 
     return availableFilters;

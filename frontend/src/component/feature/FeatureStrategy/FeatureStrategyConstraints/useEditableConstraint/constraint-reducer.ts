@@ -137,7 +137,7 @@ export const constraintReducer = (
         case 'toggle inverted operator':
             return { ...state, inverted: !state.inverted };
         case 'toggle case sensitivity':
-            return { ...state, caseInsensitive: !state.inverted };
+            return { ...state, caseInsensitive: !state.caseInsensitive };
         case 'remove value':
             if (isSingleValueConstraint(state)) {
                 if (state.value === action.payload) {

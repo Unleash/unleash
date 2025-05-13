@@ -19,6 +19,7 @@ import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/Fa
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ExportDialog } from './ExportDialog';
 import { useUiFlag } from 'hooks/useUiFlag';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { focusable } from 'themes/themeStyles';
 import {
     FeatureEnvironmentSeenCell,
@@ -68,6 +69,7 @@ const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 
 export const FeatureToggleListTable: FC = () => {
     const theme = useTheme();
+    const { isOss } = useUiConfig();
     const { trackEvent } = usePlausibleTracker();
     const { environments } = useEnvironments();
     const enabledEnvironments = environments
@@ -185,15 +187,19 @@ export const FeatureToggleListTable: FC = () => {
                           size: 50,
                           meta: { width: '1%' },
                       }),
-                      columnHelper.accessor('environments', {
-                          id: 'status',
-                          header: 'Status',
-                          cell: ({ row: { original } }) => (
-                              <StatusCell {...original} />
-                          ),
-                          enableSorting: false,
-                          size: 350,
-                      }),
+                      ...(!isOss()
+                          ? [
+                                columnHelper.accessor('environments', {
+                                    id: 'status',
+                                    header: 'Status',
+                                    cell: ({ row: { original } }) => (
+                                        <StatusCell {...original} />
+                                    ),
+                                    enableSorting: false,
+                                    size: 350,
+                                }),
+                            ]
+                          : []),
                       columnHelper.accessor('project', {
                           header: 'Project',
                           cell: ({ getValue }) => {

@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { Badge } from './Badge.tsx';
-import { render } from '../../../utils/testRenderer.ts';
+import { render } from 'utils/testRenderer';
 
 test('Badge should render text', async () => {
     render(<Badge color='success'>Predefined</Badge>);

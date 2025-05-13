@@ -138,16 +138,6 @@ export const useEditableConstraint = (
     };
 
     if (contextDefinition.legalValues?.length) {
-        if (isSingleValueConstraint(localConstraint)) {
-            return {
-                updateConstraint,
-                constraint: localConstraint,
-                validator,
-                legalValues: contextDefinition.legalValues,
-                invalidLegalValues,
-                deletedLegalValues,
-            };
-        }
         return {
             updateConstraint,
             constraint: localConstraint,
@@ -155,19 +145,12 @@ export const useEditableConstraint = (
             legalValues: contextDefinition.legalValues,
             invalidLegalValues,
             deletedLegalValues,
-        };
-    }
-    if (isSingleValueConstraint(localConstraint)) {
-        return {
-            updateConstraint,
-            constraint: localConstraint,
-            validator,
-        };
+        } as EditableConstraintState;
     }
 
     return {
         updateConstraint,
         constraint: localConstraint,
         validator,
-    };
+    } as EditableConstraintState;
 };

@@ -218,20 +218,20 @@ const TopRowInput: FC<{
 type Props = {
     constraint: IConstraint;
     onDelete: () => void;
-    onAutoSave: (constraint: IConstraint) => void;
+    onUpdate: (constraint: IConstraint) => void;
 };
 
 export const EditableConstraint: FC<Props> = ({
     onDelete,
     constraint,
-    onAutoSave,
+    onUpdate,
 }) => {
     const {
         constraint: localConstraint,
         updateConstraint,
         validator,
         ...legalValueData
-    } = useEditableConstraint(constraint, onAutoSave);
+    } = useEditableConstraint(constraint, onUpdate);
 
     const isLegalValueConstraint = 'legalValues' in legalValueData;
 

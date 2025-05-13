@@ -73,7 +73,7 @@ type EditableConstraintState = {
 
 export const useEditableConstraint = (
     constraint: IConstraint,
-    onAutoSave: (constraint: IConstraint) => void,
+    onUpdate: (constraint: IConstraint) => void,
 ): EditableConstraintState => {
     const [localConstraint, setLocalConstraint] = useState(() => {
         return fromIConstraint(constraint);
@@ -128,7 +128,7 @@ export const useEditableConstraint = (
             localConstraint.contextName !== nextState.contextName;
 
         setLocalConstraint(nextState);
-        onAutoSave(toIConstraint(nextState));
+        onUpdate(toIConstraint(nextState));
 
         if (contextFieldHasChanged) {
             setContextDefinition(

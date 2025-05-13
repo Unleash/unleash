@@ -155,7 +155,7 @@ export const NewConstraintAccordionList = forwardRef<
                                 // @ts-ignore todo: find a better way to do this
                                 onDelete={() => onRemove(index)}
                                 // @ts-ignore
-                                onAutoSave={onAutoSave(constraintId)}
+                                onUpdate={onAutoSave(constraintId)}
                             />
                         ) : (
                             <ConstraintAccordionView

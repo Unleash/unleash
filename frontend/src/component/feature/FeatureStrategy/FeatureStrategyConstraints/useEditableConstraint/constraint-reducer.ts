@@ -52,6 +52,53 @@ export const constraintReducer = (
     action: ConstraintUpdateAction,
     deletedLegalValues?: Set<string>,
 ): EditableConstraint => {
+    const removeValue = (value: string) => {
+        if (isSingleValueConstraint(state)) {
+            if (state.value === value) {
+                return {
+                    ...state,
+                    value: '',
+                };
+            } else {
+                return state;
+            }
+        }
+        state.values.delete(value);
+        return {
+            ...state,
+            values: state.values ?? new Set(),
+        };
+    };
+
+    const addValue = (value: string | string[]) => {
+        if (isSingleValueConstraint(state)) {
+            const newValue = Array.isArray(value) ? value[0] : value;
+            if (deletedLegalValues?.has(newValue)) {
+                if (deletedLegalValues?.has(state.value)) {
+                    return {
+                        ...state,
+                        value: '',
+                    };
+                }
+                return state;
+            }
+            return {
+                ...state,
+                value: newValue ?? '',
+            };
+        }
+
+        const newValues = new Set(Array.isArray(value) ? value : [value]);
+        const combinedValues = union(state.values, newValues);
+        const filteredValues = deletedLegalValues
+            ? difference(combinedValues, deletedLegalValues)
+            : combinedValues;
+        return {
+            ...state,
+            values: filteredValues,
+        };
+    };
+
     switch (action.type) {
         case 'set context field':
             if (action.payload === state.contextName) {
@@ -103,105 +150,25 @@ export const constraintReducer = (
                 operator: action.payload,
             } as EditableMultiValueConstraint);
         case 'add value(s)': {
-            if (isSingleValueConstraint(state)) {
-                const newValue = Array.isArray(action.payload)
-                    ? action.payload[0]
-                    : action.payload;
-                if (deletedLegalValues?.has(newValue)) {
-                    if (deletedLegalValues?.has(state.value)) {
-                        return {
-                            ...state,
-                            value: '',
-                        };
-                    }
-                    return state;
-                }
-                return {
-                    ...state,
-                    value: newValue ?? '',
-                };
-            }
-
-            const newValues = new Set(
-                Array.isArray(action.payload)
-                    ? action.payload
-                    : [action.payload],
-            );
-            const combinedValues = union(state.values, newValues);
-            const filteredValues = deletedLegalValues
-                ? difference(combinedValues, deletedLegalValues)
-                : combinedValues;
-            return {
-                ...state,
-                values: filteredValues,
-            };
+            return addValue(action.payload);
         }
         case 'toggle inverted operator':
             return { ...state, inverted: !state.inverted };
         case 'toggle case sensitivity':
             return { ...state, caseInsensitive: !state.caseInsensitive };
         case 'remove value':
-            if (isSingleValueConstraint(state)) {
-                if (state.value === action.payload) {
-                    return {
-                        ...state,
-                        value: '',
-                    };
-                } else {
-                    return state;
-                }
-            }
-            state.values.delete(action.payload);
-            return {
-                ...state,
-                values: state.values ?? new Set(),
-            };
+            return removeValue(action.payload);
         case 'clear values':
             return withValue(null, state);
         case 'toggle value':
-            if (isMultiValueConstraint(state)) {
-                if (state.values.has(action.payload)) {
-                    state.values.delete(action.payload);
-                    return {
-                        ...state,
-                        values: state.values ?? new Set(),
-                    };
-                } else {
-                    const newValues = new Set(
-                        Array.isArray(action.payload)
-                            ? action.payload
-                            : [action.payload],
-                    );
-                    const combinedValues = union(state.values, newValues);
-                    const filteredValues = deletedLegalValues
-                        ? difference(combinedValues, deletedLegalValues)
-                        : combinedValues;
-                    return {
-                        ...state,
-                        values: filteredValues,
-                    };
-                }
-            } else {
-                if (state.value === action.payload) {
-                    return {
-                        ...state,
-                        value: '',
-                    };
-                } else {
-                    if (deletedLegalValues?.has(action.payload)) {
-                        if (deletedLegalValues?.has(state.value)) {
-                            return {
-                                ...state,
-                                value: '',
-                            };
-                        }
-                        return state;
-                    }
-                    return {
-                        ...state,
-                        value: action.payload,
-                    };
-                }
+            if (
+                (isSingleValueConstraint(state) &&
+                    state.value === action.payload) ||
+                (isMultiValueConstraint(state) &&
+                    state.values.has(action.payload))
+            ) {
+                return removeValue(action.payload);
             }
+            return addValue(action.payload);
     }
 };

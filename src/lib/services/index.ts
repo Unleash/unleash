@@ -295,6 +295,14 @@ export const createServices = (
         ? new FeatureLinksReadModel(db, config.eventBus)
         : new FakeFeatureLinksReadModel();
 
+    const transactionalFeatureLinkService = db
+        ? withTransactional(createFeatureLinkService(config), db)
+        : withFakeTransactional(
+              createFakeFeatureLinkService(config).featureLinkService,
+          );
+
+    const featureLinkService = transactionalFeatureLinkService;
+
     const featureToggleService = new FeatureToggleService(stores, config, {
         segmentService,
         accessService,
@@ -436,14 +444,6 @@ export const createServices = (
     const transactionalUserSubscriptionsService = db
         ? withTransactional(createUserSubscriptionsService(config), db)
         : withFakeTransactional(createFakeUserSubscriptionsService(config));
-
-    const transactionalFeatureLinkService = db
-        ? withTransactional(createFeatureLinkService(config), db)
-        : withFakeTransactional(
-              createFakeFeatureLinkService(config).featureLinkService,
-          );
-
-    const featureLinkService = transactionalFeatureLinkService;
 
     return {
         transactionalAccessService,

@@ -23,7 +23,7 @@ const extraConstraintFields: Partial<EditableConstraint> = {
 };
 
 const multiValueConstraint = (
-    contextField: string,
+    contextField: string = 'multi-value-context-field',
 ): EditableMultiValueConstraint => ({
     ...extraConstraintFields,
     contextName: contextField,
@@ -32,7 +32,7 @@ const multiValueConstraint = (
 });
 
 const singleValueConstraint = (
-    contextField: string,
+    contextField: string = 'single-value-context-field',
 ): EditableSingleValueConstraint => ({
     ...extraConstraintFields,
     contextName: contextField,
@@ -40,7 +40,9 @@ const singleValueConstraint = (
     value: '5',
 });
 
-const dateConstraint = (contextField: string): EditableDateConstraint => ({
+const dateConstraint = (
+    contextField: string = CURRENT_TIME_CONTEXT_FIELD,
+): EditableDateConstraint => ({
     ...extraConstraintFields,
     contextName: contextField,
     operator: DATE_AFTER,
@@ -49,7 +51,7 @@ const dateConstraint = (contextField: string): EditableDateConstraint => ({
 
 const getConstraintForOperator = (
     operator: string,
-    contextField: string,
+    contextField?: string,
 ): EditableConstraint => {
     if (isDateOperator(operator)) {
         return { ...dateConstraint(contextField), operator };
@@ -71,7 +73,7 @@ describe('changing context field', () => {
     ])(
         'changing context field to the same field is a no-op for %s constraints',
         (_, constraint) => {
-            const input = constraint('test-context-field');
+            const input = constraint();
             expect(
                 constraintReducer(input, {
                     type: 'set context field',
@@ -132,7 +134,7 @@ describe('changing context field', () => {
         },
     );
     test('changing context field from currentTime to something else sets a default operator', () => {
-        const input = dateConstraint(CURRENT_TIME_CONTEXT_FIELD);
+        const input = dateConstraint();
         const result = constraintReducer(input, {
             type: 'set context field',
             payload: 'somethingElse',
@@ -150,10 +152,7 @@ describe('changing operator', () => {
     test.each(allOperators)(
         'changing operator to the same operator (%s) is a no-op',
         (operator) => {
-            const constraint = getConstraintForOperator(
-                operator,
-                'context-field',
-            );
+            const constraint = getConstraintForOperator(operator);
             expect(
                 constraintReducer(constraint, {
                     type: 'set operator',
@@ -171,10 +170,7 @@ describe('changing operator', () => {
     test.each(allCombinations)(
         "changing the operator to anything that isn't date based clears the value: %s -> %s",
         (operatorA, operatorB) => {
-            const constraint = getConstraintForOperator(
-                operatorA,
-                'context-field',
-            );
+            const constraint = getConstraintForOperator(operatorA);
             // @ts-expect-error
             const { value, values, ...result } = constraintReducer(constraint, {
                 type: 'set operator',
@@ -208,7 +204,7 @@ describe('changing operator', () => {
         'changing the operator from one date operator to another date operator leaves the value untouched: %s -> %s',
         (operatorA, operatorB) => {
             const input: EditableDateConstraint = {
-                ...dateConstraint('currentTime'),
+                ...dateConstraint(),
                 operator: operatorA,
             };
             const output = constraintReducer(input, {
@@ -223,7 +219,7 @@ describe('changing operator', () => {
 describe('adding values', () => {
     describe('single-value constraints', () => {
         test('adding a value replaces the existing value', () => {
-            const input = singleValueConstraint('context-field');
+            const input = singleValueConstraint();
             const output = constraintReducer(input, {
                 type: 'add value(s)',
                 payload: 'new-value',
@@ -234,7 +230,7 @@ describe('adding values', () => {
             });
         });
         test('adding a list replaces the existing value with the first value of the list', () => {
-            const input = singleValueConstraint('context-field');
+            const input = singleValueConstraint();
             const output = constraintReducer(input, {
                 type: 'add value(s)',
                 payload: ['list-value'],
@@ -245,7 +241,7 @@ describe('adding values', () => {
             });
         });
         test('adding an empty list effectively clears the value', () => {
-            const input = singleValueConstraint('context-field');
+            const input = singleValueConstraint();
             const output = constraintReducer(input, {
                 type: 'add value(s)',
                 payload: [],
@@ -257,7 +253,7 @@ describe('adding values', () => {
         });
 
         test('trying to add a deleted legal value results in no change', () => {
-            const input = singleValueConstraint('context-field');
+            const input = singleValueConstraint();
             const output = constraintReducer(
                 input,
                 {
@@ -269,7 +265,7 @@ describe('adding values', () => {
             expect(output).toStrictEqual(input);
         });
         test('if both the new value and the old value are deleted legal values, it clears the field', () => {
-            const input = singleValueConstraint('context-field');
+            const input = singleValueConstraint();
             const output = constraintReducer(
                 input,
                 {
@@ -286,7 +282,7 @@ describe('adding values', () => {
     });
     describe('multi-value constraints', () => {
         test('adding a single value to a multi-value constraint adds it to the set', () => {
-            const input = multiValueConstraint('context-field');
+            const input = multiValueConstraint();
             const output = constraintReducer(input, {
                 type: 'add value(s)',
                 payload: 'new-value',
@@ -297,7 +293,7 @@ describe('adding values', () => {
             });
         });
         test('adding a list to a multi-value constraint adds all new elements to the set', () => {
-            const input = multiValueConstraint('context-field');
+            const input = multiValueConstraint();
             const output = constraintReducer(input, {
                 type: 'add value(s)',
                 payload: ['X', 'Y'],
@@ -308,7 +304,7 @@ describe('adding values', () => {
             });
         });
         test('adding an empty list to a multi-value constraint has no effect', () => {
-            const input = multiValueConstraint('context-field');
+            const input = multiValueConstraint();
             const output = constraintReducer(input, {
                 type: 'add value(s)',
                 payload: [],
@@ -318,7 +314,7 @@ describe('adding values', () => {
 
         test('deleted legal values are removed from the set before saving new values', () => {
             const input = {
-                ...multiValueConstraint('context-field'),
+                ...multiValueConstraint(),
                 values: new Set(['deleted-old', 'A']),
             };
             const output = constraintReducer(
@@ -366,7 +362,7 @@ describe('removing / clearing values', () => {
         test('removing a value removes it from the set if it exists', () => {
             const values = ['A', 'B', 'C'];
             const input = {
-                ...multiValueConstraint('context-field'),
+                ...multiValueConstraint(),
                 values: new Set(values),
             };
             const noChange = constraintReducer(input, {
@@ -386,7 +382,7 @@ describe('removing / clearing values', () => {
             });
         });
         test('clearing values removes all values from the set', () => {
-            const input = multiValueConstraint('context-field');
+            const input = multiValueConstraint();
             const cleared = constraintReducer(input, {
                 type: 'clear values',
             });
@@ -408,7 +404,7 @@ describe('toggle options', () => {
         'toggle case sensitivity: %s -> %s',
         (from, to) => {
             const input = {
-                ...multiValueConstraint('context-field'),
+                ...multiValueConstraint(),
                 caseInsensitive: from,
             };
             expect(
@@ -423,7 +419,7 @@ describe('toggle options', () => {
     );
     test.each(stateTransitions)('match inversion: %s -> %s', (from, to) => {
         const input = {
-            ...multiValueConstraint('context-field'),
+            ...multiValueConstraint(),
             inverted: from,
         };
         expect(

@@ -59,6 +59,9 @@ export const constraintReducer = (
 ): EditableConstraint => {
     switch (action.type) {
         case 'set context field':
+            if (action.payload === state.contextName) {
+                return state;
+            }
             if (
                 action.payload === CURRENT_TIME_CONTEXT_FIELD &&
                 !isDateOperator(state.operator)

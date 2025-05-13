@@ -1,5 +1,47 @@
+import { NOT_IN, NUM_EQ } from 'constants/operators';
+import type {
+    EditableDateConstraint,
+    EditableMultiValueConstraint,
+    EditableSingleValueConstraint,
+} from './editable-constraint-type';
+import { DATE_AFTER } from '@server/util/constants';
+import { constraintReducer } from './constraint-reducer';
+
+const multiValueConstraint = (
+    contextField: string,
+): EditableMultiValueConstraint => ({
+    contextName: contextField,
+    operator: NOT_IN,
+    values: new Set(['2023-01-01T00:00:00Z', '2023-01-02T00:00:00Z']),
+});
+
+const singleValueConstraint = (
+    contextField: string,
+): EditableSingleValueConstraint => ({
+    contextName: contextField,
+    operator: NUM_EQ,
+    value: '5',
+});
+
+const dateConstraint = (contextField: string): EditableDateConstraint => ({
+    contextName: contextField,
+    operator: DATE_AFTER,
+    value: '2024-05-05T00:00:00Z',
+});
+
 describe('changing context field', () => {
-    test('changing context field to the same field is a no-op', () => {});
+    test.each([multiValueConstraint, singleValueConstraint, dateConstraint])(
+        'changing context field to the same field is a no-op',
+        (constraint) => {
+            const input = constraint('test-context-field');
+            expect(
+                constraintReducer(input, {
+                    type: 'set context field',
+                    payload: input.contextName,
+                }),
+            ).toStrictEqual(input);
+        },
+    );
     test('changing context field to anything except currentTime clears value/values', () => {});
 });
 describe('changing operator', () => {

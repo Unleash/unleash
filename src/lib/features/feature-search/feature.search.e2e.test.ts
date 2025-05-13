@@ -223,7 +223,9 @@ const searchFeaturesWithoutQueryParams = async (expectedCode = 200) => {
 };
 const getProjectArchive = async (projectId = 'default', expectedCode = 200) => {
     return app.request
-        .get(`/api/admin/archive/features/${projectId}`)
+        .get(
+            `/api/admin/search/features?project=IS%3A${projectId}&archived=IS%3Atrue`,
+        )
         .expect(expectedCode);
 };
 

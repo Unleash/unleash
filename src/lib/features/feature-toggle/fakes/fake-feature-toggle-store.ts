@@ -178,10 +178,6 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return this.features.filter((feature) => feature.archived !== archived);
     }
 
-    async getArchivedFeatures(project: string): Promise<FeatureToggle[]> {
-        return this.features.filter((feature) => feature.archived === true);
-    }
-
     async getPlaygroundFeatures(
         query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {

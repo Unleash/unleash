@@ -1,7 +1,7 @@
 import { PersonalDashboard } from './PersonalDashboard.tsx';
 import { render } from 'utils/testRenderer';
 import { fireEvent, screen } from '@testing-library/react';
-import { testServerRoute, testServerSetup } from '../../utils/testServer.ts';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const server = testServerSetup();
 

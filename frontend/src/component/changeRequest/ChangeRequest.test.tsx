@@ -7,7 +7,7 @@ import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 import { FeatureView } from '../feature/FeatureView/FeatureView.tsx';
 import { AccessProvider } from '../providers/AccessProvider/AccessProvider.tsx';
 import { AnnouncerProvider } from '../common/Announcer/AnnouncerProvider/AnnouncerProvider.tsx';
-import { testServerRoute, testServerSetup } from '../../utils/testServer.ts';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer.tsx';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';

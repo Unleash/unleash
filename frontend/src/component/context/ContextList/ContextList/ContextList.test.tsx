@@ -1,9 +1,6 @@
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import {
-    testServerRoute,
-    testServerSetup,
-} from '../../../../utils/testServer.ts';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 import ContextList from './ContextList.tsx';
 
 const server = testServerSetup();

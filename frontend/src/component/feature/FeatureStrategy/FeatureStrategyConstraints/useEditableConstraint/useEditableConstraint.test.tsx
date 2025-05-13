@@ -168,7 +168,7 @@ describe('legal values', () => {
             useEditableConstraint(initial, () => {}),
         );
         await waitFor(() => {
-            expect(result.current.legalValues?.legalValues).toStrictEqual(
+            expect(result.current.legalValueData?.legalValues).toStrictEqual(
                 definition.legalValues,
             );
         });
@@ -185,7 +185,7 @@ describe('legal values', () => {
             useEditableConstraint(initial, () => {}),
         );
         await waitFor(() => {
-            expect(result.current.legalValues?.legalValues).toStrictEqual(
+            expect(result.current.legalValueData?.legalValues).toStrictEqual(
                 definition.legalValues,
             );
         });
@@ -196,7 +196,7 @@ describe('legal values', () => {
         });
 
         await waitFor(() => {
-            expect(result.current.legalValues).toBeUndefined();
+            expect(result.current.legalValueData).toBeUndefined();
         });
     });
     test('does not add them if no legal values', () => {
@@ -210,7 +210,7 @@ describe('legal values', () => {
             useEditableConstraint(initial, () => {}),
         );
 
-        expect(result.current.legalValues).toBeUndefined();
+        expect(result.current.legalValueData).toBeUndefined();
     });
     test('identifies deleted legal values', async () => {
         const initial: IConstraint = {
@@ -224,7 +224,7 @@ describe('legal values', () => {
         );
         await waitFor(() => {
             expect(
-                result.current.legalValues?.deletedLegalValues,
+                result.current.legalValueData?.deletedLegalValues,
             ).toStrictEqual(new Set(['B']));
         });
     });
@@ -240,7 +240,7 @@ describe('legal values', () => {
         );
         await waitFor(() => {
             expect(
-                result.current.legalValues?.invalidLegalValues,
+                result.current.legalValueData?.invalidLegalValues,
             ).toStrictEqual(new Set(['A']));
         });
     });

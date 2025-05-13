@@ -52,7 +52,7 @@ type LegalValueData = {
 type EditableConstraintState = {
     updateConstraint: (action: ConstraintUpdateAction) => void;
     validator: (...values: string[]) => ConstraintValidationResult;
-    legalValues?: LegalValueData;
+    legalValueData?: LegalValueData;
     constraint: EditableConstraint;
 };
 
@@ -116,7 +116,7 @@ export const useEditableConstraint = (
         onUpdate(toIConstraint(nextState));
     };
 
-    const legalValues = contextDefinition.legalValues?.length
+    const legalValueData = contextDefinition.legalValues?.length
         ? {
               legalValues: contextDefinition.legalValues,
               invalidLegalValues,
@@ -128,6 +128,6 @@ export const useEditableConstraint = (
         updateConstraint,
         constraint: localConstraint,
         validator,
-        legalValues,
+        legalValueData,
     } as EditableConstraintState;
 };

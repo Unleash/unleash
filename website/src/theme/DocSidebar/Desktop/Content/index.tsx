@@ -8,9 +8,9 @@ type Props = WrapperProps<typeof ContentType>;
 export default function ContentWrapper(props: Props): JSX.Element {
     return (
         <>
-      <Link to="/" className="sidebar-brand-link">
-        <div className="sidebar-brand-logo" />
-      </Link>
+            <Link to='/' className='sidebar-brand-link'>
+                <div className='sidebar-brand-logo' />
+            </Link>
             <Content {...props} />
         </>
     );

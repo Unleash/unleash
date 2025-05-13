@@ -84,7 +84,7 @@ const sidebars: SidebarsConfig = {
                     link: {
                         type: 'doc',
                         id: 'feature-flag-tutorials/use-cases/gradual-rollout',
-                    },    
+                    },
                     items: [
                         {
                             type: 'category',
@@ -595,7 +595,7 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'how-to/how-to-setup-provisioning-with-okta'
+                        id: 'how-to/how-to-setup-provisioning-with-okta',
                     },
                 },
                 {

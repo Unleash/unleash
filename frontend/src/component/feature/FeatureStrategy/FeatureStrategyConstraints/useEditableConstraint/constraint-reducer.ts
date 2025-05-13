@@ -3,53 +3,46 @@ import {
     IN,
     type Operator,
     isDateOperator,
+    isMultiValueOperator,
     isSingleValueOperator,
 } from 'constants/operators';
 import { CURRENT_TIME_CONTEXT_FIELD } from 'utils/operatorsForContext';
 import {
+    type EditableDateConstraint,
     isDateConstraint,
-    isMultiValueConstraint,
     isSingleValueConstraint,
     type EditableConstraint,
+    type EditableMultiValueConstraint,
+    type EditableSingleValueConstraint,
 } from './editable-constraint-type';
 import { difference, union } from './set-functions';
 
 export type ConstraintUpdateAction =
-    | { type: 'add value(s)'; payload: string[] }
-    | { type: 'set value'; payload: string }
+    | { type: 'add value(s)'; payload: string | string[] }
     | { type: 'clear values' }
-    | { type: 'remove value from list'; payload: string }
+    | { type: 'remove value'; payload: string }
     | { type: 'set context field'; payload: string }
     | { type: 'set operator'; payload: Operator }
     | { type: 'toggle case sensitivity' }
     | { type: 'toggle inverted operator' };
 
-const resetValues = (state: EditableConstraint): EditableConstraint => {
-    if (isSingleValueConstraint(state)) {
-        if ('values' in state) {
-            const { values, ...rest } = state;
-            return {
-                ...rest,
-                value: '',
-            };
-        }
-        return {
-            ...state,
-            value: '',
-        };
-    }
-
-    if ('value' in state) {
-        const { value, ...rest } = state;
+const withValue = <
+    T extends EditableConstraint & { value?: string; values?: Set<string> },
+>(
+    newValue: string | null,
+    constraint: T,
+): EditableConstraint => {
+    const { value, values, ...rest } = constraint;
+    if (isMultiValueOperator(constraint.operator)) {
         return {
             ...rest,
-            values: new Set(),
-        };
+            values: new Set([newValue].filter(Boolean)),
+        } as EditableConstraint;
     }
     return {
-        ...state,
-        values: new Set(),
-    };
+        ...rest,
+        value: newValue ?? '',
+    } as EditableConstraint;
 };
 
 export const constraintReducer = (
@@ -59,33 +52,37 @@ export const constraintReducer = (
 ): EditableConstraint => {
     switch (action.type) {
         case 'set context field':
+            if (action.payload === state.contextName) {
+                return state;
+            }
             if (
                 action.payload === CURRENT_TIME_CONTEXT_FIELD &&
                 !isDateOperator(state.operator)
             ) {
-                return {
+                return withValue(new Date().toISOString(), {
                     ...state,
                     contextName: action.payload,
                     operator: DATE_AFTER,
-                    value: new Date().toISOString(),
-                };
+                } as EditableDateConstraint);
             } else if (
                 action.payload !== CURRENT_TIME_CONTEXT_FIELD &&
                 isDateOperator(state.operator)
             ) {
-                return {
+                return withValue(null, {
                     ...state,
                     operator: IN,
                     contextName: action.payload,
-                    values: new Set(),
-                };
+                } as EditableMultiValueConstraint);
             }
 
-            return resetValues({
+            return withValue(null, {
                 ...state,
                 contextName: action.payload,
             });
         case 'set operator':
+            if (action.payload === state.operator) {
+                return state;
+            }
             if (isDateConstraint(state) && isDateOperator(action.payload)) {
                 return {
                     ...state,
@@ -94,23 +91,40 @@ export const constraintReducer = (
             }
 
             if (isSingleValueOperator(action.payload)) {
-                return resetValues({
+                return withValue(null, {
                     ...state,
-                    value: '',
                     operator: action.payload,
-                });
+                } as EditableSingleValueConstraint);
             }
-            return resetValues({
+            return withValue(null, {
                 ...state,
-                values: new Set(),
                 operator: action.payload,
-            });
+            } as EditableMultiValueConstraint);
         case 'add value(s)': {
-            if (!('values' in state)) {
-                return state;
+            if (isSingleValueConstraint(state)) {
+                const newValue = Array.isArray(action.payload)
+                    ? action.payload[0]
+                    : action.payload;
+                if (deletedLegalValues?.has(newValue)) {
+                    if (deletedLegalValues?.has(state.value)) {
+                        return {
+                            ...state,
+                            value: '',
+                        };
+                    }
+                    return state;
+                }
+                return {
+                    ...state,
+                    value: newValue ?? '',
+                };
             }
 
-            const newValues = new Set(action.payload);
+            const newValues = new Set(
+                Array.isArray(action.payload)
+                    ? action.payload
+                    : [action.payload],
+            );
             const combinedValues = union(state.values, newValues);
             const filteredValues = deletedLegalValues
                 ? difference(combinedValues, deletedLegalValues)
@@ -120,18 +134,20 @@ export const constraintReducer = (
                 values: filteredValues,
             };
         }
-        case 'set value':
-            if (isMultiValueConstraint(state)) {
-                return state;
-            }
-            return { ...state, value: action.payload };
         case 'toggle inverted operator':
             return { ...state, inverted: !state.inverted };
         case 'toggle case sensitivity':
-            return { ...state, caseInsensitive: !state.inverted };
-        case 'remove value from list':
+            return { ...state, caseInsensitive: !state.caseInsensitive };
+        case 'remove value':
             if (isSingleValueConstraint(state)) {
-                return state;
+                if (state.value === action.payload) {
+                    return {
+                        ...state,
+                        value: '',
+                    };
+                } else {
+                    return state;
+                }
             }
             state.values.delete(action.payload);
             return {
@@ -139,6 +155,6 @@ export const constraintReducer = (
                 values: state.values ?? new Set(),
             };
         case 'clear values':
-            return resetValues(state);
+            return withValue(null, state);
     }
 };

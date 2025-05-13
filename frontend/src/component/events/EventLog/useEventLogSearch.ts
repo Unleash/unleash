@@ -71,6 +71,7 @@ export const useEventLogSearch = (
         }),
         createdBy: FilterItemParam,
         type: FilterItemParam,
+        environment: FilterItemParam,
         ...extraParameters(logType),
     };
 

@@ -9,13 +9,16 @@ import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureS
 import { EventSchemaType, type FeatureSearchResponseSchema } from 'openapi';
 import type { ProjectSchema } from 'openapi';
 import { useEventCreators } from 'hooks/api/getters/useEventCreators/useEventCreators';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 
 export const useEventLogFilters = (
     projects: ProjectSchema[],
     features: FeatureSearchResponseSchema[],
 ) => {
+    const { environments } = useEnvironments();
     const { eventCreators } = useEventCreators();
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
+
     useEffect(() => {
         const projectOptions =
             projects?.map((project: ProjectSchema) => ({
@@ -40,6 +43,12 @@ export const useEventLogFilters = (
                 value: value,
             }),
         );
+
+        const environmentOptions =
+            environments?.map((env) => ({
+                label: env.name,
+                value: env.name,
+            })) ?? [];
 
         const availableFilters: IFilterItem[] = [
             {
@@ -102,6 +111,18 @@ export const useEventLogFilters = (
                       },
                   ] as IFilterItem[])
                 : []),
+            ...(environmentOptions.length > 0
+                ? ([
+                      {
+                          label: 'Environment',
+                          icon: 'cloud',
+                          options: environmentOptions,
+                          filterKey: 'environment',
+                          singularOperators: ['IS'],
+                          pluralOperators: ['IS_ANY_OF'],
+                      },
+                  ] as IFilterItem[])
+                : []),
         ];
 
         setAvailableFilters(availableFilters);
@@ -109,6 +130,7 @@ export const useEventLogFilters = (
         JSON.stringify(features),
         JSON.stringify(projects),
         JSON.stringify(eventCreators),
+        JSON.stringify(environments),
     ]);
 
     return availableFilters;

@@ -213,7 +213,6 @@ export default class EventService {
                             representation: 'date',
                         }),
                     );
-
                 queryParams.push({
                     field: parsed.field,
                     operator: 'IS_BEFORE',
@@ -238,7 +237,7 @@ export default class EventService {
             if (parsed) queryParams.push(parsed);
         }
 
-        ['project', 'type'].forEach((field) => {
+        ['project', 'type', 'environment'].forEach((field) => {
             if (params[field]) {
                 const parsed = parseSearchOperatorValue(field, params[field]);
                 if (parsed) queryParams.push(parsed);

@@ -2,7 +2,7 @@ import { styled, Typography } from '@mui/material';
 import type { FC } from 'react';
 import { Link } from 'react-router-dom';
 import Lightbulb from '@mui/icons-material/LightbulbOutlined';
-import type { PersonalDashboardProjectDetailsSchemaInsights } from '../../openapi.ts';
+import type { PersonalDashboardProjectDetailsSchemaInsights } from 'openapi';
 import { ActionBox } from './ActionBox.tsx';
 
 const PercentageScore = styled('span')(({ theme }) => ({

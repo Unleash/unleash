@@ -3,7 +3,6 @@ import type {
     AdvancedPlaygroundEnvironmentFeatureSchema,
     AdvancedPlaygroundFeatureSchema,
 } from 'openapi';
-// @ts-expect-error no types available
 import cartesian from 'cartesian';
 
 const generateFeature = (

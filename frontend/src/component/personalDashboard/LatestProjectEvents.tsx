@@ -1,6 +1,6 @@
 import type { FC, HTMLAttributes } from 'react';
 import { Markdown } from '../common/Markdown/Markdown.tsx';
-import type { PersonalDashboardProjectDetailsSchema } from '../../openapi.ts';
+import type { PersonalDashboardProjectDetailsSchema } from 'openapi';
 import { UserAvatar } from '../common/UserAvatar/UserAvatar.tsx';
 import { Typography, styled } from '@mui/material';
 import { formatDateYMDHM } from 'utils/formatDate';

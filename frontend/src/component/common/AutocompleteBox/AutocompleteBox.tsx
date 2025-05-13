@@ -51,7 +51,7 @@ export const AutocompleteBox = ({
     const renderCustomInput = (params: AutocompleteRenderInputParams) => {
         const { InputProps } = params;
 
-        let startAdornment = undefined;
+        let startAdornment: undefined | JSX.Element = undefined;
         if (icon !== null) {
             startAdornment = (
                 <InputAdornment position='start'>

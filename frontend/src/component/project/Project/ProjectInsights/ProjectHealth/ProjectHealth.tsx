@@ -1,7 +1,7 @@
 import { ProjectHealthChart } from './ProjectHealthChart.tsx';
 import { Alert, Box, styled, Typography } from '@mui/material';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import type { ProjectInsightsSchemaHealth } from '../../../../../openapi.ts';
+import type { ProjectInsightsSchemaHealth } from 'openapi';
 import type { FC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FlagCounts } from './FlagCounts.tsx';

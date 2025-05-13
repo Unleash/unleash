@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material';
 import { useProjectColor } from './useProjectColor.js';
 import { useFilledMetricsSummary } from './useFilledMetricsSummary.js';
 import type { Theme } from '@mui/material/styles';
-import type { InstanceInsightsSchema } from '../../../openapi.js';
+import type { InstanceInsightsSchema } from 'openapi';
 import type { GroupedDataByProject } from './useGroupedProjectTrends.js';
 import { vi, type Mock } from 'vitest';
 

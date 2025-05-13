@@ -20,7 +20,7 @@ describe('StickyProvider component', () => {
     afterEach(cleanup);
 
     it('provides the sticky context with expected functions', () => {
-        let receivedContext = null;
+        let receivedContext: IStickyContext | undefined | null = null;
         render(
             <StickyProvider>
                 <StickyContext.Consumer>

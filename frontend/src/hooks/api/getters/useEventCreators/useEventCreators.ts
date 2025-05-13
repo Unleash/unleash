@@ -1,6 +1,6 @@
 import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter.js';
 import { formatApiPath } from 'utils/formatPath';
-import type { EventCreatorsSchema } from '../../../../openapi.js';
+import type { EventCreatorsSchema } from 'openapi';
 
 export const useEventCreators = () => {
     const PATH = `api/admin/event-creators`;

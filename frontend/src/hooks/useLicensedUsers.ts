@@ -1,4 +1,4 @@
-import type { LicensedUsersSchema } from '../openapi.js';
+import type { LicensedUsersSchema } from 'openapi';
 import {
     useApiGetter,
     fetcher,

@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
-import type { ProfileSchema } from '../../../../openapi.js';
+import type { ProfileSchema } from 'openapi';
 
 export interface IUseProfileOutput {
     profile?: ProfileSchema;

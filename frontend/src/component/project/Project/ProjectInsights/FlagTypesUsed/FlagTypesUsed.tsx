@@ -3,7 +3,7 @@ import { styled, type SvgIconTypeMap, Typography } from '@mui/material';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 
 import type { OverridableComponent } from '@mui/material/OverridableComponent';
-import type { FeatureTypeCountSchema } from '../../../../../openapi.ts';
+import type { FeatureTypeCountSchema } from 'openapi';
 
 export const StyledProjectInfoWidgetContainer = styled('div')(({ theme }) => ({
     margin: '0',

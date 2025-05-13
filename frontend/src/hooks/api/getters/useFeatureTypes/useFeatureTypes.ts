@@ -2,7 +2,7 @@ import useSWR, { mutate, type SWRConfiguration } from 'swr';
 import { useEffect, useState } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
-import type { FeatureTypeSchema } from '../../../../openapi.js';
+import type { FeatureTypeSchema } from 'openapi';
 
 const useFeatureTypes = (options: SWRConfiguration = {}) => {
     const fetcher = async () => {

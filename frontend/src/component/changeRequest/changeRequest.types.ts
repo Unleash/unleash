@@ -2,7 +2,7 @@ import type { IFeatureVariant } from 'interfaces/featureToggle';
 import type { ISegment } from 'interfaces/segment';
 import type { IFeatureStrategy } from '../../interfaces/strategy.js';
 import type { IUser } from '../../interfaces/user.js';
-import type { SetStrategySortOrderSchema } from '../../openapi.js';
+import type { SetStrategySortOrderSchema } from 'openapi';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 
 type BaseChangeRequest = {

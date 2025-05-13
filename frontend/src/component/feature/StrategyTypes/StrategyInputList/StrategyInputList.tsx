@@ -69,7 +69,6 @@ const StrategyInputList = ({
         if (value) {
             const newValues = value
                 .split(/,\s*/)
-                // @ts-expect-error
                 .filter((a) => !list.includes(a));
             if (newValues.length > 0) {
                 const newList = list.concat(newValues).filter((a) => a);

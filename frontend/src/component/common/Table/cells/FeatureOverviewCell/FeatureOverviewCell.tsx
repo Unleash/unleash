@@ -1,8 +1,5 @@
 import type { FC } from 'react';
-import type {
-    FeatureSearchResponseSchema,
-    TagSchema,
-} from '../../../../../openapi.ts';
+import type { FeatureSearchResponseSchema, TagSchema } from 'openapi';
 import { Box, IconButton, styled, Chip } from '@mui/material';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';

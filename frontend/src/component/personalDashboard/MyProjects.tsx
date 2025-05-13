@@ -20,7 +20,7 @@ import type {
     PersonalDashboardSchemaAdminsItem,
     PersonalDashboardSchemaProjectOwnersItem,
     PersonalDashboardSchemaProjectsItem,
-} from '../../openapi.ts';
+} from 'openapi';
 import {
     ContentGridContainer,
     EmptyGridItem,

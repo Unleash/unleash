@@ -1,4 +1,4 @@
-import type { CreateFeatureStrategySchema } from '../openapi.js';
+import type { CreateFeatureStrategySchema } from 'openapi';
 import type { IFeatureStrategy } from './strategy.js';
 
 export interface IEnvironment {

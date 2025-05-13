@@ -3,7 +3,7 @@ import { styled } from '@mui/material';
 import { StatusBox } from '../ProjectInsightsStats/StatusBox.tsx';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { Link } from 'react-router-dom';
-import type { ProjectInsightsSchemaMembers } from '../../../../../openapi.ts';
+import type { ProjectInsightsSchemaMembers } from 'openapi';
 
 interface IProjectMembersProps {
     members: ProjectInsightsSchemaMembers;

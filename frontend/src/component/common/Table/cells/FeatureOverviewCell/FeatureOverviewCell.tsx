@@ -17,7 +17,6 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { getLocalizedDateString } from '../../../util';
 import { Tag } from 'component/common/Tag/Tag';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { formatTag } from 'utils/format-tag';
 
 interface IFeatureNameCellProps {

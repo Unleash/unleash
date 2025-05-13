@@ -2,7 +2,6 @@ import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { useContext, useState } from 'react';
 import { styled, Tooltip, Chip } from '@mui/material';
 import useFeatureTags from 'hooks/api/getters/useFeatureTags/useFeatureTags';
-import DeleteTagIcon from '@mui/icons-material/Cancel';
 import ClearIcon from '@mui/icons-material/Clear';
 import { ManageTagsDialog } from 'component/feature/FeatureView/FeatureOverview/ManageTagsDialog/ManageTagsDialog';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
@@ -15,7 +14,6 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { StyledMetaDataItem } from './FeatureOverviewMetaData';
 import { AddTagButton } from './AddTagButton';
 import { Tag } from 'component/common/Tag/Tag';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { formatTag } from 'utils/format-tag';
 
 const StyledLabel = styled('span')(({ theme }) => ({

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import useTagTypesApi from 'hooks/api/actions/useTagTypesApi/useTagTypesApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface TagTypePayload {
     name: string;

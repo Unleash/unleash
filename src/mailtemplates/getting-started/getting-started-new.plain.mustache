@@ -1,0 +1,28 @@
+Welcome to Unleash {{ name }}!
+
+You have been invited to your organization's Unleash account.
+
+{{# passwordLink }}
+Start using Unleash by clicking the sign-up link below. Follow the steps provided to set your password and get started.
+
+{{{ passwordLink }}}
+{{/ passwordLink }}
+
+{{^ passwordLink }}
+Start using Unleash by clicking the log in link below.
+
+{{{ unleashUrl }}}
+{{/ passwordLink }}
+
+Once you're up and running, you might want to take a look at the following resources:
+
+- Documentation: https://docs.getunleash.io
+- Code examples: https://github.com/unleash
+- SDKs: https://docs.getunleash.io/reference/sdks
+
+Best,
+Your Unleash team
+
+Follow us on GitHub: https://github.com/unleash
+Contact us: team@getunleash.io
+© {{ year }} Bricks Software – All rights reserved.

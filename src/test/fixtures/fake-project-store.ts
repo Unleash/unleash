@@ -2,6 +2,7 @@ import type {
     IEnvironment,
     IProject,
     IProjectApplications,
+    IProjectLinkTemplate,
     IProjectStore,
 } from '../../lib/types';
 import NotFoundError from '../../lib/error/notfound-error';
@@ -188,6 +189,10 @@ export default class FakeProjectStore implements IProjectStore {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     isFeatureLimitReached(id: string): Promise<boolean> {
         return Promise.resolve(false);
+    }
+
+    async getProjectLinkTemplates(id: string): Promise<IProjectLinkTemplate[]> {
+        return [] as IProjectLinkTemplate[];
     }
 
     getProjectModeCounts(): Promise<ProjectModeCount[]> {

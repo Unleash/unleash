@@ -216,8 +216,9 @@ describe('changing operator', () => {
                 type: 'set operator',
                 payload: operatorB,
             });
-            // @ts-expect-error
-            expect(input.value).toBe(output.value);
+            expect(input.value).toBe(
+                (output as EditableSingleValueConstraint).value,
+            );
         },
     );
 });

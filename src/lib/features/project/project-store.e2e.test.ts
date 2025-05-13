@@ -229,4 +229,17 @@ test('should update project enterprise settings', async () => {
             }),
         ]),
     );
+
+    const linkTemplates = await projectStore.getProjectLinkTemplates(
+        project.id,
+    );
+
+    expect(linkTemplates).toEqual(
+        expect.arrayContaining([
+            expect.objectContaining({
+                title: 'My Link',
+                urlTemplate: 'https://example.com/{{flag}}',
+            }),
+        ]),
+    );
 });

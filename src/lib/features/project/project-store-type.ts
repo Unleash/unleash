@@ -130,6 +130,8 @@ export interface IProjectStore extends Store<IProject, string> {
 
     isFeatureLimitReached(id: string): Promise<boolean>;
 
+    getProjectLinkTemplates(projectId: string): Promise<IProjectLinkTemplate[]>;
+
     getProjectModeCounts(): Promise<ProjectModeCount[]>;
     getApplicationsByProject(
         searchParams: IProjectApplicationsSearchParams,

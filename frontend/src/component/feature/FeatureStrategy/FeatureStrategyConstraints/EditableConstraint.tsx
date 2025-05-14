@@ -261,7 +261,6 @@ export const EditableConstraint: FC<Props> = ({
                             id='context-field-select'
                             name='contextName'
                             label='Context Field'
-                            autoFocus
                             options={constraintNameOptions}
                             value={contextName || ''}
                             onChange={(contextField) =>

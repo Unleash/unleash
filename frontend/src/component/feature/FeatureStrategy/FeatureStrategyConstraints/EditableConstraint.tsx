@@ -75,6 +75,7 @@ const LegalValuesContainer = styled('div')(({ theme }) => ({
 const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
     fieldset: { border: 'none', borderRadius: 0 },
     maxWidth: '25ch',
+    minWidth: '7ch',
     ':focus-within .MuiSelect-select': {
         background: 'none',
     },

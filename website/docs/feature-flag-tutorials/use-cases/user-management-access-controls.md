@@ -97,7 +97,7 @@ Viewers can observe projects and flags, but cannot make changes. When added to a
 
 Project permissions are separated from root permissions to make it even more targeted regarding what permissions someone can and cannot have in Unleash.
 
-For more fine-tuned access controls, create [custom root roles](/reference/rbac/create-and-assign-a-custom-root-role) and [custom project roles](/reference/rbac/create-and-assign-a-custom-project-role), where you can define the privileges and limitations beyond the predefined roles we have built into Unleash.
+For more fine-tuned access controls, create [custom root roles](/reference/rbac#create-and-assign-a-custom-root-role) and [custom project roles](/reference/rbac#create-and-assign-a-custom-project-role), where you can define the privileges and limitations beyond the predefined roles we have built into Unleash.
 
 For example, customize root permissions to perform CRUD operations for:
 

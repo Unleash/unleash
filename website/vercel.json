@@ -92,11 +92,6 @@
       "permanent": true
     },
     {
-      "source": "/advanced/api_access",
-      "destination": "/how-to/how-to-use-the-admin-api",
-      "permanent": true
-    },
-    {
       "source": "/advanced/archived_toggles",
       "destination": "/reference/feature-toggles#archive-a-feature-toggle",
       "permanent": true
@@ -687,6 +682,16 @@
       "permanent": true
     },
     {
+      "source": "/how-to/how-to-capture-impression-data",
+      "destination": "/feature-flag-tutorials/use-cases/how-to-capture-impression-data",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-use-the-admin-api",
+      "destination": "/api-overview#admin-api",
+      "permanent": true
+    },
+    {
       "source": "/tutorials/unleash-overview",
       "destination": "/understanding-unleash/unleash-overview",
       "permanent": true
@@ -699,6 +704,16 @@
     {
       "source": "/tutorials/managing-constraints",
       "destination": "/understanding-unleash/managing-constraints",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-enable-openapi",
+      "destination": "/api-overview",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/api",
+      "destination": "/api-overview",
       "permanent": true
     },
     {

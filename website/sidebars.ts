@@ -130,6 +130,11 @@ const sidebars: SidebarsConfig = {
                                     label: 'Scaling Unleash',
                                     id: 'feature-flag-tutorials/use-cases/scaling-unleash',
                                 },
+                                {
+                                    type: 'doc',
+                                    label: 'Impression Data for Analytics',
+                                    id: 'feature-flag-tutorials/use-cases/how-to-capture-impression-data',
+                                },
                             ],
                         },
                         {
@@ -666,21 +671,6 @@ const sidebars: SidebarsConfig = {
                     },
                     items: [
                         {
-                            label: 'Unleash API guides',
-                            type: 'category',
-                            link: {
-                                type: 'generated-index',
-                                title: 'How-to: Unleash API',
-                                description:
-                                    'Learn how to work with the Unleash API',
-                                slug: '/how-to/api',
-                            },
-                            items: [
-                                'how-to/how-to-use-the-admin-api',
-                                'how-to/how-to-enable-openapi',
-                            ],
-                        },
-                        {
                             label: 'Feature flags, strategies, context',
                             type: 'category',
                             link: {
@@ -691,7 +681,6 @@ const sidebars: SidebarsConfig = {
                                 slug: '/how-to/misc',
                             },
                             items: [
-                                'how-to/how-to-capture-impression-data',
                                 'how-to/how-to-create-feature-toggles',
                                 'how-to/how-to-create-and-display-banners',
                                 'how-to/how-to-schedule-feature-releases',

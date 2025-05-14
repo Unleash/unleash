@@ -470,10 +470,6 @@ class="header-github-link"
                             to: '/reference/events',
                         },
                         {
-                            from: '/advanced/api_access',
-                            to: '/how-to/how-to-use-the-admin-api',
-                        },
-                        {
                             from: '/advanced/archived_toggles',
                             to: '/reference/feature-toggles',
                         },

@@ -46,7 +46,7 @@ In version 4 we improved the User Management and made it available for Unleash O
 
 In version 4 we improved the API Access and made it available for Unleash Open-Source and Unleash Enterprise. Starting from Unleash v4 we require all SDKs to use an access token in order to connect to Unleash.
 
-[Read more](../how-to/how-to-use-the-admin-api)
+[Read more](../api-overview#admin-api)
 
 ### Custom stickiness {#custom-stickiness}
 

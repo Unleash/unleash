@@ -2,7 +2,7 @@ import { IconButton, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { isStringOperator, type Operator } from 'constants/operators';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import { useRef, type FC } from 'react';
+import { useCallback, useRef, type FC } from 'react';
 import { operatorsForContext } from 'utils/operatorsForContext';
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
@@ -29,7 +29,6 @@ import {
     isNumberConstraint,
     isSemVerConstraint,
 } from './useEditableConstraint/editable-constraint-type';
-import type { ConstraintUpdateAction } from './useEditableConstraint/constraint-reducer';
 import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator';
 
 const Container = styled('article')(({ theme }) => ({
@@ -146,20 +145,22 @@ const StyledCaseSensitiveIcon = styled(CaseSensitiveIcon)(({ theme }) => ({
 }));
 
 const TopRowInput: FC<{
+    addValues: (value: string | string[]) => void;
+    clearValues: () => void;
     localConstraint: EditableConstraintType;
-    updateConstraint: (action: ConstraintUpdateAction) => void;
     validator: (value: string) => ConstraintValidationResult;
     addValuesButtonRef: React.RefObject<HTMLButtonElement>;
-}> = ({ localConstraint, updateConstraint, validator, addValuesButtonRef }) => {
+}> = ({
+    addValues,
+    clearValues,
+    localConstraint,
+    validator,
+    addValuesButtonRef,
+}) => {
     if (isDateConstraint(localConstraint)) {
         return (
             <ConstraintDateInput
-                setValue={(value: string) =>
-                    updateConstraint({
-                        type: 'add value(s)',
-                        payload: value,
-                    })
-                }
+                setValue={addValues}
                 value={localConstraint.value}
                 validator={validator}
             />
@@ -169,13 +170,8 @@ const TopRowInput: FC<{
         return (
             <AddSingleValueWidget
                 validator={validator}
-                onAddValue={(newValue) => {
-                    updateConstraint({
-                        type: 'add value(s)',
-                        payload: newValue,
-                    });
-                }}
-                removeValue={() => updateConstraint({ type: 'clear values' })}
+                onAddValue={addValues}
+                removeValue={clearValues}
                 currentValue={localConstraint.value}
                 helpText={'A semver value should be of the format X.Y.Z'}
                 inputType={'text'}
@@ -186,13 +182,8 @@ const TopRowInput: FC<{
         return (
             <AddSingleValueWidget
                 validator={validator}
-                onAddValue={(newValue) => {
-                    updateConstraint({
-                        type: 'add value(s)',
-                        payload: newValue,
-                    });
-                }}
-                removeValue={() => updateConstraint({ type: 'clear values' })}
+                onAddValue={addValues}
+                removeValue={clearValues}
                 currentValue={localConstraint.value}
                 helpText={'Add a single number'}
                 inputType={'number'}
@@ -205,12 +196,7 @@ const TopRowInput: FC<{
             validator={validator}
             helpText='Maximum 100 char length per value'
             ref={addValuesButtonRef}
-            onAddValues={(newValues) => {
-                updateConstraint({
-                    type: 'add value(s)',
-                    payload: newValues,
-                });
-            }}
+            onAddValues={addValues}
         />
     );
 };
@@ -232,6 +218,31 @@ export const EditableConstraint: FC<Props> = ({
         validator,
         legalValueData,
     } = useEditableConstraint(constraint, onUpdate);
+    const addValues = useCallback(
+        (value: string | string[]) =>
+            updateConstraint({ type: 'add value(s)', payload: value }),
+        [updateConstraint],
+    );
+    const removeValue = useCallback(
+        (value: string) =>
+            updateConstraint({ type: 'remove value', payload: value }),
+        [updateConstraint],
+    );
+    const clearAll = useCallback(
+        () => updateConstraint({ type: 'clear values' }),
+        [updateConstraint],
+    );
+    const toggleValue = useCallback(
+        (value: string) =>
+            updateConstraint({ type: 'toggle value', payload: value }),
+        [updateConstraint],
+    );
+    const onOperatorChange = useCallback(
+        (operator: Operator) => {
+            updateConstraint({ type: 'set operator', payload: operator });
+        },
+        [updateConstraint],
+    );
 
     const { context } = useUnleashContext();
     const { contextName, operator } = localConstraint;
@@ -246,10 +257,6 @@ export const EditableConstraint: FC<Props> = ({
     const constraintNameOptions = context.map((context) => {
         return { key: context.name, label: context.name };
     });
-
-    const onOperatorChange = (operator: Operator) => {
-        updateConstraint({ type: 'set operator', payload: operator });
-    };
 
     return (
         <Container>
@@ -334,12 +341,7 @@ export const EditableConstraint: FC<Props> = ({
                                   ? [localConstraint.value]
                                   : undefined
                         }
-                        removeValue={(value) => {
-                            updateConstraint({
-                                type: 'remove value',
-                                payload: value,
-                            });
-                        }}
+                        removeValue={removeValue}
                         getExternalFocusTarget={() =>
                             addValuesButtonRef.current ??
                             deleteButtonRef.current
@@ -348,7 +350,8 @@ export const EditableConstraint: FC<Props> = ({
                         {legalValueData ? null : (
                             <TopRowInput
                                 localConstraint={localConstraint}
-                                updateConstraint={updateConstraint}
+                                addValues={addValues}
+                                clearValues={clearAll}
                                 validator={validator}
                                 addValuesButtonRef={addValuesButtonRef}
                             />
@@ -373,39 +376,15 @@ export const EditableConstraint: FC<Props> = ({
                     {isMultiValueConstraint(localConstraint) ? (
                         <LegalValuesSelector
                             values={localConstraint.values}
-                            clearAll={() =>
-                                updateConstraint({
-                                    type: 'clear values',
-                                })
-                            }
-                            addValues={(newValues) =>
-                                updateConstraint({
-                                    type: 'add value(s)',
-                                    payload: newValues,
-                                })
-                            }
-                            removeValue={(value) =>
-                                updateConstraint({
-                                    type: 'remove value',
-                                    payload: value,
-                                })
-                            }
+                            toggleValue={toggleValue}
+                            clearAll={clearAll}
+                            addValues={addValues}
                             {...legalValueData}
                         />
                     ) : (
                         <SingleLegalValueSelector
+                            toggleValue={toggleValue}
                             value={localConstraint.value}
-                            clear={() =>
-                                updateConstraint({
-                                    type: 'clear values',
-                                })
-                            }
-                            addValue={(newValues) =>
-                                updateConstraint({
-                                    type: 'add value(s)',
-                                    payload: newValues,
-                                })
-                            }
                             {...legalValueData}
                         />
                     )}

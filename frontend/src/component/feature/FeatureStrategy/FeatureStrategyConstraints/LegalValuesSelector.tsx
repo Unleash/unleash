@@ -1,11 +1,19 @@
 import { type FC, useId, useState } from 'react';
-import { Alert, Button, Checkbox, Radio, styled } from '@mui/material';
+import {
+    Alert,
+    Button,
+    Checkbox,
+    type CheckboxProps,
+    Radio,
+    styled,
+} from '@mui/material';
 import {
     filterLegalValues,
     LegalValueLabel,
 } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/LegalValueLabel/LegalValueLabel';
 import { ConstraintValueSearch } from './ConstraintValueSearch';
 import type { ILegalValue } from 'interfaces/context';
+import React from 'react';
 
 const StyledValuesContainer = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -129,19 +137,15 @@ const BaseLegalValueSelector: FC<BaseProps> = ({
                 role={multiSelect ? undefined : 'radiogroup'}
             >
                 {filteredValues.map((match) => (
-                    <LegalValueLabel
+                    <MemoLabel
                         key={match.value}
                         legal={match}
                         filter={filter}
-                        control={
-                            <Control
-                                color='primary'
-                                name={`legal-value-${groupNameId}`}
-                                checked={isInputChecked(match.value)}
-                                onChange={() => onChange(match.value)}
-                                disabled={invalidLegalValues?.has(match.value)}
-                            />
-                        }
+                        Control={Control}
+                        onChange={onChange}
+                        groupNameId={groupNameId}
+                        checked={isInputChecked(match.value)}
+                        disabled={invalidLegalValues?.has(match.value)}
                     />
                 ))}
             </StyledValuesContainer>
@@ -149,10 +153,44 @@ const BaseLegalValueSelector: FC<BaseProps> = ({
     );
 };
 
+const MemoLabel = React.memo(function MemoLabel({
+    legal,
+    filter,
+    Control,
+    onChange,
+    groupNameId,
+    checked,
+    disabled,
+}: {
+    legal: ILegalValue;
+    filter: string;
+    Control: (props: CheckboxProps) => JSX.Element;
+    onChange: (value: string) => void;
+    checked: boolean;
+    groupNameId: string;
+    disabled?: boolean;
+}) {
+    return (
+        <LegalValueLabel
+            legal={legal}
+            filter={filter}
+            control={
+                <Control
+                    color='primary'
+                    name={`legal-value-${groupNameId}`}
+                    checked={checked}
+                    onChange={() => onChange(legal.value)}
+                    disabled={disabled}
+                />
+            }
+        />
+    );
+});
+
 type LegalValuesSelectorProps = {
     values: Set<string>;
-    addValues: (values: string[]) => void;
-    removeValue: (value: string) => void;
+    addValues: (value: string | string[]) => void;
+    toggleValue: (value: string) => void;
     clearAll: () => void;
     deletedLegalValues?: Set<string>;
     invalidLegalValues?: Set<string>;
@@ -163,23 +201,15 @@ export const LegalValuesSelector = ({
     legalValues,
     values,
     addValues,
-    removeValue,
+    toggleValue,
     clearAll,
     ...baseProps
 }: LegalValuesSelectorProps) => {
-    const onChange = (legalValue: string) => {
-        if (values.has(legalValue)) {
-            removeValue(legalValue);
-        } else {
-            addValues([legalValue]);
-        }
-    };
-
     return (
         <BaseLegalValueSelector
             legalValues={legalValues}
             isInputSelected={(inputValue) => values.has(inputValue)}
-            onChange={onChange}
+            onChange={toggleValue}
             multiSelect={{
                 clearAll,
                 selectAll: () => {
@@ -194,30 +224,20 @@ export const LegalValuesSelector = ({
 
 type SingleLegalValueSelectorProps = {
     value: string;
-    addValue: (value: string) => void;
-    clear: () => void;
     deletedLegalValues?: Set<string>;
     legalValues: ILegalValue[];
+    toggleValue: (value: string) => void;
     invalidLegalValues?: Set<string>;
 };
 
 export const SingleLegalValueSelector = ({
     value,
-    addValue,
-    clear,
+    toggleValue,
     ...baseProps
 }: SingleLegalValueSelectorProps) => {
-    const onChange = (newValue: string) => {
-        if (value === newValue) {
-            clear();
-        } else {
-            addValue(newValue);
-        }
-    };
-
     return (
         <BaseLegalValueSelector
-            onChange={onChange}
+            onChange={toggleValue}
             isInputSelected={(inputValue) => inputValue === value}
             {...baseProps}
         />

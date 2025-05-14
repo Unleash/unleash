@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useReducer } from 'react';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IConstraint } from 'interfaces/strategy';
 import {
@@ -60,9 +60,13 @@ export const useEditableConstraint = (
     constraint: IConstraint,
     onUpdate: (constraint: IConstraint) => void,
 ): EditableConstraintState => {
-    const [localConstraint, setLocalConstraint] = useState(() => {
-        return fromIConstraint(constraint);
-    });
+    const [localConstraint, updateConstraint] = useReducer(
+        constraintReducer,
+        fromIConstraint(constraint),
+    );
+    useEffect(() => {
+        onUpdate(toIConstraint(localConstraint));
+    }, [localConstraint]);
 
     const { context } = useUnleashContext();
 
@@ -104,17 +108,6 @@ export const useEditableConstraint = (
         JSON.stringify(contextDefinition.legalValues),
         JSON.stringify(localConstraint.operator),
     ]);
-
-    const updateConstraint = (action: ConstraintUpdateAction) => {
-        const nextState = constraintReducer(
-            localConstraint,
-            action,
-            deletedLegalValues,
-        );
-
-        setLocalConstraint(nextState);
-        onUpdate(toIConstraint(nextState));
-    };
 
     const legalValueData = contextDefinition.legalValues?.length
         ? {

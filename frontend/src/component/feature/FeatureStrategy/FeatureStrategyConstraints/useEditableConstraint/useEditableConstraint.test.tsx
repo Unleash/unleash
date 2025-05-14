@@ -20,7 +20,7 @@ const setupApi = (contextField?: ContextFieldSchema) => {
     testServerRoute(server, '/api/admin/context', [contextField]);
 };
 
-test('calls onUpdate with new state', () => {
+test('calls onUpdate with new state', async () => {
     const initial: IConstraint = {
         contextName: 'context-field',
         operator: NOT_IN,
@@ -32,15 +32,19 @@ test('calls onUpdate with new state', () => {
     const { result } = renderHook(() =>
         useEditableConstraint(initial, onUpdate),
     );
+
     result.current.updateConstraint({
         type: 'set operator',
         payload: IN,
     });
 
-    expect(onUpdate).toHaveBeenCalledWith({
-        contextName: 'context-field',
-        operator: IN,
-        values: [],
+    // gets called by useEffect, so we need to wait for the next render.
+    await waitFor(() => {
+        expect(onUpdate).toHaveBeenCalledWith({
+            contextName: 'context-field',
+            operator: IN,
+            values: [],
+        });
     });
 });
 

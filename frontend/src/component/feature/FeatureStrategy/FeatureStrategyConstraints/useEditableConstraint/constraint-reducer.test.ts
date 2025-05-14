@@ -259,27 +259,27 @@ describe('adding values', () => {
         });
 
         test('trying to add a deleted legal value results in no change', () => {
-            const input = singleValueConstraint();
-            const output = constraintReducer(
-                input,
-                {
-                    type: 'add value(s)',
-                    payload: 'deleted',
-                },
-                new Set(['deleted']),
-            );
+            const input = {
+                ...singleValueConstraint(),
+                deletedLegalValues: new Set(['deleted']),
+            };
+            const output = constraintReducer(input, {
+                type: 'add value(s)',
+                payload: 'deleted',
+            });
             expect(output).toStrictEqual(input);
         });
         test('if both the new value and the old value are deleted legal values, it clears the field', () => {
-            const input = singleValueConstraint();
-            const output = constraintReducer(
-                input,
-                {
-                    type: 'add value(s)',
-                    payload: 'deleted',
-                },
-                new Set(['deleted', input.value]),
-            );
+            const base = singleValueConstraint();
+            const input = {
+                ...base,
+                deletedLegalValues: new Set(['deleted', base.value]),
+            };
+
+            const output = constraintReducer(input, {
+                type: 'add value(s)',
+                payload: 'deleted',
+            });
             expect(output).toStrictEqual({
                 ...input,
                 value: '',
@@ -322,15 +322,12 @@ describe('adding values', () => {
             const input = {
                 ...multiValueConstraint(),
                 values: new Set(['deleted-old', 'A']),
+                deletedLegalValues: new Set(['deleted-old', 'deleted-new']),
             };
-            const output = constraintReducer(
-                input,
-                {
-                    type: 'add value(s)',
-                    payload: ['deleted-new', 'B'],
-                },
-                new Set(['deleted-old', 'deleted-new']),
-            );
+            const output = constraintReducer(input, {
+                type: 'add value(s)',
+                payload: ['deleted-new', 'B'],
+            });
             expect(output).toStrictEqual({
                 ...input,
                 values: new Set(['A', 'B']),
@@ -365,28 +362,27 @@ describe('toggling values', () => {
         });
 
         test('trying to add a deleted legal value results in no change', () => {
-            const input = singleValueConstraint();
-            const output = constraintReducer(
-                input,
-                {
-                    type: 'toggle value',
-                    payload: 'deleted',
-                },
-                new Set(['deleted']),
-            );
+            const input = {
+                ...singleValueConstraint(),
+                deletedLegalValues: new Set(['deleted']),
+            };
+            const output = constraintReducer(input, {
+                type: 'toggle value',
+                payload: 'deleted',
+            });
             expect(output).toStrictEqual(input);
         });
 
         test('if both the new value and the old value are deleted legal values, it clears the field', () => {
-            const input = singleValueConstraint();
-            const output = constraintReducer(
-                input,
-                {
-                    type: 'toggle value',
-                    payload: 'deleted',
-                },
-                new Set(['deleted', input.value]),
-            );
+            const base = singleValueConstraint();
+            const input = {
+                ...base,
+                deletedLegalValues: new Set(['deleted', base.value]),
+            };
+            const output = constraintReducer(input, {
+                type: 'toggle value',
+                payload: 'deleted',
+            });
             expect(output).toStrictEqual({
                 ...input,
                 value: '',
@@ -421,15 +417,12 @@ describe('toggling values', () => {
             const input = {
                 ...multiValueConstraint(),
                 values: new Set(['deleted-old', 'A']),
+                deletedLegalValues: new Set(['deleted-old', 'deleted-new']),
             };
-            const output = constraintReducer(
-                input,
-                {
-                    type: 'toggle value',
-                    payload: 'deleted-new',
-                },
-                new Set(['deleted-old', 'deleted-new']),
-            );
+            const output = constraintReducer(input, {
+                type: 'toggle value',
+                payload: 'deleted-new',
+            });
             expect(output).toStrictEqual({
                 ...input,
                 values: new Set(['A']),

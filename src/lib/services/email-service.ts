@@ -424,6 +424,7 @@ export class EmailService {
                 name: this.stripSpecialCharacters(name),
                 year,
                 unleashUrl,
+                recipient,
             };
 
             let gettingStartedTemplate = 'getting-started';

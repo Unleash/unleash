@@ -24,14 +24,7 @@ const useFeatureStrategyApi = () => {
         environmentId: string,
         payload: IFeatureStrategyPayload,
     ): Promise<IFeatureStrategy> => {
-        const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies`;
-        const req = createRequest(
-            path,
-            { method: 'POST', body: JSON.stringify(payload) },
-            'addStrategyToFeature',
-        );
-        const result = await makeRequest(req.caller, req.id);
-
+        // Process constraints BEFORE the API call
         if (addEditStrategyEnabled) {
             if (payload.constraints && payload.constraints.length > 0) {
                 addToRecentlyUsedConstraints(payload.constraints);
@@ -41,6 +34,14 @@ const useFeatureStrategyApi = () => {
                 addToRecentlyUsedSegments(payload.segments);
             }
         }
+
+        const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies`;
+        const req = createRequest(
+            path,
+            { method: 'POST', body: JSON.stringify(payload) },
+            'addStrategyToFeature',
+        );
+        const result = await makeRequest(req.caller, req.id);
 
         return result.json();
     };
@@ -67,14 +68,7 @@ const useFeatureStrategyApi = () => {
         strategyId: string,
         payload: IFeatureStrategyPayload,
     ): Promise<void> => {
-        const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategyId}`;
-        const req = createRequest(
-            path,
-            { method: 'PUT', body: JSON.stringify(payload) },
-            'updateStrategyOnFeature',
-        );
-        await makeRequest(req.caller, req.id);
-
+        // Process constraints BEFORE the API call
         if (addEditStrategyEnabled) {
             if (payload.constraints && payload.constraints.length > 0) {
                 addToRecentlyUsedConstraints(payload.constraints);
@@ -84,6 +78,14 @@ const useFeatureStrategyApi = () => {
                 addToRecentlyUsedSegments(payload.segments);
             }
         }
+
+        const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategyId}`;
+        const req = createRequest(
+            path,
+            { method: 'PUT', body: JSON.stringify(payload) },
+            'updateStrategyOnFeature',
+        );
+        await makeRequest(req.caller, req.id);
     };
 
     const setStrategiesSortOrder = async (

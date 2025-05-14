@@ -100,12 +100,6 @@ export const constraintReducer = (
         const filteredValues = state.deletedLegalValues
             ? difference(combinedValues, state.deletedLegalValues)
             : combinedValues;
-        console.log(
-            'setting values:',
-            combinedValues,
-            filteredValues,
-            state.deletedLegalValues,
-        );
         return {
             ...state,
             values: filteredValues,

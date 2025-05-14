@@ -10,7 +10,7 @@ export const useSegmentLimits = (): IUseSegmentLimits => {
     const { uiConfig } = useUiConfig();
 
     return {
-        segmentValuesLimit: uiConfig.segmentValuesLimit,
-        strategySegmentsLimit: uiConfig.strategySegmentsLimit,
+        segmentValuesLimit: uiConfig.resourceLimits.segmentValues,
+        strategySegmentsLimit: uiConfig.resourceLimits.strategySegments,
     };
 };

@@ -1,4 +1,5 @@
 import { validateSchema } from '../validate.js';
+import type { ResourceLimitsSchema } from './resource-limits-schema.js';
 import type { UiConfigSchema } from './ui-config-schema.js';
 
 test('uiConfigSchema', () => {
@@ -9,8 +10,10 @@ test('uiConfigSchema', () => {
         baseUriPath: 'a',
         environment: 'a',
         disablePasswordAuth: false,
-        segmentValuesLimit: 0,
-        strategySegmentsLimit: 0,
+        resourceLimits: {
+            segmentValues: 0,
+            strategySegments: 0,
+        } as ResourceLimitsSchema,
         versionInfo: {
             current: {},
             latest: {},

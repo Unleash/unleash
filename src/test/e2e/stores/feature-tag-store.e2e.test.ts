@@ -4,7 +4,7 @@ import dbInit, { type ITestDb } from '../helpers/database-init.js';
 import getLogger from '../../fixtures/no-logger.js';
 import NotFoundError from '../../../lib/error/notfound-error.js';
 import type { IUnleashStores } from '../../../lib/types/index.js';
-
+import { beforeAll, afterAll, afterEach, test, expect } from 'vitest';
 let stores: IUnleashStores;
 let db: ITestDb;
 let featureTagStore: IFeatureTagStore;
@@ -119,7 +119,7 @@ test('should import feature tags', async () => {
 test('should throw not found error if feature does not exist', async () => {
     await expect(async () =>
         featureTagStore.getAllTagsForFeature('non.existing.toggle'),
-    ).rejects.toThrow(
+    ).rejects.errorWithMessage(
         new NotFoundError(
             `Could not find feature with name non.existing.toggle`,
         ),

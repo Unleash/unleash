@@ -134,6 +134,11 @@ describe.each(metaRules)('OpenAPI schemas $name', (rule) => {
                     expect(validateMetaSchema.errors).toBeNull();
                 }
             });
+        } else {
+            // Added, because vitest requires tests for all exceptions.
+            it(`${schemaName}`, () => {
+                expect(true).toBe(true);
+            });
         }
     });
 });

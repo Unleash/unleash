@@ -32,7 +32,7 @@ import {
 import { insertLastSeenAt } from '../../../../test/e2e/helpers/test-helper.js';
 import type { EventService } from '../../../services/index.js';
 import type FeatureLinkService from '../../feature-links/feature-link-service.js';
-
+import { beforeAll, afterAll, beforeEach, test, expect } from 'vitest';
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: FeatureToggleService;
@@ -385,7 +385,7 @@ test('cloning a feature flag not allowed for change requests enabled', async () 
             SYSTEM_USER_AUDIT,
             true,
         ),
-    ).rejects.toEqual(
+    ).rejects.errorWithMessage(
         new ForbiddenError(
             `Cloning not allowed. Project default has change requests enabled.`,
         ),
@@ -399,7 +399,7 @@ test('changing to a project with change requests enabled should not be allowed',
     });
     await expect(
         service.changeProject('newFlagName', 'default', TEST_AUDIT_USER),
-    ).rejects.toEqual(
+    ).rejects.errorWithMessage(
         new ForbiddenError(
             `Changing project not allowed. Project default has change requests enabled.`,
         ),
@@ -531,7 +531,9 @@ test('If change requests are enabled, cannot change variants without going via C
             TEST_AUDIT_USER,
             [],
         ),
-    ).rejects.toThrowError(new PermissionError(SKIP_CHANGE_REQUEST));
+    ).rejects.toThrowError(
+        expect.errorWithMessage(new PermissionError(SKIP_CHANGE_REQUEST)),
+    );
 });
 
 test('If CRs are protected for any environment in the project stops bulk update of variants', async () => {
@@ -620,7 +622,9 @@ test('If CRs are protected for any environment in the project stops bulk update 
             },
             TEST_AUDIT_USER,
         ),
-    ).rejects.toThrowError(new PermissionError(SKIP_CHANGE_REQUEST));
+    ).rejects.toThrowError(
+        expect.errorWithMessage(new PermissionError(SKIP_CHANGE_REQUEST)),
+    );
 });
 
 test('getPlaygroundFeatures should return ids and titles (if they exist) on client strategies', async () => {
@@ -799,7 +803,7 @@ test('Should not allow to add flags to archived projects', async () => {
             },
             TEST_AUDIT_USER,
         ),
-    ).rejects.toEqual(
+    ).rejects.errorWithMessage(
         new NotFoundError(
             `Active project with id archivedProject does not exist`,
         ),
@@ -828,7 +832,7 @@ test('Should not allow to revive flags to archived projects', async () => {
 
     await expect(
         service.reviveFeature(flag.name, TEST_AUDIT_USER),
-    ).rejects.toEqual(
+    ).rejects.errorWithMessage(
         new NotFoundError(
             `Active project with id archivedProjectWithFlag does not exist`,
         ),
@@ -836,7 +840,7 @@ test('Should not allow to revive flags to archived projects', async () => {
 
     await expect(
         service.reviveFeatures([flag.name], project.id, TEST_AUDIT_USER),
-    ).rejects.toEqual(
+    ).rejects.errorWithMessage(
         new NotFoundError(
             `Active project with id archivedProjectWithFlag does not exist`,
         ),

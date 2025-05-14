@@ -14,7 +14,7 @@ import type {
 } from '../../types/index.js';
 import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service.js';
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 const state = async (
     cache: GlobalFrontendApiCache,
@@ -53,7 +53,7 @@ const createCache = (
     const config = {
         getLogger: noLogger,
         flagResolver: alwaysOnFlagResolver,
-        eventBus: <any>{ emit: jest.fn() },
+        eventBus: <any>{ emit: vi.fn() },
     };
     const segmentReadModel = new FakeSegmentReadModel([segment as ISegment]);
     const clientFeatureToggleReadModel = new FakeClientFeatureToggleReadModel(

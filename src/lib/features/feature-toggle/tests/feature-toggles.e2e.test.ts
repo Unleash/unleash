@@ -33,7 +33,7 @@ import type {
     SetStrategySortOrderSchema,
 } from '../../../openapi/index.js';
 import { ForbiddenError } from '../../../error/index.js';
-
+import { beforeAll, afterEach, afterAll, test, describe, expect } from 'vitest';
 let app: IUnleashTest;
 let db: ITestDb;
 let defaultToken: IApiToken;
@@ -282,7 +282,7 @@ test('should not allow to change project with dependencies', async () => {
             'default',
             TEST_AUDIT_USER,
         ),
-    ).rejects.toThrow(
+    ).rejects.errorWithMessage(
         new ForbiddenError(
             'Changing project not allowed. Feature has dependencies.',
         ),
@@ -2329,7 +2329,7 @@ test('Should not allow changing project to target project without the same enabl
             'default',
             TEST_AUDIT_USER,
         ),
-    ).rejects.toThrow(new IncompatibleProjectError(targetProject));
+    ).rejects.errorWithMessage(new IncompatibleProjectError(targetProject));
 });
 
 test('Should allow changing project to target project with the same enabled environments', async () => {
@@ -2401,7 +2401,7 @@ test('Should allow changing project to target project with the same enabled envi
         environment: '*',
         secret: 'a',
     });
-    await expect(async () =>
+    await expect(
         app.services.projectService.changeProject(
             targetProject,
             featureName,

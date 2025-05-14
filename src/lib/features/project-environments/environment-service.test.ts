@@ -12,7 +12,7 @@ import {
 import NameExistsError from '../../error/name-exists-error.js';
 import type { EventService } from '../../services/index.js';
 import { createEventsService } from '../events/createEventsService.js';
-
+import { test, beforeAll, afterAll, expect } from 'vitest';
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: EnvironmentService;
@@ -219,25 +219,26 @@ test('Adding same environment twice should throw a NameExistsError', async () =>
             'default',
             SYSTEM_USER_AUDIT,
         ),
-    ).rejects.toThrow(
+    ).rejects.errorWithMessage(
         new NameExistsError(
             'default already has the environment uniqueness-test enabled',
         ),
     );
 });
 
-test('Removing environment not connected to project should be a noop', async () =>
-    expect(async () =>
+test('Removing environment not connected to project should be a noop', async () => {
+    await expect(
         service.removeEnvironmentFromProject(
             'some-non-existing-environment',
             'default',
             SYSTEM_USER_AUDIT,
         ),
-    ).resolves);
+    ).resolves;
+});
 
 test('Trying to get an environment that does not exist throws NotFoundError', async () => {
     const envName = 'this-should-not-exist';
-    await expect(async () => service.get(envName)).rejects.toThrow(
+    await expect(async () => service.get(envName)).rejects.errorWithMessage(
         new NotFoundError(`Could not find environment with name: ${envName}`),
     );
 });

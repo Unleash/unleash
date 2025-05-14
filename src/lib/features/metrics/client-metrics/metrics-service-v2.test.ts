@@ -13,13 +13,13 @@ import { endOfDay, startOfHour, subDays, subHours } from 'date-fns';
 import type { IClientMetricsEnv } from './client-metrics-store-v2-type.js';
 import { UnknownFlagsService } from '../unknown-flags/unknown-flags-service.js';
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 function initClientMetrics() {
     const stores = createStores();
 
     const eventBus = new EventEmitter();
-    eventBus.emit = jest.fn(() => true);
+    eventBus.emit = vi.fn(() => true);
 
     const config = {
         eventBus,
@@ -35,7 +35,7 @@ function initClientMetrics() {
         },
         config,
     );
-    lastSeenService.updateLastSeen = jest.fn();
+    lastSeenService.updateLastSeen = vi.fn();
     const unknownFlagsService = new UnknownFlagsService(
         {
             unknownFlagsStore: stores.unknownFlagsStore,

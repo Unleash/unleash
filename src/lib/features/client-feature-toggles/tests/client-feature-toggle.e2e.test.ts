@@ -11,7 +11,7 @@ import type { Application } from 'express';
 import type { IFlagResolver } from '../../../types/index.js';
 import type TestAgent from 'supertest/lib/agent.d.ts';
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 let app: Application;
 
@@ -78,10 +78,10 @@ test('should get empty getFeatures via client', () => {
 });
 
 test('if caching is enabled should memoize', async () => {
-    const getClientFeatures = jest.fn().mockReturnValue([]);
-    const getActiveSegmentsForClient = jest.fn().mockReturnValue([]);
-    const respondWithValidation = jest.fn().mockReturnValue({});
-    const validPath = jest.fn().mockReturnValue(jest.fn());
+    const getClientFeatures = vi.fn().mockReturnValue([]);
+    const getActiveSegmentsForClient = vi.fn().mockReturnValue([]);
+    const respondWithValidation = vi.fn().mockReturnValue({});
+    const validPath = vi.fn().mockReturnValue(vi.fn());
     const clientSpecService = new ClientSpecService({ getLogger });
     const openApiService = { respondWithValidation, validPath };
     const clientFeatureToggleService = {
@@ -119,10 +119,10 @@ test('if caching is enabled should memoize', async () => {
 });
 
 test('if caching is not enabled all calls goes to service', async () => {
-    const getClientFeatures = jest.fn().mockReturnValue([]);
-    const getActiveSegmentsForClient = jest.fn().mockReturnValue([]);
-    const respondWithValidation = jest.fn().mockReturnValue({});
-    const validPath = jest.fn().mockReturnValue(jest.fn());
+    const getClientFeatures = vi.fn().mockReturnValue([]);
+    const getActiveSegmentsForClient = vi.fn().mockReturnValue([]);
+    const respondWithValidation = vi.fn().mockReturnValue({});
+    const validPath = vi.fn().mockReturnValue(vi.fn());
     const clientSpecService = new ClientSpecService({ getLogger });
     const clientFeatureToggleService = {
         getClientFeatures,

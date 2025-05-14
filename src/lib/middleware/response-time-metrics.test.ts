@@ -3,7 +3,7 @@ import {
     storeRequestedRoute,
 } from './response-time-metrics.js';
 import { REQUEST_TIME } from '../metric-events.js';
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 import type { IFlagResolver } from '../server-impl.js';
 import EventEmitter from 'events';
 
@@ -20,10 +20,10 @@ const isDefined = async (timeInfo: any, limit = 10) => {
 };
 
 const flagResolver = {
-    isEnabled: jest.fn(),
-    getAll: jest.fn(),
-    getVariant: jest.fn(),
-    getStaticContext: jest.fn(),
+    isEnabled: vi.fn(),
+    getAll: vi.fn(),
+    getVariant: vi.fn(),
+    getStaticContext: vi.fn(),
 } as IFlagResolver;
 
 // Make sure it's always cleaned up
@@ -32,7 +32,7 @@ beforeEach(() => {
     res = {
         statusCode: 200,
         locals: {}, // res will always have locals (according to express RequestHandler type)
-        once: jest.fn((event: string, callback: () => void) => {
+        once: vi.fn((event: string, callback: () => void) => {
             if (event === 'finish') {
                 callback();
             }
@@ -42,7 +42,7 @@ beforeEach(() => {
 
 describe('responseTimeMetrics new behavior', () => {
     const instanceStatsService = {
-        getAppCountSnapshot: jest.fn() as () => number | undefined,
+        getAppCountSnapshot: vi.fn() as () => number | undefined,
     };
     const eventBus = new EventEmitter();
 

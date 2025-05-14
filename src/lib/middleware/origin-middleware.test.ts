@@ -4,7 +4,7 @@ import { createTestConfig } from '../../test/config/test-config.js';
 import type { Request, Response } from 'express';
 import { EventEmitter } from 'events';
 import { REQUEST_ORIGIN } from '../metric-events.js';
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 const TEST_UNLEASH_TOKEN = 'TEST_UNLEASH_TOKEN';
 const TEST_USER_AGENT = 'TEST_USER_AGENT';
@@ -12,17 +12,17 @@ const TEST_USER_AGENT = 'TEST_USER_AGENT';
 describe('originMiddleware', () => {
     const req = { headers: {}, path: '' } as Request;
     const res = {} as Response;
-    const next = jest.fn();
+    const next = vi.fn();
     const loggerMock = {
-        debug: jest.fn(),
-        info: jest.fn(),
-        warn: jest.fn(),
-        error: jest.fn(),
-        fatal: jest.fn(),
+        debug: vi.fn(),
+        info: vi.fn(),
+        warn: vi.fn(),
+        error: vi.fn(),
+        fatal: vi.fn(),
     };
-    const getLogger = jest.fn(() => loggerMock);
+    const getLogger = vi.fn(() => loggerMock);
     const eventBus = new EventEmitter();
-    eventBus.emit = jest.fn() as () => boolean;
+    eventBus.emit = vi.fn() as () => boolean;
 
     let config: IUnleashConfig;
 

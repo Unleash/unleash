@@ -64,7 +64,7 @@
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
     "useDefineForClassFields": false
   },
-  "types": ["src/types/openapi.d.ts"],
+  "types": ["src/types/openapi.d.ts", "vitest/globals","src/test/vitest.d.ts"],
   "exclude": [
     "bin",
     "docs",
@@ -79,6 +79,7 @@
     "coverage",
     "website",
     "scripts",
-    "frontend"
+    "frontend",
+    "vitest.config.ts"
   ]
 }

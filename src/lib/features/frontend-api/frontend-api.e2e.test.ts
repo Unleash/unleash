@@ -21,7 +21,7 @@ import {
 } from '../../types/index.js';
 import type { FrontendApiService } from './frontend-api-service.js';
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -42,7 +42,7 @@ beforeAll(async () => {
 
 afterEach(() => {
     app.services.frontendApiService.stopAll();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 });
 
 afterAll(async () => {

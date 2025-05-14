@@ -28,7 +28,7 @@ import type {
 } from '../../openapi/index.js';
 import { DEFAULT_ENV, extractAuditInfoFromUser } from '../../util/index.js';
 import { DEFAULT_PROJECT, TEST_AUDIT_USER } from '../../types/index.js';
-
+import { beforeAll, afterAll, afterEach, test, describe, expect } from 'vitest';
 let db: ITestDb;
 let app: IUnleashTest;
 
@@ -235,7 +235,7 @@ test('should validate segment constraint values limit', async () => {
 
     await expect(
         createSegment({ name: randomId(), constraints }),
-    ).rejects.toThrow(
+    ).rejects.toThrowError(
         `Segments may not have more than ${DEFAULT_SEGMENT_VALUES_LIMIT} values`,
     );
 });
@@ -256,7 +256,7 @@ test('should validate segment constraint values limit with multiple constraints'
 
     await expect(
         createSegment({ name: randomId(), constraints }),
-    ).rejects.toThrow(
+    ).rejects.toThrowError(
         `Segments may not have more than ${DEFAULT_SEGMENT_VALUES_LIMIT} values`,
     );
 });
@@ -514,7 +514,7 @@ describe('project-specific segments', () => {
                 ...segment,
                 project: project2,
             }),
-        ).rejects.toThrow(
+        ).rejects.toThrowError(
             `Invalid project. Segment is being used by strategies in other projects: ${project1}`,
         );
     });
@@ -543,7 +543,7 @@ describe('project-specific segments', () => {
             [strategy],
             project1,
         );
-        await expect(() =>
+        await expect(
             updateSegment(segment.id, {
                 ...segment,
                 project: '',
@@ -594,7 +594,7 @@ describe('project-specific segments', () => {
                 ...segment,
                 project: project1,
             }),
-        ).rejects.toThrow(
+        ).rejects.toThrowError(
             `Invalid project. Segment is being used by strategies in other projects: ${project1}, ${project2}`,
         );
     });

@@ -3,7 +3,7 @@ import { type IUnleashTest, setupApp } from '../../helpers/test-helper.js';
 import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import getLogger from '../../../fixtures/no-logger.js';
 import version from '../../../../lib/util/version.js';
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 const asyncFilter = async (arr, predicate) => {
     const results = await Promise.all(arr.map(predicate));
@@ -42,7 +42,7 @@ test('should register client', async () => {
 
 test('should allow client to register multiple times', async () => {
     expect.assertions(2);
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const { clientInstanceStore, clientApplicationsStore } = db.stores;
 
     const clientRegistration = {
@@ -63,11 +63,11 @@ test('should allow client to register multiple times', async () => {
         .send(clientRegistration)
         .expect(202);
 
-    jest.advanceTimersByTime(6000);
+    vi.advanceTimersByTime(6000);
     // @ts-expect-error - Incomplete client registration
     expect(clientApplicationsStore.exists(clientRegistration)).toBeTruthy();
     expect(clientInstanceStore.exists(clientRegistration)).toBeTruthy();
-    jest.useRealTimers();
+    vi.useRealTimers();
 });
 
 test.skip('Should handle a massive bulk registration', async () => {

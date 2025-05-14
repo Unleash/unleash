@@ -8,7 +8,7 @@ import type EventService from '../events/event-service.js';
 import { SCHEDULER_JOB_TIME } from '../../metric-events.js';
 import EventEmitter from 'events';
 import { TEST_AUDIT_USER } from '../../types/index.js';
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 function ms(timeMs) {
     return new Promise((resolve) => setTimeout(resolve, timeMs));
@@ -72,7 +72,7 @@ test('Schedules job immediately', async () => {
     const { schedulerService } = createSchedulerTestService();
     const NO_JITTER = 0;
 
-    const job = jest.fn() as () => Promise<void>;
+    const job = vi.fn() as () => Promise<void>;
 
     await schedulerService.schedule(job, 10, 'test-id', NO_JITTER);
 
@@ -84,7 +84,7 @@ test('Does not schedule job immediately when paused', async () => {
     const { schedulerService, maintenanceService } =
         createSchedulerTestService();
 
-    const job = jest.fn() as () => Promise<void>;
+    const job = vi.fn() as () => Promise<void>;
 
     await toggleMaintenanceMode(maintenanceService, true);
     await schedulerService.schedule(job, 10, 'test-id-2');
@@ -96,7 +96,7 @@ test('Does not schedule job immediately when paused', async () => {
 test('Can schedule a single regular job', async () => {
     const { schedulerService } = createSchedulerTestService();
 
-    const job = jest.fn() as () => Promise<void>;
+    const job = vi.fn() as () => Promise<void>;
 
     await schedulerService.schedule(job, 50, 'test-id-3');
     await ms(75);
@@ -109,7 +109,7 @@ test('Scheduled job ignored in a paused mode', async () => {
     const { schedulerService, maintenanceService } =
         createSchedulerTestService();
 
-    const job = jest.fn() as () => Promise<void>;
+    const job = vi.fn() as () => Promise<void>;
 
     await toggleMaintenanceMode(maintenanceService, true);
     await schedulerService.schedule(job, 50, 'test-id-4');
@@ -123,7 +123,7 @@ test('Can resume paused job', async () => {
     const { schedulerService, maintenanceService } =
         createSchedulerTestService();
 
-    const job = jest.fn() as () => Promise<void>;
+    const job = vi.fn() as () => Promise<void>;
 
     await toggleMaintenanceMode(maintenanceService, true);
     await schedulerService.schedule(job, 50, 'test-id-5');
@@ -137,8 +137,8 @@ test('Can resume paused job', async () => {
 test('Can schedule multiple jobs at the same interval', async () => {
     const { schedulerService } = createSchedulerTestService();
 
-    const job = jest.fn() as () => Promise<void>;
-    const anotherJob = jest.fn() as () => Promise<void>;
+    const job = vi.fn() as () => Promise<void>;
+    const anotherJob = vi.fn() as () => Promise<void>;
 
     await schedulerService.schedule(job, 50, 'test-id-6');
     await schedulerService.schedule(anotherJob, 50, 'test-id-7');
@@ -152,8 +152,8 @@ test('Can schedule multiple jobs at the same interval', async () => {
 test('Can schedule multiple jobs at the different intervals', async () => {
     const { schedulerService } = createSchedulerTestService();
 
-    const job = jest.fn() as () => Promise<void>;
-    const anotherJob = jest.fn() as () => Promise<void>;
+    const job = vi.fn() as () => Promise<void>;
+    const anotherJob = vi.fn() as () => Promise<void>;
 
     await schedulerService.schedule(job, 100, 'test-id-8');
     await schedulerService.schedule(anotherJob, 200, 'test-id-9');
@@ -242,7 +242,7 @@ it('should emit scheduler job time event when scheduled function is run', async 
 test('Delays initial job execution by jitter duration', async () => {
     const { schedulerService } = createSchedulerTestService();
 
-    const job = jest.fn() as () => Promise<void>;
+    const job = vi.fn() as () => Promise<void>;
     const jitterMs = 10;
 
     await schedulerService.schedule(job, 10000, 'test-id', jitterMs);
@@ -256,7 +256,7 @@ test('Delays initial job execution by jitter duration', async () => {
 test('Does not apply jitter if schedule interval is smaller than max jitter', async () => {
     const { schedulerService } = createSchedulerTestService();
 
-    const job = jest.fn() as () => Promise<void>;
+    const job = vi.fn() as () => Promise<void>;
 
     // default jitter 2s-30s
     await schedulerService.schedule(job, 1000, 'test-id');
@@ -269,7 +269,7 @@ test('Does not allow to run scheduled job when it is already pending', async () 
     const { schedulerService } = createSchedulerTestService();
     const NO_JITTER = 0;
 
-    const job = jest.fn() as () => Promise<void>;
+    const job = vi.fn() as () => Promise<void>;
     const slowJob = async () => {
         job();
         await ms(25);

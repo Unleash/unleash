@@ -33,7 +33,14 @@ import { PasswordPreviouslyUsedError } from '../../../lib/error/password-previou
 import { createEventsService } from '../../../lib/features/index.js';
 import type EventEmitter from 'events';
 import { USER_LOGIN } from '../../../lib/metric-events.js';
-
+import {
+    beforeAll,
+    afterAll,
+    beforeEach,
+    test,
+    describe,
+    expect,
+} from 'vitest';
 let db: ITestDb;
 let stores: IUnleashStores;
 let userService: UserService;
@@ -238,7 +245,7 @@ test('should not be able to login with deleted user', async () => {
 
     await expect(
         userService.loginUser('deleted_user', 'unleash4all'),
-    ).rejects.toThrow(
+    ).rejects.errorWithMessage(
         new PasswordMismatch(
             'The combination of password and username you provided is invalid. If you have forgotten your password, visit /forgotten-password or get in touch with your instance administrator.',
         ),
@@ -260,7 +267,7 @@ test('should not be able to login without password_hash on user', async () => {
 
     await expect(
         userService.loginUser('deleted_user', 'anything-should-fail'),
-    ).rejects.toThrow(
+    ).rejects.errorWithMessage(
         new PasswordMismatch(
             'The combination of password and username you provided is invalid. If you have forgotten your password, visit /forgotten-password or get in touch with your instance administrator.',
         ),
@@ -459,7 +466,9 @@ test('should throw if rootRole is wrong via SSO', async () => {
             name: 'some',
             autoCreate: true,
         }),
-    ).rejects.toThrow(new BadDataError('Could not find rootRole=Member'));
+    ).rejects.errorWithMessage(
+        new BadDataError('Could not find rootRole=Member'),
+    );
 });
 
 test('should update user name when signing in via SSO', async () => {
@@ -522,7 +531,7 @@ test('should throw if autoCreate is false via SSO', async () => {
             name: 'some',
             autoCreate: false,
         }),
-    ).rejects.toThrow(new NotFoundError('No user found'));
+    ).rejects.errorWithMessage(new NotFoundError('No user found'));
 });
 
 test('should support a root role id when logging in and creating user via SSO', async () => {
@@ -579,7 +588,7 @@ describe('Should not be able to use any of previous 5 passwords', () => {
                 user.id,
                 password,
             ),
-        ).rejects.toThrow(new PasswordPreviouslyUsedError());
+        ).rejects.errorWithMessage(new PasswordPreviouslyUsedError());
     });
     test('Is still able to change password to one not used', async () => {
         const name = 'new-password-is-allowed';

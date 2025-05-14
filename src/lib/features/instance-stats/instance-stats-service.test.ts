@@ -12,7 +12,7 @@ import type {
     IUnleashStores,
 } from '../../types/index.js';
 import { createFakeGetLicensedUsers } from './getLicensedUsers.js';
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 let instanceStatsService: InstanceStatsService;
 let versionService: VersionService;
@@ -22,7 +22,7 @@ let flagResolver: IFlagResolver;
 
 let updateMetrics: () => Promise<void>;
 beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     register.clear();
 
@@ -49,8 +49,8 @@ beforeEach(() => {
     );
     updateMetrics = collectAggDbMetrics;
 
-    jest.spyOn(clientInstanceStore, 'getDistinctApplicationsCount');
-    jest.spyOn(instanceStatsService, 'getStats');
+    vi.spyOn(clientInstanceStore, 'getDistinctApplicationsCount');
+    vi.spyOn(instanceStatsService, 'getStats');
 
     expect(instanceStatsService.getStats).toHaveBeenCalledTimes(0);
 });
@@ -84,7 +84,7 @@ describe.each([true, false])(
     'When feature enabled is %s',
     (featureEnabled: boolean) => {
         beforeEach(() => {
-            jest.spyOn(flagResolver, 'getVariant').mockReturnValue({
+            vi.spyOn(flagResolver, 'getVariant').mockReturnValue({
                 name: 'memorizeStats',
                 enabled: featureEnabled,
                 feature_enabled: featureEnabled,
@@ -93,7 +93,7 @@ describe.each([true, false])(
 
         test(`should${featureEnabled ? ' ' : ' not '}memoize query results`, async () => {
             const segmentStore = stores.segmentStore;
-            jest.spyOn(segmentStore, 'count').mockReturnValue(
+            vi.spyOn(segmentStore, 'count').mockReturnValue(
                 Promise.resolve(5),
             );
             expect(segmentStore.count).toHaveBeenCalledTimes(0);
@@ -107,7 +107,7 @@ describe.each([true, false])(
 
         test(`should${featureEnabled ? ' ' : ' not '}memoize async query results`, async () => {
             const trafficDataUsageStore = stores.trafficDataUsageStore;
-            jest.spyOn(
+            vi.spyOn(
                 trafficDataUsageStore,
                 'getTrafficDataUsageForPeriod',
             ).mockReturnValue(
@@ -142,7 +142,7 @@ describe.each([true, false])(
         test(`getStats should${featureEnabled ? ' ' : ' not '}be memorized`, async () => {
             const featureStrategiesReadModel =
                 stores.featureStrategiesReadModel;
-            jest.spyOn(
+            vi.spyOn(
                 featureStrategiesReadModel,
                 'getMaxFeatureEnvironmentStrategies',
             ).mockReturnValue(

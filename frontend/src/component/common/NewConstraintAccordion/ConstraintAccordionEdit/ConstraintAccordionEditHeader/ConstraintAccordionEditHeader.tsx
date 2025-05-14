@@ -10,7 +10,7 @@ import {
     IN,
     stringOperators,
 } from 'constants/operators';
-import { resolveText } from './helpers';
+import { resolveText } from './helpers.ts';
 import { oneOf } from 'utils/oneOf';
 import type React from 'react';
 import { useEffect, useState } from 'react';
@@ -20,9 +20,9 @@ import {
     operatorsForContext,
     CURRENT_TIME_CONTEXT_FIELD,
 } from 'utils/operatorsForContext';
-import { InvertedOperatorButton } from '../StyledToggleButton/InvertedOperatorButton/InvertedOperatorButton';
-import { CaseSensitiveButton } from '../StyledToggleButton/CaseSensitiveButton/CaseSensitiveButton';
-import { ConstraintAccordionEditActions } from '../../ConstraintAccordionEditActions/ConstraintAccordionEditActions';
+import { InvertedOperatorButton } from '../StyledToggleButton/InvertedOperatorButton/InvertedOperatorButton.tsx';
+import { CaseSensitiveButton } from '../StyledToggleButton/CaseSensitiveButton/CaseSensitiveButton.tsx';
+import { ConstraintAccordionEditActions } from '../../ConstraintAccordionEditActions/ConstraintAccordionEditActions.tsx';
 import { styled } from '@mui/material';
 
 interface IConstraintAccordionViewHeader {

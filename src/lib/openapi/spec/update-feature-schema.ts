@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { constraintSchema } from './constraint-schema';
+import { constraintSchema } from './constraint-schema.js';
 
 export const updateFeatureSchema = {
     $id: '#/components/schemas/updateFeatureSchema',

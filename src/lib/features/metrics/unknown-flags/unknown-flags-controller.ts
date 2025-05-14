@@ -2,18 +2,18 @@ import type { Response } from 'express';
 import {
     unknownFlagsResponseSchema,
     type UnknownFlagsResponseSchema,
-} from '../../../openapi';
-import { createResponseSchema } from '../../../openapi/util/create-response-schema';
-import Controller from '../../../routes/controller';
-import type { IAuthRequest } from '../../../routes/unleash-types';
-import type { OpenApiService } from '../../../services/openapi-service';
-import type { IFlagResolver } from '../../../types/experimental';
-import type { IUnleashConfig } from '../../../types/option';
-import { NONE } from '../../../types/permissions';
-import { serializeDates } from '../../../types/serialize-dates';
-import type { IUnleashServices } from '../../../types/services';
-import type { UnknownFlagsService } from './unknown-flags-service';
-import { NotFoundError } from '../../../error';
+} from '../../../openapi/index.js';
+import { createResponseSchema } from '../../../openapi/util/create-response-schema.js';
+import Controller from '../../../routes/controller.js';
+import type { IAuthRequest } from '../../../routes/unleash-types.js';
+import type { OpenApiService } from '../../../services/openapi-service.js';
+import type { IFlagResolver } from '../../../types/experimental.js';
+import type { IUnleashConfig } from '../../../types/option.js';
+import { NONE } from '../../../types/permissions.js';
+import { serializeDates } from '../../../types/serialize-dates.js';
+import type { IUnleashServices } from '../../../services/index.js';
+import type { UnknownFlagsService } from './unknown-flags-service.js';
+import { NotFoundError } from '../../../error/index.js';
 
 export default class UnknownFlagsController extends Controller {
     private unknownFlagsService: UnknownFlagsService;

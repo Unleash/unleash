@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ConstraintSchema } from './constraintSchema';
+import type { ConstraintSchema } from './constraintSchema.js';
 
 /**
  * Represents a segment of users defined by a set of constraints.

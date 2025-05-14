@@ -1,6 +1,6 @@
 import type { BareFetcher, Key, SWRConfiguration } from 'swr';
-import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
-import useUiConfig from '../useUiConfig/useUiConfig';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
+import useUiConfig from '../useUiConfig/useUiConfig.js';
 
 export const useEnterpriseSWR = <Data = any, Error = any>(
     fallback: Data,

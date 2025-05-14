@@ -10,10 +10,10 @@ import {
     StyledProjectCardBody,
     StyledIconBox,
 } from './ProjectCard.styles';
-import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter';
-import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge';
+import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter.tsx';
+import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge.tsx';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
-import { FavoriteAction } from './FavoriteAction/FavoriteAction';
+import { FavoriteAction } from './FavoriteAction/FavoriteAction.tsx';
 import type { ProjectSchema } from 'openapi';
 import { Box } from '@mui/material';
 

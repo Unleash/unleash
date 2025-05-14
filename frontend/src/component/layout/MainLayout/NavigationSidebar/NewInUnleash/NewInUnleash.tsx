@@ -15,7 +15,7 @@ import type { NavigationMode } from 'component/layout/MainLayout/NavigationSideb
 import {
     NewInUnleashItem,
     type NewInUnleashItemDetails,
-} from './NewInUnleashItem';
+} from './NewInUnleashItem.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { ReactComponent as SignalsPreview } from 'assets/img/signals.svg';
 import LifecycleStagesImage from 'assets/img/lifecycle-stages.png';

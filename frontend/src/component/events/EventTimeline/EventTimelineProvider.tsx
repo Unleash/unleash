@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { EventTimelineContext } from './EventTimelineContext';
+import { EventTimelineContext } from './EventTimelineContext.tsx';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import type { IEnvironment } from 'interfaces/environments';
 

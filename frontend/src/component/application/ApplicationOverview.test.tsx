@@ -3,7 +3,7 @@ import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { Route, Routes } from 'react-router-dom';
 import type { ApplicationOverviewSchema } from 'openapi';
-import ApplicationOverview from './ApplicationOverview';
+import ApplicationOverview from './ApplicationOverview.tsx';
 
 const server = testServerSetup();
 

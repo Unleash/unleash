@@ -1,13 +1,13 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { parametersSchema } from './parameters-schema';
-import { variantSchema } from './variant-schema';
-import { overrideSchema } from './override-schema';
+import { parametersSchema } from './parameters-schema.js';
+import { variantSchema } from './variant-schema.js';
+import { overrideSchema } from './override-schema.js';
 import {
     playgroundStrategyEvaluation,
     playgroundStrategySchema,
-} from './playground-strategy-schema';
-import { playgroundConstraintSchema } from './playground-constraint-schema';
-import { playgroundSegmentSchema } from './playground-segment-schema';
+} from './playground-strategy-schema.js';
+import { playgroundConstraintSchema } from './playground-constraint-schema.js';
+import { playgroundSegmentSchema } from './playground-segment-schema.js';
 
 export const unknownFeatureEvaluationResult = 'unevaluated' as const;
 

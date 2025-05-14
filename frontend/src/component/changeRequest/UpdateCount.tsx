@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { Box, Typography } from '@mui/material';
-import { ConditionallyRender } from '../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../common/ConditionallyRender/ConditionallyRender.tsx';
 
 export const UpdateCount: FC<{
     featuresCount: number;

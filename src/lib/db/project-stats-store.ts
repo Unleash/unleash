@@ -1,15 +1,15 @@
-import type { Logger, LogProvider } from '../logger';
+import type { Logger, LogProvider } from '../logger.js';
 
-import metricsHelper from '../util/metrics-helper';
-import { DB_TIME } from '../metric-events';
+import metricsHelper from '../util/metrics-helper.js';
+import { DB_TIME } from '../metric-events.js';
 import type EventEmitter from 'events';
-import type { IProjectStats } from '../features/project/project-service';
+import type { IProjectStats } from '../features/project/project-service.js';
 import type {
     ICreateEnabledDates,
     IProjectStatsStore,
-} from '../types/stores/project-stats-store-type';
-import type { Db } from './db';
-import type { DoraFeaturesSchema } from '../openapi';
+} from '../types/stores/project-stats-store-type.js';
+import type { Db } from './db.js';
+import type { DoraFeaturesSchema } from '../openapi/index.js';
 
 const TABLE = 'project_stats';
 

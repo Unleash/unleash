@@ -5,7 +5,7 @@ import {
     StringParam,
     withDefault,
 } from 'use-query-params';
-import { sortKeys } from '../ProjectsListSort/ProjectsListSort';
+import { sortKeys } from '../ProjectsListSort/ProjectsListSort.jsx';
 
 const stateConfig = {
     query: StringParam,

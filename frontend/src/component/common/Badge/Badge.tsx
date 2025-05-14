@@ -8,7 +8,7 @@ import {
     type ReactElement,
     type ReactNode,
 } from 'react';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
 
 type Color =
     | 'info'

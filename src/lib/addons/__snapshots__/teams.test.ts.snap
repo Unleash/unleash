@@ -9,10 +9,3 @@ exports[`Teams integration Should call teams webhook for archived toggle with pr
 exports[`Teams integration Should call teams webhook for toggled environment 1`] = `"{"themeColor":"0076D7","summary":"Message","sections":[{"activityTitle":"*some@user.com* disabled *[some-toggle](http://some-url.com/projects/default/features/some-toggle)* for the *development* environment in project *[default](http://some-url.com/projects/default)*","activitySubtitle":"Unleash notification update","facts":[{"name":"User","value":"some@user.com"},{"name":"Action","value":"feature-environment-disabled"}]}],"potentialAction":[{"@type":"OpenUri","name":"Go to feature","targets":[{"os":"default","uri":"http://some-url.com/projects/default/features/some-toggle"}]}]}"`;
 
 exports[`Teams integration Should include custom headers in call to teams 1`] = `"{"themeColor":"0076D7","summary":"Message","sections":[{"activityTitle":"*some@user.com* disabled *[some-toggle](http://some-url.com/projects/default/features/some-toggle)* for the *development* environment in project *[default](http://some-url.com/projects/default)*","activitySubtitle":"Unleash notification update","facts":[{"name":"User","value":"some@user.com"},{"name":"Action","value":"feature-environment-disabled"}]}],"potentialAction":[{"@type":"OpenUri","name":"Go to feature","targets":[{"os":"default","uri":"http://some-url.com/projects/default/features/some-toggle"}]}]}"`;
-
-exports[`Teams integration Should include custom headers in call to teams 2`] = `
-{
-  "Content-Type": "application/json",
-  "MY_CUSTOM_HEADER": "MY_CUSTOM_VALUE",
-}
-`;

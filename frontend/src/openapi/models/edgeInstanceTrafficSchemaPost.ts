@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { EdgeLatencyMetricsSchema } from './edgeLatencyMetricsSchema';
+import type { EdgeLatencyMetricsSchema } from './edgeLatencyMetricsSchema.js';
 
 /**
  * A map containing POST requests.

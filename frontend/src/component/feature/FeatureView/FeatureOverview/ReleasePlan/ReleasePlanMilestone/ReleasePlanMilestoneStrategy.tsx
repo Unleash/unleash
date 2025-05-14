@@ -1,6 +1,6 @@
 // deprecated; remove with `flagOverviewRedesign` flag
 import { Box, styled } from '@mui/material';
-import { StrategyExecution } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
+import { StrategyExecution } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution.tsx';
 import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';
 import {
     formatStrategyName,

@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Dialogue } from '../Dialogue/Dialogue';
+import { Dialogue } from '../Dialogue/Dialogue.tsx';
 import { styled } from '@mui/material';
 import { Link } from 'react-router-dom';
 

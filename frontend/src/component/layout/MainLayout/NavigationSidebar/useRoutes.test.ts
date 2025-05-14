@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useRoutes } from './useRoutes';
+import { useRoutes } from './useRoutes.js';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { type Mock, vi } from 'vitest';

@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { playgroundConstraintSchema } from './playground-constraint-schema';
+import { playgroundConstraintSchema } from './playground-constraint-schema.js';
 
 export const playgroundSegmentSchema = {
     $id: '#/components/schemas/playgroundSegmentSchema',

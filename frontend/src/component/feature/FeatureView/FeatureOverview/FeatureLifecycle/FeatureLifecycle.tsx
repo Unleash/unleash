@@ -1,11 +1,11 @@
 import { FeatureLifecycleStageIcon } from 'component/common/FeatureLifecycle/FeatureLifecycleStageIcon';
-import { FeatureLifecycleTooltip } from './FeatureLifecycleTooltip';
-import { populateCurrentStage } from './populateCurrentStage';
+import { FeatureLifecycleTooltip } from './FeatureLifecycleTooltip.tsx';
+import { populateCurrentStage } from './populateCurrentStage.ts';
 import type { FC } from 'react';
 import type { Lifecycle } from 'interfaces/featureToggle';
 import { getFeatureLifecycleName } from 'component/common/FeatureLifecycle/getFeatureLifecycleName';
 import { Box } from '@mui/material';
-import { useUncomplete } from './useUncomplete';
+import { useUncomplete } from './useUncomplete.ts';
 
 export interface LifecycleFeature {
     lifecycle?: Lifecycle;

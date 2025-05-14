@@ -16,11 +16,11 @@ import {
     toggleAllPermissions,
     togglePermission,
 } from 'utils/permissions';
-import { RolePermissionEnvironment } from './RolePermissionEnvironment';
+import { RolePermissionEnvironment } from './RolePermissionEnvironment.tsx';
 import { useMemo } from 'react';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { RolePermissionProject } from './RolePermissionProject';
-import { RolePermissionCategoryAccordion } from './RolePermissionCategoryAccordion';
+import { RolePermissionProject } from './RolePermissionProject.tsx';
+import { RolePermissionCategoryAccordion } from './RolePermissionCategoryAccordion.tsx';
 
 interface IPermissionCategoriesProps {
     type: PredefinedRoleType;

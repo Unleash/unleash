@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SdkContextSchemaProperties } from './sdkContextSchemaProperties';
+import type { SdkContextSchemaProperties } from './sdkContextSchemaProperties.js';
 
 /**
  * The Unleash context as modeled in client SDKs

@@ -1,8 +1,8 @@
-import type { DeltaEvent } from './client-feature-toggle-delta';
+import type { DeltaEvent } from './client-feature-toggle-delta.js';
 import {
     DELTA_EVENT_TYPES,
     type DeltaHydrationEvent,
-} from './client-feature-toggle-delta-types';
+} from './client-feature-toggle-delta-types.js';
 
 export class DeltaCache {
     private events: DeltaEvent[] = [];

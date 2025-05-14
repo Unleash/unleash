@@ -1,7 +1,7 @@
 import {
     productivityReportViewModel,
     type ProductivityReportMetrics,
-} from './productivity-report-view-model';
+} from './productivity-report-view-model.js';
 
 const mockData = {
     unleashUrl: 'http://example.com',

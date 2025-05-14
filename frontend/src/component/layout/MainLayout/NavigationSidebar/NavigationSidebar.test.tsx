@@ -1,5 +1,5 @@
 import { render } from 'utils/testRenderer';
-import { NavigationSidebar } from './NavigationSidebar';
+import { NavigationSidebar } from './NavigationSidebar.tsx';
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { Route, Routes } from 'react-router-dom';

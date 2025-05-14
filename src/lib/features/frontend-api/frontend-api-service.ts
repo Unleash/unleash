@@ -3,31 +3,32 @@ import type {
     IAuditUser,
     IFlagResolver,
     IUnleashConfig,
-    IUnleashServices,
     IUser,
-} from '../../types';
-import type { Logger } from '../../logger';
+} from '../../types/index.js';
+import type { Logger } from '../../logger.js';
 import type {
     ClientMetricsSchema,
     FrontendApiFeatureSchema,
-} from '../../openapi';
-import ApiUser, { type IApiUser } from '../../types/api-user';
+} from '../../openapi/index.js';
+import ApiUser from '../../types/api-user.js';
+import type { IApiUser } from '../../types/api-user.js';
 import {
     type Context,
     InMemStorageProvider,
     Unleash,
     UnleashEvents,
 } from 'unleash-client';
-import { ApiTokenType } from '../../types/models/api-token';
+import { ApiTokenType } from '../../types/model.js';
 import {
     type FrontendSettings,
     frontendSettingsKey,
-} from '../../types/settings/frontend-settings';
-import { validateOrigins } from '../../util';
-import { BadDataError, InvalidTokenError } from '../../error';
-import { FRONTEND_API_REPOSITORY_CREATED } from '../../metric-events';
-import { FrontendApiRepository } from './frontend-api-repository';
-import type { GlobalFrontendApiCache } from './global-frontend-api-cache';
+} from '../../types/settings/frontend-settings.js';
+import { validateOrigins } from '../../util/index.js';
+import { BadDataError, InvalidTokenError } from '../../error/index.js';
+import { FRONTEND_API_REPOSITORY_CREATED } from '../../metric-events.js';
+import { FrontendApiRepository } from './frontend-api-repository.js';
+import type { GlobalFrontendApiCache } from './global-frontend-api-cache.js';
+import type { IUnleashServices } from '../../services/index.js';
 
 export type Config = Pick<
     IUnleashConfig,

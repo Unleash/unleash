@@ -16,7 +16,7 @@ import { useReleasePlanTemplatesApi } from 'hooks/api/actions/useReleasePlanTemp
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { TemplateArchiveDialog } from '../TemplateArchiveDialog';
+import { TemplateArchiveDialog } from '../TemplateArchiveDialog.tsx';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Link } from 'react-router-dom';

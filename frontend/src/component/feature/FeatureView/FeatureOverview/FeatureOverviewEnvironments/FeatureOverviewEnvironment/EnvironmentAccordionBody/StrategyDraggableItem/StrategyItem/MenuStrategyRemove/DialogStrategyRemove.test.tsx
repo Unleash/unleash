@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react';
 import {
     FeatureStrategyRemoveDialogue,
     SuggestFeatureStrategyRemoveDialogue,
-} from './DialogStrategyRemove';
+} from './DialogStrategyRemove.tsx';
 
 const strategyId = 'c81e3a1d-e91c-4083-bd0f-75bb8a9e32a2';
 const projectId = 'default';

@@ -1,5 +1,5 @@
-import { validateSchema } from '../validate';
-import type { UsersSearchSchema } from './users-search-schema';
+import { validateSchema } from '../validate.js';
+import type { UsersSearchSchema } from './users-search-schema.js';
 
 test('usersSchema', () => {
     const data: UsersSearchSchema = [{ id: 1 }];

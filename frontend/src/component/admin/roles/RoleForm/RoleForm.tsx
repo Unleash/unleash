@@ -1,11 +1,11 @@
 import { Alert, styled } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import type { ICheckedPermissions } from 'interfaces/permissions';
-import type { IRoleFormErrors } from './useRoleForm';
+import type { IRoleFormErrors } from './useRoleForm.ts';
 import type { PredefinedRoleType } from 'interfaces/role';
 import { ROOT_ROLE_TYPE } from '@server/util/constants';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { RolePermissionCategories } from './RolePermissionCategories/RolePermissionCategories';
+import { RolePermissionCategories } from './RolePermissionCategories/RolePermissionCategories.tsx';
 
 const StyledInputDescription = styled('p')(({ theme }) => ({
     display: 'flex',

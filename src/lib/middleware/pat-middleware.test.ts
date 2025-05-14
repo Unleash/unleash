@@ -1,8 +1,10 @@
-import getLogger from '../../test/fixtures/no-logger';
-import patMiddleware from './pat-middleware';
-import User from '../types/user';
-import NotFoundError from '../error/notfound-error';
-import type { AccountService } from '../services/account-service';
+import getLogger from '../../test/fixtures/no-logger.js';
+import patMiddleware from './pat-middleware.js';
+import User from '../types/user.js';
+import NotFoundError from '../error/notfound-error.js';
+import type { AccountService } from '../services/account-service.js';
+
+import { jest } from '@jest/globals';
 
 let config: any;
 

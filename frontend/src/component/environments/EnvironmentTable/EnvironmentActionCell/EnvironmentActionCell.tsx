@@ -7,12 +7,12 @@ import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmen
 import usePermissions from 'hooks/api/getters/usePermissions/usePermissions';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import useToast from 'hooks/useToast';
-import { EnvironmentActionCellPopover } from './EnvironmentActionCellPopover/EnvironmentActionCellPopover';
-import { EnvironmentCloneModal } from './EnvironmentCloneModal/EnvironmentCloneModal';
+import { EnvironmentActionCellPopover } from './EnvironmentActionCellPopover/EnvironmentActionCellPopover.tsx';
+import { EnvironmentCloneModal } from './EnvironmentCloneModal/EnvironmentCloneModal.tsx';
 import type { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
-import { EnvironmentTokenDialog } from './EnvironmentTokenDialog/EnvironmentTokenDialog';
-import { EnvironmentDeprecateToggleDialog } from './EnvironmentDeprecateToggleDialog/EnvironmentDeprecateToggleDialog';
-import { EnvironmentDeleteDialog } from './EnvironmentDeleteDialog/EnvironmentDeleteDialog';
+import { EnvironmentTokenDialog } from './EnvironmentTokenDialog/EnvironmentTokenDialog.tsx';
+import { EnvironmentDeprecateToggleDialog } from './EnvironmentDeprecateToggleDialog/EnvironmentDeprecateToggleDialog.tsx';
+import { EnvironmentDeleteDialog } from './EnvironmentDeleteDialog/EnvironmentDeleteDialog.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IEnvironmentTableActionsProps {

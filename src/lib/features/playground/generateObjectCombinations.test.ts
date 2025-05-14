@@ -1,4 +1,4 @@
-import { generateObjectCombinations } from './generateObjectCombinations';
+import { generateObjectCombinations } from './generateObjectCombinations.js';
 
 test('should generate all combinations correctly', () => {
     const obj = {

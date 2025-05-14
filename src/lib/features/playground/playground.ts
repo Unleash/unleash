@@ -1,27 +1,27 @@
 import type { Request, Response } from 'express';
-import type { IUnleashConfig } from '../../types/option';
-import type { IUnleashServices } from '../../types/services';
-import { NONE } from '../../types/permissions';
-import Controller from '../../routes/controller';
-import type { OpenApiService } from '../../services/openapi-service';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { getStandardResponses } from '../../openapi/util/standard-responses';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashServices } from '../../services/index.js';
+import { NONE } from '../../types/permissions.js';
+import Controller from '../../routes/controller.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
+import { createResponseSchema } from '../../openapi/util/create-response-schema.js';
+import { getStandardResponses } from '../../openapi/util/standard-responses.js';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
 import {
     type PlaygroundResponseSchema,
     playgroundResponseSchema,
-} from '../../openapi/spec/playground-response-schema';
-import type { PlaygroundRequestSchema } from '../../openapi/spec/playground-request-schema';
-import type { PlaygroundService } from './playground-service';
-import type { IFlagResolver } from '../../types';
-import type { AdvancedPlaygroundRequestSchema } from '../../openapi/spec/advanced-playground-request-schema';
-import type { AdvancedPlaygroundResponseSchema } from '../../openapi/spec/advanced-playground-response-schema';
+} from '../../openapi/spec/playground-response-schema.js';
+import type { PlaygroundRequestSchema } from '../../openapi/spec/playground-request-schema.js';
+import type { PlaygroundService } from './playground-service.js';
+import type { IFlagResolver } from '../../types/index.js';
+import type { AdvancedPlaygroundRequestSchema } from '../../openapi/spec/advanced-playground-request-schema.js';
+import type { AdvancedPlaygroundResponseSchema } from '../../openapi/spec/advanced-playground-response-schema.js';
 import {
     advancedPlaygroundViewModel,
     playgroundViewModel,
-} from './playground-view-model';
-import type { IAuthRequest } from '../../routes/unleash-types';
-import { extractUserIdFromUser } from '../../util';
+} from './playground-view-model.js';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
+import { extractUserIdFromUser } from '../../util/index.js';
 
 export default class PlaygroundController extends Controller {
     private openApiService: OpenApiService;

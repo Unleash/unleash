@@ -3,13 +3,13 @@ import {
     mapFeaturesForClient,
     mapSegmentsForClient,
     offlineUnleashClient,
-} from './offline-unleash-client';
+} from './offline-unleash-client.js';
 import {
     Unleash as UnleashClientNode,
     InMemStorageProvider as InMemStorageProviderNode,
 } from 'unleash-client';
 import { once } from 'events';
-import { playgroundStrategyEvaluation } from '../../openapi/spec/playground-strategy-schema';
+import { playgroundStrategyEvaluation } from '../../openapi/spec/playground-strategy-schema.js';
 
 export const offlineUnleashClientNode = async ({
     features,

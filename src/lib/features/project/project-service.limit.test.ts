@@ -1,7 +1,11 @@
-import type { IAuditUser, IFlagResolver, IUnleashConfig } from '../../types';
-import { createFakeProjectService } from './createProjectService';
-import type { IUser } from '../../types';
-import { createTestConfig } from '../../../test/config/test-config';
+import type {
+    IAuditUser,
+    IFlagResolver,
+    IUnleashConfig,
+} from '../../types/index.js';
+import { createFakeProjectService } from './createProjectService.js';
+import type { IUser } from '../../types/index.js';
+import { createTestConfig } from '../../../test/config/test-config.js';
 
 const alwaysOnFlagResolver = {
     isEnabled() {

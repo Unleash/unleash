@@ -1,5 +1,5 @@
 import type { IReleasePlan } from 'interfaces/releasePlans';
-import { useReleasePlanTemplate } from './api/getters/useReleasePlanTemplates/useReleasePlanTemplate';
+import { useReleasePlanTemplate } from './api/getters/useReleasePlanTemplates/useReleasePlanTemplate.js';
 
 export const useReleasePlanPreview = (
     templateId: string,

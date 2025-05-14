@@ -1,14 +1,13 @@
 import type { Response } from 'express';
-import Controller from '../../routes/controller';
+import Controller from '../../routes/controller.js';
 import {
     type IUnleashConfig,
-    type IUnleashServices,
     serializeDates,
     UPDATE_PROJECT,
     PROJECT_DEFAULT_STRATEGY_WRITE,
-} from '../../types';
-import type { Logger } from '../../logger';
-import type EnvironmentService from './environment-service';
+} from '../../types/index.js';
+import type { Logger } from '../../logger.js';
+import type EnvironmentService from './environment-service.js';
 import {
     createFeatureStrategySchema,
     type CreateFeatureStrategySchema,
@@ -17,10 +16,14 @@ import {
     emptyResponse,
     getStandardResponses,
     type ProjectEnvironmentSchema,
-} from '../../openapi';
-import type { OpenApiService, ProjectService } from '../../services';
-import type { IAuthRequest } from '../../routes/unleash-types';
-import type { WithTransactional } from '../../db/transaction';
+} from '../../openapi/index.js';
+import type {
+    IUnleashServices,
+    OpenApiService,
+    ProjectService,
+} from '../../services/index.js';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
+import type { WithTransactional } from '../../db/transaction.js';
 
 const PREFIX = '/:projectId/environments';
 

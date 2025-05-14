@@ -1,5 +1,5 @@
-import type { Store } from './store';
-import type Group from '../group';
+import type { Store } from './store.js';
+import type Group from '../group.js';
 import type {
     ICreateGroupUserModel,
     IGroup,
@@ -7,8 +7,8 @@ import type {
     IGroupProject,
     IGroupRole,
     IGroupUser,
-} from '../group';
-import type { IGroupWithProjectRoles } from './access-store';
+} from '../group.js';
+import type { IGroupWithProjectRoles } from './access-store.js';
 
 export interface IStoreGroup {
     name: string;

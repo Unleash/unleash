@@ -8,7 +8,7 @@ import {
     styled,
 } from '@mui/material';
 import type { IConstraint } from 'interfaces/strategy';
-import { ConstraintAccordionViewBody } from './ConstraintAccordionViewBody/ConstraintAccordionViewBody';
+import { ConstraintAccordionViewBody } from './ConstraintAccordionViewBody/ConstraintAccordionViewBody.tsx';
 import { ConstraintAccordionViewHeader } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionViewHeader/ConstraintAccordionViewHeader';
 import { oneOf } from 'utils/oneOf';
 import {

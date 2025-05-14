@@ -30,8 +30,8 @@ import {
     CHANGE_REQUEST_SCHEDULED,
     CHANGE_REQUEST_SCHEDULE_SUSPENDED,
     FEATURE_COMPLETED,
-} from '../types/events';
-import type { IAddonDefinition } from '../types/model';
+} from '../events/index.js';
+import type { IAddonDefinition } from '../types/model.js';
 
 const webhookDefinition: IAddonDefinition = {
     name: 'webhook',

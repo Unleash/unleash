@@ -10,7 +10,7 @@ import {
     NotEnoughData,
 } from 'component/insights/components/LineChart/LineChart';
 import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
-import { UpdatesPerEnvironmentTypeChartTooltip } from './UpdatesPerEnvironmentTypeChartTooltip/UpdatesPerEnvironmentTypeChartTooltip';
+import { UpdatesPerEnvironmentTypeChartTooltip } from './UpdatesPerEnvironmentTypeChartTooltip/UpdatesPerEnvironmentTypeChartTooltip.tsx';
 
 interface IUpdatesPerEnvironmnetTypeChart {
     environmentTypeTrends: InstanceInsightsSchema['environmentTypeTrends'];

@@ -1,5 +1,5 @@
-import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter';
-import type { ProjectStatusSchema } from '../../../../openapi';
+import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter.js';
+import type { ProjectStatusSchema } from 'openapi';
 import { formatApiPath } from 'utils/formatPath';
 
 const path = (projectId: string) => `api/admin/projects/${projectId}/status`;

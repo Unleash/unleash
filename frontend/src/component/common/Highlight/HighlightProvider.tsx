@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { HighlightContext } from './HighlightContext';
+import { HighlightContext } from './HighlightContext.tsx';
 
 const defaultState = {
     eventTimeline: false,

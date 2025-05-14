@@ -1,4 +1,4 @@
-import type { IUnleashConfig } from '../../types/option';
+import type { IUnleashConfig } from '../../types/option.js';
 import {
     type IAuditUser,
     type IFlagResolver,
@@ -7,26 +7,29 @@ import {
     SegmentDeletedEvent,
     SegmentUpdatedEvent,
     SKIP_CHANGE_REQUEST,
-} from '../../types';
-import type { Logger } from '../../logger';
-import NameExistsError from '../../error/name-exists-error';
-import type { ISegmentStore } from './segment-store-type';
-import type { ISegment } from '../../types/model';
-import { segmentSchema } from '../../services/segment-schema';
-import type User from '../../types/user';
-import type { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type';
-import BadDataError from '../../error/bad-data-error';
+} from '../../types/index.js';
+import type { Logger } from '../../logger.js';
+import NameExistsError from '../../error/name-exists-error.js';
+import type { ISegmentStore } from './segment-store-type.js';
+import type { ISegment } from '../../types/model.js';
+import { segmentSchema } from '../../services/segment-schema.js';
+import type User from '../../types/user.js';
+import type { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
+import BadDataError from '../../error/bad-data-error.js';
 import type {
     ISegmentService,
     StrategiesUsingSegment,
-} from './segment-service-interface';
-import { NotFoundError, PermissionError } from '../../error';
-import type { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model';
-import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
-import type EventService from '../events/event-service';
-import type { IChangeRequestSegmentUsageReadModel } from '../change-request-segment-usage-service/change-request-segment-usage-read-model';
-import type { ResourceLimitsSchema, UpsertSegmentSchema } from '../../openapi';
-import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
+} from './segment-service-interface.js';
+import { NotFoundError, PermissionError } from '../../error/index.js';
+import type { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model.js';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
+import type EventService from '../events/event-service.js';
+import type { IChangeRequestSegmentUsageReadModel } from '../change-request-segment-usage-service/change-request-segment-usage-read-model.js';
+import type {
+    ResourceLimitsSchema,
+    UpsertSegmentSchema,
+} from '../../openapi/index.js';
+import { throwExceedsLimitError } from '../../error/exceeds-limit-error.js';
 
 export class SegmentService implements ISegmentService {
     private logger: Logger;

@@ -1,5 +1,5 @@
-import { populateCurrentStage } from './populateCurrentStage';
-import type { IFeatureToggle } from '../../../../../interfaces/featureToggle';
+import { populateCurrentStage } from './populateCurrentStage.js';
+import type { IFeatureToggle } from '../../../../../interfaces/featureToggle.js';
 
 const enteredStageAt = 'date';
 

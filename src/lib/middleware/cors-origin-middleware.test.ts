@@ -1,16 +1,19 @@
-import { resolveOrigin } from './cors-origin-middleware';
-import FakeSettingStore from '../../test/fixtures/fake-setting-store';
-import { createTestConfig } from '../../test/config/test-config';
-import FakeEventStore from '../../test/fixtures/fake-event-store';
-import { randomId } from '../util/random-id';
-import FakeProjectStore from '../../test/fixtures/fake-project-store';
-import { FrontendApiService, SettingService } from '../../lib/services';
-import { type ISettingStore, TEST_AUDIT_USER } from '../../lib/types';
-import { frontendSettingsKey } from '../../lib/types/settings/frontend-settings';
-import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
-import { createFakeEventsService } from '../features';
-import type { GlobalFrontendApiCache } from '../features/frontend-api/global-frontend-api-cache';
-import type { Services } from '../features/frontend-api/frontend-api-service';
+import { resolveOrigin } from './cors-origin-middleware.js';
+import FakeSettingStore from '../../test/fixtures/fake-setting-store.js';
+import { createTestConfig } from '../../test/config/test-config.js';
+import FakeEventStore from '../../test/fixtures/fake-event-store.js';
+import { randomId } from '../util/random-id.js';
+import FakeProjectStore from '../../test/fixtures/fake-project-store.js';
+import {
+    FrontendApiService,
+    SettingService,
+} from '../../lib/services/index.js';
+import { type ISettingStore, TEST_AUDIT_USER } from '../../lib/types/index.js';
+import { frontendSettingsKey } from '../../lib/types/settings/frontend-settings.js';
+import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store.js';
+import { createFakeEventsService } from '../features/index.js';
+import type { GlobalFrontendApiCache } from '../features/frontend-api/global-frontend-api-cache.js';
+import type { Services } from '../features/frontend-api/frontend-api-service.js';
 
 const createSettingService = (
     frontendApiOrigins: string[],

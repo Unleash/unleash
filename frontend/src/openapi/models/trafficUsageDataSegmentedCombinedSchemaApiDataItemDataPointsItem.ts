@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { TrafficUsageDataSegmentedCombinedSchemaApiDataItemDataPointsItemTrafficTypesItem } from './trafficUsageDataSegmentedCombinedSchemaApiDataItemDataPointsItemTrafficTypesItem';
+import type { TrafficUsageDataSegmentedCombinedSchemaApiDataItemDataPointsItemTrafficTypesItem } from './trafficUsageDataSegmentedCombinedSchemaApiDataItemDataPointsItemTrafficTypesItem.js';
 
 export type TrafficUsageDataSegmentedCombinedSchemaApiDataItemDataPointsItem = {
     /**

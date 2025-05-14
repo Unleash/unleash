@@ -1,7 +1,8 @@
 {
   "name": "unleash-server",
+  "type": "module",
   "description": "Unleash is an enterprise ready feature flag service. It provides different strategies for handling feature flags.",
-  "version": "6.10.0",
+  "version": "7.0.0",
   "keywords": [
     "unleash",
     "feature flag",
@@ -28,18 +29,19 @@
   },
   "types": "./dist/lib/server-impl.d.ts",
   "engines": {
-    "node": ">=18 <21"
+    "node": ">=20"
   },
   "license": "Apache-2.0",
-  "main": "./dist/lib/server-impl.js",
+  "exports": "./dist/lib/server-impl.js",
   "scripts": {
     "start": "TZ=UTC node ./dist/server.js",
     "copy-templates": "copyfiles -u 1 src/mailtemplates/**/* dist/",
-    "build:backend": "tsc --pretty",
+    "build:backend": "tsc --pretty && copyfiles -u 2 src/migrations/package.json dist/migrations",
     "build:frontend": "yarn --cwd ./frontend run build",
     "build:frontend:if-needed": "./scripts/build-frontend-if-needed.sh",
     "build": "yarn run clean && concurrently \"yarn:copy-templates\" \"yarn:build:frontend\" \"yarn:build:backend\"",
-    "dev:backend": "TZ=UTC NODE_ENV=development tsc-watch --onSuccess \"node dist/server-dev.js\"",
+    "dev:vite": "TZ=UTC NODE_ENV=development vite-node src/server-dev.ts",
+    "dev:backend": "TZ=UTC NODE_ENV=development tsc-watch --onEmit \"copyfiles -u 2 src/migrations/package.json dist/migrations\" --onSuccess \"node dist/server-dev.js\"",
     "dev:frontend": "wait-on tcp:4242 && yarn --cwd ./frontend run dev",
     "dev:frontend:cloud": "UNLEASH_BASE_PATH=/demo/ yarn run dev:frontend",
     "dev": "concurrently \"yarn:dev:backend\" \"yarn:dev:frontend\"",
@@ -51,15 +53,15 @@
     "local:package": "del-cli --force build && mkdir build && cp -r dist docs CHANGELOG.md LICENSE README.md package.json build",
     "build:watch": "tsc -w",
     "prepare": "husky && yarn --cwd ./frontend install && if [ ! -d ./dist ]; then yarn build; fi",
-    "test": "NODE_ENV=test PORT=4243 node --trace-warnings node_modules/.bin/jest",
-    "test:unit": "NODE_ENV=test PORT=4243 jest --testPathIgnorePatterns=src/test/e2e --testPathIgnorePatterns=dist",
+    "test": "NODE_ENV=test PORT=4243 node --experimental-vm-modules node_modules/.bin/jest",
+    "test:unit": "NODE_ENV=test PORT=4243 node --experimental-vm-modules node_modules/.bin/jest --testPathIgnorePatterns=src/test/e2e",
     "test:docker": "./scripts/docker-postgres.sh",
-    "test:report": "NODE_ENV=test PORT=4243 jest --reporters=\"default\" --reporters=\"jest-junit\"",
+    "test:report": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test PORT=4243 node node_modules/.bin/jest --reporters=\"default\" --reporters=\"jest-junit\"",
     "test:docker:cleanup": "docker rm -f unleash-postgres",
     "test:watch": "yarn test --watch",
-    "test:coverage": "NODE_ENV=test PORT=4243 jest --coverage --testLocationInResults --outputFile=\"coverage/report.json\" --forceExit",
-    "test:coverage:jest": "NODE_ENV=test PORT=4243 jest --silent --ci --json --coverage --testLocationInResults --outputFile=\"report.json\" --forceExit",
-    "test:updateSnapshot": "NODE_ENV=test PORT=4243 jest --updateSnapshot",
+    "test:coverage": "NODE_ENV=test PORT=4243 node --experimental-vm-modules node_modules/.bin/jest --coverage --testLocationInResults --outputFile=\"coverage/report.json\" --forceExit",
+    "test:coverage:jest": "NODE_ENV=test PORT=4243 node --experimental-vm-modules node_modules/.bin/jest --silent --ci --json --coverage --testLocationInResults --outputFile=\"report.json\" --forceExit",
+    "test:updateSnapshot": "NODE_ENV=test PORT=4243 node --experimental-vm-modules node_modules/.bin/jest --updateSnapshot",
     "seed:setup": "ts-node src/test/e2e/seed/segment.seed.ts",
     "seed:serve": "UNLEASH_DATABASE_NAME=unleash_test UNLEASH_DATABASE_SCHEMA=seed yarn run start:dev",
     "clean": "del-cli --force dist",
@@ -81,10 +83,19 @@
     "automock": false,
     "maxWorkers": 4,
     "testTimeout": 20000,
-    "globalSetup": "./scripts/jest-setup.ts",
+    "globalSetup": "./src/jest-setup.ts",
     "transform": {
       "^.+\\.tsx?$": [
-        "@swc/jest"
+        "@swc/jest",
+        {
+          "jsc": {
+            "target": "ESNext",
+            "parser": {
+              "syntax": "typescript"
+            }
+          },
+          "isModule": true
+        }
       ]
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
@@ -106,13 +117,23 @@
       "/dist/",
       "/src/migrations",
       "/src/test"
+    ],
+    "extensionsToTreatAsEsm": [
+      ".ts",
+      ".tsx"
+    ],
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "transformIgnorePatterns": [
+      "node_modules"
     ]
   },
   "dependencies": {
     "@slack/web-api": "^7.9.1",
     "@wesleytodd/openapi": "^1.1.0",
-    "ajv": "^8.12.0",
-    "ajv-formats": "^2.1.1",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
     "async": "^3.2.4",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
@@ -161,7 +182,6 @@
     "pg-connection-string": "^2.5.0",
     "pkginfo": "^0.4.1",
     "prom-client": "^14.0.0",
-    "response-time": "^2.3.2",
     "sanitize-filename": "^1.6.3",
     "semver": "^7.6.3",
     "serve-favicon": "^2.5.0",
@@ -179,8 +199,8 @@
     "@babel/core": "7.26.10",
     "@biomejs/biome": "^1.9.4",
     "@cyclonedx/yarn-plugin-cyclonedx": "^2.0.0",
-    "@swc/core": "1.11.8",
-    "@swc/jest": "0.2.37",
+    "@swc/core": "1.11.24",
+    "@swc/jest": "0.2.38",
     "@types/bcryptjs": "2.4.6",
     "@types/cors": "2.8.17",
     "@types/express": "4.17.21",
@@ -190,9 +210,11 @@
     "@types/jest": "29.5.14",
     "@types/js-yaml": "4.0.9",
     "@types/lodash.groupby": "4.6.9",
+    "@types/lodash.isequal": "^4.5.8",
     "@types/make-fetch-happen": "10.0.4",
     "@types/memoizee": "0.4.11",
     "@types/mime": "4.0.0",
+    "@types/murmurhash3js": "^3.0.7",
     "@types/mustache": "^4.2.5",
     "@types/node": "20.17.24",
     "@types/nodemailer": "6.4.17",
@@ -223,7 +245,8 @@
     "supertest": "7.0.0",
     "ts-node": "10.9.2",
     "tsc-watch": "6.2.1",
-    "typescript": "5.8.2",
+    "typescript": "5.8.3",
+    "vite-node": "^3.1.3",
     "wait-on": "^8.0.0"
   },
   "resolutions": {
@@ -253,5 +276,5 @@
       "yarn biome format --write --no-errors-on-unmatched"
     ]
   },
-  "packageManager": "yarn@4.7.0"
+  "packageManager": "yarn@4.9.1"
 }

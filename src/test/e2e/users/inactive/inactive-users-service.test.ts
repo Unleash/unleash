@@ -1,21 +1,25 @@
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import { createTestConfig } from '../../../config/test-config';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { createTestConfig } from '../../../config/test-config.js';
 import {
     AccessService,
     EmailService,
     type EventService,
     GroupService,
-} from '../../../../lib/services';
-import ResetTokenService from '../../../../lib/services/reset-token-service';
-import SessionService from '../../../../lib/services/session-service';
-import SettingService from '../../../../lib/services/setting-service';
-import UserService from '../../../../lib/services/user-service';
-import { ADMIN, type IUnleashStores, type IUser } from '../../../../lib/types';
-import type { InactiveUsersService } from '../../../../lib/users/inactive/inactive-users-service';
-import { createInactiveUsersService } from '../../../../lib/users';
-import { extractAuditInfoFromUser } from '../../../../lib/util';
-import { createEventsService } from '../../../../lib/features';
+} from '../../../../lib/services/index.js';
+import ResetTokenService from '../../../../lib/services/reset-token-service.js';
+import SessionService from '../../../../lib/services/session-service.js';
+import SettingService from '../../../../lib/services/setting-service.js';
+import UserService from '../../../../lib/services/user-service.js';
+import {
+    ADMIN,
+    type IUnleashStores,
+    type IUser,
+} from '../../../../lib/types/index.js';
+import type { InactiveUsersService } from '../../../../lib/users/inactive/inactive-users-service.js';
+import { createInactiveUsersService } from '../../../../lib/users/index.js';
+import { extractAuditInfoFromUser } from '../../../../lib/util/index.js';
+import { createEventsService } from '../../../../lib/features/index.js';
 
 let db: ITestDb;
 let stores: IUnleashStores;

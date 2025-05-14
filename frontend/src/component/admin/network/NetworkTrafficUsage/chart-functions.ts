@@ -4,15 +4,15 @@ import type {
     MeteredRequestsSchema,
     TrafficUsageDataSegmentedCombinedSchema,
 } from 'openapi';
-import { endpointsInfo } from './endpoint-info';
+import { endpointsInfo } from './endpoint-info.js';
 import {
     addDays,
     addMonths,
     differenceInCalendarDays,
     differenceInCalendarMonths,
 } from 'date-fns';
-import { formatDay, formatMonth, parseDateString } from './dates';
-import type { ChartDataSelection } from './chart-data-selection';
+import { formatDay, formatMonth, parseDateString } from './dates.js';
+import type { ChartDataSelection } from './chart-data-selection.js';
 export type ChartDatasetType = ChartDataset<'bar'>;
 
 export const toTrafficUsageChartData = (

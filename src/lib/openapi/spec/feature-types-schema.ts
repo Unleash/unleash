@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { featureTypeSchema } from './feature-type-schema';
+import { featureTypeSchema } from './feature-type-schema.js';
 
 export const featureTypesSchema = {
     $id: '#/components/schemas/featureTypesSchema',

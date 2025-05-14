@@ -5,7 +5,7 @@ import FlagProvider, {
     LocalStorageProvider,
     UnleashClient,
 } from '@unleash/proxy-client-react';
-import { basePath } from '../../../utils/formatPath';
+import { basePath } from '../../../utils/formatPath.ts';
 
 const UNLEASH_API = 'https://hosted.edge.getunleash.io/api/frontend';
 const DEV_TOKEN = '';

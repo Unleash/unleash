@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { DateSchema } from './dateSchema';
-import type { ClientMetricsSchemaBucketToggles } from './clientMetricsSchemaBucketToggles';
+import type { DateSchema } from './dateSchema.js';
+import type { ClientMetricsSchemaBucketToggles } from './clientMetricsSchemaBucketToggles.js';
 
 /**
  * Holds all metrics gathered over a window of time. Typically 1 hour wide

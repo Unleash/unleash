@@ -2,7 +2,7 @@ import type React from 'react';
 import { IconButton, styled, Tooltip } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
-import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender.tsx';
 
 interface ConstraintAccordionHeaderActionsProps {
     onDelete?: () => void;

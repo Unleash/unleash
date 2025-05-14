@@ -1,27 +1,27 @@
 import type { Response } from 'express';
-import type { IUnleashConfig } from '../../../types/option';
+import type { IUnleashConfig } from '../../../types/option.js';
 import {
     type IFlagResolver,
     type IProjectParam,
-    type IUnleashServices,
     UPDATE_FEATURE,
-} from '../../../types';
-import type { Logger } from '../../../logger';
-import { DELETE_FEATURE } from '../../../types/permissions';
-import type FeatureToggleService from '../../../features/feature-toggle/feature-toggle-service';
-import type { IAuthRequest } from '../../unleash-types';
-import type { OpenApiService } from '../../../services/openapi-service';
+} from '../../../types/index.js';
+import type { Logger } from '../../../logger.js';
+import { DELETE_FEATURE } from '../../../types/permissions.js';
+import type { FeatureToggleService } from '../../../features/feature-toggle/feature-toggle-service.js';
+import type { IAuthRequest } from '../../unleash-types.js';
+import type { OpenApiService } from '../../../services/openapi-service.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../../openapi/util/standard-responses';
+} from '../../../openapi/util/standard-responses.js';
 import {
     type BatchFeaturesSchema,
     createRequestSchema,
     createResponseSchema,
-} from '../../../openapi';
-import Controller from '../../controller';
-import type { WithTransactional } from '../../../db/transaction';
+} from '../../../openapi/index.js';
+import Controller from '../../controller.js';
+import type { IUnleashServices } from '../../../services/index.js';
+import type { WithTransactional } from '../../../db/transaction.js';
 
 const PATH = '/:projectId';
 const PATH_ARCHIVE = `${PATH}/archive`;
@@ -202,5 +202,3 @@ export default class ProjectArchiveController extends Controller {
         res.send({ parentsWithChildFeatures, hasDeletedDependencies });
     }
 }
-
-module.exports = ProjectArchiveController;

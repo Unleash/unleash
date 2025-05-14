@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { RoleSchema } from './roleSchema';
-import type { UserSchema } from './userSchema';
+import type { RoleSchema } from './roleSchema.js';
+import type { UserSchema } from './userSchema.js';
 
 /**
  * Users and root roles

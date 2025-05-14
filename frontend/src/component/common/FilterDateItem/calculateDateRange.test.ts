@@ -1,4 +1,4 @@
-import { calculateDateRange, type RangeType } from './calculateDateRange';
+import { calculateDateRange, type RangeType } from './calculateDateRange.js';
 
 describe('calculateDateRange', () => {
     const fixedDate = new Date('2024-06-16');

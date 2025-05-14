@@ -5,7 +5,7 @@ import {
     type RefObject,
     useEffect,
 } from 'react';
-import { StickyContext } from './StickyContext';
+import { StickyContext } from './StickyContext.tsx';
 
 interface IStickyProviderProps {
     children: ReactNode;

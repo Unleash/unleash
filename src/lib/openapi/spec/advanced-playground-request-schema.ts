@@ -1,6 +1,6 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { ALL } from '../../types/models/api-token';
-import { sdkContextSchema } from './sdk-context-schema';
+import { ALL } from '../../types/models/api-token.js';
+import { sdkContextSchema } from './sdk-context-schema.js';
 
 export const advancedPlaygroundRequestSchema = {
     $id: '#/components/schemas/advancedPlaygroundRequestSchema',

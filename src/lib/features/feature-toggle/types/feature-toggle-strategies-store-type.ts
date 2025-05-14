@@ -5,9 +5,9 @@ import type {
     IFeatureStrategy,
     IStrategyConfig,
     IVariant,
-} from '../../../types/model';
-import type { Store } from '../../../types/stores/store';
-import type { IFeatureProjectUserParams } from '../feature-toggle-controller';
+} from '../../../types/model.js';
+import type { Store } from '../../../types/stores/store.js';
+import type { IFeatureProjectUserParams } from '../feature-toggle-controller.js';
 
 export interface FeatureConfigurationClient {
     name: string;

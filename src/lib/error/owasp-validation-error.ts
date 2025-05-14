@@ -1,5 +1,5 @@
 import type { TestResult } from 'owasp-password-strength-test';
-import { type ApiErrorSchema, UnleashError } from './unleash-error';
+import { type ApiErrorSchema, UnleashError } from './unleash-error.js';
 
 type ValidationError = {
     validationErrors: string[];
@@ -29,4 +29,3 @@ class OwaspValidationError extends UnleashError {
     }
 }
 export default OwaspValidationError;
-module.exports = OwaspValidationError;

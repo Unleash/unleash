@@ -3,7 +3,7 @@ import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuar
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { READ_ROLE } from '@server/types/permissions';
-import { RolesPage } from './RolesPage';
+import { RolesPage } from './RolesPage.tsx';
 
 export const Roles = () => {
     const { isEnterprise } = useUiConfig();

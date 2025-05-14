@@ -3,9 +3,9 @@ import type {
     IClientApplications,
     IClientApplicationsSearchParams,
     IClientApplicationsStore,
-} from '../../lib/types/stores/client-applications-store';
-import NotFoundError from '../../lib/error/notfound-error';
-import type { IApplicationOverview } from '../../lib/features/metrics/instance/models';
+} from '../../lib/types/stores/client-applications-store.js';
+import NotFoundError from '../../lib/error/notfound-error.js';
+import type { IApplicationOverview } from '../../lib/features/metrics/instance/models.js';
 
 export default class FakeClientApplicationsStore
     implements IClientApplicationsStore

@@ -5,7 +5,7 @@ import WarningIcon from '@mui/icons-material/ErrorOutlined';
 import ErrorIcon from '@mui/icons-material/Cancel';
 import CloseIcon from '@mui/icons-material/Close';
 import type { FC } from 'react';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledBox = styled(Box)(({ theme }) => ({

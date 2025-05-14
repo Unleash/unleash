@@ -4,7 +4,7 @@ import type { INavigationMenuItem } from 'interfaces/route';
 import type { IFeatureVariant } from 'interfaces/featureToggle';
 import { format, isValid, parseISO } from 'date-fns';
 import type { IFeatureVariantEdit } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal';
-import { formatDateYMD } from '../../utils/formatDate';
+import { formatDateYMD } from '../../utils/formatDate.js';
 
 /**
  * Handle feature flags and configuration for different plans.

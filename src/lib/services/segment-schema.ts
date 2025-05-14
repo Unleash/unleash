@@ -1,5 +1,5 @@
 import joi from 'joi';
-import { constraintSchema } from '../schema/feature-schema';
+import { constraintSchema } from '../schema/feature-schema.js';
 
 export const segmentSchema = joi
     .object()

@@ -24,7 +24,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { CreateFeatureDialog } from './CreateFeatureDialog';
+import { CreateFeatureDialog } from './CreateFeatureDialog.tsx';
 import IosShare from '@mui/icons-material/IosShare';
 import type { OverridableStringUnion } from '@mui/types';
 import type { ButtonPropsVariantOverrides } from '@mui/material/Button/Button';

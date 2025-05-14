@@ -1,7 +1,7 @@
 import {
     getDeletedLegalValues,
     getInvalidLegalValues,
-} from './legal-value-functions';
+} from './legal-value-functions.js';
 
 test('should return deleted legal values', () => {
     const deletedLegalValues = getDeletedLegalValues(

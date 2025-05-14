@@ -4,8 +4,8 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Box, styled } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { MaintenanceTooltip } from './MaintenanceTooltip';
-import { MaintenanceToggle } from './MaintenanceToggle';
+import { MaintenanceTooltip } from './MaintenanceTooltip.tsx';
+import { MaintenanceToggle } from './MaintenanceToggle.tsx';
 import { UPDATE_MAINTENANCE_MODE } from '@server/types/permissions';
 
 export const MaintenanceAdmin = () => (

@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import type { InstanceInsightsSchema } from 'openapi';
-import { useFilteredTrends } from './useFilteredTrends';
-import { useGroupedProjectTrends } from './useGroupedProjectTrends';
-import { useFilteredFlagsSummary } from './useFilteredFlagsSummary';
-import { useAllDatapoints } from './useAllDatapoints';
+import { useFilteredTrends } from './useFilteredTrends.js';
+import { useGroupedProjectTrends } from './useGroupedProjectTrends.js';
+import { useFilteredFlagsSummary } from './useFilteredFlagsSummary.js';
+import { useAllDatapoints } from './useAllDatapoints.js';
 
 export const useInsightsData = (
     instanceInsights: InstanceInsightsSchema,

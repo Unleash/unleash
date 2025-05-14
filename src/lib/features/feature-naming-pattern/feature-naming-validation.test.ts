@@ -1,7 +1,7 @@
 import {
     checkFeatureFlagNamesAgainstPattern,
     checkFeatureNamingData,
-} from './feature-naming-validation';
+} from './feature-naming-validation.js';
 
 describe('validate incoming feature naming data', () => {
     test('patterns with leading ^ and trailing $ are treated the same as without', () => {

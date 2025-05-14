@@ -10,7 +10,7 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { PaginatedTable } from 'component/common/Table';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
-import { ApplicationUsageCell } from './ApplicationUsageCell/ApplicationUsageCell';
+import { ApplicationUsageCell } from './ApplicationUsageCell/ApplicationUsageCell.tsx';
 import type { ApplicationSchema } from 'openapi';
 import {
     encodeQueryParams,

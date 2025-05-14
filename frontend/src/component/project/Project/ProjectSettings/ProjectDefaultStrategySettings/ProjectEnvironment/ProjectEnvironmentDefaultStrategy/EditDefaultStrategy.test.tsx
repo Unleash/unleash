@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { useDefaultStrategy } from './EditDefaultStrategy';
+import { useDefaultStrategy } from './EditDefaultStrategy.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const server = testServerSetup();

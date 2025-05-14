@@ -1,11 +1,13 @@
-import EventStore from './event-store';
-import getLogger from '../../../test/fixtures/no-logger';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import { EventEmitter } from 'stream';
-import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events';
-import type { IUnleashConfig } from '../../types';
-import { createTestConfig } from '../../../test/config/test-config';
-import { createEventsService } from './createEventsService';
+import EventStore from './event-store.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events.js';
+import type { IUnleashConfig } from '../../types/index.js';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import { createEventsService } from './createEventsService.js';
+import EventEmitter from 'node:events';
 
 let db: ITestDb;
 

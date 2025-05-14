@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useFilteredFlagsSummary } from './useFilteredFlagsSummary';
+import { useFilteredFlagsSummary } from './useFilteredFlagsSummary.js';
 
 describe('useFilteredFlagTrends', () => {
     it('should summarize only last week of project flag trends', () => {

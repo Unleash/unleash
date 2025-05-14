@@ -1,5 +1,5 @@
-import type { DeprecatedProjectOverviewSchema } from './deprecated-project-overview-schema';
-import { validateSchema } from '../validate';
+import type { DeprecatedProjectOverviewSchema } from './deprecated-project-overview-schema.js';
+import { validateSchema } from '../validate.js';
 
 test('deprecatedProjectOverviewSchema', () => {
     const data: DeprecatedProjectOverviewSchema = {

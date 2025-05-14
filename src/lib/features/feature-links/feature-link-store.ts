@@ -1,8 +1,8 @@
-import type { Db } from '../../db/db';
-import type { IFeatureLinkStore } from '../../types';
-import type { IFeatureLink } from './feature-link-store-type';
-import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store';
-import type { Row } from '../../db/crud/row-type';
+import type { Db } from '../../db/db.js';
+import type { IFeatureLinkStore } from '../../types/index.js';
+import type { IFeatureLink } from './feature-link-store-type.js';
+import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store.js';
+import type { Row } from '../../db/crud/row-type.js';
 import { ulid } from 'ulidx';
 
 export class FeatureLinkStore

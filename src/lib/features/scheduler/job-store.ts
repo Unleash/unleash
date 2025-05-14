@@ -1,9 +1,10 @@
-import type { Store } from '../../types/stores/store';
-import type { Db, IUnleashConfig, Logger } from '../../server-impl';
-import metricsHelper from '../../util/metrics-helper';
-import { DB_TIME } from '../../metric-events';
-import type { Row } from '../../db/crud/row-type';
-import { defaultToRow } from '../../db/crud/default-mappings';
+import type { Store } from '../../types/stores/store.js';
+import type { Db, IUnleashConfig } from '../../types/index.js';
+import metricsHelper from '../../util/metrics-helper.js';
+import { DB_TIME } from '../../metric-events.js';
+import type { Row } from '../../db/crud/row-type.js';
+import { defaultToRow } from '../../db/crud/default-mappings.js';
+import type { Logger } from '../../logger.js';
 
 export type JobModel = {
     name: string;

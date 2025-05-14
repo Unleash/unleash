@@ -2,6 +2,6 @@
 // that says we should only use named exports, because
 // it makes it harder to diverge from the name of the component when
 // importing it in other files.
-import { FeatureView } from './FeatureView';
+import { FeatureView } from './FeatureView.tsx';
 
 export default FeatureView;

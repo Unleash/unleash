@@ -2,8 +2,8 @@ import type {
     IClientInstance,
     IClientInstanceStore,
     INewClientInstance,
-} from '../../lib/types/stores/client-instance-store';
-import NotFoundError from '../../lib/error/notfound-error';
+} from '../../lib/types/stores/client-instance-store.js';
+import NotFoundError from '../../lib/error/notfound-error.js';
 import groupBy from 'lodash.groupby';
 
 export default class FakeClientInstanceStore implements IClientInstanceStore {

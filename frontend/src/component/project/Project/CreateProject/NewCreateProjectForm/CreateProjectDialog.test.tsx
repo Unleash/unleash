@@ -1,8 +1,8 @@
 import { render } from 'utils/testRenderer';
 import { screen, waitFor } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { CreateProjectDialog } from './CreateProjectDialog';
-import { CREATE_PROJECT } from '../../../../providers/AccessProvider/permissions';
+import { CreateProjectDialog } from './CreateProjectDialog.tsx';
+import { CREATE_PROJECT } from '../../../../providers/AccessProvider/permissions.ts';
 
 const server = testServerSetup();
 

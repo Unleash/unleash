@@ -10,7 +10,7 @@ import {
     Typography,
 } from '@mui/material';
 import FileDownload from '@mui/icons-material/FileDownload';
-import type { EventSchema } from '../../../openapi';
+import type { EventSchema } from 'openapi';
 import { json2csv } from 'json-2-csv';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 

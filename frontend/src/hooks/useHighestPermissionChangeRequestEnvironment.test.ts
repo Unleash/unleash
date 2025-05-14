@@ -1,4 +1,4 @@
-import { getHighestChangeRequestEnv } from './useHighestPermissionChangeRequestEnvironment';
+import { getHighestChangeRequestEnv } from './useHighestPermissionChangeRequestEnvironment.js';
 
 describe('Get the right change request env', () => {
     it('gets a production env if present', () => {

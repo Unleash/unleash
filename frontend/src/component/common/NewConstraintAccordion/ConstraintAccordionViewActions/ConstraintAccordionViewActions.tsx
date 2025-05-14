@@ -1,6 +1,6 @@
 import type React from 'react';
 import { Button, styled, Tooltip } from '@mui/material';
-import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender.tsx';
 
 interface ConstraintAccordionHeaderActionsProps {
     onUse?: () => void;

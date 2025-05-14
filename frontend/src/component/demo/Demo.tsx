@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { DemoTopics } from './DemoTopics/DemoTopics';
-import { DemoSteps } from './DemoSteps/DemoSteps';
+import { DemoTopics } from './DemoTopics/DemoTopics.tsx';
+import { DemoSteps } from './DemoSteps/DemoSteps.tsx';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import { TOPICS } from './demo-topics';
-import { DemoDialogWelcome } from './DemoDialog/DemoDialogWelcome/DemoDialogWelcome';
-import { DemoDialogFinish } from './DemoDialog/DemoDialogFinish/DemoDialogFinish';
+import { TOPICS } from './demo-topics.js';
+import { DemoDialogWelcome } from './DemoDialog/DemoDialogWelcome/DemoDialogWelcome.tsx';
+import { DemoDialogFinish } from './DemoDialog/DemoDialogFinish/DemoDialogFinish.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { DemoBanner } from './DemoBanner/DemoBanner';
+import { DemoBanner } from './DemoBanner/DemoBanner.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';

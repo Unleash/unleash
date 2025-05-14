@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { groupSchema } from './group-schema';
+import { groupSchema } from './group-schema.js';
 
 export const createGroupSchema = {
     $id: '#/components/schemas/createGroupSchema',

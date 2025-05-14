@@ -5,8 +5,8 @@ import type {
     ChangeRequestState,
     ISegmentChange,
 } from '../../../changeRequest.types';
-import { SegmentChangeDetails } from './SegmentChangeDetails';
-import { ConflictWarning } from './ConflictWarning';
+import { SegmentChangeDetails } from './SegmentChangeDetails.tsx';
+import { ConflictWarning } from './ConflictWarning.tsx';
 
 interface ISegmentChangeProps {
     segmentChange: ISegmentChange;

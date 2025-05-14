@@ -12,7 +12,22 @@
         "useExhaustiveDependencies": "off",
         "noUnusedImports": "warn",
         "useJsxKeyInIterable": "off",
-        "useHookAtTopLevel": "error"
+        "useHookAtTopLevel": "error",
+        "useImportExtensions": {
+          "level": "error",
+          "options": {
+            "suggestedExtensions": {
+              "ts": {
+                "module": "js",
+                "component": "jsx"
+              },
+              "tsx": {
+                "module": "js",
+                "component": "tsx"
+              }
+            }
+          }
+        }
       },
       "complexity": {
         "noBannedTypes": "off",
@@ -52,6 +67,7 @@
       "website/build",
       "website/docs/generated",
       "website/global.js",
+      "website",
       "setupJest.js",
       "dist",
       "build",

@@ -4,19 +4,19 @@ import type {
     IProjectApplications,
     IProjectLinkTemplate,
     IProjectStore,
-} from '../../lib/types';
-import NotFoundError from '../../lib/error/notfound-error';
+} from '../../lib/types/index.js';
+import NotFoundError from '../../lib/error/notfound-error.js';
 import type {
     IEnvironmentProjectLink,
     ProjectModeCount,
-} from '../../lib/features/project/project-store';
-import type { CreateFeatureStrategySchema } from '../../lib/openapi';
+} from '../../lib/features/project/project-store.js';
+import type { CreateFeatureStrategySchema } from '../../lib/openapi/index.js';
 import type {
     IProjectApplicationsSearchParams,
     IProjectHealthUpdate,
     IProjectInsert,
     ProjectEnvironment,
-} from '../../lib/features/project/project-store-type';
+} from '../../lib/features/project/project-store-type.js';
 
 type ArchivableProject = Omit<IProject, 'archivedAt'> & {
     archivedAt: null | Date;
@@ -182,7 +182,7 @@ export default class FakeProjectStore implements IProjectStore {
         projectId: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         environment: string,
-    ): Promise<CreateFeatureStrategySchema | null> {
+    ): Promise<CreateFeatureStrategySchema | undefined> {
         throw new Error('Method not implemented.');
     }
 

@@ -4,8 +4,8 @@ import { ReactComponent as CaseSensitiveOff } from 'assets/icons/24_Text format 
 import {
     StyledToggleButtonOff,
     StyledToggleButtonOn,
-} from '../StyledToggleButton';
-import { ConditionallyRender } from '../../../../ConditionallyRender/ConditionallyRender';
+} from '../StyledToggleButton.tsx';
+import { ConditionallyRender } from '../../../../ConditionallyRender/ConditionallyRender.tsx';
 import type { IConstraint } from 'interfaces/strategy';
 
 interface CaseSensitiveButtonProps {

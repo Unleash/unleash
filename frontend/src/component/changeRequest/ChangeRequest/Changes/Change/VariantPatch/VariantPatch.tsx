@@ -9,8 +9,8 @@ import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import type { ReactNode } from 'react';
-import { ChangeOverwriteWarning } from '../ChangeOverwriteWarning/ChangeOverwriteWarning';
-import { VariantDiff } from './VariantDiff';
+import { ChangeOverwriteWarning } from '../ChangeOverwriteWarning/ChangeOverwriteWarning.tsx';
+import { VariantDiff } from './VariantDiff.tsx';
 
 const ChangeItemInfo = styled(Box)({
     display: 'flex',

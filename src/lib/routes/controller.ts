@@ -5,13 +5,13 @@ import {
     type Response,
     type RequestHandler,
 } from 'express';
-import type { Logger } from '../logger';
-import { type IUnleashConfig, NONE } from '../types';
-import { handleErrors } from './util';
-import requireContentType from '../middleware/content_type_checker';
-import { PermissionError } from '../error';
-import { fromOpenApiValidationErrors } from '../error/bad-data-error';
-import { storeRequestedRoute } from '../middleware/response-time-metrics';
+import type { Logger } from '../logger.js';
+import { type IUnleashConfig, NONE } from '../types/index.js';
+import { handleErrors } from './util.js';
+import requireContentType from '../middleware/content_type_checker.js';
+import { PermissionError } from '../error/index.js';
+import { fromOpenApiValidationErrors } from '../error/bad-data-error.js';
+import { storeRequestedRoute } from '../middleware/response-time-metrics.js';
 
 type IRequestHandler<P = any, ResBody = any, ReqBody = any, ReqQuery = any> = (
     req: Request<P, ResBody, ReqBody, ReqQuery>,
@@ -229,5 +229,3 @@ export default class Controller {
         return this.app;
     }
 }
-
-module.exports = Controller;

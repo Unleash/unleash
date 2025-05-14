@@ -3,10 +3,10 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ToastRenderer from 'component/common/ToastRenderer/ToastRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import PasswordAuth from './PasswordAuth';
+import PasswordAuth from './PasswordAuth.tsx';
 import { LOGIN_BUTTON } from 'utils/testIds';
-import type { IAuthEndpointDetailsResponse } from '../../hooks/api/getters/useAuth/useAuthEndpoint';
-import HostedAuth from './HostedAuth';
+import type { IAuthEndpointDetailsResponse } from '../../hooks/api/getters/useAuth/useAuthEndpoint.ts';
+import HostedAuth from './HostedAuth.tsx';
 
 const server = testServerSetup();
 

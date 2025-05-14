@@ -1,7 +1,7 @@
 import type {
     ISession,
     ISessionStore,
-} from '../../lib/types/stores/session-store';
+} from '../../lib/types/stores/session-store.js';
 
 export default class FakeSessionStore implements ISessionStore {
     private sessions: ISession[] = [];

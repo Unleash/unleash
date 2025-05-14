@@ -1,11 +1,11 @@
-import dbInit, { type ITestDb } from '../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import getLogger from '../../../fixtures/no-logger';
-import { simpleAuthSettingsKey } from '../../../../lib/types/settings/simple-auth-settings';
-import { RoleName, TEST_AUDIT_USER } from '../../../../lib/types';
+} from '../../helpers/test-helper.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { simpleAuthSettingsKey } from '../../../../lib/types/settings/simple-auth-settings.js';
+import { RoleName, TEST_AUDIT_USER } from '../../../../lib/types/index.js';
 import { addDays, minutesToMilliseconds } from 'date-fns';
 
 let db: ITestDb;

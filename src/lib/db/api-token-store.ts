@@ -1,19 +1,19 @@
 import type { EventEmitter } from 'events';
-import metricsHelper from '../util/metrics-helper';
-import { DB_TIME } from '../metric-events';
-import type { Logger, LogProvider } from '../logger';
-import NotFoundError from '../error/notfound-error';
-import type { IApiTokenStore } from '../types/stores/api-token-store';
+import metricsHelper from '../util/metrics-helper.js';
+import { DB_TIME } from '../metric-events.js';
+import type { Logger, LogProvider } from '../logger.js';
+import NotFoundError from '../error/notfound-error.js';
+import type { IApiTokenStore } from '../types/stores/api-token-store.js';
 import {
     ApiTokenType,
+    type Db,
     type IApiToken,
     type IApiTokenCreate,
-    isAllProjects,
-} from '../types/models/api-token';
-import { ALL_PROJECTS } from '../util/constants';
-import type { Db } from './db';
-import { inTransaction } from './transaction';
-import type { IFlagResolver } from '../types';
+    type IFlagResolver,
+} from '../types/index.js';
+import { ALL_PROJECTS } from '../internals.js';
+import { isAllProjects } from '../server-impl.js';
+import { inTransaction } from './transaction.js';
 
 const TABLE = 'api_tokens';
 const API_LINK_TABLE = 'api_token_project';

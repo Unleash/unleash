@@ -1,4 +1,4 @@
-import { parseToken } from './parseToken';
+import { parseToken } from './parseToken.js';
 
 describe('parseToken', () => {
     test('should return null if token is undefined', () => {

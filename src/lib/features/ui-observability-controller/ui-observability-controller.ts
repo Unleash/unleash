@@ -1,16 +1,16 @@
 import type { Request, Response } from 'express';
-import Controller from '../../routes/controller';
+import Controller from '../../routes/controller.js';
 
-import { NONE } from '../../types/permissions';
-import type { IUnleashConfig } from '../../types/option';
-import type { IUnleashServices } from '../../types/services';
-import type { Logger } from '../../logger';
+import { NONE } from '../../types/permissions.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashServices } from '../../services/index.js';
+import type { Logger } from '../../logger.js';
 
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../openapi/util/standard-responses';
-import { createRequestSchema } from '../../openapi';
+} from '../../openapi/util/standard-responses.js';
+import { createRequestSchema } from '../../openapi/index.js';
 
 const version = 1;
 

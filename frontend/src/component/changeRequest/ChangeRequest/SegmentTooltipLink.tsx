@@ -10,7 +10,7 @@ import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { styled } from '@mui/material';
 import { textTruncated } from 'themes/themeStyles';
 import type { ISegment } from 'interfaces/segment';
-import { NameWithChangeInfo } from './NameWithChangeInfo/NameWithChangeInfo';
+import { NameWithChangeInfo } from './NameWithChangeInfo/NameWithChangeInfo.tsx';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',

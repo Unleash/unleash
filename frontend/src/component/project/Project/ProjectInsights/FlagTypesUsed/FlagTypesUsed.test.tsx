@@ -3,7 +3,7 @@ import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import type { ProjectOverviewSchema } from 'openapi';
 import { Route, Routes } from 'react-router-dom';
-import { FlagTypesUsed } from './FlagTypesUsed';
+import { FlagTypesUsed } from './FlagTypesUsed.tsx';
 
 const server = testServerSetup();
 

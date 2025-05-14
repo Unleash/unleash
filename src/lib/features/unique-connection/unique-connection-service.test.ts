@@ -1,11 +1,11 @@
-import { UniqueConnectionService } from './unique-connection-service';
-import { FakeUniqueConnectionStore } from './fake-unique-connection-store';
-import getLogger from '../../../test/fixtures/no-logger';
-import type { IFlagResolver } from '../../types';
-import { SDK_CONNECTION_ID_RECEIVED } from '../../metric-events';
+import { UniqueConnectionService } from './unique-connection-service.js';
+import { FakeUniqueConnectionStore } from './fake-unique-connection-store.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import type { IFlagResolver } from '../../types/index.js';
+import { SDK_CONNECTION_ID_RECEIVED } from '../../metric-events.js';
 import { addHours } from 'date-fns';
 import EventEmitter from 'events';
-import { UniqueConnectionReadModel } from './unique-connection-read-model';
+import { UniqueConnectionReadModel } from './unique-connection-read-model.js';
 
 const alwaysOnFlagResolver = {
     isEnabled() {

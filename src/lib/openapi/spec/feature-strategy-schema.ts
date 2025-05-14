@@ -1,7 +1,7 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { constraintSchema } from './constraint-schema';
-import { parametersSchema } from './parameters-schema';
-import { strategyVariantSchema } from './strategy-variant-schema';
+import { constraintSchema } from './constraint-schema.js';
+import { parametersSchema } from './parameters-schema.js';
+import { strategyVariantSchema } from './strategy-variant-schema.js';
 
 export const featureStrategySchema = {
     $id: '#/components/schemas/featureStrategySchema',

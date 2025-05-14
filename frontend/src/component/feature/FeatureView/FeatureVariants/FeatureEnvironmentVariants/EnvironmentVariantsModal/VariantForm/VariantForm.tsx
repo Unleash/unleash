@@ -17,7 +17,7 @@ import type { IPayload } from 'interfaces/featureToggle';
 import { useOverrides } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/useOverrides';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { WeightType } from 'constants/variantTypes';
-import type { IFeatureVariantEdit } from '../EnvironmentVariantsModal';
+import type { IFeatureVariantEdit } from '../EnvironmentVariantsModal.tsx';
 import Delete from '@mui/icons-material/Delete';
 
 const LazyReactJSONEditor = React.lazy(

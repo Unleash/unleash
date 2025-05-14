@@ -2,15 +2,15 @@ import { useNavigate, Link } from 'react-router-dom';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { useStrategyForm } from '../hooks/useStrategyForm';
-import { StrategyForm } from '../StrategyForm/StrategyForm';
+import { useStrategyForm } from '../hooks/useStrategyForm.ts';
+import { StrategyForm } from '../StrategyForm/StrategyForm.tsx';
 import { CREATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import useStrategiesApi from 'hooks/api/actions/useStrategiesApi/useStrategiesApi';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { GO_BACK } from 'constants/navigate';
-import { CustomStrategyInfo } from '../CustomStrategyInfo/CustomStrategyInfo';
+import { CustomStrategyInfo } from '../CustomStrategyInfo/CustomStrategyInfo.tsx';
 import { Alert } from '@mui/material';
 
 const CreateStrategyDeprecationWarning = () => (

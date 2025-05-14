@@ -3,8 +3,8 @@ import { Badge } from 'component/common/Badge/Badge';
 import { subMonths } from 'date-fns';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import type { FC } from 'react';
-import type { ChartDataSelection } from './chart-data-selection';
-import { parseMonthString } from './dates';
+import type { ChartDataSelection } from './chart-data-selection.ts';
+import { parseMonthString } from './dates.ts';
 
 type Props = {
     period: ChartDataSelection;

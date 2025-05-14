@@ -1,5 +1,5 @@
-import { validateSchema } from '../validate';
-import type { ClientApplicationSchema } from './client-application-schema';
+import { validateSchema } from '../validate.js';
+import type { ClientApplicationSchema } from './client-application-schema.js';
 
 test('clientApplicationSchema no fields', () => {
     expect(

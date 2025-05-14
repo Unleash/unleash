@@ -1,5 +1,5 @@
 import { List, ListItem, styled, Typography } from '@mui/material';
-import { MilestoneStrategyMenuCard } from './MilestoneStrategyMenuCard';
+import { MilestoneStrategyMenuCard } from './MilestoneStrategyMenuCard.tsx';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
 

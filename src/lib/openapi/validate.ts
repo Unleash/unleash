@@ -1,13 +1,14 @@
-import Ajv, { type ErrorObject } from 'ajv';
-import { type SchemaId, schemas } from './index';
-import { omitKeys } from '../util/omit-keys';
-import { fromOpenApiValidationErrors } from '../error/bad-data-error';
+import type { ErrorObject } from 'ajv';
+import Ajv from 'ajv';
+import { type SchemaId, schemas } from './index.js';
+import { omitKeys } from '../util/index.js';
+import { fromOpenApiValidationErrors } from '../error/bad-data-error.js';
 
 export interface ISchemaValidationErrors<S = SchemaId> {
     schema: S;
     errors: ErrorObject[];
 }
-
+// @ts-expect-error: Does not expose constructor
 const ajv = new Ajv({
     schemas: Object.values(schemas).map((schema) =>
         omitKeys(schema, 'components'),
@@ -19,6 +20,9 @@ const ajv = new Ajv({
         'date-time': true,
         date: true,
         uri: true,
+    },
+    code: {
+        esm: true,
     },
 });
 
@@ -33,7 +37,6 @@ export const validateSchema = <S = SchemaId>(
     schema: S,
     data: unknown,
 ): ISchemaValidationErrors<S> | undefined => {
-    // @ts-expect-error we validate that we have an $id field, AJV apparently does not think this is enough to be willing to validate.
     if (!ajv.validate(schema, data)) {
         return {
             schema,

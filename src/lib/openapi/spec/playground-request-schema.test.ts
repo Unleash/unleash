@@ -1,11 +1,11 @@
 import fc, { type Arbitrary } from 'fast-check';
-import { urlFriendlyString } from '../../../test/arbitraries.test';
+import { urlFriendlyString } from '../../../test/arbitraries.test.js';
 import {
     playgroundRequestSchema,
     type PlaygroundRequestSchema,
-} from '../../../lib/openapi/spec/playground-request-schema';
-import { validateSchema } from '../validate';
-import { generate as generateContext } from './sdk-context-schema.test';
+} from '../../../lib/openapi/spec/playground-request-schema.js';
+import { validateSchema } from '../validate.js';
+import { generate as generateContext } from './sdk-context-schema.test.js';
 
 export const generate = (): Arbitrary<PlaygroundRequestSchema> =>
     fc.record({

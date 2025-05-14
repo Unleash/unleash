@@ -1,6 +1,6 @@
-import type { IFavoriteFeaturesStore } from '../../lib/types';
-import type { IFavoriteFeatureKey } from '../../lib/types/stores/favorite-features';
-import type { IFavoriteFeature } from '../../lib/types/favorites';
+import type { IFavoriteFeaturesStore } from '../../lib/types/index.js';
+import type { IFavoriteFeatureKey } from '../../lib/types/stores/favorite-features.js';
+import type { IFavoriteFeature } from '../../lib/types/favorites.js';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export default class FakeFavoriteFeaturesStore
     implements IFavoriteFeaturesStore

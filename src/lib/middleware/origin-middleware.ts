@@ -1,10 +1,10 @@
 import type { Request, Response, NextFunction } from 'express';
-import type { IUnleashConfig } from '../types';
-import { REQUEST_ORIGIN, emitMetricEvent } from '../metric-events';
+import type { IUnleashConfig } from '../types/index.js';
+import { REQUEST_ORIGIN, emitMetricEvent } from '../metric-events.js';
 import {
     determineIntegrationSource,
     getFilteredOrigin,
-} from './integration-headers';
+} from './integration-headers.js';
 
 export const originMiddleware = ({
     getLogger,

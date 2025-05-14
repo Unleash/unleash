@@ -3,12 +3,12 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Alert, Checkbox, styled } from '@mui/material';
 import { useThemeStyles } from 'themes/themeStyles';
 import { ConstraintValueSearch } from 'component/common/LegacyConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
-import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
+import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader.tsx';
 import type { ILegalValue } from 'interfaces/context';
 import {
     filterLegalValues,
     LegalValueLabel,
-} from '../LegalValueLabel/LegalValueLabel';
+} from '../LegalValueLabel/LegalValueLabel.tsx';
 
 interface IRestrictiveLegalValuesProps {
     data: {

@@ -2,7 +2,7 @@ import { collectDefaultMetrics } from 'prom-client';
 import memoizee from 'memoizee';
 import type EventEmitter from 'events';
 import type { Knex } from 'knex';
-import * as events from './metric-events';
+import * as events from './metric-events.js';
 import {
     DB_POOL_UPDATE,
     FEATURE_ARCHIVED,
@@ -23,21 +23,21 @@ import {
     PROJECT_ARCHIVED,
     PROJECT_REVIVED,
     PROJECT_DELETED,
-} from './types/events';
-import type { IUnleashConfig } from './types/option';
-import type { IUnleashStores } from './types/stores';
+} from './events/index.js';
+import type { IUnleashConfig } from './types/option.js';
+import type { IUnleashStores } from './types/stores.js';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
-import type { InstanceStatsService } from './features/instance-stats/instance-stats-service';
-import type { IEnvironment, ISdkHeartbeat } from './types';
+import type { InstanceStatsService } from './features/instance-stats/instance-stats-service.js';
+import type { IEnvironment, ISdkHeartbeat } from './types/index.js';
 import {
     createCounter,
     createGauge,
     createSummary,
     createHistogram,
-} from './util/metrics';
-import type { SchedulerService } from './services';
-import type { IClientMetricsEnv } from './features/metrics/client-metrics/client-metrics-store-v2-type';
-import { DbMetricsMonitor } from './metrics-gauge';
+} from './util/metrics/index.js';
+import type { SchedulerService } from './services/index.js';
+import type { IClientMetricsEnv } from './features/metrics/client-metrics/client-metrics-store-v2-type.js';
+import { DbMetricsMonitor } from './metrics-gauge.js';
 
 export function registerPrometheusPostgresMetrics(
     db: Knex,

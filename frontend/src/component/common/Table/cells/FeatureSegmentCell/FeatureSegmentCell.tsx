@@ -1,7 +1,7 @@
 import type { VFC } from 'react';
 import type { FeatureSearchResponseSchema } from 'openapi';
 import { styled, Typography } from '@mui/material';
-import { TextCell } from '../TextCell/TextCell';
+import { TextCell } from '../TextCell/TextCell.tsx';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';

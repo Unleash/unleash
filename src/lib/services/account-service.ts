@@ -1,11 +1,11 @@
-import type { Logger } from '../logger';
-import type { IUser } from '../types/user';
-import type { IUnleashConfig } from '../types/option';
-import type { IAccountStore, IUnleashStores } from '../types/stores';
-import type { AccessService } from './access-service';
-import { RoleName } from '../types/model';
-import type { IAdminCount } from '../types/stores/account-store';
-import { NotFoundError } from '../error';
+import type { Logger } from '../logger.js';
+import type { IUser } from '../types/user.js';
+import type { IUnleashConfig } from '../types/option.js';
+import type { IAccountStore, IUnleashStores } from '../types/stores.js';
+import type { AccessService } from './access-service.js';
+import { RoleName } from '../types/model.js';
+import type { IAdminCount } from '../types/stores/account-store.js';
+import { NotFoundError } from '../error/index.js';
 
 interface IUserWithRole extends IUser {
     rootRole: number;

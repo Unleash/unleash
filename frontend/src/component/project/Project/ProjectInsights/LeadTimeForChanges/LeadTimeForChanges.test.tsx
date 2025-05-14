@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import type { ProjectDoraMetricsSchema } from 'openapi';
-import { LeadTimeForChanges } from './LeadTimeForChanges';
+import { LeadTimeForChanges } from './LeadTimeForChanges.tsx';
 import { Route, Routes } from 'react-router-dom';
 
 test('Show outdated SDKs and apps using them', async () => {

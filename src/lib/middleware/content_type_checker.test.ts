@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
-import requireContentType from './content_type_checker';
+import requireContentType from './content_type_checker.js';
+import { jest } from '@jest/globals';
 
 const mockRequest: (contentType: string) => Request = (contentType) => ({
     // @ts-ignore

@@ -21,13 +21,13 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { FeatureStaleCell } from 'component/feature/FeatureToggleList/FeatureStaleCell/FeatureStaleCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
-import { ReportExpiredCell } from './ReportExpiredCell/ReportExpiredCell';
-import { ReportStatusCell } from './ReportStatusCell/ReportStatusCell';
+import { ReportExpiredCell } from './ReportExpiredCell/ReportExpiredCell.tsx';
+import { ReportStatusCell } from './ReportStatusCell/ReportStatusCell.tsx';
 import {
     formatStatus,
     type ReportingStatus,
-} from './ReportStatusCell/formatStatus';
-import { formatExpiredAt } from './ReportExpiredCell/formatExpiredAt';
+} from './ReportStatusCell/formatStatus.ts';
+import { formatExpiredAt } from './ReportExpiredCell/formatExpiredAt.ts';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';

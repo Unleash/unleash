@@ -1,4 +1,4 @@
-import { snakeCase, snakeCaseKeys } from './snakeCase';
+import { snakeCase, snakeCaseKeys } from './snakeCase.js';
 
 test('should return snake case from camelCase', () => {
     const resultOne = snakeCase('camelCase');

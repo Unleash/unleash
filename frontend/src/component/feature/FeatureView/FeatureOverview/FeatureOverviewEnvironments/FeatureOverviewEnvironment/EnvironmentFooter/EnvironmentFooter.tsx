@@ -1,6 +1,6 @@
 import type { IFeatureEnvironmentMetrics } from 'interfaces/featureToggle';
 import { FeatureMetricsStats } from 'component/feature/FeatureView/FeatureMetrics/FeatureMetricsStats/FeatureMetricsStats';
-import { SectionSeparator } from '../SectionSeparator/SectionSeparator';
+import { SectionSeparator } from '../SectionSeparator/SectionSeparator.tsx';
 import { styled } from '@mui/material';
 
 const StyledLabel = styled('span')(({ theme }) => ({

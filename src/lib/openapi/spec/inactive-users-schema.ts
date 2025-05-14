@@ -1,4 +1,4 @@
-import { inactiveUserSchema } from './inactive-user-schema';
+import { inactiveUserSchema } from './inactive-user-schema.js';
 import type { FromSchema } from 'json-schema-to-ts';
 
 export const inactiveUsersSchema = {

@@ -1,5 +1,5 @@
-import type { ProjectMode } from '../../types';
-import type { IProjectQuery, IProjectsQuery } from './project-store-type';
+import type { ProjectMode } from '../../types/index.js';
+import type { IProjectQuery, IProjectsQuery } from './project-store-type.js';
 
 export type ProjectForUi = {
     id: string;

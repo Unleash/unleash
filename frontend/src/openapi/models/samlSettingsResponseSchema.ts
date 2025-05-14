@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SamlSettingsResponseSchemaDefaultRootRole } from './samlSettingsResponseSchemaDefaultRootRole';
+import type { SamlSettingsResponseSchemaDefaultRootRole } from './samlSettingsResponseSchemaDefaultRootRole.js';
 
 /**
  * Response for SAML settings

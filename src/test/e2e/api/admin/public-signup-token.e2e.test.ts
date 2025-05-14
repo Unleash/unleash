@@ -1,9 +1,9 @@
-import { setupAppWithCustomAuth } from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import { RoleName } from '../../../../lib/types/model';
-import type { PublicSignupTokenCreateSchema } from '../../../../lib/openapi/spec/public-signup-token-create-schema';
-import type { IUnleashStores } from '../../../../lib/types';
+import { setupAppWithCustomAuth } from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { RoleName } from '../../../../lib/types/model.js';
+import type { PublicSignupTokenCreateSchema } from '../../../../lib/openapi/spec/public-signup-token-create-schema.js';
+import type { IUnleashStores } from '../../../../lib/types/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

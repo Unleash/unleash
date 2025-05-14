@@ -1,6 +1,6 @@
 import { INPUT_ERROR_TEXT } from 'utils/testIds';
 import { TextField, type OutlinedTextFieldProps } from '@mui/material';
-import { parseValidDate } from '../util';
+import { parseValidDate } from '../util.ts';
 import { format } from 'date-fns';
 
 interface IDateTimePickerProps extends Omit<OutlinedTextFieldProps, 'variant'> {

@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
-import type { ChartDataSelection } from '../chart-data-selection';
-import { periodsRecord, selectablePeriods } from '../selectable-periods';
-import { createBarChartOptions } from '../bar-chart-options';
+import type { ChartDataSelection } from '../chart-data-selection.js';
+import { periodsRecord, selectablePeriods } from '../selectable-periods.js';
+import { createBarChartOptions } from '../bar-chart-options.js';
 import useTheme from '@mui/material/styles/useTheme';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { parseMonthString } from '../dates';
+import { parseMonthString } from '../dates.js';
 
 export const useChartDataSelection = (includedTraffic?: number) => {
     const theme = useTheme();

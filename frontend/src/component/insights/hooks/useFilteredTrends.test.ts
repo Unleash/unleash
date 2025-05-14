@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useFilteredTrends } from './useFilteredTrends';
+import { useFilteredTrends } from './useFilteredTrends.js';
 
 const mockProjectFlagTrends = [
     {

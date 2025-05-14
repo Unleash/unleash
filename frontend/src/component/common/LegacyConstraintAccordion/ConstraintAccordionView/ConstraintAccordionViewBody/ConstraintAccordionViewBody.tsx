@@ -1,8 +1,8 @@
 import type { IConstraint } from 'interfaces/strategy';
 import { formatConstraintValue } from 'utils/formatConstraintValue';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { MultipleValues } from './MultipleValues/MultipleValues';
-import { SingleValue } from './SingleValue/SingleValue';
+import { MultipleValues } from './MultipleValues/MultipleValues.tsx';
+import { SingleValue } from './SingleValue/SingleValue.tsx';
 import { styled } from '@mui/material';
 
 interface IConstraintAccordionViewBodyProps {

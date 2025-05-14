@@ -1,6 +1,6 @@
 import type { CreateFeatureSchemaType, FeatureSchema } from 'openapi';
-import type { IFeatureStrategy } from './strategy';
-import type { ITag } from './tags';
+import type { IFeatureStrategy } from './strategy.js';
+import type { ITag } from './tags.js';
 
 /**
  * @deprecated use FeatureSchema from openapi

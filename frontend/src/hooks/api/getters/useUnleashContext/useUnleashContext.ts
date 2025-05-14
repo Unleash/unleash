@@ -1,6 +1,6 @@
 import useSWR, { type SWRConfiguration } from 'swr';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { IUnleashContextDefinition } from 'interfaces/context';
 
 interface IUnleashContextOutput {

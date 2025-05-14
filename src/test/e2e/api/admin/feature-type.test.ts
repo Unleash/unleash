@@ -1,11 +1,11 @@
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import { validateSchema } from '../../../../lib/openapi/validate';
-import { featureTypesSchema } from '../../../../lib/openapi/spec/feature-types-schema';
+} from '../../helpers/test-helper.js';
+import { validateSchema } from '../../../../lib/openapi/validate.js';
+import { featureTypesSchema } from '../../../../lib/openapi/spec/feature-types-schema.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

@@ -5,7 +5,7 @@ import type {
     IChangeRequestDeleteDependency,
 } from 'component/changeRequest/changeRequest.types';
 import { Link } from 'react-router-dom';
-import { ChangeItemWrapper } from './StrategyChange';
+import { ChangeItemWrapper } from './StrategyChange.tsx';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     maxWidth: '100%',

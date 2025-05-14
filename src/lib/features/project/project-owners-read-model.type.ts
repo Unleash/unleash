@@ -1,4 +1,4 @@
-import type { ProjectForUi } from './project-read-model-type';
+import type { ProjectForUi } from './project-read-model-type.js';
 
 export type SystemOwner = { ownerType: 'system' };
 export type UserProjectOwner = {

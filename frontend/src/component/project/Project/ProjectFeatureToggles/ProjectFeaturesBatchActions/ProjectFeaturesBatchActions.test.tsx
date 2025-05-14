@@ -1,6 +1,6 @@
 import { render } from 'utils/testRenderer';
 import { screen, waitFor } from '@testing-library/react';
-import { ProjectFeaturesBatchActions } from './ProjectFeaturesBatchActions';
+import { ProjectFeaturesBatchActions } from './ProjectFeaturesBatchActions.tsx';
 import { DELETE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 

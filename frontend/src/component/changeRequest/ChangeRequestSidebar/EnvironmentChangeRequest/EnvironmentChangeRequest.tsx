@@ -10,18 +10,18 @@ import {
 } from '@mui/material';
 import type { ChangeRequestType } from '../../changeRequest.types';
 import { Link } from 'react-router-dom';
-import { ChangeRequestStatusBadge } from '../../ChangeRequestStatusBadge/ChangeRequestStatusBadge';
+import { ChangeRequestStatusBadge } from '../../ChangeRequestStatusBadge/ChangeRequestStatusBadge.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { changesCount } from '../../changesCount';
+import { changesCount } from '../../changesCount.js';
 import {
     Separator,
     StyledFlexAlignCenterBox,
     StyledSuccessIcon,
-} from '../ChangeRequestSidebar';
-import { AddCommentField } from '../../ChangeRequestOverview/ChangeRequestComments/AddCommentField';
+} from '../ChangeRequestSidebar.tsx';
+import { AddCommentField } from '../../ChangeRequestOverview/ChangeRequestComments/AddCommentField.tsx';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import Input from 'component/common/Input/Input';
-import { ChangeRequestTitle } from './ChangeRequestTitle';
+import { ChangeRequestTitle } from './ChangeRequestTitle.tsx';
 import { UpdateCount } from 'component/changeRequest/UpdateCount';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 

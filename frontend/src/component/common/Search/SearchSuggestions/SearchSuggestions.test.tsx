@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { SearchSuggestions } from './SearchSuggestions';
+import { SearchSuggestions } from './SearchSuggestions.tsx';
 
 const searchContext = {
     data: [

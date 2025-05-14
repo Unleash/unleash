@@ -1,5 +1,5 @@
-import { validateSchema } from '../validate';
-import type { ValidatePasswordSchema } from './validate-password-schema';
+import { validateSchema } from '../validate.js';
+import type { ValidatePasswordSchema } from './validate-password-schema.js';
 
 test('validatePasswordSchema', () => {
     const data: ValidatePasswordSchema = {

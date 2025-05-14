@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { FreeTextInput } from './FreeTextInput';
+import { FreeTextInput } from './FreeTextInput.tsx';
 
 const server = testServerSetup();
 

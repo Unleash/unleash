@@ -1,8 +1,8 @@
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
-import type { IContextFieldDto } from '../../../lib/features/context/context-field-store-type';
+import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import getLogger from '../../fixtures/no-logger.js';
+import type { IContextFieldDto } from '../../../lib/features/context/context-field-store-type.js';
 import fc, { type Arbitrary } from 'fast-check';
-import type { IUnleashStores } from '../../../lib/types';
+import type { IUnleashStores } from '../../../lib/types/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

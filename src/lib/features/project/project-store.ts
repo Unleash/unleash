@@ -1,6 +1,6 @@
-import type { Logger } from '../../logger';
+import type { Logger } from '../../logger.js';
 
-import NotFoundError from '../../error/notfound-error';
+import NotFoundError from '../../error/notfound-error.js';
 import type {
     IEnvironment,
     IFlagResolver,
@@ -11,7 +11,7 @@ import type {
     IProjectUpdate,
     IUnleashConfig,
     ProjectMode,
-} from '../../types';
+} from '../../types/index.js';
 import type {
     IProjectHealthUpdate,
     IProjectInsert,
@@ -21,14 +21,14 @@ import type {
     IProjectStore,
     ProjectEnvironment,
     IProjectApplicationsSearchParams,
-} from '../../features/project/project-store-type';
-import { DEFAULT_ENV } from '../../util';
-import metricsHelper from '../../util/metrics-helper';
-import { DB_TIME } from '../../metric-events';
+} from '../../features/project/project-store-type.js';
+import { DEFAULT_ENV } from '../../util/index.js';
+import metricsHelper from '../../util/metrics-helper.js';
+import { DB_TIME } from '../../metric-events.js';
 import type EventEmitter from 'events';
-import type { Db } from '../../db/db';
-import type { CreateFeatureStrategySchema } from '../../openapi';
-import { applySearchFilters } from '../feature-search/search-utils';
+import type { Db } from '../../db/db.js';
+import type { CreateFeatureStrategySchema } from '../../openapi/index.js';
+import { applySearchFilters } from '../feature-search/search-utils.js';
 
 const COLUMNS = [
     'id',
@@ -569,7 +569,7 @@ class ProjectStore implements IProjectStore {
     async getDefaultStrategy(
         projectId: string,
         environment: string,
-    ): Promise<CreateFeatureStrategySchema | null> {
+    ): Promise<CreateFeatureStrategySchema | undefined> {
         const rows = await this.db(PROJECT_ENVIRONMENTS)
             .select('default_strategy')
             .where({
@@ -577,7 +577,7 @@ class ProjectStore implements IProjectStore {
                 environment_name: environment,
             });
 
-        return rows.length > 0 ? rows[0].default_strategy : null;
+        return rows.length > 0 ? rows[0].default_strategy : undefined;
     }
 
     async updateDefaultStrategy(

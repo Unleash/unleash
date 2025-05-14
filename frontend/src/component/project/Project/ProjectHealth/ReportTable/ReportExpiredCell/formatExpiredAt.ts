@@ -1,6 +1,6 @@
 import type { IFeatureFlagListItem } from 'interfaces/featureToggle';
 import { KILLSWITCH, PERMISSION } from 'constants/featureToggleTypes';
-import { expired, getDiffInDays } from '../utils';
+import { expired, getDiffInDays } from '../utils.js';
 import { parseISO, subDays } from 'date-fns';
 import type { FeatureTypeSchema } from 'openapi';
 

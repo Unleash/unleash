@@ -1,8 +1,8 @@
-import { NotFoundError } from '../../error';
+import { NotFoundError } from '../../error/index.js';
 import type {
     IFeatureLink,
     IFeatureLinkStore,
-} from './feature-link-store-type';
+} from './feature-link-store-type.js';
 
 export default class FakeFeatureLinkStore implements IFeatureLinkStore {
     private links: IFeatureLink[] = [];

@@ -1,6 +1,6 @@
-import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter';
+import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter.js';
 import { formatApiPath } from 'utils/formatPath';
-import type { ProjectFlagCreatorsSchema } from '../../../../openapi';
+import type { ProjectFlagCreatorsSchema } from 'openapi';
 
 export const useProjectFlagCreators = (project: string) => {
     const PATH = `api/admin/projects/${project}/flag-creators`;

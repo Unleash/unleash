@@ -9,7 +9,7 @@ import {
     StyledWidgetTitle,
 } from './ProjectInfo.styles';
 import { useProjectChangeRequests } from 'hooks/api/getters/useProjectChangeRequests/useProjectChangeRequests';
-import { WidgetFooterLink } from './WidgetFooterLink';
+import { WidgetFooterLink } from './WidgetFooterLink.tsx';
 
 const LOADING_LABEL = 'change-requests-widget';
 

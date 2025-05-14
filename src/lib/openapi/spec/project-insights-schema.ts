@@ -1,8 +1,8 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { projectStatsSchema } from './project-stats-schema';
-import { featureTypeCountSchema } from './feature-type-count-schema';
-import { doraFeaturesSchema } from './dora-features-schema';
-import { projectDoraMetricsSchema } from './project-dora-metrics-schema';
+import { projectStatsSchema } from './project-stats-schema.js';
+import { featureTypeCountSchema } from './feature-type-count-schema.js';
+import { doraFeaturesSchema } from './dora-features-schema.js';
+import { projectDoraMetricsSchema } from './project-dora-metrics-schema.js';
 
 export const projectInsightsSchema = {
     $id: '#/components/schemas/projectInsightsSchema',

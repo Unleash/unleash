@@ -1,17 +1,21 @@
-import type { Logger } from '../../logger';
+import type { Logger } from '../../logger.js';
 import {
     FeatureLinkAddedEvent,
     FeatureLinkRemovedEvent,
     FeatureLinkUpdatedEvent,
     type IAuditUser,
     type IUnleashConfig,
-} from '../../types';
+} from '../../types/index.js';
 import type {
     IFeatureLink,
     IFeatureLinkStore,
-} from './feature-link-store-type';
-import type EventService from '../events/event-service';
-import { BadDataError, NotFoundError, OperationDeniedError } from '../../error';
+} from './feature-link-store-type.js';
+import type EventService from '../events/event-service.js';
+import {
+    BadDataError,
+    NotFoundError,
+    OperationDeniedError,
+} from '../../error/index.js';
 import normalizeUrl from 'normalize-url';
 import { parse } from 'tldts';
 

@@ -1,6 +1,9 @@
-import type { LicensedUsersSchema } from '../openapi';
-import { useApiGetter, fetcher } from './api/getters/useApiGetter/useApiGetter';
-import { formatApiPath } from '../utils/formatPath';
+import type { LicensedUsersSchema } from 'openapi';
+import {
+    useApiGetter,
+    fetcher,
+} from './api/getters/useApiGetter/useApiGetter.js';
+import { formatApiPath } from '../utils/formatPath.js';
 
 const path = `api/admin/licensed-users`;
 

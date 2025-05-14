@@ -1,13 +1,13 @@
-import { ADMIN } from '../../types/permissions';
+import { ADMIN } from '../../types/permissions.js';
 import {
     type EmailService,
     TemplateFormat,
-} from '../../services/email-service';
-import type { IUnleashConfig } from '../../types/option';
-import type { IUnleashServices } from '../../types/services';
+} from '../../services/email-service.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashServices } from '../../services/index.js';
 import type { Request, Response } from 'express';
-import Controller from '../controller';
-import type { Logger } from '../../logger';
+import Controller from '../controller.js';
+import type { Logger } from '../../logger.js';
 import sanitize from 'sanitize-filename';
 
 export default class EmailController extends Controller {
@@ -54,4 +54,3 @@ export default class EmailController extends Controller {
         res.end();
     }
 }
-module.exports = EmailController;

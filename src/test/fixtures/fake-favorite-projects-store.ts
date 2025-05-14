@@ -1,6 +1,6 @@
-import type { IFavoriteProjectsStore } from '../../lib/types';
-import type { IFavoriteProjectKey } from '../../lib/types/stores/favorite-projects';
-import type { IFavoriteProject } from '../../lib/types/favorites';
+import type { IFavoriteProjectsStore } from '../../lib/types/index.js';
+import type { IFavoriteProjectKey } from '../../lib/types/stores/favorite-projects.js';
+import type { IFavoriteProject } from '../../lib/types/favorites.js';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export default class FakeFavoriteProjectsStore
     implements IFavoriteProjectsStore

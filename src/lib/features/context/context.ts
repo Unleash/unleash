@@ -1,46 +1,46 @@
 import type { Request, Response } from 'express';
 
-import Controller from '../../routes/controller';
+import Controller from '../../routes/controller.js';
 
 import {
     CREATE_CONTEXT_FIELD,
     UPDATE_CONTEXT_FIELD,
     DELETE_CONTEXT_FIELD,
     NONE,
-} from '../../types/permissions';
-import type { IUnleashConfig } from '../../types/option';
-import type { IUnleashServices } from '../../types/services';
-import type ContextService from './context-service';
-import type { Logger } from '../../logger';
-import type { IAuthRequest } from '../../routes/unleash-types';
+} from '../../types/permissions.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashServices } from '../../services/index.js';
+import type ContextService from './context-service.js';
+import type { Logger } from '../../logger.js';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
 
-import type { OpenApiService } from '../../services/openapi-service';
+import type { OpenApiService } from '../../services/openapi-service.js';
 import {
     contextFieldSchema,
     type ContextFieldSchema,
-} from '../../openapi/spec/context-field-schema';
-import type { ContextFieldsSchema } from '../../openapi/spec/context-fields-schema';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
+} from '../../openapi/spec/context-field-schema.js';
+import type { ContextFieldsSchema } from '../../openapi/spec/context-fields-schema.js';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
 import {
     createResponseSchema,
     resourceCreatedResponseSchema,
-} from '../../openapi/util/create-response-schema';
-import { serializeDates } from '../../types/serialize-dates';
-import NotFoundError from '../../error/notfound-error';
-import type { NameSchema } from '../../openapi/spec/name-schema';
+} from '../../openapi/util/create-response-schema.js';
+import { serializeDates } from '../../types/serialize-dates.js';
+import NotFoundError from '../../error/notfound-error.js';
+import type { NameSchema } from '../../openapi/spec/name-schema.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../openapi/util/standard-responses';
+} from '../../openapi/util/standard-responses.js';
 import {
     type ContextFieldStrategiesSchema,
     contextFieldStrategiesSchema,
-} from '../../openapi/spec/context-field-strategies-schema';
-import type { UpdateContextFieldSchema } from '../../openapi/spec/update-context-field-schema';
-import type { CreateContextFieldSchema } from '../../openapi/spec/create-context-field-schema';
-import { extractUserIdFromUser } from '../../util';
-import type { LegalValueSchema } from '../../openapi';
-import type { WithTransactional } from '../../db/transaction';
+} from '../../openapi/spec/context-field-strategies-schema.js';
+import type { UpdateContextFieldSchema } from '../../openapi/spec/update-context-field-schema.js';
+import type { CreateContextFieldSchema } from '../../openapi/spec/create-context-field-schema.js';
+import { extractUserIdFromUser } from '../../util/index.js';
+import type { LegalValueSchema } from '../../openapi/index.js';
+import type { WithTransactional } from '../../db/transaction.js';
 
 interface ContextParam {
     contextField: string;

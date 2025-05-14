@@ -1,28 +1,30 @@
-import express from 'express';
-import { createTestConfig } from '../test/config/test-config';
-import compression from 'compression';
+import { createTestConfig } from '../test/config/test-config.js';
+import { jest } from '@jest/globals';
 
-jest.mock('compression', () =>
-    jest.fn().mockImplementation(() => (req, res, next) => {
-        next();
+// This mock setup MUST be at the top-level, before any other code that might trigger imports.
+jest.unstable_mockModule('compression', () => ({
+    default: jest.fn().mockImplementation(() => {
+        // This is the actual middleware function Express would use
+        return (req, res, next) => {
+            next();
+        };
     }),
-);
+}));
+let getApp: any;
+let compression: any;
 
-jest.mock(
-    './routes',
-    () =>
-        class Index {
-            router() {
-                return express.Router();
-            }
-        },
-);
+const openApiService = {
+    // returns a middleware
+    validPath: jest.fn().mockReturnValue(() => {}),
+    useDocs: jest.fn(),
+};
 
-import getApp from './app';
+const appModule = await import('./app.js');
+getApp = appModule.default;
+
 test('should not throw when valid config', async () => {
     const config = createTestConfig();
-    // @ts-expect-error - We're passing in empty stores and services
-    const app = await getApp(config, {}, {});
+    const app = await getApp(config, {}, { openApiService });
     expect(typeof app.listen).toBe('function');
 });
 
@@ -33,8 +35,7 @@ test('should call preHook', async () => {
             called++;
         },
     });
-    // @ts-expect-error - We're passing in empty stores and services
-    await getApp(config, {}, {});
+    await getApp(config, {}, { openApiService });
     expect(called).toBe(1);
 });
 
@@ -45,18 +46,36 @@ test('should call preRouterHook', async () => {
             called++;
         },
     });
-    // @ts-expect-error - We're passing in empty stores and services
-    await getApp(config, {}, {});
+    await getApp(config, {}, { openApiService });
     expect(called).toBe(1);
 });
 
 describe('compression middleware', () => {
-    beforeAll(() => {
-        (compression as jest.Mock).mockClear();
+    beforeAll(async () => {
+        jest.resetModules(); // Crucial: Clears the module cache.
+        // Import 'compression' AFTER resetModules. This ensures we get the mock.
+        const compressionModule = await import('compression');
+        compression = compressionModule.default; // `compression` is now our jest.fn()
+
+        // Import 'app.js' AFTER resetModules and AFTER 'compression' is set to the mock.
+        // This ensures app.js uses the mocked version of compression.
+        const appModule = await import('./app.js');
+        getApp = appModule.default;
     });
 
-    afterEach(() => {
-        (compression as jest.Mock).mockClear();
+    beforeEach(() => {
+        // Clear call history for the mock before each test in this describe block
+        if (
+            compression &&
+            typeof (compression as jest.Mock).mockClear === 'function'
+        ) {
+            (compression as jest.Mock).mockClear();
+        } else {
+            // This case might happen if beforeAll failed or types are unexpected
+            console.warn(
+                'Compression mock was not available or not a mock function in beforeEach',
+            );
+        }
     });
 
     test.each([
@@ -84,9 +103,10 @@ describe('compression middleware', () => {
                     disableCompression: disableCompression as any,
                 },
             });
-            // @ts-expect-error - We're passing in empty stores and services
-            await getApp(config, {}, {});
-            expect(compression).toBeCalledTimes(+expectCompressionEnabled);
+            await getApp(config, {}, { openApiService });
+            expect(compression).toHaveBeenCalledTimes(
+                +expectCompressionEnabled,
+            );
         },
     );
 });

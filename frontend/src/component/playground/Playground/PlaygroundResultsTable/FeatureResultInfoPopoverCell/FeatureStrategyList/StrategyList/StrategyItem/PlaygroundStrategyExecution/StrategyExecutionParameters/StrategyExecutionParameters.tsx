@@ -4,13 +4,13 @@ import {
 } from 'utils/parseParameter';
 import { Box, styled } from '@mui/material';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
-import { PlaygroundParameterItem } from '../PlaygroundParameterItem/PlaygroundParameterItem';
+import { PlaygroundParameterItem } from '../PlaygroundParameterItem/PlaygroundParameterItem.tsx';
 import { StyledBoxSummary } from '../StrategyExecution.styles';
 import type {
     PlaygroundConstraintSchema,
     PlaygroundRequestSchema,
 } from 'openapi';
-import { getMappedParam } from '../helpers';
+import { getMappedParam } from '../helpers.ts';
 import { Badge } from 'component/common/Badge/Badge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import DisabledPercentageCircle from 'component/common/PercentageCircle/DisabledPercentageCircle';

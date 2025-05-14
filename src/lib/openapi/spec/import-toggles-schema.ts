@@ -1,23 +1,23 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { exportResultSchema } from './export-result-schema';
-import { featureSchema } from './feature-schema';
-import { featureStrategySchema } from './feature-strategy-schema';
-import { contextFieldSchema } from './context-field-schema';
-import { featureTagSchema } from './feature-tag-schema';
-import { segmentSchema } from './segment-schema';
-import { variantsSchema } from './variants-schema';
-import { variantSchema } from './variant-schema';
-import { overrideSchema } from './override-schema';
-import { constraintSchema } from './constraint-schema';
-import { parametersSchema } from './parameters-schema';
-import { legalValueSchema } from './legal-value-schema';
-import { tagTypeSchema } from './tag-type-schema';
-import { featureEnvironmentSchema } from './feature-environment-schema';
-import { strategyVariantSchema } from './strategy-variant-schema';
-import { featureDependenciesSchema } from './feature-dependencies-schema';
-import { dependentFeatureSchema } from './dependent-feature-schema';
-import { featureLinksSchema } from './feature-links-schema';
-import { featureLinkSchema } from './feature-link-schema';
+import { exportResultSchema } from './export-result-schema.js';
+import { featureSchema } from './feature-schema.js';
+import { featureStrategySchema } from './feature-strategy-schema.js';
+import { contextFieldSchema } from './context-field-schema.js';
+import { featureTagSchema } from './feature-tag-schema.js';
+import { segmentSchema } from './segment-schema.js';
+import { variantsSchema } from './variants-schema.js';
+import { variantSchema } from './variant-schema.js';
+import { overrideSchema } from './override-schema.js';
+import { constraintSchema } from './constraint-schema.js';
+import { parametersSchema } from './parameters-schema.js';
+import { legalValueSchema } from './legal-value-schema.js';
+import { tagTypeSchema } from './tag-type-schema.js';
+import { featureEnvironmentSchema } from './feature-environment-schema.js';
+import { strategyVariantSchema } from './strategy-variant-schema.js';
+import { featureDependenciesSchema } from './feature-dependencies-schema.js';
+import { dependentFeatureSchema } from './dependent-feature-schema.js';
+import { featureLinksSchema } from './feature-links-schema.js';
+import { featureLinkSchema } from './feature-link-schema.js';
 
 export const importTogglesSchema = {
     $id: '#/components/schemas/importTogglesSchema',

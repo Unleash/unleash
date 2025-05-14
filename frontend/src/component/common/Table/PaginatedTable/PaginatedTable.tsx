@@ -5,8 +5,8 @@ import {
     type Table as TableType,
     flexRender,
 } from '@tanstack/react-table';
-import { TableCell } from '../TableCell/TableCell';
-import { CellSortable } from '../SortableTableHeader/CellSortable/CellSortable';
+import { TableCell } from '../TableCell/TableCell.tsx';
+import { CellSortable } from '../SortableTableHeader/CellSortable/CellSortable.tsx';
 import { StickyPaginationBar } from 'component/common/Table/StickyPaginationBar/StickyPaginationBar';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled } from '@mui/material';

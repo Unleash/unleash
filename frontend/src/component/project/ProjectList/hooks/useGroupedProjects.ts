@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { groupProjects } from '../group-projects';
+import { groupProjects } from '../group-projects.js';
 import type { ProjectSchema } from 'openapi';
 
 export const useGroupedProjects = (

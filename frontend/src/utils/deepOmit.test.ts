@@ -1,4 +1,4 @@
-import { deepOmit } from './deepOmit';
+import { deepOmit } from './deepOmit.js';
 
 test('should omit all instances of a given field', () => {
     const input = {

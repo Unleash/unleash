@@ -1,17 +1,17 @@
 import type { Response } from 'express';
-import type { IUnleashConfig } from '../../types/option';
-import type { IUnleashServices } from '../../types';
-import Controller from '../../routes/controller';
-import { extractUsername } from '../../util/extract-user';
-import { DELETE_FEATURE, UPDATE_FEATURE } from '../../types/permissions';
-import type FeatureToggleService from './feature-toggle-service';
-import type { IAuthRequest } from '../../routes/unleash-types';
-import type { OpenApiService } from '../../services/openapi-service';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashServices } from '../../services/index.js';
+import Controller from '../../routes/controller.js';
+import { extractUsername } from '../../util/extract-user.js';
+import { DELETE_FEATURE, UPDATE_FEATURE } from '../../types/permissions.js';
+import type { FeatureToggleService } from './feature-toggle-service.js';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../openapi/util/standard-responses';
-import type { WithTransactional } from '../../db/transaction';
+} from '../../openapi/util/standard-responses.js';
+import type { WithTransactional } from '../../db/transaction.js';
 
 export default class ArchiveController extends Controller {
     private featureService: FeatureToggleService;
@@ -102,5 +102,3 @@ export default class ArchiveController extends Controller {
         res.status(200).end();
     }
 }
-
-module.exports = ArchiveController;

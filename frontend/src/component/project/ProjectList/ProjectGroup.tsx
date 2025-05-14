@@ -1,13 +1,13 @@
 import type { ComponentType, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ProjectCard as DefaultProjectCard } from '../ProjectCard/ProjectCard';
+import { ProjectCard as DefaultProjectCard } from '../ProjectCard/ProjectCard.tsx';
 import type { ProjectSchema } from 'openapi';
-import loadingData from './loadingData';
+import loadingData from './loadingData.ts';
 import { TablePlaceholder } from 'component/common/Table';
 import { styled } from '@mui/material';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { UpgradeProjectCard } from '../ProjectCard/UpgradeProjectCard';
+import { UpgradeProjectCard } from '../ProjectCard/UpgradeProjectCard.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledGridContainer = styled('div')(({ theme }) => ({

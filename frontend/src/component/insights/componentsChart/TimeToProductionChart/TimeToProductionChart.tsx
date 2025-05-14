@@ -9,9 +9,9 @@ import {
 import { useProjectChartData } from 'component/insights/hooks/useProjectChartData';
 import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
 import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
-import { TimeToProductionTooltip } from './TimeToProductionTooltip/TimeToProductionTooltip';
+import { TimeToProductionTooltip } from './TimeToProductionTooltip/TimeToProductionTooltip.tsx';
 import { useTheme } from '@mui/material';
-import { medianTimeToProduction } from './median-time-to-production';
+import { medianTimeToProduction } from './median-time-to-production.ts';
 
 interface ITimeToProductionChartProps {
     projectFlagTrends: GroupedDataByProject<

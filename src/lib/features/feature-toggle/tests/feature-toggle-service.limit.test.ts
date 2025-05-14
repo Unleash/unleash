@@ -1,4 +1,4 @@
-import { createFakeFeatureToggleService } from '../createFeatureToggleService';
+import { createFakeFeatureToggleService } from '../createFeatureToggleService.js';
 import type {
     IAuditUser,
     IConstraint,
@@ -6,9 +6,9 @@ import type {
     IStrategyConfig,
     IUnleashConfig,
     IUser,
-} from '../../../types';
-import getLogger from '../../../../test/fixtures/no-logger';
-import { ExceedsLimitError } from '../../../error/exceeds-limit-error';
+} from '../../../types/index.js';
+import getLogger from '../../../../test/fixtures/no-logger.js';
+import { ExceedsLimitError } from '../../../error/exceeds-limit-error.js';
 
 const alwaysOnFlagResolver = {
     isEnabled() {

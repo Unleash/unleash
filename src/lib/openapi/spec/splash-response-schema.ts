@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { splashRequestSchema } from './splash-request-schema';
+import { splashRequestSchema } from './splash-request-schema.js';
 
 export const splashResponseSchema = {
     ...splashRequestSchema,

@@ -1,4 +1,4 @@
-import { StyledLink } from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow';
+import { StyledLink } from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow.tsx';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import type { FC } from 'react';
 

@@ -6,7 +6,7 @@ import {
     useRef,
     useState,
 } from 'react';
-import { StickyContext } from './StickyContext';
+import { StickyContext } from './StickyContext.tsx';
 import { styled } from '@mui/material';
 
 const StyledSticky = styled('div', {

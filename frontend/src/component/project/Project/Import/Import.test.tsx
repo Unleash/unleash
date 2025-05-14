@@ -1,6 +1,6 @@
 import { render } from 'utils/testRenderer';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
-import { ImportModal } from './ImportModal';
+import { ImportModal } from './ImportModal.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import userEvent from '@testing-library/user-event';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';

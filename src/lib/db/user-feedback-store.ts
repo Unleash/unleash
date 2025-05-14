@@ -1,11 +1,11 @@
 import type { EventEmitter } from 'events';
-import type { LogProvider, Logger } from '../logger';
+import type { LogProvider, Logger } from '../logger.js';
 import type {
     IUserFeedback,
     IUserFeedbackKey,
     IUserFeedbackStore,
-} from '../types/stores/user-feedback-store';
-import type { Db } from './db';
+} from '../types/stores/user-feedback-store.js';
+import type { Db } from './db.js';
 
 const COLUMNS = ['given', 'user_id', 'feedback_id', 'nevershow'];
 const TABLE = 'user_feedback';
@@ -110,5 +110,3 @@ export default class UserFeedbackStore implements IUserFeedbackStore {
         return userFeedbacks.map(rowToField);
     }
 }
-
-module.exports = UserFeedbackStore;

@@ -1,5 +1,5 @@
 import type { IProjectEnvironment } from 'interfaces/environments';
-import { getEnabledEnvs } from './helpers';
+import { getEnabledEnvs } from './helpers.js';
 
 const generateEnv = (enabled: boolean, name: string): IProjectEnvironment => {
     return {

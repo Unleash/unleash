@@ -1,18 +1,18 @@
 import type { Response } from 'express';
-import type { OpenApiService } from '../../services/openapi-service';
-import type { Logger } from '../../logger';
-import type { IUnleashConfig } from '../../server-impl';
-import type UserService from '../../services/user-service';
-import type { IUnleashServices } from '../../types';
-import { NONE } from '../../types/permissions';
-import Controller from '../controller';
-import type { IAuthRequest } from '../unleash-types';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { userSchema, type UserSchema } from '../../openapi/spec/user-schema';
-import type { LoginSchema } from '../../openapi/spec/login-schema';
-import { serializeDates } from '../../types/serialize-dates';
-import { getStandardResponses } from '../../openapi';
+import type { OpenApiService } from '../../services/openapi-service.js';
+import type { Logger } from '../../logger.js';
+import type { IUnleashConfig } from '../../types/index.js';
+import type UserService from '../../services/user-service.js';
+import type { IUnleashServices } from '../../services/index.js';
+import { NONE } from '../../types/permissions.js';
+import Controller from '../controller.js';
+import type { IAuthRequest } from '../unleash-types.js';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
+import { createResponseSchema } from '../../openapi/util/create-response-schema.js';
+import { userSchema, type UserSchema } from '../../openapi/spec/user-schema.js';
+import type { LoginSchema } from '../../openapi/spec/login-schema.js';
+import { serializeDates } from '../../types/serialize-dates.js';
+import { getStandardResponses } from '../../openapi/index.js';
 
 export class SimplePasswordProvider extends Controller {
     private logger: Logger;

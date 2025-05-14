@@ -1,4 +1,4 @@
-import { tagSchema } from './tag-schema';
+import { tagSchema } from './tag-schema.js';
 
 test('should require url friendly type if defined', () => {
     const tag = {

@@ -12,14 +12,14 @@ import {
 import Close from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { SearchSuggestions } from './SearchSuggestions/SearchSuggestions';
+import { SearchSuggestions } from './SearchSuggestions/SearchSuggestions.tsx';
 import type { IGetSearchContextOutput } from 'hooks/useSearch';
 import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
 import { SEARCH_INPUT } from 'utils/testIds';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
-import { useSavedQuery } from './useSavedQuery';
+import { useSavedQuery } from './useSavedQuery.ts';
 import { useOnBlur } from 'hooks/useOnBlur';
-import { SearchHistory } from './SearchSuggestions/SearchHistory';
+import { SearchHistory } from './SearchSuggestions/SearchHistory.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface ISearchProps {

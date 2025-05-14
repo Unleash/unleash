@@ -15,8 +15,8 @@ import {
     type EditableMultiValueConstraint,
     type EditableSingleValueConstraint,
     isMultiValueConstraint,
-} from './editable-constraint-type';
-import { difference, union } from './set-functions';
+} from './editable-constraint-type.js';
+import { difference, union } from './set-functions.js';
 
 export type ConstraintUpdateAction =
     | { type: 'add value(s)'; payload: string | string[] }

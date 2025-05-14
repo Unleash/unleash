@@ -1,9 +1,9 @@
-import { DeltaCache } from './delta-cache';
+import { DeltaCache } from './delta-cache.js';
 import {
     DELTA_EVENT_TYPES,
     type DeltaEvent,
     type DeltaHydrationEvent,
-} from './client-feature-toggle-delta-types';
+} from './client-feature-toggle-delta-types.js';
 
 describe('RevisionCache', () => {
     it('should always update the hydration event and remove event when over limit', () => {

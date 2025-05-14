@@ -14,16 +14,16 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { SplashPageRedirect } from 'component/splash/SplashPageRedirect/SplashPageRedirect';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
-import MaintenanceBanner from './maintenance/MaintenanceBanner';
+import MaintenanceBanner from './maintenance/MaintenanceBanner.tsx';
 import { styled } from '@mui/material';
-import { InitialRedirect, useLastViewedPage } from './InitialRedirect';
-import { InternalBanners } from './banners/internalBanners/InternalBanners';
-import { ExternalBanners } from './banners/externalBanners/ExternalBanners';
-import { LicenseBanner } from './banners/internalBanners/LicenseBanner';
-import { Demo } from './demo/Demo';
-import { LoginRedirect } from './common/LoginRedirect/LoginRedirect';
-import { SecurityBanner } from './banners/internalBanners/SecurityBanner';
-import { MonthsOldVersionBanner } from './banners/internalBanners/MonthsOldVersionBanner';
+import { InitialRedirect, useLastViewedPage } from './InitialRedirect.tsx';
+import { InternalBanners } from './banners/internalBanners/InternalBanners.tsx';
+import { ExternalBanners } from './banners/externalBanners/ExternalBanners.tsx';
+import { LicenseBanner } from './banners/internalBanners/LicenseBanner.tsx';
+import { Demo } from './demo/Demo.tsx';
+import { LoginRedirect } from './common/LoginRedirect/LoginRedirect.tsx';
+import { SecurityBanner } from './banners/internalBanners/SecurityBanner.tsx';
+import { MonthsOldVersionBanner } from './banners/internalBanners/MonthsOldVersionBanner.tsx';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {

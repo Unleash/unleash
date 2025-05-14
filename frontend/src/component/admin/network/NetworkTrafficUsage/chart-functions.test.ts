@@ -7,8 +7,8 @@ import {
     toConnectionChartData,
     toRequestChartData,
     toTrafficUsageChartData,
-} from './chart-functions';
-import { endpointsInfo } from './endpoint-info';
+} from './chart-functions.js';
+import { endpointsInfo } from './endpoint-info.js';
 
 describe('toTrafficUsageChartData', () => {
     const dataPoint = (period: string, count: number) => ({

@@ -1,8 +1,11 @@
 import dbInit, {
     type ITestDb,
-} from '../../../../test/e2e/helpers/database-init';
-import getLogger from '../../../../test/fixtures/no-logger';
-import type { IClientMetricsStoreV2, IUnleashStores } from '../../../types';
+} from '../../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../../test/fixtures/no-logger.js';
+import type {
+    IClientMetricsStoreV2,
+    IUnleashStores,
+} from '../../../types/index.js';
 import { endOfDay, setHours, startOfHour, subDays } from 'date-fns';
 
 let stores: IUnleashStores;

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { LegalValueSchema } from './legalValueSchema';
+import type { LegalValueSchema } from './legalValueSchema.js';
 
 /**
  * A representation of a [context field](https://docs.getunleash.io/reference/unleash-context).

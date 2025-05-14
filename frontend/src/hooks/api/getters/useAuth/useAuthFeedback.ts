@@ -1,4 +1,4 @@
-import { type IAuthFeedback, useAuthEndpoint } from './useAuthEndpoint';
+import { type IAuthFeedback, useAuthEndpoint } from './useAuthEndpoint.js';
 
 interface IUseAuthFeedbackOutput {
     feedback?: IAuthFeedback[];

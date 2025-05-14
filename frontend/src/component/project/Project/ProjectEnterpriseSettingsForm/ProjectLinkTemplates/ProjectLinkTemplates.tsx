@@ -15,7 +15,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import type { ProjectLinkTemplateSchema } from 'openapi';
-import ProjectLinkTemplateDialog from './ProjectLinkTemplateDialog';
+import ProjectLinkTemplateDialog from './ProjectLinkTemplateDialog.tsx';
 import { Truncator } from 'component/common/Truncator/Truncator';
 
 interface IProjectLinkTemplatesProps {

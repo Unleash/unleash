@@ -4,17 +4,17 @@ import {
     StyledProjectCardBody,
     StyledIconBox,
 } from './ProjectCard.styles';
-import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter';
-import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge';
+import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter.tsx';
+import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge.tsx';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
-import { FavoriteAction } from './FavoriteAction/FavoriteAction';
+import { FavoriteAction } from './FavoriteAction/FavoriteAction.tsx';
 import { Box, styled } from '@mui/material';
 import { flexColumn } from 'themes/themeStyles';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
-import { ProjectLastSeen } from './ProjectLastSeen/ProjectLastSeen';
+import { ProjectLastSeen } from './ProjectLastSeen/ProjectLastSeen.tsx';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { ProjectMembers } from './ProjectCardFooter/ProjectMembers/ProjectMembers';
+import { ProjectMembers } from './ProjectCardFooter/ProjectMembers/ProjectMembers.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
 import type { ProjectSchema } from 'openapi';

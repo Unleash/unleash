@@ -1,5 +1,5 @@
-import { ActionBox } from './ActionBox';
-import { NeutralCircleContainer } from './SharedComponents';
+import { ActionBox } from './ActionBox.tsx';
+import { NeutralCircleContainer } from './SharedComponents.tsx';
 import type { PersonalDashboardSchemaProjectOwnersItem } from 'openapi';
 import type { FC } from 'react';
 import { AvatarGroupFromOwners } from 'component/common/AvatarGroupFromOwners/AvatarGroupFromOwners';

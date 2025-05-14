@@ -1,5 +1,5 @@
-import type { IUser, MinimalUser } from '../user';
-import type { Store } from './store';
+import type { IUser, MinimalUser } from '../user.js';
+import type { Store } from './store.js';
 
 export interface IUserLookup {
     id?: number;

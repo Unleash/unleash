@@ -1,4 +1,4 @@
-import { UnleashError } from './unleash-error';
+import { UnleashError } from './unleash-error.js';
 
 class PasswordMismatch extends UnleashError {
     statusCode = 401;

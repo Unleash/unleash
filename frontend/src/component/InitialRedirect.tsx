@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { type Location, Navigate } from 'react-router-dom';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
-import Loader from './common/Loader/Loader';
+import Loader from './common/Loader/Loader.tsx';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 

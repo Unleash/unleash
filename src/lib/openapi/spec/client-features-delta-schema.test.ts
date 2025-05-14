@@ -1,5 +1,5 @@
-import { validateSchema } from '../validate';
-import type { ClientFeaturesDeltaSchema } from './client-features-delta-schema';
+import { validateSchema } from '../validate.js';
+import type { ClientFeaturesDeltaSchema } from './client-features-delta-schema.js';
 
 test('clientFeaturesDeltaSchema all fields', () => {
     const data: ClientFeaturesDeltaSchema = {

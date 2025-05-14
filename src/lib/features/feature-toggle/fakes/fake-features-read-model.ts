@@ -1,4 +1,4 @@
-import type { IFeaturesReadModel } from '../types/features-read-model-type';
+import type { IFeaturesReadModel } from '../types/features-read-model-type.js';
 
 export class FakeFeaturesReadModel implements IFeaturesReadModel {
     featureExists(): Promise<boolean> {

@@ -1,11 +1,11 @@
 import supertest, { type Test } from 'supertest';
-import createStores from '../../../test/fixtures/store';
-import permissions from '../../../test/fixtures/permissions';
-import getApp from '../../app';
-import { createTestConfig } from '../../../test/config/test-config';
-import { createServices } from '../../services';
-import type { IUnleashStores } from '../../types';
-import type TestAgent from 'supertest/lib/agent';
+import createStores from '../../../test/fixtures/store.js';
+import permissions from '../../../test/fixtures/permissions.js';
+import getApp from '../../app.js';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import { createServices } from '../../services/index.js';
+import type { IUnleashStores } from '../../types/index.js';
+import type TestAgent from 'supertest/lib/agent.d.ts';
 
 async function getSetup() {
     const stores = createStores();

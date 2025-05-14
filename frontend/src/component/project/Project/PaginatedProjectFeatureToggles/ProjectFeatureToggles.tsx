@@ -8,20 +8,20 @@ import { PaginatedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
-import { ActionsCell } from '../ProjectFeatureToggles/ActionsCell/ActionsCell';
-import { ExperimentalColumnsMenu as ColumnsMenu } from './ExperimentalColumnsMenu/ExperimentalColumnsMenu';
+import { ActionsCell } from '../ProjectFeatureToggles/ActionsCell/ActionsCell.tsx';
+import { ExperimentalColumnsMenu as ColumnsMenu } from './ExperimentalColumnsMenu/ExperimentalColumnsMenu.tsx';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
-import { MemoizedRowSelectCell } from '../ProjectFeatureToggles/RowSelectCell/RowSelectCell';
+import { MemoizedRowSelectCell } from '../ProjectFeatureToggles/RowSelectCell/RowSelectCell.tsx';
 import { BatchSelectionActionsBar } from 'component/common/BatchSelectionActionsBar/BatchSelectionActionsBar';
-import { ProjectFeaturesBatchActions } from '../ProjectFeatureToggles/ProjectFeaturesBatchActions/ProjectFeaturesBatchActions';
+import { ProjectFeaturesBatchActions } from '../ProjectFeatureToggles/ProjectFeaturesBatchActions/ProjectFeaturesBatchActions.tsx';
 import {
     FeatureLifecycleCell,
     MemoizedFeatureEnvironmentSeenCell,
 } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { useFeatureToggleSwitch } from '../ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch';
+import { useFeatureToggleSwitch } from '../ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch.tsx';
 import useLoading from 'hooks/useLoading';
-import { ProjectFeatureTogglesHeader } from './ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader';
+import { ProjectFeatureTogglesHeader } from './ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader.tsx';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { withTableState } from 'utils/withTableState';
 import type { FeatureSearchResponseSchema } from 'openapi';
@@ -29,30 +29,30 @@ import {
     ArchivedFeatureToggleCell,
     FeatureToggleCell,
     PlaceholderFeatureToggleCell,
-} from './FeatureToggleCell/FeatureToggleCell';
-import { ProjectOverviewFilters } from './ProjectOverviewFilters';
-import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility';
-import { TableEmptyState } from './TableEmptyState/TableEmptyState';
-import { useRowActions } from './hooks/useRowActions';
-import { useSelectedData } from './hooks/useSelectedData';
+} from './FeatureToggleCell/FeatureToggleCell.tsx';
+import { ProjectOverviewFilters } from './ProjectOverviewFilters.tsx';
+import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility.ts';
+import { TableEmptyState } from './TableEmptyState/TableEmptyState.tsx';
+import { useRowActions } from './hooks/useRowActions.tsx';
+import { useSelectedData } from './hooks/useSelectedData.ts';
 import { createFeatureOverviewCell } from 'component/common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 import {
     useProjectFeatureSearch,
     useProjectFeatureSearchActions,
-} from './useProjectFeatureSearch';
-import { AvatarCell } from './AvatarCell';
+} from './useProjectFeatureSearch.ts';
+import { AvatarCell } from './AvatarCell.tsx';
 import { styled } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog';
-import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding';
+import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog.tsx';
+import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding.tsx';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { ProjectOnboarded } from 'component/onboarding/flow/ProjectOnboarded';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { ArchivedFeatureActionCell } from '../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureActionCell';
-import { ArchiveBatchActions } from '../../../archive/ArchiveTable/ArchiveBatchActions';
+import { ArchivedFeatureActionCell } from '../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureActionCell.tsx';
+import { ArchiveBatchActions } from '../../../archive/ArchiveTable/ArchiveBatchActions.tsx';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE } from '@server/types/permissions';
-import { ImportModal } from '../Import/ImportModal';
+import { ImportModal } from '../Import/ImportModal.tsx';
 import { IMPORT_BUTTON } from 'utils/testIds';
 
 interface IPaginatedProjectFeatureTogglesProps {

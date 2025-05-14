@@ -1,8 +1,8 @@
 import type {
     IInactiveUserRow,
     IInactiveUsersStore,
-} from '../types/inactive-users-store-type';
-import type { IUser } from '../../../types';
+} from '../types/inactive-users-store-type.js';
+import type { IUser } from '../../../types/index.js';
 import { subDays } from 'date-fns';
 
 export class FakeInactiveUsersStore implements IInactiveUsersStore {

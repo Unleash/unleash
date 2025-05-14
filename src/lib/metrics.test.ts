@@ -1,45 +1,45 @@
 import { register } from 'prom-client';
 import EventEmitter from 'events';
-import type { IEventStore } from './types/stores/event-store';
-import { createTestConfig } from '../test/config/test-config';
+import type { IEventStore } from './types/stores/event-store.js';
+import { createTestConfig } from '../test/config/test-config.js';
 import {
     CLIENT_REGISTERED,
     DB_TIME,
     EXCEEDS_LIMIT,
     FUNCTION_TIME,
     REQUEST_TIME,
-} from './metric-events';
+} from './metric-events.js';
 import {
     CLIENT_METRICS,
     CLIENT_REGISTER,
     FEATURE_ENVIRONMENT_ENABLED,
     FEATURE_UPDATED,
     PROJECT_ENVIRONMENT_REMOVED,
-} from './types/events';
+} from './events/index.js';
 import {
     createMetricsMonitor,
     registerPrometheusMetrics,
     registerPrometheusPostgresMetrics,
-} from './metrics';
-import createStores from '../test/fixtures/store';
-import { InstanceStatsService } from './features/instance-stats/instance-stats-service';
-import VersionService from './services/version-service';
-import { createFakeGetActiveUsers } from './features/instance-stats/getActiveUsers';
-import { createFakeGetProductionChanges } from './features/instance-stats/getProductionChanges';
+} from './metrics.js';
+import createStores from '../test/fixtures/store.js';
+import { InstanceStatsService } from './features/instance-stats/instance-stats-service.js';
+import VersionService from './services/version-service.js';
+import { createFakeGetActiveUsers } from './features/instance-stats/getActiveUsers.js';
+import { createFakeGetProductionChanges } from './features/instance-stats/getProductionChanges.js';
 import type {
     IEnvironmentStore,
     IFeatureLifecycleReadModel,
     IFeatureLifecycleStore,
     IUnleashStores,
-} from './types';
-import FakeEnvironmentStore from './features/project-environments/fake-environment-store';
-import { SchedulerService } from './services';
-import noLogger from '../test/fixtures/no-logger';
-import getLogger from '../test/fixtures/no-logger';
-import dbInit, { type ITestDb } from '../test/e2e/helpers/database-init';
-import { FeatureLifecycleStore } from './features/feature-lifecycle/feature-lifecycle-store';
-import { FeatureLifecycleReadModel } from './features/feature-lifecycle/feature-lifecycle-read-model';
-import { createFakeGetLicensedUsers } from './features/instance-stats/getLicensedUsers';
+} from './types/index.js';
+import FakeEnvironmentStore from './features/project-environments/fake-environment-store.js';
+import { SchedulerService } from './services/index.js';
+import noLogger from '../test/fixtures/no-logger.js';
+import getLogger from '../test/fixtures/no-logger.js';
+import dbInit, { type ITestDb } from '../test/e2e/helpers/database-init.js';
+import { FeatureLifecycleStore } from './features/feature-lifecycle/feature-lifecycle-store.js';
+import { FeatureLifecycleReadModel } from './features/feature-lifecycle/feature-lifecycle-read-model.js';
+import { createFakeGetLicensedUsers } from './features/instance-stats/getLicensedUsers.js';
 
 const monitor = createMetricsMonitor();
 const eventBus = new EventEmitter();

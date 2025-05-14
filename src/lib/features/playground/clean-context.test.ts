@@ -1,4 +1,4 @@
-import { cleanContext } from './clean-context';
+import { cleanContext } from './clean-context.js';
 
 const invalidJsonTypes = {
     object: {},

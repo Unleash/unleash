@@ -1,7 +1,7 @@
 import { styled } from '@mui/material';
 import type { IGroup } from 'interfaces/group';
 import { Link } from 'react-router-dom';
-import { GroupCardActions } from './GroupCardActions';
+import { GroupCardActions } from './GroupCardActions.tsx';
 import { RoleBadge } from 'component/common/RoleBadge/RoleBadge';
 import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
 import GroupsIcon from '@mui/icons-material/GroupsOutlined';
@@ -9,7 +9,7 @@ import { useSearchHighlightContext } from 'component/common/Table/SearchHighligh
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import { Card } from 'component/common/Card/Card';
-import { GroupCardFooter } from './GroupCardFooter';
+import { GroupCardFooter } from './GroupCardFooter.tsx';
 
 const StyledCardLink = styled(Link)(({ theme }) => ({
     color: 'inherit',

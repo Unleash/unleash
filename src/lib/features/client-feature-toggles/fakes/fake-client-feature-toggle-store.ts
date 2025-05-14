@@ -2,8 +2,8 @@ import type {
     FeatureToggle,
     IFeatureToggleClient,
     IFeatureToggleQuery,
-} from '../../../types/model';
-import type { IFeatureToggleClientStore } from '../types/client-feature-toggle-store-type';
+} from '../../../types/model.js';
+import type { IFeatureToggleClientStore } from '../types/client-feature-toggle-store-type.js';
 
 export default class FakeClientFeatureToggleStore
     implements IFeatureToggleClientStore

@@ -1,7 +1,7 @@
 import { styled, Typography } from '@mui/material';
-import { useRecentlyUsedSegments } from './useRecentlyUsedSegments';
+import { useRecentlyUsedSegments } from './useRecentlyUsedSegments.ts';
 import type { ISegment } from 'interfaces/segment';
-import { RecentlyUsedSegmentChip } from './RecentlyUsedSegmentChip';
+import { RecentlyUsedSegmentChip } from './RecentlyUsedSegmentChip.tsx';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useUiFlag } from 'hooks/useUiFlag';
 

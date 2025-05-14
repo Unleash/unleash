@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { StrategyEvaluationItem } from 'component/common/ConstraintsList/StrategyEvaluationItem/StrategyEvaluationItem';
 import type { FeatureStrategySchema } from 'openapi';
-import { RolloutParameter } from '../RolloutParameter/RolloutParameter';
+import { RolloutParameter } from '../RolloutParameter/RolloutParameter.tsx';
 import { ValuesList } from 'component/common/ConstraintsList/ValuesList/ValuesList';
 import { parseParameterStrings } from 'utils/parseParameter';
 

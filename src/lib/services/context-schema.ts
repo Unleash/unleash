@@ -1,5 +1,5 @@
 import joi from 'joi';
-import { nameType } from '../routes/util';
+import { nameType } from '../routes/util.js';
 
 export const nameSchema = joi.object().keys({ name: nameType });
 

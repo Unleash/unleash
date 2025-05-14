@@ -10,7 +10,7 @@ import {
     createEmptyConstraint,
 } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
-import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint';
+import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/EditableConstraint';
 export interface IEditableConstraintsListRef {
     addConstraint?: (contextName: string) => void;
 }

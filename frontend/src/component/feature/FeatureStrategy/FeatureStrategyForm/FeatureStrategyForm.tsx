@@ -419,16 +419,6 @@ export const FeatureStrategyForm = ({
                         </Alert>
                     }
                 />
-                <ConditionallyRender
-                    condition={!isChangeRequest}
-                    show={
-                        <FeatureStrategyEnabled
-                            projectId={feature.project}
-                            featureId={feature.name}
-                            environmentId={environmentId}
-                        />
-                    }
-                />
             </StyledAlertBox>
 
             <StyledTabs value={tab} onChange={handleChange}>
@@ -486,6 +476,17 @@ export const FeatureStrategyForm = ({
                                         ...strategyState,
                                         disabled: !strategyState.disabled,
                                     }))
+                                }
+                            />
+
+                            <ConditionallyRender
+                                condition={!isChangeRequest}
+                                show={
+                                    <FeatureStrategyEnabled
+                                        projectId={feature.project}
+                                        featureId={feature.name}
+                                        environmentId={environmentId}
+                                    />
                                 }
                             />
                         </>

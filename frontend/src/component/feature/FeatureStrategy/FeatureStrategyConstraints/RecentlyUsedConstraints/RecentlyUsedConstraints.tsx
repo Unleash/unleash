@@ -38,15 +38,14 @@ export const RecentlyUsedConstraints = ({
         return null;
     }
 
-    // Filter out constraints that are already in the constraints list
-    const filteredConstraints = recentlyUsedConstraints.filter(
+    const nonSelectedRecentConstraints = recentlyUsedConstraints.filter(
         (recentConstraint) =>
             !constraints.some((constraint) =>
                 areConstraintsEqual(constraint, recentConstraint),
             ),
     );
 
-    if (filteredConstraints.length === 0) {
+    if (nonSelectedRecentConstraints.length === 0) {
         return null;
     }
 
@@ -54,7 +53,7 @@ export const RecentlyUsedConstraints = ({
         <StyledContainer>
             <StyledHeader>Recently used constraints</StyledHeader>
             <StyledConstraintsContainer>
-                {filteredConstraints.map((constraint) => (
+                {nonSelectedRecentConstraints.map((constraint) => (
                     <ConstraintAccordionView
                         key={constraint[constraintId]}
                         constraint={constraint}

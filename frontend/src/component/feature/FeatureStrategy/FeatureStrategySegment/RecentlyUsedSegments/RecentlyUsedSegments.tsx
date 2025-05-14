@@ -47,11 +47,11 @@ export const RecentlyUsedSegments = ({
         .map((id) => allSegments.find((segment) => segment.id === id))
         .filter((segment) => segment !== undefined) as ISegment[];
 
-    const filteredSegmentObjects = segmentObjects.filter(
+    const nonSelectedRecentSegments = segmentObjects.filter(
         (segment) => !segments.some((selected) => selected.id === segment.id),
     );
 
-    if (filteredSegmentObjects.length === 0) {
+    if (nonSelectedRecentSegments.length === 0) {
         return null;
     }
 
@@ -59,7 +59,7 @@ export const RecentlyUsedSegments = ({
         <StyledContainer>
             <StyledHeader>Recently used segments</StyledHeader>
             <StyledSegmentsContainer>
-                {filteredSegmentObjects.map((segment) => (
+                {nonSelectedRecentSegments.map((segment) => (
                     <RecentlyUsedSegmentChip
                         key={segment.id}
                         segment={segment}

@@ -268,6 +268,7 @@ test('should not return instances older than 24h', async () => {
         .expect(202);
 
     await app.services.clientMetricsServiceV2.bulkAdd();
+    await app.services.clientInstanceService.bulkAdd();
 
     await db.stores.clientApplicationsStore.upsert({
         appName: metrics.appName,

@@ -35,7 +35,7 @@ export const FeatureStrategyEnabled: FC<IFeatureStrategyEnabledProps> = ({
                 </Alert>
             }
             elseShow={
-                <Alert severity='warning'>
+                <Alert severity='info'>
                     This feature flag is currently disabled in the{' '}
                     <strong>{environmentId}</strong> environment. Any changes
                     made here will not take effect until the flag has been

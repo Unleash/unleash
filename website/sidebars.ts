@@ -682,7 +682,6 @@ const sidebars: SidebarsConfig = {
                             },
                             items: [
                                 'how-to/how-to-create-feature-toggles',
-                                'how-to/how-to-create-and-display-banners',
                                 'how-to/how-to-schedule-feature-releases',
                                 'how-to/how-to-synchronize-unleash-instances',
                             ],
@@ -701,7 +700,6 @@ const sidebars: SidebarsConfig = {
                         {
                             label: 'Users and permissions',
                             items: [
-                                'how-to/how-to-add-users-to-unleash',
                                 'how-to/how-to-create-and-manage-user-groups',
                                 'how-to/how-to-set-up-group-sso-sync',
                             ],

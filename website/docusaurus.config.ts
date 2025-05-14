@@ -504,22 +504,6 @@ class="header-github-link"
                             to: '/reference/stickiness',
                         },
                         {
-                            from: '/advanced/sso-google',
-                            to: '/how-to/how-to-add-sso-google',
-                        },
-                        {
-                            from: '/advanced/sso-open-id-connect',
-                            to: '/how-to/how-to-add-sso-open-id-connect',
-                        },
-                        {
-                            from: '/advanced/sso-saml-keycloak',
-                            to: '/how-to/how-to-add-sso-saml-keycloak',
-                        },
-                        {
-                            from: '/advanced/sso-saml',
-                            to: '/how-to/how-to-add-sso-saml',
-                        },
-                        {
                             from: '/advanced/enterprise-authentication',
                             to: '/reference/sso',
                         },
@@ -674,10 +658,6 @@ class="header-github-link"
                         {
                             from: '/user_guide/unleash_context',
                             to: '/reference/unleash-context',
-                        },
-                        {
-                            from: '/user_guide/user-management',
-                            to: '/how-to/how-to-add-users-to-unleash',
                         },
                         {
                             from: '/user_guide/v4-whats-new',

@@ -132,8 +132,18 @@
       "permanent": true
     },
     {
+      "source": "/how-to/how-to-add-users-to-unleash",
+      "destination": "/reference/rbac",
+      "permanent": true
+    },
+    {
       "source": "/how-to/how-to-clone-environments",
       "destination": "/reference/environments#clone-an-environment",
+      "permanent": true
+    },
+    {
+      "source": "/how-to-create-and-display-banners",
+      "destination": "/reference/banners",
       "permanent": true
     },
     {
@@ -459,11 +469,6 @@
     {
       "source": "/user_guide/unleash_context",
       "destination": "/reference/unleash-context",
-      "permanent": true
-    },
-    {
-      "source": "/user_guide/user-management",
-      "destination": "/how-to/how-to-add-users-to-unleash",
       "permanent": true
     },
     {

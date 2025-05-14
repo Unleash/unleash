@@ -1,5 +1,6 @@
 ---
-title: How to add SSO with SAML 2.0 Okta
+title: SAML 2.0 with Okta
+description: Set up SSO for Unleash with SAML 2.0 and Okta.
 ---
 
 :::note Availability

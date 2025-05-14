@@ -1,5 +1,6 @@
 ---
-title: How to add SSO with SAML 2.0 Keycloak
+title: SAML 2.0 with Keycloak
+description: Set up SSO for Unleash with SAML 2.0 and Keycloak.
 ---
 
 :::note Availability

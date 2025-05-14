@@ -101,7 +101,7 @@ export default class ClientInstanceService {
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
 
-         this.seenClients[this.clientKey(value)] = {
+        this.seenClients[this.clientKey(value)] = {
             appName: value.appName,
             instanceId: value.instanceId,
             environment: value.environment,

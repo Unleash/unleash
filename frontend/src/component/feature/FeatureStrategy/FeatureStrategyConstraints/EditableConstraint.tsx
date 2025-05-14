@@ -85,9 +85,7 @@ const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
         margin: 0,
     },
     '&::before': {
-        border: 'none',
-        // make it transparent so that it fades in
-        borderColor: `${theme.palette.primary.main}00`,
+        borderColor: theme.palette.divider,
     },
     '&&:hover::before': {
         borderColor: theme.palette.primary.main,

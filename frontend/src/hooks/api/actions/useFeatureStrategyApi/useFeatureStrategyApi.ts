@@ -24,7 +24,6 @@ const useFeatureStrategyApi = () => {
         environmentId: string,
         payload: IFeatureStrategyPayload,
     ): Promise<IFeatureStrategy> => {
-        // Process constraints BEFORE the API call
         if (addEditStrategyEnabled) {
             if (payload.constraints && payload.constraints.length > 0) {
                 addToRecentlyUsedConstraints(payload.constraints);
@@ -68,7 +67,6 @@ const useFeatureStrategyApi = () => {
         strategyId: string,
         payload: IFeatureStrategyPayload,
     ): Promise<void> => {
-        // Process constraints BEFORE the API call
         if (addEditStrategyEnabled) {
             if (payload.constraints && payload.constraints.length > 0) {
                 addToRecentlyUsedConstraints(payload.constraints);

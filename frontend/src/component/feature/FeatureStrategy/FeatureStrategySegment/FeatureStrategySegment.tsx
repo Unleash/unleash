@@ -106,7 +106,10 @@ export const FeatureStrategySegment = ({
                 segments={selectedSegments}
                 setSegments={setSelectedSegments}
             />
-            <RecentlyUsedSegments setSegments={setSelectedSegments} />
+            <RecentlyUsedSegments
+                setSegments={setSelectedSegments}
+                segments={selectedSegments}
+            />
         </>
     );
 };

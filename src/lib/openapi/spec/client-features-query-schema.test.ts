@@ -14,7 +14,6 @@ test('clientFeatureQuerySchema all fields', () => {
         tag: [['some-tag', 'some-other-tag']],
         project: ['default'],
         namePrefix: 'some-prefix',
-        environment: 'some-env',
         inlineSegmentConstraints: true,
     };
 

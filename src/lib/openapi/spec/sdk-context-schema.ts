@@ -20,11 +20,6 @@ export const sdkContextSchema = {
             description:
                 'A DateTime (or similar) data class instance or a string in an RFC3339-compatible format. Defaults to the current time if not set by the user.',
         },
-        environment: {
-            type: 'string',
-            deprecated: true,
-            description: 'The environment the app is running in.',
-        },
         properties: {
             type: 'object',
             additionalProperties: { type: 'string' },

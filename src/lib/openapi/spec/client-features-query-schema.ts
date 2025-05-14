@@ -33,12 +33,6 @@ export const clientFeaturesQuerySchema = {
             type: 'string',
             example: 'payment',
         },
-        environment: {
-            type: 'string',
-            description:
-                'Strategies for the feature flag configured for this environment are included. This is now handled by API tokens and was marked as deprecated in v5',
-            deprecated: true,
-        },
         inlineSegmentConstraints: {
             description:
                 'Set to true if requesting client does not support Unleash-Client-Specification 4.2.2 or newer. Modern SDKs will have this set to false, since they will be able to merge constraints and segments themselves',

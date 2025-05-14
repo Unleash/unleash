@@ -7,6 +7,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 
 type RecentlyUsedSegmentsProps = {
     setSegments?: React.Dispatch<React.SetStateAction<ISegment[]>>;
+    segments?: ISegment[];
 };
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -27,6 +28,7 @@ const StyledSegmentsContainer = styled('div')(({ theme }) => ({
 
 export const RecentlyUsedSegments = ({
     setSegments,
+    segments = [],
 }: RecentlyUsedSegmentsProps) => {
     const { items: recentlyUsedSegmentIds } = useRecentlyUsedSegments();
     const { segments: allSegments } = useSegments();
@@ -45,7 +47,11 @@ export const RecentlyUsedSegments = ({
         .map((id) => allSegments.find((segment) => segment.id === id))
         .filter((segment) => segment !== undefined) as ISegment[];
 
-    if (segmentObjects.length === 0) {
+    const filteredSegmentObjects = segmentObjects.filter(
+        (segment) => !segments.some((selected) => selected.id === segment.id),
+    );
+
+    if (filteredSegmentObjects.length === 0) {
         return null;
     }
 
@@ -53,7 +59,7 @@ export const RecentlyUsedSegments = ({
         <StyledContainer>
             <StyledHeader>Recently used segments</StyledHeader>
             <StyledSegmentsContainer>
-                {segmentObjects.map((segment) => (
+                {filteredSegmentObjects.map((segment) => (
                     <RecentlyUsedSegmentChip
                         key={segment.id}
                         segment={segment}

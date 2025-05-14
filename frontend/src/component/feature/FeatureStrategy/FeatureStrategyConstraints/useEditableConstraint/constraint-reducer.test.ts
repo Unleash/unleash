@@ -261,10 +261,12 @@ describe('adding values', () => {
             expect(output).toStrictEqual(input);
         });
         test('if both the new value and the old value are deleted legal values, it clears the field', () => {
-            const base = singleValueConstraint;
             const input = {
-                ...base,
-                deletedLegalValues: new Set(['deleted', base.value]),
+                ...singleValueConstraint,
+                deletedLegalValues: new Set([
+                    'deleted',
+                    singleValueConstraint.value,
+                ]),
             };
 
             const output = constraintReducer(input, {
@@ -365,10 +367,12 @@ describe('toggling values', () => {
         });
 
         test('if both the new value and the old value are deleted legal values, it clears the field', () => {
-            const base = singleValueConstraint;
             const input = {
-                ...base,
-                deletedLegalValues: new Set(['deleted', base.value]),
+                ...singleValueConstraint,
+                deletedLegalValues: new Set([
+                    'deleted',
+                    singleValueConstraint.value,
+                ]),
             };
             const output = constraintReducer(input, {
                 type: 'toggle value',

@@ -48,6 +48,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests.tsx';
 import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -210,6 +211,7 @@ export const FeatureStrategyForm = ({
         environmentId,
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
+    const addEditStrategy = useUiFlag('addEditStrategy');
 
     useEffect(() => {
         trackEvent('new-strategy-form', {
@@ -349,7 +351,10 @@ export const FeatureStrategyForm = ({
                 <StyledTitle>
                     {formatStrategyName(strategy.name || '')}
                     <ConditionallyRender
-                        condition={strategy.name === 'flexibleRollout'}
+                        condition={
+                            !addEditStrategy &&
+                            strategy.name === 'flexibleRollout'
+                        }
                         show={
                             <Badge color='success' sx={{ marginLeft: '1rem' }}>
                                 {strategy.parameters?.rollout}%
@@ -357,7 +362,7 @@ export const FeatureStrategyForm = ({
                         }
                     />
                 </StyledTitle>
-                {foundEnvironment ? (
+                {foundEnvironment && !addEditStrategy ? (
                     <StyledEnvironmentBox>
                         <EnvironmentTypographyHeader>
                             Environment:

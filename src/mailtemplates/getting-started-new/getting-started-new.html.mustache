@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to Unleash</title>
+    <style>
+        /* /\/\/\/\/\/\/\/\/ CLIENT-SPECIFIC STYLES /\/\/\/\/\/\/\/\/ */
+			#outlook a{padding:0;} /* Force Outlook to provide a "view in browser" message */
+			.ReadMsgBody{width:100%;} .ExternalClass{width:100%;} /* Force Hotmail to display emails at full width */
+			.ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 100%;} /* Force Hotmail to display normal line spacing */
+			body, table, td, p, a, li, blockquote{-webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;} /* Prevent WebKit and Windows mobile changing default text sizes */
+			table, td{mso-table-lspace:0pt; mso-table-rspace:0pt;} /* Remove spacing between tables in Outlook 2007 and up */
+			img{-ms-interpolation-mode:bicubic;} /* Allow smoother rendering of resized image in Internet Explorer */
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #EAEAED;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        color: #000;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      .preheader {
+        display: none;
+        font-size: 1px;
+        color: #fff;
+        line-height: 1px;
+        max-height: 0;
+        max-width: 0;
+        opacity: 0;
+        overflow: hidden;
+      }
+      .logo-bar {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+      .logo-bar > img {
+        max-height: 36px;
+        display: block;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+      .header {
+        text-align: center;
+      }
+      .header img {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        border: 0;
+      }
+      .content {
+        padding: 32px 24px 24px;
+      }
+      .content h1 {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 16px;
+      }
+      .content p {
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 16px;
+      }
+      .resources {
+        padding: 0 24px 24px;
+      }
+      .resources h2 {
+        font-size: 18px;
+        margin-bottom: 12px;
+      }
+      .resources ul {
+        padding-left: 24px;
+        margin: 0;
+      }
+      .resources ul li {
+        margin-bottom: 8px;
+      }
+      .resources ul li a {
+        color: #615BC2;
+        text-decoration: underline;
+      }
+      .signature {
+        padding: 0px 24px;
+      }
+      .footer {
+        font-size: 12px;
+        color: #3b3f44;
+        text-align: center;
+        padding: 24px;
+      }
+      .footer a {
+        color: #615BC2;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+    <body>
+        <span class="preheader">
+            Welcome to Unleash! You’ve been invited to your organization’s Unleash account – start experimenting with features today.
+        </span>
+        <div class="logo-bar">
+            <img src="https://cdn.getunleash.io/unleash_logo_600.png" alt="Unleash logo" />
+        </div>
+    <div class="container">
+      <div class="header">
+        <img src="https://cdn.getunleash.io/email-assets/email_header_welcome.png" alt="Welcome to Unleash" />
+      </div>
+      <div class="content">
+        <h1>Welcome to Unleash {{ name }}!</h1>
+        <p>
+          You have been invited to your organization’s Unleash account.
+        </p>
+        {{# passwordLink }}
+        <p>
+          Start using Unleash by clicking the sign-up link below. Follow the
+          steps provided to set your password and get started.
+        </p>
+        <p>
+          <a href="{{{ passwordLink }}}" target="_blank" rel="noopener noreferrer" style="display:inline-block; padding:6px 20px; margin-top:8px; background-color:#6C65E5; color:#ffffff !important; text-decoration:none; border-radius:6px; font-weight:bold; font-size:14px;">Set up account</a>
+        </p>
+        {{/ passwordLink }}
+        {{^ passwordLink }}
+        <p>
+          Start using Unleash by clicking the log in link below.
+        </p>
+        <p>
+          <a href="{{{ unleashUrl }}}" target="_blank" rel="noopener noreferrer" style="display:inline-block; padding:6px 20px; margin-top:8px; background-color:#6C65E5; color:#ffffff !important; text-decoration:none; border-radius:6px; font-weight:bold; font-size:14px;">Log in</a>
+        </p>
+        {{/ passwordLink }}
+      </div>
+      <div class="resources">
+        <h2>Useful resources</h2>
+        <p>Once you are up and running, you might want to take a look at the following resources:</p>
+        <ul>
+          <li><a href="https://docs.getunleash.io" target="_blank" rel="noopener noreferrer">Documentation</a></li>
+          <li><a href="https://github.com/unleash" target="_blank" rel="noopener noreferrer">Code examples</a></li>
+          <li><a href="https://docs.getunleash.io/reference/sdks" target="_blank" rel="noopener noreferrer">SDKs</a></li>
+        </ul>
+      </div>
+      <div class="signature">
+        <p>Best,<br/>Your Unleash team</p>
+      </div>
+      <div class="footer">
+        <p>
+            By starting to use Unleash, you are agreeing to our <a href="https://www.getunleash.io/terms-of-service" target="_blank" rel="noopener noreferrer">Terms of Service</a>
+            <br />
+            This email was sent to {{ recipient }}
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

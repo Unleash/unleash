@@ -1,11 +1,12 @@
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import type { IConstraint } from 'interfaces/strategy';
+import murmurHash3 from 'murmurhash3js';
 
 export const getConstraintKey = (constraint: IConstraint): string => {
     const sortedValues = (values?: string[]) =>
         values ? [...values].sort() : undefined;
 
-    return JSON.stringify({
+    const jsonString = JSON.stringify({
         contextName: constraint.contextName,
         operator: constraint.operator,
         values: sortedValues(constraint.values),
@@ -13,6 +14,8 @@ export const getConstraintKey = (constraint: IConstraint): string => {
         inverted: constraint.inverted,
         caseInsensitive: constraint.caseInsensitive,
     });
+
+    return murmurHash3.x86.hash32(jsonString).toString(16);
 };
 
 export const areConstraintsEqual = (

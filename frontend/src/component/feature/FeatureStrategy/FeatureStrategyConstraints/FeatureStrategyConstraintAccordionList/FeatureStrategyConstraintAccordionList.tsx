@@ -139,6 +139,7 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                             show={
                                 <RecentlyUsedConstraints
                                     setConstraints={setConstraints}
+                                    constraints={constraints}
                                 />
                             }
                         />

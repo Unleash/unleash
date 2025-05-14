@@ -1,11 +1,15 @@
 import { styled, Typography } from '@mui/material';
 import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
 import { constraintId } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
-import { useRecentlyUsedConstraints } from './useRecentlyUsedConstraints';
+import {
+    useRecentlyUsedConstraints,
+    areConstraintsEqual,
+} from './useRecentlyUsedConstraints';
 import type { IConstraint } from 'interfaces/strategy';
 
 type IRecentlyUsedConstraintsProps = {
     setConstraints?: React.Dispatch<React.SetStateAction<IConstraint[]>>;
+    constraints?: IConstraint[];
 };
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -26,6 +30,7 @@ const StyledConstraintsContainer = styled('div')(({ theme }) => ({
 
 export const RecentlyUsedConstraints = ({
     setConstraints,
+    constraints = [],
 }: IRecentlyUsedConstraintsProps) => {
     const { items: recentlyUsedConstraints } = useRecentlyUsedConstraints();
 
@@ -33,11 +38,22 @@ export const RecentlyUsedConstraints = ({
         return null;
     }
 
+    const nonSelectedRecentConstraints = recentlyUsedConstraints.filter(
+        (recentConstraint) =>
+            !constraints.some((constraint) =>
+                areConstraintsEqual(constraint, recentConstraint),
+            ),
+    );
+
+    if (nonSelectedRecentConstraints.length === 0) {
+        return null;
+    }
+
     return (
         <StyledContainer>
             <StyledHeader>Recently used constraints</StyledHeader>
             <StyledConstraintsContainer>
-                {recentlyUsedConstraints.map((constraint) => (
+                {nonSelectedRecentConstraints.map((constraint) => (
                     <ConstraintAccordionView
                         key={constraint[constraintId]}
                         constraint={constraint}

@@ -139,6 +139,13 @@ const RolloutSlider = ({
         }
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleInputBlur();
+        }
+    };
+
     return (
         <SliderWrapper>
             <StyledBox>
@@ -213,6 +220,7 @@ const RolloutSlider = ({
                         value={inputValue}
                         onChange={handleInputChange}
                         onBlur={handleInputBlur}
+                        onKeyDown={handleKeyDown}
                         disabled={disabled}
                         inputProps={{
                             min: 0,

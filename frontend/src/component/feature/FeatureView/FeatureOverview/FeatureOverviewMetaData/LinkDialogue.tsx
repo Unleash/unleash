@@ -6,6 +6,7 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import type { FeatureLink } from 'interfaces/featureToggle';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
     width: '100%',
@@ -43,6 +44,7 @@ const LinkDialogue: FC<ILinkDialogueProps> = ({
     const isEditMode = mode === 'edit';
     const dialogueTitle = isEditMode ? 'Edit link' : 'Add link';
     const successMessage = isEditMode ? 'Link updated' : 'Link added';
+    const { trackEvent } = usePlausibleTracker();
 
     useEffect(() => {
         if (isEditMode && link) {
@@ -60,8 +62,18 @@ const LinkDialogue: FC<ILinkDialogueProps> = ({
         try {
             if (isEditMode) {
                 await editLink(id, { url, title: title || null });
+                trackEvent('feature-links', {
+                    props: {
+                        eventType: 'edit-link',
+                    },
+                });
             } else {
                 await addLink({ url, title: title || null });
+                trackEvent('feature-links', {
+                    props: {
+                        eventType: 'add-link',
+                    },
+                });
             }
 
             setToastData({ text: successMessage, type: 'success' });

@@ -1,28 +1,28 @@
 import { Knex } from 'knex';
-import metricsHelper from '../../util/metrics-helper';
-import { DB_TIME } from '../../metric-events';
-import type { Logger } from '../../logger';
+import metricsHelper from '../../util/metrics-helper.js';
+import { DB_TIME } from '../../metric-events.js';
+import type { Logger } from '../../logger.js';
 import type {
     IFeatureToggleClient,
     IFeatureToggleClientStore,
     IFeatureToggleQuery,
     IFlagResolver,
     IStrategyConfig,
-    ITag,
     IUnleashConfig,
     PartialDeep,
-} from '../../types';
+} from '../../types/index.js';
 import {
     ALL_PROJECTS,
     DEFAULT_ENV,
     ensureStringValue,
     mapValues,
-} from '../../util';
+} from '../../util/index.js';
 import type EventEmitter from 'events';
-import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
-import type { Db } from '../../db/db';
+import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
+import type { Db } from '../../db/db.js';
 import Raw = Knex.Raw;
-import { sortStrategies } from '../../util/sortStrategies';
+import { sortStrategies } from '../../util/sortStrategies.js';
+import type { ITag } from '../../tags/index.js';
 
 export interface IGetAllFeatures {
     featureQuery?: IFeatureToggleQuery;
@@ -364,5 +364,3 @@ export default class FeatureToggleClientStore
         });
     }
 }
-
-module.exports = FeatureToggleClientStore;

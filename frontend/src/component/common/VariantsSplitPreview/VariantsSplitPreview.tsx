@@ -2,7 +2,7 @@ import { Box, Typography, styled } from '@mui/material';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import type { StrategyVariantSchema } from 'openapi';
-import { SplitPreviewTooltip } from './SplitPreviewTooltip/SplitPreviewTooltip';
+import { SplitPreviewTooltip } from './SplitPreviewTooltip/SplitPreviewTooltip.tsx';
 
 const StyledContainer = styled(Box)(() => ({
     display: 'flex',

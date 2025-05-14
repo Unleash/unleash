@@ -1,5 +1,5 @@
-import type { IFeatureToggleQuery } from '../../../types';
-import type { FeatureConfigurationClient } from '../../feature-toggle/types/feature-toggle-strategies-store-type';
+import type { IFeatureToggleQuery } from '../../../types/index.js';
+import type { FeatureConfigurationClient } from '../../feature-toggle/types/feature-toggle-strategies-store-type.js';
 
 export interface FeatureConfigurationDeltaClient
     extends FeatureConfigurationClient {

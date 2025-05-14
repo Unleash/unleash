@@ -1,6 +1,6 @@
 import type { IEnvironments } from 'interfaces/featureToggle';
 
-import { getLatestLastSeenAt } from './getLatestLastSeenAt';
+import { getLatestLastSeenAt } from './getLatestLastSeenAt.js';
 
 describe('getLatestLastSeenAt', () => {
     test('should return the most recent lastSeenAt date', () => {

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SignalSchemaPayload } from './signalSchemaPayload';
-import type { SignalSchemaSource } from './signalSchemaSource';
+import type { SignalSchemaPayload } from './signalSchemaPayload.js';
+import type { SignalSchemaSource } from './signalSchemaSource.js';
 
 /**
  * An object describing a signal.

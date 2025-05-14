@@ -1,5 +1,5 @@
 import type { VFC } from 'react';
-import { PlaygroundResultChip as NewPlaygroundResultChip } from './PlaygroundResultChip';
+import { PlaygroundResultChip as NewPlaygroundResultChip } from './PlaygroundResultChip.tsx';
 
 interface IResultChipProps {
     enabled: boolean | 'unevaluated' | 'unknown';

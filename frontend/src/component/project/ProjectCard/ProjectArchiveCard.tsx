@@ -7,8 +7,8 @@ import {
     StyledIconBox,
     StyledActions,
 } from './ProjectCard.styles';
-import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter';
-import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge';
+import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter.tsx';
+import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge.tsx';
 import type { ProjectSchemaOwners } from 'openapi';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import { formatDateYMDHM } from 'utils/formatDate';

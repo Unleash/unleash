@@ -1,7 +1,7 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useNavigate } from 'react-router-dom';
-import EditFeatureForm from '../FeatureForm/EditFeatureForm';
-import useFeatureForm from '../hooks/useFeatureForm';
+import EditFeatureForm from '../FeatureForm/EditFeatureForm.tsx';
+import useFeatureForm from '../hooks/useFeatureForm.ts';
 import * as jsonpatch from 'fast-json-patch';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';

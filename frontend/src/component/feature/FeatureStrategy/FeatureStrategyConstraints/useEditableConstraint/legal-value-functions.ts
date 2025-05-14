@@ -1,5 +1,5 @@
 import type { ILegalValue } from 'interfaces/context';
-import { difference } from './set-functions';
+import { difference } from './set-functions.js';
 
 export const getDeletedLegalValues = (
     allLegalValues: ILegalValue[],

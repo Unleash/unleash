@@ -1,6 +1,6 @@
-import type { Logger, LogProvider } from '../logger';
-import type { ISettingStore } from '../types/stores/settings-store';
-import type { Db } from './db';
+import type { Logger, LogProvider } from '../logger.js';
+import type { ISettingStore } from '../types/stores/settings-store.js';
+import type { Db } from './db.js';
 
 const TABLE = 'settings';
 
@@ -77,5 +77,3 @@ export default class SettingStore implements ISettingStore {
         return rows.map((r) => r.content);
     }
 }
-
-module.exports = SettingStore;

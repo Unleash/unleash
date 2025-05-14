@@ -1,6 +1,6 @@
 import { Box, styled } from '@mui/material';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
-import ConditionalRolloutSlider from '../../../../feature/StrategyTypes/RolloutSlider/ConditionalRolloutSlider';
+import ConditionalRolloutSlider from '../../../../feature/StrategyTypes/RolloutSlider/ConditionalRolloutSlider.tsx';
 import type { IFormErrors } from 'hooks/useFormErrors';
 import type { IFeatureStrategyParameters } from 'interfaces/strategy';
 import { useMemo } from 'react';

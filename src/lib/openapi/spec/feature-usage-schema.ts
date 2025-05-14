@@ -1,6 +1,6 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { featureEnvironmentMetricsSchema } from './feature-environment-metrics-schema';
-import { dateSchema } from './date-schema';
+import { featureEnvironmentMetricsSchema } from './feature-environment-metrics-schema.js';
+import { dateSchema } from './date-schema.js';
 
 export const featureUsageSchema = {
     $id: '#/components/schemas/featureUsageSchema',

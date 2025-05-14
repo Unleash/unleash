@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SetUiConfigSchemaFrontendSettings } from './setUiConfigSchemaFrontendSettings';
+import type { SetUiConfigSchemaFrontendSettings } from './setUiConfigSchemaFrontendSettings.js';
 
 /**
  * Unleash configuration settings affect the admin UI.

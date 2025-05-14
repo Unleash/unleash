@@ -1,9 +1,9 @@
 import type { ILoginEvent } from 'interfaces/loginEvent';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
-import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
-import useUiConfig from '../useUiConfig/useUiConfig';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
+import useUiConfig from '../useUiConfig/useUiConfig.js';
 
 export const useLoginHistory = () => {
     const { isEnterprise } = useUiConfig();

@@ -2,7 +2,7 @@ import type { Knex } from 'knex';
 import type {
     IQueryOperator,
     IQueryParam,
-} from '../feature-toggle/types/feature-toggle-strategies-store-type';
+} from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
 
 export interface NormalizeParamsDefaults {
     limitDefault: number;

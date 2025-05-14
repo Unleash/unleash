@@ -37,9 +37,9 @@ import {
 } from 'react-table';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { sortTypes } from 'utils/sortTypes';
-import { CreatePersonalAPIToken } from './CreatePersonalAPIToken/CreatePersonalAPIToken';
-import { DeletePersonalAPIToken } from './DeletePersonalAPIToken/DeletePersonalAPIToken';
-import { PersonalAPITokenDialog } from './PersonalAPITokenDialog/PersonalAPITokenDialog';
+import { CreatePersonalAPIToken } from './CreatePersonalAPIToken/CreatePersonalAPIToken.tsx';
+import { DeletePersonalAPIToken } from './DeletePersonalAPIToken/DeletePersonalAPIToken.tsx';
+import { PersonalAPITokenDialog } from './PersonalAPITokenDialog/PersonalAPITokenDialog.tsx';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 

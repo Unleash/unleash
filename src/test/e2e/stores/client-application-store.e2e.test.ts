@@ -1,11 +1,11 @@
 import faker from 'faker';
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
+import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import getLogger from '../../fixtures/no-logger.js';
 import type {
     IClientApplicationsStore,
     IUnleashStores,
-} from '../../../lib/types';
-import type { IClientApplication } from '../../../lib/types/stores/client-applications-store';
+} from '../../../lib/types/index.js';
+import type { IClientApplication } from '../../../lib/types/stores/client-applications-store.js';
 import { subDays } from 'date-fns';
 
 let db: ITestDb;

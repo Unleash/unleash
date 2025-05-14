@@ -1,8 +1,8 @@
-import type { Db, IUnleashConfig } from '../../../server-impl';
-import FeatureToggleStore from '../../feature-toggle/feature-toggle-store';
-import { FakeProjectLifecycleSummaryReadModel } from './fake-project-lifecycle-summary-read-model';
-import type { IProjectLifecycleSummaryReadModel } from './project-lifecycle-read-model-type';
-import { ProjectLifecycleSummaryReadModel } from './project-lifecycle-summary-read-model';
+import type { Db, IUnleashConfig } from '../../../types/index.js';
+import FeatureToggleStore from '../../feature-toggle/feature-toggle-store.js';
+import { FakeProjectLifecycleSummaryReadModel } from './fake-project-lifecycle-summary-read-model.js';
+import type { IProjectLifecycleSummaryReadModel } from './project-lifecycle-read-model-type.js';
+import { ProjectLifecycleSummaryReadModel } from './project-lifecycle-summary-read-model.js';
 
 export const createProjectLifecycleSummaryReadModel = (
     db: Db,

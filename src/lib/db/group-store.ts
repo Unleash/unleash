@@ -1,5 +1,5 @@
-import type { IGroupStore, IStoreGroup } from '../types/stores/group-store';
-import NotFoundError from '../error/notfound-error';
+import type { IGroupStore, IStoreGroup } from '../types/stores/group-store.js';
+import NotFoundError from '../error/notfound-error.js';
 import Group, {
     type ICreateGroupUserModel,
     type IGroup,
@@ -7,11 +7,11 @@ import Group, {
     type IGroupProject,
     type IGroupRole,
     type IGroupUser,
-} from '../types/group';
-import type { Db } from './db';
-import { BadDataError, FOREIGN_KEY_VIOLATION } from '../error';
-import type { IGroupWithProjectRoles } from '../types/stores/access-store';
-import { PROJECT_ROLE_TYPES } from '../util';
+} from '../types/group.js';
+import type { Db } from './db.js';
+import { BadDataError, FOREIGN_KEY_VIOLATION } from '../error/index.js';
+import type { IGroupWithProjectRoles } from '../types/stores/access-store.js';
+import { PROJECT_ROLE_TYPES } from '../util/index.js';
 
 const T = {
     GROUPS: 'groups',

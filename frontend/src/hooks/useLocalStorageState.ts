@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { createLocalStorage } from '../utils/createLocalStorage';
+import { createLocalStorage } from '../utils/createLocalStorage.js';
 
 export const useLocalStorageState = <T extends object | string>(
     key: string,

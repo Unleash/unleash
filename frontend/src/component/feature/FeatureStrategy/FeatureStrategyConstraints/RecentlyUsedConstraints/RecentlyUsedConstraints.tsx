@@ -4,7 +4,7 @@ import { constraintId } from 'component/common/LegacyConstraintAccordion/Constra
 import {
     useRecentlyUsedConstraints,
     areConstraintsEqual,
-} from './useRecentlyUsedConstraints';
+} from './useRecentlyUsedConstraints.ts';
 import type { IConstraint } from 'interfaces/strategy';
 
 type IRecentlyUsedConstraintsProps = {

@@ -1,5 +1,5 @@
 import { endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
-import { parseMonthString } from './dates';
+import { parseMonthString } from './dates.js';
 
 export type ChartDataSelection =
     | {

@@ -1,9 +1,9 @@
-import NotImplementedError from '../../lib/error/not-implemented-error';
+import NotImplementedError from '../../lib/error/not-implemented-error.js';
 import type {
     IUserFeedback,
     IUserFeedbackKey,
     IUserFeedbackStore,
-} from '../../lib/types/stores/user-feedback-store';
+} from '../../lib/types/stores/user-feedback-store.js';
 
 export default class FakeUserFeedbackStore implements IUserFeedbackStore {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

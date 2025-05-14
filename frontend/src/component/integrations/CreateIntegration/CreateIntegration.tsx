@@ -1,5 +1,5 @@
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
-import { IntegrationForm } from '../IntegrationForm/IntegrationForm';
+import { IntegrationForm } from '../IntegrationForm/IntegrationForm.tsx';
 import cloneDeep from 'lodash.clonedeep';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { AddonSchema } from 'openapi';

@@ -16,7 +16,7 @@ import {
     singleValueOperators,
     stringOperators,
     type Operator,
-} from './operators';
+} from './operators.js';
 
 describe('operators are correctly identified', () => {
     test('date operators', () => {

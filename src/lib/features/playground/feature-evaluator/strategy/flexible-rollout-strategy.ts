@@ -1,7 +1,7 @@
-import { Strategy } from './strategy';
-import type { Context } from '../context';
-import { normalizedStrategyValue } from './util';
-import { resolveContextValue } from '../helpers';
+import { Strategy } from './strategy.js';
+import type { Context } from '../context.js';
+import { normalizedStrategyValue } from './util.js';
+import { resolveContextValue } from '../helpers.js';
 
 const STICKINESS = {
     default: 'default',

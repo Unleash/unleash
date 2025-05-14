@@ -1,7 +1,7 @@
 import useSWR, { mutate, type SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { ProjectDoraMetricsSchema } from 'openapi';
 
 interface IUseProjectDoraMetricsOutput {

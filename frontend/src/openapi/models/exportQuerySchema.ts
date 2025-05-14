@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ExportQuerySchemaAnyOf } from './exportQuerySchemaAnyOf';
-import type { ExportQuerySchemaAnyOfTwo } from './exportQuerySchemaAnyOfTwo';
-import type { ExportQuerySchemaAnyOfThree } from './exportQuerySchemaAnyOfThree';
+import type { ExportQuerySchemaAnyOf } from './exportQuerySchemaAnyOf.js';
+import type { ExportQuerySchemaAnyOfTwo } from './exportQuerySchemaAnyOfTwo.js';
+import type { ExportQuerySchemaAnyOfThree } from './exportQuerySchemaAnyOfThree.js';
 
 /**
  * Available query parameters for  the [deprecated export/import](https://docs.getunleash.io/reference/deploy/import-export) functionality.

@@ -1,4 +1,4 @@
-import { difference, union } from './set-functions';
+import { difference, union } from './set-functions.js';
 
 test('union', () => {
     const a = [1, 2];

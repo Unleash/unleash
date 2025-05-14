@@ -1,14 +1,14 @@
-import SettingService from '../../../lib/services/setting-service';
-import { createTestConfig } from '../../config/test-config';
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import type { IUnleashStores } from '../../../lib/types/stores';
+import SettingService from '../../../lib/services/setting-service.js';
+import { createTestConfig } from '../../config/test-config.js';
+import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import type { IUnleashStores } from '../../../lib/types/stores.js';
 import {
     SETTING_CREATED,
     SETTING_DELETED,
     SETTING_UPDATED,
-} from '../../../lib/types/events';
-import { TEST_AUDIT_USER } from '../../../lib/types';
-import { createEventsService } from '../../../lib/features';
+} from '../../../lib/events/index.js';
+import { createEventsService } from '../../../lib/features/index.js';
+import { TEST_AUDIT_USER } from '../../../lib/types/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

@@ -4,11 +4,11 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
-import { FeatureView } from '../feature/FeatureView/FeatureView';
-import { AccessProvider } from '../providers/AccessProvider/AccessProvider';
-import { AnnouncerProvider } from '../common/Announcer/AnnouncerProvider/AnnouncerProvider';
-import { testServerRoute, testServerSetup } from '../../utils/testServer';
-import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer';
+import { FeatureView } from '../feature/FeatureView/FeatureView.tsx';
+import { AccessProvider } from '../providers/AccessProvider/AccessProvider.tsx';
+import { AnnouncerProvider } from '../common/Announcer/AnnouncerProvider/AnnouncerProvider.tsx';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer.tsx';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';
 

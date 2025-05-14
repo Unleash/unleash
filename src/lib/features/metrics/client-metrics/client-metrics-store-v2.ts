@@ -1,17 +1,20 @@
-import type { Logger, LogProvider } from '../../../logger';
+import type { Logger, LogProvider } from '../../../logger.js';
 import type {
     IClientMetricsEnv,
     IClientMetricsEnvKey,
     IClientMetricsEnvVariant,
     IClientMetricsStoreV2,
-} from './client-metrics-store-v2-type';
-import NotFoundError from '../../../error/notfound-error';
+} from './client-metrics-store-v2-type.js';
+import NotFoundError from '../../../error/notfound-error.js';
 import { endOfDay, startOfHour } from 'date-fns';
-import { collapseHourlyMetrics, spreadVariants } from './collapseHourlyMetrics';
-import type { Db } from '../../../db/db';
-import type { IFlagResolver } from '../../../types';
-import metricsHelper from '../../../util/metrics-helper';
-import { DB_TIME } from '../../../metric-events';
+import {
+    collapseHourlyMetrics,
+    spreadVariants,
+} from './collapseHourlyMetrics.js';
+import type { Db } from '../../../db/db.js';
+import type { IFlagResolver } from '../../../types/index.js';
+import metricsHelper from '../../../util/metrics-helper.js';
+import { DB_TIME } from '../../../metric-events.js';
 import type EventEmitter from 'events';
 
 interface ClientMetricsBaseTable {

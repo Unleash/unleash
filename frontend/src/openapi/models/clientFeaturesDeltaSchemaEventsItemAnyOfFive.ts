@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ClientSegmentSchema } from './clientSegmentSchema';
-import type { ClientFeaturesDeltaSchemaEventsItemAnyOfFiveType } from './clientFeaturesDeltaSchemaEventsItemAnyOfFiveType';
+import type { ClientSegmentSchema } from './clientSegmentSchema.js';
+import type { ClientFeaturesDeltaSchemaEventsItemAnyOfFiveType } from './clientFeaturesDeltaSchemaEventsItemAnyOfFiveType.js';
 
 export type ClientFeaturesDeltaSchemaEventsItemAnyOfFive = {
     eventId: number;

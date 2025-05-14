@@ -4,7 +4,7 @@ import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions'
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import useApplications from 'hooks/api/getters/useApplications/useApplications';
-import { StrategyDetails } from './StrategyDetails/StrategyDetails';
+import { StrategyDetails } from './StrategyDetails/StrategyDetails.tsx';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import Edit from '@mui/icons-material/Edit';

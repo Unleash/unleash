@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { FeatureTypeForm } from './FeatureTypeForm';
+import { FeatureTypeForm } from './FeatureTypeForm.tsx';
 
 const mockFeatureType = {
     id: '1',

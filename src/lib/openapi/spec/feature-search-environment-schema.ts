@@ -1,10 +1,10 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { constraintSchema } from './constraint-schema';
-import { parametersSchema } from './parameters-schema';
-import { featureStrategySchema } from './feature-strategy-schema';
-import { variantSchema } from './variant-schema';
-import { strategyVariantSchema } from './strategy-variant-schema';
-import { featureEnvironmentSchema } from './feature-environment-schema';
+import { constraintSchema } from './constraint-schema.js';
+import { parametersSchema } from './parameters-schema.js';
+import { featureStrategySchema } from './feature-strategy-schema.js';
+import { variantSchema } from './variant-schema.js';
+import { strategyVariantSchema } from './strategy-variant-schema.js';
+import { featureEnvironmentSchema } from './feature-environment-schema.js';
 
 export const featureSearchEnvironmentSchema = {
     $id: '#/components/schemas/featureSearchEnvironmentSchema',

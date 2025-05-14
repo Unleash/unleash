@@ -14,8 +14,8 @@ import {
     FEATURE_PROJECT_CHANGE,
     FEATURE_VARIANTS_UPDATED,
     FEATURE_POTENTIALLY_STALE_ON,
-} from '../types/events';
-import type { IAddonDefinition } from '../types/model';
+} from '../events/index.js';
+import type { IAddonDefinition } from '../types/model.js';
 
 const slackDefinition: IAddonDefinition = {
     name: 'slack',

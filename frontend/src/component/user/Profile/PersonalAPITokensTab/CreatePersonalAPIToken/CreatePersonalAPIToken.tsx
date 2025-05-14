@@ -13,7 +13,7 @@ import {
     ExpirationOption,
     type IPersonalAPITokenFormErrors,
     PersonalAPITokenForm,
-} from './PersonalAPITokenForm/PersonalAPITokenForm';
+} from './PersonalAPITokenForm/PersonalAPITokenForm.tsx';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',

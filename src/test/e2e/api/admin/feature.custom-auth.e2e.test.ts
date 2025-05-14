@@ -1,9 +1,9 @@
-import { setupAppWithCustomAuth } from '../../helpers/test-helper';
-import AuthenticationRequired from '../../../../lib/types/authentication-required';
+import { setupAppWithCustomAuth } from '../../helpers/test-helper.js';
+import AuthenticationRequired from '../../../../lib/types/authentication-required.js';
 
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import type { IUnleashStores } from '../../../../lib/types';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import type { IUnleashStores } from '../../../../lib/types/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

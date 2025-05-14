@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { VerticalTab } from './VerticalTab/VerticalTab';
+import { VerticalTab } from './VerticalTab/VerticalTab.tsx';
 import type { HTMLAttributes } from 'react';
 
 const StyledTabPage = styled('div')(({ theme }) => ({

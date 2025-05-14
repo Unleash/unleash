@@ -1,10 +1,10 @@
 import { render } from 'utils/testRenderer';
 import { screen, waitFor } from '@testing-library/react';
-import { usePersistentTableState } from './usePersistentTableState';
+import { usePersistentTableState } from './usePersistentTableState.ts';
 import { Route, Routes } from 'react-router-dom';
-import { createLocalStorage } from '../utils/createLocalStorage';
+import { createLocalStorage } from '../utils/createLocalStorage.ts';
 import { ArrayParam, NumberParam, StringParam } from 'use-query-params';
-import { FilterItemParam } from '../utils/serializeQueryParams';
+import { FilterItemParam } from '../utils/serializeQueryParams.ts';
 
 type TestComponentProps = {
     keyName: string;

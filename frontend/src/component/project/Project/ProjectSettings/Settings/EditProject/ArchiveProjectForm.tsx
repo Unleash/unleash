@@ -3,7 +3,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { styled } from '@mui/material';
-import { ArchiveProject } from '../ArchiveProject';
+import { ArchiveProject } from '../ArchiveProject.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.spacing(2),

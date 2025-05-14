@@ -1,11 +1,11 @@
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../../helpers/database-init';
-import getLogger from '../../../../fixtures/no-logger';
-import * as jsonpatch from 'fast-json-patch';
-import { type IVariant, WeightType } from '../../../../../lib/types/model';
+} from '../../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../../helpers/database-init.js';
+import getLogger from '../../../../fixtures/no-logger.js';
+import * as jsonpatch from 'fast-json-patch/index.mjs';
+import { type IVariant, WeightType } from '../../../../../lib/types/model.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

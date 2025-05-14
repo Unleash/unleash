@@ -1,6 +1,6 @@
 import { Button, styled } from '@mui/material';
 import type { IConstraint } from 'interfaces/strategy';
-import { CANCEL } from '../ConstraintAccordionEdit';
+import { CANCEL } from '../ConstraintAccordionEdit.tsx';
 
 import type React from 'react';
 

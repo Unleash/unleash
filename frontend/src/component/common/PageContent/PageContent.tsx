@@ -5,7 +5,7 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Paper, type PaperProps, styled } from '@mui/material';
 import { useStyles } from './PageContent.styles';
 import useLoading from 'hooks/useLoading';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
 
 interface IPageContentProps extends PaperProps {
     header?: ReactNode;

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SetStrategySortOrderSchemaItem } from './setStrategySortOrderSchemaItem';
+import type { SetStrategySortOrderSchemaItem } from './setStrategySortOrderSchemaItem.js';
 
 /**
  * An array of strategies with their new sort order

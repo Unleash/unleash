@@ -1,6 +1,6 @@
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
-import { ServiceAccountsTable } from './ServiceAccountsTable/ServiceAccountsTable';
+import { ServiceAccountsTable } from './ServiceAccountsTable/ServiceAccountsTable.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

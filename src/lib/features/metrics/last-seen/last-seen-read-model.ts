@@ -1,15 +1,11 @@
-import type { Db } from '../../../db/db';
-import type { ILastSeenReadModel } from './types/last-seen-read-model-type';
+import type { Db } from '../../../db/db.js';
+import type {
+    IFeatureLastSeenResults,
+    ILastSeenReadModel,
+} from './types/last-seen-read-model-type.js';
 
 const TABLE = 'last_seen_at_metrics';
 
-export interface IFeatureLastSeenResults {
-    [featureName: string]: {
-        [environment: string]: {
-            lastSeen: string;
-        };
-    };
-}
 export class LastSeenAtReadModel implements ILastSeenReadModel {
     private db: Db;
 

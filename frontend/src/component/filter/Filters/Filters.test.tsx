@@ -5,7 +5,7 @@ import {
     type FilterItemParamHolder,
     Filters,
     type IFilterItem,
-} from './Filters';
+} from './Filters.tsx';
 
 test('shoulder render all available filters', async () => {
     const availableFilters: IFilterItem[] = [

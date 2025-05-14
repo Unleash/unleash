@@ -1,5 +1,5 @@
-import { validateSchema } from '../validate';
-import type { ContextFieldSchema } from './context-field-schema';
+import { validateSchema } from '../validate.js';
+import type { ContextFieldSchema } from './context-field-schema.js';
 
 test('contextFieldSchema', () => {
     const data: ContextFieldSchema = {

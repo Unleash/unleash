@@ -14,11 +14,11 @@ import UserProfile from 'component/user/UserProfile';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 
-import { DrawerMenu } from './DrawerMenu/DrawerMenu';
+import { DrawerMenu } from './DrawerMenu/DrawerMenu.tsx';
 import DarkModeOutlined from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlined from '@mui/icons-material/LightModeOutlined';
 import { useThemeMode } from 'hooks/useThemeMode';
-import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
+import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton.tsx';
 import { CommandBar } from 'component/commandBar/CommandBar';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({

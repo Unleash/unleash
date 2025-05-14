@@ -3,15 +3,15 @@ import type {
     IFeatureToggleClient,
     IStrategyConfig,
     PartialDeep,
-} from '../../types';
-import { ensureStringValue, mapValues } from '../../util';
-import type { Db } from '../../db/db';
-import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
+} from '../../types/index.js';
+import { ensureStringValue, mapValues } from '../../util/index.js';
+import type { Db } from '../../db/db.js';
+import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
 import Raw = Knex.Raw;
-import metricsHelper from '../../util/metrics-helper';
-import { DB_TIME } from '../../metric-events';
+import metricsHelper from '../../util/metrics-helper.js';
+import { DB_TIME } from '../../metric-events.js';
 import type EventEmitter from 'events';
-import type { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type';
+import type { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type.js';
 
 export default class ClientFeatureToggleReadModel
     implements IClientFeatureToggleReadModel

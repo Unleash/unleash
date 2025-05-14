@@ -1,13 +1,13 @@
-import { tagSchema } from './tag-schema';
-import NameExistsError from '../error/name-exists-error';
-import { TagCreatedEvent, TagDeletedEvent } from '../types/events';
-import type { Logger } from '../logger';
-import type { IUnleashStores } from '../types/stores';
-import type { IUnleashConfig } from '../types/option';
-import type { ITagStore } from '../types/stores/tag-store';
-import type { ITag } from '../types/model';
-import type EventService from '../features/events/event-service';
-import type { IAuditUser } from '../types';
+import { tagSchema } from './tag-schema.js';
+import NameExistsError from '../error/name-exists-error.js';
+import { TagCreatedEvent, TagDeletedEvent } from '../types/index.js';
+import type { Logger } from '../logger.js';
+import type { IUnleashStores } from '../types/stores.js';
+import type { IUnleashConfig } from '../types/option.js';
+import type { ITagStore } from '../types/stores/tag-store.js';
+import type { ITag } from '../tags/index.js';
+import type EventService from '../features/events/event-service.js';
+import type { IAuditUser } from '../types/index.js';
 
 export default class TagService {
     private tagStore: ITagStore;
@@ -78,5 +78,3 @@ export default class TagService {
         );
     }
 }
-
-module.exports = TagService;

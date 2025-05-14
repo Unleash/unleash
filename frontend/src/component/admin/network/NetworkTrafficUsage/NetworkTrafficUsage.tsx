@@ -18,15 +18,15 @@ import {
 import { Bar } from 'react-chartjs-2';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin';
-import { PeriodSelector } from './PeriodSelector';
+import { PeriodSelector } from './PeriodSelector.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { OverageInfo, RequestSummary } from './RequestSummary';
-import { currentMonth } from './dates';
-import { getChartLabel } from './chart-functions';
-import { useTrafficStats } from './hooks/useStats';
-import { BoldText, StyledBox, TopRow } from './SharedComponents';
-import { useChartDataSelection } from './hooks/useChartDataSelection';
-import { useTrafficBundles } from '../../../../hooks/api/getters/useTrafficBundles/useTrafficBundles';
+import { OverageInfo, RequestSummary } from './RequestSummary.tsx';
+import { currentMonth } from './dates.ts';
+import { getChartLabel } from './chart-functions.ts';
+import { useTrafficStats } from './hooks/useStats.ts';
+import { BoldText, StyledBox, TopRow } from './SharedComponents.tsx';
+import { useChartDataSelection } from './hooks/useChartDataSelection.ts';
+import { useTrafficBundles } from '../../../../hooks/api/getters/useTrafficBundles/useTrafficBundles.ts';
 
 const TrafficInfoBoxes = styled('div')(({ theme }) => ({
     display: 'grid',

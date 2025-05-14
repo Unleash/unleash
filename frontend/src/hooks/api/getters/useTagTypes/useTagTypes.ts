@@ -2,7 +2,7 @@ import useSWR, { mutate, type SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import type { ITagType } from 'interfaces/tags';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 
 const useTagTypes = (options: SWRConfiguration = {}) => {
     const fetcher = async () => {

@@ -2,7 +2,7 @@ import type { IPermission } from 'interfaces/user';
 import {
     type IUseAuthEndpointOutput,
     useAuthEndpoint,
-} from './useAuthEndpoint';
+} from './useAuthEndpoint.js';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type { IUiConfig } from 'interfaces/uiConfig';
 import { MAINTENANCE_MODE_PERMISSIONS } from '@server/types/permissions';

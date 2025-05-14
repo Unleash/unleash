@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectOverviewSchemaOnboardingStatusOneOf } from './projectOverviewSchemaOnboardingStatusOneOf';
-import type { ProjectOverviewSchemaOnboardingStatusOneOfThree } from './projectOverviewSchemaOnboardingStatusOneOfThree';
+import type { ProjectOverviewSchemaOnboardingStatusOneOf } from './projectOverviewSchemaOnboardingStatusOneOf.js';
+import type { ProjectOverviewSchemaOnboardingStatusOneOfThree } from './projectOverviewSchemaOnboardingStatusOneOfThree.js';
 
 /**
  * The current onboarding status of the project.

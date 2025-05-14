@@ -1,31 +1,33 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../test/e2e/helpers/test-helper';
+} from '../../../test/e2e/helpers/test-helper.js';
 import type {
     IConstraint,
     IFeatureOverview,
     IFeatureToggleClient,
     ISegment,
-} from '../../types/model';
-import { randomId } from '../../util/random-id';
-import User from '../../types/user';
+} from '../../types/model.js';
+import { randomId } from '../../util/random-id.js';
+import User from '../../types/user.js';
 import {
     DEFAULT_SEGMENT_VALUES_LIMIT,
     DEFAULT_STRATEGY_SEGMENTS_LIMIT,
-} from '../../util/segments';
-import { collectIds } from '../../util/collect-ids';
-import { arraysHaveSameItems } from '../../util/arraysHaveSameItems';
+} from '../../util/segments.js';
+import { collectIds } from '../../util/collect-ids.js';
+import { arraysHaveSameItems } from '../../util/arraysHaveSameItems.js';
 import type {
     CreateFeatureSchema,
     CreateFeatureStrategySchema,
     FeatureStrategySchema,
     UpsertSegmentSchema,
-} from '../../openapi';
-import { DEFAULT_ENV, extractAuditInfoFromUser } from '../../util';
-import { DEFAULT_PROJECT, TEST_AUDIT_USER } from '../../types';
+} from '../../openapi/index.js';
+import { DEFAULT_ENV, extractAuditInfoFromUser } from '../../util/index.js';
+import { DEFAULT_PROJECT, TEST_AUDIT_USER } from '../../types/index.js';
 
 let db: ITestDb;
 let app: IUnleashTest;

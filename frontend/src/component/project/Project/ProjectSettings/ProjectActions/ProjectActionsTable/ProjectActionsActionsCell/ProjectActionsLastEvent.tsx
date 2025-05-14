@@ -1,7 +1,7 @@
 import type { IActionSet } from 'interfaces/action';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { useActionEvents } from 'hooks/api/getters/useActionEvents/useActionEvents';
-import { ProjectActionsEventsDetails } from '../ProjectActionsEventsModal/ProjectActionsEventsDetails/ProjectActionsEventsDetails';
+import { ProjectActionsEventsDetails } from '../ProjectActionsEventsModal/ProjectActionsEventsDetails/ProjectActionsEventsDetails.tsx';
 import { CircularProgress, styled } from '@mui/material';
 import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';

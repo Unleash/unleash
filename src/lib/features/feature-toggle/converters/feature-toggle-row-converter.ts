@@ -1,16 +1,16 @@
+import type { ITag } from '../../../tags/index.js';
 import type {
     PartialDeep,
     IFeatureToggleClient,
     IStrategyConfig,
     IFeatureToggleQuery,
-    ITag,
     IFlagResolver,
     IFeatureToggleListItem,
-} from '../../../types';
+} from '../../../types/index.js';
 
-import { mapValues, ensureStringValue } from '../../../util';
-import { sortStrategies } from '../../../util/sortStrategies';
-import type { FeatureConfigurationClient } from '../types/feature-toggle-strategies-store-type';
+import { mapValues, ensureStringValue } from '../../../util/index.js';
+import { sortStrategies } from '../../../util/sortStrategies.js';
+import type { FeatureConfigurationClient } from '../types/feature-toggle-strategies-store-type.js';
 
 export class FeatureToggleRowConverter {
     private flagResolver: IFlagResolver;

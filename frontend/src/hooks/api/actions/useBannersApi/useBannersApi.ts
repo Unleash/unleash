@@ -1,5 +1,5 @@
 import type { IInternalBanner } from 'interfaces/banner';
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
 const ENDPOINT = 'api/admin/banners';
 

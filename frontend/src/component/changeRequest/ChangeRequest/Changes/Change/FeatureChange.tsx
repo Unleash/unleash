@@ -7,14 +7,14 @@ import type {
 import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert, Box, styled } from '@mui/material';
-import { ToggleStatusChange } from './ToggleStatusChange';
-import { StrategyChange } from './StrategyChange';
-import { VariantPatch } from './VariantPatch/VariantPatch';
-import { EnvironmentStrategyExecutionOrder } from './EnvironmentStrategyExecutionOrder/EnvironmentStrategyExecutionOrder';
-import { ArchiveFeatureChange } from './ArchiveFeatureChange';
-import { DependencyChange } from './DependencyChange';
+import { ToggleStatusChange } from './ToggleStatusChange.tsx';
+import { StrategyChange } from './StrategyChange.tsx';
+import { VariantPatch } from './VariantPatch/VariantPatch.tsx';
+import { EnvironmentStrategyExecutionOrder } from './EnvironmentStrategyExecutionOrder/EnvironmentStrategyExecutionOrder.tsx';
+import { ArchiveFeatureChange } from './ArchiveFeatureChange.tsx';
+import { DependencyChange } from './DependencyChange.tsx';
 import { Link } from 'react-router-dom';
-import { ReleasePlanChange } from './ReleasePlanChange';
+import { ReleasePlanChange } from './ReleasePlanChange.tsx';
 
 const StyledSingleChangeBox = styled(Box, {
     shouldForwardProp: (prop: string) => !prop.startsWith('$'),

@@ -1,9 +1,9 @@
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { styled } from '@mui/material';
-import { StatusBox } from '../ProjectInsightsStats/StatusBox';
+import { StatusBox } from '../ProjectInsightsStats/StatusBox.tsx';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { Link } from 'react-router-dom';
-import type { ProjectInsightsSchemaMembers } from '../../../../../openapi';
+import type { ProjectInsightsSchemaMembers } from 'openapi';
 
 interface IProjectMembersProps {
     members: ProjectInsightsSchemaMembers;

@@ -6,10 +6,10 @@ import {
     useSearch,
     includesFilter,
     getColumnValues,
-} from './useSearch';
+} from './useSearch.ts';
 import type { FC } from 'react';
 import { render, screen } from '@testing-library/react';
-import type { IFeatureFlagListItem } from '../interfaces/featureToggle';
+import type { IFeatureFlagListItem } from '../interfaces/featureToggle.ts';
 
 const columns = [
     {

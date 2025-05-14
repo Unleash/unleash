@@ -1,5 +1,5 @@
 import express from 'express';
-import { conditionalMiddleware } from '../../../../lib/middleware/conditional-middleware';
+import { conditionalMiddleware } from '../../../../lib/middleware/conditional-middleware.js';
 import supertest from 'supertest';
 
 test('disabled middleware should not block paths that use the same path', async () => {

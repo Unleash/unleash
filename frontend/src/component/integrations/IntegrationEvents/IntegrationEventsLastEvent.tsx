@@ -1,11 +1,11 @@
 import type { AddonSchema } from 'openapi';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { useIntegrationEvents } from 'hooks/api/getters/useIntegrationEvents/useIntegrationEvents';
-import { IntegrationEventsDetails } from './IntegrationEventsDetails/IntegrationEventsDetails';
+import { IntegrationEventsDetails } from './IntegrationEventsDetails/IntegrationEventsDetails.tsx';
 import { Box, type BoxProps, styled } from '@mui/material';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHMS } from 'utils/formatDate';
-import { IntegrationEventsStateIcon } from './IntegrationEventsStateIcon';
+import { IntegrationEventsStateIcon } from './IntegrationEventsStateIcon.tsx';
 
 const StyledTooltipLink = styled(TooltipLink)({
     display: 'flex',

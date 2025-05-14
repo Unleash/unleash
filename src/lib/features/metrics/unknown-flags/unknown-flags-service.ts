@@ -1,11 +1,11 @@
-import type { Logger } from '../../../logger';
+import type { Logger } from '../../../logger.js';
 import type {
     IFlagResolver,
     IUnknownFlagsStore,
     IUnleashConfig,
-} from '../../../types';
-import type { IUnleashStores } from '../../../types';
-import type { UnknownFlag } from './unknown-flags-store';
+} from '../../../types/index.js';
+import type { IUnleashStores } from '../../../types/index.js';
+import type { UnknownFlag } from './unknown-flags-store.js';
 
 export const MAX_UNKNOWN_FLAGS = 10;
 

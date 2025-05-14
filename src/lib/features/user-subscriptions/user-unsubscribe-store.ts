@@ -1,5 +1,5 @@
-import type { Db } from '../../db/db';
-import type { IUserUnsubscribeStore } from './user-unsubscribe-store-type';
+import type { Db } from '../../db/db.js';
+import type { IUserUnsubscribeStore } from './user-unsubscribe-store-type.js';
 
 const COLUMNS = ['user_id', 'subscription', 'created_at'];
 export const TABLE = 'user_unsubscription';

@@ -1,4 +1,4 @@
-import { getStatus } from './getStatus';
+import { getStatus } from './getStatus.js';
 import { PRODUCTION } from 'constants/environmentTypes';
 import type { FeatureSearchEnvironmentSchema } from 'openapi';
 

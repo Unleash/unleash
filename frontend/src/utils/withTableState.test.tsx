@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { useReactTable } from '@tanstack/react-table';
-import { withTableState } from './withTableState';
+import { withTableState } from './withTableState.ts';
 import { useState } from 'react';
 import { render } from '@testing-library/react';
 

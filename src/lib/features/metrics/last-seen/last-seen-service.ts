@@ -1,8 +1,8 @@
-import type { Logger } from '../../../logger';
-import type { IUnleashConfig } from '../../../server-impl';
-import type { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v2-type';
-import type { ILastSeenStore } from './types/last-seen-store-type';
-import type { IUnleashStores } from '../../../types';
+import type { Logger } from '../../../logger.js';
+import type { IUnleashConfig } from '../../../types/index.js';
+import type { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v2-type.js';
+import type { ILastSeenStore } from './types/last-seen-store-type.js';
+import type { IUnleashStores } from '../../../types/index.js';
 
 export type LastSeenInput = {
     featureName: string;

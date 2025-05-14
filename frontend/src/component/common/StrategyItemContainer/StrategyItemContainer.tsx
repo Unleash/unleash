@@ -5,10 +5,10 @@ import { Box, IconButton, Typography, styled } from '@mui/material';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { formatStrategyName } from 'utils/strategyNames';
 import type { PlaygroundStrategySchema } from 'openapi';
-import { Badge } from '../Badge/Badge';
+import { Badge } from '../Badge/Badge.tsx';
 import { Link } from 'react-router-dom';
-import { Truncator } from '../Truncator/Truncator';
-import { disabledStrategyClassName } from './disabled-strategy-utils';
+import { Truncator } from '../Truncator/Truncator.tsx';
+import { disabledStrategyClassName } from './disabled-strategy-utils.ts';
 
 type StrategyItemContainerProps = {
     strategyHeaderLevel?: 1 | 2 | 3 | 4 | 5 | 6;

@@ -1,4 +1,4 @@
-import { UnleashError } from './unleash-error';
+import { UnleashError } from './unleash-error.js';
 
 export class RateLimitError extends UnleashError {
     statusCode = 429;

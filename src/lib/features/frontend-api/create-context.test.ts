@@ -1,6 +1,6 @@
 // Copy of https://github.com/Unleash/unleash-proxy/blob/main/src/test/create-context.test.ts.
 
-import { createContext, enrichContextWithIp } from './create-context';
+import { createContext, enrichContextWithIp } from './create-context.js';
 
 test('should remove undefined properties', () => {
     const context = createContext({

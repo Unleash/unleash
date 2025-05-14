@@ -1,4 +1,4 @@
-import { clientRegisterSchema, clientMetricsSchema } from './schema';
+import { clientRegisterSchema, clientMetricsSchema } from './schema.js';
 
 test('clientRegisterSchema should allow empty ("") instanceId', () => {
     const { value } = clientRegisterSchema.validate({

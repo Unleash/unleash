@@ -1,7 +1,7 @@
 import type { ReactNode, VFC } from 'react';
 import { Box } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
-import { ChangeItemWrapper } from './StrategyChange';
+import { ChangeItemWrapper } from './StrategyChange.tsx';
 
 interface IToggleStatusChange {
     enabled: boolean;

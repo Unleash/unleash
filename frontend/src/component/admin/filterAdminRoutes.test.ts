@@ -1,4 +1,4 @@
-import { filterRoutesByPlanData } from './filterRoutesByPlanData';
+import { filterRoutesByPlanData } from './filterRoutesByPlanData.js';
 
 describe('filterRoutesByPlanData - open souce routes', () => {
     test('open source - should show menu item if mode paid plan mode is not defined', () => {

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ReleasePlanSchemaDiscriminator } from './releasePlanSchemaDiscriminator';
-import type { ReleasePlanMilestoneSchema } from './releasePlanMilestoneSchema';
+import type { ReleasePlanSchemaDiscriminator } from './releasePlanSchemaDiscriminator.js';
+import type { ReleasePlanMilestoneSchema } from './releasePlanMilestoneSchema.js';
 
 /**
  * Schema representing the creation of a release plan.

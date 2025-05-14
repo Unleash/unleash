@@ -14,7 +14,7 @@ import {
     ConstraintListItem,
     ConstraintsList,
 } from 'component/common/ConstraintsList/ConstraintsList';
-import { ConstraintAccordionView } from '../NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
+import { ConstraintAccordionView } from '../NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView.tsx';
 
 type SegmentItemProps = {
     segment: Partial<ISegment>;

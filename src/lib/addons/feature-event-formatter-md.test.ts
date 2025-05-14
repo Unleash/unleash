@@ -8,10 +8,10 @@ import {
     FEATURE_STRATEGY_UPDATE,
     type IEvent,
     PROJECT_ARCHIVED,
-    SYSTEM_USER_ID,
-} from '../types';
+} from '../events/index.js';
+import { SYSTEM_USER_ID } from '../types/index.js';
 
-import { FeatureEventFormatterMd } from './feature-event-formatter-md';
+import { FeatureEventFormatterMd } from './feature-event-formatter-md.js';
 import {
     DATE_AFTER,
     DATE_BEFORE,
@@ -28,7 +28,7 @@ import {
     STR_CONTAINS,
     STR_ENDS_WITH,
     STR_STARTS_WITH,
-} from '../util';
+} from '../util/index.js';
 
 const testCases: [string, IEvent][] = [
     [

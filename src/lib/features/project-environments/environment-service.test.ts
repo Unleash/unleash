@@ -1,15 +1,17 @@
-import EnvironmentService from './environment-service';
-import { createTestConfig } from '../../../test/config/test-config';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import NotFoundError from '../../error/notfound-error';
+import EnvironmentService from './environment-service.js';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import NotFoundError from '../../error/notfound-error.js';
 import {
     type IUnleashStores,
     SYSTEM_USER,
     SYSTEM_USER_AUDIT,
-} from '../../types';
-import NameExistsError from '../../error/name-exists-error';
-import type { EventService } from '../../services';
-import { createEventsService } from '../events/createEventsService';
+} from '../../types/index.js';
+import NameExistsError from '../../error/name-exists-error.js';
+import type { EventService } from '../../services/index.js';
+import { createEventsService } from '../events/createEventsService.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

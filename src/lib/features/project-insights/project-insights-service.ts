@@ -5,14 +5,14 @@ import type {
     IFeatureTypeStore,
     IProjectStore,
     IUnleashStores,
-} from '../../types';
-import { calculateAverageTimeToProd } from '../feature-toggle/time-to-production/time-to-production';
-import type { IProjectStatsStore } from '../../types/stores/project-stats-store-type';
+} from '../../types/index.js';
+import { calculateAverageTimeToProd } from '../feature-toggle/time-to-production/time-to-production.js';
+import type { IProjectStatsStore } from '../../types/stores/project-stats-store-type.js';
 import type {
     ProjectDoraMetricsSchema,
     ProjectInsightsSchema,
-} from '../../openapi';
-import { calculateProjectHealth } from '../../domain/project-health/project-health';
+} from '../../openapi/index.js';
+import { calculateProjectHealth } from '../../domain/project-health/project-health.js';
 import { subDays } from 'date-fns';
 
 export class ProjectInsightsService {

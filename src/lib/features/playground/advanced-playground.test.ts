@@ -1,10 +1,12 @@
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../test/e2e/helpers/test-helper';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
-import type { AdvancedPlaygroundResponseSchema } from '../../openapi';
+} from '../../../test/e2e/helpers/test-helper.js';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import type { AdvancedPlaygroundResponseSchema } from '../../openapi/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

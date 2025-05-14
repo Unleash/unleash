@@ -2,15 +2,15 @@ import {
     UserPreferenceUpdatedEvent,
     type IUnleashConfig,
     type IUnleashStores,
-} from '../../types';
-import type { Logger } from '../../logger';
-import type { IAuditUser } from '../../types/user';
+} from '../../types/index.js';
+import type { Logger } from '../../logger.js';
+import type { IAuditUser } from '../../types/user.js';
 import type {
     IUserUnsubscribeStore,
     UnsubscribeEntry,
-} from './user-unsubscribe-store-type';
-import type EventService from '../events/event-service';
-import type { IUserSubscriptionsReadModel } from './user-subscriptions-read-model-type';
+} from './user-unsubscribe-store-type.js';
+import type EventService from '../events/event-service.js';
+import type { IUserSubscriptionsReadModel } from './user-subscriptions-read-model-type.js';
 
 export class UserSubscriptionsService {
     private userUnsubscribeStore: IUserUnsubscribeStore;

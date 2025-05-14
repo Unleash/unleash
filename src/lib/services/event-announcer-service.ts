@@ -1,8 +1,8 @@
-import type { IUnleashConfig } from '../types/option';
-import type { IUnleashStores } from '../types/stores';
-import type { Logger } from '../logger';
-import type { IEventStore } from '../types/stores/event-store';
-import type { IFlagResolver } from '../types';
+import type { IUnleashConfig } from '../types/option.js';
+import type { IUnleashStores } from '../types/stores.js';
+import type { Logger } from '../logger.js';
+import type { IEventStore } from '../types/stores/event-store.js';
+import type { IFlagResolver } from '../types/index.js';
 
 export default class EventAnnouncer {
     private logger: Logger;

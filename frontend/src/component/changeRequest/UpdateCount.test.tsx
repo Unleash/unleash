@@ -1,5 +1,5 @@
 import { render } from 'utils/testRenderer';
-import { UpdateCount } from './UpdateCount';
+import { UpdateCount } from './UpdateCount.tsx';
 import { screen } from '@testing-library/react';
 
 test('Show only features count when no segments', async () => {

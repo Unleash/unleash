@@ -1,4 +1,4 @@
-import { StrategyParameter } from './StrategyParameter/StrategyParameter';
+import { StrategyParameter } from './StrategyParameter/StrategyParameter.tsx';
 import type React from 'react';
 import type { IStrategyParameter } from 'interfaces/strategy';
 

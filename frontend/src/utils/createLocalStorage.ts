@@ -1,5 +1,5 @@
-import { basePath } from './formatPath';
-import { getLocalStorageItem, setLocalStorageItem } from './storage';
+import { basePath } from './formatPath.js';
+import { getLocalStorageItem, setLocalStorageItem } from './storage.js';
 
 export const createLocalStorage = <T extends object | string>(
     key: string,

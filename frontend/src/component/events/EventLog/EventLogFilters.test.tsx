@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useEventLogFilters } from './EventLogFilters';
+import { useEventLogFilters } from './EventLogFilters.tsx';
 
 const allFilterKeys = ['from', 'to', 'createdBy', 'type', 'project', 'feature'];
 

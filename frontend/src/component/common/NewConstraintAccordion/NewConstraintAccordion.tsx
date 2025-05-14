@@ -1,7 +1,7 @@
 import type { IConstraint } from 'interfaces/strategy';
 
-import { ConstraintAccordionEdit } from './ConstraintAccordionEdit/ConstraintAccordionEdit';
-import { ConstraintAccordionView } from './ConstraintAccordionView/ConstraintAccordionView';
+import { ConstraintAccordionEdit } from './ConstraintAccordionEdit/ConstraintAccordionEdit.tsx';
+import { ConstraintAccordionView } from './ConstraintAccordionView/ConstraintAccordionView.tsx';
 
 export interface IConstraintAccordionProps {
     compact: boolean;

@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { tagSchema } from './tag-schema';
+import { tagSchema } from './tag-schema.js';
 
 export const createFeatureSchema = {
     $id: '#/components/schemas/createFeatureSchema',

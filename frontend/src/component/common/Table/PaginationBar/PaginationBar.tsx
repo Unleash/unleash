@@ -1,6 +1,6 @@
 import type React from 'react';
 import { Box, Typography, Button, styled } from '@mui/material';
-import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender.tsx';
 import { ReactComponent as ArrowRight } from 'assets/icons/arrowRight.svg';
 import { ReactComponent as ArrowLeft } from 'assets/icons/arrowLeft.svg';
 

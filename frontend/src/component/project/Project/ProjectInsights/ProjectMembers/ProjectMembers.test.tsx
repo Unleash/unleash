@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { ProjectMembers } from './ProjectMembers';
+import { ProjectMembers } from './ProjectMembers.tsx';
 
 test('Show outdated project members', async () => {
     const members = {

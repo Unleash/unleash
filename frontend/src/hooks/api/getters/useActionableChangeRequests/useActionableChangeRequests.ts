@@ -1,7 +1,7 @@
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { ActionableChangeRequestsSchema } from 'openapi/models/actionableChangeRequestsSchema';
-import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
+import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR.js';
 
 interface IUseActionableChangeRequestsOutput {
     total?: number;

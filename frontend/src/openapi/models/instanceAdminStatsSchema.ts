@@ -3,11 +3,11 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { InstanceAdminStatsSchemaActiveUsers } from './instanceAdminStatsSchemaActiveUsers';
-import type { InstanceAdminStatsSchemaApiTokens } from './instanceAdminStatsSchemaApiTokens';
-import type { InstanceAdminStatsSchemaClientAppsItem } from './instanceAdminStatsSchemaClientAppsItem';
-import type { InstanceAdminStatsSchemaPreviousDayMetricsBucketsCount } from './instanceAdminStatsSchemaPreviousDayMetricsBucketsCount';
-import type { InstanceAdminStatsSchemaProductionChanges } from './instanceAdminStatsSchemaProductionChanges';
+import type { InstanceAdminStatsSchemaActiveUsers } from './instanceAdminStatsSchemaActiveUsers.js';
+import type { InstanceAdminStatsSchemaApiTokens } from './instanceAdminStatsSchemaApiTokens.js';
+import type { InstanceAdminStatsSchemaClientAppsItem } from './instanceAdminStatsSchemaClientAppsItem.js';
+import type { InstanceAdminStatsSchemaPreviousDayMetricsBucketsCount } from './instanceAdminStatsSchemaPreviousDayMetricsBucketsCount.js';
+import type { InstanceAdminStatsSchemaProductionChanges } from './instanceAdminStatsSchemaProductionChanges.js';
 
 /**
  * Information about an instance and statistics about usage of various features of Unleash

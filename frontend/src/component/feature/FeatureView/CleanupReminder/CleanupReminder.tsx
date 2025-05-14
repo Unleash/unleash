@@ -9,17 +9,17 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import {
     DELETE_FEATURE,
     UPDATE_FEATURE,
-} from '../../../providers/AccessProvider/permissions';
-import { MarkCompletedDialogue } from '../FeatureOverview/FeatureLifecycle/MarkCompletedDialogue';
-import { populateCurrentStage } from '../FeatureOverview/FeatureLifecycle/populateCurrentStage';
-import { isSafeToArchive } from '../FeatureOverview/FeatureLifecycle/isSafeToArchive';
+} from '../../../providers/AccessProvider/permissions.ts';
+import { MarkCompletedDialogue } from '../FeatureOverview/FeatureLifecycle/MarkCompletedDialogue.tsx';
+import { populateCurrentStage } from '../FeatureOverview/FeatureLifecycle/populateCurrentStage.ts';
+import { isSafeToArchive } from '../FeatureOverview/FeatureLifecycle/isSafeToArchive.ts';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useNavigate } from 'react-router-dom';
-import { useFlagReminders } from './useFlagReminders';
+import { useFlagReminders } from './useFlagReminders.ts';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { useUncomplete } from '../FeatureOverview/FeatureLifecycle/useUncomplete';
+import { useUncomplete } from '../FeatureOverview/FeatureLifecycle/useUncomplete.ts';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     marginRight: theme.spacing(2),

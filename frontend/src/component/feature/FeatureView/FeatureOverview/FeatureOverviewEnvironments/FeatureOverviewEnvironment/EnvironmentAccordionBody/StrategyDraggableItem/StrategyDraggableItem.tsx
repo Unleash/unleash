@@ -6,7 +6,7 @@ import {
 } from 'react';
 import { Box } from '@mui/material';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { StrategyItem } from './StrategyItem/StrategyItem';
+import { StrategyItem } from './StrategyItem/StrategyItem.tsx';
 
 type StrategyDraggableItemProps = {
     headerItemsRight: ReactNode;

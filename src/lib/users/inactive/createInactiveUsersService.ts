@@ -1,9 +1,9 @@
-import { InactiveUsersService } from './inactive-users-service';
-import type { IUnleashConfig } from '../../server-impl';
-import type { Db } from '../../server-impl';
-import { InactiveUsersStore } from './inactive-users-store';
-import { FakeInactiveUsersStore } from './fakes/fake-inactive-users-store';
-import type { UserService } from '../../services';
+import { InactiveUsersService } from './inactive-users-service.js';
+import type { IUnleashConfig } from '../../types/index.js';
+import type { Db } from '../../types/index.js';
+import { InactiveUsersStore } from './inactive-users-store.js';
+import { FakeInactiveUsersStore } from './fakes/fake-inactive-users-store.js';
+import type { UserService } from '../../services/index.js';
 
 export const createInactiveUsersService = (
     db: Db,

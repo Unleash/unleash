@@ -4,23 +4,23 @@ import { isStringOperator, type Operator } from 'constants/operators';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { useCallback, useRef, type FC } from 'react';
 import { operatorsForContext } from 'utils/operatorsForContext';
-import { ConstraintOperatorSelect } from './ConstraintOperatorSelect';
+import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import Delete from '@mui/icons-material/Delete';
-import { ValueList } from './ValueList';
+import { ValueList } from './ValueList.tsx';
 import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive.svg';
 import { ReactComponent as CaseInsensitiveIcon } from 'assets/icons/case-insensitive.svg';
-import { AddValuesWidget } from './AddValuesWidget';
+import { AddValuesWidget } from './AddValuesWidget.tsx';
 
 import { ReactComponent as EqualsIcon } from 'assets/icons/constraint-equals.svg';
 import { ReactComponent as NotEqualsIcon } from 'assets/icons/constraint-not-equals.svg';
-import { AddSingleValueWidget } from './AddSingleValueWidget';
-import { ConstraintDateInput } from './ConstraintDateInput';
+import { AddSingleValueWidget } from './AddSingleValueWidget.tsx';
+import { ConstraintDateInput } from './ConstraintDateInput.tsx';
 import {
     LegalValuesSelector,
     SingleLegalValueSelector,
-} from './LegalValuesSelector';
-import { useEditableConstraint } from './useEditableConstraint/useEditableConstraint';
+} from './LegalValuesSelector.tsx';
+import { useEditableConstraint } from './useEditableConstraint/useEditableConstraint.js';
 import type { IConstraint } from 'interfaces/strategy';
 import {
     type EditableConstraint as EditableConstraintType,
@@ -28,8 +28,8 @@ import {
     isMultiValueConstraint,
     isNumberConstraint,
     isSemVerConstraint,
-} from './useEditableConstraint/editable-constraint-type';
-import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator';
+} from './useEditableConstraint/editable-constraint-type.ts';
+import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator.ts';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),

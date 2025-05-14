@@ -12,14 +12,14 @@ import {
     TextField,
 } from '@mui/material';
 import { Alert } from '@mui/material';
-import { AutoCreateForm } from '../AutoCreateForm/AutoCreateForm';
+import { AutoCreateForm } from '../AutoCreateForm/AutoCreateForm.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useAuthSettingsApi from 'hooks/api/actions/useAuthSettingsApi/useAuthSettingsApi';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
-import { SsoGroupSettings } from '../SsoGroupSettings';
+import { SsoGroupSettings } from '../SsoGroupSettings.tsx';
 import type { IRole } from 'interfaces/role';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 

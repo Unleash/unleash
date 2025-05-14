@@ -1,14 +1,14 @@
-import type { Logger, LogProvider } from '../logger';
+import type { Logger, LogProvider } from '../logger.js';
 
-import NotFoundError from '../error/notfound-error';
+import NotFoundError from '../error/notfound-error.js';
 import type {
     IEditableStrategy,
     IMinimalStrategyRow,
     IStrategy,
     IStrategyImport,
     IStrategyStore,
-} from '../types/stores/strategy-store';
-import type { Db } from './db';
+} from '../types/stores/strategy-store.js';
+import type { Db } from './db.js';
 
 const STRATEGY_COLUMNS = [
     'title',
@@ -182,5 +182,3 @@ export default class StrategyStore implements IStrategyStore {
             .delete();
     }
 }
-
-module.exports = StrategyStore;

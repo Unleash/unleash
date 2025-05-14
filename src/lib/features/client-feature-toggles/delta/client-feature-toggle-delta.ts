@@ -1,23 +1,22 @@
-import {
-    FEATURE_PROJECT_CHANGE,
-    type IEventStore,
-    type IFeatureToggleDeltaQuery,
-    type IFeatureToggleQuery,
-    type IFlagResolver,
-    type ISegmentReadModel,
-    type IUnleashConfig,
-} from '../../../types';
-import type ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service';
-import { UPDATE_REVISION } from '../../feature-toggle/configuration-revision-service';
-import { DeltaCache } from './delta-cache';
+import type {
+    IEventStore,
+    IFeatureToggleDeltaQuery,
+    IFeatureToggleQuery,
+    IFlagResolver,
+    ISegmentReadModel,
+    IUnleashConfig,
+} from '../../../types/index.js';
+import type ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service.js';
+import { UPDATE_REVISION } from '../../feature-toggle/configuration-revision-service.js';
+import { DeltaCache } from './delta-cache.js';
 import type {
     FeatureConfigurationDeltaClient,
     IClientFeatureToggleDeltaReadModel,
-} from './client-feature-toggle-delta-read-model-type';
-import { CLIENT_DELTA_MEMORY } from '../../../metric-events';
+} from './client-feature-toggle-delta-read-model-type.js';
+import { CLIENT_DELTA_MEMORY } from '../../../metric-events.js';
 import EventEmitter from 'events';
-import type { Logger } from '../../../logger';
-import type { ClientFeaturesDeltaSchema } from '../../../openapi';
+import type { Logger } from '../../../logger.js';
+import type { ClientFeaturesDeltaSchema } from '../../../openapi/index.js';
 import {
     DELTA_EVENT_TYPES,
     type DeltaEvent,
@@ -25,7 +24,8 @@ import {
     isDeltaFeatureRemovedEvent,
     isDeltaFeatureUpdatedEvent,
     isDeltaSegmentEvent,
-} from './client-feature-toggle-delta-types';
+} from './client-feature-toggle-delta-types.js';
+import { FEATURE_PROJECT_CHANGE } from '../../../events/index.js';
 
 type EnvironmentRevisions = Record<string, DeltaCache>;
 

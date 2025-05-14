@@ -1,20 +1,20 @@
-import NameExistsError from '../../error/name-exists-error';
+import NameExistsError from '../../error/name-exists-error.js';
 
-import { tagTypeSchema } from '../../services/tag-type-schema';
+import { tagTypeSchema } from '../../services/tag-type-schema.js';
 
-import type { IUnleashStores } from '../../types/stores';
+import type { IUnleashStores } from '../../types/stores.js';
 import {
     TagTypeCreatedEvent,
     TagTypeDeletedEvent,
     TagTypeUpdatedEvent,
-} from '../../types/events';
+} from '../../types/index.js';
 
-import type { Logger } from '../../logger';
-import type { ITagType, ITagTypeStore } from './tag-type-store-type';
-import type { IUnleashConfig } from '../../types/option';
-import type EventService from '../events/event-service';
-import type { IAuditUser } from '../../types';
-import { NotFoundError } from '../../error';
+import type { Logger } from '../../logger.js';
+import type { ITagType, ITagTypeStore } from './tag-type-store-type.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import type EventService from '../events/event-service.js';
+import type { IAuditUser } from '../../types/index.js';
+import { NotFoundError } from '../../error/index.js';
 
 export default class TagTypeService {
     private tagTypeStore: ITagTypeStore;
@@ -106,5 +106,3 @@ export default class TagTypeService {
         return data;
     }
 }
-
-module.exports = TagTypeService;

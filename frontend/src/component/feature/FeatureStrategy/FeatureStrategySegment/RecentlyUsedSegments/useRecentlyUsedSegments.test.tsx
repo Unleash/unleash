@@ -1,4 +1,4 @@
-import { useRecentlyUsedSegments } from './useRecentlyUsedSegments';
+import { useRecentlyUsedSegments } from './useRecentlyUsedSegments.ts';
 import { renderHook, act } from '@testing-library/react';
 
 describe('useRecentlyUsedSegments', () => {

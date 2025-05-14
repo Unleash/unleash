@@ -11,7 +11,7 @@ import type {
 import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
 import { ReactComponent as LogoIconWhite } from 'assets/icons/logoWhiteBg.svg';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
-import { NetworkPrometheusAPIWarning } from '../NetworkPrometheusAPIWarning';
+import { NetworkPrometheusAPIWarning } from '../NetworkPrometheusAPIWarning.tsx';
 
 const StyleUnleashContainer = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(18),

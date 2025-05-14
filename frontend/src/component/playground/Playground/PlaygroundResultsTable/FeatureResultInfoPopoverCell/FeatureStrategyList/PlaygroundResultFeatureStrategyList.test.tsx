@@ -2,7 +2,7 @@ import { vi } from 'vitest';
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
-import { PlaygroundResultFeatureStrategyList } from './PlaygroundResultsFeatureStrategyList';
+import { PlaygroundResultFeatureStrategyList } from './PlaygroundResultsFeatureStrategyList.tsx';
 
 const testCases = [
     {

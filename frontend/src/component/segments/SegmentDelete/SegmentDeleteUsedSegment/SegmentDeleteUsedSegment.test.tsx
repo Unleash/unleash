@@ -1,6 +1,6 @@
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import { SegmentDeleteUsedSegment } from './SegmentDeleteUsedSegment';
+import { SegmentDeleteUsedSegment } from './SegmentDeleteUsedSegment.tsx';
 
 describe('SegmentDeleteUsedSegment', () => {
     it('should link to change requests for change request strategies', async () => {

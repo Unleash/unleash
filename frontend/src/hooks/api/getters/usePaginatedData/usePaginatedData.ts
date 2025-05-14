@@ -1,7 +1,7 @@
 import useSWR, { type SWRConfiguration } from 'swr';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
-import { useClearSWRCache } from '../../../useClearSWRCache';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { useClearSWRCache } from '../../../useClearSWRCache.js';
 
 type GenericSearchOutput<T> = {
     loading: boolean;

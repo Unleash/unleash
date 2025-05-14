@@ -3,11 +3,11 @@ import type {
     IUnleashContextDefinition,
 } from 'interfaces/context';
 import type { IConstraint } from 'interfaces/strategy';
-import { DateSingleValue } from '../DateSingleValue/DateSingleValue';
-import { FreeTextInput } from '../FreeTextInput/FreeTextInput';
-import { RestrictiveLegalValues } from '../RestrictiveLegalValues/RestrictiveLegalValues';
-import { SingleLegalValue } from '../SingleLegalValue/SingleLegalValue';
-import { SingleValue } from '../SingleValue/SingleValue';
+import { DateSingleValue } from '../DateSingleValue/DateSingleValue.tsx';
+import { FreeTextInput } from '../FreeTextInput/FreeTextInput.tsx';
+import { RestrictiveLegalValues } from '../RestrictiveLegalValues/RestrictiveLegalValues.tsx';
+import { SingleLegalValue } from '../SingleLegalValue/SingleLegalValue.tsx';
+import { SingleValue } from '../SingleValue/SingleValue.tsx';
 import {
     IN_OPERATORS_LEGAL_VALUES,
     STRING_OPERATORS_FREETEXT,
@@ -19,7 +19,7 @@ import {
     DATE_OPERATORS_SINGLE_VALUE,
     IN_OPERATORS_FREETEXT,
     type Input,
-} from '../useConstraintInput/useConstraintInput';
+} from '../useConstraintInput/useConstraintInput.tsx';
 import type React from 'react';
 
 interface IResolveInputProps {

@@ -1,11 +1,13 @@
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import metricsExample from '../../../examples/client-metrics.json';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import { REQUEST_TIME } from '../../../../lib/metric-events';
+} from '../../helpers/test-helper.js';
+import metricsExample from '../../../examples/client-metrics.json' with {
+    type: 'json',
+};
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { REQUEST_TIME } from '../../../../lib/metric-events.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

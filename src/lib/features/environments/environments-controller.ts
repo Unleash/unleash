@@ -1,30 +1,30 @@
 import type { Request, Response } from 'express';
-import Controller from '../../routes/controller';
-import type { IUnleashServices } from '../../types/services';
-import type { IUnleashConfig } from '../../types/option';
-import type EnvironmentService from '../project-environments/environment-service';
-import type { Logger } from '../../logger';
-import { ADMIN, NONE } from '../../types/permissions';
-import type { OpenApiService } from '../../services/openapi-service';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
+import Controller from '../../routes/controller.js';
+import type { IUnleashServices } from '../../services/index.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import type EnvironmentService from '../project-environments/environment-service.js';
+import type { Logger } from '../../logger.js';
+import { ADMIN, NONE } from '../../types/permissions.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
+import { createResponseSchema } from '../../openapi/util/create-response-schema.js';
 import {
     environmentsSchema,
     type EnvironmentsSchema,
-} from '../../openapi/spec/environments-schema';
+} from '../../openapi/spec/environments-schema.js';
 import {
     environmentSchema,
     type EnvironmentSchema,
-} from '../../openapi/spec/environment-schema';
-import type { SortOrderSchema } from '../../openapi/spec/sort-order-schema';
+} from '../../openapi/spec/environment-schema.js';
+import type { SortOrderSchema } from '../../openapi/spec/sort-order-schema.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../openapi/util/standard-responses';
+} from '../../openapi/util/standard-responses.js';
 import {
     environmentsProjectSchema,
     type EnvironmentsProjectSchema,
-} from '../../openapi/spec/environments-project-schema';
+} from '../../openapi/spec/environments-project-schema.js';
 
 interface EnvironmentParam {
     name: string;

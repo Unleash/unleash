@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Link as RouterLink } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ArchiveProjectDialogue } from '../../ArchiveProject/ArchiveProjectDialogue';
+import { ArchiveProjectDialogue } from '../../ArchiveProject/ArchiveProjectDialogue.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',

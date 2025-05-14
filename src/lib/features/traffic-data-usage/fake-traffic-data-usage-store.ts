@@ -2,8 +2,8 @@ import type {
     IStatTrafficUsageKey,
     IStatTrafficUsage,
     IStatMonthlyTrafficUsage,
-} from './traffic-data-usage-store-type';
-import type { ITrafficDataUsageStore } from '../../types';
+} from './traffic-data-usage-store-type.js';
+import type { ITrafficDataUsageStore } from '../../types/index.js';
 import {
     differenceInCalendarMonths,
     endOfDay,

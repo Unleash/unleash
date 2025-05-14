@@ -6,19 +6,23 @@ import { TabLink } from 'component/common/TabNav/TabLink';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useUiFlag } from 'hooks/useUiFlag';
 
-const NetworkOverview = lazy(() => import('./NetworkOverview/NetworkOverview'));
-const NetworkConnectedEdges = lazy(
-    () => import('./NetworkConnectedEdges/NetworkConnectedEdges'),
+const NetworkOverview = lazy(
+    () => import('./NetworkOverview/NetworkOverview.tsx'),
 );
-const NetworkTraffic = lazy(() => import('./NetworkTraffic/NetworkTraffic'));
+const NetworkConnectedEdges = lazy(
+    () => import('./NetworkConnectedEdges/NetworkConnectedEdges.tsx'),
+);
+const NetworkTraffic = lazy(
+    () => import('./NetworkTraffic/NetworkTraffic.tsx'),
+);
 const NetworkTrafficUsage = lazy(
-    () => import('./NetworkTrafficUsage/NetworkTrafficUsage'),
+    () => import('./NetworkTrafficUsage/NetworkTrafficUsage.tsx'),
 );
 const BackendConnections = lazy(
-    () => import('./NetworkTrafficUsage/BackendConnections'),
+    () => import('./NetworkTrafficUsage/BackendConnections.tsx'),
 );
 const FrontendNetworkTrafficUsage = lazy(
-    () => import('./NetworkTrafficUsage/FrontendNetworkTrafficUsage'),
+    () => import('./NetworkTrafficUsage/FrontendNetworkTrafficUsage.tsx'),
 );
 
 const tabs = [

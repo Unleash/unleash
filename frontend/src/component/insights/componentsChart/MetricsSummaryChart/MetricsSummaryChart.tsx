@@ -7,12 +7,12 @@ import {
     LineChart,
     NotEnoughData,
 } from 'component/insights/components/LineChart/LineChart';
-import { MetricsSummaryTooltip } from './MetricsChartTooltip/MetricsChartTooltip';
+import { MetricsSummaryTooltip } from './MetricsChartTooltip/MetricsChartTooltip.tsx';
 import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
 import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
 import { useTheme } from '@mui/material';
-import { aggregateDataPerDate } from './aggregate-metrics-by-day';
-import { useFilledMetricsSummary } from '../../hooks/useFilledMetricsSummary';
+import { aggregateDataPerDate } from './aggregate-metrics-by-day.ts';
+import { useFilledMetricsSummary } from '../../hooks/useFilledMetricsSummary.ts';
 
 interface IMetricsSummaryChartProps {
     metricsSummaryTrends: GroupedDataByProject<

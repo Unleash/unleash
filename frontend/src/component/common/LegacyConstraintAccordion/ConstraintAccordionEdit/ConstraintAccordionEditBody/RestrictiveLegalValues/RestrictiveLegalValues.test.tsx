@@ -1,6 +1,6 @@
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import { RestrictiveLegalValues } from './RestrictiveLegalValues';
+import { RestrictiveLegalValues } from './RestrictiveLegalValues.tsx';
 
 test('should show alert when you have illegal legal values', async () => {
     const contextDefinitionValues = [{ value: 'value1' }, { value: 'value2' }];

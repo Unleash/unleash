@@ -1,7 +1,7 @@
 import type { VFC } from 'react';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { getLocalizedDateString } from '../../../util';
+import { getLocalizedDateString } from '../../../util.ts';
 
 interface IDateCellProps {
     value?: Date | string | null;

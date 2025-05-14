@@ -1,17 +1,20 @@
-import { createTestConfig } from '../../test/config/test-config';
-import type { IUnleashConfig, IUnleashOptions, IUser } from '../server-impl';
-import { ApiTokenType, type IApiTokenCreate } from '../types/models/api-token';
+import { createTestConfig } from '../../test/config/test-config.js';
+import type { IUnleashConfig, IUnleashOptions, IUser } from '../types/index.js';
+import { ApiTokenType, type IApiTokenCreate } from '../types/model.js';
 import {
     ADMIN_TOKEN_USER,
+    SYSTEM_USER,
+    TEST_AUDIT_USER,
+} from '../types/index.js';
+import { addDays, minutesToMilliseconds, subDays } from 'date-fns';
+import { extractAuditInfoFromUser } from '../util/index.js';
+import { createFakeApiTokenService } from '../features/api-tokens/createApiTokenService.js';
+import {
     API_TOKEN_CREATED,
     API_TOKEN_DELETED,
     API_TOKEN_UPDATED,
-    SYSTEM_USER,
-    TEST_AUDIT_USER,
-} from '../types';
-import { addDays, minutesToMilliseconds, subDays } from 'date-fns';
-import { extractAuditInfoFromUser } from '../util';
-import { createFakeApiTokenService } from '../features/api-tokens/createApiTokenService';
+} from '../events/index.js';
+import { jest } from '@jest/globals';
 
 test('Should init api token', async () => {
     const token = {

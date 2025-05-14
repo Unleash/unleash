@@ -3,7 +3,7 @@ import type {
     IFeatureStrategy,
     IFeatureStrategySortOrder,
 } from 'interfaces/strategy';
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 import { useRecentlyUsedConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/RecentlyUsedConstraints/useRecentlyUsedConstraints';
 import { useRecentlyUsedSegments } from 'component/feature/FeatureStrategy/FeatureStrategySegment/RecentlyUsedSegments/useRecentlyUsedSegments';
 import { useUiFlag } from 'hooks/useUiFlag';

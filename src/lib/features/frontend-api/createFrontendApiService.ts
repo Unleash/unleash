@@ -1,18 +1,18 @@
-import { FrontendApiService } from './frontend-api-service';
-import { SegmentReadModel } from '../segment/segment-read-model';
-import type ClientMetricsServiceV2 from '../metrics/client-metrics/metrics-service-v2';
-import SettingService from '../../services/setting-service';
-import SettingStore from '../../db/setting-store';
-import { createEventsService, createFakeEventsService } from '../index';
-import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service';
-import { GlobalFrontendApiCache } from './global-frontend-api-cache';
-import ClientFeatureToggleReadModel from './client-feature-toggle-read-model';
-import { FakeSegmentReadModel } from '../segment/fake-segment-read-model';
-import FakeSettingStore from '../../../test/fixtures/fake-setting-store';
-import FakeClientFeatureToggleReadModel from './fake-client-feature-toggle-read-model';
-import type { IUnleashConfig } from '../../types';
-import type { Db } from '../../db/db';
-import type ClientInstanceService from '../metrics/instance/instance-service';
+import { FrontendApiService } from './frontend-api-service.js';
+import { SegmentReadModel } from '../segment/segment-read-model.js';
+import type ClientMetricsServiceV2 from '../metrics/client-metrics/metrics-service-v2.js';
+import SettingService from '../../services/setting-service.js';
+import SettingStore from '../../db/setting-store.js';
+import { createEventsService, createFakeEventsService } from '../index.js';
+import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service.js';
+import { GlobalFrontendApiCache } from './global-frontend-api-cache.js';
+import ClientFeatureToggleReadModel from './client-feature-toggle-read-model.js';
+import { FakeSegmentReadModel } from '../segment/fake-segment-read-model.js';
+import FakeSettingStore from '../../../test/fixtures/fake-setting-store.js';
+import FakeClientFeatureToggleReadModel from './fake-client-feature-toggle-read-model.js';
+import type { IUnleashConfig } from '../../types/index.js';
+import type { Db } from '../../db/db.js';
+import type { ClientInstanceService } from '../../server-impl.js';
 
 export const createFrontendApiService = (
     db: Db,

@@ -1,8 +1,8 @@
 import { ulid } from 'ulidx';
-import type { ReleasePlanMilestone } from './release-plan-milestone';
-import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store';
-import type { Row } from '../../db/crud/row-type';
-import type { Db } from '../../db/db';
+import type { ReleasePlanMilestone } from './release-plan-milestone.js';
+import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store.js';
+import type { Row } from '../../db/crud/row-type.js';
+import type { Db } from '../../db/db.js';
 
 const TABLE = 'milestones';
 

@@ -1,6 +1,6 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { projectSchema } from './project-schema';
-import { projectOverviewSchema } from './project-overview-schema';
+import { projectSchema } from './project-schema.js';
+import { projectOverviewSchema } from './project-overview-schema.js';
 
 export const personalDashboardProjectDetailsSchema = {
     $id: '#/components/schemas/personalDashboardProjectDetailsSchema',

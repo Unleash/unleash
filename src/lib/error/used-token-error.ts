@@ -1,4 +1,4 @@
-import { UnleashError } from './unleash-error';
+import { UnleashError } from './unleash-error.js';
 
 class UsedTokenError extends UnleashError {
     statusCode = 403;
@@ -9,4 +9,3 @@ class UsedTokenError extends UnleashError {
 }
 
 export default UsedTokenError;
-module.exports = UsedTokenError;

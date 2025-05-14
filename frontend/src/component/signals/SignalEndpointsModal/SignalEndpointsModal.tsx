@@ -12,11 +12,11 @@ import {
     useSignalEndpointsApi,
 } from 'hooks/api/actions/useSignalEndpointsApi/useSignalEndpointsApi';
 import { useSignalEndpointTokensApi } from 'hooks/api/actions/useSignalEndpointTokensApi/useSignalEndpointTokensApi';
-import { SignalEndpointsForm } from './SignalEndpointsForm/SignalEndpointsForm';
+import { SignalEndpointsForm } from './SignalEndpointsForm/SignalEndpointsForm.tsx';
 import {
     TokenGeneration,
     useSignalEndpointsForm,
-} from './SignalEndpointsForm/useSignalEndpointsForm';
+} from './SignalEndpointsForm/useSignalEndpointsForm.ts';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledHeader = styled('div')(({ theme }) => ({

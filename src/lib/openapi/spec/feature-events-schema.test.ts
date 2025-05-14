@@ -1,8 +1,8 @@
-import { validateSchema } from '../validate';
+import { validateSchema } from '../validate.js';
 import {
     type FeatureEventsSchema,
     featureEventsSchema,
-} from './feature-events-schema';
+} from './feature-events-schema.js';
 
 test('featureEventsSchema', () => {
     const data: FeatureEventsSchema = {

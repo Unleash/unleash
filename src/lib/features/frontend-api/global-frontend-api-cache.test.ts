@@ -1,18 +1,20 @@
 import {
     GlobalFrontendApiCache,
     type GlobalFrontendApiCacheState,
-} from './global-frontend-api-cache';
-import noLogger from '../../../test/fixtures/no-logger';
-import { FakeSegmentReadModel } from '../segment/fake-segment-read-model';
-import FakeClientFeatureToggleReadModel from './fake-client-feature-toggle-read-model';
+} from './global-frontend-api-cache.js';
+import noLogger from '../../../test/fixtures/no-logger.js';
+import { FakeSegmentReadModel } from '../segment/fake-segment-read-model.js';
+import FakeClientFeatureToggleReadModel from './fake-client-feature-toggle-read-model.js';
 import EventEmitter from 'events';
 import type {
     IApiUser,
     IFeatureToggleClient,
     IFlagResolver,
     ISegment,
-} from '../../types';
-import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service';
+} from '../../types/index.js';
+import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service.js';
+
+import { jest } from '@jest/globals';
 
 const state = async (
     cache: GlobalFrontendApiCache,

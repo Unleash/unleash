@@ -1,8 +1,8 @@
 import type { IConstraint } from 'interfaces/strategy';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-import { ConstraintAccordionEdit } from './ConstraintAccordionEdit/ConstraintAccordionEdit';
-import { ConstraintAccordionView } from './ConstraintAccordionView/ConstraintAccordionView';
+import { ConstraintAccordionEdit } from './ConstraintAccordionEdit/ConstraintAccordionEdit.tsx';
+import { ConstraintAccordionView } from './ConstraintAccordionView/ConstraintAccordionView.tsx';
 
 interface IConstraintAccordionProps {
     compact: boolean;

@@ -3,6 +3,6 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { RequestConsumptionSchemaItem } from './requestConsumptionSchemaItem';
+import type { RequestConsumptionSchemaItem } from './requestConsumptionSchemaItem.js';
 
 export type RequestConsumptionSchema = RequestConsumptionSchemaItem[];

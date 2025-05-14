@@ -1,6 +1,6 @@
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import { PremiumFeature } from './PremiumFeature';
+import { PremiumFeature } from './PremiumFeature.tsx';
 
 test('Show plans comparison message and link by default - with tooltip', async () => {
     render(<PremiumFeature feature='environments' tooltip={true} />);

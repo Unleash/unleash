@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { StrategyItemContainer } from './StrategyItemContainer';
+import { StrategyItemContainer } from './StrategyItemContainer.tsx';
 
 test('should render strategy name, custom title and description', async () => {
     const strategy: IFeatureStrategy = {

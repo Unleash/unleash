@@ -1,4 +1,4 @@
-import { type ApiErrorSchema, UnleashError } from './unleash-error';
+import { type ApiErrorSchema, UnleashError } from './unleash-error.js';
 
 export default class PasswordUndefinedError extends UnleashError {
     statusCode = 400;

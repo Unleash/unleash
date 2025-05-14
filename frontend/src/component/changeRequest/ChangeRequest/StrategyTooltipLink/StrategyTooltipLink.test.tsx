@@ -1,6 +1,6 @@
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import { StrategyDiff } from './StrategyTooltipLink';
+import { StrategyDiff } from './StrategyTooltipLink.tsx';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import type { IChangeRequestUpdateStrategy } from 'component/changeRequest/changeRequest.types';
 

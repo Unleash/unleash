@@ -1,23 +1,27 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithAuth,
-} from '../../../test/e2e/helpers/test-helper';
-import getLogger from '../../../test/fixtures/no-logger';
+} from '../../../test/e2e/helpers/test-helper.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 import {
     CLIENT_METRICS_ADDED,
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_REVIVED,
-    type IEventStore,
-    type IFeatureLifecycleStore,
-    type StageName,
-} from '../../types';
+} from '../../events/index.js';
+import type {
+    IEventStore,
+    IFeatureLifecycleStore,
+    StageName,
+} from '../../types/index.js';
 import type EventEmitter from 'events';
-import type { FeatureLifecycleCompletedSchema } from '../../openapi';
-import { FeatureLifecycleReadModel } from './feature-lifecycle-read-model';
-import type { IFeatureLifecycleReadModel } from './feature-lifecycle-read-model-type';
-import { STAGE_ENTERED } from '../../metric-events';
+import type { FeatureLifecycleCompletedSchema } from '../../openapi/index.js';
+import { FeatureLifecycleReadModel } from './feature-lifecycle-read-model.js';
+import type { IFeatureLifecycleReadModel } from './feature-lifecycle-read-model-type.js';
+import { STAGE_ENTERED } from '../../metric-events.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

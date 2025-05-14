@@ -1,4 +1,4 @@
-import { findOutdatedSDKs } from './findOutdatedSdks';
+import { findOutdatedSDKs } from './findOutdatedSdks.js';
 
 describe('findOutdatedSDKs', () => {
     it('should return an empty array when all SDKs are up to date', () => {

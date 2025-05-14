@@ -7,7 +7,7 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
-import { ProjectActionsTable } from './ProjectActionsTable/ProjectActionsTable';
+import { ProjectActionsTable } from './ProjectActionsTable/ProjectActionsTable.tsx';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { useTheme } from '@mui/material';
 import Add from '@mui/icons-material/Add';

@@ -1,6 +1,6 @@
 import useSWR, { type SWRConfiguration, type Key } from 'swr';
 import { useCallback } from 'react';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 
 interface IUseApiGetterOutput<T> {
     data?: T;

@@ -1,7 +1,7 @@
 import type { AddonSchema, AddonTypeSchema } from 'openapi';
 import useLoading from 'hooks/useLoading';
 import { StyledCardsGrid } from '../IntegrationList.styles';
-import { IntegrationCard } from '../IntegrationCard/IntegrationCard';
+import { IntegrationCard } from '../IntegrationCard/IntegrationCard.tsx';
 import type { VFC } from 'react';
 import { Typography, styled } from '@mui/material';
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';

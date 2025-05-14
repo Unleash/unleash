@@ -1,27 +1,26 @@
 import type { Response } from 'express';
-import Controller from '../../../routes/controller';
-import {
-    CLIENT_METRICS,
-    type IFlagResolver,
-    type IUnleashConfig,
-    type IUnleashServices,
-} from '../../../types';
-import type ClientInstanceService from './instance-service';
-import type { Logger } from '../../../logger';
-import type { IAuthRequest } from '../../../routes/unleash-types';
-import type ClientMetricsServiceV2 from '../client-metrics/metrics-service-v2';
-import { NONE } from '../../../types/permissions';
-import type { OpenApiService } from '../../../services/openapi-service';
-import { createRequestSchema } from '../../../openapi/util/create-request-schema';
+import Controller from '../../../routes/controller.js';
+import type { IFlagResolver, IUnleashConfig } from '../../../types/index.js';
+import type ClientInstanceService from './instance-service.js';
+import type { Logger } from '../../../logger.js';
+import type { IAuthRequest } from '../../../routes/unleash-types.js';
+import type ClientMetricsServiceV2 from '../client-metrics/metrics-service-v2.js';
+import { NONE } from '../../../types/permissions.js';
+import type {
+    IUnleashServices,
+    OpenApiService,
+} from '../../../services/index.js';
+import { createRequestSchema } from '../../../openapi/util/create-request-schema.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../../openapi/util/standard-responses';
+} from '../../../openapi/util/standard-responses.js';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
-import type { BulkMetricsSchema } from '../../../openapi/spec/bulk-metrics-schema';
-import { clientMetricsEnvBulkSchema } from '../shared/schema';
-import type { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v2-type';
+import type { BulkMetricsSchema } from '../../../openapi/spec/bulk-metrics-schema.js';
+import { clientMetricsEnvBulkSchema } from '../shared/schema.js';
+import type { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v2-type.js';
+import { CLIENT_METRICS } from '../../../events/index.js';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;

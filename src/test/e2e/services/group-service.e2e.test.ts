@@ -1,15 +1,15 @@
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
-import { createTestConfig } from '../../config/test-config';
-import { GroupService } from '../../../lib/services/group-service';
-import type { EventService } from '../../../lib/services';
+import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import getLogger from '../../fixtures/no-logger.js';
+import { createTestConfig } from '../../config/test-config.js';
+import { GroupService } from '../../../lib/services/group-service.js';
+import type { EventService } from '../../../lib/services/index.js';
 import {
     type IGroupStore,
     type IUnleashStores,
     type IUser,
     TEST_AUDIT_USER,
-} from '../../../lib/types';
-import { createEventsService } from '../../../lib/features';
+} from '../../../lib/types/index.js';
+import { createEventsService } from '../../../lib/features/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

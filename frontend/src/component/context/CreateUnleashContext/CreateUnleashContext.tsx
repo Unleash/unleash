@@ -1,7 +1,7 @@
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { useContextForm } from '../hooks/useContextForm';
-import { ContextForm } from '../ContextForm/ContextForm';
+import { useContextForm } from '../hooks/useContextForm.ts';
+import { ContextForm } from '../ContextForm/ContextForm.tsx';
 import { CREATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

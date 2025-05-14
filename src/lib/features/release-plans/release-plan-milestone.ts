@@ -1,4 +1,4 @@
-import type { ReleasePlanMilestoneStrategy } from './release-plan-milestone-strategy';
+import type { ReleasePlanMilestoneStrategy } from './release-plan-milestone-strategy.js';
 
 export interface ReleasePlanMilestone {
     id: string;

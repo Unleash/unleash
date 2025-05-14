@@ -4,7 +4,7 @@ import {
     StyledButtonTypography,
     StyledListItemIcon,
     StyledListItemText,
-} from './RecentlyVisited/CommandResultGroup';
+} from './RecentlyVisited/CommandResultGroup.tsx';
 import { ListItemButton } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { IconRenderer } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';

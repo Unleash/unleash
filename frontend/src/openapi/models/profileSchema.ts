@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSchema } from './featureSchema';
-import type { RoleSchema } from './roleSchema';
+import type { FeatureSchema } from './featureSchema.js';
+import type { RoleSchema } from './roleSchema.js';
 
 /**
  * User profile overview

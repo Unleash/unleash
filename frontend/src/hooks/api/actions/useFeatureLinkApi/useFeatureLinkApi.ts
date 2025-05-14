@@ -1,7 +1,7 @@
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useCallback } from 'react';
-import type { FeatureLinkSchema } from '../../../../openapi';
+import type { FeatureLinkSchema } from 'openapi';
 
 export const useFeatureLinkApi = (project: string, feature: string) => {
     const { makeRequest, createRequest, errors, loading } = useAPI({

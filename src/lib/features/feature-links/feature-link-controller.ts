@@ -1,18 +1,18 @@
 import type { Response } from 'express';
-import Controller from '../../routes/controller';
-import type { IAuthRequest } from '../../routes/unleash-types';
-import type { IUnleashConfig } from '../../types/option';
-import type { WithTransactional } from '../../db/transaction';
-import type FeatureLinkService from './feature-link-service';
-import { UPDATE_FEATURE } from '../../types/permissions';
-import type { OpenApiService } from '../../services/openapi-service';
+import Controller from '../../routes/controller.js';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { WithTransactional } from '../../db/transaction.js';
+import type FeatureLinkService from './feature-link-service.js';
+import { UPDATE_FEATURE } from '../../types/permissions.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../openapi/util/standard-responses';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import type { IFeatureLink } from './feature-link-store-type';
-import type { IFlagResolver } from '../../types';
+} from '../../openapi/util/standard-responses.js';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
+import type { IFeatureLink } from './feature-link-store-type.js';
+import type { IFlagResolver } from '../../types/index.js';
 
 interface FeatureLinkServices {
     transactionalFeatureLinkService: WithTransactional<FeatureLinkService>;

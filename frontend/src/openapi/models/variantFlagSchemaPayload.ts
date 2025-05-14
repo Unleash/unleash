@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { VariantFlagSchemaPayloadType } from './variantFlagSchemaPayloadType';
+import type { VariantFlagSchemaPayloadType } from './variantFlagSchemaPayloadType.js';
 
 /**
  * Additional data associated with this variant.

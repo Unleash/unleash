@@ -15,7 +15,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { Children } from 'react';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
-import { ButtonItemIcon } from '../ButtonItemIcon';
+import { ButtonItemIcon } from '../ButtonItemIcon.tsx';
 
 export const listItemButtonStyle = (theme: Theme) => ({
     border: `1px solid transparent`,

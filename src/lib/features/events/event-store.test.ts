@@ -1,8 +1,8 @@
 import knex from 'knex';
-import EventStore from './event-store';
-import getLogger from '../../../test/fixtures/no-logger';
+import EventStore from './event-store.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 import { subHours, formatRFC3339 } from 'date-fns';
-import dbInit from '../../../test/e2e/helpers/database-init';
+import dbInit from '../../../test/e2e/helpers/database-init.js';
 
 beforeAll(() => {
     getLogger.setMuteError(true);

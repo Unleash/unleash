@@ -1,65 +1,44 @@
 import {
-    FEATURE_ARCHIVED,
-    FEATURE_CREATED,
-    FEATURE_ENVIRONMENT_DISABLED,
     type IFlagResolver,
     type IAddonConfig,
-    type IEvent,
     serializeDates,
     type IFlagKey,
-} from '../types';
-import type { Logger } from '../logger';
+} from '../types/index.js';
 
-import NewRelicAddon, { type INewRelicParameters } from './new-relic';
+import NewRelicAddon, { type INewRelicParameters } from './new-relic.js';
 
-import noLogger from '../../test/fixtures/no-logger';
+import noLogger from '../../test/fixtures/no-logger.js';
 import { gunzip } from 'node:zlib';
 import { promisify } from 'util';
-import type { IntegrationEventsService } from '../services';
+import type { IntegrationEventsService } from '../services/index.js';
+import {
+    FEATURE_CREATED,
+    type IEvent,
+    FEATURE_ARCHIVED,
+    FEATURE_ENVIRONMENT_DISABLED,
+} from '../events/index.js';
+import { jest } from '@jest/globals';
+import nock from 'nock';
 
 const asyncGunzip = promisify(gunzip);
 
-let fetchRetryCalls: any[] = [];
 const registerEventMock = jest.fn();
 
 const INTEGRATION_ID = 1337;
 const ARGS: IAddonConfig = {
     getLogger: noLogger,
     unleashUrl: 'http://some-url.com',
-    integrationEventsService: {} as IntegrationEventsService,
+    integrationEventsService: {
+        registerEvent: registerEventMock,
+    } as unknown as IntegrationEventsService,
     flagResolver: { isEnabled: (expName: IFlagKey) => false } as IFlagResolver,
-    eventBus: {} as any,
+    eventBus: {
+        emit: jest.fn(),
+    } as any,
 };
 
-jest.mock(
-    './addon',
-    () =>
-        class Addon {
-            logger: Logger;
-
-            constructor(definition, { getLogger }) {
-                this.logger = getLogger('addon/test');
-                fetchRetryCalls = [];
-            }
-
-            async fetchRetry(url, options, retries, backoff) {
-                fetchRetryCalls.push({
-                    url,
-                    options,
-                    retries,
-                    backoff,
-                });
-                return Promise.resolve({ ok: true, status: 200 });
-            }
-
-            async registerEvent(event) {
-                return registerEventMock(event);
-            }
-        },
-);
-
 const defaultParameters = {
-    url: 'fakeUrl',
+    url: 'http://fakeurl',
     licenseKey: 'fakeLicenseKey',
 } as INewRelicParameters;
 
@@ -77,10 +56,15 @@ const defaultEvent = {
     },
 } as IEvent;
 
-const makeAddHandleEvent = (event: IEvent, parameters: INewRelicParameters) => {
+const makeAddHandleEvent = (
+    event: IEvent,
+    parameters: INewRelicParameters,
+): (() => Promise<void>) => {
     const addon = new NewRelicAddon(ARGS);
 
-    return () => addon.handleEvent(event, parameters, INTEGRATION_ID);
+    return async () => {
+        await addon.handleEvent(event, parameters, INTEGRATION_ID);
+    };
 };
 
 describe('New Relic integration', () => {
@@ -159,20 +143,20 @@ describe('New Relic integration', () => {
 
             const handleEvent = makeAddHandleEvent(event, parameters);
 
+            let body: any;
+            nock('http://fakeurl')
+                .post('/')
+                .matchHeader('Content-Type', 'application/json')
+                .matchHeader('Api-Key', parameters.licenseKey)
+                .matchHeader('Content-Encoding', 'gzip')
+                .reply(200, (uri, requestBody) => {
+                    body = requestBody;
+                    return [200, 'OK'];
+                });
             await handleEvent();
-            expect(fetchRetryCalls.length).toBe(1);
+            expect(nock.isDone()).toBe(true);
 
-            const { url, options } = fetchRetryCalls[0];
-            const jsonBody = JSON.parse(
-                (await asyncGunzip(options.body)).toString(),
-            );
-
-            expect(url).toBe(parameters.url);
-            expect(options.method).toBe('POST');
-            expect(options.headers['Api-Key']).toBe(parameters.licenseKey);
-            expect(options.headers['Content-Type']).toBe('application/json');
-            expect(options.headers['Content-Encoding']).toBe('gzip');
-            expect(options.headers).toMatchSnapshot();
+            const jsonBody = body;
 
             expect(jsonBody.eventType).toBe('UnleashServiceEvent');
             expect(jsonBody.unleashEventType).toBe(event.type);
@@ -187,6 +171,14 @@ describe('New Relic integration', () => {
     test('Should call registerEvent', async () => {
         const handleEvent = makeAddHandleEvent(defaultEvent, defaultParameters);
 
+        nock('http://fakeurl')
+            .post('/')
+            .matchHeader('Content-Type', 'application/json')
+            .matchHeader('Api-Key', defaultParameters.licenseKey)
+            .matchHeader('Content-Encoding', 'gzip')
+            .reply(200, () => {
+                return [200, 'OK'];
+            });
         await handleEvent();
 
         expect(registerEventMock).toHaveBeenCalledTimes(1);

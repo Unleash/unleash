@@ -1,7 +1,7 @@
 import { Box, styled, Typography } from '@mui/material';
 import type { ProjectStatsSchema } from 'openapi/models';
-import { HelpPopper } from './HelpPopper';
-import { StatusBox } from './StatusBox';
+import { HelpPopper } from './HelpPopper.tsx';
+import { StatusBox } from './StatusBox.tsx';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { Link } from 'react-router-dom';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';

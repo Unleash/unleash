@@ -1,9 +1,9 @@
-import type { ITag } from '../../lib/types/model';
+import type { ITag } from '../../lib/tags/index.js';
 import type {
     IFeatureAndTag,
     IFeatureTag,
     IFeatureTagStore,
-} from '../../lib/types/stores/feature-tag-store';
+} from '../../lib/types/stores/feature-tag-store.js';
 
 export default class FakeFeatureTagStore implements IFeatureTagStore {
     private featureTags: IFeatureTag[] = [];
@@ -111,5 +111,3 @@ export default class FakeFeatureTagStore implements IFeatureTagStore {
         throw new Error('Method not implemented.');
     }
 }
-
-module.exports = FakeFeatureTagStore;

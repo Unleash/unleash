@@ -12,7 +12,7 @@ import {
 import CheckCircle from '@mui/icons-material/CheckCircle';
 import CircleOutlined from '@mui/icons-material/CircleOutlined';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import type { ITutorialTopic } from '../demo-topics';
+import type { ITutorialTopic } from '../demo-topics.ts';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ReactComponent as StarsIcon } from 'assets/img/stars.svg';
 

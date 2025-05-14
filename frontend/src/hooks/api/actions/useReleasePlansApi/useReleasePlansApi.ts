@@ -1,4 +1,4 @@
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 export const useReleasePlansApi = () => {
     const { makeRequest, makeLightRequest, createRequest, errors, loading } =
         useAPI({

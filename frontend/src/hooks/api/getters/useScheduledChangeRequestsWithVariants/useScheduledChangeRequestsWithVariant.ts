@@ -1,7 +1,7 @@
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
-import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
-import type { ScheduledChangeRequestViewModel } from '../useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR.js';
+import type { ScheduledChangeRequestViewModel } from '../useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy.js';
 
 const fetcher = (path: string) => {
     return fetch(path)

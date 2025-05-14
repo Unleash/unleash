@@ -1,8 +1,8 @@
 import { Box, Button, styled } from '@mui/material';
 import type React from 'react';
 import Input from 'component/common/Input/Input';
-import { EnvironmentTypeSelector } from './EnvironmentTypeSelector';
-import { ChangeRequestSelector } from './ChangeRequestSelector';
+import { EnvironmentTypeSelector } from './EnvironmentTypeSelector.tsx';
+import { ChangeRequestSelector } from './ChangeRequestSelector.tsx';
 import { trim } from 'component/common/util';
 
 interface IEnvironmentForm {

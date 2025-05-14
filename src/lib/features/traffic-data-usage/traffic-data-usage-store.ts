@@ -1,12 +1,12 @@
 import { endOfDay, endOfMonth, startOfDay, startOfMonth } from 'date-fns';
-import type { Db } from '../../db/db';
-import type { Logger, LogProvider } from '../../logger';
+import type { Db } from '../../db/db.js';
+import type { Logger, LogProvider } from '../../logger.js';
 import type {
     IStatMonthlyTrafficUsage,
     IStatTrafficUsage,
     IStatTrafficUsageKey,
     ITrafficDataUsageStore,
-} from './traffic-data-usage-store-type';
+} from './traffic-data-usage-store-type.js';
 
 const TABLE = 'stat_traffic_usage';
 const COLUMNS = ['day', 'traffic_group', 'status_code_series', 'count'];

@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { userSchema } from './user-schema';
+import { userSchema } from './user-schema.js';
 
 export const usersSearchSchema = {
     $id: '#/components/schemas/usersSearchSchema',

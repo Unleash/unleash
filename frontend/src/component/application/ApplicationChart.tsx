@@ -8,14 +8,14 @@ import type {
     ApplicationOverviewSchema,
 } from 'openapi';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { HelpIcon } from '../common/HelpIcon/HelpIcon';
+import { HelpIcon } from '../common/HelpIcon/HelpIcon.tsx';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 import CloudCircle from '@mui/icons-material/CloudCircle';
 import Flag from '@mui/icons-material/Flag';
 import WarningAmberRounded from '@mui/icons-material/WarningAmberRounded';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { getApplicationIssues } from './ApplicationIssues/ApplicationIssues';
+import { getApplicationIssues } from './ApplicationIssues/ApplicationIssues.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledTable = styled('table')(({ theme }) => ({

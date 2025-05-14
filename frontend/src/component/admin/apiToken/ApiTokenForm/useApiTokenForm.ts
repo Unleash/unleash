@@ -8,7 +8,7 @@ import {
     CREATE_PROJECT_API_TOKEN,
 } from '@server/types/permissions';
 import { useHasRootAccess } from 'hooks/useHasAccess';
-import type { SelectOption } from './TokenTypeSelector/TokenTypeSelector';
+import type { SelectOption } from './TokenTypeSelector/TokenTypeSelector.jsx';
 
 export type ApiTokenFormErrorType = 'tokenName' | 'projects';
 export const useApiTokenForm = (project?: string) => {

@@ -1,7 +1,7 @@
 import { PayloadType, type Variant } from 'unleash-client';
-import { parseEnvVarBoolean } from '../util';
-import { getDefaultVariant } from 'unleash-client/lib/variant';
-import type { Context } from '../features/playground/feature-evaluator';
+import { parseEnvVarBoolean } from '../util/index.js';
+import { getDefaultVariant } from 'unleash-client/lib/variant.js';
+import type { Context } from '../features/playground/feature-evaluator/index.js';
 
 export type IFlagKey =
     | 'accessLogs'

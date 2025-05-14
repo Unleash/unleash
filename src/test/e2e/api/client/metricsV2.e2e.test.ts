@@ -1,12 +1,14 @@
-import { type IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
-import metricsExample from '../../../examples/client-metrics.json';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
 import {
-    ApiTokenType,
-    type IApiToken,
-} from '../../../../lib/types/models/api-token';
-import { TEST_AUDIT_USER } from '../../../../lib/types';
+    type IUnleashTest,
+    setupAppWithAuth,
+} from '../../helpers/test-helper.js';
+import metricsExample from '../../../examples/client-metrics.json' with {
+    type: 'json',
+};
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { ApiTokenType, type IApiToken } from '../../../../lib/types/model.js';
+import { TEST_AUDIT_USER } from '../../../../lib/types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

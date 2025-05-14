@@ -1,5 +1,5 @@
-import type { Db } from '../../../db/db';
-import { MAX_UNKNOWN_FLAGS } from './unknown-flags-service';
+import type { Db } from '../../../db/db.js';
+import { MAX_UNKNOWN_FLAGS } from './unknown-flags-service.js';
 
 const TABLE = 'unknown_flags';
 

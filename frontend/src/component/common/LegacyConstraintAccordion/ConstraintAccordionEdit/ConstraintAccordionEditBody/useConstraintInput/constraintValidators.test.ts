@@ -3,7 +3,7 @@ import {
     semVerValidatorGenerator,
     dateValidatorGenerator,
     stringValidatorGenerator,
-} from './constraintValidators';
+} from './constraintValidators.js';
 
 test('numbervalidator should accept 0', () => {
     const numValidator = numberValidatorGenerator(0);

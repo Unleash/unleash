@@ -6,9 +6,9 @@ import { DateCalendar, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format } from 'date-fns';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { getLocalizedDateString } from '../util';
+import { getLocalizedDateString } from '../util.ts';
 import type { FilterItemParams } from 'component/filter/FilterItem/FilterItem';
-import { DateRangePresets } from './DateRangePresets';
+import { DateRangePresets } from './DateRangePresets.tsx';
 
 export interface IFilterDateItemProps {
     name: string;

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { DateSchema } from './dateSchema';
-import type { FeatureEnvironmentMetricsSchemaVariants } from './featureEnvironmentMetricsSchemaVariants';
+import type { DateSchema } from './dateSchema.js';
+import type { FeatureEnvironmentMetricsSchemaVariants } from './featureEnvironmentMetricsSchemaVariants.js';
 
 /**
  * How many times `feautreName` was evaluated to `true` (yes) and `false` (no) for `appName` in `environmnet`

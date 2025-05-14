@@ -12,11 +12,11 @@ import { formatAssetPath } from 'utils/formatPath';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { DraftBanner } from './DraftBanner/DraftBanner';
+import { DraftBanner } from './DraftBanner/DraftBanner.tsx';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
-import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar';
+import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar.tsx';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
-import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash';
+import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash.tsx';
 
 interface IMainLayoutProps {
     children: ReactNode;

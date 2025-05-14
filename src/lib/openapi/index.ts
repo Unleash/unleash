@@ -1,10 +1,10 @@
 import type { OpenAPIV3 } from 'openapi-types';
 
-import type { IServerOption } from '../types';
-import { mapValues, omitKeys } from '../util';
-import { openApiTags } from './util';
-import { URL } from 'url';
-import apiVersion from '../util/version';
+import type { IServerOption } from '../types/index.js';
+import { mapValues, omitKeys } from '../util/index.js';
+import { openApiTags } from './util/index.js';
+import { URL } from 'node:url';
+import apiVersion from '../util/version.js';
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".
 export type SchemaId = (typeof schemas)[keyof typeof schemas]['$id'];
@@ -38,7 +38,7 @@ interface OpenAPIV3DocumentWithServers extends OpenAPIV3.Document {
  * All schemas in `openapi/spec` should be listed here.
  * Instead of listing them all maunally, exclude those that are not schemas (maybe they should be moved elsewhere)
  */
-import * as importedSchemas from './spec';
+import * as importedSchemas from './spec/index.js';
 const {
     constraintSchemaBase,
     unknownFeatureEvaluationResult,
@@ -112,6 +112,5 @@ export const createOpenApiSchema = ({
         tags: openApiTags,
     };
 };
-
-export * from './util';
-export * from './spec';
+export * from './util/index.js';
+export * from './spec/index.js';

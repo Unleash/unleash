@@ -1,7 +1,11 @@
-import { createFakeFeatureLinkService } from './createFeatureLinkService';
-import type { IAuditUser, IUnleashConfig } from '../../types';
-import getLogger from '../../../test/fixtures/no-logger';
-import { BadDataError, NotFoundError, OperationDeniedError } from '../../error';
+import { createFakeFeatureLinkService } from './createFeatureLinkService.js';
+import type { IAuditUser, IUnleashConfig } from '../../types/index.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import {
+    BadDataError,
+    NotFoundError,
+    OperationDeniedError,
+} from '../../error/index.js';
 
 test('create, update and delete feature link', async () => {
     const { featureLinkStore, featureLinkService } =

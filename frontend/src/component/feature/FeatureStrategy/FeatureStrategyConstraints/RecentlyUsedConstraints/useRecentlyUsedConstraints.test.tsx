@@ -1,7 +1,7 @@
 import {
     useRecentlyUsedConstraints,
     areConstraintsEqual,
-} from './useRecentlyUsedConstraints';
+} from './useRecentlyUsedConstraints.ts';
 import { renderHook, act } from '@testing-library/react';
 import type { IConstraint } from 'interfaces/strategy';
 import { IN, STR_CONTAINS } from 'constants/operators';

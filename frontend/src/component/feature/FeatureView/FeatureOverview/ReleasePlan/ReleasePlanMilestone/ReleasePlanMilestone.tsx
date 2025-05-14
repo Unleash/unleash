@@ -9,11 +9,11 @@ import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
 import {
     ReleasePlanMilestoneStatus,
     type MilestoneStatus,
-} from './ReleasePlanMilestoneStatus';
+} from './ReleasePlanMilestoneStatus.tsx';
 import { useState } from 'react';
 
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-import { StrategyItem } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyItem';
+import { StrategyItem } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyItem.tsx';
 import { StrategyList } from 'component/common/StrategyList/StrategyList';
 import { StrategyListItem } from 'component/common/StrategyList/StrategyListItem';
 

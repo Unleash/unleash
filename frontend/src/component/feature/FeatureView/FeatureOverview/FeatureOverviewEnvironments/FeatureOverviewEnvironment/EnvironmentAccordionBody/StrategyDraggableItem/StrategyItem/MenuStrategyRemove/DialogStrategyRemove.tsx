@@ -4,7 +4,7 @@ import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFe
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { Link, useNavigate } from 'react-router-dom';
 import useToast from 'hooks/useToast';
-import { formatFeaturePath } from '../../../../../../../../FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
+import { formatFeaturePath } from '../../../../../../../../FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit.tsx';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { Alert, styled, Typography } from '@mui/material';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';

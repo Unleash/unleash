@@ -4,9 +4,9 @@ import type {
     FeatureLifecycleView,
     FeatureLifecycleProjectItem,
     NewStage,
-} from './feature-lifecycle-store-type';
-import type { Db } from '../../db/db';
-import type { StageName } from '../../types';
+} from './feature-lifecycle-store-type.js';
+import type { Db } from '../../db/db.js';
+import type { StageName } from '../../types/index.js';
 
 type DBType = {
     stage: StageName;

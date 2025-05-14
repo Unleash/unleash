@@ -1,13 +1,12 @@
 import type { Request, Response } from 'express';
-import Controller from '../../routes/controller';
+import Controller from '../../routes/controller.js';
 import {
     type IFlagResolver,
     type IUnleashConfig,
-    type IUnleashServices,
     NONE,
-} from '../../types';
-import type { Logger } from '../../logger';
-import type { IApiUser } from '../../types/api-user';
+} from '../../types/index.js';
+import type { Logger } from '../../logger.js';
+import type { IApiUser } from '../../types/api-user.js';
 import {
     type ClientMetricsSchema,
     createRequestSchema,
@@ -17,15 +16,16 @@ import {
     frontendApiFeaturesSchema,
     type FrontendApiFeaturesSchema,
     getStandardResponses,
-} from '../../openapi';
+} from '../../openapi/index.js';
 import type { Context } from 'unleash-client';
-import { enrichContextWithIp } from './index';
-import { corsOriginMiddleware } from '../../middleware';
-import NotImplementedError from '../../error/not-implemented-error';
+import { enrichContextWithIp } from './index.js';
+import { corsOriginMiddleware } from '../../middleware/index.js';
+import NotImplementedError from '../../error/not-implemented-error.js';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
-import metricsHelper from '../../util/metrics-helper';
-import { FUNCTION_TIME } from '../../metric-events';
+import metricsHelper from '../../util/metrics-helper.js';
+import { FUNCTION_TIME } from '../../metric-events.js';
+import type { IUnleashServices } from '../../services/index.js';
 
 interface ApiUserRequest<
     PARAM = any,

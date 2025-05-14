@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectSchemaOwnersOneOfItemAnyOfOwnerType } from './projectSchemaOwnersOneOfItemAnyOfOwnerType';
+import type { ProjectSchemaOwnersOneOfItemAnyOfOwnerType } from './projectSchemaOwnersOneOfItemAnyOfOwnerType.js';
 
 export type ProjectSchemaOwnersOneOfItemAnyOf = {
     /** @nullable */

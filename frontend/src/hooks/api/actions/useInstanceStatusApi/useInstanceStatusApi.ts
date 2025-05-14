@@ -1,4 +1,4 @@
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
 const useInstanceStatusApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({

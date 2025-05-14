@@ -1,33 +1,33 @@
 import type { Response } from 'express';
-import Controller from '../../controller';
-import type { Logger } from '../../../logger';
-import type {
-    IFlagResolver,
-    IUnleashConfig,
-    IUnleashServices,
-} from '../../../types';
-import { createRequestSchema } from '../../../openapi/util/create-request-schema';
+import Controller from '../../controller.js';
+import type { Logger } from '../../../logger.js';
+import type { IFlagResolver, IUnleashConfig } from '../../../types/index.js';
+import { createRequestSchema } from '../../../openapi/util/create-request-schema.js';
 import {
     createResponseSchema,
     resourceCreatedResponseSchema,
-} from '../../../openapi/util/create-response-schema';
+} from '../../../openapi/util/create-response-schema.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../../openapi/util/standard-responses';
-import type { OpenApiService } from '../../../services/openapi-service';
+} from '../../../openapi/util/standard-responses.js';
+import type { OpenApiService } from '../../../services/openapi-service.js';
 
-import type PatService from '../../../services/pat-service';
-import { NONE } from '../../../types/permissions';
-import type { IAuthRequest } from '../../unleash-types';
-import { serializeDates } from '../../../types/serialize-dates';
-import { type PatSchema, patSchema } from '../../../openapi/spec/pat-schema';
-import { type PatsSchema, patsSchema } from '../../../openapi/spec/pats-schema';
+import type PatService from '../../../services/pat-service.js';
+import { NONE } from '../../../types/permissions.js';
+import type { IAuthRequest } from '../../unleash-types.js';
+import { serializeDates } from '../../../types/serialize-dates.js';
+import { type PatSchema, patSchema } from '../../../openapi/spec/pat-schema.js';
+import {
+    type PatsSchema,
+    patsSchema,
+} from '../../../openapi/spec/pats-schema.js';
 import {
     type CreatePatSchema,
     createPatSchema,
-} from '../../../openapi/spec/create-pat-schema';
-import { ForbiddenError, NotFoundError } from '../../../error';
+} from '../../../openapi/spec/create-pat-schema.js';
+import { ForbiddenError, NotFoundError } from '../../../error/index.js';
+import type { IUnleashServices } from '../../../services/index.js';
 
 export default class PatController extends Controller {
     private patService: PatService;

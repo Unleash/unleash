@@ -1,11 +1,14 @@
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
-import ProjectHealthService from '../../../lib/services/project-health-service';
-import { createTestConfig } from '../../config/test-config';
-import { type IUnleashStores, TEST_AUDIT_USER } from '../../../lib/types';
-import type { IUser } from '../../../lib/server-impl';
-import { createProjectService } from '../../../lib/features';
-import type { ProjectService } from '../../../lib/services';
+import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import getLogger from '../../fixtures/no-logger.js';
+import ProjectHealthService from '../../../lib/services/project-health-service.js';
+import { createTestConfig } from '../../config/test-config.js';
+import {
+    type IUnleashStores,
+    TEST_AUDIT_USER,
+} from '../../../lib/types/index.js';
+import type { IUser } from '../../../lib/types/index.js';
+import { createProjectService } from '../../../lib/features/index.js';
+import type { ProjectService } from '../../../lib/services/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

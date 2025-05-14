@@ -1,8 +1,8 @@
 import fs from 'fs';
-import type { IUnleashConfig } from '../server-impl';
-import { rewriteHTML } from './rewriteHTML';
+import { rewriteHTML } from './rewriteHTML.js';
 import path from 'path';
 import fetch from 'make-fetch-happen';
+import type { IUnleashConfig } from '../types/index.js';
 
 export async function loadIndexHTML(
     config: IUnleashConfig,

@@ -1,5 +1,5 @@
 import type { IPermission } from 'interfaces/permissions';
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
 interface IRolePayload {
     name: string;

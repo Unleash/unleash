@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react';
 
 import { formatApiPath } from 'utils/formatPath';
 import type { IEnvironment } from 'interfaces/environments';
-import handleErrorResponses from '../httpErrorResponseHandler';
-import { defaultEnvironment } from './defaultEnvironment';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { defaultEnvironment } from './defaultEnvironment.js';
 
 const useEnvironment = (id: string, options: SWRConfiguration = {}) => {
     const fetcher = async () => {

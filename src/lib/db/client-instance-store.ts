@@ -1,14 +1,14 @@
 import type EventEmitter from 'events';
-import type { Logger, LogProvider } from '../logger';
+import type { Logger, LogProvider } from '../logger.js';
 import type {
     IClientInstance,
     IClientInstanceStore,
     INewClientInstance,
-} from '../types/stores/client-instance-store';
+} from '../types/stores/client-instance-store.js';
 import { subDays } from 'date-fns';
-import type { Db } from './db';
-import metricsHelper from '../util/metrics-helper';
-import { DB_TIME } from '../metric-events';
+import type { Db } from './db.js';
+import metricsHelper from '../util/metrics-helper.js';
+import { DB_TIME } from '../metric-events.js';
 
 const COLUMNS = [
     'app_name',

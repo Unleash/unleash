@@ -1,8 +1,8 @@
 import type {
     IFeatureToggleStore,
     IFeatureToggleStoreQuery,
-} from '../types/feature-toggle-store-type';
-import NotFoundError from '../../../error/notfound-error';
+} from '../types/feature-toggle-store-type.js';
+import NotFoundError from '../../../error/notfound-error.js';
 import type {
     FeatureToggle,
     FeatureToggleDTO,
@@ -10,14 +10,14 @@ import type {
     IFeatureToggleQuery,
     IFeatureTypeCount,
     IVariant,
-} from '../../../types/model';
-import type { LastSeenInput } from '../../metrics/last-seen/last-seen-service';
+} from '../../../types/model.js';
+import type { LastSeenInput } from '../../metrics/last-seen/last-seen-service.js';
 import type {
     EnvironmentFeatureNames,
     FeatureToggleInsert,
-} from '../feature-toggle-store';
-import type { FeatureConfigurationClient } from '../types/feature-toggle-strategies-store-type';
-import type { IFeatureProjectUserParams } from '../feature-toggle-controller';
+} from '../feature-toggle-store.js';
+import type { FeatureConfigurationClient } from '../types/feature-toggle-strategies-store-type.js';
+import type { IFeatureProjectUserParams } from '../feature-toggle-controller.js';
 
 export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     features: FeatureToggle[] = [];

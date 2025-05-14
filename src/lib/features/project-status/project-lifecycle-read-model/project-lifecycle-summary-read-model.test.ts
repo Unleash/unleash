@@ -1,11 +1,11 @@
 import { addDays, addMinutes } from 'date-fns';
 import dbInit, {
     type ITestDb,
-} from '../../../../test/e2e/helpers/database-init';
-import getLogger from '../../../../test/fixtures/no-logger';
-import { ProjectLifecycleSummaryReadModel } from './project-lifecycle-summary-read-model';
-import type { StageName } from '../../../types';
-import { randomId } from '../../../util';
+} from '../../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../../test/fixtures/no-logger.js';
+import { ProjectLifecycleSummaryReadModel } from './project-lifecycle-summary-read-model.js';
+import type { StageName } from '../../../types/index.js';
+import { randomId } from '../../../util/index.js';
 
 let db: ITestDb;
 let readModel: ProjectLifecycleSummaryReadModel;

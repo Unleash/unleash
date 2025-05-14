@@ -1,7 +1,7 @@
 import type {
     IEnvironmentProjectLink,
     ProjectModeCount,
-} from './project-store';
+} from './project-store.js';
 import type {
     IEnvironment,
     IFeatureNaming,
@@ -9,9 +9,9 @@ import type {
     IProjectApplications,
     IProjectLinkTemplate,
     ProjectMode,
-} from '../../types/model';
-import type { Store } from '../../types/stores/store';
-import type { CreateFeatureStrategySchema } from '../../openapi';
+} from '../../types/model.js';
+import type { Store } from '../../types/stores/store.js';
+import type { CreateFeatureStrategySchema } from '../../openapi/index.js';
 
 export interface IProjectInsert {
     id: string;
@@ -120,7 +120,7 @@ export interface IProjectStore extends Store<IProject, string> {
     getDefaultStrategy(
         projectId: string,
         environment: string,
-    ): Promise<CreateFeatureStrategySchema | null>;
+    ): Promise<CreateFeatureStrategySchema | undefined>;
 
     updateDefaultStrategy(
         projectId: string,

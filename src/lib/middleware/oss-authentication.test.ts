@@ -1,14 +1,14 @@
 import supertest from 'supertest';
-import { createServices } from '../services';
-import { createTestConfig } from '../../test/config/test-config';
+import { createServices } from '../services/index.js';
+import { createTestConfig } from '../../test/config/test-config.js';
 
-import createStores from '../../test/fixtures/store';
-import ossAuth from './oss-authentication';
-import getApp from '../app';
-import User from '../types/user';
-import sessionDb from './session-db';
+import createStores from '../../test/fixtures/store.js';
+import ossAuth from './oss-authentication.js';
+import getApp from '../app.js';
+import User from '../types/user.js';
+import sessionDb from './session-db.js';
 import type { Knex } from 'knex';
-import type { LogProvider } from '../logger';
+import type { LogProvider } from '../logger.js';
 
 const getLogger = (() => ({ debug() {} })) as unknown as LogProvider;
 

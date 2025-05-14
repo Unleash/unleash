@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UnknownFlagSchema } from './unknownFlagSchema';
+import type { UnknownFlagSchema } from './unknownFlagSchema.js';
 
 /**
  * A list of unknown flags that have been reported by the system

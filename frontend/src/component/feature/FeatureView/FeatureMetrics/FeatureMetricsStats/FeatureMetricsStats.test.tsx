@@ -1,5 +1,5 @@
 import { render } from 'utils/testRenderer';
-import { FeatureMetricsStats } from './FeatureMetricsStats';
+import { FeatureMetricsStats } from './FeatureMetricsStats.tsx';
 import { screen } from '@testing-library/react';
 
 test('render hourly metrics stats', async () => {

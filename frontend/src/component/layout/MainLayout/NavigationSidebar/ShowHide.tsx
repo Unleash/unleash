@@ -1,5 +1,5 @@
 import { Box, IconButton, styled, Tooltip } from '@mui/material';
-import type { NavigationMode } from './NavigationMode';
+import type { NavigationMode } from './NavigationMode.tsx';
 import type { FC } from 'react';
 import HideIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import ExpandIcon from '@mui/icons-material/KeyboardDoubleArrowRight';

@@ -1,11 +1,14 @@
-import { type IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import type { ApiTokenService } from '../../../../lib/services/api-token-service';
-import { ApiTokenType } from '../../../../lib/types/models/api-token';
-import { DEFAULT_ENV } from '../../../../lib/util/constants';
-import { TEST_AUDIT_USER } from '../../../../lib/types';
-import { User } from '../../../../lib/server-impl';
+import {
+    type IUnleashTest,
+    setupAppWithAuth,
+} from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import type { ApiTokenService } from '../../../../lib/services/index.js';
+import { ApiTokenType } from '../../../../lib/types/model.js';
+import { DEFAULT_ENV } from '../../../../lib/util/index.js';
+import { TEST_AUDIT_USER } from '../../../../lib/types/index.js';
+import User from '../../../../lib/types/user.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

@@ -1,7 +1,7 @@
 import { type FC, useState, useMemo } from 'react';
 import { InputAdornment } from '@mui/material';
 import Search from '@mui/icons-material/Search';
-import { ChangeRequestTable } from './ChangeRequestTable';
+import { ChangeRequestTable } from './ChangeRequestTable.tsx';
 import {
     ScrollContainer,
     TableSearchInput,

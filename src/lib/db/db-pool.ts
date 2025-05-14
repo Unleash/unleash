@@ -1,5 +1,7 @@
-import { knex, type Knex } from 'knex';
-import type { IUnleashConfig } from '../types/option';
+import type { Knex } from 'knex';
+import knexpkg from 'knex';
+const { knex } = knexpkg;
+import type { IUnleashConfig } from '../types/option.js';
 
 export function createDb({
     db,
@@ -23,8 +25,3 @@ export function createDb({
         },
     });
 }
-
-// for backward compatibility
-module.exports = {
-    createDb,
-};

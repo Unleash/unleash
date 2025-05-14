@@ -1,4 +1,4 @@
-import type { IUnknownFlagsStore, UnknownFlag } from './unknown-flags-store';
+import type { IUnknownFlagsStore, UnknownFlag } from './unknown-flags-store.js';
 
 export class FakeUnknownFlagsStore implements IUnknownFlagsStore {
     private unknownFlagMap = new Map<string, UnknownFlag>();

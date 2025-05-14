@@ -15,7 +15,7 @@ import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { Typography, styled } from '@mui/material';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { textTruncated } from 'themes/themeStyles';
-import { NameWithChangeInfo } from '../NameWithChangeInfo/NameWithChangeInfo';
+import { NameWithChangeInfo } from '../NameWithChangeInfo/NameWithChangeInfo.tsx';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',

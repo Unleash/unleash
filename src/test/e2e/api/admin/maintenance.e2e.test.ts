@@ -1,6 +1,9 @@
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import { setupApp, setupAppWithCustomConfig } from '../../helpers/test-helper';
-import getLogger from '../../../fixtures/no-logger';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import {
+    setupApp,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper.js';
+import getLogger from '../../../fixtures/no-logger.js';
 
 let db: ITestDb;
 

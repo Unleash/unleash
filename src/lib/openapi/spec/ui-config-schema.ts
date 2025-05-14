@@ -1,7 +1,7 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { versionSchema } from './version-schema';
-import { variantFlagSchema } from './variant-flag-schema';
-import { resourceLimitsSchema } from './resource-limits-schema';
+import { versionSchema } from './version-schema.js';
+import { variantFlagSchema } from './variant-flag-schema.js';
+import { resourceLimitsSchema } from './resource-limits-schema.js';
 
 export const uiConfigSchema = {
     $id: '#/components/schemas/uiConfigSchema',

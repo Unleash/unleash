@@ -1,9 +1,9 @@
 import nock from 'nock';
-import createStores from '../../test/fixtures/store';
-import version from '../util/version';
-import getLogger from '../../test/fixtures/no-logger';
-import VersionService from './version-service';
-import { randomId } from '../util/random-id';
+import createStores from '../../test/fixtures/store.js';
+import version from '../util/version.js';
+import getLogger from '../../test/fixtures/no-logger.js';
+import VersionService from './version-service.js';
+import { randomId } from '../util/random-id.js';
 
 beforeAll(() => {
     nock.disableNetConnect();

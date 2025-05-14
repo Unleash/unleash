@@ -1,5 +1,5 @@
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
-import type { NavigationMode } from './NavigationMode';
+import type { NavigationMode } from './NavigationMode.jsx';
 import { useEffect } from 'react';
 
 export const useNavigationMode = () => {

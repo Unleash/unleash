@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateActionSchema } from './createActionSchema';
-import type { CreateActionsSchemaMatch } from './createActionsSchemaMatch';
+import type { CreateActionSchema } from './createActionSchema.js';
+import type { CreateActionsSchemaMatch } from './createActionsSchemaMatch.js';
 
 /**
  * An action set defines actions that Unleash performs when a signal is matched.

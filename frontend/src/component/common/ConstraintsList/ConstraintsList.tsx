@@ -1,6 +1,6 @@
 import { Children, isValidElement, type FC, type ReactNode } from 'react';
 import { styled } from '@mui/material';
-import { ConstraintSeparator } from './ConstraintSeparator/ConstraintSeparator';
+import { ConstraintSeparator } from './ConstraintSeparator/ConstraintSeparator.tsx';
 
 const StyledList = styled('ul')(({ theme }) => ({
     display: 'flex',

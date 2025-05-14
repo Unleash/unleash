@@ -1,5 +1,5 @@
-import useAPI from '../useApi/useApi';
-import { usePlausibleTracker } from '../../../usePlausibleTracker';
+import useAPI from '../useApi/useApi.js';
+import { usePlausibleTracker } from '../../../usePlausibleTracker.js';
 import type { PlausibleChangeRequestState } from 'component/changeRequest/changeRequest.types';
 import { getUniqueChangeRequestId } from 'utils/unique-change-request-id';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

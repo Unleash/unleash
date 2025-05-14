@@ -1,9 +1,9 @@
 import { subDays } from 'date-fns';
-import type { IFeatureType } from '../../types/stores/feature-type-store';
+import type { IFeatureType } from '../../types/stores/feature-type-store.js';
 import {
     calculateProjectHealth,
     calculateHealthRating,
-} from './project-health';
+} from './project-health.js';
 
 const exampleFeatureTypes: IFeatureType[] = [
     {

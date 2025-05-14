@@ -36,7 +36,7 @@ import {
 import { caseInsensitiveSearch } from 'utils/search';
 import type { IServiceAccount } from 'interfaces/service-account';
 import { MultipleRoleSelect } from 'component/common/MultipleRoleSelect/MultipleRoleSelect';
-import type { IUserProjectRole } from '../../../../interfaces/userProjectRoles';
+import type { IUserProjectRole } from '../../../../interfaces/userProjectRoles.ts';
 import { useCheckProjectPermissions } from 'hooks/useHasAccess';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import AutocompleteVirtual from 'component/common/AutocompleteVirtual/AutcompleteVirtual';

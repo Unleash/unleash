@@ -18,7 +18,7 @@ import { UIProviderContainer } from 'component/providers/UIProvider/UIProviderCo
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 import { FeedbackProvider } from 'component/feedbackNew/FeedbackProvider';
 import { PlausibleProvider } from 'component/providers/PlausibleProvider/PlausibleProvider';
-import { Error as LayoutError } from './component/layout/Error/Error';
+import { Error as LayoutError } from './component/layout/Error/Error.tsx';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecordUIErrorApi } from 'hooks/api/actions/useRecordUIErrorApi/useRecordUiErrorApi';
 import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';

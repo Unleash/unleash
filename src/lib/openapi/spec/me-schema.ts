@@ -1,7 +1,7 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { userSchema } from './user-schema';
-import { permissionSchema } from './permission-schema';
-import { feedbackResponseSchema } from './feedback-response-schema';
+import { userSchema } from './user-schema.js';
+import { permissionSchema } from './permission-schema.js';
+import { feedbackResponseSchema } from './feedback-response-schema.js';
 
 export const meSchema = {
     $id: '#/components/schemas/meSchema',

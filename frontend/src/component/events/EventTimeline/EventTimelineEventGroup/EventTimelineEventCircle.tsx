@@ -9,7 +9,7 @@ import type {
     TimelineEvent,
     TimelineEventGroup,
     TimelineEventType,
-} from '../EventTimeline';
+} from '../EventTimeline.tsx';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import type { HTMLAttributes } from 'react';
 import SensorsIcon from '@mui/icons-material/Sensors';

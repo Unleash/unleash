@@ -1,13 +1,8 @@
-import BadDataError from '../../error/bad-data-error';
-import type { IEnvironment } from '../model';
+import BadDataError from '../../error/bad-data-error.js';
+import type { IApiTokenCreate, IEnvironment } from '../model.js';
+import { ApiTokenType } from '../model.js';
 
 export const ALL = '*';
-
-export enum ApiTokenType {
-    CLIENT = 'client',
-    ADMIN = 'admin',
-    FRONTEND = 'frontend',
-}
 
 export interface ILegacyApiTokenCreate {
     secret: string;
@@ -21,28 +16,6 @@ export interface ILegacyApiTokenCreate {
     projects?: string[];
     expiresAt?: Date;
     tokenName?: string;
-}
-
-export interface IApiTokenCreate {
-    secret: string;
-    tokenName: string;
-    alias?: string;
-    type: ApiTokenType;
-    environment: string;
-    projects: string[];
-    expiresAt?: Date;
-    /**
-     * @deprecated Use tokenName instead
-     */
-    username?: string;
-}
-
-export interface IApiToken extends Omit<IApiTokenCreate, 'alias'> {
-    createdAt: Date;
-    seenAt?: Date;
-    environment: string;
-    project: string;
-    alias?: string | null;
 }
 
 export const isAllProjects = (projects: string[]): boolean => {

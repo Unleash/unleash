@@ -1,5 +1,5 @@
-import type { IUser } from '../user';
-import type { Store } from './store';
+import type { IUser } from '../user.js';
+import type { Store } from './store.js';
 
 export interface ICreateUser {
     name?: string;

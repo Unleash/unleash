@@ -1,10 +1,10 @@
-import { Dialogue } from '../../../../common/Dialogue/Dialogue';
-import useLoading from '../../../../../hooks/useLoading';
+import { Dialogue } from '../../../../common/Dialogue/Dialogue.tsx';
+import useLoading from '../../../../../hooks/useLoading.ts';
 import { Alert, Typography } from '@mui/material';
-import { DEL_INACTIVE_USERS_ERROR } from '../../../../../hooks/api/actions/useInactiveUsersApi/useInactiveUsersApi';
-import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
-import type { IInactiveUser } from '../../../../../hooks/api/getters/useInactiveUsers/useInactiveUsers';
-import { flexRow } from '../../../../../themes/themeStyles';
+import { DEL_INACTIVE_USERS_ERROR } from '../../../../../hooks/api/actions/useInactiveUsersApi/useInactiveUsersApi.ts';
+import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender.tsx';
+import type { IInactiveUser } from '../../../../../hooks/api/getters/useInactiveUsers/useInactiveUsers.ts';
+import { flexRow } from '../../../../../themes/themeStyles.ts';
 
 interface IDeleteInactiveUsersProps {
     showDialog: boolean;

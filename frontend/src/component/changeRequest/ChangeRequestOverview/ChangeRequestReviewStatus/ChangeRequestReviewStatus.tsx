@@ -33,7 +33,7 @@ import type {
     ChangeRequestSchedulePending,
     ChangeRequestScheduleSuspended,
 } from 'component/changeRequest/changeRequest.types';
-import { getBrowserTimezone } from './utils';
+import { getBrowserTimezone } from './utils.ts';
 import { formatDateYMDHMS } from 'utils/formatDate';
 
 interface ISuggestChangeReviewsStatusProps {

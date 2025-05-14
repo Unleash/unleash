@@ -18,10 +18,10 @@ import useEnvironmentApi, {
 } from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { EnvironmentRow } from './EnvironmentRow/EnvironmentRow';
-import { EnvironmentNameCell } from './EnvironmentNameCell/EnvironmentNameCell';
-import { EnvironmentActionCell } from './EnvironmentActionCell/EnvironmentActionCell';
-import { EnvironmentIconCell } from './EnvironmentIconCell/EnvironmentIconCell';
+import { EnvironmentRow } from './EnvironmentRow/EnvironmentRow.tsx';
+import { EnvironmentNameCell } from './EnvironmentNameCell/EnvironmentNameCell.tsx';
+import { EnvironmentActionCell } from './EnvironmentActionCell/EnvironmentActionCell.tsx';
+import { EnvironmentIconCell } from './EnvironmentIconCell/EnvironmentIconCell.tsx';
 import { Search } from 'component/common/Search/Search';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';

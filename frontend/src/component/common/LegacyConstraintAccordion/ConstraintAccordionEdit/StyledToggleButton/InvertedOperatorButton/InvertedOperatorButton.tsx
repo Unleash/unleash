@@ -5,8 +5,8 @@ import type { IConstraint } from 'interfaces/strategy';
 import {
     StyledToggleButtonOff,
     StyledToggleButtonOn,
-} from '../StyledToggleButton';
-import { ConditionallyRender } from '../../../../ConditionallyRender/ConditionallyRender';
+} from '../StyledToggleButton.tsx';
+import { ConditionallyRender } from '../../../../ConditionallyRender/ConditionallyRender.tsx';
 
 interface InvertedOperatorButtonProps {
     localConstraint: IConstraint;

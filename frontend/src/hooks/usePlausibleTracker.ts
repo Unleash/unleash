@@ -73,7 +73,8 @@ export type CustomEvents =
     | 'order-environments'
     | 'project-navigation'
     | 'productivity-report'
-    | 'release-management';
+    | 'release-management'
+    | 'feature-links';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

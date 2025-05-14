@@ -45,6 +45,7 @@ jobs:
       - run: yarn install --immutable
         env:
           YARN_ENABLE_SCRIPTS: false
+      - run: yarn run build:backend
       - run: yarn run test:coverage
         env:
           CI: true

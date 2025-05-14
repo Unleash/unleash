@@ -1,32 +1,28 @@
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import type { IConstraint } from 'interfaces/strategy';
 
+export const getConstraintKey = (constraint: IConstraint): string => {
+    const sortedValues = (values?: string[]) =>
+        values ? [...values].sort() : undefined;
+
+    return JSON.stringify({
+        contextName: constraint.contextName,
+        operator: constraint.operator,
+        values: sortedValues(constraint.values),
+        value: constraint.value,
+        inverted: constraint.inverted,
+        caseInsensitive: constraint.caseInsensitive,
+    });
+};
+
 export const areConstraintsEqual = (
     a: IConstraint,
     b: IConstraint,
 ): boolean => {
-    const sortedValues = (values?: string[]) =>
-        values ? [...values].sort() : undefined;
+    const aKey = getConstraintKey(a);
+    const bKey = getConstraintKey(b);
 
-    const aJson = JSON.stringify({
-        contextName: a.contextName,
-        operator: a.operator,
-        values: sortedValues(a.values),
-        value: a.value,
-        inverted: a.inverted,
-        caseInsensitive: a.caseInsensitive,
-    });
-
-    const bJson = JSON.stringify({
-        contextName: b.contextName,
-        operator: b.operator,
-        values: sortedValues(b.values),
-        value: b.value,
-        inverted: b.inverted,
-        caseInsensitive: b.caseInsensitive,
-    });
-
-    return aJson === bJson;
+    return aKey === bKey;
 };
 
 export const useRecentlyUsedConstraints = (

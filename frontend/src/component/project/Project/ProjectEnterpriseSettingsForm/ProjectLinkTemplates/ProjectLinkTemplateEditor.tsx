@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button, styled, TextField } from '@mui/material';
 import type { ProjectLinkTemplateSchema } from 'openapi';
-import { usePlausibleTracker } from '../../../../../hooks/usePlausibleTracker.ts';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IProjectLinkTemplateEditorProps {
     template?: ProjectLinkTemplateSchema;

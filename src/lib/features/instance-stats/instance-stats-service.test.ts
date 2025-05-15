@@ -93,9 +93,7 @@ describe.each([true, false])(
 
         test(`should${featureEnabled ? ' ' : ' not '}memoize query results`, async () => {
             const segmentStore = stores.segmentStore;
-            vi.spyOn(segmentStore, 'count').mockReturnValue(
-                Promise.resolve(5),
-            );
+            vi.spyOn(segmentStore, 'count').mockReturnValue(Promise.resolve(5));
             expect(segmentStore.count).toHaveBeenCalledTimes(0);
             expect(await instanceStatsService.segmentCount()).toBe(5);
             expect(segmentStore.count).toHaveBeenCalledTimes(1);

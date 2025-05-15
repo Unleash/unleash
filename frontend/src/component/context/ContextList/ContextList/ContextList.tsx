@@ -97,7 +97,7 @@ const ContextList: VFC = () => {
                 align: 'center',
                 Cell: ({
                     row: {
-                        original: { name },
+                        original: { name, usedInFeatures },
                     },
                 }: any) => (
                     <ContextActionsCell
@@ -106,6 +106,7 @@ const ContextList: VFC = () => {
                             setName(name);
                             setShowDelDialogue(true);
                         }}
+                        allowDelete={usedInFeatures === 0}
                     />
                 ),
                 width: 150,

@@ -497,10 +497,6 @@ export class FeatureToggleService {
     async validateConstraint(input: IConstraint): Promise<IConstraint> {
         const constraint = await constraintSchema.validateAsync(input);
         const { operator } = constraint;
-        const contextDefinition = await this.contextFieldStore.get(
-            constraint.contextName,
-        );
-
         if (oneOf(NUM_OPERATORS, operator)) {
             await validateNumber(constraint.value);
         }
@@ -519,20 +515,26 @@ export class FeatureToggleService {
             await validateDate(constraint.value);
         }
 
-        if (
-            contextDefinition?.legalValues &&
-            contextDefinition.legalValues.length > 0
-        ) {
-            const valuesToValidate = oneOf(
-                [...DATE_OPERATORS, ...SEMVER_OPERATORS, ...NUM_OPERATORS],
-                operator,
-            )
-                ? constraint.value
-                : constraint.values;
-            validateLegalValues(
-                contextDefinition.legalValues,
-                valuesToValidate,
+        if (await this.contextFieldStore.exists(constraint.contextName)) {
+            const contextDefinition = await this.contextFieldStore.get(
+                constraint.contextName,
             );
+
+            if (
+                contextDefinition?.legalValues &&
+                contextDefinition.legalValues.length > 0
+            ) {
+                const valuesToValidate = oneOf(
+                    [...DATE_OPERATORS, ...SEMVER_OPERATORS, ...NUM_OPERATORS],
+                    operator,
+                )
+                    ? constraint.value
+                    : constraint.values;
+                validateLegalValues(
+                    contextDefinition.legalValues,
+                    valuesToValidate,
+                );
+            }
         }
 
         return constraint;

@@ -75,6 +75,7 @@ const LegalValuesContainer = styled('div')(({ theme }) => ({
 const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
     fieldset: { border: 'none', borderRadius: 0 },
     maxWidth: '25ch',
+    minWidth: '7ch',
     ':focus-within .MuiSelect-select': {
         background: 'none',
     },
@@ -84,9 +85,7 @@ const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
         margin: 0,
     },
     '&::before': {
-        border: 'none',
-        // make it transparent so that it fades in
-        borderColor: `${theme.palette.primary.main}00`,
+        borderColor: theme.palette.divider,
     },
     '&&:hover::before': {
         borderColor: theme.palette.primary.main,
@@ -259,9 +258,19 @@ export const EditableConstraint: FC<Props> = ({
         return null;
     }
 
-    const constraintNameOptions = context.map((context) => {
-        return { key: context.name, label: context.name };
-    });
+    const extantContextFieldNames = context.map((context) => context.name);
+    const contextFieldHasBeenDeleted = !extantContextFieldNames.includes(
+        localConstraint.contextName,
+    );
+
+    const availableContextFieldNames = contextFieldHasBeenDeleted
+        ? [...extantContextFieldNames, localConstraint.contextName].toSorted()
+        : extantContextFieldNames;
+
+    const contextFieldOptions = availableContextFieldNames.map((option) => ({
+        key: option,
+        label: option,
+    }));
 
     return (
         <Container>
@@ -273,7 +282,7 @@ export const EditableConstraint: FC<Props> = ({
                             id='context-field-select'
                             name='contextName'
                             label='Context Field'
-                            options={constraintNameOptions}
+                            options={contextFieldOptions}
                             value={contextName || ''}
                             onChange={(contextField) =>
                                 updateConstraint({

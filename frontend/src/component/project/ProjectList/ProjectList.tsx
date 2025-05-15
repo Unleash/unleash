@@ -78,7 +78,7 @@ export const ProjectList = () => {
                                 }
                             />
 
-                            <ProjectArchiveLink />
+                            {!isOss() && <ProjectArchiveLink />}
                             <ProjectCreationButton
                                 isDialogOpen={Boolean(state.create)}
                                 setIsDialogOpen={(create) =>

@@ -108,29 +108,6 @@ test('should accept client metrics with yes/no', () => {
         .expect(202);
 });
 
-test('should accept client metrics with yes/no with metricsV2', async () => {
-    const testRunner = await getSetup();
-    await testRunner.request
-        .post('/api/client/metrics')
-        .send({
-            appName: 'demo',
-            instanceId: '1',
-            bucket: {
-                start: Date.now(),
-                stop: Date.now(),
-                toggles: {
-                    toggleA: {
-                        yes: 200,
-                        no: 0,
-                    },
-                },
-            },
-        })
-        .expect(202);
-
-    await testRunner.destroy();
-});
-
 test('should accept client metrics with variants', () => {
     return request
         .post('/api/client/metrics')

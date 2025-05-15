@@ -245,7 +245,7 @@ export class ContextController extends Controller {
                     tags: ['Context'],
                     summary: 'Validate a context field',
                     description:
-                        'Check whether the provided data can be used to create a context field. If the data is not valid, ...?',
+                        'Check whether the provided data can be used to create a context field. If the data is not valid, returns a 400 status code with the reason why it is not valid.',
                     operationId: 'validate',
                     requestBody: createRequestSchema('nameSchema'),
                     responses: {

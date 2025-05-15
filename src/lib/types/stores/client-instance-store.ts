@@ -18,6 +18,10 @@ export interface IClientInstanceStore
         Pick<INewClientInstance, 'appName' | 'instanceId'>
     > {
     bulkUpsert(instances: INewClientInstance[]): Promise<void>;
+    /**
+     * @deprecated
+     * `bulkUpsert` is beeing used instead. remove with `lastSeenBulkQuery` flag
+     */
     setLastSeen(INewClientInstance): Promise<void>;
     insert(details: INewClientInstance): Promise<void>;
     getByAppName(appName: string): Promise<IClientInstance[]>;

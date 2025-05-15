@@ -1,32 +1,43 @@
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import type { IConstraint } from 'interfaces/strategy';
 
+const hashString = (str: string): number => {
+    let hash = 0;
+    if (str.length === 0) return hash;
+
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash = hash & hash;
+    }
+
+    return Math.abs(hash);
+};
+
+export const getConstraintKey = (constraint: IConstraint): string => {
+    const sortedValues = (values?: string[]) =>
+        values ? [...values].sort() : undefined;
+
+    const jsonString = JSON.stringify({
+        contextName: constraint.contextName,
+        operator: constraint.operator,
+        values: sortedValues(constraint.values),
+        value: constraint.value,
+        inverted: constraint.inverted,
+        caseInsensitive: constraint.caseInsensitive,
+    });
+
+    return hashString(jsonString).toString();
+};
+
 export const areConstraintsEqual = (
     a: IConstraint,
     b: IConstraint,
 ): boolean => {
-    const sortedValues = (values?: string[]) =>
-        values ? [...values].sort() : undefined;
+    const aKey = getConstraintKey(a);
+    const bKey = getConstraintKey(b);
 
-    const aJson = JSON.stringify({
-        contextName: a.contextName,
-        operator: a.operator,
-        values: sortedValues(a.values),
-        value: a.value,
-        inverted: a.inverted,
-        caseInsensitive: a.caseInsensitive,
-    });
-
-    const bJson = JSON.stringify({
-        contextName: b.contextName,
-        operator: b.operator,
-        values: sortedValues(b.values),
-        value: b.value,
-        inverted: b.inverted,
-        caseInsensitive: b.caseInsensitive,
-    });
-
-    return aJson === bJson;
+    return aKey === bKey;
 };
 
 export const useRecentlyUsedConstraints = (

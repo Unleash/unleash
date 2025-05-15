@@ -1,9 +1,9 @@
 import { styled, Typography } from '@mui/material';
 import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
-import { constraintId } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import {
     useRecentlyUsedConstraints,
     areConstraintsEqual,
+    getConstraintKey,
 } from './useRecentlyUsedConstraints.ts';
 import type { IConstraint } from 'interfaces/strategy';
 
@@ -55,7 +55,7 @@ export const RecentlyUsedConstraints = ({
             <StyledConstraintsContainer>
                 {nonSelectedRecentConstraints.map((constraint) => (
                     <ConstraintAccordionView
-                        key={constraint[constraintId]}
+                        key={getConstraintKey(constraint)}
                         constraint={constraint}
                         borderStyle='dashed'
                         onUse={() => {

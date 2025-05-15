@@ -66,7 +66,8 @@ export type IFlagKey =
     | 'registerFrontendClient'
     | 'featureLinks'
     | 'projectLinkTemplates'
-    | 'reportUnknownFlags';
+    | 'reportUnknownFlags'
+    | 'lastSeenBulkQuery';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 

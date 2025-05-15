@@ -32,7 +32,14 @@ import {
 import { insertLastSeenAt } from '../../../../test/e2e/helpers/test-helper.js';
 import type { EventService } from '../../../services/index.js';
 import type FeatureLinkService from '../../feature-links/feature-link-service.js';
-import { beforeAll, afterAll, beforeEach, test, expect } from 'vitest';
+import {
+    beforeAll,
+    afterAll,
+    beforeEach,
+    test,
+    expect,
+    describe,
+} from 'vitest';
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: FeatureToggleService;

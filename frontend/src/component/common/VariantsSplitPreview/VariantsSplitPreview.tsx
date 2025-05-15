@@ -22,7 +22,10 @@ const StyledVariantItem = styled(Box)<{ selected?: boolean }>(
     }),
 );
 
-const StyledVariantItemTrack = styled(Box)<{
+const StyledVariantItemTrack = styled(Box, {
+    shouldForwardProp: (prop) =>
+        !['index', 'hasError', 'isFirst', 'isLast'].includes(prop as string),
+})<{
     index: number;
     hasError?: boolean;
     isFirst?: boolean;

@@ -81,7 +81,7 @@ test('should pick up environment from token', async () => {
         tokenName: 'tester',
     });
 
-    // @ts-expect-error
+    // @ts-expect-error - cachedFeatureNames is a private property in ClientMetricsServiceV2
     app.services.clientMetricsServiceV2.cachedFeatureNames = jest
         .fn()
         .mockResolvedValue(['test']);
@@ -124,7 +124,7 @@ test('should set lastSeen for toggles with metrics both for toggle and toggle en
         TEST_AUDIT_USER,
     );
 
-    // @ts-expect-error
+    // @ts-expect-error - cachedFeatureNames is a private property in ClientMetricsServiceV2
     app.services.clientMetricsServiceV2.cachedFeatureNames = jest
         .fn()
         .mockResolvedValue(['t1', 't2']);

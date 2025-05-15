@@ -258,9 +258,19 @@ export const EditableConstraint: FC<Props> = ({
         return null;
     }
 
-    const constraintNameOptions = context.map((context) => {
-        return { key: context.name, label: context.name };
-    });
+    const extantContextFieldNames = context.map((context) => context.name);
+    const contextFieldHasBeenDeleted = !extantContextFieldNames.includes(
+        localConstraint.contextName,
+    );
+
+    const availableContextFieldNames = contextFieldHasBeenDeleted
+        ? [...extantContextFieldNames, localConstraint.contextName].toSorted()
+        : extantContextFieldNames;
+
+    const contextFieldOptions = availableContextFieldNames.map((option) => ({
+        key: option,
+        label: option,
+    }));
 
     return (
         <Container>
@@ -272,7 +282,7 @@ export const EditableConstraint: FC<Props> = ({
                             id='context-field-select'
                             name='contextName'
                             label='Context Field'
-                            options={constraintNameOptions}
+                            options={contextFieldOptions}
                             value={contextName || ''}
                             onChange={(contextField) =>
                                 updateConstraint({

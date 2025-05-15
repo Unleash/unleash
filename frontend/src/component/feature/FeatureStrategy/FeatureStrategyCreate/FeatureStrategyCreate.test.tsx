@@ -392,7 +392,7 @@ describe('NewFeatureStrategyCreate', () => {
         expect(screen.queryByText('789')).toBeInTheDocument();
     });
 
-    test.skip('Should remove constraint when no valid values are set and moving between tabs', async () => {
+    test('Should remove constraint when no valid values are set and moving between tabs', async () => {
         setupComponent();
 
         const titleEl = await screen.findByText('Gradual rollout');

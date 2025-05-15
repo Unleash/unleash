@@ -15,7 +15,7 @@ import SettingService from './setting-service.js';
 import FakeSettingStore from '../../test/fixtures/fake-setting-store.js';
 import { extractAuditInfoFromUser } from '../util/index.js';
 import { createFakeEventsService } from '../features/index.js';
-import { vi, expect, test } from 'vitest';
+import { vi, expect, test, describe, beforeEach } from 'vitest';
 const config: IUnleashConfig = createTestConfig();
 
 const systemUser = new User({ id: -1, username: 'system' });

@@ -28,7 +28,6 @@ const initializeTemplateDb = (db: IUnleashConfig['db']): Promise<void> => {
             );
             await Promise.all(
                 result.rows.map((row) => {
-                    console.log(`Dropping test database ${row.datname}`);
                     return client.query(`DROP DATABASE ${row.datname}`);
                 }),
             );

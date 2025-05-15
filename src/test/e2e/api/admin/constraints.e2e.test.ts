@@ -43,3 +43,14 @@ test('should accept valid constraints', async () => {
         .send({ contextName: 'environment', operator: 'IN', values: ['a'] })
         .expect(204);
 });
+
+test('should allow unknown constraints if their values are valid', async () => {
+    await app.request
+        .post(PATH)
+        .send({
+            contextName: 'not-a-default-context-value',
+            operator: 'NUM_EQ',
+            value: 1,
+        })
+        .expect(204);
+});

@@ -9,15 +9,11 @@ import ArchiveIcon from '@mui/icons-material/Inventory2Outlined';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import type { FC } from 'react';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const ProjectArchiveLink: FC = () => {
     const navigate = useNavigate();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    const { isOss } = useUiConfig();
-
-    if (isOss()) return null;
 
     if (isSmallScreen) {
         return (

@@ -304,29 +304,24 @@ To view a user’s permissions, go to **Admin > Users**. Select a user and click
 
 :::
 
-User groups allow you to assign roles to a group of users within a project, rather than to a user directly. This allows
-you to manage your user permissions more easily when there's lots of users in the system. For a guide on how to create
-and manage user groups see [_how to create and manage user groups_](../how-to/how-to-create-and-manage-user-groups.md).
+User groups allow you to manage user permissions efficiently by assigning roles to a collection of users instead of individually. This is particularly useful for projects with many users.
 
-A user group consists of the following:
+You can create and manage user groups in the Admin UI at **Admin settings > User config > Groups**.
 
-- a **name** (required)
-- a **description** (optional)
-- a **list of users** (required)
-- a list of SSO groups to sync from (optional)
-- a root role associated with the group (optional; available in v5.1+)
+When creating a user group, you can define the following:
 
-Groups do nothing on their own. They must either be given a root role directly or a role on a project to assign
-permissions.
+- **Name**: A unique identifier for the group.
+- **Description**: A brief explanation of the group's purpose.
+- **Users**: A list of users who are members of this group.
+- **SSO groups** to sync from: A list of single sign-on (SSO) groups to synchronize members from.
+- **Root role**: A role assigned to the group at the root level. (Available in v5.1+)
 
-Groups that do not have a root role need to be assigned a role on a project to be useful. You can assign both predefined
-roles and custom project roles to groups.
+Groups themselves do not grant permissions. To be functional, a group must either:
+- Be assigned a root role. Members of this group will inherit the root role's permissions globally.
+- Be assigned a role on a specific project. This grants the group's members the specified permissions within that project. You can assign both predefined and custom project roles to groups.
 
-Any user that is a member of a group with a root role will inherit that root role's permissions on the root level.
-
-While a user can only have one role in a given project, a user may belong to multiple groups, and each of those groups
-may be given a role on a project. In the case where a given user is given permissions through more than one group, the
-user will inherit the most permissive permissions of all their groups in that project.
+A user can belong to multiple groups, and each group a user belongs to can have a different role assigned to it on a specific project.
+If a user gains permissions for a project through multiple groups, they will inherit the most permissive set of permissions from all their assigned group roles for that project.
 
 ## User group SSO integration
 

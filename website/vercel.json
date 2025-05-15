@@ -137,6 +137,26 @@
       "permanent": true
     },
     {
+      "source": "/how-to/how-to-import-export",
+      "destination": "/reference/environment-import-export",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/users-and-permissions",
+      "destination": "/reference/rbac",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/env",
+      "destination": "/reference/environments",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-create-and-manage-user-groups",
+      "destination": "/reference/rbac#user-groups",
+      "permanent": true
+    },
+    {
       "source": "/how-to/how-to-clone-environments",
       "destination": "/reference/environments#clone-an-environment",
       "permanent": true
@@ -1018,12 +1038,12 @@
     },
     {
       "source": "/reference/deploy/import-export",
-      "destination": "/how-to/how-to-import-export",
+      "destination": "/reference/environment-import-export",
       "permanent": true
     },
     {
       "source": "/deploy/import_export",
-      "destination": "/how-to/how-to-import-export",
+      "destination": "/reference/environment-import-export",
       "permanent": true
     },
     {

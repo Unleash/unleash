@@ -1,5 +1,5 @@
 ---
-title: OpenID Connect
+title: Set up SSO with OpenID Connect
 description: Set up SSO for Unleash with OpenID Connect.
 ---
 

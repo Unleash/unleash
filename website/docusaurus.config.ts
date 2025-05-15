@@ -823,13 +823,6 @@ class="header-github-link"
                         },
                         {
                             from: [
-                                '/reference/deploy/import-export',
-                                '/deploy/import_export',
-                            ],
-                            to: '/how-to/how-to-import-export',
-                        },
-                        {
-                            from: [
                                 '/reference/deploy/environment-import-export',
                                 '/deploy/environment-import-export',
                             ],

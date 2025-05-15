@@ -354,6 +354,7 @@ const sidebars: SidebarsConfig = {
                                 'reference/projects',
                                 'reference/project-collaboration-mode',
                                 'reference/environments',
+                                'reference/environment-import-export',
                             ],
                         },
                         {
@@ -584,6 +585,7 @@ const sidebars: SidebarsConfig = {
                         'how-to/how-to-add-sso-saml-keycloak',
                         'how-to/how-to-add-sso-azure-saml',
                         'how-to/how-to-setup-sso-keycloak-group-sync',
+                        'how-to/how-to-set-up-group-sso-sync',
                     ],
                     type: 'category',
                     link: {
@@ -685,32 +687,6 @@ const sidebars: SidebarsConfig = {
                                 'how-to/how-to-schedule-feature-releases',
                                 'how-to/how-to-synchronize-unleash-instances',
                             ],
-                        },
-                        {
-                            label: 'Environments',
-                            type: 'category',
-                            link: {
-                                type: 'generated-index',
-                                title: 'How-to: environments',
-                                description: 'Environments how-to guides.',
-                                slug: '/how-to/env',
-                            },
-                            items: ['how-to/how-to-environment-import-export'],
-                        },
-                        {
-                            label: 'Users and permissions',
-                            items: [
-                                'how-to/how-to-create-and-manage-user-groups',
-                                'how-to/how-to-set-up-group-sso-sync',
-                            ],
-                            type: 'category',
-                            link: {
-                                type: 'generated-index',
-                                title: 'How-to: users and permissions',
-                                description:
-                                    'Users and permission how-to guides.',
-                                slug: '/how-to/users-and-permissions',
-                            },
                         },
                     ],
                 },

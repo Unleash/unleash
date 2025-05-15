@@ -179,6 +179,39 @@ test('should delete context field', async () => {
     return app.request.delete('/api/admin/context/userId').expect(200);
 });
 
+test('should not delete a context field that is in use', async () => {
+    const context = 'appName';
+    const feature = 'contextFeature';
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            name: feature,
+            enabled: false,
+            strategies: [{ name: 'default' }],
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${feature}/environments/default/strategies`,
+        )
+        .send({
+            name: 'default',
+            constraints: [
+                {
+                    contextName: context,
+                    operator: 'IN',
+                    values: ['test'],
+                    caseInsensitive: false,
+                    inverted: false,
+                },
+            ],
+        })
+        .expect(200);
+
+    return app.request.delete(`/api/admin/context/${context}`).expect(409);
+});
+
 test('refuses to create a context not url-friendly name', async () => {
     expect.assertions(0);
     return app.request

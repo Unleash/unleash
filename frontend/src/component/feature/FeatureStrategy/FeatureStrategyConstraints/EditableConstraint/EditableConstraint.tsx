@@ -205,6 +205,23 @@ const TopRowInput: FC<{
     );
 };
 
+const getContextFieldOptions = (
+    contextFields: string[],
+    selectedContextField: string,
+) => {
+    const contextFieldHasBeenDeleted =
+        !contextFields.includes(selectedContextField);
+
+    const availableContextFieldNames = contextFieldHasBeenDeleted
+        ? [...contextFields, selectedContextField].toSorted()
+        : contextFields;
+
+    return availableContextFieldNames.map((option) => ({
+        key: option,
+        label: option,
+    }));
+};
+
 type Props = {
     constraint: IConstraint;
     onDelete: () => void;
@@ -258,14 +275,10 @@ export const EditableConstraint: FC<Props> = ({
         return null;
     }
 
-    const allConstraintOptions = [
-        ...new Set([
-            ...context.map((context) => context.name),
-            localConstraint.contextName,
-        ]),
-    ]
-        .toSorted()
-        .map((option) => ({ key: option, label: option }));
+    const contextFieldOptions = getContextFieldOptions(
+        context.map((contextField) => contextField.name),
+        localConstraint.contextName,
+    );
 
     return (
         <Container>
@@ -277,7 +290,12 @@ export const EditableConstraint: FC<Props> = ({
                             id='context-field-select'
                             name='contextName'
                             label='Context Field'
-                            options={allConstraintOptions}
+                            options={contextFieldOptions}
+                            // helperText={'oh no'
+                            //     contextFieldHasBeenDeleted
+                            //         ? "This context field has been deleted. You can still edit this instance, but won't be able to use it for other constraints."
+                            //         : ''
+                            // }
                             value={contextName || ''}
                             onChange={(contextField) =>
                                 updateConstraint({

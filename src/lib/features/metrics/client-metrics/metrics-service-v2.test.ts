@@ -57,7 +57,7 @@ test('process metrics properly', async () => {
         initClientMetrics();
 
     stores.clientMetricsStoreV2.getFeatureFlagNames = jest
-        .fn()
+        .fn<() => Promise<string[]>>()
         .mockResolvedValue(['myCoolToggle', 'myOtherToggle']);
 
     await clientMetricsService.registerClientMetrics(

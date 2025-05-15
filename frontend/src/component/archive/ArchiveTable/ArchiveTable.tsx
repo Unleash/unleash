@@ -180,10 +180,9 @@ export const ArchiveTable = ({
     const {
         headerGroups,
         rows,
-        state: { sortBy, selectedRowIds },
+        state: { sortBy },
         prepareRow,
         setHiddenColumns,
-        toggleAllRowsSelected,
     } = useTable(
         {
             columns: columns as any[], // TODO: fix after `react-table` v8 update

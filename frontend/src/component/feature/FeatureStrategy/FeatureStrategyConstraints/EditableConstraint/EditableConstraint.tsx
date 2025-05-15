@@ -205,23 +205,6 @@ const TopRowInput: FC<{
     );
 };
 
-const getContextFieldOptions = (
-    contextFields: string[],
-    selectedContextField: string,
-) => {
-    const contextFieldHasBeenDeleted =
-        !contextFields.includes(selectedContextField);
-
-    const availableContextFieldNames = contextFieldHasBeenDeleted
-        ? [...contextFields, selectedContextField].toSorted()
-        : contextFields;
-
-    return availableContextFieldNames.map((option) => ({
-        key: option,
-        label: option,
-    }));
-};
-
 type Props = {
     constraint: IConstraint;
     onDelete: () => void;
@@ -275,10 +258,19 @@ export const EditableConstraint: FC<Props> = ({
         return null;
     }
 
-    const contextFieldOptions = getContextFieldOptions(
-        context.map((contextField) => contextField.name),
+    const extantContextFieldNames = context.map((context) => context.name);
+    const contextFieldHasBeenDeleted = !extantContextFieldNames.includes(
         localConstraint.contextName,
     );
+
+    const availableContextFieldNames = contextFieldHasBeenDeleted
+        ? [...extantContextFieldNames, localConstraint.contextName].toSorted()
+        : extantContextFieldNames;
+
+    const contextFieldOptions = availableContextFieldNames.map((option) => ({
+        key: option,
+        label: option,
+    }));
 
     return (
         <Container>
@@ -291,11 +283,6 @@ export const EditableConstraint: FC<Props> = ({
                             name='contextName'
                             label='Context Field'
                             options={contextFieldOptions}
-                            // helperText={'oh no'
-                            //     contextFieldHasBeenDeleted
-                            //         ? "This context field has been deleted. You can still edit this instance, but won't be able to use it for other constraints."
-                            //         : ''
-                            // }
                             value={contextName || ''}
                             onChange={(contextField) =>
                                 updateConstraint({

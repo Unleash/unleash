@@ -12,11 +12,13 @@ import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 interface IContextActionsCellProps {
     name: string;
     onDelete: () => void;
+    allowDelete: boolean;
 }
 
 export const ContextActionsCell: VFC<IContextActionsCellProps> = ({
     name,
     onDelete,
+    allowDelete,
 }) => {
     const navigate = useNavigate();
 
@@ -37,6 +39,7 @@ export const ContextActionsCell: VFC<IContextActionsCellProps> = ({
                 permission={DELETE_CONTEXT_FIELD}
                 onClick={onDelete}
                 data-loading
+                disabled={!allowDelete}
                 aria-label='delete'
                 tooltipProps={{
                     title: 'Delete context field',

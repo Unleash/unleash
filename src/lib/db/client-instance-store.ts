@@ -71,12 +71,18 @@ export default class ClientInstanceStore implements IClientInstanceStore {
         }
     }
 
+    /**
+     * @deprecated
+     * `bulkUpsert` is beeing used instead. remove with `lastSeenBulkQuery` flag
+     */
     async setLastSeen({
         appName,
         instanceId,
         environment,
         clientIp,
     }: INewClientInstance): Promise<void> {
+        const stopTimer = this.metricTimer('setLastSeen');
+
         await this.db(TABLE)
             .insert({
                 app_name: appName,
@@ -90,14 +96,20 @@ export default class ClientInstanceStore implements IClientInstanceStore {
                 last_seen: new Date(),
                 client_ip: clientIp,
             });
+
+        stopTimer();
     }
 
     async bulkUpsert(instances: INewClientInstance[]): Promise<void> {
+        const stopTimer = this.metricTimer('bulkUpsert');
+
         const rows = instances.map(mapToDb);
         await this.db(TABLE)
             .insert(rows)
             .onConflict(['app_name', 'instance_id', 'environment'])
             .merge();
+
+        stopTimer();
     }
 
     async delete({

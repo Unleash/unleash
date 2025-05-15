@@ -60,8 +60,10 @@ export const useEditableConstraint = (
     constraint: IConstraint,
     onUpdate: (constraint: IConstraint) => void,
 ): EditableConstraintState => {
-    const [{ deletedLegalValues, ...localConstraint }, updateConstraint] =
-        useReducer(constraintReducer, fromIConstraint(constraint));
+    const [localConstraint, updateConstraint] = useReducer(
+        constraintReducer,
+        fromIConstraint(constraint),
+    );
     useEffect(() => {
         onUpdate(toIConstraint(localConstraint));
     }, [localConstraint]);
@@ -111,6 +113,7 @@ export const useEditableConstraint = (
         JSON.stringify(localConstraint.operator),
     ]);
 
+    const { deletedLegalValues, ...constraintData } = localConstraint;
     const legalValueData = contextDefinition.legalValues?.length
         ? {
               legalValues: contextDefinition.legalValues,
@@ -121,7 +124,7 @@ export const useEditableConstraint = (
 
     return {
         updateConstraint,
-        constraint: localConstraint,
+        constraint: constraintData,
         validator,
         legalValueData,
     } as EditableConstraintState;

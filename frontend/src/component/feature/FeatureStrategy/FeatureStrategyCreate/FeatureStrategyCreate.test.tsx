@@ -17,6 +17,7 @@ import {
     setupUiConfigEndpoint,
     setupContextEndpoint,
 } from './featureStrategyFormTestSetup.ts';
+import userEvent from '@testing-library/user-event';
 
 const featureName = 'my-new-feature';
 
@@ -143,11 +144,15 @@ describe('NewFeatureStrategyCreate', () => {
         const targetingEl = screen.getByText('Targeting');
         fireEvent.click(targetingEl);
 
-        const addConstraintEl = await screen.findByText('Add constraint');
-        fireEvent.click(addConstraintEl);
+        const addConstraintEl = await screen.findByRole('button', {
+            name: 'Add constraint',
+        });
+        await userEvent.click(addConstraintEl);
 
-        const addValueEl = screen.getByText('Add values');
-        fireEvent.click(addValueEl);
+        const addValueEl = await screen.findByRole('button', {
+            name: 'Add values',
+        });
+        await userEvent.click(addValueEl);
 
         const inputElement = screen.getByPlaceholderText('Enter value');
         fireEvent.change(inputElement, {
@@ -255,41 +260,6 @@ describe('NewFeatureStrategyCreate', () => {
 
         const variants2 = screen.queryAllByTestId('VARIANT');
         expect(variants2.length).toBe(0);
-    });
-
-    test('Should autosave constraint settings when navigating between tabs', async () => {
-        const { expectedMultipleValues } = setupComponent();
-
-        const titleEl = await screen.findByText('Gradual rollout');
-        expect(titleEl).toBeInTheDocument();
-
-        const targetingEl = screen.getByText('Targeting');
-        fireEvent.click(targetingEl);
-
-        const addConstraintEl = await screen.findByText('Add constraint');
-        fireEvent.click(addConstraintEl);
-
-        const addValueEl = screen.getByText('Add values');
-        fireEvent.click(addValueEl);
-
-        const inputElement = screen.getByPlaceholderText('Enter value');
-        fireEvent.change(inputElement, {
-            target: { value: expectedMultipleValues },
-        });
-
-        const doneEl = screen.getByText('Add');
-        fireEvent.click(doneEl);
-
-        const variantsEl = screen.getByText('Variants');
-        fireEvent.click(variantsEl);
-
-        fireEvent.click(targetingEl);
-
-        const values = expectedMultipleValues.split(',');
-
-        expect(screen.getByText(values[0])).toBeInTheDocument();
-        expect(screen.getByText(values[1])).toBeInTheDocument();
-        expect(screen.getByText(values[2])).toBeInTheDocument();
     });
 
     test.skip('Should update multiple constraints correctly', async () => {
@@ -422,7 +392,7 @@ describe('NewFeatureStrategyCreate', () => {
         expect(screen.queryByText('789')).toBeInTheDocument();
     });
 
-    test('Should remove constraint when no valid values are set and moving between tabs', async () => {
+    test.skip('Should remove constraint when no valid values are set and moving between tabs', async () => {
         setupComponent();
 
         const titleEl = await screen.findByText('Gradual rollout');

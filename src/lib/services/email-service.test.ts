@@ -40,6 +40,9 @@ test('Can send welcome mail', async () => {
             sender: 'noreply@getunleash.ai',
         },
         getLogger: noLoggerProvider,
+        flagResolver: {
+            isEnabled: () => true,
+        },
     } as unknown as IUnleashConfig);
     const content = await emailService.sendGettingStartedMail(
         'Some username',

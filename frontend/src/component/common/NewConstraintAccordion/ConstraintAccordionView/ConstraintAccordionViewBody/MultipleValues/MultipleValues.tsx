@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Chip, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { ConstraintValueSearch as NewConstraintValueSearch } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/ConstraintValueSearch';
+import { ConstraintValueSearch as NewConstraintValueSearch } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/ConstraintValueSearch';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ConstraintValueSearch } from 'component/common/NewConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 

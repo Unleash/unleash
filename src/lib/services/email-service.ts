@@ -10,6 +10,7 @@ import {
     productivityReportViewModel,
 } from '../features/productivity-report/productivity-report-view-model.js';
 import { fileURLToPath } from 'node:url';
+import type { IFlagResolver } from '../types/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -85,9 +86,12 @@ export class EmailService {
 
     private readonly sender: string;
 
+    private flagResolver: IFlagResolver;
+
     constructor(config: IUnleashConfig, transportProvider?: TransportProvider) {
         this.config = config;
         this.logger = config.getLogger('services/email-service.ts');
+        this.flagResolver = config.flagResolver;
         const { email } = config;
         if (email?.host) {
             this.sender = email.sender;
@@ -420,14 +424,21 @@ export class EmailService {
                 name: this.stripSpecialCharacters(name),
                 year,
                 unleashUrl,
+                recipient,
             };
+
+            let gettingStartedTemplate = 'getting-started';
+            if (this.flagResolver.isEnabled('newGettingStartedEmail')) {
+                gettingStartedTemplate = 'getting-started-new';
+            }
+
             const bodyHtml = await this.compileTemplate(
-                'getting-started',
+                gettingStartedTemplate,
                 TemplateFormat.HTML,
                 context,
             );
             const bodyText = await this.compileTemplate(
-                'getting-started',
+                gettingStartedTemplate,
                 TemplateFormat.PLAIN,
                 context,
             );

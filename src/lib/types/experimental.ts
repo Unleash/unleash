@@ -67,7 +67,8 @@ export type IFlagKey =
     | 'featureLinks'
     | 'projectLinkTemplates'
     | 'reportUnknownFlags'
-    | 'lastSeenBulkQuery';
+    | 'lastSeenBulkQuery'
+    | 'newGettingStartedEmail';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -314,6 +315,10 @@ const flags: IFlags = {
     ),
     reportUnknownFlags: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REPORT_UNKNOWN_FLAGS,
+        false,
+    ),
+    newGettingStartedEmail: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_GETTING_STARTED_EMAIL,
         false,
     ),
 };

@@ -54,3 +54,14 @@ test('should allow unknown constraints if their values are valid', async () => {
         })
         .expect(204);
 });
+
+test('should block unknown constraints if their values are invalid', async () => {
+    await app.request
+        .post(PATH)
+        .send({
+            contextName: 'not-a-default-context-value',
+            operator: 'IN',
+            value: 1,
+        })
+        .expect(400);
+});

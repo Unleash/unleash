@@ -60,13 +60,14 @@ export const useEditableConstraint = (
     constraint: IConstraint,
     onUpdate: (constraint: IConstraint) => void,
 ): EditableConstraintState => {
-    const [localConstraint, updateConstraint] = useReducer(
+    const [constraintState, updateConstraint] = useReducer(
         constraintReducer,
         fromIConstraint(constraint),
     );
+    const { deletedLegalValues, ...localConstraint } = constraintState;
     useEffect(() => {
         onUpdate(toIConstraint(localConstraint));
-    }, [localConstraint]);
+    }, [constraintState]);
 
     const { context } = useUnleashContext();
 
@@ -77,17 +78,21 @@ export const useEditableConstraint = (
 
     const validator = constraintValidator(localConstraint);
 
-    const deletedLegalValues = useMemo(() => {
+    useEffect(() => {
         if (
             contextDefinition.legalValues?.length &&
             constraint.values?.length
         ) {
-            return getDeletedLegalValues(
+            const deletedLegalValues = getDeletedLegalValues(
                 contextDefinition.legalValues,
                 constraint.values,
             );
+
+            updateConstraint({
+                type: 'deleted legal values update',
+                payload: deletedLegalValues,
+            });
         }
-        return undefined;
     }, [
         JSON.stringify(contextDefinition.legalValues),
         JSON.stringify(constraint.values),

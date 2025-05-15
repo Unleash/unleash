@@ -18,6 +18,10 @@ import {
 } from './editable-constraint-type.js';
 import { difference, union } from './set-functions.js';
 
+type EditableConstraintWithDeletedLegalValues = EditableConstraint & {
+    deletedLegalValues?: Set<string>;
+};
+
 export type ConstraintUpdateAction =
     | { type: 'add value(s)'; payload: string | string[] }
     | { type: 'clear values' }
@@ -26,14 +30,18 @@ export type ConstraintUpdateAction =
     | { type: 'set operator'; payload: Operator }
     | { type: 'toggle case sensitivity' }
     | { type: 'toggle inverted operator' }
+    | { type: 'deleted legal values update'; payload?: Set<string> }
     | { type: 'toggle value'; payload: string };
 
 const withValue = <
-    T extends EditableConstraint & { value?: string; values?: Set<string> },
+    T extends EditableConstraintWithDeletedLegalValues & {
+        value?: string;
+        values?: Set<string>;
+    },
 >(
     newValue: string | null,
     constraint: T,
-): EditableConstraint => {
+): EditableConstraintWithDeletedLegalValues => {
     const { value, values, ...rest } = constraint;
     if (isMultiValueOperator(constraint.operator)) {
         return {
@@ -48,10 +56,9 @@ const withValue = <
 };
 
 export const constraintReducer = (
-    state: EditableConstraint,
+    state: EditableConstraintWithDeletedLegalValues,
     action: ConstraintUpdateAction,
-    deletedLegalValues?: Set<string>,
-): EditableConstraint => {
+): EditableConstraintWithDeletedLegalValues => {
     const removeValue = (value: string) => {
         if (isSingleValueConstraint(state)) {
             if (state.value === value) {
@@ -73,8 +80,8 @@ export const constraintReducer = (
     const addValue = (value: string | string[]) => {
         if (isSingleValueConstraint(state)) {
             const newValue = Array.isArray(value) ? value[0] : value;
-            if (deletedLegalValues?.has(newValue)) {
-                if (deletedLegalValues?.has(state.value)) {
+            if (state.deletedLegalValues?.has(newValue)) {
+                if (state.deletedLegalValues?.has(state.value)) {
                     return {
                         ...state,
                         value: '',
@@ -90,8 +97,8 @@ export const constraintReducer = (
 
         const newValues = new Set(Array.isArray(value) ? value : [value]);
         const combinedValues = union(state.values, newValues);
-        const filteredValues = deletedLegalValues
-            ? difference(combinedValues, deletedLegalValues)
+        const filteredValues = state.deletedLegalValues
+            ? difference(combinedValues, state.deletedLegalValues)
             : combinedValues;
         return {
             ...state,
@@ -170,5 +177,10 @@ export const constraintReducer = (
                 return removeValue(action.payload);
             }
             return addValue(action.payload);
+        case 'deleted legal values update':
+            return {
+                ...state,
+                deletedLegalValues: action.payload,
+            };
     }
 };

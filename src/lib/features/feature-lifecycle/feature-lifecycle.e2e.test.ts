@@ -22,6 +22,7 @@ import type { FeatureLifecycleCompletedSchema } from '../../openapi/index.js';
 import { FeatureLifecycleReadModel } from './feature-lifecycle-read-model.js';
 import type { IFeatureLifecycleReadModel } from './feature-lifecycle-read-model-type.js';
 import { STAGE_ENTERED } from '../../metric-events.js';
+import type { ClientInstanceService } from '../../server-impl.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -29,6 +30,7 @@ let featureLifecycleStore: IFeatureLifecycleStore;
 let eventStore: IEventStore;
 let eventBus: EventEmitter;
 let featureLifecycleReadModel: IFeatureLifecycleReadModel;
+let clientInstanceService: ClientInstanceService;
 
 beforeAll(async () => {
     db = await dbInit('feature_lifecycle', getLogger, {
@@ -47,6 +49,7 @@ beforeAll(async () => {
     eventBus = app.config.eventBus;
     featureLifecycleReadModel = new FeatureLifecycleReadModel(db.rawDatabase);
     featureLifecycleStore = db.stores.featureLifecycleStore;
+    clientInstanceService = app.services.clientInstanceService;
 
     await app.request
         .post(`/auth/demo/login`)
@@ -62,6 +65,7 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
+    await clientInstanceService.bulkAdd(); // flush
     await featureLifecycleStore.deleteAll();
 });
 

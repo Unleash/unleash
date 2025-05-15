@@ -35,7 +35,6 @@ test('uiConfigSchema', () => {
         },
     };
 
-    console.log(validateSchema('#/components/schemas/uiConfigSchema', data));
     expect(
         validateSchema('#/components/schemas/uiConfigSchema', data),
     ).toBeUndefined();

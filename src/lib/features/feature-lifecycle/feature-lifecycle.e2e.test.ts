@@ -22,7 +22,7 @@ import type { FeatureLifecycleCompletedSchema } from '../../openapi/index.js';
 import { FeatureLifecycleReadModel } from './feature-lifecycle-read-model.js';
 import type { IFeatureLifecycleReadModel } from './feature-lifecycle-read-model-type.js';
 import { STAGE_ENTERED } from '../../metric-events.js';
-import type { ClientInstanceService } from '../../server-impl.js';
+import type ClientInstanceService from '../metrics/instance/instance-service.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

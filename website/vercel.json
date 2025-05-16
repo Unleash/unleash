@@ -836,7 +836,7 @@
       "destination": "/using-unleash/troubleshooting/flag-not-returned",
       "permanent": true
     },
-        {
+    {
       "source": "/how-to/how-to-troubleshoot-flag-not-returned",
       "destination": "/using-unleash/troubleshooting/flag-not-returned",
       "permanent": true
@@ -846,17 +846,17 @@
       "destination": "troubleshooting",
       "permanent": true
     },
-        {
+    {
       "source": "/using-unleash/troubleshooting/flag-abn-unexpected-results",
       "destination": "troubleshooting",
       "permanent": true
     },
-        {
+    {
       "source": "/using-unleash/troubleshooting/flag-exposure",
       "destination": "troubleshooting",
       "permanent": true
     },
-        {
+    {
       "source": "/using-unleash/troubleshooting/flag-not-returned",
       "destination": "troubleshooting",
       "permanent": true

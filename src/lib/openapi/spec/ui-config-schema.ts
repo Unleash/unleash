@@ -72,20 +72,6 @@ export const uiConfigSchema = {
             description: 'Whether maintenance mode is currently active or not.',
             example: false,
         },
-        segmentValuesLimit: {
-            type: 'number',
-            description:
-                'The maximum number of values that can be used in a single segment.',
-            example: 1000,
-            deprecated: true,
-        },
-        strategySegmentsLimit: {
-            type: 'number',
-            description:
-                'The maximum number of segments that can be applied to a single strategy.',
-            example: 5,
-            deprecated: true,
-        },
         resourceLimits: {
             $ref: resourceLimitsSchema.$id,
             description: resourceLimitsSchema.description,

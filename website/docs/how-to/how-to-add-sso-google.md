@@ -1,5 +1,6 @@
 ---
-title: 'How to add SSO with Google'
+title: 'Google'
+description: Set up SSO for Unleash with Google.
 ---
 
 :::caution Deprecation notice

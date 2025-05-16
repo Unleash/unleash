@@ -1,5 +1,5 @@
 ---
-title: How to Setup Okta Provisioning
+title: Set up Okta provisioning
 ---
 
 :::note Availability

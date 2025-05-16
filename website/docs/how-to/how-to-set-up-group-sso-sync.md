@@ -1,5 +1,5 @@
 ---
-title: How to Set Up User Group SSO Syncing
+title: Set up user group SSO syncing
 ---
 
 :::note Availability

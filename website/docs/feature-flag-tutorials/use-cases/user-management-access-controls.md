@@ -19,7 +19,7 @@ In this tutorial, you will:
 
 When an enterprise like a global banking platform considers implementing feature flags, keeping track of who can access your feature flag platform and handling authentication is critical. Traditional username and password approaches are insecure and [shared accounts pose a security risk](https://www.getunleash.io/blog/stop-sharing-accounts).
 
-To ensure proper user authentication and reduce risk exposure, Unleash provides [single sign-on](/how-to/sso) as the recommended centralized method for managing user access.
+To ensure proper user authentication and reduce risk exposure, Unleash provides [single sign-on](/how-to/how-to-add-sso-open-id-connect) as the recommended centralized method for managing user access.
 
 Unleash supports any SSO option through OpenID Connect or SAML 2.0, including identity providers like Okta, Microsoft Entra ID, and Keycloak to create a unified authentication process.
 
@@ -97,7 +97,7 @@ Viewers can observe projects and flags, but cannot make changes. When added to a
 
 Project permissions are separated from root permissions to make it even more targeted regarding what permissions someone can and cannot have in Unleash.
 
-For more fine-tuned access controls, create [custom root roles](/how-to/how-to-create-and-assign-custom-root-roles) and [custom project roles](/how-to/how-to-create-and-assign-custom-project-roles), where you can define the privileges and limitations beyond the predefined roles we have built into Unleash.
+For more fine-tuned access controls, create [custom root roles](/reference/rbac#create-and-assign-a-custom-root-role) and [custom project roles](/reference/rbac#create-and-assign-a-custom-project-role), where you can define the privileges and limitations beyond the predefined roles we have built into Unleash.
 
 For example, customize root permissions to perform CRUD operations for:
 

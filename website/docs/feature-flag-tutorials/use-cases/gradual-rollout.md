@@ -1,6 +1,7 @@
 ---
 title: How to Perform a Gradual Rollout
 slug: /feature-flag-tutorials/use-cases/gradual-rollout
+pagination_next: feature-flag-tutorials/use-cases/a-b-testing
 ---
 
 ## What is a Gradual Rollout?

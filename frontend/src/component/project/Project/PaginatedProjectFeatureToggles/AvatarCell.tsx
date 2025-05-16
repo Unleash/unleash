@@ -5,11 +5,11 @@ import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 
 type AvatarCellProps = {
-    row: {
-        original: {
-            createdBy: {
-                id: number;
-                name: string;
+    row?: {
+        original?: {
+            createdBy?: {
+                id?: number;
+                name?: string;
                 imageUrl?: string;
             };
         };
@@ -42,35 +42,39 @@ const StyledAvatar = styled(UserAvatar)(({ theme }) => ({
 
 export const AvatarCell =
     (onAvatarClick?: (userId: number) => void): FC<AvatarCellProps> =>
-    ({ row: { original } }) => {
-        const ariaDisabled = original.createdBy.id === 0;
+    ({ row }) => {
+        const createdBy = {
+            id: 0,
+            name: '',
+            imageUrl: '',
+            ...row?.original?.createdBy,
+        };
+        const ariaDisabled = createdBy.id === 0;
         const clickAction = ariaDisabled
             ? () => {}
-            : () => onAvatarClick?.(original.createdBy.id);
+            : () => onAvatarClick?.(createdBy.id);
         const tooltipContent = ariaDisabled ? (
             <>
-                <p>{original.createdBy.name}</p>
+                <p>{createdBy.name}</p>
                 <StyledSecondaryText>
                     You can't filter by unknown users.
                 </StyledSecondaryText>
             </>
         ) : (
-            <p>{original.createdBy.name}</p>
+            <p>{createdBy.name}</p>
         );
 
         const content = (
             <>
                 <ScreenReaderOnly>
-                    <span>
-                        Show only flags created by {original.createdBy.name}
-                    </span>
+                    <span>Show only flags created by {createdBy.name}</span>
                 </ScreenReaderOnly>
                 <StyledAvatar
                     disableTooltip
                     user={{
-                        id: original.createdBy.id,
-                        name: original.createdBy.name,
-                        imageUrl: original.createdBy.imageUrl,
+                        id: createdBy.id,
+                        name: createdBy.name,
+                        imageUrl: createdBy.imageUrl,
                     }}
                 />
             </>

@@ -10,6 +10,8 @@ import getLogger from '../../../fixtures/no-logger.js';
 import { ApiTokenType, type IApiToken } from '../../../../lib/types/model.js';
 import { TEST_AUDIT_USER } from '../../../../lib/types/index.js';
 
+import { jest } from '@jest/globals';
+
 let app: IUnleashTest;
 let db: ITestDb;
 
@@ -81,6 +83,11 @@ test('should pick up environment from token', async () => {
         tokenName: 'tester',
     });
 
+    // @ts-expect-error - cachedFeatureNames is a private property in ClientMetricsServiceV2
+    app.services.clientMetricsServiceV2.cachedFeatureNames = jest
+        .fn<() => Promise<string[]>>()
+        .mockResolvedValue(['test']);
+
     await app.request
         .post('/api/client/metrics')
         .set('Authorization', token.secret)
@@ -118,6 +125,11 @@ test('should set lastSeen for toggles with metrics both for toggle and toggle en
         { name: 't2' },
         TEST_AUDIT_USER,
     );
+
+    // @ts-expect-error - cachedFeatureNames is a private property in ClientMetricsServiceV2
+    app.services.clientMetricsServiceV2.cachedFeatureNames = jest
+        .fn<() => Promise<string[]>>()
+        .mockResolvedValue(['t1', 't2']);
 
     const token = await app.services.apiTokenService.createApiToken({
         type: ApiTokenType.CLIENT,

@@ -360,6 +360,12 @@ test('should store frontend api client metrics', async () => {
         projects: ['*'],
         environment: '*',
     });
+
+    // @ts-expect-error - cachedFeatureNames is a private property in ClientMetricsServiceV2
+    app.services.clientMetricsServiceV2.cachedFeatureNames = jest
+        .fn<() => Promise<string[]>>()
+        .mockResolvedValue([featureName]);
+
     await app.request
         .get(`/api/admin/client-metrics/features/${featureName}`)
         .set('Authorization', adminToken.secret)

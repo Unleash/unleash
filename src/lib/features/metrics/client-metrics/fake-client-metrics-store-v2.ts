@@ -19,7 +19,7 @@ export default class FakeClientMetricsStoreV2
     }
 
     getFeatureFlagNames(): Promise<string[]> {
-        throw new Error('Method not implemented.');
+        return Promise.resolve([]);
     }
 
     getSeenTogglesForApp(

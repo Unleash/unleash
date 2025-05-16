@@ -1,10 +1,9 @@
-import type { SWRConfiguration } from 'swr';
+import useSWR, { type SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
-import { emptyFeature } from './emptyFeature.ts';
-import handleErrorResponses from '../httpErrorResponseHandler.ts';
+import { emptyFeature } from './emptyFeature.js';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import { formatApiPath } from 'utils/formatPath';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
-import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.ts';
 
 export interface IUseFeatureOutput {
     feature: IFeatureToggle;
@@ -26,9 +25,11 @@ export const useFeature = (
 ): IUseFeatureOutput => {
     const path = formatFeatureApiPath(projectId, featureId);
 
-    const { data, error, mutate } = useConditionalSWR<IFeatureResponse>(
-        Boolean(featureId && projectId),
-        { status: 404 },
+    if (!featureId) {
+        // console.trace("boom");
+    }
+
+    const { data, error, mutate } = useSWR<IFeatureResponse>(
         ['useFeature', path],
         () => featureFetcher(path),
         options,

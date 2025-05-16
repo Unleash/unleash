@@ -268,16 +268,14 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'lifecycle.stage_feature',
                     );
 
-                if (this.flagResolver.isEnabled('flagsOverviewSearch')) {
-                    const parsedLifecycle = lifecycle
-                        ? parseSearchOperatorValue(
-                              'lifecycle.latest_stage',
-                              lifecycle,
-                          )
-                        : null;
-                    if (parsedLifecycle) {
-                        applyGenericQueryParams(query, [parsedLifecycle]);
-                    }
+                const parsedLifecycle = lifecycle
+                    ? parseSearchOperatorValue(
+                          'lifecycle.latest_stage',
+                          lifecycle,
+                      )
+                    : null;
+                if (parsedLifecycle) {
+                    applyGenericQueryParams(query, [parsedLifecycle]);
                 }
 
                 const rankingSql = this.buildRankingSql(
@@ -342,10 +340,8 @@ class FeatureSearchStore implements IFeatureSearchStore {
             .whereBetween('final_rank', [offset + 1, offset + limit])
             .orderBy('final_rank');
 
-        if (this.flagResolver.isEnabled('flagsOverviewSearch')) {
-            this.buildChangeRequestSql(finalQuery);
-            this.buildReleasePlanSql(finalQuery);
-        }
+        this.buildChangeRequestSql(finalQuery);
+        this.buildReleasePlanSql(finalQuery);
 
         this.queryExtraData(finalQuery);
         const rows = await finalQuery;

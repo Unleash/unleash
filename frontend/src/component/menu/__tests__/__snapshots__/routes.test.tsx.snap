@@ -104,17 +104,6 @@ exports[`returns all baseRoutes 1`] = `
     "menu": {
       "primary": true,
     },
-    "notFlag": "flagsReleaseManagementUI",
-    "path": "/search",
-    "title": "Search",
-    "type": "protected",
-  },
-  {
-    "component": [Function],
-    "flag": "flagsReleaseManagementUI",
-    "menu": {
-      "primary": true,
-    },
     "path": "/search",
     "title": "Flags overview",
     "type": "protected",

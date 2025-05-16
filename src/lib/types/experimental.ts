@@ -58,8 +58,6 @@ export type IFlagKey =
     | 'teamsIntegrationChangeRequests'
     | 'edgeObservability'
     | 'addEditStrategy'
-    | 'flagsOverviewSearch'
-    | 'flagsReleaseManagementUI'
     | 'cleanupReminder'
     | 'removeInactiveApplications'
     | 'registerFrontendClient'
@@ -280,14 +278,7 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_ADD_EDIT_STRATEGY,
         false,
     ),
-    flagsOverviewSearch: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FLAGS_OVERVIEW_SEARCH,
-        false,
-    ),
-    flagsReleaseManagementUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FLAGS_RELEASE_MANAGEMENT_UI,
-        false,
-    ),
+
     cleanupReminder: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CLEANUP_REMINDER,
         false,

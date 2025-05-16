@@ -15,8 +15,8 @@ exports[`order of items in navigation > menu for enterprise plan 1`] = `
     "text": "Projects",
   },
   {
-    "icon": "SearchIcon",
-    "text": "Search",
+    "icon": "FlagOutlinedIcon",
+    "text": "Flags overview",
   },
   {
     "icon": "AutoFixNormalIcon",
@@ -80,8 +80,8 @@ exports[`order of items in navigation > menu for open-source 1`] = `
     "text": "Projects",
   },
   {
-    "icon": "SearchIcon",
-    "text": "Search",
+    "icon": "FlagOutlinedIcon",
+    "text": "Flags overview",
   },
   {
     "icon": "AutoFixNormalIcon",
@@ -137,8 +137,8 @@ exports[`order of items in navigation > menu for pro plan 1`] = `
     "text": "Projects",
   },
   {
-    "icon": "SearchIcon",
-    "text": "Search",
+    "icon": "FlagOutlinedIcon",
+    "text": "Flags overview",
   },
   {
     "icon": "AutoFixNormalIcon",

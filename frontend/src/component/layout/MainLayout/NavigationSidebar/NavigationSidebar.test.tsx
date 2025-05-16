@@ -69,7 +69,7 @@ test('select active item', async () => {
         { route: '/search' },
     );
 
-    const searchLink = screen.getByRole('link', { name: 'Search' });
+    const searchLink = screen.getByRole('link', { name: 'Flags overview' });
 
     expect(searchLink).toHaveClass(classes.selected);
 });

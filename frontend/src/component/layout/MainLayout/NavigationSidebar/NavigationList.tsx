@@ -9,7 +9,6 @@ import {
     SignOutItem,
 } from './ListItems.tsx';
 import { Box, List, Typography } from '@mui/material';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { IconRenderer } from './IconRenderer.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import Accordion from '@mui/material/Accordion';
@@ -127,7 +126,6 @@ export const PrimaryNavigationList: FC<{
 }> = ({ mode, onClick, activeItem }) => {
     const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
     const { isOss } = useUiConfig();
-    const flagsReleaseManagementUI = useUiFlag('flagsReleaseManagementUI');
 
     return (
         <List>
@@ -150,7 +148,7 @@ export const PrimaryNavigationList: FC<{
             </DynamicListItem>
             <DynamicListItem
                 href='/search'
-                text={flagsReleaseManagementUI ? 'Flags overview' : 'Search'}
+                text='Flags overview'
                 onClick={() => onClick('/search')}
                 selected={activeItem === '/search'}
             >

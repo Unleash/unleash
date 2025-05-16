@@ -132,19 +132,10 @@ export const routes: IRoute[] = [
     // Flags overview
     {
         path: '/search',
-        title: 'Search',
-        component: FeatureToggleListTable,
-        type: 'protected',
-        menu: { primary: true },
-        notFlag: 'flagsReleaseManagementUI',
-    },
-    {
-        path: '/search',
         title: 'Flags overview',
         component: FeatureToggleListTable,
         type: 'protected',
         menu: { primary: true },
-        flag: 'flagsReleaseManagementUI',
     },
 
     // Playground

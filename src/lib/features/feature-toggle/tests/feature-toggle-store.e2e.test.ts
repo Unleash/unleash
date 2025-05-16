@@ -27,15 +27,15 @@ afterAll(async () => {
 });
 
 test('should not crash for unknown toggle', async () => {
-    const project = await featureToggleStore.getProjectId(
+    const project = await featureToggleStore.getProjectIds(
         'missing-toggle-name',
     );
-    expect(project).toBe(undefined);
+    expect(project).toBe([]);
 });
 
 test('should not crash for undefined toggle name', async () => {
-    const project = await featureToggleStore.getProjectId(undefined);
-    expect(project).toBe(undefined);
+    const project = await featureToggleStore.getProjectIds(undefined);
+    expect(project).toBe([]);
 });
 
 describe('potentially_stale marking', () => {

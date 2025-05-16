@@ -3,5 +3,6 @@ export interface IFeaturesReadModel {
     featuresInTheSameProject(
         featureA: string,
         featureB: string,
+        project: string,
     ): Promise<boolean>;
 }

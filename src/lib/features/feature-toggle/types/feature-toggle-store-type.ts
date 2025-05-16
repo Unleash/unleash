@@ -23,7 +23,7 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
 
     setLastSeen(data: LastSeenInput[]): Promise<void>;
 
-    getProjectId(name: string | undefined): Promise<string | undefined>;
+    getProjectIds(name: string | undefined): Promise<string[]>;
 
     create(project: string, data: FeatureToggleInsert): Promise<FeatureToggle>;
 

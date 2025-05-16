@@ -71,12 +71,17 @@ export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
             return [];
         }
         const rows = await this.db('features')
+            .innerJoin(
+                'feature_project',
+                'feature_project.feature_name',
+                'features.name',
+            )
             .leftJoin(
                 'dependent_features',
                 'features.name',
                 'dependent_features.child',
             )
-            .where('features.project', result[0].project)
+            .where('feature_project.project_id', result[0].project)
             .andWhere('features.name', '!=', child)
             .andWhere('dependent_features.child', null)
             .andWhere('features.archived_at', null)

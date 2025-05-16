@@ -87,7 +87,9 @@ const rbacMiddleware = (
                 )
             ) {
                 const { featureName } = params;
-                projectId = await featureToggleStore.getProjectId(featureName);
+                projectId = (
+                    await featureToggleStore.getProjectIds(featureName)
+                )[0];
             } else if (
                 projectId === undefined &&
                 permissionsArray.some(

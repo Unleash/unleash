@@ -28,7 +28,7 @@ import type {
 } from '../../openapi/index.js';
 import { DEFAULT_ENV, extractAuditInfoFromUser } from '../../util/index.js';
 import { DEFAULT_PROJECT, TEST_AUDIT_USER } from '../../types/index.js';
-
+import { beforeAll, afterAll, afterEach, test, describe, expect } from 'vitest';
 let db: ITestDb;
 let app: IUnleashTest;
 
@@ -55,11 +55,9 @@ const fetchFeatureStrategies = (featureName: string) =>
         .expect(200)
         .then((res) => res.body);
 
-const fetchClientFeatures = (): Promise<IFeatureToggleClient[]> => {
-    return app.request
-        .get(FEATURES_CLIENT_BASE_PATH)
-        .expect(200)
-        .then((res) => res.body.features);
+const fetchClientFeatures = async (): Promise<IFeatureToggleClient[]> => {
+    const res = await app.request.get(FEATURES_CLIENT_BASE_PATH).expect(200);
+    return res.body.features;
 };
 
 const createSegment = (postData: UpsertSegmentSchema): Promise<ISegment> => {
@@ -235,7 +233,7 @@ test('should validate segment constraint values limit', async () => {
 
     await expect(
         createSegment({ name: randomId(), constraints }),
-    ).rejects.toThrow(
+    ).rejects.toThrowError(
         `Segments may not have more than ${DEFAULT_SEGMENT_VALUES_LIMIT} values`,
     );
 });
@@ -256,7 +254,7 @@ test('should validate segment constraint values limit with multiple constraints'
 
     await expect(
         createSegment({ name: randomId(), constraints }),
-    ).rejects.toThrow(
+    ).rejects.toThrowError(
         `Segments may not have more than ${DEFAULT_SEGMENT_VALUES_LIMIT} values`,
     );
 });
@@ -514,7 +512,7 @@ describe('project-specific segments', () => {
                 ...segment,
                 project: project2,
             }),
-        ).rejects.toThrow(
+        ).rejects.toThrowError(
             `Invalid project. Segment is being used by strategies in other projects: ${project1}`,
         );
     });
@@ -543,12 +541,12 @@ describe('project-specific segments', () => {
             [strategy],
             project1,
         );
-        await expect(() =>
+        await expect(
             updateSegment(segment.id, {
                 ...segment,
                 project: '',
             }),
-        ).resolves;
+        ).resolves.toBeUndefined();
     });
 
     test(`can't set a specific segment project when being used by multiple projects (global)`, async () => {
@@ -589,12 +587,12 @@ describe('project-specific segments', () => {
             [strategy2],
             project2,
         );
-        await expect(() =>
+        await expect(
             updateSegment(segment.id, {
                 ...segment,
                 project: project1,
             }),
-        ).rejects.toThrow(
+        ).rejects.toThrowError(
             `Invalid project. Segment is being used by strategies in other projects: ${project1}, ${project2}`,
         );
     });

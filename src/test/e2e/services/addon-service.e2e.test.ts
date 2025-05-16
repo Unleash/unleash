@@ -13,7 +13,7 @@ import { FEATURE_CREATED } from '../../../lib/events/index.js';
 import { IntegrationEventsService } from '../../../lib/services/index.js';
 import { createEventsService } from '../../../lib/features/index.js';
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -63,7 +63,7 @@ afterEach(async () => {
 });
 
 test('should only return active addons', async () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const config = {
         provider: 'simple',
         enabled: false,
@@ -100,7 +100,7 @@ test('should only return active addons', async () => {
     await addonService.createAddon(config2, TEST_AUDIT_USER);
     await addonService.createAddon(config3, TEST_AUDIT_USER);
 
-    jest.advanceTimersByTime(61_000);
+    vi.advanceTimersByTime(61_000);
 
     const activeAddons = await addonService.fetchAddonConfigs();
     const allAddons = await addonService.getAddons();
@@ -108,5 +108,5 @@ test('should only return active addons', async () => {
     expect(activeAddons.length).toBe(2);
     expect(allAddons.length).toBe(3);
 
-    jest.useRealTimers();
+    vi.useRealTimers();
 });

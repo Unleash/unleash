@@ -12,15 +12,15 @@ import FakeStrategiesStore from '../../../../test/fixtures/fake-strategies-store
 import FakeFeatureToggleStore from '../../feature-toggle/fakes/fake-feature-toggle-store.js';
 import type { IApplicationOverview } from './models.js';
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 let config: IUnleashConfig;
 beforeAll(() => {
     config = createTestConfig({});
 });
 test('Multiple registrations of same appname and instanceid within same time period should only cause one registration', async () => {
-    const appStoreSpy = jest.fn();
-    const bulkSpy = jest.fn();
+    const appStoreSpy = vi.fn();
+    const bulkSpy = vi.fn();
     const clientApplicationsStore: any = {
         bulkUpsert: appStoreSpy,
     };
@@ -65,12 +65,12 @@ test('Multiple registrations of same appname and instanceid within same time per
     expect(registrations[0].started).toBe(client1.started);
     expect(registrations[0].interval).toBe(client1.interval);
 
-    jest.useRealTimers();
+    vi.useRealTimers();
 });
 
 test('Multiple unique clients causes multiple registrations', async () => {
-    const appStoreSpy = jest.fn();
-    const bulkSpy = jest.fn();
+    const appStoreSpy = vi.fn();
+    const bulkSpy = vi.fn();
     const clientApplicationsStore: any = {
         bulkUpsert: appStoreSpy,
     };
@@ -119,8 +119,8 @@ test('Multiple unique clients causes multiple registrations', async () => {
 });
 
 test('Same client registered outside of dedup interval will be registered twice', async () => {
-    const appStoreSpy = jest.fn();
-    const bulkSpy = jest.fn();
+    const appStoreSpy = vi.fn();
+    const bulkSpy = vi.fn();
     const clientApplicationsStore: any = {
         bulkUpsert: appStoreSpy,
     };
@@ -162,9 +162,7 @@ test('Same client registered outside of dedup interval will be registered twice'
     expect(appStoreSpy).toHaveBeenCalledTimes(2);
     expect(bulkSpy).toHaveBeenCalledTimes(2);
 
-    // @ts-expect-error unknown type
     const firstRegistrations = appStoreSpy.mock.calls[0][0][0];
-    // @ts-expect-error unknown type
     const secondRegistrations = appStoreSpy.mock.calls[1][0][0];
 
     expect(firstRegistrations.appName).toBe(secondRegistrations.appName);
@@ -172,8 +170,8 @@ test('Same client registered outside of dedup interval will be registered twice'
 });
 
 test('No registrations during a time period will not call stores', async () => {
-    const appStoreSpy = jest.fn();
-    const bulkSpy = jest.fn();
+    const appStoreSpy = vi.fn();
+    const bulkSpy = vi.fn();
     const clientApplicationsStore: any = {
         bulkUpsert: appStoreSpy,
     };

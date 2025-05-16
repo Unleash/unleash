@@ -9,9 +9,7 @@ import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import getLogger from '../../../fixtures/no-logger.js';
 import { ApiTokenType, type IApiToken } from '../../../../lib/types/model.js';
 import { TEST_AUDIT_USER } from '../../../../lib/types/index.js';
-
-import { jest } from '@jest/globals';
-
+import { vi } from 'vitest';
 let app: IUnleashTest;
 let db: ITestDb;
 
@@ -84,7 +82,7 @@ test('should pick up environment from token', async () => {
     });
 
     // @ts-expect-error - cachedFeatureNames is a private property in ClientMetricsServiceV2
-    app.services.clientMetricsServiceV2.cachedFeatureNames = jest
+    app.services.clientMetricsServiceV2.cachedFeatureNames = vi
         .fn<() => Promise<string[]>>()
         .mockResolvedValue(['test']);
 
@@ -127,7 +125,7 @@ test('should set lastSeen for toggles with metrics both for toggle and toggle en
     );
 
     // @ts-expect-error - cachedFeatureNames is a private property in ClientMetricsServiceV2
-    app.services.clientMetricsServiceV2.cachedFeatureNames = jest
+    app.services.clientMetricsServiceV2.cachedFeatureNames = vi
         .fn<() => Promise<string[]>>()
         .mockResolvedValue(['t1', 't2']);
 

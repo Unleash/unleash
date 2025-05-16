@@ -99,7 +99,7 @@ describe('validate incoming feature naming data', () => {
         });
 
         if (result.state === 'valid') {
-            fail('Expected invalid result');
+            expect.fail('Expected invalid result');
         }
 
         expect(result.reasons.length).toBe(1);

@@ -8,9 +8,7 @@ import metricsExample from '../../../examples/client-metrics.json' with {
 import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import getLogger from '../../../fixtures/no-logger.js';
 import { ApiTokenType } from '../../../../lib/types/model.js';
-
-import { jest } from '@jest/globals';
-
+import { vi } from 'vitest';
 let app: IUnleashTest;
 let db: ITestDb;
 
@@ -42,7 +40,7 @@ test('should enrich metrics with environment from api-token', async () => {
 
     const featureName = Object.keys(metricsExample.bucket.toggles)[0];
     // @ts-expect-error - cachedFeatureNames is a private property in ClientMetricsServiceV2
-    app.services.clientMetricsServiceV2.cachedFeatureNames = jest
+    app.services.clientMetricsServiceV2.cachedFeatureNames = vi
         .fn<() => Promise<string[]>>()
         .mockResolvedValue([featureName]);
 

@@ -6,7 +6,7 @@ import {
 import { validateSchema } from '../validate.js';
 import { generate as generateInput } from './playground-request-schema.test.js';
 import { generate as generateFeature } from './playground-feature-schema.test.js';
-
+import { test } from '@fast-check/vitest';
 const generate = (): Arbitrary<PlaygroundResponseSchema> =>
     fc.record({
         input: generateInput(),
@@ -15,12 +15,16 @@ const generate = (): Arbitrary<PlaygroundResponseSchema> =>
         }),
     });
 
-test('playgroundResponseSchema', () =>
-    fc.assert(
-        fc.property(
-            generate(),
-            (data: PlaygroundResponseSchema) =>
-                validateSchema(playgroundResponseSchema.$id, data) ===
-                undefined,
+test(
+    'playgroundResponseSchema',
+    () =>
+        fc.assert(
+            fc.property(
+                generate(),
+                (data: PlaygroundResponseSchema) =>
+                    validateSchema(playgroundResponseSchema.$id, data) ===
+                    undefined,
+            ),
         ),
-    ));
+    { timeout: 60000 },
+);

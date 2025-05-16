@@ -2,7 +2,7 @@ import NotFoundError from '../../../lib/error/notfound-error.js';
 import dbInit, { type ITestDb } from '../helpers/database-init.js';
 import getLogger from '../../fixtures/no-logger.js';
 import type { IUnleashStores } from '../../../lib/types/index.js';
-
+import { beforeAll, afterAll, beforeEach, test, expect } from 'vitest';
 let stores: IUnleashStores;
 let db: ITestDb;
 
@@ -38,7 +38,7 @@ test('should not allow two users with same email', async () => {
     await expect(async () => {
         await stores.userStore.insert({ email: 'me2@mail.com' });
         await stores.userStore.insert({ email: 'me2@mail.com' });
-    }).rejects.toThrow(/duplicate key value violates unique constraint/);
+    }).rejects.toThrowError(/duplicate key value violates unique constraint/);
 });
 
 test('should insert new user with email and return it', async () => {
@@ -58,7 +58,7 @@ test('should insert new user with username', async () => {
 test('Should require email or username', async () => {
     await expect(async () => {
         await stores.userStore.upsert({});
-    }).rejects.toThrow(
+    }).rejects.toThrowError(
         new Error('Can only find users with id, username or email.'),
     );
 });
@@ -74,9 +74,9 @@ test('should set password_hash for user', async () => {
 
 test('should not get password_hash for unknown userId', async () => {
     const store = stores.userStore;
-    await expect(async () => store.getPasswordHash(-12)).rejects.toThrow(
-        new NotFoundError('User not found'),
-    );
+    await expect(async () =>
+        store.getPasswordHash(-12),
+    ).rejects.errorWithMessage(new NotFoundError('User not found'));
 });
 
 test('should update loginAttempts for user', async () => {
@@ -190,7 +190,7 @@ test('should delete user', async () => {
 
     await stores.userStore.delete(user.id);
 
-    await expect(() => stores.userStore.get(user.id)).rejects.toThrow(
+    await expect(() => stores.userStore.get(user.id)).rejects.errorWithMessage(
         new NotFoundError('No user found'),
     );
 

@@ -5,7 +5,6 @@ import { log } from 'db-migrate-shared';
 import postgresPkg from 'pg';
 const { Client } = postgresPkg;
 import type { IDBOption } from '../../lib/types/index.js';
-import { jest } from '@jest/globals';
 import { fileURLToPath } from 'node:url';
 import path from 'path';
 
@@ -21,7 +20,6 @@ async function initSchema(db: IDBOption): Promise<void> {
 }
 
 test('Dedupe permissions migration correctly dedupes permissions', async () => {
-    jest.setTimeout(15000);
     const config = createTestConfig({
         db: {
             ...getDbConfig(),
@@ -177,4 +175,4 @@ test('Dedupe permissions migration correctly dedupes permissions', async () => {
 
     await client.end();
     await dbm.reset();
-});
+}, 15000);

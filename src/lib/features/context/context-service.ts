@@ -29,6 +29,7 @@ import {
     CONTEXT_FIELD_UPDATED,
     CONTEXT_FIELD_DELETED,
 } from '../../events/index.js';
+import ConflictError from '../../error/conflict-error.js';
 
 class ContextService {
     private eventService: EventService;
@@ -238,6 +239,15 @@ class ContextService {
         auditUser: IAuditUser,
     ): Promise<void> {
         const contextField = await this.contextFieldStore.get(name);
+
+        const strategies =
+            await this.featureStrategiesStore.getStrategiesByContextField(name);
+
+        if (strategies.length > 0) {
+            throw new ConflictError(
+                `This context field is in use by existing flags. To delete it, first remove its usage from all flags.`,
+            );
+        }
 
         // delete
         await this.contextFieldStore.delete(name);

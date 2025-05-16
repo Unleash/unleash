@@ -925,6 +925,12 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         const rows = await this.db
             .select(this.prefixColumns())
             .from<IFeatureStrategiesTable>(T.featureStrategies)
+            .join(
+                T.features,
+                `${T.features}.name`,
+                `${T.featureStrategies}.feature_name`,
+            )
+            .where(`${T.features}.archived_at`, 'IS', null)
             .where(
                 this.db.raw(
                     "EXISTS (SELECT 1 FROM jsonb_array_elements(constraints) AS elem WHERE elem ->> 'contextName' = ?)",

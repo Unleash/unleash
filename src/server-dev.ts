@@ -50,7 +50,6 @@ process.nextTick(async () => {
                         showUserDeviceCount: true,
                         deltaApi: true,
                         uniqueSdkTracking: true,
-                        teamsIntegrationChangeRequests: true,
                         addEditStrategy: true,
                         cleanupReminder: true,
                         strictSchemaValidation: true,

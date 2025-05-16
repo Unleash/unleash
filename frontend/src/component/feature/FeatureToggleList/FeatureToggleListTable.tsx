@@ -114,6 +114,8 @@ export const FeatureToggleListTable: FC = () => {
         [favorite, refetchFeatures, unfavorite, setToastApiError],
     );
 
+    const showStatusColumn = !isOss();
+
     const columns = useMemo(
         () => [
             columnHelper.accessor('favorite', {
@@ -167,7 +169,7 @@ export const FeatureToggleListTable: FC = () => {
                 size: 50,
                 meta: { width: '1%' },
             }),
-            ...(!isOss()
+            ...(showStatusColumn
                 ? [
                       columnHelper.accessor('environments', {
                           id: 'status',
@@ -199,7 +201,7 @@ export const FeatureToggleListTable: FC = () => {
                 },
             }),
         ],
-        [tableState.favoritesFirst],
+        [tableState.favoritesFirst, showStatusColumn],
     );
     const data = useMemo<FeatureSearchResponseSchema[]>(
         () =>

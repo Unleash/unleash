@@ -47,14 +47,8 @@ jobs:
           YARN_ENABLE_SCRIPTS: false
       - run: yarn lint
       - run: yarn build:backend
-      - run: yarn run test:report # This adds test results as github check to the workflow
+      - run: yarn run test --reporter=dot --reporter=github-actions# This adds test results as github check to the workflow
         env:
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
-      - name: Upload test report to build # Done this way since external PRs would not be able to write the check. See https://github.com/marketplace/actions/test-reporter#recommended-setup-for-public-repositories
-        uses: actions/upload-artifact@v4
-        if: (success() || failure()) && github.ref == 'refs/heads/main'
-        with:
-          name: test-results
-          path: ./reports/jest-junit.xml

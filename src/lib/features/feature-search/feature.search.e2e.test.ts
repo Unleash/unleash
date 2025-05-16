@@ -31,7 +31,6 @@ beforeAll(async () => {
                 flags: {
                     strictSchemaValidation: true,
                     anonymiseEventLog: true,
-                    flagsOverviewSearch: true,
                 },
             },
         },

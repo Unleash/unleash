@@ -52,7 +52,6 @@ process.nextTick(async () => {
                         uniqueSdkTracking: true,
                         teamsIntegrationChangeRequests: true,
                         addEditStrategy: true,
-                        flagsOverviewSearch: true,
                         cleanupReminder: true,
                         strictSchemaValidation: true,
                         registerFrontendClient: true,

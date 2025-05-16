@@ -329,6 +329,14 @@ test('should show context field usage for active flags', async () => {
         strategies: [{ environment: 'default', featureName: 'contextFeature' }],
     });
 
+    const { body: getAllBody } = await app.request
+        .get(`/api/admin/context`)
+        .expect(200);
+
+    expect(
+        getAllBody.find((field) => field.name === context)?.usedInFeatures,
+    ).toBe(1);
+
     await app.archiveFeature('contextFeature').expect(202);
 
     const { body: postArchiveBody } = await app.request.get(
@@ -336,4 +344,17 @@ test('should show context field usage for active flags', async () => {
     );
 
     expect(postArchiveBody.strategies).toHaveLength(0);
+
+    const { body: getContextBody } = await app.request.get(
+        `/api/admin/context/${context}/strategies`,
+    );
+
+    const { body: postArchiveGetAllBody } = await app.request
+        .get(`/api/admin/context`)
+        .expect(200);
+
+    expect(
+        postArchiveGetAllBody.find((field) => field.name === context)
+            ?.usedInFeatures,
+    ).toBe(0);
 });

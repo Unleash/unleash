@@ -25,10 +25,6 @@ export const useFeature = (
 ): IUseFeatureOutput => {
     const path = formatFeatureApiPath(projectId, featureId);
 
-    if (!featureId) {
-        // console.trace("boom");
-    }
-
     const { data, error, mutate } = useSWR<IFeatureResponse>(
         ['useFeature', path],
         () => featureFetcher(path),

@@ -4,7 +4,7 @@ import User from '../types/user.js';
 import NotFoundError from '../error/notfound-error.js';
 import type { AccountService } from '../services/account-service.js';
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 let config: any;
 
@@ -12,7 +12,7 @@ beforeEach(() => {
     config = {
         getLogger,
         flagResolver: {
-            isEnabled: jest.fn().mockReturnValue(true),
+            isEnabled: vi.fn().mockReturnValue(true),
         },
     };
 });
@@ -20,16 +20,16 @@ beforeEach(() => {
 test('should not set user if unknown token', async () => {
     // @ts-expect-error wrong type
     const accountService = {
-        getAccountByPersonalAccessToken: jest.fn(),
-        addPATSeen: jest.fn(),
+        getAccountByPersonalAccessToken: vi.fn(),
+        addPATSeen: vi.fn(),
     } as AccountService;
 
     const func = patMiddleware(config, { accountService });
 
-    const cb = jest.fn();
+    const cb = vi.fn();
 
     const req = {
-        header: jest.fn().mockReturnValue('user:some-token'),
+        header: vi.fn().mockReturnValue('user:some-token'),
         user: undefined,
     };
 
@@ -43,15 +43,15 @@ test('should not set user if unknown token', async () => {
 test('should not set user if token wrong format', async () => {
     // @ts-expect-error wrong type
     const accountService = {
-        getAccountByPersonalAccessToken: jest.fn(),
+        getAccountByPersonalAccessToken: vi.fn(),
     } as AccountService;
 
     const func = patMiddleware(config, { accountService });
 
-    const cb = jest.fn();
+    const cb = vi.fn();
 
     const req = {
-        header: jest.fn().mockReturnValue('token-not-starting-with-user'),
+        header: vi.fn().mockReturnValue('token-not-starting-with-user'),
         user: undefined,
     };
 
@@ -72,16 +72,16 @@ test('should add user if known token', async () => {
     });
     // @ts-expect-error wrong type
     const accountService = {
-        getAccountByPersonalAccessToken: jest.fn().mockReturnValue(apiUser),
-        addPATSeen: jest.fn(),
+        getAccountByPersonalAccessToken: vi.fn().mockReturnValue(apiUser),
+        addPATSeen: vi.fn(),
     } as AccountService;
 
     const func = patMiddleware(config, { accountService });
 
-    const cb = jest.fn();
+    const cb = vi.fn();
 
     const req = {
-        header: jest.fn().mockReturnValue('user:some-known-token'),
+        header: vi.fn().mockReturnValue('user:some-known-token'),
         user: undefined,
         path: '/api/client',
     };
@@ -104,10 +104,10 @@ test('should call next if accountService throws exception', async () => {
 
     const func = patMiddleware(config, { accountService });
 
-    const cb = jest.fn();
+    const cb = vi.fn();
 
     const req = {
-        header: jest.fn().mockReturnValue('user:some-token'),
+        header: vi.fn().mockReturnValue('user:some-token'),
         user: undefined,
     };
 
@@ -121,8 +121,8 @@ test('Should not log at error level if user not found', async () => {
     const fakeLogger = {
         debug: () => {},
         info: () => {},
-        warn: jest.fn(),
-        error: jest.fn(),
+        warn: vi.fn(),
+        error: vi.fn(),
         fatal: console.error,
     };
     const conf = {
@@ -130,20 +130,20 @@ test('Should not log at error level if user not found', async () => {
             return fakeLogger;
         },
         flagResolver: {
-            isEnabled: jest.fn().mockReturnValue(true),
+            isEnabled: vi.fn().mockReturnValue(true),
         },
     };
     // @ts-expect-error wrong type
     const accountService = {
-        getAccountByPersonalAccessToken: jest.fn().mockImplementation(() => {
+        getAccountByPersonalAccessToken: vi.fn().mockImplementation(() => {
             throw new NotFoundError('Could not find pat');
         }),
     } as AccountService;
     const mw = patMiddleware(conf, { accountService });
-    const cb = jest.fn();
+    const cb = vi.fn();
 
     const req = {
-        header: jest.fn().mockReturnValue('user:some-token'),
+        header: vi.fn().mockReturnValue('user:some-token'),
         user: undefined,
     };
 

@@ -12,7 +12,7 @@ import {
 } from '../types/index.js';
 import type { IntegrationEventsService } from '../services/index.js';
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 import EventEmitter from 'node:events';
 import nock from 'nock';
 
@@ -28,7 +28,7 @@ afterEach(() => {
 });
 
 const setup = () => {
-    const registerEventMock = jest.fn();
+    const registerEventMock = vi.fn();
     const addonConfig: IAddonConfig = {
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',

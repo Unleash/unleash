@@ -8,7 +8,7 @@ import {
 } from '../../types/index.js';
 import { createFakeProjectService } from './createProjectService.js';
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 describe('enterprise extension: enable change requests', () => {
     const createService = (mode: 'oss' | 'enterprise' = 'enterprise') => {
@@ -75,7 +75,7 @@ describe('enterprise extension: enable change requests', () => {
     test("it does not call the change request enablement function if we're not enterprise", async () => {
         const { service } = createService('oss');
 
-        const fn = jest.fn() as () => Promise<
+        const fn = vi.fn() as () => Promise<
             { name: string; requiredApprovals: number }[] | undefined
         >;
 
@@ -334,7 +334,7 @@ describe('enterprise extension: enable change requests', () => {
         const { service } = createService();
 
         const projectId = 'fake-project-id';
-        expect(
+        await expect(
             service.createProject(
                 {
                     id: projectId,
@@ -357,7 +357,7 @@ describe('enterprise extension: enable change requests', () => {
         const { service } = createService('oss');
 
         const projectId = 'fake-project-id';
-        expect(
+        await expect(
             service.createProject(
                 {
                     id: projectId,

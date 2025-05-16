@@ -27,6 +27,7 @@ import BadDataError from '../../lib/error/bad-data-error.js';
 import { createFakeEventsService } from '../../lib/features/events/createEventsService.js';
 import { createFakeAccessReadModel } from '../features/access/createAccessReadModel.js';
 import { ROLE_CREATED } from '../events/index.js';
+import { expect } from 'vitest';
 
 function getSetup() {
     const config = createTestConfig({
@@ -56,9 +57,13 @@ test('should fail when name exists', async () => {
         SYSTEM_USER_AUDIT,
     );
 
-    expect(accessService.validateRole(existingRole)).rejects.toThrow(
-        new NameExistsError(
-            `There already exists a role with the name ${existingRole.name}`,
+    await expect(() =>
+        accessService.validateRole(existingRole),
+    ).rejects.toThrowError(
+        expect.errorWithMessage(
+            new NameExistsError(
+                `There already exists a role with the name ${existingRole.name}`,
+            ),
         ),
     );
 });
@@ -110,7 +115,7 @@ test('should not accept empty names', async () => {
 
     await expect(
         accessService.validateRole(withWhitespaceName),
-    ).rejects.toThrow('"name" is not allowed to be empty');
+    ).rejects.toThrowError('"name" is not allowed to be empty');
 });
 
 test('should trim leading and trailing whitespace from names', async () => {

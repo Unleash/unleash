@@ -21,7 +21,7 @@ import {
 } from '../../types/index.js';
 import type { FrontendApiService } from './frontend-api-service.js';
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -42,7 +42,7 @@ beforeAll(async () => {
 
 afterEach(() => {
     app.services.frontendApiService.stopAll();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 });
 
 afterAll(async () => {
@@ -360,6 +360,12 @@ test('should store frontend api client metrics', async () => {
         projects: ['*'],
         environment: '*',
     });
+
+    // @ts-expect-error - cachedFeatureNames is a private property in ClientMetricsServiceV2
+    app.services.clientMetricsServiceV2.cachedFeatureNames = vi
+        .fn<() => Promise<string[]>>()
+        .mockResolvedValue([featureName]);
+
     await app.request
         .get(`/api/admin/client-metrics/features/${featureName}`)
         .set('Authorization', adminToken.secret)

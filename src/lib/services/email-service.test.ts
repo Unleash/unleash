@@ -1,7 +1,7 @@
 import { EmailService, type TransportProvider } from './email-service.js';
 import noLoggerProvider from '../../test/fixtures/no-logger.js';
 import type { IUnleashConfig } from '../types/index.js';
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 test('Can send reset email', async () => {
     const emailService = new EmailService({
@@ -54,7 +54,7 @@ test('Can send welcome mail', async () => {
 });
 
 test('Can supply additional SMTP transport options', async () => {
-    const transport = jest.fn() as unknown as TransportProvider;
+    const transport = vi.fn() as unknown as TransportProvider;
 
     new EmailService(
         {

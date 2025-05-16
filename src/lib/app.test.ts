@@ -1,9 +1,9 @@
 import { createTestConfig } from '../test/config/test-config.js';
-import { jest } from '@jest/globals';
+import { type Mock, vi } from 'vitest';
 
 // This mock setup MUST be at the top-level, before any other code that might trigger imports.
-jest.unstable_mockModule('compression', () => ({
-    default: jest.fn().mockImplementation(() => {
+vi.mock('compression', () => ({
+    default: vi.fn().mockImplementation(() => {
         // This is the actual middleware function Express would use
         return (req, res, next) => {
             next();
@@ -15,8 +15,8 @@ let compression: any;
 
 const openApiService = {
     // returns a middleware
-    validPath: jest.fn().mockReturnValue(() => {}),
-    useDocs: jest.fn(),
+    validPath: vi.fn().mockReturnValue(() => {}),
+    useDocs: vi.fn(),
 };
 
 const appModule = await import('./app.js');
@@ -52,10 +52,10 @@ test('should call preRouterHook', async () => {
 
 describe('compression middleware', () => {
     beforeAll(async () => {
-        jest.resetModules(); // Crucial: Clears the module cache.
+        vi.resetModules(); // Crucial: Clears the module cache.
         // Import 'compression' AFTER resetModules. This ensures we get the mock.
         const compressionModule = await import('compression');
-        compression = compressionModule.default; // `compression` is now our jest.fn()
+        compression = compressionModule.default; // `compression` is now our vi.fn()
 
         // Import 'app.js' AFTER resetModules and AFTER 'compression' is set to the mock.
         // This ensures app.js uses the mocked version of compression.
@@ -67,9 +67,9 @@ describe('compression middleware', () => {
         // Clear call history for the mock before each test in this describe block
         if (
             compression &&
-            typeof (compression as jest.Mock).mockClear === 'function'
+            typeof (compression as Mock).mockClear === 'function'
         ) {
-            (compression as jest.Mock).mockClear();
+            (compression as Mock).mockClear();
         } else {
             // This case might happen if beforeAll failed or types are unexpected
             console.warn(

@@ -10,25 +10,25 @@ import {
     start,
     type UnleashFactoryMethods,
 } from './server-impl.js';
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 import type MetricsMonitor from './metrics.js';
 
 const mockFactories: () => UnleashFactoryMethods = () => ({
-    createDb: jest.fn<(config: IUnleashConfig) => Db>().mockReturnValue({
-        destroy: jest.fn(),
+    createDb: vi.fn<(config: IUnleashConfig) => Db>().mockReturnValue({
+        destroy: vi.fn(),
     } as unknown as Db),
-    createStores: jest
+    createStores: vi
         .fn<(config: IUnleashConfig, db: Db) => IUnleashStores>()
         .mockReturnValue({
             settingStore: {
-                get: jest.fn(),
-                postgresVersion: jest.fn(),
+                get: vi.fn(),
+                postgresVersion: vi.fn(),
             },
             eventStore: {
-                on: jest.fn(),
+                on: vi.fn(),
             },
         } as unknown as IUnleashStores),
-    createServices: jest
+    createServices: vi
         .fn<
             (
                 stores: IUnleashStores,
@@ -38,24 +38,24 @@ const mockFactories: () => UnleashFactoryMethods = () => ({
         >()
         .mockReturnValue({
             userService: {
-                initAdminUser: jest.fn(),
+                initAdminUser: vi.fn(),
             },
             schedulerService: {
-                schedule: jest.fn(),
-                stop: jest.fn(),
+                schedule: vi.fn(),
+                stop: vi.fn(),
             },
             addonService: {
-                destroy: jest.fn(),
+                destroy: vi.fn(),
             },
             openApiService: {
                 // returns a middleware
-                validPath: jest.fn().mockReturnValue(() => {}),
+                validPath: vi.fn().mockReturnValue(() => {}),
             },
         } as unknown as IUnleashServices),
     createSessionDb:
-        jest.fn<(config: IUnleashConfig, db: Db) => RequestHandler>(),
-    createMetricsMonitor: jest.fn<() => MetricsMonitor>().mockReturnValue({
-        startMonitoring: jest.fn(),
+        vi.fn<(config: IUnleashConfig, db: Db) => RequestHandler>(),
+    createMetricsMonitor: vi.fn<() => MetricsMonitor>().mockReturnValue({
+        startMonitoring: vi.fn(),
     } as unknown as MetricsMonitor),
 });
 

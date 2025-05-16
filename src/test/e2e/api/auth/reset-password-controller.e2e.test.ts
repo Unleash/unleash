@@ -25,7 +25,7 @@ import {
     TEST_AUDIT_USER,
 } from '../../../../lib/types/index.js';
 import { createEventsService } from '../../../../lib/features/index.js';
-
+import { beforeAll, test, afterAll, expect } from 'vitest';
 let app: IUnleashTest;
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -110,9 +110,6 @@ beforeAll(async () => {
 
 afterAll(async () => {
     await stores.resetTokenStore.deleteAll();
-});
-
-afterAll(async () => {
     await app.destroy();
     await db.destroy();
 });

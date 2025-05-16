@@ -9,7 +9,7 @@ import getLogger from '../../../test/fixtures/no-logger.js';
 import { randomId } from '../../util/index.js';
 import { ApiTokenType } from '../../types/model.js';
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 let app: IUnleashNoSupertest;
 let db: ITestDb;
@@ -37,7 +37,7 @@ beforeAll(async () => {
 
 afterEach(() => {
     app.services.frontendApiService.stopAll();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 });
 
 afterAll(async () => {

@@ -6,7 +6,7 @@ import SettingService from './setting-service.js';
 import type EventService from '../features/events/event-service.js';
 import MaintenanceService from '../features/maintenance/maintenance-service.js';
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 function ms(timeMs: number) {
     return new Promise((resolve) => setTimeout(resolve, timeMs));
@@ -51,7 +51,7 @@ beforeEach(() => {
 });
 
 test('Schedules job immediately', async () => {
-    const job = jest.fn() as () => Promise<void> as () => Promise<void>;
+    const job = vi.fn() as () => Promise<void> as () => Promise<void>;
     await schedulerService.schedule(job, 10, 'test-id');
 
     expect(job).toHaveBeenCalledTimes(1);
@@ -59,7 +59,7 @@ test('Schedules job immediately', async () => {
 });
 
 test('Can schedule a single regular job', async () => {
-    const job = jest.fn() as () => Promise<void>;
+    const job = vi.fn() as () => Promise<void>;
     await schedulerService.schedule(job, 50, 'test-id-3');
     await ms(75);
 
@@ -68,8 +68,8 @@ test('Can schedule a single regular job', async () => {
 });
 
 test('Can schedule multiple jobs at the same interval', async () => {
-    const job = jest.fn() as () => Promise<void>;
-    const anotherJob = jest.fn() as () => Promise<void>;
+    const job = vi.fn() as () => Promise<void>;
+    const anotherJob = vi.fn() as () => Promise<void>;
 
     await schedulerService.schedule(job, 50, 'test-id-6');
     await schedulerService.schedule(anotherJob, 50, 'test-id-7');
@@ -81,8 +81,8 @@ test('Can schedule multiple jobs at the same interval', async () => {
 });
 
 test('Can schedule multiple jobs at the different intervals', async () => {
-    const job = jest.fn() as () => Promise<void>;
-    const anotherJob = jest.fn() as () => Promise<void>;
+    const job = vi.fn() as () => Promise<void>;
+    const anotherJob = vi.fn() as () => Promise<void>;
 
     await schedulerService.schedule(job, 100, 'test-id-8');
     await schedulerService.schedule(anotherJob, 200, 'test-id-9');

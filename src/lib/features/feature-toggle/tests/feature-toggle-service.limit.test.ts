@@ -9,7 +9,7 @@ import type {
 } from '../../../types/index.js';
 import getLogger from '../../../../test/fixtures/no-logger.js';
 import { ExceedsLimitError } from '../../../error/exceeds-limit-error.js';
-
+import { describe, test, expect } from 'vitest';
 const alwaysOnFlagResolver = {
     isEnabled() {
         return true;
@@ -43,7 +43,7 @@ describe('Strategy limits', () => {
             await addStrategy();
         }
 
-        await expect(addStrategy()).rejects.toThrow(
+        await expect(addStrategy()).rejects.toThrowError(
             "Failed to create strategy. You can't create more than the established limit of 3",
         );
     });
@@ -87,7 +87,7 @@ describe('Strategy limits', () => {
                     contextName: 'accountId',
                 },
             ]),
-        ).rejects.toThrow(
+        ).rejects.toThrowError(
             "Failed to create constraints. You can't create more than the established limit of 1",
         );
     });
@@ -159,7 +159,7 @@ describe('Strategy limits', () => {
         // check that you can't save more constraints
         await expect(async () =>
             updateStrategy([...constraints, ...constraints]),
-        ).rejects.toThrow(new ExceedsLimitError('constraints', LIMIT));
+        ).rejects.errorWithMessage(new ExceedsLimitError('constraints', LIMIT));
     });
 
     test('Should not allow to exceed constraint values limit', async () => {
@@ -195,7 +195,7 @@ describe('Strategy limits', () => {
                     values: ['1', '2', '3', '4'],
                 },
             ]),
-        ).rejects.toThrow(
+        ).rejects.toThrowError(
             "Failed to create constraint values for userId. You can't create more than the established limit of 3",
         );
     });
@@ -266,7 +266,7 @@ describe('Strategy limits', () => {
         // check that you can't save more constraint values
         await expect(async () =>
             updateStrategy(initialConstraintValueCount + 1),
-        ).rejects.toThrow(
+        ).rejects.errorWithMessage(
             new ExceedsLimitError('constraint values for appName', LIMIT),
         );
     });

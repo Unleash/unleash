@@ -8,7 +8,7 @@ import SessionService from '../services/session-service.js';
 import FakeSessionStore from '../../test/fixtures/fake-session-store.js';
 import noLogger from '../../test/fixtures/no-logger.js';
 import { addDays } from 'date-fns';
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 test('should redirect to "/" after logout', async () => {
     const baseUriPath = '';
@@ -146,7 +146,7 @@ test('should clear "unleash-session" cookie even when disabled clear site data',
 test('should call destroy on session', async () => {
     const baseUriPath = '';
     const fakeSession = {
-        destroy: jest.fn(),
+        destroy: vi.fn(),
     };
     const app = express();
     const config = createTestConfig({ server: { baseUriPath } });
@@ -171,7 +171,7 @@ test('should call destroy on session', async () => {
 test('should handle req.logout with callback function', async () => {
     // passport >=0.6.0
     const baseUriPath = '';
-    const logoutFunction = jest.fn((cb: (err?: any) => void) => cb());
+    const logoutFunction = vi.fn((cb: (err?: any) => void) => cb());
     const app = express();
     const config = createTestConfig({ server: { baseUriPath } });
     app.use((req: IAuthRequest, res, next) => {
@@ -196,7 +196,7 @@ test('should handle req.logout with callback function', async () => {
 test('should handle req.logout without callback function', async () => {
     // passport <0.6.0
     const baseUriPath = '';
-    const logoutFunction = jest.fn();
+    const logoutFunction = vi.fn();
     const app = express();
     const config = createTestConfig({ server: { baseUriPath } });
     app.use((req: IAuthRequest, res, next) => {
@@ -220,7 +220,7 @@ test('should handle req.logout without callback function', async () => {
 
 test('should redirect to alternative logoutUrl', async () => {
     const fakeSession = {
-        destroy: jest.fn(),
+        destroy: vi.fn(),
         logoutUrl: '/some-other-path',
     };
     const app = express();
@@ -248,7 +248,7 @@ test('Should destroy sessions for user', async () => {
     const app = express();
     const config = createTestConfig();
     const fakeSession = {
-        destroy: jest.fn(),
+        destroy: vi.fn(),
         user: {
             id: 1,
         },

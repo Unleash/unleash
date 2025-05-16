@@ -55,7 +55,6 @@ export type IFlagKey =
     | 'deltaApi'
     | 'uniqueSdkTracking'
     | 'consumptionModel'
-    | 'teamsIntegrationChangeRequests'
     | 'edgeObservability'
     | 'addEditStrategy'
     | 'cleanupReminder'
@@ -264,10 +263,6 @@ const flags: IFlags = {
     ),
     consumptionModel: parseEnvVarBoolean(
         process.env.EXPERIMENTAL_CONSUMPTION_MODEL,
-        false,
-    ),
-    teamsIntegrationChangeRequests: parseEnvVarBoolean(
-        process.env.EXPERIMENTAL_TEAMS_INTEGRATION_CHANGE_REQUESTS,
         false,
     ),
     edgeObservability: parseEnvVarBoolean(

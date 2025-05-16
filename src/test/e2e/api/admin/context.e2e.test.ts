@@ -179,7 +179,7 @@ test('should delete context field', async () => {
     return app.request.delete('/api/admin/context/userId').expect(200);
 });
 
-test('should not delete a context field that is in use', async () => {
+test('should not delete a context field that is in use by active flags', async () => {
     const context = 'appName';
     const feature = 'contextFeature';
     await app.request
@@ -209,7 +209,15 @@ test('should not delete a context field that is in use', async () => {
         })
         .expect(200);
 
-    return app.request.delete(`/api/admin/context/${context}`).expect(409);
+    app.request.delete(`/api/admin/context/${context}`).expect(409);
+
+    await app.archiveFeature('contextFeature').expect(202);
+
+    const { body: postArchiveBody } = await app.request.get(
+        `/api/admin/context/${context}/strategies`,
+    );
+
+    expect(postArchiveBody.strategies).toHaveLength(0);
 });
 
 test('refuses to create a context not url-friendly name', async () => {
@@ -274,7 +282,7 @@ test('should update context field with stickiness', async () => {
     expect(contextField.stickiness).toBe(true);
 });
 
-test('should show context field usage', async () => {
+test('should show context field usage for active flags', async () => {
     const context = 'appName';
     const feature = 'contextFeature';
     await app.request
@@ -320,4 +328,12 @@ test('should show context field usage', async () => {
     expect(body).toMatchObject({
         strategies: [{ environment: 'default', featureName: 'contextFeature' }],
     });
+
+    await app.archiveFeature('contextFeature').expect(202);
+
+    const { body: postArchiveBody } = await app.request.get(
+        `/api/admin/context/${context}/strategies`,
+    );
+
+    expect(postArchiveBody.strategies).toHaveLength(0);
 });

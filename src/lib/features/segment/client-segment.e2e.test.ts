@@ -55,11 +55,9 @@ const fetchFeatureStrategies = (featureName: string) =>
         .expect(200)
         .then((res) => res.body);
 
-const fetchClientFeatures = (): Promise<IFeatureToggleClient[]> => {
-    return app.request
-        .get(FEATURES_CLIENT_BASE_PATH)
-        .expect(200)
-        .then((res) => res.body.features);
+const fetchClientFeatures = async (): Promise<IFeatureToggleClient[]> => {
+    const res = await app.request.get(FEATURES_CLIENT_BASE_PATH).expect(200);
+    return res.body.features;
 };
 
 const createSegment = (postData: UpsertSegmentSchema): Promise<ISegment> => {
@@ -548,7 +546,7 @@ describe('project-specific segments', () => {
                 ...segment,
                 project: '',
             }),
-        ).resolves;
+        ).resolves.toBeUndefined();
     });
 
     test(`can't set a specific segment project when being used by multiple projects (global)`, async () => {
@@ -589,7 +587,7 @@ describe('project-specific segments', () => {
             [strategy2],
             project2,
         );
-        await expect(() =>
+        await expect(
             updateSegment(segment.id, {
                 ...segment,
                 project: project1,

@@ -16,7 +16,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: build
-
+    permissions:
+      contents: read
+      # Needed for the github-reporter from vite to make comments on PRs
+      pull-requests: write
     services:
       # Label used to access the service container
       postgres:
@@ -47,7 +50,7 @@ jobs:
           YARN_ENABLE_SCRIPTS: false
       - run: yarn lint
       - run: yarn build:backend
-      - run: yarn run test --reporter=dot --reporter=github-actions
+      - run: yarn run test
         env:
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres

@@ -132,6 +132,11 @@
       "permanent": true
     },
     {
+      "source": "/how-to/",
+      "destination": "/what-is-a-feature-flag",
+      "permanent": true
+    },
+    {
       "source": "/how-to/how-to-add-users-to-unleash",
       "destination": "/reference/rbac",
       "permanent": true
@@ -831,14 +836,34 @@
       "destination": "/using-unleash/troubleshooting/flag-not-returned",
       "permanent": true
     },
-    {
-      "source": "/how-to/how-to-troubleshoot-cors",
-      "destination": "/using-unleash/troubleshooting/cors",
+        {
+      "source": "/how-to/how-to-troubleshoot-flag-not-returned",
+      "destination": "/using-unleash/troubleshooting/flag-not-returned",
       "permanent": true
     },
     {
-      "source": "/how-to/how-to-troubleshoot-https",
-      "destination": "/using-unleash/troubleshooting/https",
+      "source": "/using-unleash/troubleshooting/cors",
+      "destination": "troubleshooting",
+      "permanent": true
+    },
+        {
+      "source": "/using-unleash/troubleshooting/flag-abn-unexpected-results",
+      "destination": "troubleshooting",
+      "permanent": true
+    },
+        {
+      "source": "/using-unleash/troubleshooting/flag-exposure",
+      "destination": "troubleshooting",
+      "permanent": true
+    },
+        {
+      "source": "/using-unleash/troubleshooting/flag-not-returned",
+      "destination": "troubleshooting",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/troubleshooting/https",
+      "destination": "/using-unleash/deploy/https",
       "permanent": true
     },
     {

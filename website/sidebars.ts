@@ -91,6 +91,14 @@ const sidebars: SidebarsConfig = {
                             id: 'feature-flag-tutorials/use-cases/how-to-create-feature-toggles',
                         },
                         {
+                            type: 'doc',
+                            id: 'how-to/how-to-schedule-feature-releases',
+                        },
+                        {
+                            type: 'doc',
+                            id: 'how-to/how-to-synchronize-unleash-instances',
+                        },
+                        {
                             type: 'category',
                             label: 'Use Cases',
                             collapsed: true,
@@ -579,6 +587,7 @@ const sidebars: SidebarsConfig = {
                         'using-unleash/deploy/configuring-unleash',
                         'using-unleash/deploy/upgrading-unleash',
                         'using-unleash/deploy/license-keys',
+                        'using-unleash/deploy/https',
                     ],
                 },
                 {
@@ -651,48 +660,7 @@ const sidebars: SidebarsConfig = {
                         },
                     ],
                 },
-                {
-                    label: 'Troubleshooting',
-                    type: 'category',
-                    link: {
-                        type: 'doc',
-                        id: 'using-unleash/troubleshooting/cors',
-                    },
-                    items: [
-                        'using-unleash/troubleshooting/cors',
-                        'using-unleash/troubleshooting/https',
-                        'using-unleash/troubleshooting/flag-exposure',
-                        'using-unleash/troubleshooting/flag-not-returned',
-                        'using-unleash/troubleshooting/flag-abn-test-unexpected-result',
-                    ],
-                },
-                {
-                    label: 'How-to guides',
-                    type: 'category',
-                    link: {
-                        type: 'generated-index',
-                        title: 'How-to guides',
-                        description: 'Step-by-step recipes for you to follow.',
-                        slug: '/how-to',
-                    },
-                    items: [
-                        {
-                            label: 'Feature flags, strategies, context',
-                            type: 'category',
-                            link: {
-                                type: 'generated-index',
-                                title: 'How-to: general Unleash tasks',
-                                description:
-                                    'Guides for how to perform general Unleash tasks.',
-                                slug: '/how-to/misc',
-                            },
-                            items: [
-                                'how-to/how-to-schedule-feature-releases',
-                                'how-to/how-to-synchronize-unleash-instances',
-                            ],
-                        },
-                    ],
-                },
+                'troubleshooting',
             ],
         },
         {

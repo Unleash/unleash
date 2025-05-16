@@ -804,23 +804,6 @@ class="header-github-link"
                             ],
                             to: '/understanding-unleash/data-collection',
                         },
-
-                        {
-                            from: '/how-to/how-to-troubleshoot-flag-exposure',
-                            to: '/using-unleash/troubleshooting/flag-exposure',
-                        },
-                        {
-                            from: '/how-to/how-to-troubleshoot-flag-not-returned',
-                            to: '/using-unleash/troubleshooting/flag-not-returned',
-                        },
-                        {
-                            from: '/how-to/how-to-troubleshoot-cors',
-                            to: '/using-unleash/troubleshooting/cors',
-                        },
-                        {
-                            from: '/how-to/how-to-troubleshoot-https',
-                            to: '/using-unleash/troubleshooting/https',
-                        },
                         {
                             from: [
                                 '/reference/deploy/environment-import-export',

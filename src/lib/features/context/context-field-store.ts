@@ -20,6 +20,7 @@ const COLUMNS = [
 const T = {
     contextFields: 'context_fields',
     featureStrategies: 'feature_strategies',
+    features: 'features',
 };
 
 type ContextFieldDB = {
@@ -107,6 +108,12 @@ class ContextFieldStore implements IContextFieldStore {
                         WHERE elem ->> 'contextName' = ${T.contextFields}.name
                       )`,
             )
+            .join(
+                T.features,
+                `${T.features}.name`,
+                `${T.featureStrategies}.feature_name`,
+            )
+            .where(`${T.features}.archived_at`, 'IS', null)
             .groupBy(
                 this.prefixColumns(
                     COLUMNS.filter((column) => column !== 'legal_values'),
@@ -144,7 +151,6 @@ class ContextFieldStore implements IContextFieldStore {
         return present;
     }
 
-    // TODO: write tests for the changes you made here?
     async create(contextField: IContextFieldDto): Promise<IContextField> {
         const [row] = await this.db(T.contextFields)
             .insert(this.fieldToRow(contextField))

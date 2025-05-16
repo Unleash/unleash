@@ -16,7 +16,7 @@ exports.up = (db, callback) => {
                 SELECT id FROM ranked WHERE rn > 1
             );
 
-            CREATE UNIQUE INDEX unique_pending_request_per_user_project_env
+            CREATE UNIQUE INDEX IF NOT EXISTS unique_pending_request_per_user_project_env
                 ON change_requests (created_by, project, environment)
                 WHERE state NOT IN ('Applied', 'Cancelled', 'Rejected', 'Scheduled');
         `,

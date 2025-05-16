@@ -56,7 +56,7 @@ test('process metrics properly', async () => {
     const { clientMetricsService, eventBus, lastSeenService, stores } =
         initClientMetrics();
 
-    stores.clientMetricsStoreV2.getFeatureFlagNames = jest
+    stores.clientMetricsStoreV2.getFeatureFlagNames = vi
         .fn<() => Promise<string[]>>()
         .mockResolvedValue(['myCoolToggle', 'myOtherToggle']);
 

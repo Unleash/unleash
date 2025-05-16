@@ -7,8 +7,8 @@ By default, these endpoints will not return feature flags that are not enabled. 
 The first thing to look into is to validate that the feature is well configured and then check the token used from the SDK because it determines the set of accessible features. Last, verify that the context you're providing contains all the required data.
 
 1. Check that the feature is properly enabled: 
-    1. Verify that the feature has a strategy associated to it that will return true for your context (ref: [add a strategy](/how-to-create-feature-flag#step-2))
-    2. Verify that the feature has been enabled in the environment used by the client application (ref: [enabling a feature flag](/how-to-create-feature-flag#step-3))
+    1. Verify that the feature has a strategy associated to it that will return true for your context (ref: [add a strategy](/reference/actication-strategies))
+    2. Verify that the feature has been enabled in the environment used by the client application (ref: [enabling a feature flag](/reference/feature-toggles))
 2. Check that your token is of the right [type](/reference/api-tokens-and-client-keys.mdx). To connect to the Frontend API, Edge or Proxy, you need to use a [Front-end token](/reference/api-tokens-and-client-keys#frontend-tokens)
 3. Check that your token has access to the feature flag. The **token access configuration is immutable post-creation** and defines the set of features that the token can access. The different [parts of a token](/reference/api-tokens-and-client-keys#api-token-format) determine what projects and environment can be accessed:
     1. **Access to all projects (current and future)** - Tokens with a leading asterisk will provide access to all projects in a particular environment. For example, the token `*:production:xyz123etc...` will provide access to flags in the production environment of all projects.

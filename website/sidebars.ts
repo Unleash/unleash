@@ -87,6 +87,10 @@ const sidebars: SidebarsConfig = {
                     },
                     items: [
                         {
+                            type: 'doc',
+                            id: 'feature-flag-tutorials/use-cases/how-to-create-feature-toggles',
+                        },
+                        {
                             type: 'category',
                             label: 'Use Cases',
                             collapsed: true,
@@ -683,7 +687,6 @@ const sidebars: SidebarsConfig = {
                                 slug: '/how-to/misc',
                             },
                             items: [
-                                'how-to/how-to-create-feature-toggles',
                                 'how-to/how-to-schedule-feature-releases',
                                 'how-to/how-to-synchronize-unleash-instances',
                             ],

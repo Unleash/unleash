@@ -12,6 +12,7 @@ import {
     CREATE_FEATURE_STRATEGY,
     DEFAULT_PROJECT,
     type IUnleashStores,
+    TEST_AUDIT_USER,
     UPDATE_FEATURE_ENVIRONMENT,
 } from '../../types/index.js';
 import { DEFAULT_ENV } from '../../util/index.js';
@@ -76,6 +77,14 @@ beforeAll(async () => {
             { name: CREATE_FEATURE_STRATEGY },
         ],
         'production',
+    );
+
+    await app.services.userService.createUser(
+        {
+            username: 'admin@test.com',
+            rootRole: 1,
+        },
+        TEST_AUDIT_USER,
     );
 });
 
@@ -1340,15 +1349,28 @@ const createChangeRequest = async ({
     feature,
     environment,
     state,
-}: { id: number; feature: string; environment: string; state: string }) => {
+    createdBy,
+}: {
+    id: number;
+    feature: string;
+    environment: string;
+    state: string;
+    createdBy: number;
+}) => {
     await db
         .rawDatabase('change_requests')
-        .insert({ id, environment, state, project: 'default', created_by: 1 });
+        .insert({
+            id,
+            environment,
+            state,
+            project: 'default',
+            created_by: createdBy,
+        });
     await db.rawDatabase('change_request_events').insert({
         id,
         feature,
         action: 'updateEnabled',
-        created_by: 1,
+        created_by: createdBy,
         change_request_id: id,
     });
 };
@@ -1362,48 +1384,56 @@ test('should return change request ids per environment', async () => {
         feature: 'my_feature_a',
         environment: 'production',
         state: 'In review',
+        createdBy: 1,
     });
     await createChangeRequest({
         id: 2,
         feature: 'my_feature_a',
         environment: 'production',
         state: 'Applied',
+        createdBy: 1,
     });
     await createChangeRequest({
         id: 3,
         feature: 'my_feature_a',
         environment: 'production',
         state: 'Cancelled',
+        createdBy: 1,
     });
     await createChangeRequest({
         id: 4,
         feature: 'my_feature_a',
         environment: 'production',
         state: 'Rejected',
+        createdBy: 1,
     });
     await createChangeRequest({
         id: 5,
         feature: 'my_feature_a',
         environment: 'development',
         state: 'Draft',
+        createdBy: 1,
     });
     await createChangeRequest({
         id: 6,
         feature: 'my_feature_a',
         environment: 'development',
         state: 'Scheduled',
+        createdBy: 1,
     });
     await createChangeRequest({
         id: 7,
         feature: 'my_feature_a',
         environment: 'development',
         state: 'Approved',
+        createdBy: 2,
     });
     await createChangeRequest({
         id: 8,
         feature: 'my_feature_b',
         environment: 'development',
         state: 'Approved',
+        createdBy: 1,
     });
 
     const { body } = await searchFeatures({});

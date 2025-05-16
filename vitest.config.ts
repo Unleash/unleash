@@ -29,7 +29,7 @@ export default defineConfig({
             reporter: [
                 ['json', { path: './coverage/coverage-final.json' }],
                 ['json-summary', { path: './coverage/coverage-summary.json' }],
-                ['clover'],
+                ['cobertura'],
                 ['lcov', { projectRoot: './src' }],
             ],
             provider: 'v8',

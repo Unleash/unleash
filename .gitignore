@@ -108,3 +108,4 @@ website/.yarn/*
 !website/.yarn/versions
 
 coverage/.tmp
+coverage/*

@@ -1,7 +1,7 @@
 import useSWR, { type SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
-import { emptyFeature } from './emptyFeature.js';
-import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { emptyFeature } from './emptyFeature.ts';
+import handleErrorResponses from '../httpErrorResponseHandler.ts';
 import { formatApiPath } from 'utils/formatPath';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 

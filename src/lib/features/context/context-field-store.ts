@@ -89,17 +89,21 @@ class ContextFieldStore implements IContextFieldStore {
 
     async getAll(): Promise<IContextField[]> {
         const rows = await this.db
-            .select(
-                this.prefixColumns(),
-                'used_in_projects',
-                'used_in_features',
-            )
-            .countDistinct(
-                `${T.featureStrategies}.project_name AS used_in_projects`,
-            )
-            .countDistinct(
-                `${T.featureStrategies}.feature_name AS used_in_features`,
-            )
+            .select([
+                ...this.prefixColumns(),
+                this.db.raw(
+                    `COUNT(DISTINCT CASE
+                        WHEN ${T.features}.archived_at IS NULL
+                        THEN ${T.featureStrategies}.project_name
+                    END) AS used_in_projects`,
+                ),
+                this.db.raw(
+                    `COUNT(DISTINCT CASE
+                        WHEN ${T.features}.archived_at IS NULL
+                        THEN ${T.featureStrategies}.feature_name
+                    END) AS used_in_features`,
+                ),
+            ])
             .from(T.contextFields)
             .joinRaw(
                 `LEFT JOIN ${T.featureStrategies} ON EXISTS (
@@ -108,18 +112,18 @@ class ContextFieldStore implements IContextFieldStore {
                         WHERE elem ->> 'contextName' = ${T.contextFields}.name
                       )`,
             )
-            .join(
+            .leftJoin(
                 T.features,
                 `${T.features}.name`,
                 `${T.featureStrategies}.feature_name`,
             )
-            .where(`${T.features}.archived_at`, 'IS', null)
             .groupBy(
                 this.prefixColumns(
                     COLUMNS.filter((column) => column !== 'legal_values'),
                 ),
             )
             .orderBy('name', 'asc');
+
         return rows.map(mapRow);
     }
 

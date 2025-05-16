@@ -27,8 +27,8 @@ export default defineConfig({
         coverage: {
             reportOnFailure: true,
             reporter: [
-                ['json', { path: "./coverage/coverage-final.json" }],
-                ['json-summary', { path: "./coverage/coverage-summary.json" }]
+                ['json', { path: './coverage/coverage-final.json' }],
+                ['json-summary', { path: './coverage/coverage-summary.json' }],
                 ['clover'],
                 ['lcov', { projectRoot: './src' }],
             ],

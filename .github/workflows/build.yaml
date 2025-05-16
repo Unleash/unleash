@@ -47,7 +47,7 @@ jobs:
           YARN_ENABLE_SCRIPTS: false
       - run: yarn lint
       - run: yarn build:backend
-      - run: yarn run test --reporter=dot --reporter=github-actions# This adds test results as github check to the workflow
+      - run: yarn run test --reporter=dot --reporter=github-actions
         env:
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres

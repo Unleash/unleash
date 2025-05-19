@@ -2,7 +2,7 @@ import dbInit, { type ITestDb } from './helpers/database-init.js';
 import { setupAppWithCustomAuth } from './helpers/test-helper.js';
 import { type IUnleashStores, RoleName } from '../../lib/types/index.js';
 import type { IUnleashServices } from '../../lib/services/index.js';
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -35,7 +35,7 @@ afterAll(async () => {
 });
 
 test('Using custom auth type without defining custom middleware causes default DENY ALL policy to take effect', async () => {
-    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
+    vi.spyOn(global.console, 'error').mockImplementation(() => vi.fn());
     const { request, destroy } = await setupAppWithCustomAuth(
         stores,
         undefined,

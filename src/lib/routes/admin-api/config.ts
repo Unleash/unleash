@@ -191,8 +191,6 @@ class ConfigController extends Controller {
             unleashUrl: this.config.server.unleashUrl,
             baseUriPath: this.config.server.baseUriPath,
             authenticationType: this.config.authentication?.type,
-            segmentValuesLimit: this.config.resourceLimits.segmentValues,
-            strategySegmentsLimit: this.config.resourceLimits.strategySegments,
             frontendApiOrigins: frontendSettings.frontendApiOrigins,
             versionInfo: await this.versionService.getVersionInfo(),
             prometheusAPIAvailable: this.config.prometheusApi !== undefined,

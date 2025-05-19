@@ -14,18 +14,18 @@ import {
 } from '../types/index.js';
 import type { IntegrationEventsService } from '../services/index.js';
 const slackApiCalls: ChatPostMessageArguments[] = [];
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 const loggerMock = {
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-    fatal: jest.fn(),
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    fatal: vi.fn(),
 };
-const getLogger = jest.fn(() => loggerMock);
+const getLogger = vi.fn(() => loggerMock);
 
-const registerEventMock = jest.fn();
+const registerEventMock = vi.fn();
 
 const INTEGRATION_ID = 1337;
 const ARGS: IAddonConfig = {
@@ -36,11 +36,11 @@ const ARGS: IAddonConfig = {
     } as unknown as IntegrationEventsService,
     flagResolver: { isEnabled: (expName: IFlagKey) => false } as IFlagResolver,
     eventBus: {
-        emit: jest.fn(),
+        emit: vi.fn(),
     } as any,
 };
 
-let postMessage = jest.fn().mockImplementation((options: any) => {
+let postMessage = vi.fn().mockImplementation((options: any) => {
     slackApiCalls.push(options);
     return Promise.resolve();
 });
@@ -73,7 +73,7 @@ describe('SlackAppAddon', () => {
     };
 
     beforeEach(() => {
-        jest.useFakeTimers();
+        vi.useFakeTimers();
         slackApiCalls.length = 0;
         postMessage.mockClear();
         registerEventMock.mockClear();
@@ -82,13 +82,13 @@ describe('SlackAppAddon', () => {
                 chat: {
                     postMessage,
                 },
-                on: jest.fn(),
+                on: vi.fn(),
             } as unknown as Methods;
         });
     });
 
     afterEach(() => {
-        jest.useRealTimers();
+        vi.useRealTimers();
     });
 
     it('should post message when feature is toggled', async () => {
@@ -182,7 +182,7 @@ describe('SlackAppAddon', () => {
 
     it('should log error when an API call fails', async () => {
         // @ts-ignore
-        postMessage = jest.fn().mockRejectedValue(mockError);
+        postMessage = vi.fn().mockRejectedValue(mockError);
 
         await addon.handleEvent(
             event,
@@ -208,13 +208,10 @@ describe('SlackAppAddon', () => {
             ],
         };
 
-        postMessage = jest
+        postMessage = vi
             .fn()
-            // @ts-ignore
             .mockResolvedValueOnce({ ok: true })
-            // @ts-ignore
             .mockResolvedValueOnce({ ok: true })
-            // @ts-ignore
             .mockRejectedValueOnce(mockError);
 
         await addon.handleEvent(

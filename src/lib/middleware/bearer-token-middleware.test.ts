@@ -3,14 +3,14 @@ import type { IUnleashConfig } from '../types/index.js';
 import { createTestConfig } from '../../test/config/test-config.js';
 import getLogger from '../../test/fixtures/no-logger.js';
 import type { Request, Response } from 'express';
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 const exampleSignalToken = 'signal_tokensecret';
 
 describe('bearerTokenMiddleware', () => {
     const req = { headers: {}, path: '' } as Request;
     const res = {} as Response;
-    const next = jest.fn();
+    const next = vi.fn();
 
     let config: IUnleashConfig;
 

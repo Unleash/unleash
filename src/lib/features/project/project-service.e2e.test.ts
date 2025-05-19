@@ -34,7 +34,14 @@ import { DEFAULT_ENV, extractAuditInfoFromUser } from '../../util/index.js';
 import { ApiTokenType } from '../../types/model.js';
 import { createApiTokenService } from '../api-tokens/createApiTokenService.js';
 import type User from '../../types/user.js';
-
+import {
+    beforeAll,
+    expect,
+    test,
+    beforeEach,
+    afterEach,
+    afterAll,
+} from 'vitest';
 let stores: IUnleashStores;
 let db: ITestDb;
 
@@ -672,7 +679,7 @@ describe('Managing Project access', () => {
                 [secondUser.id],
                 projectAuditUser,
             ),
-        ).rejects.toThrow(
+        ).rejects.errorWithMessage(
             new InvalidOperationError(
                 'User tried to grant role they did not have access to',
             ),
@@ -746,7 +753,7 @@ describe('Managing Project access', () => {
                 [secondUser.id],
                 projectAuditUser,
             ),
-        ).rejects.toThrow(
+        ).rejects.errorWithMessage(
             new InvalidOperationError(
                 'User tried to grant role they did not have access to',
             ),
@@ -868,7 +875,7 @@ describe('Managing Project access', () => {
                 [customRoleUpdateEnvironments.id],
                 auditProjectUser,
             ),
-        ).rejects.toThrow(
+        ).rejects.errorWithMessage(
             new InvalidOperationError(
                 'User tried to assign a role they did not have access to',
             ),
@@ -885,7 +892,7 @@ describe('Managing Project access', () => {
                 [customRoleUpdateEnvironments.id],
                 auditProjectUser,
             ),
-        ).rejects.toThrow(
+        ).rejects.errorWithMessage(
             new InvalidOperationError(
                 'User tried to assign a role they did not have access to',
             ),
@@ -2641,12 +2648,12 @@ describe('create project with environments', () => {
     });
 
     test("envs that don't exist cause errors", async () => {
-        await expect(createProjectWithEnvs(['fake-project'])).rejects.toThrow(
-            BadDataError,
-        );
-        await expect(createProjectWithEnvs(['fake-project'])).rejects.toThrow(
-            /'fake-project'/,
-        );
+        await expect(
+            createProjectWithEnvs(['fake-project']),
+        ).rejects.toThrowError(BadDataError);
+        await expect(
+            createProjectWithEnvs(['fake-project']),
+        ).rejects.toThrowError(/'fake-project'/);
     });
 });
 

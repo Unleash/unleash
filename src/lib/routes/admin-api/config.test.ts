@@ -53,8 +53,12 @@ test('should get ui config', async () => {
 
     expect(body.slogan).toEqual('hello');
     expect(body.headerBackground).toEqual('red');
-    expect(body.segmentValuesLimit).toEqual(DEFAULT_SEGMENT_VALUES_LIMIT);
-    expect(body.strategySegmentsLimit).toEqual(DEFAULT_STRATEGY_SEGMENTS_LIMIT);
+    expect(body.resourceLimits!.segmentValues).toEqual(
+        DEFAULT_SEGMENT_VALUES_LIMIT,
+    );
+    expect(body.resourceLimits!.strategySegments).toEqual(
+        DEFAULT_STRATEGY_SEGMENTS_LIMIT,
+    );
 });
 
 test('should update CORS settings', async () => {

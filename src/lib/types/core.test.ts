@@ -1,7 +1,6 @@
 import dbInit, { type ITestDb } from '../../test/e2e/helpers/database-init.js';
 import { SYSTEM_USER } from './core.js';
 import getLogger from '../../test/fixtures/no-logger.js';
-import { jest } from '@jest/globals';
 
 describe('System user definitions in code and db', () => {
     let dbDefinition: {
@@ -13,7 +12,6 @@ describe('System user definitions in code and db', () => {
     };
     let db: ITestDb;
     beforeAll(async () => {
-        jest.setTimeout(15000);
         db = await dbInit('system_user_alignment_test', getLogger);
 
         const query = await db.rawDatabase.raw(

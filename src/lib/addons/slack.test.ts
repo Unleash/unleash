@@ -17,10 +17,10 @@ import {
 } from '../types/index.js';
 import type { IntegrationEventsService } from '../services/index.js';
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 import nock from 'nock';
 
-const registerEventMock = jest.fn();
+const registerEventMock = vi.fn();
 
 const INTEGRATION_ID = 1337;
 const ARGS: IAddonConfig = {
@@ -31,7 +31,7 @@ const ARGS: IAddonConfig = {
     } as unknown as IntegrationEventsService,
     flagResolver: { isEnabled: (expName: IFlagKey) => false } as IFlagResolver,
     eventBus: {
-        emit: jest.fn(),
+        emit: vi.fn(),
     } as any,
 };
 describe('Slack integration', () => {

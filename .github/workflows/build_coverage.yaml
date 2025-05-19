@@ -65,6 +65,8 @@ jobs:
       #      GH_EMAIL: 'ivarconr@gmail.com'
       #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Coveralls
-        uses: coverallsapp/github-action@master
+        uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          format: cobertura
+          file: coverage/cobertura-coverage.xml

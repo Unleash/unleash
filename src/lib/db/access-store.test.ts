@@ -5,6 +5,7 @@ import type { AccessStore } from './access-store.js';
 import { BadDataError } from '../error/index.js';
 
 let db: ITestDb;
+import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 
 beforeAll(async () => {
     db = await dbInit('access_store_serial', getLogger);

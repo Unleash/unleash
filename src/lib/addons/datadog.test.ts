@@ -16,17 +16,17 @@ import {
 } from '../types/index.js';
 import type { IntegrationEventsService } from '../services/index.js';
 import nock from 'nock';
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 const INTEGRATION_ID = 1337;
 const ARGS: IAddonConfig = {
     getLogger: noLogger,
     unleashUrl: 'http://some-url.com',
     integrationEventsService: {
-        registerEvent: jest.fn(),
+        registerEvent: vi.fn(),
     } as unknown as IntegrationEventsService,
     flagResolver: { isEnabled: (expName: IFlagKey) => false } as IFlagResolver,
-    eventBus: <any>{ emit: jest.fn() },
+    eventBus: <any>{ emit: vi.fn() },
 };
 
 describe('Datadog integration', () => {
@@ -317,7 +317,7 @@ describe('Datadog integration', () => {
 
     test('Should call registerEvent', async () => {
         const addon = new DatadogAddon(ARGS);
-        const registerEventSpy = jest.spyOn(addon, 'registerEvent');
+        const registerEventSpy = vi.spyOn(addon, 'registerEvent');
         const event: IEvent = {
             id: 1,
             createdAt: new Date(),

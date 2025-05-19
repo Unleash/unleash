@@ -285,7 +285,7 @@ describe('missing descriptions', () => {
                 .post('/api/admin/addons')
                 .send(addonWithoutDescription);
 
-            return app.request
+            await app.request
                 .put(`/api/admin/addons/${body.id}`)
                 .send({
                     ...addonWithoutDescription,

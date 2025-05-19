@@ -5,7 +5,7 @@ import { createTestConfig } from '../../../test/config/test-config.js';
 import FakeSettingStore from '../../../test/fixtures/fake-setting-store.js';
 import type EventService from '../events/event-service.js';
 import { TEST_AUDIT_USER } from '../../types/index.js';
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 test('Scheduler should run scheduled functions if maintenance mode is off', async () => {
     const config = createTestConfig();
@@ -20,7 +20,7 @@ test('Scheduler should run scheduled functions if maintenance mode is off', asyn
         config.eventBus,
     );
 
-    const job = jest.fn();
+    const job = vi.fn();
 
     await schedulerService.schedule(
         async () => {
@@ -52,7 +52,7 @@ test('Scheduler should not run scheduled functions if maintenance mode is on', a
         TEST_AUDIT_USER,
     );
 
-    const job = jest.fn();
+    const job = vi.fn();
 
     await schedulerService.schedule(
         async () => {

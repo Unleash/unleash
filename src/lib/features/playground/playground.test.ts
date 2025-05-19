@@ -3,7 +3,8 @@ import fc from 'fast-check';
 import supertest from 'supertest';
 import { createServices } from '../../services/index.js';
 import { createTestConfig } from '../../../test/config/test-config.js';
-
+import { it } from '@fast-check/vitest';
+import { describe } from 'vitest';
 import createStores from '../../../test/fixtures/store.js';
 
 import getApp from '../../app.js';
@@ -80,7 +81,7 @@ describe('the playground API', () => {
                         .send(payload)
                         .expect('Content-Type', /json/);
 
-                    return status === 400;
+                    expect(status).toBe(400);
                 },
             ),
             testParams,

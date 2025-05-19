@@ -19,7 +19,7 @@ import { omitKeys } from '../../../../lib/util/omit-keys.js';
 import type { ISessionStore } from '../../../../lib/types/stores/session-store.js';
 import type { IUnleashStores } from '../../../../lib/types/index.js';
 import { createHash } from 'crypto';
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -248,7 +248,7 @@ test('validator should accept strong password', async () => {
 
 test('should change password', async () => {
     const user = await userStore.insert({ email: 'some@mail.com' });
-    const spy = jest.spyOn(sessionStore, 'deleteSessionsForUser');
+    const spy = vi.spyOn(sessionStore, 'deleteSessionsForUser');
     await app.request
         .post(`/api/admin/user-admin/${user.id}/change-password`)
         .send({ password: 'simple123-_ASsad' })

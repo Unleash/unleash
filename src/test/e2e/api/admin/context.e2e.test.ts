@@ -1,4 +1,5 @@
 import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import { v4 as uuidv4 } from 'uuid';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
@@ -179,6 +180,47 @@ test('should delete context field', async () => {
     return app.request.delete('/api/admin/context/userId').expect(200);
 });
 
+test('should not delete a context field that is in use by active flags', async () => {
+    const context = 'appName';
+    const feature = uuidv4();
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            name: feature,
+            enabled: false,
+            strategies: [{ name: 'default' }],
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${feature}/environments/default/strategies`,
+        )
+        .send({
+            name: 'default',
+            constraints: [
+                {
+                    contextName: context,
+                    operator: 'IN',
+                    values: ['test'],
+                    caseInsensitive: false,
+                    inverted: false,
+                },
+            ],
+        })
+        .expect(200);
+
+    app.request.delete(`/api/admin/context/${context}`).expect(409);
+
+    await app.archiveFeature(feature).expect(202);
+
+    const { body: postArchiveBody } = await app.request.get(
+        `/api/admin/context/${context}/strategies`,
+    );
+
+    expect(postArchiveBody.strategies).toHaveLength(0);
+});
+
 test('refuses to create a context not url-friendly name', async () => {
     expect.assertions(0);
     return app.request
@@ -241,7 +283,7 @@ test('should update context field with stickiness', async () => {
     expect(contextField.stickiness).toBe(true);
 });
 
-test('should show context field usage', async () => {
+test('should show context field usage for active flags', async () => {
     const context = 'appName';
     const feature = 'contextFeature';
     await app.request
@@ -287,4 +329,33 @@ test('should show context field usage', async () => {
     expect(body).toMatchObject({
         strategies: [{ environment: 'default', featureName: 'contextFeature' }],
     });
+
+    const { body: getAllBody } = await app.request
+        .get(`/api/admin/context`)
+        .expect(200);
+
+    expect(
+        getAllBody.find((field) => field.name === context)?.usedInFeatures,
+    ).toBe(1);
+
+    await app.archiveFeature('contextFeature').expect(202);
+
+    const { body: postArchiveBody } = await app.request.get(
+        `/api/admin/context/${context}/strategies`,
+    );
+
+    expect(postArchiveBody.strategies).toHaveLength(0);
+
+    const { body: getContextBody } = await app.request.get(
+        `/api/admin/context/${context}/strategies`,
+    );
+
+    const { body: postArchiveGetAllBody } = await app.request
+        .get(`/api/admin/context`)
+        .expect(200);
+
+    expect(
+        postArchiveGetAllBody.find((field) => field.name === context)
+            ?.usedInFeatures,
+    ).toBe(0);
 });

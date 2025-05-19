@@ -1,4 +1,5 @@
 import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import { v4 as uuidv4 } from 'uuid';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
@@ -181,7 +182,7 @@ test('should delete context field', async () => {
 
 test('should not delete a context field that is in use by active flags', async () => {
     const context = 'appName';
-    const feature = 'contextFeature';
+    const feature = uuidv4();
     await app.request
         .post('/api/admin/projects/default/features')
         .send({
@@ -211,7 +212,7 @@ test('should not delete a context field that is in use by active flags', async (
 
     app.request.delete(`/api/admin/context/${context}`).expect(409);
 
-    await app.archiveFeature('contextFeature').expect(202);
+    await app.archiveFeature(feature).expect(202);
 
     const { body: postArchiveBody } = await app.request.get(
         `/api/admin/context/${context}/strategies`,
@@ -337,7 +338,11 @@ test('should show context field usage for active flags', async () => {
         getAllBody.find((field) => field.name === context)?.usedInFeatures,
     ).toBe(1);
 
-    await app.archiveFeature('contextFeature').expect(202);
+    await app
+        .archiveFeature(
+            'csrc/test/e2e/api/admin/context.e2e.test.tsontextFeature',
+        )
+        .expect(202);
 
     const { body: postArchiveBody } = await app.request.get(
         `/api/admin/context/${context}/strategies`,

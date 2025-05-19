@@ -338,11 +338,7 @@ test('should show context field usage for active flags', async () => {
         getAllBody.find((field) => field.name === context)?.usedInFeatures,
     ).toBe(1);
 
-    await app
-        .archiveFeature(
-            'csrc/test/e2e/api/admin/context.e2e.test.tsontextFeature',
-        )
-        .expect(202);
+    await app.archiveFeature('contextFeature').expect(202);
 
     const { body: postArchiveBody } = await app.request.get(
         `/api/admin/context/${context}/strategies`,

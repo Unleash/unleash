@@ -21,27 +21,62 @@ export interface ICustomMetricsStore {
 
 export class CustomMetricsStore implements ICustomMetricsStore {
     private logger: Logger;
-    // In-memory store for custom metrics organized by metric name
-    private customMetricsStore: Map<string, StoredCustomMetric[]> = new Map();
+    // In-memory store for custom metrics organized by metric name and minute
+    private customMetricsStore: Map<string, StoredCustomMetric> = new Map();
 
     constructor(config: IUnleashConfig) {
         this.logger = config.getLogger('custom-metrics-store');
     }
 
-    addMetric(metric: Omit<StoredCustomMetric, 'timestamp'>): void {
-        const timestamp = new Date();
-        const storedMetric: StoredCustomMetric = {
-            ...metric,
-            timestamp,
-        };
+    // Helper to round a date to the previous minute
+    private roundToMinute(date: Date): Date {
+        const rounded = new Date(date);
+        rounded.setSeconds(0);
+        rounded.setMilliseconds(0);
+        return rounded;
+    }
 
-        // Get or create array for this metric name
-        if (!this.customMetricsStore.has(metric.name)) {
-            this.customMetricsStore.set(metric.name, []);
+    // Generate a unique key for a metric based on name and labels
+    private getMetricKey(
+        metric: Omit<StoredCustomMetric, 'timestamp'>,
+        timestamp: Date,
+    ): string {
+        const roundedTimestamp = this.roundToMinute(timestamp);
+        const timeKey = roundedTimestamp.toISOString();
+
+        // Base key includes the metric name and time
+        let key = `${metric.name}:${timeKey}`;
+
+        // If there are labels, add them to the key
+        if (metric.labels && Object.keys(metric.labels).length > 0) {
+            // Sort the labels to ensure consistent key generation
+            const labelEntries = Object.entries(metric.labels).sort(
+                ([keyA], [keyB]) => keyA.localeCompare(keyB),
+            );
+
+            // Add each label to the key
+            const labelString = labelEntries
+                .map(([key, value]) => `${key}=${value}`)
+                .join(',');
+
+            key += `:${labelString}`;
         }
 
-        // Add the metric to the array for this name
-        this.customMetricsStore.get(metric.name)?.push(storedMetric);
+        return key;
+    }
+
+    addMetric(metric: Omit<StoredCustomMetric, 'timestamp'>): void {
+        const now = new Date();
+        const roundedTimestamp = this.roundToMinute(now);
+        const metricKey = this.getMetricKey(metric, now);
+
+        const storedMetric: StoredCustomMetric = {
+            ...metric,
+            timestamp: roundedTimestamp,
+        };
+
+        // Store the metric with its unique key, overwriting any existing metric with the same key
+        this.customMetricsStore.set(metricKey, storedMetric);
     }
 
     addMetrics(metrics: Omit<StoredCustomMetric, 'timestamp'>[]): void {
@@ -54,28 +89,38 @@ export class CustomMetricsStore implements ICustomMetricsStore {
     }
 
     getMetrics(): StoredCustomMetric[] {
-        const allMetrics: StoredCustomMetric[] = [];
-        // Flatten the map into a single array
-        for (const metricsArray of this.customMetricsStore.values()) {
-            allMetrics.push(...metricsArray);
-        }
-        return allMetrics;
+        return Array.from(this.customMetricsStore.values());
     }
 
     getMetricsByName(name: string): StoredCustomMetric[] {
-        return this.customMetricsStore.get(name) || [];
+        return Array.from(this.customMetricsStore.values()).filter(
+            (metric) => metric.name === name,
+        );
     }
 
     getMetricNames(): string[] {
-        return Array.from(this.customMetricsStore.keys());
+        const names = new Set<string>();
+        for (const metric of this.customMetricsStore.values()) {
+            names.add(metric.name);
+        }
+        return Array.from(names);
     }
 
     getPrometheusMetrics(): string {
         // Prometheus formatted output
         let output = '';
+        const metricsByName = new Map<string, StoredCustomMetric[]>();
+
+        // Group metrics by name
+        for (const metric of this.customMetricsStore.values()) {
+            if (!metricsByName.has(metric.name)) {
+                metricsByName.set(metric.name, []);
+            }
+            metricsByName.get(metric.name)?.push(metric);
+        }
 
         // Process each metric name
-        for (const [metricName, metrics] of this.customMetricsStore.entries()) {
+        for (const [metricName, metrics] of metricsByName.entries()) {
             if (metrics.length === 0) continue;
 
             // Add metric help and type comments

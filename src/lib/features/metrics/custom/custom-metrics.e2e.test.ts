@@ -7,6 +7,7 @@ import dbInit, {
 } from '../../../../test/e2e/helpers/database-init.js';
 import getLogger from '../../../../test/fixtures/no-logger.js';
 import type { CustomMetricsService } from './custom-metrics-service.js';
+import type { StoredCustomMetric } from './custom-metrics-store.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -137,4 +138,131 @@ test('should expose metrics in Prometheus format', async () => {
         /api_requests_total{status="404",endpoint="\/api\/missing"} 5/,
     );
     expect(metricsText).toMatch(/memory_usage{application="unleash"} 1024/);
+});
+
+test('should deduplicate metrics, round timestamps, and preserve different labels', async () => {
+    // First submission - set a baseline
+    await app.request
+        .post('/api/client/metrics/custom')
+        .send({
+            metrics: [
+                {
+                    name: 'test_counter',
+                    value: 1,
+                    labels: {
+                        instance: 'server1',
+                    },
+                },
+                {
+                    name: 'test_counter',
+                    value: 5,
+                    labels: {
+                        instance: 'server2',
+                    },
+                },
+                {
+                    name: 'memory_usage',
+                    value: 100,
+                    labels: {
+                        server: 'main',
+                    },
+                },
+            ],
+        })
+        .expect(202);
+
+    // Second submission - duplicates with different values
+    await app.request
+        .post('/api/client/metrics/custom')
+        .send({
+            metrics: [
+                {
+                    name: 'test_counter', // Same metric name and label as first one
+                    value: 2, // Different value to check if it's updated
+                    labels: {
+                        instance: 'server1',
+                    },
+                },
+                {
+                    name: 'memory_usage', // Same metric name and label
+                    value: 200, // Different value
+                    labels: {
+                        server: 'main',
+                    },
+                },
+                {
+                    name: 'memory_usage', // Same metric name but different label
+                    value: 150,
+                    labels: {
+                        server: 'backup', // Different label value
+                    },
+                },
+            ],
+        })
+        .expect(202);
+
+    // Get the metrics and verify
+    const response = await app.request
+        .get('/api/admin/custom-metrics')
+        .expect(200);
+
+    // Check structure
+    expect(response.body).toHaveProperty('metrics');
+    expect(response.body).toHaveProperty('count');
+    expect(response.body).toHaveProperty('metricNames');
+
+    const metrics = response.body.metrics as StoredCustomMetric[];
+
+    // Verify the deduplication - we should have exactly 4 metrics, not 6
+    // test_counter with server1, test_counter with server2,
+    // memory_usage with main, memory_usage with backup
+    expect(response.body.count).toBe(4);
+
+    // Verify test_counter with server1 has the updated value (2, not 1)
+    const testCounterServer1 = metrics.find(
+        (m) => m.name === 'test_counter' && m.labels?.instance === 'server1',
+    );
+    expect(testCounterServer1).toBeDefined();
+    expect(testCounterServer1?.value).toBe(2);
+
+    // Verify test_counter with server2 still exists with original value
+    const testCounterServer2 = metrics.find(
+        (m) => m.name === 'test_counter' && m.labels?.instance === 'server2',
+    );
+    expect(testCounterServer2).toBeDefined();
+    expect(testCounterServer2?.value).toBe(5);
+
+    // Verify memory_usage with main server has updated value (200, not 100)
+    const memoryUsageMain = metrics.find(
+        (m) => m.name === 'memory_usage' && m.labels?.server === 'main',
+    );
+    expect(memoryUsageMain).toBeDefined();
+    expect(memoryUsageMain?.value).toBe(200);
+
+    // Verify memory_usage with backup server exists
+    const memoryUsageBackup = metrics.find(
+        (m) => m.name === 'memory_usage' && m.labels?.server === 'backup',
+    );
+    expect(memoryUsageBackup).toBeDefined();
+    expect(memoryUsageBackup?.value).toBe(150);
+
+    // Verify all timestamps are rounded to the minute (seconds and milliseconds are 0)
+    metrics.forEach((metric) => {
+        const date = new Date(metric.timestamp);
+        expect(date.getSeconds()).toBe(0);
+        expect(date.getMilliseconds()).toBe(0);
+    });
+
+    // Also verify Prometheus output contains the correct values
+    const prometheusResponse = await app.request
+        .get('/api/admin/custom-metrics/prometheus')
+        .expect(200);
+
+    const prometheusOutput = prometheusResponse.text;
+
+    // Check for correct metric values in Prometheus format
+    expect(prometheusOutput).toMatch(/test_counter{instance="server1"} 2/);
+    expect(prometheusOutput).toMatch(/test_counter{instance="server2"} 5/);
+    expect(prometheusOutput).toMatch(/memory_usage{server="main"} 200/);
+    expect(prometheusOutput).toMatch(/memory_usage{server="backup"} 150/);
 });

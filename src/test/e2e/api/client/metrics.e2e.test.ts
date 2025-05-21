@@ -196,6 +196,66 @@ test('should be able to retrieve metrics by name', async () => {
         .expect(404);
 });
 
+test('should expose metrics in Prometheus format', async () => {
+    // Send some test metrics
+    await app.request
+        .post('/api/client/metrics/custom')
+        .send({
+            metrics: [
+                {
+                    name: 'api_requests_total',
+                    value: 10,
+                    labels: {
+                        status: '200',
+                        endpoint: '/api/test',
+                    },
+                },
+                {
+                    name: 'api_requests_total',
+                    value: 5,
+                    labels: {
+                        status: '404',
+                        endpoint: '/api/missing',
+                    },
+                },
+                {
+                    name: 'memory_usage',
+                    value: 1024,
+                    labels: {
+                        application: 'unleash',
+                    },
+                },
+            ],
+        })
+        .expect(202);
+
+    // Retrieve Prometheus formatted metrics
+    const response = await app.request
+        .get('/api/client/metrics/prometheus')
+        .expect(200);
+
+    // Check content type is text/plain
+    expect(response.headers['content-type']).toContain('text/plain');
+
+    // Check the response contains Prometheus formatted metrics
+    const metricsText = response.text;
+
+    // Check for HELP and TYPE comments
+    expect(metricsText).toContain('# HELP api_requests_total');
+    expect(metricsText).toContain('# TYPE api_requests_total counter');
+    expect(metricsText).toContain('# HELP memory_usage');
+    expect(metricsText).toContain('# TYPE memory_usage counter');
+
+    // Check for metric values with labels
+    expect(metricsText).toMatch(
+        /api_requests_total{status="200",endpoint="\/api\/test"} 10/,
+    );
+    expect(metricsText).toMatch(
+        /api_requests_total{status="404",endpoint="\/api\/missing"} 5/,
+    );
+    expect(metricsText).toMatch(/memory_usage{application="unleash"} 1024/);
+});
+
 test('should reject invalid custom metrics', async () => {
     const invalidCustomMetrics = {
         data: [

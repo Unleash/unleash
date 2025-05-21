@@ -183,6 +183,34 @@ export default class ClientMetricsController extends Controller {
                 }),
             ],
         });
+
+        // Add a route to expose metrics in Prometheus format
+        this.route({
+            method: 'get',
+            path: '/prometheus',
+            handler: this.getPrometheusMetrics,
+            permission: NONE,
+            middleware: [
+                this.openApiService.validPath({
+                    tags: ['Client'],
+                    summary: 'Get metrics in Prometheus format',
+                    description: `Exposes all custom metrics in Prometheus text format for scraping.`,
+                    operationId: 'getPrometheusMetrics',
+                    responses: {
+                        200: {
+                            description: 'Prometheus formatted metrics',
+                            content: {
+                                'text/plain': {
+                                    schema: {
+                                        type: 'string',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                }),
+            ],
+        });
     }
 
     async registerMetrics(req: IAuthRequest, res: Response): Promise<void> {
@@ -324,6 +352,68 @@ export default class ClientMetricsController extends Controller {
             this.logger.error('Error retrieving metrics by name', e);
             res.status(500).end();
         }
+    }
+
+    // Method to retrieve metrics in Prometheus format
+    async getPrometheusMetrics(
+        req: IAuthRequest,
+        res: Response,
+    ): Promise<void> {
+        try {
+            // Prometheus formatted output
+            let output = '';
+
+            // Process each metric name
+            for (const [
+                metricName,
+                metrics,
+            ] of this.customMetricsStore.entries()) {
+                if (metrics.length === 0) continue;
+
+                // Add metric help and type comments
+                output += `# HELP ${metricName} Custom metric reported to Unleash\n`;
+                output += `# TYPE ${metricName} counter\n`;
+
+                // Add each metric instance
+                for (const metric of metrics) {
+                    // Format labels if present
+                    let labelStr = '';
+                    if (
+                        metric.labels &&
+                        Object.keys(metric.labels).length > 0
+                    ) {
+                        const labelParts = Object.entries(metric.labels)
+                            .map(
+                                ([key, value]) =>
+                                    `${key}="${this.escapePrometheusString(value)}"`,
+                            )
+                            .join(',');
+                        labelStr = `{${labelParts}}`;
+                    }
+
+                    // Add the metric line
+                    output += `${metricName}${labelStr} ${metric.value}\n`;
+                }
+
+                // Add empty line between different metrics
+                output += '\n';
+            }
+
+            // Return Prometheus formatted metrics
+            res.set('Content-Type', 'text/plain');
+            res.send(output);
+        } catch (e) {
+            this.logger.error('Error generating Prometheus metrics', e);
+            res.status(500).end();
+        }
+    }
+
+    // Helper method to escape special characters in Prometheus label values
+    private escapePrometheusString(str: string): string {
+        return str
+            .replace(/\\/g, '\\\\') // Escape backslashes
+            .replace(/"/g, '\\"') // Escape double quotes
+            .replace(/\n/g, '\\n'); // Escape newlines
     }
 
     // Method to clear metrics older than the specified time (in ms)

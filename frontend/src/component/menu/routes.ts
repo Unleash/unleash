@@ -50,6 +50,7 @@ import { PersonalDashboard } from '../personalDashboard/PersonalDashboard.jsx';
 import { ReleaseManagement } from 'component/releases/ReleaseManagement/ReleaseManagement';
 import { CreateReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/CreateReleasePlanTemplate';
 import { EditReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/EditReleasePlanTemplate';
+import { ExploreCounters } from 'component/counters/ExploreCounters/ExploreCounters.js';
 
 export const routes: IRoute[] = [
     // Splash
@@ -173,6 +174,16 @@ export const routes: IRoute[] = [
         component: PaginatedApplicationList,
         type: 'protected',
         menu: { main: true },
+    },
+
+    // Counters
+    {
+        path: '/custom-metrics',
+        title: 'Custom metrics',
+        component: ExploreCounters,
+        type: 'protected',
+        menu: { main: true },
+        flag: 'customMetrics',
     },
 
     // Context

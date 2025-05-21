@@ -30,7 +30,6 @@ export default class CustomMetricsController extends Controller {
         this.openApiService = openApiService;
         this.customMetricsService = customMetricsService;
 
-        // Add a route to get custom metrics (for debugging purposes)
         this.route({
             method: 'get',
             path: '',
@@ -49,7 +48,6 @@ export default class CustomMetricsController extends Controller {
             ],
         });
 
-        // Add a route to expose metrics in Prometheus format
         this.route({
             method: 'get',
             path: '/prometheus',
@@ -78,12 +76,10 @@ export default class CustomMetricsController extends Controller {
         });
     }
 
-    // Method to retrieve all stored custom metrics
     async getCustomMetrics(req: IAuthRequest, res: Response): Promise<void> {
         try {
             const allMetrics = this.customMetricsService.getMetrics();
 
-            // Return the stored metrics
             res.json({
                 metrics: allMetrics,
                 count: allMetrics.length,
@@ -95,16 +91,13 @@ export default class CustomMetricsController extends Controller {
         }
     }
 
-    // Method to retrieve metrics in Prometheus format
     async getPrometheusMetrics(
         req: IAuthRequest,
         res: Response,
     ): Promise<void> {
         try {
-            // Get Prometheus formatted metrics from the service
             const output = this.customMetricsService.getPrometheusMetrics();
 
-            // Return Prometheus formatted metrics
             res.set('Content-Type', 'text/plain');
             res.send(output);
         } catch (e) {

@@ -15,47 +15,28 @@ export class CustomMetricsService {
         this.store = new CustomMetricsStore(config);
     }
 
-    /**
-     * Add a single metric to the store
-     */
     addMetric(metric: Omit<StoredCustomMetric, 'timestamp'>): void {
         this.store.addMetric(metric);
     }
 
-    /**
-     * Add multiple metrics to the store
-     */
     addMetrics(metrics: Omit<StoredCustomMetric, 'timestamp'>[]): void {
         this.store.addMetrics(metrics);
     }
 
-    /**
-     * Get all metrics from the store
-     */
     getMetrics(): StoredCustomMetric[] {
         return this.store.getMetrics();
     }
 
-    /**
-     * Get names of all metrics in the store
-     */
     getMetricNames(): string[] {
         return this.store.getMetricNames();
     }
 
-    /**
-     * Get metrics formatted for Prometheus
-     */
     getPrometheusMetrics(): string {
         return this.store.getPrometheusMetrics();
     }
 
-    /**
-     * Clear all metrics (intended for testing purposes)
-     */
     clearMetricsForTesting(): void {
         if (this.store instanceof CustomMetricsStore) {
-            // Access the internal Map and reset it to empty
             (this.store as any).customMetricsStore = new Map();
         } else {
             this.logger.warn(

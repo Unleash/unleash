@@ -24,7 +24,6 @@ beforeAll(async () => {
 });
 
 afterEach(async () => {
-    // Clear any custom metrics using the testing method
     const service = app.services.customMetricsService as CustomMetricsService;
     service.clearMetricsForTesting();
 });
@@ -48,25 +47,21 @@ test('should store custom metrics in memory and be able to retrieve them', async
         ],
     };
 
-    // Send the custom metrics
     await app.request
         .post('/api/client/metrics/custom')
         .send(customMetricsExample)
         .expect(202);
 
-    // Retrieve the stored metrics from admin API
     const response = await app.request
         .get('/api/admin/custom-metrics')
         .expect(200);
 
-    // Check that our metrics are stored
     expect(response.body).toHaveProperty('metrics');
     expect(response.body).toHaveProperty('count');
     expect(response.body).toHaveProperty('metricNames');
     expect(response.body.count).toBeGreaterThan(0);
     expect(response.body.metricNames).toContain('test_metric');
 
-    // Check that our metric is in the response
     const metrics = response.body.metrics;
     const found = metrics.some(
         (metric) =>
@@ -81,7 +76,6 @@ test('should store custom metrics in memory and be able to retrieve them', async
 });
 
 test('should expose metrics in Prometheus format', async () => {
-    // Send some test metrics
     await app.request
         .post('/api/client/metrics/custom')
         .send({
@@ -113,24 +107,19 @@ test('should expose metrics in Prometheus format', async () => {
         })
         .expect(202);
 
-    // Retrieve Prometheus formatted metrics from admin API (using the correct path)
     const response = await app.request
         .get('/api/admin/custom-metrics/prometheus')
         .expect(200);
 
-    // Check content type is text/plain
     expect(response.headers['content-type']).toContain('text/plain');
 
-    // Check the response contains Prometheus formatted metrics
     const metricsText = response.text;
 
-    // Check for HELP and TYPE comments
     expect(metricsText).toContain('# HELP api_requests_total');
     expect(metricsText).toContain('# TYPE api_requests_total counter');
     expect(metricsText).toContain('# HELP memory_usage');
     expect(metricsText).toContain('# TYPE memory_usage counter');
 
-    // Check for metric values with labels
     expect(metricsText).toMatch(
         /api_requests_total{status="200",endpoint="\/api\/test"} 10/,
     );
@@ -141,7 +130,6 @@ test('should expose metrics in Prometheus format', async () => {
 });
 
 test('should deduplicate metrics, round timestamps, and preserve different labels', async () => {
-    // First submission - set a baseline
     await app.request
         .post('/api/client/metrics/custom')
         .send({
@@ -171,96 +159,83 @@ test('should deduplicate metrics, round timestamps, and preserve different label
         })
         .expect(202);
 
-    // Second submission - duplicates with different values
     await app.request
         .post('/api/client/metrics/custom')
         .send({
             metrics: [
                 {
-                    name: 'test_counter', // Same metric name and label as first one
-                    value: 2, // Different value to check if it's updated
+                    name: 'test_counter',
+                    value: 2,
                     labels: {
                         instance: 'server1',
                     },
                 },
                 {
-                    name: 'memory_usage', // Same metric name and label
-                    value: 200, // Different value
+                    name: 'memory_usage',
+                    value: 200,
                     labels: {
                         server: 'main',
                     },
                 },
                 {
-                    name: 'memory_usage', // Same metric name but different label
+                    name: 'memory_usage',
                     value: 150,
                     labels: {
-                        server: 'backup', // Different label value
+                        server: 'backup',
                     },
                 },
             ],
         })
         .expect(202);
 
-    // Get the metrics and verify
     const response = await app.request
         .get('/api/admin/custom-metrics')
         .expect(200);
 
-    // Check structure
     expect(response.body).toHaveProperty('metrics');
     expect(response.body).toHaveProperty('count');
     expect(response.body).toHaveProperty('metricNames');
 
     const metrics = response.body.metrics as StoredCustomMetric[];
 
-    // Verify the deduplication - we should have exactly 4 metrics, not 6
-    // test_counter with server1, test_counter with server2,
-    // memory_usage with main, memory_usage with backup
     expect(response.body.count).toBe(4);
 
-    // Verify test_counter with server1 has the updated value (2, not 1)
     const testCounterServer1 = metrics.find(
         (m) => m.name === 'test_counter' && m.labels?.instance === 'server1',
     );
     expect(testCounterServer1).toBeDefined();
     expect(testCounterServer1?.value).toBe(2);
 
-    // Verify test_counter with server2 still exists with original value
     const testCounterServer2 = metrics.find(
         (m) => m.name === 'test_counter' && m.labels?.instance === 'server2',
     );
     expect(testCounterServer2).toBeDefined();
     expect(testCounterServer2?.value).toBe(5);
 
-    // Verify memory_usage with main server has updated value (200, not 100)
     const memoryUsageMain = metrics.find(
         (m) => m.name === 'memory_usage' && m.labels?.server === 'main',
     );
     expect(memoryUsageMain).toBeDefined();
     expect(memoryUsageMain?.value).toBe(200);
 
-    // Verify memory_usage with backup server exists
     const memoryUsageBackup = metrics.find(
         (m) => m.name === 'memory_usage' && m.labels?.server === 'backup',
     );
     expect(memoryUsageBackup).toBeDefined();
     expect(memoryUsageBackup?.value).toBe(150);
 
-    // Verify all timestamps are rounded to the minute (seconds and milliseconds are 0)
     metrics.forEach((metric) => {
         const date = new Date(metric.timestamp);
         expect(date.getSeconds()).toBe(0);
         expect(date.getMilliseconds()).toBe(0);
     });
 
-    // Also verify Prometheus output contains the correct values
     const prometheusResponse = await app.request
         .get('/api/admin/custom-metrics/prometheus')
         .expect(200);
 
     const prometheusOutput = prometheusResponse.text;
 
-    // Check for correct metric values in Prometheus format
     expect(prometheusOutput).toMatch(/test_counter{instance="server1"} 2/);
     expect(prometheusOutput).toMatch(/test_counter{instance="server2"} 5/);
     expect(prometheusOutput).toMatch(/memory_usage{server="main"} 200/);

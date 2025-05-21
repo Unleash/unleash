@@ -107,6 +107,95 @@ test('should accept custom metrics', async () => {
         .expect(202);
 });
 
+test('should store custom metrics in memory and be able to retrieve them', async () => {
+    const customMetricsExample = {
+        metrics: [
+            {
+                name: 'test_metric',
+                value: 42,
+                labels: {
+                    env: 'test',
+                    component: 'api',
+                },
+            },
+        ],
+    };
+
+    // Send the custom metrics
+    await app.request
+        .post('/api/client/metrics/custom')
+        .send(customMetricsExample)
+        .expect(202);
+
+    // Retrieve the stored metrics
+    const response = await app.request
+        .get('/api/client/metrics/custom')
+        .expect(200);
+
+    // Check that our metrics are stored
+    expect(response.body).toHaveProperty('metrics');
+    expect(response.body).toHaveProperty('count');
+    expect(response.body).toHaveProperty('metricNames');
+    expect(response.body.count).toBeGreaterThan(0);
+    expect(response.body.metricNames).toContain('test_metric');
+
+    // Check that our metric is in the response
+    const metrics = response.body.metrics;
+    const found = metrics.some(
+        (metric) =>
+            metric.name === 'test_metric' &&
+            metric.value === 42 &&
+            metric.labels &&
+            metric.labels.env === 'test' &&
+            metric.labels.component === 'api',
+    );
+
+    expect(found).toBe(true);
+});
+
+test('should be able to retrieve metrics by name', async () => {
+    // Send metrics with different names
+    await app.request
+        .post('/api/client/metrics/custom')
+        .send({
+            metrics: [
+                {
+                    name: 'http_requests',
+                    value: 1,
+                    labels: { method: 'GET' },
+                },
+                {
+                    name: 'database_queries',
+                    value: 5,
+                    labels: { type: 'select' },
+                },
+            ],
+        })
+        .expect(202);
+
+    // Retrieve metrics for http_requests
+    const response = await app.request
+        .get('/api/client/metrics/custom/http_requests')
+        .expect(200);
+
+    // Check response
+    expect(response.body).toHaveProperty('name', 'http_requests');
+    expect(response.body).toHaveProperty('metrics');
+    expect(response.body).toHaveProperty('count');
+    expect(response.body.count).toBeGreaterThan(0);
+
+    // Check metric content
+    const metrics = response.body.metrics;
+    expect(metrics[0].name).toBe('http_requests');
+    expect(metrics[0].value).toBe(1);
+    expect(metrics[0].labels.method).toBe('GET');
+
+    // Check 404 for non-existent metric
+    await app.request
+        .get('/api/client/metrics/custom/non_existent_metric')
+        .expect(404);
+});
+
 test('should reject invalid custom metrics', async () => {
     const invalidCustomMetrics = {
         data: [

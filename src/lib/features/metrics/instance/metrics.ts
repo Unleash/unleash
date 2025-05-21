@@ -26,6 +26,14 @@ import type { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v
 import { CLIENT_METRICS } from '../../../events/index.js';
 import type { CustomMetricsSchema } from '../../../openapi/spec/custom-metrics-schema.js';
 
+// Interface for stored custom metrics
+interface StoredCustomMetric {
+    name: string;
+    value: number;
+    labels?: Record<string, string>;
+    timestamp: Date;
+}
+
 export default class ClientMetricsController extends Controller {
     logger: Logger;
 
@@ -36,6 +44,9 @@ export default class ClientMetricsController extends Controller {
     metricsV2: ClientMetricsServiceV2;
 
     flagResolver: IFlagResolver;
+
+    // In-memory store for custom metrics organized by metric name
+    private customMetricsStore: Map<string, StoredCustomMetric[]> = new Map();
 
     constructor(
         {
@@ -133,6 +144,45 @@ export default class ClientMetricsController extends Controller {
                 }),
             ],
         });
+
+        // Add a route to get custom metrics (for debugging purposes)
+        this.route({
+            method: 'get',
+            path: '/custom',
+            handler: this.getCustomMetrics,
+            permission: NONE,
+            middleware: [
+                this.openApiService.validPath({
+                    tags: ['Client'],
+                    summary: 'Get stored custom metrics',
+                    description: `Retrieves the stored custom metrics data.`,
+                    operationId: 'getCustomMetrics',
+                    responses: {
+                        200: emptyResponse,
+                    },
+                }),
+            ],
+        });
+
+        // Add a route to get metrics by name
+        this.route({
+            method: 'get',
+            path: '/custom/:name',
+            handler: this.getCustomMetricsByName,
+            permission: NONE,
+            middleware: [
+                this.openApiService.validPath({
+                    tags: ['Client'],
+                    summary: 'Get stored custom metrics by name',
+                    description: `Retrieves the stored custom metrics data for a specific metric name.`,
+                    operationId: 'getCustomMetricsByName',
+                    responses: {
+                        200: emptyResponse,
+                        404: emptyResponse,
+                    },
+                }),
+            ],
+        });
     }
 
     async registerMetrics(req: IAuthRequest, res: Response): Promise<void> {
@@ -174,11 +224,47 @@ export default class ClientMetricsController extends Controller {
                 // Use Joi validation for custom metrics
                 await customMetricsSchema.validateAsync(body);
 
-                // Process custom metrics
-                // Note: This will just accept the metrics and return success for now
-                // Later we can implement proper processing in metrics-service-v2.ts
+                // Process and store custom metrics
+                if (body.metrics && Array.isArray(body.metrics)) {
+                    const timestamp = new Date();
+                    let storedCount = 0;
 
-                this.logger.debug('Received custom metrics', body);
+                    // Store each metric in our in-memory store
+                    body.metrics.forEach((metric) => {
+                        // Validate types explicitly
+                        if (
+                            typeof metric.name === 'string' &&
+                            typeof metric.value === 'number'
+                        ) {
+                            const storedMetric: StoredCustomMetric = {
+                                name: metric.name,
+                                value: metric.value,
+                                labels: metric.labels as
+                                    | Record<string, string>
+                                    | undefined,
+                                timestamp,
+                            };
+
+                            // Get or create array for this metric name
+                            if (!this.customMetricsStore.has(metric.name)) {
+                                this.customMetricsStore.set(metric.name, []);
+                            }
+
+                            // Add the metric to the array for this name
+                            this.customMetricsStore
+                                .get(metric.name)
+                                ?.push(storedMetric);
+                            storedCount++;
+                        } else {
+                            this.logger.warn(
+                                'Invalid metric type found, skipping',
+                                metric,
+                            );
+                        }
+                    });
+
+                    this.logger.debug(`Stored ${storedCount} custom metrics`);
+                }
 
                 res.status(202).end();
             } catch (e) {
@@ -186,6 +272,90 @@ export default class ClientMetricsController extends Controller {
                 res.status(400).end();
             }
         }
+    }
+
+    // Method to retrieve all stored custom metrics
+    async getCustomMetrics(req: IAuthRequest, res: Response): Promise<void> {
+        try {
+            const allMetrics: StoredCustomMetric[] = [];
+            let totalCount = 0;
+
+            // Flatten the map into a single array
+            for (const metricsArray of this.customMetricsStore.values()) {
+                allMetrics.push(...metricsArray);
+                totalCount += metricsArray.length;
+            }
+
+            // Return the stored metrics
+            res.json({
+                metrics: allMetrics,
+                count: totalCount,
+                metricNames: Array.from(this.customMetricsStore.keys()),
+            });
+        } catch (e) {
+            this.logger.error('Error retrieving custom metrics', e);
+            res.status(500).end();
+        }
+    }
+
+    // Method to retrieve metrics by name
+    async getCustomMetricsByName(
+        req: IAuthRequest,
+        res: Response,
+    ): Promise<void> {
+        try {
+            const { name } = req.params;
+
+            if (!name || !this.customMetricsStore.has(name)) {
+                res.status(404).json({
+                    error: `No metrics found with name: ${name}`,
+                });
+                return;
+            }
+
+            const metrics = this.customMetricsStore.get(name) || [];
+
+            res.json({
+                name,
+                metrics,
+                count: metrics.length,
+            });
+        } catch (e) {
+            this.logger.error('Error retrieving metrics by name', e);
+            res.status(500).end();
+        }
+    }
+
+    // Method to clear metrics older than the specified time (in ms)
+    clearOldMetrics(maxAge: number): void {
+        const now = new Date();
+
+        // For each metric name in the store
+        for (const [name, metrics] of this.customMetricsStore.entries()) {
+            // Filter out old metrics
+            const filteredMetrics = metrics.filter((metric) => {
+                const age = now.getTime() - metric.timestamp.getTime();
+                return age <= maxAge;
+            });
+
+            // Update the store with filtered metrics
+            if (filteredMetrics.length === 0) {
+                // Remove the entry completely if no metrics remain
+                this.customMetricsStore.delete(name);
+            } else {
+                this.customMetricsStore.set(name, filteredMetrics);
+            }
+        }
+
+        // Count total metrics after cleanup
+        let totalMetrics = 0;
+        for (const metrics of this.customMetricsStore.values()) {
+            totalMetrics += metrics.length;
+        }
+
+        this.logger.debug(
+            `Cleared old metrics. Store now contains ${totalMetrics} metrics across ${this.customMetricsStore.size} different metric names`,
+        );
     }
 
     async bulkMetrics(

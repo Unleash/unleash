@@ -58,6 +58,7 @@ export * from './create-strategy-variant-schema.js';
 export * from './create-tag-schema.js';
 export * from './create-user-response-schema.js';
 export * from './create-user-schema.js';
+export * from './custom-metrics-schema.js';
 export * from './date-schema.js';
 export * from './dependencies-exist-schema.js';
 export * from './dependent-feature-schema.js';

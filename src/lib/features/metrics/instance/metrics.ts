@@ -21,6 +21,7 @@ import type { BulkMetricsSchema } from '../../../openapi/spec/bulk-metrics-schem
 import { clientMetricsEnvBulkSchema } from '../shared/schema.js';
 import type { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v2-type.js';
 import { CLIENT_METRICS } from '../../../events/index.js';
+import type { CustomMetricsSchema } from '../../../openapi/spec/custom-metrics-schema.js';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;
@@ -102,6 +103,33 @@ export default class ClientMetricsController extends Controller {
                 }),
             ],
         });
+
+        this.route({
+            method: 'post',
+            path: '/custom',
+            handler: this.customMetrics,
+            permission: NONE,
+            middleware: [
+                this.openApiService.validPath({
+                    tags: ['Client'],
+                    summary: 'Send custom metrics',
+                    description: `This operation accepts custom metrics from clients. These metrics will be exposed via Prometheus in Unleash.`,
+                    operationId: 'clientCustomMetrics',
+                    requestBody: createRequestSchema('customMetricsSchema'),
+                    responses: {
+                        202: emptyResponse,
+                        ...getStandardResponses(400),
+                    },
+                }),
+                rateLimit({
+                    windowMs: minutesToMilliseconds(1),
+                    max: config.metricsRateLimiting.clientMetricsMaxPerMinute,
+                    validate: false,
+                    standardHeaders: true,
+                    legacyHeaders: false,
+                }),
+            ],
+        });
     }
 
     async registerMetrics(req: IAuthRequest, res: Response): Promise<void> {
@@ -125,6 +153,46 @@ export default class ClientMetricsController extends Controller {
                 );
                 res.status(202).end();
             } catch (e) {
+                res.status(400).end();
+            }
+        }
+    }
+
+    async customMetrics(
+        req: IAuthRequest<void, void, CustomMetricsSchema>,
+        res: Response<void>,
+    ): Promise<void> {
+        if (this.config.flagResolver.isEnabled('disableMetrics')) {
+            res.status(204).end();
+        } else {
+            try {
+                const { body } = req;
+
+                // Simple manual validation
+                if (!body || !body.metrics || !Array.isArray(body.metrics)) {
+                    this.logger.error('Invalid custom metrics format', body);
+                    res.status(400).end();
+                    return;
+                }
+
+                // Check each metric
+                for (const metric of body.metrics) {
+                    if (!metric.name || typeof metric.value !== 'number') {
+                        this.logger.error('Invalid metric format', metric);
+                        res.status(400).end();
+                        return;
+                    }
+                }
+
+                // Process custom metrics
+                // Note: This will just accept the metrics and return success for now
+                // Later we can implement proper processing in metrics-service-v2.ts
+
+                this.logger.debug('Received custom metrics', body);
+
+                res.status(202).end();
+            } catch (e) {
+                this.logger.error('Failed to process custom metrics', e);
                 res.status(400).end();
             }
         }

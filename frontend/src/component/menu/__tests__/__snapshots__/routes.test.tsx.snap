@@ -154,6 +154,16 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
+    "flag": "customMetrics",
+    "menu": {
+      "main": true,
+    },
+    "path": "/custom-metrics",
+    "title": "Custom metrics",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
     "menu": {},
     "parent": "/context",
     "path": "/context/create",

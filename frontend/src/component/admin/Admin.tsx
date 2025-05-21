@@ -19,8 +19,12 @@ import NotFound from 'component/common/NotFound/NotFound';
 import { Banners } from './banners/Banners.tsx';
 import { License } from './license/License.tsx';
 import { AdminHome } from './AdminHome.tsx';
+import { CdnAdmin } from './cdn/CdnAdmin.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 export const Admin = () => {
+    const isCdnEnabled = useUiFlag('cdnConfig');
+
     return (
         <>
             <Routes>
@@ -39,6 +43,9 @@ export const Admin = () => {
                 <Route path='banners' element={<Banners />} />
                 <Route path='license' element={<License />} />
                 <Route path='cors' element={<CorsAdmin />} />
+                {isCdnEnabled ? (
+                    <Route path='cdn' element={<CdnAdmin />} />
+                ) : null}
                 <Route path='auth/*' element={<AuthSettings />} />
                 <Route
                     path='admin-invoices'

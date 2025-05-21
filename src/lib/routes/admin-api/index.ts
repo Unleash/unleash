@@ -37,6 +37,7 @@ import { SearchApi } from './search/index.js';
 import PersonalDashboardController from '../../features/personal-dashboard/personal-dashboard-controller.js';
 import FeatureLifecycleCountController from '../../features/feature-lifecycle/feature-lifecycle-count-controller.js';
 import type { IUnleashServices } from '../../services/index.js';
+import CustomMetricsController from '../../features/metrics/custom/custom-metrics-controller.js';
 
 export class AdminApi extends Controller {
     constructor(
@@ -76,6 +77,10 @@ export class AdminApi extends Controller {
         this.app.use(
             '/client-metrics',
             new ClientMetricsController(config, services).router,
+        );
+        this.app.use(
+            '/custom-metrics',
+            new CustomMetricsController(services, config).router,
         );
         this.app.use('/user', new UserController(config, services).router);
         this.app.use(

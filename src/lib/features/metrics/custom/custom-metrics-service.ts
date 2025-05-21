@@ -37,13 +37,6 @@ export class CustomMetricsService {
     }
 
     /**
-     * Get metrics by name
-     */
-    getMetricsByName(name: string): StoredCustomMetric[] {
-        return this.store.getMetricsByName(name);
-    }
-
-    /**
      * Get names of all metrics in the store
      */
     getMetricNames(): string[] {
@@ -55,5 +48,19 @@ export class CustomMetricsService {
      */
     getPrometheusMetrics(): string {
         return this.store.getPrometheusMetrics();
+    }
+
+    /**
+     * Clear all metrics (intended for testing purposes)
+     */
+    clearMetricsForTesting(): void {
+        if (this.store instanceof CustomMetricsStore) {
+            // Access the internal Map and reset it to empty
+            (this.store as any).customMetricsStore = new Map();
+        } else {
+            this.logger.warn(
+                'Cannot clear metrics - store is not an instance of CustomMetricsStore',
+            );
+        }
     }
 }

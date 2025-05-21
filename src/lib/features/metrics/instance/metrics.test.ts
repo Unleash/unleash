@@ -46,9 +46,7 @@ let destroy: () => Promise<void>;
 beforeAll(async () => {
     const setup = await getSetup({
         experimental: {
-            flags: {
-                registerFrontendClient: true,
-            },
+            flags: {},
         },
     });
     request = setup.request;

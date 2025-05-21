@@ -137,8 +137,7 @@ export class FrontendApiService {
 
         if (
             metrics.instanceId &&
-            typeof sdkVersion === 'string' &&
-            this.flagResolver.isEnabled('registerFrontendClient')
+            typeof sdkVersion === 'string'
         ) {
             const client = {
                 appName: metrics.appName,

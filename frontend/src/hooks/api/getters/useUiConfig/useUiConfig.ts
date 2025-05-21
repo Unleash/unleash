@@ -38,7 +38,7 @@ const useUiConfig = (): IUseUIConfigOutput => {
         return {
             ...defaultValue,
             ...data,
-            flags: { ...defaultValue.flags, ...data?.flags },
+            flags: { ...defaultValue.flags, ...data?.flags, cdnConfig: true }, // FIXME: !!
         };
     }, [data]);
 

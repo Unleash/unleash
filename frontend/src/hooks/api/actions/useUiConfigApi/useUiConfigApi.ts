@@ -14,8 +14,14 @@ export const useUiConfigApi = () => {
         await makeRequest(req.caller, req.id);
     };
 
+    const setCdnTokens = async (cdnTokens: string[]): Promise<void> => {
+        console.debug('setCdnTokens', cdnTokens);
+        // TODO: api integration
+    };
+
     return {
         setCors,
+        setCdnTokens,
         loading,
         errors,
     };

@@ -59,7 +59,7 @@ export const RemoveApiTokenButton = ({
                 title='Confirm deletion'
             >
                 <div>
-                    Are you sure you want to delete the following API token?
+                    Are you sure you want to delete the following token?
                     <br />
                     <StyledUl>
                         <li>

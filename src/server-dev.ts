@@ -57,6 +57,7 @@ process.nextTick(async () => {
                         featureLinks: true,
                         projectLinkTemplates: true,
                         reportUnknownFlags: true,
+                        cdnConfig: true,
                     },
                 },
                 authentication: {

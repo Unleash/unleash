@@ -2,7 +2,6 @@ import type { Row, HeaderGroup } from 'react-table';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { Box, useMediaQuery, Link } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { ApiTokenDocs } from 'component/admin/apiToken/ApiTokenDocs/ApiTokenDocs';
 
 import theme from 'themes/theme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -52,14 +51,6 @@ export const ApiTokenTable = ({
 
     return (
         <>
-            <ConditionallyRender
-                condition={rows.length > 0}
-                show={
-                    <Box sx={{ mb: 4 }}>
-                        <ApiTokenDocs />
-                    </Box>
-                }
-            />
             <Box sx={{ overflowX: 'auto' }}>
                 <SearchHighlightProvider value={globalFilter}>
                     <VirtualizedTable

@@ -85,9 +85,10 @@ export const adminRoutes: INavigationMenuItem[] = [
     },
     {
         path: '/admin/cdn',
-        title: 'CDN Tokens',
+        title: 'CDN access',
         menu: { adminSettings: true },
         group: 'access',
+        flag: 'cdnConfig',
     },
 
     // Single sign-on/login

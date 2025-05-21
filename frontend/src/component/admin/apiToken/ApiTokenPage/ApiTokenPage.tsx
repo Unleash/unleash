@@ -19,6 +19,8 @@ import {
     CREATE_CLIENT_API_TOKEN,
     CREATE_FRONTEND_API_TOKEN,
 } from '@server/types/permissions';
+import { Box } from '@mui/material';
+import { ApiTokenDocs } from '../ApiTokenDocs/ApiTokenDocs.tsx';
 
 export const ApiTokenPage = () => {
     const { tokens, loading, refetch } = useApiTokens();
@@ -96,6 +98,11 @@ export const ApiTokenPage = () => {
                     />
                 }
             >
+                {rows.length > 0 ? (
+                    <Box sx={{ mb: 4 }}>
+                        <ApiTokenDocs />
+                    </Box>
+                ) : null}
                 <ApiTokenTable
                     loading={loading}
                     headerGroups={headerGroups}

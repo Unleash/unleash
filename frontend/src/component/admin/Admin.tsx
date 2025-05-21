@@ -21,6 +21,7 @@ import { License } from './license/License.tsx';
 import { AdminHome } from './AdminHome.tsx';
 import { CdnAdmin } from './cdn/CdnAdmin.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { CreateCdnToken } from './cdn/CreateCdnToken/CreateCdnToken.tsx';
 
 export const Admin = () => {
     const isCdnEnabled = useUiFlag('cdnConfig');
@@ -45,6 +46,12 @@ export const Admin = () => {
                 <Route path='cors' element={<CorsAdmin />} />
                 {isCdnEnabled ? (
                     <Route path='cdn' element={<CdnAdmin />} />
+                ) : null}
+                {isCdnEnabled ? (
+                    <Route
+                        path='cdn/create-token'
+                        element={<CreateCdnToken />}
+                    />
                 ) : null}
                 <Route path='auth/*' element={<AuthSettings />} />
                 <Route

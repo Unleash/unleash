@@ -1,5 +1,6 @@
 ---
-title: How to add SSO with OpenID Connect
+title: Set up SSO with OpenID Connect
+description: Set up SSO for Unleash with OpenID Connect.
 ---
 
 :::note Availability

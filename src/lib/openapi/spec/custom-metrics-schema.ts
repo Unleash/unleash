@@ -29,7 +29,7 @@ export const customMetricSchema = {
             },
         },
     },
-    components: {}
+    components: {},
 };
 
 export const customMetricsSchema = {

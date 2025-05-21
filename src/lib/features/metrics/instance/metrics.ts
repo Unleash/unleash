@@ -180,6 +180,8 @@ export default class ClientMetricsController extends Controller {
             try {
                 const { body } = req;
 
+                console.log(body);
+
                 // Use Joi validation for custom metrics
                 await customMetricsSchema.validateAsync(body);
 

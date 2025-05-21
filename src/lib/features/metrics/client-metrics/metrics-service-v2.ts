@@ -138,19 +138,17 @@ export default class ClientMetricsServiceV2 {
             );
         }
 
-        if (this.flagResolver.isEnabled('reportUnknownFlags')) {
-            try {
-                const nonExistingNames = toggleNames.filter(
-                    (name) => !existingFlags.includes(name),
-                );
+        try {
+            const nonExistingNames = toggleNames.filter(
+                (name) => !existingFlags.includes(name),
+            );
 
-                unknownToggleNames = nonExistingNames.slice(
-                    0,
-                    MAX_UNKNOWN_FLAGS,
-                );
-            } catch (e) {
-                this.logger.error(e);
-            }
+            unknownToggleNames = nonExistingNames.slice(
+                0,
+                MAX_UNKNOWN_FLAGS,
+            );
+        } catch (e) {
+            this.logger.error(e);
         }
 
         const validatedToggleNames =

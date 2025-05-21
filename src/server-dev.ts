@@ -56,7 +56,6 @@ process.nextTick(async () => {
                         registerFrontendClient: true,
                         featureLinks: true,
                         projectLinkTemplates: true,
-                        reportUnknownFlags: true,
                         customMetrics: true,
                     },
                 },

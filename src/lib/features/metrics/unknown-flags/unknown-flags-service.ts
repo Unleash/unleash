@@ -55,7 +55,6 @@ export class UnknownFlagsService {
     }
 
     async flush(): Promise<void> {
-        if (!this.flagResolver.isEnabled('reportUnknownFlags')) return;
         if (this.unknownFlagsCache.size === 0) return;
 
         const existing = await this.unknownFlagsStore.getAll();
@@ -101,7 +100,6 @@ export class UnknownFlagsService {
     }
 
     async clear(hoursAgo: number) {
-        if (!this.flagResolver.isEnabled('reportUnknownFlags')) return;
         return this.unknownFlagsStore.clear(hoursAgo);
     }
 }

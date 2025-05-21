@@ -58,9 +58,6 @@ export default class UnknownFlagsController extends Controller {
         _: IAuthRequest,
         res: Response<UnknownFlagsResponseSchema>,
     ): Promise<void> {
-        if (!this.flagResolver.isEnabled('reportUnknownFlags')) {
-            throw new NotFoundError();
-        }
         const unknownFlags =
             await this.unknownFlagsService.getGroupedUnknownFlags();
 

@@ -62,7 +62,6 @@ export type IFlagKey =
     | 'registerFrontendClient'
     | 'featureLinks'
     | 'projectLinkTemplates'
-    | 'reportUnknownFlags'
     | 'lastSeenBulkQuery'
     | 'newGettingStartedEmail'
     | 'customMetrics';
@@ -293,10 +292,6 @@ const flags: IFlags = {
     ),
     projectLinkTemplates: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_LINK_TEMPLATES,
-        false,
-    ),
-    reportUnknownFlags: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_REPORT_UNKNOWN_FLAGS,
         false,
     ),
     lastSeenBulkQuery: parseEnvVarBoolean(

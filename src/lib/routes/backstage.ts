@@ -4,19 +4,42 @@ import { join } from 'path';
 import { register as prometheusRegister } from 'prom-client';
 import Controller from './controller.js';
 import type { IUnleashConfig } from '../types/option.js';
+import type { IFlagResolver } from '../types/index.js';
+import type { CustomMetricsService } from '../features/metrics/custom/custom-metrics-service.js';
+import type { IUnleashServices } from '../services/index.js';
 
 class BackstageController extends Controller {
     logger: any;
+    private flagResolver: IFlagResolver;
+    private customMetricsService: CustomMetricsService;
 
-    constructor(config: IUnleashConfig) {
+    constructor(
+        config: IUnleashConfig,
+        {
+            customMetricsService,
+        }: Pick<IUnleashServices, 'customMetricsService'>,
+    ) {
         super(config);
 
         this.logger = config.getLogger('backstage.js');
+        this.flagResolver = config.flagResolver;
+        this.customMetricsService = customMetricsService;
 
         if (config.server.serverMetrics) {
             this.get('/prometheus', async (req, res) => {
                 res.set('Content-Type', prometheusRegister.contentType);
-                res.end(await prometheusRegister.metrics());
+
+                let metricsOutput = await prometheusRegister.metrics();
+
+                if (this.flagResolver.isEnabled('customMetrics')) {
+                    const customMetrics =
+                        this.customMetricsService.getPrometheusMetrics();
+                    if (customMetrics) {
+                        metricsOutput = `${metricsOutput}\n${customMetrics}`;
+                    }
+                }
+
+                res.end(metricsOutput);
             });
         }
 

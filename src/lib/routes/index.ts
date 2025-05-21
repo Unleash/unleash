@@ -30,7 +30,10 @@ class IndexRouter extends Controller {
             '/invite',
             new PublicInviteController(config, services).router,
         );
-        this.use('/internal-backstage', new BackstageController(config).router);
+        this.use(
+            '/internal-backstage',
+            new BackstageController(config, services).router,
+        );
         this.use('/logout', new LogoutController(config, services).router);
         this.useWithMiddleware(
             '/auth/simple',

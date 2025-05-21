@@ -29,6 +29,7 @@ export const customMetricSchema = {
             },
         },
     },
+    components: {}
 };
 
 export const customMetricsSchema = {

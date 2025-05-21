@@ -44,16 +44,15 @@ const useApiTokenLimit = () => {
 
 export const CreateCdnToken = ({ modal = false }: ICreateApiTokenProps) => {
     const { setToastApiError } = useToast();
-    const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
     const [showConfirm, setShowConfirm] = useState(false);
     const [token, setToken] = useState('');
-    const {
-        limit,
-        currentValue,
-        limitReached,
-        loading: loadingLimit,
-    } = useApiTokenLimit();
+    // const {
+    //     limit,
+    //     currentValue,
+    //     limitReached,
+    //     loading: loadingLimit,
+    // } = useApiTokenLimit();
 
     const {
         getApiTokenPayload,
@@ -69,12 +68,12 @@ export const CreateCdnToken = ({ modal = false }: ICreateApiTokenProps) => {
         clearErrors,
     } = useApiTokenForm();
 
-    const { createToken, loading: loadingCreateToken } = useApiTokensApi();
+    const { createToken, loading: loadingCreateToken } = useApiTokensApi(); // FIXME: API
     const { refetch } = useApiTokens();
 
     usePageTitle(pageTitle);
 
-    const PATH = `api/admin/api-tokens`;
+    const PATH = `api/admin/cdn-tokens`;
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
@@ -102,12 +101,12 @@ export const CreateCdnToken = ({ modal = false }: ICreateApiTokenProps) => {
         navigate(GO_BACK);
     };
 
-    const formatApiCode = () => {
-        return `curl --location --request POST '${uiConfig.unleashUrl}/${PATH}' \\
---header 'Authorization: INSERT_API_KEY' \\
---header 'Content-Type: application/json' \\
---data-raw '${JSON.stringify(getApiTokenPayload(), undefined, 2)}'`;
-    };
+    //     const formatApiCode = () => {
+    //         return `curl --location --request POST '${uiConfig.unleashUrl}/${PATH}' \\
+    // --header 'Authorization: INSERT_API_KEY' \\
+    // --header 'Content-Type: application/json' \\
+    // --data-raw '${JSON.stringify(getApiTokenPayload(), undefined, 2)}'`;
+    //     };
 
     const handleCancel = () => {
         navigate(GO_BACK);
@@ -132,9 +131,8 @@ export const CreateCdnToken = ({ modal = false }: ICreateApiTokenProps) => {
                     <CreateButton
                         name='token'
                         permission={[ADMIN]}
-                        disabled={
-                            limitReached || loadingLimit || loadingCreateToken
-                        }
+                        disabled={loadingCreateToken}
+                        // limitReached || loadingLimit || loadingCreateToken
                     />
                 }
             >

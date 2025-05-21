@@ -109,26 +109,57 @@ export class CustomMetricsStore implements ICustomMetricsStore {
     getPrometheusMetrics(): string {
         // Prometheus formatted output
         let output = '';
-        const metricsByName = new Map<string, StoredCustomMetric[]>();
+        const metricsByName = new Map<
+            string,
+            Map<string, StoredCustomMetric>
+        >();
 
-        // Group metrics by name
+        // Group metrics by name and then by label combination
         for (const metric of this.customMetricsStore.values()) {
+            // Initialize map for this metric name if it doesn't exist
             if (!metricsByName.has(metric.name)) {
-                metricsByName.set(metric.name, []);
+                metricsByName.set(
+                    metric.name,
+                    new Map<string, StoredCustomMetric>(),
+                );
             }
-            metricsByName.get(metric.name)?.push(metric);
+
+            // Generate a key for this label combination
+            let labelKey = '';
+            if (metric.labels && Object.keys(metric.labels).length > 0) {
+                // Sort the labels to ensure consistent key generation
+                const labelEntries = Object.entries(metric.labels).sort(
+                    ([keyA], [keyB]) => keyA.localeCompare(keyB),
+                );
+
+                // Generate a string key for the label combination
+                labelKey = labelEntries
+                    .map(([key, value]) => `${key}=${value}`)
+                    .join(',');
+            }
+
+            const metricsForName = metricsByName.get(metric.name)!;
+
+            // Only keep the newest metric for this name+label combination
+            // If we already have a metric with these labels, check if this one is newer
+            if (
+                !metricsForName.has(labelKey) ||
+                metricsForName.get(labelKey)!.timestamp < metric.timestamp
+            ) {
+                metricsForName.set(labelKey, metric);
+            }
         }
 
         // Process each metric name
-        for (const [metricName, metrics] of metricsByName.entries()) {
-            if (metrics.length === 0) continue;
+        for (const [metricName, metricsMap] of metricsByName.entries()) {
+            if (metricsMap.size === 0) continue;
 
             // Add metric help and type comments
             output += `# HELP ${metricName} Custom metric reported to Unleash\n`;
             output += `# TYPE ${metricName} counter\n`;
 
-            // Add each metric instance
-            for (const metric of metrics) {
+            // Add each metric instance (only the latest for each label combination)
+            for (const metric of metricsMap.values()) {
                 // Format labels if present
                 let labelStr = '';
                 if (metric.labels && Object.keys(metric.labels).length > 0) {

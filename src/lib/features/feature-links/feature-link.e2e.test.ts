@@ -26,7 +26,6 @@ beforeAll(async () => {
         {
             experimental: {
                 flags: {
-                    featureLinks: true,
                 },
             },
         },

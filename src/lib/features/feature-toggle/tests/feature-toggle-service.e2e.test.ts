@@ -60,7 +60,6 @@ const irrelevantDate = new Date();
 
 beforeAll(async () => {
     const flags = {
-        featureLinks: true,
         projectLinkTemplates: true,
     };
     const config = createTestConfig({ experimental: { flags } });

@@ -303,9 +303,7 @@ export default class ExportImportService
         await this.importTagTypes(dto, auditUser);
         await this.importTags(dto, auditUser);
         await this.importContextFields(dto, auditUser);
-        if (this.flagResolver.isEnabled('featureLinks')) {
-            await this.importLinks(dto, auditUser);
-        }
+        await this.importLinks(dto, auditUser);
     }
 
     async import(
@@ -907,7 +905,6 @@ export default class ExportImportService
             segments,
             tagTypes,
             featureDependencies,
-            featureLinks,
         ] = await Promise.all([
             this.toggleStore.getAllByNames(featureNames),
             await this.featureEnvironmentStore.getAllByFeatures(
@@ -924,10 +921,10 @@ export default class ExportImportService
             this.segmentReadModel.getAll(),
             this.tagTypeStore.getAll(),
             this.dependentFeaturesReadModel.getDependencies(featureNames),
-            this.flagResolver.isEnabled('featureLinks')
-                ? this.featureLinksReadModel.getLinks(...featureNames)
-                : Promise.resolve([]),
         ]);
+        const featureLinks = await this.featureLinksReadModel.getLinks(
+            ...featureNames,
+        );
         this.addSegmentsToStrategies(featureStrategies, strategySegments);
         const filteredContextFields = contextFields
             .filter(

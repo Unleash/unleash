@@ -5,9 +5,7 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import ApiTokenForm from '../../apiToken/ApiTokenForm/ApiTokenForm.tsx';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
-import { useApiTokenForm } from 'component/admin/apiToken/ApiTokenForm/useApiTokenForm';
 import { ConfirmToken } from '../ConfirmToken/ConfirmToken.tsx';
 import { scrollToTop } from 'component/common/util';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -19,6 +17,8 @@ import { ProjectSelector } from '../../apiToken/ApiTokenForm/ProjectSelector/Pro
 import { EnvironmentSelector } from '../../apiToken/ApiTokenForm/EnvironmentSelector/EnvironmentSelector.tsx';
 import { ADMIN } from '@server/types/permissions';
 import { Limit } from 'component/common/Limit/Limit';
+import { useCdnTokenForm } from '../useCdnTokenForm.ts';
+import { TokenType } from 'interfaces/token.ts';
 
 const pageTitle = 'Create CDN token';
 interface ICreateApiTokenProps {
@@ -29,18 +29,18 @@ const StyledLimit = styled(Limit)(({ theme }) => ({
     margin: theme.spacing(2, 0, 4),
 }));
 
-const useApiTokenLimit = () => {
-    const { tokens, loading: loadingTokens } = useApiTokens();
-    const { uiConfig, loading: loadingConfig } = useUiConfig();
-    const apiTokensLimit = uiConfig.resourceLimits.apiTokens;
+// const useApiTokenLimit = () => {
+//     const { tokens, loading: loadingTokens } = useApiTokens();
+//     const { uiConfig, loading: loadingConfig } = useUiConfig();
+//     const apiTokensLimit = uiConfig.resourceLimits.apiTokens;
 
-    return {
-        limit: apiTokensLimit,
-        currentValue: tokens.length,
-        limitReached: tokens.length >= apiTokensLimit,
-        loading: loadingConfig || loadingTokens,
-    };
-};
+//     return {
+//         limit: apiTokensLimit,
+//         currentValue: tokens.length,
+//         limitReached: tokens.length >= apiTokensLimit,
+//         loading: loadingConfig || loadingTokens,
+//     };
+// };
 
 export const CreateCdnToken = ({ modal = false }: ICreateApiTokenProps) => {
     const { setToastApiError } = useToast();
@@ -57,7 +57,6 @@ export const CreateCdnToken = ({ modal = false }: ICreateApiTokenProps) => {
     const {
         getApiTokenPayload,
         tokenName,
-        type,
         projects,
         environment,
         setTokenName,
@@ -66,7 +65,7 @@ export const CreateCdnToken = ({ modal = false }: ICreateApiTokenProps) => {
         isValid,
         errors,
         clearErrors,
-    } = useApiTokenForm();
+    } = useCdnTokenForm();
 
     const { createToken, loading: loadingCreateToken } = useApiTokensApi(); // FIXME: API
     const { refetch } = useApiTokens();
@@ -143,14 +142,14 @@ export const CreateCdnToken = ({ modal = false }: ICreateApiTokenProps) => {
                     clearErrors={clearErrors}
                 />
                 <ProjectSelector
-                    type={type}
+                    type={TokenType.CDN}
                     projects={projects}
                     setProjects={setProjects}
                     errors={errors}
                     clearErrors={clearErrors}
                 />
                 <EnvironmentSelector
-                    type={type}
+                    type={TokenType.CDN}
                     environment={environment}
                     setEnvironment={setEnvironment}
                 />
@@ -167,7 +166,7 @@ export const CreateCdnToken = ({ modal = false }: ICreateApiTokenProps) => {
                 setOpen={setShowConfirm}
                 closeConfirm={closeConfirm}
                 token={token}
-                type={type}
+                type={TokenType.CDN}
             />
         </FormTemplate>
     );

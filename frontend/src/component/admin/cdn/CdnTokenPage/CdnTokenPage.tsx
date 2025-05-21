@@ -2,10 +2,8 @@ import { ApiTokenTable } from 'component/common/ApiTokenTable/ApiTokenTable';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Search } from 'component/common/Search/Search';
-import { useApiTokenTable } from 'component/common/ApiTokenTable/useApiTokenTable';
 import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
-import { CopyApiTokenButton } from 'component/common/ApiTokenTable/CopyApiTokenButton/CopyApiTokenButton';
 import { RemoveApiTokenButton } from 'component/common/ApiTokenTable/RemoveApiTokenButton/RemoveApiTokenButton';
 import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import { ADMIN } from '@server/types/permissions';
@@ -14,6 +12,7 @@ import { Box } from '@mui/material';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import Add from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
+import { useCdnTokenTable } from '../useCdnTokenTable.tsx';
 
 export const CdnTokenPage = () => {
     const { tokens, loading, refetch } = useApiTokens();
@@ -28,13 +27,9 @@ export const CdnTokenPage = () => {
         setGlobalFilter,
         setHiddenColumns,
         columns,
-    } = useApiTokenTable(tokens, (props) => {
+    } = useCdnTokenTable(tokens, (props) => {
         return (
             <ActionCell>
-                <CopyApiTokenButton
-                    token={props.row.original}
-                    permission={ADMIN}
-                />
                 <RemoveApiTokenButton
                     token={props.row.original}
                     permission={ADMIN}

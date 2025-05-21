@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { PageContent } from 'component/common/PageContent/PageContent';
-import { Alert } from '@mui/material';
+import { Alert, Box } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import AccessContext from 'contexts/AccessContext';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -24,6 +24,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useProjectApiTokensApi from 'hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { ApiTokenDocs } from 'component/admin/apiToken/ApiTokenDocs/ApiTokenDocs';
 
 export const ProjectApiAccess = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -111,16 +112,23 @@ export const ProjectApiAccess = () => {
                         </Alert>
                     }
                     elseShow={
-                        <ApiTokenTable
-                            compact
-                            loading={loading}
-                            headerGroups={headerGroups}
-                            setHiddenColumns={setHiddenColumns}
-                            prepareRow={prepareRow}
-                            rows={rows}
-                            columns={columns}
-                            globalFilter={globalFilter}
-                        />
+                        <>
+                            {rows.length > 0 ? (
+                                <Box sx={{ mb: 4 }}>
+                                    <ApiTokenDocs />
+                                </Box>
+                            ) : null}
+                            <ApiTokenTable
+                                compact
+                                loading={loading}
+                                headerGroups={headerGroups}
+                                setHiddenColumns={setHiddenColumns}
+                                prepareRow={prepareRow}
+                                rows={rows}
+                                columns={columns}
+                                globalFilter={globalFilter}
+                            />
+                        </>
                     }
                 />
             </PageContent>

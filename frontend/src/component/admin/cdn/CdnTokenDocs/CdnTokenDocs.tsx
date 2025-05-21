@@ -1,6 +1,5 @@
-import { Alert, Box, IconButton, styled, Tooltip } from '@mui/material';
+import { Alert, Box, styled } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import CopyIcon from '@mui/icons-material/FileCopy';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 
@@ -32,7 +31,7 @@ export const CdnTokenDocs = () => {
     return (
         <Alert severity='info'>
             <p>Low-latency content delivery network (experimental).</p>
-            <GridContainer>
+            {/* <GridContainer>
                 <GridItem>
                     <strong>CDN API URL: </strong>
                 </GridItem>
@@ -65,7 +64,7 @@ export const CdnTokenDocs = () => {
                         </IconButton>
                     </Tooltip>
                 </GridItem>
-            </GridContainer>
+            </GridContainer> */}
         </Alert>
     );
 };

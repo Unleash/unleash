@@ -64,7 +64,8 @@ export type IFlagKey =
     | 'projectLinkTemplates'
     | 'reportUnknownFlags'
     | 'lastSeenBulkQuery'
-    | 'newGettingStartedEmail';
+    | 'newGettingStartedEmail'
+    | 'customMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 

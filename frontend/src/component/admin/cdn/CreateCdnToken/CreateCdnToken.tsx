@@ -43,7 +43,7 @@ const StyledLimit = styled(Limit)(({ theme }) => ({
 // };
 
 export const CreateCdnToken = ({ modal = false }: ICreateApiTokenProps) => {
-    const { setToastApiError } = useToast();
+    const { setToastApiError, setToastData } = useToast();
     const navigate = useNavigate();
     const [showConfirm, setShowConfirm] = useState(false);
     const [token, setToken] = useState('');
@@ -72,7 +72,7 @@ export const CreateCdnToken = ({ modal = false }: ICreateApiTokenProps) => {
 
     usePageTitle(pageTitle);
 
-    const PATH = `api/admin/cdn-tokens`;
+    const PATH = `/admin/cdn`;
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
@@ -83,11 +83,13 @@ export const CreateCdnToken = ({ modal = false }: ICreateApiTokenProps) => {
             const payload = getApiTokenPayload();
 
             await createToken(payload)
-                .then((res) => res.json())
-                .then((api) => {
+                .then(() => {
                     scrollToTop();
-                    setToken(api.secret);
-                    setShowConfirm(true);
+                    setToastData({
+                        type: 'success',
+                        text: `CDN token created successfully`,
+                    })
+                    navigate(PATH)
                     refetch();
                 });
         } catch (error: unknown) {

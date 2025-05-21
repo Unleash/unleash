@@ -15,7 +15,6 @@ export const useCdnTokensApi = () => {
 
     const createToken = async (newToken: CdnApiTokenSchema) => {
         const path = `api/admin/cdn/tokens`;
-        console.log(newToken)
         const req = createRequest(path, {
             method: 'POST',
             body: JSON.stringify(newToken),

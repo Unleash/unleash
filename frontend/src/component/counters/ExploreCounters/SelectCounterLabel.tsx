@@ -63,7 +63,7 @@ export const SelectCounterLabel = ({
                     sx={{ width: 200, maxWidth: '100%' }}
                 >
                     {labels
-                        ? getLabelNames(labels).map((option) => (
+                        ? getLabelNames(labels)?.map((option) => (
                               <MenuItem key={option} value={option}>
                                   {option}
                               </MenuItem>
@@ -90,7 +90,7 @@ export const SelectCounterLabel = ({
                             All
                         </MenuItem>
                         {labels
-                            ? getLabelValues(label, labels).map((option) => (
+                            ? getLabelValues(label, labels)?.map((option) => (
                                   <MenuItem
                                       key={option}
                                       value={`${label}::${option}`}

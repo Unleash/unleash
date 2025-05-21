@@ -220,7 +220,7 @@ export const ExploreCounterChart = ({
             <Line
                 options={options}
                 data={data}
-                aria-label='Stuff happens here'
+                aria-label='Explore Counters Metrics Chart'
             />
         </div>
     );

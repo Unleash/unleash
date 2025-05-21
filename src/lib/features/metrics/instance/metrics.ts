@@ -18,7 +18,10 @@ import {
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
 import type { BulkMetricsSchema } from '../../../openapi/spec/bulk-metrics-schema.js';
-import { clientMetricsEnvBulkSchema } from '../shared/schema.js';
+import {
+    clientMetricsEnvBulkSchema,
+    customMetricsSchema,
+} from '../shared/schema.js';
 import type { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v2-type.js';
 import { CLIENT_METRICS } from '../../../events/index.js';
 import type { CustomMetricsSchema } from '../../../openapi/spec/custom-metrics-schema.js';
@@ -168,21 +171,8 @@ export default class ClientMetricsController extends Controller {
             try {
                 const { body } = req;
 
-                // Simple manual validation
-                if (!body || !body.metrics || !Array.isArray(body.metrics)) {
-                    this.logger.error('Invalid custom metrics format', body);
-                    res.status(400).end();
-                    return;
-                }
-
-                // Check each metric
-                for (const metric of body.metrics) {
-                    if (!metric.name || typeof metric.value !== 'number') {
-                        this.logger.error('Invalid metric format', metric);
-                        res.status(400).end();
-                        return;
-                    }
-                }
+                // Use Joi validation for custom metrics
+                await customMetricsSchema.validateAsync(body);
 
                 // Process custom metrics
                 // Note: This will just accept the metrics and return success for now

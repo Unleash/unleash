@@ -17,16 +17,16 @@ export interface IMetricsResponse {
 }
 
 export const useMetricCounters = () => {
-    const { data, error, mutate } = useConditionalSWR<IMetricsResponse[]>(
+    const { data, error, mutate } = useConditionalSWR<IMetricsResponse>(
         true,
-        [],
+        { metrics: [], count: 0, metricNames: [] },
         formatApiPath('api/admin/custom-metrics'),
         fetcher,
     );
 
     return useMemo(
         () => ({
-            counters: data ?? [],
+            counters: data ?? { metrics: [], count: 0, metricNames: [] },
             loading: !error && !data,
             refetch: () => mutate(),
             error,

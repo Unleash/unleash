@@ -1,27 +1,29 @@
 import { useState } from 'react';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
+import { CdnApiTokenSchema } from 'openapi';
 
 export type ApiTokenFormErrorType = 'tokenName' | 'projects';
 export const useCdnTokenForm = (project?: string) => {
     const { environments } = useEnvironments();
+    const initialEnvironment = environments?.find((e) => e.enabled)?.name;
 
     const [tokenName, setTokenName] = useState('');
     const [projects, setProjects] = useState<string[]>([
         project ? project : '*',
     ]);
-    const [memorizedProjects, setMemorizedProjects] =
-        useState<string[]>(projects);
-    const [environment, setEnvironment] = useState<string>();
+    const [environment, setEnvironment] = useState<string | undefined>(
+        initialEnvironment,
+    );
     const [errors, setErrors] = useState<
         Partial<Record<ApiTokenFormErrorType, string>>
     >({});
 
-    const getApiTokenPayload = () => ({
-        // FIXME: payload
-        tokenName,
-        environment,
-        projects,
-    });
+    const getApiTokenPayload = () =>
+        ({
+            tokenName,
+            environment,
+            project: projects[0],
+        }) as CdnApiTokenSchema; // FIXME: env can be undefined
 
     const isValid = () => {
         const newErrors: Partial<Record<ApiTokenFormErrorType, string>> = {};

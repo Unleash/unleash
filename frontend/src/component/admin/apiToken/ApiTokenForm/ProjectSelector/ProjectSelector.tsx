@@ -13,6 +13,7 @@ interface IProjectSelectorProps {
     errors: { [key: string]: string };
     clearErrors: (error?: ApiTokenFormErrorType) => void;
 }
+
 export const ProjectSelector = ({
     type,
     projects,

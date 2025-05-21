@@ -140,6 +140,8 @@ export * from './bulkToggleFeaturesEnvironmentOn404.js';
 export * from './bulkToggleFeaturesEnvironmentOn413.js';
 export * from './bulkToggleFeaturesEnvironmentOn415.js';
 export * from './bulkToggleFeaturesSchema.js';
+export * from './cdnApiTokenSchema.js';
+export * from './cdnApiTokensSchema.js';
 export * from './changePassword401.js';
 export * from './changePassword403.js';
 export * from './changePassword415.js';

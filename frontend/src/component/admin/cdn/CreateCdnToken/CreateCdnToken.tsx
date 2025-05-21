@@ -4,7 +4,7 @@ import { styled } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import ApiTokenForm from '../../apiToken/ApiTokenForm/ApiTokenForm.tsx';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
-import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
+import {useCdnTokensApi} from 'hooks/api/actions/useCdnTokensApi/useCdnTokensApi';
 import useToast from 'hooks/useToast';
 import { ConfirmToken } from '../ConfirmToken/ConfirmToken.tsx';
 import { scrollToTop } from 'component/common/util';
@@ -67,7 +67,7 @@ export const CreateCdnToken = ({ modal = false }: ICreateApiTokenProps) => {
         clearErrors,
     } = useCdnTokenForm();
 
-    const { createToken, loading: loadingCreateToken } = useApiTokensApi(); // FIXME: API
+    const { createToken, loading: loadingCreateToken } = useCdnTokensApi();
     const { refetch } = useApiTokens();
 
     usePageTitle(pageTitle);

@@ -13,10 +13,10 @@ import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton
 import Add from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
 import { useCdnTokenTable } from '../useCdnTokenTable.tsx';
+import { useCdnTokens } from 'hooks/api/getters/useCdnTokens/useCdnTokens.ts';
 
 export const CdnTokenPage = () => {
-    const { tokens, loading, refetch } = useApiTokens();
-    const { deleteToken } = useApiTokensApi();
+    const { tokens, loading, refetch } = useCdnTokens();
     const navigate = useNavigate();
 
     const {
@@ -27,20 +27,7 @@ export const CdnTokenPage = () => {
         setGlobalFilter,
         setHiddenColumns,
         columns,
-    } = useCdnTokenTable(tokens, (props) => {
-        return (
-            <ActionCell>
-                <RemoveApiTokenButton
-                    token={props.row.original}
-                    permission={ADMIN}
-                    onRemove={async () => {
-                        await deleteToken(props.row.original.secret);
-                        refetch();
-                    }}
-                />
-            </ActionCell>
-        );
-    });
+    } = useCdnTokenTable(tokens);
 
     return (
         <PageContent

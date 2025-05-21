@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import type { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
@@ -12,10 +11,11 @@ import {
 import { sortTypes } from 'utils/sortTypes';
 import { ProjectsList } from 'component/admin/apiToken/ProjectsList/ProjectsList';
 import { ApiTokenIcon } from 'component/admin/apiToken/ApiTokenIcon/ApiTokenIcon';
+import { CdnApiTokensSchema } from 'openapi';
 
 export const useCdnTokenTable = (
-    tokens: IApiToken[],
-    getActionCell: (props: any) => JSX.Element,
+    tokens: CdnApiTokensSchema['tokens'],
+    getActionCell?: (props: any) => JSX.Element,
 ) => {
     const initialState = useMemo(
         () => ({ sortBy: [{ id: 'createdAt', desc: true }] }),
@@ -74,15 +74,15 @@ export const useCdnTokenTable = (
                 width: 140,
                 disableGlobalFilter: true,
             },
-            {
-                Header: 'Actions',
-                width: 120,
-                id: 'Actions',
-                align: 'center',
-                disableSortBy: true,
-                disableGlobalFilter: true,
-                Cell: getActionCell,
-            },
+            // {
+            //     Header: 'Actions',
+            //     width: 120,
+            //     id: 'Actions',
+            //     align: 'center',
+            //     disableSortBy: true,
+            //     disableGlobalFilter: true,
+            //     Cell: getActionCell,
+            // },
         ];
     }, []);
 

@@ -26,7 +26,7 @@ export const useMetricCounters = () => {
 
     return useMemo(
         () => ({
-            counters: data ?? { metrics: [], count: 0, metricNames: [] },
+            counters: data ?? [],
             loading: !error && !data,
             refetch: () => mutate(),
             error,

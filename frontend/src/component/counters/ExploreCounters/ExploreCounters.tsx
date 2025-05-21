@@ -54,8 +54,6 @@ export const ExploreCounters = () => {
             if (counter && metric.name !== counter) {
                 return false;
             }
-            console.log('selectedLabels', selectedLabels);
-            console.log('selectedLabelValues', selectedLabelValues);
             if (selectedLabels.length > 0) {
                 const labels = Object.keys(metric.labels);
                 return selectedLabels.every(
@@ -73,8 +71,12 @@ export const ExploreCounters = () => {
 
     useEffect(() => {
         setCounterNames(mapCounterNames(data.counters.metrics));
-        setLabels(mapLabels(data.counters.metrics));
-    }, [data.counters]);
+        const labelMetrics = data.counters.metrics.filter((metric) => {
+            return counter && metric.name === counter;
+        });
+        const counterLabels = mapLabels(labelMetrics);
+        setLabels(counterLabels);
+    }, [data.counters, filteredCounters, counter]);
 
     const selectLabel = (label: string) => {
         setSelectedLabels((prev) => {
@@ -106,9 +108,7 @@ export const ExploreCounters = () => {
     return (
         <>
             <PageContent
-                header={
-                    <PageHeader title={`Explore custom metrics`}></PageHeader>
-                }
+                header={<PageHeader title={`Explore custom metrics`} />}
             >
                 <ExploreCounterFilter
                     selectLabel={selectLabel}

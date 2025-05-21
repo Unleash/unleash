@@ -6,7 +6,7 @@ import {
     useLocationSettings,
     type ILocationSettings,
 } from 'hooks/useLocationSettings';
-import { formatDateHM, formatDateYMD } from 'utils/formatDate';
+import { formatDateHM } from 'utils/formatDate';
 import { useMemo } from 'react';
 import { useTheme } from '@mui/material';
 import { CyclicIterator } from 'utils/cyclicIterator';
@@ -62,10 +62,9 @@ export const createChartOptions = (
                 type: 'linear',
                 title: {
                     display: true,
-                    text: 'Number of requests',
+                    text: 'Count',
                     color: theme.palette.text.secondary,
                 },
-                // min: 0,
                 suggestedMin: 0,
                 ticks: { precision: 0, color: theme.palette.text.secondary },
                 grid: {
@@ -75,20 +74,11 @@ export const createChartOptions = (
             },
             x: {
                 type: 'time',
-                time: { unit: hoursBack > 48 ? 'day' : 'hour' },
+                time: { unit: 'minute' },
                 grid: { display: false },
                 ticks: {
                     callback: (_, i, data) =>
-                        hoursBack > 48
-                            ? formatDateYMD(
-                                  data[i].value,
-                                  locationSettings.locale,
-                                  'UTC',
-                              )
-                            : formatDateHM(
-                                  data[i].value,
-                                  locationSettings.locale,
-                              ),
+                        formatDateHM(data[i].value, locationSettings.locale),
                     color: theme.palette.text.secondary,
                 },
             },
@@ -139,11 +129,7 @@ const toValues = (
     return metrics.reduce(
         (acc, metric) => {
             for (const [key, value] of Object.entries(metric.labels)) {
-                /*
-            if (!selectedLabels.includes(key) || (selectedValues.length > 0 && !selectedValues.includes(`${key}::${value}`))) {
-                continue;
-            }*/
-                const labelKey = buildMetricKey(metric); //`${key}::${value}`;
+                const labelKey = buildMetricKey(metric);
                 if (!acc[labelKey]) {
                     acc[labelKey] = [];
                 }

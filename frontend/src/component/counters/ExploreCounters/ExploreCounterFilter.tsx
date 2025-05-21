@@ -17,21 +17,11 @@ interface IExploreCounterFilter {
     unselectLabel: (label: string) => void;
     selectLabelValue: (value: string) => void;
     unselectLabelValue: (value: string) => void;
-    filteredCounters: {
-        name: string;
-        value: number;
-        timestamp: Date;
-        labels: {
-            name: string;
-            value: string;
-        }[];
-    }[];
 }
 
 export const ExploreCounterFilter = ({
     counterNames,
     labels,
-    filteredCounters,
     counter,
     setCounter,
     selectLabel,

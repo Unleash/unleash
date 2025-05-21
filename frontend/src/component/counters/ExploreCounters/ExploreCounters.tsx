@@ -119,7 +119,6 @@ export const ExploreCounters = () => {
                     setCounter={setCounter}
                     counterNames={counterNames}
                     labels={labels}
-                    filteredCounters={filteredCounters}
                 />
                 {counter &&
                     selectedLabels.length > 0 &&

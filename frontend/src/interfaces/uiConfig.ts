@@ -91,6 +91,7 @@ export type UiFlags = {
     registerFrontendClient?: boolean;
     featureLinks?: boolean;
     projectLinkTemplates?: boolean;
+    customMetrics?: boolean;
 };
 
 export interface IVersionInfo {

@@ -13,6 +13,8 @@ import {
     dateOperators,
     numOperators,
     inOperators,
+    type ContextFieldType,
+    getOperatorsForContextFieldType,
 } from 'constants/operators';
 import { formatOperatorDescription } from 'component/common/LegacyConstraintAccordion/ConstraintOperator/formatOperatorDescription';
 import { useId } from 'react';
@@ -24,6 +26,7 @@ interface IConstraintOperatorSelectProps {
     value: Operator;
     onChange: (value: Operator) => void;
     inverted?: boolean;
+    contextFieldType?: ContextFieldType;
 }
 
 const StyledSelect = styled(Select)(({ theme }) => ({
@@ -83,12 +86,17 @@ export const ConstraintOperatorSelect = ({
     value,
     onChange,
     inverted,
+    contextFieldType,
 }: IConstraintOperatorSelectProps) => {
     const selectId = useId();
     const labelId = useId();
     const onSelectChange = (event: SelectChangeEvent<unknown>) => {
         onChange(event.target.value as Operator);
     };
+
+    const availableOperators = contextFieldType
+        ? getOperatorsForContextFieldType(contextFieldType)
+        : options;
 
     const renderValue = () => {
         return (
@@ -115,11 +123,14 @@ export const ConstraintOperatorSelect = ({
                 renderValue={renderValue}
                 IconComponent={KeyboardArrowDownOutlined}
             >
-                {options.map((operator) => (
+                {availableOperators.map((operator) => (
                     <StyledMenuItem
                         key={operator}
                         value={operator}
-                        separator={needSeparatorAbove(options, operator)}
+                        separator={needSeparatorAbove(
+                            availableOperators,
+                            operator,
+                        )}
                     >
                         {formatOperatorDescription(operator, inverted)}
                     </StyledMenuItem>

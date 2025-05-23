@@ -7,24 +7,32 @@ import {
     styled,
     type Theme,
     Link,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
 } from '@mui/material';
 import type React from 'react';
 import { useState, useEffect } from 'react';
 import Add from '@mui/icons-material/Add';
 import type { ILegalValue } from 'interfaces/context';
-import { ContextFormChip } from 'component/context/ContectFormChip/ContextFormChip';
 import { ContextFormChipList } from 'component/context/ContectFormChip/ContextFormChipList';
 import { ContextFieldUsage } from '../ContextFieldUsage/ContextFieldUsage.tsx';
+import type { ContextFieldType } from 'constants/operators.ts';
 
 interface IContextForm {
     contextName: string;
     contextDesc: string;
     legalValues: ILegalValue[];
     stickiness: boolean;
+    valueType?: ContextFieldType;
     setContextName: React.Dispatch<React.SetStateAction<string>>;
     setContextDesc: React.Dispatch<React.SetStateAction<string>>;
     setStickiness: React.Dispatch<React.SetStateAction<boolean>>;
     setLegalValues: React.Dispatch<React.SetStateAction<ILegalValue[]>>;
+    setValueType: React.Dispatch<
+        React.SetStateAction<ContextFieldType | undefined>
+    >;
     handleSubmit: (e: any) => void;
     onCancel: () => void;
     errors: { [key: string]: string };
@@ -52,28 +60,34 @@ const styledInput = (theme: Theme) => ({
     marginBottom: theme.spacing(2),
 });
 
-const StyledTagContainer = styled('div')(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: '1fr auto',
-    gap: theme.spacing(1),
+const StyledLegalValueContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
     marginBottom: theme.spacing(2),
 }));
 
-const StyledInputHeader = styled('p')(({ theme }) => ({
-    marginBottom: theme.spacing(0.5),
-}));
-
-const StyledSwitchContainer = styled('div')({
+const StyledLegalValueHeader = styled('div')({
     display: 'flex',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginLeft: '-9px',
 });
 
-const StyledButtonContainer = styled('div')(({ theme }) => ({
-    marginTop: theme.spacing(3),
+const StyledLegalValueInputContainer = styled('div')({
+    display: 'grid',
+    gridTemplateColumns: '1fr auto',
+    gap: '1rem',
+});
+
+const StyledTagContainer = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(1),
+}));
+
+const StyledButtonContainer = styled('div')({
+    marginTop: 'auto',
     display: 'flex',
     justifyContent: 'flex-end',
-}));
+});
 
 const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
@@ -81,16 +95,18 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
 
 export const ContextForm: React.FC<IContextForm> = ({
     children,
-    handleSubmit,
-    onCancel,
     contextName,
     contextDesc,
     legalValues,
     stickiness,
+    valueType,
     setContextName,
     setContextDesc,
     setLegalValues,
     setStickiness,
+    setValueType,
+    handleSubmit,
+    onCancel,
     errors,
     mode,
     validateContext,
@@ -98,71 +114,53 @@ export const ContextForm: React.FC<IContextForm> = ({
     clearErrors,
 }) => {
     const [value, setValue] = useState('');
-    const [valueDesc, setValueDesc] = useState('');
-    const [valueFocused, setValueFocused] = useState(false);
-
-    const isMissingValue = valueDesc.trim() && !value.trim();
-
-    const isDuplicateValue = legalValues.some((legalValue) => {
-        return legalValue.value.trim() === value.trim();
-    });
+    const [description, setDescription] = useState('');
 
     useEffect(() => {
-        setErrors((prev) => ({
-            ...prev,
-            tag: isMissingValue
-                ? 'Value cannot be empty'
-                : isDuplicateValue
-                  ? 'Duplicate value'
-                  : undefined,
-        }));
-    }, [setErrors, isMissingValue, isDuplicateValue]);
-
-    const onSubmit = (event: React.SyntheticEvent) => {
-        event.preventDefault();
-        handleSubmit(event);
-    };
-
-    const onKeyDown = (event: React.KeyboardEvent) => {
-        if (event.key === ENTER) {
-            event.preventDefault();
-            if (valueFocused) {
-                addLegalValue();
-            } else {
-                handleSubmit(event);
-            }
+        if (legalValues.length > 0 && value.length > 0) {
+            clearErrors('legalValues');
         }
-    };
+    }, [legalValues, value]);
 
-    const sortLegalValues = (a: ILegalValue, b: ILegalValue) => {
-        return a.value.toLowerCase().localeCompare(b.value.toLowerCase());
-    };
-
-    const addLegalValue = () => {
-        const next: ILegalValue = {
-            value: value.trim(),
-            description: valueDesc.trim(),
+    const onAddLegalValue = () => {
+        if (value.length === 0) {
+            setErrors((prev) => ({ ...prev, tag: 'Name can not be empty.' }));
+            return;
+        }
+        const newLegalValue: ILegalValue = {
+            value,
+            description,
         };
-        if (next.value && !isDuplicateValue) {
-            setValue('');
-            setValueDesc('');
-            setLegalValues((prev) => [...prev, next].sort(sortLegalValues));
-        }
+        setLegalValues([...legalValues, newLegalValue]);
+        setValue('');
+        setDescription('');
     };
 
-    const removeLegalValue = (value: ILegalValue) => {
-        setLegalValues((prev) => prev.filter((p) => p.value !== value.value));
+    const onRemoveLegalValue = (val: ILegalValue) => {
+        setLegalValues(legalValues.filter((l) => l.value !== val.value));
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === ENTER) {
+            e.preventDefault();
+            onAddLegalValue();
+        }
     };
 
     return (
-        <StyledForm onSubmit={onSubmit}>
+        <StyledForm
+            onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit(e);
+            }}
+        >
             <div>
                 <StyledInputDescription>
-                    What is your context name?
+                    What is the name of your context field?
                 </StyledInputDescription>
                 <Input
                     sx={styledInput}
-                    label='Context name'
+                    label='Context field name'
                     value={contextName}
                     disabled={mode === 'Edit'}
                     onChange={(e) => setContextName(e.target.value.trim())}
@@ -185,83 +183,99 @@ export const ContextForm: React.FC<IContextForm> = ({
                     size='small'
                     onChange={(e) => setContextDesc(e.target.value)}
                 />
+
                 <StyledInputDescription>
-                    Which values do you want to allow?
+                    What is the type of your context field?
                 </StyledInputDescription>
-                <StyledTagContainer>
-                    <TextField
-                        label='Legal value (optional)'
-                        name='value'
-                        sx={{ gridColumn: 1 }}
-                        value={value}
-                        error={Boolean(errors.tag)}
-                        helperText={errors.tag}
-                        variant='outlined'
-                        size='small'
-                        onChange={(e) => setValue(e.target.value)}
-                        onKeyPress={(e) => onKeyDown(e)}
-                        onBlur={() => setValueFocused(false)}
-                        onFocus={() => setValueFocused(true)}
-                        inputProps={{ maxLength: 100 }}
-                    />
-                    <TextField
-                        label='Value description (optional)'
-                        sx={{ gridColumn: 1 }}
-                        value={valueDesc}
-                        variant='outlined'
-                        size='small'
-                        onChange={(e) => setValueDesc(e.target.value)}
-                        onKeyPress={(e) => onKeyDown(e)}
-                        onBlur={() => setValueFocused(false)}
-                        onFocus={() => setValueFocused(true)}
-                        inputProps={{ maxLength: 100 }}
-                    />
-                    <Button
-                        sx={{ gridColumn: 2 }}
-                        startIcon={<Add />}
-                        onClick={addLegalValue}
-                        variant='outlined'
-                        color='primary'
-                        disabled={!value.trim() || isDuplicateValue}
+                <FormControl sx={styledInput} size='small'>
+                    <InputLabel id='context-field-type-label'>
+                        Context Field Type (optional)
+                    </InputLabel>
+                    <Select
+                        labelId='context-field-type-label'
+                        label='Context Field Type (optional)'
+                        value={valueType || ''}
+                        onChange={(e) =>
+                            setValueType(
+                                (e.target.value as ContextFieldType) ||
+                                    undefined,
+                            )
+                        }
                     >
-                        Add
-                    </Button>
-                </StyledTagContainer>
-                <ContextFormChipList>
-                    {legalValues.map((legalValue) => {
-                        return (
-                            <ContextFormChip
-                                key={legalValue.value}
-                                label={legalValue.value}
-                                description={legalValue.description}
-                                onRemove={() => removeLegalValue(legalValue)}
-                            />
-                        );
-                    })}
-                </ContextFormChipList>
-                <StyledInputHeader>Custom stickiness</StyledInputHeader>
-                <p>
-                    By enabling stickiness on this context field you can use it
-                    together with the flexible-rollout strategy. This will
-                    guarantee a consistent behavior for specific values of this
-                    context field. PS! Not all client SDK's support this feature
-                    yet!{' '}
-                    <Link
-                        href='https://docs.getunleash.io/reference/stickiness'
-                        target='_blank'
-                        rel='noreferrer'
-                    >
-                        Read more
-                    </Link>
-                </p>
-                <StyledSwitchContainer>
-                    <Switch
-                        checked={stickiness}
-                        value={stickiness}
-                        onChange={() => setStickiness(!stickiness)}
-                    />
-                    <Typography>{stickiness ? 'On' : 'Off'}</Typography>
-                </StyledSwitchContainer>
+                        <MenuItem value=''>
+                            <em>Undefined (all operators)</em>
+                        </MenuItem>
+                        <MenuItem value={'String'}>String</MenuItem>
+                        <MenuItem value={'Number'}>Number</MenuItem>
+                        <MenuItem value={'Semver'}>Semver</MenuItem>
+                        <MenuItem value={'Date'}>Date</MenuItem>
+                    </Select>
+                </FormControl>
+
+                <StyledLegalValueContainer>
+                    <StyledLegalValueHeader>
+                        <Typography variant='body2'>
+                            Do you want to define a set of legal values for this
+                            context field? (optional)
+                        </Typography>
+                        <Link
+                            href='https://docs.getunleash.io/reference/unleash-context#custom-context-fields'
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            sx={{ margin: (theme) => theme.spacing(0, 1) }}
+                        >
+                            Read more
+                        </Link>
+                    </StyledLegalValueHeader>
+                    <StyledLegalValueInputContainer>
+                        <TextField
+                            label='Legal value (optional)'
+                            name='value'
+                            sx={{ gridColumn: 1 }}
+                            value={value}
+                            error={Boolean(errors.tag)}
+                            helperText={errors.tag}
+                            variant='outlined'
+                            size='small'
+                            onKeyDown={handleKeyDown}
+                            onChange={(e) => setValue(e.target.value)}
+                        />
+                        <TextField
+                            label='Description (optional)'
+                            name='description'
+                            sx={{ gridColumn: 1 }}
+                            value={description}
+                            variant='outlined'
+                            size='small'
+                            onKeyDown={handleKeyDown}
+                            onChange={(e) => setDescription(e.target.value)}
+                        />
+                        <Button
+                            color='primary'
+                            variant='contained'
+                            onClick={onAddLegalValue}
+                            sx={{ gridColumn: 2, justifySelf: 'flex-start' }}
+                            startIcon={<Add />}
+                        >
+                            Add
+                        </Button>
+                    </StyledLegalValueInputContainer>
+                    <StyledTagContainer>
+                        <ContextFormChipList
+                            legalValues={legalValues}
+                            onRemove={onRemoveLegalValue}
+                        />
+                    </StyledTagContainer>
+                </StyledLegalValueContainer>
+
+                <Typography variant='body2' sx={{ mb: 1 }}>
+                    Do you want this context field to be sticky? (optional)
+                </Typography>
+                <Switch
+                    name='stickiness'
+                    checked={stickiness}
+                    onChange={(e) => setStickiness(e.target.checked)}
+                />
                 <ContextFieldUsage contextName={contextName} />
             </div>
             <StyledButtonContainer>

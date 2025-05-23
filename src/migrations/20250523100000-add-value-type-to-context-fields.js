@@ -4,6 +4,10 @@ exports.up = (db, callback) => {
     db.runSql(`
         ALTER TABLE context_fields
         ADD COLUMN value_type TEXT DEFAULT NULL;
+
+        UPDATE context_fields
+        SET value_type = 'Date'
+        WHERE name = 'currentTime';
     `, callback);
 };
 

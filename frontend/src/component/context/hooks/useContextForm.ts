@@ -2,17 +2,22 @@ import { useEffect, useState } from 'react';
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
 import type { ILegalValue } from 'interfaces/context';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import type { ContextFieldType } from 'constants/operators.ts'; // Added import
 
 export const useContextForm = (
     initialContextName = '',
     initialContextDesc = '',
     initialLegalValues = [] as ILegalValue[],
     initialStickiness = false,
+    initialValueType?: ContextFieldType, // Added initialValueType
 ) => {
     const [contextName, setContextName] = useState(initialContextName);
     const [contextDesc, setContextDesc] = useState(initialContextDesc);
     const [legalValues, setLegalValues] = useState(initialLegalValues);
     const [stickiness, setStickiness] = useState(initialStickiness);
+    const [valueType, setValueType] = useState<ContextFieldType | undefined>(
+        initialValueType,
+    ); // Added valueType state
     const [errors, setErrors] = useState({});
     const { validateContextName } = useContextsApi();
 
@@ -33,12 +38,17 @@ export const useContextForm = (
         setStickiness(initialStickiness);
     }, [initialStickiness]);
 
+    useEffect(() => {
+        setValueType(initialValueType);
+    }, [initialValueType]); // Added effect for valueType
+
     const getContextPayload = () => {
         return {
             name: contextName,
             description: contextDesc,
             legalValues,
             stickiness,
+            valueType, // Added valueType to payload
         };
     };
 
@@ -69,10 +79,12 @@ export const useContextForm = (
         contextDesc,
         legalValues,
         stickiness,
+        valueType, // Added valueType to return
         setContextName,
         setContextDesc,
         setLegalValues,
         setStickiness,
+        setValueType, // Added setValueType to return
         getContextPayload,
         validateContext,
         setErrors,

@@ -31,6 +31,8 @@ export const SEMVER_EQ = 'SEMVER_EQ' as const;
 export const SEMVER_GT = 'SEMVER_GT' as const;
 export const SEMVER_LT = 'SEMVER_LT' as const;
 
+export type ContextFieldType = 'String' | 'Number' | 'Semver' | 'Date';
+
 export const allOperators: Operator[] = [
     IN,
     NOT_IN,
@@ -93,3 +95,23 @@ export const newOperators = [
 ];
 export type NewOperator = (typeof newOperators)[number];
 export const isNewOperator = isOperator(newOperators);
+
+export const getOperatorsForContextFieldType = (
+    type?: ContextFieldType,
+): Operator[] => {
+    if (!type) {
+        return allOperators;
+    }
+    switch (type) {
+        case 'String':
+            return [...stringOperators, ...inOperators];
+        case 'Number':
+            return numOperators;
+        case 'Semver':
+            return semVerOperators;
+        case 'Date':
+            return dateOperators;
+        default:
+            return allOperators;
+    }
+};

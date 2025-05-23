@@ -5,6 +5,8 @@ import {
     isDateOperator,
     isMultiValueOperator,
     isSingleValueOperator,
+    type ContextFieldType,
+    getOperatorsForContextFieldType,
 } from 'constants/operators';
 import { CURRENT_TIME_CONTEXT_FIELD } from 'utils/operatorsForContext';
 import {
@@ -26,7 +28,10 @@ export type ConstraintUpdateAction =
     | { type: 'add value(s)'; payload: string | string[] }
     | { type: 'clear values' }
     | { type: 'remove value'; payload: string }
-    | { type: 'set context field'; payload: string }
+    | {
+          type: 'set context field';
+          payload: { name: string; valueType?: ContextFieldType };
+      }
     | { type: 'set operator'; payload: Operator }
     | { type: 'toggle case sensitivity' }
     | { type: 'toggle inverted operator' }
@@ -107,34 +112,52 @@ export const constraintReducer = (
     };
 
     switch (action.type) {
-        case 'set context field':
-            if (action.payload === state.contextName) {
+        case 'set context field': {
+            if (action.payload.name === state.contextName) {
                 return state;
             }
-            if (
-                action.payload === CURRENT_TIME_CONTEXT_FIELD &&
-                !isDateOperator(state.operator)
-            ) {
+
+            const newOperators = getOperatorsForContextFieldType(
+                action.payload.valueType,
+            );
+            let newOperator: Operator = newOperators[0] || IN;
+
+            if (action.payload.name === CURRENT_TIME_CONTEXT_FIELD) {
+                if (!isDateOperator(newOperator)) {
+                    newOperator = DATE_AFTER;
+                }
                 return withValue(new Date().toISOString(), {
                     ...state,
-                    contextName: action.payload,
-                    operator: DATE_AFTER,
+                    contextName: action.payload.name,
+                    operator: newOperator,
                 } as EditableDateConstraint);
-            } else if (
-                action.payload !== CURRENT_TIME_CONTEXT_FIELD &&
-                isDateOperator(state.operator)
-            ) {
+            }
+
+            if (action.payload.valueType === 'Date') {
+                if (!isDateOperator(newOperator)) {
+                    newOperator = DATE_AFTER;
+                }
+                return withValue(new Date().toISOString(), {
+                    ...state,
+                    contextName: action.payload.name,
+                    operator: newOperator,
+                } as EditableDateConstraint);
+            }
+
+            if (isSingleValueOperator(newOperator)) {
                 return withValue(null, {
                     ...state,
-                    operator: IN,
-                    contextName: action.payload,
-                } as EditableMultiValueConstraint);
+                    contextName: action.payload.name,
+                    operator: newOperator,
+                } as EditableSingleValueConstraint);
             }
 
             return withValue(null, {
                 ...state,
-                contextName: action.payload,
-            });
+                contextName: action.payload.name,
+                operator: newOperator,
+            } as EditableMultiValueConstraint);
+        }
         case 'set operator':
             if (action.payload === state.operator) {
                 return state;

@@ -304,14 +304,14 @@ export class FeatureToggleService {
         featureName,
         projectId,
     }: IFeatureContext): Promise<void> {
-        const id = await this.featureToggleStore.getProjectId(featureName);
+        const ids = await this.featureToggleStore.getProjectIds(featureName);
 
-        if (id !== projectId) {
+        if (ids.includes(projectId)) {
             throw new NotFoundError(
                 `There's no feature named "${featureName}" in project "${projectId}"${
-                    id === undefined
+                    ids.length > 0
                         ? '.'
-                        : `, but there's a feature with that name in project "${id}"`
+                        : `, but there's a feature with that name in project "${ids}"`
                 }`,
             );
         }
@@ -1094,12 +1094,14 @@ export class FeatureToggleService {
         environmentVariants,
         userId,
     }: IGetFeatureParams): Promise<FeatureToggleView> {
+        console.log('get feature');
         if (projectId) {
             await this.validateFeatureBelongsToProject({
                 featureName,
                 projectId,
             });
         }
+        console.log('get feature found');
 
         let dependencies: IDependency[] = [];
         let children: string[] = [];
@@ -2170,10 +2172,6 @@ export class FeatureToggleService {
                 project: toggle.project,
             }),
         );
-    }
-
-    async getProjectId(name: string): Promise<string | undefined> {
-        return this.featureToggleStore.getProjectId(name);
     }
 
     async updateFeatureStrategyProject(

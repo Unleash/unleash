@@ -7,6 +7,9 @@ import {
     type IUnleashConfig,
     NONE,
     serializeDates,
+    CREATE_PROJECT,
+    UPDATE_PROJECT,
+    DELETE_PROJECT,
 } from '../../types/index.js';
 import ProjectFeaturesController from '../feature-toggle/feature-toggle-controller.js';
 import ProjectEnvironmentsController from '../project-environments/project-environments-controller.js';
@@ -22,10 +25,13 @@ import {
     type ProjectDoraMetricsSchema,
     projectDoraMetricsSchema,
     projectOverviewSchema,
+    createRequestSchema,
+    projectSchema,
+    ProjectSchema,
     type ProjectsSchema,
     projectsSchema,
 } from '../../openapi/index.js';
-import { getStandardResponses } from '../../openapi/util/standard-responses.js';
+import { getStandardResponses, emptyResponse } from '../../openapi/util/standard-responses.js';
 import type { IUnleashServices, OpenApiService } from '../../services/index.js';
 import type { IAuthRequest } from '../../routes/unleash-types.js';
 import { ProjectApiTokenController } from '../../routes/admin-api/project/api-token.js';
@@ -138,6 +144,74 @@ export default class ProjectController extends Controller {
             ],
         });
 
+        this.route({
+            path: '/validate',
+            method: 'post',
+            handler: this.validateId,
+            permission: CREATE_PROJECT,
+            middleware: [
+                services.openApiService.validPath({
+                    tags: ['Projects'],
+                    operationId: 'validateId',
+                    requestBody: createRequestSchema('idSchema'),
+                    responses: {
+                        200: emptyResponse,
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            path: '',
+            method: 'post',
+            handler: this.createProject,
+            permission: CREATE_PROJECT,
+            middleware: [
+                services.openApiService.validPath({
+                    tags: ['Projects'],
+                    operationId: 'createProject',
+                    requestBody: createRequestSchema('projectSchema'),
+                    responses: {
+                        200: createResponseSchema('projectSchema'),
+                        ...getStandardResponses(401, 403, 409),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            path: '/:projectId',
+            method: 'put',
+            handler: this.updateProject,
+            permission: UPDATE_PROJECT,
+            middleware: [
+                services.openApiService.validPath({
+                    tags: ['Projects'],
+                    operationId: 'updateProject',
+                    requestBody: createRequestSchema('projectSchema'),
+                    responses: {
+                        200: createResponseSchema('projectSchema'),
+                        ...getStandardResponses(400, 401, 403, 404, 413, 415),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            path: '/:projectId',
+            method: 'delete',
+            handler: this.deleteProject,
+            permission: DELETE_PROJECT,
+            middleware: [
+                services.openApiService.validPath({
+                    tags: ['Projects'],
+                    operationId: 'deleteProject',
+                    responses: {
+                        200: emptyResponse,
+                    },
+                }),
+            ],
+        });
         /** @deprecated use project insights instead */
         this.route({
             method: 'get',
@@ -241,12 +315,7 @@ export default class ProjectController extends Controller {
         res: Response<ProjectsSchema>,
     ): Promise<void> {
         const { user } = req;
-        const projects = await this.projectService.getProjects(
-            {
-                id: 'default',
-            },
-            user.id,
-        );
+        const projects = await this.projectService.getProjects({}, user.id);
 
         const projectsWithOwners =
             await this.projectService.addOwnersToProjects(projects);
@@ -301,6 +370,57 @@ export default class ProjectController extends Controller {
         );
     }
 
+    async validateId(req: IAuthRequest, res: Response<void>): Promise<void> {
+        const project = req.body;
+
+        await this.projectService.validateId(project.id);
+        res.status(200).end();
+    }
+
+    async createProject(
+        req: IAuthRequest,
+        res: Response<ProjectSchema>,
+    ): Promise<void> {
+        const project = req.body;
+
+        const createdProject = await this.projectService.createProject(
+            project,
+            req.user,
+        );
+        this.openApiService.respondWithValidation(
+            201,
+            res,
+            projectSchema.$id,
+            serializeDates(createdProject),
+        );
+    }
+
+    async updateProject(
+        req: IAuthRequest,
+        res: Response<ProjectSchema>,
+    ): Promise<void> {
+        const { projectId } = req.params;
+        const project = req.body;
+
+        let projectToUpdate = await this.projectService.getProject(projectId);
+        projectToUpdate = { ...projectToUpdate, ...project };
+
+        await this.projectService.updateProject(projectToUpdate, req.user);
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            projectSchema.$id,
+            serializeDates(projectToUpdate),
+        );
+    }
+
+    async deleteProject(req: IAuthRequest, res: Response): Promise<void> {
+        const { projectId } = req.params;
+
+        await this.projectService.deleteProject(projectId, req.user);
+        res.status(200).end();
+    }
+    
     /** @deprecated use projectInsights instead */
     async getProjectDora(
         req: IAuthRequest,

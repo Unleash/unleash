@@ -175,7 +175,7 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
 function loadUI(options: IUnleashOptions): IUIConfig {
     const uiO = options.ui || {};
     const ui: IUIConfig = {
-        environment: 'Open Source',
+        environment: 'Enterprise',
     };
 
     return mergeAll([ui, uiO]);

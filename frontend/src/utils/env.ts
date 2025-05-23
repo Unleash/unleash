@@ -3,7 +3,7 @@ export const isLocalhostDomain = (hostname = window.location.hostname) =>
 
 export const isUnleashDomain = (hostname = window.location.hostname) =>
     hostname.endsWith('.getunleash.io') ||
-    hostname.endsWith('.unleash-hosted.com');
+    hostname.endsWith('.unleash-hosted.com') || true;
 
 export const isVercelBranchDomain = (hostname = window.location.hostname) =>
     hostname.endsWith('.vercel.app');

@@ -217,6 +217,9 @@ export async function createApp(
         createMetricsMonitor,
     },
 ): Promise<IUnleash> {
+    config.enterpriseVersion = '6.10.0-enterprise';
+    config.versionCheck.enable = false;
+    config.telemetry = false;
     // Database dependencies (stateful)
     const logger = config.getLogger('server-impl.js');
     const serverVersion = config.enterpriseVersion ?? version;

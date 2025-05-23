@@ -67,7 +67,7 @@ export const contextFieldSchema = {
         valueType: {
             type: 'string',
             nullable: true,
-            enum: ['String', 'Number', 'Semver', 'Date', null],
+            enum: ['String', 'Number', 'Semver', 'Date'],
             example: 'String',
             description:
                 'The type of the context field. Used to restrict the operators available for this field.',

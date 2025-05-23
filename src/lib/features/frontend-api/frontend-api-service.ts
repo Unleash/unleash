@@ -215,22 +215,6 @@ export class FrontendApiService {
         }
     }
 
-    async setFrontendSettings(
-        value: FrontendSettings,
-        auditUser: IAuditUser,
-    ): Promise<void> {
-        const error = validateOrigins(value.frontendApiOrigins);
-        if (error) {
-            throw new BadDataError(error);
-        }
-        await this.services.settingService.insert(
-            frontendSettingsKey,
-            value,
-            auditUser,
-            false,
-        );
-    }
-
     async setFrontendCorsSettings(
         value: FrontendSettings['frontendApiOrigins'],
         auditUser: IAuditUser,

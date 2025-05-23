@@ -21,7 +21,6 @@ import type { EmailService } from '../../services/email-service.js';
 import { emptyResponse } from '../../openapi/util/standard-responses.js';
 import type { IAuthRequest } from '../unleash-types.js';
 import NotFoundError from '../../error/notfound-error.js';
-import type { SetUiConfigSchema } from '../../openapi/spec/set-ui-config-schema.js';
 import type { SetCorsSchema } from '../../openapi/spec/set-cors-schema.js';
 import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
 import type {
@@ -99,25 +98,6 @@ class ConfigController extends Controller {
                     responses: {
                         200: createResponseSchema('uiConfigSchema'),
                     },
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'post',
-            path: '',
-            handler: this.setUiConfig,
-            permission: ADMIN,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Admin UI'],
-                    summary: 'Set UI configuration',
-                    description:
-                        'Deprecated. Use `./cors` instead. Sets the UI configuration for this Unleash instance.',
-                    operationId: 'setUiConfig',
-                    requestBody: createRequestSchema('setUiConfigSchema'),
-                    responses: { 200: emptyResponse },
-                    deprecated: true,
                 }),
             ],
         });
@@ -208,22 +188,6 @@ class ConfigController extends Controller {
             uiConfigSchema.$id,
             response,
         );
-    }
-
-    async setUiConfig(
-        req: IAuthRequest<void, void, SetUiConfigSchema>,
-        res: Response<string>,
-    ): Promise<void> {
-        if (req.body.frontendSettings) {
-            await this.frontendApiService.setFrontendSettings(
-                req.body.frontendSettings,
-                req.audit,
-            );
-            res.sendStatus(204);
-            return;
-        }
-
-        throw new NotFoundError();
     }
 
     async setCors(

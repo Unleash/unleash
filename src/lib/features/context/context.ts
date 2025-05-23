@@ -260,10 +260,10 @@ export class ContextController extends Controller {
         req: Request,
         res: Response<ContextFieldsSchema>,
     ): Promise<void> {
+        const contextFields = await this.transactionalContextService.getAll();
+
         res.status(200)
-            .json(
-                serializeDates(await this.transactionalContextService.getAll()),
-            )
+            .json(serializeDates(contextFields) as ContextFieldsSchema)
             .end();
     }
 
@@ -275,11 +275,14 @@ export class ContextController extends Controller {
             const name = req.params.contextField;
             const contextField =
                 await this.transactionalContextService.getContextField(name);
+            const { valueType, ...responseRest } = contextField;
+            const responseData = { ...responseRest, valueType: valueType };
+
             this.openApiService.respondWithValidation(
                 200,
                 res,
                 contextFieldSchema.$id,
-                serializeDates(contextField),
+                serializeDates(responseData),
             );
         } catch (err) {
             throw new NotFoundError('Could not find context field');
@@ -290,17 +293,21 @@ export class ContextController extends Controller {
         req: IAuthRequest<void, void, CreateContextFieldSchema>,
         res: Response<ContextFieldSchema>,
     ): Promise<void> {
-        const value = req.body;
+        const contextFieldData = req.body;
 
         const result = await this.transactionalContextService.transactional(
-            (service) => service.createContextField(value, req.audit),
+            (service) =>
+                service.createContextField(contextFieldData, req.audit),
         );
+
+        const { valueType, ...responseRest } = result;
+        const responseData = { ...responseRest, valueType };
 
         this.openApiService.respondWithValidation(
             201,
             res,
             contextFieldSchema.$id,
-            serializeDates(result),
+            serializeDates(responseData),
             { location: `context/${result.name}` },
         );
     }
@@ -310,10 +317,12 @@ export class ContextController extends Controller {
         res: Response,
     ): Promise<void> {
         const name = req.params.contextField;
-        const contextField = req.body;
+        const { valueType, ...rest } = req.body;
+
+        const contextFieldUpdateData: any = { ...rest, name };
 
         await this.transactionalContextService.transactional((service) =>
-            service.updateContextField({ ...contextField, name }, req.audit),
+            service.updateContextField(contextFieldUpdateData, req.audit),
         );
         res.status(200).end();
     }

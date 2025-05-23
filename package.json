@@ -46,7 +46,7 @@
     "dev:frontend:cloud": "UNLEASH_BASE_PATH=/demo/ yarn run dev:frontend",
     "dev": "concurrently \"yarn:dev:backend\" \"yarn:dev:frontend\"",
     "prepare:backend": "concurrently \"yarn:copy-templates\" \"yarn:build:backend\"",
-    "start:dev": "yarn run clean && TZ=UTC NODE_ENV=development tsc-watch --onSuccess \"node dist/server-dev.js\"",
+    "start:dev": "yarn run clean && yarn dev:backend",
     "db-migrate": "db-migrate --migrations-dir ./src/migrations",
     "lint": "biome check .",
     "lint:fix": "biome check . --write",

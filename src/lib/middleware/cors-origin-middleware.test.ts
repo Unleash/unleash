@@ -2,7 +2,6 @@ import { resolveOrigin } from './cors-origin-middleware.js';
 import FakeSettingStore from '../../test/fixtures/fake-setting-store.js';
 import { createTestConfig } from '../../test/config/test-config.js';
 import FakeEventStore from '../../test/fixtures/fake-event-store.js';
-import { randomId } from '../util/random-id.js';
 import FakeProjectStore from '../../test/fixtures/fake-project-store.js';
 import {
     FrontendApiService,
@@ -56,32 +55,21 @@ test('resolveOrigin', () => {
 
 test('corsOriginMiddleware origin validation', async () => {
     const { frontendApiService } = createSettingService([]);
-    const userName = randomId();
     await expect(() =>
-        frontendApiService.setFrontendSettings(
-            { frontendApiOrigins: ['a'] },
-            TEST_AUDIT_USER,
-        ),
+        frontendApiService.setFrontendCorsSettings(['a'], TEST_AUDIT_USER),
     ).rejects.toThrow('Invalid origin: a');
 });
 
 test('corsOriginMiddleware without config', async () => {
     const { frontendApiService, settingStore } = createSettingService([]);
-    const userName = randomId();
     expect(await frontendApiService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: [],
     });
-    await frontendApiService.setFrontendSettings(
-        { frontendApiOrigins: [] },
-        TEST_AUDIT_USER,
-    );
+    await frontendApiService.setFrontendCorsSettings([], TEST_AUDIT_USER);
     expect(await frontendApiService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: [],
     });
-    await frontendApiService.setFrontendSettings(
-        { frontendApiOrigins: ['*'] },
-        TEST_AUDIT_USER,
-    );
+    await frontendApiService.setFrontendCorsSettings(['*'], TEST_AUDIT_USER);
     expect(await frontendApiService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: ['*'],
     });
@@ -93,19 +81,15 @@ test('corsOriginMiddleware without config', async () => {
 
 test('corsOriginMiddleware with config', async () => {
     const { frontendApiService, settingStore } = createSettingService(['*']);
-    const userName = randomId();
     expect(await frontendApiService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: ['*'],
     });
-    await frontendApiService.setFrontendSettings(
-        { frontendApiOrigins: [] },
-        TEST_AUDIT_USER,
-    );
+    await frontendApiService.setFrontendCorsSettings([], TEST_AUDIT_USER);
     expect(await frontendApiService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: [],
     });
-    await frontendApiService.setFrontendSettings(
-        { frontendApiOrigins: ['https://example.com', 'https://example.org'] },
+    await frontendApiService.setFrontendCorsSettings(
+        ['https://example.com', 'https://example.org'],
         TEST_AUDIT_USER,
     );
     expect(await frontendApiService.getFrontendSettings(false)).toEqual({
@@ -120,16 +104,12 @@ test('corsOriginMiddleware with config', async () => {
 test('corsOriginMiddleware with caching enabled', async () => {
     const { frontendApiService } = createSettingService([]);
 
-    const userName = randomId();
     expect(await frontendApiService.getFrontendSettings()).toEqual({
         frontendApiOrigins: [],
     });
 
     //setting
-    await frontendApiService.setFrontendSettings(
-        { frontendApiOrigins: ['*'] },
-        TEST_AUDIT_USER,
-    );
+    await frontendApiService.setFrontendCorsSettings(['*'], TEST_AUDIT_USER);
 
     //still get cached value
     expect(await frontendApiService.getFrontendSettings()).toEqual({

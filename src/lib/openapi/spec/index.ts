@@ -184,7 +184,6 @@ export * from './segment-strategies-schema.js';
 export * from './segments-schema.js';
 export * from './set-cors-schema.js';
 export * from './set-strategy-sort-order-schema.js';
-export * from './set-ui-config-schema.js';
 export * from './sort-order-schema.js';
 export * from './splash-request-schema.js';
 export * from './splash-response-schema.js';

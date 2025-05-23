@@ -7,7 +7,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import {
     dateOperators,
     DATE_AFTER,
-    IN,
     stringOperators,
 } from 'constants/operators';
 import { resolveText } from './helpers.ts';
@@ -124,7 +123,11 @@ export const ConstraintAccordionEditHeader = ({
             contextName !== CURRENT_TIME_CONTEXT_FIELD &&
             oneOf(dateOperators, operator)
         ) {
-            setOperator(IN);
+            setLocalConstraint((prev) => ({
+                ...prev,
+                operator: DATE_AFTER,
+                value: new Date().toISOString(),
+            }));
         }
 
         if (oneOf(stringOperators, operator)) {

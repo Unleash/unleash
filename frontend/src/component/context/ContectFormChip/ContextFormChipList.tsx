@@ -1,5 +1,7 @@
 import type React from 'react';
 import { styled } from '@mui/material';
+import type { ILegalValue } from 'interfaces/context';
+import { ContextFormChip } from './ContextFormChip.tsx';
 
 const StyledContainer = styled('ul')(({ theme }) => ({
     listStyleType: 'none',
@@ -18,5 +20,23 @@ const StyledContainer = styled('ul')(({ theme }) => ({
     },
 }));
 
-export const ContextFormChipList: React.FC<{ children?: React.ReactNode }> =
-    StyledContainer;
+interface IContextFormChipListProps {
+    legalValues: ILegalValue[];
+    onRemove: (value: ILegalValue) => void;
+}
+
+export const ContextFormChipList: React.FC<IContextFormChipListProps> = ({
+    legalValues,
+    onRemove,
+}) => (
+    <StyledContainer>
+        {legalValues.map((legalValue) => (
+            <ContextFormChip
+                key={legalValue.value}
+                label={legalValue.value}
+                description={legalValue.description}
+                onRemove={() => onRemove(legalValue)}
+            />
+        ))}
+    </StyledContainer>
+);

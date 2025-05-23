@@ -57,11 +57,20 @@ export const contextFieldSchema = {
         },
         legalValues: {
             description:
-                'Allowed values for this context field schema. Can be used to narrow down accepted input',
+                'Allowed values for this context field. Can be used to extend the context field schema',
             type: 'array',
             items: {
                 $ref: '#/components/schemas/legalValueSchema',
             },
+            example: [{ value: 'ios' }, { value: 'android' }],
+        },
+        valueType: {
+            type: 'string',
+            nullable: true,
+            enum: ['String', 'Number', 'Semver', 'Date', null],
+            example: 'String',
+            description:
+                'The type of the context field. Used to restrict the operators available for this field.',
         },
     },
     components: {

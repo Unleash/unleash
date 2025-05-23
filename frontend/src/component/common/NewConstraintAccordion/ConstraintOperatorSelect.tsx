@@ -106,7 +106,7 @@ export const ConstraintOperatorSelect = ({
         displayedOptions = options.filter((op) => allowedByType.includes(op));
     }
 
-    console.log(contextFieldType);
+    
 
     // todo (addEditStrategy): add prop to configure the select element or style it. (currently, the chevron is different from the other select element we use). Maybe add a new component.
     return (

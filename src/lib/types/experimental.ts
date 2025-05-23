@@ -59,7 +59,6 @@ export type IFlagKey =
     | 'addEditStrategy'
     | 'cleanupReminder'
     | 'removeInactiveApplications'
-    | 'registerFrontendClient'
     | 'featureLinks'
     | 'projectLinkTemplates'
     | 'reportUnknownFlags'
@@ -281,10 +280,6 @@ const flags: IFlags = {
     ),
     removeInactiveApplications: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REMOVE_INACTIVE_APPLICATIONS,
-        false,
-    ),
-    registerFrontendClient: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_REGISTER_FRONTEND_CLIENT,
         false,
     ),
     featureLinks: parseEnvVarBoolean(

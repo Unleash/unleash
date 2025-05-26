@@ -275,14 +275,12 @@ export class ContextController extends Controller {
             const name = req.params.contextField;
             const contextField =
                 await this.transactionalContextService.getContextField(name);
-            const { valueType, ...responseRest } = contextField;
-            const responseData = { ...responseRest, valueType: valueType };
 
             this.openApiService.respondWithValidation(
                 200,
                 res,
                 contextFieldSchema.$id,
-                serializeDates(responseData),
+                serializeDates(contextField),
             );
         } catch (err) {
             throw new NotFoundError('Could not find context field');

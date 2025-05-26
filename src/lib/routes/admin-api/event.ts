@@ -18,8 +18,6 @@ import {
     type FeatureEventsSchema,
 } from '../../../lib/openapi/spec/feature-events-schema.js';
 import { getStandardResponses } from '../../../lib/openapi/util/standard-responses.js';
-import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
-import type { DeprecatedSearchEventsSchema } from '../../openapi/spec/deprecated-search-events-schema.js';
 import type { IFlagResolver } from '../../types/experimental.js';
 import type { IAuthRequest } from '../unleash-types.js';
 import {
@@ -101,27 +99,6 @@ export default class EventController extends Controller {
         });
 
         this.route({
-            method: 'post',
-            path: '/events/search',
-            handler: this.deprecatedSearchEvents,
-            permission: NONE,
-            middleware: [
-                openApiService.validPath({
-                    operationId: 'deprecatedSearchEvents',
-                    tags: ['Events'],
-                    deprecated: true,
-                    summary: 'Search for events (deprecated)',
-                    description:
-                        'Allows searching for events matching the search criteria in the request body',
-                    requestBody: createRequestSchema(
-                        'deprecatedSearchEventsSchema',
-                    ),
-                    responses: { 200: createResponseSchema('eventsSchema') },
-                }),
-            ],
-        });
-
-        this.route({
             method: 'get',
             path: '/event-creators',
             handler: this.getEventCreators,
@@ -189,28 +166,6 @@ export default class EventController extends Controller {
         const response = {
             version,
             toggleName: feature,
-            events: serializeDates(this.maybeAnonymiseEvents(eventList.events)),
-            totalEvents: eventList.totalEvents,
-        };
-
-        this.openApiService.respondWithValidation(
-            200,
-            res,
-            featureEventsSchema.$id,
-            response,
-        );
-    }
-
-    async deprecatedSearchEvents(
-        req: Request<unknown, unknown, DeprecatedSearchEventsSchema>,
-        res: Response<EventsSchema>,
-    ): Promise<void> {
-        const eventList = await this.eventService.deprecatedSearchEvents(
-            req.body,
-        );
-
-        const response = {
-            version,
             events: serializeDates(this.maybeAnonymiseEvents(eventList.events)),
             totalEvents: eventList.totalEvents,
         };

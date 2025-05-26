@@ -25,6 +25,7 @@ import type TestAgent from 'supertest/lib/agent.d.ts';
 import type Test from 'supertest/lib/test.d.ts';
 import type { Server } from 'node:http';
 import { initialServiceSetup } from '../../../lib/server-impl.js';
+import type { EventSearchQueryParameters } from '../../../lib/openapi/spec/event-search-query-parameters.js';
 process.env.NODE_ENV = 'test';
 
 export interface IUnleashTest extends IUnleashHttpAPI {
@@ -115,7 +116,10 @@ export interface IUnleashHttpAPI {
         expectedResponseCode?: number,
     ): supertest.Test;
 
-    getRecordedEvents(): supertest.Test;
+    getRecordedEvents(
+        queryParams?: EventSearchQueryParameters,
+        expectedResponseCode?: number,
+    ): supertest.Test;
 
     createSegment(postData: object, expectStatusCode?: number): supertest.Test;
     deleteSegment(
@@ -318,13 +322,12 @@ function httpApis(
                 .expect(expectStatusCode);
         },
         getRecordedEvents(
-            project: string | null = null,
+            queryParams: EventSearchQueryParameters = {},
             expectedResponseCode: number = 200,
         ): supertest.Test {
+            const query = new URLSearchParams(queryParams as any).toString();
             return request
-                .post('/api/admin/events/search')
-                .send({ project, query: '', limit: 50, offset: 0 })
-                .set('Content-Type', 'application/json')
+                .get(`/api/admin/search/events?${query}`)
                 .expect(expectedResponseCode);
         },
     };

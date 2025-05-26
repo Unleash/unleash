@@ -24,9 +24,18 @@ import type { Knex } from 'knex';
 import type TestAgent from 'supertest/lib/agent.d.ts';
 import type Test from 'supertest/lib/test.d.ts';
 import type { Server } from 'node:http';
-import { initialServiceSetup } from '../../../lib/server-impl.js';
+import { initialServiceSetup, RoleName } from '../../../lib/server-impl.js';
 import type { EventSearchQueryParameters } from '../../../lib/openapi/spec/event-search-query-parameters.js';
 process.env.NODE_ENV = 'test';
+
+type DemoLoginArgs = {
+    email: string;
+};
+
+type SimpleLoginArgs = {
+    username: string;
+    password: string;
+};
 
 export interface IUnleashTest extends IUnleashHttpAPI {
     request: TestAgent<Test>;
@@ -131,6 +140,8 @@ export interface IUnleashHttpAPI {
         postData: object,
         expectStatusCode?: number,
     ): supertest.Test;
+
+    login(args: DemoLoginArgs | SimpleLoginArgs): supertest.Test;
 }
 
 function httpApis(
@@ -330,6 +341,24 @@ function httpApis(
                 .get(`/api/admin/search/events${query ? `?${query}` : ''}`)
                 .expect(expectedResponseCode);
         },
+        login(args: DemoLoginArgs | SimpleLoginArgs): supertest.Test {
+            if ('email' in args) {
+                const { email } = args;
+                return request
+                    .post(`${base}/auth/demo/login`)
+                    .send({ email })
+                    .expect(200);
+            }
+
+            const { username, password } = args;
+            return request
+                .post(`${base}/auth/simple/login`)
+                .send({
+                    username,
+                    password,
+                } as SimpleLoginArgs)
+                .expect(200);
+        },
     };
 }
 
@@ -511,4 +540,23 @@ export const insertFeatureEnvironmentsLastSeen = async (
     `);
 
     return date;
+};
+
+export const createAdminUser = async (
+    app: IUnleashTest,
+    stores: IUnleashStores,
+    email: string,
+    name = 'admin-user',
+): Promise<void> => {
+    const roles = await app.services.accessService.getRootRoles();
+    const adminRole = roles.find((role) => role.name === RoleName.ADMIN)!;
+    const user = await stores.userStore.insert({
+        name,
+        email,
+    });
+    await app.services.accessService.addUserToRole(
+        user.id,
+        adminRole.id,
+        'default',
+    );
 };

@@ -327,7 +327,7 @@ function httpApis(
         ): supertest.Test {
             const query = new URLSearchParams(queryParams as any).toString();
             return request
-                .get(`/api/admin/search/events?${query}`)
+                .get(`/api/admin/search/events${query ? `?${query}` : ''}`)
                 .expect(expectedResponseCode);
         },
     };

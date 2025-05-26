@@ -199,6 +199,7 @@ export const ContextForm: React.FC<IContextForm> = ({
                             labelId='context-field-type-label'
                             label='Context Field Type (optional)'
                             value={valueType || ''}
+                            disabled={mode === 'Edit'}
                             onChange={(e) =>
                                 setValueType(
                                     (e.target.value as ContextFieldType) ||

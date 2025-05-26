@@ -24,7 +24,11 @@ import type { Knex } from 'knex';
 import type TestAgent from 'supertest/lib/agent.d.ts';
 import type Test from 'supertest/lib/test.d.ts';
 import type { Server } from 'node:http';
-import { initialServiceSetup, RoleName } from '../../../lib/server-impl.js';
+import {
+    initialServiceSetup,
+    type IUser,
+    type RoleName,
+} from '../../../lib/server-impl.js';
 import type { EventSearchQueryParameters } from '../../../lib/openapi/spec/event-search-query-parameters.js';
 process.env.NODE_ENV = 'test';
 
@@ -542,21 +546,38 @@ export const insertFeatureEnvironmentsLastSeen = async (
     return date;
 };
 
-export const createAdminUser = async (
-    app: IUnleashTest,
-    stores: IUnleashStores,
-    email: string,
-    name = 'admin-user',
-): Promise<void> => {
-    const roles = await app.services.accessService.getRootRoles();
-    const adminRole = roles.find((role) => role.name === RoleName.ADMIN)!;
-    const user = await stores.userStore.insert({
+export const createUserWithRootRole = async ({
+    app,
+    stores,
+    email,
+    name = email,
+    roleName,
+}: {
+    app: IUnleashTest;
+    stores: IUnleashStores;
+    name?: string;
+    email: string;
+    roleName?: RoleName;
+}): Promise<IUser> => {
+    const createdUser = await stores.userStore.insert({
         name,
         email,
     });
-    await app.services.accessService.addUserToRole(
-        user.id,
-        adminRole.id,
-        'default',
-    );
+
+    if (roleName) {
+        const roles = await app.services.accessService.getRootRoles();
+        const role = roles.find((role) => role.name === roleName);
+
+        if (!role) {
+            throw new Error(`Role ${roleName} not found`);
+        }
+
+        await app.services.accessService.addUserToRole(
+            createdUser.id,
+            role.id,
+            'default',
+        );
+    }
+
+    return createdUser;
 };

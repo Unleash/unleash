@@ -1,12 +1,13 @@
 import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import getLogger from '../../../fixtures/no-logger.js';
 import {
-    createAdminUser,
+    createUserWithRootRole,
     type IUnleashTest,
     setupAppWithAuth,
 } from '../../helpers/test-helper.js';
 import { validateSchema } from '../../../../lib/openapi/validate.js';
 import { featureTypesSchema } from '../../../../lib/openapi/spec/feature-types-schema.js';
+import { RoleName } from '../../../../lib/types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -27,7 +28,12 @@ beforeAll(async () => {
         db.rawDatabase,
     );
 
-    await createAdminUser(app, db.stores, adminEmail);
+    await createUserWithRootRole({
+        app,
+        stores: db.stores,
+        email: adminEmail,
+        roleName: RoleName.ADMIN,
+    });
 });
 
 beforeEach(async () => {

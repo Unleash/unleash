@@ -2,11 +2,12 @@ import dbInit, {
     type ITestDb,
 } from '../../../test/e2e/helpers/database-init.js';
 import {
-    createAdminUser,
+    createUserWithRootRole,
     type IUnleashTest,
     setupAppWithAuth,
 } from '../../../test/e2e/helpers/test-helper.js';
 import getLogger from '../../../test/fixtures/no-logger.js';
+import { RoleName } from '../../types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -27,7 +28,12 @@ beforeAll(async () => {
         db.rawDatabase,
     );
 
-    await createAdminUser(app, db.stores, adminEmail);
+    await createUserWithRootRole({
+        app,
+        stores: db.stores,
+        email: adminEmail,
+        roleName: RoleName.ADMIN,
+    });
 });
 
 beforeEach(async () => {

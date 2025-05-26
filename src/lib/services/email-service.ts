@@ -430,6 +430,9 @@ export class EmailService {
             let gettingStartedTemplate = 'getting-started';
             if (this.flagResolver.isEnabled('newGettingStartedEmail')) {
                 gettingStartedTemplate = 'getting-started-new';
+                if (passwordLink === unleashUrl) {
+                    delete context.passwordLink;
+                }
             }
 
             const bodyHtml = await this.compileTemplate(

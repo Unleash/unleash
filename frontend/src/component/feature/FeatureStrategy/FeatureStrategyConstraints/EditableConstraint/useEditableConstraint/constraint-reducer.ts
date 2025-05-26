@@ -50,6 +50,7 @@ const createConstraintWithValue = (
     if (isMultiValueOperator(operator)) {
         return {
             ...base,
+            value: '',
             values: initialValue ? new Set([initialValue]) : new Set(),
         } as EditableMultiValueConstraint;
     }
@@ -69,8 +70,17 @@ const isDateContext = (
 };
 
 // Helper to get appropriate operator for context field
-const getAppropriateOperator = (valueType?: ContextFieldType): Operator => {
+const getAppropriateOperator = (
+    valueType?: ContextFieldType,
+    currentOperator?: Operator,
+): Operator => {
     const allowedOperators = getOperatorsForContextFieldType(valueType);
+
+    // If current operator is still valid for the new context type, preserve it
+    if (currentOperator && allowedOperators.includes(currentOperator)) {
+        return currentOperator;
+    }
+
     const firstOperator = allowedOperators[0] || IN;
 
     // For date contexts, ensure we use a date operator
@@ -139,7 +149,10 @@ export const constraintReducer = (
             }
 
             const { name, valueType } = action.payload;
-            const newOperator = getAppropriateOperator(valueType);
+            const newOperator = getAppropriateOperator(
+                valueType,
+                state.operator,
+            );
             const baseState = { ...state, contextName: name };
 
             // Handle date contexts with appropriate initial value

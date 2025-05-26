@@ -43,7 +43,8 @@ test('calls onUpdate with new state', async () => {
         expect(onUpdate).toHaveBeenCalledWith({
             contextName: 'context-field',
             operator: IN,
-            values: [],
+            value: '',
+            values: new Set(),
         });
     });
 });

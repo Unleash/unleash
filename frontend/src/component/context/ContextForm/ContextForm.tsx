@@ -19,6 +19,7 @@ import type { ILegalValue } from 'interfaces/context';
 import { ContextFormChipList } from 'component/context/ContectFormChip/ContextFormChipList';
 import { ContextFieldUsage } from '../ContextFieldUsage/ContextFieldUsage.tsx';
 import type { ContextFieldType } from 'constants/operators.ts';
+import { useFlag } from '@unleash/proxy-client-react';
 
 interface IContextForm {
     contextName: string;
@@ -116,6 +117,8 @@ export const ContextForm: React.FC<IContextForm> = ({
     const [value, setValue] = useState('');
     const [description, setDescription] = useState('');
 
+    const useValueType = useFlag('contextFieldValueType') || true;
+
     useEffect(() => {
         if (legalValues.length > 0 && value.length > 0) {
             clearErrors('legalValues');
@@ -187,30 +190,32 @@ export const ContextForm: React.FC<IContextForm> = ({
                 <StyledInputDescription>
                     What is the type of your context field?
                 </StyledInputDescription>
-                <FormControl sx={styledInput} size='small'>
-                    <InputLabel id='context-field-type-label'>
-                        Context Field Type (optional)
-                    </InputLabel>
-                    <Select
-                        labelId='context-field-type-label'
-                        label='Context Field Type (optional)'
-                        value={valueType || ''}
-                        onChange={(e) =>
-                            setValueType(
-                                (e.target.value as ContextFieldType) ||
-                                    undefined,
-                            )
-                        }
-                    >
-                        <MenuItem value=''>
-                            <em>Undefined (all operators)</em>
-                        </MenuItem>
-                        <MenuItem value={'String'}>String</MenuItem>
-                        <MenuItem value={'Number'}>Number</MenuItem>
-                        <MenuItem value={'Semver'}>Semver</MenuItem>
-                        <MenuItem value={'Date'}>Date</MenuItem>
-                    </Select>
-                </FormControl>
+                {useValueType && (
+                    <FormControl sx={styledInput} size='small'>
+                        <InputLabel id='context-field-type-label'>
+                            Context Field Type (optional)
+                        </InputLabel>
+                        <Select
+                            labelId='context-field-type-label'
+                            label='Context Field Type (optional)'
+                            value={valueType || ''}
+                            onChange={(e) =>
+                                setValueType(
+                                    (e.target.value as ContextFieldType) ||
+                                        undefined,
+                                )
+                            }
+                        >
+                            <MenuItem value=''>
+                                <em>Undefined (all operators)</em>
+                            </MenuItem>
+                            <MenuItem value={'String'}>String</MenuItem>
+                            <MenuItem value={'Number'}>Number</MenuItem>
+                            <MenuItem value={'Semver'}>Semver</MenuItem>
+                            <MenuItem value={'Date'}>Date</MenuItem>
+                        </Select>
+                    </FormControl>
+                )}
 
                 <StyledLegalValueContainer>
                     <StyledLegalValueHeader>

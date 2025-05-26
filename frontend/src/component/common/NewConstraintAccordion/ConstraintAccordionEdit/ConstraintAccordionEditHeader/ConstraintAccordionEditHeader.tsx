@@ -147,7 +147,6 @@ export const ConstraintAccordionEditHeader = ({
     });
 
     const onOperatorChange = (operator: Operator) => {
-        console.log('contextName', contextName, operator);
         if (oneOf(stringOperators, operator)) {
             setShowCaseSensitiveButton(true);
         } else {

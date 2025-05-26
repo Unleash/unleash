@@ -89,8 +89,7 @@ const ContextList: VFC = () => {
             {
                 Header: 'Type',
                 accessor: 'valueType',
-                Cell: ({ value }: any) => value || 'Undefined',
-                width: '30%',
+                Cell: ({ value }: any) => value || '-',
             },
             {
                 Header: 'Used in',

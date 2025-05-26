@@ -298,14 +298,11 @@ export class ContextController extends Controller {
                 service.createContextField(contextFieldData, req.audit),
         );
 
-        const { valueType, ...responseRest } = result;
-        const responseData = { ...responseRest, valueType };
-
         this.openApiService.respondWithValidation(
             201,
             res,
             contextFieldSchema.$id,
-            serializeDates(responseData),
+            serializeDates(result),
             { location: `context/${result.name}` },
         );
     }
@@ -317,7 +314,17 @@ export class ContextController extends Controller {
         const name = req.params.contextField;
         const { valueType, ...rest } = req.body;
 
-        const contextFieldUpdateData: any = { ...rest, name };
+        const contextField =
+            await this.transactionalContextService.getContextField(name);
+
+        // we prefer to preserve the existing valueType
+        const updatedValueType = contextField.valueType || valueType;
+
+        const contextFieldUpdateData: any = {
+            ...rest,
+            name,
+            valueType: updatedValueType,
+        };
 
         await this.transactionalContextService.transactional((service) =>
             service.updateContextField(contextFieldUpdateData, req.audit),

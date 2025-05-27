@@ -45,7 +45,6 @@ import {
     ProjectCreatedEvent,
     ProjectDeletedEvent,
     ProjectGroupAddedEvent,
-    ProjectGroupRemovedEvent,
     ProjectGroupUpdateRoleEvent,
     ProjectRevivedEvent,
     ProjectUpdatedEvent,
@@ -797,44 +796,6 @@ export default class ProjectService {
                 project: project.id,
                 auditUser,
                 data: {
-                    groupId: group.id,
-                    projectId: project.id,
-                    roleName: role.name,
-                },
-            }),
-        );
-    }
-
-    /**
-     * @deprecated use removeGroupAccess
-     */
-    async removeGroup(
-        projectId: string,
-        roleId: number,
-        groupId: number,
-        auditUser: IAuditUser,
-    ): Promise<void> {
-        const group = await this.groupService.getGroup(groupId);
-        const role = await this.accessService.getRole(roleId);
-        const project = await this.getProject(projectId);
-        if (group.id == null)
-            throw new ValidationError(
-                'Unexpected empty group id',
-                [],
-                undefined,
-            );
-
-        await this.accessService.removeGroupFromRole(
-            group.id,
-            role.id,
-            project.id,
-        );
-
-        await this.eventService.storeEvent(
-            new ProjectGroupRemovedEvent({
-                project: projectId,
-                auditUser,
-                preData: {
                     groupId: group.id,
                     projectId: project.id,
                     roleName: role.name,

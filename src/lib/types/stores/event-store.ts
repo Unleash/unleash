@@ -27,8 +27,8 @@ export interface IEventStore
     getEvents(): Promise<IEvent[]>;
     count(): Promise<number>;
     searchEventsCount(
-        params: IEventSearchParams,
         queryParams: IQueryParam[],
+        query?: IEventSearchParams['query'],
     ): Promise<number>;
     searchEvents(
         params: IEventSearchParams,

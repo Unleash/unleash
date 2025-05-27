@@ -138,11 +138,11 @@ class EventStore implements IEventStore {
     }
 
     async searchEventsCount(
-        params: IEventSearchParams,
         queryParams: IQueryParam[],
+        query?: IEventSearchParams['query'],
     ): Promise<number> {
-        const query = this.buildSearchQuery(params, queryParams);
-        const count = await query.count().first();
+        const searchQuery = this.buildSearchQuery(queryParams, query);
+        const count = await searchQuery.count().first();
         if (!count) {
             return 0;
         }
@@ -354,7 +354,7 @@ class EventStore implements IEventStore {
         queryParams: IQueryParam[],
         options?: { withIp?: boolean },
     ): Promise<IEvent[]> {
-        const query = this.buildSearchQuery(params, queryParams)
+        const query = this.buildSearchQuery(queryParams, params.query)
             .select(options?.withIp ? [...EVENT_COLUMNS, 'ip'] : EVENT_COLUMNS)
             .orderBy('created_at', 'desc')
             .limit(Number(params.limit) ?? 100)
@@ -372,23 +372,23 @@ class EventStore implements IEventStore {
     }
 
     private buildSearchQuery(
-        params: IEventSearchParams,
         queryParams: IQueryParam[],
+        query?: IEventSearchParams['query'],
     ) {
-        let query = this.db.from<IEventTable>(TABLE);
+        let searchQuery = this.db.from<IEventTable>(TABLE);
 
-        applyGenericQueryParams(query, queryParams);
+        applyGenericQueryParams(searchQuery, queryParams);
 
-        if (params.query) {
-            query = query.where((where) =>
+        if (query) {
+            searchQuery = searchQuery.where((where) =>
                 where
-                    .orWhereRaw('data::text ILIKE ?', `%${params.query}%`)
-                    .orWhereRaw('tags::text ILIKE ?', `%${params.query}%`)
-                    .orWhereRaw('pre_data::text ILIKE ?', `%${params.query}%`),
+                    .orWhereRaw('data::text ILIKE ?', `%${query}%`)
+                    .orWhereRaw('tags::text ILIKE ?', `%${query}%`)
+                    .orWhereRaw('pre_data::text ILIKE ?', `%${query}%`),
             );
         }
 
-        return query;
+        return searchQuery;
     }
 
     async getEventCreators(): Promise<Array<{ id: number; name: string }>> {

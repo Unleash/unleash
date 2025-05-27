@@ -83,12 +83,8 @@ export default class EventService {
         queryParams.push(...projectFilter);
 
         const totalEvents = await this.eventStore.searchEventsCount(
-            {
-                limit: search.limit,
-                offset: search.offset,
-                query: search.query,
-            },
             queryParams,
+            search.query,
         );
         const events = await this.eventStore.searchEvents(
             {

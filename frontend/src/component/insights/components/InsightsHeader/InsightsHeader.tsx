@@ -73,14 +73,14 @@ export const InsightsHeader: VFC<DashboardHeaderProps> = ({ actions }) => {
                 titleElement={
                     <Typography
                         variant='h1'
-                        component='div'
+                        component='span'
                         sx={(theme) => ({
                             display: 'flex',
                             alignItems: 'center',
                             gap: theme.spacing(1),
                         })}
                     >
-                        <span>Insights</span>{' '}
+                        Insights
                     </Typography>
                 }
                 actions={

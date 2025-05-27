@@ -16,12 +16,14 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FlagIcon from '@mui/icons-material/OutlinedFlag';
+import StopRoundedIcon from '@mui/icons-material/StopRounded';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useShowBadge } from 'component/layout/components/EnterprisePlanBadge/useShowBadge';
 import { EnterprisePlanBadge } from 'component/layout/components/EnterprisePlanBadge/EnterprisePlanBadge';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 import { AdminMenuNavigation } from '../AdminMenu/AdminNavigationItems.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 export const SecondaryNavigationList: FC<{
     routes: INavigationMenuItem[];
@@ -31,6 +33,7 @@ export const SecondaryNavigationList: FC<{
 }> = ({ routes, mode, onClick, activeItem }) => {
     const showBadge = useShowBadge();
     const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
+    const sideMenuCleanup = useUiFlag('sideMenuCleanup');
 
     return (
         <List>
@@ -47,7 +50,11 @@ export const SecondaryNavigationList: FC<{
                         ) : null
                     }
                 >
-                    <IconRenderer path={route.path} />
+                    {sideMenuCleanup ? (
+                        <StopRoundedIcon fontSize='small' />
+                    ) : (
+                        <IconRenderer path={route.path} />
+                    )}
                 </DynamicListItem>
             ))}
         </List>
@@ -126,6 +133,7 @@ export const PrimaryNavigationList: FC<{
 }> = ({ mode, onClick, activeItem }) => {
     const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
     const { isOss } = useUiConfig();
+    const sideMenuCleanup = useUiFlag('sideMenuCleanup');
 
     return (
         <List>
@@ -165,7 +173,7 @@ export const PrimaryNavigationList: FC<{
             {!isOss() ? (
                 <DynamicListItem
                     href='/insights'
-                    text='Insights'
+                    text={sideMenuCleanup ? 'Analytics' : 'Insights'}
                     onClick={() => onClick('/insights')}
                     selected={activeItem === '/insights'}
                 >

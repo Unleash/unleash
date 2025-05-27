@@ -31,6 +31,7 @@ import { ReactComponent as LogoOnly } from 'assets/img/logoDark.svg';
 import { Link } from 'react-router-dom';
 import { useFlag } from '@unleash/proxy-client-react';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 export const MobileNavigationSidebar: FC<{
     onClick: () => void;
@@ -118,12 +119,15 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
     const initialPathname = useInitialPathname();
 
     const [activeItem, setActiveItem] = useState(initialPathname);
+    const sideMenuCleanup = useUiFlag('sideMenuCleanup');
 
     const { lastViewed: lastViewedProject } = useLastViewedProject();
-    const showRecentProject = mode === 'full' && lastViewedProject;
+    const showRecentProject =
+        !sideMenuCleanup && mode === 'full' && lastViewedProject;
 
     const { lastViewed: lastViewedFlags } = useLastViewedFlags();
-    const showRecentFlags = mode === 'full' && lastViewedFlags.length > 0;
+    const showRecentFlags =
+        !sideMenuCleanup && mode === 'full' && lastViewedFlags.length > 0;
     const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
 
     useEffect(() => {

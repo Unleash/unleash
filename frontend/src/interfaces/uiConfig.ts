@@ -93,6 +93,7 @@ export type UiFlags = {
     projectLinkTemplates?: boolean;
     customMetrics?: boolean;
     lifecycleMetrics?: boolean;
+    sideMenuCleanup?: boolean;
 };
 
 export interface IVersionInfo {

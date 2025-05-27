@@ -152,9 +152,9 @@ describe.each([
             .expect(200);
 
         if (etagVariant.feature_enabled) {
-            expect(res.headers.etag).toBe(`"61824cd0:17:${etagVariant.name}"`);
+            expect(res.headers.etag).toBe(`"61824cd0:16:${etagVariant.name}"`);
             expect(res.body.meta.etag).toBe(
-                `"61824cd0:17:${etagVariant.name}"`,
+                `"61824cd0:16:${etagVariant.name}"`,
             );
         } else {
             expect(res.headers.etag).toBe('"61824cd0:16"');
@@ -169,9 +169,9 @@ describe.each([
             .expect(etagVariant.feature_enabled ? 200 : 304);
 
         if (etagVariant.feature_enabled) {
-            expect(res.headers.etag).toBe(`"61824cd0:17:${etagVariant.name}"`);
+            expect(res.headers.etag).toBe(`"61824cd0:16:${etagVariant.name}"`);
             expect(res.body.meta.etag).toBe(
-                `"61824cd0:17:${etagVariant.name}"`,
+                `"61824cd0:16:${etagVariant.name}"`,
             );
         }
     });
@@ -193,13 +193,13 @@ describe.each([
             .expect(200);
 
         if (etagVariant.feature_enabled) {
-            expect(res.headers.etag).toBe(`"61824cd0:17:${etagVariant.name}"`);
+            expect(res.headers.etag).toBe(`"61824cd0:16:${etagVariant.name}"`);
             expect(res.body.meta.etag).toBe(
-                `"61824cd0:17:${etagVariant.name}"`,
+                `"61824cd0:16:${etagVariant.name}"`,
             );
         } else {
-            expect(res.headers.etag).toBe('"61824cd0:17"');
-            expect(res.body.meta.etag).toBe('"61824cd0:17"');
+            expect(res.headers.etag).toBe('"61824cd0:16"');
+            expect(res.body.meta.etag).toBe('"61824cd0:16"');
         }
     });
 });

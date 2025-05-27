@@ -2,11 +2,16 @@ import {
     APPLICATION_CREATED,
     FEATURE_CREATED,
     FEATURE_DELETED,
+    FEATURE_TAGGED,
+    FEATURE_UPDATED,
+    SEGMENT_UPDATED,
     type IEvent,
 } from '../../../lib/events/index.js';
 import {
     FeatureCreatedEvent,
     FeatureDeletedEvent,
+    FeatureTaggedEvent,
+    FeatureUpdatedEvent,
 } from '../../../lib/types/index.js';
 
 import dbInit, { type ITestDb } from '../helpers/database-init.js';
@@ -246,4 +251,71 @@ test('Should get all events of type', async () => {
         type: FEATURE_DELETED,
     });
     expect(featureDeletedEvents).toHaveLength(3);
+});
+
+test('getMaxRevisionId should exclude FEATURE_CREATED and FEATURE_TAGGED events', async () => {
+    const featureName = 'test-feature';
+    const project = 'test-project';
+
+    const featureCreatedEvent = new FeatureCreatedEvent({
+        project,
+        featureName,
+        auditUser: testAudit,
+        data: { name: featureName },
+    });
+
+    const featureTaggedEvent = new FeatureTaggedEvent({
+        project,
+        featureName,
+        auditUser: testAudit,
+        data: { type: 'simple', value: 'test-tag' },
+    });
+
+    const featureUpdatedEvent = new FeatureUpdatedEvent({
+        project,
+        featureName,
+        auditUser: testAudit,
+        data: { name: featureName, enabled: false },
+        preData: { name: featureName, enabled: true },
+    });
+
+    const segmentUpdatedEvent = {
+        type: SEGMENT_UPDATED,
+        createdBy: testAudit.username,
+        createdByUserId: testAudit.id,
+        ip: testAudit.ip,
+        data: { id: 1, name: 'test-segment' },
+    };
+
+    await eventStore.store(featureCreatedEvent);
+    const maxRevisionAfterCreated = await eventStore.getMaxRevisionId();
+
+    await eventStore.store(featureTaggedEvent);
+    const maxRevisionAfterTagged = await eventStore.getMaxRevisionId();
+
+    await eventStore.store(featureUpdatedEvent);
+    const maxRevisionAfterUpdated = await eventStore.getMaxRevisionId();
+
+    await eventStore.store(segmentUpdatedEvent);
+    const maxRevisionAfterSegment = await eventStore.getMaxRevisionId();
+
+    const allEvents = await eventStore.getAll();
+    const createdEvent = allEvents.find((e) => e.type === FEATURE_CREATED);
+    const taggedEvent = allEvents.find((e) => e.type === FEATURE_TAGGED);
+    const updatedEvent = allEvents.find((e) => e.type === FEATURE_UPDATED);
+    const segmentEvent = allEvents.find((e) => e.type === SEGMENT_UPDATED);
+
+    expect(maxRevisionAfterCreated).toBe(0);
+    expect(maxRevisionAfterTagged).toBe(0);
+    expect(maxRevisionAfterUpdated).toBe(updatedEvent!.id);
+    expect(maxRevisionAfterSegment).toBe(segmentEvent!.id);
+
+    expect(createdEvent).toBeDefined();
+    expect(taggedEvent).toBeDefined();
+    expect(updatedEvent).toBeDefined();
+    expect(segmentEvent).toBeDefined();
+
+    expect(updatedEvent!.id).toBeGreaterThan(createdEvent!.id);
+    expect(updatedEvent!.id).toBeGreaterThan(taggedEvent!.id);
+    expect(segmentEvent!.id).toBeGreaterThan(updatedEvent!.id);
 });

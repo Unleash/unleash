@@ -65,6 +65,7 @@ export type IFlagKey =
     | 'reportUnknownFlags'
     | 'lastSeenBulkQuery'
     | 'newGettingStartedEmail'
+    | 'lifecycleMetrics'
     | 'customMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -305,6 +306,10 @@ const flags: IFlags = {
     ),
     newGettingStartedEmail: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_GETTING_STARTED_EMAIL,
+        false,
+    ),
+    lifecycleMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_METRICS,
         false,
     ),
 };

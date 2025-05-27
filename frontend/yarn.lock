@@ -6077,7 +6077,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"immer@npm:9.0.21, immer@npm:^9.0.6":
+"immer@npm:10.1.1":
+  version: 10.1.1
+  resolution: "immer@npm:10.1.1"
+  checksum: 10c0/b749e10d137ccae91788f41bd57e9387f32ea6d6ea8fd7eb47b23fd7766681575efc7f86ceef7fe24c3bc9d61e38ff5d2f49c2663b2b0c056e280a4510923653
+  languageName: node
+  linkType: hard
+
+"immer@npm:^9.0.6":
   version: 9.0.21
   resolution: "immer@npm:9.0.21"
   checksum: 10c0/03ea3ed5d4d72e8bd428df4a38ad7e483ea8308e9a113d3b42e0ea2cc0cc38340eb0a6aca69592abbbf047c685dbda04e3d34bf2ff438ab57339ed0a34cc0a05
@@ -10151,7 +10158,7 @@ __metadata:
     dequal: "npm:2.0.3"
     fast-json-patch: "npm:3.1.1"
     http-proxy-middleware: "npm:2.0.9"
-    immer: "npm:9.0.21"
+    immer: "npm:10.1.1"
     jsdom: "npm:25.0.1"
     json-2-csv: "npm:^5.5.5"
     lodash.clonedeep: "npm:4.5.0"

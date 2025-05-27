@@ -1,9 +1,6 @@
 import type { IBaseEvent, IEvent } from '../../events/index.js';
 import type { Store } from './store.js';
-import type {
-    DeprecatedSearchEventsSchema,
-    ProjectActivitySchema,
-} from '../../openapi/index.js';
+import type { ProjectActivitySchema } from '../../openapi/index.js';
 import type EventEmitter from 'events';
 import type { IQueryOperations } from '../../features/events/event-store.js';
 import type { IQueryParam } from '../../features/feature-toggle/types/feature-toggle-strategies-store-type.js';
@@ -29,16 +26,10 @@ export interface IEventStore
     batchStore(events: IBaseEvent[]): Promise<void>;
     getEvents(): Promise<IEvent[]>;
     count(): Promise<number>;
-    deprecatedFilteredCount(
-        search: DeprecatedSearchEventsSchema,
-    ): Promise<number>;
     searchEventsCount(
-        params: IEventSearchParams,
         queryParams: IQueryParam[],
+        query?: IEventSearchParams['query'],
     ): Promise<number>;
-    deprecatedSearchEvents(
-        search: DeprecatedSearchEventsSchema,
-    ): Promise<IEvent[]>;
     searchEvents(
         params: IEventSearchParams,
         queryParams: IQueryParam[],

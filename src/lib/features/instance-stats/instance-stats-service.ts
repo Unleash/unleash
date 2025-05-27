@@ -492,18 +492,26 @@ export class InstanceStatsService {
     }
 
     featuresExported(): Promise<number> {
-        return this.memorize('deprecatedFilteredCountFeaturesExported', () =>
-            this.eventStore.deprecatedFilteredCount({
-                type: FEATURES_EXPORTED,
-            }),
+        return this.memorize('searchEventsCountFeaturesExported', () =>
+            this.eventStore.searchEventsCount([
+                {
+                    field: 'type',
+                    operator: 'IS',
+                    values: [FEATURES_EXPORTED],
+                },
+            ]),
         );
     }
 
     featuresImported(): Promise<number> {
-        return this.memorize('deprecatedFilteredCountFeaturesImported', () =>
-            this.eventStore.deprecatedFilteredCount({
-                type: FEATURES_IMPORTED,
-            }),
+        return this.memorize('searchEventsCountFeaturesImported', () =>
+            this.eventStore.searchEventsCount([
+                {
+                    field: 'type',
+                    operator: 'IS',
+                    values: [FEATURES_IMPORTED],
+                },
+            ]),
         );
     }
 

@@ -36,9 +36,19 @@ test('Can create new setting', async () => {
 
     expect(actual).toStrictEqual(someData);
     const { eventStore } = stores;
-    const createdEvents = await eventStore.deprecatedSearchEvents({
-        type: SETTING_CREATED,
-    });
+    const createdEvents = await eventStore.searchEvents(
+        {
+            offset: 0,
+            limit: 10,
+        },
+        [
+            {
+                field: 'type',
+                operator: 'IS',
+                values: [SETTING_CREATED],
+            },
+        ],
+    );
     expect(createdEvents).toHaveLength(1);
     expect(createdEvents[0].data).toEqual({ id: 'some-setting', some: 'blob' });
 });
@@ -51,9 +61,19 @@ test('Can delete setting', async () => {
     const actual = await service.get('some-setting');
     expect(actual).toBeUndefined();
     const { eventStore } = stores;
-    const createdEvents = await eventStore.deprecatedSearchEvents({
-        type: SETTING_DELETED,
-    });
+    const createdEvents = await eventStore.searchEvents(
+        {
+            offset: 0,
+            limit: 10,
+        },
+        [
+            {
+                field: 'type',
+                operator: 'IS',
+                values: [SETTING_DELETED],
+            },
+        ],
+    );
     expect(createdEvents).toHaveLength(1);
 });
 
@@ -66,9 +86,19 @@ test('Sentitive SSO settings are redacted in event log', async () => {
     const actual = await service.get(property);
     const { eventStore } = stores;
 
-    const updatedEvents = await eventStore.deprecatedSearchEvents({
-        type: SETTING_UPDATED,
-    });
+    const updatedEvents = await eventStore.searchEvents(
+        {
+            offset: 0,
+            limit: 10,
+        },
+        [
+            {
+                field: 'type',
+                operator: 'IS',
+                values: [SETTING_UPDATED],
+            },
+        ],
+    );
     expect(updatedEvents[0].preData).toEqual({ hideEventDetails: true });
     await service.delete(property, TEST_AUDIT_USER);
 });
@@ -83,9 +113,19 @@ test('Can update setting', async () => {
         TEST_AUDIT_USER,
         false,
     );
-    const updatedEvents = await eventStore.deprecatedSearchEvents({
-        type: SETTING_UPDATED,
-    });
+    const updatedEvents = await eventStore.searchEvents(
+        {
+            offset: 0,
+            limit: 10,
+        },
+        [
+            {
+                field: 'type',
+                operator: 'IS',
+                values: [SETTING_UPDATED],
+            },
+        ],
+    );
     expect(updatedEvents).toHaveLength(1);
     expect(updatedEvents[0].data).toEqual({
         id: 'updated-setting',

@@ -22,10 +22,7 @@ import {
     SYSTEM_USER,
     SYSTEM_USER_ID,
 } from '../../types/index.js';
-import type {
-    DeprecatedSearchEventsSchema,
-    ProjectActivitySchema,
-} from '../../openapi/index.js';
+import type { ProjectActivitySchema } from '../../openapi/index.js';
 import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
 import { applyGenericQueryParams } from '../feature-search/search-utils.js';
 import type { ITag } from '../../tags/index.js';
@@ -130,30 +127,6 @@ class EventStore implements IEventStore {
         const count = await this.db(TABLE)
             .count<Record<string, number>>()
             .first();
-        if (!count) {
-            return 0;
-        }
-        if (typeof count.count === 'string') {
-            return Number.parseInt(count.count, 10);
-        } else {
-            return count.count;
-        }
-    }
-
-    async deprecatedFilteredCount(
-        eventSearch: DeprecatedSearchEventsSchema,
-    ): Promise<number> {
-        let query = this.db(TABLE);
-        if (eventSearch.type) {
-            query = query.andWhere({ type: eventSearch.type });
-        }
-        if (eventSearch.project) {
-            query = query.andWhere({ project: eventSearch.project });
-        }
-        if (eventSearch.feature) {
-            query = query.andWhere({ feature_name: eventSearch.feature });
-        }
-        const count = await query.count().first();
         if (!count) {
             return 0;
         }
@@ -465,52 +438,6 @@ class EventStore implements IEventStore {
             date: row.date,
             count: Number(row.count),
         }));
-    }
-
-    async deprecatedSearchEvents(
-        search: DeprecatedSearchEventsSchema = {},
-    ): Promise<IEvent[]> {
-        let query = this.db
-            .select(EVENT_COLUMNS)
-            .from<IEventTable>(TABLE)
-            .limit(search.limit ?? 100)
-            .offset(search.offset ?? 0)
-            .orderBy('created_at', 'desc');
-
-        if (search.type) {
-            query = query.andWhere({
-                type: search.type,
-            });
-        }
-
-        if (search.project) {
-            query = query.andWhere({
-                project: search.project,
-            });
-        }
-
-        if (search.feature) {
-            query = query.andWhere({
-                feature_name: search.feature,
-            });
-        }
-
-        if (search.query) {
-            query = query.where((where) =>
-                where
-                    .orWhereRaw('type::text ILIKE ?', `%${search.query}%`)
-                    .orWhereRaw('created_by::text ILIKE ?', `%${search.query}%`)
-                    .orWhereRaw('data::text ILIKE ?', `%${search.query}%`)
-                    .orWhereRaw('tags::text ILIKE ?', `%${search.query}%`)
-                    .orWhereRaw('pre_data::text ILIKE ?', `%${search.query}%`),
-            );
-        }
-
-        try {
-            return (await query).map(this.rowToEvent);
-        } catch (err) {
-            return [];
-        }
     }
 
     rowToEvent(row: IEventTable): IEvent {

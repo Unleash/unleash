@@ -6,7 +6,6 @@ import type {
     IEventStore,
 } from '../../types/stores/event-store.js';
 import type { IApiUser, IUser } from '../../types/index.js';
-import type { DeprecatedSearchEventsSchema } from '../../openapi/index.js';
 import type EventEmitter from 'node:events';
 import { ApiTokenType } from '../../types/model.js';
 import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events.js';
@@ -61,18 +60,6 @@ export default class EventService {
     async getEvents(): Promise<IEventList> {
         const totalEvents = await this.eventStore.count();
         const events = await this.eventStore.getEvents();
-        return {
-            events,
-            totalEvents,
-        };
-    }
-
-    async deprecatedSearchEvents(
-        search: DeprecatedSearchEventsSchema,
-    ): Promise<IEventList> {
-        const totalEvents =
-            await this.eventStore.deprecatedFilteredCount(search);
-        const events = await this.eventStore.deprecatedSearchEvents(search);
         return {
             events,
             totalEvents,

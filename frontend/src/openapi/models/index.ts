@@ -577,8 +577,6 @@ export * from './deprecateStrategy403.js';
 export * from './deprecateStrategy404.js';
 export * from './deprecatedProjectOverviewSchema.js';
 export * from './deprecatedProjectOverviewSchemaMode.js';
-export * from './deprecatedSearchEventsSchema.js';
-export * from './deprecatedSearchEventsSchemaType.js';
 export * from './disableBanner401.js';
 export * from './disableBanner403.js';
 export * from './disableBanner404.js';

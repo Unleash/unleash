@@ -198,14 +198,20 @@ class EventStore implements IEventStore {
             .max('id')
             .where((builder) =>
                 builder
-                    .whereNotNull('feature_name')
+                    .andWhere((inner) =>
+                        inner
+                            .whereNotNull('feature_name')
+                            .whereNotIn('type', [
+                                FEATURE_CREATED,
+                                FEATURE_TAGGED,
+                            ]),
+                    )
                     .orWhereIn('type', [
                         SEGMENT_UPDATED,
                         FEATURE_IMPORT,
                         FEATURES_IMPORTED,
                     ]),
             )
-            .andWhereNot('type', [FEATURE_CREATED, FEATURE_TAGGED])
             .andWhere('id', '>=', largerThan)
             .first();
         return row?.max ?? 0;
@@ -219,7 +225,14 @@ class EventStore implements IEventStore {
             .andWhere('id', '<=', end)
             .andWhere((builder) =>
                 builder
-                    .whereNotNull('feature_name')
+                    .andWhere((inner) =>
+                        inner
+                            .whereNotNull('feature_name')
+                            .whereNotIn('type', [
+                                FEATURE_CREATED,
+                                FEATURE_TAGGED,
+                            ]),
+                    )
                     .orWhereIn('type', [
                         SEGMENT_UPDATED,
                         FEATURE_IMPORT,
@@ -228,7 +241,6 @@ class EventStore implements IEventStore {
                         SEGMENT_DELETED,
                     ]),
             )
-            .andWhereNot('type', [FEATURE_CREATED, FEATURE_TAGGED])
             .orderBy('id', 'asc');
 
         const rows = await query;

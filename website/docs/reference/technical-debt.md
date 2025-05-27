@@ -1,5 +1,5 @@
 ---
-title: Technical Debt
+title: Technical debt
 pagination_next: reference/insights
 ---
 

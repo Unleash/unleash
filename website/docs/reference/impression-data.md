@@ -1,5 +1,5 @@
 ---
-title: Impression Data
+title: Impression data
 pagination_next: reference/events
 ---
 

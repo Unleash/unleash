@@ -1,5 +1,5 @@
 ---
-title: How to Implement User Management, Access Controls, and Auditing with Feature Flags
+title: How to implement user management, access controls, and auditing with feature flags
 slug: /feature-flag-tutorials/use-cases/user-management-access-controls-auditing
 ---
 

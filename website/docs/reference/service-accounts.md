@@ -1,5 +1,5 @@
 ---
-title: Service Accounts
+title: Service accounts
 ---
 
 :::note Availability

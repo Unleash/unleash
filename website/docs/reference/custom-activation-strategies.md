@@ -1,5 +1,5 @@
 ---
-title: Custom Activation Strategies
+title: Custom activation strategies
 ---
 
 :::caution

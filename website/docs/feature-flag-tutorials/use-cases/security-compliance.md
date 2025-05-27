@@ -1,5 +1,5 @@
 ---
-title: Feature Flag Security and Compliance for Enterprises
+title: Feature flag security and compliance for enterprises
 slug: /feature-flag-tutorials/use-cases/security-and-compliance
 ---
 

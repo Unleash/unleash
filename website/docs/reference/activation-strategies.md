@@ -1,5 +1,5 @@
 ---
-title: Activation Strategies
+title: Activation strategies
 ---
 
 import VideoContent from '@site/src/components/VideoContent.jsx'

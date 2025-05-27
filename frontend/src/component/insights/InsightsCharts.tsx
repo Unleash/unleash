@@ -134,6 +134,9 @@ export const InsightsCharts: FC<IChartsProps> = ({
 
     return (
         <StyledContainer>
+            <Section title='Flags lifecycle currently' />
+            <Section title='Performance insights' />
+            <Section title='User insights' />
             <ConditionallyRender
                 condition={showAllProjects}
                 show={

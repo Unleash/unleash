@@ -1,4 +1,4 @@
-import type { FC, PropsWithChildren } from 'react';
+import type { FC } from 'react';
 import { Box, Paper, styled } from '@mui/material';
 import { UserStats } from './componentsStat/UserStats/UserStats.tsx';
 import { UsersChart } from './componentsChart/UsersChart/UsersChart.tsx';
@@ -89,16 +89,6 @@ const StyledChartContainer = styled(Box)(({ theme }) => ({
     margin: 'auto 0',
     padding: theme.spacing(3),
 }));
-
-const Section: FC<PropsWithChildren<{ title: string }>> = ({
-    title,
-    children,
-}) => (
-    <section>
-        <h2>{title}</h2>
-        {children}
-    </section>
-);
 
 export const InsightsCharts: FC<IChartsProps> = ({
     projects,

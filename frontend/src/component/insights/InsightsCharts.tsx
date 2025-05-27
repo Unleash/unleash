@@ -299,8 +299,6 @@ const NewInsightsCharts: FC<IChartsProps> = ({
 export const InsightsCharts: FC<IChartsProps> = (props) => {
     const useNewInsightsCharts = useUiFlag('lifecycleMetrics');
 
-    console.log(useNewInsightsCharts, 'flag');
-
     return useNewInsightsCharts ? (
         <NewInsightsCharts {...props} />
     ) : (

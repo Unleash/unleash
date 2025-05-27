@@ -1,5 +1,7 @@
 import {
+    FEATURE_CREATED,
     FEATURE_IMPORT,
+    FEATURE_TAGGED,
     FEATURES_IMPORTED,
     type IBaseEvent,
     type IEvent,
@@ -196,7 +198,14 @@ class EventStore implements IEventStore {
             .max('id')
             .where((builder) =>
                 builder
-                    .whereNotNull('feature_name')
+                    .andWhere((inner) =>
+                        inner
+                            .whereNotNull('feature_name')
+                            .whereNotIn('type', [
+                                FEATURE_CREATED,
+                                FEATURE_TAGGED,
+                            ]),
+                    )
                     .orWhereIn('type', [
                         SEGMENT_UPDATED,
                         FEATURE_IMPORT,

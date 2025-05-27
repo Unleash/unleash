@@ -90,7 +90,7 @@ const StyledChartContainer = styled(Box)(({ theme }) => ({
     padding: theme.spacing(3),
 }));
 
-export const InsightsCharts: FC<IChartsProps> = ({
+export const LegacyInsightsCharts: FC<IChartsProps> = ({
     projects,
     summary,
     userTrends,

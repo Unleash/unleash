@@ -19,6 +19,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { WidgetTitle } from './components/WidgetTitle/WidgetTitle.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { LegacyInsightsCharts } from './LegacyInsightsCharts.tsx';
 
 export interface IChartsProps {
     flagTrends: InstanceInsightsSchema['flagTrends'];
@@ -101,7 +102,17 @@ const Section: FC<PropsWithChildren<{ title: string }>> = ({
     </section>
 );
 
-export const InsightsCharts: FC<IChartsProps> = ({
+export const InsightsCharts: FC<IChartsProps> = (props) => {
+    const useNewInsightsCharts = useUiFlag('lifecycleMetrics');
+
+    return useNewInsightsCharts ? (
+        <NewInsightsCharts {...props} />
+    ) : (
+        <LegacyInsightsCharts {...props} />
+    );
+};
+
+const NewInsightsCharts: FC<IChartsProps> = ({
     projects,
     summary,
     userTrends,

@@ -18,6 +18,7 @@ import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { WidgetTitle } from './components/WidgetTitle/WidgetTitle.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 export interface IChartsProps {
     flagTrends: InstanceInsightsSchema['flagTrends'];
@@ -104,6 +105,7 @@ export const InsightsCharts: FC<IChartsProps> = ({
     const showAllProjects = projects[0] === allOption.id;
     const isOneProjectSelected = projects.length === 1;
     const { isEnterprise } = useUiConfig();
+    const showMedianTimeToProduction = !useUiFlag('lifecycleMetrics');
 
     const lastUserTrend = userTrends[userTrends.length - 1];
     const lastFlagTrend = flagTrends[flagTrends.length - 1];
@@ -205,26 +207,28 @@ export const InsightsCharts: FC<IChartsProps> = ({
                                 />
                             </StyledChartContainer>
                         </StyledWidget>
-                        <StyledWidget>
-                            <StyledWidgetStats>
-                                <WidgetTitle
-                                    title='Median time to production'
-                                    tooltip={`How long does it currently take on average from when a feature flag was created until it was enabled in a "production" type environment. This is calculated only from feature flags of the type "release" and is the median across the selected projects.`}
-                                />
-                                <TimeToProduction
-                                    daysToProduction={
-                                        summary.medianTimeToProduction
-                                    }
-                                />
-                            </StyledWidgetStats>
-                            <StyledChartContainer>
-                                <TimeToProductionChart
-                                    projectFlagTrends={groupedProjectsData}
-                                    isAggregate={showAllProjects}
-                                    isLoading={loading}
-                                />
-                            </StyledChartContainer>
-                        </StyledWidget>
+                        {showMedianTimeToProduction ? (
+                            <StyledWidget>
+                                <StyledWidgetStats>
+                                    <WidgetTitle
+                                        title='Median time to production'
+                                        tooltip={`How long does it currently take on average from when a feature flag was created until it was enabled in a "production" type environment. This is calculated only from feature flags of the type "release" and is the median across the selected projects.`}
+                                    />
+                                    <TimeToProduction
+                                        daysToProduction={
+                                            summary.medianTimeToProduction
+                                        }
+                                    />
+                                </StyledWidgetStats>
+                                <StyledChartContainer>
+                                    <TimeToProductionChart
+                                        projectFlagTrends={groupedProjectsData}
+                                        isAggregate={showAllProjects}
+                                        isLoading={loading}
+                                    />
+                                </StyledChartContainer>
+                            </StyledWidget>
+                        ) : null}
                     </>
                 }
             />

@@ -276,7 +276,6 @@ test('getMaxRevisionId should exclude FEATURE_CREATED and FEATURE_TAGGED events'
         featureName,
         auditUser: testAudit,
         data: { name: featureName, enabled: false },
-        preData: { name: featureName, enabled: true, project },
     });
 
     const segmentUpdatedEvent = {

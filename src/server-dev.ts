@@ -58,6 +58,7 @@ process.nextTick(async () => {
                         projectLinkTemplates: true,
                         reportUnknownFlags: true,
                         customMetrics: true,
+                        lifecycleMetrics: true,
                     },
                 },
                 authentication: {

@@ -92,6 +92,7 @@ export type UiFlags = {
     featureLinks?: boolean;
     projectLinkTemplates?: boolean;
     customMetrics?: boolean;
+    lifecycleMetrics?: boolean;
 };
 
 export interface IVersionInfo {

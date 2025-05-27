@@ -8,8 +8,6 @@ import { FlagsChart } from './componentsChart/FlagsChart/FlagsChart.tsx';
 import { FlagsProjectChart } from './componentsChart/FlagsProjectChart/FlagsProjectChart.tsx';
 import { HealthStats } from './componentsStat/HealthStats/HealthStats.tsx';
 import { ProjectHealthChart } from './componentsChart/ProjectHealthChart/ProjectHealthChart.tsx';
-import { TimeToProduction } from './componentsStat/TimeToProduction/TimeToProduction.tsx';
-import { TimeToProductionChart } from './componentsChart/TimeToProductionChart/TimeToProductionChart.tsx';
 import { MetricsSummaryChart } from './componentsChart/MetricsSummaryChart/MetricsSummaryChart.tsx';
 import { UpdatesPerEnvironmentTypeChart } from './componentsChart/UpdatesPerEnvironmentTypeChart/UpdatesPerEnvironmentTypeChart.tsx';
 import type { InstanceInsightsSchema } from 'openapi';
@@ -102,16 +100,6 @@ const Section: FC<PropsWithChildren<{ title: string }>> = ({
     </section>
 );
 
-export const InsightsCharts: FC<IChartsProps> = (props) => {
-    const useNewInsightsCharts = useUiFlag('lifecycleMetrics');
-
-    return useNewInsightsCharts ? (
-        <NewInsightsCharts {...props} />
-    ) : (
-        <LegacyInsightsCharts {...props} />
-    );
-};
-
 const NewInsightsCharts: FC<IChartsProps> = ({
     projects,
     summary,
@@ -126,7 +114,6 @@ const NewInsightsCharts: FC<IChartsProps> = ({
     const showAllProjects = projects[0] === allOption.id;
     const isOneProjectSelected = projects.length === 1;
     const { isEnterprise } = useUiConfig();
-    const showMedianTimeToProduction = !useUiFlag('lifecycleMetrics');
 
     const lastUserTrend = userTrends[userTrends.length - 1];
     const lastFlagTrend = flagTrends[flagTrends.length - 1];
@@ -231,28 +218,6 @@ const NewInsightsCharts: FC<IChartsProps> = ({
                                 />
                             </StyledChartContainer>
                         </StyledWidget>
-                        {showMedianTimeToProduction ? (
-                            <StyledWidget>
-                                <StyledWidgetStats>
-                                    <WidgetTitle
-                                        title='Median time to production'
-                                        tooltip={`How long does it currently take on average from when a feature flag was created until it was enabled in a "production" type environment. This is calculated only from feature flags of the type "release" and is the median across the selected projects.`}
-                                    />
-                                    <TimeToProduction
-                                        daysToProduction={
-                                            summary.medianTimeToProduction
-                                        }
-                                    />
-                                </StyledWidgetStats>
-                                <StyledChartContainer>
-                                    <TimeToProductionChart
-                                        projectFlagTrends={groupedProjectsData}
-                                        isAggregate={showAllProjects}
-                                        isLoading={loading}
-                                    />
-                                </StyledChartContainer>
-                            </StyledWidget>
-                        ) : null}
                     </>
                 }
             />
@@ -344,5 +309,17 @@ const NewInsightsCharts: FC<IChartsProps> = ({
                 }
             />
         </StyledContainer>
+    );
+};
+
+export const InsightsCharts: FC<IChartsProps> = (props) => {
+    const useNewInsightsCharts = useUiFlag('lifecycleMetrics');
+
+    console.log(useNewInsightsCharts, 'flag');
+
+    return useNewInsightsCharts ? (
+        <NewInsightsCharts {...props} />
+    ) : (
+        <LegacyInsightsCharts {...props} />
     );
 };

@@ -95,12 +95,26 @@ const StyledSection = styled('section')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
+const SectionTitleRow = styled('div')(({ theme }) => ({
+    position: 'sticky',
+    top: 0,
+    zIndex: theme.zIndex.sticky,
+    padding: theme.spacing(2, 0),
+    background: theme.palette.background.application,
+    transition: 'padding 0.3s ease',
+    display: 'flex',
+    alignItems: 'space-between',
+    flexFlow: 'row wrap',
+}));
+
 const Section: FC<PropsWithChildren<{ title: string }>> = ({
     title,
     children,
 }) => (
     <StyledSection>
-        <h2>{title}</h2>
+        <SectionTitleRow>
+            <h2>{title}</h2>
+        </SectionTitleRow>
         {children}
     </StyledSection>
 );

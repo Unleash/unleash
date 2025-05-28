@@ -63,9 +63,9 @@ exports[`should match snapshot from /api/client/features 1`] = `
     },
   ],
   "meta": {
-    "etag": ""61824cd0:11"",
+    "etag": ""61824cd0:20"",
     "queryHash": "61824cd0",
-    "revisionId": 11,
+    "revisionId": 20,
   },
   "query": {
     "environment": "default",

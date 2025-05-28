@@ -1,4 +1,4 @@
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import type { IUnleashConfig } from '../../types/option.js';
 import type { IUnleashServices } from '../../services/index.js';
 import type EventService from '../../features/events/event-service.js';
@@ -24,6 +24,7 @@ import {
     eventCreatorsSchema,
     type ProjectFlagCreatorsSchema,
 } from '../../openapi/index.js';
+import { extractUserIdFromUser } from '../../util/index.js';
 
 const ANON_KEYS = ['email', 'username', 'createdBy'];
 const version = 1 as const;
@@ -53,6 +54,7 @@ export default class EventController extends Controller {
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
+                    deprecated: true,
                     operationId: 'getEvents',
                     tags: ['Events'],
                     responses: {
@@ -84,6 +86,7 @@ export default class EventController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    deprecated: true,
                     operationId: 'getEventsForToggle',
                     tags: ['Events'],
                     responses: {
@@ -127,15 +130,21 @@ export default class EventController extends Controller {
     }
 
     async getEvents(
-        req: Request<any, any, any, { project?: string }>,
+        req: IAuthRequest<any, any, any, { project?: string }>,
         res: Response<EventsSchema>,
     ): Promise<void> {
-        const { project } = req.query;
+        const { user, query } = req;
+        const { project } = query;
         let eventList: IEventList;
         if (project) {
-            eventList = await this.eventService.deprecatedSearchEvents({
-                project,
-            });
+            eventList = await this.eventService.searchEvents(
+                {
+                    project: `IS:${project}`,
+                    offset: 0,
+                    limit: 50,
+                },
+                extractUserIdFromUser(user),
+            );
         } else {
             eventList = await this.eventService.getEvents();
         }
@@ -155,17 +164,23 @@ export default class EventController extends Controller {
     }
 
     async getEventsForToggle(
-        req: Request<{ featureName: string }>,
+        req: IAuthRequest<{ featureName: string }>,
         res: Response<FeatureEventsSchema>,
     ): Promise<void> {
-        const feature = req.params.featureName;
-        const eventList = await this.eventService.deprecatedSearchEvents({
-            feature,
-        });
+        const { user, params } = req;
+        const { featureName } = params;
+        const eventList = await this.eventService.searchEvents(
+            {
+                feature: `IS:${featureName}`,
+                offset: 0,
+                limit: 50,
+            },
+            extractUserIdFromUser(user),
+        );
 
         const response = {
             version,
-            toggleName: feature,
+            toggleName: featureName,
             events: serializeDates(this.maybeAnonymiseEvents(eventList.events)),
             totalEvents: eventList.totalEvents,
         };

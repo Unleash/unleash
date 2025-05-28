@@ -2,10 +2,7 @@ import type { IEventStore } from '../../lib/types/stores/event-store.js';
 import type { IBaseEvent, IEvent } from '../../lib/events/index.js';
 import { sharedEventEmitter } from '../../lib/util/anyEventEmitter.js';
 import type { IQueryOperations } from '../../lib/features/events/event-store.js';
-import type {
-    DeprecatedSearchEventsSchema,
-    ProjectActivitySchema,
-} from '../../lib/openapi/index.js';
+import type { ProjectActivitySchema } from '../../lib/openapi/index.js';
 import type EventEmitter from 'events';
 
 class FakeEventStore implements IEventStore {
@@ -81,12 +78,6 @@ class FakeEventStore implements IEventStore {
         return Promise.resolve(0);
     }
 
-    deprecatedFilteredCount(
-        search: DeprecatedSearchEventsSchema,
-    ): Promise<number> {
-        return Promise.resolve(0);
-    }
-
     destroy(): void {}
 
     async exists(key: number): Promise<boolean> {
@@ -101,9 +92,6 @@ class FakeEventStore implements IEventStore {
         return this.events;
     }
 
-    async deprecatedSearchEvents(): Promise<IEvent[]> {
-        throw new Error('Method not implemented.');
-    }
     async searchEvents(): Promise<IEvent[]> {
         throw new Error('Method not implemented.');
     }

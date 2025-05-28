@@ -77,7 +77,6 @@ import {
     PROJECT_ENVIRONMENT_REMOVED,
     PROJECT_FAVORITED,
     PROJECT_GROUP_ADDED,
-    PROJECT_GROUP_REMOVED,
     PROJECT_GROUP_ROLE_CHANGED,
     PROJECT_IMPORT,
     PROJECT_REVIVED,
@@ -1035,28 +1034,6 @@ export class ProjectGroupAddedEvent extends BaseEvent {
         this.project = project;
         this.data = data;
         this.preData = null;
-    }
-}
-
-export class ProjectGroupRemovedEvent extends BaseEvent {
-    readonly project: string;
-
-    readonly data: any;
-
-    readonly preData: any;
-
-    /**
-     */
-    constructor(p: {
-        project: string;
-        preData: any;
-        auditUser: IAuditUser;
-    }) {
-        super(PROJECT_GROUP_REMOVED, p.auditUser);
-        const { project, preData } = p;
-        this.project = project;
-        this.data = null;
-        this.preData = preData;
     }
 }
 

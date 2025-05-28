@@ -79,7 +79,6 @@ export const PROJECT_USER_ADDED = 'project-user-added' as const;
 export const PROJECT_USER_REMOVED = 'project-user-removed' as const;
 export const PROJECT_USER_ROLE_CHANGED = 'project-user-role-changed' as const;
 export const PROJECT_GROUP_ADDED = 'project-group-added' as const;
-export const PROJECT_GROUP_REMOVED = 'project-group-removed' as const;
 export const PROJECT_GROUP_ROLE_CHANGED = 'project-group-role-changed' as const;
 export const DROP_PROJECTS = 'drop-projects' as const;
 export const TAG_CREATED = 'tag-created' as const;
@@ -273,7 +272,6 @@ export const IEventTypes = [
     PROJECT_USER_ROLE_CHANGED,
     PROJECT_GROUP_ROLE_CHANGED,
     PROJECT_GROUP_ADDED,
-    PROJECT_GROUP_REMOVED,
     ROLE_CREATED,
     ROLE_UPDATED,
     ROLE_DELETED,

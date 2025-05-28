@@ -455,14 +455,6 @@ export class AccessService {
         return this.store.removeUserFromRole(userId, roleId, projectId);
     }
 
-    async removeGroupFromRole(
-        groupId: number,
-        roleId: number,
-        projectId: string,
-    ): Promise<void> {
-        return this.store.removeGroupFromRole(groupId, roleId, projectId);
-    }
-
     async updateUserProjectRole(
         userId: number,
         roleId: number,

@@ -11,6 +11,7 @@ import { InsightsFilters } from './InsightsFilters.tsx';
 import { FilterItemParam } from '../../utils/serializeQueryParams.ts';
 import { format, subMonths } from 'date-fns';
 import { withDefault } from 'use-query-params';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(2),
@@ -30,6 +31,7 @@ interface InsightsProps {
 }
 
 export const Insights: FC<InsightsProps> = ({ withCharts = true }) => {
+    const useStickyPageHeader = !useUiFlag('lifecycleMetrics');
     const stateConfig = {
         project: FilterItemParam,
         from: withDefault(FilterItemParam, {
@@ -55,15 +57,19 @@ export const Insights: FC<InsightsProps> = ({ withCharts = true }) => {
 
     const insightsData = useInsightsData(insights, projects);
 
+    const header = (
+        <InsightsHeader
+            actions={<InsightsFilters state={state} onChange={setState} />}
+        />
+    );
+
     return (
         <StyledWrapper>
-            <StickyContainer>
-                <InsightsHeader
-                    actions={
-                        <InsightsFilters state={state} onChange={setState} />
-                    }
-                />
-            </StickyContainer>
+            {useStickyPageHeader ? (
+                <StickyContainer>{header}</StickyContainer>
+            ) : (
+                header
+            )}
             {withCharts && (
                 <InsightsCharts
                     loading={loading}

@@ -6,7 +6,7 @@ import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText
 import styles from './DrawerMenu.module.scss'; // FIXME: useStyle - theme
 import theme from 'themes/theme';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
-import { MobileNavigationSidebar } from 'component/layout/MainLayout/NavigationSidebar/NavigationSidebar';
+import { MobileNavigationSidebar } from 'component/layout/MainLayout/NavigationSidebar/MobileNavigationSidebar';
 import { NewInUnleash } from 'component/layout/MainLayout/NavigationSidebar/NewInUnleash/NewInUnleash';
 import { AdminMobileNavigation } from 'component/layout/MainLayout/AdminMenu/AdminNavigationItems';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';

@@ -5,15 +5,13 @@ import { ShowHide } from './ShowHide.tsx';
 import { useRoutes } from './useRoutes.ts';
 import { useExpanded } from './useExpanded.ts';
 import {
-    OtherLinksList,
     PrimaryNavigationList,
     RecentFlagsNavigation,
     RecentProjectsNavigation,
-    SecondaryNavigation,
-    SecondaryNavigationList,
     AdminSettingsNavigation,
-    AdminSettingsLink,
 } from './NavigationList.tsx';
+import { SecondaryNavigationList } from './SecondaryNavigationList.tsx';
+import { SecondaryNavigation } from './SecondaryNavigation.tsx';
 import { FullListItem, MiniListItem } from './ListItems.tsx';
 import { useInitialPathname } from './useInitialPathname.ts';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
@@ -32,27 +30,6 @@ import { Link } from 'react-router-dom';
 import { useFlag } from '@unleash/proxy-client-react';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
-
-export const MobileNavigationSidebar: FC<{
-    onClick: () => void;
-    NewInUnleash?: typeof NewInUnleash;
-}> = ({ onClick, NewInUnleash }) => {
-    const { routes } = useRoutes();
-
-    return (
-        <>
-            {NewInUnleash ? <NewInUnleash /> : null}
-            <PrimaryNavigationList mode='full' onClick={onClick} />
-            <SecondaryNavigationList
-                routes={routes.mainNavRoutes}
-                mode='full'
-                onClick={onClick}
-            />
-            <AdminSettingsLink mode={'full'} onClick={onClick} />
-            <OtherLinksList />
-        </>
-    );
-};
 
 export const StretchContainer = styled(Box, {
     shouldForwardProp: (propName) =>

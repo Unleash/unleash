@@ -1,4 +1,3 @@
-import type React from 'react';
 import type { FC } from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
 import type { NavigationMode } from './NavigationMode.tsx';
@@ -11,55 +10,12 @@ import {
 import { Box, List, Typography } from '@mui/material';
 import { IconRenderer } from './IconRenderer.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FlagIcon from '@mui/icons-material/OutlinedFlag';
-import StopRoundedIcon from '@mui/icons-material/StopRounded';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { useShowBadge } from 'component/layout/components/EnterprisePlanBadge/useShowBadge';
-import { EnterprisePlanBadge } from 'component/layout/components/EnterprisePlanBadge/EnterprisePlanBadge';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 import { AdminMenuNavigation } from '../AdminMenu/AdminNavigationItems.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
-
-export const SecondaryNavigationList: FC<{
-    routes: INavigationMenuItem[];
-    mode: NavigationMode;
-    onClick: (activeItem: string) => void;
-    activeItem?: string;
-}> = ({ routes, mode, onClick, activeItem }) => {
-    const showBadge = useShowBadge();
-    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
-    const sideMenuCleanup = useUiFlag('sideMenuCleanup');
-
-    return (
-        <List>
-            {routes.map((route) => (
-                <DynamicListItem
-                    key={route.title}
-                    onClick={() => onClick(route.path)}
-                    href={route.path}
-                    text={route.title}
-                    selected={activeItem === route.path}
-                    badge={
-                        showBadge(route?.menu?.mode) ? (
-                            <EnterprisePlanBadge />
-                        ) : null
-                    }
-                >
-                    {sideMenuCleanup ? (
-                        <StopRoundedIcon fontSize='small' />
-                    ) : (
-                        <IconRenderer path={route.path} />
-                    )}
-                </DynamicListItem>
-            ))}
-        </List>
-    );
-};
 
 export const OtherLinksList = () => {
     const { uiConfig } = useUiConfig();
@@ -181,47 +137,6 @@ export const PrimaryNavigationList: FC<{
                 </DynamicListItem>
             ) : null}
         </List>
-    );
-};
-
-const AccordionHeader: FC<{ children?: React.ReactNode }> = ({ children }) => {
-    return (
-        <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls='configure-content'
-            id='configure-header'
-        >
-            <Typography sx={{ fontWeight: 'bold', fontSize: 'small' }}>
-                {children}
-            </Typography>
-        </AccordionSummary>
-    );
-};
-
-export const SecondaryNavigation: FC<{
-    expanded: boolean;
-    onExpandChange: (expanded: boolean) => void;
-    mode: NavigationMode;
-    title: string;
-    children?: React.ReactNode;
-}> = ({ mode, expanded, onExpandChange, title, children }) => {
-    return (
-        <Accordion
-            disableGutters={true}
-            sx={{
-                boxShadow: 'none',
-                '&:before': {
-                    display: 'none',
-                },
-            }}
-            expanded={expanded}
-            onChange={(_, expand) => {
-                onExpandChange(expand);
-            }}
-        >
-            {mode === 'full' && <AccordionHeader>{title}</AccordionHeader>}
-            <AccordionDetails sx={{ p: 0 }}>{children}</AccordionDetails>
-        </Accordion>
     );
 };
 

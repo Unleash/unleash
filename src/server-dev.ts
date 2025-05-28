@@ -59,6 +59,7 @@ process.nextTick(async () => {
                         reportUnknownFlags: true,
                         customMetrics: true,
                         lifecycleMetrics: true,
+                        sideMenuCleanup: true,
                     },
                 },
                 authentication: {

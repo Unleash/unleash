@@ -5,15 +5,13 @@ import { ShowHide } from './ShowHide.tsx';
 import { useRoutes } from './useRoutes.ts';
 import { useExpanded } from './useExpanded.ts';
 import {
-    OtherLinksList,
     PrimaryNavigationList,
     RecentFlagsNavigation,
     RecentProjectsNavigation,
-    SecondaryNavigation,
-    SecondaryNavigationList,
     AdminSettingsNavigation,
-    AdminSettingsLink,
 } from './NavigationList.tsx';
+import { SecondaryNavigationList } from './SecondaryNavigationList.tsx';
+import { SecondaryNavigation } from './SecondaryNavigation.tsx';
 import { FullListItem, MiniListItem } from './ListItems.tsx';
 import { useInitialPathname } from './useInitialPathname.ts';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
@@ -31,27 +29,7 @@ import { ReactComponent as LogoOnly } from 'assets/img/logoDark.svg';
 import { Link } from 'react-router-dom';
 import { useFlag } from '@unleash/proxy-client-react';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
-
-export const MobileNavigationSidebar: FC<{
-    onClick: () => void;
-    NewInUnleash?: typeof NewInUnleash;
-}> = ({ onClick, NewInUnleash }) => {
-    const { routes } = useRoutes();
-
-    return (
-        <>
-            {NewInUnleash ? <NewInUnleash /> : null}
-            <PrimaryNavigationList mode='full' onClick={onClick} />
-            <SecondaryNavigationList
-                routes={routes.mainNavRoutes}
-                mode='full'
-                onClick={onClick}
-            />
-            <AdminSettingsLink mode={'full'} onClick={onClick} />
-            <OtherLinksList />
-        </>
-    );
-};
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 export const StretchContainer = styled(Box, {
     shouldForwardProp: (propName) =>
@@ -118,12 +96,15 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
     const initialPathname = useInitialPathname();
 
     const [activeItem, setActiveItem] = useState(initialPathname);
+    const sideMenuCleanup = useUiFlag('sideMenuCleanup');
 
     const { lastViewed: lastViewedProject } = useLastViewedProject();
-    const showRecentProject = mode === 'full' && lastViewedProject;
+    const showRecentProject =
+        !sideMenuCleanup && mode === 'full' && lastViewedProject;
 
     const { lastViewed: lastViewedFlags } = useLastViewedFlags();
-    const showRecentFlags = mode === 'full' && lastViewedFlags.length > 0;
+    const showRecentFlags =
+        !sideMenuCleanup && mode === 'full' && lastViewedFlags.length > 0;
     const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
 
     useEffect(() => {

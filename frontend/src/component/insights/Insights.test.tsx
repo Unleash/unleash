@@ -1,8 +1,8 @@
 import { render } from 'utils/testRenderer';
 import { fireEvent, screen } from '@testing-library/react';
-import { Insights } from './Insights.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { vi } from 'vitest';
+import { LegacyInsights } from './LegacyInsights.tsx';
 
 const server = testServerSetup();
 
@@ -27,10 +27,11 @@ const setupApi = () => {
 
 const currentTime = '2024-04-25T08:05:00.000Z';
 
+// todo(lifecycleMetrics): add tests for new insights
 test('Filter insights by project and date', async () => {
     vi.setSystemTime(currentTime);
     setupApi();
-    render(<Insights withCharts={false} />);
+    render(<LegacyInsights withCharts={false} />);
     const addFilter = await screen.findByText('Filter');
     fireEvent.click(addFilter);
     const projectFilter = await screen.findByText('Project');

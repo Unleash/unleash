@@ -46,7 +46,7 @@ export class OpenApiService {
         const { beta, enterpriseOnly, ...rest } = op;
 
         const betaBadge = beta
-            ? `![Beta](${this.docsStaticsPath()}/Beta.svg)
+            ? `![Beta](${this.docsStaticsPath()}/Beta.svg) This is a beta endpoint and it may change or be removed in the future. 
             
             `
             : '';

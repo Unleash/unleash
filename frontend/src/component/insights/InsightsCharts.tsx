@@ -104,6 +104,7 @@ const SectionTitleRow = styled('div')(({ theme }) => ({
     position: 'sticky',
     top: 0,
     zIndex: theme.zIndex.sticky,
+    paddingBlock: theme.spacing(2),
     background: theme.palette.background.application,
     transition: 'padding 0.3s ease',
     display: 'flex',
@@ -114,8 +115,8 @@ const SectionTitleRow = styled('div')(({ theme }) => ({
 }));
 
 const Section: FC<
-    PropsWithChildren<{ title: string; HeaderActions?: ReactNode }>
-> = ({ title, children, HeaderActions }) => (
+    PropsWithChildren<{ title: string; filters?: ReactNode }>
+> = ({ title, children, filters: HeaderActions }) => (
     <StyledSection>
         <SectionTitleRow>
             <h2>{title}</h2>
@@ -149,54 +150,7 @@ export const InsightsCharts: FC<IChartsProps> = ({
         <StyledContainer>
             <Section title='Flags lifecycle currently' />
             <PerformanceInsights />
-            <Section title='User insights'>
-                {showAllProjects ? (
-                    <StyledWidget>
-                        <StyledWidgetStats>
-                            <WidgetTitle title='Total users' />
-                            <UserStats
-                                count={usersTotal}
-                                active={usersActive}
-                                inactive={usersInactive}
-                                isLoading={loading}
-                            />
-                        </StyledWidgetStats>
-                        <StyledChartContainer>
-                            <UsersChart
-                                userTrends={userTrends}
-                                isLoading={loading}
-                            />
-                        </StyledChartContainer>
-                    </StyledWidget>
-                ) : (
-                    <StyledWidget>
-                        <StyledWidgetStats>
-                            <WidgetTitle
-                                title={
-                                    isOneProjectSelected
-                                        ? 'Users in project'
-                                        : 'Users per project on average'
-                                }
-                                tooltip={
-                                    isOneProjectSelected
-                                        ? 'Number of users in selected projects.'
-                                        : 'Average number of users for selected projects.'
-                                }
-                            />
-                            <UserStats
-                                count={summary.averageUsers}
-                                isLoading={loading}
-                            />
-                        </StyledWidgetStats>
-                        <StyledChartContainer>
-                            <UsersPerProjectChart
-                                projectFlagTrends={groupedProjectsData}
-                                isLoading={loading}
-                            />
-                        </StyledChartContainer>
-                    </StyledWidget>
-                )}
-            </Section>
+            <UserInsights />
         </StyledContainer>
     );
 };
@@ -256,7 +210,7 @@ const PerformanceInsights: FC<{}> = () => {
     return (
         <Section
             title='Performance insights'
-            HeaderActions={
+            filters={
                 <StyledInsightsFilters state={state} onChange={setState} />
             }
         >
@@ -357,6 +311,113 @@ const PerformanceInsights: FC<{}> = () => {
                     </StyledWidget>
                 </>
             ) : null}
+        </Section>
+    );
+};
+
+const UserInsights: FC<{}> = () => {
+    const stateConfig = {
+        project: FilterItemParam,
+        from: withDefault(FilterItemParam, {
+            values: [format(subMonths(new Date(), 1), 'yyyy-MM-dd')],
+            operator: 'IS',
+        }),
+        to: withDefault(FilterItemParam, {
+            values: [format(new Date(), 'yyyy-MM-dd')],
+            operator: 'IS',
+        }),
+    };
+    const [state, setState] = usePersistentTableState('insights', stateConfig, [
+        'from',
+        'to',
+    ]);
+
+    const { insights, loading } = useInsights(
+        state.from?.values[0],
+        state.to?.values[0],
+    );
+
+    const projects = state.project?.values ?? [allOption.id];
+
+    const showAllProjects = projects[0] === allOption.id;
+    const {
+        flagTrends,
+        summary,
+        groupedProjectsData,
+        userTrends,
+        groupedMetricsData,
+        allMetricsDatapoints,
+        environmentTypeTrends,
+    } = useInsightsData(insights, projects);
+
+    const { isEnterprise } = useUiConfig();
+    const lastUserTrend = userTrends[userTrends.length - 1];
+    const usersTotal = lastUserTrend?.total ?? 0;
+    const usersActive = lastUserTrend?.active ?? 0;
+    const usersInactive = lastUserTrend?.inactive ?? 0;
+    const lastFlagTrend = flagTrends[flagTrends.length - 1];
+    const flagsTotal = lastFlagTrend?.total ?? 0;
+
+    const isOneProjectSelected = projects.length === 1;
+    function getFlagsPerUser(flagsTotal: number, usersTotal: number) {
+        const flagsPerUserCalculation = flagsTotal / usersTotal;
+        return Number.isNaN(flagsPerUserCalculation)
+            ? 'N/A'
+            : flagsPerUserCalculation.toFixed(2);
+    }
+    return (
+        <Section
+            title='User insights'
+            filters={
+                <StyledInsightsFilters state={state} onChange={setState} />
+            }
+        >
+            {showAllProjects ? (
+                <StyledWidget>
+                    <StyledWidgetStats>
+                        <WidgetTitle title='Total users' />
+                        <UserStats
+                            count={usersTotal}
+                            active={usersActive}
+                            inactive={usersInactive}
+                            isLoading={loading}
+                        />
+                    </StyledWidgetStats>
+                    <StyledChartContainer>
+                        <UsersChart
+                            userTrends={userTrends}
+                            isLoading={loading}
+                        />
+                    </StyledChartContainer>
+                </StyledWidget>
+            ) : (
+                <StyledWidget>
+                    <StyledWidgetStats>
+                        <WidgetTitle
+                            title={
+                                isOneProjectSelected
+                                    ? 'Users in project'
+                                    : 'Users per project on average'
+                            }
+                            tooltip={
+                                isOneProjectSelected
+                                    ? 'Number of users in selected projects.'
+                                    : 'Average number of users for selected projects.'
+                            }
+                        />
+                        <UserStats
+                            count={summary.averageUsers}
+                            isLoading={loading}
+                        />
+                    </StyledWidgetStats>
+                    <StyledChartContainer>
+                        <UsersPerProjectChart
+                            projectFlagTrends={groupedProjectsData}
+                            isLoading={loading}
+                        />
+                    </StyledChartContainer>
+                </StyledWidget>
+            )}
         </Section>
     );
 };

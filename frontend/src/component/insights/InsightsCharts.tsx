@@ -100,7 +100,7 @@ const Section: FC<
 export const InsightsCharts: FC<{}> = () => {
     return (
         <StyledContainer>
-            <Section title='Flags lifecycle currently' />
+            <LifecycleInsights />
             <PerformanceInsights />
             <UserInsights />
         </StyledContainer>
@@ -111,29 +111,51 @@ const StyledInsightsFilters = styled(InsightsFilters)({
     padding: 0,
 });
 
-const PerformanceInsights: FC<{}> = () => {
+const LifecycleInsights: FC<{}> = () => {
+    const statePrefix = 'lifecycle-';
     const stateConfig = {
-        project: FilterItemParam,
-        from: withDefault(FilterItemParam, {
+        [`${statePrefix}project`]: FilterItemParam,
+    };
+    const [state, setState] = usePersistentTableState('insights', stateConfig);
+
+    return (
+        <Section
+            title='Flags lifecycle currently'
+            filters={
+                <StyledInsightsFilters
+                    state={state}
+                    onChange={setState}
+                    filterNamePrefix={statePrefix}
+                />
+            }
+        />
+    );
+};
+
+const PerformanceInsights: FC<{}> = () => {
+    const statePrefix = 'performance-';
+    const stateConfig = {
+        [`${statePrefix}project`]: FilterItemParam,
+        [`${statePrefix}from`]: withDefault(FilterItemParam, {
             values: [format(subMonths(new Date(), 1), 'yyyy-MM-dd')],
             operator: 'IS',
         }),
-        to: withDefault(FilterItemParam, {
+        [`${statePrefix}to`]: withDefault(FilterItemParam, {
             values: [format(new Date(), 'yyyy-MM-dd')],
             operator: 'IS',
         }),
     };
     const [state, setState] = usePersistentTableState('insights', stateConfig, [
-        'from',
-        'to',
+        'performance-from',
+        'performance-to',
     ]);
 
     const { insights, loading } = useInsights(
-        state.from?.values[0],
-        state.to?.values[0],
+        state[`${statePrefix}from`]?.values[0],
+        state[`${statePrefix}to`]?.values[0],
     );
 
-    const projects = state.project?.values ?? [allOption.id];
+    const projects = state[`${statePrefix}project`]?.values ?? [allOption.id];
 
     const showAllProjects = projects[0] === allOption.id;
     const {
@@ -163,7 +185,11 @@ const PerformanceInsights: FC<{}> = () => {
         <Section
             title='Performance insights'
             filters={
-                <StyledInsightsFilters state={state} onChange={setState} />
+                <StyledInsightsFilters
+                    state={state}
+                    onChange={setState}
+                    filterNamePrefix={statePrefix}
+                />
             }
         >
             {showAllProjects ? (
@@ -268,28 +294,30 @@ const PerformanceInsights: FC<{}> = () => {
 };
 
 const UserInsights: FC<{}> = () => {
+    const statePrefix = 'users-';
     const stateConfig = {
-        project: FilterItemParam,
-        from: withDefault(FilterItemParam, {
+        [`${statePrefix}project`]: FilterItemParam,
+        [`${statePrefix}from`]: withDefault(FilterItemParam, {
             values: [format(subMonths(new Date(), 1), 'yyyy-MM-dd')],
             operator: 'IS',
         }),
-        to: withDefault(FilterItemParam, {
+        [`${statePrefix}to`]: withDefault(FilterItemParam, {
             values: [format(new Date(), 'yyyy-MM-dd')],
             operator: 'IS',
         }),
     };
-    const [state, setState] = usePersistentTableState('insights', stateConfig, [
-        'from',
-        'to',
-    ]);
-
-    const { insights, loading } = useInsights(
-        state.from?.values[0],
-        state.to?.values[0],
+    const [state, setState] = usePersistentTableState(
+        'insights-users',
+        stateConfig,
+        ['users-from', 'users-to'],
     );
 
-    const projects = state.project?.values ?? [allOption.id];
+    const { insights, loading } = useInsights(
+        state['users-from']?.values[0],
+        state['users-to']?.values[0],
+    );
+
+    const projects = state['users-project']?.values ?? [allOption.id];
 
     const showAllProjects = projects[0] === allOption.id;
     const { summary, groupedProjectsData, userTrends } = useInsightsData(
@@ -308,7 +336,11 @@ const UserInsights: FC<{}> = () => {
         <Section
             title='User insights'
             filters={
-                <StyledInsightsFilters state={state} onChange={setState} />
+                <StyledInsightsFilters
+                    state={state}
+                    onChange={setState}
+                    filterNamePrefix={statePrefix}
+                />
             }
         >
             {showAllProjects ? (

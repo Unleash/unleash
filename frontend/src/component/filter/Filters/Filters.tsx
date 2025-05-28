@@ -42,7 +42,7 @@ type ITextFilterItem = IBaseFilterItem & {
     pluralOperators: [string, ...string[]];
 };
 
-type IDateFilterItem = IBaseFilterItem & {
+export type IDateFilterItem = IBaseFilterItem & {
     dateOperators: [string, ...string[]];
     fromFilterKey?: string;
     toFilterKey?: string;

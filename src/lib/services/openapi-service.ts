@@ -51,7 +51,7 @@ export class OpenApiService {
             `
             : '';
         const enterpriseBadge = enterpriseOnly
-            ? `![Enterprise](${this.docsStaticsPath()}/Enterprise.svg) **Enterprise feature**
+            ? `![Unleash Enterprise](${this.docsStaticsPath()}/Enterprise.svg) **Enterprise feature**
             
             `
             : '';

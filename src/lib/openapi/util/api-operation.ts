@@ -14,4 +14,6 @@ export interface ApiOperation<Tag = OpenApiTag | DeprecatedOpenAPITag>
     extends Omit<OpenAPIV3.OperationObject, 'tags'> {
     operationId: string;
     tags: [Tag];
+    beta?: boolean;
+    enterpriseOnly?: boolean;
 }

@@ -1,5 +1,10 @@
 import openapi, { type IExpressOpenApi } from '@wesleytodd/openapi';
-import type { Express, RequestHandler, Response } from 'express';
+import {
+    type Express,
+    type RequestHandler,
+    type Response,
+    static as expressStatic,
+} from 'express';
 import type { IUnleashConfig } from '../types/option.js';
 import {
     createOpenApiSchema,
@@ -38,12 +43,40 @@ export class OpenApiService {
     }
 
     validPath(op: ApiOperation): RequestHandler {
-        return this.api.validPath(op);
+        const { beta, enterpriseOnly, ...rest } = op;
+
+        const betaBadge = beta
+            ? `![Beta](${this.docsStaticsPath()}/Beta.svg) This is a beta endpoint and it may change or be removed in the future. 
+            
+            `
+            : '';
+        const enterpriseBadge = enterpriseOnly
+            ? `![Unleash Enterprise](${this.docsStaticsPath()}/Enterprise.svg) **Enterprise feature**
+            
+            `
+            : '';
+        return this.api.validPath({
+            ...rest,
+            description:
+                `${enterpriseBadge}${betaBadge}${op.description}`.replaceAll(
+                    /\n\s*/g,
+                    '\n\n',
+                ),
+        });
     }
 
     useDocs(app: Express): void {
         app.use(this.api);
         app.use(this.docsPath(), this.api.swaggerui());
+        app.use(
+            this.docsStaticsPath(),
+            expressStatic('openapi-static', { index: false }),
+        );
+    }
+
+    docsStaticsPath(): string {
+        const { baseUriPath = '' } = this.config.server ?? {};
+        return `${baseUriPath}/docs/static`;
     }
 
     docsPath(): string {

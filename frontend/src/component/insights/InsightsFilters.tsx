@@ -9,12 +9,12 @@ import {
 interface IFeatureToggleFiltersProps {
     state: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
+    className?: string;
 }
 
-export const InsightsFilters: FC<IFeatureToggleFiltersProps> = ({
-    state,
-    onChange,
-}) => {
+export const InsightsFilters: FC<IFeatureToggleFiltersProps> = (
+    filterProps,
+) => {
     const { projects } = useProjects();
 
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
@@ -65,11 +65,5 @@ export const InsightsFilters: FC<IFeatureToggleFiltersProps> = ({
         setAvailableFilters(availableFilters);
     }, [JSON.stringify(projects)]);
 
-    return (
-        <Filters
-            availableFilters={availableFilters}
-            state={state}
-            onChange={onChange}
-        />
-    );
+    return <Filters {...filterProps} availableFilters={availableFilters} />;
 };

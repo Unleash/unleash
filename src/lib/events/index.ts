@@ -213,6 +213,8 @@ export const USER_PREFERENCE_UPDATED = 'user-preference-updated' as const;
 export const SCIM_USERS_DELETED = 'scim-users-deleted' as const;
 export const SCIM_GROUPS_DELETED = 'scim-groups-deleted' as const;
 
+export const CDN_TOKEN_CREATED = 'cdn-token-created' as const;
+
 export const IEventTypes = [
     APPLICATION_CREATED,
     FEATURE_CREATED,
@@ -373,6 +375,7 @@ export const IEventTypes = [
     USER_PREFERENCE_UPDATED,
     SCIM_USERS_DELETED,
     SCIM_GROUPS_DELETED,
+    CDN_TOKEN_CREATED,
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 

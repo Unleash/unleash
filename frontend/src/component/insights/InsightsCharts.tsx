@@ -10,8 +10,6 @@ import { HealthStats } from './componentsStat/HealthStats/HealthStats.tsx';
 import { ProjectHealthChart } from './componentsChart/ProjectHealthChart/ProjectHealthChart.tsx';
 import { MetricsSummaryChart } from './componentsChart/MetricsSummaryChart/MetricsSummaryChart.tsx';
 import { UpdatesPerEnvironmentTypeChart } from './componentsChart/UpdatesPerEnvironmentTypeChart/UpdatesPerEnvironmentTypeChart.tsx';
-import type { InstanceInsightsSchema } from 'openapi';
-import type { GroupedDataByProject } from './hooks/useGroupedProjectTrends.ts';
 import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { WidgetTitle } from './components/WidgetTitle/WidgetTitle.tsx';
@@ -22,33 +20,6 @@ import { withDefault } from 'use-query-params';
 import { FilterItemParam } from 'utils/serializeQueryParams.ts';
 import { useInsightsData } from './hooks/useInsightsData.ts';
 import { InsightsFilters } from './InsightsFilters.tsx';
-
-export interface IChartsProps {
-    flagTrends: InstanceInsightsSchema['flagTrends'];
-    projectsData: InstanceInsightsSchema['projectFlagTrends'];
-    groupedProjectsData: GroupedDataByProject<
-        InstanceInsightsSchema['projectFlagTrends']
-    >;
-    metricsData: InstanceInsightsSchema['metricsSummaryTrends'];
-    groupedMetricsData: GroupedDataByProject<
-        InstanceInsightsSchema['metricsSummaryTrends']
-    >;
-    userTrends: InstanceInsightsSchema['userTrends'];
-    environmentTypeTrends: InstanceInsightsSchema['environmentTypeTrends'];
-    summary: {
-        total: number;
-        active: number;
-        stale: number;
-        potentiallyStale: number;
-        averageUsers: number;
-        averageHealth?: string;
-        flagsPerUser?: string;
-        medianTimeToProduction?: number;
-    };
-    loading: boolean;
-    projects: string[];
-    allMetricsDatapoints: string[];
-}
 
 const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -126,26 +97,7 @@ const Section: FC<
     </StyledSection>
 );
 
-export const InsightsCharts: FC<IChartsProps> = ({
-    projects,
-    summary,
-    userTrends,
-    groupedProjectsData,
-    flagTrends,
-    groupedMetricsData,
-    environmentTypeTrends,
-    allMetricsDatapoints,
-    loading,
-}) => {
-    const showAllProjects = projects[0] === allOption.id;
-    const isOneProjectSelected = projects.length === 1;
-
-    const lastUserTrend = userTrends[userTrends.length - 1];
-
-    const usersTotal = lastUserTrend?.total ?? 0;
-    const usersActive = lastUserTrend?.active ?? 0;
-    const usersInactive = lastUserTrend?.inactive ?? 0;
-
+export const InsightsCharts: FC<{}> = () => {
     return (
         <StyledContainer>
             <Section title='Flags lifecycle currently' />
@@ -340,31 +292,18 @@ const UserInsights: FC<{}> = () => {
     const projects = state.project?.values ?? [allOption.id];
 
     const showAllProjects = projects[0] === allOption.id;
-    const {
-        flagTrends,
-        summary,
-        groupedProjectsData,
-        userTrends,
-        groupedMetricsData,
-        allMetricsDatapoints,
-        environmentTypeTrends,
-    } = useInsightsData(insights, projects);
+    const { summary, groupedProjectsData, userTrends } = useInsightsData(
+        insights,
+        projects,
+    );
 
-    const { isEnterprise } = useUiConfig();
     const lastUserTrend = userTrends[userTrends.length - 1];
     const usersTotal = lastUserTrend?.total ?? 0;
     const usersActive = lastUserTrend?.active ?? 0;
     const usersInactive = lastUserTrend?.inactive ?? 0;
-    const lastFlagTrend = flagTrends[flagTrends.length - 1];
-    const flagsTotal = lastFlagTrend?.total ?? 0;
 
     const isOneProjectSelected = projects.length === 1;
-    function getFlagsPerUser(flagsTotal: number, usersTotal: number) {
-        const flagsPerUserCalculation = flagsTotal / usersTotal;
-        return Number.isNaN(flagsPerUserCalculation)
-            ? 'N/A'
-            : flagsPerUserCalculation.toFixed(2);
-    }
+
     return (
         <Section
             title='User insights'

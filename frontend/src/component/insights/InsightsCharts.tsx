@@ -83,7 +83,7 @@ const StyledWidgetStats = styled(Box)<{ width?: number; padding?: number }>(
 
 const StyledChartContainer = styled(Box)(({ theme }) => ({
     position: 'relative',
-    minWidth: 0, // bugfix, see: https://github.com/chartjs/Chart.js/issues/4156#issuecomment-295180128
+    minWidth: 0, // bugfix, see: https://github.com/chartjs/Chart.js/issues/4156#issuecomment-295180128
     flexGrow: 1,
     margin: 'auto 0',
     padding: theme.spacing(3),

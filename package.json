@@ -13,7 +13,6 @@
   ],
   "files": [
     "dist",
-    "openapi-static",
     "frontend/build",
     "frontend/build/*",
     "frontend/build/**/*",
@@ -50,7 +49,7 @@
     "db-migrate": "db-migrate --migrations-dir ./src/migrations",
     "lint": "biome check .",
     "lint:fix": "biome check . --write",
-    "local:package": "del-cli --force build && mkdir build && cp -r dist openapi-static CHANGELOG.md LICENSE README.md package.json build",
+    "local:package": "del-cli --force build && mkdir build && cp -r dist CHANGELOG.md LICENSE README.md package.json build",
     "build:watch": "tsc -w",
     "prepare": "husky && yarn --cwd ./frontend install && if [ ! -d ./dist ]; then yarn build; fi",
     "test": "PORT=4243 vitest run",

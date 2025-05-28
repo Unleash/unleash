@@ -15,6 +15,7 @@ import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectO
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 import { AdminMenuNavigation } from '../AdminMenu/AdminNavigationItems.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { ConfigurationAccordion } from './ConfigurationAccordion.tsx';
 
 export const OtherLinksList = () => {
     const { uiConfig } = useUiConfig();
@@ -50,7 +51,7 @@ export const RecentProjectsList: FC<{
             text={projectName}
             onClick={onClick}
             selected={false}
-            dense={mode === 'mini'}
+            mode={mode}
         >
             <ProjectIcon />
         </MenuListItem>
@@ -73,7 +74,7 @@ export const RecentFlagsList: FC<{
                 onClick={onClick}
                 selected={false}
                 key={flag.featureId}
-                dense={mode === 'mini'}
+                mode={mode}
             >
                 <FlagIcon />
             </MenuListItem>
@@ -83,11 +84,22 @@ export const RecentFlagsList: FC<{
 
 export const PrimaryNavigationList: FC<{
     mode: NavigationMode;
+    setMode: (mode: NavigationMode) => void;
     onClick: (activeItem: string) => void;
     activeItem?: string;
-}> = ({ mode, onClick, activeItem }) => {
-    const DynamicListItem = (props: ComponentProps<typeof MenuListItem>) => (
-        <MenuListItem {...props} dense={mode === 'mini'} />
+}> = ({ mode, setMode, onClick, activeItem }) => {
+    const PrimaryListItem = ({
+        href,
+        text,
+    }: Pick<ComponentProps<typeof MenuListItem>, 'href' | 'text'>) => (
+        <MenuListItem
+            href={href}
+            text={text}
+            icon={<IconRenderer path={href} />}
+            onClick={() => onClick(href)}
+            selected={activeItem === href}
+            mode={mode}
+        />
     );
 
     const { isOss } = useUiConfig();
@@ -95,59 +107,22 @@ export const PrimaryNavigationList: FC<{
 
     return (
         <List>
-            <DynamicListItem
-                href='/personal'
-                text='Dashboard'
-                onClick={() => onClick('/personal')}
-                selected={activeItem === '/personal'}
-            >
-                <IconRenderer path='/personal' />
-            </DynamicListItem>
-
-            <DynamicListItem
-                href='/projects'
-                text='Projects'
-                onClick={() => onClick('/projects')}
-                selected={activeItem === '/projects'}
-            >
-                <IconRenderer path='/projects' />
-            </DynamicListItem>
-            <DynamicListItem
-                href='/search'
-                text='Flags overview'
-                onClick={() => onClick('/search')}
-                selected={activeItem === '/search'}
-            >
-                <IconRenderer path='/search' />
-            </DynamicListItem>
-            <DynamicListItem
-                href='/playground'
-                text='Playground'
-                onClick={() => onClick('/playground')}
-                selected={activeItem === '/playground'}
-            >
-                <IconRenderer path='/playground' />
-            </DynamicListItem>
+            <PrimaryListItem href='/personal' text='Dashboard' />
+            <PrimaryListItem href='/projects' text='Projects' />
+            <PrimaryListItem href='/search' text='Flags overview' />
+            <PrimaryListItem href='/playground' text='Playground' />
             {!isOss() ? (
-                <DynamicListItem
+                <PrimaryListItem
                     href='/insights'
                     text={sideMenuCleanup ? 'Analytics' : 'Insights'}
-                    onClick={() => onClick('/insights')}
-                    selected={activeItem === '/insights'}
-                >
-                    <IconRenderer path='/insights' />
-                </DynamicListItem>
+                />
             ) : null}
-            {sideMenuCleanup ? (
-                <DynamicListItem
-                    href='/insights'
-                    text='Configure'
-                    onClick={() => onClick('/insights')}
-                    selected={activeItem === '/insights'}
-                >
-                    <IconRenderer path='Configure' />
-                </DynamicListItem>
-            ) : null}
+            <ConfigurationAccordion
+                mode={mode}
+                setMode={setMode}
+                activeItem={activeItem}
+                onClick={() => onClick('configure')}
+            />
         </List>
     );
 };
@@ -192,10 +167,9 @@ export const AdminSettingsLink: FC<{
                 href='/admin'
                 text='Admin settings'
                 onClick={() => onClick('/admin')}
-                dense={mode === 'mini'}
-            >
-                <IconRenderer path='/admin' />
-            </MenuListItem>
+                mode={mode}
+                icon={<IconRenderer path='/admin' />}
+            />
         </List>
     </Box>
 );

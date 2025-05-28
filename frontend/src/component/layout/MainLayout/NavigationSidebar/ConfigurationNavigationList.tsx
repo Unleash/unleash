@@ -32,14 +32,16 @@ export const ConfigurationNavigationList: FC<{
                             <EnterprisePlanBadge />
                         ) : null
                     }
-                    dense={mode === 'mini'}
-                >
-                    {sideMenuCleanup ? (
-                        <StopRoundedIcon fontSize='small' color='primary' />
-                    ) : (
-                        <IconRenderer path={route.path} />
-                    )}
-                </MenuListItem>
+                    mode={mode}
+                    icon={
+                        sideMenuCleanup ? (
+                            <StopRoundedIcon fontSize='small' color='primary' />
+                        ) : (
+                            <IconRenderer path={route.path} />
+                        )
+                    }
+                    secondary={sideMenuCleanup}
+                />
             ))}
         </List>
     );

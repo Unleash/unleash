@@ -153,6 +153,7 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
                     <>
                         <PrimaryNavigationList
                             mode={mode}
+                            setMode={setMode}
                             onClick={setActiveItem}
                             activeItem={activeItem}
                         />

@@ -1,6 +1,8 @@
-import type React from 'react';
 import type { FC, ReactNode } from 'react';
 import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
     ListItem,
     ListItemButton,
     ListItemIcon,
@@ -13,6 +15,8 @@ import { Link } from 'react-router-dom';
 import { basePath } from 'utils/formatPath';
 import SignOutIcon from '@mui/icons-material/ExitToApp';
 import type { Theme } from '@mui/material/styles/createTheme';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import type { NavigationMode } from './NavigationMode.tsx';
 
 const listItemButtonStyle = (theme: Theme) => ({
     borderRadius: theme.spacing(0.5),
@@ -22,12 +26,17 @@ const listItemButtonStyle = (theme: Theme) => ({
     },
 });
 
-const CappedText = styled(Typography)({
+const CappedText = styled(Typography)<{
+    bold?: boolean;
+}>(({ theme, bold }) => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     width: '100%',
-});
+    fontWeight: bold
+        ? theme.typography.fontWeightBold
+        : theme.typography.fontWeightRegular,
+}));
 
 const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({
     minWidth: theme.spacing(4),
@@ -41,7 +50,7 @@ const StyledListItemText = styled(ListItemText)(({ theme }) => ({
 export const ExternalFullListItem: FC<{
     href: string;
     text: string;
-    children?: React.ReactNode;
+    children?: ReactNode;
 }> = ({ href, text, children }) => {
     return (
         <ListItem disablePadding>
@@ -90,42 +99,133 @@ export const MenuListItem: FC<{
     selected?: boolean;
     badge?: ReactNode;
     onClick: () => void;
-    children?: React.ReactNode;
-    dense?: boolean;
-}> = ({ href, text, selected, onClick, children, dense, badge }) => {
-    if (dense) {
-        return (
-            <ListItem disablePadding onClick={onClick}>
-                <ListItemButton
-                    dense={true}
-                    component={Link}
-                    to={href}
-                    sx={listItemButtonStyle}
-                    selected={selected}
-                >
-                    <Tooltip title={text} placement='right'>
-                        <StyledListItemIcon>{children}</StyledListItemIcon>
-                    </Tooltip>
-                </ListItemButton>
-            </ListItem>
-        );
-    }
-
+    icon?: ReactNode;
+    children?: ReactNode;
+    mode?: NavigationMode;
+    secondary?: boolean;
+}> = ({
+    href,
+    text,
+    selected,
+    onClick,
+    icon,
+    mode = 'full',
+    badge,
+    children,
+    secondary,
+}) => {
     return (
         <ListItem disablePadding onClick={onClick}>
             <ListItemButton
-                dense={true}
+                dense
                 component={Link}
                 to={href}
-                sx={listItemButtonStyle}
+                sx={(theme) => ({
+                    ...listItemButtonStyle(theme),
+                    ...(mode === 'full' &&
+                        secondary && {
+                            paddingLeft: theme.spacing(4),
+                        }),
+                })}
                 selected={selected}
             >
-                <StyledListItemIcon>{children}</StyledListItemIcon>
-                <StyledListItemText>
-                    <CappedText>{text}</CappedText>
-                </StyledListItemText>
-                {badge}
+                {mode === 'mini' ? (
+                    <Tooltip title={text} placement='right'>
+                        <StyledListItemIcon>{icon}</StyledListItemIcon>
+                    </Tooltip>
+                ) : (
+                    <>
+                        <StyledListItemIcon>{icon}</StyledListItemIcon>
+                        <StyledListItemText>
+                            <CappedText>{text}</CappedText>
+                        </StyledListItemText>
+                        {badge}
+                    </>
+                )}
             </ListItemButton>
+            {children}
+        </ListItem>
+    );
+};
+
+const StyledAccordion = styled(Accordion)(({ theme }) => ({
+    flexGrow: 1,
+    '.MuiAccordionSummary-root': {
+        minHeight: 'auto',
+        borderRadius: theme.spacing(1),
+        borderLeft: `${theme.spacing(0.5)} solid transparent`,
+        margin: 0,
+        paddingTop: theme.spacing(0.5),
+        paddingBottom: theme.spacing(0.5),
+        '.MuiAccordionSummary-content': { margin: 0 },
+        '&>.MuiAccordionSummary-content.MuiAccordionSummary-content': {
+            margin: '0',
+            alignItems: 'center',
+        },
+    },
+    '.MuiAccordionSummary-content': {
+        margin: 0,
+        display: 'flex',
+        alignItems: 'center',
+    },
+    '.MuiAccordionSummary-expandIconWrapper': {
+        position: 'absolute',
+        right: theme.spacing(1),
+    },
+}));
+
+export const MenuListAccordion: FC<{
+    title: string;
+    expanded: boolean;
+    onExpandChange: (expanded: boolean) => void;
+    children?: ReactNode;
+    mode?: NavigationMode;
+    icon?: ReactNode;
+    active?: boolean;
+}> = ({ title, expanded, mode, icon, onExpandChange, children, active }) => {
+    return (
+        <ListItem disablePadding sx={{ display: 'flex' }}>
+            <StyledAccordion
+                disableGutters={true}
+                sx={{
+                    boxShadow: 'none',
+                    '&:before': {
+                        display: 'none',
+                    },
+                }}
+                expanded={expanded}
+                onChange={(_, expand) => {
+                    onExpandChange(expand);
+                }}
+            >
+                <AccordionSummary
+                    sx={{ padding: 0 }}
+                    expandIcon={mode === 'full' ? <ExpandMoreIcon /> : null}
+                >
+                    <ListItemButton
+                        dense
+                        sx={listItemButtonStyle}
+                        selected={active && mode === 'mini'}
+                        disableRipple
+                    >
+                        {mode === 'mini' ? (
+                            <Tooltip title={title} placement='right'>
+                                <StyledListItemIcon>{icon}</StyledListItemIcon>
+                            </Tooltip>
+                        ) : (
+                            <>
+                                <StyledListItemIcon>{icon}</StyledListItemIcon>
+                                <StyledListItemText>
+                                    <CappedText bold={active}>
+                                        {title}
+                                    </CappedText>
+                                </StyledListItemText>
+                            </>
+                        )}
+                    </ListItemButton>
+                </AccordionSummary>
+                <AccordionDetails sx={{ p: 0 }}>{children}</AccordionDetails>
+            </StyledAccordion>
         </ListItem>
     );
 };

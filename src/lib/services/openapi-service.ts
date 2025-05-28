@@ -46,14 +46,22 @@ export class OpenApiService {
         const { beta, enterpriseOnly, ...rest } = op;
 
         const betaBadge = beta
-            ? `![Beta](${this.docsStaticsPath()}/Beta.svg) `
+            ? `![Beta](${this.docsStaticsPath()}/Beta.svg)
+            
+            `
             : '';
         const enterpriseBadge = enterpriseOnly
-            ? `![Enterprise](${this.docsStaticsPath()}/Enterprise.svg) **Enterprise only** ![Enterprise](${this.docsStaticsPath()}/Enterprise.svg) `
+            ? `![Enterprise](${this.docsStaticsPath()}/Enterprise.svg) **Enterprise feature**
+            
+            `
             : '';
         return this.api.validPath({
             ...rest,
-            description: `${enterpriseBadge}${betaBadge}${op.description}`,
+            description:
+                `${enterpriseBadge}${betaBadge}${op.description}`.replaceAll(
+                    /\n\s*/g,
+                    '\n\n',
+                ),
         });
     }
 

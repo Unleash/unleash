@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
 import type { NavigationMode } from './NavigationMode.ts';
-import { FullListItem, MiniListItem } from './ListItems.tsx';
+import { MenuListItem } from './ListItems.tsx';
 import { List } from '@mui/material';
 import { IconRenderer } from './IconRenderer.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
@@ -16,13 +16,12 @@ export const ConfigurationNavigationList: FC<{
     activeItem?: string;
 }> = ({ routes, mode, onClick, activeItem }) => {
     const showBadge = useShowBadge();
-    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
     const sideMenuCleanup = useUiFlag('sideMenuCleanup');
 
     return (
         <List>
             {routes.map((route) => (
-                <DynamicListItem
+                <MenuListItem
                     key={route.title}
                     onClick={() => onClick(route.path)}
                     href={route.path}
@@ -33,13 +32,14 @@ export const ConfigurationNavigationList: FC<{
                             <EnterprisePlanBadge />
                         ) : null
                     }
+                    dense={mode === 'mini'}
                 >
                     {sideMenuCleanup ? (
                         <StopRoundedIcon fontSize='small' color='primary' />
                     ) : (
                         <IconRenderer path={route.path} />
                     )}
-                </DynamicListItem>
+                </MenuListItem>
             ))}
         </List>
     );

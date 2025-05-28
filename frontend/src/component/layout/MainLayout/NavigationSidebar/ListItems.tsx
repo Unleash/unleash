@@ -38,33 +38,6 @@ const StyledListItemText = styled(ListItemText)(({ theme }) => ({
     margin: 0,
 }));
 
-export const FullListItem: FC<{
-    href: string;
-    text: string;
-    badge?: ReactNode;
-    onClick: () => void;
-    selected?: boolean;
-    children?: React.ReactNode;
-}> = ({ href, text, badge, onClick, selected, children }) => {
-    return (
-        <ListItem disablePadding onClick={onClick}>
-            <ListItemButton
-                dense={true}
-                component={Link}
-                to={href}
-                sx={listItemButtonStyle}
-                selected={selected}
-            >
-                <StyledListItemIcon>{children}</StyledListItemIcon>
-                <StyledListItemText>
-                    <CappedText>{text}</CappedText>
-                </StyledListItemText>
-                {badge}
-            </ListItemButton>
-        </ListItem>
-    );
-};
-
 export const ExternalFullListItem: FC<{
     href: string;
     text: string;
@@ -88,6 +61,7 @@ export const ExternalFullListItem: FC<{
         </ListItem>
     );
 };
+
 export const SignOutItem = () => {
     return (
         <form method='POST' action={`${basePath}/logout`}>
@@ -110,13 +84,33 @@ export const SignOutItem = () => {
     );
 };
 
-export const MiniListItem: FC<{
+export const MenuListItem: FC<{
     href: string;
     text: string;
     selected?: boolean;
+    badge?: ReactNode;
     onClick: () => void;
     children?: React.ReactNode;
-}> = ({ href, text, selected, onClick, children }) => {
+    dense?: boolean;
+}> = ({ href, text, selected, onClick, children, dense, badge }) => {
+    if (dense) {
+        return (
+            <ListItem disablePadding onClick={onClick}>
+                <ListItemButton
+                    dense={true}
+                    component={Link}
+                    to={href}
+                    sx={listItemButtonStyle}
+                    selected={selected}
+                >
+                    <Tooltip title={text} placement='right'>
+                        <StyledListItemIcon>{children}</StyledListItemIcon>
+                    </Tooltip>
+                </ListItemButton>
+            </ListItem>
+        );
+    }
+
     return (
         <ListItem disablePadding onClick={onClick}>
             <ListItemButton
@@ -126,9 +120,11 @@ export const MiniListItem: FC<{
                 sx={listItemButtonStyle}
                 selected={selected}
             >
-                <Tooltip title={text} placement='right'>
-                    <StyledListItemIcon>{children}</StyledListItemIcon>
-                </Tooltip>
+                <StyledListItemIcon>{children}</StyledListItemIcon>
+                <StyledListItemText>
+                    <CappedText>{text}</CappedText>
+                </StyledListItemText>
+                {badge}
             </ListItemButton>
         </ListItem>
     );

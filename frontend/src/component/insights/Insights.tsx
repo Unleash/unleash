@@ -7,10 +7,10 @@ import { InsightsHeader } from './components/InsightsHeader/InsightsHeader.tsx';
 import { useInsightsData } from './hooks/useInsightsData.ts';
 import { InsightsCharts } from './InsightsCharts.tsx';
 import { FilterItemParam } from '../../utils/serializeQueryParams.ts';
-import { format, subMonths } from 'date-fns';
 import { withDefault } from 'use-query-params';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { LegacyInsights } from './LegacyInsights.tsx';
+import { format, subMonths } from 'date-fns';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(2),
@@ -23,27 +23,39 @@ interface InsightsProps {
 
 const NewInsights: FC<InsightsProps> = ({ withCharts = true }) => {
     const stateConfig = {
-        project: FilterItemParam,
-        from: withDefault(FilterItemParam, {
+        performanceProject: FilterItemParam,
+        performanceFrom: withDefault(FilterItemParam, {
             values: [format(subMonths(new Date(), 1), 'yyyy-MM-dd')],
             operator: 'IS',
         }),
-        to: withDefault(FilterItemParam, {
+        performanceTo: withDefault(FilterItemParam, {
+            values: [format(new Date(), 'yyyy-MM-dd')],
+            operator: 'IS',
+        }),
+        lifecycleProject: FilterItemParam,
+
+        usersProject: FilterItemParam,
+        usersFrom: withDefault(FilterItemParam, {
+            values: [format(subMonths(new Date(), 1), 'yyyy-MM-dd')],
+            operator: 'IS',
+        }),
+        usersTo: withDefault(FilterItemParam, {
             values: [format(new Date(), 'yyyy-MM-dd')],
             operator: 'IS',
         }),
     };
-    const [state, setState] = usePersistentTableState('insights', stateConfig, [
-        'from',
-        'to',
-    ]);
-
-    const { insights, loading } = useInsights(
-        state.from?.values[0],
-        state.to?.values[0],
+    const [state, setState] = usePersistentTableState(
+        'insights:v2',
+        stateConfig,
+        ['performanceFrom', 'performanceTo', 'usersFrom', 'usersTo'],
     );
 
-    const projects = state.project?.values ?? [allOption.id];
+    const { insights, loading } = useInsights(
+        state.performanceFrom?.values[0],
+        state.performanceTo?.values[0],
+    );
+
+    const projects = state.performanceProject?.values ?? [allOption.id];
 
     const insightsData = useInsightsData(insights, projects);
 
@@ -63,6 +75,7 @@ const NewInsights: FC<InsightsProps> = ({ withCharts = true }) => {
 
 export const Insights: FC<InsightsProps> = (props) => {
     const useNewInsights = useUiFlag('lifecycleMetrics');
+    console.log('useNewInsights', useNewInsights);
 
     return useNewInsights ? (
         <NewInsights {...props} />

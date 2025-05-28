@@ -1,4 +1,4 @@
-import type { FC, PropsWithChildren } from 'react';
+import type { FC, PropsWithChildren, ReactNode } from 'react';
 import { Box, Paper, styled } from '@mui/material';
 import { UserStats } from './componentsStat/UserStats/UserStats.tsx';
 import { UsersChart } from './componentsChart/UsersChart/UsersChart.tsx';
@@ -15,6 +15,13 @@ import type { GroupedDataByProject } from './hooks/useGroupedProjectTrends.ts';
 import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { WidgetTitle } from './components/WidgetTitle/WidgetTitle.tsx';
+import { format, subMonths } from 'date-fns';
+import { useInsights } from 'hooks/api/getters/useInsights/useInsights.ts';
+import { usePersistentTableState } from 'hooks/usePersistentTableState.ts';
+import { withDefault } from 'use-query-params';
+import { FilterItemParam } from 'utils/serializeQueryParams.ts';
+import { useInsightsData } from './hooks/useInsightsData.ts';
+import { InsightsFilters } from './InsightsFilters.tsx';
 
 export interface IChartsProps {
     flagTrends: InstanceInsightsSchema['flagTrends'];
@@ -97,21 +104,22 @@ const SectionTitleRow = styled('div')(({ theme }) => ({
     position: 'sticky',
     top: 0,
     zIndex: theme.zIndex.sticky,
-    padding: theme.spacing(2, 0),
     background: theme.palette.background.application,
     transition: 'padding 0.3s ease',
     display: 'flex',
-    alignItems: 'space-between',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     flexFlow: 'row wrap',
+    rowGap: theme.spacing(2),
 }));
 
-const Section: FC<PropsWithChildren<{ title: string }>> = ({
-    title,
-    children,
-}) => (
+const Section: FC<
+    PropsWithChildren<{ title: string; HeaderActions?: ReactNode }>
+> = ({ title, children, HeaderActions }) => (
     <StyledSection>
         <SectionTitleRow>
             <h2>{title}</h2>
+            {HeaderActions}
         </SectionTitleRow>
         {children}
     </StyledSection>
@@ -130,132 +138,17 @@ export const InsightsCharts: FC<IChartsProps> = ({
 }) => {
     const showAllProjects = projects[0] === allOption.id;
     const isOneProjectSelected = projects.length === 1;
-    const { isEnterprise } = useUiConfig();
 
     const lastUserTrend = userTrends[userTrends.length - 1];
-    const lastFlagTrend = flagTrends[flagTrends.length - 1];
 
     const usersTotal = lastUserTrend?.total ?? 0;
     const usersActive = lastUserTrend?.active ?? 0;
     const usersInactive = lastUserTrend?.inactive ?? 0;
-    const flagsTotal = lastFlagTrend?.total ?? 0;
-
-    function getFlagsPerUser(flagsTotal: number, usersTotal: number) {
-        const flagsPerUserCalculation = flagsTotal / usersTotal;
-        return Number.isNaN(flagsPerUserCalculation)
-            ? 'N/A'
-            : flagsPerUserCalculation.toFixed(2);
-    }
 
     return (
         <StyledContainer>
             <Section title='Flags lifecycle currently' />
-            <Section title='Performance insights'>
-                {showAllProjects ? (
-                    <StyledWidget>
-                        <StyledWidgetStats width={275}>
-                            <WidgetTitle title='Flags' />
-                            <FlagStats
-                                count={flagsTotal}
-                                flagsPerUser={getFlagsPerUser(
-                                    flagsTotal,
-                                    usersTotal,
-                                )}
-                                isLoading={loading}
-                            />
-                        </StyledWidgetStats>
-                        <StyledChartContainer>
-                            <FlagsChart
-                                flagTrends={flagTrends}
-                                isLoading={loading}
-                            />
-                        </StyledChartContainer>
-                    </StyledWidget>
-                ) : (
-                    <StyledWidget>
-                        <StyledWidgetStats width={275}>
-                            <WidgetTitle title='Flags' />
-                            <FlagStats
-                                count={summary.total}
-                                flagsPerUser={''}
-                                isLoading={loading}
-                            />
-                        </StyledWidgetStats>
-                        <StyledChartContainer>
-                            <FlagsProjectChart
-                                projectFlagTrends={groupedProjectsData}
-                                isLoading={loading}
-                            />
-                        </StyledChartContainer>
-                    </StyledWidget>
-                )}
-                {isEnterprise() ? (
-                    <StyledWidget>
-                        <StyledWidgetStats width={350} padding={0}>
-                            <HealthStats
-                                value={summary.averageHealth}
-                                healthy={summary.active}
-                                stale={summary.stale}
-                                potentiallyStale={summary.potentiallyStale}
-                                title={
-                                    <WidgetTitle
-                                        title='Health'
-                                        tooltip={
-                                            'Percentage of flags that are not stale or potentially stale.'
-                                        }
-                                    />
-                                }
-                            />
-                        </StyledWidgetStats>
-                        <StyledChartContainer>
-                            <ProjectHealthChart
-                                projectFlagTrends={groupedProjectsData}
-                                isAggregate={showAllProjects}
-                                isLoading={loading}
-                            />
-                        </StyledChartContainer>
-                    </StyledWidget>
-                ) : null}
-                {isEnterprise() ? (
-                    <>
-                        <StyledWidget>
-                            <StyledWidgetContent>
-                                <WidgetTitle
-                                    title='Flag evaluation metrics'
-                                    tooltip='Summary of all flag evaluations reported by SDKs.'
-                                />
-                                <StyledChartContainer>
-                                    <MetricsSummaryChart
-                                        metricsSummaryTrends={
-                                            groupedMetricsData
-                                        }
-                                        allDatapointsSorted={
-                                            allMetricsDatapoints
-                                        }
-                                        isAggregate={showAllProjects}
-                                        isLoading={loading}
-                                    />
-                                </StyledChartContainer>
-                            </StyledWidgetContent>
-                        </StyledWidget>
-                        <StyledWidget>
-                            <StyledWidgetContent>
-                                <WidgetTitle
-                                    title='Updates per environment type'
-                                    tooltip='Summary of all configuration updates per environment type.'
-                                />
-                                <UpdatesPerEnvironmentTypeChart
-                                    environmentTypeTrends={
-                                        environmentTypeTrends
-                                    }
-                                    isLoading={loading}
-                                />
-                            </StyledWidgetContent>
-                        </StyledWidget>
-                    </>
-                ) : null}
-            </Section>
-
+            <PerformanceInsights />
             <Section title='User insights'>
                 {showAllProjects ? (
                     <StyledWidget>
@@ -305,5 +198,165 @@ export const InsightsCharts: FC<IChartsProps> = ({
                 )}
             </Section>
         </StyledContainer>
+    );
+};
+
+const StyledInsightsFilters = styled(InsightsFilters)({
+    padding: 0,
+});
+
+const PerformanceInsights: FC<{}> = () => {
+    const stateConfig = {
+        project: FilterItemParam,
+        from: withDefault(FilterItemParam, {
+            values: [format(subMonths(new Date(), 1), 'yyyy-MM-dd')],
+            operator: 'IS',
+        }),
+        to: withDefault(FilterItemParam, {
+            values: [format(new Date(), 'yyyy-MM-dd')],
+            operator: 'IS',
+        }),
+    };
+    const [state, setState] = usePersistentTableState('insights', stateConfig, [
+        'from',
+        'to',
+    ]);
+
+    const { insights, loading } = useInsights(
+        state.from?.values[0],
+        state.to?.values[0],
+    );
+
+    const projects = state.project?.values ?? [allOption.id];
+
+    const showAllProjects = projects[0] === allOption.id;
+    const {
+        flagTrends,
+        summary,
+        groupedProjectsData,
+        userTrends,
+        groupedMetricsData,
+        allMetricsDatapoints,
+        environmentTypeTrends,
+    } = useInsightsData(insights, projects);
+
+    const { isEnterprise } = useUiConfig();
+    const lastUserTrend = userTrends[userTrends.length - 1];
+    const usersTotal = lastUserTrend?.total ?? 0;
+    const lastFlagTrend = flagTrends[flagTrends.length - 1];
+    const flagsTotal = lastFlagTrend?.total ?? 0;
+
+    function getFlagsPerUser(flagsTotal: number, usersTotal: number) {
+        const flagsPerUserCalculation = flagsTotal / usersTotal;
+        return Number.isNaN(flagsPerUserCalculation)
+            ? 'N/A'
+            : flagsPerUserCalculation.toFixed(2);
+    }
+
+    return (
+        <Section
+            title='Performance insights'
+            HeaderActions={
+                <StyledInsightsFilters state={state} onChange={setState} />
+            }
+        >
+            {showAllProjects ? (
+                <StyledWidget>
+                    <StyledWidgetStats width={275}>
+                        <WidgetTitle title='Flags' />
+                        <FlagStats
+                            count={flagsTotal}
+                            flagsPerUser={getFlagsPerUser(
+                                flagsTotal,
+                                usersTotal,
+                            )}
+                            isLoading={loading}
+                        />
+                    </StyledWidgetStats>
+                    <StyledChartContainer>
+                        <FlagsChart
+                            flagTrends={flagTrends}
+                            isLoading={loading}
+                        />
+                    </StyledChartContainer>
+                </StyledWidget>
+            ) : (
+                <StyledWidget>
+                    <StyledWidgetStats width={275}>
+                        <WidgetTitle title='Flags' />
+                        <FlagStats
+                            count={summary.total}
+                            flagsPerUser={''}
+                            isLoading={loading}
+                        />
+                    </StyledWidgetStats>
+                    <StyledChartContainer>
+                        <FlagsProjectChart
+                            projectFlagTrends={groupedProjectsData}
+                            isLoading={loading}
+                        />
+                    </StyledChartContainer>
+                </StyledWidget>
+            )}
+            {isEnterprise() ? (
+                <StyledWidget>
+                    <StyledWidgetStats width={350} padding={0}>
+                        <HealthStats
+                            value={summary.averageHealth}
+                            healthy={summary.active}
+                            stale={summary.stale}
+                            potentiallyStale={summary.potentiallyStale}
+                            title={
+                                <WidgetTitle
+                                    title='Health'
+                                    tooltip={
+                                        'Percentage of flags that are not stale or potentially stale.'
+                                    }
+                                />
+                            }
+                        />
+                    </StyledWidgetStats>
+                    <StyledChartContainer>
+                        <ProjectHealthChart
+                            projectFlagTrends={groupedProjectsData}
+                            isAggregate={showAllProjects}
+                            isLoading={loading}
+                        />
+                    </StyledChartContainer>
+                </StyledWidget>
+            ) : null}
+            {isEnterprise() ? (
+                <>
+                    <StyledWidget>
+                        <StyledWidgetContent>
+                            <WidgetTitle
+                                title='Flag evaluation metrics'
+                                tooltip='Summary of all flag evaluations reported by SDKs.'
+                            />
+                            <StyledChartContainer>
+                                <MetricsSummaryChart
+                                    metricsSummaryTrends={groupedMetricsData}
+                                    allDatapointsSorted={allMetricsDatapoints}
+                                    isAggregate={showAllProjects}
+                                    isLoading={loading}
+                                />
+                            </StyledChartContainer>
+                        </StyledWidgetContent>
+                    </StyledWidget>
+                    <StyledWidget>
+                        <StyledWidgetContent>
+                            <WidgetTitle
+                                title='Updates per environment type'
+                                tooltip='Summary of all configuration updates per environment type.'
+                            />
+                            <UpdatesPerEnvironmentTypeChart
+                                environmentTypeTrends={environmentTypeTrends}
+                                isLoading={loading}
+                            />
+                        </StyledWidgetContent>
+                    </StyledWidget>
+                </>
+            ) : null}
+        </Section>
     );
 };

@@ -9,6 +9,7 @@
 !LICENSE
 !README.md
 !frontend
+!openapi-static
 frontend/node_modules
 !.yarn/**
 !.yarnrc.yml

@@ -10,8 +10,8 @@ import {
     RecentProjectsNavigation,
     AdminSettingsNavigation,
 } from './NavigationList.tsx';
-import { SecondaryNavigationList } from './SecondaryNavigationList.tsx';
-import { SecondaryNavigation } from './SecondaryNavigation.tsx';
+import { ConfigurationNavigationList } from './ConfigurationNavigationList.tsx';
+import { ConfigurationNavigation } from './ConfigurationNavigation.tsx';
 import { FullListItem, MiniListItem } from './ListItems.tsx';
 import { useInitialPathname } from './useInitialPathname.ts';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
@@ -158,7 +158,7 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
                             onClick={setActiveItem}
                             activeItem={activeItem}
                         />
-                        <SecondaryNavigation
+                        <ConfigurationNavigation
                             expanded={expanded.includes('configure')}
                             onExpandChange={(expand) => {
                                 changeExpanded('configure', expand);
@@ -166,13 +166,13 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
                             mode={mode}
                             title='Configure'
                         >
-                            <SecondaryNavigationList
+                            <ConfigurationNavigationList
                                 routes={routes.mainNavRoutes}
                                 mode={mode}
                                 onClick={setActiveItem}
                                 activeItem={activeItem}
                             />
-                        </SecondaryNavigation>
+                        </ConfigurationNavigation>
 
                         <AdminSettingsNavigation
                             onClick={setActiveItem}

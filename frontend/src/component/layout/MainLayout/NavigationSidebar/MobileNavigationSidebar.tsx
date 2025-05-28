@@ -5,7 +5,7 @@ import {
     OtherLinksList,
 } from './NavigationList.tsx';
 import type { NewInUnleash } from './NewInUnleash/NewInUnleash.tsx';
-import { SecondaryNavigationList } from './SecondaryNavigationList.tsx';
+import { ConfigurationNavigationList } from './ConfigurationNavigationList.tsx';
 import { useRoutes } from './useRoutes.ts';
 
 export const MobileNavigationSidebar: FC<{
@@ -18,7 +18,7 @@ export const MobileNavigationSidebar: FC<{
         <>
             {NewInUnleash ? <NewInUnleash /> : null}
             <PrimaryNavigationList mode='full' onClick={onClick} />
-            <SecondaryNavigationList
+            <ConfigurationNavigationList
                 routes={routes.mainNavRoutes}
                 mode='full'
                 onClick={onClick}

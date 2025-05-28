@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
-import type { NavigationMode } from './NavigationMode.tsx';
+import type { NavigationMode } from './NavigationMode.ts';
 import { FullListItem, MiniListItem } from './ListItems.tsx';
 import { List } from '@mui/material';
 import { IconRenderer } from './IconRenderer.tsx';
@@ -9,7 +9,7 @@ import StopRoundedIcon from '@mui/icons-material/StopRounded';
 import { useShowBadge } from 'component/layout/components/EnterprisePlanBadge/useShowBadge';
 import { EnterprisePlanBadge } from 'component/layout/components/EnterprisePlanBadge/EnterprisePlanBadge';
 
-export const SecondaryNavigationList: FC<{
+export const ConfigurationNavigationList: FC<{
     routes: INavigationMenuItem[];
     mode: NavigationMode;
     onClick: (activeItem: string) => void;

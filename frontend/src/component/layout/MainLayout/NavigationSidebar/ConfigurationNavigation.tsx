@@ -1,6 +1,6 @@
 import type React from 'react';
 import type { FC } from 'react';
-import type { NavigationMode } from './NavigationMode.tsx';
+import type { NavigationMode } from './NavigationMode.ts';
 import { Typography } from '@mui/material';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -21,7 +21,7 @@ const AccordionHeader: FC<{ children?: React.ReactNode }> = ({ children }) => {
     );
 };
 
-export const SecondaryNavigation: FC<{
+export const ConfigurationNavigation: FC<{
     expanded: boolean;
     onExpandChange: (expanded: boolean) => void;
     mode: NavigationMode;

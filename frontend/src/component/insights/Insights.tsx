@@ -57,18 +57,21 @@ export const Insights: FC<InsightsProps> = ({ withCharts = true }) => {
 
     const insightsData = useInsightsData(insights, projects);
 
-    const header = (
-        <InsightsHeader
-            actions={<InsightsFilters state={state} onChange={setState} />}
-        />
-    );
-
     return (
         <StyledWrapper>
             {useStickyPageHeader ? (
-                <StickyContainer>{header}</StickyContainer>
+                <StickyContainer>
+                    <InsightsHeader
+                        actions={
+                            <InsightsFilters
+                                state={state}
+                                onChange={setState}
+                            />
+                        }
+                    />
+                </StickyContainer>
             ) : (
-                header
+                <InsightsHeader />
             )}
             {withCharts && (
                 <InsightsCharts

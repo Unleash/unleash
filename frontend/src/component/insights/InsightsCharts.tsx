@@ -15,8 +15,6 @@ import type { GroupedDataByProject } from './hooks/useGroupedProjectTrends.ts';
 import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { WidgetTitle } from './components/WidgetTitle/WidgetTitle.tsx';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
-import { LegacyInsightsCharts } from './LegacyInsightsCharts.tsx';
 
 export interface IChartsProps {
     flagTrends: InstanceInsightsSchema['flagTrends'];
@@ -119,7 +117,7 @@ const Section: FC<PropsWithChildren<{ title: string }>> = ({
     </StyledSection>
 );
 
-const NewInsightsCharts: FC<IChartsProps> = ({
+export const InsightsCharts: FC<IChartsProps> = ({
     projects,
     summary,
     userTrends,
@@ -307,15 +305,5 @@ const NewInsightsCharts: FC<IChartsProps> = ({
                 )}
             </Section>
         </StyledContainer>
-    );
-};
-
-export const InsightsCharts: FC<IChartsProps> = (props) => {
-    const useNewInsightsCharts = useUiFlag('lifecycleMetrics');
-
-    return useNewInsightsCharts ? (
-        <NewInsightsCharts {...props} />
-    ) : (
-        <LegacyInsightsCharts {...props} />
     );
 };

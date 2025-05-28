@@ -1,27 +1,37 @@
-import type { FC } from 'react';
+import { useState, type FC } from 'react';
 import { styled } from '@mui/material';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import { useInsights } from 'hooks/api/getters/useInsights/useInsights';
 import { InsightsHeader } from './components/InsightsHeader/InsightsHeader.tsx';
 import { useInsightsData } from './hooks/useInsightsData.ts';
-import { InsightsCharts } from './InsightsCharts.tsx';
+import { Sticky } from 'component/common/Sticky/Sticky';
+import { InsightsFilters } from './InsightsFilters.tsx';
 import { FilterItemParam } from '../../utils/serializeQueryParams.ts';
 import { format, subMonths } from 'date-fns';
 import { withDefault } from 'use-query-params';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
-import { LegacyInsights } from './LegacyInsights.tsx';
+import { LegacyInsightsCharts } from './LegacyInsightsCharts.tsx';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(2),
 }));
 
+const StickyContainer = styled(Sticky)(({ theme }) => ({
+    position: 'sticky',
+    top: 0,
+    zIndex: theme.zIndex.sticky,
+    padding: theme.spacing(2, 0),
+    background: theme.palette.background.application,
+    transition: 'padding 0.3s ease',
+}));
+
 interface InsightsProps {
-    // todo (lifecycleMetrics): remove this arg? it's only used for testing
     withCharts?: boolean;
 }
 
-const NewInsights: FC<InsightsProps> = ({ withCharts = true }) => {
+export const LegacyInsights: FC<InsightsProps> = ({ withCharts = true }) => {
+    const [scrolled, setScrolled] = useState(false);
+
     const stateConfig = {
         project: FilterItemParam,
         from: withDefault(FilterItemParam, {
@@ -47,26 +57,34 @@ const NewInsights: FC<InsightsProps> = ({ withCharts = true }) => {
 
     const insightsData = useInsightsData(insights, projects);
 
+    const handleScroll = () => {
+        if (!scrolled && window.scrollY > 0) {
+            setScrolled(true);
+        } else if (scrolled && window.scrollY === 0) {
+            setScrolled(false);
+        }
+    };
+
+    if (typeof window !== 'undefined') {
+        window.addEventListener('scroll', handleScroll);
+    }
+
     return (
         <StyledWrapper>
-            <InsightsHeader />
+            <StickyContainer>
+                <InsightsHeader
+                    actions={
+                        <InsightsFilters state={state} onChange={setState} />
+                    }
+                />
+            </StickyContainer>
             {withCharts && (
-                <InsightsCharts
+                <LegacyInsightsCharts
                     loading={loading}
                     projects={projects}
                     {...insightsData}
                 />
             )}
         </StyledWrapper>
-    );
-};
-
-export const Insights: FC<InsightsProps> = (props) => {
-    const useNewInsights = useUiFlag('lifecycleMetrics');
-
-    return useNewInsights ? (
-        <NewInsights {...props} />
-    ) : (
-        <LegacyInsights {...props} />
     );
 };

@@ -571,23 +571,6 @@ export class AccessStore implements IAccessStore {
             .update('role_id', roleId);
     }
 
-    updateGroupProjectRole(
-        groupId: number,
-        roleId: number,
-        projectId: string,
-    ): Promise<void> {
-        return this.db(T.GROUP_ROLE)
-            .where({
-                group_id: groupId,
-                project: projectId,
-            })
-            .whereNotIn(
-                'role_id',
-                this.db(T.ROLES).select('id as role_id').where('type', 'root'),
-            )
-            .update('role_id', roleId);
-    }
-
     async addAccessToProject(
         roles: number[],
         groups: number[],

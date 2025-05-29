@@ -1361,12 +1361,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/cors@npm:2.8.17":
-  version: 2.8.17
-  resolution: "@types/cors@npm:2.8.17"
+"@types/cors@npm:2.8.18":
+  version: 2.8.18
+  resolution: "@types/cors@npm:2.8.18"
   dependencies:
     "@types/node": "npm:*"
-  checksum: 10c0/457364c28c89f3d9ed34800e1de5c6eaaf344d1bb39af122f013322a50bc606eb2aa6f63de4e41a7a08ba7ef454473926c94a830636723da45bf786df032696d
+  checksum: 10c0/9dd1075de0e3a40c304826668960c797e67e597a734fb8e8ab404561f31ef2bd553ef5500eb86da7e91a344bee038a59931d2fbf182fbce09f13816f51fdd80e
   languageName: node
   linkType: hard
 
@@ -8272,7 +8272,7 @@ __metadata:
     "@slack/web-api": "npm:^7.9.1"
     "@swc/core": "npm:1.11.29"
     "@types/bcryptjs": "npm:2.4.6"
-    "@types/cors": "npm:2.8.17"
+    "@types/cors": "npm:2.8.18"
     "@types/express": "npm:4.17.21"
     "@types/express-session": "npm:1.18.1"
     "@types/faker": "npm:5.5.9"

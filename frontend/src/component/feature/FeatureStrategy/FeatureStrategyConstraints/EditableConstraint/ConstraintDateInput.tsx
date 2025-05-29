@@ -3,7 +3,7 @@ import { parseDateValue, parseValidDate } from 'component/common/util';
 
 import { useId, useMemo, useState } from 'react';
 import { styled } from '@mui/material';
-import TimezoneCountries from 'countries-and-timezones';
+import { getAllTimezones } from 'countries-and-timezones';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import type { ConstraintValidatorOutput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/constraintValidators';
@@ -35,7 +35,7 @@ export const ConstraintDateInput = ({
 }: IDateSingleValueProps) => {
     const [error, setError] = useState('');
     const timezones = Object.values(
-        TimezoneCountries.getAllTimezones({ deprecated: false }) as {
+        getAllTimezones({ deprecated: false }) as {
             [timezone: string]: { name: string; utcOffsetStr: string };
         },
     ).map((timezone) => ({

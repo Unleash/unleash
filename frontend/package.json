@@ -117,7 +117,7 @@
     "semver": "7.7.1",
     "swr": "2.3.3",
     "tss-react": "4.9.15",
-    "typescript": "5.4.5",
+    "typescript": "5.8.3",
     "unleash-proxy-client": "^3.7.3",
     "use-query-params": "^2.2.1",
     "vanilla-jsoneditor": "^0.23.0",

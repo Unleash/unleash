@@ -10,9 +10,8 @@ import {
     RecentProjectsNavigation,
     AdminSettingsNavigation,
 } from './NavigationList.tsx';
-import { SecondaryNavigationList } from './SecondaryNavigationList.tsx';
-import { SecondaryNavigation } from './SecondaryNavigation.tsx';
-import { FullListItem, MiniListItem } from './ListItems.tsx';
+import { ConfigurationNavigationList } from './ConfigurationNavigationList.tsx';
+import { ConfigurationNavigation } from './ConfigurationNavigation.tsx';
 import { useInitialPathname } from './useInitialPathname.ts';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
@@ -105,7 +104,6 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
     const { lastViewed: lastViewedFlags } = useLastViewedFlags();
     const showRecentFlags =
         !sideMenuCleanup && mode === 'full' && lastViewedFlags.length > 0;
-    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
 
     useEffect(() => {
         setActiveItem(initialPathname);
@@ -155,24 +153,27 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
                     <>
                         <PrimaryNavigationList
                             mode={mode}
+                            setMode={setMode}
                             onClick={setActiveItem}
                             activeItem={activeItem}
                         />
-                        <SecondaryNavigation
-                            expanded={expanded.includes('configure')}
-                            onExpandChange={(expand) => {
-                                changeExpanded('configure', expand);
-                            }}
-                            mode={mode}
-                            title='Configure'
-                        >
-                            <SecondaryNavigationList
-                                routes={routes.mainNavRoutes}
+                        {!sideMenuCleanup ? (
+                            <ConfigurationNavigation
+                                expanded={expanded.includes('configure')}
+                                onExpandChange={(expand) => {
+                                    changeExpanded('configure', expand);
+                                }}
                                 mode={mode}
-                                onClick={setActiveItem}
-                                activeItem={activeItem}
-                            />
-                        </SecondaryNavigation>
+                                title='Configure'
+                            >
+                                <ConfigurationNavigationList
+                                    routes={routes.mainNavRoutes}
+                                    mode={mode}
+                                    onClick={setActiveItem}
+                                    activeItem={activeItem}
+                                />
+                            </ConfigurationNavigation>
+                        ) : null}
 
                         <AdminSettingsNavigation
                             onClick={setActiveItem}

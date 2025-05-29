@@ -20,7 +20,7 @@ export const ConfigurationAccordion: FC<ConfigurationAccordionProps> = ({
     onClick,
 }) => {
     const [expanded, changeExpanded] = useExpanded<'configure'>();
-    const [tempExpanded, setTempExpanded] = useState(false);
+    const [temporarilyExpanded, setTemporarilyExpanded] = useState(false);
     const { routes } = useRoutes();
     const subRoutes = routes.mainNavRoutes;
     const hasActiveItem = Boolean(
@@ -29,26 +29,26 @@ export const ConfigurationAccordion: FC<ConfigurationAccordionProps> = ({
 
     useEffect(() => {
         if (mode === 'mini') {
-            setTempExpanded(false);
+            setTemporarilyExpanded(false);
         }
     }, [mode]);
 
     const onExpandChange = () => {
         changeExpanded('configure', !expanded.includes('configure'));
 
-        if (tempExpanded) {
-            setTempExpanded(false);
+        if (temporarilyExpanded) {
+            setTemporarilyExpanded(false);
             setMode('mini');
         }
         if (mode === 'mini') {
-            setTempExpanded(true);
+            setTemporarilyExpanded(true);
             setMode('full');
         }
     };
 
     const onItemClick = () => {
-        if (tempExpanded) {
-            setTempExpanded(false);
+        if (temporarilyExpanded) {
+            setTemporarilyExpanded(false);
             setMode('mini');
         }
         onClick?.();
@@ -58,7 +58,7 @@ export const ConfigurationAccordion: FC<ConfigurationAccordionProps> = ({
         <MenuListAccordion
             title='Configure'
             expanded={
-                (expanded.includes('configure') || tempExpanded) &&
+                (expanded.includes('configure') || temporarilyExpanded) &&
                 mode === 'full'
             }
             onExpandChange={onExpandChange}

@@ -10,7 +10,6 @@ import {
 } from '../../types/index.js';
 import ProjectFeaturesController from '../feature-toggle/feature-toggle-controller.js';
 import ProjectEnvironmentsController from '../project-environments/project-environments-controller.js';
-import ProjectHealthReport from '../../routes/admin-api/project/health-report.js';
 import type ProjectService from './project-service.js';
 import VariantsController from '../../routes/admin-api/project/variants.js';
 import {
@@ -226,7 +225,6 @@ export default class ProjectController extends Controller {
             '/',
             new ProjectEnvironmentsController(config, services).router,
         );
-        this.use('/', new ProjectHealthReport(config, services).router);
         this.use('/', new VariantsController(config, services).router);
         this.use('/', new ProjectApiTokenController(config, services).router);
         this.use('/', new ProjectArchiveController(config, services).router);

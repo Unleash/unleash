@@ -110,7 +110,6 @@ export * from './group-user-model-schema.js';
 export * from './groups-schema.js';
 export * from './health-check-schema.js';
 export * from './health-overview-schema.js';
-export * from './health-report-schema.js';
 export * from './id-schema.js';
 export * from './ids-schema.js';
 export * from './import-toggles-schema.js';

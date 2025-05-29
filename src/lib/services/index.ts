@@ -326,11 +326,7 @@ export const createServices = (
         ? createProjectStatusService(db, config)
         : createFakeProjectStatusService().projectStatusService;
 
-    const projectHealthService = new ProjectHealthService(
-        stores,
-        config,
-        projectService,
-    );
+    const projectHealthService = new ProjectHealthService(stores, config);
 
     const exportImportService = db
         ? createExportImportTogglesService(db, config)

@@ -137,12 +137,6 @@ export interface IAccessStore extends Store<IRole, number> {
         projectId: string,
     ): Promise<void>;
 
-    updateGroupProjectRole(
-        userId: number,
-        roleId: number,
-        projectId: string,
-    ): Promise<void>;
-
     removeRolesOfTypeForUser(
         userId: number,
         roleTypes: string[],

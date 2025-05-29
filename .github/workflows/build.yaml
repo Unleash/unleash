@@ -18,7 +18,7 @@ jobs:
     name: build
     permissions:
       contents: read
-      # Needed for the github-reporter from vite to make comments on PRs
+      # Needed for the github-reporter from vitest to make comments on PRs
       pull-requests: write
     services:
       # Label used to access the service container

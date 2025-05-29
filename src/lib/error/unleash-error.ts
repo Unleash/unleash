@@ -3,6 +3,7 @@ import type { FromSchema } from 'json-schema-to-ts';
 
 export const UnleashApiErrorTypes = [
     'ContentTypeError',
+    'ConflictError',
     'DisabledError',
     'FeatureHasTagError',
     'IncompatibleProjectError',

@@ -18,9 +18,15 @@ import {
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
 import type { BulkMetricsSchema } from '../../../openapi/spec/bulk-metrics-schema.js';
-import { clientMetricsEnvBulkSchema } from '../shared/schema.js';
+import {
+    clientMetricsEnvBulkSchema,
+    customMetricsSchema,
+} from '../shared/schema.js';
 import type { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v2-type.js';
 import { CLIENT_METRICS } from '../../../events/index.js';
+import type { CustomMetricsSchema } from '../../../openapi/spec/custom-metrics-schema.js';
+import type { StoredCustomMetric } from '../custom/custom-metrics-store.js';
+import type { CustomMetricsService } from '../custom/custom-metrics-service.js';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;
@@ -31,6 +37,8 @@ export default class ClientMetricsController extends Controller {
 
     metricsV2: ClientMetricsServiceV2;
 
+    customMetricsService: CustomMetricsService;
+
     flagResolver: IFlagResolver;
 
     constructor(
@@ -38,11 +46,13 @@ export default class ClientMetricsController extends Controller {
             clientInstanceService,
             clientMetricsServiceV2,
             openApiService,
+            customMetricsService,
         }: Pick<
             IUnleashServices,
             | 'clientInstanceService'
             | 'clientMetricsServiceV2'
             | 'openApiService'
+            | 'customMetricsService'
         >,
         config: IUnleashConfig,
     ) {
@@ -53,6 +63,7 @@ export default class ClientMetricsController extends Controller {
         this.clientInstanceService = clientInstanceService;
         this.openApiService = openApiService;
         this.metricsV2 = clientMetricsServiceV2;
+        this.customMetricsService = customMetricsService;
         this.flagResolver = config.flagResolver;
 
         this.route({
@@ -102,6 +113,35 @@ export default class ClientMetricsController extends Controller {
                 }),
             ],
         });
+
+        this.route({
+            method: 'post',
+            path: '/custom',
+            handler: this.customMetrics,
+            permission: NONE,
+            middleware: [
+                this.openApiService.validPath({
+                    tags: ['Client'],
+                    summary: 'Send custom metrics',
+                    description: `This operation accepts custom metrics from clients. These metrics will be exposed via Prometheus in Unleash.`,
+                    operationId: 'clientCustomMetrics',
+                    requestBody: createRequestSchema('customMetricsSchema'),
+                    responses: {
+                        202: emptyResponse,
+                        ...getStandardResponses(400),
+                    },
+                }),
+                rateLimit({
+                    windowMs: minutesToMilliseconds(1),
+                    max: config.metricsRateLimiting.clientMetricsMaxPerMinute,
+                    validate: false,
+                    standardHeaders: true,
+                    legacyHeaders: false,
+                }),
+            ],
+        });
+
+        // Note: Custom metrics GET endpoints are now handled by the admin API
     }
 
     async registerMetrics(req: IAuthRequest, res: Response): Promise<void> {
@@ -125,6 +165,46 @@ export default class ClientMetricsController extends Controller {
                 );
                 res.status(202).end();
             } catch (e) {
+                res.status(400).end();
+            }
+        }
+    }
+
+    async customMetrics(
+        req: IAuthRequest<void, void, CustomMetricsSchema>,
+        res: Response<void>,
+    ): Promise<void> {
+        if (this.config.flagResolver.isEnabled('disableMetrics')) {
+            res.status(204).end();
+        } else {
+            try {
+                const { body } = req;
+
+                // Use Joi validation for custom metrics
+                await customMetricsSchema.validateAsync(body);
+
+                // Process and store custom metrics
+                if (body.metrics && Array.isArray(body.metrics)) {
+                    const validMetrics = body.metrics.filter(
+                        (metric) =>
+                            typeof metric.name === 'string' &&
+                            typeof metric.value === 'number',
+                    );
+
+                    if (validMetrics.length < body.metrics.length) {
+                        this.logger.warn(
+                            'Some invalid metric types found, skipping',
+                        );
+                    }
+
+                    this.customMetricsService.addMetrics(
+                        validMetrics as Omit<StoredCustomMetric, 'timestamp'>[],
+                    );
+                }
+
+                res.status(202).end();
+            } catch (e) {
+                this.logger.error('Failed to process custom metrics', e);
                 res.status(400).end();
             }
         }

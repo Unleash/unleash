@@ -69,14 +69,6 @@ export class FakeAccessStore implements IAccessStore {
         throw new Error('Method not implemented.');
     }
 
-    removeGroupFromRole(
-        groupId: number,
-        roleId: number,
-        projectId?: string,
-    ): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
-
     updateUserProjectRole(
         userId: number,
         roleId: number,

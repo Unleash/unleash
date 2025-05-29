@@ -87,11 +87,13 @@ export type UiFlags = {
     consumptionModel?: boolean;
     edgeObservability?: boolean;
     addEditStrategy?: boolean;
-    flagsReleaseManagementUI?: boolean;
     cleanupReminder?: boolean;
     registerFrontendClient?: boolean;
     featureLinks?: boolean;
     projectLinkTemplates?: boolean;
+    customMetrics?: boolean;
+    lifecycleMetrics?: boolean;
+    sideMenuCleanup?: boolean;
 };
 
 export interface IVersionInfo {

@@ -554,20 +554,6 @@ export class AccessStore implements IAccessStore {
         });
     }
 
-    async removeGroupFromRole(
-        groupId: number,
-        roleId: number,
-        projectId?: string,
-    ): Promise<void> {
-        return this.db(T.GROUP_ROLE)
-            .where({
-                group_id: groupId,
-                role_id: roleId,
-                project: projectId,
-            })
-            .delete();
-    }
-
     async updateUserProjectRole(
         userId: number,
         roleId: number,

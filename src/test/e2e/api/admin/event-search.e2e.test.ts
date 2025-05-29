@@ -6,66 +6,26 @@ import {
     type IUnleashStores,
     RoleName,
 } from '../../../../lib/types/index.js';
-import type {
-    AccessService,
-    EventService,
-} from '../../../../lib/services/index.js';
+import type { EventService } from '../../../../lib/services/index.js';
 import getLogger from '../../../fixtures/no-logger.js';
 import {
+    createUserWithRootRole,
     type IUnleashTest,
     setupAppWithAuth,
 } from '../../helpers/test-helper.js';
 import { createEventsService } from '../../../../lib/features/index.js';
 import { createTestConfig } from '../../../config/test-config.js';
-import type { IRole } from '../../../../lib/types/stores/access-store.js';
 import { FEATURE_CREATED, USER_CREATED } from '../../../../lib/events/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
 let eventService: EventService;
 const TEST_USER_ID = -9999;
-const regularUserName = 'import-user';
-const adminUserName = 'admin-user';
+const regularEmail = 'import-user@getunleash.io';
+const adminEmail = 'admin-user@getunleash.io';
 
 const config: IUnleashConfig = createTestConfig();
-let adminRole: IRole;
 let stores: IUnleashStores;
-let accessService: AccessService;
-
-const loginRegularUser = () =>
-    app.request
-        .post(`/auth/demo/login`)
-        .send({
-            email: `${regularUserName}@getunleash.io`,
-        })
-        .expect(200);
-
-const loginAdminUser = () =>
-    app.request
-        .post(`/auth/demo/login`)
-        .send({
-            email: `${adminUserName}@getunleash.io`,
-        })
-        .expect(200);
-
-const createUserEditorAccess = async (name, email) => {
-    const { userStore } = stores;
-    const user = await userStore.insert({
-        name,
-        email,
-    });
-    return user;
-};
-
-const createUserAdminAccess = async (name, email) => {
-    const { userStore } = stores;
-    const user = await userStore.insert({
-        name,
-        email,
-    });
-    await accessService.addUserToRole(user.id, adminRole.id, 'default');
-    return user;
-};
 
 beforeAll(async () => {
     db = await dbInit('event_search', getLogger);
@@ -84,19 +44,18 @@ beforeAll(async () => {
 
     eventService = createEventsService(db.rawDatabase, config);
 
-    accessService = app.services.accessService;
+    await createUserWithRootRole({
+        app,
+        stores,
+        email: regularEmail,
+    });
 
-    const roles = await accessService.getRootRoles();
-    adminRole = roles.find((role) => role.name === RoleName.ADMIN)!;
-
-    await createUserEditorAccess(
-        regularUserName,
-        `${regularUserName}@getunleash.io`,
-    );
-    await createUserAdminAccess(
-        adminUserName,
-        `${adminUserName}@getunleash.io`,
-    );
+    await createUserWithRootRole({
+        app,
+        stores,
+        email: adminEmail,
+        roleName: RoleName.ADMIN,
+    });
 });
 
 afterAll(async () => {
@@ -105,7 +64,7 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-    await loginAdminUser();
+    await app.login({ email: adminEmail });
     await db.stores.featureToggleStore.deleteAll();
     await db.stores.segmentStore.deleteAll();
     await db.stores.eventStore.deleteAll();
@@ -522,7 +481,7 @@ test('should filter events by project using IS_ANY_OF', async () => {
 });
 
 test('should not show user creation events for non-admins', async () => {
-    await loginRegularUser();
+    await app.login({ email: regularEmail });
     await eventService.storeEvent({
         type: USER_CREATED,
         createdBy: 'test-user',

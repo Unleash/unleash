@@ -79,6 +79,50 @@ test('should create instance if does not exist', async () => {
     expect(finalInstances.length).toBe(1);
 });
 
+test('should accept custom metrics', async () => {
+    const customMetricsExample = {
+        metrics: [
+            {
+                name: 'http_responses_total',
+                value: 1,
+                labels: {
+                    status: '200',
+                    method: 'GET',
+                },
+            },
+            {
+                name: 'http_responses_total',
+                value: 1,
+                labels: {
+                    status: '304',
+                    method: 'GET',
+                },
+            },
+        ],
+    };
+
+    return app.request
+        .post('/api/client/metrics/custom')
+        .send(customMetricsExample)
+        .expect(202);
+});
+
+test('should reject invalid custom metrics', async () => {
+    const invalidCustomMetrics = {
+        data: [
+            {
+                name: 'http_responses_total',
+                value: 1,
+            },
+        ],
+    };
+
+    return app.request
+        .post('/api/client/metrics/custom')
+        .send(invalidCustomMetrics)
+        .expect(400);
+});
+
 test('should emit response time metrics data in the correct path', async () => {
     const badMetrics = {
         ...metricsExample,

@@ -55,11 +55,8 @@ export type IFlagKey =
     | 'deltaApi'
     | 'uniqueSdkTracking'
     | 'consumptionModel'
-    | 'teamsIntegrationChangeRequests'
     | 'edgeObservability'
     | 'addEditStrategy'
-    | 'flagsOverviewSearch'
-    | 'flagsReleaseManagementUI'
     | 'cleanupReminder'
     | 'removeInactiveApplications'
     | 'registerFrontendClient'
@@ -67,7 +64,10 @@ export type IFlagKey =
     | 'projectLinkTemplates'
     | 'reportUnknownFlags'
     | 'lastSeenBulkQuery'
-    | 'newGettingStartedEmail';
+    | 'newGettingStartedEmail'
+    | 'lifecycleMetrics'
+    | 'customMetrics'
+    | 'sideMenuCleanup';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -268,10 +268,6 @@ const flags: IFlags = {
         process.env.EXPERIMENTAL_CONSUMPTION_MODEL,
         false,
     ),
-    teamsIntegrationChangeRequests: parseEnvVarBoolean(
-        process.env.EXPERIMENTAL_TEAMS_INTEGRATION_CHANGE_REQUESTS,
-        false,
-    ),
     edgeObservability: parseEnvVarBoolean(
         process.env.EXPERIMENTAL_EDGE_OBSERVABILITY,
         false,
@@ -280,14 +276,7 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_ADD_EDIT_STRATEGY,
         false,
     ),
-    flagsOverviewSearch: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FLAGS_OVERVIEW_SEARCH,
-        false,
-    ),
-    flagsReleaseManagementUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FLAGS_RELEASE_MANAGEMENT_UI,
-        false,
-    ),
+
     cleanupReminder: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CLEANUP_REMINDER,
         false,
@@ -318,6 +307,14 @@ const flags: IFlags = {
     ),
     newGettingStartedEmail: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_GETTING_STARTED_EMAIL,
+        false,
+    ),
+    lifecycleMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_METRICS,
+        false,
+    ),
+    sideMenuCleanup: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SIDE_MENU_CLEANUP,
         false,
     ),
 };

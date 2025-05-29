@@ -53,7 +53,10 @@ export const FeatureOverview = () => {
     const { splash } = useAuthSplash();
     const [showTooltip, setShowTooltip] = useState(false);
     const [hasClosedTooltip, setHasClosedTooltip] = useState(false);
-    const { feature, refetchFeature } = useFeature(projectId, featureId);
+    const { feature, refetchFeature, loading } = useFeature(
+        projectId,
+        featureId,
+    );
     const cleanupReminderEnabled = useUiFlag('cleanupReminder');
     const dragTooltipSplashId = 'strategy-drag-tooltip';
     const shouldShowStrategyDragTooltip = !splash?.[dragTooltipSplashId];
@@ -74,14 +77,16 @@ export const FeatureOverview = () => {
             ) : null}
             <StyledContainer>
                 <div>
-                    <FeatureOverviewMetaData
-                        hiddenEnvironments={hiddenEnvironments}
-                        onEnvironmentVisibilityChange={
-                            onEnvironmentVisibilityChange
-                        }
-                        feature={feature}
-                        onChange={refetchFeature}
-                    />
+                    {!loading ? (
+                        <FeatureOverviewMetaData
+                            hiddenEnvironments={hiddenEnvironments}
+                            onEnvironmentVisibilityChange={
+                                onEnvironmentVisibilityChange
+                            }
+                            feature={feature}
+                            onChange={refetchFeature}
+                        />
+                    ) : null}
                 </div>
                 <StyledMainContent>
                     <FeatureOverviewEnvironments

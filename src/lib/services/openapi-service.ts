@@ -38,7 +38,41 @@ export class OpenApiService {
     }
 
     validPath(op: ApiOperation): RequestHandler {
-        return this.api.validPath(op);
+        const { beta, enterpriseOnly, ...rest } = op;
+        const { baseUriPath = '' } = this.config.server ?? {};
+        const openapiStaticAssets = `${baseUriPath}/openapi-static`;
+        const betaBadge = beta
+            ? `![Beta](${openapiStaticAssets}/Beta.svg) This is a beta endpoint and it may change or be removed in the future. 
+            
+            `
+            : '';
+        const enterpriseBadge = enterpriseOnly
+            ? `![Unleash Enterprise](${openapiStaticAssets}/Enterprise.svg) **Enterprise feature**
+            
+            `
+            : '';
+
+        const failDeprecated =
+            (op.deprecated ?? false) && process.env.NODE_ENV === 'development';
+
+        if (failDeprecated) {
+            return (req, res, next) => {
+                this.logger.warn(
+                    `Deprecated endpoint: ${op.operationId} at ${req.path}`,
+                );
+                return res.status(410).json({
+                    message: `The endpoint ${op.operationId} at ${req.path} is deprecated and should not be used.`,
+                });
+            };
+        }
+        return this.api.validPath({
+            ...rest,
+            description:
+                `${enterpriseBadge}${betaBadge}${op.description}`.replaceAll(
+                    /\n\s*/g,
+                    '\n\n',
+                ),
+        });
     }
 
     useDocs(app: Express): void {

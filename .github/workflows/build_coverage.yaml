@@ -9,14 +9,16 @@ on:
       - website/**
       - frontend/**
       - coverage/**
+  pull_request:
+    paths-ignore:
+      - website/**
+      - frontend/**
+      - coverage/**
 
 jobs:
   coverage:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [20.x]
     services:
       # Label used to access the service container
       postgres:
@@ -35,7 +37,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: 22.x

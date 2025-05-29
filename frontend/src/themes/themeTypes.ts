@@ -40,16 +40,32 @@ declare module '@mui/material/styles' {
         };
     }
 
+    interface PaletteColor {
+        border?: string;
+    }
+
+    interface SimplePaletteColorOptions {
+        border?: string;
+    }
+
+    interface CustomTypeBackground {
+        application: string;
+        sidebar: string;
+        alternative: string;
+        elevation1: string;
+        elevation2: string;
+    }
+
     interface CustomPalette {
         /**
          * Generic neutral palette color
          */
-        neutral: PaletteColorOptions;
+        neutral: SimplePaletteColorOptions;
 
         /**
          * Sales-related palette color
          */
-        web: PaletteColorOptions;
+        web: SimplePaletteColorOptions;
 
         /**
          * Table colors
@@ -170,30 +186,6 @@ declare module '@mui/material/styles' {
     }
 
     interface TypeAction extends CustomTypeAction {}
-
-    /* Extend the background object from MUI */
-    interface CustomTypeBackground {
-        application: string;
-        sidebar: string;
-        alternative: string;
-        elevation1: string;
-        elevation2: string;
-    }
-
-    interface PaletteColor {
-        main: string;
-        light: string;
-        dark: string;
-        border?: string;
-        contrastText: string;
-    }
-    interface PaletteColorOptions {
-        main?: string;
-        light?: string;
-        dark?: string;
-        border?: string;
-        contrastText?: string;
-    }
 }
 
 declare module '@mui/system/createTheme/shape' {

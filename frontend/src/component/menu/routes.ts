@@ -50,6 +50,7 @@ import { PersonalDashboard } from '../personalDashboard/PersonalDashboard.jsx';
 import { ReleaseManagement } from 'component/releases/ReleaseManagement/ReleaseManagement';
 import { CreateReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/CreateReleasePlanTemplate';
 import { EditReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/EditReleasePlanTemplate';
+import { ExploreCounters } from 'component/counters/ExploreCounters/ExploreCounters.js';
 
 export const routes: IRoute[] = [
     // Splash
@@ -132,19 +133,10 @@ export const routes: IRoute[] = [
     // Flags overview
     {
         path: '/search',
-        title: 'Search',
-        component: FeatureToggleListTable,
-        type: 'protected',
-        menu: { primary: true },
-        notFlag: 'flagsReleaseManagementUI',
-    },
-    {
-        path: '/search',
         title: 'Flags overview',
         component: FeatureToggleListTable,
         type: 'protected',
         menu: { primary: true },
-        flag: 'flagsReleaseManagementUI',
     },
 
     // Playground
@@ -165,6 +157,16 @@ export const routes: IRoute[] = [
         type: 'protected',
         menu: { primary: true },
         enterprise: true,
+        notFlag: 'sideMenuCleanup',
+    },
+    {
+        path: '/insights',
+        title: 'Analytics',
+        component: Insights,
+        type: 'protected',
+        menu: { primary: true },
+        enterprise: true,
+        flag: 'sideMenuCleanup',
     },
 
     // Applications
@@ -182,6 +184,16 @@ export const routes: IRoute[] = [
         component: PaginatedApplicationList,
         type: 'protected',
         menu: { main: true },
+    },
+
+    // Counters
+    {
+        path: '/custom-metrics',
+        title: 'Custom metrics',
+        component: ExploreCounters,
+        type: 'protected',
+        menu: { main: true },
+        flag: 'customMetrics',
     },
 
     // Context

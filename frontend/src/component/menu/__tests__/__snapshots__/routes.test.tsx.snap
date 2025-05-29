@@ -104,17 +104,6 @@ exports[`returns all baseRoutes 1`] = `
     "menu": {
       "primary": true,
     },
-    "notFlag": "flagsReleaseManagementUI",
-    "path": "/search",
-    "title": "Search",
-    "type": "protected",
-  },
-  {
-    "component": [Function],
-    "flag": "flagsReleaseManagementUI",
-    "menu": {
-      "primary": true,
-    },
     "path": "/search",
     "title": "Flags overview",
     "type": "protected",
@@ -142,8 +131,20 @@ exports[`returns all baseRoutes 1`] = `
     "menu": {
       "primary": true,
     },
+    "notFlag": "sideMenuCleanup",
     "path": "/insights",
     "title": "Insights",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "enterprise": true,
+    "flag": "sideMenuCleanup",
+    "menu": {
+      "primary": true,
+    },
+    "path": "/insights",
+    "title": "Analytics",
     "type": "protected",
   },
   {
@@ -161,6 +162,16 @@ exports[`returns all baseRoutes 1`] = `
     },
     "path": "/applications",
     "title": "Applications",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "flag": "customMetrics",
+    "menu": {
+      "main": true,
+    },
+    "path": "/custom-metrics",
+    "title": "Custom metrics",
     "type": "protected",
   },
   {

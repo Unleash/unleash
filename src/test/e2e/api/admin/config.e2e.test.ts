@@ -58,39 +58,10 @@ test('gets ui config with disablePasswordAuth', async () => {
 
 test('gets ui config with frontendSettings', async () => {
     const frontendApiOrigins = ['https://example.net'];
-    await app.services.frontendApiService.setFrontendSettings(
-        { frontendApiOrigins },
+    await app.services.frontendApiService.setFrontendCorsSettings(
+        frontendApiOrigins,
         TEST_AUDIT_USER,
     );
-    await app.request
-        .get('/api/admin/ui-config')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) =>
-            expect(res.body.frontendApiOrigins).toEqual(frontendApiOrigins),
-        );
-});
-
-test('sets ui config with frontendSettings', async () => {
-    const frontendApiOrigins = ['https://example.org'];
-    await app.request
-        .get('/api/admin/ui-config')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => expect(res.body.frontendApiOrigins).toEqual(['*']));
-    await app.request
-        .post('/api/admin/ui-config')
-        .send({ frontendSettings: { frontendApiOrigins: [] } })
-        .expect(204);
-    await app.request
-        .get('/api/admin/ui-config')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => expect(res.body.frontendApiOrigins).toEqual([]));
-    await app.request
-        .post('/api/admin/ui-config')
-        .send({ frontendSettings: { frontendApiOrigins } })
-        .expect(204);
     await app.request
         .get('/api/admin/ui-config')
         .expect('Content-Type', /json/)

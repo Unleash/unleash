@@ -6,7 +6,6 @@ import type {
     IEventStore,
 } from '../../types/stores/event-store.js';
 import type { IApiUser, IUser } from '../../types/index.js';
-import type { DeprecatedSearchEventsSchema } from '../../openapi/index.js';
 import type EventEmitter from 'node:events';
 import { ApiTokenType } from '../../types/model.js';
 import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events.js';
@@ -67,18 +66,6 @@ export default class EventService {
         };
     }
 
-    async deprecatedSearchEvents(
-        search: DeprecatedSearchEventsSchema,
-    ): Promise<IEventList> {
-        const totalEvents =
-            await this.eventStore.deprecatedFilteredCount(search);
-        const events = await this.eventStore.deprecatedSearchEvents(search);
-        return {
-            events,
-            totalEvents,
-        };
-    }
-
     async searchEvents(
         search: IEventSearchParams,
         userId: number,
@@ -96,12 +83,8 @@ export default class EventService {
         queryParams.push(...projectFilter);
 
         const totalEvents = await this.eventStore.searchEventsCount(
-            {
-                limit: search.limit,
-                offset: search.offset,
-                query: search.query,
-            },
             queryParams,
+            search.query,
         );
         const events = await this.eventStore.searchEvents(
             {

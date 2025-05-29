@@ -86,6 +86,14 @@ beforeAll(async () => {
         },
         TEST_AUDIT_USER,
     );
+
+    await app.services.userService.createUser(
+        {
+            username: 'admin2@test.com',
+            rootRole: 1,
+        },
+        TEST_AUDIT_USER,
+    );
 });
 
 afterAll(async () => {
@@ -1357,15 +1365,13 @@ const createChangeRequest = async ({
     state: string;
     createdBy: number;
 }) => {
-    await db
-        .rawDatabase('change_requests')
-        .insert({
-            id,
-            environment,
-            state,
-            project: 'default',
-            created_by: createdBy,
-        });
+    await db.rawDatabase('change_requests').insert({
+        id,
+        environment,
+        state,
+        project: 'default',
+        created_by: createdBy,
+    });
     await db.rawDatabase('change_request_events').insert({
         id,
         feature,
@@ -1433,7 +1439,7 @@ test('should return change request ids per environment', async () => {
         feature: 'my_feature_b',
         environment: 'development',
         state: 'Approved',
-        createdBy: 1,
+        createdBy: 3,
     });
 
     const { body } = await searchFeatures({});

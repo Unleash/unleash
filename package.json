@@ -107,7 +107,7 @@
     "lodash.groupby": "^4.6.0",
     "lodash.sortby": "^4.7.0",
     "log4js": "^6.0.0",
-    "make-fetch-happen": "^13.0.1",
+    "make-fetch-happen": "^14.0.0",
     "memoizee": "^0.4.17",
     "mime": "^4.0.4",
     "murmurhash3js": "^3.0.1",

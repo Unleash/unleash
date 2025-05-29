@@ -51,6 +51,20 @@ export class OpenApiService {
             
             `
             : '';
+
+        const failDeprecated =
+            (op.deprecated ?? false) && process.env.NODE_ENV === 'development';
+
+        if (failDeprecated) {
+            return (req, res, next) => {
+                this.logger.warn(
+                    `Deprecated endpoint: ${op.operationId} at ${req.path}`,
+                );
+                return res.status(410).json({
+                    message: `The endpoint ${op.operationId} at ${req.path} is deprecated and should not be used.`,
+                });
+            };
+        }
         return this.api.validPath({
             ...rest,
             description:

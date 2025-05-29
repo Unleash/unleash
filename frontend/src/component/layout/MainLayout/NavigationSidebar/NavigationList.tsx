@@ -52,9 +52,8 @@ export const RecentProjectsList: FC<{
             onClick={onClick}
             selected={false}
             mode={mode}
-        >
-            <ProjectIcon />
-        </MenuListItem>
+            icon={<ProjectIcon />}
+        />
     </List>
 );
 
@@ -75,9 +74,8 @@ export const RecentFlagsList: FC<{
                 selected={false}
                 key={flag.featureId}
                 mode={mode}
-            >
-                <FlagIcon />
-            </MenuListItem>
+                icon={<FlagIcon />}
+            />
         ))}
     </List>
 );
@@ -117,12 +115,14 @@ export const PrimaryNavigationList: FC<{
                     text={sideMenuCleanup ? 'Analytics' : 'Insights'}
                 />
             ) : null}
-            <ConfigurationAccordion
-                mode={mode}
-                setMode={setMode}
-                activeItem={activeItem}
-                onClick={() => onClick('configure')}
-            />
+            {sideMenuCleanup ? (
+                <ConfigurationAccordion
+                    mode={mode}
+                    setMode={setMode}
+                    activeItem={activeItem}
+                    onClick={() => onClick('configure')}
+                />
+            ) : null}
         </List>
     );
 };

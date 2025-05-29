@@ -1,0 +1,408 @@
+---
+title: Managing feature flags in your codebase
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Feature flags are a powerful technique for controlling the release of features and managing application behavior. Unleash provides the server-side infrastructure for managing these flags. This guide focuses on how you, as a developer or architect, can effectively organize and implement unleash feature flags directly within your codebase. The choices you make here significantly impact your application's performance, testability, and long-term maintainability. Good general software design practices, like modularity and clear separation of concerns, also make integrating and managing feature flags easier.
+
+This guide explores key considerations for in-code flag management, offers detailed recommendations, and provides code examples to help you build reliable and flexible systems.
+
+Four core principles should guide your strategy for managing feature flags in code:
+
+## Clarity
+
+Flag-related logic should be easy to understand, locate, and reason about. Developers should quickly grasp what a flag does and how it affects behavior.
+
+## Maintainability
+
+Adding new flags, modifying existing ones, and especially removing flags when they are no longer needed should be straightforward and low-risk processes.
+
+## Testability
+
+Code controlled by feature flags must be easily testable across its key states. Achieving 100% test coverage for every flag combination is often unrealistic and unnecessary. Instead, focus your testing efforts on the critical scenarios.
+
+## Scalability
+Your approach must accommodate a growing number of feature flags and an increasing number of developers interacting with them, without leading to a tangled or unmanageable codebase.
+
+## Strategic flag evaluation: where, when, and how often
+How you implement feature flags in your codebase significantly affects its structure and behavior. Thoughtful evaluation strategies are key to maintainable and predictable systems.
+
+### Define flags at the highest level of abstraction
+Place feature flag evaluations as high in the application stack as is practical for the change they control. For instance, when toggling a new UI theme or a different checkout flow, evaluate the flag in the controller, presenter, or top-level component that orchestrates that part of the user experience.
+
+Benefits:
+
+- Simplified code: by controlling feature behavior from a single, high-level point, the rest of your system often doesn't need to be aware of the flag itself.
+
+- Easier testing: isolating the decision point makes it easier to unit and integration test the feature.
+
+- Faster cleanup: flags defined and evaluated in one primary location are easier to find and remove.
+
+```javascript
+// src/controllers/checkoutController.js
+// import { featureService } from '../services/featureService';
+// import { FeatureFlags } from '../feature-flags';
+
+export function handleCheckoutRequest(req, res) {
+  const userContext = { userId: req.user.id, /* ... other context */ };
+  const useNewCheckout = featureService.isEnabled(FeatureFlags.NEW_CHECKOUT_PROCESS, userContext);
+
+  if (useNewCheckout) {
+    renderNewCheckoutPage(req, res, userContext);
+  } else {
+    renderOldCheckoutPage(req, res, userContext);
+  }
+}
+```
+
+Additional things to consider:
+
+- Performance: passing evaluated flag state down many layers can be cumbersome. If a decision is only relevant deep in a call stack, evaluate closer to the point of use, but weigh this against centralization benefits and the "evaluate once" principle.
+
+- Granularity: for a high-level module controlling many distinct, independently flagged sub-features, evaluating all flags at the top might be overly complex. Delegate flag evaluation for sub-features to their respective sub-modules, while still adhering to "evaluate once" for each flag.
+
+- Backend logic: evaluate close to the affected module
+For changes mainly affecting backend logic (e.g., new database interaction, optimized algorithm), evaluate the flag close to the specific module responsible.
+
+Benefits:
+
+Focused testing: simplifies unit and integration testing of the module with the flag enabled/disabled.
+
+Isolation: reduces the risk of unintended side effects in unrelated backend code.
+
+Ensuring testability for backend modules:
+
+Inject flag result: evaluate the flag outside the module's core logic and inject the boolean result.
+
+Separate implementations: use patterns like strategy where the flag decision determines which implementation is used.
+
+Code example (conceptual python service module):
+
+```
+# services/data_processor.py
+# from ..feature_service import feature_service
+# from .. import feature_flags
+
+class DataProcessor:
+    def __init__(self, use_new_algorithm: bool):
+        self._use_new_algorithm = use_new_algorithm
+
+    def process(self, data):
+        if self._use_new_algorithm:
+            return self._process_with_new_algorithm(data)
+        else:
+            return self._process_with_old_algorithm(data)
+
+    def _process_with_old_algorithm(self, data): return f"Processed with old: {data}"
+    def _process_with_new_algorithm(self, data): return f"Processed with NEW: {data}"
+
+# Somewhere higher in the stack:
+# def get_data_processor(user_context):
+#     use_new_algo_flag_enabled = feature_service.is_enabled(
+#         feature_flags.OPTIMIZED_DATA_PROCESSING, user_context
+#     )
+#     return DataProcessor(use_new_algorithm=use_new_algo_flag_enabled)
+
+```
+
+Things to consider:
+
+This complements "evaluate once per request." The result of a flag evaluation can be passed to the backend module.
+
+Avoid individual backend modules re-evaluating the same global flag multiple times for the same operation.
+
+Evaluate feature flags once per user request
+Evaluate a feature flag once per user request, typically at the entry point. Propagate the outcome downstream.
+
+Benefits:
+
+Consistent user experience: guarantees the user experiences the same feature state throughout their interaction.
+
+Predictable behavior: simplifies reasoning about system behavior.
+
+Cleaner code: reduces redundant flag evaluations.
+
+Resilience: minimizes the window for experiencing varying flag states during rare inconsistencies.
+
+How to propagate the flag's outcome:
+
+Request headers: for distributed systems (e.g., X-Feature-NewCheckout: true).
+
+Request context/object: within a monolith or single service.
+
+Configuration object: derived from flags at the start of the request.
+
+```
+// --- API Gateway (e.g., Express.js middleware) ---
+// import { featureService } from './services/featureService';
+// import { FeatureFlags } from './feature-flags';
+// import axios from 'axios';
+
+gateway.use(async (req, res, next) => {
+  const userContext = { userId: req.user?.id };
+  req.featureFlags = {
+    useNewPaymentMethod: featureService.isEnabled(FeatureFlags.NEW_PAYMENT_METHOD, userContext)
+  };
+  next();
+});
+
+gateway.post('/api/orders', async (req, res) => {
+  try {
+    const orderServiceResponse = await axios.post('http://order-service/create-order',
+      req.body, { headers: { 'X-Feature-UseNewPayment': req.featureFlags.useNewPaymentMethod } }
+    );
+    res.json(orderServiceResponse.data);
+  } catch (error) { /* ... */ }
+});
+```
+
+Things to consider:
+
+Overhead: propagating flag state adds minor overhead.
+
+Long-lived processes: for background jobs (not typical user requests), you might need to re-evaluate flags periodically if their state can change and influence ongoing behavior.
+
+Sdk caching: while unleash sdks have efficient caching, "evaluate once per request" is primarily about logical consistency for a user interaction.
+
+## Defining and storing flag names: your single source of truth
+Represent and store flag names (keys) that link your code to configurations in the unleash ui.
+
+Recommendation: centralize flag name definitions using constants or enums.
+
+Why: single source of truth, type safety, easier refactoring and discoverability.
+
+Code examples:
+
+Ensure string values exactly match names in your unleash instance. See unleash feature flag documentation.
+
+Things to consider:
+
+Large number of flags: for hundreds of flags, consider organizing definitions by feature area, maintaining a clear project-wide convention.
+
+Dynamic flag names: avoid constructing flag names dynamically (e.g., "feature_" + sectionName) as it hinders static analysis and discovery.
+
+Accessing and evaluating flags: the abstraction layer advantage
+Directly calling unleash.isEnabled() throughout your codebase can lead to tight coupling.
+
+Recommendation: implement an abstraction layer or a dedicated service (e.g., FeatureService) wrapping unleash sdk calls.
+
+Why: decoupling, centralized logic (defaults, context, logging), simplified usage, enhanced testability.
+
+Code example (typescript/node.js FeatureService):
+
+```
+// src/services/feature-service.ts
+import { Unleash, Context as UnleashContext } from 'unleash-client';
+
+export interface AppUserContext { /* ... as previously defined ... */ }
+
+class FeatureService {
+  private unleash: Unleash;
+  constructor(unleashInstance: Unleash) { this.unleash = unleashInstance; }
+
+  private buildUnleashContext(appContext?: AppUserContext): UnleashContext { /* ... */ return { ...appContext }; }
+
+  public isEnabled(flagName: string, appContext?: AppUserContext, defaultValue: boolean = false): boolean {
+    try {
+      const unleashContext = this.buildUnleashContext(appContext);
+      // See [Unleash SDK isEnabled Documentation](placeholder_link_to_sdk_isenabled_doc)
+      return this.unleash.isEnabled(flagName, unleashContext, defaultValue);
+    } catch (error) {
+      console.error(`Error evaluating flag ${flagName}:`, error);
+      return defaultValue;
+    }
+  }
+
+  // Example of a more semantic, business-language method
+  public canUserAccessNewDashboard(userContext?: AppUserContext): boolean {
+    // Assuming FeatureFlags.BETA_USER_DASHBOARD is defined
+    return this.isEnabled(FeatureFlags.BETA_USER_DASHBOARD, userContext, false);
+  }
+}
+// Initialize and export:
+// const unleash = initializeUnleashClient();
+// export const featureService = new FeatureService(unleash);
+```
+
+Key considerations for your abstraction layer:
+
+Context provision: define how relevant context is passed for targeted evaluations.
+
+Default values & backward compatibility: always provide a safe default value (typically the "off" or pre-existing behavior). This is crucial for backward compatibility, ensuring that if a flag is turned off or the sdk fails, the application gracefully reverts to known, stable functionality without errors.
+
+Error handling: implement robust error handling around sdk calls.
+
+Refer to the unleash sdk documentation.
+
+Things to consider:
+
+Over-abstraction: for very small applications, a dedicated service might seem like overkill, but it often pays off as complexity grows.
+
+Semantic methods: encapsulating flag checks within methods that use business language (e.g., user.canPerformAction() instead of featureService.isEnabled("actionFlag")) can significantly improve code readability and align it closer to domain concepts. This can be part of your FeatureService or even methods on domain objects themselves if they have access to flag evaluation capabilities.
+
+Structuring conditional logic: beyond simple if/else
+Overusing if/else for complex features can lead to code that's hard to read, test, and clean up.
+
+Recommendation: for complex features, consider design patterns like strategy or encapsulate logic into separate modules/classes.
+
+Why: cleaner code, improved testability, easier cleanup (delete a class/module instead of surgical else block removal).
+
+Code example (strategy pattern - conceptual typescript):
+
+```
+// src/feature-flags.ts
+export enum FeatureFlags { ADVANCED_REPORTING_ENGINE = "advancedReportingEngineEnabled" }
+
+interface ReportData { /* ... */ }
+interface ReportGenerationStrategy { generateReport(data: ReportData, context?: AppUserContext): Promise<string>; }
+class StandardReportStrategy implements ReportGenerationStrategy { /* ... */ }
+class AdvancedReportStrategy implements ReportGenerationStrategy { /* ... */ }
+
+class ReportService {
+  private standardStrategy: ReportGenerationStrategy;
+  private advancedStrategy: ReportGenerationStrategy;
+  private featureService: /* type of featureService */ any;
+
+  constructor(fsInstance: any) { /* ... initialize strategies and fsInstance ... */ }
+
+  public async createReport(data: ReportData, userContext?: AppUserContext): Promise<string> {
+    let strategy = this.featureService.isEnabled(FeatureFlags.ADVANCED_REPORTING_ENGINE, userContext)
+      ? this.advancedStrategy
+      : this.standardStrategy;
+    return strategy.generateReport(data, userContext);
+  }
+}
+```
+
+Isolating feature-specific code: contain new feature code within new modules/classes for clarity and easier removal.
+
+Things to consider:
+
+Complexity for simple toggles: using complex patterns for simple on/off toggles is usually unnecessary.
+
+Upfront effort: patterns like strategy require more upfront design.
+
+Readability vs. dry (don't repeat yourself): when dealing with feature flags, the two code paths (flag on vs. flag off) are often intentionally different. Prioritize readability and ease of cleanup for each path over aggressively trying to dry the code between them. Sometimes, a little duplication is acceptable if it makes each path clearer and the eventual removal of the old path simpler.
+
+Minimizing code clutter: the art of flag hygiene
+Without discipline, your codebase can become cluttered with flag checks, leading to "flag debt."
+
+Recommendations:
+
+Clear comments: every flag check should explain its purpose, task reference (jira id), expected lifecycle, and owner.
+
+// JIRA-123: Enable new dashboard. Remove after Q1 (Team Phoenix)
+if (featureService.isEnabled(FeatureFlags.BETA_USER_DASHBOARD, userContext)) { /* ... */ }
+
+Associate metadata: reflect metadata from unleash ui (tags, descriptions) in code comments.
+
+Minimize or group changes behind a single flag: instead of many granular flags for different facets of one larger feature, consider grouping related changes under a single, more encompassing flag. This reduces the number of flags to manage, simplifies understanding what a flag controls, and lowers the risk of conflicting flag interactions. For example, a "newSettingsPageV1" flag might control the display of several new ui elements and backend endpoints related to that page.
+
+Regular reviews: periodically review active flags in code.
+
+Use unleash tags for organization in the unleash platform.
+
+Things to consider:
+
+Comment verbosity: balance detail with conciseness in comments.
+
+Granularity balance: while grouping flags simplifies management, ensure flags are not so broad that they lose their utility for fine-grained control or targeted rollouts when needed.
+
+## Flag lifecycle management in code: cleanup and removal
+All flags (except perhaps permanent operational toggles) have a lifecycle. Removing them from code is crucial.
+
+When to remove flags: feature fully rolled out and stable; a/b test concluded; temporary flag no longer needed.
+
+Process for safe removal from code:
+
+Verify in unleash: confirm status (e.g., 100% rollout, disabled).
+
+Set permanent state (optional safeguard): configure flag in unleash to its permanent state; monitor.
+
+Remove conditional logic: delete if/else blocks.
+
+Delete old code path: critical step to avoid dead code.
+
+Delete flag definition: remove from constants/enums.
+
+Clean up abstraction layer: remove specific helper methods.
+
+Archive/delete flag in unleash ui: see managing flags in unleash.
+
+Test thoroughly: ensure expected behavior.
+
+Code review: for removal changes.
+
+Failure to remove old code paths is a primary cause of technical debt.
+
+Things to consider:
+
+"Zombie" flags: flags 100% rolled out but never removed. Implement diligent cleanup policies.
+
+Fear of removal: clear documentation and robust testing mitigate this.
+
+Feature flags in monolithic applications: specific considerations
+Monoliths present unique nuances: shared codebase complexity, deployment cadence (entire monolith often deployed), vast testing surface area, and potentially complex refactoring for cleanup. In monoliths, a robust FeatureService and disciplined cleanup are paramount.
+
+Things to consider:
+
+Strangler fig pattern: flags are useful for gradual monolith refactoring.
+
+Performance of flag evaluation: in high-throughput monolith sections, ensure flag evaluations aren't a bottleneck.
+
+Beyond the code: supporting best practices for in-code success
+Effective in-code flag management is significantly influenced by broader team practices:
+
+Consistent naming conventions: establish clear conventions for flag names used in unleash and code.
+
+Access control (rbac): utilize unleash's role-based access control. See unleash rbac documentation.
+
+Flag lifespan planning: differentiate between short-lived and long-lived flags. Plan for removal.
+
+Clear documentation & communication: document flag purpose, scope, owner, and lifecycle.
+
+Regular audits & dedicated cleanup time: schedule flag audits and allocate time for cleanup.
+
+Beware of dependent flags (parent-child hierarchies): while it might seem useful to group flags (e.g., a parent flag controlling several child flags), this can add significant complexity, especially if both parent and child flags have their own targeting rules. Misconfigurations can easily occur, and understanding rollout percentages becomes difficult (e.g., if parent is 50% and child is 50%, is it 25% overall?). If you use such structures, keep targeting rules simple, document hierarchies meticulously, and consider if flags can be designed to be managed independently to reduce this complexity.
+
+Avoid defining core business logic in flags: feature flags are excellent for experimenting with business logic changes or controlling rollout, but they should not become the long-term definition of fundamental business rules. Core logic should reside in your main codebase or dedicated entitlement services. Relying on flags for permanent business rules can lead to:
+
+Dependency on external services: critical business functions shouldn't solely depend on a flagging service's availability.
+
+Increased complexity & maintainability issues: business rules become scattered and entangled.
+
+Performance implications: complex evaluations for business logic can slow down flag checks.
+
+Security risks: accidental toggling could expose or alter critical business operations.
+Use flags to test and validate business logic changes, then integrate successful changes into your core system and remove the flag.
+
+These practices create an environment where managing flags in code is a smoother, more predictable process.
+
+## Frequently asked questions (FAQs)
+Q1: where should i define my feature flag names in the code?
+A: centralize them in a dedicated file using constants or enums for a single source of truth.
+
+Q2: should i call the unleash sdk directly everywhere, or build a helper service?
+A: build a helper service (abstraction layer) to decouple your app, centralize logic, and improve testability.
+
+Q3: how do i handle code for complex features controlled by flags cleanly?
+A: use design patterns like strategy or encapsulate logic in separate modules/classes. Prioritize readability for each code path, even if it means not strictly adhering to dry.
+
+Q4: how do we avoid "flag debt" (messy, old flag code)?
+A: document flags clearly, group related changes under single flags where appropriate, conduct regular audits, and prioritize removing obsolete flags and their old code.
+
+Q5: when and how should i remove a feature flag from the code?
+A: remove a flag once fully rolled out and stable, or an experiment concludes. Delete conditional logic, the old code path, the flag definition, and archive it in unleash. Test thoroughly.
+
+Q6: what's the best way to evaluate a flag: once per request or multiple times?
+A: evaluate once per user request at the entry point and propagate its outcome for consistency.
+
+Q7: how high up in my code should i check a feature flag?
+A: evaluate at the highest practical level of abstraction. For backend logic, evaluate closer to the affected module, based on a flag state determined once per request.
+
+## Conclusion
+Effectively managing feature flags within your codebase is as crucial as managing them in the unleash platform. By establishing clear definitions, leveraging abstraction layers, adopting strategic evaluation points, structuring conditional logic thoughtfully, and committing to regular cleanup, you can effectively use unleash. These in-code practices, supported by broader team discipline, will ensure that feature flags remain a valuable tool for software development, not a source of technical debt.
+
+For more information on getting started with unleash, visit the Unleash documentation home.

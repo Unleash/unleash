@@ -4,7 +4,7 @@ import { parseDateValue, parseValidDate } from 'component/common/util';
 
 import { useMemo, useState } from 'react';
 import { styled } from '@mui/material';
-import TimezoneCountries from 'countries-and-timezones';
+import { getAllTimezones } from 'countries-and-timezones';
 
 interface IDateSingleValueProps {
     setValue: (value: string) => void;
@@ -30,13 +30,13 @@ export const DateSingleValue = ({
     error,
     setError,
 }: IDateSingleValueProps) => {
-    const timezones = Object.values(
-        TimezoneCountries.getAllTimezones({ deprecated: false }),
-    ).map((timezone) => ({
-        key: timezone.name,
-        label: `${timezone.name}`,
-        utcOffset: timezone.utcOffsetStr,
-    }));
+    const timezones = Object.values(getAllTimezones({ deprecated: false })).map(
+        (timezone) => ({
+            key: timezone.name,
+            label: `${timezone.name}`,
+            utcOffset: timezone.utcOffsetStr,
+        }),
+    );
     const { timeZone: localTimezoneName } =
         Intl.DateTimeFormat().resolvedOptions();
     const [pickedDate, setPickedDate] = useState(value || '');

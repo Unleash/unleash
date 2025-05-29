@@ -495,7 +495,7 @@ export default class UserAdminController extends Controller {
         const rootRoles = await this.accessService.getRootRoles();
         const inviteLinks = await this.resetTokenService.getActiveInvitations();
 
-        const usersWithInviteLinks = users.map((user) => {
+        const usersWithInviteLinks = users.map(({ isAPI, ...user }) => {
             const inviteLink = inviteLinks[user.id] || '';
             return { ...user, inviteLink };
         });
@@ -533,7 +533,7 @@ export default class UserAdminController extends Controller {
             200,
             res,
             usersSearchSchema.$id,
-            serializeDates(users),
+            serializeDates(users.map(({ isAPI, ...u }) => u)),
         );
     }
 
@@ -580,7 +580,7 @@ export default class UserAdminController extends Controller {
         res: Response<UserSchema>,
     ): Promise<void> {
         const { id } = req.params;
-        const user = await this.userService.getUser(id);
+        const { isAPI, ...user } = await this.userService.getUser(id);
 
         this.openApiService.respondWithValidation(
             200,
@@ -621,8 +621,9 @@ export default class UserAdminController extends Controller {
             ? await this.userService.sendWelcomeEmail(createdUser, inviteLink)
             : false;
 
+        const { isAPI, ...user } = createdUser;
         const responseData: CreateUserResponseSchema = {
-            ...serializeDates(createdUser),
+            ...serializeDates(user),
             inviteLink,
             emailSent,
             rootRole: normalizedRootRole,
@@ -654,7 +655,7 @@ export default class UserAdminController extends Controller {
             ? Number(rootRole)
             : (rootRole as RoleName);
 
-        const updateUser = await this.userService.updateUser(
+        const { isAPI, ...updateUser } = await this.userService.updateUser(
             {
                 id,
                 name,
@@ -733,7 +734,9 @@ export default class UserAdminController extends Controller {
         res: Response<UserAccessOverviewSchema>,
     ): Promise<void> {
         const { project, environment } = req.query;
-        const user = await this.userService.getUser(req.params.id);
+        const { isAPI, ...user } = await this.userService.getUser(
+            req.params.id,
+        );
         const rootRole = await this.accessService.getRootRoleForUser(user.id);
         let projectRoles: IRoleWithPermissions[] = [];
         if (project) {

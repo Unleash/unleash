@@ -23,7 +23,7 @@ export const useTrafficSearch = (
         to: string;
     },
 ): InstanceTrafficMetricsResponse => {
-    const apiPath = `api/admin/metrics/traffic-search?grouping=${grouping}&from=${from}&to=${to}`;
+    const apiPath = `api/admin/metrics/traffic?grouping=${grouping}&from=${from}&to=${to}`;
 
     const { data, error, mutate } = useSWR(formatApiPath(apiPath), fetcher);
 

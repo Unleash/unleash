@@ -3,17 +3,21 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import {
     type FilterItemParamHolder,
     Filters,
+    type IDateFilterItem,
     type IFilterItem,
 } from 'component/filter/Filters/Filters';
 
 interface IFeatureToggleFiltersProps {
     state: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
+    className?: string;
+    filterNamePrefix?: string;
 }
 
 export const InsightsFilters: FC<IFeatureToggleFiltersProps> = ({
+    filterNamePrefix,
     state,
-    onChange,
+    ...filterProps
 }) => {
     const { projects } = useProjects();
 
@@ -27,49 +31,51 @@ export const InsightsFilters: FC<IFeatureToggleFiltersProps> = ({
 
         const hasMultipleProjects = projectsOptions.length > 1;
 
+        const prefix = filterNamePrefix;
+
         const availableFilters: IFilterItem[] = [
             {
                 label: 'Date From',
                 icon: 'today',
                 options: [],
-                filterKey: 'from',
+                filterKey: `${prefix}from`,
                 dateOperators: ['IS'],
-                fromFilterKey: 'from',
-                toFilterKey: 'to',
+                fromFilterKey: `${prefix}from`,
+                toFilterKey: `${prefix}to`,
                 persistent: true,
-            },
+            } as IDateFilterItem,
             {
                 label: 'Date To',
                 icon: 'today',
                 options: [],
-                filterKey: 'to',
+                filterKey: `${prefix}to`,
                 dateOperators: ['IS'],
-                fromFilterKey: 'from',
-                toFilterKey: 'to',
+                fromFilterKey: `${prefix}from`,
+                toFilterKey: `${prefix}to`,
                 persistent: true,
-            },
+            } as IDateFilterItem,
             ...(hasMultipleProjects
                 ? ([
                       {
                           label: 'Project',
                           icon: 'topic',
                           options: projectsOptions,
-                          filterKey: 'project',
+                          filterKey: `${prefix}project`,
                           singularOperators: ['IS'],
                           pluralOperators: ['IS_ANY_OF'],
                       },
                   ] as IFilterItem[])
                 : []),
-        ];
+        ].filter(({ filterKey }) => filterKey in state);
 
         setAvailableFilters(availableFilters);
     }, [JSON.stringify(projects)]);
 
     return (
         <Filters
-            availableFilters={availableFilters}
+            {...filterProps}
             state={state}
-            onChange={onChange}
+            availableFilters={availableFilters}
         />
     );
 };

@@ -30,6 +30,7 @@ export default class ProjectInsightsController extends Controller {
         this.openApiService = services.openApiService;
         this.flagResolver = config.flagResolver;
 
+        // TODO: Remove in v8. This endpoint is deprecated and no longer used by the UI.
         this.route({
             method: 'get',
             path: '/:projectId/insights',
@@ -37,6 +38,7 @@ export default class ProjectInsightsController extends Controller {
             permission: NONE,
             middleware: [
                 this.openApiService.validPath({
+                    deprecated: true,
                     tags: ['Projects'],
                     operationId: 'getProjectInsights',
                     summary: 'Get an overview of a project insights.',

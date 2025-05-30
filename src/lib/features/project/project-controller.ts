@@ -146,6 +146,7 @@ export default class ProjectController extends Controller {
             permission: NONE,
             middleware: [
                 this.openApiService.validPath({
+                    deprecated: true,
                     tags: ['Projects'],
                     operationId: 'getProjectDora',
                     summary: 'Get an overview project dora metrics.',

@@ -62,10 +62,14 @@ export class SimplePasswordProvider extends Controller {
         const { username, password } = req.body;
         const userAgent = req.get('user-agent');
 
-        const user = await this.userService.loginUser(username, password, {
-            userAgent,
-            ip: req.ip,
-        });
+        const { isAPI, ...user } = await this.userService.loginUser(
+            username,
+            password,
+            {
+                userAgent,
+                ip: req.ip,
+            },
+        );
         req.session.user = user;
         this.openApiService.respondWithValidation(
             200,

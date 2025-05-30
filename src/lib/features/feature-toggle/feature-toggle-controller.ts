@@ -104,7 +104,6 @@ const PATH_STRATEGY = `${PATH_STRATEGIES}/:strategyId`;
 type ProjectFeaturesServices = Pick<
     IUnleashServices,
     | 'featureToggleService'
-    | 'projectHealthService'
     | 'openApiService'
     | 'transactionalFeatureToggleService'
     | 'featureTagService'

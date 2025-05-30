@@ -28,7 +28,6 @@ import useQueryParams from 'hooks/useQueryParams';
 import { useEffect, useState, type ReactNode } from 'react';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment.tsx';
 import ProjectFlags from './ProjectFlags.tsx';
-import ProjectHealth from './ProjectHealth/ProjectHealth.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import {
@@ -375,7 +374,6 @@ export const Project = () => {
                 }}
             />
             <Routes>
-                <Route path='health' element={<ProjectHealth />} />
                 <Route
                     path='access/*'
                     element={

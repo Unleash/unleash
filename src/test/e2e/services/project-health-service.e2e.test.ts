@@ -25,11 +25,7 @@ beforeAll(async () => {
         email: 'test@getunleash.io',
     });
     projectService = createProjectService(db.rawDatabase, config);
-    projectHealthService = new ProjectHealthService(
-        stores,
-        config,
-        projectService,
-    );
+    projectHealthService = new ProjectHealthService(stores, config);
 });
 
 afterAll(async () => {

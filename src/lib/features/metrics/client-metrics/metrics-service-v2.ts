@@ -132,12 +132,6 @@ export default class ClientMetricsServiceV2 {
             existingFlags.includes(name),
         );
 
-        if (existingNames.length !== toggleNames.length) {
-            this.logger.info(
-                `Filtered out ${toggleNames.length - existingNames.length} toggles with non-existing names`,
-            );
-        }
-
         if (this.flagResolver.isEnabled('reportUnknownFlags')) {
             try {
                 const nonExistingNames = toggleNames.filter(
@@ -209,8 +203,10 @@ export default class ClientMetricsServiceV2 {
         const { validatedToggleNames, unknownToggleNames } =
             await this.filterExistingToggleNames(toggleNames);
 
-        this.logger.debug(
-            `Got ${toggleNames.length} (${validatedToggleNames.length} valid) metrics from ${clientIp}`,
+        const invalidToggleNames =
+            toggleNames.length - validatedToggleNames.length;
+        this.logger.info(
+            `Got ${toggleNames.length} (${invalidToggleNames > 0 ? `${invalidToggleNames} invalid ones` : 'all valid'}) metrics from ${value.appName}`,
         );
 
         if (data.sdkVersion) {
@@ -235,6 +231,12 @@ export default class ClientMetricsServiceV2 {
                 appName: value.appName,
                 seenAt: value.bucket.stop,
             }));
+            this.logger.info(
+                `Registering ${unknownFlags.length} unknown flags from ${value.appName}, i.e.: ${unknownFlags
+                    .slice(0, 10)
+                    .map((f) => f.name)
+                    .join(', ')}`,
+            );
             this.unknownFlagsService.register(unknownFlags);
         }
 

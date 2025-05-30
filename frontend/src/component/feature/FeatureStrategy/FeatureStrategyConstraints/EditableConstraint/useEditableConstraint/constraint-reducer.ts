@@ -4,11 +4,11 @@ import {
     type Operator,
     isDateOperator,
     isMultiValueOperator,
-    isSingleValueOperator,
+    type ContextFieldType,
+    getOperatorsForContextFieldType,
 } from 'constants/operators';
 import { CURRENT_TIME_CONTEXT_FIELD } from 'utils/operatorsForContext';
 import {
-    type EditableDateConstraint,
     isDateConstraint,
     isSingleValueConstraint,
     type EditableConstraint,
@@ -26,33 +26,69 @@ export type ConstraintUpdateAction =
     | { type: 'add value(s)'; payload: string | string[] }
     | { type: 'clear values' }
     | { type: 'remove value'; payload: string }
-    | { type: 'set context field'; payload: string }
+    | {
+          type: 'set context field';
+          payload: { name: string; valueType?: ContextFieldType };
+      }
     | { type: 'set operator'; payload: Operator }
     | { type: 'toggle case sensitivity' }
     | { type: 'toggle inverted operator' }
     | { type: 'deleted legal values update'; payload?: Set<string> }
     | { type: 'toggle value'; payload: string };
 
-const withValue = <
-    T extends EditableConstraintWithDeletedLegalValues & {
-        value?: string;
-        values?: Set<string>;
-    },
->(
-    newValue: string | null,
-    constraint: T,
+// Helper to create constraint with appropriate value structure based on operator
+const createConstraintWithValue = (
+    baseConstraint: Omit<
+        EditableConstraintWithDeletedLegalValues,
+        'value' | 'values'
+    >,
+    operator: Operator,
+    initialValue?: string | null,
 ): EditableConstraintWithDeletedLegalValues => {
-    const { value, values, ...rest } = constraint;
-    if (isMultiValueOperator(constraint.operator)) {
+    const base = { ...baseConstraint, operator };
+
+    if (isMultiValueOperator(operator)) {
         return {
-            ...rest,
-            values: new Set([newValue].filter(Boolean)),
-        } as EditableConstraint;
+            ...base,
+            value: '',
+            values: initialValue ? new Set([initialValue]) : new Set(),
+        } as EditableMultiValueConstraint;
     }
+
     return {
-        ...rest,
-        value: newValue ?? '',
-    } as EditableConstraint;
+        ...base,
+        value: initialValue ?? '',
+    } as EditableSingleValueConstraint;
+};
+
+// Helper to determine if context field should use date operators
+const isDateContext = (
+    contextName: string,
+    valueType?: ContextFieldType,
+): boolean => {
+    return contextName === CURRENT_TIME_CONTEXT_FIELD || valueType === 'Date';
+};
+
+// Helper to get appropriate operator for context field
+const getAppropriateOperator = (
+    valueType?: ContextFieldType,
+    currentOperator?: Operator,
+): Operator => {
+    const allowedOperators = getOperatorsForContextFieldType(valueType);
+
+    // If current operator is still valid for the new context type, preserve it
+    if (currentOperator && allowedOperators.includes(currentOperator)) {
+        return currentOperator;
+    }
+
+    const firstOperator = allowedOperators[0] || IN;
+
+    // For date contexts, ensure we use a date operator
+    if (valueType === 'Date' && !isDateOperator(firstOperator)) {
+        return DATE_AFTER;
+    }
+
+    return firstOperator;
 };
 
 export const constraintReducer = (
@@ -107,38 +143,36 @@ export const constraintReducer = (
     };
 
     switch (action.type) {
-        case 'set context field':
-            if (action.payload === state.contextName) {
+        case 'set context field': {
+            if (action.payload.name === state.contextName) {
                 return state;
             }
-            if (
-                action.payload === CURRENT_TIME_CONTEXT_FIELD &&
-                !isDateOperator(state.operator)
-            ) {
-                return withValue(new Date().toISOString(), {
-                    ...state,
-                    contextName: action.payload,
-                    operator: DATE_AFTER,
-                } as EditableDateConstraint);
-            } else if (
-                action.payload !== CURRENT_TIME_CONTEXT_FIELD &&
-                isDateOperator(state.operator)
-            ) {
-                return withValue(null, {
-                    ...state,
-                    operator: IN,
-                    contextName: action.payload,
-                } as EditableMultiValueConstraint);
+
+            const { name, valueType } = action.payload;
+            const newOperator = getAppropriateOperator(
+                valueType,
+                state.operator,
+            );
+            const baseState = { ...state, contextName: name };
+
+            // Handle date contexts with appropriate initial value
+            if (isDateContext(name, valueType)) {
+                return createConstraintWithValue(
+                    baseState,
+                    isDateOperator(newOperator) ? newOperator : DATE_AFTER,
+                    new Date().toISOString(),
+                );
             }
 
-            return withValue(null, {
-                ...state,
-                contextName: action.payload,
-            });
+            // Handle other contexts
+            return createConstraintWithValue(baseState, newOperator);
+        }
         case 'set operator':
             if (action.payload === state.operator) {
                 return state;
             }
+
+            // For date constraints, preserve the value if switching between date operators
             if (isDateConstraint(state) && isDateOperator(action.payload)) {
                 return {
                     ...state,
@@ -146,16 +180,8 @@ export const constraintReducer = (
                 };
             }
 
-            if (isSingleValueOperator(action.payload)) {
-                return withValue(null, {
-                    ...state,
-                    operator: action.payload,
-                } as EditableSingleValueConstraint);
-            }
-            return withValue(null, {
-                ...state,
-                operator: action.payload,
-            } as EditableMultiValueConstraint);
+            // For other operator changes, reset values
+            return createConstraintWithValue(state, action.payload);
         case 'add value(s)': {
             return addValue(action.payload);
         }
@@ -166,7 +192,7 @@ export const constraintReducer = (
         case 'remove value':
             return removeValue(action.payload);
         case 'clear values':
-            return withValue(null, state);
+            return createConstraintWithValue(state, state.operator);
         case 'toggle value':
             if (
                 (isSingleValueConstraint(state) &&

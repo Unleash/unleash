@@ -13,8 +13,8 @@ import { ConstraintOperatorSelect } from 'component/common/NewConstraintAccordio
 import {
     type Operator,
     allOperators,
-    dateOperators,
     stringOperators,
+    type ContextFieldType,
 } from 'constants/operators';
 import { useEffect, useState } from 'react';
 import { oneOf } from 'utils/oneOf';
@@ -23,6 +23,7 @@ import { CaseSensitiveButton } from 'component/common/NewConstraintAccordion/Con
 import { InvertedOperatorButton } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/StyledToggleButton/InvertedOperatorButton/InvertedOperatorButton';
 import { ResolveInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/ResolveInput/ResolveInput';
 import { useConstraintInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
+import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 
 const StyledDeleteButton = styled(IconButton)({
     marginRight: '-6px',
@@ -116,6 +117,7 @@ export const ProjectActionsFilterItem = ({
 }: IProjectActionsFilterItemProps) => {
     const { parameter, inverted, operator, caseInsensitive, value, values } =
         filter;
+    const { context } = useUnleashContext();
 
     const header = (
         <>
@@ -134,9 +136,9 @@ export const ProjectActionsFilterItem = ({
     const [showCaseSensitiveButton, setShowCaseSensitiveButton] =
         useState(false);
 
-    const validOperators = allOperators.filter(
-        (operator) => !oneOf(dateOperators, operator),
-    );
+    const [contextFieldType, setContextFieldType] = useState<
+        ContextFieldType | undefined
+    >(undefined);
 
     const { input, validator, setError, error } = useConstraintInput({
         contextDefinition: { legalValues: [] },
@@ -169,6 +171,19 @@ export const ProjectActionsFilterItem = ({
             setShowCaseSensitiveButton(false);
         }
     }, [operator]);
+
+    useEffect(() => {
+        const selectedContextField = context.find(
+            (cf) => cf.name === parameter,
+        );
+        if (selectedContextField?.valueType) {
+            setContextFieldType(
+                selectedContextField.valueType as ContextFieldType,
+            );
+        } else {
+            setContextFieldType(undefined);
+        }
+    }, [parameter, context]);
 
     const onOperatorChange = (operator: Operator) => {
         if (oneOf(stringOperators, operator)) {
@@ -242,9 +257,10 @@ export const ProjectActionsFilterItem = ({
                         </StyledOperatorButtonWrapper>
                         <StyledOperatorSelectWrapper>
                             <ConstraintOperatorSelect
-                                options={validOperators}
+                                options={allOperators}
                                 value={operator}
                                 onChange={onOperatorChange}
+                                contextFieldType={contextFieldType}
                             />
                         </StyledOperatorSelectWrapper>
                         <ConditionallyRender

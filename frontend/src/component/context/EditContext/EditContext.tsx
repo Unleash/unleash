@@ -13,6 +13,7 @@ import { ContextForm } from '../ContextForm/ContextForm.tsx';
 import { useContextForm } from '../hooks/useContextForm.ts';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { GO_BACK } from 'constants/navigate';
+import type { ContextFieldType } from 'constants/operators.ts';
 
 export const EditContext = () => {
     useEffect(() => {
@@ -30,10 +31,12 @@ export const EditContext = () => {
         contextDesc,
         legalValues,
         stickiness,
+        valueType,
         setContextName,
         setContextDesc,
         setLegalValues,
         setStickiness,
+        setValueType,
         getContextPayload,
         clearErrors,
         setErrors,
@@ -43,6 +46,7 @@ export const EditContext = () => {
         context?.description,
         context?.legalValues,
         context?.stickiness,
+        context?.valueType as ContextFieldType | undefined,
     );
 
     const formatApiCode = () => {
@@ -97,6 +101,8 @@ export const EditContext = () => {
                 setLegalValues={setLegalValues}
                 stickiness={stickiness}
                 setStickiness={setStickiness}
+                valueType={valueType}
+                setValueType={setValueType}
                 mode='Edit'
                 setErrors={setErrors}
                 clearErrors={clearErrors}

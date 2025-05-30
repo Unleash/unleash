@@ -20,5 +20,9 @@ export const contextSchema = joi
             .optional()
             .items(legalValueSchema),
         stickiness: joi.boolean().optional().default(false),
+        valueType: joi
+            .string()
+            .optional()
+            .valid('String', 'Number', 'Semver', 'Date'),
     })
     .options({ allowUnknown: false, stripUnknown: true });

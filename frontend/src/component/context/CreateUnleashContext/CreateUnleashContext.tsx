@@ -27,10 +27,12 @@ export const CreateUnleashContext = ({
         contextDesc,
         legalValues,
         stickiness,
+        valueType, // Added
         setContextName,
         setContextDesc,
         setLegalValues,
         setStickiness,
+        setValueType, // Added
         getContextPayload,
         validateContext,
         clearErrors,
@@ -91,6 +93,8 @@ export const CreateUnleashContext = ({
                 setLegalValues={setLegalValues}
                 stickiness={stickiness}
                 setStickiness={setStickiness}
+                valueType={valueType} // Added
+                setValueType={setValueType} // Added
                 mode='Create'
                 validateContext={validateContext}
                 setErrors={setErrors}

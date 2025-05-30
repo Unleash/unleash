@@ -13,6 +13,14 @@ export const createContextFieldSchema = {
             type: 'string',
             example: 'subscriptionTier',
         },
+        valueType: {
+            type: 'string',
+            nullable: true,
+            enum: ['String', 'Number', 'Semver', 'Date'],
+            example: 'String',
+            description:
+                'The type of the context field. Used to restrict the operators available for this field.',
+        },
     },
 } as const;
 

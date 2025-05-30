@@ -258,3 +258,328 @@ test('should delete a context field', () => {
         .set('Content-Type', 'application/json')
         .expect(200);
 });
+
+// Tests for context field value types
+describe('Context field value types', () => {
+    test('should create a context field with String value type', async () => {
+        expect.assertions(1);
+
+        await request
+            .post(`${base}/api/admin/context`)
+            .send({
+                name: 'stringField',
+                description: 'A string field',
+                valueType: 'String',
+            })
+            .set('Content-Type', 'application/json')
+            .expect(201);
+
+        const { body } = await request.get(
+            `${base}/api/admin/context/stringField`,
+        );
+        expect(body.valueType).toBe('String');
+    });
+
+    test('should create a context field with Number value type', async () => {
+        expect.assertions(1);
+
+        await request
+            .post(`${base}/api/admin/context`)
+            .send({
+                name: 'numberField',
+                description: 'A number field',
+                valueType: 'Number',
+            })
+            .set('Content-Type', 'application/json')
+            .expect(201);
+
+        const { body } = await request.get(
+            `${base}/api/admin/context/numberField`,
+        );
+        expect(body.valueType).toBe('Number');
+    });
+
+    test('should create a context field with Semver value type', async () => {
+        expect.assertions(1);
+
+        await request
+            .post(`${base}/api/admin/context`)
+            .send({
+                name: 'semverField',
+                description: 'A semver field',
+                valueType: 'Semver',
+            })
+            .set('Content-Type', 'application/json')
+            .expect(201);
+
+        const { body } = await request.get(
+            `${base}/api/admin/context/semverField`,
+        );
+        expect(body.valueType).toBe('Semver');
+    });
+
+    test('should create a context field with Date value type', async () => {
+        expect.assertions(1);
+
+        await request
+            .post(`${base}/api/admin/context`)
+            .send({
+                name: 'dateField',
+                description: 'A date field',
+                valueType: 'Date',
+            })
+            .set('Content-Type', 'application/json')
+            .expect(201);
+
+        const { body } = await request.get(
+            `${base}/api/admin/context/dateField`,
+        );
+        expect(body.valueType).toBe('Date');
+    });
+
+    test('should create a context field without value type (null)', async () => {
+        expect.assertions(1);
+
+        await request
+            .post(`${base}/api/admin/context`)
+            .send({
+                name: 'untypedField',
+                description: 'An untyped field',
+            })
+            .set('Content-Type', 'application/json')
+            .expect(201);
+
+        const { body } = await request.get(
+            `${base}/api/admin/context/untypedField`,
+        );
+        expect(body.valueType).toBeUndefined();
+    });
+
+    test('should create a context field with explicit null value type', async () => {
+        expect.assertions(1);
+
+        await request
+            .post(`${base}/api/admin/context`)
+            .send({
+                name: 'explicitNullField',
+                description: 'An explicitly null typed field',
+                valueType: undefined,
+            })
+            .set('Content-Type', 'application/json')
+            .expect(201);
+
+        const { body } = await request.get(
+            `${base}/api/admin/context/explicitNullField`,
+        );
+        expect(body.valueType).toBeUndefined();
+    });
+
+    test('should reject invalid value type', () => {
+        expect.assertions(0);
+
+        return request
+            .post(`${base}/api/admin/context`)
+            .send({
+                name: 'invalidField',
+                description: 'Invalid type field',
+                valueType: 'InvalidType',
+            })
+            .set('Content-Type', 'application/json')
+            .expect(400);
+    });
+
+    test('should reject empty string value type', () => {
+        expect.assertions(0);
+
+        return request
+            .post(`${base}/api/admin/context`)
+            .send({
+                name: 'emptyTypeField',
+                description: 'Empty type field',
+                valueType: '',
+            })
+            .set('Content-Type', 'application/json')
+            .expect(400);
+    });
+
+    test('should update context field description but will preserve value type', async () => {
+        expect.assertions(2);
+
+        // Create field with value type
+        await request
+            .post(`${base}/api/admin/context`)
+            .send({
+                name: 'updateTestField',
+                description: 'Original description',
+                valueType: 'Number',
+            })
+            .set('Content-Type', 'application/json')
+            .expect(201);
+
+        // Update field description
+        await request
+            .put(`${base}/api/admin/context/updateTestField`)
+            .send({
+                name: 'updateTestField',
+                description: 'Updated description',
+            })
+            .set('Content-Type', 'application/json')
+            .expect(200);
+
+        const { body } = await request.get(
+            `${base}/api/admin/context/updateTestField`,
+        );
+        expect(body.description).toBe('Updated description');
+        expect(body.valueType).toBe('Number'); // Value type should not be preserved
+    });
+
+    test('should get all context fields and include value types', async () => {
+        expect.assertions(2);
+
+        // Create a field with a specific type
+        await request
+            .post(`${base}/api/admin/context`)
+            .send({
+                name: 'testAllFields',
+                description: 'Test field for all fields',
+                valueType: 'String',
+            })
+            .set('Content-Type', 'application/json')
+            .expect(201);
+
+        const { body } = await request
+            .get(`${base}/api/admin/context`)
+            .expect(200);
+
+        expect(Array.isArray(body)).toBe(true);
+
+        const testField = body.find(
+            (field: any) => field.name === 'testAllFields',
+        );
+        expect(testField?.valueType).toBe('String');
+    });
+
+    test('should handle legal values with different value types', async () => {
+        expect.assertions(1);
+
+        await request
+            .post(`${base}/api/admin/context`)
+            .send({
+                name: 'typedLegalValues',
+                description: 'Field with typed legal values',
+                valueType: 'String',
+                legalValues: [{ value: 'option1' }, { value: 'option2' }],
+            })
+            .set('Content-Type', 'application/json')
+            .expect(201);
+
+        const { body } = await request.get(
+            `${base}/api/admin/context/typedLegalValues`,
+        );
+        expect(body.valueType).toBe('String');
+    });
+
+    test('should validate case sensitivity of value types', () => {
+        expect.assertions(0);
+
+        return request
+            .post(`${base}/api/admin/context`)
+            .send({
+                name: 'caseSensitiveField',
+                description: 'Case sensitive field',
+                valueType: 'string', // lowercase should be rejected
+            })
+            .set('Content-Type', 'application/json')
+            .expect(400);
+    });
+
+    test('should accept all valid value type enum values', async () => {
+        const validTypes = ['String', 'Number', 'Semver', 'Date'];
+
+        for (let i = 0; i < validTypes.length; i++) {
+            const valueType = validTypes[i];
+            await request
+                .post(`${base}/api/admin/context`)
+                .send({
+                    name: `validType${i}`,
+                    description: `Valid type ${valueType}`,
+                    valueType,
+                })
+                .set('Content-Type', 'application/json')
+                .expect(201);
+        }
+
+        expect.assertions(0);
+    });
+
+    test('should maintain backward compatibility for existing fields without value type', async () => {
+        expect.assertions(1);
+
+        // The environment field should exist from test fixtures and have null value type
+        const { body } = await request.get(
+            `${base}/api/admin/context/environment`,
+        );
+        expect(body.valueType).toBeUndefined();
+    });
+
+    test('should not update value type on existing context field update', async () => {
+        expect.assertions(1);
+
+        // Create field with one type
+        await request
+            .post(`${base}/api/admin/context`)
+            .send({
+                name: 'noUpdateType',
+                description: 'No update type field',
+                valueType: 'String',
+            })
+            .set('Content-Type', 'application/json')
+            .expect(201);
+
+        // Try to update with different type (should be changed)
+        await request
+            .put(`${base}/api/admin/context/noUpdateType`)
+            .send({
+                name: 'noUpdateType',
+                description: 'Updated description',
+                valueType: 'Number', // This should be ignored
+            })
+            .set('Content-Type', 'application/json')
+            .expect(200);
+
+        const { body } = await request.get(
+            `${base}/api/admin/context/noUpdateType`,
+        );
+        expect(body.valueType).toBe('String'); // Should remain original type
+    });
+
+    test('should preserve value type when adding legal values', async () => {
+        expect.assertions(1);
+
+        // Create field with type
+        await request
+            .post(`${base}/api/admin/context`)
+            .send({
+                name: 'legalValuePreserve',
+                description: 'Preserve type with legal values',
+                valueType: 'String',
+            })
+            .set('Content-Type', 'application/json')
+            .expect(201);
+
+        // Add legal value
+        await request
+            .post(`${base}/api/admin/context/legalValuePreserve/legal-values`)
+            .send({
+                value: 'newValue',
+                description: 'New legal value',
+            })
+            .set('Content-Type', 'application/json')
+            .expect(200);
+
+        const { body } = await request.get(
+            `${base}/api/admin/context/legalValuePreserve`,
+        );
+        expect(body.valueType).toBe('String');
+    });
+});

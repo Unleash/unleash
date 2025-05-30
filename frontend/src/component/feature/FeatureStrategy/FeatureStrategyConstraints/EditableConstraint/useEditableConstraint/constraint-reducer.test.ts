@@ -74,7 +74,7 @@ describe('changing context field', () => {
             expect(
                 constraintReducer(input, {
                     type: 'set context field',
-                    payload: input.contextName,
+                    payload: { name: input.contextName },
                 }),
             ).toStrictEqual(input);
         },
@@ -83,7 +83,7 @@ describe('changing context field', () => {
         const input = { ...singleValueConstraint, contextName: 'field-a' };
         const result = constraintReducer(input, {
             type: 'set context field',
-            payload: 'field-b',
+            payload: { name: 'field-b' },
         });
         expect(result).toStrictEqual({
             ...input,
@@ -96,11 +96,12 @@ describe('changing context field', () => {
         const input = { ...multiValueConstraint, contextName: 'field-a' };
         const result = constraintReducer(input, {
             type: 'set context field',
-            payload: 'field-b',
+            payload: { name: 'field-b' },
         });
         expect(result).toStrictEqual({
             ...input,
             contextName: 'field-b',
+            value: '',
             values: new Set(),
         });
     });
@@ -113,9 +114,9 @@ describe('changing context field', () => {
         (_, constraint) => {
             const now = new Date();
             const input = { ...constraint, contextName: 'field-a' };
-            const { value, ...result } = constraintReducer(input, {
+            const { value, values, ...result } = constraintReducer(input, {
                 type: 'set context field',
-                payload: 'currentTime',
+                payload: { name: 'currentTime' },
             }) as Extractable;
             const {
                 values: _vs,
@@ -136,13 +137,14 @@ describe('changing context field', () => {
         const input = dateConstraint;
         const result = constraintReducer(input, {
             type: 'set context field',
-            payload: 'somethingElse',
+            payload: { name: 'somethingElse' },
         });
         const { value: _, ...inputBody } = input;
         expect(result).toStrictEqual({
             ...inputBody,
             contextName: 'somethingElse',
             operator: IN,
+            value: '',
             values: new Set(),
         });
     });
@@ -489,6 +491,7 @@ describe('removing / clearing values', () => {
 
             expect(cleared).toStrictEqual({
                 ...input,
+                value: '',
                 values: new Set(),
             });
         });

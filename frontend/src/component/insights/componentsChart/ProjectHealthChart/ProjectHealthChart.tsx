@@ -11,6 +11,7 @@ import {
 import { useTheme } from '@mui/material';
 import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
 import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
+import { useFlag } from '@unleash/proxy-client-react';
 
 interface IProjectHealthChartProps {
     projectFlagTrends: GroupedDataByProject<
@@ -34,6 +35,9 @@ const calculateHealth = (item: WeekData) =>
         100
     ).toFixed(2);
 
+const calculateTechDebt = (item: WeekData) =>
+    (((item.stale + item.potentiallyStale) / item.total) * 100).toFixed(2);
+
 export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
     projectFlagTrends,
     isAggregate,
@@ -42,6 +46,10 @@ export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
     const projectsData = useProjectChartData(projectFlagTrends);
     const theme = useTheme();
     const placeholderData = usePlaceholderData();
+    const healthToTechDebtEnabled = useFlag('healthToTechDebt');
+    const calculateData = healthToTechDebtEnabled
+        ? calculateTechDebt
+        : calculateHealth;
 
     const aggregateHealthData = useMemo(() => {
         const labels = Array.from(
@@ -82,7 +90,7 @@ export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
                 {
                     label: 'Health',
                     data: weeks.map((item) => ({
-                        health: item.total ? calculateHealth(item) : undefined,
+                        health: item.total ? calculateData(item) : undefined,
                         date: item.date,
                         total: item.total,
                         stale: item.stale,
@@ -117,6 +125,11 @@ export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
                 notEnoughData
                     ? {}
                     : {
+                          plugins: {
+                              legend: {
+                                  display: false,
+                              },
+                          },
                           parsing: { yAxisKey: 'health', xAxisKey: 'date' },
                           scales: {
                               y: {

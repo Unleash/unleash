@@ -9,6 +9,7 @@ import { ProjectHealthGrid } from './ProjectHealthGrid.tsx';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import FeedbackIcon from '@mui/icons-material/ChatOutlined';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useFlag } from '@unleash/proxy-client-react';
 
 const ModalContentContainer = styled('section')(({ theme }) => ({
     minHeight: '100vh',
@@ -140,6 +141,7 @@ export const ProjectStatusModal = ({ open, onClose, onFollowLink }: Props) => {
         });
     };
     const { isOss } = useUiConfig();
+    const healthToDebtEnabled = useFlag('healthToTechDebt');
 
     return (
         <DynamicSidebarModal
@@ -159,7 +161,9 @@ export const ProjectStatusModal = ({ open, onClose, onFollowLink }: Props) => {
                 </HeaderRow>
                 <WidgetContainer>
                     <Row>
-                        <RowHeader>Health</RowHeader>
+                        <RowHeader>
+                            {healthToDebtEnabled ? 'Technical debt' : 'Health'}
+                        </RowHeader>
                         <ProjectHealthGrid />
                     </Row>
                     {!isOss() && (

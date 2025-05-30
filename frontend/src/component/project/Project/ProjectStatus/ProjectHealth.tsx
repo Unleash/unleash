@@ -5,6 +5,7 @@ import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectS
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { HealthGridTile } from './ProjectHealthGrid.styles';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
+import { useFlag } from '@unleash/proxy-client-react';
 
 const ChartRadius = 40;
 const ChartStrokeWidth = 13;
@@ -80,6 +81,28 @@ const UnhealthyFlagBox = ({ flagCount }: { flagCount: number }) => {
     );
 };
 
+const useHealthColor = (healthRating: number) => {
+    const theme = useTheme();
+    if (healthRating <= 24) {
+        return theme.palette.error.main;
+    }
+    if (healthRating <= 74) {
+        return theme.palette.warning.border;
+    }
+    return theme.palette.success.border;
+};
+
+const useTechnicalDebtColor = (healthRating: number) => {
+    const theme = useTheme();
+    if (healthRating >= 75) {
+        return theme.palette.error.main;
+    }
+    if (healthRating >= 25) {
+        return theme.palette.warning.border;
+    }
+    return theme.palette.success.border;
+};
+
 const Wrapper = styled(HealthGridTile)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -92,22 +115,21 @@ export const ProjectHealth = () => {
     const {
         data: { health, staleFlags },
     } = useProjectStatus(projectId);
-    const healthRating = health.current;
     const { isOss } = useUiConfig();
     const theme = useTheme();
-    const circumference = 2 * Math.PI * ChartRadius; //
+    const healthToDebtEnabled = useFlag('healthToTechDebt');
+    const circumference = 2 * Math.PI * ChartRadius;
+    const healthRating = healthToDebtEnabled
+        ? 100 - health.current
+        : health.current;
 
     const gapLength = 0.3;
     const filledLength = 1 - gapLength;
     const offset = 0.75 - gapLength / 2;
     const healthLength = (healthRating / 100) * circumference * 0.7;
 
-    const healthColor =
-        healthRating >= 0 && healthRating <= 24
-            ? theme.palette.error.main
-            : healthRating >= 25 && healthRating <= 74
-              ? theme.palette.warning.border
-              : theme.palette.success.border;
+    const healthColor = useHealthColor(healthRating);
+    const technicalDebtColor = useTechnicalDebtColor(healthRating);
 
     return (
         <Wrapper>
@@ -129,7 +151,11 @@ export const ProjectHealth = () => {
                             cy='50'
                             r={ChartRadius}
                             fill='none'
-                            stroke={healthColor}
+                            stroke={
+                                healthToDebtEnabled
+                                    ? technicalDebtColor
+                                    : healthColor
+                            }
                             strokeWidth={ChartStrokeWidth}
                             strokeDasharray={`${healthLength} ${circumference - healthLength}`}
                             strokeDashoffset={offset * circumference}
@@ -148,11 +174,23 @@ export const ProjectHealth = () => {
                 </SVGWrapper>
                 <TextContainer>
                     <Typography>
-                        Your current project health rating is {healthRating}%
+                        {healthToDebtEnabled ? (
+                            <>
+                                Your current technical debt rating is{' '}
+                                {healthRating}%.
+                            </>
+                        ) : (
+                            <>
+                                Your current project health rating is{' '}
+                                {healthRating}%.
+                            </>
+                        )}
                     </Typography>
                     {!isOss() && (
                         <Link to={`/insights?project=IS%3A${projectId}`}>
-                            View health over time
+                            {healthToDebtEnabled
+                                ? 'View technical debt over time'
+                                : 'View health over time'}
                         </Link>
                     )}
                 </TextContainer>

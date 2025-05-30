@@ -5,6 +5,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
 import { HorizontalDistributionChart } from 'component/insights/components/HorizontalDistributionChart/HorizontalDistributionChart';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useFlag } from '@unleash/proxy-client-react';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -99,6 +100,7 @@ const Distribution = ({ stale = 0, potentiallyStale = 0, total = 0 }) => {
 export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({
     tooltip,
 }) => {
+    const healthToTechDebtEnabled = useFlag('healthToTechDebt');
     const data = tooltip?.dataPoints.map((point) => {
         return {
             label: point.label,
@@ -137,7 +139,9 @@ export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({
                             color='textSecondary'
                             component='span'
                         >
-                            Project health
+                            {healthToTechDebtEnabled
+                                ? 'Technical debt'
+                                : 'Project health'}
                         </Typography>
                     </StyledItemHeader>
                     <StyledItemHeader>
@@ -148,9 +152,17 @@ export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({
                             >
                                 {'● '}
                             </Typography>
-                            <strong>{point.title}</strong>
+                            <strong>
+                                {healthToTechDebtEnabled
+                                    ? 'Technical debt'
+                                    : point.title}
+                            </strong>
                         </Typography>
-                        <Badge color={getHealthBadgeColor(point.value.health)}>
+                        <Badge
+                            color={getHealthBadgeColor(
+                                100 - point.value.health,
+                            )}
+                        >
                             {point.value.health}%
                         </Badge>
                     </StyledItemHeader>{' '}

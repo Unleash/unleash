@@ -5,14 +5,15 @@ exports.up = function(db, cb) {
         `
             CREATE TABLE IF NOT EXISTS lifecycle_trends (
                 id TEXT NOT NULL,
-                stage TEXT NOT NULL CHECK (stage IN ('develop', 'production', 'cleanup')),
+                stage TEXT NOT NULL CHECK (stage IN ('initial','develop', 'production', 'cleanup', 'archived')),
                 flag_type TEXT NOT NULL CHECK (flag_type IN ('experimental', 'release', 'permanent')),
-                median_time_in_stage_days DECIMAL(10,2) DEFAULT 0,
+                project VARCHAR(255) NOT NULL REFERENCES projects (id) ON DELETE CASCADE,
                 flags_older_than_week INTEGER DEFAULT 0,
                 new_flags_this_week INTEGER DEFAULT 0,
                 created_at TIMESTAMP DEFAULT now(),
                 PRIMARY KEY (id, stage, flag_type)
-                );`,
+                );
+        `,
         cb,
     );
 };

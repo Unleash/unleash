@@ -63,7 +63,6 @@ export * from './custom-metrics-schema.js';
 export * from './date-schema.js';
 export * from './dependencies-exist-schema.js';
 export * from './dependent-feature-schema.js';
-export * from './deprecated-project-overview-schema.js';
 export * from './dora-features-schema.js';
 export * from './edge-token-schema.js';
 export * from './email-schema.js';

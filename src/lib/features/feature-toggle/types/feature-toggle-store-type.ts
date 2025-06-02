@@ -3,7 +3,6 @@ import type {
     FeatureToggleDTO,
     IFeatureToggleQuery,
     IFeatureTypeCount,
-    IVariant,
 } from '../../../types/model.js';
 import type { FeatureToggleInsert } from '../feature-toggle-store.js';
 import type { Store } from '../../../types/stores/store.js';
@@ -75,26 +74,6 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
     >;
 
     isPotentiallyStale(featureName: string): Promise<boolean>;
-
-    /**
-     * @deprecated - Variants should be fetched from FeatureEnvironmentStore (since variants are now; since 4.18, connected to environments)
-     * @param featureName
-     * TODO: Remove before release 5.0
-     */
-    getVariants(featureName: string): Promise<IVariant[]>;
-
-    /**
-     * TODO: Remove before release 5.0
-     * @deprecated - Variants should be fetched from FeatureEnvironmentStore (since variants are now; since 4.18, connected to environments)
-     * @param project
-     * @param featureName
-     * @param newVariants
-     */
-    saveVariants(
-        project: string,
-        featureName: string,
-        newVariants: IVariant[],
-    ): Promise<FeatureToggle>;
 
     disableAllEnvironmentsForFeatures(names: string[]): Promise<void>;
 

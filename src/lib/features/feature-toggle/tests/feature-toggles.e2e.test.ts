@@ -18,12 +18,7 @@ import {
 import ApiUser from '../../../types/api-user.js';
 import { ApiTokenType, type IApiToken } from '../../../types/model.js';
 import IncompatibleProjectError from '../../../error/incompatible-project-error.js';
-import {
-    type IStrategyConfig,
-    type IVariant,
-    RoleName,
-    WeightType,
-} from '../../../types/model.js';
+import { type IStrategyConfig, RoleName } from '../../../types/model.js';
 import { v4 as uuidv4 } from 'uuid';
 import type supertest from 'supertest';
 import { randomId } from '../../../util/random-id.js';
@@ -914,46 +909,6 @@ test('Should patch feature flag', async () => {
     expect(updateForOurFlag).toBeTruthy();
     expect(updateForOurFlag?.data.description).toBe('New desc');
     expect(updateForOurFlag?.data.type).toBe('kill-switch');
-});
-
-test('Should patch feature flag and not remove variants', async () => {
-    const url = '/api/admin/projects/default/features';
-    const name = 'new.flag.variants';
-    await app.request
-        .post(url)
-        .send({ name, description: 'some', type: 'release' })
-        .expect(201);
-    await app.request
-        .put(`${url}/${name}/variants`)
-        .send([
-            {
-                name: 'variant1',
-                weightType: 'variable',
-                weight: 500,
-                stickiness: 'default',
-            },
-            {
-                name: 'variant2',
-                weightType: 'variable',
-                weight: 500,
-                stickiness: 'default',
-            },
-        ])
-        .expect(200);
-    await app.request
-        .patch(`${url}/${name}`)
-        .send([
-            { op: 'replace', path: '/description', value: 'New desc' },
-            { op: 'replace', path: '/type', value: 'kill-switch' },
-        ])
-        .expect(200);
-
-    const { body: flag } = await app.request.get(`${url}/${name}`);
-
-    expect(flag.name).toBe(name);
-    expect(flag.description).toBe('New desc');
-    expect(flag.type).toBe('kill-switch');
-    expect(flag.variants).toHaveLength(2);
 });
 
 test('Patching feature flags to stale should trigger FEATURE_STALE_ON event', async () => {
@@ -2411,47 +2366,6 @@ test('Should allow changing project to target project with the same enabled envi
             TEST_AUDIT_USER,
         ),
     ).resolves;
-});
-
-test(`a feature's variants should be sorted by name in increasing order`, async () => {
-    const featureName = 'variants.are.sorted';
-    const project = 'default';
-    await app.createFeature(featureName, project);
-
-    const newVariants: IVariant[] = [
-        {
-            name: 'z',
-            stickiness: 'default',
-            weight: 250,
-            weightType: WeightType.FIX,
-        },
-        {
-            name: 'f',
-            stickiness: 'default',
-            weight: 375,
-            weightType: WeightType.VARIABLE,
-        },
-        {
-            name: 'a',
-            stickiness: 'default',
-            weight: 450,
-            weightType: WeightType.VARIABLE,
-        },
-    ];
-
-    await app.request
-        .put(`/api/admin/projects/${project}/features/${featureName}/variants`)
-        .send(newVariants)
-        .expect(200);
-
-    await app.request
-        .get(`/api/admin/projects/${project}/features/${featureName}`)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.variants[0].name).toBe('a');
-            expect(res.body.variants[1].name).toBe('f');
-            expect(res.body.variants[2].name).toBe('z');
-        });
 });
 
 test('should validate context when calling update with PUT', async () => {

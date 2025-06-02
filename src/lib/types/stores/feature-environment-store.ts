@@ -80,7 +80,6 @@ export interface IFeatureEnvironmentStore
         environments: string[],
         variants: IVariant[],
     ): Promise<void>;
-
     addFeatureEnvironment(
         featureEnvironment: IFeatureEnvironment,
     ): Promise<void>;

@@ -23,6 +23,9 @@ import {
     PROJECT_ARCHIVED,
     PROJECT_REVIVED,
     PROJECT_DELETED,
+    RELEASE_PLAN_ADDED,
+    RELEASE_PLAN_REMOVED,
+    RELEASE_PLAN_MILESTONE_STARTED,
 } from './events/index.js';
 import type { IUnleashConfig } from './types/option.js';
 import type { IUnleashStores } from './types/stores.js';
@@ -1005,6 +1008,58 @@ export function registerPrometheusMetrics(
             action: 'revived',
         });
     });
+
+    eventStore.on(
+        RELEASE_PLAN_ADDED,
+        async ({ featureName, project, environment }) => {
+            const environmentType = await resolveEnvironmentType(
+                environment,
+                cachedEnvironments,
+            );
+            featureFlagUpdateTotal.increment({
+                toggle: featureName,
+                project,
+                environment,
+                environmentType,
+                action: 'updated',
+            });
+        },
+    );
+
+    eventStore.on(
+        RELEASE_PLAN_REMOVED,
+        async ({ featureName, project, environment }) => {
+            const environmentType = await resolveEnvironmentType(
+                environment,
+                cachedEnvironments,
+            );
+            featureFlagUpdateTotal.increment({
+                toggle: featureName,
+                project,
+                environment,
+                environmentType,
+                action: 'updated',
+            });
+        },
+    );
+
+    eventStore.on(
+        RELEASE_PLAN_MILESTONE_STARTED,
+        async ({ featureName, project, environment }) => {
+            const environmentType = await resolveEnvironmentType(
+                environment,
+                cachedEnvironments,
+            );
+            featureFlagUpdateTotal.increment({
+                toggle: featureName,
+                project,
+                environment,
+                environmentType,
+                action: 'updated',
+            });
+        },
+    );
+
     eventStore.on(PROJECT_CREATED, () => {
         projectActionsCounter.increment({ action: PROJECT_CREATED });
     });

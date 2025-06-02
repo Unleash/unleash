@@ -96,7 +96,7 @@ export class OpenApiService {
     respondWithValidation<T, S = SchemaId>(
         status: number,
         res: Response<T>,
-        schema: S,
+        schema: SchemaId,
         data: T,
         headers: { [header: string]: string } = {},
     ): void {
@@ -104,8 +104,8 @@ export class OpenApiService {
 
         if (errors) {
             this.logger.debug(
-                'Invalid response:',
-                JSON.stringify(errors, null, 4),
+                `Invalid response for ${res.req?.originalUrl || ''}:`,
+                errors,
             );
             if (this.flagResolver.isEnabled('strictSchemaValidation')) {
                 throw new Error(JSON.stringify(errors, null, 4));

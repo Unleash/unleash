@@ -33,6 +33,9 @@ const StrategyEvalChipLessInlinePadding = styled(StrategyEvaluationChip)(
             paddingInline: theme.spacing(0),
         },
         svg: {
+            path: {
+                fill: 'currentColor',
+            },
             '--size': theme.spacing(2.5),
             width: 'var(--size)',
             height: 'var(--size)',

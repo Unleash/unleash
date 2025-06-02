@@ -145,7 +145,9 @@ const StyledCaseInsensitiveIcon = styled(CaseInsensitiveIcon)(({ theme }) => ({
     },
 }));
 const StyledCaseSensitiveIcon = styled(CaseSensitiveIcon)(({ theme }) => ({
-    fill: 'currentcolor',
+    path: {
+        fill: 'currentColor',
+    },
 }));
 
 const TopRowInput: FC<{

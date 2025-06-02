@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.10.1] - 2025-06-02
+
+### Bug Fixes
+
+- Regexes in flag naming patterns will now break when necessary ([#10067](https://github.com/Unleash/unleash/issues/10067))
+
+
 ## [6.10.0] - 2025-05-07
 
 ### Bug Fixes

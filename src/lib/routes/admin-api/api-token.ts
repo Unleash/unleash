@@ -313,10 +313,10 @@ export class ApiTokenController extends Controller {
             permissionRequired,
         );
         if (hasPermission) {
-            const token = await this.apiTokenService.createApiToken(
+            const token = await this.apiTokenService.createApiTokenWithProjects(
                 {
                     ...createToken,
-                    projects: createToken.projects ?? [createToken.project],
+                    projects: createToken.projects,
                 },
                 req.audit,
             );

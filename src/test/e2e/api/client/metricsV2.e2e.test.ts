@@ -74,12 +74,14 @@ test('should accept client metrics', async () => {
 test('should pick up environment from token', async () => {
     const environment = 'test';
     await db.stores.environmentStore.create({ name: 'test', type: 'test' });
-    const token = await app.services.apiTokenService.createApiToken({
-        type: ApiTokenType.CLIENT,
-        projects: ['default'],
-        environment,
-        tokenName: 'tester',
-    });
+    const token = await app.services.apiTokenService.createApiTokenWithProjects(
+        {
+            type: ApiTokenType.CLIENT,
+            projects: ['default'],
+            environment,
+            tokenName: 'tester',
+        },
+    );
 
     // @ts-expect-error - cachedFeatureNames is a private property in ClientMetricsServiceV2
     app.services.clientMetricsServiceV2.cachedFeatureNames = vi
@@ -129,12 +131,14 @@ test('should set lastSeen for toggles with metrics both for toggle and toggle en
         .fn<() => Promise<string[]>>()
         .mockResolvedValue(['t1', 't2']);
 
-    const token = await app.services.apiTokenService.createApiToken({
-        type: ApiTokenType.CLIENT,
-        projects: ['default'],
-        environment: 'default',
-        tokenName: 'tester',
-    });
+    const token = await app.services.apiTokenService.createApiTokenWithProjects(
+        {
+            type: ApiTokenType.CLIENT,
+            projects: ['default'],
+            environment: 'default',
+            tokenName: 'tester',
+        },
+    );
 
     await app.request
         .post('/api/client/metrics')

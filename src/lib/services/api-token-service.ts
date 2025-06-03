@@ -7,7 +7,6 @@ import ApiUser, { type IApiUser } from '../types/api-user.js';
 import {
     validateApiToken,
     validateApiTokenEnvironment,
-    mapLegacyProjects,
 } from '../types/models/api-token.js';
 import type { IApiTokenStore } from '../types/stores/api-token-store.js';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error.js';
@@ -269,22 +268,6 @@ export class ApiTokenService {
                 }),
             );
         }
-    }
-
-    /**
-     * @deprecated This may be removed in a future release, prefer createApiTokenWithProjects
-     */
-    public async createApiToken(
-        newToken: Omit<IApiTokenCreate, 'secret'>,
-        auditUser: IAuditUser = SYSTEM_USER_AUDIT,
-    ): Promise<IApiToken> {
-        return this.internalCreateApiTokenWithProjects(
-            {
-                ...newToken,
-                projects: mapLegacyProjects(undefined, newToken.projects),
-            },
-            auditUser,
-        );
     }
 
     /**

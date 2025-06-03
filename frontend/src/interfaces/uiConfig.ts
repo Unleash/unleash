@@ -88,8 +88,6 @@ export type UiFlags = {
     edgeObservability?: boolean;
     addEditStrategy?: boolean;
     registerFrontendClient?: boolean;
-    featureLinks?: boolean;
-    projectLinkTemplates?: boolean;
     customMetrics?: boolean;
     lifecycleMetrics?: boolean;
     sideMenuCleanup?: boolean;

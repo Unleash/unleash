@@ -70,3 +70,7 @@ https://github.com/PaloAltoNetworks/docusaurus-openapi-docs/issues/177
     color: var(--ifm-color-secondary-contrast-foreground);
     border-color: var(--ifm-color-secondary-dark);
 }
+
+main .theme-api-markdown > .openapi-left-panel__container p > img {
+    display: inline !important;
+}

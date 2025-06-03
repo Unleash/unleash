@@ -260,9 +260,6 @@ class ProjectStore implements IProjectStore {
         data: IProjectEnterpriseSettingsUpdate,
     ): Promise<void> {
         try {
-            const projectLinkTemplatesEnabled = this.flagResolver.isEnabled(
-                'projectLinkTemplates',
-            );
             const link_templates = JSON.stringify(
                 data.linkTemplates ? data.linkTemplates : [],
             );
@@ -276,11 +273,7 @@ class ProjectStore implements IProjectStore {
                         feature_naming_example: data.featureNaming?.example,
                         feature_naming_description:
                             data.featureNaming?.description,
-                        ...(projectLinkTemplatesEnabled
-                            ? {
-                                  link_templates,
-                              }
-                            : {}),
+                        link_templates,
                     });
             } else {
                 await this.db(SETTINGS_TABLE).insert({
@@ -289,11 +282,7 @@ class ProjectStore implements IProjectStore {
                     feature_naming_pattern: data.featureNaming?.pattern,
                     feature_naming_example: data.featureNaming?.example,
                     feature_naming_description: data.featureNaming?.description,
-                    ...(projectLinkTemplatesEnabled
-                        ? {
-                              link_templates,
-                          }
-                        : {}),
+                    link_templates,
                 });
             }
         } catch (err) {
@@ -653,10 +642,6 @@ class ProjectStore implements IProjectStore {
             throw new NotFoundError('No project found');
         }
 
-        const projectLinkTemplatesEnabled = this.flagResolver.isEnabled(
-            'projectLinkTemplates',
-        );
-
         return {
             id: row.id,
             name: row.name,
@@ -673,9 +658,7 @@ class ProjectStore implements IProjectStore {
                 example: row.feature_naming_example,
                 description: row.feature_naming_description,
             },
-            ...(projectLinkTemplatesEnabled
-                ? { linkTemplates: row.link_templates || [] }
-                : {}),
+            linkTemplates: row.link_templates || [],
         };
     }
 

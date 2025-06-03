@@ -12,7 +12,6 @@ import Input from 'component/common/Input/Input';
 import { FeatureFlagNamingTooltip } from './FeatureFlagNamingTooltip.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import type { ProjectLinkTemplateSchema } from 'openapi';
-import { useUiFlag } from 'hooks/useUiFlag';
 import ProjectLinkTemplates from './ProjectLinkTemplates/ProjectLinkTemplates.tsx';
 
 interface IProjectEnterpriseSettingsForm {
@@ -154,8 +153,6 @@ const ProjectEnterpriseSettingsForm: React.FC<
         { key: 'protected', label: 'protected' },
         { key: 'private', label: 'private' },
     ];
-
-    const projectLinkTemplatesEnabled = useUiFlag('projectLinkTemplates');
 
     useEffect(() => {
         setPreviousPattern(featureNamingPattern || '');
@@ -354,12 +351,10 @@ The flag name should contain the project name, the feature name, and the ticket 
                     />
                 </StyledFlagNamingContainer>
 
-                {projectLinkTemplatesEnabled && (
-                    <ProjectLinkTemplates
-                        linkTemplates={linkTemplates || []}
-                        setLinkTemplates={setLinkTemplates}
-                    />
-                )}
+                <ProjectLinkTemplates
+                    linkTemplates={linkTemplates || []}
+                    setLinkTemplates={setLinkTemplates}
+                />
             </StyledFieldset>
             <StyledButtonContainer>{children}</StyledButtonContainer>
         </StyledForm>

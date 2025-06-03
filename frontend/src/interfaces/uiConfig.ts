@@ -87,7 +87,6 @@ export type UiFlags = {
     consumptionModel?: boolean;
     edgeObservability?: boolean;
     addEditStrategy?: boolean;
-    cleanupReminder?: boolean;
     registerFrontendClient?: boolean;
     customMetrics?: boolean;
     lifecycleMetrics?: boolean;

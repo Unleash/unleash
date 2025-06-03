@@ -51,7 +51,6 @@ process.nextTick(async () => {
                         deltaApi: true,
                         uniqueSdkTracking: true,
                         addEditStrategy: true,
-                        cleanupReminder: true,
                         strictSchemaValidation: true,
                         registerFrontendClient: true,
                         reportUnknownFlags: true,

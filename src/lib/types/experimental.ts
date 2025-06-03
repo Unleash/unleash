@@ -57,8 +57,6 @@ export type IFlagKey =
     | 'consumptionModel'
     | 'edgeObservability'
     | 'addEditStrategy'
-    | 'cleanupReminder'
-    | 'removeInactiveApplications'
     | 'registerFrontendClient'
     | 'reportUnknownFlags'
     | 'lastSeenBulkQuery'
@@ -272,15 +270,6 @@ const flags: IFlags = {
     ),
     addEditStrategy: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ADD_EDIT_STRATEGY,
-        false,
-    ),
-
-    cleanupReminder: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CLEANUP_REMINDER,
-        false,
-    ),
-    removeInactiveApplications: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_REMOVE_INACTIVE_APPLICATIONS,
         false,
     ),
     registerFrontendClient: parseEnvVarBoolean(

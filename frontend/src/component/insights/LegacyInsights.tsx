@@ -1,4 +1,4 @@
-import { useState, type FC } from 'react';
+import type { FC } from 'react';
 import { styled } from '@mui/material';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
@@ -30,8 +30,6 @@ interface InsightsProps {
 }
 
 export const LegacyInsights: FC<InsightsProps> = ({ withCharts = true }) => {
-    const [scrolled, setScrolled] = useState(false);
-
     const stateConfig = {
         project: FilterItemParam,
         from: withDefault(FilterItemParam, {
@@ -56,18 +54,6 @@ export const LegacyInsights: FC<InsightsProps> = ({ withCharts = true }) => {
     const projects = state.project?.values ?? [allOption.id];
 
     const insightsData = useInsightsData(insights, projects);
-
-    const handleScroll = () => {
-        if (!scrolled && window.scrollY > 0) {
-            setScrolled(true);
-        } else if (scrolled && window.scrollY === 0) {
-            setScrolled(false);
-        }
-    };
-
-    if (typeof window !== 'undefined') {
-        window.addEventListener('scroll', handleScroll);
-    }
 
     return (
         <StyledWrapper>

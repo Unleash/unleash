@@ -35,8 +35,15 @@ const calculateHealth = (item: WeekData) =>
         100
     ).toFixed(2);
 
-const calculateTechDebt = (item: WeekData) =>
-    (((item.stale + item.potentiallyStale) / item.total) * 100).toFixed(2);
+const calculateTechDebt = (item: WeekData) => {
+    if (!item.total) {
+        return 0;
+    }
+
+    return (((item.stale + item.potentiallyStale) / item.total) * 100).toFixed(
+        2,
+    );
+};
 
 export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
     projectFlagTrends,

@@ -72,13 +72,10 @@ export const HealthStats: FC<IHealthStatsProps> = ({
     title,
 }) => {
     const healthToDebtEnabled = useFlag('healthToTechDebt');
-    const technicalDebtValue =
-        Number(
-            100 -
-                (typeof value === 'string'
-                    ? Number.parseFloat(value)
-                    : value || 0),
-        ).toFixed(0) || 0;
+
+    // TODO: get the following from backend
+    const unhealthy = stale + potentiallyStale;
+    const technicalDebtValue = (unhealthy / (healthy + unhealthy)) * 100;
 
     return (
         <StyledContainer>

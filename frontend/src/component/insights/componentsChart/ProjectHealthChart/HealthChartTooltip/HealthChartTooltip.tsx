@@ -34,6 +34,13 @@ const getHealthBadgeColor = (health?: number | null) => {
     return 'error';
 };
 
+const getTechnicalDebtBadgeColor = (technicalDebt?: number | null) => {
+    if (technicalDebt === undefined || technicalDebt === null) {
+        return 'info';
+    }
+    return getTechnicalDebtColor(technicalDebt);
+};
+
 const Distribution = ({ stale = 0, potentiallyStale = 0, total = 0 }) => {
     const healthyFlagCount = total - stale - potentiallyStale;
 
@@ -158,13 +165,19 @@ export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({
                                     : point.title}
                             </strong>
                         </Typography>
-                        <Badge
-                            color={getHealthBadgeColor(
-                                100 - point.value.health,
-                            )}
-                        >
-                            {point.value.health}%
-                        </Badge>
+                        {healthToTechDebtEnabled ? (
+                            <Badge
+                                color={getTechnicalDebtBadgeColor(
+                                    100 - point.value.health, // TODO: get from backend
+                                )}
+                            />
+                        ) : (
+                            <Badge
+                                color={getHealthBadgeColor(point.value.health)}
+                            >
+                                {point.value.health}%
+                            </Badge>
+                        )}
                     </StyledItemHeader>{' '}
                     <Divider
                         sx={(theme) => ({ margin: theme.spacing(1.5, 0) })}

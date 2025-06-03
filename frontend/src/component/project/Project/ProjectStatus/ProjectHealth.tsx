@@ -92,15 +92,16 @@ const useHealthColor = (healthRating: number) => {
     return theme.palette.success.border;
 };
 
-const useTechnicalDebtColor = (healthRating: number) => {
+const useTechnicalDebtColor = (techicalDebt: number) => {
     const theme = useTheme();
-    if (healthRating >= 75) {
-        return theme.palette.error.main;
+    switch (getTechnicalDebtColor(techicalDebt)) {
+        case 'error':
+            return theme.palette.error.main;
+        case 'warning':
+            return theme.palette.warning.border;
+        default:
+            return theme.palette.success.border;
     }
-    if (healthRating >= 25) {
-        return theme.palette.warning.border;
-    }
-    return theme.palette.success.border;
 };
 
 const Wrapper = styled(HealthGridTile)(({ theme }) => ({
@@ -119,17 +120,17 @@ export const ProjectHealth = () => {
     const theme = useTheme();
     const healthToDebtEnabled = useFlag('healthToTechDebt');
     const circumference = 2 * Math.PI * ChartRadius;
-    const healthRating = healthToDebtEnabled
-        ? 100 - health.current
-        : health.current;
+    const healthRating = health.current;
+    const technicalDebt = 100 - healthRating; // TODO: get from backend
 
     const gapLength = 0.3;
     const filledLength = 1 - gapLength;
     const offset = 0.75 - gapLength / 2;
     const healthLength = (healthRating / 100) * circumference * 0.7;
+    const technicalDebtLength = (technicalDebt / 100) * circumference * 0.7;
 
     const healthColor = useHealthColor(healthRating);
-    const technicalDebtColor = useTechnicalDebtColor(healthRating);
+    const technicalDebtColor = useTechnicalDebtColor(technicalDebt);
 
     return (
         <Wrapper>
@@ -157,7 +158,11 @@ export const ProjectHealth = () => {
                                     : healthColor
                             }
                             strokeWidth={ChartStrokeWidth}
-                            strokeDasharray={`${healthLength} ${circumference - healthLength}`}
+                            strokeDasharray={
+                                healthToDebtEnabled
+                                    ? `${technicalDebtLength} ${circumference - healthLength}`
+                                    : `${healthLength} ${circumference - healthLength}`
+                            }
                             strokeDashoffset={offset * circumference}
                         />
                         <text
@@ -168,7 +173,8 @@ export const ProjectHealth = () => {
                             fill={theme.palette.text.primary}
                             fontSize={theme.typography.h1.fontSize}
                         >
-                            {healthRating}%
+                            {healthToDebtEnabled ? technicalDebt : healthRating}
+                            %
                         </text>
                     </StyledSVG>
                 </SVGWrapper>
@@ -177,7 +183,7 @@ export const ProjectHealth = () => {
                         {healthToDebtEnabled ? (
                             <>
                                 Your current technical debt rating is{' '}
-                                {healthRating}%.
+                                {technicalDebt}%.
                             </>
                         ) : (
                             <>

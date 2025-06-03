@@ -137,7 +137,7 @@ test('doesnt return feature flags if project deleted', async () => {
         type: ApiTokenType.CLIENT,
         tokenName: deletionTokenName,
         environment,
-        project: deletionProject,
+        projects: [deletionProject],
     });
 
     await app.services.projectService.deleteProject(

@@ -129,7 +129,7 @@ test('returns feature flag with "default" config', async () => {
         type: ApiTokenType.CLIENT,
         tokenName,
         environment: DEFAULT_ENV,
-        project,
+        projects: [project],
     });
     await app.request
         .get('/api/client/features')
@@ -151,7 +151,7 @@ test('returns feature flag with testing environment config', async () => {
         type: ApiTokenType.CLIENT,
         tokenName: tokenName,
         environment,
-        project,
+        projects: [project],
     });
     await app.request
         .get('/api/client/features')
@@ -177,7 +177,7 @@ test('returns feature flag for project2', async () => {
         type: ApiTokenType.CLIENT,
         tokenName: tokenName,
         environment,
-        project: project2,
+        projects: [project2],
     });
     await app.request
         .get('/api/client/features')
@@ -197,7 +197,7 @@ test('returns feature flag for all projects', async () => {
         type: ApiTokenType.CLIENT,
         tokenName: tokenName,
         environment,
-        project: '*',
+        projects: ['*'],
     });
     await app.request
         .get('/api/client/features')

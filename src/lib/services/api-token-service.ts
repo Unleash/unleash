@@ -5,11 +5,9 @@ import type { IUnleashStores } from '../types/stores.js';
 import type { IUnleashConfig } from '../types/option.js';
 import ApiUser, { type IApiUser } from '../types/api-user.js';
 import {
-    type ILegacyApiTokenCreate,
     validateApiToken,
     validateApiTokenEnvironment,
-    mapLegacyToken,
-    mapLegacyTokenWithSecret,
+    mapLegacyProjects,
 } from '../types/models/api-token.js';
 import type { IApiTokenStore } from '../types/stores/api-token-store.js';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error.js';
@@ -194,7 +192,7 @@ export class ApiTokenService {
         return this.store.getAll();
     }
 
-    async initApiTokens(tokens: ILegacyApiTokenCreate[]) {
+    async initApiTokens(tokens: IApiTokenCreate[]) {
         const tokenCount = await this.store.count();
         if (tokenCount > 0) {
             this.logger.debug(
@@ -203,9 +201,9 @@ export class ApiTokenService {
             return;
         }
         try {
-            const createAll = tokens
-                .map(mapLegacyTokenWithSecret)
-                .map((t) => this.insertNewApiToken(t, SYSTEM_USER_AUDIT));
+            const createAll = tokens.map((t) =>
+                this.insertNewApiToken(t, SYSTEM_USER_AUDIT),
+            );
             await Promise.all(createAll);
             this.logger.info(
                 `Created initial API tokens: ${tokens.map((t) => `(name: ${t.tokenName}, type: ${t.type})`).join(', ')}`,
@@ -277,11 +275,16 @@ export class ApiTokenService {
      * @deprecated This may be removed in a future release, prefer createApiTokenWithProjects
      */
     public async createApiToken(
-        newToken: Omit<ILegacyApiTokenCreate, 'secret'>,
+        newToken: Omit<IApiTokenCreate, 'secret'>,
         auditUser: IAuditUser = SYSTEM_USER_AUDIT,
     ): Promise<IApiToken> {
-        const token = mapLegacyToken(newToken);
-        return this.internalCreateApiTokenWithProjects(token, auditUser);
+        return this.internalCreateApiTokenWithProjects(
+            {
+                ...newToken,
+                projects: mapLegacyProjects(undefined, newToken.projects),
+            },
+            auditUser,
+        );
     }
 
     /**

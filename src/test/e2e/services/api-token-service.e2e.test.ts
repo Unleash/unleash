@@ -71,7 +71,7 @@ test('should create client token', async () => {
     const token = await apiTokenService.createApiToken({
         tokenName: 'default-client',
         type: ApiTokenType.CLIENT,
-        project: '*',
+        projects: ['*'],
         environment: DEFAULT_ENV,
     });
     const allTokens = await apiTokenService.getAllTokens();
@@ -79,7 +79,7 @@ test('should create client token', async () => {
     expect(allTokens.length).toBe(1);
     expect(token.secret.length > 32).toBe(true);
     expect(token.type).toBe(ApiTokenType.CLIENT);
-    expect(token.username).toBe('default-client');
+    expect(token.tokenName).toBe('default-client');
     expect(allTokens[0].secret).toBe(token.secret);
 });
 
@@ -87,7 +87,7 @@ test('should create admin token', async () => {
     const token = await apiTokenService.createApiToken({
         tokenName: 'admin',
         type: ApiTokenType.ADMIN,
-        project: '*',
+        projects: ['*'],
         environment: '*',
     });
 
@@ -101,7 +101,7 @@ test('should set expiry of token', async () => {
         tokenName: 'default-client',
         type: ApiTokenType.CLIENT,
         expiresAt: time,
-        project: '*',
+        projects: ['*'],
         environment: DEFAULT_ENV,
     });
 
@@ -119,7 +119,7 @@ test('should update expiry of token', async () => {
             tokenName: 'default-client',
             type: ApiTokenType.CLIENT,
             expiresAt: time,
-            project: '*',
+            projects: ['*'],
             environment: DEFAULT_ENV,
         },
         TEST_AUDIT_USER,

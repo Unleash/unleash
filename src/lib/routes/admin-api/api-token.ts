@@ -43,6 +43,7 @@ import {
 } from '../../openapi/util/standard-responses.js';
 import type { FrontendApiService } from '../../features/frontend-api/frontend-api-service.js';
 import { OperationDeniedError } from '../../error/index.js';
+import type { CreateApiTokenSchema } from '../../internals.js';
 
 interface TokenParam {
     token: string;
@@ -299,25 +300,24 @@ export class ApiTokenController extends Controller {
     }
 
     async createApiToken(
-        req: IAuthRequest,
+        req: IAuthRequest<CreateApiTokenSchema>,
         res: Response<ApiTokenSchema>,
     ): Promise<any> {
         const createToken = await createApiToken.validateAsync(req.body);
         const permissionRequired = tokenTypeToCreatePermission(
             createToken.type,
         );
-        if (createToken.type.toUpperCase() === 'ADMIN') {
-            throw new OperationDeniedError(
-                `Admin tokens are disabled in this instance. Use a Service account or a PAT to access admin operations instead`,
-            );
-        }
+
         const hasPermission = await this.accessService.hasPermission(
             req.user,
             permissionRequired,
         );
         if (hasPermission) {
             const token = await this.apiTokenService.createApiToken(
-                createToken,
+                {
+                    ...createToken,
+                    projects: createToken.projects ?? [createToken.project],
+                },
                 req.audit,
             );
             this.openApiService.respondWithValidation(

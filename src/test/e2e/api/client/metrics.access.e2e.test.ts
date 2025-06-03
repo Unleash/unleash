@@ -35,7 +35,7 @@ test('should enrich metrics with environment from api-token', async () => {
         type: ApiTokenType.CLIENT,
         tokenName: 'test',
         environment: 'some',
-        project: '*',
+        projects: ['*'],
     });
 
     const featureName = Object.keys(metricsExample.bucket.toggles)[0];

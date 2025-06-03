@@ -8,6 +8,10 @@ Predefined strategy types are a legacy implementation. Please use the [default s
 
 ## UserIDs
 
+:::warning
+The `userWithId` strategy was removed in Unleash v7.0.0 for new installations. Instead use a gradual rollout strategy with a user ID stickiness and constraints.
+:::
+
 The `userWithId` strategy is active for users with a `userId` defined in the `userIds` list.
 
 **Parameters:**

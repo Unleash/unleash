@@ -354,7 +354,10 @@ class EventStore implements IEventStore {
                 .select(EVENT_COLUMNS)
                 .from(TABLE)
                 .limit(100)
-                .orderBy('created_at', 'desc');
+                .orderBy([
+                    { column: 'created_at', order: 'desc' },
+                    { column: 'id', order: 'desc' },
+                ]);
             if (query) {
                 qB = qB.where(query);
             }

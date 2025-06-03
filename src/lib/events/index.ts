@@ -79,8 +79,6 @@ export const PROJECT_USER_ADDED = 'project-user-added' as const;
 export const PROJECT_USER_REMOVED = 'project-user-removed' as const;
 export const PROJECT_USER_ROLE_CHANGED = 'project-user-role-changed' as const;
 export const PROJECT_GROUP_ADDED = 'project-group-added' as const;
-export const PROJECT_GROUP_REMOVED = 'project-group-removed' as const;
-export const PROJECT_GROUP_ROLE_CHANGED = 'project-group-role-changed' as const;
 export const DROP_PROJECTS = 'drop-projects' as const;
 export const TAG_CREATED = 'tag-created' as const;
 export const TAG_DELETED = 'tag-deleted' as const;
@@ -213,6 +211,8 @@ export const USER_PREFERENCE_UPDATED = 'user-preference-updated' as const;
 export const SCIM_USERS_DELETED = 'scim-users-deleted' as const;
 export const SCIM_GROUPS_DELETED = 'scim-groups-deleted' as const;
 
+export const CDN_TOKEN_CREATED = 'cdn-token-created' as const;
+
 export const IEventTypes = [
     APPLICATION_CREATED,
     FEATURE_CREATED,
@@ -269,9 +269,7 @@ export const IEventTypes = [
     PROJECT_USER_ADDED,
     PROJECT_USER_REMOVED,
     PROJECT_USER_ROLE_CHANGED,
-    PROJECT_GROUP_ROLE_CHANGED,
     PROJECT_GROUP_ADDED,
-    PROJECT_GROUP_REMOVED,
     ROLE_CREATED,
     ROLE_UPDATED,
     ROLE_DELETED,
@@ -373,6 +371,7 @@ export const IEventTypes = [
     USER_PREFERENCE_UPDATED,
     SCIM_USERS_DELETED,
     SCIM_GROUPS_DELETED,
+    CDN_TOKEN_CREATED,
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 

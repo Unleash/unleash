@@ -181,6 +181,7 @@ import {
 import { getDbConfig } from '../test/e2e/helpers/database-config.js';
 import { testDbPrefix } from '../test/e2e/helpers/database-init.js';
 import type { RequestHandler } from 'express';
+import { UPDATE_REVISION } from './features/feature-toggle/configuration-revision-service.js';
 
 export async function initialServiceSetup(
     { authentication }: Pick<IUnleashConfig, 'authentication'>,
@@ -420,6 +421,7 @@ export {
     CUSTOM_ROOT_ROLE_TYPE,
     getVariantValue,
     UPDATE_DELTA,
+    UPDATE_REVISION,
     applyGenericQueryParams,
     normalizeQueryParams,
     parseSearchOperatorValue,

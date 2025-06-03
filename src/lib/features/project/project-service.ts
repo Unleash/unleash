@@ -45,8 +45,6 @@ import {
     ProjectCreatedEvent,
     ProjectDeletedEvent,
     ProjectGroupAddedEvent,
-    ProjectGroupRemovedEvent,
-    ProjectGroupUpdateRoleEvent,
     ProjectRevivedEvent,
     ProjectUpdatedEvent,
     ProjectUserRemovedEvent,
@@ -64,7 +62,6 @@ import type { FeatureToggleService } from '../feature-toggle/feature-toggle-serv
 import IncompatibleProjectError from '../../error/incompatible-project-error.js';
 import { arraysHaveSameItems } from '../../util/index.js';
 import type { GroupService } from '../../services/group-service.js';
-import type { IGroupRole } from '../../types/group.js';
 import type { FavoritesService } from '../../services/favorites-service.js';
 import { calculateAverageTimeToProd } from '../feature-toggle/time-to-production/time-to-production.js';
 import type { IProjectStatsStore } from '../../types/stores/project-stats-store-type.js';
@@ -110,17 +107,6 @@ export interface IProjectStats {
 interface ICalculateStatus {
     projectId: string;
     updates: IProjectStats;
-}
-
-function includes(
-    list: number[],
-    {
-        id,
-    }: {
-        id: number;
-    },
-): boolean {
-    return list.some((l) => l === id);
 }
 
 export default class ProjectService {
@@ -805,44 +791,6 @@ export default class ProjectService {
         );
     }
 
-    /**
-     * @deprecated use removeGroupAccess
-     */
-    async removeGroup(
-        projectId: string,
-        roleId: number,
-        groupId: number,
-        auditUser: IAuditUser,
-    ): Promise<void> {
-        const group = await this.groupService.getGroup(groupId);
-        const role = await this.accessService.getRole(roleId);
-        const project = await this.getProject(projectId);
-        if (group.id == null)
-            throw new ValidationError(
-                'Unexpected empty group id',
-                [],
-                undefined,
-            );
-
-        await this.accessService.removeGroupFromRole(
-            group.id,
-            role.id,
-            project.id,
-        );
-
-        await this.eventService.storeEvent(
-            new ProjectGroupRemovedEvent({
-                project: projectId,
-                auditUser,
-                preData: {
-                    groupId: group.id,
-                    projectId: project.id,
-                    roleName: role.name,
-                },
-            }),
-        );
-    }
-
     private isAdmin(userId: number, roles: IRoleWithProject[]): boolean {
         return (
             userId === SYSTEM_USER_ID ||
@@ -1032,20 +980,6 @@ export default class ProjectService {
         }
     }
 
-    async findProjectGroupRole(
-        projectId: string,
-        roleId: number,
-    ): Promise<IGroupRole> {
-        const roles = await this.groupService.getRolesForProject(projectId);
-        const role = roles.find((r) => r.roleId === roleId);
-        if (!role) {
-            throw new NotFoundError(
-                `Couldn't find roleId=${roleId} on project=${projectId}`,
-            );
-        }
-        return role;
-    }
-
     async findProjectRole(
         projectId: string,
         roleId: number,
@@ -1156,56 +1090,6 @@ export default class ProjectService {
                     roleId,
                     roleName: role.name,
                     email: user.email,
-                },
-            }),
-        );
-    }
-
-    async changeGroupRole(
-        projectId: string,
-        roleId: number,
-        userId: number,
-        auditUser: IAuditUser,
-    ): Promise<void> {
-        const usersWithRoles = await this.getAccessToProject(projectId);
-        const userGroup = usersWithRoles.groups.find((u) => u.id === userId);
-        if (!userGroup)
-            throw new ValidationError('Unexpected empty user', [], undefined);
-        const currentRole = usersWithRoles.roles.find((r) =>
-            userGroup.roles?.includes(r.id),
-        );
-        if (!currentRole)
-            throw new ValidationError(
-                'Unexpected empty current role',
-                [],
-                undefined,
-            );
-
-        if (currentRole.id === roleId) {
-            // Nothing to do....
-            return;
-        }
-
-        await this.accessService.updateGroupProjectRole(
-            userId,
-            roleId,
-            projectId,
-        );
-        const role = await this.findProjectGroupRole(projectId, roleId);
-
-        await this.eventService.storeEvent(
-            new ProjectGroupUpdateRoleEvent({
-                project: projectId,
-                auditUser,
-                preData: {
-                    userId,
-                    roleId: currentRole.id,
-                    roleName: currentRole.name,
-                },
-                data: {
-                    userId,
-                    roleId,
-                    roleName: role.name,
                 },
             }),
         );

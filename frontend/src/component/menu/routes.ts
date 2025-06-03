@@ -157,6 +157,16 @@ export const routes: IRoute[] = [
         type: 'protected',
         menu: { primary: true },
         enterprise: true,
+        notFlag: 'sideMenuCleanup',
+    },
+    {
+        path: '/insights',
+        title: 'Analytics',
+        component: Insights,
+        type: 'protected',
+        menu: { primary: true },
+        enterprise: true,
+        flag: 'sideMenuCleanup',
     },
 
     // Applications

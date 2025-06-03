@@ -2775,40 +2775,40 @@ __metadata:
   linkType: hard
 
 "@tanstack/react-table@npm:^8.10.7":
-  version: 8.21.2
-  resolution: "@tanstack/react-table@npm:8.21.2"
+  version: 8.21.3
+  resolution: "@tanstack/react-table@npm:8.21.3"
   dependencies:
-    "@tanstack/table-core": "npm:8.21.2"
+    "@tanstack/table-core": "npm:8.21.3"
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 10c0/192392c7d945bf50a21a0904fdce07e4abb74bc6187bcd32ae843031d48e851a10899e0218443d742ee01c30ca1ff890a8677a5878b8904561ebc23479adfdf1
+  checksum: 10c0/85d1d0fcb690ecc011f68a5a61c96f82142e31a0270dcf9cbc699a6f36715b1653fe6ff1518302a6d08b7093351fc4cabefd055a7db3cd8ac01e068956b0f944
   languageName: node
   linkType: hard
 
 "@tanstack/react-virtual@npm:^3.11.3":
-  version: 3.13.2
-  resolution: "@tanstack/react-virtual@npm:3.13.2"
+  version: 3.13.9
+  resolution: "@tanstack/react-virtual@npm:3.13.9"
   dependencies:
-    "@tanstack/virtual-core": "npm:3.13.2"
+    "@tanstack/virtual-core": "npm:3.13.9"
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/6341e43c8af79b273deb9283631b881065131191959ffc08e9e83c42e772e0c1576a4787252017650798e2e3961fc7854ee7ea0a8b40dab7354c6a2e830f5db6
+  checksum: 10c0/aa05fb24e30686516e74ccdec94a83d195615a4f29bc866a53ee6b0107e466c6d6e3e947b3fb0613b907b0f982d74b00367868cf6b1ac956562d0e7c24d6764b
   languageName: node
   linkType: hard
 
-"@tanstack/table-core@npm:8.21.2":
-  version: 8.21.2
-  resolution: "@tanstack/table-core@npm:8.21.2"
-  checksum: 10c0/836326c6aef7e0b9b4566f9b2ade5ea73b90ce94f2b0cc35a3b3e1f44a9b3512d5507e4818c509824443b3d0488f2026df54e7a9f8f0cdccae6040347e6ff079
+"@tanstack/table-core@npm:8.21.3":
+  version: 8.21.3
+  resolution: "@tanstack/table-core@npm:8.21.3"
+  checksum: 10c0/40e3560e6d55e07cc047024aa7f83bd47a9323d21920d4adabba8071fd2d21230c48460b26cedf392588f8265b9edc133abb1b0d6d0adf4dae0970032900a8c9
   languageName: node
   linkType: hard
 
-"@tanstack/virtual-core@npm:3.13.2":
-  version: 3.13.2
-  resolution: "@tanstack/virtual-core@npm:3.13.2"
-  checksum: 10c0/6527f4e2db071e03b6a0768b10405d072c2692551148314e36ea673878c78ea50f10849f173b32ec8b8d265bd624ab03cacb770c60719885e1ca02cdccf04927
+"@tanstack/virtual-core@npm:3.13.9":
+  version: 3.13.9
+  resolution: "@tanstack/virtual-core@npm:3.13.9"
+  checksum: 10c0/6e9526a9d52f8ddc54af8a1dc7380814b10ab38d8a4265e362a5b69c3132097ace51496d4206fe8aa90e33129aaf1a177c93d7ed018b5564b78e057fc9cdb48d
   languageName: node
   linkType: hard
 
@@ -9948,23 +9948,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.4.5":
-  version: 5.4.5
-  resolution: "typescript@npm:5.4.5"
+"typescript@npm:5.8.3":
+  version: 5.8.3
+  resolution: "typescript@npm:5.8.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/2954022ada340fd3d6a9e2b8e534f65d57c92d5f3989a263754a78aba549f7e6529acc1921913560a4b816c46dce7df4a4d29f9f11a3dc0d4213bb76d043251e
+  checksum: 10c0/5f8bb01196e542e64d44db3d16ee0e4063ce4f3e3966df6005f2588e86d91c03e1fb131c2581baf0fb65ee79669eea6e161cd448178986587e9f6844446dbb48
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>":
-  version: 5.4.5
-  resolution: "typescript@patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>::version=5.4.5&hash=5adc0c"
+"typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>":
+  version: 5.8.3
+  resolution: "typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/db2ad2a16ca829f50427eeb1da155e7a45e598eec7b086d8b4e8ba44e5a235f758e606d681c66992230d3fc3b8995865e5fd0b22a2c95486d0b3200f83072ec9
+  checksum: 10c0/39117e346ff8ebd87ae1510b3a77d5d92dae5a89bde588c747d25da5c146603a99c8ee588c7ef80faaf123d89ed46f6dbd918d534d641083177d5fac38b8a1cb
   languageName: node
   linkType: hard
 
@@ -10182,7 +10182,7 @@ __metadata:
     semver: "npm:7.7.1"
     swr: "npm:2.3.3"
     tss-react: "npm:4.9.15"
-    typescript: "npm:5.4.5"
+    typescript: "npm:5.8.3"
     unleash-proxy-client: "npm:^3.7.3"
     use-query-params: "npm:^2.2.1"
     vanilla-jsoneditor: "npm:^0.23.0"

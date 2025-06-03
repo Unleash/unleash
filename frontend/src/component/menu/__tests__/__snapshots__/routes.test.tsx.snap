@@ -131,8 +131,20 @@ exports[`returns all baseRoutes 1`] = `
     "menu": {
       "primary": true,
     },
+    "notFlag": "sideMenuCleanup",
     "path": "/insights",
     "title": "Insights",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "enterprise": true,
+    "flag": "sideMenuCleanup",
+    "menu": {
+      "primary": true,
+    },
+    "path": "/insights",
+    "title": "Analytics",
     "type": "protected",
   },
   {

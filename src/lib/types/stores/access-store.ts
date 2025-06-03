@@ -131,19 +131,7 @@ export interface IAccessStore extends Store<IRole, number> {
         projectId?: string,
     ): Promise<void>;
 
-    removeGroupFromRole(
-        groupId: number,
-        roleId: number,
-        projectId?: string,
-    ): Promise<void>;
-
     updateUserProjectRole(
-        userId: number,
-        roleId: number,
-        projectId: string,
-    ): Promise<void>;
-
-    updateGroupProjectRole(
         userId: number,
         roleId: number,
         projectId: string,

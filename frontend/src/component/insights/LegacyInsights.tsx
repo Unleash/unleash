@@ -10,7 +10,7 @@ import { InsightsFilters } from './InsightsFilters.tsx';
 import { FilterItemParam } from '../../utils/serializeQueryParams.ts';
 import { format, subMonths } from 'date-fns';
 import { withDefault } from 'use-query-params';
-import { LegacyInsightsCharts } from './LegacyInsightsCharts.tsx';
+import { InsightsCharts } from './InsightsCharts.tsx';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(2),
@@ -79,7 +79,7 @@ export const LegacyInsights: FC<InsightsProps> = ({ withCharts = true }) => {
                 />
             </StickyContainer>
             {withCharts && (
-                <LegacyInsightsCharts
+                <InsightsCharts
                     loading={loading}
                     projects={projects}
                     {...insightsData}

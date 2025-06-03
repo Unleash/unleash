@@ -2559,10 +2559,6 @@ export class FeatureToggleService {
         featureName: string,
         auditUser: IAuditUser,
     ) {
-        if (!this.flagResolver.isEnabled('projectLinkTemplates')) {
-            return;
-        }
-
         const featureLinksFromTemplates = (
             await this.projectStore.getProjectLinkTemplates(projectId)
         ).map((template) => ({

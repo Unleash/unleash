@@ -8,24 +8,12 @@ export const isAllProjects = (projects: string[]): boolean => {
     return projects && projects.length === 1 && projects[0] === ALL;
 };
 
-export const mapLegacyProjects = (
-    project?: string,
-    projects?: string[],
-): string[] => {
-    let cleanedProjects: string[];
-    if (project) {
-        cleanedProjects = [project];
-    } else if (projects) {
-        cleanedProjects = projects;
-        if (cleanedProjects.includes('*')) {
-            cleanedProjects = ['*'];
-        }
-    } else {
-        throw new BadDataError(
-            'API tokens must either contain a project or projects field',
-        );
+export const resolveValidProjects = (projects: string[]): string[] => {
+    if (projects.includes('*')) {
+        return ['*'];
     }
-    return cleanedProjects;
+
+    return projects;
 };
 
 export const validateApiToken = ({

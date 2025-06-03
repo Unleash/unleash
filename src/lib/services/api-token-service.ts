@@ -5,6 +5,7 @@ import type { IUnleashStores } from '../types/stores.js';
 import type { IUnleashConfig } from '../types/option.js';
 import ApiUser, { type IApiUser } from '../types/api-user.js';
 import {
+    resolveValidProjects,
     validateApiToken,
     validateApiTokenEnvironment,
 } from '../types/models/api-token.js';
@@ -279,7 +280,13 @@ export class ApiTokenService {
         newToken: Omit<IApiTokenCreate, 'secret'>,
         auditUser: IAuditUser = SYSTEM_USER_AUDIT,
     ): Promise<IApiToken> {
-        return this.internalCreateApiTokenWithProjects(newToken, auditUser);
+        return this.internalCreateApiTokenWithProjects(
+            {
+                ...newToken,
+                projects: resolveValidProjects(newToken.projects),
+            },
+            auditUser,
+        );
     }
 
     private async internalCreateApiTokenWithProjects(

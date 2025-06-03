@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Lightbulb from '@mui/icons-material/LightbulbOutlined';
 import type { PersonalDashboardProjectDetailsSchemaInsights } from 'openapi';
 import { ActionBox } from './ActionBox.tsx';
+import { useFlag } from '@unleash/proxy-client-react';
 
 const PercentageScore = styled('span')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
@@ -57,9 +58,11 @@ const ProjectHealthMessage: FC<{
     insights: PersonalDashboardProjectDetailsSchemaInsights;
     project: string;
 }> = ({ trend, insights, project }) => {
+    const healthToTechDebtEnabled = useFlag('healthToTechDebt');
     const { avgHealthCurrentWindow, avgHealthPastWindow, health } = insights;
-    const improveMessage =
-        'Remember to archive your stale feature flags to keep the project health growing.';
+    const improveMessage = healthToTechDebtEnabled
+        ? 'Remember to archive your stale feature flags to keep the technical debt low.'
+        : 'Remember to archive your stale feature flags to keep the project health growing.';
     const keepDoingMessage =
         'This indicates that you are doing a good job of archiving your feature flags.';
 

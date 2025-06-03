@@ -75,7 +75,10 @@ export const HealthStats: FC<IHealthStatsProps> = ({
 
     // TODO: get the following from backend
     const unhealthy = stale + potentiallyStale;
-    const technicalDebtValue = (unhealthy / (healthy + unhealthy)) * 100;
+    const technicalDebtValue = (
+        (unhealthy / (healthy + unhealthy)) *
+        100
+    ).toFixed(1);
 
     return (
         <StyledContainer>

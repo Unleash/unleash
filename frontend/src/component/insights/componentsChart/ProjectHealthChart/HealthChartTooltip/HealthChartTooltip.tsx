@@ -6,6 +6,7 @@ import type { TooltipState } from 'component/insights/components/LineChart/Chart
 import { HorizontalDistributionChart } from 'component/insights/components/HorizontalDistributionChart/HorizontalDistributionChart';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useFlag } from '@unleash/proxy-client-react';
+import { getTechnicalDebtColor } from 'utils/getTechnicalDebtColor.ts';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -108,6 +109,7 @@ export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({
     tooltip,
 }) => {
     const healthToTechDebtEnabled = useFlag('healthToTechDebt');
+
     const data = tooltip?.dataPoints.map((point) => {
         return {
             label: point.label,

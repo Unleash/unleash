@@ -183,7 +183,7 @@ const NewInsightsCharts: FC<IChartsProps> = ({
                     <StyledWidget>
                         <StyledWidgetStats width={350} padding={0}>
                             <HealthStats
-                                value={summary.averageHealth}
+                                value={summary.averageHealth} // Not used for technical debt
                                 healthy={summary.active}
                                 stale={summary.stale}
                                 potentiallyStale={summary.potentiallyStale}

@@ -6,6 +6,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { HealthGridTile } from './ProjectHealthGrid.styles';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
 import { useFlag } from '@unleash/proxy-client-react';
+import { getTechnicalDebtColor } from 'utils/getTechnicalDebtColor.ts';
 
 const ChartRadius = 40;
 const ChartStrokeWidth = 13;
@@ -160,7 +161,7 @@ export const ProjectHealth = () => {
                             strokeWidth={ChartStrokeWidth}
                             strokeDasharray={
                                 healthToDebtEnabled
-                                    ? `${technicalDebtLength} ${circumference - healthLength}`
+                                    ? `${technicalDebtLength} ${circumference - technicalDebtLength}`
                                     : `${healthLength} ${circumference - healthLength}`
                             }
                             strokeDashoffset={offset * circumference}

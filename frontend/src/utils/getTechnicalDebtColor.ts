@@ -2,7 +2,7 @@
  * Consistent values for boundries between healthy, warning and error colors
  * @param technicalDebt {Number} 0-100
  */
-const getTechnicalDebtColor = (technicalDebt: number) => {
+export const getTechnicalDebtColor = (technicalDebt: number) => {
     if (technicalDebt >= 50) {
         return 'error';
     }

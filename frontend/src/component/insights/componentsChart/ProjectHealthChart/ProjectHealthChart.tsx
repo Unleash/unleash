@@ -54,9 +54,6 @@ export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
     const theme = useTheme();
     const placeholderData = usePlaceholderData();
     const healthToTechDebtEnabled = useFlag('healthToTechDebt');
-    const calculateData = healthToTechDebtEnabled
-        ? calculateTechDebt
-        : calculateHealth;
 
     const aggregateHealthData = useMemo(() => {
         const labels = Array.from(
@@ -97,7 +94,17 @@ export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
                 {
                     label: 'Health',
                     data: weeks.map((item) => ({
-                        health: item.total ? calculateData(item) : undefined,
+                        ...(healthToTechDebtEnabled
+                            ? {
+                                  technicalDebt: item.total
+                                      ? calculateTechDebt(item)
+                                      : undefined,
+                              }
+                            : {
+                                  health: item.total
+                                      ? calculateHealth(item)
+                                      : undefined,
+                              }),
                         date: item.date,
                         total: item.total,
                         stale: item.stale,

@@ -58,7 +58,6 @@ export type IFlagKey =
     | 'edgeObservability'
     | 'addEditStrategy'
     | 'cleanupReminder'
-    | 'removeInactiveApplications'
     | 'registerFrontendClient'
     | 'featureLinks'
     | 'projectLinkTemplates'
@@ -279,10 +278,6 @@ const flags: IFlags = {
 
     cleanupReminder: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CLEANUP_REMINDER,
-        false,
-    ),
-    removeInactiveApplications: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_REMOVE_INACTIVE_APPLICATIONS,
         false,
     ),
     registerFrontendClient: parseEnvVarBoolean(

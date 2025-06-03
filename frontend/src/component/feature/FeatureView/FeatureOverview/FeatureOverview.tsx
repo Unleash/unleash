@@ -11,7 +11,6 @@ import { styled } from '@mui/material';
 import { FeatureStrategyCreate } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
 import { useEffect, useState } from 'react';
 import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureOverviewEnvironments } from './FeatureOverviewEnvironments/FeatureOverviewEnvironments.tsx';
 import { useEnvironmentVisibility } from './FeatureOverviewMetaData/EnvironmentVisibilityMenu/hooks/useEnvironmentVisibility.ts';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
@@ -57,7 +56,6 @@ export const FeatureOverview = () => {
         projectId,
         featureId,
     );
-    const cleanupReminderEnabled = useUiFlag('cleanupReminder');
     const dragTooltipSplashId = 'strategy-drag-tooltip';
     const shouldShowStrategyDragTooltip = !splash?.[dragTooltipSplashId];
     const toggleShowTooltip = (envIsOpen: boolean) => {
@@ -72,9 +70,7 @@ export const FeatureOverview = () => {
 
     return (
         <div>
-            {cleanupReminderEnabled ? (
-                <CleanupReminder feature={feature} onChange={refetchFeature} />
-            ) : null}
+            <CleanupReminder feature={feature} onChange={refetchFeature} />
             <StyledContainer>
                 <div>
                     {!loading ? (

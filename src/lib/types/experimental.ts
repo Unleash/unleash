@@ -57,7 +57,6 @@ export type IFlagKey =
     | 'consumptionModel'
     | 'edgeObservability'
     | 'addEditStrategy'
-    | 'cleanupReminder'
     | 'registerFrontendClient'
     | 'featureLinks'
     | 'projectLinkTemplates'
@@ -273,11 +272,6 @@ const flags: IFlags = {
     ),
     addEditStrategy: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ADD_EDIT_STRATEGY,
-        false,
-    ),
-
-    cleanupReminder: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CLEANUP_REMINDER,
         false,
     ),
     registerFrontendClient: parseEnvVarBoolean(

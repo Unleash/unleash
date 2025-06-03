@@ -40,7 +40,7 @@ export const InsightsFilters: FC<IFeatureToggleFiltersProps> = ({
 
         const hasMultipleProjects = projectsOptions.length > 1;
 
-        const prefix = filterNamePrefix;
+        const prefix = filterNamePrefix ?? '';
 
         const availableFilters: IFilterItem[] = [
             {

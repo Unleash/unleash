@@ -2,7 +2,7 @@ import { render } from 'utils/testRenderer';
 import { fireEvent, screen } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { vi } from 'vitest';
-import { LegacyInsights } from './LegacyInsights.tsx';
+import { Insights } from './Insights.tsx';
 
 const server = testServerSetup();
 
@@ -31,7 +31,7 @@ const currentTime = '2024-04-25T08:05:00.000Z';
 test('Filter insights by project and date', async () => {
     vi.setSystemTime(currentTime);
     setupApi();
-    render(<LegacyInsights withCharts={false} />);
+    render(<Insights withCharts={false} />);
     const addFilter = await screen.findByText('Filter');
     fireEvent.click(addFilter);
     const projectFilter = await screen.findByText('Project');

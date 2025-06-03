@@ -129,11 +129,6 @@ export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
                 notEnoughData
                     ? {}
                     : {
-                          plugins: {
-                              legend: {
-                                  display: false,
-                              },
-                          },
                           parsing: {
                               yAxisKey: healthToTechDebtEnabled
                                   ? 'technicalDebt'

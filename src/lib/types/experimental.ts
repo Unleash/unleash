@@ -57,7 +57,6 @@ export type IFlagKey =
     | 'consumptionModel'
     | 'edgeObservability'
     | 'addEditStrategy'
-    | 'cleanupReminder'
     | 'removeInactiveApplications'
     | 'registerFrontendClient'
     | 'featureLinks'

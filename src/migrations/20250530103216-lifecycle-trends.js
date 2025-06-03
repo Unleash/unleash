@@ -11,7 +11,7 @@ exports.up = function(db, cb) {
                 flags_older_than_week INTEGER DEFAULT 0,
                 new_flags_this_week INTEGER DEFAULT 0,
                 created_at TIMESTAMP DEFAULT now(),
-                PRIMARY KEY (id, stage, flag_type)
+                PRIMARY KEY (id, stage, flag_type, project)
                 );
         `,
         cb,

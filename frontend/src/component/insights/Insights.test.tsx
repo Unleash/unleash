@@ -1,8 +1,8 @@
 import { render } from 'utils/testRenderer';
 import { fireEvent, screen } from '@testing-library/react';
+import { Insights } from './Insights.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { vi } from 'vitest';
-import { Insights } from './Insights.tsx';
 
 const server = testServerSetup();
 

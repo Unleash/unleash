@@ -57,7 +57,6 @@ export type IFlagKey =
     | 'consumptionModel'
     | 'edgeObservability'
     | 'addEditStrategy'
-    | 'removeInactiveApplications'
     | 'registerFrontendClient'
     | 'featureLinks'
     | 'projectLinkTemplates'
@@ -273,10 +272,6 @@ const flags: IFlags = {
     ),
     addEditStrategy: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ADD_EDIT_STRATEGY,
-        false,
-    ),
-    removeInactiveApplications: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_REMOVE_INACTIVE_APPLICATIONS,
         false,
     ),
     registerFrontendClient: parseEnvVarBoolean(

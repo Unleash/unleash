@@ -331,10 +331,7 @@ export default class ClientInstanceService {
     }
 
     async removeInactiveApplications(): Promise<number> {
-        if (this.flagResolver.isEnabled('removeInactiveApplications')) {
-            return this.clientApplicationsStore.removeInactiveApplications();
-        }
-        return 0;
+        return this.clientApplicationsStore.removeInactiveApplications();
     }
 
     async getOutdatedSdks(): Promise<OutdatedSdksSchema['sdks']> {

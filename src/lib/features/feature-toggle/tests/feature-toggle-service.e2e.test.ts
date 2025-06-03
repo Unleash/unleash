@@ -59,18 +59,13 @@ const mockConstraints = (): IConstraint[] => {
 const irrelevantDate = new Date();
 
 beforeAll(async () => {
-    const flags = {
-        featureLinks: true,
-        projectLinkTemplates: true,
-    };
-    const config = createTestConfig({ experimental: { flags } });
+    const config = createTestConfig();
 
     db = await dbInit(
         'feature_toggle_service_v2_service_serial',
         config.getLogger,
         {
             dbInitMethod: 'legacy' as const,
-            experimental: { flags },
         },
     );
     unleashConfig = config;

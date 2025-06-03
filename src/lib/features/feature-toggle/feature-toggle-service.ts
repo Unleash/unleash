@@ -1114,9 +1114,7 @@ export class FeatureToggleService {
                 this.featureCollaboratorsReadModel.getFeatureCollaborators(
                     featureName,
                 ),
-                this.flagResolver.isEnabled('featureLinks')
-                    ? this.featureLinksReadModel.getLinks(featureName)
-                    : Promise.resolve([]),
+                this.featureLinksReadModel.getLinks(featureName),
             ]);
 
         if (environmentVariants) {
@@ -2559,10 +2557,6 @@ export class FeatureToggleService {
         featureName: string,
         auditUser: IAuditUser,
     ) {
-        if (!this.flagResolver.isEnabled('projectLinkTemplates')) {
-            return;
-        }
-
         const featureLinksFromTemplates = (
             await this.projectStore.getProjectLinkTemplates(projectId)
         ).map((template) => ({

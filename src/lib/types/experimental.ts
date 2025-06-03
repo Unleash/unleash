@@ -58,8 +58,6 @@ export type IFlagKey =
     | 'edgeObservability'
     | 'addEditStrategy'
     | 'registerFrontendClient'
-    | 'featureLinks'
-    | 'projectLinkTemplates'
     | 'reportUnknownFlags'
     | 'lastSeenBulkQuery'
     | 'newGettingStartedEmail'
@@ -276,14 +274,6 @@ const flags: IFlags = {
     ),
     registerFrontendClient: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REGISTER_FRONTEND_CLIENT,
-        false,
-    ),
-    featureLinks: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FEATURE_LINKS,
-        false,
-    ),
-    projectLinkTemplates: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROJECT_LINK_TEMPLATES,
         false,
     ),
     reportUnknownFlags: parseEnvVarBoolean(

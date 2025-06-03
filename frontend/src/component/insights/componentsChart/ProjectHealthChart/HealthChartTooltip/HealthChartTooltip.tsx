@@ -115,7 +115,9 @@ export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({
             label: point.label,
             title: point.dataset.label,
             color: point.dataset.borderColor,
-            value: point.raw as InstanceInsightsSchemaProjectFlagTrendsItem,
+            value: point.raw as InstanceInsightsSchemaProjectFlagTrendsItem & {
+                technicalDebt?: number | null;
+            }, // TODO: get from backend
         };
     });
 
@@ -170,9 +172,11 @@ export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({
                         {healthToTechDebtEnabled ? (
                             <Badge
                                 color={getTechnicalDebtBadgeColor(
-                                    100 - point.value.health, // TODO: get from backend
+                                    point.value.technicalDebt,
                                 )}
-                            />
+                            >
+                                {point.value.technicalDebt}%
+                            </Badge>
                         ) : (
                             <Badge
                                 color={getHealthBadgeColor(point.value.health)}

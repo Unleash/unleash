@@ -163,11 +163,7 @@ export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({
                             >
                                 {'● '}
                             </Typography>
-                            <strong>
-                                {healthToTechDebtEnabled
-                                    ? 'Technical debt'
-                                    : point.title}
-                            </strong>
+                            <strong>{point.title}</strong>
                         </Typography>
                         {healthToTechDebtEnabled ? (
                             <Badge

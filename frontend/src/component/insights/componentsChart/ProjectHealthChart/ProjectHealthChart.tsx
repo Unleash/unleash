@@ -2,7 +2,10 @@ import 'chartjs-adapter-date-fns';
 import { type FC, useMemo } from 'react';
 import type { InstanceInsightsSchema } from 'openapi';
 import { HealthTooltip } from './HealthChartTooltip/HealthChartTooltip.tsx';
-import { useProjectChartData } from 'component/insights/hooks/useProjectChartData';
+import {
+    calculateTechDebt,
+    useProjectChartData,
+} from 'component/insights/hooks/useProjectChartData';
 import {
     fillGradientPrimary,
     LineChart,
@@ -34,16 +37,6 @@ const calculateHealth = (item: WeekData) =>
         ((item.total - item.stale - item.potentiallyStale) / item.total) *
         100
     ).toFixed(2);
-
-const calculateTechDebt = (item: WeekData) => {
-    if (!item.total) {
-        return 0;
-    }
-
-    return (((item.stale + item.potentiallyStale) / item.total) * 100).toFixed(
-        2,
-    );
-};
 
 export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
     projectFlagTrends,
@@ -92,7 +85,7 @@ export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
         return {
             datasets: [
                 {
-                    label: 'Health',
+                    label: healthToTechDebtEnabled ? 'Technica debt' : 'Health',
                     data: weeks.map((item) => ({
                         health: item.total ? calculateHealth(item) : undefined,
                         ...(healthToTechDebtEnabled

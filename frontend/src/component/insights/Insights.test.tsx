@@ -27,7 +27,9 @@ const setupApi = () => {
 
 const currentTime = '2024-04-25T08:05:00.000Z';
 
-// todo(lifecycleMetrics): add tests for new insights
+// todo(lifecycleMetrics): this test won't be relevant anymore because the
+// filters are on each section instead of the top-level component. Consider
+// rewriting this for the individual section components instead.
 test('Filter insights by project and date', async () => {
     vi.setSystemTime(currentTime);
     setupApi();

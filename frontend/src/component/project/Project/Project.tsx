@@ -26,7 +26,6 @@ import {
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
 import { useEffect, useState, type ReactNode } from 'react';
-import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment.tsx';
 import ProjectFlags from './ProjectFlags.tsx';
 import ProjectHealth from './ProjectHealth/ProjectHealth.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -51,7 +50,6 @@ import type { UiFlags } from 'interfaces/uiConfig';
 import { HiddenProjectIconWithTooltip } from './HiddenProjectIconWithTooltip/HiddenProjectIconWithTooltip.tsx';
 import { ChangeRequestPlausibleProvider } from 'component/changeRequest/ChangeRequestContext';
 import { ProjectApplications } from '../ProjectApplications/ProjectApplications.tsx';
-import { ProjectInsights } from './ProjectInsights/ProjectInsights.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectArchived } from './ArchiveProject/ProjectArchived.tsx';
 import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker.ts';
@@ -386,8 +384,6 @@ export const Project = () => {
                         />
                     }
                 />
-                <Route path='environments' element={<ProjectEnvironment />} />
-                <Route path='insights' element={<ProjectInsights />} />
                 <Route path='logs' element={<ProjectLog />} />
                 <Route
                     path='change-requests'

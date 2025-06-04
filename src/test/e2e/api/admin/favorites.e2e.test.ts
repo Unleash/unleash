@@ -69,6 +69,13 @@ const unfavoriteProject = async (projectName = 'default') => {
         .expect(200);
 };
 
+const getProject = async (projectName = 'default') => {
+    return app.request
+        .get(`/api/admin/projects/${projectName}/overview`)
+        .set('Content-Type', 'application/json')
+        .expect(200);
+};
+
 const getProjects = async () => {
     return app.request
         .get('/api/admin/projects')
@@ -189,5 +196,28 @@ test('should be favorited in projects list', async () => {
     expect(body.projects[0]).toMatchObject({
         name: 'Default',
         favorite: true,
+    });
+});
+
+test('should be favorited in single project endpoint', async () => {
+    await favoriteProject();
+
+    const { body } = await getProject();
+
+    expect(body).toMatchObject({
+        name: 'Default',
+        favorite: true,
+    });
+});
+
+test('project should not be favorited by default', async () => {
+    await favoriteProject();
+    await unfavoriteProject();
+
+    const { body } = await getProject();
+
+    expect(body).toMatchObject({
+        name: 'Default',
+        favorite: false,
     });
 });

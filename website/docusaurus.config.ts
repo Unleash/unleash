@@ -407,6 +407,9 @@ class="header-github-link"
                     background: 'var(--ifm-background-color)',
                 },
             },
+            zoom: {
+                selector: '.markdown :not(p) > img',
+            },
         },
         presets: [
             [

@@ -35,27 +35,25 @@ export const createOptions = (
             y: {
                 beginAtZero: true,
                 stacked: true,
-                // grid: {
-                //     color: theme.palette.divider,
-                //     borderColor: theme.palette.divider,
-                // },
-                // ticks: {
-                //     color: theme.palette.text.secondary,
-                //     display: !isPlaceholder,
-                //     precision: 0,
-                // },
+                grid: {
+                    color: theme.palette.divider,
+                    borderColor: theme.palette.divider,
+                    drawBorder: false,
+                },
+                ticks: {
+                    // major: { enabled: true },
+                    // stepSize: 1,
+                    // color: theme.palette.text.secondary,
+                    // display: !isPlaceholder,
+                    // precision: 0,
+                },
             },
             x: {
                 stacked: true,
-                // type: 'time',
-                // time: {
-                //     unit: 'week',
-                //     tooltipFormat: 'PPP',
-                // },
-                // grid: {
-                //     color: 'transparent',
-                //     borderColor: 'transparent',
-                // },
+                grid: {
+                    display: false,
+                },
+
                 // ticks: {
                 //     color: theme.palette.text.secondary,
                 //     display: !isPlaceholder,

@@ -41,10 +41,18 @@ const useChartColors = () => {
     };
 };
 
+const ChartRow = styled('div')(({ theme }) => ({
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: theme.spacing(2),
+}));
+
 const ChartContainer = styled('article')(({ theme }) => ({
     background: theme.palette.background.default,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(2),
+    aspectRatio: '5/4', // todo: temp
+    minWidth: 0,
 }));
 
 export const LifecycleInsights: FC = () => {
@@ -163,45 +171,53 @@ export const LifecycleInsights: FC = () => {
                 />
             }
         >
-            {/* <pre>{JSON.stringify(lifecycleTrends, null, 2)}</pre> */}
-            {Object.entries(mockData).map(([stage, data]) => (
-                <ChartContainer>
-                    <LifecycleChart
-                        key={stage}
-                        data={{
-                            labels: [`Experimental`, `Release`, `Other flags`],
-                            datasets: [
-                                {
-                                    label: '> 1 week old',
-                                    data: [
-                                        data.categories.experimental
-                                            .flagsOlderThanWeek,
-                                        data.categories.release
-                                            .flagsOlderThanWeek,
-                                        data.categories.permanent
-                                            .flagsOlderThanWeek,
-                                    ],
-                                    stack: '1',
-                                    backgroundColor: chartColors.olderThanWeek,
-                                },
-                                {
-                                    label: 'New this week',
-                                    data: [
-                                        data.categories.experimental
-                                            .newFlagsThisWeek,
-                                        data.categories.release
-                                            .newFlagsThisWeek,
-                                        data.categories.permanent
-                                            .newFlagsThisWeek,
-                                    ],
-                                    stack: '1',
-                                    backgroundColor: chartColors.newThisWeek,
-                                },
-                            ],
-                        }}
-                    />
-                </ChartContainer>
-            ))}
+            <ChartRow>
+                {/* <pre>{JSON.stringify(lifecycleTrends, null, 2)}</pre> */}
+                {Object.entries(mockData).map(([stage, data]) => (
+                    <ChartContainer>
+                        <LifecycleChart
+                            key={stage}
+                            data={{
+                                labels: [
+                                    `Experimental`,
+                                    `Release`,
+                                    `Other flags`,
+                                ],
+                                datasets: [
+                                    {
+                                        label: '> 1 week old',
+                                        data: [
+                                            data.categories.experimental
+                                                .flagsOlderThanWeek,
+                                            data.categories.release
+                                                .flagsOlderThanWeek,
+                                            data.categories.permanent
+                                                .flagsOlderThanWeek,
+                                        ],
+                                        stack: '1',
+                                        backgroundColor:
+                                            chartColors.olderThanWeek,
+                                    },
+                                    {
+                                        label: 'New this week',
+                                        data: [
+                                            data.categories.experimental
+                                                .newFlagsThisWeek,
+                                            data.categories.release
+                                                .newFlagsThisWeek,
+                                            data.categories.permanent
+                                                .newFlagsThisWeek,
+                                        ],
+                                        stack: '1',
+                                        backgroundColor:
+                                            chartColors.newThisWeek,
+                                    },
+                                ],
+                            }}
+                        />
+                    </ChartContainer>
+                ))}
+            </ChartRow>
         </InsightsSection>
     );
 };

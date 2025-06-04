@@ -28,21 +28,28 @@ export const createOptions = (
     // locationSettings: ILocationSettings,
     // setTooltip: React.Dispatch<React.SetStateAction<TooltipState | null>>,
     isPlaceholder?: boolean,
-): ChartOptions<'bar'> =>
-    ({
+): ChartOptions<'bar'> => {
+    const fontSize = 10;
+    return {
         plugins: {
             legend: {
                 position: 'right',
                 align: 'start',
                 labels: {
+                    color: theme.palette.text.secondary,
                     usePointStyle: true,
                     padding: 21,
+                    boxHeight: 8,
+                    font: {
+                        size: fontSize,
+                    },
                 },
             },
             datalabels: {
                 color: theme.palette.text.primary,
                 font: {
                     weight: 'bold',
+                    size: fontSize,
                 },
                 anchor: 'end',
                 align: 'top',
@@ -54,21 +61,32 @@ export const createOptions = (
         scales: {
             y: {
                 beginAtZero: true,
-                stacked: true,
                 grid: {
                     color: theme.palette.divider,
                     borderColor: theme.palette.divider,
                     drawBorder: false,
                 },
+                ticks: {
+                    color: theme.palette.text.disabled,
+                    font: {
+                        size: fontSize,
+                    },
+                },
             },
             x: {
-                stacked: true,
                 grid: {
                     display: false,
                 },
+                ticks: {
+                    color: theme.palette.text.primary,
+                    font: {
+                        size: fontSize,
+                    },
+                },
             },
         },
-    }) as const;
+    } as const;
+};
 
 function mergeAll<T>(objects: Partial<T>[]): T {
     return merge.all<T>(objects.filter((i) => i));

@@ -203,30 +203,6 @@ test('Trying to add a strategy configuration to environment not connected to fla
         });
 });
 
-test('Can get project overview', async () => {
-    await app.request
-        .post('/api/admin/projects/default/features')
-        .send({
-            name: 'project-overview',
-            enabled: false,
-            strategies: [{ name: 'default' }],
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201)
-        .expect((res) => {
-            expect(res.body.name).toBe('project-overview');
-            expect(res.body.createdAt).toBeTruthy();
-        });
-    await app.request
-        .get('/api/admin/projects/default')
-        .expect(200)
-        .expect((r) => {
-            expect(r.body.name).toBe('Default');
-            expect(r.body.features).toHaveLength(2);
-            expect(r.body.members).toBe(0);
-        });
-});
-
 test('should list dependencies and children', async () => {
     const parent = uuidv4();
     const child = uuidv4();
@@ -387,76 +363,6 @@ test('Can get features for project', async () => {
                     (feature) => feature.name === 'features-for-project',
                 ),
             ).toBeTruthy();
-        });
-});
-
-test('Project overview includes environment connected to feature', async () => {
-    await app.request
-        .post('/api/admin/projects/default/features')
-        .send({
-            name: 'com.test.environment',
-            enabled: false,
-            strategies: [{ name: 'default' }],
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201)
-        .expect((res) => {
-            expect(res.body.name).toBe('com.test.environment');
-            expect(res.body.createdAt).toBeTruthy();
-        });
-    await db.stores.environmentStore.create({
-        name: 'project-overview',
-        type: 'production',
-    });
-    await app.request
-        .post('/api/admin/projects/default/environments')
-        .send({ environment: 'project-overview' })
-        .expect(200);
-    return app.request
-        .get('/api/admin/projects/default')
-        .expect(200)
-        .expect((r) => {
-            expect(r.body.features[0].environments[0].name).toBe(DEFAULT_ENV);
-            expect(r.body.features[0].environments[1].name).toBe(
-                'project-overview',
-            );
-        });
-});
-
-test('Disconnecting environment from project, removes environment from features in project overview', async () => {
-    await app.request
-        .post('/api/admin/projects/default/features')
-        .send({
-            name: 'com.test.disconnect.environment',
-            enabled: false,
-            strategies: [{ name: 'default' }],
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201)
-        .expect((res) => {
-            expect(res.body.name).toBe('com.test.disconnect.environment');
-            expect(res.body.createdAt).toBeTruthy();
-        });
-    await db.stores.environmentStore.create({
-        name: 'dis-project-overview',
-        type: 'production',
-    });
-    await app.request
-        .post('/api/admin/projects/default/environments')
-        .send({ environment: 'dis-project-overview' })
-        .expect(200);
-    await app.request
-        .delete('/api/admin/projects/default/environments/dis-project-overview')
-        .expect(200);
-    return app.request
-        .get('/api/admin/projects/default')
-        .expect(200)
-        .expect((r) => {
-            expect(
-                r.body.features.some(
-                    (e) => e.environment === 'dis-project-overview',
-                ),
-            ).toBeFalsy();
         });
 });
 
@@ -756,7 +662,7 @@ describe('Interacting with features using project IDs that belong to other proje
 
         // ensure the new project has been created
         await app.request
-            .get(`/api/admin/projects/${otherProject}`)
+            .get(`/api/admin/projects/${otherProject}/health-report`)
             .expect(200);
 
         // create flag in default project

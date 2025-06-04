@@ -15,8 +15,6 @@ import type ProjectService from './project-service.js';
 import VariantsController from '../../routes/admin-api/project/variants.js';
 import {
     createResponseSchema,
-    type DeprecatedProjectOverviewSchema,
-    deprecatedProjectOverviewSchema,
     outdatedSdksSchema,
     type OutdatedSdksSchema,
     type ProjectDoraMetricsSchema,
@@ -90,29 +88,6 @@ export default class ProjectController extends Controller {
                     responses: {
                         200: createResponseSchema('projectsSchema'),
                         ...getStandardResponses(401, 403),
-                    },
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'get',
-            path: '/:projectId',
-            handler: this.getDeprecatedProjectOverview,
-            permission: NONE,
-            middleware: [
-                this.openApiService.validPath({
-                    tags: ['Projects'],
-                    operationId: 'getDeprecatedProjectOverview',
-                    summary: 'Get an overview of a project. (deprecated)',
-                    deprecated: true,
-                    description:
-                        'This endpoint returns an overview of the specified projects stats, project health, number of members, which environments are configured, and the features in the project.',
-                    responses: {
-                        200: createResponseSchema(
-                            'deprecatedProjectOverviewSchema',
-                        ),
-                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -257,27 +232,6 @@ export default class ProjectController extends Controller {
             res,
             projectsSchema.$id,
             { version: 1, projects: serializeDates(projectsWithOwners) },
-        );
-    }
-
-    async getDeprecatedProjectOverview(
-        req: IAuthRequest<IProjectParam, unknown, unknown, IArchivedQuery>,
-        res: Response<DeprecatedProjectOverviewSchema>,
-    ): Promise<void> {
-        const { projectId } = req.params;
-        const { archived } = req.query;
-        const { user } = req;
-        const overview = await this.projectService.getProjectHealth(
-            projectId,
-            archived,
-            user.id,
-        );
-
-        this.openApiService.respondWithValidation(
-            200,
-            res,
-            deprecatedProjectOverviewSchema.$id,
-            serializeDates(overview),
         );
     }
 

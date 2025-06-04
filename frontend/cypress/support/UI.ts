@@ -257,57 +257,6 @@ export const deleteFeatureStrategy_UI = (
     return cy.wait('@deleteUserStrategy');
 };
 
-export const addUserIdStrategyToFeature_UI = (
-    featureToggleName: string,
-    projectName: string,
-): Chainable<any> => {
-    const project = projectName || 'default';
-    cy.visit(
-        `/projects/${project}/features/${featureToggleName}/strategies/create?environmentId=development&strategyName=userWithId`,
-    );
-
-    if (ENTERPRISE) {
-        cy.get('[data-testid=ADD_CONSTRAINT_ID]').click();
-        cy.get('[data-testid=CONSTRAINT_AUTOCOMPLETE_ID]')
-            .type('{downArrow}'.repeat(1))
-            .type('{enter}');
-        cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
-    }
-
-    cy.get('[data-testid=STRATEGY_INPUT_LIST]')
-        .type('user1')
-        .type('{enter}')
-        .type('user2')
-        .type('{enter}');
-    cy.get('[data-testid=ADD_TO_STRATEGY_INPUT_LIST]').click();
-
-    cy.intercept(
-        'POST',
-        `/api/admin/projects/default/features/${featureToggleName}/environments/*/strategies`,
-        (req) => {
-            expect(req.body.name).to.equal('userWithId');
-
-            expect(req.body.parameters.userIds.length).to.equal(11);
-
-            if (ENTERPRISE) {
-                expect(req.body.constraints.length).to.equal(1);
-            } else {
-                expect(req.body.constraints.length).to.equal(0);
-            }
-
-            req.continue((res) => {
-                strategyId = res.body.id;
-            });
-        },
-    ).as('addStrategyToFeature');
-
-    // this one needs to wait until the dropdown selector of stickiness is set, that's why waitForAnimations: true
-    cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`)
-        .first()
-        .click({ waitForAnimations: true });
-    return cy.wait('@addStrategyToFeature');
-};
-
 export const logout_UI = (): Chainable<any> => {
     return cy.visit('/logout');
 };

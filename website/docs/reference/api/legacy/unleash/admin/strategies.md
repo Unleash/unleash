@@ -22,18 +22,6 @@ Used to fetch all defined strategies and their defined parameters.
       "parameters": []
     },
     {
-      "name": "userWithId",
-      "description": "Active for userId specified in the comma seperated 'userIds' parameter.",
-      "parameters": [
-        {
-          "name": "userIds",
-          "type": "list",
-          "description": "List of unique userIds the feature should be active for.",
-          "required": true
-        }
-      ]
-    },
-    {
       "name": "gradualRollout",
       "description": "Gradual rollout to logged in users",
       "parameters": [

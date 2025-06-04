@@ -84,14 +84,18 @@ test('Can add environment variants when existing ones exist for this feature', a
         'development',
         true,
     );
-    await db.stores.featureToggleStore.saveVariants('default', featureName, [
-        {
-            name: 'existing-variant',
-            stickiness: 'default',
-            weight: 1000,
-            weightType: WeightType.VARIABLE,
-        },
-    ]);
+    await db.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+        featureName,
+        'default',
+        [
+            {
+                name: 'existing-variant',
+                stickiness: 'default',
+                weight: 1000,
+                weightType: WeightType.VARIABLE,
+            },
+        ],
+    );
 
     const patch = [
         {
@@ -125,14 +129,18 @@ test('Patching variants with an invalid patch payload should return a BadDataErr
         'development',
         true,
     );
-    await db.stores.featureToggleStore.saveVariants('default', featureName, [
-        {
-            name: 'existing-variant',
-            stickiness: 'default',
-            weight: 1000,
-            weightType: WeightType.VARIABLE,
-        },
-    ]);
+    await db.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+        featureName,
+        'development',
+        [
+            {
+                name: 'existing-variant',
+                stickiness: 'default',
+                weight: 1000,
+                weightType: WeightType.VARIABLE,
+            },
+        ],
+    );
 
     const patch = [
         {

@@ -170,6 +170,7 @@ export const LifecycleInsights: FC = () => {
                                                             value,
                                                             context,
                                                         ) => {
+                                                            // todo (lifecycleMetrics): use a nice formatter here, so that 1,000,000 flags are instead formatted as 1M
                                                             if (
                                                                 context.chart
                                                                     .legend

@@ -1,4 +1,4 @@
-import { type ReactNode, useState, type FC, useMemo } from 'react';
+import { type FC, useMemo } from 'react';
 import {
     CategoryScale,
     LinearScale,
@@ -17,18 +17,9 @@ import 'chartjs-adapter-date-fns';
 import { type Theme, useTheme } from '@mui/material';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import merge from 'deepmerge';
-import {
-    ChartTooltip,
-    type TooltipState,
-} from '../LineChart/ChartTooltip/ChartTooltip.tsx';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-export const createOptions = (
-    theme: Theme,
-    // locationSettings: ILocationSettings,
-    // setTooltip: React.Dispatch<React.SetStateAction<TooltipState | null>>,
-    isPlaceholder?: boolean,
-): ChartOptions<'bar'> => {
+export const createOptions = (theme: Theme): ChartOptions<'bar'> => {
     const fontSize = 10;
     return {
         plugins: {
@@ -96,40 +87,20 @@ function mergeAll<T>(objects: Partial<T>[]): T {
 
 const LifecycleChartComponent: FC<{
     data: ChartData<'bar', unknown>;
-    aspectRatio?: number;
-    cover?: ReactNode;
     overrideOptions?: ChartOptions<'bar'>;
-    TooltipComponent?: ({
-        tooltip,
-    }: { tooltip: TooltipState | null }) => ReturnType<FC>;
-}> = ({
-    data,
-    aspectRatio = 2.5,
-    cover,
-    overrideOptions,
-    TooltipComponent,
-}) => {
+}> = ({ data, overrideOptions }) => {
     const theme = useTheme();
     const { locationSettings } = useLocationSettings();
 
-    const [tooltip, setTooltip] = useState<null | TooltipState>(null);
-
     const options = useMemo(
         () => mergeAll([createOptions(theme)]),
-        [theme, locationSettings, overrideOptions, cover],
+        [theme, locationSettings, overrideOptions],
     );
 
     return (
         <>
-            <Bar
-                key={cover ? 'cover' : 'chart'}
-                options={options}
-                data={data}
-                plugins={[ChartDataLabels]}
-                height={100}
-                width={100 * aspectRatio}
-            />
-            <ChartTooltip tooltip={tooltip} />
+            <Bar options={options} data={data} plugins={[ChartDataLabels]} />
+            {/* todo: implement fallback for screen readers */}
         </>
     );
 };

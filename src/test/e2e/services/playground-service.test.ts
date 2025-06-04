@@ -136,9 +136,9 @@ export const seedDatabaseForPlaygroundTest = async (
                 feature.enabled,
             );
 
-            await database.stores.featureToggleStore.saveVariants(
-                feature.project!,
+            await database.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
                 feature.name,
+                environment,
                 [
                     ...(feature.variants ?? []).map((variant) => ({
                         ...variant,

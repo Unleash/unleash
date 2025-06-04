@@ -60,6 +60,7 @@ export const createOptions = (theme: Theme): ChartOptions<'bar'> => {
                     drawBorder: false,
                 },
                 ticks: {
+                    stepSize: 1,
                     color: theme.palette.text.disabled,
                     font: {
                         size: fontSize,

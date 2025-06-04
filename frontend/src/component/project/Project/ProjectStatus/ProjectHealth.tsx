@@ -5,6 +5,8 @@ import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectS
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { HealthGridTile } from './ProjectHealthGrid.styles';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
+import { useFlag } from '@unleash/proxy-client-react';
+import { getTechnicalDebtColor } from 'utils/getTechnicalDebtColor.ts';
 
 const ChartRadius = 40;
 const ChartStrokeWidth = 13;
@@ -80,6 +82,29 @@ const UnhealthyFlagBox = ({ flagCount }: { flagCount: number }) => {
     );
 };
 
+const useHealthColor = (healthRating: number) => {
+    const theme = useTheme();
+    if (healthRating <= 24) {
+        return theme.palette.error.main;
+    }
+    if (healthRating <= 74) {
+        return theme.palette.warning.border;
+    }
+    return theme.palette.success.border;
+};
+
+const useTechnicalDebtColor = (techicalDebt: number) => {
+    const theme = useTheme();
+    switch (getTechnicalDebtColor(techicalDebt)) {
+        case 'error':
+            return theme.palette.error.main;
+        case 'warning':
+            return theme.palette.warning.border;
+        default:
+            return theme.palette.success.border;
+    }
+};
+
 const Wrapper = styled(HealthGridTile)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -92,22 +117,21 @@ export const ProjectHealth = () => {
     const {
         data: { health, staleFlags },
     } = useProjectStatus(projectId);
-    const healthRating = health.current;
     const { isOss } = useUiConfig();
     const theme = useTheme();
-    const circumference = 2 * Math.PI * ChartRadius; //
+    const healthToDebtEnabled = useFlag('healthToTechDebt');
+    const circumference = 2 * Math.PI * ChartRadius;
+    const healthRating = health.current;
+    const technicalDebt = 100 - healthRating; // TODO: get from backend
 
     const gapLength = 0.3;
     const filledLength = 1 - gapLength;
     const offset = 0.75 - gapLength / 2;
     const healthLength = (healthRating / 100) * circumference * 0.7;
+    const technicalDebtLength = (technicalDebt / 100) * circumference * 0.7;
 
-    const healthColor =
-        healthRating >= 0 && healthRating <= 24
-            ? theme.palette.error.main
-            : healthRating >= 25 && healthRating <= 74
-              ? theme.palette.warning.border
-              : theme.palette.success.border;
+    const healthColor = useHealthColor(healthRating);
+    const technicalDebtColor = useTechnicalDebtColor(technicalDebt);
 
     return (
         <Wrapper>
@@ -129,9 +153,17 @@ export const ProjectHealth = () => {
                             cy='50'
                             r={ChartRadius}
                             fill='none'
-                            stroke={healthColor}
+                            stroke={
+                                healthToDebtEnabled
+                                    ? technicalDebtColor
+                                    : healthColor
+                            }
                             strokeWidth={ChartStrokeWidth}
-                            strokeDasharray={`${healthLength} ${circumference - healthLength}`}
+                            strokeDasharray={
+                                healthToDebtEnabled
+                                    ? `${technicalDebtLength} ${circumference - technicalDebtLength}`
+                                    : `${healthLength} ${circumference - healthLength}`
+                            }
                             strokeDashoffset={offset * circumference}
                         />
                         <text
@@ -142,17 +174,30 @@ export const ProjectHealth = () => {
                             fill={theme.palette.text.primary}
                             fontSize={theme.typography.h1.fontSize}
                         >
-                            {healthRating}%
+                            {healthToDebtEnabled ? technicalDebt : healthRating}
+                            %
                         </text>
                     </StyledSVG>
                 </SVGWrapper>
                 <TextContainer>
                     <Typography>
-                        Your current project health rating is {healthRating}%
+                        {healthToDebtEnabled ? (
+                            <>
+                                Your current technical debt rating is{' '}
+                                {technicalDebt}%.
+                            </>
+                        ) : (
+                            <>
+                                Your current project health rating is{' '}
+                                {healthRating}%.
+                            </>
+                        )}
                     </Typography>
                     {!isOss() && (
                         <Link to={`/insights?project=IS%3A${projectId}`}>
-                            View health over time
+                            {healthToDebtEnabled
+                                ? 'View technical debt over time'
+                                : 'View health over time'}
                         </Link>
                     )}
                 </TextContainer>

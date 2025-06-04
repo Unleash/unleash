@@ -1,6 +1,7 @@
 import type { FC, ReactNode } from 'react';
 import { Box, Divider, Link, styled } from '@mui/material';
 import { ReactComponent as InstanceHealthIcon } from 'assets/icons/instance-health.svg';
+import { useFlag } from '@unleash/proxy-client-react';
 
 interface IHealthStatsProps {
     value?: string | number;
@@ -69,43 +70,59 @@ export const HealthStats: FC<IHealthStatsProps> = ({
     stale,
     potentiallyStale,
     title,
-}) => (
-    <StyledContainer>
-        <StyledHeader>
-            <StyledSection>{title}</StyledSection>
-            <StyledSection>{/* TODO: trend */}</StyledSection>
-        </StyledHeader>
-        <Divider />
-        <StyledSection>
-            <StyledStatsRow>
-                <StyledIcon />
-                Instance health
-                <StyledMainValue>{`${value || 0}%`}</StyledMainValue>
-            </StyledStatsRow>
-        </StyledSection>
-        <Divider />
-        <FlagsSection>
-            <StyledStatsRow>
-                Healthy flags
-                <StyledValue>{healthy || 0}</StyledValue>
-            </StyledStatsRow>
-            <StyledStatsRow>
-                Stale flags
-                <StyledValue>{stale || 0}</StyledValue>
-            </StyledStatsRow>
-            <StyledStatsRow>
-                Potentially stale flags
-                <StyledValue>{potentiallyStale || 0}</StyledValue>
-            </StyledStatsRow>
-            <ExplanationRow>
-                <Link
-                    href='https://docs.getunleash.io/reference/insights#health'
-                    target='_blank'
-                    rel='noreferrer'
-                >
-                    What affects instance health?
-                </Link>
-            </ExplanationRow>
-        </FlagsSection>
-    </StyledContainer>
-);
+}) => {
+    const healthToDebtEnabled = useFlag('healthToTechDebt');
+
+    // TODO: get the following from backend
+    const unhealthy = stale + potentiallyStale;
+    const technicalDebtValue = (
+        (unhealthy / (healthy + unhealthy)) *
+        100
+    ).toFixed(1);
+
+    return (
+        <StyledContainer>
+            <StyledHeader>
+                <StyledSection>{title}</StyledSection>
+            </StyledHeader>
+            <Divider />
+            <StyledSection>
+                <StyledStatsRow>
+                    <StyledIcon />
+                    {healthToDebtEnabled ? 'Technical debt' : 'Instance health'}
+                    {healthToDebtEnabled ? (
+                        <StyledMainValue>{`${technicalDebtValue}%`}</StyledMainValue>
+                    ) : (
+                        <StyledMainValue>{`${value || 0}%`}</StyledMainValue>
+                    )}
+                </StyledStatsRow>
+            </StyledSection>
+            <Divider />
+            <FlagsSection>
+                <StyledStatsRow>
+                    Healthy flags
+                    <StyledValue>{healthy || 0}</StyledValue>
+                </StyledStatsRow>
+                <StyledStatsRow>
+                    Stale flags
+                    <StyledValue>{stale || 0}</StyledValue>
+                </StyledStatsRow>
+                <StyledStatsRow>
+                    Potentially stale flags
+                    <StyledValue>{potentiallyStale || 0}</StyledValue>
+                </StyledStatsRow>
+                <ExplanationRow>
+                    <Link
+                        href='https://docs.getunleash.io/reference/insights#health'
+                        target='_blank'
+                        rel='noreferrer'
+                    >
+                        {healthToDebtEnabled
+                            ? 'What affects technical debt?'
+                            : 'What affects instance health?'}
+                    </Link>
+                </ExplanationRow>
+            </FlagsSection>
+        </StyledContainer>
+    );
+};

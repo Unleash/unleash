@@ -18,6 +18,7 @@ import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { WidgetTitle } from './components/WidgetTitle/WidgetTitle.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useFlag } from '@unleash/proxy-client-react';
 
 export interface IChartsProps {
     flagTrends: InstanceInsightsSchema['flagTrends'];
@@ -104,6 +105,7 @@ export const InsightsCharts: FC<IChartsProps> = ({
     const showAllProjects = projects[0] === allOption.id;
     const isOneProjectSelected = projects.length === 1;
     const { isEnterprise } = useUiConfig();
+    const healthToDebtEnabled = useFlag('healthToTechDebt');
 
     const lastUserTrend = userTrends[userTrends.length - 1];
     const lastFlagTrend = flagTrends[flagTrends.length - 1];
@@ -189,9 +191,15 @@ export const InsightsCharts: FC<IChartsProps> = ({
                                     potentiallyStale={summary.potentiallyStale}
                                     title={
                                         <WidgetTitle
-                                            title='Health'
+                                            title={
+                                                healthToDebtEnabled
+                                                    ? 'Technical debt'
+                                                    : 'Health'
+                                            }
                                             tooltip={
-                                                'Percentage of flags that are not stale or potentially stale.'
+                                                healthToDebtEnabled
+                                                    ? 'Percentage of stale and potentially stale flags.'
+                                                    : 'Percentage of flags that are not stale or potentially stale.'
                                             }
                                         />
                                     }

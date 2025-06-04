@@ -5,6 +5,8 @@ import { Badge } from 'component/common/Badge/Badge';
 import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
 import { HorizontalDistributionChart } from 'component/insights/components/HorizontalDistributionChart/HorizontalDistributionChart';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useFlag } from '@unleash/proxy-client-react';
+import { getTechnicalDebtColor } from 'utils/getTechnicalDebtColor.ts';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -31,6 +33,13 @@ const getHealthBadgeColor = (health?: number | null) => {
     }
 
     return 'error';
+};
+
+const getTechnicalDebtBadgeColor = (technicalDebt?: number | null) => {
+    if (technicalDebt === undefined || technicalDebt === null) {
+        return 'info';
+    }
+    return getTechnicalDebtColor(technicalDebt);
 };
 
 const Distribution = ({ stale = 0, potentiallyStale = 0, total = 0 }) => {
@@ -99,12 +108,16 @@ const Distribution = ({ stale = 0, potentiallyStale = 0, total = 0 }) => {
 export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({
     tooltip,
 }) => {
+    const healthToTechDebtEnabled = useFlag('healthToTechDebt');
+
     const data = tooltip?.dataPoints.map((point) => {
         return {
             label: point.label,
             title: point.dataset.label,
             color: point.dataset.borderColor,
-            value: point.raw as InstanceInsightsSchemaProjectFlagTrendsItem,
+            value: point.raw as InstanceInsightsSchemaProjectFlagTrendsItem & {
+                technicalDebt?: number | null;
+            }, // TODO: get from backend
         };
     });
 
@@ -137,7 +150,9 @@ export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({
                             color='textSecondary'
                             component='span'
                         >
-                            Project health
+                            {healthToTechDebtEnabled
+                                ? 'Technical debt'
+                                : 'Project health'}
                         </Typography>
                     </StyledItemHeader>
                     <StyledItemHeader>
@@ -150,9 +165,21 @@ export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({
                             </Typography>
                             <strong>{point.title}</strong>
                         </Typography>
-                        <Badge color={getHealthBadgeColor(point.value.health)}>
-                            {point.value.health}%
-                        </Badge>
+                        {healthToTechDebtEnabled ? (
+                            <Badge
+                                color={getTechnicalDebtBadgeColor(
+                                    point.value.technicalDebt,
+                                )}
+                            >
+                                {point.value.technicalDebt}%
+                            </Badge>
+                        ) : (
+                            <Badge
+                                color={getHealthBadgeColor(point.value.health)}
+                            >
+                                {point.value.health}%
+                            </Badge>
+                        )}
                     </StyledItemHeader>{' '}
                     <Divider
                         sx={(theme) => ({ margin: theme.spacing(1.5, 0) })}

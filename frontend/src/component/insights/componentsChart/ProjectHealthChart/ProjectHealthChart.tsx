@@ -2,7 +2,10 @@ import 'chartjs-adapter-date-fns';
 import { type FC, useMemo } from 'react';
 import type { InstanceInsightsSchema } from 'openapi';
 import { HealthTooltip } from './HealthChartTooltip/HealthChartTooltip.tsx';
-import { useProjectChartData } from 'component/insights/hooks/useProjectChartData';
+import {
+    calculateTechDebt,
+    useProjectChartData,
+} from 'component/insights/hooks/useProjectChartData';
 import {
     fillGradientPrimary,
     LineChart,
@@ -11,6 +14,7 @@ import {
 import { useTheme } from '@mui/material';
 import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
 import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
+import { useFlag } from '@unleash/proxy-client-react';
 
 interface IProjectHealthChartProps {
     projectFlagTrends: GroupedDataByProject<
@@ -42,6 +46,7 @@ export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
     const projectsData = useProjectChartData(projectFlagTrends);
     const theme = useTheme();
     const placeholderData = usePlaceholderData();
+    const healthToTechDebtEnabled = useFlag('healthToTechDebt');
 
     const aggregateHealthData = useMemo(() => {
         const labels = Array.from(
@@ -80,9 +85,18 @@ export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
         return {
             datasets: [
                 {
-                    label: 'Health',
+                    label: healthToTechDebtEnabled
+                        ? 'Technical debt'
+                        : 'Health',
                     data: weeks.map((item) => ({
                         health: item.total ? calculateHealth(item) : undefined,
+                        ...(healthToTechDebtEnabled
+                            ? {
+                                  technicalDebt: item.total
+                                      ? calculateTechDebt(item)
+                                      : undefined,
+                              }
+                            : {}),
                         date: item.date,
                         total: item.total,
                         stale: item.stale,
@@ -117,7 +131,12 @@ export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
                 notEnoughData
                     ? {}
                     : {
-                          parsing: { yAxisKey: 'health', xAxisKey: 'date' },
+                          parsing: {
+                              yAxisKey: healthToTechDebtEnabled
+                                  ? 'technicalDebt'
+                                  : 'health',
+                              xAxisKey: 'date',
+                          },
                           scales: {
                               y: {
                                   min: 0,

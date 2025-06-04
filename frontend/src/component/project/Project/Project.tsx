@@ -373,6 +373,7 @@ export const Project = () => {
                 }}
             />
             <Routes>
+                {/* FIXME: remove /health with `healthToTechDebt` flag - redirect to project status */}
                 <Route path='health' element={<ProjectHealth />} />
                 <Route
                     path='access/*'

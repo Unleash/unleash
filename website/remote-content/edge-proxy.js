@@ -27,10 +27,10 @@ const DOCS = mapObject(enrich)({
                 sidebarName: 'Benchmarking',
                 slugName: 'benchmarking',
             },
-            // 'docs/CLI.md': {
-            //     sidebarName: 'CLI',
-            //     slugName: 'cli',
-            // },
+            'docs/CLI.md': {
+                sidebarName: 'CLI',
+                slugName: 'cli',
+            },
             'docs/development-guide.md': {
                 sidebarName: 'Development guide',
                 slugName: 'development-guide',

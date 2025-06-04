@@ -53,6 +53,7 @@ export * from './create-feature-strategy-schema.js';
 export * from './create-group-schema.js';
 export * from './create-invited-user-schema.js';
 export * from './create-pat-schema.js';
+export * from './create-project-api-token-schema.js';
 export * from './create-strategy-schema.js';
 export * from './create-strategy-variant-schema.js';
 export * from './create-tag-schema.js';

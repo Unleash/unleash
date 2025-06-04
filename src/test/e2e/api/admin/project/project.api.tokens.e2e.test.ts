@@ -77,7 +77,7 @@ test('fails to create new client token when given wrong project', async () => {
     return app.request
         .post('/api/admin/projects/wrong/api-tokens')
         .send({
-            username: 'default-client',
+            tokenName: 'default-client',
             type: 'client',
             projects: ['wrong'],
             environment: 'default',
@@ -90,7 +90,7 @@ test('creates new client token', async () => {
     return app.request
         .post('/api/admin/projects/default/api-tokens')
         .send({
-            username: 'default-client',
+            tokenName: 'default-client',
             type: 'client',
             projects: ['default'],
             environment: 'default',
@@ -98,7 +98,7 @@ test('creates new client token', async () => {
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect((res) => {
-            expect(res.body.username).toBe('default-client');
+            expect(res.body.tokenName).toBe('default-client');
         });
 });
 

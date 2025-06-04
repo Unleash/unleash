@@ -133,11 +133,11 @@ afterAll(async () => {
 });
 
 test('doesnt return feature flags if project deleted', async () => {
-    const token = await apiTokenService.createApiToken({
+    const token = await apiTokenService.createApiTokenWithProjects({
         type: ApiTokenType.CLIENT,
         tokenName: deletionTokenName,
         environment,
-        project: deletionProject,
+        projects: [deletionProject],
     });
 
     await app.services.projectService.deleteProject(

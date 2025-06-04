@@ -2436,11 +2436,11 @@ test('should also delete api tokens that were only bound to deleted project', as
         auditUser,
     );
 
-    const token = await apiTokenService.createApiToken({
+    const token = await apiTokenService.createApiTokenWithProjects({
         type: ApiTokenType.CLIENT,
         tokenName,
         environment: DEFAULT_ENV,
-        project: project,
+        projects: [project],
     });
 
     await projectService.deleteProject(project, user, auditUser);
@@ -2471,7 +2471,7 @@ test('should not delete project-bound api tokens still bound to project', async 
         auditUser,
     );
 
-    const token = await apiTokenService.createApiToken({
+    const token = await apiTokenService.createApiTokenWithProjects({
         type: ApiTokenType.CLIENT,
         tokenName,
         environment: DEFAULT_ENV,
@@ -2507,7 +2507,7 @@ test('should delete project-bound api tokens when all projects they belong to ar
         auditUser,
     );
 
-    const token = await apiTokenService.createApiToken({
+    const token = await apiTokenService.createApiTokenWithProjects({
         type: ApiTokenType.CLIENT,
         tokenName,
         environment: DEFAULT_ENV,

@@ -169,66 +169,32 @@ export const LifecycleInsights: FC = () => {
                     <LifecycleChart
                         key={stage}
                         data={{
-                            labels: [
-                                `${stage} Experimental`,
-                                `${stage} Release`,
-                                `${stage} Other flags`,
-                            ],
+                            labels: [`Experimental`, `Release`, `Other flags`],
                             datasets: [
                                 {
-                                    label: 'Experimental Flags old',
+                                    label: '> 1 week old',
                                     data: [
                                         data.categories.experimental
                                             .flagsOlderThanWeek,
+                                        data.categories.release
+                                            .flagsOlderThanWeek,
+                                        data.categories.permanent
+                                            .flagsOlderThanWeek,
                                     ],
-                                    stack: 'experimental',
+                                    stack: '1',
                                     backgroundColor: chartColors.olderThanWeek,
                                 },
                                 {
-                                    label: 'Experimental Flags new',
+                                    label: 'New this week',
                                     data: [
                                         data.categories.experimental
                                             .newFlagsThisWeek,
-                                    ],
-                                    stack: 'experimental',
-                                    backgroundColor: chartColors.newThisWeek,
-                                },
-
-                                {
-                                    label: 'Release Flags old',
-                                    data: [
-                                        data.categories.release
-                                            .flagsOlderThanWeek,
-                                    ],
-                                    stack: 'release',
-                                    backgroundColor: chartColors.olderThanWeek,
-                                },
-                                {
-                                    label: 'Release Flags new',
-                                    data: [
                                         data.categories.release
                                             .newFlagsThisWeek,
-                                    ],
-                                    stack: 'release',
-                                    backgroundColor: chartColors.newThisWeek,
-                                },
-
-                                {
-                                    label: 'Other Flags old',
-                                    data: [
-                                        data.categories.permanent
-                                            .flagsOlderThanWeek,
-                                    ],
-                                    stack: 'other',
-                                    backgroundColor: chartColors.olderThanWeek,
-                                },
-                                {
-                                    label: 'Other Flags new',
-                                    data: [
                                         data.categories.permanent
                                             .newFlagsThisWeek,
                                     ],
-                                    stack: 'other',
+                                    stack: '1',
                                     backgroundColor: chartColors.newThisWeek,
                                 },
                             ],

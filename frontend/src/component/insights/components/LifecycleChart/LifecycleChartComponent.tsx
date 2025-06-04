@@ -1,9 +1,8 @@
-import { type ReactNode, useState, type FC } from 'react';
+import { type ReactNode, useState, type FC, useMemo } from 'react';
 import {
     CategoryScale,
     LinearScale,
     PointElement,
-    LineElement,
     Tooltip,
     Legend,
     TimeScale,
@@ -15,13 +14,58 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
-import { useTheme } from '@mui/material';
+import { type Theme, useTheme } from '@mui/material';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import merge from 'deepmerge';
 import {
     ChartTooltip,
     type TooltipState,
 } from '../LineChart/ChartTooltip/ChartTooltip.tsx';
+
+export const createOptions = (
+    theme: Theme,
+    // locationSettings: ILocationSettings,
+    // setTooltip: React.Dispatch<React.SetStateAction<TooltipState | null>>,
+    isPlaceholder?: boolean,
+): ChartOptions<'bar'> =>
+    ({
+        responsive: true,
+        color: theme.palette.text.secondary,
+        scales: {
+            y: {
+                beginAtZero: true,
+                stacked: true,
+                // grid: {
+                //     color: theme.palette.divider,
+                //     borderColor: theme.palette.divider,
+                // },
+                // ticks: {
+                //     color: theme.palette.text.secondary,
+                //     display: !isPlaceholder,
+                //     precision: 0,
+                // },
+            },
+            x: {
+                stacked: true,
+                // type: 'time',
+                // time: {
+                //     unit: 'week',
+                //     tooltipFormat: 'PPP',
+                // },
+                // grid: {
+                //     color: 'transparent',
+                //     borderColor: 'transparent',
+                // },
+                // ticks: {
+                //     color: theme.palette.text.secondary,
+                //     display: !isPlaceholder,
+                //     source: 'data',
+                //     maxRotation: 90,
+                //     minRotation: 23.5,
+                // },
+            },
+        },
+    }) as const;
 
 function mergeAll<T>(objects: Partial<T>[]): T {
     return merge.all<T>(objects.filter((i) => i));
@@ -47,25 +91,16 @@ const LifecycleChartComponent: FC<{
 
     const [tooltip, setTooltip] = useState<null | TooltipState>(null);
 
-    // const options = useMemo(
-    //     () =>
-    //         mergeAll([
-    //             createOptions(
-    //                 theme,
-    //                 locationSettings,
-    //                 setTooltip,
-    //                 Boolean(cover),
-    //             ),
-    //             overrideOptions ?? {},
-    //         ]),
-    //     [theme, locationSettings, overrideOptions, cover],
-    // );
+    const options = useMemo(
+        () => mergeAll([createOptions(theme)]),
+        [theme, locationSettings, overrideOptions, cover],
+    );
 
     return (
         <>
             <Bar
                 key={cover ? 'cover' : 'chart'}
-                // options={options}
+                options={options}
                 data={data}
                 // plugins={[customHighlightPlugin]}
                 height={100}
@@ -80,7 +115,6 @@ Chart.register(
     CategoryScale,
     LinearScale,
     PointElement,
-    LineElement,
     BarElement,
     TimeScale,
     Tooltip,

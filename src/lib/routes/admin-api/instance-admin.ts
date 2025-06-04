@@ -75,7 +75,6 @@ class InstanceAdminController extends Controller {
                     responses: {
                         200: createResponseSchema('instanceAdminStatsSchema'),
                     },
-                    deprecated: true,
                 }),
             ],
         });

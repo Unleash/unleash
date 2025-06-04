@@ -166,7 +166,18 @@ export const LifecycleInsights: FC = () => {
                                             datalabels: {
                                                 labels: {
                                                     value: {
-                                                        formatter: () => {
+                                                        formatter: (
+                                                            value,
+                                                            context,
+                                                        ) => {
+                                                            if (
+                                                                context.chart
+                                                                    .legend
+                                                                    ?.legendItems?.[1]
+                                                                    .hidden
+                                                            ) {
+                                                                return value;
+                                                            }
                                                             return '';
                                                         },
                                                     },
@@ -194,6 +205,14 @@ export const LifecycleInsights: FC = () => {
                                                             value,
                                                             context,
                                                         ) => {
+                                                            if (
+                                                                context.chart
+                                                                    .legend
+                                                                    ?.legendItems?.[0]
+                                                                    .hidden
+                                                            ) {
+                                                                return value;
+                                                            }
                                                             return (
                                                                 value +
                                                                 oldData[

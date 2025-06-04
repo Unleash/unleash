@@ -34,6 +34,7 @@ export const createOptions = (
         plugins: {
             legend: {
                 position: 'right',
+                maxWidth: 150,
                 align: 'start',
                 labels: {
                     color: theme.palette.text.secondary,

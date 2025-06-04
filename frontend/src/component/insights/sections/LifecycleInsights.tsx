@@ -130,36 +130,6 @@ export const LifecycleInsights: FC = () => {
         },
     };
 
-    // const f = (
-    //     input: LifecycleTrend,
-    // ): { labels: string[]; datasets: { data: number[] }[] } => {
-    //     const flat = Object.entries(input.categories).map(([key, value]) => ({
-    //         label: key,
-    //         data: [value.flagsOlderThanWeek, value.newFlagsThisWeek],
-    //     }));
-    //     const result = Object.entries(input.categories).reduce(
-    //         (acc, [key, value]) => {
-    //             return {
-    //                 ...acc,
-    //                 labels: [...acc.labels, key],
-    //                 datasets: [
-    //                     ...acc.datasets,
-    //                     {
-    //                         data: [
-    //                             value.flagsOlderThanWeek,
-    //                             value.newFlagsThisWeek,
-    //                         ],
-    //                     },
-    //                 ],
-    //             };
-    //         },
-    //         { labels: [], datasets: [] },
-    //     );
-    //     return result;
-    // };
-
-    // console.log(mockData.develop, f(mockData.develop));
-
     return (
         <InsightsSection
             title='Flags lifecycle currently'
@@ -197,6 +167,7 @@ export const LifecycleInsights: FC = () => {
                                         stack: '1',
                                         backgroundColor:
                                             chartColors.olderThanWeek,
+                                        borderRadius: 4,
                                     },
                                     {
                                         label: 'New this week',
@@ -211,6 +182,7 @@ export const LifecycleInsights: FC = () => {
                                         stack: '1',
                                         backgroundColor:
                                             chartColors.newThisWeek,
+                                        borderRadius: 4,
                                     },
                                 ],
                             }}

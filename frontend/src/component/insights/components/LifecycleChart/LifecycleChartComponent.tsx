@@ -29,6 +29,15 @@ export const createOptions = (
     isPlaceholder?: boolean,
 ): ChartOptions<'bar'> =>
     ({
+        plugins: {
+            legend: {
+                position: 'right',
+                align: 'start',
+                labels: {
+                    usePointStyle: true,
+                },
+            },
+        },
         responsive: true,
         color: theme.palette.text.secondary,
         scales: {

@@ -47,17 +47,6 @@ export const createOptions = (
                 anchor: 'end',
                 align: 'top',
                 offset: -6,
-                // formatter: (value: number, context: Context) => {
-                //     console.log(context);
-                //     // return context.dataset.data.reduce((acc, curr) => {
-                //     //     console.log(context);
-                //     //     // if (Number.) {
-                //     //     //     return acc + curr;
-                //     //     // }
-                //     //     return acc + 1;
-                //     // }, 0);
-                //     return 17;
-                // },
             },
         },
         responsive: true,
@@ -71,27 +60,12 @@ export const createOptions = (
                     borderColor: theme.palette.divider,
                     drawBorder: false,
                 },
-                ticks: {
-                    // major: { enabled: true },
-                    // stepSize: 1,
-                    // color: theme.palette.text.secondary,
-                    // display: !isPlaceholder,
-                    // precision: 0,
-                },
             },
             x: {
                 stacked: true,
                 grid: {
                     display: false,
                 },
-
-                // ticks: {
-                //     color: theme.palette.text.secondary,
-                //     display: !isPlaceholder,
-                //     source: 'data',
-                //     maxRotation: 90,
-                //     minRotation: 23.5,
-                // },
             },
         },
     }) as const;

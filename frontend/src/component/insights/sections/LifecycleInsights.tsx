@@ -142,90 +142,79 @@ export const LifecycleInsights: FC = () => {
         >
             <ChartRow>
                 {/* <pre>{JSON.stringify(lifecycleTrends, null, 2)}</pre> */}
-                {Object.entries(mockData).map(([stage, data]) => (
-                    <ChartContainer>
-                        <LifecycleChart
-                            key={stage}
-                            data={{
-                                labels: [
-                                    `Experimental`,
-                                    `Release`,
-                                    `Other flags`,
-                                ],
-                                datasets: [
-                                    {
-                                        label: 'Flags > 1 week old',
-                                        data: [
-                                            data.categories.experimental
-                                                .flagsOlderThanWeek,
-                                            data.categories.release
-                                                .flagsOlderThanWeek,
-                                            data.categories.permanent
-                                                .flagsOlderThanWeek,
-                                        ],
-                                        stack: '1',
-                                        backgroundColor:
-                                            chartColors.olderThanWeek,
-                                        borderRadius: 4,
-                                        datalabels: {
-                                            labels: {
-                                                value: {
-                                                    formatter: () => {
-                                                        return '';
+                {Object.entries(mockData).map(([stage, data]) => {
+                    const oldData = [
+                        data.categories.experimental.flagsOlderThanWeek,
+                        data.categories.release.flagsOlderThanWeek,
+                        data.categories.permanent.flagsOlderThanWeek,
+                    ];
+                    return (
+                        <ChartContainer>
+                            <LifecycleChart
+                                key={stage}
+                                data={{
+                                    labels: [
+                                        `Experimental`,
+                                        `Release`,
+                                        `Other flags`,
+                                    ],
+                                    datasets: [
+                                        {
+                                            label: 'Flags > 1 week old',
+                                            data: oldData,
+                                            stack: '1',
+                                            backgroundColor:
+                                                chartColors.olderThanWeek,
+                                            borderRadius: 4,
+                                            datalabels: {
+                                                labels: {
+                                                    value: {
+                                                        formatter: () => {
+                                                            return '';
+                                                        },
                                                     },
                                                 },
                                             },
                                         },
-                                    },
-                                    {
-                                        label: 'New flags this week',
-                                        data: [
-                                            data.categories.experimental
-                                                .newFlagsThisWeek,
-                                            data.categories.release
-                                                .newFlagsThisWeek,
-                                            data.categories.permanent
-                                                .newFlagsThisWeek,
-                                        ],
-                                        stack: '1',
-                                        backgroundColor:
-                                            chartColors.newThisWeek,
-                                        borderRadius: 4,
-                                        datalabels: {
-                                            labels: {
-                                                value: {
-                                                    formatter: (
-                                                        value,
-                                                        context,
-                                                    ) => {
-                                                        const dataSets = [
-                                                            data.categories
-                                                                .experimental
-                                                                .flagsOlderThanWeek,
-                                                            data.categories
-                                                                .release
-                                                                .flagsOlderThanWeek,
-                                                            data.categories
-                                                                .permanent
-                                                                .flagsOlderThanWeek,
-                                                        ];
-                                                        return (
-                                                            value +
-                                                            dataSets[
-                                                                context
-                                                                    .dataIndex
-                                                            ]
-                                                        );
+                                        {
+                                            label: 'New flags this week',
+                                            data: [
+                                                data.categories.experimental
+                                                    .newFlagsThisWeek,
+                                                data.categories.release
+                                                    .newFlagsThisWeek,
+                                                data.categories.permanent
+                                                    .newFlagsThisWeek,
+                                            ],
+                                            stack: '1',
+                                            backgroundColor:
+                                                chartColors.newThisWeek,
+                                            borderRadius: 4,
+                                            datalabels: {
+                                                labels: {
+                                                    value: {
+                                                        formatter: (
+                                                            value,
+                                                            context,
+                                                        ) => {
+                                                            return (
+                                                                value +
+                                                                oldData[
+                                                                    context
+                                                                        .dataIndex
+                                                                ]
+                                                            );
+                                                        },
                                                     },
                                                 },
                                             },
                                         },
-                                    },
-                                ],
-                            }}
-                        />
-                    </ChartContainer>
-                ))}
+                                    ],
+                                }}
+                            />
+                        </ChartContainer>
+                    );
+                })}
             </ChartRow>
         </InsightsSection>
     );

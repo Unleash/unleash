@@ -70,7 +70,6 @@ export const LifecycleInsights: FC = () => {
 
     // @ts-expect-error (lifecycleMetrics): The schema hasn't been updated yet.
     const { lifecycleTrends } = insights;
-    console.log('lifecycleTrends', lifecycleTrends);
 
     const mockData: LifecycleInsights = {
         develop: {
@@ -141,7 +140,6 @@ export const LifecycleInsights: FC = () => {
             }
         >
             <ChartRow>
-                {/* <pre>{JSON.stringify(lifecycleTrends, null, 2)}</pre> */}
                 {Object.entries(mockData).map(([stage, data]) => {
                     const oldData = [
                         data.categories.experimental.flagsOlderThanWeek,
@@ -149,9 +147,8 @@ export const LifecycleInsights: FC = () => {
                         data.categories.permanent.flagsOlderThanWeek,
                     ];
                     return (
-                        <ChartContainer>
+                        <ChartContainer key={stage}>
                             <LifecycleChart
-                                key={stage}
                                 data={{
                                     labels: [
                                         `Experimental`,

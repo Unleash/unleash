@@ -57,6 +57,7 @@ export const createOptions = (
             },
         },
         responsive: true,
+        maintainAspectRatio: false,
         color: theme.palette.text.secondary,
         scales: {
             y: {

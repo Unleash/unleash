@@ -21,6 +21,7 @@ import {
     ChartTooltip,
     type TooltipState,
 } from '../LineChart/ChartTooltip/ChartTooltip.tsx';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 export const createOptions = (
     theme: Theme,
@@ -35,7 +36,28 @@ export const createOptions = (
                 align: 'start',
                 labels: {
                     usePointStyle: true,
+                    padding: 21,
                 },
+            },
+            datalabels: {
+                color: theme.palette.text.primary,
+                font: {
+                    weight: 'bold',
+                },
+                anchor: 'end',
+                align: 'top',
+                offset: -6,
+                // formatter: (value: number, context: Context) => {
+                //     console.log(context);
+                //     // return context.dataset.data.reduce((acc, curr) => {
+                //     //     console.log(context);
+                //     //     // if (Number.) {
+                //     //     //     return acc + curr;
+                //     //     // }
+                //     //     return acc + 1;
+                //     // }, 0);
+                //     return 17;
+                // },
             },
         },
         responsive: true,
@@ -109,7 +131,7 @@ const LifecycleChartComponent: FC<{
                 key={cover ? 'cover' : 'chart'}
                 options={options}
                 data={data}
-                // plugins={[customHighlightPlugin]}
+                plugins={[ChartDataLabels]}
                 height={100}
                 width={100 * aspectRatio}
             />

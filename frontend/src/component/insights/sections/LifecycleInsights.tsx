@@ -51,7 +51,6 @@ const ChartContainer = styled('article')(({ theme }) => ({
     background: theme.palette.background.default,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(2),
-    aspectRatio: '5/4', // todo: temp
     minWidth: 0,
 }));
 
@@ -155,7 +154,7 @@ export const LifecycleInsights: FC = () => {
                                 ],
                                 datasets: [
                                     {
-                                        label: '> 1 week old',
+                                        label: 'Flags > 1 week old',
                                         data: [
                                             data.categories.experimental
                                                 .flagsOlderThanWeek,
@@ -168,9 +167,18 @@ export const LifecycleInsights: FC = () => {
                                         backgroundColor:
                                             chartColors.olderThanWeek,
                                         borderRadius: 4,
+                                        datalabels: {
+                                            labels: {
+                                                value: {
+                                                    formatter: () => {
+                                                        return '';
+                                                    },
+                                                },
+                                            },
+                                        },
                                     },
                                     {
-                                        label: 'New this week',
+                                        label: 'New flags this week',
                                         data: [
                                             data.categories.experimental
                                                 .newFlagsThisWeek,
@@ -183,6 +191,35 @@ export const LifecycleInsights: FC = () => {
                                         backgroundColor:
                                             chartColors.newThisWeek,
                                         borderRadius: 4,
+                                        datalabels: {
+                                            labels: {
+                                                value: {
+                                                    formatter: (
+                                                        value,
+                                                        context,
+                                                    ) => {
+                                                        const dataSets = [
+                                                            data.categories
+                                                                .experimental
+                                                                .flagsOlderThanWeek,
+                                                            data.categories
+                                                                .release
+                                                                .flagsOlderThanWeek,
+                                                            data.categories
+                                                                .permanent
+                                                                .flagsOlderThanWeek,
+                                                        ];
+                                                        return (
+                                                            value +
+                                                            dataSets[
+                                                                context
+                                                                    .dataIndex
+                                                            ]
+                                                        );
+                                                    },
+                                                },
+                                            },
+                                        },
                                     },
                                 ],
                             }}

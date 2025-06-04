@@ -85,7 +85,9 @@ export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
         return {
             datasets: [
                 {
-                    label: healthToTechDebtEnabled ? 'Technica debt' : 'Health',
+                    label: healthToTechDebtEnabled
+                        ? 'Technical debt'
+                        : 'Health',
                     data: weeks.map((item) => ({
                         health: item.total ? calculateHealth(item) : undefined,
                         ...(healthToTechDebtEnabled

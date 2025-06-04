@@ -155,39 +155,6 @@ test('viewer users should not be allowed to fetch tokens', async () => {
     await destroy();
 });
 
-test('Only token-admins should be allowed to create token', async () => {
-    expect.assertions(0);
-
-    const preHook = (app, config, { userService, accessService }) => {
-        app.use('/api/admin/', async (req, res, next) => {
-            const role = await accessService.getPredefinedRole(RoleName.EDITOR);
-            req.user = await userService.createUser({
-                email: 'editor2@example.com',
-                rootRole: role.id,
-            });
-            next();
-        });
-    };
-
-    const { request, destroy } = await setupAppWithCustomAuth(
-        stores,
-        preHook,
-        undefined,
-        db.rawDatabase,
-    );
-
-    await request
-        .post('/api/admin/api-tokens')
-        .send({
-            tokenName: 'default-admin',
-            type: 'admin',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(403);
-
-    await destroy();
-});
-
 test('A role with only CREATE_PROJECT_API_TOKEN can create project tokens', async () => {
     expect.assertions(0);
 

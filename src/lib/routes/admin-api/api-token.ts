@@ -314,10 +314,7 @@ export class ApiTokenController extends Controller {
         );
         if (hasPermission) {
             const token = await this.apiTokenService.createApiTokenWithProjects(
-                {
-                    ...createToken,
-                    projects: createToken.projects,
-                },
+                createToken,
                 req.audit,
             );
             this.openApiService.respondWithValidation(

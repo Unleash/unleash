@@ -6,7 +6,7 @@ import { DEFAULT_ENV } from '../util/constants.js';
 export const createApiToken = joi
     .object()
     .keys({
-        tokenName: joi.string().optional(),
+        tokenName: joi.string().required(),
         type: joi
             .string()
             .lowercase()

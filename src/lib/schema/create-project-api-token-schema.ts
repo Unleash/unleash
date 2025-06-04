@@ -5,7 +5,7 @@ import { DEFAULT_ENV } from '../util/constants.js';
 export const createProjectApiToken = joi
     .object()
     .keys({
-        tokenName: joi.string().optional(),
+        tokenName: joi.string().required(),
         type: joi
             .string()
             .lowercase()

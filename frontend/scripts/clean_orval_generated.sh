@@ -10,5 +10,6 @@ echo '' >> src/openapi/index.ts
 
 echo "Formatting..."
 yarn fmt
+./node_modules/.bin/biome lint --write --unsafe src/openapi
 
 echo "Done!"

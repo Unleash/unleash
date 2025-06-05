@@ -133,7 +133,7 @@ This can be done at any point after you've created your flag.
 
 :::tip API: add variants
 
-Use the [create variants endpoint](/reference/api/unleash/overwrite-feature-variants) to create or overwrite existing variants in all environments. The payload should be your desired variant configuration.
+Use the [create variants endpoint](../reference/api/unleash/overwrite-feature-variants) to create or overwrite existing variants in all environments. The payload should be your desired variant configuration.
 
 :::
 

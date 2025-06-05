@@ -33,12 +33,6 @@ const useFeatureForm = (
     }, [initialType]);
 
     useEffect(() => {
-        if (!name) {
-            setName(toggleQueryName || initialName);
-        }
-    }, [name, initialName, toggleQueryName]);
-
-    useEffect(() => {
         if (!projectId) setProject(initialProject);
         else setProject(projectId);
     }, [initialProject, projectId]);

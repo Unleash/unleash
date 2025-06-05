@@ -65,7 +65,6 @@ test('Should add environment to project', async () => {
     const environment = envs.find((env) => env.environment === 'test');
 
     expect(environment).toBeDefined();
-    console.log(envs);
     expect(envs).toHaveLength(2); // test + default
 });
 

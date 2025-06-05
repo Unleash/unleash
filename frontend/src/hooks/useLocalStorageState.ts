@@ -13,7 +13,15 @@ export const useLocalStorageState = <T extends object | string>(
 
     useEffect(() => {
         setStoredValue(localValue);
-    }, [localValue]);
+    }, [localValue, setStoredValue]);
 
-    return [localValue, setLocalValue] as const;
+    return [
+        localValue,
+        (value: T | ((prevState: T) => T)) => {
+            const newValue =
+                value instanceof Function ? value(localValue) : value;
+            setStoredValue(newValue);
+            setLocalValue(newValue);
+        },
+    ] as const;
 };

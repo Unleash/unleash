@@ -17,7 +17,7 @@ import { useGlobalFeatureSearch } from 'component/feature/FeatureToggleList/useG
 import useProjectOverview, {
     featuresCount,
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import type { FeatureTypeSchema } from 'openapi';
+import type { CreateFeatureSchemaType, FeatureTypeSchema } from 'openapi';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { DialogFormTemplate } from 'component/common/DialogFormTemplate/DialogFormTemplate';
@@ -31,6 +31,7 @@ import { ToggleConfigButton } from 'component/common/DialogFormTemplate/ConfigBu
 import { useFlagLimits } from './useFlagLimits.tsx';
 import { useFeatureCreatedFeedback } from './hooks/useFeatureCreatedFeedback.ts';
 import { formatTag } from 'utils/format-tag';
+import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
 
 interface ICreateFeatureDialogProps {
     open: boolean;
@@ -103,6 +104,17 @@ const CreateFeatureDialogContent = ({
     const navigate = useNavigate();
     const openFeatureCreatedFeedback = useFeatureCreatedFeedback();
 
+    const [storedFlagConfig, storeFlagConfig] = useLocalStorageState<
+        Partial<{
+            name: string;
+            type: CreateFeatureSchemaType;
+            project: string;
+            description: string;
+            impressionData: boolean;
+            tags: Set<ITag>;
+        }>
+    >('flag-creation-dialog', {});
+
     const {
         type,
         setType,
@@ -120,7 +132,14 @@ const CreateFeatureDialogContent = ({
         getTogglePayload,
         clearErrors,
         errors,
-    } = useFeatureForm();
+    } = useFeatureForm(
+        storedFlagConfig.name,
+        storedFlagConfig.type,
+        storedFlagConfig.project,
+        storedFlagConfig.description,
+        storedFlagConfig.impressionData,
+        storedFlagConfig.tags,
+    );
     const { createFeatureToggle, loading } = useFeatureApi();
 
     const generalDocumentation: {
@@ -170,6 +189,7 @@ const CreateFeatureDialogContent = ({
                 });
                 onClose();
                 onSuccess?.();
+                storeFlagConfig({});
                 openFeatureCreatedFeedback();
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
@@ -210,8 +230,20 @@ const CreateFeatureDialogContent = ({
         return projectObject?.name;
     }, [project, projects]);
 
+    const onDialogClose = () => {
+        storeFlagConfig({
+            name,
+            project,
+            tags,
+            impressionData,
+            type,
+            description,
+        });
+        onClose();
+    };
+
     return (
-        <StyledDialog open={open} onClose={onClose}>
+        <StyledDialog open={open} onClose={onDialogClose}>
             <FormTemplate
                 compact
                 disablePadding

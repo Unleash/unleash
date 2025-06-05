@@ -5,7 +5,7 @@ rm -rf src/openapi/apis
 
 # Remove all but last line from index.ts
 echo "Cleaning index.ts..."
-echo "export * from './models';" > src/openapi/index.ts
+echo "export * from './models/index';" > src/openapi/index.ts
 echo '' >> src/openapi/index.ts
 
 echo "Formatting..."

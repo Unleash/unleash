@@ -41,4 +41,8 @@ export type SearchEventsParams = {
      * The number of feature environments to return in a page. By default it is set to 50. The maximum is 1000.
      */
     limit?: string;
+    /**
+     * Filter by environment name using supported operators: IS, IS_ANY_OF.
+     */
+    environment?: string;
 };

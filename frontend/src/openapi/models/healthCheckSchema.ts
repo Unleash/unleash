@@ -9,6 +9,6 @@ import type { HealthCheckSchemaHealth } from './healthCheckSchemaHealth.js';
  * Used by service orchestrators to decide whether this Unleash instance should be marked as healthy or unhealthy
  */
 export interface HealthCheckSchema {
-    /** The state this Unleash instance is in. GOOD if everything is ok, BAD if the instance should be restarted */
+    /** The state this Unleash instance is in. GOOD if the server is up and running. It never returns BAD, if the server is unhealthy you will get an unsuccessful http response. */
     health: HealthCheckSchemaHealth;
 }

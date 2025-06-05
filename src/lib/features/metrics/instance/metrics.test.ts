@@ -19,6 +19,7 @@ import { startOfHour } from 'date-fns';
 import { ApiTokenType } from '../../../types/model.js';
 import type TestAgent from 'supertest/lib/agent.d.ts';
 import type { BulkRegistrationSchema } from '../../../openapi/index.js';
+import { DEFAULT_ENV } from '../../../server-impl.js';
 
 let db: ITestDb;
 let config: IUnleashConfig;
@@ -427,7 +428,7 @@ describe('bulk metrics', () => {
                     {
                         featureName: 'test_feature_one',
                         appName: 'test_application',
-                        environment: 'production',
+                        environment: DEFAULT_ENV,
                         timestamp: startOfHour(now),
                         yes: 1000,
                         no: 800,
@@ -459,9 +460,9 @@ describe('bulk metrics', () => {
                 1,
             );
 
-        expect(defaultReport).toHaveLength(0);
-        expect(developmentReport).toHaveLength(1);
-        expect(developmentReport[0].yes).toBe(1000);
+        expect(developmentReport).toHaveLength(0);
+        expect(defaultReport).toHaveLength(1);
+        expect(defaultReport[0].yes).toBe(1000);
     });
 
     test('should accept empty bulk metrics', async () => {

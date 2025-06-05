@@ -49,12 +49,14 @@ const ContextList: VFC = () => {
                     sortOrder,
                     usedInProjects,
                     usedInFeatures,
+                    valueType,
                 }) => ({
                     name,
                     description,
                     sortOrder,
                     usedInProjects,
                     usedInFeatures,
+                    valueType,
                 }),
             )
             .sort((a, b) => a.sortOrder - b.sortOrder);
@@ -83,6 +85,11 @@ const ContextList: VFC = () => {
                     />
                 ),
                 sortType: 'alphanumeric',
+            },
+            {
+                Header: 'Type',
+                accessor: 'valueType',
+                Cell: ({ value }: any) => value || '-',
             },
             {
                 Header: 'Used in',

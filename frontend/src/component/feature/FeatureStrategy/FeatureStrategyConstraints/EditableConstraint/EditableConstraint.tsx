@@ -1,9 +1,14 @@
 import { IconButton, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import { isStringOperator, type Operator } from 'constants/operators';
+import {
+    isStringOperator,
+    type Operator,
+    type ContextFieldType,
+    allOperators,
+} from 'constants/operators';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { useCallback, useRef, type FC } from 'react';
-import { operatorsForContext } from 'utils/operatorsForContext';
+import { getContextField } from 'utils/operatorsForContext';
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import Delete from '@mui/icons-material/Delete';
@@ -260,7 +265,14 @@ export const EditableConstraint: FC<Props> = ({
         return null;
     }
 
-    const extantContextFieldNames = context.map((context) => context.name);
+    const currentContextField = getContextField(context, contextName);
+    const contextFieldType = currentContextField?.valueType as
+        | ContextFieldType
+        | undefined;
+
+    const extantContextFieldNames = context.map(
+        (contextField) => contextField.name,
+    );
     const contextFieldHasBeenDeleted = !extantContextFieldNames.includes(
         localConstraint.contextName,
     );
@@ -286,12 +298,21 @@ export const EditableConstraint: FC<Props> = ({
                             label='Context Field'
                             options={contextFieldOptions}
                             value={contextName || ''}
-                            onChange={(contextField) =>
+                            onChange={(selectedContextFieldName) => {
+                                const selectedField = getContextField(
+                                    context,
+                                    selectedContextFieldName,
+                                );
                                 updateConstraint({
                                     type: 'set context field',
-                                    payload: contextField,
-                                })
-                            }
+                                    payload: {
+                                        name: selectedContextFieldName,
+                                        valueType: selectedField?.valueType as
+                                            | ContextFieldType
+                                            | undefined,
+                                    },
+                                });
+                            }}
                             variant='standard'
                         />
 
@@ -318,10 +339,11 @@ export const EditableConstraint: FC<Props> = ({
                             </HtmlTooltip>
 
                             <ConstraintOperatorSelect
-                                options={operatorsForContext(contextName)}
+                                options={allOperators}
                                 value={operator}
                                 onChange={onOperatorChange}
                                 inverted={localConstraint.inverted}
+                                contextFieldType={contextFieldType}
                             />
 
                             {showCaseSensitiveButton ? (

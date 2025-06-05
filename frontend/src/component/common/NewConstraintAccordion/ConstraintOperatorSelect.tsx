@@ -13,6 +13,8 @@ import {
     dateOperators,
     numOperators,
     inOperators,
+    type ContextFieldType,
+    getOperatorsForContextFieldType,
 } from 'constants/operators';
 import { useState } from 'react';
 import { formatOperatorDescription } from 'component/common/LegacyConstraintAccordion/ConstraintOperator/formatOperatorDescription';
@@ -21,6 +23,7 @@ interface IConstraintOperatorSelectProps {
     options: Operator[];
     value: Operator;
     onChange: (value: Operator) => void;
+    contextFieldType?: ContextFieldType;
 }
 
 const StyledValueContainer = styled('div')(({ theme }) => ({
@@ -78,6 +81,7 @@ export const ConstraintOperatorSelect = ({
     options,
     value,
     onChange,
+    contextFieldType,
 }: IConstraintOperatorSelectProps) => {
     const [open, setOpen] = useState(false);
 
@@ -96,6 +100,12 @@ export const ConstraintOperatorSelect = ({
         );
     };
 
+    let displayedOptions = options;
+    if (contextFieldType) {
+        const allowedByType = getOperatorsForContextFieldType(contextFieldType);
+        displayedOptions = options.filter((op) => allowedByType.includes(op));
+    }
+
     // todo (addEditStrategy): add prop to configure the select element or style it. (currently, the chevron is different from the other select element we use). Maybe add a new component.
     return (
         <StyledFormInput variant='outlined' size='small' fullWidth>
@@ -111,11 +121,14 @@ export const ConstraintOperatorSelect = ({
                 onChange={onSelectChange}
                 renderValue={renderValue}
             >
-                {options.map((operator) => (
+                {displayedOptions.map((operator) => (
                     <StyledMenuItem
                         key={operator}
                         value={operator}
-                        separator={needSeparatorAbove(options, operator)}
+                        separator={needSeparatorAbove(
+                            displayedOptions,
+                            operator,
+                        )}
                     >
                         <StyledOptionContainer>
                             <StyledLabel>{operator}</StyledLabel>

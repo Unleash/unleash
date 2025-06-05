@@ -43,7 +43,8 @@ test('calls onUpdate with new state', async () => {
         expect(onUpdate).toHaveBeenCalledWith({
             contextName: 'context-field',
             operator: IN,
-            values: [],
+            value: '',
+            values: new Set(),
         });
     });
 });
@@ -196,7 +197,7 @@ describe('legal values', () => {
 
         result.current.updateConstraint({
             type: 'set context field',
-            payload: 'field-without-legal-values',
+            payload: { name: 'field-without-legal-values' },
         });
 
         await waitFor(() => {

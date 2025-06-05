@@ -16,6 +16,7 @@ const COLUMNS = [
     'sort_order',
     'legal_values',
     'created_at',
+    'value_type', // Added value_type
 ];
 const T = {
     contextFields: 'context_fields',
@@ -32,6 +33,7 @@ type ContextFieldDB = {
     used_in_features?: number;
     legal_values: ILegalValue[];
     created_at: Date;
+    value_type?: 'String' | 'Number' | 'Semver' | 'Date' | null; // Added value_type
 };
 
 const mapRow = (row: ContextFieldDB): IContextField => ({
@@ -41,6 +43,7 @@ const mapRow = (row: ContextFieldDB): IContextField => ({
     sortOrder: row.sort_order,
     legalValues: row.legal_values || [],
     createdAt: row.created_at,
+    valueType: row.value_type, // Corrected: ensure this matches IContextField
     ...(row.used_in_projects && {
         usedInProjects: Number(row.used_in_projects),
     }),
@@ -56,6 +59,7 @@ interface ICreateContextField {
     sort_order: number;
     legal_values?: string;
     updated_at: Date;
+    value_type?: 'String' | 'Number' | 'Semver' | 'Date' | null;
 }
 
 class ContextFieldStore implements IContextFieldStore {
@@ -84,6 +88,7 @@ class ContextFieldStore implements IContextFieldStore {
             stickiness: data.stickiness || false,
             sort_order: data.sortOrder || 0,
             legal_values: JSON.stringify(data.legalValues || []),
+            value_type: data.valueType, // Corrected: ensure this matches IContextFieldDto
         };
     }
 

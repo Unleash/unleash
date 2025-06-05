@@ -133,6 +133,6 @@ This can be done at any point after you've created your flag.
 
 [Variants](../reference/feature-toggle-variants) give you the ability to further target your users and split them into groups of your choosing, such as for A/B testing. On the flag overview page, select the variants tab. Use the "new variant" button to add the variants that you want.
 
-![](/img/create-toggle-add-variants.png)
+![add-variants](/img/create-toggle-add-variants.png)
 
 [^1]: Prior to Unleash 4.21, "create/edit variants" was a project-level permission instead of an environment-level permission.

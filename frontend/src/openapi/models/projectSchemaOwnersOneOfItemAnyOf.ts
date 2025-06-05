@@ -6,10 +6,10 @@
 import type { ProjectSchemaOwnersOneOfItemAnyOfOwnerType } from './projectSchemaOwnersOneOfItemAnyOfOwnerType.js';
 
 export type ProjectSchemaOwnersOneOfItemAnyOf = {
-    ownerType: ProjectSchemaOwnersOneOfItemAnyOfOwnerType;
-    name: string;
-    /** @nullable */
-    imageUrl?: string | null;
     /** @nullable */
     email?: string | null;
+    /** @nullable */
+    imageUrl?: string | null;
+    name: string;
+    ownerType: ProjectSchemaOwnersOneOfItemAnyOfOwnerType;
 };

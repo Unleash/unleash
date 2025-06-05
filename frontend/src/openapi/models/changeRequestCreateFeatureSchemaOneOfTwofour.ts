@@ -10,10 +10,10 @@ import type { ChangeRequestCreateFeatureSchemaOneOfTwofourPayload } from './chan
  * Start milestone of feature environment release plan.
  */
 export type ChangeRequestCreateFeatureSchemaOneOfTwofour = {
-    /** The name of the feature that this change applies to. */
-    feature: string;
     /** The name of this action. */
     action: ChangeRequestCreateFeatureSchemaOneOfTwofourAction;
+    /** The name of the feature that this change applies to. */
+    feature: string;
     /** The ID of the release plan and which of its milestones to start. */
     payload: ChangeRequestCreateFeatureSchemaOneOfTwofourPayload;
 };

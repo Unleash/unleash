@@ -9,8 +9,6 @@ import type { CreateReleasePlanMilestoneSchema } from './createReleasePlanMilest
  * Schema representing the creation of a release template.
  */
 export interface CreateReleasePlanTemplateSchema {
-    /** The name of the release template. */
-    name: string;
     /**
      * A description of the release template.
      * @nullable
@@ -18,4 +16,6 @@ export interface CreateReleasePlanTemplateSchema {
     description?: string | null;
     /** A list of the milestones in this release template. */
     milestones?: CreateReleasePlanMilestoneSchema[];
+    /** The name of the release template. */
+    name: string;
 }

@@ -9,21 +9,21 @@ import type { ApplicationEnvironmentIssuesSchema } from './applicationEnvironmen
  * Data about an application environment
  */
 export interface ApplicationOverviewEnvironmentSchema {
-    /** Name of the application environment */
-    name: string;
-    /** The number of instances of the application environment */
-    instanceCount: number;
-    /** SDKs used in the application environment */
-    sdks: string[];
-    /** Frontend SDKs used in the application environment */
-    frontendSdks: string[];
     /** Backend SDKs used in the application environment */
     backendSdks: string[];
+    /** Frontend SDKs used in the application environment */
+    frontendSdks: string[];
+    /** The number of instances of the application environment */
+    instanceCount: number;
+    /** This list of issues that might be wrong with the application */
+    issues: ApplicationEnvironmentIssuesSchema;
     /**
      * The last time the application environment was seen
      * @nullable
      */
     lastSeen: string | null;
-    /** This list of issues that might be wrong with the application */
-    issues: ApplicationEnvironmentIssuesSchema;
+    /** Name of the application environment */
+    name: string;
+    /** SDKs used in the application environment */
+    sdks: string[];
 }

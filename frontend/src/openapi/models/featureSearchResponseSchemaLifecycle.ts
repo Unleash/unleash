@@ -9,6 +9,8 @@ import type { FeatureSearchResponseSchemaLifecycleStage } from './featureSearchR
  * Current lifecycle stage of the feature
  */
 export type FeatureSearchResponseSchemaLifecycle = {
+    /** When the feature entered this stage */
+    enteredStageAt: string;
     /** The name of the current lifecycle stage */
     stage: FeatureSearchResponseSchemaLifecycleStage;
     /**
@@ -16,6 +18,4 @@ export type FeatureSearchResponseSchemaLifecycle = {
      * @nullable
      */
     status?: string | null;
-    /** When the feature entered this stage */
-    enteredStageAt: string;
 };

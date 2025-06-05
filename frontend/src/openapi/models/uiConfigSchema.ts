@@ -3,59 +3,59 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { UiConfigSchemaAuthenticationType } from './uiConfigSchemaAuthenticationType.js';
 import type { UiConfigSchemaBilling } from './uiConfigSchemaBilling.js';
-import type { ResourceLimitsSchema } from './resourceLimitsSchema.js';
 import type { UiConfigSchemaFlags } from './uiConfigSchemaFlags.js';
 import type { UiConfigSchemaLinksItem } from './uiConfigSchemaLinksItem.js';
-import type { UiConfigSchemaAuthenticationType } from './uiConfigSchemaAuthenticationType.js';
-import type { VersionSchema } from './versionSchema.js';
+import type { ResourceLimitsSchema } from './resourceLimitsSchema.js';
 import type { UiConfigSchemaUnleashContext } from './uiConfigSchemaUnleashContext.js';
+import type { VersionSchema } from './versionSchema.js';
 
 /**
  * A collection of properties used to configure the Unleash Admin UI.
  */
 export interface UiConfigSchema {
-    /** The slogan to display in the UI footer. */
-    slogan?: string;
-    /** The name of this Unleash instance. Used to build the text in the footer. */
-    name?: string;
-    /** The current version of Unleash */
-    version: string;
-    /** What kind of Unleash instance it is: Enterprise, Pro, or Open source */
-    environment?: string;
-    /** The billing model in use for this Unleash instance. */
-    billing?: UiConfigSchemaBilling;
-    /** The URL of the Unleash instance. */
-    unleashUrl: string;
+    /** The type of authentication enabled for this Unleash instance */
+    authenticationType?: UiConfigSchemaAuthenticationType;
     /** The base URI path at which this Unleash instance is listening. */
     baseUriPath: string;
-    /** The URI path at which the feedback endpoint is listening. */
-    feedbackUriPath?: string;
+    /** The billing model in use for this Unleash instance. */
+    billing?: UiConfigSchemaBilling;
     /** Whether password authentication should be disabled or not. */
     disablePasswordAuth?: boolean;
     /** Whether this instance can send out emails or not. */
     emailEnabled?: boolean;
-    /** Whether maintenance mode is currently active or not. */
-    maintenanceMode?: boolean;
-    /** A map of resource names and their limits. */
-    resourceLimits?: ResourceLimitsSchema;
-    /** Whether a Prometheus API is available. */
-    prometheusAPIAvailable?: boolean;
-    /** The list of origins that the front-end API should accept requests from. */
-    frontendApiOrigins?: string[];
+    /** What kind of Unleash instance it is: Enterprise, Pro, or Open source */
+    environment?: string;
+    /** The URI path at which the feedback endpoint is listening. */
+    feedbackUriPath?: string;
     /** Additional (largely experimental) features that are enabled in this Unleash instance. */
     flags?: UiConfigSchemaFlags;
+    /** The list of origins that the front-end API should accept requests from. */
+    frontendApiOrigins?: string[];
     /** Relevant links to use in the UI. */
     links?: UiConfigSchemaLinksItem[];
-    /** The type of authentication enabled for this Unleash instance */
-    authenticationType?: UiConfigSchemaAuthenticationType;
-    versionInfo: VersionSchema;
-    /** Whether the OIDC configuration is set through environment variables or not. */
-    oidcConfiguredThroughEnv?: boolean;
-    /** Whether the SAML configuration is set through environment variables or not. */
-    samlConfiguredThroughEnv?: boolean;
+    /** Whether maintenance mode is currently active or not. */
+    maintenanceMode?: boolean;
     /** The maximum number of sessions that a user has. */
     maxSessionsCount?: number;
+    /** The name of this Unleash instance. Used to build the text in the footer. */
+    name?: string;
+    /** Whether the OIDC configuration is set through environment variables or not. */
+    oidcConfiguredThroughEnv?: boolean;
+    /** Whether a Prometheus API is available. */
+    prometheusAPIAvailable?: boolean;
+    /** A map of resource names and their limits. */
+    resourceLimits?: ResourceLimitsSchema;
+    /** Whether the SAML configuration is set through environment variables or not. */
+    samlConfiguredThroughEnv?: boolean;
+    /** The slogan to display in the UI footer. */
+    slogan?: string;
     /** The context object used to configure the Unleash instance. */
     unleashContext?: UiConfigSchemaUnleashContext;
+    /** The URL of the Unleash instance. */
+    unleashUrl: string;
+    /** The current version of Unleash */
+    version: string;
+    versionInfo: VersionSchema;
 }

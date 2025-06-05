@@ -6,7 +6,7 @@
 import type { InstanceInsightsSchemaLifecycleTrendsDevelopCategories } from './instanceInsightsSchemaLifecycleTrendsDevelopCategories.js';
 
 export type InstanceInsightsSchemaLifecycleTrendsDevelop = {
-    totalFlags: number;
     averageTimeInStageDays: number;
     categories: InstanceInsightsSchemaLifecycleTrendsDevelopCategories;
+    totalFlags: number;
 };

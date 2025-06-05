@@ -4,9 +4,9 @@
  * See `gen:api` script in package.json
  */
 import type { UserAccessOverviewSchemaOverview } from './userAccessOverviewSchemaOverview.js';
-import type { UserSchema } from './userSchema.js';
-import type { RoleSchema } from './roleSchema.js';
 import type { UserAccessOverviewSchemaProjectRolesItem } from './userAccessOverviewSchemaProjectRolesItem.js';
+import type { RoleSchema } from './roleSchema.js';
+import type { UserSchema } from './userSchema.js';
 
 /**
  * Describes the access overview (list of permissions and metadata) for a user.
@@ -14,10 +14,10 @@ import type { UserAccessOverviewSchemaProjectRolesItem } from './userAccessOverv
 export interface UserAccessOverviewSchema {
     /** The access overview (list of permissions) for the user */
     overview: UserAccessOverviewSchemaOverview;
-    /** The user that this access overview is for */
-    user: UserSchema;
-    /** The name of the root role that this user has */
-    rootRole: RoleSchema;
     /** The list of project roles that this user has in the selected project */
     projectRoles: UserAccessOverviewSchemaProjectRolesItem[];
+    /** The name of the root role that this user has */
+    rootRole: RoleSchema;
+    /** The user that this access overview is for */
+    user: UserSchema;
 }

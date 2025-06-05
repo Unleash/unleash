@@ -8,10 +8,6 @@
  * The data required to create an CDN API token.
  */
 export interface CdnApiTokenSchema {
-    /** The name of the token. */
-    tokenName: string;
-    /** The project that the token should be valid for. Defaults to "*" meaning every project. */
-    project?: string;
     /** The environment that the token should be valid for. */
     environment: string;
     /**
@@ -19,4 +15,8 @@ export interface CdnApiTokenSchema {
      * @nullable
      */
     expiresAt?: string | null;
+    /** The project that the token should be valid for. Defaults to "*" meaning every project. */
+    project?: string;
+    /** The name of the token. */
+    tokenName: string;
 }

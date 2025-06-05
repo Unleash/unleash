@@ -8,6 +8,12 @@
  * An event summary
  */
 export type PersonalDashboardProjectDetailsSchemaLatestEventsItem = {
+    /** When the event was recorded */
+    createdAt: string;
+    /** Which user created this event */
+    createdBy: string;
+    /** URL used for the user profile image of the event author */
+    createdByImageUrl: string;
     /**
      * The ID of the event.
      * @minimum 1
@@ -18,10 +24,4 @@ export type PersonalDashboardProjectDetailsSchemaLatestEventsItem = {
      * @nullable
      */
     summary: string | null;
-    /** Which user created this event */
-    createdBy: string;
-    /** URL used for the user profile image of the event author */
-    createdByImageUrl: string;
-    /** When the event was recorded */
-    createdAt: string;
 };

@@ -8,11 +8,11 @@
  * The link to any URL related to the feature
  */
 export interface FeatureLinkSchema {
-    /** The URL the feature is linked to */
-    url: string;
     /**
      * The description of the link
      * @nullable
      */
     title?: string | null;
+    /** The URL the feature is linked to */
+    url: string;
 }

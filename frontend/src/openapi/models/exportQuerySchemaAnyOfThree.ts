@@ -5,10 +5,10 @@
  */
 
 export type ExportQuerySchemaAnyOfThree = {
-    /** The environment to export from */
-    environment: string;
     /** Whether to return a downloadable file */
     downloadFile?: boolean;
+    /** The environment to export from */
+    environment: string;
     /** Selects project to export the features from. Used when no tags or features are provided. */
     project: string;
 };

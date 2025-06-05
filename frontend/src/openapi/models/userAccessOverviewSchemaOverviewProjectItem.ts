@@ -5,14 +5,8 @@
  */
 
 export type UserAccessOverviewSchemaOverviewProjectItem = {
-    /** The ID of the permission */
-    id: number;
-    /** The name of the permission */
-    name: string;
     /** The display name of the permission */
     displayName: string;
-    /** The type of the permission */
-    type: string;
     /**
      * The environment that the permission applies to
      * @nullable
@@ -20,4 +14,10 @@ export type UserAccessOverviewSchemaOverviewProjectItem = {
     environment?: string | null;
     /** Whether the user has this permission */
     hasPermission: boolean;
+    /** The ID of the permission */
+    id: number;
+    /** The name of the permission */
+    name: string;
+    /** The type of the permission */
+    type: string;
 };

@@ -8,14 +8,14 @@
  * A number features in each of the lifecycle stages
  */
 export interface FeatureLifecycleCountSchema {
-    /** Number of features in the initial stage */
-    initial: number;
-    /** Number of features in the pre-live stage */
-    preLive: number;
-    /** Number of features in the live stage */
-    live: number;
-    /** Number of features in the completed stage */
-    completed: number;
     /** Number of features in the archived stage */
     archived: number;
+    /** Number of features in the completed stage */
+    completed: number;
+    /** Number of features in the initial stage */
+    initial: number;
+    /** Number of features in the live stage */
+    live: number;
+    /** Number of features in the pre-live stage */
+    preLive: number;
 }

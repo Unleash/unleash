@@ -9,15 +9,32 @@ import type { GroupUserModelSchema } from './groupUserModelSchema.js';
  * Data about a group including their project role
  */
 export interface GroupWithProjectRoleSchema {
-    /** The name of the group */
-    name?: string;
+    /** When this group was added to the project */
+    addedAt?: string;
+    /**
+     * When was this group created
+     * @nullable
+     */
+    createdAt?: string | null;
+    /**
+     * A user who created this group
+     * @nullable
+     */
+    createdBy?: string | null;
+    /**
+     * A custom description of the group
+     * @nullable
+     */
+    description?: string | null;
     /**
      * The group's ID in the Unleash system
      * @minimum 0
      */
     id: number;
-    /** When this group was added to the project */
-    addedAt?: string;
+    /** A list of SSO groups that should map to this Unleash group */
+    mappingsSSO?: string[];
+    /** The name of the group */
+    name?: string;
     /**
      * The ID of the role this group has in the given project
      * @minimum 0
@@ -26,32 +43,15 @@ export interface GroupWithProjectRoleSchema {
     /** A list of roles this user has in the given project */
     roles?: number[];
     /**
-     * A custom description of the group
-     * @nullable
-     */
-    description?: string | null;
-    /** A list of SSO groups that should map to this Unleash group */
-    mappingsSSO?: string[];
-    /**
      * A role id that is used as the root role for all users in this group. This can be either the id of the Viewer, Editor or Admin role.
      * @nullable
      */
     rootRole?: number | null;
     /**
-     * A user who created this group
-     * @nullable
-     */
-    createdBy?: string | null;
-    /**
-     * When was this group created
-     * @nullable
-     */
-    createdAt?: string | null;
-    /** A list of users belonging to this group */
-    users?: GroupUserModelSchema[];
-    /**
      * The SCIM ID of the group, only present if managed by SCIM
      * @nullable
      */
     scimId?: string | null;
+    /** A list of users belonging to this group */
+    users?: GroupUserModelSchema[];
 }

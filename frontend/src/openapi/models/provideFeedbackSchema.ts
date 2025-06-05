@@ -8,13 +8,13 @@
  * Schema representing the creation of feedback information.
  */
 export interface ProvideFeedbackSchema {
-    /** The category of the feedback. */
-    category: string;
     /**
-     * The type of user providing the feedback.
+     * Details aspects of the service or product that could benefit from enhancements or modifications. Aids in pinpointing areas needing attention for improvement.
      * @nullable
      */
-    userType?: string | null;
+    areasForImprovement?: string | null;
+    /** The category of the feedback. */
+    category: string;
     /**
      * A score indicating the difficulty experienced by the user.
      * @nullable
@@ -26,8 +26,8 @@ export interface ProvideFeedbackSchema {
      */
     positive?: string | null;
     /**
-     * Details aspects of the service or product that could benefit from enhancements or modifications. Aids in pinpointing areas needing attention for improvement.
+     * The type of user providing the feedback.
      * @nullable
      */
-    areasForImprovement?: string | null;
+    userType?: string | null;
 }

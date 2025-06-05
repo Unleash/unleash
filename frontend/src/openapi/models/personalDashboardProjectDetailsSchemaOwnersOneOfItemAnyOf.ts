@@ -6,10 +6,10 @@
 import type { PersonalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOfOwnerType } from './personalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOfOwnerType.js';
 
 export type PersonalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOf = {
-    ownerType: PersonalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOfOwnerType;
-    name: string;
-    /** @nullable */
-    imageUrl?: string | null;
     /** @nullable */
     email?: string | null;
+    /** @nullable */
+    imageUrl?: string | null;
+    name: string;
+    ownerType: PersonalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOfOwnerType;
 };

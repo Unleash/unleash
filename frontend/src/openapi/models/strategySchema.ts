@@ -9,26 +9,26 @@ import type { StrategySchemaParametersItem } from './strategySchemaParametersIte
  * The [activation strategy](https://docs.getunleash.io/reference/activation-strategies) schema
  */
 export interface StrategySchema {
-    /**
-     * An optional title for the strategy
-     * @nullable
-     */
-    title?: string | null;
-    /** The name (type) of the strategy */
-    name: string;
-    /**
-     * A human friendly name for the strategy
-     * @nullable
-     */
-    displayName: string | null;
+    deprecated: boolean;
     /**
      * A short description of the strategy
      * @nullable
      */
     description: string | null;
+    /**
+     * A human friendly name for the strategy
+     * @nullable
+     */
+    displayName: string | null;
     /** Whether the strategy can be edited or not. Strategies bundled with Unleash cannot be edited. */
     editable: boolean;
-    deprecated: boolean;
+    /** The name (type) of the strategy */
+    name: string;
     /** A list of relevant parameters for each strategy */
     parameters: StrategySchemaParametersItem[];
+    /**
+     * An optional title for the strategy
+     * @nullable
+     */
+    title?: string | null;
 }

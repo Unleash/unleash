@@ -9,20 +9,23 @@ import type { UserSchemaAccountType } from './userSchemaAccountType.js';
  * An Unleash user
  */
 export interface UserSchema {
-    /** The user id */
-    id: number;
+    /** A user is either an actual User or a Service Account */
+    accountType?: UserSchemaAccountType;
     /**
-     * Name of the user
+     * Count of active browser sessions for this user
      * @nullable
      */
-    name?: string | null;
+    activeSessions?: number | null;
+    /** The user was created at this time */
+    createdAt?: string;
+    /** Experimental. The number of deleted browser sessions after last login */
+    deletedSessions?: number;
     /** Email of the user */
     email?: string;
-    /**
-     * A unique username for the user
-     * @nullable
-     */
-    username?: string | null;
+    /** Is the welcome email sent to the user or not */
+    emailSent?: boolean;
+    /** The user id */
+    id: number;
     /** URL used for the user profile image */
     imageUrl?: string;
     /** If the user is actively inviting other users, this is the link that can be shared with other users */
@@ -32,34 +35,31 @@ export interface UserSchema {
      * @minimum 0
      */
     loginAttempts?: number;
-    /** Is the welcome email sent to the user or not */
-    emailSent?: boolean;
+    /**
+     * Name of the user
+     * @nullable
+     */
+    name?: string | null;
+    /** Deprecated */
+    permissions?: string[];
     /**
      * Which [root role](https://docs.getunleash.io/reference/rbac#predefined-roles) this user is assigned
      * @minimum 0
      */
     rootRole?: number;
     /**
-     * The last time this user logged in
-     * @nullable
-     */
-    seenAt?: string | null;
-    /** The user was created at this time */
-    createdAt?: string;
-    /** A user is either an actual User or a Service Account */
-    accountType?: UserSchemaAccountType;
-    /** Deprecated */
-    permissions?: string[];
-    /**
      * The SCIM ID of the user, only present if managed by SCIM
      * @nullable
      */
     scimId?: string | null;
     /**
-     * Count of active browser sessions for this user
+     * The last time this user logged in
      * @nullable
      */
-    activeSessions?: number | null;
-    /** Experimental. The number of deleted browser sessions after last login */
-    deletedSessions?: number;
+    seenAt?: string | null;
+    /**
+     * A unique username for the user
+     * @nullable
+     */
+    username?: string | null;
 }

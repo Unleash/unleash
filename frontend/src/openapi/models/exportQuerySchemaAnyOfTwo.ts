@@ -5,10 +5,10 @@
  */
 
 export type ExportQuerySchemaAnyOfTwo = {
-    /** The environment to export from */
-    environment: string;
     /** Whether to return a downloadable file */
     downloadFile?: boolean;
+    /** The environment to export from */
+    environment: string;
     /** Selects features to export by tag. */
     tag: string;
 };

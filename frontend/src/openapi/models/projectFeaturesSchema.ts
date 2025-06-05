@@ -10,8 +10,8 @@ import type { ProjectFeatureSchema } from './projectFeatureSchema.js';
  * @deprecated
  */
 export interface ProjectFeaturesSchema {
-    /** The version of the feature's schema */
-    version: number;
     /** A list of features */
     features: ProjectFeatureSchema[];
+    /** The version of the feature's schema */
+    version: number;
 }

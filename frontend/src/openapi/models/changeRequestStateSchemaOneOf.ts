@@ -6,8 +6,8 @@
 import type { ChangeRequestStateSchemaOneOfState } from './changeRequestStateSchemaOneOfState.js';
 
 export type ChangeRequestStateSchemaOneOf = {
-    /** The new desired state for the change request */
-    state: ChangeRequestStateSchemaOneOfState;
     /** Any comments accompanying the state changed. Used when sending a draft to review. */
     comment?: string;
+    /** The new desired state for the change request */
+    state: ChangeRequestStateSchemaOneOfState;
 };

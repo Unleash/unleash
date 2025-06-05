@@ -8,15 +8,15 @@
  * User feedback information about a particular feedback item.
  */
 export interface FeedbackResponseSchema {
-    /** The ID of the user that gave the feedback. */
-    userId?: number;
-    /** `true` if the user has asked never to see this feedback questionnaire again. */
-    neverShow?: boolean;
+    /** The name of the feedback session */
+    feedbackId?: string;
     /**
      * When this feedback was given
      * @nullable
      */
     given?: string | null;
-    /** The name of the feedback session */
-    feedbackId?: string;
+    /** `true` if the user has asked never to see this feedback questionnaire again. */
+    neverShow?: boolean;
+    /** The ID of the user that gave the feedback. */
+    userId?: number;
 }

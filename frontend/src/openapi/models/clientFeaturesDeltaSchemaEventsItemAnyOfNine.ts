@@ -3,13 +3,13 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ClientFeaturesDeltaSchemaEventsItemAnyOfNineType } from './clientFeaturesDeltaSchemaEventsItemAnyOfNineType.js';
 import type { ClientFeatureSchema } from './clientFeatureSchema.js';
 import type { ClientSegmentSchema } from './clientSegmentSchema.js';
+import type { ClientFeaturesDeltaSchemaEventsItemAnyOfNineType } from './clientFeaturesDeltaSchemaEventsItemAnyOfNineType.js';
 
 export type ClientFeaturesDeltaSchemaEventsItemAnyOfNine = {
     eventId: number;
-    type: ClientFeaturesDeltaSchemaEventsItemAnyOfNineType;
     features: ClientFeatureSchema[];
     segments: ClientSegmentSchema[];
+    type: ClientFeaturesDeltaSchemaEventsItemAnyOfNineType;
 };

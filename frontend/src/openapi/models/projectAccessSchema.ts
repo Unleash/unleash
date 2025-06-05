@@ -4,8 +4,8 @@
  * See `gen:api` script in package.json
  */
 import type { GroupWithProjectRoleSchema } from './groupWithProjectRoleSchema.js';
-import type { UserWithProjectRoleSchema } from './userWithProjectRoleSchema.js';
 import type { RoleSchema } from './roleSchema.js';
+import type { UserWithProjectRoleSchema } from './userWithProjectRoleSchema.js';
 
 /**
  * An object describing access permissions for a given project.
@@ -13,8 +13,8 @@ import type { RoleSchema } from './roleSchema.js';
 export interface ProjectAccessSchema {
     /** A list of groups that have access to this project */
     groups: GroupWithProjectRoleSchema[];
-    /** A list of users and their roles within this project */
-    users: UserWithProjectRoleSchema[];
     /** A list of roles that are available within this project. */
     roles: RoleSchema[];
+    /** A list of users and their roles within this project */
+    users: UserWithProjectRoleSchema[];
 }

@@ -9,14 +9,14 @@ import type { ActionDefinitionParameterSchema } from './actionDefinitionParamete
  * Configuration of a single action and its parameters.
  */
 export interface ActionDefinitionSchema {
-    /** The label of the action. */
-    label: string;
-    /** A description for the action. */
-    description: string;
     /** The category of the action. */
     category: string;
-    /** The permissions required to perform the action. */
-    permissions: string[];
+    /** A description for the action. */
+    description: string;
+    /** The label of the action. */
+    label: string;
     /** The parameters required to perform the action. */
     parameters: ActionDefinitionParameterSchema[];
+    /** The permissions required to perform the action. */
+    permissions: string[];
 }

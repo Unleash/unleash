@@ -16,6 +16,7 @@ export default defineConfig({
             schemas: 'models',
             client: 'swr',
             clean: true,
+            propertySortOrder: 'Alphabetical',
             // mock: true,
             override: {
                 mutator: {

@@ -3,39 +3,39 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectCreatedSchemaMode } from './projectCreatedSchemaMode.js';
 import type { ProjectCreatedSchemaChangeRequestEnvironmentsItem } from './projectCreatedSchemaChangeRequestEnvironmentsItem.js';
+import type { ProjectCreatedSchemaMode } from './projectCreatedSchemaMode.js';
 
 /**
  * Details about the newly created project.
  */
 export interface ProjectCreatedSchema {
-    /**
-     * The project's identifier.
-     * @pattern [A-Za-z0-9_~.-]+
-     */
-    id: string;
-    /**
-     * The project's name.
-     * @minLength 1
-     */
-    name: string;
+    /** The list of environments that have change requests enabled. */
+    changeRequestEnvironments?: ProjectCreatedSchemaChangeRequestEnvironmentsItem[];
+    /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */
+    defaultStickiness?: string;
     /**
      * The project's description.
      * @nullable
      */
     description?: string | null;
+    /** The environments enabled for the project. */
+    environments?: string[];
     /**
      * A limit on the number of features allowed in the project. `null` if no limit.
      * @nullable
      */
     featureLimit?: number | null;
+    /**
+     * The project's identifier.
+     * @pattern [A-Za-z0-9_~.-]+
+     */
+    id: string;
     /** A mode of the project affecting what actions are possible in this project */
     mode?: ProjectCreatedSchemaMode;
-    /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */
-    defaultStickiness?: string;
-    /** The environments enabled for the project. */
-    environments?: string[];
-    /** The list of environments that have change requests enabled. */
-    changeRequestEnvironments?: ProjectCreatedSchemaChangeRequestEnvironmentsItem[];
+    /**
+     * The project's name.
+     * @minLength 1
+     */
+    name: string;
 }

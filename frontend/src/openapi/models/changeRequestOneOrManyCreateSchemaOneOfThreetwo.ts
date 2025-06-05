@@ -10,10 +10,10 @@ import type { ChangeRequestOneOrManyCreateSchemaOneOfThreetwoPayload } from './c
  * Remove a release plan from feature environment.
  */
 export type ChangeRequestOneOrManyCreateSchemaOneOfThreetwo = {
-    /** The name of the feature that this change applies to. */
-    feature: string;
     /** The name of this action. */
     action: ChangeRequestOneOrManyCreateSchemaOneOfThreetwoAction;
+    /** The name of the feature that this change applies to. */
+    feature: string;
     /** The Id of the release plan to remove. */
     payload: ChangeRequestOneOrManyCreateSchemaOneOfThreetwoPayload;
 };

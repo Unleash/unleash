@@ -11,33 +11,33 @@ import type { ReleasePlanMilestoneSchema } from './releasePlanMilestoneSchema.js
  */
 export interface ReleasePlanTemplateSchema {
     /**
-     * The release plan/template's ID. Release template IDs are ulids.
+     * The date and time that the release template was archived.
+     * @nullable
      */
-    id: string;
+    archivedAt?: string | null;
     /**
-     * A field to distinguish between release plans and release templates.
+     * The date and time that the release template was created.
      */
-    discriminator: ReleasePlanTemplateSchemaDiscriminator;
-    /** The name of the release template. */
-    name: string;
+    createdAt: string;
+    /**
+     * Release template: The ID of the user who created this template.
+     */
+    createdByUserId: number;
     /**
      * A description of the release template.
      * @nullable
      */
     description?: string | null;
     /**
-     * Release template: The ID of the user who created this template.
+     * A field to distinguish between release plans and release templates.
      */
-    createdByUserId: number;
+    discriminator: ReleasePlanTemplateSchemaDiscriminator;
     /**
-     * The date and time that the release template was created.
+     * The release plan/template's ID. Release template IDs are ulids.
      */
-    createdAt: string;
+    id: string;
     /** A list of the milestones in this release template. */
     milestones?: ReleasePlanMilestoneSchema[];
-    /**
-     * The date and time that the release template was archived.
-     * @nullable
-     */
-    archivedAt?: string | null;
+    /** The name of the release template. */
+    name: string;
 }

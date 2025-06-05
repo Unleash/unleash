@@ -8,14 +8,14 @@
  * Data used to update an [environment](https://docs.getunleash.io/reference/environments).
  */
 export interface UpdateEnvironmentSchema {
-    /** Updates the type of environment (i.e. development or production). */
-    type?: string;
-    /** Changes the sort order of this environment. */
-    sortOrder?: number;
     /**
      * Experimental field. The number of approvals required before a change request can be applied in this environment.
      * @minimum 1
      * @nullable
      */
     requiredApprovals?: number | null;
+    /** Changes the sort order of this environment. */
+    sortOrder?: number;
+    /** Updates the type of environment (i.e. development or production). */
+    type?: string;
 }

@@ -8,13 +8,8 @@
  * Data about a user including their project role
  */
 export interface UserWithProjectRoleSchema {
-    /**
-     * Whether this user is authenticated through Unleash tokens or logged in with a session
-     * @deprecated
-     */
-    isAPI?: boolean;
-    /** The name of the user */
-    name?: string;
+    /** When this user was added to the project */
+    addedAt?: string;
     /**
      * The user's email address
      * @nullable
@@ -30,8 +25,13 @@ export interface UserWithProjectRoleSchema {
      * @nullable
      */
     imageUrl?: string | null;
-    /** When this user was added to the project */
-    addedAt?: string;
+    /**
+     * Whether this user is authenticated through Unleash tokens or logged in with a session
+     * @deprecated
+     */
+    isAPI?: boolean;
+    /** The name of the user */
+    name?: string;
     /**
      * The ID of the role this user has in the given project
      * @minimum 0

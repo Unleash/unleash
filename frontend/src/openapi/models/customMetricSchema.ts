@@ -9,10 +9,10 @@ import type { CustomMetricSchemaLabels } from './customMetricSchemaLabels.js';
  * A custom metric with name, value and optional labels
  */
 export interface CustomMetricSchema {
+    /** Labels to categorize the metric */
+    labels?: CustomMetricSchemaLabels;
     /** Name of the custom metric */
     name: string;
     /** Value of the custom metric */
     value: number;
-    /** Labels to categorize the metric */
-    labels?: CustomMetricSchemaLabels;
 }

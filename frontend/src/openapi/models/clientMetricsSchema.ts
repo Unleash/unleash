@@ -11,23 +11,23 @@ import type { ClientMetricsSchemaBucket } from './clientMetricsSchemaBucket.js';
 export interface ClientMetricsSchema {
     /** The name of the application that is evaluating toggles */
     appName: string;
-    /** A [(somewhat) unique identifier](https://docs.getunleash.io/reference/sdks/node#advanced-usage) for the application */
-    instanceId?: string;
+    /** Holds all metrics gathered over a window of time. Typically 1 hour wide */
+    bucket: ClientMetricsSchemaBucket;
     /**
      * Which environment the application is running in. This property was deprecated in v5. This can be determined by the API key calling this endpoint.
      * @deprecated
      */
     environment?: string;
-    /** An SDK version identifier. Usually formatted as "unleash-client-<language>:<version>" */
-    sdkVersion?: string;
+    /** A [(somewhat) unique identifier](https://docs.getunleash.io/reference/sdks/node#advanced-usage) for the application */
+    instanceId?: string;
     /** The platform the application is running on. For languages that compile to binaries, this can be omitted */
     platformName?: string;
     /** The version of the platform the application is running on. Languages that compile to binaries, this is expected to be the compiler version used to assemble the binary. */
     platformVersion?: string;
-    /** The semantic version of the Yggdrasil engine used by the client. If the client is using a native engine this can be omitted. */
-    yggdrasilVersion?: string;
+    /** An SDK version identifier. Usually formatted as "unleash-client-<language>:<version>" */
+    sdkVersion?: string;
     /** The version of the Unleash client specification the client supports */
     specVersion?: string;
-    /** Holds all metrics gathered over a window of time. Typically 1 hour wide */
-    bucket: ClientMetricsSchemaBucket;
+    /** The semantic version of the Yggdrasil engine used by the client. If the client is using a native engine this can be omitted. */
+    yggdrasilVersion?: string;
 }

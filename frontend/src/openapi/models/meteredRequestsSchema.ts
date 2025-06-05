@@ -3,18 +3,18 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { MeteredRequestsSchemaGrouping } from './meteredRequestsSchemaGrouping.js';
-import type { MeteredRequestsSchemaDateRange } from './meteredRequestsSchemaDateRange.js';
 import type { MeteredRequestsSchemaApiDataItem } from './meteredRequestsSchemaApiDataItem.js';
+import type { MeteredRequestsSchemaDateRange } from './meteredRequestsSchemaDateRange.js';
+import type { MeteredRequestsSchemaGrouping } from './meteredRequestsSchemaGrouping.js';
 
 /**
  * Contains the recorded metered groups requests segmented by day/month
  */
 export interface MeteredRequestsSchema {
-    /** Whether the data is aggregated by month or by day. */
-    grouping: MeteredRequestsSchemaGrouping;
-    /** The date range there is data for. The range is inclusive and goes from the start of the `from` date to the end of the `to` date */
-    dateRange: MeteredRequestsSchemaDateRange;
     /** Contains the recorded daily/monthly requests for each metered group */
     apiData: MeteredRequestsSchemaApiDataItem[];
+    /** The date range there is data for. The range is inclusive and goes from the start of the `from` date to the end of the `to` date */
+    dateRange: MeteredRequestsSchemaDateRange;
+    /** Whether the data is aggregated by month or by day. */
+    grouping: MeteredRequestsSchemaGrouping;
 }

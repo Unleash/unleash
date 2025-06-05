@@ -9,9 +9,9 @@ import type { ExportResultSchema } from './exportResultSchema.js';
  * The result of the export operation for a project and environment, used at import
  */
 export interface ImportTogglesSchema {
-    /** The exported [project](https://docs.getunleash.io/reference/projects) */
-    project: string;
+    data: ExportResultSchema;
     /** The exported [environment](https://docs.getunleash.io/reference/environments) */
     environment: string;
-    data: ExportResultSchema;
+    /** The exported [project](https://docs.getunleash.io/reference/projects) */
+    project: string;
 }

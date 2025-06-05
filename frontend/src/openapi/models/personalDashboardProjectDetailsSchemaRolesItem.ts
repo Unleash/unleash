@@ -9,10 +9,10 @@ import type { PersonalDashboardProjectDetailsSchemaRolesItemType } from './perso
  * An Unleash role.
  */
 export type PersonalDashboardProjectDetailsSchemaRolesItem = {
-    /** The name of the role */
-    name: string;
     /** The id of the role */
     id: number;
+    /** The name of the role */
+    name: string;
     /** The type of the role */
     type: PersonalDashboardProjectDetailsSchemaRolesItemType;
 };

@@ -3,16 +3,16 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PlaygroundRequestSchemaProjects } from './playgroundRequestSchemaProjects.js';
 import type { SdkContextSchema } from './sdkContextSchema.js';
+import type { PlaygroundRequestSchemaProjects } from './playgroundRequestSchemaProjects.js';
 
 /**
  * Data for the playground API to evaluate feature flags
  */
 export interface PlaygroundRequestSchema {
+    context: SdkContextSchema;
     /** The environment to evaluate feature flags in. */
     environment: string;
     /** A list of projects to check for feature flags in. */
     projects?: PlaygroundRequestSchemaProjects;
-    context: SdkContextSchema;
 }

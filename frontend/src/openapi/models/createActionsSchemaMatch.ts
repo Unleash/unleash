@@ -3,17 +3,17 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateActionsSchemaMatchSource } from './createActionsSchemaMatchSource.js';
 import type { CreateActionsSchemaMatchPayload } from './createActionsSchemaMatchPayload.js';
+import type { CreateActionsSchemaMatchSource } from './createActionsSchemaMatchSource.js';
 
 /**
  * Defines a matching rule for the signal that will trigger the action set
  */
 export type CreateActionsSchemaMatch = {
+    /** Match the payload of the signal */
+    payload: CreateActionsSchemaMatchPayload;
     /** Match the source of the signal */
     source: CreateActionsSchemaMatchSource;
     /** Match the source id of the signal */
     sourceId: number;
-    /** Match the payload of the signal */
-    payload: CreateActionsSchemaMatchPayload;
 };

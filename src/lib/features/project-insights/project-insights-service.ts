@@ -174,7 +174,12 @@ export class ProjectInsightsService {
             /**
              * @deprecated
              */
-            health,
+            health: {
+                rating: health.rating,
+                activeCount: health.activeCount,
+                potentiallyStaleCount: health.potentiallyStaleCount,
+                staleCount: health.staleCount,
+            },
         };
     }
 }

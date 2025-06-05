@@ -28,7 +28,6 @@ import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
 import Label from '@mui/icons-material/Label';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import { MultiSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/MultiSelectConfigButton';
-import type { ITag } from 'interfaces/tags';
 import { ToggleConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/ToggleConfigButton';
 import { useFlagLimits } from './useFlagLimits.tsx';
 import { useFeatureCreatedFeedback } from './hooks/useFeatureCreatedFeedback.ts';
@@ -314,17 +313,32 @@ const CreateFeatureDialogContent = ({
                                     />
                                 }
                             />
-                            <MultiSelectConfigButton<ITag>
+                            <MultiSelectConfigButton
                                 tooltip={{
                                     header: 'Select tags',
                                 }}
                                 description={configButtonData.tags.text}
-                                selectedOptions={tags}
+                                selectedOptions={
+                                    new Set(
+                                        Array.from(tags).map(
+                                            (tag) => `${tag.type}:${tag.value}`,
+                                        ),
+                                    )
+                                }
                                 options={allTags.map((tag) => ({
                                     label: formatTag(tag),
-                                    value: tag,
+                                    value: `${tag.type}:${tag.value}`,
                                 }))}
-                                onChange={setTags}
+                                onChange={(strings) => {
+                                    const normalized = Array.from(strings).map(
+                                        (string) => {
+                                            const [type, value] =
+                                                string.split(':');
+                                            return { type, value };
+                                        },
+                                    );
+                                    setTags(new Set(normalized));
+                                }}
                                 button={{
                                     label:
                                         tags.size > 0

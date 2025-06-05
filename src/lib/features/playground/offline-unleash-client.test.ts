@@ -10,6 +10,7 @@ import {
 } from 'unleash-client';
 import { once } from 'events';
 import { playgroundStrategyEvaluation } from '../../openapi/spec/playground-strategy-schema.js';
+import { DEFAULT_ENV } from '../../server-impl.js';
 
 export const offlineUnleashClientNode = async ({
     features,
@@ -54,7 +55,7 @@ describe('offline client', () => {
                     stale: false,
                 },
             ],
-            context: { appName: 'other-app', environment: 'default' },
+            context: { appName: 'other-app', environment: DEFAULT_ENV },
             logError: console.log,
         });
 
@@ -108,7 +109,7 @@ describe('offline client', () => {
                     stale: false,
                 },
             ],
-            context: { appName, environment: 'default' },
+            context: { appName, environment: DEFAULT_ENV },
             logError: console.log,
         });
 

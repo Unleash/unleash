@@ -141,7 +141,7 @@ test('Can read initial features', async () => {
 
     const defaultProjectFeatures = cache.getToggles({
         environment: '*',
-        projects: ['*'],
+        projects: ['default'],
     } as IApiUser);
     expect(defaultProjectFeatures.length).toBe(0);
 

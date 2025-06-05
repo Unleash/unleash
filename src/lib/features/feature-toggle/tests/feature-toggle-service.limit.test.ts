@@ -10,6 +10,7 @@ import type {
 import getLogger from '../../../../test/fixtures/no-logger.js';
 import { ExceedsLimitError } from '../../../error/exceeds-limit-error.js';
 import { describe, test, expect } from 'vitest';
+import { DEFAULT_ENV } from '../../../server-impl.js';
 const alwaysOnFlagResolver = {
     isEnabled() {
         return true;
@@ -134,7 +135,7 @@ describe('Strategy limits', () => {
             featureName: flagName,
             constraints: constraints,
             projectId: 'default',
-            environment: 'default',
+            environment: DEFAULT_ENV,
         });
 
         const updateStrategy = (newConstraints) =>
@@ -146,7 +147,7 @@ describe('Strategy limits', () => {
                 {
                     projectId: 'default',
                     featureName: 'feature',
-                    environment: 'default',
+                    environment: DEFAULT_ENV,
                 },
                 {} as IAuditUser,
             );
@@ -241,7 +242,7 @@ describe('Strategy limits', () => {
             featureName: flagName,
             constraints: constraints(initialConstraintValueCount),
             projectId: 'default',
-            environment: 'default',
+            environment: DEFAULT_ENV,
         });
 
         const updateStrategy = (valueCount) =>
@@ -253,7 +254,7 @@ describe('Strategy limits', () => {
                 {
                     projectId: 'default',
                     featureName: 'feature',
-                    environment: 'default',
+                    environment: DEFAULT_ENV,
                 },
                 {} as IAuditUser,
             );

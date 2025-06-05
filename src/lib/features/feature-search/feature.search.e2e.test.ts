@@ -450,12 +450,12 @@ test('should filter features by tag that has colon inside', async () => {
 test('should filter features by environment status', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');
-    await app.enableFeature('my_feature_a', 'default');
+    await app.enableFeature('my_feature_a', DEFAULT_ENV);
 
     const { body } = await filterFeaturesByEnvironmentStatus([
-        'default:enabled',
+        `${DEFAULT_ENV}:enabled`,
         'nonexistentEnv:disabled',
-        'default:wrongStatus',
+        `${DEFAULT_ENV}:wrongStatus`,
     ]);
 
     expect(body).toMatchObject({
@@ -527,10 +527,10 @@ test('should sort features', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_c');
     await app.createFeature('my_feature_b');
-    await app.enableFeature('my_feature_c', 'default');
+    await app.enableFeature('my_feature_c', DEFAULT_ENV);
     await app.favoriteFeature('my_feature_b');
 
-    await insertLastSeenAt('my_feature_c', db.rawDatabase, 'default');
+    await insertLastSeenAt('my_feature_c', db.rawDatabase, DEFAULT_ENV);
 
     const { body: ascName } = await sortFeatures({
         sortBy: 'name',
@@ -575,7 +575,7 @@ test('should sort features', async () => {
     });
 
     const { body: environmentAscSort } = await sortFeatures({
-        sortBy: 'environment:default',
+        sortBy: `environment:${DEFAULT_ENV}`,
         sortOrder: 'asc',
     });
 
@@ -589,7 +589,7 @@ test('should sort features', async () => {
     });
 
     const { body: environmentDescSort } = await sortFeatures({
-        sortBy: 'environment:default',
+        sortBy: `environment:${DEFAULT_ENV}`,
         sortOrder: 'desc',
     });
 
@@ -603,7 +603,7 @@ test('should sort features', async () => {
     });
 
     const { body: favoriteEnvironmentDescSort } = await sortFeatures({
-        sortBy: 'environment:default',
+        sortBy: `environment:${DEFAULT_ENV}`,
         sortOrder: 'desc',
         favoritesFirst: 'true',
     });

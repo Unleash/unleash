@@ -9,6 +9,7 @@ import {
     type IUser,
     TEST_AUDIT_USER,
 } from '../../types/index.js';
+import { DEFAULT_ENV } from '../../server-impl.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -78,7 +79,7 @@ describe('usage counting', () => {
 
         await db.rawDatabase.table('change_requests').insert({
             id: CR_ID,
-            environment: 'default',
+            environment: DEFAULT_ENV,
             state: 'In Review',
             project: 'default',
             created_by: user.id,
@@ -174,7 +175,7 @@ describe('usage counting', () => {
             await stores.featureStrategiesStore.createStrategyFeatureEnv({
                 featureName: flag.name,
                 projectId: 'default',
-                environment: 'default',
+                environment: DEFAULT_ENV,
                 strategyName: 'flexibleRollout',
                 segments: [segment1.id],
                 parameters: {
@@ -187,7 +188,7 @@ describe('usage counting', () => {
 
         await db.rawDatabase.table('change_requests').insert({
             id: CR_ID,
-            environment: 'default',
+            environment: DEFAULT_ENV,
             state: 'In Review',
             project: 'default',
             created_by: user.id,

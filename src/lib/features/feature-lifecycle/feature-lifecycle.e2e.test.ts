@@ -103,8 +103,9 @@ const uncompleteFeature = async (featureName: string, expectedCode = 200) => {
 function reachedStage(feature: string, stage: StageName) {
     return new Promise((resolve) =>
         eventBus.on(STAGE_ENTERED, (event) => {
-            if (event.stage === stage && event.feature === feature)
+            if (event.stage === stage && event.feature === feature) {
                 resolve(stage);
+            }
         }),
     );
 }
@@ -126,25 +127,25 @@ const getFeaturesLifecycleCount = async () => {
 
 test('should return lifecycle stages', async () => {
     await app.createFeature('my_feature_a');
-    await app.enableFeature('my_feature_a', 'default');
+    await app.enableFeature('my_feature_a', 'production');
     eventStore.emit(FEATURE_CREATED, { featureName: 'my_feature_a' });
     await reachedStage('my_feature_a', 'initial');
     await expectFeatureStage('my_feature_a', 'initial');
     eventBus.emit(CLIENT_METRICS_ADDED, [
         {
             featureName: 'my_feature_a',
-            environment: 'default',
+            environment: 'production',
         },
         {
             featureName: 'non_existent_feature',
-            environment: 'default',
+            environment: 'production',
         },
     ]);
 
     // missing feature
     eventBus.emit(CLIENT_METRICS_ADDED, [
         {
-            environment: 'default',
+            environment: 'production',
             yes: 0,
             no: 0,
         },
@@ -240,12 +241,12 @@ test('should backfill archived feature', async () => {
 
 test('should not backfill for existing lifecycle', async () => {
     await app.createFeature('my_feature_e');
-    await app.enableFeature('my_feature_e', 'default');
+    await app.enableFeature('my_feature_e', 'production');
     eventStore.emit(FEATURE_CREATED, { featureName: 'my_feature_e' });
     eventBus.emit(CLIENT_METRICS_ADDED, [
         {
             featureName: 'my_feature_e',
-            environment: 'default',
+            environment: 'production',
         },
     ]);
     await reachedStage('my_feature_e', 'live');

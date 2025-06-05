@@ -427,7 +427,7 @@ describe('bulk metrics', () => {
                     {
                         featureName: 'test_feature_one',
                         appName: 'test_application',
-                        environment: 'default',
+                        environment: 'production',
                         timestamp: startOfHour(now),
                         yes: 1000,
                         no: 800,
@@ -459,9 +459,9 @@ describe('bulk metrics', () => {
                 1,
             );
 
-        expect(developmentReport).toHaveLength(0);
-        expect(defaultReport).toHaveLength(1);
-        expect(defaultReport[0].yes).toBe(1000);
+        expect(defaultReport).toHaveLength(0);
+        expect(developmentReport).toHaveLength(1);
+        expect(developmentReport[0].yes).toBe(1000);
     });
 
     test('should accept empty bulk metrics', async () => {

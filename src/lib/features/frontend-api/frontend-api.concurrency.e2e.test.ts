@@ -6,7 +6,7 @@ import dbInit, {
     type ITestDb,
 } from '../../../test/e2e/helpers/database-init.js';
 import getLogger from '../../../test/fixtures/no-logger.js';
-import { randomId } from '../../util/index.js';
+import { DEFAULT_ENV, randomId } from '../../util/index.js';
 import { ApiTokenType } from '../../types/model.js';
 
 import { vi } from 'vitest';
@@ -58,7 +58,7 @@ test('multiple parallel calls to api/frontend should not create multiple instanc
         await app.services.apiTokenService.createApiTokenWithProjects({
             type: ApiTokenType.FRONTEND,
             projects: ['default'],
-            environment: 'default',
+            environment: DEFAULT_ENV,
             tokenName: `test-token-${randomId()}`,
         });
     const address = app.server.address();

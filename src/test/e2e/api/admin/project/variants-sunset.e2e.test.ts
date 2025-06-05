@@ -5,6 +5,7 @@ import {
 import dbInit, { type ITestDb } from '../../../helpers/database-init.js';
 import getLogger from '../../../../fixtures/no-logger.js';
 import { WeightType } from '../../../../../lib/types/model.js';
+import { DEFAULT_ENV } from '../../../../../lib/server-impl.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -86,7 +87,7 @@ test('Can add environment variants when existing ones exist for this feature', a
     );
     await db.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
         featureName,
-        'default',
+        DEFAULT_ENV,
         [
             {
                 name: 'existing-variant',

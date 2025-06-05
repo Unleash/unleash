@@ -27,6 +27,7 @@ import type { PlaygroundSegmentSchema } from '../../../lib/openapi/spec/playgrou
 import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker.js';
 import { createFeatureToggleService } from '../../../lib/features/index.js';
 import { SegmentReadModel } from '../../../lib/features/segment/segment-read-model.js';
+import { DEFAULT_ENV } from '../../../lib/server-impl.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -194,7 +195,7 @@ describe('the playground service (e2e)', () => {
     const insertAndEvaluateFeatures = async ({
         features,
         context,
-        env = 'default',
+        env = DEFAULT_ENV,
         segments,
     }: {
         features: ClientFeatureSchema[];

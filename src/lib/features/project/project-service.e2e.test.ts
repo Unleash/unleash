@@ -8,7 +8,7 @@ import type { AccessService } from '../../services/index.js';
 import { MOVE_FEATURE_TOGGLE } from '../../types/permissions.js';
 import { createTestConfig } from '../../../test/config/test-config.js';
 import { RoleName } from '../../types/model.js';
-import { randomId } from '../../util/index.js';
+import { DEFAULT_ENV, randomId } from '../../util/index.js';
 import EnvironmentService from '../project-environments/environment-service.js';
 import IncompatibleProjectError from '../../error/incompatible-project-error.js';
 import type { ApiTokenService, EventService } from '../../services/index.js';
@@ -22,7 +22,6 @@ import {
 } from '../index.js';
 import {
     type IAuditUser,
-    type IGroup,
     type IUnleashStores,
     type IUser,
     SYSTEM_USER_AUDIT,
@@ -30,18 +29,11 @@ import {
     TEST_AUDIT_USER,
 } from '../../types/index.js';
 import { BadDataError, InvalidOperationError } from '../../error/index.js';
-import { DEFAULT_ENV, extractAuditInfoFromUser } from '../../util/index.js';
+import { extractAuditInfoFromUser } from '../../util/index.js';
 import { ApiTokenType } from '../../types/model.js';
 import { createApiTokenService } from '../api-tokens/createApiTokenService.js';
 import type User from '../../types/user.js';
-import {
-    beforeAll,
-    expect,
-    test,
-    beforeEach,
-    afterEach,
-    afterAll,
-} from 'vitest';
+import { beforeAll, expect, test, beforeEach, afterAll } from 'vitest';
 let stores: IUnleashStores;
 let db: ITestDb;
 
@@ -55,7 +47,6 @@ let auditUser: IAuditUser;
 let apiTokenService: ApiTokenService;
 
 let opsUser: IUser;
-let group: IGroup;
 
 const isProjectUser = async (
     userId: number,
@@ -80,10 +71,6 @@ beforeAll(async () => {
         username: user.email,
         ip: '127.0.0.1',
     };
-    group = await stores.groupStore.create({
-        name: 'aTestGroup',
-        description: '',
-    });
     opsUser = await stores.userStore.insert({
         name: 'Test user',
         email: 'test@example.com',
@@ -103,27 +90,23 @@ beforeAll(async () => {
     apiTokenService = createApiTokenService(db.rawDatabase, config);
 });
 beforeEach(async () => {
-    await stores.accessStore.addUserToRole(opsUser.id, 1, '');
-});
-
-afterAll(async () => {
-    await db.destroy();
-});
-
-afterEach(async () => {
     const envs = await stores.environmentStore.getAll();
-    const deleteEnvs = envs
-        .filter((env) => env.name !== 'default')
-        .map(async (env) => {
-            await stores.environmentStore.delete(env.name);
-        });
+    const deleteEnvs = envs.map(async (env) => {
+        await stores.environmentStore.delete(env.name);
+    });
+    await Promise.allSettled(deleteEnvs);
+
     const users = await stores.userStore.getAll();
     const wipeUserPermissions = users.map(async (u) => {
         await stores.accessStore.unlinkUserRoles(u.id);
     });
     await stores.eventStore.deleteAll();
-    await Promise.allSettled(deleteEnvs);
     await Promise.allSettled(wipeUserPermissions);
+    await stores.accessStore.addUserToRole(opsUser.id, 1, '');
+});
+
+afterAll(async () => {
+    await db.destroy();
 });
 
 test('should have default project', async () => {
@@ -1850,6 +1833,11 @@ const updateFeature = async (featureName: string, update: any) => {
 };
 
 test('should calculate average time to production', async () => {
+    await stores.environmentStore.create({
+        name: 'prod-env',
+        type: 'production',
+        enabled: true,
+    });
     const project = {
         id: 'average-time-to-prod',
         name: 'average-time-to-prod',
@@ -1884,7 +1872,7 @@ test('should calculate average time to production', async () => {
                     enabled: true,
                     project: project.id,
                     featureName: flag.name,
-                    environment: 'default',
+                    environment: 'prod-env',
                     auditUser,
                 }),
             );
@@ -1908,6 +1896,11 @@ test('should calculate average time to production', async () => {
 });
 
 test('should calculate average time to production ignoring some items', async () => {
+    await stores.environmentStore.create({
+        name: 'prod-env',
+        type: 'production',
+        enabled: true,
+    });
     const project = {
         id: 'average-time-to-prod-corner-cases',
         name: 'average-time-to-prod',
@@ -1918,7 +1911,7 @@ test('should calculate average time to production ignoring some items', async ()
         enabled: true,
         project: project.id,
         featureName,
-        environment: 'default',
+        environment: 'prod-env',
         auditUser,
         tags: [],
     });
@@ -2160,7 +2153,7 @@ test('should return average time to production per flag', async () => {
                     enabled: true,
                     project: project.id,
                     featureName: flag.name,
-                    environment: 'default',
+                    environment: DEFAULT_ENV,
                     auditUser,
                 }),
             );
@@ -2238,7 +2231,7 @@ test('should return average time to production per flag for a specific project',
                     enabled: true,
                     project: project1.id,
                     featureName: flag.name,
-                    environment: 'default',
+                    environment: 'production',
                     auditUser,
                 }),
             );
@@ -2252,7 +2245,7 @@ test('should return average time to production per flag for a specific project',
                     enabled: true,
                     project: project2.id,
                     featureName: flag.name,
-                    environment: 'default',
+                    environment: 'production',
                     auditUser,
                 }),
             );
@@ -2315,7 +2308,7 @@ test('should return average time to production per flag and include archived fla
                     enabled: true,
                     project: project1.id,
                     featureName: flag.name,
-                    environment: 'default',
+                    environment: 'production',
                     auditUser,
                 }),
             );
@@ -2424,6 +2417,11 @@ test('deleting a project with archived flags should result in any remaining arch
 });
 
 test('should also delete api tokens that were only bound to deleted project', async () => {
+    await stores.environmentStore.create({
+        name: 'prod-env',
+        type: 'production',
+        enabled: true,
+    });
     const project = 'some';
     const tokenName = 'test';
 
@@ -2439,7 +2437,7 @@ test('should also delete api tokens that were only bound to deleted project', as
     const token = await apiTokenService.createApiTokenWithProjects({
         type: ApiTokenType.CLIENT,
         tokenName,
-        environment: DEFAULT_ENV,
+        environment: 'prod-env',
         projects: [project],
     });
 
@@ -2449,6 +2447,11 @@ test('should also delete api tokens that were only bound to deleted project', as
 });
 
 test('should not delete project-bound api tokens still bound to project', async () => {
+    await stores.environmentStore.create({
+        name: 'prod-env',
+        type: 'production',
+        enabled: true,
+    });
     const project1 = 'token-deleted-project';
     const project2 = 'token-not-deleted-project';
     const tokenName = 'test';
@@ -2474,7 +2477,7 @@ test('should not delete project-bound api tokens still bound to project', async 
     const token = await apiTokenService.createApiTokenWithProjects({
         type: ApiTokenType.CLIENT,
         tokenName,
-        environment: DEFAULT_ENV,
+        environment: 'prod-env',
         projects: [project1, project2],
     });
 
@@ -2485,6 +2488,11 @@ test('should not delete project-bound api tokens still bound to project', async 
 });
 
 test('should delete project-bound api tokens when all projects they belong to are deleted', async () => {
+    await stores.environmentStore.create({
+        name: 'prod-env',
+        type: 'production',
+        enabled: true,
+    });
     const project1 = 'token-deleted-project-1';
     const project2 = 'token-deleted-project-2';
     const tokenName = 'test';
@@ -2510,7 +2518,7 @@ test('should delete project-bound api tokens when all projects they belong to ar
     const token = await apiTokenService.createApiTokenWithProjects({
         type: ApiTokenType.CLIENT,
         tokenName,
-        environment: DEFAULT_ENV,
+        environment: 'prod-env',
         projects: [project1, project2],
     });
 

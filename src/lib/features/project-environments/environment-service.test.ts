@@ -13,6 +13,7 @@ import NameExistsError from '../../error/name-exists-error.js';
 import type { EventService } from '../../services/index.js';
 import { createEventsService } from '../events/createEventsService.js';
 import { test, beforeAll, afterAll, expect } from 'vitest';
+import { DEFAULT_ENV } from '../../server-impl.js';
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: EnvironmentService;
@@ -76,7 +77,7 @@ test('Can manage required approvals', async () => {
     const changeRequestEnvs =
         await db.stores.environmentStore.getChangeRequestEnvironments([
             'approval_env',
-            'default',
+            DEFAULT_ENV,
             'other',
         ]);
 
@@ -344,32 +345,22 @@ test('When given overrides should remap projects to override environments', asyn
     expect(projects).not.toContain('default');
 });
 
-test('Override works correctly when enabling default and disabling prod and dev', async () => {
-    const defaultEnvironment = 'default';
-    const prodEnvironment = 'production';
-    const devEnvironment = 'development';
-
+test('Override works correctly when enabling a custom environment and disabling prod and dev', async () => {
+    const newEnvironment = 'custom';
     await db.stores.environmentStore.create({
-        name: prodEnvironment,
+        name: newEnvironment,
         type: 'production',
     });
-
-    await db.stores.environmentStore.create({
-        name: devEnvironment,
-        type: 'development',
-    });
-    await service.toggleEnvironment(prodEnvironment, true);
-    await service.toggleEnvironment(devEnvironment, true);
-
-    await service.overrideEnabledProjects([defaultEnvironment]);
+    await service.toggleEnvironment(newEnvironment, true);
+    await service.overrideEnabledProjects([newEnvironment]);
 
     const environments = await service.getAll();
     const targetedEnvironment = environments.find(
-        (env) => env.name === defaultEnvironment,
+        (env) => env.name === newEnvironment,
     );
 
     const allOtherEnvironments = environments
-        .filter((x) => x.name !== defaultEnvironment)
+        .filter((x) => x.name !== newEnvironment)
         .map((env) => env.enabled);
     const envNames = environments.map((x) => x.name);
 

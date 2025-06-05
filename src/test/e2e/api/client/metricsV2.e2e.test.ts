@@ -10,6 +10,7 @@ import getLogger from '../../../fixtures/no-logger.js';
 import { ApiTokenType, type IApiToken } from '../../../../lib/types/model.js';
 import { TEST_AUDIT_USER } from '../../../../lib/types/index.js';
 import { vi } from 'vitest';
+import { DEFAULT_ENV } from '../../../../lib/server-impl.js';
 let app: IUnleashTest;
 let db: ITestDb;
 
@@ -23,7 +24,7 @@ beforeAll(async () => {
         await app.services.apiTokenService.createApiTokenWithProjects({
             type: ApiTokenType.CLIENT,
             projects: ['default'],
-            environment: 'default',
+            environment: DEFAULT_ENV,
             tokenName: 'tester',
         });
 });
@@ -135,7 +136,7 @@ test('should set lastSeen for toggles with metrics both for toggle and toggle en
         {
             type: ApiTokenType.CLIENT,
             projects: ['default'],
-            environment: 'default',
+            environment: DEFAULT_ENV,
             tokenName: 'tester',
         },
     );
@@ -178,8 +179,8 @@ test('should set lastSeen for toggles with metrics both for toggle and toggle en
         projectId: 'default',
     });
 
-    const t1Env = t1.environments.find((e) => e.name === 'default');
-    const t2Env = t2.environments.find((e) => e.name === 'default');
+    const t1Env = t1.environments.find((e) => e.name === DEFAULT_ENV);
+    const t2Env = t2.environments.find((e) => e.name === DEFAULT_ENV);
 
     expect(t1.lastSeenAt?.getTime()).toBeGreaterThanOrEqual(start);
     expect(t1Env?.lastSeenAt.getTime()).toBeGreaterThanOrEqual(start);

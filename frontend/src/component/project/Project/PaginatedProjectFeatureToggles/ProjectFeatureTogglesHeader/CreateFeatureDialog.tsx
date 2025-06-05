@@ -32,6 +32,7 @@ import { useFlagLimits } from './useFlagLimits.tsx';
 import { useFeatureCreatedFeedback } from './hooks/useFeatureCreatedFeedback.ts';
 import { formatTag } from 'utils/format-tag';
 import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 interface ICreateFeatureDialogProps {
     open: boolean;
@@ -114,6 +115,9 @@ const CreateFeatureDialogContent = ({
             tags: Set<ITag>;
         }>
     >('flag-creation-dialog', {});
+    const useFlagCreationCache = useUiFlag('createFlagDialogCache');
+
+    const initialData = useFlagCreationCache ? storedFlagConfig : {};
 
     const {
         type,
@@ -133,12 +137,12 @@ const CreateFeatureDialogContent = ({
         clearErrors,
         errors,
     } = useFeatureForm(
-        storedFlagConfig.name,
-        storedFlagConfig.type,
-        storedFlagConfig.project,
-        storedFlagConfig.description,
-        storedFlagConfig.impressionData,
-        storedFlagConfig.tags,
+        initialData.name,
+        initialData.type,
+        initialData.project,
+        initialData.description,
+        initialData.impressionData,
+        initialData.tags,
     );
     const { createFeatureToggle, loading } = useFeatureApi();
 

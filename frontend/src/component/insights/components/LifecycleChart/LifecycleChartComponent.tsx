@@ -88,7 +88,7 @@ function mergeAll<T>(objects: Partial<T>[]): T {
 
 const LifecycleChartComponent: FC<{
     data: ChartData<'bar', unknown>;
-    ariaLabel?: string;
+    ariaLabel: string;
     ariaDescription?: string;
     overrideOptions?: ChartOptions<'bar'>;
 }> = ({ data, ariaLabel, ariaDescription, overrideOptions }) => {

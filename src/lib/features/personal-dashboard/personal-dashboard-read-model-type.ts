@@ -14,6 +14,7 @@ export type PersonalProject = BasePersonalProject & {
     owners?: ProjectOwners;
 } & {
     health: number;
+    technicalDebt: number;
     memberCount: number;
     featureCount: number;
 };

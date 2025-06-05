@@ -343,6 +343,7 @@ export interface IProjectHealth {
     members: number;
     version: number;
     health: number;
+    technicalDebt: number;
     favorite?: boolean;
     updatedAt?: Date;
     createdAt: Date | undefined;
@@ -367,6 +368,7 @@ export interface IProjectOverview {
     members: number;
     version: number;
     health: number;
+    technicalDebt: number;
     favorite?: boolean;
     updatedAt?: Date;
     archivedAt?: Date;

@@ -96,6 +96,7 @@ export class PersonalDashboardService {
             id: project.id,
             name: project.name,
             health: project.health,
+            technicalDebt: 100 - (project.health || 0),
             memberCount: project.memberCount,
             featureCount: project.featureCount,
         }));
@@ -207,6 +208,7 @@ export class PersonalDashboardService {
                 staleFlags,
                 activeFlags: totalFlags - staleFlags - potentiallyStaleFlags,
                 health: currentHealth,
+                technicalDebt: 100 - currentHealth,
             },
         };
     }

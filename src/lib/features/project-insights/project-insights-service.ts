@@ -152,6 +152,12 @@ export class ProjectInsightsService {
             stats,
             featureTypeCounts,
             health,
+            technicalDebt: {
+                rating: 100 - health.rating,
+                activeCount: health.activeCount,
+                potentiallyStaleCount: health.potentiallyStaleCount,
+                staleCount: health.staleCount,
+            },
             leadTime,
             members,
         };

@@ -35,6 +35,12 @@ type LifecycleInsights = {
 
 const useChartColors = () => {
     const theme = useTheme();
+    if (theme.mode === 'dark') {
+        return {
+            olderThanWeek: '#5A5CAC',
+            newThisWeek: '#698745',
+        };
+    }
     return {
         olderThanWeek: theme.palette.primary.light,
         newThisWeek: theme.palette.success.border,
@@ -68,7 +74,6 @@ export const LifecycleInsights: FC = () => {
     const projects = state[`${statePrefix}project`]?.values ?? [allOption.id];
     const { insights, loading } = useInsights();
 
-    // @ts-expect-error (lifecycleMetrics): The schema hasn't been updated yet.
     const { lifecycleTrends } = insights;
 
     return (

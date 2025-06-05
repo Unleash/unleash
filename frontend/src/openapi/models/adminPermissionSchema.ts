@@ -8,17 +8,17 @@
  * Describes a single permission
  */
 export interface AdminPermissionSchema {
+    /** The identifier for this permission */
+    id: number;
+    /** The name of this permission */
+    name: string;
     /** The name to display in listings of permissions */
     displayName: string;
+    /** What level this permission applies to. Either root, project or the name of the environment it applies to */
+    type: string;
     /**
      * Which environment this permission applies to
      * @nullable
      */
     environment?: string | null;
-    /** The identifier for this permission */
-    id: number;
-    /** The name of this permission */
-    name: string;
-    /** What level this permission applies to. Either root, project or the name of the environment it applies to */
-    type: string;
 }

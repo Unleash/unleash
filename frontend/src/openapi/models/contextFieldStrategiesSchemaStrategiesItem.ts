@@ -5,14 +5,14 @@
  */
 
 export type ContextFieldStrategiesSchemaStrategiesItem = {
-    /** The ID of the environment where this strategy is in. */
-    environment: string;
-    /** The name of the feature that contains this strategy. */
-    featureName: string;
     /** The ID of the strategy. */
     id: string;
+    /** The name of the feature that contains this strategy. */
+    featureName: string;
     /** The ID of the project that contains this feature. */
     projectId: string;
+    /** The ID of the environment where this strategy is in. */
+    environment: string;
     /** The name of the strategy. */
     strategyName: string;
 };

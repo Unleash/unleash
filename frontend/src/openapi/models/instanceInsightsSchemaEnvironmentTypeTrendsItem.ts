@@ -7,10 +7,10 @@
 export type InstanceInsightsSchemaEnvironmentTypeTrendsItem = {
     /** A UTC date when the stats were captured. Time is the very end of a given day. */
     date: string;
+    /** Year and week in a given year for which the stats were calculated */
+    week: string;
     /** Environment type the data belongs too */
     environmentType: string;
     /** Total number of times configuration has been updated in the environment type  */
     totalUpdates: number;
-    /** Year and week in a given year for which the stats were calculated */
-    week: string;
 };

@@ -8,8 +8,8 @@
  * Query parameters used to modify the list of features returned.
  */
 export interface AdminFeaturesQuerySchema {
-    /** A case-insensitive prefix filter for the names of feature flags */
-    namePrefix?: string;
     /** Used to filter by tags. For each entry, a TAGTYPE:TAGVALUE is expected */
     tag?: string[];
+    /** A case-insensitive prefix filter for the names of feature flags */
+    namePrefix?: string;
 }

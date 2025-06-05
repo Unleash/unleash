@@ -6,6 +6,6 @@
 import type { PersonalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOfThreeOwnerType } from './personalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOfThreeOwnerType.js';
 
 export type PersonalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOfThree = {
-    name: string;
     ownerType: PersonalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOfThreeOwnerType;
+    name: string;
 };

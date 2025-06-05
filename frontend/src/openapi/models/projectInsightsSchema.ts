@@ -3,24 +3,24 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureTypeCountSchema } from './featureTypeCountSchema.js';
+import type { ProjectStatsSchema } from './projectStatsSchema.js';
 import type { ProjectInsightsSchemaHealth } from './projectInsightsSchemaHealth.js';
 import type { ProjectDoraMetricsSchema } from './projectDoraMetricsSchema.js';
+import type { FeatureTypeCountSchema } from './featureTypeCountSchema.js';
 import type { ProjectInsightsSchemaMembers } from './projectInsightsSchemaMembers.js';
-import type { ProjectStatsSchema } from './projectStatsSchema.js';
 
 /**
  * A high-level overview of a project insights. It contains information such as project statistics, overall health, types of flags, members overview, change requests overview.
  */
 export interface ProjectInsightsSchema {
-    /** The number of features of each type */
-    featureTypeCounts: FeatureTypeCountSchema[];
+    /** Project statistics */
+    stats: ProjectStatsSchema;
     /** Health summary of the project */
     health: ProjectInsightsSchemaHealth;
     /** Lead time (DORA) metrics */
     leadTime: ProjectDoraMetricsSchema;
+    /** The number of features of each type */
+    featureTypeCounts: FeatureTypeCountSchema[];
     /** Active/inactive users summary */
     members: ProjectInsightsSchemaMembers;
-    /** Project statistics */
-    stats: ProjectStatsSchema;
 }

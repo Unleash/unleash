@@ -8,23 +8,23 @@
  * An overview of how many users and groups are mapped to the specified project with the specified role.
  */
 export interface ProjectRoleSchema {
-    /**
-     * Number of groups mapped to this project.
-     * @minimum 0
-     */
-    groupCount?: number;
     /** The id of the project user and group count are counted for. */
     project: string;
     /** Id of the role the user and group count are counted for. */
     role?: number;
+    /**
+     * Number of users mapped to this project.
+     * @minimum 0
+     */
+    userCount?: number;
     /**
      * Number of service accounts mapped to this project.
      * @minimum 0
      */
     serviceAccountCount?: number;
     /**
-     * Number of users mapped to this project.
+     * Number of groups mapped to this project.
      * @minimum 0
      */
-    userCount?: number;
+    groupCount?: number;
 }

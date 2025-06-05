@@ -3,15 +3,15 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { StrategySchema } from './strategySchema.js';
 import type { StrategiesSchemaVersion } from './strategiesSchemaVersion.js';
+import type { StrategySchema } from './strategySchema.js';
 
 /**
  * List of strategies
  */
 export interface StrategiesSchema {
-    /** List of strategies */
-    strategies: StrategySchema[];
     /** Version of the strategies schema */
     version: StrategiesSchemaVersion;
+    /** List of strategies */
+    strategies: StrategySchema[];
 }

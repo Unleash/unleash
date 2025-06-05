@@ -8,8 +8,8 @@
  * User feedback information to be created.
  */
 export interface FeedbackCreateSchema {
-    /** The name of the feedback session */
-    feedbackId: string;
     /** `true` if the user has asked never to see this feedback questionnaire again. Defaults to `false`. */
     neverShow?: boolean;
+    /** The name of the feedback session */
+    feedbackId: string;
 }

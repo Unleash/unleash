@@ -9,11 +9,11 @@
  */
 export interface TagSchema {
     /**
-     * The hexadecimal color code for the tag type.
-     * @nullable
-     * @pattern ^#[0-9A-Fa-f]{6}$
+     * The value of the tag.
+     * @minLength 2
+     * @maxLength 50
      */
-    color?: string | null;
+    value: string;
     /**
      * The [type](https://docs.getunleash.io/reference/feature-toggles#tags) of the tag
      * @minLength 2
@@ -21,9 +21,9 @@ export interface TagSchema {
      */
     type: string;
     /**
-     * The value of the tag.
-     * @minLength 2
-     * @maxLength 50
+     * The hexadecimal color code for the tag type.
+     * @nullable
+     * @pattern ^#[0-9A-Fa-f]{6}$
      */
-    value: string;
+    color?: string | null;
 }

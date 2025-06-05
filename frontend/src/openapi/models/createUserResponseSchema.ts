@@ -3,30 +3,27 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateUserResponseSchemaAccountType } from './createUserResponseSchemaAccountType.js';
 import type { CreateUserResponseSchemaRootRole } from './createUserResponseSchemaRootRole.js';
+import type { CreateUserResponseSchemaAccountType } from './createUserResponseSchemaAccountType.js';
 
 /**
  * An Unleash user after creation
  */
 export interface CreateUserResponseSchema {
-    /** A user is either an actual User or a Service Account */
-    accountType?: CreateUserResponseSchemaAccountType;
-    /**
-     * Count of active browser sessions for this user
-     * @nullable
-     */
-    activeSessions?: number | null;
-    /** The user was created at this time */
-    createdAt?: string;
-    /** Experimental. The number of deleted browser sessions after last login */
-    deletedSessions?: number;
-    /** Email of the user */
-    email?: string;
-    /** Is the welcome email sent to the user or not */
-    emailSent?: boolean;
     /** The user id */
     id: number;
+    /**
+     * Name of the user
+     * @nullable
+     */
+    name?: string | null;
+    /** Email of the user */
+    email?: string;
+    /**
+     * A unique username for the user
+     * @nullable
+     */
+    username?: string | null;
     /** URL used for the user profile image */
     imageUrl?: string;
     /** If the user is actively inviting other users, this is the link that can be shared with other users */
@@ -36,28 +33,31 @@ export interface CreateUserResponseSchema {
      * @minimum 0
      */
     loginAttempts?: number;
-    /**
-     * Name of the user
-     * @nullable
-     */
-    name?: string | null;
-    /** Deprecated */
-    permissions?: string[];
+    /** Is the welcome email sent to the user or not */
+    emailSent?: boolean;
     /** Which [root role](https://docs.getunleash.io/reference/rbac#predefined-roles) this user is assigned. Usually a numeric role ID, but can be a string when returning newly created user with an explicit string role. */
     rootRole?: CreateUserResponseSchemaRootRole;
+    /**
+     * The last time this user logged in
+     * @nullable
+     */
+    seenAt?: string | null;
+    /** The user was created at this time */
+    createdAt?: string;
+    /** A user is either an actual User or a Service Account */
+    accountType?: CreateUserResponseSchemaAccountType;
+    /** Deprecated */
+    permissions?: string[];
     /**
      * The SCIM ID of the user, only present if managed by SCIM
      * @nullable
      */
     scimId?: string | null;
     /**
-     * The last time this user logged in
+     * Count of active browser sessions for this user
      * @nullable
      */
-    seenAt?: string | null;
-    /**
-     * A unique username for the user
-     * @nullable
-     */
-    username?: string | null;
+    activeSessions?: number | null;
+    /** Experimental. The number of deleted browser sessions after last login */
+    deletedSessions?: number;
 }

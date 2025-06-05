@@ -9,11 +9,10 @@
  */
 export interface CreateTagSchema {
     /**
-     * The hexadecimal color code for the tag type.
-     * @nullable
-     * @pattern ^#[0-9A-Fa-f]{6}$
+     * The value of the tag. The value must be between 2 and 50 characters long. Leading and trailing whitespace is ignored and will be trimmed before saving the tag value.
+     * @pattern ^\s*\S.{0,48}\S\s*$
      */
-    color?: string | null;
+    value: string;
     /**
      * The [type](https://docs.getunleash.io/reference/feature-toggles#tags) of the tag
      * @minLength 2
@@ -21,8 +20,9 @@ export interface CreateTagSchema {
      */
     type: string;
     /**
-     * The value of the tag. The value must be between 2 and 50 characters long. Leading and trailing whitespace is ignored and will be trimmed before saving the tag value.
-     * @pattern ^\s*\S.{0,48}\S\s*$
+     * The hexadecimal color code for the tag type.
+     * @nullable
+     * @pattern ^#[0-9A-Fa-f]{6}$
      */
-    value: string;
+    color?: string | null;
 }

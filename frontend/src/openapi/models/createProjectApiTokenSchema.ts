@@ -8,15 +8,15 @@
  * The schema for creating a project API token. This schema is used to create a new project API token.
  */
 export interface CreateProjectApiTokenSchema {
+    /**
+     * A client or frontend token. Must be one of the strings "client" or "frontend" (not case sensitive).
+     * @pattern ^([Cc][Ll][Ii][Ee][Nn][Tt]|[Ff][Rr][Oo][Nn][Tt][Ee][Nn][Dd])$
+     */
+    type: string;
     /** The environment that the token should be valid for. Defaults to "default". */
     environment?: string;
     /** The date and time when the token should expire. The date should be in ISO 8601 format. */
     expiresAt?: string;
     /** A unique name for this particular token */
     tokenName: string;
-    /**
-     * A client or frontend token. Must be one of the strings "client" or "frontend" (not case sensitive).
-     * @pattern ^([Cc][Ll][Ii][Ee][Nn][Tt]|[Ff][Rr][Oo][Nn][Tt][Ee][Nn][Dd])$
-     */
-    type: string;
 }

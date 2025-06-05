@@ -9,8 +9,8 @@ import type { ChangeRequestOneOrManyCreateSchemaOneOfOnesixAction } from './chan
  * Archive a feature.
  */
 export type ChangeRequestOneOrManyCreateSchemaOneOfOnesix = {
-    /** The name of this action. */
-    action: ChangeRequestOneOrManyCreateSchemaOneOfOnesixAction;
     /** The name of the feature that this change applies to. */
     feature: string;
+    /** The name of this action. */
+    action: ChangeRequestOneOrManyCreateSchemaOneOfOnesixAction;
 };

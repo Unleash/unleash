@@ -10,14 +10,14 @@ import type { ActionDefinitionParameterSchemaType } from './actionDefinitionPara
  * Defines a parameter for an action.
  */
 export interface ActionDefinitionParameterSchema {
-    /** The label of the parameter. */
-    label: string;
     /** The name of the parameter. */
     name: ActionDefinitionParameterSchemaName;
+    /** The label of the parameter. */
+    label: string;
+    /** The parameter type. */
+    type: ActionDefinitionParameterSchemaType;
     /** Whether the parameter is optional. */
     optional?: boolean;
     /** Lists of options to be used for the parameter. */
     options?: string[];
-    /** The parameter type. */
-    type: ActionDefinitionParameterSchemaType;
 }

@@ -6,8 +6,8 @@
 import type { MeteredConnectionsSchemaApiDataItemDataPointsItem } from './meteredConnectionsSchemaApiDataItemDataPointsItem.js';
 
 export type MeteredConnectionsSchemaApiDataItem = {
-    /** The recorded data points for the metered group */
-    dataPoints: MeteredConnectionsSchemaApiDataItemDataPointsItem[];
     /** The metered group representing charging unit in the organization using Unleash */
     meteredGroup: string;
+    /** The recorded data points for the metered group */
+    dataPoints: MeteredConnectionsSchemaApiDataItemDataPointsItem[];
 };

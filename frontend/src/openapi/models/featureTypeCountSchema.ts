@@ -8,8 +8,8 @@
  * A count of feature flags of a specific type
  */
 export interface FeatureTypeCountSchema {
-    /** Number of feature flags of this type */
-    count: number;
     /** Type of the flag e.g. experiment, kill-switch, release, operational, permission */
     type: string;
+    /** Number of feature flags of this type */
+    count: number;
 }

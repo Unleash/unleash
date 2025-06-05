@@ -10,10 +10,10 @@ import type { ChangeRequestCreateSchemaOneOfTwoninePayload } from './changeReque
  * Start milestone of feature environment release plan.
  */
 export type ChangeRequestCreateSchemaOneOfTwonine = {
-    /** The name of this action. */
-    action: ChangeRequestCreateSchemaOneOfTwonineAction;
     /** The name of the feature that this change applies to. */
     feature: string;
+    /** The name of this action. */
+    action: ChangeRequestCreateSchemaOneOfTwonineAction;
     /** The ID of the release plan and which of its milestones to start. */
     payload: ChangeRequestCreateSchemaOneOfTwoninePayload;
 };

@@ -3,15 +3,15 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { InstanceInsightsSchemaLifecycleTrendsCleanup } from './instanceInsightsSchemaLifecycleTrendsCleanup.js';
 import type { InstanceInsightsSchemaLifecycleTrendsDevelop } from './instanceInsightsSchemaLifecycleTrendsDevelop.js';
 import type { InstanceInsightsSchemaLifecycleTrendsProduction } from './instanceInsightsSchemaLifecycleTrendsProduction.js';
+import type { InstanceInsightsSchemaLifecycleTrendsCleanup } from './instanceInsightsSchemaLifecycleTrendsCleanup.js';
 
 /**
  * Aggregated view of feature flag lifecycle across environments
  */
 export type InstanceInsightsSchemaLifecycleTrends = {
-    cleanup: InstanceInsightsSchemaLifecycleTrendsCleanup;
     develop: InstanceInsightsSchemaLifecycleTrendsDevelop;
     production: InstanceInsightsSchemaLifecycleTrendsProduction;
+    cleanup: InstanceInsightsSchemaLifecycleTrendsCleanup;
 };

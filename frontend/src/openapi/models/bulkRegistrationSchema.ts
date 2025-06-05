@@ -4,35 +4,35 @@
  * See `gen:api` script in package.json
  */
 import type { BulkRegistrationSchemaConnectViaItem } from './bulkRegistrationSchemaConnectViaItem.js';
-import type { BulkRegistrationSchemaSdkType } from './bulkRegistrationSchemaSdkType.js';
 import type { DateSchema } from './dateSchema.js';
+import type { BulkRegistrationSchemaSdkType } from './bulkRegistrationSchemaSdkType.js';
 
 /**
  * An application registration. Defines the format POSTed by our server-side SDKs when they're starting up
  */
 export interface BulkRegistrationSchema {
-    /** The name of the application that is evaluating toggles */
-    appName: string;
     /** A list of applications this app registration has been registered through. If connected directly to Unleash, this is an empty list. 
  This can be used in later visualizations to tell how many levels of proxy or Edge instances our SDKs have connected through */
     connectVia?: BulkRegistrationSchemaConnectViaItem[];
+    /** The name of the application that is evaluating toggles */
+    appName: string;
     /** Which environment the application is running in */
     environment: string;
     /** A [(somewhat) unique identifier](https://docs.getunleash.io/reference/sdks/node#advanced-usage) for the application */
     instanceId: string;
     /** How often (in seconds) the application refreshes its features */
     interval?: number;
+    /** The application started at */
+    started?: DateSchema;
+    /** Enabled [strategies](https://docs.getunleash.io/reference/activation-strategies) in the application */
+    strategies?: string[];
     /** The list of projects used in the application */
     projects?: string[];
+    /** The version the sdk is running. Typically <client>:<version> */
+    sdkVersion?: string;
     /**
      * The sdk type
      * @nullable
      */
     sdkType?: BulkRegistrationSchemaSdkType;
-    /** The version the sdk is running. Typically <client>:<version> */
-    sdkVersion?: string;
-    /** The application started at */
-    started?: DateSchema;
-    /** Enabled [strategies](https://docs.getunleash.io/reference/activation-strategies) in the application */
-    strategies?: string[];
 }

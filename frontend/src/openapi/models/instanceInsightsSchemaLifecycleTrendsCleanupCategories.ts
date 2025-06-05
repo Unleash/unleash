@@ -4,11 +4,11 @@
  * See `gen:api` script in package.json
  */
 import type { InstanceInsightsSchemaLifecycleTrendsCleanupCategoriesExperimental } from './instanceInsightsSchemaLifecycleTrendsCleanupCategoriesExperimental.js';
-import type { InstanceInsightsSchemaLifecycleTrendsCleanupCategoriesPermanent } from './instanceInsightsSchemaLifecycleTrendsCleanupCategoriesPermanent.js';
 import type { InstanceInsightsSchemaLifecycleTrendsCleanupCategoriesRelease } from './instanceInsightsSchemaLifecycleTrendsCleanupCategoriesRelease.js';
+import type { InstanceInsightsSchemaLifecycleTrendsCleanupCategoriesPermanent } from './instanceInsightsSchemaLifecycleTrendsCleanupCategoriesPermanent.js';
 
 export type InstanceInsightsSchemaLifecycleTrendsCleanupCategories = {
     experimental: InstanceInsightsSchemaLifecycleTrendsCleanupCategoriesExperimental;
-    permanent: InstanceInsightsSchemaLifecycleTrendsCleanupCategoriesPermanent;
     release: InstanceInsightsSchemaLifecycleTrendsCleanupCategoriesRelease;
+    permanent: InstanceInsightsSchemaLifecycleTrendsCleanupCategoriesPermanent;
 };

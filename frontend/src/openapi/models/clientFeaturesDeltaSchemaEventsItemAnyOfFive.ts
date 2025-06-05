@@ -3,11 +3,11 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ClientSegmentSchema } from './clientSegmentSchema.js';
 import type { ClientFeaturesDeltaSchemaEventsItemAnyOfFiveType } from './clientFeaturesDeltaSchemaEventsItemAnyOfFiveType.js';
+import type { ClientSegmentSchema } from './clientSegmentSchema.js';
 
 export type ClientFeaturesDeltaSchemaEventsItemAnyOfFive = {
     eventId: number;
-    segment: ClientSegmentSchema;
     type: ClientFeaturesDeltaSchemaEventsItemAnyOfFiveType;
+    segment: ClientSegmentSchema;
 };

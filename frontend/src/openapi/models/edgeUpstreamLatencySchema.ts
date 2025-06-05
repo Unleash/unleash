@@ -9,7 +9,7 @@ import type { EdgeLatencyMetricsSchema } from './edgeLatencyMetricsSchema.js';
  * Latencies for upstream actions from Edge (downloading/syncing new features, uploading metrics, uploading instance data)
  */
 export interface EdgeUpstreamLatencySchema {
-    edge: EdgeLatencyMetricsSchema;
     features: EdgeLatencyMetricsSchema;
     metrics: EdgeLatencyMetricsSchema;
+    edge: EdgeLatencyMetricsSchema;
 }

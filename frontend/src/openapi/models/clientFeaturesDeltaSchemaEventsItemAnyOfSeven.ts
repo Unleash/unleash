@@ -7,6 +7,6 @@ import type { ClientFeaturesDeltaSchemaEventsItemAnyOfSevenType } from './client
 
 export type ClientFeaturesDeltaSchemaEventsItemAnyOfSeven = {
     eventId: number;
-    segmentId: number;
     type: ClientFeaturesDeltaSchemaEventsItemAnyOfSevenType;
+    segmentId: number;
 };

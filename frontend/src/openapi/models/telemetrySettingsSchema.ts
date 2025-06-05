@@ -8,8 +8,8 @@
  * Contains information about which settings are configured for version info collection and feature usage collection.
  */
 export interface TelemetrySettingsSchema {
-    /** Whether collection of feature usage metrics is enabled/active. */
-    featureInfoCollectionEnabled: boolean;
     /** Whether collection of version info is enabled/active. */
     versionInfoCollectionEnabled: boolean;
+    /** Whether collection of feature usage metrics is enabled/active. */
+    featureInfoCollectionEnabled: boolean;
 }

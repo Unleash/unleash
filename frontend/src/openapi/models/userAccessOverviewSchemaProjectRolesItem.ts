@@ -6,22 +6,22 @@
 import type { UserAccessOverviewSchemaProjectRolesItemPermissionsItem } from './userAccessOverviewSchemaProjectRolesItemPermissionsItem.js';
 
 export type UserAccessOverviewSchemaProjectRolesItem = {
-    /** A more detailed description of the role and what use it's intended for */
-    description?: string;
     /**
      * The role id
      * @minimum 0
      */
     id: number;
+    /** A role can either be a global root role (applies to all projects) or a project role */
+    type: string;
     /** The name of the role */
     name: string;
-    /** The permissions that this role has */
-    permissions: UserAccessOverviewSchemaProjectRolesItemPermissionsItem[];
+    /** A more detailed description of the role and what use it's intended for */
+    description?: string;
     /**
      * What project the role belongs to
      * @nullable
      */
     project?: string | null;
-    /** A role can either be a global root role (applies to all projects) or a project role */
-    type: string;
+    /** The permissions that this role has */
+    permissions: UserAccessOverviewSchemaProjectRolesItemPermissionsItem[];
 };

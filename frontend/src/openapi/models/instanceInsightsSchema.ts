@@ -3,27 +3,27 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { InstanceInsightsSchemaEnvironmentTypeTrendsItem } from './instanceInsightsSchemaEnvironmentTypeTrendsItem.js';
-import type { InstanceInsightsSchemaFlagTrendsItem } from './instanceInsightsSchemaFlagTrendsItem.js';
-import type { InstanceInsightsSchemaLifecycleTrends } from './instanceInsightsSchemaLifecycleTrends.js';
-import type { InstanceInsightsSchemaMetricsSummaryTrendsItem } from './instanceInsightsSchemaMetricsSummaryTrendsItem.js';
-import type { InstanceInsightsSchemaProjectFlagTrendsItem } from './instanceInsightsSchemaProjectFlagTrendsItem.js';
 import type { InstanceInsightsSchemaUserTrendsItem } from './instanceInsightsSchemaUserTrendsItem.js';
+import type { InstanceInsightsSchemaFlagTrendsItem } from './instanceInsightsSchemaFlagTrendsItem.js';
+import type { InstanceInsightsSchemaProjectFlagTrendsItem } from './instanceInsightsSchemaProjectFlagTrendsItem.js';
+import type { InstanceInsightsSchemaMetricsSummaryTrendsItem } from './instanceInsightsSchemaMetricsSummaryTrendsItem.js';
+import type { InstanceInsightsSchemaEnvironmentTypeTrendsItem } from './instanceInsightsSchemaEnvironmentTypeTrendsItem.js';
+import type { InstanceInsightsSchemaLifecycleTrends } from './instanceInsightsSchemaLifecycleTrends.js';
 
 /**
  * A summary of this Unleash instance's usage statistics, including user and flag counts, and trends over time.
  */
 export interface InstanceInsightsSchema {
-    /** How updates per environment type changed over time */
-    environmentTypeTrends: InstanceInsightsSchemaEnvironmentTypeTrendsItem[];
-    /** How number of flags changed over time */
-    flagTrends: InstanceInsightsSchemaFlagTrendsItem[];
-    /** Aggregated view of feature flag lifecycle across environments */
-    lifecycleTrends: InstanceInsightsSchemaLifecycleTrends;
-    /** How metrics data per project changed over time */
-    metricsSummaryTrends: InstanceInsightsSchemaMetricsSummaryTrendsItem[];
-    /** How number of flags per project changed over time */
-    projectFlagTrends: InstanceInsightsSchemaProjectFlagTrendsItem[];
     /** How number of users changed over time */
     userTrends: InstanceInsightsSchemaUserTrendsItem[];
+    /** How number of flags changed over time */
+    flagTrends: InstanceInsightsSchemaFlagTrendsItem[];
+    /** How number of flags per project changed over time */
+    projectFlagTrends: InstanceInsightsSchemaProjectFlagTrendsItem[];
+    /** How metrics data per project changed over time */
+    metricsSummaryTrends: InstanceInsightsSchemaMetricsSummaryTrendsItem[];
+    /** How updates per environment type changed over time */
+    environmentTypeTrends: InstanceInsightsSchemaEnvironmentTypeTrendsItem[];
+    /** Aggregated view of feature flag lifecycle across environments */
+    lifecycleTrends: InstanceInsightsSchemaLifecycleTrends;
 }

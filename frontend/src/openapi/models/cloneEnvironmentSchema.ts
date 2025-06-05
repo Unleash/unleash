@@ -8,12 +8,12 @@
  * Data used to clone an environment.
  */
 export interface CloneEnvironmentSchema {
-    /** Copies the RBAC permissions from the source environment if true. Defaults to true */
-    clonePermissions?: boolean;
     /** The name of the new cloned environment, this cannot be changed later */
     name: string;
-    /** A list of projects that should be included in the cloned environment. */
-    projects?: string[];
     /** Updates the type of environment (i.e. development or production). */
     type: string;
+    /** A list of projects that should be included in the cloned environment. */
+    projects?: string[];
+    /** Copies the RBAC permissions from the source environment if true. Defaults to true */
+    clonePermissions?: boolean;
 }

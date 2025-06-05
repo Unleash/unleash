@@ -5,10 +5,10 @@
  */
 
 export type FeatureSchemaDependenciesItem = {
-    /** Whether the parent feature is enabled or not */
-    enabled?: boolean;
     /** The name of the parent feature */
     feature: string;
+    /** Whether the parent feature is enabled or not */
+    enabled?: boolean;
     /** The list of variants the parent feature should resolve to. Only valid when feature is enabled. */
     variants?: string[];
 };

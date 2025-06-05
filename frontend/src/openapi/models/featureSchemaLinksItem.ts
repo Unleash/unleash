@@ -7,11 +7,11 @@
 export type FeatureSchemaLinksItem = {
     /** The id of the link */
     id: string;
+    /** The URL the feature is linked to */
+    url: string;
     /**
      * The description of the link
      * @nullable
      */
     title?: string | null;
-    /** The URL the feature is linked to */
-    url: string;
 };

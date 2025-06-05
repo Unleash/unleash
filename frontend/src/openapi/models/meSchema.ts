@@ -3,20 +3,20 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeedbackResponseSchema } from './feedbackResponseSchema.js';
-import type { PermissionSchema } from './permissionSchema.js';
-import type { MeSchemaSplash } from './meSchemaSplash.js';
 import type { UserSchema } from './userSchema.js';
+import type { PermissionSchema } from './permissionSchema.js';
+import type { FeedbackResponseSchema } from './feedbackResponseSchema.js';
+import type { MeSchemaSplash } from './meSchemaSplash.js';
 
 /**
  * Detailed user information
  */
 export interface MeSchema {
-    /** User feedback information */
-    feedback: FeedbackResponseSchema[];
+    user: UserSchema;
     /** User permissions for projects and environments */
     permissions: PermissionSchema[];
+    /** User feedback information */
+    feedback: FeedbackResponseSchema[];
     /** Splash screen configuration */
     splash: MeSchemaSplash;
-    user: UserSchema;
 }

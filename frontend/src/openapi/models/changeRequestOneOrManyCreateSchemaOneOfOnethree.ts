@@ -10,9 +10,9 @@ import type { ChangeRequestOneOrManyCreateSchemaOneOfOnethreePayload } from './c
  * Delete a strategy from this feature.
  */
 export type ChangeRequestOneOrManyCreateSchemaOneOfOnethree = {
-    /** The name of this action. */
-    action: ChangeRequestOneOrManyCreateSchemaOneOfOnethreeAction;
     /** The name of the feature that this change applies to. */
     feature: string;
+    /** The name of this action. */
+    action: ChangeRequestOneOrManyCreateSchemaOneOfOnethreeAction;
     payload: ChangeRequestOneOrManyCreateSchemaOneOfOnethreePayload;
 };

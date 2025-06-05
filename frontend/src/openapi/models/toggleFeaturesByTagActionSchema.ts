@@ -8,10 +8,10 @@
  * Input data required for the action
  */
 export interface ToggleFeaturesByTagActionSchema {
-    /** The environment we want to target */
-    environment: string;
     /** The project where the feature is located */
     project: string;
+    /** The environment we want to target */
+    environment: string;
     /** The tag we want to target, in the following format: `[TAG_TYPE]:[TAG_VALUE]` */
     tag: string;
 }

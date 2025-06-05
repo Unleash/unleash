@@ -9,11 +9,11 @@ import type { LicensedUsersSchemaLicensedUsers } from './licensedUsersSchemaLice
  * A response model representing user license data.
  */
 export interface LicensedUsersSchema {
-    /** An object containing historical and current licensed user data. */
-    licensedUsers: LicensedUsersSchemaLicensedUsers;
     /**
      * The total number of licensed seats currently available for this Unleash instance.
      * @minimum 0
      */
     seatCount: number;
+    /** An object containing historical and current licensed user data. */
+    licensedUsers: LicensedUsersSchemaLicensedUsers;
 }

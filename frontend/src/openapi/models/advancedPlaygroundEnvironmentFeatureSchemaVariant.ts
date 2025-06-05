@@ -13,12 +13,12 @@ import type { AdvancedPlaygroundEnvironmentFeatureSchemaVariantPayload } from '.
  * @nullable
  */
 export type AdvancedPlaygroundEnvironmentFeatureSchemaVariant = {
-    /** Whether the variant is enabled or not. If the feature is disabled or if it doesn't have variants, this property will be `false` */
-    enabled: boolean;
-    /** Whether the feature is enabled or not. If the feature is disabled, this property will be `false` */
-    feature_enabled?: boolean;
     /** The variant's name. If there is no variant or if the flag is disabled, this will be `disabled` */
     name: string;
+    /** Whether the variant is enabled or not. If the feature is disabled or if it doesn't have variants, this property will be `false` */
+    enabled: boolean;
     /** An optional payload attached to the variant. */
     payload?: AdvancedPlaygroundEnvironmentFeatureSchemaVariantPayload;
+    /** Whether the feature is enabled or not. If the feature is disabled, this property will be `false` */
+    feature_enabled?: boolean;
 } | null;

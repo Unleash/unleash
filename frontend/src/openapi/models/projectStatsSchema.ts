@@ -12,16 +12,16 @@ Stats are divided into current and previous **windows**.
 - The **previous window** is the 30 days **before** the current window (from 60 to 30 days ago)
  */
 export interface ProjectStatsSchema {
-    /** The number of feature flags that were archived during the current window */
-    archivedCurrentWindow: number;
-    /** The number of feature flags that were archived during the previous window */
-    archivedPastWindow: number;
     /** The average time from when a feature was created to when it was enabled in the "production" environment during the current window */
     avgTimeToProdCurrentWindow: number;
     /** The number of feature flags created during the current window */
     createdCurrentWindow: number;
     /** The number of feature flags created during the previous window */
     createdPastWindow: number;
+    /** The number of feature flags that were archived during the current window */
+    archivedCurrentWindow: number;
+    /** The number of feature flags that were archived during the previous window */
+    archivedPastWindow: number;
     /** The number of project events that occurred during the current window */
     projectActivityCurrentWindow: number;
     /** The number of project events that occurred during the previous window */

@@ -10,9 +10,9 @@ import type { ReleasePlanTemplateIdSchema } from './releasePlanTemplateIdSchema.
  * Add a release plan to this feature environment.
  */
 export type ChangeRequestOneOrManyCreateSchemaOneOfTwoseven = {
-    /** The name of this action. */
-    action: ChangeRequestOneOrManyCreateSchemaOneOfTwosevenAction;
     /** The name of the feature that this change applies to. */
     feature: string;
+    /** The name of this action. */
+    action: ChangeRequestOneOrManyCreateSchemaOneOfTwosevenAction;
     payload: ReleasePlanTemplateIdSchema;
 };

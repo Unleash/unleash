@@ -3,24 +3,24 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectStatusSchemaLifecycleSummaryArchived } from './projectStatusSchemaLifecycleSummaryArchived.js';
-import type { ProjectStatusSchemaLifecycleSummaryCompleted } from './projectStatusSchemaLifecycleSummaryCompleted.js';
 import type { ProjectStatusSchemaLifecycleSummaryInitial } from './projectStatusSchemaLifecycleSummaryInitial.js';
-import type { ProjectStatusSchemaLifecycleSummaryLive } from './projectStatusSchemaLifecycleSummaryLive.js';
 import type { ProjectStatusSchemaLifecycleSummaryPreLive } from './projectStatusSchemaLifecycleSummaryPreLive.js';
+import type { ProjectStatusSchemaLifecycleSummaryLive } from './projectStatusSchemaLifecycleSummaryLive.js';
+import type { ProjectStatusSchemaLifecycleSummaryCompleted } from './projectStatusSchemaLifecycleSummaryCompleted.js';
+import type { ProjectStatusSchemaLifecycleSummaryArchived } from './projectStatusSchemaLifecycleSummaryArchived.js';
 
 /**
  * Feature flag lifecycle statistics for this project.
  */
 export type ProjectStatusSchemaLifecycleSummary = {
-    /** Information on archived flags in this project. */
-    archived: ProjectStatusSchemaLifecycleSummaryArchived;
-    /** Statistics on feature flags in a given stage in this project. */
-    completed: ProjectStatusSchemaLifecycleSummaryCompleted;
     /** Statistics on feature flags in a given stage in this project. */
     initial: ProjectStatusSchemaLifecycleSummaryInitial;
     /** Statistics on feature flags in a given stage in this project. */
+    preLive: ProjectStatusSchemaLifecycleSummaryPreLive;
+    /** Statistics on feature flags in a given stage in this project. */
     live: ProjectStatusSchemaLifecycleSummaryLive;
     /** Statistics on feature flags in a given stage in this project. */
-    preLive: ProjectStatusSchemaLifecycleSummaryPreLive;
+    completed: ProjectStatusSchemaLifecycleSummaryCompleted;
+    /** Information on archived flags in this project. */
+    archived: ProjectStatusSchemaLifecycleSummaryArchived;
 };

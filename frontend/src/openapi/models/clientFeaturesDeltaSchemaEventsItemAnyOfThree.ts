@@ -7,7 +7,7 @@ import type { ClientFeaturesDeltaSchemaEventsItemAnyOfThreeType } from './client
 
 export type ClientFeaturesDeltaSchemaEventsItemAnyOfThree = {
     eventId: number;
+    type: ClientFeaturesDeltaSchemaEventsItemAnyOfThreeType;
     featureName: string;
     project: string;
-    type: ClientFeaturesDeltaSchemaEventsItemAnyOfThreeType;
 };

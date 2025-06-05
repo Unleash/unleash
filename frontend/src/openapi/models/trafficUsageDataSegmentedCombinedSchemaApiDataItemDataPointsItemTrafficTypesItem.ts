@@ -6,11 +6,11 @@
 
 export type TrafficUsageDataSegmentedCombinedSchemaApiDataItemDataPointsItemTrafficTypesItem =
     {
+        /** The type of traffic */
+        group: string;
         /**
          * The number of requests
          * @minimum 0
          */
         count: number;
-        /** The type of traffic */
-        group: string;
     };

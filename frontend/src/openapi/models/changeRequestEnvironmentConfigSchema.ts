@@ -8,15 +8,15 @@
  * The [change request](https://docs.getunleash.io/reference/change-requests) configuration for a specific environment.
  */
 export interface ChangeRequestEnvironmentConfigSchema {
-    /** `true` if this environment has change requests enabled, otherwise `false`. */
-    changeRequestEnabled: boolean;
     /** The environment that this configuration applies to. */
     environment: string;
+    /** The [type of the environment](https://docs.getunleash.io/reference/environments#environment-types) listed in `environment`. */
+    type: string;
+    /** `true` if this environment has change requests enabled, otherwise `false`. */
+    changeRequestEnabled: boolean;
     /**
      * The number of approvals that are required for a change request to be fully approved and ready to be applied in this environment.
      * @nullable
      */
     requiredApprovals: number | null;
-    /** The [type of the environment](https://docs.getunleash.io/reference/environments#environment-types) listed in `environment`. */
-    type: string;
 }

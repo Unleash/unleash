@@ -11,14 +11,14 @@ import type { EdgeEndpointTrafficSchema } from './edgeEndpointTrafficSchema.js';
 export interface EdgeRequestStatsSchema {
     /** 20x and 30x requests to the client features endpoint */
     '/api/client/features'?: EdgeEndpointTrafficSchema;
+    /** Traffic to the frontend endpoint */
+    '/api/frontend'?: EdgeEndpointTrafficSchema;
+    /** Traffic to the proxy endpoint (proxy endpoint is deprecated, use /api/frontend instead) */
+    '/api/proxy'?: EdgeEndpointTrafficSchema;
     /** Traffic to Edge Metrics (from SDKs) */
     '/api/client/metrics'?: EdgeEndpointTrafficSchema;
     /** Traffic to Edge Metrics (from other Edge instances) */
     '/api/client/metrics/bulk'?: EdgeEndpointTrafficSchema;
     /** Traffic to Edge Metrics (from other Edge instances) */
     '/api/client/metrics/edge'?: EdgeEndpointTrafficSchema;
-    /** Traffic to the frontend endpoint */
-    '/api/frontend'?: EdgeEndpointTrafficSchema;
-    /** Traffic to the proxy endpoint (proxy endpoint is deprecated, use /api/frontend instead) */
-    '/api/proxy'?: EdgeEndpointTrafficSchema;
 }

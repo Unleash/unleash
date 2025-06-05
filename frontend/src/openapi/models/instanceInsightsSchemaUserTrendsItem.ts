@@ -5,12 +5,12 @@
  */
 
 export type InstanceInsightsSchemaUserTrendsItem = {
-    /** The number of active Unleash users on a particular day */
-    active: number;
     /** A UTC date when the stats were captured. Time is the very end of a given day. */
     date: string;
-    /** The number of inactive Unleash users on a particular day */
-    inactive: number;
     /** The number of actual Unleash users on a particular day */
     total: number;
+    /** The number of active Unleash users on a particular day */
+    active: number;
+    /** The number of inactive Unleash users on a particular day */
+    inactive: number;
 };

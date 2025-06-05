@@ -3,17 +3,24 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { EventSchemaType } from './eventSchemaType.js';
 import type { EventSchemaData } from './eventSchemaData.js';
 import type { EventSchemaPreData } from './eventSchemaPreData.js';
 import type { TagSchema } from './tagSchema.js';
-import type { EventSchemaType } from './eventSchemaType.js';
 
 /**
  * An event describing something happening in the system
  */
 export interface EventSchema {
+    /**
+     * The ID of the event. An increasing natural number.
+     * @minimum 1
+     */
+    id: number;
     /** The time the event happened as a RFC 3339-conformant timestamp. */
     createdAt: string;
+    /** What [type](https://docs.getunleash.io/reference/api/legacy/unleash/admin/events#event-type-description) of event this is */
+    type: EventSchemaType;
     /** Which user created this event */
     createdBy: string;
     /**
@@ -22,55 +29,48 @@ export interface EventSchema {
      */
     createdByUserId?: number | null;
     /**
-     * Extra associated data related to the event, such as feature flag state, segment configuration, etc., if applicable.
-     * @nullable
-     */
-    data?: EventSchemaData;
-    /**
      * The feature flag environment the event relates to, if applicable.
      * @nullable
      */
     environment?: string | null;
-    /**
-     * The name of the feature flag the event relates to, if applicable.
-     * @nullable
-     */
-    featureName?: string | null;
-    /**
-     * The ID of the event. An increasing natural number.
-     * @minimum 1
-     */
-    id: number;
-    /**
-     * The IP address of the user that created the event. Only available in Enterprise.
-     * @nullable
-     */
-    ip?: string | null;
-    /**
-     * The concise, human-readable name of the event.
-     * @nullable
-     */
-    label?: string | null;
-    /**
-     * Data relating to the previous state of the event's subject.
-     * @nullable
-     */
-    preData?: EventSchemaPreData;
     /**
      * The project the event relates to, if applicable.
      * @nullable
      */
     project?: string | null;
     /**
-     * A markdown-formatted summary of the event.
+     * The name of the feature flag the event relates to, if applicable.
      * @nullable
      */
-    summary?: string | null;
+    featureName?: string | null;
+    /**
+     * Extra associated data related to the event, such as feature flag state, segment configuration, etc., if applicable.
+     * @nullable
+     */
+    data?: EventSchemaData;
+    /**
+     * Data relating to the previous state of the event's subject.
+     * @nullable
+     */
+    preData?: EventSchemaPreData;
     /**
      * Any tags related to the event, if applicable.
      * @nullable
      */
     tags?: TagSchema[] | null;
-    /** What [type](https://docs.getunleash.io/reference/api/legacy/unleash/admin/events#event-type-description) of event this is */
-    type: EventSchemaType;
+    /**
+     * The concise, human-readable name of the event.
+     * @nullable
+     */
+    label?: string | null;
+    /**
+     * A markdown-formatted summary of the event.
+     * @nullable
+     */
+    summary?: string | null;
+    /**
+     * The IP address of the user that created the event. Only available in Enterprise.
+     * @nullable
+     */
+    ip?: string | null;
 }

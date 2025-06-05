@@ -8,8 +8,8 @@
  * Change password as long as the token is a valid token
  */
 export interface ChangePasswordSchema {
-    /** The new password for the user */
-    password: string;
     /** A reset token used to validate that the user is allowed to change the password. */
     token: string;
+    /** The new password for the user */
+    password: string;
 }

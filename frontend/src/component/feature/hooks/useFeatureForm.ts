@@ -6,14 +6,23 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import type { ITag } from 'interfaces/tags';
 import type { CreateFeatureSchema, CreateFeatureSchemaType } from 'openapi';
 
-const useFeatureForm = (
-    initialName: string = '',
-    initialType: CreateFeatureSchemaType = 'release',
-    initialProject: string = 'default',
-    initialDescription: string = '',
-    initialImpressionData: boolean = false,
-    initialTags: Set<ITag> = new Set(),
-) => {
+export type FeatureFormInitialData = Partial<{
+    name: string;
+    type: CreateFeatureSchemaType;
+    project: string;
+    description: string;
+    impressionData: boolean;
+    tags: Set<ITag>;
+}>;
+
+const useFeatureForm = ({
+    name: initialName = '',
+    type: initialType = 'release',
+    project: initialProject = 'default',
+    description: initialDescription = '',
+    impressionData: initialImpressionData = false,
+    tags: initialTags = new Set(),
+}: FeatureFormInitialData) => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
     const { validateFeatureToggleName } = useFeatureApi();

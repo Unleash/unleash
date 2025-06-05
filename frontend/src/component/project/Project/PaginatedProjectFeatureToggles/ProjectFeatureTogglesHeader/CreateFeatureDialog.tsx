@@ -9,7 +9,9 @@ import { Dialog, styled } from '@mui/material';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { Limit } from 'component/common/Limit/Limit';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import useFeatureForm from 'component/feature/hooks/useFeatureForm';
+import useFeatureForm, {
+    type FeatureFormInitialData,
+} from 'component/feature/hooks/useFeatureForm';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import FlagIcon from '@mui/icons-material/Flag';
 import ImpressionDataIcon from '@mui/icons-material/AltRoute';
@@ -17,7 +19,7 @@ import { useGlobalFeatureSearch } from 'component/feature/FeatureToggleList/useG
 import useProjectOverview, {
     featuresCount,
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import type { CreateFeatureSchemaType, FeatureTypeSchema } from 'openapi';
+import type { FeatureTypeSchema } from 'openapi';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { DialogFormTemplate } from 'component/common/DialogFormTemplate/DialogFormTemplate';
@@ -105,16 +107,11 @@ const CreateFeatureDialogContent = ({
     const navigate = useNavigate();
     const openFeatureCreatedFeedback = useFeatureCreatedFeedback();
 
-    const [storedFlagConfig, storeFlagConfig] = useLocalStorageState<
-        Partial<{
-            name: string;
-            type: CreateFeatureSchemaType;
-            project: string;
-            description: string;
-            impressionData: boolean;
-            tags: Set<ITag>;
-        }>
-    >('flag-creation-dialog', {});
+    const [storedFlagConfig, storeFlagConfig] =
+        useLocalStorageState<FeatureFormInitialData>(
+            'flag-creation-dialog',
+            {},
+        );
     const useFlagCreationCache = useUiFlag('createFlagDialogCache');
 
     const initialData = useFlagCreationCache ? storedFlagConfig : {};
@@ -136,14 +133,7 @@ const CreateFeatureDialogContent = ({
         getTogglePayload,
         clearErrors,
         errors,
-    } = useFeatureForm(
-        initialData.name,
-        initialData.type,
-        initialData.project,
-        initialData.description,
-        initialData.impressionData,
-        initialData.tags,
-    );
+    } = useFeatureForm(initialData);
     const { createFeatureToggle, loading } = useFeatureApi();
 
     const generalDocumentation: {
@@ -237,7 +227,6 @@ const CreateFeatureDialogContent = ({
     const onDialogClose = () => {
         storeFlagConfig({
             name,
-            project,
             tags,
             impressionData,
             type,

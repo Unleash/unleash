@@ -194,6 +194,7 @@ export class PersonalDashboardService {
             projectInsights?.potentiallyStaleFeatureCount || 0;
         const staleFlags = projectInsights?.staleFeatureCount || 0;
         const currentHealth = projectInsights?.health || 0;
+        const technicalDebt = projectInsights?.technicalDebt || 0;
 
         return {
             latestEvents,
@@ -207,8 +208,11 @@ export class PersonalDashboardService {
                 potentiallyStaleFlags,
                 staleFlags,
                 activeFlags: totalFlags - staleFlags - potentiallyStaleFlags,
+                technicalDebt,
+                /**
+                 * @deprecated
+                 */
                 health: currentHealth,
-                technicalDebt: 100 - currentHealth,
             },
         };
     }

@@ -342,7 +342,6 @@ export interface IProjectHealth {
     features: IFeatureOverview[];
     members: number;
     version: number;
-    health: number;
     technicalDebt: number;
     favorite?: boolean;
     updatedAt?: Date;
@@ -352,6 +351,10 @@ export interface IProjectHealth {
     featureLimit?: number;
     featureNaming?: IFeatureNaming;
     defaultStickiness: string;
+    /**
+     * @deprecated
+     */
+    health: number;
 }
 
 export type ProjectOnboardingStatus =
@@ -367,7 +370,6 @@ export interface IProjectOverview {
     featureTypeCounts: IFeatureTypeCount[];
     members: number;
     version: number;
-    health: number;
     technicalDebt: number;
     favorite?: boolean;
     updatedAt?: Date;
@@ -380,6 +382,10 @@ export interface IProjectOverview {
     defaultStickiness: string;
     onboardingStatus: ProjectOnboardingStatus;
     linkTemplates?: IProjectLinkTemplate[];
+    /**
+     * @deprecated
+     */
+    health: number;
 }
 
 export interface IProjectHealthReport extends IProjectHealth {

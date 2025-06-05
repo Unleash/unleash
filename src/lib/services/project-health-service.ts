@@ -77,7 +77,6 @@ export default class ProjectHealthService {
         return {
             ...overview,
             ...healthRating,
-            technicalDebt: 100 - (overview.health || 0),
         };
     }
 

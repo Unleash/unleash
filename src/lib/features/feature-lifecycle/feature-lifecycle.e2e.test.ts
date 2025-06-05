@@ -23,6 +23,7 @@ import { FeatureLifecycleReadModel } from './feature-lifecycle-read-model.js';
 import type { IFeatureLifecycleReadModel } from './feature-lifecycle-read-model-type.js';
 import { STAGE_ENTERED } from '../../metric-events.js';
 import type ClientInstanceService from '../metrics/instance/instance-service.js';
+import { DEFAULT_ENV } from '../../server-impl.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -241,12 +242,12 @@ test('should backfill archived feature', async () => {
 
 test('should not backfill for existing lifecycle', async () => {
     await app.createFeature('my_feature_e');
-    await app.enableFeature('my_feature_e', 'production');
+    await app.enableFeature('my_feature_e', DEFAULT_ENV);
     eventStore.emit(FEATURE_CREATED, { featureName: 'my_feature_e' });
     eventBus.emit(CLIENT_METRICS_ADDED, [
         {
             featureName: 'my_feature_e',
-            environment: 'production',
+            environment: DEFAULT_ENV,
         },
     ]);
     await reachedStage('my_feature_e', 'live');

@@ -18,12 +18,8 @@ export const useLocalStorageState = <T extends object | string>(
     return [
         localValue,
         (value: T | ((prevState: T) => T)) => {
-            setLocalValue((previousValue) => {
-                const newValue =
-                    value instanceof Function ? value(previousValue) : value;
-                setStoredValue(newValue);
-                return newValue;
-            });
+            setStoredValue(value);
+            setLocalValue(value);
         },
     ] as const;
 };

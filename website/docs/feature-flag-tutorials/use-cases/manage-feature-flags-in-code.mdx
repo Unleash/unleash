@@ -5,26 +5,115 @@ title: Managing feature flags in your codebase
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Feature flags are a powerful technique for controlling the release of features and managing application behavior. Unleash provides the server-side infrastructure for managing these flags. This guide focuses on how you, as a developer or architect, can effectively organize and implement unleash feature flags directly within your codebase. The choices you make here significantly impact your application's performance, testability, and long-term maintainability. Good general software design practices, like modularity and clear separation of concerns, also make integrating and managing feature flags easier.
+The choices you make when organizinga and implementing feature flags in your codebase significantly impact your application's performance, testability, and long-term maintainability. In this guide, we explore key considerations for flag management in code, offering detailed recommendations, and code examples to help you build reliable and flexible systems.
 
-This guide explores key considerations for in-code flag management, offers detailed recommendations, and provides code examples to help you build reliable and flexible systems.
+Good general software design practices, like modularity and clear separation of concerns, also make integrating and managing feature flags easier.
 
-Four core principles should guide your strategy for managing feature flags in code:
+Before diving into specifics, let's look at some high-level ... that help you work with feature flags in code:
 
-## Clarity
+- **Clarity**: Feature flag-related logic should be easy to understand, locate, and reason about. Developers should quickly grasp what a flag does and how it affects behavior.
+- **Maintainability**: Adding new flags, modifying, and especially removing flags when they are no longer needed should be straightforward and low-risk.
+- **Testability**: Code controlled by feature flags must be easily testables.
+- **Scalability**: Your approach must accommodate a growing number of feature flags and a large number of developers interacting with them, without leading to a tangled or unmanageable codebase.
 
-Flag-related logic should be easy to understand, locate, and reason about. Developers should quickly grasp what a flag does and how it affects behavior.
+.. now with some of the high-level principles, let's dive into feature flag specifics.
 
-## Maintainability
+## Defining and storing flag names
 
-Adding new flags, modifying existing ones, and especially removing flags when they are no longer needed should be straightforward and low-risk processes.
+The first step in managing flags in code is deciding how to represent and store the flag names. These are the identifiers that link your code to the flag configurations in the Unleash Admin UI.
 
-## Testability
+Unleash already tells you that flag names must be unique.. but what else to consider here???
 
-Code controlled by feature flags must be easily testable across its key states. Achieving 100% test coverage for every flag combination is often unrealistic and unnecessary. Instead, focus your testing efforts on the critical scenarios.
+When it comes to defining flag names in your code, we recommend a statically-defined and centrally-configured approach. If possible, use your language's type system to provide strong type safety and discoverability for flag names.
 
-## Scalability
-Your approach must accommodate a growing number of feature flags and an increasing number of developers interacting with them, without leading to a tangled or unmanageable codebase.
+> **Centralize your flag name definitions. Use constants or enums within your codebase.**
+
+Why?
+- **Single source of truth**: Avoids scattering string literals throughout your application, which can lead to typos and inconsistencies.
+- **Type safety**: Enums or strongly-typed constants provide compile-time checks, catching errors early.
+- **Refactoring**: Although flag names are immutable in Unleash, you may need to update it in your application (for example, to fix a typo). With a centralized place for flag definitions, you only need to update it in one place in your code.
+- **Discoverability**: It's easier to see all available flags and their intended use.
+
+This pattern centers on the pre-definition of known flag identifiers using TypeScript's type system, alongside establishing default configurations for these flags. 
+
+### Structured flag definitions with type safety
+
+
+When managing a collection of flags that might include variants or complex states beyond simple booleans, consider patterns that leverage your language's type system.
+In TypeScript, for example, a common and effective pattern (also used within the [Unleash codebase](https://github.com/Unleash/unleash/blob/main/src/lib/types/experimental.ts).)) involves using union types for keys and mapped types for collections.
+
+
+
+
+Pattern summary:
+
+Define flag keys: Create a union type of string literals for all your feature flag names.
+
+Define flag state structure: Create a type (often a mapped type based on the union type of keys) that describes the shape of an object holding all flags. The value for each flag key can be a boolean or a more complex FlagVariant object.
+
+Provide initial/default values: Define an object conforming to this type to hold default states for your flags.
+
+Code example (typescript: typed keys and collection):
+
+// src/feature-flag-definitions.ts
+
+// 1. Define all possible flag keys as a union type
+export type AppFeatureKey =
+  | 'newUserProfilePage'
+  | 'darkModeTheme'
+  | 'experimentalAnalyticsDashboard';
+
+// Represents the structure of a flag that might have variants
+export interface AppFlagVariant {
+  name: string; // Corresponds to variant name in Unleash
+  enabled: boolean;
+  payload?: {
+    type: string; // e.g., 'string', 'json', 'csv'
+    value: string;
+  };
+}
+
+// 2. Define the type for the object holding all flags
+// Flags can be simple booleans or more complex variants
+export type AppFeatures = Partial<{
+  [key in AppFeatureKey]: boolean | AppFlagVariant;
+}>;
+
+// 3. Provide default/initial values for flags
+export const initialAppFeatureFlags: AppFeatures = {
+  newUserProfilePage: false, // Default to off
+  darkModeTheme: {
+    name: 'uiTheme', // This could be the flag name if it's a variant flag
+    enabled: false,
+    payload: {
+      type: 'string',
+      value: 'light', // Default payload value
+    },
+  },
+  // experimentalAnalyticsDashboard might default to undefined,
+  // relying on the Unleash server or a default in the evaluation logic.
+};
+
+// Usage with a feature service (conceptual)
+// if (featureService.isEnabled(AppFeatureKey.newUserProfilePage, context)) { ... }
+// const darkModeVariant = featureService.getVariant(AppFeatureKey.darkModeTheme, context);
+// if (darkModeVariant?.enabled && darkModeVariant.payload?.value === 'dark') { ... }
+
+Things to consider (for typed keys and collections pattern):
+
+Enhanced type safety: This pattern provides excellent compile-time checking for flag names and their potential structures, reducing runtime errors. It's particularly beneficial when flags have variants with payloads.
+
+Clarity for complex states: Clearly defines the shape of each flag, whether it's a simple toggle or has multiple variants.
+
+Verbosity: Can be more verbose for projects with only a few simple boolean flags compared to just using string constants or a basic enum.
+
+Language specific implementation: While the principle of strong typing is general, the exact implementation shown (union types, mapped types) is specific to TypeScript. Other statically-typed languages may offer different mechanisms to achieve similar levels of type safety for flag definitions.
+
+Large number of flags: for hundreds of flags, consider organizing definitions by feature area, maintaining a clear project-wide convention.
+
+Dynamic flag names: avoid constructing flag names dynamically (e.g., "feature_" + sectionName) as it hinders static analysis and discovery.
+
+
 
 ## Strategic flag evaluation: where, when, and how often
 How you implement feature flags in your codebase significantly affects its structure and behavior. Thoughtful evaluation strategies are key to maintainable and predictable systems.
@@ -166,24 +255,7 @@ Long-lived processes: for background jobs (not typical user requests), you might
 
 Sdk caching: while unleash sdks have efficient caching, "evaluate once per request" is primarily about logical consistency for a user interaction.
 
-## Defining and storing flag names: your single source of truth
-Represent and store flag names (keys) that link your code to configurations in the unleash ui.
-
-Recommendation: centralize flag name definitions using constants or enums.
-
-Why: single source of truth, type safety, easier refactoring and discoverability.
-
-Code examples:
-
-Ensure string values exactly match names in your unleash instance. See unleash feature flag documentation.
-
-Things to consider:
-
-Large number of flags: for hundreds of flags, consider organizing definitions by feature area, maintaining a clear project-wide convention.
-
-Dynamic flag names: avoid constructing flag names dynamically (e.g., "feature_" + sectionName) as it hinders static analysis and discovery.
-
-Accessing and evaluating flags: the abstraction layer advantage
+## Accessing and evaluating flags: the abstraction layer advantage
 Directly calling unleash.isEnabled() throughout your codebase can lead to tight coupling.
 
 Recommendation: implement an abstraction layer or a dedicated service (e.g., FeatureService) wrapping unleash sdk calls.
@@ -406,3 +478,16 @@ A: evaluate at the highest practical level of abstraction. For backend logic, ev
 Effectively managing feature flags within your codebase is as crucial as managing them in the unleash platform. By establishing clear definitions, leveraging abstraction layers, adopting strategic evaluation points, structuring conditional logic thoughtfully, and committing to regular cleanup, you can effectively use unleash. These in-code practices, supported by broader team discipline, will ensure that feature flags remain a valuable tool for software development, not a source of technical debt.
 
 For more information on getting started with unleash, visit the Unleash documentation home.
+
+
+
+2. Call your flag in as few places as possible
+It should be easy to understand how feature flags affect your code. The more locations a flag is in, the more likely it is to cause problems. For example, a developer could remove the flag in one place but forget to remove it in another.
+
+If you expect to use a feature flag in multiple places, it's a good idea to wrap the flag in a single function or method. For example:
+
+JavaScript
+
+function useBetaFeature() {
+    return unleash.isFeatureEnabled('beta-feature')
+}   

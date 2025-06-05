@@ -3,14 +3,14 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateFeatureStrategySchema } from './createFeatureStrategySchema.js';
+import type { FeatureStrategySchema } from './featureStrategySchema.js';
 
 /**
  * Describes a project's configuration in a given environment.
  */
 export interface EnvironmentProjectSchema {
     /** The strategy configuration to add when enabling a feature environment by default */
-    defaultStrategy?: CreateFeatureStrategySchema;
+    defaultStrategy?: FeatureStrategySchema;
     /** `true` if the environment is enabled for the project, otherwise `false` */
     enabled: boolean;
     /** The name of the environment */

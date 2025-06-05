@@ -74,7 +74,6 @@ export const LifecycleInsights: FC = () => {
     const projects = state[`${statePrefix}project`]?.values ?? [allOption.id];
     const { insights, loading } = useInsights();
 
-    // @ts-expect-error (lifecycleMetrics): The schema hasn't been updated yet.
     const { lifecycleTrends } = insights;
 
     return (

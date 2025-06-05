@@ -179,9 +179,9 @@ test('should save multiple projects from token', async () => {
         .expect('Content-Type', /json/)
         .expect(200);
 
-    expect(body.applications).toEqual(
-        expect.arrayContaining([
-            expect.objectContaining({
+    expect(body).toMatchObject({
+        applications: [
+            {
                 appName: 'multi-project-app',
                 usage: [
                     {
@@ -193,7 +193,8 @@ test('should save multiple projects from token', async () => {
                         project: 'mainProject',
                     },
                 ],
-            }),
-        ]),
-    );
+            },
+        ],
+        total: 1,
+    });
 });

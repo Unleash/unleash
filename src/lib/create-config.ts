@@ -37,7 +37,7 @@ import {
     secondsToMilliseconds,
 } from 'date-fns';
 import EventEmitter from 'events';
-import { mapLegacyToken, validateApiToken } from './types/models/api-token.js';
+import { validateApiToken } from './types/models/api-token.js';
 import {
     parseEnvVarBoolean,
     parseEnvVarJSON,
@@ -417,13 +417,13 @@ const loadTokensFromString = (
         const [environment = '*'] = rest.split('.');
         const token = {
             createdAt: undefined,
-            project,
+            projects: [project],
             environment,
             secret,
             type: tokenType,
             tokenName: 'admin',
         };
-        validateApiToken(mapLegacyToken(token));
+        validateApiToken(token);
         return token;
     });
     return tokens;

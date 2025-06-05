@@ -39,10 +39,14 @@ import { ActionBox } from './ActionBox.tsx';
 import useLoading from 'hooks/useLoading';
 import { NoProjectsContactAdmin } from './NoProjectsContactAdmin.tsx';
 import { AskOwnerToAddYouToTheirProject } from './AskOwnerToAddYouToTheirProject.tsx';
+import { useFlag } from '@unleash/proxy-client-react';
 
 const ActiveProjectDetails: FC<{
     project: PersonalDashboardSchemaProjectsItem;
 }> = ({ project }) => {
+    const healthToTechDebtEnabled = useFlag('healthToTechDebt');
+
+    const techicalDebt = 100 - project.health; // TODO: health to technical debt from backend
     return (
         <Box sx={{ display: 'flex', gap: 2 }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -63,10 +67,10 @@ const ActiveProjectDetails: FC<{
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <Typography variant='subtitle2' color='primary'>
-                    {project.health}%
+                    {healthToTechDebtEnabled ? techicalDebt : project.health}%
                 </Typography>
                 <Typography variant='caption' color='text.secondary'>
-                    health
+                    {healthToTechDebtEnabled ? 'technical debt' : 'health'}
                 </Typography>
             </Box>
         </Box>

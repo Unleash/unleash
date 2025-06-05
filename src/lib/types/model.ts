@@ -210,10 +210,6 @@ export interface IApiTokenCreate {
     environment: string;
     projects: string[];
     expiresAt?: Date;
-    /**
-     * @deprecated Use tokenName instead
-     */
-    username?: string;
 }
 
 export interface IApiToken extends Omit<IApiTokenCreate, 'alias'> {

@@ -86,7 +86,7 @@ export const LifecycleInsights: FC = () => {
                 {Object.entries(mockData).map(([stage, data]) => {
                     return (
                         <ChartContainer key={stage}>
-                            <Chart data={data} />
+                            <Chart data={data} stage={stage} />
                         </ChartContainer>
                     );
                 })}
@@ -95,15 +95,37 @@ export const LifecycleInsights: FC = () => {
     );
 };
 
-const Chart: React.FC<{ data: LifecycleTrend }> = ({ data }) => {
+const Chart: React.FC<{ stage: string; data: LifecycleTrend }> = ({
+    stage,
+    data,
+}) => {
     const chartColors = useChartColors();
     const oldData = [
         data.categories.experimental.flagsOlderThanWeek,
         data.categories.release.flagsOlderThanWeek,
         data.categories.permanent.flagsOlderThanWeek,
     ];
+
+    const total = {
+        experimental:
+            data.categories.experimental.flagsOlderThanWeek +
+            data.categories.experimental.newFlagsThisWeek,
+        release:
+            data.categories.release.flagsOlderThanWeek +
+            data.categories.release.newFlagsThisWeek,
+        permanent:
+            data.categories.permanent.flagsOlderThanWeek +
+            data.categories.permanent.newFlagsThisWeek,
+    };
+
+    const ariaLabel = `Bar chart; the number of flags in the ${stage} stage, separated by flag type. Experimental: ${total.experimental}, Release: ${total.release}, Other: ${total.permanent}`;
+
+    const ariaDescription = `Flag counts are further separated into flags that have entered the stage within the last week (new) and flags that have been in the stage for more than a week (old). Experimental flags: ${data.categories.experimental.flagsOlderThanWeek} old, ${data.categories.experimental.newFlagsThisWeek} new. Release flags: ${data.categories.release.flagsOlderThanWeek} old, ${data.categories.release.newFlagsThisWeek} new. Other flags: ${data.categories.permanent.flagsOlderThanWeek} old, ${data.categories.permanent.newFlagsThisWeek} new.`;
+
     return (
         <LifecycleChart
+            ariaLabel={ariaLabel}
+            ariaDescription={ariaDescription}
             data={{
                 labels: [`Experimental`, `Release`, `Other flags`],
                 datasets: [

@@ -88,8 +88,10 @@ function mergeAll<T>(objects: Partial<T>[]): T {
 
 const LifecycleChartComponent: FC<{
     data: ChartData<'bar', unknown>;
+    ariaLabel: string;
+    ariaDescription?: string;
     overrideOptions?: ChartOptions<'bar'>;
-}> = ({ data, overrideOptions }) => {
+}> = ({ data, ariaLabel, ariaDescription, overrideOptions }) => {
     const theme = useTheme();
     const { locationSettings } = useLocationSettings();
 
@@ -99,10 +101,13 @@ const LifecycleChartComponent: FC<{
     );
 
     return (
-        <>
-            <Bar options={options} data={data} plugins={[ChartDataLabels]} />
-            {/* todo: implement fallback for screen readers */}
-        </>
+        <Bar
+            options={options}
+            data={data}
+            aria-label={ariaLabel}
+            aria-description={ariaDescription}
+            plugins={[ChartDataLabels]}
+        />
     );
 };
 

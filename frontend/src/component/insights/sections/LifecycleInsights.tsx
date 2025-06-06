@@ -55,12 +55,8 @@ const useChartColors = () => {
 
 const ChartRow = styled('div')(({ theme }) => ({
     display: 'grid',
-    // flexFlow: 'row wrap',
-    // justifyContent: 'space-between',
     gap: theme.spacing(2),
-    '--tile-max-width': `calc(calc(var(--max-main-content-width) - ${theme.spacing(4)}) / 3) `,
-    gridTemplateColumns:
-        'repeat(auto-fit, minmax(300px, var(--tile-max-width)))',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))',
 }));
 
 const LifecycleTile = styled('article')(({ theme }) => ({

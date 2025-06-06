@@ -403,12 +403,10 @@ class="header-github-link"
             imageZoom: {
                 // Optional medium-zoom options at
                 // https://www.npmjs.com/package/medium-zoom#options
+                selector: '.markdown :not(p) > img',
                 options: {
                     background: 'var(--ifm-background-color)',
                 },
-            },
-            zoom: {
-                selector: '.markdown :not(p) > img',
             },
         },
         presets: [

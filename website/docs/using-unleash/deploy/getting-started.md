@@ -74,7 +74,7 @@ docker run -d \
   -e POSTGRES_DB=unleash \
   --network unleash \
   --name postgres \
-  postgres:15 # or any 13+ version
+  postgres:17 # or any 14+ version
 ```
 
 #### Start Unleash server container

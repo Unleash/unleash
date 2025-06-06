@@ -7,6 +7,9 @@ import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import { useInsights } from 'hooks/api/getters/useInsights/useInsights';
 import { LifecycleChart } from '../components/LifecycleChart/LifecycleChart.tsx';
 import { styled, useTheme } from '@mui/material';
+import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber.tsx';
+import { FeatureLifecycleStageIcon } from 'component/common/FeatureLifecycle/FeatureLifecycleStageIcon.tsx';
+import { normalizeDays } from './normalize-days.ts';
 
 type LifecycleTrend = {
     totalFlags: number;
@@ -53,11 +56,63 @@ const ChartRow = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const ChartContainer = styled('article')(({ theme }) => ({
+const LifecycleTile = styled('article')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
     background: theme.palette.background.default,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(2),
     minWidth: 0,
+}));
+
+const lifecycleStageMap = {
+    develop: 'pre-live',
+    production: 'live',
+    cleanup: 'completed',
+};
+
+const TileHeader = styled('h3')(({ theme }) => ({
+    margin: 0,
+    // display: 'flex',
+    // flexFlow: 'column',
+    fontSize: theme.typography.body1.fontSize,
+    fontWeight: 'normal',
+}));
+
+const HeaderNumber = styled('span')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    gap: theme.spacing(2),
+    fontSize: theme.typography.h1.fontSize,
+    fontWeight: 'bold',
+}));
+
+const HeaderText = styled(HeaderNumber)(({ theme }) => ({}));
+
+const Stats = styled('dl')(({ theme }) => ({
+    background: theme.palette.background.elevation1,
+    borderRadius: theme.shape.borderRadiusMedium,
+    margin: 0,
+    fontSize: theme.typography.body2.fontSize,
+    '& dt::after': {
+        content: '":"',
+    },
+    '& dd': {
+        margin: 0,
+        fontWeight: 'bold',
+    },
+    paddingInline: theme.spacing(2),
+    paddingBlock: theme.spacing(1.5),
+    gap: theme.spacing(1.5),
+}));
+
+const StatRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row wrap',
+    gap: theme.spacing(0.5),
+    fontSize: theme.typography.body2.fontSize,
 }));
 
 export const LifecycleInsights: FC = () => {
@@ -90,9 +145,46 @@ export const LifecycleInsights: FC = () => {
             <ChartRow>
                 {Object.entries(mockData).map(([stage, data]) => {
                     return (
-                        <ChartContainer key={stage}>
+                        <LifecycleTile key={stage}>
+                            <TileHeader>
+                                <HeaderNumber>
+                                    <PrettifyLargeNumber
+                                        value={data.totalFlags ?? 0}
+                                        threshold={1000}
+                                        precision={1}
+                                    />
+                                    <FeatureLifecycleStageIcon
+                                        aria-hidden='true'
+                                        stage={{
+                                            name: lifecycleStageMap[stage],
+                                        }}
+                                    />
+                                </HeaderNumber>
+                                <span>Flags in {stage} stage</span>
+                            </TileHeader>
                             <Chart data={data} stage={stage} />
-                        </ChartContainer>
+
+                            <Stats>
+                                <StatRow>
+                                    <dt>Current median time spent in stage</dt>
+                                    <dd data-loading-project-lifecycle-summary>
+                                        {normalizeDays(
+                                            data.averageTimeInStageDays,
+                                        )}
+                                    </dd>
+                                </StatRow>
+                                <StatRow>
+                                    <dt>
+                                        Historical median time spent in stage
+                                    </dt>
+                                    <dd data-loading-project-lifecycle-summary>
+                                        {normalizeDays(
+                                            data.averageTimeInStageDays,
+                                        )}
+                                    </dd>
+                                </StatRow>
+                            </Stats>
+                        </LifecycleTile>
                     );
                 })}
             </ChartRow>

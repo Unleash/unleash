@@ -162,7 +162,7 @@ export const ProjectLifecycleSummary = () => {
         return (
             <StyledStageTitle>
                 {flagWord(stage)} in{' '}
-                {getFeatureLifecycleName(lifecycleStageName)} stage
+                {getFeatureLifecycleName(lifecycleStageName)}
             </StyledStageTitle>
         );
     };

@@ -21,23 +21,21 @@ interface IPrettifyLargeNumberProps {
     precision?: number;
 }
 
-export const prettifyLargeNumber = (
-    value: number,
-    threshold: number = 1_000_000,
-    precision: number = 2,
-) => {
-    if (value < threshold) {
-        return value.toLocaleString();
-    }
-    return millify(value, { precision });
-};
+export const prettifyLargeNumber =
+    (threshold: number = 1_000_000, precision: number = 2) =>
+    (value: number) => {
+        if (value < threshold) {
+            return value.toLocaleString();
+        }
+        return millify(value, { precision });
+    };
 
 export const PrettifyLargeNumber: FC<IPrettifyLargeNumberProps> = ({
     value,
     threshold = 1_000_000,
     precision = 2,
 }) => {
-    const prettyValue = prettifyLargeNumber(value, threshold, precision);
+    const prettyValue = prettifyLargeNumber(threshold, precision)(value);
     const showTooltip = value > threshold;
 
     const valueSpan = (

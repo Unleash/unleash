@@ -195,8 +195,7 @@ export const LifecycleInsights: FC = () => {
     );
 };
 
-const prettifyFlagCount = (value: number): string =>
-    prettifyLargeNumber(value, 1000, 2);
+const prettifyFlagCount = prettifyLargeNumber(1000, 2);
 
 const Chart: React.FC<{ stage: string; data: LifecycleTrend }> = ({
     stage,

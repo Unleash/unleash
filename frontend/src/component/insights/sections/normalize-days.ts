@@ -1,5 +1,7 @@
 import { prettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
 
+const prettifyNumber = prettifyLargeNumber(1000, 2);
+
 export const normalizeDays = (days: number) => {
     if (days <= 0) {
         return 'No data';
@@ -11,5 +13,5 @@ export const normalizeDays = (days: number) => {
     if (rounded === 1) {
         return '1 day';
     }
-    return `${prettifyLargeNumber(rounded, 1000, 2)} days`;
+    return `${prettifyNumber(rounded)} days`;
 };

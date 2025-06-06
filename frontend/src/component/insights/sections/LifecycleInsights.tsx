@@ -65,7 +65,7 @@ const LifecycleTile = styled('article')(({ theme }) => ({
     gap: theme.spacing(2),
     background: theme.palette.background.default,
     borderRadius: theme.shape.borderRadiusLarge,
-    padding: theme.spacing(2),
+    padding: theme.spacing(3),
     minWidth: 0,
 }));
 
@@ -81,6 +81,7 @@ const TileHeader = styled('h3')(({ theme }) => ({
     // flexFlow: 'column',
     fontSize: theme.typography.body1.fontSize,
     fontWeight: 'normal',
+    padding: theme.spacing(1),
 }));
 
 const HeaderNumber = styled('span')(({ theme }) => ({
@@ -165,8 +166,9 @@ export const LifecycleInsights: FC = () => {
                                 </HeaderNumber>
                                 <span>Flags in {stage} stage</span>
                             </TileHeader>
-                            <Chart data={data} stage={stage} />
-
+                            <div>
+                                <Chart data={data} stage={stage} />
+                            </div>
                             <Stats>
                                 <StatRow>
                                     <dt>Current median time spent in stage</dt>

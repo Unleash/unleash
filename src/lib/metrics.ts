@@ -902,8 +902,8 @@ export function registerPrometheusMetrics(
         featureFlagUpdateTotal.increment({
             toggle: featureName,
             project,
-            environment: 'default',
-            environmentType: 'production',
+            environment: 'n/a',
+            environmentType: 'n/a',
             action: 'updated',
         });
     });

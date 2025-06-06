@@ -12,9 +12,7 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('project_environments_api_serial', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('project_environments_api_serial', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
         {
@@ -65,7 +63,7 @@ test('Should add environment to project', async () => {
     const environment = envs.find((env) => env.environment === 'test');
 
     expect(environment).toBeDefined();
-    expect(envs).toHaveLength(2); // test + default
+    expect(envs).toHaveLength(3); // test + development + production
 });
 
 test('Should validate environment', async () => {

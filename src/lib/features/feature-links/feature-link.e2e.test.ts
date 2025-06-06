@@ -18,9 +18,7 @@ let eventStore: IEventStore;
 let featureLinkReadModel: IFeatureLinksReadModel;
 
 beforeAll(async () => {
-    db = await dbInit('feature_link', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('feature_link', getLogger);
     app = await setupAppWithAuth(
         db.stores,
         {

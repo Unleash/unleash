@@ -110,6 +110,7 @@ const CreateFeatureDialogContent = ({
         useLocalStorageState<FeatureFormInitialData>(
             'flag-creation-dialog',
             {},
+            60 * 60 * 1000, // <- 1 hour
         );
     const useFlagCreationCache = useUiFlag('createFlagDialogCache');
 

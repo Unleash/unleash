@@ -26,7 +26,9 @@ const listItemButtonStyle = (theme: Theme) => ({
     },
 });
 
-const CappedText = styled(Typography)<{
+const CappedText = styled(Typography, {
+    shouldForwardProp: (prop) => prop !== 'bold',
+})<{
     bold?: boolean;
 }>(({ theme, bold }) => ({
     whiteSpace: 'nowrap',

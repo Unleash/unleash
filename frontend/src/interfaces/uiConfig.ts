@@ -90,7 +90,6 @@ export type UiFlags = {
     registerFrontendClient?: boolean;
     customMetrics?: boolean;
     lifecycleMetrics?: boolean;
-    sideMenuCleanup?: boolean;
 };
 
 export interface IVersionInfo {

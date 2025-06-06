@@ -62,8 +62,7 @@ export type IFlagKey =
     | 'lastSeenBulkQuery'
     | 'newGettingStartedEmail'
     | 'lifecycleMetrics'
-    | 'customMetrics'
-    | 'sideMenuCleanup';
+    | 'customMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -290,10 +289,6 @@ const flags: IFlags = {
     ),
     lifecycleMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_METRICS,
-        false,
-    ),
-    sideMenuCleanup: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SIDE_MENU_CLEANUP,
         false,
     ),
 };

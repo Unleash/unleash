@@ -48,8 +48,8 @@ export const createOptions = (theme: Theme): ChartOptions<'bar'> => {
                 offset: -6,
             },
         },
-        aspectRatio: 2 / 1,
         responsive: true,
+        maintainAspectRatio: false,
         color: theme.palette.text.secondary,
         scales: {
             y: {

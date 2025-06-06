@@ -7,6 +7,12 @@ import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import { useInsights } from 'hooks/api/getters/useInsights/useInsights';
 import { LifecycleChart } from '../components/LifecycleChart/LifecycleChart.tsx';
 import { styled, useTheme } from '@mui/material';
+import {
+    prettifyLargeNumber,
+    PrettifyLargeNumber,
+} from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber.tsx';
+import { FeatureLifecycleStageIcon } from 'component/common/FeatureLifecycle/FeatureLifecycleStageIcon.tsx';
+import { normalizeDays } from './normalize-days.ts';
 
 type LifecycleTrend = {
     totalFlags: number;
@@ -53,11 +59,59 @@ const ChartRow = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const ChartContainer = styled('article')(({ theme }) => ({
+const LifecycleTile = styled('article')(({ theme }) => ({
     background: theme.palette.background.default,
     borderRadius: theme.shape.borderRadiusLarge,
-    padding: theme.spacing(2),
+    padding: theme.spacing(3),
     minWidth: 0,
+}));
+
+const lifecycleStageMap = {
+    develop: 'pre-live',
+    production: 'live',
+    cleanup: 'completed',
+};
+
+const TileHeader = styled('h3')(({ theme }) => ({
+    margin: 0,
+    fontSize: theme.typography.body1.fontSize,
+    fontWeight: 'normal',
+    padding: theme.spacing(1),
+    marginBottom: theme.spacing(3),
+}));
+
+const HeaderNumber = styled('span')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    gap: theme.spacing(2),
+    fontSize: theme.typography.h1.fontSize,
+    fontWeight: 'bold',
+}));
+
+const Stats = styled('dl')(({ theme }) => ({
+    background: theme.palette.background.elevation1,
+    borderRadius: theme.shape.borderRadiusMedium,
+    fontSize: theme.typography.body2.fontSize,
+    '& dt::after': {
+        content: '":"',
+    },
+    '& dd': {
+        margin: 0,
+        fontWeight: 'bold',
+    },
+    paddingInline: theme.spacing(2),
+    paddingBlock: theme.spacing(1.5),
+    gap: theme.spacing(1.5),
+    margin: 0,
+    marginTop: theme.spacing(2),
+}));
+
+const StatRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row wrap',
+    gap: theme.spacing(0.5),
+    fontSize: theme.typography.body2.fontSize,
 }));
 
 export const LifecycleInsights: FC = () => {
@@ -90,15 +144,55 @@ export const LifecycleInsights: FC = () => {
             <ChartRow>
                 {Object.entries(mockData).map(([stage, data]) => {
                     return (
-                        <ChartContainer key={stage}>
-                            <Chart data={data} stage={stage} />
-                        </ChartContainer>
+                        <LifecycleTile key={stage}>
+                            <TileHeader>
+                                <HeaderNumber>
+                                    <PrettifyLargeNumber
+                                        value={data.totalFlags ?? 0}
+                                        threshold={1000}
+                                        precision={1}
+                                    />
+                                    <FeatureLifecycleStageIcon
+                                        aria-hidden='true'
+                                        stage={{
+                                            name: lifecycleStageMap[stage],
+                                        }}
+                                    />
+                                </HeaderNumber>
+                                <span>Flags in {stage} stage</span>
+                            </TileHeader>
+                            <div>
+                                <Chart data={data} stage={stage} />
+                            </div>
+                            <Stats>
+                                <StatRow>
+                                    <dt>Current median time spent in stage</dt>
+                                    <dd data-loading-project-lifecycle-summary>
+                                        {normalizeDays(
+                                            data.averageTimeInStageDays,
+                                        )}
+                                    </dd>
+                                </StatRow>
+                                <StatRow>
+                                    <dt>
+                                        Historical median time spent in stage
+                                    </dt>
+                                    <dd data-loading-project-lifecycle-summary>
+                                        {normalizeDays(
+                                            data.averageTimeInStageDays,
+                                        )}
+                                    </dd>
+                                </StatRow>
+                            </Stats>
+                        </LifecycleTile>
                     );
                 })}
             </ChartRow>
         </InsightsSection>
     );
 };
+
+const prettifyFlagCount = prettifyLargeNumber(1000, 2);
 
 const Chart: React.FC<{ stage: string; data: LifecycleTrend }> = ({
     stage,
@@ -151,7 +245,7 @@ const Chart: React.FC<{ stage: string; data: LifecycleTrend }> = ({
                                             context.chart.legend
                                                 ?.legendItems?.[1].hidden
                                         ) {
-                                            return value;
+                                            return prettifyFlagCount(value);
                                         }
                                         return '';
                                     },
@@ -177,10 +271,10 @@ const Chart: React.FC<{ stage: string; data: LifecycleTrend }> = ({
                                             context.chart.legend
                                                 ?.legendItems?.[0].hidden
                                         ) {
-                                            return value;
+                                            return prettifyFlagCount(value);
                                         }
-                                        return (
-                                            value + oldData[context.dataIndex]
+                                        return prettifyFlagCount(
+                                            value + oldData[context.dataIndex],
                                         );
                                     },
                                 },

@@ -10805,7 +10805,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"medium-zoom@npm:^1.0.4":
+"medium-zoom@npm:^1.0.8":
   version: 1.1.0
   resolution: "medium-zoom@npm:1.1.0"
   checksum: 10c0/7d1f05e8eab045c33d7c04d4ee7bf04f5246cf7a720d7b5f5a51c36ab23666e363bcbb6bffae50b5948d5eb19361914cb0e26a1fce5c1fff7a266bc0217893f3
@@ -12921,12 +12921,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"plugin-image-zoom@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "plugin-image-zoom@npm:1.2.0"
+plugin-image-zoom@flexanalytics/plugin-image-zoom:
+  version: 1.1.0
+  resolution: "plugin-image-zoom@https://github.com/flexanalytics/plugin-image-zoom.git#commit=8e1b866c79ed6d42cefc4c52f851f1dfd1d0c7de"
   dependencies:
-    medium-zoom: "npm:^1.0.4"
-  checksum: 10c0/decbb9c5bd2e2eafdca6e96585afc5fad2c2cdee5bdca3b007bdfece56a07e96471225b5aa2bdc532088d3d083353a1d5871ef20adcdc8862dcace431bd42c52
+    medium-zoom: "npm:^1.0.8"
+  checksum: 10c0/5b78ff4c239cd825dddff5717871f3897fbd58d4f5c489875d5c2e53716e0d5e39ddc1e7eef4b9a7f100414952658fc2d465d024eec13c0d5976dce1513a65a8
   languageName: node
   linkType: hard
 
@@ -17107,7 +17107,7 @@ __metadata:
     docusaurus-plugin-sass: "npm:^0.2.6"
     docusaurus-theme-openapi-docs: "npm:4.3.4"
     git-url-parse: "npm:^16.0.0"
-    plugin-image-zoom: "npm:^1.2.0"
+    plugin-image-zoom: flexanalytics/plugin-image-zoom
     prism-react-renderer: "npm:^2.4.0"
     prism-svelte: "npm:^0.5.0"
     react: "npm:^18.3.1"

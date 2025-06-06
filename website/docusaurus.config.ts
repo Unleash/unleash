@@ -400,11 +400,15 @@ class="header-github-link"
                 },
             },
             image: 'img/unleash-preview-1200-630.png',
-            zoom: {
-                selector: '.markdown :not(p) > img',
+            imageZoom: {
+                // Optional medium-zoom options at
+                // https://www.npmjs.com/package/medium-zoom#options
                 options: {
                     background: 'var(--ifm-background-color)',
                 },
+            },
+            zoom: {
+                selector: '.markdown :not(p) > img',
             },
         },
         presets: [

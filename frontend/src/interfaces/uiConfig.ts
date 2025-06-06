@@ -90,6 +90,7 @@ export type UiFlags = {
     registerFrontendClient?: boolean;
     customMetrics?: boolean;
     lifecycleMetrics?: boolean;
+    createFlagDialogCache?: boolean;
     sideMenuCleanup?: boolean;
 };
 

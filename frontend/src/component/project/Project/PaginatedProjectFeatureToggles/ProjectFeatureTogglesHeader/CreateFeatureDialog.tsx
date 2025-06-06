@@ -9,7 +9,9 @@ import { Dialog, styled } from '@mui/material';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { Limit } from 'component/common/Limit/Limit';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import useFeatureForm from 'component/feature/hooks/useFeatureForm';
+import useFeatureForm, {
+    type FeatureFormInitialData,
+} from 'component/feature/hooks/useFeatureForm';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import FlagIcon from '@mui/icons-material/Flag';
 import ImpressionDataIcon from '@mui/icons-material/AltRoute';
@@ -26,11 +28,12 @@ import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
 import Label from '@mui/icons-material/Label';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import { MultiSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/MultiSelectConfigButton';
-import type { ITag } from 'interfaces/tags';
 import { ToggleConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/ToggleConfigButton';
 import { useFlagLimits } from './useFlagLimits.tsx';
 import { useFeatureCreatedFeedback } from './hooks/useFeatureCreatedFeedback.ts';
 import { formatTag } from 'utils/format-tag';
+import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 interface ICreateFeatureDialogProps {
     open: boolean;
@@ -103,6 +106,16 @@ const CreateFeatureDialogContent = ({
     const navigate = useNavigate();
     const openFeatureCreatedFeedback = useFeatureCreatedFeedback();
 
+    const [storedFlagConfig, setStoredFlagConfig] =
+        useLocalStorageState<FeatureFormInitialData>(
+            'flag-creation-dialog',
+            {},
+            60 * 60 * 1000, // <- 1 hour
+        );
+    const useFlagCreationCache = useUiFlag('createFlagDialogCache');
+
+    const initialData = useFlagCreationCache ? storedFlagConfig : {};
+
     const {
         type,
         setType,
@@ -120,7 +133,7 @@ const CreateFeatureDialogContent = ({
         getTogglePayload,
         clearErrors,
         errors,
-    } = useFeatureForm();
+    } = useFeatureForm(initialData);
     const { createFeatureToggle, loading } = useFeatureApi();
 
     const generalDocumentation: {
@@ -170,6 +183,7 @@ const CreateFeatureDialogContent = ({
                 });
                 onClose();
                 onSuccess?.();
+                setStoredFlagConfig({});
                 openFeatureCreatedFeedback();
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
@@ -210,8 +224,19 @@ const CreateFeatureDialogContent = ({
         return projectObject?.name;
     }, [project, projects]);
 
+    const onDialogClose = () => {
+        setStoredFlagConfig({
+            name,
+            tags,
+            impressionData,
+            type,
+            description,
+        });
+        onClose();
+    };
+
     return (
-        <StyledDialog open={open} onClose={onClose}>
+        <StyledDialog open={open} onClose={onDialogClose}>
             <FormTemplate
                 compact
                 disablePadding
@@ -289,17 +314,32 @@ const CreateFeatureDialogContent = ({
                                     />
                                 }
                             />
-                            <MultiSelectConfigButton<ITag>
+                            <MultiSelectConfigButton
                                 tooltip={{
                                     header: 'Select tags',
                                 }}
                                 description={configButtonData.tags.text}
-                                selectedOptions={tags}
+                                selectedOptions={
+                                    new Set(
+                                        Array.from(tags).map(
+                                            (tag) => `${tag.type}:${tag.value}`,
+                                        ),
+                                    )
+                                }
                                 options={allTags.map((tag) => ({
                                     label: formatTag(tag),
-                                    value: tag,
+                                    value: `${tag.type}:${tag.value}`,
                                 }))}
-                                onChange={setTags}
+                                onChange={(strings) => {
+                                    const normalized = Array.from(strings).map(
+                                        (string) => {
+                                            const [type, value] =
+                                                string.split(':');
+                                            return { type, value };
+                                        },
+                                    );
+                                    setTags(new Set(normalized));
+                                }}
                                 button={{
                                     label:
                                         tags.size > 0

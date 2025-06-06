@@ -6,15 +6,11 @@ import {
     MenuListItem,
     SignOutItem,
 } from './ListItems.tsx';
-import { Box, List, Typography } from '@mui/material';
+import { Box, List } from '@mui/material';
 import { IconRenderer } from './IconRenderer.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import FlagIcon from '@mui/icons-material/OutlinedFlag';
-import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
-import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 import { AdminMenuNavigation } from '../AdminMenu/AdminNavigationItems.tsx';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { ConfigurationAccordion } from './ConfigurationAccordion.tsx';
 
 export const OtherLinksList = () => {
@@ -35,50 +31,6 @@ export const OtherLinksList = () => {
         </List>
     );
 };
-
-/**
- * @deprecated remove with `sideMenuCleanup` flag
- */
-export const RecentProjectsList: FC<{
-    projectId: string;
-    projectName: string;
-    mode: NavigationMode;
-    onClick: () => void;
-}> = ({ projectId, projectName, mode, onClick }) => (
-    <List>
-        <MenuListItem
-            href={`/projects/${projectId}`}
-            text={projectName}
-            onClick={onClick}
-            selected={false}
-            mode={mode}
-            icon={<ProjectIcon />}
-        />
-    </List>
-);
-
-/**
- * @deprecated remove with `sideMenuCleanup` flag
- */
-export const RecentFlagsList: FC<{
-    flags: { featureId: string; projectId: string }[];
-    mode: NavigationMode;
-    onClick: () => void;
-}> = ({ flags, mode, onClick }) => (
-    <List>
-        {flags.map((flag) => (
-            <MenuListItem
-                href={`/projects/${flag.projectId}/features/${flag.featureId}`}
-                text={flag.featureId}
-                onClick={onClick}
-                selected={false}
-                key={flag.featureId}
-                mode={mode}
-                icon={<FlagIcon />}
-            />
-        ))}
-    </List>
-);
 
 export const PrimaryNavigationList: FC<{
     mode: NavigationMode;
@@ -101,7 +53,6 @@ export const PrimaryNavigationList: FC<{
     );
 
     const { isOss } = useUiConfig();
-    const sideMenuCleanup = useUiFlag('sideMenuCleanup');
 
     return (
         <List>
@@ -110,19 +61,14 @@ export const PrimaryNavigationList: FC<{
             <PrimaryListItem href='/search' text='Flags overview' />
             <PrimaryListItem href='/playground' text='Playground' />
             {!isOss() ? (
-                <PrimaryListItem
-                    href='/insights'
-                    text={sideMenuCleanup ? 'Analytics' : 'Insights'}
-                />
+                <PrimaryListItem href='/insights' text='Analytics' />
             ) : null}
-            {sideMenuCleanup ? (
-                <ConfigurationAccordion
-                    mode={mode}
-                    setMode={setMode}
-                    activeItem={activeItem}
-                    onClick={() => onClick('configure')}
-                />
-            ) : null}
+            <ConfigurationAccordion
+                mode={mode}
+                setMode={setMode}
+                activeItem={activeItem}
+                onClick={() => onClick('configure')}
+            />
         </List>
     );
 };
@@ -173,55 +119,3 @@ export const AdminSettingsLink: FC<{
         </List>
     </Box>
 );
-
-export const RecentProjectsNavigation: FC<{
-    mode: NavigationMode;
-    projectId: string;
-    onClick: () => void;
-}> = ({ mode, onClick, projectId }) => {
-    const { project, loading } = useProjectOverview(projectId);
-    const projectDeleted = !project.name && !loading;
-
-    if (projectDeleted) return null;
-    return (
-        <Box>
-            {mode === 'full' && (
-                <Typography
-                    sx={{
-                        fontWeight: 'bold',
-                        fontSize: 'small',
-                        ml: 2,
-                        mt: 1.5,
-                    }}
-                >
-                    Recent project
-                </Typography>
-            )}
-            <RecentProjectsList
-                projectId={projectId}
-                projectName={project.name}
-                mode={mode}
-                onClick={onClick}
-            />
-        </Box>
-    );
-};
-
-export const RecentFlagsNavigation: FC<{
-    mode: NavigationMode;
-    flags: { featureId: string; projectId: string }[];
-    onClick: () => void;
-}> = ({ mode, onClick, flags }) => {
-    return (
-        <Box>
-            {mode === 'full' && (
-                <Typography
-                    sx={{ fontWeight: 'bold', fontSize: 'small', ml: 2 }}
-                >
-                    Recent flags
-                </Typography>
-            )}
-            <RecentFlagsList flags={flags} mode={mode} onClick={onClick} />
-        </Box>
-    );
-};

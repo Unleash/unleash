@@ -91,7 +91,6 @@ export type UiFlags = {
     customMetrics?: boolean;
     lifecycleMetrics?: boolean;
     createFlagDialogCache?: boolean;
-    sideMenuCleanup?: boolean;
 };
 
 export interface IVersionInfo {

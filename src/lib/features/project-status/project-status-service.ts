@@ -88,6 +88,9 @@ export class ProjectStatusService {
             health: {
                 current: currentHealth,
             },
+            technicalDebt: {
+                current: 100 - currentHealth,
+            },
             lifecycleSummary,
             staleFlags: {
                 total: staleFlagCount,

@@ -6,6 +6,9 @@ test('projectStatusSchema', () => {
         health: {
             current: 50,
         },
+        technicalDebt: {
+            current: 50,
+        },
         lifecycleSummary: {
             initial: {
                 currentFlags: 0,

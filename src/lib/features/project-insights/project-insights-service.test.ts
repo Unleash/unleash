@@ -47,6 +47,12 @@ test('Return basic insights', async () => {
             staleCount: 0,
             rating: 100,
         },
+        technicalDebt: {
+            activeCount: 0,
+            potentiallyStaleCount: 0,
+            staleCount: 0,
+            rating: 0,
+        },
         leadTime: { features: [], projectAverage: 0 },
         members: { currentMembers: 0, change: 0 },
     });

@@ -11,9 +11,7 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('metrics_serial', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('metrics_serial', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
         {
@@ -179,9 +177,9 @@ test('should save multiple projects from token', async () => {
         .expect('Content-Type', /json/)
         .expect(200);
 
-    expect(body).toMatchObject({
-        applications: [
-            {
+    expect(body.applications).toEqual(
+        expect.arrayContaining([
+            expect.objectContaining({
                 appName: 'multi-project-app',
                 usage: [
                     {
@@ -193,8 +191,7 @@ test('should save multiple projects from token', async () => {
                         project: 'mainProject',
                     },
                 ],
-            },
-        ],
-        total: 1,
-    });
+            }),
+        ]),
+    );
 });

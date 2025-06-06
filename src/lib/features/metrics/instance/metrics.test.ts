@@ -417,7 +417,7 @@ describe('bulk metrics', () => {
         });
     });
 
-    test('filters out metrics for environments we do not have access for. No auth setup so we can only access default env', async () => {
+    test('without access to production environment due to no auth setup, we can only access the default env', async () => {
         const now = new Date();
 
         await request
@@ -437,7 +437,7 @@ describe('bulk metrics', () => {
                     {
                         featureName: 'test_feature_two',
                         appName: 'test_application',
-                        environment: 'development',
+                        environment: 'production',
                         timestamp: startOfHour(now),
                         yes: 1000,
                         no: 800,

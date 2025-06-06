@@ -13,9 +13,7 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('advanced_playground', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('advanced_playground', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
         {

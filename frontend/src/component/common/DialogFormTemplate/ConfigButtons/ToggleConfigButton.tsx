@@ -36,7 +36,7 @@ export function ToggleConfigButton({
             variant='custom'
         >
             <Button
-                aria-role='switch'
+                role='switch'
                 aria-checked={currentValue}
                 variant={currentValue ? 'contained' : 'outlined'}
                 color='primary'

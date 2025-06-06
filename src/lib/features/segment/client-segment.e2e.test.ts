@@ -197,9 +197,7 @@ const createTestSegments = async () => {
 };
 
 beforeAll(async () => {
-    db = await dbInit('segments', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('segments', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
         {

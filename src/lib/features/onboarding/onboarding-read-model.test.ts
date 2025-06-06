@@ -15,6 +15,7 @@ import {
     setupAppWithCustomConfig,
 } from '../../../test/e2e/helpers/test-helper.js';
 import { ApiTokenType } from '../../types/model.js';
+import { DEFAULT_ENV } from '../../server-impl.js';
 
 let db: ITestDb;
 let onboardingReadModel: IOnboardingReadModel;
@@ -167,7 +168,7 @@ test('can get project onboarding status', async () => {
 
     await lastSeenStore.setLastSeen([
         {
-            environment: 'default',
+            environment: DEFAULT_ENV,
             featureName: 'my-flag',
         },
     ]);
@@ -188,7 +189,7 @@ test('archived feature counts as onboarded', async () => {
 
     await lastSeenStore.setLastSeen([
         {
-            environment: 'default',
+            environment: DEFAULT_ENV,
             featureName: 'my-flag',
         },
     ]);
@@ -213,7 +214,7 @@ test('sdk register also onboards a project', async () => {
         await app.services.apiTokenService.createApiTokenWithProjects({
             type: ApiTokenType.CLIENT,
             projects: ['default'],
-            environment: 'default',
+            environment: DEFAULT_ENV,
             tokenName: 'tester',
         });
 

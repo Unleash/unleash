@@ -7,6 +7,7 @@ import getLogger from '../../../fixtures/no-logger.js';
 import type { IUnleashStores } from '../../../../lib/types/index.js';
 import { ApiTokenType } from '../../../../lib/types/model.js';
 import { registerPrometheusMetrics } from '../../../../lib/metrics.js';
+import { DEFAULT_ENV } from '../../../../lib/server-impl.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -73,13 +74,13 @@ test('api tokens are serialized correctly', async () => {
     await app.services.apiTokenService.createApiTokenWithProjects({
         tokenName: 'frontend',
         type: ApiTokenType.FRONTEND,
-        environment: 'default',
+        environment: DEFAULT_ENV,
         projects: ['*'],
     });
     await app.services.apiTokenService.createApiTokenWithProjects({
         tokenName: 'client',
         type: ApiTokenType.CLIENT,
-        environment: 'default',
+        environment: DEFAULT_ENV,
         projects: ['*'],
     });
 

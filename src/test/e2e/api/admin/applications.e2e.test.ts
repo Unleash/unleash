@@ -5,6 +5,7 @@ import {
 } from '../../helpers/test-helper.js';
 import getLogger from '../../../fixtures/no-logger.js';
 import { ApiTokenType, type IApiToken } from '../../../../lib/types/model.js';
+import { DEFAULT_ENV } from '../../../../lib/server-impl.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -65,7 +66,7 @@ beforeAll(async () => {
         await app.services.apiTokenService.createApiTokenWithProjects({
             type: ApiTokenType.CLIENT,
             projects: ['default'],
-            environment: 'default',
+            environment: DEFAULT_ENV,
             tokenName: 'tester',
         });
 
@@ -73,16 +74,17 @@ beforeAll(async () => {
         await app.services.apiTokenService.createApiTokenWithProjects({
             type: ApiTokenType.FRONTEND,
             projects: ['default'],
-            environment: 'default',
+            environment: DEFAULT_ENV,
             tokenName: 'tester',
         });
 });
 
-afterEach(async () => {
+beforeEach(async () => {
     await Promise.all([
         db.stores.clientMetricsStoreV2.deleteAll(),
         db.stores.clientInstanceStore.deleteAll(),
         db.stores.featureToggleStore.deleteAll(),
+        db.stores.clientApplicationsStore.deleteAll(),
     ]);
 });
 
@@ -134,7 +136,7 @@ test('should show correct application metrics', async () => {
         environments: [
             {
                 instanceCount: 2,
-                name: 'default',
+                name: DEFAULT_ENV,
                 frontendSdks: [],
                 backendSdks: [
                     'unleash-client-node:3.2.1',
@@ -153,7 +155,7 @@ test('should show correct application metrics', async () => {
 
     const { body: instancesBody } = await app.request
         .get(
-            `/api/admin/metrics/instances/${metrics.appName}/environment/default`,
+            `/api/admin/metrics/instances/${metrics.appName}/environment/${DEFAULT_ENV}`,
         )
         .expect(200);
 
@@ -198,7 +200,7 @@ test('should report frontend application instances', async () => {
 
     const { body } = await app.request
         .get(
-            `/api/admin/metrics/instances/${metrics.appName}/environment/default`,
+            `/api/admin/metrics/instances/${metrics.appName}/environment/${DEFAULT_ENV}`,
         )
         .expect(200);
 
@@ -243,7 +245,7 @@ test('should show missing features and strategies', async () => {
         environments: [
             {
                 instanceCount: 1,
-                name: 'default',
+                name: DEFAULT_ENV,
                 sdks: ['unleash-client-node:1.0.0'],
                 issues: {
                     missingFeatures: ['toggle-name-2', 'toggle-name-3'],
@@ -296,7 +298,7 @@ test('should not return instances older than 24h', async () => {
 
     const { body: instancesBody } = await app.request
         .get(
-            `/api/admin/metrics/instances/${metrics.appName}/environment/default`,
+            `/api/admin/metrics/instances/${metrics.appName}/environment/${DEFAULT_ENV}`,
         )
         .expect(200);
 

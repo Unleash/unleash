@@ -116,7 +116,7 @@ test('should return average time to production per toggle', async () => {
                     enabled: true,
                     project: project.id,
                     featureName: toggle.name,
-                    environment: 'default',
+                    environment: 'production',
                     auditUser: TEST_AUDIT_USER,
                 }),
             );
@@ -202,7 +202,7 @@ test('should return average time to production per toggle for a specific project
                     enabled: true,
                     project: project1.id,
                     featureName: toggle.name,
-                    environment: 'default',
+                    environment: 'production',
                     auditUser: TEST_AUDIT_USER,
                 }),
             );
@@ -216,7 +216,7 @@ test('should return average time to production per toggle for a specific project
                     enabled: true,
                     project: project2.id,
                     featureName: toggle.name,
-                    environment: 'default',
+                    environment: 'production',
                     auditUser: TEST_AUDIT_USER,
                 }),
             );
@@ -287,7 +287,7 @@ test('should return average time to production per toggle and include archived t
                     enabled: true,
                     project: project1.id,
                     featureName: toggle.name,
-                    environment: 'default',
+                    environment: 'production',
                     auditUser: TEST_AUDIT_USER,
                 }),
             );

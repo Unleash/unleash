@@ -5,6 +5,7 @@ import {
 } from '../../helpers/test-helper.js';
 import getLogger from '../../../fixtures/no-logger.js';
 import { ApiTokenType } from '../../../../lib/types/model.js';
+import { DEFAULT_ENV } from '../../../../lib/server-impl.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -156,7 +157,7 @@ test('should save multiple projects from token', async () => {
         await app.services.apiTokenService.createApiTokenWithProjects({
             type: ApiTokenType.CLIENT,
             projects: ['default', 'mainProject'],
-            environment: 'default',
+            environment: DEFAULT_ENV,
             tokenName: 'tester',
         });
 
@@ -184,11 +185,11 @@ test('should save multiple projects from token', async () => {
                 appName: 'multi-project-app',
                 usage: [
                     {
-                        environments: ['default'],
+                        environments: [DEFAULT_ENV],
                         project: 'default',
                     },
                     {
-                        environments: ['default'],
+                        environments: [DEFAULT_ENV],
                         project: 'mainProject',
                     },
                 ],

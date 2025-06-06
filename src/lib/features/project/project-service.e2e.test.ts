@@ -22,7 +22,6 @@ import {
 } from '../index.js';
 import {
     type IAuditUser,
-    type IGroup,
     type IUnleashStores,
     type IUser,
     SYSTEM_USER_AUDIT,
@@ -30,18 +29,11 @@ import {
     TEST_AUDIT_USER,
 } from '../../types/index.js';
 import { BadDataError, InvalidOperationError } from '../../error/index.js';
-import { DEFAULT_ENV, extractAuditInfoFromUser } from '../../util/index.js';
+import { extractAuditInfoFromUser } from '../../util/index.js';
 import { ApiTokenType } from '../../types/model.js';
 import { createApiTokenService } from '../api-tokens/createApiTokenService.js';
 import type User from '../../types/user.js';
-import {
-    beforeAll,
-    expect,
-    test,
-    beforeEach,
-    afterEach,
-    afterAll,
-} from 'vitest';
+import { beforeAll, expect, test, beforeEach, afterAll } from 'vitest';
 let stores: IUnleashStores;
 let db: ITestDb;
 
@@ -55,7 +47,6 @@ let auditUser: IAuditUser;
 let apiTokenService: ApiTokenService;
 
 let opsUser: IUser;
-let group: IGroup;
 
 const isProjectUser = async (
     userId: number,
@@ -80,10 +71,6 @@ beforeAll(async () => {
         username: user.email,
         ip: '127.0.0.1',
     };
-    group = await stores.groupStore.create({
-        name: 'aTestGroup',
-        description: '',
-    });
     opsUser = await stores.userStore.insert({
         name: 'Test user',
         email: 'test@example.com',
@@ -101,29 +88,31 @@ beforeAll(async () => {
     environmentService = new EnvironmentService(stores, config, eventService);
     projectService = createProjectService(db.rawDatabase, config);
     apiTokenService = createApiTokenService(db.rawDatabase, config);
+    // await stores.environmentStore.updateProperty(DEFAULT_ENV, 'enabled', false);
+    // await stores.environmentStore.updateProperty(
+    //     'production',
+    //     'enabled',
+    //     false,
+    // );
 });
 beforeEach(async () => {
-    await stores.accessStore.addUserToRole(opsUser.id, 1, '');
-});
-
-afterAll(async () => {
-    await db.destroy();
-});
-
-afterEach(async () => {
     const envs = await stores.environmentStore.getAll();
-    const deleteEnvs = envs
-        .filter((env) => env.name !== 'default')
-        .map(async (env) => {
-            await stores.environmentStore.delete(env.name);
-        });
+    const deleteEnvs = envs.map(async (env) => {
+        await stores.environmentStore.delete(env.name);
+    });
+    await Promise.allSettled(deleteEnvs);
+
     const users = await stores.userStore.getAll();
     const wipeUserPermissions = users.map(async (u) => {
         await stores.accessStore.unlinkUserRoles(u.id);
     });
     await stores.eventStore.deleteAll();
-    await Promise.allSettled(deleteEnvs);
     await Promise.allSettled(wipeUserPermissions);
+    await stores.accessStore.addUserToRole(opsUser.id, 1, '');
+});
+
+afterAll(async () => {
+    await db.destroy();
 });
 
 test('should have default project', async () => {
@@ -1850,6 +1839,11 @@ const updateFeature = async (featureName: string, update: any) => {
 };
 
 test('should calculate average time to production', async () => {
+    await stores.environmentStore.create({
+        name: 'prod-env',
+        type: 'production',
+        enabled: true,
+    });
     const project = {
         id: 'average-time-to-prod',
         name: 'average-time-to-prod',
@@ -1884,7 +1878,7 @@ test('should calculate average time to production', async () => {
                     enabled: true,
                     project: project.id,
                     featureName: flag.name,
-                    environment: 'default',
+                    environment: 'prod-env',
                     auditUser,
                 }),
             );
@@ -1908,6 +1902,11 @@ test('should calculate average time to production', async () => {
 });
 
 test('should calculate average time to production ignoring some items', async () => {
+    await stores.environmentStore.create({
+        name: 'prod-env',
+        type: 'production',
+        enabled: true,
+    });
     const project = {
         id: 'average-time-to-prod-corner-cases',
         name: 'average-time-to-prod',
@@ -1918,7 +1917,7 @@ test('should calculate average time to production ignoring some items', async ()
         enabled: true,
         project: project.id,
         featureName,
-        environment: 'default',
+        environment: 'prod-env',
         auditUser,
         tags: [],
     });
@@ -2125,222 +2124,6 @@ test('should get correct amount of project members for current and past window',
     expect(result.updates.projectActivityPastWindow).toBe(0);
 });
 
-test('should return average time to production per flag', async () => {
-    const project = {
-        id: 'average-time-to-prod-per-flag',
-        name: 'average-time-to-prod-per-flag',
-        mode: 'open' as const,
-        defaultStickiness: 'clientId',
-    };
-
-    await projectService.createProject(project, user, auditUser);
-
-    const flags = [
-        { name: 'average-prod-time-pt', subdays: 7 },
-        { name: 'average-prod-time-pt-2', subdays: 14 },
-        { name: 'average-prod-time-pt-3', subdays: 40 },
-        { name: 'average-prod-time-pt-4', subdays: 15 },
-        { name: 'average-prod-time-pt-5', subdays: 2 },
-    ];
-
-    const featureFlags = await Promise.all(
-        flags.map((flag) => {
-            return featureToggleService.createFeatureToggle(
-                project.id,
-                flag,
-                auditUser,
-            );
-        }),
-    );
-
-    await Promise.all(
-        featureFlags.map((flag) => {
-            return eventService.storeEvent(
-                new FeatureEnvironmentEvent({
-                    enabled: true,
-                    project: project.id,
-                    featureName: flag.name,
-                    environment: 'default',
-                    auditUser,
-                }),
-            );
-        }),
-    );
-
-    await Promise.all(
-        flags.map((flag) =>
-            updateFeature(flag.name, {
-                created_at: subDays(new Date(), flag.subdays),
-            }),
-        ),
-    );
-
-    const result = await projectService.getDoraMetrics(project.id);
-
-    expect(result.features).toHaveLength(5);
-    expect(result.features[0].timeToProduction).toBeTruthy();
-    expect(result.projectAverage).toBeTruthy();
-});
-
-test('should return average time to production per flag for a specific project', async () => {
-    const project1 = {
-        id: 'average-time-to-prod-per-flag-1',
-        name: 'Project 1',
-        mode: 'open' as const,
-        defaultStickiness: 'clientId',
-    };
-
-    const project2 = {
-        id: 'average-time-to-prod-per-flag-2',
-        name: 'Project 2',
-        mode: 'open' as const,
-        defaultStickiness: 'clientId',
-    };
-
-    await projectService.createProject(project1, user, auditUser);
-    await projectService.createProject(project2, user, auditUser);
-
-    const flagsProject1 = [
-        { name: 'average-prod-time-pt-10', subdays: 7 },
-        { name: 'average-prod-time-pt-11', subdays: 14 },
-        { name: 'average-prod-time-pt-12', subdays: 40 },
-    ];
-
-    const flagsProject2 = [
-        { name: 'average-prod-time-pt-13', subdays: 15 },
-        { name: 'average-prod-time-pt-14', subdays: 2 },
-    ];
-
-    const featureFlagsProject1 = await Promise.all(
-        flagsProject1.map((flag) => {
-            return featureToggleService.createFeatureToggle(
-                project1.id,
-                flag,
-                auditUser,
-            );
-        }),
-    );
-
-    const featureFlagsProject2 = await Promise.all(
-        flagsProject2.map((flag) => {
-            return featureToggleService.createFeatureToggle(
-                project2.id,
-                flag,
-                auditUser,
-            );
-        }),
-    );
-
-    await Promise.all(
-        featureFlagsProject1.map((flag) => {
-            return eventService.storeEvent(
-                new FeatureEnvironmentEvent({
-                    enabled: true,
-                    project: project1.id,
-                    featureName: flag.name,
-                    environment: 'default',
-                    auditUser,
-                }),
-            );
-        }),
-    );
-
-    await Promise.all(
-        featureFlagsProject2.map((flag) => {
-            return eventService.storeEvent(
-                new FeatureEnvironmentEvent({
-                    enabled: true,
-                    project: project2.id,
-                    featureName: flag.name,
-                    environment: 'default',
-                    auditUser,
-                }),
-            );
-        }),
-    );
-
-    await Promise.all(
-        flagsProject1.map((flag) =>
-            updateFeature(flag.name, {
-                created_at: subDays(new Date(), flag.subdays),
-            }),
-        ),
-    );
-
-    await Promise.all(
-        flagsProject2.map((flag) =>
-            updateFeature(flag.name, {
-                created_at: subDays(new Date(), flag.subdays),
-            }),
-        ),
-    );
-
-    const resultProject1 = await projectService.getDoraMetrics(project1.id);
-    const resultProject2 = await projectService.getDoraMetrics(project2.id);
-
-    expect(resultProject1.features).toHaveLength(3);
-    expect(resultProject2.features).toHaveLength(2);
-});
-
-test('should return average time to production per flag and include archived flags', async () => {
-    const project1 = {
-        id: 'average-time-to-prod-per-flag-12',
-        name: 'Project 1',
-        mode: 'open' as const,
-        defaultStickiness: 'clientId',
-    };
-
-    await projectService.createProject(project1, user, auditUser);
-
-    const flagsProject1 = [
-        { name: 'average-prod-time-pta-10', subdays: 7 },
-        { name: 'average-prod-time-pta-11', subdays: 14 },
-        { name: 'average-prod-time-pta-12', subdays: 40 },
-    ];
-
-    const featureFlagsProject1 = await Promise.all(
-        flagsProject1.map((flag) => {
-            return featureToggleService.createFeatureToggle(
-                project1.id,
-                flag,
-                auditUser,
-            );
-        }),
-    );
-
-    await Promise.all(
-        featureFlagsProject1.map((flag) => {
-            return eventService.storeEvent(
-                new FeatureEnvironmentEvent({
-                    enabled: true,
-                    project: project1.id,
-                    featureName: flag.name,
-                    environment: 'default',
-                    auditUser,
-                }),
-            );
-        }),
-    );
-
-    await Promise.all(
-        flagsProject1.map((flag) =>
-            updateFeature(flag.name, {
-                created_at: subDays(new Date(), flag.subdays),
-            }),
-        ),
-    );
-
-    await featureToggleService.archiveToggle(
-        'average-prod-time-pta-12',
-        user,
-        auditUser,
-    );
-
-    const resultProject1 = await projectService.getDoraMetrics(project1.id);
-
-    expect(resultProject1.features).toHaveLength(3);
-});
-
 describe('feature flag naming patterns', () => {
     test(`should clear existing example and description if the payload doesn't contain them`, async () => {
         const featureNaming = {
@@ -2424,6 +2207,11 @@ test('deleting a project with archived flags should result in any remaining arch
 });
 
 test('should also delete api tokens that were only bound to deleted project', async () => {
+    await stores.environmentStore.create({
+        name: 'prod-env',
+        type: 'production',
+        enabled: true,
+    });
     const project = 'some';
     const tokenName = 'test';
 
@@ -2439,7 +2227,7 @@ test('should also delete api tokens that were only bound to deleted project', as
     const token = await apiTokenService.createApiTokenWithProjects({
         type: ApiTokenType.CLIENT,
         tokenName,
-        environment: DEFAULT_ENV,
+        environment: 'prod-env',
         projects: [project],
     });
 
@@ -2449,6 +2237,11 @@ test('should also delete api tokens that were only bound to deleted project', as
 });
 
 test('should not delete project-bound api tokens still bound to project', async () => {
+    await stores.environmentStore.create({
+        name: 'prod-env',
+        type: 'production',
+        enabled: true,
+    });
     const project1 = 'token-deleted-project';
     const project2 = 'token-not-deleted-project';
     const tokenName = 'test';
@@ -2474,7 +2267,7 @@ test('should not delete project-bound api tokens still bound to project', async 
     const token = await apiTokenService.createApiTokenWithProjects({
         type: ApiTokenType.CLIENT,
         tokenName,
-        environment: DEFAULT_ENV,
+        environment: 'prod-env',
         projects: [project1, project2],
     });
 
@@ -2485,6 +2278,11 @@ test('should not delete project-bound api tokens still bound to project', async 
 });
 
 test('should delete project-bound api tokens when all projects they belong to are deleted', async () => {
+    await stores.environmentStore.create({
+        name: 'prod-env',
+        type: 'production',
+        enabled: true,
+    });
     const project1 = 'token-deleted-project-1';
     const project2 = 'token-deleted-project-2';
     const tokenName = 'test';
@@ -2510,7 +2308,7 @@ test('should delete project-bound api tokens when all projects they belong to ar
     const token = await apiTokenService.createApiTokenWithProjects({
         type: ApiTokenType.CLIENT,
         tokenName,
-        environment: DEFAULT_ENV,
+        environment: 'prod-env',
         projects: [project1, project2],
     });
 

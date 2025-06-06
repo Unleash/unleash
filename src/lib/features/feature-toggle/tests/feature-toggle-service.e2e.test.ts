@@ -366,7 +366,7 @@ test('cloning a feature flag copies variant environments correctly', async () =>
         );
 
     const defaultEnv = clonedFlag.environments.find(
-        (x) => x.name === 'default',
+        (x) => x.name === DEFAULT_ENV,
     );
     const newEnv = clonedFlag.environments.find((x) => x.name === targetEnv);
 
@@ -377,7 +377,7 @@ test('cloning a feature flag copies variant environments correctly', async () =>
 test('cloning a feature flag not allowed for change requests enabled', async () => {
     await db.rawDatabase('change_request_settings').insert({
         project: 'default',
-        environment: 'default',
+        environment: DEFAULT_ENV,
     });
     await expect(
         service.cloneFeatureToggle(
@@ -397,7 +397,7 @@ test('cloning a feature flag not allowed for change requests enabled', async () 
 test('changing to a project with change requests enabled should not be allowed', async () => {
     await db.rawDatabase('change_request_settings').insert({
         project: 'default',
-        environment: 'default',
+        environment: DEFAULT_ENV,
     });
     await expect(
         service.changeProject('newFlagName', 'default', TEST_AUDIT_USER),
@@ -453,7 +453,7 @@ test('Cloning a feature flag also clones segments correctly', async () => {
         featureName: clonedFeatureName,
     });
     expect(
-        feature.environments.find((x) => x.name === 'default')?.strategies[0]
+        feature.environments.find((x) => x.name === DEFAULT_ENV)?.strategies[0]
             .segments,
     ).toHaveLength(1);
 });
@@ -510,13 +510,13 @@ test('If change requests are enabled, cannot change variants without going via C
     };
     await db.rawDatabase('change_request_settings').insert({
         project: 'default',
-        environment: 'default',
+        environment: DEFAULT_ENV,
     });
     return expect(async () =>
         customFeatureService.crProtectedSaveVariantsOnEnv(
             'default',
             featureName,
-            'default',
+            DEFAULT_ENV,
             [newVariant],
             {
                 createdAt: irrelevantDate,
@@ -852,7 +852,7 @@ test('Should not allow to revive flags to archived projects', async () => {
 test('Should enable disabled strategies on feature environment enabled', async () => {
     const flagName = 'enableThisFlag';
     const project = 'default';
-    const environment = 'default';
+    const environment = DEFAULT_ENV;
     await service.createFeatureToggle(
         project,
         {

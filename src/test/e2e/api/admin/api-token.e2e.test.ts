@@ -200,7 +200,9 @@ test('should prefix default token with "*:*."', async () => {
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect((res) => {
-            expect(res.body.secret).toMatch(/\*:default\..*/);
+            expect(res.body.secret).toMatch(
+                new RegExp(`\\*:${DEFAULT_ENV}\\..*`),
+            );
         });
 });
 
@@ -216,7 +218,9 @@ test('should prefix token with "project:environment."', async () => {
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect((res) => {
-            expect(res.body.secret).toMatch(/default:default\..*/);
+            expect(res.body.secret).toMatch(
+                new RegExp(`default:${DEFAULT_ENV}\\..*`),
+            );
         });
 });
 

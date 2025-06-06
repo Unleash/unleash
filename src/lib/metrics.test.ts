@@ -89,19 +89,6 @@ beforeAll(async () => {
         eventBus,
     );
 
-    const metricsDbConf = {
-        client: {
-            pool: {
-                min: 0,
-                max: 4,
-                numUsed: () => 2,
-                numFree: () => 2,
-                numPendingAcquires: () => 0,
-                numPendingCreates: () => 1,
-            },
-        },
-    };
-
     const { collectAggDbMetrics, collectStaticCounters } =
         registerPrometheusMetrics(
             config,

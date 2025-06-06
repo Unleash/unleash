@@ -13,6 +13,7 @@ import NameExistsError from '../../error/name-exists-error.js';
 import type { EventService } from '../../services/index.js';
 import { createEventsService } from '../events/createEventsService.js';
 import { test, beforeAll, afterAll, expect } from 'vitest';
+import { DEFAULT_ENV } from '../../server-impl.js';
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: EnvironmentService;
@@ -76,7 +77,7 @@ test('Can manage required approvals', async () => {
     const changeRequestEnvs =
         await db.stores.environmentStore.getChangeRequestEnvironments([
             'approval_env',
-            'default',
+            DEFAULT_ENV,
             'other',
         ]);
 
@@ -345,7 +346,7 @@ test('When given overrides should remap projects to override environments', asyn
 });
 
 test('Override works correctly when enabling default and disabling prod and dev', async () => {
-    const defaultEnvironment = 'default';
+    const defaultEnvironment = DEFAULT_ENV;
     const prodEnvironment = 'production';
     const devEnvironment = 'development';
 

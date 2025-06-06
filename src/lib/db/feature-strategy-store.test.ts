@@ -1,5 +1,6 @@
 import dbInit, { type ITestDb } from '../../test/e2e/helpers/database-init.js';
 import getLogger from '../../test/fixtures/no-logger.js';
+import { DEFAULT_ENV } from '../server-impl.js';
 import type {
     IFeatureStrategiesStore,
     IFeatureStrategy,
@@ -85,7 +86,7 @@ test('counts custom strategies in use', async () => {
         projectId: 'default',
         featureName: 'test-toggle',
         strategyName: 'strategy-1',
-        environment: 'default',
+        environment: DEFAULT_ENV,
         parameters: {},
         constraints: [],
         variants: [],
@@ -103,7 +104,7 @@ const baseStrategy: PartialSome<IFeatureStrategy, 'id' | 'createdAt'> = {
     projectId: 'default',
     featureName: 'test-toggle-increment',
     strategyName: 'strategy-1',
-    environment: 'default',
+    environment: DEFAULT_ENV,
     parameters: {},
     constraints: [],
     variants: [],

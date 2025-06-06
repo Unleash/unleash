@@ -13,6 +13,7 @@ import type {
 } from '../../types/index.js';
 import { createFakeGetLicensedUsers } from './getLicensedUsers.js';
 import { vi } from 'vitest';
+import { DEFAULT_ENV } from '../../server-impl.js';
 
 let instanceStatsService: InstanceStatsService;
 let versionService: VersionService;
@@ -146,7 +147,7 @@ describe.each([true, false])(
             ).mockReturnValue(
                 Promise.resolve({
                     feature: 'x',
-                    environment: 'default',
+                    environment: DEFAULT_ENV,
                     count: 3,
                 }),
             );

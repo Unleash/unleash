@@ -65,7 +65,7 @@ test('Should add environment to project', async () => {
     const environment = envs.find((env) => env.environment === 'test');
 
     expect(environment).toBeDefined();
-    expect(envs).toHaveLength(2);
+    expect(envs).toHaveLength(2); // test + default
 });
 
 test('Should validate environment', async () => {
@@ -113,7 +113,7 @@ test('Should add default strategy to environment', async () => {
 
     await app.request
         .post(
-            `/api/admin/projects/default/environments/default/default-strategy`,
+            `/api/admin/projects/default/environments/${DEFAULT_ENV}/default-strategy`,
         )
         .send(defaultStrategy)
         .expect(200);
@@ -123,14 +123,14 @@ test('Should add default strategy to environment', async () => {
 
     expect(envs).toHaveLength(1);
     expect(envs[0]).toStrictEqual({
-        environment: 'default',
+        environment: DEFAULT_ENV,
         defaultStrategy,
     });
     const { body } = await app.getRecordedEvents();
     expect(body.events[0]).toMatchObject({
         type: 'default-strategy-updated',
         project: 'default',
-        environment: 'default',
+        environment: DEFAULT_ENV,
         data: defaultStrategy,
         preData: null,
     });
@@ -139,7 +139,7 @@ test('Should add default strategy to environment', async () => {
 test('Should throw an error if you try to set defaultStrategy other than flexibleRollout', async () => {
     await app.request
         .post(
-            `/api/admin/projects/default/environments/default/default-strategy`,
+            `/api/admin/projects/default/environments/${DEFAULT_ENV}/default-strategy`,
         )
         .send({
             name: 'default',
@@ -153,7 +153,7 @@ test('Add environment to project should return 404 when given a projectid that d
     await app.request
         .post(`/api/admin/projects/unknown/environments`)
         .send({
-            environment: 'default',
+            environment: DEFAULT_ENV,
         })
         .expect(404);
 });

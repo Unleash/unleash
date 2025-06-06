@@ -6,7 +6,7 @@ import dbInit, {
     type ITestDb,
 } from '../../../test/e2e/helpers/database-init.js';
 import getLogger from '../../../test/fixtures/no-logger.js';
-import { randomId } from '../../util/index.js';
+import { DEFAULT_ENV, randomId } from '../../util/index.js';
 import {
     ApiTokenType,
     type IApiToken,
@@ -64,7 +64,7 @@ export const createApiToken = (
     return app.services.apiTokenService.createApiTokenWithProjects({
         type,
         projects: ['*'],
-        environment: 'default',
+        environment: DEFAULT_ENV,
         tokenName: `${type}-token-${randomId()}`,
         ...overrides,
     });
@@ -73,7 +73,7 @@ export const createApiToken = (
 const createFeatureToggle = async ({
     name,
     project = 'default',
-    environment = 'default',
+    environment = DEFAULT_ENV,
     strategies,
     enabled,
 }: {
@@ -233,13 +233,13 @@ test('should allow requests with an admin token', async () => {
         environment: '*',
     });
     await frontendApiService.refreshData();
-    await app.request
+    const { body } = await app.request
         .get('/api/frontend')
         .set('Authorization', adminToken.secret)
         .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => expect(res.body.toggles).toHaveLength(1))
-        .expect((res) => expect(res.body.toggles[0].name).toEqual(featureA));
+        .expect(200);
+    expect(body.toggles).toHaveLength(1);
+    expect(body.toggles[0].name).toEqual(featureA);
 });
 
 test('should not allow admin requests with a frontend token', async () => {
@@ -341,7 +341,7 @@ test('should accept client registration requests', async () => {
             appName: randomId(),
             instanceId: randomId(),
             sdkVersion: randomId(),
-            environment: 'default',
+            environment: DEFAULT_ENV,
             interval: 10000,
             started: new Date(),
             strategies: ['default'],
@@ -419,7 +419,7 @@ test('should store frontend api client metrics', async () => {
                 featureName,
                 lastHourUsage: [
                     {
-                        environment: 'default',
+                        environment: DEFAULT_ENV,
                         timestamp: startOfHour(now).toISOString(),
                         yes: 3,
                         no: 30,
@@ -1174,7 +1174,7 @@ test('should return 204 if metrics are disabled', async () => {
         await localApp.services.apiTokenService.createApiTokenWithProjects({
             type: ApiTokenType.FRONTEND,
             projects: ['*'],
-            environment: 'default',
+            environment: DEFAULT_ENV,
             tokenName: `disabledMetric-token-${randomId()}`,
         });
 

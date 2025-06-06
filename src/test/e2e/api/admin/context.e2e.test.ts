@@ -5,6 +5,7 @@ import {
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper.js';
 import getLogger from '../../../fixtures/no-logger.js';
+import { DEFAULT_ENV } from '../../../../lib/server-impl.js';
 
 let db: ITestDb;
 let app: IUnleashTest;
@@ -194,7 +195,7 @@ test('should not delete a context field that is in use by active flags', async (
         .expect(201);
     await app.request
         .post(
-            `/api/admin/projects/default/features/${feature}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${feature}/environments/${DEFAULT_ENV}/strategies`,
         )
         .send({
             name: 'default',
@@ -297,7 +298,7 @@ test('should show context field usage for active flags', async () => {
         .expect(201);
     await app.request
         .post(
-            `/api/admin/projects/default/features/${feature}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${feature}/environments/${DEFAULT_ENV}/strategies`,
         )
         .send({
             name: 'default',
@@ -327,7 +328,9 @@ test('should show context field usage for active flags', async () => {
 
     expect(body.strategies).toHaveLength(1);
     expect(body).toMatchObject({
-        strategies: [{ environment: 'default', featureName: 'contextFeature' }],
+        strategies: [
+            { environment: DEFAULT_ENV, featureName: 'contextFeature' },
+        ],
     });
 
     const { body: getAllBody } = await app.request

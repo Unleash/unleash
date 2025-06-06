@@ -46,7 +46,7 @@ const fetchFeatures = (): Promise<IFeatureOverview[]> => {
 };
 
 const getFeatureStrategiesPath = (featureName: string) => {
-    return `/api/admin/projects/default/features/${featureName}/environments/default/strategies`;
+    return `/api/admin/projects/default/features/${featureName}/environments/${DEFAULT_ENV}/strategies`;
 };
 
 const fetchFeatureStrategies = (featureName: string) =>

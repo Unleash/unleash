@@ -166,7 +166,9 @@ export const LifecycleInsights: FC = () => {
                             </div>
                             <Stats>
                                 <StatRow>
-                                    <dt>Current median time spent in stage</dt>
+                                    <dt>
+                                        Median time for flags currently in stage
+                                    </dt>
                                     <dd data-loading-project-lifecycle-summary>
                                         {normalizeDays(
                                             data.averageTimeInStageDays,
@@ -175,7 +177,8 @@ export const LifecycleInsights: FC = () => {
                                 </StatRow>
                                 <StatRow>
                                     <dt>
-                                        Historical median time spent in stage
+                                        Historical median time for flags in
+                                        stage
                                     </dt>
                                     <dd data-loading-project-lifecycle-summary>
                                         {normalizeDays(

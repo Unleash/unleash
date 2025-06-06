@@ -55,8 +55,8 @@ const useChartColors = () => {
 
 const ChartRow = styled('div')(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
     gap: theme.spacing(2),
+    gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))',
 }));
 
 const LifecycleTile = styled('article')(({ theme }) => ({
@@ -88,6 +88,10 @@ const HeaderNumber = styled('span')(({ theme }) => ({
     fontSize: theme.typography.h1.fontSize,
     fontWeight: 'bold',
 }));
+
+const Capitalized = styled('span')({
+    textTransform: 'capitalize',
+});
 
 const Stats = styled('dl')(({ theme }) => ({
     background: theme.palette.background.elevation1,
@@ -159,14 +163,18 @@ export const LifecycleInsights: FC = () => {
                                         }}
                                     />
                                 </HeaderNumber>
-                                <span>Flags in {stage} stage</span>
+                                <span>
+                                    Flags in <Capitalized>{stage}</Capitalized>
+                                </span>
                             </TileHeader>
                             <div>
                                 <Chart data={data} stage={stage} />
                             </div>
                             <Stats>
                                 <StatRow>
-                                    <dt>Current median time spent in stage</dt>
+                                    <dt>
+                                        Median time for flags currently in stage
+                                    </dt>
                                     <dd data-loading-project-lifecycle-summary>
                                         {normalizeDays(
                                             data.averageTimeInStageDays,
@@ -175,7 +183,8 @@ export const LifecycleInsights: FC = () => {
                                 </StatRow>
                                 <StatRow>
                                     <dt>
-                                        Historical median time spent in stage
+                                        Historical median time for flags in
+                                        stage
                                     </dt>
                                     <dd data-loading-project-lifecycle-summary>
                                         {normalizeDays(

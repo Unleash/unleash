@@ -36,7 +36,7 @@
     "docusaurus-plugin-sass": "^0.2.6",
     "docusaurus-theme-openapi-docs": "4.3.4",
     "git-url-parse": "^16.0.0",
-    "plugin-image-zoom": "flexanalytics/plugin-image-zoom",
+    "plugin-image-zoom": "^1.2.0",
     "prism-react-renderer": "^2.4.0",
     "prism-svelte": "^0.5.0",
     "react": "^18.3.1",

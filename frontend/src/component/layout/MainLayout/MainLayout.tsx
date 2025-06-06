@@ -37,6 +37,7 @@ const MainLayoutContent = styled(Grid)(({ theme }) => ({
     margin: '0 auto',
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
+    '--max-main-content-width': `calc(1512px - ${theme.spacing(4)})`,
     [theme.breakpoints.up(1856)]: {
         width: '100%',
     },

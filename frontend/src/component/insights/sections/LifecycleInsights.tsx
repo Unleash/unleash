@@ -60,9 +60,6 @@ const ChartRow = styled('div')(({ theme }) => ({
 }));
 
 const LifecycleTile = styled('article')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(2),
     background: theme.palette.background.default,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(3),
@@ -77,11 +74,10 @@ const lifecycleStageMap = {
 
 const TileHeader = styled('h3')(({ theme }) => ({
     margin: 0,
-    // display: 'flex',
-    // flexFlow: 'column',
     fontSize: theme.typography.body1.fontSize,
     fontWeight: 'normal',
     padding: theme.spacing(1),
+    marginBottom: theme.spacing(3),
 }));
 
 const HeaderNumber = styled('span')(({ theme }) => ({
@@ -93,12 +89,9 @@ const HeaderNumber = styled('span')(({ theme }) => ({
     fontWeight: 'bold',
 }));
 
-const HeaderText = styled(HeaderNumber)(({ theme }) => ({}));
-
 const Stats = styled('dl')(({ theme }) => ({
     background: theme.palette.background.elevation1,
     borderRadius: theme.shape.borderRadiusMedium,
-    margin: 0,
     fontSize: theme.typography.body2.fontSize,
     '& dt::after': {
         content: '":"',
@@ -110,6 +103,8 @@ const Stats = styled('dl')(({ theme }) => ({
     paddingInline: theme.spacing(2),
     paddingBlock: theme.spacing(1.5),
     gap: theme.spacing(1.5),
+    margin: 0,
+    marginTop: theme.spacing(2),
 }));
 
 const StatRow = styled('div')(({ theme }) => ({

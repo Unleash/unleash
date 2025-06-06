@@ -15,9 +15,7 @@ const userId = -9999;
 const projectId = 'default';
 
 beforeAll(async () => {
-    db = await dbInit('feature_env_api_client', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('feature_env_api_client', getLogger);
     app = await setupAppWithCustomConfig(db.stores, {}, db.rawDatabase);
 
     await app.services.featureToggleService.createFeatureToggle(

@@ -11,9 +11,7 @@ let db: ITestDb;
 let app: IUnleashTest;
 
 beforeAll(async () => {
-    db = await dbInit('context_api_serial', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('context_api_serial', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
         {
@@ -34,13 +32,15 @@ afterAll(async () => {
 
 test('gets all context fields', async () => {
     expect.assertions(1);
-    return app.request
+    const { body } = await app.request
         .get('/api/admin/context')
         .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.length).toBe(3);
-        });
+        .expect(200);
+
+    // because tests share the database, we might have more fields than expected
+    expect(body.map((field) => field.name)).toEqual(
+        expect.arrayContaining(['environment', 'userId', 'sessionId']),
+    );
 });
 
 test('get the context field', async () => {

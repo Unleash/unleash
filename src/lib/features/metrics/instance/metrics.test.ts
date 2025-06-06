@@ -19,7 +19,6 @@ import { startOfHour } from 'date-fns';
 import { ApiTokenType } from '../../../types/model.js';
 import type TestAgent from 'supertest/lib/agent.d.ts';
 import type { BulkRegistrationSchema } from '../../../openapi/index.js';
-import { DEFAULT_ENV } from '../../../server-impl.js';
 
 let db: ITestDb;
 let config: IUnleashConfig;
@@ -428,7 +427,7 @@ describe('bulk metrics', () => {
                     {
                         featureName: 'test_feature_one',
                         appName: 'test_application',
-                        environment: DEFAULT_ENV,
+                        environment: 'production',
                         timestamp: startOfHour(now),
                         yes: 1000,
                         no: 800,

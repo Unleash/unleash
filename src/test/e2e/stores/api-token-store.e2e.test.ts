@@ -8,9 +8,7 @@ let stores: IUnleashStores;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('api_token_store_serial', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('api_token_store_serial', getLogger);
     stores = db.stores;
 });
 

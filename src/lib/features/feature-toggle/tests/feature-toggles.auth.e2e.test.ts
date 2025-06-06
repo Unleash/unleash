@@ -17,9 +17,7 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('feature_strategy_auth_api_serial', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('feature_strategy_auth_api_serial', getLogger);
     app = await setupAppWithAuth(
         db.stores,
         {

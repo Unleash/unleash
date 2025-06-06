@@ -27,9 +27,9 @@ export const apiTokenSchema = {
         },
         environment: {
             type: 'string',
-            description:
-                'The environment the token has access to. `*` if it has access to all environments.',
+            description: 'The environment the token has access to.',
             example: 'development',
+            default: 'development',
         },
         project: {
             type: 'string',

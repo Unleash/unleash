@@ -34,9 +34,7 @@ let featureLifecycleReadModel: IFeatureLifecycleReadModel;
 let clientInstanceService: ClientInstanceService;
 
 beforeAll(async () => {
-    db = await dbInit('feature_lifecycle', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('feature_lifecycle', getLogger);
     app = await setupAppWithAuth(
         db.stores,
         {

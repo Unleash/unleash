@@ -9,11 +9,9 @@ import {
 import getLogger from '../../../test/fixtures/no-logger.js';
 import type { FeatureSearchQueryParameters } from '../../openapi/spec/feature-search-query-parameters.js';
 import {
-    CREATE_FEATURE_STRATEGY,
     DEFAULT_PROJECT,
     type IUnleashStores,
     TEST_AUDIT_USER,
-    UPDATE_FEATURE_ENVIRONMENT,
 } from '../../types/index.js';
 import { DEFAULT_ENV } from '../../util/index.js';
 
@@ -22,9 +20,7 @@ let db: ITestDb;
 let stores: IUnleashStores;
 
 beforeAll(async () => {
-    db = await dbInit('feature_search', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('feature_search', getLogger);
     app = await setupAppWithAuth(
         db.stores,
         {
@@ -45,38 +41,6 @@ beforeAll(async () => {
             email: 'user@getunleash.io',
         })
         .expect(200);
-
-    await stores.environmentStore.create({
-        name: 'development',
-        type: 'development',
-    });
-
-    await app.linkProjectToEnvironment('default', 'development');
-
-    await stores.accessStore.addPermissionsToRole(
-        body.rootRole,
-        [
-            { name: UPDATE_FEATURE_ENVIRONMENT },
-            { name: CREATE_FEATURE_STRATEGY },
-        ],
-        'development',
-    );
-
-    await stores.environmentStore.create({
-        name: 'production',
-        type: 'production',
-    });
-
-    await app.linkProjectToEnvironment('default', 'production');
-
-    await stores.accessStore.addPermissionsToRole(
-        body.rootRole,
-        [
-            { name: UPDATE_FEATURE_ENVIRONMENT },
-            { name: CREATE_FEATURE_STRATEGY },
-        ],
-        'production',
-    );
 
     await app.services.userService.createUser(
         {
@@ -866,11 +830,6 @@ test('should return segments in payload with no duplicates/nulls', async () => {
                 segments: [mySegment.name],
                 environments: [
                     {
-                        name: 'default',
-                        hasStrategies: true,
-                        hasEnabledStrategies: true,
-                    },
-                    {
                         name: 'development',
                         hasStrategies: true,
                         hasEnabledStrategies: true,
@@ -1184,11 +1143,6 @@ test('should return environment usage metrics and lifecycle', async () => {
                 lifecycle: { stage: 'completed', status: 'discarded' },
                 environments: [
                     {
-                        name: 'default',
-                        yes: 0,
-                        no: 0,
-                    },
-                    {
                         name: 'development',
                         yes: 10,
                         no: 4,
@@ -1448,7 +1402,6 @@ test('should return change request ids per environment', async () => {
             {
                 name: 'my_feature_a',
                 environments: [
-                    { name: 'default', changeRequestIds: [] },
                     { name: 'development', changeRequestIds: [5, 6, 7] },
                     { name: 'production', changeRequestIds: [1] },
                 ],
@@ -1456,7 +1409,6 @@ test('should return change request ids per environment', async () => {
             {
                 name: 'my_feature_b',
                 environments: [
-                    { name: 'default', changeRequestIds: [] },
                     { name: 'development', changeRequestIds: [8] },
                     { name: 'production', changeRequestIds: [] },
                 ],
@@ -1557,7 +1509,6 @@ test('should return release plan milestones', async () => {
             {
                 name: 'my_feature_a',
                 environments: [
-                    { name: 'default' },
                     {
                         name: 'development',
                         totalMilestones: 3,
@@ -1569,6 +1520,5 @@ test('should return release plan milestones', async () => {
             },
         ],
     });
-    expect(body.features[0].environments[0].milestoneName).toBeUndefined();
-    expect(body.features[0].environments[2].milestoneName).toBeUndefined();
+    expect(body.features[0].environments[1].milestoneName).toBeUndefined();
 });

@@ -1,4 +1,4 @@
-export const DEFAULT_ENV = 'default';
+export const DEFAULT_ENV = 'development';
 
 export const ALL_PROJECTS = '*';
 export const ALL_ENVS = '*';

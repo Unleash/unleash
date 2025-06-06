@@ -64,9 +64,6 @@ beforeAll(async () => {
     db = await dbInit(
         'feature_toggle_service_v2_service_serial',
         config.getLogger,
-        {
-            dbInitMethod: 'legacy' as const,
-        },
     );
     unleashConfig = config;
     stores = db.stores;

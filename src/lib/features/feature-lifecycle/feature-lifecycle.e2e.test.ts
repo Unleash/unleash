@@ -23,7 +23,6 @@ import { FeatureLifecycleReadModel } from './feature-lifecycle-read-model.js';
 import type { IFeatureLifecycleReadModel } from './feature-lifecycle-read-model-type.js';
 import { STAGE_ENTERED } from '../../metric-events.js';
 import type ClientInstanceService from '../metrics/instance/instance-service.js';
-import { DEFAULT_ENV } from '../../server-impl.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -125,26 +124,27 @@ const getFeaturesLifecycleCount = async () => {
 };
 
 test('should return lifecycle stages', async () => {
+    const environment = 'production'; // prod environment moves lifecycle to live stage
     await app.createFeature('my_feature_a');
-    await app.enableFeature('my_feature_a', DEFAULT_ENV);
+    await app.enableFeature('my_feature_a', environment);
     eventStore.emit(FEATURE_CREATED, { featureName: 'my_feature_a' });
     await reachedStage('my_feature_a', 'initial');
     await expectFeatureStage('my_feature_a', 'initial');
     eventBus.emit(CLIENT_METRICS_ADDED, [
         {
             featureName: 'my_feature_a',
-            environment: DEFAULT_ENV,
+            environment: environment,
         },
         {
             featureName: 'non_existent_feature',
-            environment: DEFAULT_ENV,
+            environment: environment,
         },
     ]);
 
     // missing feature
     eventBus.emit(CLIENT_METRICS_ADDED, [
         {
-            environment: DEFAULT_ENV,
+            environment: environment,
             yes: 0,
             no: 0,
         },
@@ -239,13 +239,14 @@ test('should backfill archived feature', async () => {
 });
 
 test('should not backfill for existing lifecycle', async () => {
+    const environment = 'production'; // prod environment moves lifecycle to live stage
     await app.createFeature('my_feature_e');
-    await app.enableFeature('my_feature_e', DEFAULT_ENV);
+    await app.enableFeature('my_feature_e', environment);
     eventStore.emit(FEATURE_CREATED, { featureName: 'my_feature_e' });
     eventBus.emit(CLIENT_METRICS_ADDED, [
         {
             featureName: 'my_feature_e',
-            environment: DEFAULT_ENV,
+            environment: environment,
         },
     ]);
     await reachedStage('my_feature_e', 'live');

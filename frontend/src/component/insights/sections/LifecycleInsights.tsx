@@ -89,6 +89,10 @@ const HeaderNumber = styled('span')(({ theme }) => ({
     fontWeight: 'bold',
 }));
 
+const Capitalized = styled('span')({
+    textTransform: 'capitalize',
+});
+
 const Stats = styled('dl')(({ theme }) => ({
     background: theme.palette.background.elevation1,
     borderRadius: theme.shape.borderRadiusMedium,
@@ -159,7 +163,9 @@ export const LifecycleInsights: FC = () => {
                                         }}
                                     />
                                 </HeaderNumber>
-                                <span>Flags in {stage} stage</span>
+                                <span>
+                                    Flags in <Capitalized>{stage}</Capitalized>
+                                </span>
                             </TileHeader>
                             <div>
                                 <Chart data={data} stage={stage} />

@@ -106,7 +106,7 @@ const CreateFeatureDialogContent = ({
     const navigate = useNavigate();
     const openFeatureCreatedFeedback = useFeatureCreatedFeedback();
 
-    const [storedFlagConfig, storeFlagConfig] =
+    const [storedFlagConfig, setStoredFlagConfig] =
         useLocalStorageState<FeatureFormInitialData>(
             'flag-creation-dialog',
             {},
@@ -182,7 +182,7 @@ const CreateFeatureDialogContent = ({
                 });
                 onClose();
                 onSuccess?.();
-                storeFlagConfig({});
+                setStoredFlagConfig({});
                 openFeatureCreatedFeedback();
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
@@ -224,7 +224,7 @@ const CreateFeatureDialogContent = ({
     }, [project, projects]);
 
     const onDialogClose = () => {
-        storeFlagConfig({
+        setStoredFlagConfig({
             name,
             tags,
             impressionData,

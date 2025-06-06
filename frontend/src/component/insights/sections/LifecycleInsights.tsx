@@ -7,7 +7,10 @@ import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import { useInsights } from 'hooks/api/getters/useInsights/useInsights';
 import { LifecycleChart } from '../components/LifecycleChart/LifecycleChart.tsx';
 import { styled, useTheme } from '@mui/material';
-import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber.tsx';
+import {
+    prettifyLargeNumber,
+    PrettifyLargeNumber,
+} from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber.tsx';
 import { FeatureLifecycleStageIcon } from 'component/common/FeatureLifecycle/FeatureLifecycleStageIcon.tsx';
 import { normalizeDays } from './normalize-days.ts';
 
@@ -192,6 +195,9 @@ export const LifecycleInsights: FC = () => {
     );
 };
 
+const prettifyFlagCount = (value: number): string =>
+    prettifyLargeNumber(value, 1000, 2);
+
 const Chart: React.FC<{ stage: string; data: LifecycleTrend }> = ({
     stage,
     data,
@@ -243,7 +249,7 @@ const Chart: React.FC<{ stage: string; data: LifecycleTrend }> = ({
                                             context.chart.legend
                                                 ?.legendItems?.[1].hidden
                                         ) {
-                                            return value;
+                                            return prettifyFlagCount(value);
                                         }
                                         return '';
                                     },
@@ -269,10 +275,10 @@ const Chart: React.FC<{ stage: string; data: LifecycleTrend }> = ({
                                             context.chart.legend
                                                 ?.legendItems?.[0].hidden
                                         ) {
-                                            return value;
+                                            return prettifyFlagCount(value);
                                         }
-                                        return (
-                                            value + oldData[context.dataIndex]
+                                        return prettifyFlagCount(
+                                            value + oldData[context.dataIndex],
                                         );
                                     },
                                 },

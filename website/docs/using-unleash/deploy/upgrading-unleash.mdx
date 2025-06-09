@@ -32,7 +32,6 @@ The following deprecated API endpoints have been removed in v7:
 - POST `/api/admin/ui-config` deprecated in 6.9.0.
 - POST `/api/admin/events/search` deprecated in 6.1.0.
 - GET `/api/admin/projects/{projectId}` deprecated in 5.8.0.
-- GET `/api/admin/instance-admin/statistics` deprecated in 4.17.0.
 - GET `/api/admin/archive/features` deprecated in 4.10.0.
 - GET `/api/admin/archive/features/{projectId}` deprecated in 4.11.0.
 - GET `/api/admin/dashboard/executive` deprecated in 5.11.0.
@@ -40,6 +39,7 @@ The following deprecated API endpoints have been removed in v7:
 - GET `/api/admin/projects/{projectId}/users` deprecated in 4.14.3.
 
 **Un-deprecated API endpoints:**
+- GET `/api/admin/instance-admin/statistics` was marked as deprecated when introduced in 4.17.0, this was accidental and it has now been un-deprecated.
 - POST `/api/admin/strategies` is no longer deprecated and can be used to create custom strategies. The endpoint was previously deprecated in v6.0.0 but due to the feedback received from users, it has been reintroduced in v7.0.0.
 
 ## Upgrading from v5 to v6

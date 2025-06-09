@@ -8,17 +8,43 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
-import { useMediaQuery } from '@mui/material';
+import { Box, styled, Typography, useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { useSearch } from 'hooks/useSearch';
 import theme from 'themes/theme';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import type { FeedbackSchema } from 'openapi';
+import { getActiveExperiments } from './activeExperiments.ts';
 
 interface IFeedbackSchemaCellProps {
     value?: string | null; // FIXME: proper type
     row: { original: FeedbackSchema };
 }
+
+const StyledSectionHeader = styled(Typography)(({ theme }) => ({
+    fontWeight: theme.fontWeight.bold,
+    marginBottom: theme.spacing(1),
+}));
+
+const AverageScore = styled('div')(({ theme }) => ({
+    fontSize: theme.fontSizes.mediumHeader,
+}));
+
+const ActiveExperiments = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(2),
+    flexWrap: 'wrap',
+    marginBottom: theme.spacing(4),
+}));
+
+const ActiveExperimentCard = styled('div')(({ theme }) => ({
+    backgroundColor: theme.palette.secondary.light,
+    borderRadius: `${theme.shape.borderRadiusLarge}px`,
+    padding: theme.spacing(3),
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: theme.spacing(10),
+}));
 
 export const FeedbackList = () => {
     const { feedback } = useFeedbackPosted();
@@ -27,7 +53,7 @@ export const FeedbackList = () => {
 
     const columns = [
         {
-            Header: 'Category',
+            Header: 'Feature',
             accessor: 'category',
             Cell: ({
                 row: { original: feedback },
@@ -37,7 +63,7 @@ export const FeedbackList = () => {
             searchable: true,
         },
         {
-            Header: 'UserType',
+            Header: 'User Type',
             accessor: 'userType',
             Cell: ({
                 row: { original: feedback },
@@ -47,7 +73,7 @@ export const FeedbackList = () => {
             searchable: true,
         },
         {
-            Header: 'DifficultyScore',
+            Header: 'Score',
             accessor: 'difficultyScore',
             Cell: ({
                 row: { original: feedback },
@@ -56,7 +82,7 @@ export const FeedbackList = () => {
             ),
         },
         {
-            Header: 'Positive',
+            Header: 'What do you like most?',
             accessor: 'positive',
             minWidth: 100,
             Cell: ({
@@ -68,7 +94,7 @@ export const FeedbackList = () => {
             searchable: true,
         },
         {
-            Header: 'Areas for improvement',
+            Header: 'What should be improved?',
             accessor: 'areasForImprovement',
             minWidth: 100,
             Cell: ({
@@ -80,13 +106,15 @@ export const FeedbackList = () => {
             searchable: true,
         },
         {
-            Header: 'Created at',
+            Header: 'Date',
             accessor: 'createdAt',
             Cell: DateCell,
         },
     ];
 
     const { data, getSearchText } = useSearch(columns, searchValue, feedback);
+
+    const activeExperiments = useMemo(() => getActiveExperiments(data), [data]);
 
     const { headerGroups, rows, prepareRow } = useTable(
         {
@@ -119,7 +147,7 @@ export const FeedbackList = () => {
         <PageContent
             header={
                 <PageHeader
-                    title={`Feedbacks posted (${rows.length})`}
+                    title={'Feedback'}
                     actions={
                         <>
                             <ConditionallyRender
@@ -149,6 +177,31 @@ export const FeedbackList = () => {
                 </PageHeader>
             }
         >
+            <StyledSectionHeader>Active experiments</StyledSectionHeader>
+            <ActiveExperiments>
+                {activeExperiments.length > 0 ? (
+                    activeExperiments.map((experiment) => (
+                        <ActiveExperimentCard key={experiment.category}>
+                            <Box>
+                                <StyledSectionHeader>
+                                    {experiment.category}
+                                </StyledSectionHeader>
+                                <Box>{experiment.commentCount} comments</Box>
+                            </Box>
+                            <AverageScore>
+                                {experiment.averageScore}/7
+                            </AverageScore>
+                        </ActiveExperimentCard>
+                    ))
+                ) : (
+                    <Box sx={{ py: 2 }}>
+                        No feedback data from the last three months
+                    </Box>
+                )}
+            </ActiveExperiments>
+            <StyledSectionHeader>
+                All feedback ({rows.length})
+            </StyledSectionHeader>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable
                     rows={rows}

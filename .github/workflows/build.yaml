@@ -55,3 +55,50 @@ jobs:
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+
+  openapi-diff:
+    name: OpenAPI Diff
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+      # Download the OpenAPI spec from the current branch (edit this as needed)
+      - name: Download OpenAPI spec (current branch)
+        run: |
+          curl -sSL -o openapi-current.json https://us.app.unleash-hosted.com/ushosted/docs/openapi.json
+      # Download the OpenAPI spec from the main branch (edit this as needed)
+      - name: Download OpenAPI spec (main branch)
+        run: |
+          git checkout origin/main -- .
+          curl -sSL -o openapi-main.json https://sandbox.getunleash.io/enterprise/docs/openapi.json
+      # Install openapi-diff tool
+      - name: Install openapi-diff
+        run: npm install -g @openapitools/openapi-diff
+      - name: Run OpenAPI diff
+        id: diff
+        run: |
+          openapi-diff openapi-main.json openapi-current.json > openapi-diff.txt || true
+      - name: Comment on PR with OpenAPI diff
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const diff = fs.readFileSync('openapi-diff.txt', 'utf8');
+            if (diff.length > 60000) {
+              core.warning('Diff too long to post as a comment.');
+              return;
+            }
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `### OpenAPI Diff\n\n\`\`\`diff\n${diff}\n\`\`\``
+            });

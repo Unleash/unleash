@@ -163,13 +163,14 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: openapi-stable
-      - name: Install openapi-changes
-        run: curl -fsSL https://pb33f.io/openapi-changes/install.sh | sh 
+      # - name: Install openapi-changes
+      #   run: curl -fsSL https://pb33f.io/openapi-changes/install.sh | sh 
       - name: Run OpenAPI diff
         id: diff
         run: |
-          openapi-changes summary --markdown openapi-stable.json openapi-current.json > openapi-diff.txt || true
-          openapi-changes report openapi-stable.json openapi-current.json
+          docker run --rm -t -v $(pwd):/specs:ro openapitools/openapi-diff:latest /specs/openapi-stable.json /specs/openapi-current.json > openapi-diff.txt || true
+          #openapi-changes summary --markdown openapi-stable.json openapi-current.json > openapi-diff.txt || true
+          #openapi-changes report openapi-stable.json openapi-current.json
       - name: Comment on PR with OpenAPI diff
         uses: actions/github-script@v7
         with:

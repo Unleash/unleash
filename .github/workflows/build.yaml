@@ -12,6 +12,13 @@ on:
       - frontend/**
       - website/**
       - coverage/**
+  workflow_dispatch:
+    inputs:
+      stable_version:
+        description: 'Stable Unleash version to compare against (e.g. 6.9.3)'
+        required: false
+        default: 'latest'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -56,36 +63,59 @@ jobs:
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
 
-  openapi-diff:
-    name: OpenAPI Diff
+  generate-openapi-current:
+    name: Generate OpenAPI (current branch)
     runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'pull_request'
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22.x
-      # Download the OpenAPI spec from the current branch (edit this as needed)
       - name: Download OpenAPI spec (current branch)
         run: |
           curl -sSL -o openapi-current.json https://us.app.unleash-hosted.com/ushosted/docs/openapi.json
-      # Download the OpenAPI spec from the main branch (edit this as needed)
-      - name: Download OpenAPI spec (main branch)
+      - name: Upload openapi-current.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: openapi-current
+          path: openapi-current.json
+
+  generate-openapi-stable:
+    name: Generate OpenAPI (stable)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start Unleash test instance
         run: |
-          git checkout origin/main -- .
-          curl -sSL -o openapi-main.json https://sandbox.getunleash.io/enterprise/docs/openapi.json
-      # Install openapi-diff tool
-      - name: Install openapi-diff
-        run: npm install -g @openapitools/openapi-diff
+          docker compose -f .github/docker-compose.test.yml up -d --wait -t 90
+        env:
+          FRONTEND_TEST_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
+          UNLEASH_VERSION: ${{ github.event.inputs.stable_version }}
+      - name: Download OpenAPI spec (${{ github.event.inputs.stable_version || 'latest stable' }})
+        run: curl -sSL -o openapi-stable.json "localhost:4242/docs/openapi.json"
+      - name: Upload openapi-stable.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: openapi-stable
+          path: openapi-stable.json
+
+  openapi-diff:
+    name: OpenAPI Diff
+    runs-on: ubuntu-latest
+    needs: [generate-openapi-current, generate-openapi-stable]
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Download openapi-current.json
+        uses: actions/download-artifact@v4
+        with:
+          name: openapi-current
+      - name: Download openapi-stable.json
+        uses: actions/download-artifact@v4
+        with:
+          name: openapi-stable
+      - name: Install openapi-changes
+        run: |
+          curl -sSL https://github.com/pb33f/openapi-changes/releases/latest/download/openapi-changes_Linux_x86_64.tar.gz | tar xz
+          sudo mv openapi-changes /usr/local/bin/
       - name: Run OpenAPI diff
         id: diff
         run: |
-          openapi-diff openapi-main.json openapi-current.json > openapi-diff.txt || true
+          openapi-changes diff openapi-stable.json openapi-current.json > openapi-diff.txt || true
       - name: Comment on PR with OpenAPI diff
         uses: actions/github-script@v7
         with:

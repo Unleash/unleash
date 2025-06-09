@@ -64,7 +64,6 @@
     "seed:setup": "ts-node src/test/e2e/seed/segment.seed.ts",
     "seed:serve": "UNLEASH_DATABASE_NAME=unleash_test UNLEASH_DATABASE_SCHEMA=seed yarn run start:dev",
     "clean": "del-cli --force dist",
-    "heroku-postbuild": "cd frontend && yarn && yarn build",
     "prepack": "./scripts/prepack.sh",
     "schema:update": "node ./.husky/update-openapi-spec-list.js"
   },

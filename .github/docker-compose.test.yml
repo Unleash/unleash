@@ -26,7 +26,7 @@ services:
       unleash:
         condition: service_healthy
   unleash:
-    image: unleashorg/${UNLEASH_VERSION:-unleash-enterprise\:latest}
+    image: unleashorg/${UNLEASH_VERSION:-unleash-enterprise:latest}
     pull_policy: "always"
     expose:
       - "4242"

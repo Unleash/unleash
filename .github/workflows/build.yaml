@@ -168,10 +168,8 @@ jobs:
       - name: Run OpenAPI diff
         id: diff
         run: |
-          docker run --rm -t -v $(pwd):/specs:ro tufin/oasdiff changelog --color never /specs/openapi-stable.json /specs/openapi-current.json > openapi-diff.txt || true
-          #docker run --rm -t -v $(pwd):/specs:rw openapitools/openapi-diff:latest /specs/openapi-stable.json /specs/openapi-current.json --text /specs/openapi-diff.txt || true
-          #openapi-changes summary --markdown openapi-stable.json openapi-current.json > openapi-diff.txt || true
-          #openapi-changes report openapi-stable.json openapi-current.json
+          docker run --rm -t -v $(pwd):/specs:ro tufin/oasdiff changelog --format markdown /specs/openapi-stable.json /specs/openapi-current.json > openapi-diff.txt || true
+          # then output in a format that can be used in GitHub Actions
           docker run --rm -t -v $(pwd):/specs:ro tufin/oasdiff changelog --format githubactions /specs/openapi-stable.json /specs/openapi-current.json
       - name: Comment on PR with OpenAPI diff
         uses: actions/github-script@v7
@@ -188,7 +186,7 @@ jobs:
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                body: `${diff}`
+                body: `### OpenAPI Diff\n\n\`\`\`diff\n${diff}\n\`\`\``
               });
             } else {
               console.log('No significant changes detected in OpenAPI spec.');

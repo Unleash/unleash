@@ -14,6 +14,9 @@ const placeholderData: ProjectStatusSchema = {
     health: {
         current: 0,
     },
+    technicalDebt: {
+        current: 0,
+    },
     lifecycleSummary: {
         initial: {
             currentFlags: 0,

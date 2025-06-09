@@ -168,7 +168,7 @@ jobs:
       - name: Run OpenAPI diff
         id: diff
         run: |
-          docker run --rm -t -v $(pwd):/specs:rw openapitools/openapi-diff:latest /specs/openapi-stable.json /specs/openapi-current.json --asciidoc /specs/openapi-diff.txt || true
+          docker run --rm -t -v $(pwd):/specs:rw openapitools/openapi-diff:latest /specs/openapi-stable.json /specs/openapi-current.json --markdown /specs/openapi-diff.txt || true
           #openapi-changes summary --markdown openapi-stable.json openapi-current.json > openapi-diff.txt || true
           #openapi-changes report openapi-stable.json openapi-current.json
       - name: Comment on PR with OpenAPI diff

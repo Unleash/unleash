@@ -168,8 +168,8 @@ jobs:
       - name: Run OpenAPI diff
         id: diff
         run: |
-          openapi-changes diff openapi-stable.json openapi-current.json > openapi-diff.txt || true
-          cat openapi-diff.txt
+          openapi-changes summary --markdown openapi-stable.json openapi-current.json > openapi-diff.txt || true
+          openapi-changes report openapi-stable.json openapi-current.json
       - name: Comment on PR with OpenAPI diff
         uses: actions/github-script@v7
         with:

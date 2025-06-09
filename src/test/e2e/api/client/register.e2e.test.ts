@@ -15,9 +15,7 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('register_client', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('register_client', getLogger);
     app = await setupApp(db.stores);
 });
 
@@ -63,10 +61,12 @@ test('should allow client to register multiple times', async () => {
         .send(clientRegistration)
         .expect(202);
 
-    vi.advanceTimersByTime(6000);
-    // @ts-expect-error - Incomplete client registration
-    expect(clientApplicationsStore.exists(clientRegistration)).toBeTruthy();
-    expect(clientInstanceStore.exists(clientRegistration)).toBeTruthy();
+    await app.services.clientInstanceService.bulkAdd();
+
+    expect(
+        await clientApplicationsStore.exists(clientRegistration.appName),
+    ).toBeTruthy();
+    expect(await clientInstanceStore.exists(clientRegistration)).toBeTruthy();
     vi.useRealTimers();
 });
 

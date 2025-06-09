@@ -19,6 +19,7 @@ import { startOfHour } from 'date-fns';
 import { ApiTokenType } from '../../../types/model.js';
 import type TestAgent from 'supertest/lib/agent.d.ts';
 import type { BulkRegistrationSchema } from '../../../openapi/index.js';
+import { DEFAULT_ENV } from '../../../server-impl.js';
 
 let db: ITestDb;
 let config: IUnleashConfig;
@@ -416,7 +417,7 @@ describe('bulk metrics', () => {
         });
     });
 
-    test('filters out metrics for environments we do not have access for. No auth setup so we can only access default env', async () => {
+    test('without access to production environment due to no auth setup, we can only access the default env', async () => {
         const now = new Date();
 
         await request
@@ -427,7 +428,7 @@ describe('bulk metrics', () => {
                     {
                         featureName: 'test_feature_one',
                         appName: 'test_application',
-                        environment: 'default',
+                        environment: DEFAULT_ENV,
                         timestamp: startOfHour(now),
                         yes: 1000,
                         no: 800,
@@ -436,7 +437,7 @@ describe('bulk metrics', () => {
                     {
                         featureName: 'test_feature_two',
                         appName: 'test_application',
-                        environment: 'development',
+                        environment: 'production',
                         timestamp: startOfHour(now),
                         yes: 1000,
                         no: 800,

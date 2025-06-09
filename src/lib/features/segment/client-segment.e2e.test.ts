@@ -46,7 +46,7 @@ const fetchFeatures = (): Promise<IFeatureOverview[]> => {
 };
 
 const getFeatureStrategiesPath = (featureName: string) => {
-    return `/api/admin/projects/default/features/${featureName}/environments/default/strategies`;
+    return `/api/admin/projects/default/features/${featureName}/environments/${DEFAULT_ENV}/strategies`;
 };
 
 const fetchFeatureStrategies = (featureName: string) =>
@@ -197,9 +197,7 @@ const createTestSegments = async () => {
 };
 
 beforeAll(async () => {
-    db = await dbInit('segments', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('segments', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
         {

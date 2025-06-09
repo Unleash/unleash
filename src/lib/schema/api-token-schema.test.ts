@@ -1,3 +1,4 @@
+import { DEFAULT_ENV } from '../server-impl.js';
 import { ALL } from '../types/models/api-token.js';
 import { createApiToken } from './api-token-schema.js';
 
@@ -51,10 +52,10 @@ test('should allow for embedded proxy (frontend) key', async () => {
     expect(token.error).toBeUndefined();
 });
 
-test('should set environment to default for frontend key', async () => {
+test('should set environment to default environment for frontend key', async () => {
     const token = await createApiToken.validateAsync({
         tokenName: 'test',
         type: 'frontend',
     });
-    expect(token.environment).toEqual('default');
+    expect(token.environment).toEqual(DEFAULT_ENV);
 });

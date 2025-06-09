@@ -11,7 +11,7 @@ import {
     mapFeatureForClient,
     mapSegmentsForClient,
 } from '../playground/offline-unleash-client.js';
-import { ALL_ENVS } from '../../util/constants.js';
+import { ALL_ENVS, DEFAULT_ENV } from '../../util/constants.js';
 import type { Logger } from '../../logger.js';
 import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service.js';
 import type { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type.js';
@@ -141,7 +141,7 @@ export class GlobalFrontendApiCache extends EventEmitter {
 
     private environmentNameForToken(token: IApiUser): string {
         if (token.environment === ALL_ENVS) {
-            return 'default';
+            return DEFAULT_ENV;
         }
         return token.environment;
     }

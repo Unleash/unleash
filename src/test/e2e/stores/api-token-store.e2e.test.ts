@@ -2,20 +2,18 @@ import dbInit, { type ITestDb } from '../helpers/database-init.js';
 import getLogger from '../../fixtures/no-logger.js';
 import type { IUnleashStores } from '../../../lib/types/index.js';
 import { ApiTokenType } from '../../../lib/types/model.js';
-import { randomId } from '../../../lib/util/index.js';
+import { DEFAULT_ENV, randomId } from '../../../lib/util/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('api_token_store_serial', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('api_token_store_serial', getLogger);
     stores = db.stores;
 });
 
-afterEach(async () => {
-    await db.reset();
+beforeEach(async () => {
+    await stores.apiTokenStore.deleteAll();
 });
 
 afterAll(async () => {
@@ -30,7 +28,7 @@ test('get token is undefined when not exist', async () => {
 test('get token returns the token when exists', async () => {
     const newToken = await stores.apiTokenStore.insert({
         secret: 'abcde321',
-        environment: 'default',
+        environment: DEFAULT_ENV,
         type: ApiTokenType.ADMIN,
         projects: [],
         tokenName: 'admin-test-token',
@@ -51,28 +49,28 @@ describe('count deprecated tokens', () => {
         });
         await stores.apiTokenStore.insert({
             secret: '*:*.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             type: ApiTokenType.ADMIN,
             projects: [],
             tokenName: 'admin-token',
         });
         await stores.apiTokenStore.insert({
             secret: 'default:development.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             type: ApiTokenType.CLIENT,
             projects: ['default'],
             tokenName: 'client-token',
         });
         await stores.apiTokenStore.insert({
             secret: '*:development.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             type: ApiTokenType.CLIENT,
             projects: [],
             tokenName: 'client-wildcard-token',
         });
         await stores.apiTokenStore.insert({
             secret: '[]:production.3d6bdada42ddbd63a019d26955178be44368985f7fb3237c584ef86f',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             type: ApiTokenType.FRONTEND,
             projects: ['default', 'test'],
             tokenName: 'frontend-token',
@@ -92,7 +90,7 @@ describe('count deprecated tokens', () => {
     test('should return 1 for legacy tokens', async () => {
         await stores.apiTokenStore.insert({
             secret: 'be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             type: ApiTokenType.ADMIN,
             projects: [],
             tokenName: 'admin-test-token',
@@ -112,7 +110,7 @@ describe('count deprecated tokens', () => {
     test('should return 1 for orphaned tokens', async () => {
         await stores.apiTokenStore.insert({
             secret: 'deleted-project:development.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             type: ApiTokenType.CLIENT,
             projects: [],
             tokenName: 'admin-test-token',
@@ -132,7 +130,7 @@ describe('count deprecated tokens', () => {
     test('should not count wildcard tokens as orphaned', async () => {
         await stores.apiTokenStore.insert({
             secret: '*:*.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             type: ApiTokenType.CLIENT,
             projects: [],
             tokenName: 'client-test-token',
@@ -156,14 +154,14 @@ describe('count deprecated tokens', () => {
             '[]:production.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178';
         await stores.apiTokenStore.insert({
             secret: legacyTokenSecret,
-            environment: 'default',
+            environment: DEFAULT_ENV,
             type: ApiTokenType.ADMIN,
             projects: [],
             tokenName: 'admin-test-token',
         });
         await stores.apiTokenStore.insert({
             secret: orphanedTokenSecret,
-            environment: 'default',
+            environment: DEFAULT_ENV,
             type: ApiTokenType.FRONTEND,
             projects: [],
             tokenName: 'frontend-test-token',
@@ -196,14 +194,14 @@ describe('count project tokens', () => {
         const store = stores.apiTokenStore;
         await store.insert({
             secret: `default:default.${randomId()}`,
-            environment: 'default',
+            environment: DEFAULT_ENV,
             type: ApiTokenType.CLIENT,
             projects: ['default'],
             tokenName: 'token1',
         });
         await store.insert({
             secret: `*:*.${randomId()}`,
-            environment: 'default',
+            environment: DEFAULT_ENV,
             type: ApiTokenType.CLIENT,
             projects: ['*'],
             tokenName: 'token2',
@@ -211,7 +209,7 @@ describe('count project tokens', () => {
 
         await store.insert({
             secret: `${project.id}:default.${randomId()}`,
-            environment: 'default',
+            environment: DEFAULT_ENV,
             type: ApiTokenType.CLIENT,
             projects: [project.id],
             tokenName: 'token3',
@@ -219,7 +217,7 @@ describe('count project tokens', () => {
 
         await store.insert({
             secret: `[]:default.${randomId()}`,
-            environment: 'default',
+            environment: DEFAULT_ENV,
             type: ApiTokenType.CLIENT,
             projects: [project.id, 'default'],
             tokenName: 'token4',

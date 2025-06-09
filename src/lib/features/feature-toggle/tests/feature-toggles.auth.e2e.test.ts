@@ -17,9 +17,7 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('feature_strategy_auth_api_serial', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('feature_strategy_auth_api_serial', getLogger);
     app = await setupAppWithAuth(
         db.stores,
         {
@@ -139,10 +137,10 @@ test('Should not be possible auto-enable feature flag without CREATE_FEATURE_STR
     await db.stores.accessStore.removePermissionFromRole(
         role.id,
         CREATE_FEATURE_STRATEGY,
-        'default',
+        DEFAULT_ENV,
     );
     await app.request
-        .post(`${url}/${name}/environments/default/on`)
+        .post(`${url}/${name}/environments/${DEFAULT_ENV}/on`)
         .expect(403);
 });
 

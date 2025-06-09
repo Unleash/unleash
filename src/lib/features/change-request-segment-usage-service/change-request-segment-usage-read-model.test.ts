@@ -5,7 +5,7 @@ import dbInit, {
 import getLogger from '../../../test/fixtures/no-logger.js';
 import type { IChangeRequestSegmentUsageReadModel } from './change-request-segment-usage-read-model.js';
 import { createChangeRequestSegmentUsageReadModel } from './createChangeRequestSegmentUsageReadModel.js';
-import { randomId } from '../../util/index.js';
+import { DEFAULT_ENV, randomId } from '../../util/index.js';
 
 let db: ITestDb;
 let user: IUser;
@@ -65,7 +65,7 @@ const createCR = async (
 ) => {
     await db.rawDatabase.table('change_requests').insert({
         id: changeRequestId,
-        environment: 'default',
+        environment: DEFAULT_ENV,
         state,
         project: 'default',
         created_by: userId,
@@ -167,7 +167,7 @@ test.each([
                 {
                     projectId: 'default',
                     strategyName: 'flexibleRollout',
-                    environment: 'default',
+                    environment: DEFAULT_ENV,
                     featureName: FLAG_NAME,
                     changeRequest: { id: CR_ID, title: CR_TITLE },
                 },
@@ -205,7 +205,7 @@ test.each([
                     id: strategyId,
                     projectId: 'default',
                     strategyName: 'flexibleRollout',
-                    environment: 'default',
+                    environment: DEFAULT_ENV,
                     featureName: FLAG_NAME,
                     changeRequest: { id: CR_ID, title: CR_TITLE },
                 },
@@ -235,7 +235,7 @@ test(`If the same strategy appears in multiple CRs with the same segment, each s
         id: strategyId,
         projectId: 'default',
         strategyName: 'flexibleRollout',
-        environment: 'default',
+        environment: DEFAULT_ENV,
         featureName: FLAG_NAME,
         changeRequest: { id: CR_ID, title: CR_TITLE },
     });
@@ -243,7 +243,7 @@ test(`If the same strategy appears in multiple CRs with the same segment, each s
         id: strategyId,
         projectId: 'default',
         strategyName: 'flexibleRollout',
-        environment: 'default',
+        environment: DEFAULT_ENV,
         featureName: FLAG_NAME,
         changeRequest: { id: CR_ID_2, title: null },
     });

@@ -65,8 +65,6 @@ const createFlag = async (
     strategy: Omit<IStrategyConfig, 'id'> = defaultStrategy,
     tags: string[] = [],
     projectId: string = 'default',
-    username: string = 'test',
-    userId: number = -9999,
 ) => {
     await app.services.featureToggleService.createFeatureToggle(
         projectId,
@@ -241,7 +239,7 @@ describe('import-export for project-specific segments', () => {
             .post('/api/admin/features-batch/export')
             .send({
                 features: [defaultFeatureName],
-                environment: 'default',
+                environment: DEFAULT_ENV,
             })
             .set('Content-Type', 'application/json')
             .expect(200);
@@ -257,7 +255,7 @@ describe('import-export for project-specific segments', () => {
             featureEnvironments: [
                 {
                     enabled: false,
-                    environment: 'default',
+                    environment: DEFAULT_ENV,
                     featureName: defaultFeatureName,
                 },
             ],
@@ -322,7 +320,7 @@ test('exports features', async () => {
         .post('/api/admin/features-batch/export')
         .send({
             features: [defaultFeatureName],
-            environment: 'default',
+            environment: DEFAULT_ENV,
         })
         .set('Content-Type', 'application/json')
         .expect(200);
@@ -338,7 +336,7 @@ test('exports features', async () => {
         featureEnvironments: [
             {
                 enabled: false,
-                environment: 'default',
+                environment: DEFAULT_ENV,
                 featureName: defaultFeatureName,
             },
         ],
@@ -407,7 +405,7 @@ test('exports features by tag', async () => {
         .post('/api/admin/features-batch/export')
         .send({
             tag: 'mytag',
-            environment: 'default',
+            environment: DEFAULT_ENV,
         })
         .set('Content-Type', 'application/json')
         .expect(200);
@@ -423,7 +421,7 @@ test('exports features by tag', async () => {
         featureEnvironments: [
             {
                 enabled: false,
-                environment: 'default',
+                environment: DEFAULT_ENV,
                 featureName: defaultFeatureName,
             },
         ],
@@ -505,7 +503,7 @@ test('should export custom context fields from strategies and variants', async (
         .post('/api/admin/features-batch/export')
         .send({
             features: [defaultFeatureName],
-            environment: 'default',
+            environment: DEFAULT_ENV,
         })
         .set('Content-Type', 'application/json')
         .expect(200);
@@ -521,7 +519,7 @@ test('should export custom context fields from strategies and variants', async (
         featureEnvironments: [
             {
                 enabled: false,
-                environment: 'default',
+                environment: DEFAULT_ENV,
                 featureName: defaultFeatureName,
             },
         ],
@@ -550,7 +548,7 @@ test('should export tags', async () => {
         .post('/api/admin/features-batch/export')
         .send({
             features: [defaultFeatureName],
-            environment: 'default',
+            environment: DEFAULT_ENV,
         })
         .set('Content-Type', 'application/json')
         .expect(200);
@@ -566,7 +564,7 @@ test('should export tags', async () => {
         featureEnvironments: [
             {
                 enabled: false,
-                environment: 'default',
+                environment: DEFAULT_ENV,
                 featureName: defaultFeatureName,
             },
         ],
@@ -593,7 +591,7 @@ test('returns all features, when no explicit feature was requested', async () =>
         .post('/api/admin/features-batch/export')
         .send({
             features: [],
-            environment: 'default',
+            environment: DEFAULT_ENV,
         })
         .set('Content-Type', 'application/json')
         .expect(200);
@@ -614,7 +612,7 @@ test('returns all project features', async () => {
     const { body } = await app.request
         .post('/api/admin/features-batch/export')
         .send({
-            environment: 'default',
+            environment: DEFAULT_ENV,
             project: DEFAULT_PROJECT,
         })
         .set('Content-Type', 'application/json')
@@ -625,7 +623,7 @@ test('returns all project features', async () => {
     const { body: otherProject } = await app.request
         .post('/api/admin/features-batch/export')
         .send({
-            environment: 'default',
+            environment: DEFAULT_ENV,
             features: [], // should be ignored because we have project
             project: 'other_project',
         })

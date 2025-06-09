@@ -4,15 +4,8 @@
  * See `gen:api` script in package.json
  */
 import type { CreateApiTokenSchemaOneOf } from './createApiTokenSchemaOneOf.js';
-import type { CreateApiTokenSchemaOneOfTwo } from './createApiTokenSchemaOneOfTwo.js';
-import type { CreateApiTokenSchemaOneOfThree } from './createApiTokenSchemaOneOfThree.js';
-import type { CreateApiTokenSchemaOneOfFour } from './createApiTokenSchemaOneOfFour.js';
 
 /**
  * The data required to create an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).
  */
-export type CreateApiTokenSchema =
-    | CreateApiTokenSchemaOneOf
-    | CreateApiTokenSchemaOneOfTwo
-    | CreateApiTokenSchemaOneOfThree
-    | CreateApiTokenSchemaOneOfFour;
+export type CreateApiTokenSchema = CreateApiTokenSchemaOneOf;

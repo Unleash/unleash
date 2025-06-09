@@ -64,7 +64,7 @@ const createStrategy = async (
 ) => {
     return app.request
         .post(
-            `/api/admin/projects/default/features/${featureName}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${featureName}/environments/${DEFAULT_ENV}/strategies`,
         )
         .send(payload)
         .expect(expectedCode);
@@ -78,7 +78,7 @@ const updateStrategy = async (
 ) => {
     const { body } = await app.request
         .put(
-            `/api/admin/projects/default/features/${featureName}/environments/default/strategies/${strategyId}`,
+            `/api/admin/projects/default/features/${featureName}/environments/${DEFAULT_ENV}/strategies/${strategyId}`,
         )
         .send(payload)
         .expect(expectedCode);
@@ -87,9 +87,7 @@ const updateStrategy = async (
 };
 
 beforeAll(async () => {
-    db = await dbInit('feature_strategy_api_serial', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('feature_strategy_api_serial', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
         {
@@ -107,7 +105,7 @@ beforeAll(async () => {
         await app.services.apiTokenService.createApiTokenWithProjects({
             type: ApiTokenType.CLIENT,
             projects: ['default'],
-            environment: 'default',
+            environment: DEFAULT_ENV,
             tokenName: 'tester',
         });
 });
@@ -952,7 +950,7 @@ test('Can add strategy to feature flag to a "some-env-2"', async () => {
 });
 
 test('Can update strategy on feature flag', async () => {
-    const envName = 'default';
+    const envName = DEFAULT_ENV;
     const featureName = 'feature.strategy.update.strat';
     const projectPath = '/api/admin/projects/default';
     const featurePath = `${projectPath}/features/${featureName}`;
@@ -986,7 +984,7 @@ test('Can update strategy on feature flag', async () => {
 });
 
 test('should coerce all strategy parameter values to strings', async () => {
-    const envName = 'default';
+    const envName = DEFAULT_ENV;
     const featureName = randomId();
     const projectPath = '/api/admin/projects/default';
     const featurePath = `${projectPath}/features/${featureName}`;
@@ -1010,7 +1008,7 @@ test('should coerce all strategy parameter values to strings', async () => {
 });
 
 test('should NOT limit the length of parameter values', async () => {
-    const envName = 'default';
+    const envName = DEFAULT_ENV;
     const featureName = randomId();
     const projectPath = '/api/admin/projects/default';
     const featurePath = `${projectPath}/features/${featureName}`;
@@ -1027,7 +1025,7 @@ test('should NOT limit the length of parameter values', async () => {
 });
 
 test('Can NOT delete strategy with wrong projectId', async () => {
-    const envName = 'default';
+    const envName = DEFAULT_ENV;
     const featureName = 'feature.strategy.delete.strat.error';
 
     const projectPath = '/api/admin/projects/default';
@@ -1059,7 +1057,7 @@ test('Can NOT delete strategy with wrong projectId', async () => {
 });
 
 test('add strategy cannot use wrong projectId', async () => {
-    const envName = 'default';
+    const envName = DEFAULT_ENV;
     const featureName = 'feature.strategy.add.strat.wrong.projectId';
 
     // create feature flag
@@ -1083,7 +1081,7 @@ test('add strategy cannot use wrong projectId', async () => {
 });
 
 test('update strategy on feature flag cannot use wrong projectId', async () => {
-    const envName = 'default';
+    const envName = DEFAULT_ENV;
     const featureName = 'feature.strategy.update.strat.wrong.projectId';
 
     const projectPath = '/api/admin/projects/default';
@@ -2040,7 +2038,7 @@ test('should clone feature flag WITH variants', async () => {
 });
 
 test('should clone feature flag without replacing groupId', async () => {
-    const envName = 'default';
+    const envName = DEFAULT_ENV;
     const featureName = 'feature.flag.base.4';
     const cloneName = 'feature.flag.clone.4';
 
@@ -2135,13 +2133,13 @@ test('Should not allow changing project to target project without the same enabl
     );
     await db.stores.projectStore.addEnvironmentToProject(
         targetProject,
-        'default',
+        DEFAULT_ENV,
     );
 
     await app.createFeature(featureName, project);
     await app.request
         .post(
-            `/api/admin/projects/${project}/features/${featureName}/environments/default/strategies`,
+            `/api/admin/projects/${project}/features/${featureName}/environments/${DEFAULT_ENV}/strategies`,
         )
         .send({
             name: 'flexibleRollout',
@@ -2163,7 +2161,7 @@ test('Should not allow changing project to target project without the same enabl
         .expect(200);
     await app.request
         .post(
-            `/api/admin/projects/${project}/features/${featureName}/environments/default/on`,
+            `/api/admin/projects/${project}/features/${featureName}/environments/${DEFAULT_ENV}/on`,
         )
         .send({})
         .expect(200);
@@ -2215,14 +2213,14 @@ test('Should allow changing project to target project with the same enabled envi
     await db.stores.projectStore.addEnvironmentToProject('default', inBoth);
     await db.stores.projectStore.addEnvironmentToProject(
         targetProject,
-        'default',
+        DEFAULT_ENV,
     );
     await db.stores.projectStore.addEnvironmentToProject(targetProject, inBoth);
 
     await app.createFeature(featureName, project);
     await app.request
         .post(
-            `/api/admin/projects/${project}/features/${featureName}/environments/default/strategies`,
+            `/api/admin/projects/${project}/features/${featureName}/environments/${DEFAULT_ENV}/strategies`,
         )
         .send({
             name: 'flexibleRollout',
@@ -2244,7 +2242,7 @@ test('Should allow changing project to target project with the same enabled envi
         .expect(200);
     await app.request
         .post(
-            `/api/admin/projects/${project}/features/${featureName}/environments/default/on`,
+            `/api/admin/projects/${project}/features/${featureName}/environments/${DEFAULT_ENV}/on`,
         )
         .send({})
         .expect(200);
@@ -2461,7 +2459,7 @@ test('should handle strategy variants', async () => {
         variants: [variant],
     };
 
-    const featureStrategiesPath = `/api/admin/projects/default/features/${feature.name}/environments/default/strategies`;
+    const featureStrategiesPath = `/api/admin/projects/default/features/${feature.name}/environments/${DEFAULT_ENV}/strategies`;
 
     await app.request
         .post(featureStrategiesPath)
@@ -2513,7 +2511,7 @@ test('should reject invalid constraint values for multi-valued constraints', asy
         constraints: [{ contextName: 'userId', operator: 'IN', values }],
     });
 
-    const featureStrategiesPath = `/api/admin/projects/${project.id}/features/${flag.name}/environments/default/strategies`;
+    const featureStrategiesPath = `/api/admin/projects/${project.id}/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`;
 
     await app.request
         .post(featureStrategiesPath)
@@ -2578,7 +2576,7 @@ test('should add default constraint values for single-valued constraints', async
         expect(res.body.constraints[0].values).toEqual(values);
     };
 
-    const featureStrategiesPath = `/api/admin/projects/${project.id}/features/${flag.name}/environments/default/strategies`;
+    const featureStrategiesPath = `/api/admin/projects/${project.id}/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`;
 
     await app.request
         .post(featureStrategiesPath)
@@ -2623,7 +2621,7 @@ test('should allow long parameter values', async () => {
 
     await app.request
         .post(
-            `/api/admin/projects/${project.id}/features/${flag.name}/environments/default/strategies`,
+            `/api/admin/projects/${project.id}/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`,
         )
         .send(strategy)
         .expect(200);
@@ -2640,7 +2638,7 @@ test('should change strategy sort order when payload is valid', async () => {
 
     const { body: strategyOne } = await app.request
         .post(
-            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`,
         )
         .send({
             name: 'default',
@@ -2652,7 +2650,7 @@ test('should change strategy sort order when payload is valid', async () => {
 
     const { body: strategyTwo } = await app.request
         .post(
-            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`,
         )
         .send({
             name: 'flexibleRollout',
@@ -2663,7 +2661,7 @@ test('should change strategy sort order when payload is valid', async () => {
         .expect(200);
 
     const { body: strategies } = await app.request.get(
-        `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
+        `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`,
     );
 
     expect(strategies[0].sortOrder).toBe(0);
@@ -2673,7 +2671,7 @@ test('should change strategy sort order when payload is valid', async () => {
 
     await app.request
         .post(
-            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies/set-sort-order`,
+            `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies/set-sort-order`,
         )
         .send([
             {
@@ -2688,7 +2686,7 @@ test('should change strategy sort order when payload is valid', async () => {
         .expect(200);
 
     const { body: strategiesOrdered } = await app.request.get(
-        `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
+        `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`,
     );
 
     expect(strategiesOrdered[0].sortOrder).toBe(1);
@@ -2702,7 +2700,7 @@ test('should reject set sort order request when payload is invalid', async () =>
 
     await app.request
         .post(
-            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies/set-sort-order`,
+            `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies/set-sort-order`,
         )
         .send([
             {
@@ -2726,7 +2724,7 @@ test('should return strategies in correct order when new strategies are added', 
 
     const { body: strategyOne } = await app.request
         .post(
-            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`,
         )
         .send({
             name: 'default',
@@ -2738,7 +2736,7 @@ test('should return strategies in correct order when new strategies are added', 
 
     const { body: strategyTwo } = await app.request
         .post(
-            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`,
         )
         .send({
             name: 'flexibleRollout',
@@ -2749,7 +2747,7 @@ test('should return strategies in correct order when new strategies are added', 
         .expect(200);
 
     const { body: strategies } = await app.request.get(
-        `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
+        `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`,
     );
 
     expect(strategies[0].sortOrder).toBe(0);
@@ -2759,7 +2757,7 @@ test('should return strategies in correct order when new strategies are added', 
 
     await app.request
         .post(
-            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies/set-sort-order`,
+            `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies/set-sort-order`,
         )
         .send([
             {
@@ -2775,7 +2773,7 @@ test('should return strategies in correct order when new strategies are added', 
 
     const { body: strategyThree } = await app.request
         .post(
-            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`,
         )
         .send({
             name: 'flexibleRollout',
@@ -2787,7 +2785,7 @@ test('should return strategies in correct order when new strategies are added', 
 
     const { body: strategyFour } = await app.request
         .post(
-            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`,
         )
         .send({
             name: 'flexibleRollout',
@@ -2798,7 +2796,7 @@ test('should return strategies in correct order when new strategies are added', 
         .expect(200);
 
     const { body: strategiesOrdered } = await app.request.get(
-        `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
+        `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`,
     );
 
     expect(strategiesOrdered[0].sortOrder).toBe(1);
@@ -2810,7 +2808,7 @@ test('should return strategies in correct order when new strategies are added', 
 
     await app.request
         .post(
-            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies/set-sort-order`,
+            `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies/set-sort-order`,
         )
         .send([
             {
@@ -2821,7 +2819,7 @@ test('should return strategies in correct order when new strategies are added', 
         .expect(200);
 
     const { body: strategiesReOrdered } = await app.request.get(
-        `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
+        `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`,
     );
 
     // This block checks the order of the strategies retrieved from the endpoint. After partial update, the order should
@@ -2853,7 +2851,7 @@ test('should create a strategy with segments', async () => {
         .get(`/api/admin/projects/default/features/${feature.name}`)
         .expect((res) => {
             const defaultEnv = res.body.environments.find(
-                (env) => env.name === 'default',
+                (env) => env.name === DEFAULT_ENV,
             );
             const strategy = defaultEnv.strategies.find(
                 (strat) => strat.id === strategyOne.id,
@@ -2874,7 +2872,7 @@ test('should create a strategy with segments', async () => {
         .get(`/api/admin/projects/default/features/${feature.name}`)
         .expect((res) => {
             const defaultEnv = res.body.environments.find(
-                (env) => env.name === 'default',
+                (env) => env.name === DEFAULT_ENV,
             );
             const strategy = defaultEnv.strategies.find(
                 (strat) => strat.id === strategyOne.id,
@@ -2903,7 +2901,7 @@ test('should add multiple segments to a strategy', async () => {
         .get(`/api/admin/projects/default/features/${feature.name}`)
         .expect((res) => {
             const defaultEnv = res.body.environments.find(
-                (env) => env.name === 'default',
+                (env) => env.name === DEFAULT_ENV,
             );
             const strategy = defaultEnv?.strategies.find(
                 (strat) => strat.id === strategyOne.id,
@@ -3075,7 +3073,7 @@ test('should return disabled strategies', async () => {
 
     const { body: strategyOne } = await app.request
         .post(
-            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`,
         )
         .send({
             name: 'default',
@@ -3088,7 +3086,7 @@ test('should return disabled strategies', async () => {
 
     const { body: strategyTwo } = await app.request
         .post(
-            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`,
         )
         .send({
             name: 'flexibleRollout',
@@ -3099,7 +3097,7 @@ test('should return disabled strategies', async () => {
         .expect(200);
 
     const { body: strategies } = await app.request.get(
-        `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
+        `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`,
     );
 
     expect(strategies[0].id).toBe(strategyOne.id);
@@ -3119,7 +3117,7 @@ test('should disable strategies in place', async () => {
 
     const { body: strategyOne } = await app.request
         .post(
-            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`,
         )
         .send({
             name: 'flexibleRollout',
@@ -3133,7 +3131,7 @@ test('should disable strategies in place', async () => {
         .expect(200);
 
     const { body: strategies } = await app.request.get(
-        `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
+        `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`,
     );
 
     expect(strategies[0].id).toBe(strategyOne.id);
@@ -3141,7 +3139,7 @@ test('should disable strategies in place', async () => {
 
     const { body: updatedStrategyOne } = await app.request
         .put(
-            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies/${strategyOne.id}`,
+            `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies/${strategyOne.id}`,
         )
         .send({
             name: 'flexibleRollout',
@@ -3156,7 +3154,7 @@ test('should disable strategies in place', async () => {
         .expect(200);
 
     const { body: updatedStrategies } = await app.request.get(
-        `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
+        `/api/admin/projects/default/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`,
     );
 
     expect(updatedStrategies[0].id).toBe(updatedStrategyOne.id);
@@ -3530,7 +3528,7 @@ test('can get evaluation metrics', async () => {
         name: 'metric-feature',
         environments: [
             {
-                name: 'default',
+                name: DEFAULT_ENV,
                 yes: 123,
                 no: 321,
             },

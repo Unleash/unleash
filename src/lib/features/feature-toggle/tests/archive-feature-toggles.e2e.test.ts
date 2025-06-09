@@ -11,9 +11,7 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('archive_test_serial', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('archive_test_serial', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
         {
@@ -125,26 +123,6 @@ test('Should disable all environments when reviving a toggle', async () => {
         archived: true,
         createdByUserId: 9999,
     });
-
-    await db.stores.environmentStore.create({
-        name: 'development',
-        enabled: true,
-        type: 'development',
-        sortOrder: 1,
-    });
-
-    await db.stores.environmentStore.create({
-        name: 'production',
-        enabled: true,
-        type: 'production',
-        sortOrder: 2,
-    });
-
-    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
-        'feat-proj-1',
-        'default',
-        true,
-    );
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
         'feat-proj-1',
         'production',

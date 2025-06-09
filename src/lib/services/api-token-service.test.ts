@@ -7,7 +7,7 @@ import {
     TEST_AUDIT_USER,
 } from '../types/index.js';
 import { addDays, minutesToMilliseconds, subDays } from 'date-fns';
-import { extractAuditInfoFromUser } from '../util/index.js';
+import { DEFAULT_ENV, extractAuditInfoFromUser } from '../util/index.js';
 import { createFakeApiTokenService } from '../features/api-tokens/createApiTokenService.js';
 import {
     API_TOKEN_CREATED,
@@ -50,7 +50,7 @@ test('Should init api token', async () => {
 
 test("Shouldn't return frontend token when secret is undefined", async () => {
     const token: IApiTokenCreate = {
-        environment: 'default',
+        environment: DEFAULT_ENV,
         projects: ['*'],
         secret: '*:*:some-random-string',
         type: ApiTokenType.FRONTEND,
@@ -62,7 +62,7 @@ test("Shouldn't return frontend token when secret is undefined", async () => {
     const { environmentStore, apiTokenService } =
         createFakeApiTokenService(config);
     await environmentStore.create({
-        name: 'default',
+        name: DEFAULT_ENV,
         enabled: true,
         type: 'test',
         sortOrder: 1,
@@ -76,7 +76,7 @@ test("Shouldn't return frontend token when secret is undefined", async () => {
 
 test('Api token operations should all have events attached', async () => {
     const token: IApiTokenCreate = {
-        environment: 'default',
+        environment: DEFAULT_ENV,
         projects: ['*'],
         secret: '*:*:some-random-string',
         type: ApiTokenType.FRONTEND,
@@ -89,7 +89,7 @@ test('Api token operations should all have events attached', async () => {
     const { environmentStore, apiTokenService, eventService } =
         createFakeApiTokenService(config);
     await environmentStore.create({
-        name: 'default',
+        name: DEFAULT_ENV,
         enabled: true,
         type: 'test',
         sortOrder: 1,
@@ -150,7 +150,7 @@ test('getUserForToken should get a user with admin token user id and token name'
 
 describe('API token getTokenWithCache', () => {
     const token: IApiTokenCreate = {
-        environment: 'default',
+        environment: DEFAULT_ENV,
         projects: ['*'],
         secret: '*:*:some-random-string',
         type: ApiTokenType.CLIENT,
@@ -228,7 +228,7 @@ test('normalizes api token type casing to lowercase', async () => {
         createFakeApiTokenService(config);
 
     await environmentStore.create({
-        name: 'default',
+        name: DEFAULT_ENV,
         enabled: true,
         type: 'test',
         sortOrder: 1,
@@ -238,7 +238,7 @@ test('normalizes api token type casing to lowercase', async () => {
 
     await apiTokenService.createApiTokenWithProjects(
         {
-            environment: 'default',
+            environment: DEFAULT_ENV,
             // @ts-ignore
             type: 'CLIENT',
             projects: [],
@@ -249,7 +249,7 @@ test('normalizes api token type casing to lowercase', async () => {
 
     await apiTokenService.createApiTokenWithProjects(
         {
-            environment: 'default',
+            environment: DEFAULT_ENV,
             // @ts-ignore
             type: 'client',
             projects: [],

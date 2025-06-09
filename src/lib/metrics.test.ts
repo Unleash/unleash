@@ -89,19 +89,6 @@ beforeAll(async () => {
         eventBus,
     );
 
-    const metricsDbConf = {
-        client: {
-            pool: {
-                min: 0,
-                max: 4,
-                numUsed: () => 2,
-                numFree: () => 2,
-                numPendingAcquires: () => 0,
-                numPendingCreates: () => 1,
-            },
-        },
-    };
-
     const { collectAggDbMetrics, collectStaticCounters } =
         registerPrometheusMetrics(
             config,
@@ -141,7 +128,7 @@ test('should collect metrics for updated toggles', async () => {
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
-        /feature_toggle_update_total\{toggle="TestToggle",project="default",environment="default",environmentType="production",action="updated"\} 1/,
+        /feature_toggle_update_total\{toggle="TestToggle",project="default",environment="n\/a",environmentType="n\/a",action="updated"\} 1/,
     );
 });
 

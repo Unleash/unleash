@@ -68,9 +68,7 @@ export const EventSchemaType = {
     'project-user-added': 'project-user-added',
     'project-user-removed': 'project-user-removed',
     'project-user-role-changed': 'project-user-role-changed',
-    'project-group-role-changed': 'project-group-role-changed',
     'project-group-added': 'project-group-added',
-    'project-group-removed': 'project-group-removed',
     'role-created': 'role-created',
     'role-updated': 'role-updated',
     'role-deleted': 'role-deleted',
@@ -175,4 +173,5 @@ export const EventSchemaType = {
     'user-preference-updated': 'user-preference-updated',
     'scim-users-deleted': 'scim-users-deleted',
     'scim-groups-deleted': 'scim-groups-deleted',
+    'cdn-token-created': 'cdn-token-created',
 } as const;

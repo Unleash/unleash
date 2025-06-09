@@ -15,9 +15,7 @@ const userId = -9999;
 const projectId = 'default';
 
 beforeAll(async () => {
-    db = await dbInit('feature_env_api_client', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('feature_env_api_client', getLogger);
     app = await setupAppWithCustomConfig(db.stores, {}, db.rawDatabase);
 
     await app.services.featureToggleService.createFeatureToggle(
@@ -46,7 +44,7 @@ test('returns feature flag for default env', async () => {
     await app.services.featureToggleService.updateEnabled(
         'default',
         'feature.default.1',
-        'default',
+        DEFAULT_ENV,
         true,
         TEST_AUDIT_USER,
     );
@@ -64,12 +62,12 @@ test('returns feature flag for default env', async () => {
 
 test('returns feature flag for default env even if it is removed from project', async () => {
     await db.stores.featureEnvironmentStore.disconnectFeatures(
-        'default',
+        DEFAULT_ENV,
         'default',
     );
 
     await db.stores.featureEnvironmentStore.disconnectProject(
-        'default',
+        DEFAULT_ENV,
         'default',
     );
 

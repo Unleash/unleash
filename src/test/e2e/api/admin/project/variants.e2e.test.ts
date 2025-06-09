@@ -6,6 +6,7 @@ import dbInit, { type ITestDb } from '../../../helpers/database-init.js';
 import getLogger from '../../../../fixtures/no-logger.js';
 import * as jsonpatch from 'fast-json-patch/index.mjs';
 import { type IVariant, WeightType } from '../../../../../lib/types/model.js';
+import { DEFAULT_ENV } from '../../../../../lib/server-impl.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -40,12 +41,12 @@ test('Can get variants for a feature', async () => {
     });
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
         featureName,
-        'default',
+        DEFAULT_ENV,
         true,
     );
     await db.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
         featureName,
-        'default',
+        DEFAULT_ENV,
         [
             {
                 name: variantName,
@@ -57,7 +58,7 @@ test('Can get variants for a feature', async () => {
     );
     await app.request
         .get(
-            `/api/admin/projects/default/features/${featureName}/environments/default/variants`,
+            `/api/admin/projects/default/features/${featureName}/environments/${DEFAULT_ENV}/variants`,
         )
         .expect(200)
         .expect((res) => {

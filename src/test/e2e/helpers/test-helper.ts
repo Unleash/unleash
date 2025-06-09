@@ -517,7 +517,7 @@ export async function setupAppWithBaseUrl(
 export const insertLastSeenAt = async (
     featureName: string,
     db: Knex,
-    environment: string = 'default',
+    environment: string = DEFAULT_ENV,
     date: string = '2023-10-01T12:34:56.000Z',
 ): Promise<string> => {
     try {

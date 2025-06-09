@@ -30,9 +30,9 @@
     "ts:check": "tsc",
     "e2e": "NODE_OPTIONS=\"${NODE_OPTIONS:-} --no-experimental-fetch\" yarn run cypress open --config baseUrl='http://localhost:3000' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
     "e2e:oss": "yarn --cwd frontend run cypress run --spec \"cypress/oss/**/*.spec.ts\" --config baseUrl=\"http://localhost:${EXPOSED_PORT:-4242}\" --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
-    "gen:api": "NODE_OPTIONS=\"${NODE_OPTIONS:-} --no-experimental-fetch\" orval --config orval.config.js",
-    "gen:api:demo": "NODE_OPTIONS=\"${NODE_OPTIONS:-} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://app.unleash-hosted.com/demo/docs/openapi.json yarn run gen:api",
-    "gen:api:sandbox": "NODE_OPTIONS=\"${NODE_OPTIONS:-} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://sandbox.getunleash.io/demo2/docs/openapi.json yarn run gen:api",
+    "gen:api": "orval --config orval.config.ts",
+    "gen:api:demo": "UNLEASH_OPENAPI_URL=https://app.unleash-hosted.com/demo/docs/openapi.json yarn run gen:api",
+    "gen:api:sandbox": "UNLEASH_OPENAPI_URL=https://sandbox.getunleash.io/demo2/docs/openapi.json yarn run gen:api",
     "gen:api:clean": "yarn gen:api && rm -rf src/openapi/apis && sed -i.bak '1q' src/openapi/index.ts && rm src/openapi/index.ts.bak"
   },
   "devDependencies": {
@@ -95,7 +95,7 @@
     "lodash.omit": "4.5.0",
     "millify": "^6.0.0",
     "msw": "2.7.3",
-    "orval": "^6.31.0",
+    "orval": "^7.9.0",
     "pkginfo": "0.4.1",
     "plausible-tracker": "0.3.9",
     "prop-types": "15.8.1",
@@ -159,6 +159,7 @@
   },
   "packageManager": "yarn@4.9.1",
   "dependencies": {
+    "chartjs-plugin-datalabels": "^2.2.0",
     "json-2-csv": "^5.5.5"
   }
 }

@@ -18,12 +18,16 @@ export type ProjectForUi = {
 
 export type ProjectForInsights = {
     id: string;
-    health: number;
+    technicalDebt: number;
     memberCount: number;
     featureCount: number;
     staleFeatureCount: number;
     potentiallyStaleFeatureCount: number;
     avgTimeToProduction: number;
+    /**
+     * @deprecated
+     */
+    health: number;
 };
 
 export interface IProjectReadModel {

@@ -87,6 +87,16 @@ jobs:
         env:
           FRONTEND_TEST_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
           UNLEASH_VERSION: ${{ github.event.inputs.stable_version }}
+      - name: Wait for Unleash to be ready
+        run: |
+          for i in {1..30}; do
+            if curl -sf http://localhost:3000/health; then
+              echo "Unleash is up!";
+              break;
+            fi
+            echo "Waiting for Unleash...";
+            sleep 2
+          done
       - name: Download OpenAPI spec (${{ github.event.inputs.stable_version || 'latest stable' }})
         run: |
           set -x

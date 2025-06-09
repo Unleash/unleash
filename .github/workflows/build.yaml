@@ -88,7 +88,10 @@ jobs:
           FRONTEND_TEST_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
           UNLEASH_VERSION: ${{ github.event.inputs.stable_version }}
       - name: Download OpenAPI spec (${{ github.event.inputs.stable_version || 'latest stable' }})
-        run: curl -sSL -o openapi-stable.json "localhost:3000/docs/openapi.json"
+        run: |
+          set -x
+          curl -sSL -o openapi-stable.json "localhost:3000/docs/openapi.json"
+          cat openapi-stable.json
       - name: Upload openapi-stable.json
         uses: actions/upload-artifact@v4
         with:

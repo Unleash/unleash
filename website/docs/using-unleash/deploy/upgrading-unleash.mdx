@@ -11,6 +11,37 @@ Unleash aims to support client SDKs connecting to a server version that is one m
 
 Before you begin any major version upgrade, we strongly recommend performing a [full backup of your PostgreSQL database](/using-unleash/deploy/configuring-unleash#back-up-and-restore-the-database). This ensures you can restore your instance if issues occur during the upgrade.
 
+## Upgrading from v6 to v7
+Unleash v7, released in June 2025, introduced several key changes. Ensure you address the following before or during your upgrade to v7.
+
+### ESM migration
+Unleash v7 has fully migrated to ECMAScript Modules (ESM). If you run Unleash from source or using a custom build environment, ensure your environment supports ESM. This change may require updates to your custom scripts or integrations.
+
+### Requires Node.js version 22+
+If you run Unleash from source or using a custom build environment (not the official Docker image), you must ensure your environment uses Node.js version 22 or later. Unleash v7 drops support for Node.js versions below 22, which is [active LTS at the time of release](https://github.com/nodejs/Release/blob/cf57a9739438f7a46d8f49b18aa8c2de3f3ca756/README.md#release-schedule).
+
+### Database requirement: PostgreSQL v14+
+Unleash v7 requires **PostgreSQL version 14 or later**. Running v7 with older PostgreSQL versions (10, 11, 12, 13) is unsupported, though the server might start with a warning message.
+
+### API changes
+The following deprecated API endpoints have been removed in v7:
+- [PUT|DELETE] `/api/admin/projects/{projectId}/groups/{groupId}/roles/{roleId}` deprecated in 5.5.0.
+- [POST|PUT|DELETE] `/api/admin/projects/{projectId}/users/{userId}/roles/{roleId}` deprecated in 5.5.0.
+- [GET|PATCH|PUT] `/api/admin/projects/{projectId}/features/{featureName}/variants` endpoint, deprecated in 4.21.0.
+- POST `/api/admin/projects/{projectId}/role/{roleId}/access` deprecated in 5.5.0.
+- POST `/api/admin/ui-config` deprecated in 6.9.0.
+- POST `/api/admin/events/search` deprecated in 6.1.0.
+- GET `/api/admin/projects/{projectId}` deprecated in 5.8.0.
+- GET `/api/admin/instance-admin/statistics` deprecated in 4.17.0.
+- GET `/api/admin/archive/features` deprecated in 4.10.0.
+- GET `/api/admin/archive/features/{projectId}` deprecated in 4.11.0.
+- GET `/api/admin/dashboard/executive` deprecated in 5.11.0.
+- GET `/api/admin/metrics/traffic/{period}` deprecated in 6.8.0.
+- GET `/api/admin/projects/{projectId}/users` deprecated in 4.14.3.
+
+**Un-deprecated API endpoints:**
+- POST `/api/admin/strategies` is no longer deprecated and can be used to create custom strategies. The endpoint was previously deprecated in v6.0.0 but due to the feedback received from users, it has been reintroduced in v7.0.0.
+
 ## Upgrading from v5 to v6
 
 [Unleash v6](https://github.com/Unleash/unleash/issues/4380), released in June 2024, introduced several key changes. Ensure you address the following before or during your upgrade to v6.

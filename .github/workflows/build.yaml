@@ -90,7 +90,13 @@ jobs:
         run: |
           yarn install --immutable
       - name: Start Unleash test instance
-        run: yarn dev:backend
+        run: |
+          # fake frontend build
+          mkdir frontend/build
+          touch frontend/build/index.html
+          frontend/build/favicon.ico
+          # end fake frontend build
+          yarn dev:backend
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_SSL: 'false'

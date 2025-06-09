@@ -31,27 +31,25 @@ export function getActiveExperiments(
         {},
     );
 
-    return Object.entries(groupedByCategory)
-        .map(([category, items]) => {
-            const commentCount = items.length;
+    return Object.entries(groupedByCategory).map(([category, items]) => {
+        const commentCount = items.length;
 
-            const validScores = items
-                .filter((item) => item.difficultyScore !== null)
-                .map((item) => item.difficultyScore as number);
+        const validScores = items
+            .filter((item) => item.difficultyScore !== null)
+            .map((item) => item.difficultyScore as number);
 
-            const averageScore =
-                validScores.length > 0
-                    ? (
-                          validScores.reduce((sum, score) => sum + score, 0) /
-                          validScores.length
-                      ).toFixed(1)
-                    : 'N/A';
+        const averageScore =
+            validScores.length > 0
+                ? (
+                      validScores.reduce((sum, score) => sum + score, 0) /
+                      validScores.length
+                  ).toFixed(1)
+                : 'N/A';
 
-            return {
-                category,
-                commentCount,
-                averageScore,
-            };
-        })
-        .sort((a, b) => b.commentCount - a.commentCount);
+        return {
+            category,
+            commentCount,
+            averageScore,
+        };
+    });
 }

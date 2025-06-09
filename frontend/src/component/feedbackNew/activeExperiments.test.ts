@@ -138,11 +138,20 @@ describe('getActiveExperiments', () => {
         expect(result[0].averageScore).toBe('N/A');
     });
 
-    it('should sort results by comment count in descending order', () => {
-        const moreData: FeedbackSchema[] = [
-            ...mockFeedbackData,
+    it('should preserve the order of experiments as returned from the backend', () => {
+        // Create test data with a specific order
+        const orderedData: FeedbackSchema[] = [
             {
-                id: 6,
+                id: 1,
+                category: 'feature1',
+                createdAt: now.toISOString(),
+                difficultyScore: 5,
+                areasForImprovement: null,
+                positive: null,
+                userType: 'developer',
+            },
+            {
+                id: 2,
                 category: 'feature2',
                 createdAt: now.toISOString(),
                 difficultyScore: 4,
@@ -152,10 +161,10 @@ describe('getActiveExperiments', () => {
             },
         ];
 
-        const result = getActiveExperiments(moreData);
+        const result = getActiveExperiments(orderedData);
 
-        // feature2 should be first with 3 comments, feature1 second with 2 comments
-        expect(result[0].category).toBe('feature2');
-        expect(result[1].category).toBe('feature1');
+        // The order should be preserved from the input data
+        expect(result[0].category).toBe('feature1');
+        expect(result[1].category).toBe('feature2');
     });
 });

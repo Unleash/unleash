@@ -123,9 +123,7 @@ jobs:
         with:
           name: openapi-stable
       - name: Install openapi-changes
-        run: |
-          curl -sSL https://github.com/pb33f/openapi-changes/releases/latest/download/openapi-changes_Linux_x86_64.tar.gz | tar xz
-          sudo mv openapi-changes /usr/local/bin/
+        run: curl -fsSL https://pb33f.io/openapi-changes/install.sh | sh 
       - name: Run OpenAPI diff
         id: diff
         run: |

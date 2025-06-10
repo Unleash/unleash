@@ -19,6 +19,10 @@ interface IPrettifyLargeNumberProps {
      * @default 2
      */
     precision?: number;
+    /**
+     * Data attribute for loading state
+     */
+    'data-loading'?: string;
 }
 
 export const prettifyLargeNumber =
@@ -34,12 +38,15 @@ export const PrettifyLargeNumber: FC<IPrettifyLargeNumberProps> = ({
     value,
     threshold = 1_000_000,
     precision = 2,
+    'data-loading': dataLoading,
 }) => {
     const prettyValue = prettifyLargeNumber(threshold, precision)(value);
     const showTooltip = value > threshold;
 
     const valueSpan = (
-        <span data-testid={LARGE_NUMBER_PRETTIFIED}>{prettyValue}</span>
+        <span data-loading={dataLoading} data-testid={LARGE_NUMBER_PRETTIFIED}>
+            {prettyValue}
+        </span>
     );
 
     return (

@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import type { FC, PropsWithChildren, ReactNode } from 'react';
+import { forwardRef, type PropsWithChildren, type ReactNode } from 'react';
 
 const StyledSection = styled('section')(({ theme }) => ({
     display: 'flex',
@@ -21,14 +21,15 @@ const SectionTitleRow = styled('div')(({ theme }) => ({
     rowGap: theme.spacing(2),
 }));
 
-export const InsightsSection: FC<
+export const InsightsSection = forwardRef<
+    HTMLElement,
     PropsWithChildren<{ title: string; filters?: ReactNode }>
-> = ({ title, children, filters: HeaderActions }) => (
-    <StyledSection>
+>(({ title, children, filters: HeaderActions }, ref) => (
+    <StyledSection ref={ref}>
         <SectionTitleRow>
             <h2>{title}</h2>
             {HeaderActions}
         </SectionTitleRow>
         {children}
     </StyledSection>
-);
+));

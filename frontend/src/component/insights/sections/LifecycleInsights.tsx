@@ -247,9 +247,6 @@ const Chart: React.FC<{ stage: string; data: LifecycleTrend }> = ({
                             labels: {
                                 value: {
                                     formatter: (value, context) => {
-                                        // todo (lifecycleMetrics): use a nice
-                                        // formatter here, so that 1,000,000
-                                        // flags are instead formatted as 1M
                                         if (
                                             context.chart.legend
                                                 ?.legendItems?.[1].hidden

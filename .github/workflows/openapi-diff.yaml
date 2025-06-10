@@ -131,6 +131,8 @@ jobs:
                 repo: context.repo.repo,
                 body: `### OpenAPI Diff too long, check the this task output for details.`
               });
+              consloe.log('OpenAPI diff is too long to display in a comment, check the task output for details.');
+              console.log(diff);
             } else if (diff.length > 1) {
               github.rest.issues.createComment({
                 issue_number: context.issue.number,

@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - src/lib/**
+      - .github/workflows/openapi-diff.yaml
   workflow_dispatch:
     inputs:
       stable_version:

@@ -129,6 +129,7 @@ jobs:
           script: |
             const fs = require('fs');
             const diff = fs.readFileSync('openapi-diff.txt', 'utf8');
+            const diffLines = diff.split('\n').filter(line => line.trim() !== '' && !line.startsWith('#')).length;
             const marker = '### OpenAPI Diff';
             // Get all comments on the PR
             const { data: comments } = await github.rest.issues.listComments({
@@ -139,10 +140,11 @@ jobs:
             // Find existing OpenAPI Diff comment
             const existing = comments.find(c => c.body && c.body.includes(marker) && c.user.type === 'Bot');
             let body;
-            if (diff.length > 60000) {
+            if (diffLines > 300) {
               body = `${marker} too long, check the this task output for details.`;
-            } else if (diff.length > 1) {
-              body = `${marker} (${diff.length})\n\n\`\`\`diff\n${diff}\n\`\`\``;
+              console.log(diff);
+            } else if (diffLines > 0) {
+              body = `${marker} (${diffLines} lines})\n\n\`\`\`diff\n${diff}\n\`\`\``;
             } else {
               body = null;
             }

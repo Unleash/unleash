@@ -166,4 +166,11 @@ jobs:
               }
             } else {
               console.log('No significant changes detected in OpenAPI spec.');
+              if (existing) {
+                await github.rest.issues.deleteComment({
+                  comment_id: existing.id,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                });
+              }
             }

@@ -24,16 +24,19 @@ jobs:
         env:
           FRONTEND_TEST_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
           UNLEASH_VERSION: ${{ github.event.inputs.stable_version || 'unleash-server:latest' }}
+          CHECK_VERSION: 'false'
       - name: Wait for Unleash to be ready
         run: |
           for i in {1..30}; do
             if curl -sf http://localhost:3000/health; then
               echo "Unleash is up!";
-              break;
+              exit 0
             fi
             echo "Waiting for Unleash...";
             sleep 2
           done
+          echo "Unleash did not become ready in time."
+          exit 1
       - name: Download OpenAPI spec (${{ github.event.inputs.stable_version || 'latest stable' }})
         run: curl -sSL -o openapi-stable.json "localhost:3000/docs/openapi.json"
       - name: Upload openapi-stable.json
@@ -81,6 +84,7 @@ jobs:
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_SSL: 'false'
+          CHECK_VERSION: 'false'
       - name: Wait for Unleash to be ready
         run: |
           for i in {1..30}; do

@@ -80,7 +80,7 @@ jobs:
           # end fake frontend build
 
           # start unleash in background
-          yarn dev:backend &
+          NODE_ENV=openapi yarn dev:backend &
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_SSL: 'false'

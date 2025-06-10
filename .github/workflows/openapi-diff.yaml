@@ -23,7 +23,7 @@ jobs:
           docker compose -f .github/docker-compose.test.yml up -d --wait -t 90
         env:
           FRONTEND_TEST_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
-          UNLEASH_VERSION: ${{ github.event.inputs.stable_version || 'unleash-server:latest' }}
+          UNLEASH_VERSION: ${{ github.event.inputs.stable_version || 'unleash-server:main-edge' }}
           CHECK_VERSION: 'false'
       - name: Wait for Unleash to be ready
         run: |
@@ -37,7 +37,7 @@ jobs:
           done
           echo "Unleash did not become ready in time."
           exit 1
-      - name: Download OpenAPI spec (${{ github.event.inputs.stable_version || 'latest stable' }})
+      - name: Download OpenAPI spec from (${{ github.event.inputs.stable_version || 'tip of main' }})
         run: curl -sSL -o openapi-stable.json "localhost:3000/docs/openapi.json"
       - name: Upload openapi-stable.json
         uses: actions/upload-artifact@v4

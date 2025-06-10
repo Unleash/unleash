@@ -79,7 +79,7 @@ const LabelContainer = styled('div')({
 
 interface IFlagStatsProps {
     count: number;
-    flagsPerUser?: string;
+    flagsPerUser?: string; // todo: remove this prop with the lifecycleMetrics flag
     isLoading?: boolean;
 }
 

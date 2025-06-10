@@ -22,7 +22,7 @@ const SectionTitleRow = styled('div')(({ theme }) => ({
 }));
 
 export const InsightsSection = forwardRef<
-    HTMLSectionElement,
+    HTMLElement,
     PropsWithChildren<{ title: string; filters?: ReactNode }>
 >(({ title, children, filters: HeaderActions }, ref) => (
     <StyledSection ref={ref}>

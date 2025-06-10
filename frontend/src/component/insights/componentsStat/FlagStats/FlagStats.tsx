@@ -119,7 +119,7 @@ export const FlagStats: React.FC<IFlagStatsProps> = ({
                         htmlTooltip
                         tooltipId={descriptionId}
                         tooltip={
-                            'This includes the four lifecycle stages define, develop, production and cleanup'
+                            'This includes the four lifecycle stages define, develop, production, and cleanup'
                         }
                     >
                         <InfoOutlined />

@@ -114,7 +114,7 @@ export const FlagStats: React.FC<IFlagStatsProps> = ({
 
             {hideFlagsPerUser ? (
                 <LabelContainer>
-                    <p id={labelId}>Total number of flags</p>
+                    <Typography id={labelId} variant="body2">Total number of flags</Typography>
                     <HelpIcon
                         htmlTooltip
                         tooltipId={descriptionId}

@@ -6,15 +6,9 @@ import { useRoutes } from './useRoutes.ts';
 import { useExpanded } from './useExpanded.ts';
 import {
     PrimaryNavigationList,
-    RecentFlagsNavigation,
-    RecentProjectsNavigation,
     AdminSettingsNavigation,
 } from './NavigationList.tsx';
-import { ConfigurationNavigationList } from './ConfigurationNavigationList.tsx';
-import { ConfigurationNavigation } from './ConfigurationNavigation.tsx';
 import { useInitialPathname } from './useInitialPathname.ts';
-import { useLastViewedProject } from 'hooks/useLastViewedProject';
-import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
 import type { NewInUnleash } from './NewInUnleash/NewInUnleash.tsx';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -28,7 +22,6 @@ import { ReactComponent as LogoOnly } from 'assets/img/logoDark.svg';
 import { Link } from 'react-router-dom';
 import { useFlag } from '@unleash/proxy-client-react';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 export const StretchContainer = styled(Box, {
     shouldForwardProp: (propName) =>
@@ -95,15 +88,6 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
     const initialPathname = useInitialPathname();
 
     const [activeItem, setActiveItem] = useState(initialPathname);
-    const sideMenuCleanup = useUiFlag('sideMenuCleanup');
-
-    const { lastViewed: lastViewedProject } = useLastViewedProject();
-    const showRecentProject =
-        !sideMenuCleanup && mode === 'full' && lastViewedProject;
-
-    const { lastViewed: lastViewedFlags } = useLastViewedFlags();
-    const showRecentFlags =
-        !sideMenuCleanup && mode === 'full' && lastViewedFlags.length > 0;
 
     useEffect(() => {
         setActiveItem(initialPathname);
@@ -157,23 +141,6 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
                             onClick={setActiveItem}
                             activeItem={activeItem}
                         />
-                        {!sideMenuCleanup ? (
-                            <ConfigurationNavigation
-                                expanded={expanded.includes('configure')}
-                                onExpandChange={(expand) => {
-                                    changeExpanded('configure', expand);
-                                }}
-                                mode={mode}
-                                title='Configure'
-                            >
-                                <ConfigurationNavigationList
-                                    routes={routes.mainNavRoutes}
-                                    mode={mode}
-                                    onClick={setActiveItem}
-                                    activeItem={activeItem}
-                                />
-                            </ConfigurationNavigation>
-                        ) : null}
 
                         <AdminSettingsNavigation
                             onClick={setActiveItem}
@@ -186,22 +153,6 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
                             expanded={expanded.includes('admin')}
                             routes={routes.adminRoutes}
                         />
-
-                        {showRecentProject && (
-                            <RecentProjectsNavigation
-                                mode={mode}
-                                projectId={lastViewedProject}
-                                onClick={() => setActiveItem('/projects')}
-                            />
-                        )}
-
-                        {showRecentFlags && (
-                            <RecentFlagsNavigation
-                                mode={mode}
-                                flags={lastViewedFlags}
-                                onClick={() => setActiveItem('/projects')}
-                            />
-                        )}
 
                         {/* this will push the show/hide to the bottom on short nav list */}
                         <Box sx={{ flex: 1 }} />

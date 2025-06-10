@@ -24,23 +24,127 @@ If you run Unleash from source or using a custom build environment (not the offi
 Unleash v7 requires **PostgreSQL version 14 or later**. Running v7 with older PostgreSQL versions (10, 11, 12, 13) is unsupported, though the server might start with a warning message.
 
 ### API changes
-The following deprecated API endpoints have been removed in v7:
-- [PUT | DELETE] `/api/admin/projects/{projectId}/groups/{groupId}/roles/{roleId}` deprecated in 5.5.0.
-- [POST | PUT | DELETE] `/api/admin/projects/{projectId}/users/{userId}/roles/{roleId}` deprecated in 5.5.0.
-- [GET | PATCH | PUT] `/api/admin/projects/{projectId}/features/{featureName}/variants` endpoint, deprecated in 4.21.0.
-- POST `/api/admin/projects/{projectId}/role/{roleId}/access` deprecated in 5.5.0.
-- POST `/api/admin/ui-config` deprecated in 6.9.0.
-- POST `/api/admin/events/search` deprecated in 6.1.0.
-- GET `/api/admin/projects/{projectId}` deprecated in 5.8.0.
-- GET `/api/admin/archive/features` deprecated in 4.10.0.
-- GET `/api/admin/archive/features/{projectId}` deprecated in 4.11.0.
-- GET `/api/admin/dashboard/executive` deprecated in 5.11.0.
-- GET `/api/admin/metrics/traffic/{period}` deprecated in 6.8.0.
-- GET `/api/admin/projects/{projectId}/users` deprecated in 4.14.3.
 
-**Un-deprecated API endpoints:**
-- GET `/api/admin/instance-admin/statistics` was marked as deprecated when introduced in 4.17.0, this was accidental and it has now been un-deprecated.
-- POST `/api/admin/strategies` is no longer deprecated and can be used to create custom strategies. The endpoint was previously deprecated in v6.0.0 but due to the feedback received from users, it has been reintroduced in v7.0.0.
+As part of our commitment to maintaining a clean and robust codebase, several deprecated API endpoints and schema properties have been removed in Unleash v7.
+
+<details>
+  <summary>Removed API endpoints</summary>
+
+- **GET `/api/admin/archive/features`**
+  
+  Deprecated in: v4.10.0, use `/api/admin/search/features?archived=IS:true` instead.
+
+  ---
+
+- **GET `/api/admin/archive/features/{projectId}`**
+
+  Deprecated in: v4.11.0, use `/api/admin/search/features?project=IS:{projectId}&archived=IS:true` instead.
+
+  ---
+
+- **GET `/api/admin/projects/{projectId}/users`**
+
+  Deprecated in: v4.14.3, use `/api/admin/projects/{projectId}/access` instead.
+
+  ---
+
+- **GET, PATCH, and PUT `/api/admin/projects/{projectId}/features/{featureName}/variants`**
+
+  Deprecated in: v4.21.0, use [strategy variants](https://docs.getunleash.io/reference/strategy-variants) instead.
+  You can create or update variants when creating or adding a strategy to a feature flag.
+  For example: `/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/strategies`.
+
+  ---
+
+- **POST `/api/admin/projects/{projectId}/role/{roleId}/access`**
+  
+  Deprecated in: v5.5.0, use `/api/admin/projects/{projectId}/access` instead.
+
+  ---
+
+- **PUT and DELETE `/api/admin/projects/{projectId}/groups/{groupId}/roles/{roleId}`**
+
+  Deprecated in: v5.5.0, use `/api/admin/projects/{projectId}/groups/{groupId}/roles` instead.
+
+  ---
+
+- **PUT, POST, and DELETE `/api/admin/projects/{projectId}/users/{userId}/roles/{roleId}`**
+
+  Deprecated in: v5.5.0, use `/api/admin/projects/{projectId}/users/{userId}/roles` instead.
+
+  ---
+
+- **GET `/api/admin/projects/{projectId}`**
+  
+  Deprecated in: v5.8.0, use `/api/admin/projects/{projectId}/overview` instead.
+
+  ---
+
+- **GET `/api/admin/dashboard/executive`**
+  
+  Deprecated in: v5.11.0, use `/api/admin/projects/{projectId}/overview` instead.
+
+  ---
+
+- **POST `/api/admin/events/search`**
+  
+  Deprecated in: v6.1.0, use `/api/admin/search/events` instead.
+
+  ---
+
+- **GET `/api/admin/metrics/traffic/{period}`**
+
+  Deprecated in: v6.8.0, use `/api/admin/metrics/traffic` instead.
+
+  ---
+
+- **POST `/api/admin/ui-config`**
+
+  Deprecated in: v6.9.0, use `/api/admin/ui-config/cors` instead.
+
+</details>
+
+<details>
+  <summary>Removed schema properties</summary>
+
+- **`username`**
+  
+  Removed from `apiTokenSchema` and `createApiTokenSchema`.
+  Deprecated in: v5.1.0 and v5.3.0
+  Affected endpoints: `/api/admin/api-tokens`, `/api/admin/api-tokens/{name}`, and `/api/admin/projects/{projectId}/api-tokens`.
+
+  ---
+
+- **`environment`**
+
+  Removed from `sdkContextSchema`, `clientApplicationSchema`, `clientMetricsSchema`, and `clientFeaturesQuerySchema`.
+  Deprecated in: v5.2.0
+  Affected endpoints: Client API and Playground endpoints. Environment is now part of the API token.
+
+  ---
+
+- **`isAPI`** 
+
+  Removed from `userSchema`.
+  Deprecated in: v5.3.0
+  Affected endpoints: `/api/admin/user`, `/api/admin/user-admin`, `/api/admin/user-admin/access`, `/api/admin/user-admin/search`, `/api/admin/user-admin/{id}`, `/api/admin/access/overview`,
+ `/api/admin/projects/{projectId}/access`, `/api/admin/groups`, `/api/admin/groups/{groupId}`, `/api/admin/invite-link/tokens`, `/api/admin/user-admin/{id}/permissions`, `/auth/simple/login`,
+  `api/admin/projects/{projectId}/access`, `/invite/{token}/signup`.
+
+</details>
+
+<details>
+  <summary>Previously deprecated endpoints restored in v7</summary>
+  - **GET `/api/admin/instance-admin/statistics`**
+
+  Deprecated in 4.17.0 - This was accidental and it has now been fully restored.
+
+  ---
+
+- **POST `/api/admin/strategies`**
+
+  Deprecated in v6.0.0 but, due to user feedback, it has been reintroduced in v7.0.0. It can be used to create custom strategies.
+</details>
 
 ## Upgrading from v5 to v6
 

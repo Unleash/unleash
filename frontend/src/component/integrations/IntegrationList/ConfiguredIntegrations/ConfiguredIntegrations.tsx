@@ -70,6 +70,7 @@ export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
                                 description={description || ''}
                                 link={`/integrations/edit/${id}`}
                                 configureActionText='Open'
+                                deprecated={providerConfig?.deprecated}
                             />
                         );
                     })}

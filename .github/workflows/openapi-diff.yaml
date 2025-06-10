@@ -1,4 +1,4 @@
-name: Build, Lint & Tests
+name: OpenAPI Diff
 
 on:
   pull_request:

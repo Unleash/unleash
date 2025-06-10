@@ -7,7 +7,6 @@ import {
 } from '@mui/material';
 import type { ActionsFilterState } from '../../useProjectActionsForm.ts';
 import Delete from '@mui/icons-material/Delete';
-import Input from 'component/common/Input/Input';
 import { ProjectActionsFormItem } from '../ProjectActionsFormItem.tsx';
 import { ConstraintOperatorSelect } from 'component/common/NewConstraintAccordion/ConstraintOperatorSelect';
 import {
@@ -73,10 +72,6 @@ const StyledOperatorButtonWrapper = styled('div')(({ theme }) => ({
 const StyledInputContainer = styled('div')({
     width: '100%',
     flex: 1,
-});
-
-const StyledInput = styled(Input)({
-    width: '100%',
 });
 
 const StyledResolveInputWrapper = styled('div')(({ theme }) => ({

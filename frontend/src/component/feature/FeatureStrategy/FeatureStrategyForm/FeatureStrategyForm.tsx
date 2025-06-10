@@ -45,10 +45,8 @@ import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { BuiltInStrategies, formatStrategyName } from 'utils/strategyNames';
 import { Badge } from 'component/common/Badge/Badge';
-import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests.tsx';
 import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -211,7 +209,6 @@ export const FeatureStrategyForm = ({
         environmentId,
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
-    const addEditStrategy = useUiFlag('addEditStrategy');
 
     useEffect(() => {
         trackEvent('new-strategy-form', {
@@ -350,35 +347,7 @@ export const FeatureStrategyForm = ({
             <StyledHeaderBox>
                 <StyledTitle>
                     {formatStrategyName(strategy.name || '')}
-                    <ConditionallyRender
-                        condition={
-                            !addEditStrategy &&
-                            strategy.name === 'flexibleRollout'
-                        }
-                        show={
-                            <Badge color='success' sx={{ marginLeft: '1rem' }}>
-                                {strategy.parameters?.rollout}%
-                            </Badge>
-                        }
-                    />
                 </StyledTitle>
-                {foundEnvironment && !addEditStrategy ? (
-                    <StyledEnvironmentBox>
-                        <EnvironmentTypographyHeader>
-                            Environment:
-                        </EnvironmentTypographyHeader>
-                        <EnvironmentIconBox>
-                            <EnvironmentIcon
-                                enabled={foundEnvironment.enabled}
-                            />{' '}
-                            <EnvironmentTypography
-                                enabled={foundEnvironment.enabled}
-                            >
-                                {foundEnvironment.name}
-                            </EnvironmentTypography>
-                        </EnvironmentIconBox>
-                    </StyledEnvironmentBox>
-                ) : null}
             </StyledHeaderBox>
 
             <StyledAlertBox>

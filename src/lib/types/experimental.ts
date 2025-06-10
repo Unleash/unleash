@@ -56,7 +56,6 @@ export type IFlagKey =
     | 'uniqueSdkTracking'
     | 'consumptionModel'
     | 'edgeObservability'
-    | 'addEditStrategy'
     | 'registerFrontendClient'
     | 'reportUnknownFlags'
     | 'lastSeenBulkQuery'
@@ -267,10 +266,6 @@ const flags: IFlags = {
     ),
     edgeObservability: parseEnvVarBoolean(
         process.env.EXPERIMENTAL_EDGE_OBSERVABILITY,
-        false,
-    ),
-    addEditStrategy: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ADD_EDIT_STRATEGY,
         false,
     ),
     registerFrontendClient: parseEnvVarBoolean(

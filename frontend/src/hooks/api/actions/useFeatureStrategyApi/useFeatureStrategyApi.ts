@@ -6,7 +6,6 @@ import type {
 import useAPI from '../useApi/useApi.js';
 import { useRecentlyUsedConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/RecentlyUsedConstraints/useRecentlyUsedConstraints';
 import { useRecentlyUsedSegments } from 'component/feature/FeatureStrategy/FeatureStrategySegment/RecentlyUsedSegments/useRecentlyUsedSegments';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const useFeatureStrategyApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
@@ -16,7 +15,6 @@ const useFeatureStrategyApi = () => {
     const { addItem: addToRecentlyUsedConstraints } =
         useRecentlyUsedConstraints();
     const { addItem: addToRecentlyUsedSegments } = useRecentlyUsedSegments();
-    const addEditStrategyEnabled = useUiFlag('addEditStrategy');
 
     const addStrategyToFeature = async (
         projectId: string,
@@ -24,14 +22,12 @@ const useFeatureStrategyApi = () => {
         environmentId: string,
         payload: IFeatureStrategyPayload,
     ): Promise<IFeatureStrategy> => {
-        if (addEditStrategyEnabled) {
-            if (payload.constraints && payload.constraints.length > 0) {
-                addToRecentlyUsedConstraints(payload.constraints);
-            }
+        if (payload.constraints && payload.constraints.length > 0) {
+            addToRecentlyUsedConstraints(payload.constraints);
+        }
 
-            if (payload.segments && payload.segments.length > 0) {
-                addToRecentlyUsedSegments(payload.segments);
-            }
+        if (payload.segments && payload.segments.length > 0) {
+            addToRecentlyUsedSegments(payload.segments);
         }
 
         const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies`;
@@ -67,14 +63,12 @@ const useFeatureStrategyApi = () => {
         strategyId: string,
         payload: IFeatureStrategyPayload,
     ): Promise<void> => {
-        if (addEditStrategyEnabled) {
-            if (payload.constraints && payload.constraints.length > 0) {
-                addToRecentlyUsedConstraints(payload.constraints);
-            }
+        if (payload.constraints && payload.constraints.length > 0) {
+            addToRecentlyUsedConstraints(payload.constraints);
+        }
 
-            if (payload.segments && payload.segments.length > 0) {
-                addToRecentlyUsedSegments(payload.segments);
-            }
+        if (payload.segments && payload.segments.length > 0) {
+            addToRecentlyUsedSegments(payload.segments);
         }
 
         const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategyId}`;

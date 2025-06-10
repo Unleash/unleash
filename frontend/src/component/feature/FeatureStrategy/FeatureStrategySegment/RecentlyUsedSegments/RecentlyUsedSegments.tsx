@@ -3,7 +3,6 @@ import { useRecentlyUsedSegments } from './useRecentlyUsedSegments.ts';
 import type { ISegment } from 'interfaces/segment';
 import { RecentlyUsedSegmentChip } from './RecentlyUsedSegmentChip.tsx';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 type RecentlyUsedSegmentsProps = {
     setSegments?: React.Dispatch<React.SetStateAction<ISegment[]>>;
@@ -32,14 +31,7 @@ export const RecentlyUsedSegments = ({
 }: RecentlyUsedSegmentsProps) => {
     const { items: recentlyUsedSegmentIds } = useRecentlyUsedSegments();
     const { segments: allSegments } = useSegments();
-    const addEditStrategyEnabled = useUiFlag('addEditStrategy');
-
-    if (
-        !addEditStrategyEnabled ||
-        recentlyUsedSegmentIds.length === 0 ||
-        !setSegments ||
-        !allSegments
-    ) {
+    if (recentlyUsedSegmentIds.length === 0 || !setSegments || !allSegments) {
         return null;
     }
 

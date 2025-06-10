@@ -8,9 +8,9 @@ import type {
 } from 'component/changeRequest/changeRequest.types';
 import { useSegment } from 'hooks/api/getters/useSegment/useSegment';
 import { SegmentDiff, SegmentTooltipLink } from '../../SegmentTooltipLink.tsx';
-import { ConstraintAccordionList } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
+
 import { ViewableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/ViewableConstraintsList';
-import { useUiFlag } from 'hooks/useUiFlag';
+
 import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning.tsx';
 
 const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
@@ -67,7 +67,6 @@ export const SegmentChangeDetails: FC<{
             : currentSegment?.name;
     const referenceSegment =
         changeRequestState === 'Applied' ? snapshotSegment : currentSegment;
-    const addEditStrategy = useUiFlag('addEditStrategy');
 
     return (
         <SegmentContainer conflict={change.conflict}>
@@ -116,16 +115,9 @@ export const SegmentChangeDetails: FC<{
                         </ChangeItemInfo>
                         <div>{actions}</div>
                     </ChangeItemCreateEditWrapper>
-                    {addEditStrategy ? (
-                        <ViewableConstraintsList
-                            constraints={change.payload.constraints}
-                        />
-                    ) : (
-                        <ConstraintAccordionList
-                            constraints={change.payload.constraints}
-                            showLabel={false}
-                        />
-                    )}
+                    <ViewableConstraintsList
+                        constraints={change.payload.constraints}
+                    />
                 </>
             )}
         </SegmentContainer>

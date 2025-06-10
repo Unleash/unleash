@@ -1,6 +1,4 @@
 import RolloutSlider from './RolloutSlider.tsx';
-import LegacyRolloutSlider from './LegacyRolloutSlider.tsx';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IRolloutSliderProps {
     name: string;
@@ -12,13 +10,7 @@ interface IRolloutSliderProps {
 }
 
 const ConditionalRolloutSlider = (props: IRolloutSliderProps) => {
-    const addEditStrategy = useUiFlag('addEditStrategy');
-
-    if (addEditStrategy) {
-        return <RolloutSlider {...props} />;
-    }
-
-    return <LegacyRolloutSlider {...props} />;
+    return <RolloutSlider {...props} />;
 };
 
 export default ConditionalRolloutSlider;

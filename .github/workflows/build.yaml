@@ -12,6 +12,7 @@ on:
       - frontend/**
       - website/**
       - coverage/**
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -54,4 +55,4 @@ jobs:
         env:
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres 

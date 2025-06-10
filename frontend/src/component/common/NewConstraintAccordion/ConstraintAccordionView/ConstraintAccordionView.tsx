@@ -114,11 +114,9 @@ export const ConstraintAccordionView = ({
                         onEdit={onEdit}
                         onDelete={onDelete}
                         onUse={onUse}
-                        singleValue={singleValue}
                         allowExpand={setExpandable}
                         disabled={disabled}
                         expanded={expanded}
-                        compact={compact}
                     />
                     {renderAfter}
                 </StyledWrapper>

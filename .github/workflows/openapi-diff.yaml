@@ -129,23 +129,39 @@ jobs:
           script: |
             const fs = require('fs');
             const diff = fs.readFileSync('openapi-diff.txt', 'utf8');
+            const marker = '### OpenAPI Diff';
+            // Get all comments on the PR
+            const { data: comments } = await github.rest.issues.listComments({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            // Find existing OpenAPI Diff comment
+            const existing = comments.find(c => c.body && c.body.includes(marker) && c.user.type === 'Bot');
+            let body;
             if (diff.length > 60000) {
-              github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: `### OpenAPI Diff too long, check the this task output for details.`
-              });
-              consloe.log('OpenAPI diff is too long to display in a comment, check the task output for details.');
-              console.log(diff);
+              body = `${marker} too long, check the this task output for details.`;
             } else if (diff.length > 1) {
-              github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: `### OpenAPI Diff\n\n\`\`\`diff\n${diff}\n\`\`\``
-              });
+              body = `${marker}\n\n\`\`\`diff\n${diff}\n\`\`\``;
+            } else {
+              body = null;
+            }
+            if (body) {
+              if (existing) {
+                await github.rest.issues.updateComment({
+                  comment_id: existing.id,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body,
+                });
+              } else {
+                await github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body,
+                });
+              }
             } else {
               console.log('No significant changes detected in OpenAPI spec.');
             }
-            

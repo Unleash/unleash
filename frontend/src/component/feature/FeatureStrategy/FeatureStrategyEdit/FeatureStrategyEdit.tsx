@@ -28,13 +28,14 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
-import { constraintId } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
+
 import { v4 as uuidv4 } from 'uuid';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 import {
     getChangeRequestConflictCreatedData,
     getChangeRequestConflictCreatedDataFromScheduleData,
 } from './change-request-conflict-data.ts';
+import { constraintId } from 'utils/createEmptyConstraint.ts';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');

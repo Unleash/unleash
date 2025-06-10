@@ -23,7 +23,6 @@ const StyledWrapper = styled('div')(({ theme }) => ({
 
 /**
  * @deprecated use `component/feature/FeatureStrategy/FeatureStrategyConstraints/ConstraintDateInput.tsx`
- * Remove with flag `addEditStrategy`
  */
 export const DateSingleValue = ({
     setValue,

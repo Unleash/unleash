@@ -1,26 +1,20 @@
-import type {
-    ILegalValue,
-    IUnleashContextDefinition,
-} from 'interfaces/context';
+import type { IUnleashContextDefinition } from 'interfaces/context';
 import type { IConstraint } from 'interfaces/strategy';
-import { DateSingleValue } from '../DateSingleValue/DateSingleValue.tsx';
 import { FreeTextInput } from '../FreeTextInput/FreeTextInput.tsx';
-import { RestrictiveLegalValues } from '../RestrictiveLegalValues/RestrictiveLegalValues.tsx';
-import { SingleLegalValue } from '../SingleLegalValue/SingleLegalValue.tsx';
 import { SingleValue } from '../SingleValue/SingleValue.tsx';
 import {
-    IN_OPERATORS_LEGAL_VALUES,
     STRING_OPERATORS_FREETEXT,
-    STRING_OPERATORS_LEGAL_VALUES,
     SEMVER_OPERATORS_SINGLE_VALUE,
-    NUM_OPERATORS_LEGAL_VALUES,
     NUM_OPERATORS_SINGLE_VALUE,
-    SEMVER_OPERATORS_LEGAL_VALUES,
-    DATE_OPERATORS_SINGLE_VALUE,
     IN_OPERATORS_FREETEXT,
-    type Input,
 } from '../useConstraintInput/useConstraintInput.tsx';
 import type React from 'react';
+
+type ActionFilterItemInput =
+    | typeof STRING_OPERATORS_FREETEXT
+    | typeof SEMVER_OPERATORS_SINGLE_VALUE
+    | typeof NUM_OPERATORS_SINGLE_VALUE
+    | typeof IN_OPERATORS_FREETEXT;
 
 interface IResolveInputProps {
     contextDefinition: Pick<IUnleashContextDefinition, 'legalValues'>;
@@ -32,38 +26,12 @@ interface IResolveInputProps {
     setValuesWithRecord: (values: string[]) => void;
     setError: React.Dispatch<React.SetStateAction<string>>;
     removeValue: (index: number) => void;
-    input: Input;
+    input: ActionFilterItemInput;
     error: string;
 }
 
-const resolveLegalValues = (
-    values: IConstraint['values'],
-    legalValues: IUnleashContextDefinition['legalValues'],
-): { legalValues: ILegalValue[]; deletedLegalValues: ILegalValue[] } => {
-    if (legalValues?.length === 0) {
-        return {
-            legalValues: [],
-            deletedLegalValues: [],
-        };
-    }
-
-    const deletedLegalValues = (values || [])
-        .filter(
-            (value) =>
-                !(legalValues || []).some(
-                    ({ value: legalValue }) => legalValue === value,
-                ),
-        )
-        .map((v) => ({ value: v, description: '' }));
-
-    return {
-        legalValues: legalValues || [],
-        deletedLegalValues,
-    };
-};
-
 /**
- * @deprecated; remove with `addEditStrategy` flag. Need an input? Prefer using specific input components.
+ * @deprecated; Need an input? Prefer using specific input components.
  *
  * For the case of `ProjectActionsFilterItem.tsx`: it already excludes legal
  * values and date operators. This leaves only free text and single value
@@ -71,12 +39,8 @@ const resolveLegalValues = (
  */
 export const ResolveInput = ({
     input,
-    contextDefinition,
-    constraintValues,
-    constraintValue,
     localConstraint,
     setValue,
-    setValues,
     setValuesWithRecord,
     setError,
     removeValue,
@@ -84,72 +48,8 @@ export const ResolveInput = ({
 }: IResolveInputProps) => {
     const resolveInput = () => {
         switch (input) {
-            case IN_OPERATORS_LEGAL_VALUES:
-            case STRING_OPERATORS_LEGAL_VALUES:
-                return (
-                    <RestrictiveLegalValues
-                        data={resolveLegalValues(
-                            constraintValues,
-                            contextDefinition.legalValues,
-                        )}
-                        constraintValues={constraintValues}
-                        values={localConstraint.values || []}
-                        setValuesWithRecord={setValuesWithRecord}
-                        setValues={setValues}
-                        error={error}
-                        setError={setError}
-                    />
-                );
-            case NUM_OPERATORS_LEGAL_VALUES:
-                return (
-                    <>
-                        <SingleLegalValue
-                            data={resolveLegalValues(
-                                [constraintValue],
-                                contextDefinition.legalValues,
-                            )}
-                            setValue={setValue}
-                            value={localConstraint.value}
-                            constraintValue={constraintValue}
-                            type='number'
-                            legalValues={
-                                contextDefinition.legalValues?.filter(
-                                    (legalValue) => Number(legalValue.value),
-                                ) || []
-                            }
-                            error={error}
-                            setError={setError}
-                        />
-                    </>
-                );
-            case SEMVER_OPERATORS_LEGAL_VALUES:
-                return (
-                    <>
-                        <SingleLegalValue
-                            data={resolveLegalValues(
-                                [constraintValue],
-                                contextDefinition.legalValues,
-                            )}
-                            setValue={setValue}
-                            value={localConstraint.value}
-                            constraintValue={constraintValue}
-                            type='semver'
-                            legalValues={contextDefinition.legalValues || []}
-                            error={error}
-                            setError={setError}
-                        />
-                    </>
-                );
-            case DATE_OPERATORS_SINGLE_VALUE:
-                return (
-                    <DateSingleValue
-                        value={localConstraint.value}
-                        setValue={setValue}
-                        error={error}
-                        setError={setError}
-                    />
-                );
             case IN_OPERATORS_FREETEXT:
+            case STRING_OPERATORS_FREETEXT:
                 return (
                     <FreeTextInput
                         values={localConstraint.values || []}
@@ -158,18 +58,6 @@ export const ResolveInput = ({
                         error={error}
                         setError={setError}
                     />
-                );
-            case STRING_OPERATORS_FREETEXT:
-                return (
-                    <>
-                        <FreeTextInput
-                            values={localConstraint.values || []}
-                            removeValue={removeValue}
-                            setValues={setValuesWithRecord}
-                            error={error}
-                            setError={setError}
-                        />
-                    </>
                 );
             case NUM_OPERATORS_SINGLE_VALUE:
                 return (

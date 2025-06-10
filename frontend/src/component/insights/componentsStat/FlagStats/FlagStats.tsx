@@ -96,8 +96,10 @@ export const FlagStats: React.FC<IFlagStatsProps> = ({
             <StyledRingContainer>
                 <StyledRing>
                     <StyledRingContent
-                        aria-labelledby={labelId}
-                        aria-describedby={descriptionId}
+                        {...(hideFlagsPerUser && {
+                            'aria-labelledby': labelId,
+                            'aria-describedby': descriptionId,
+                        })}
                     >
                         {isLoading ? (
                             <ScreenReaderOnly>

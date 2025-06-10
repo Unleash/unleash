@@ -13,6 +13,7 @@ import {
 } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber.tsx';
 import { FeatureLifecycleStageIcon } from 'component/common/FeatureLifecycle/FeatureLifecycleStageIcon.tsx';
 import { normalizeDays } from './normalize-days.ts';
+import useLoading from 'hooks/useLoading.ts';
 
 type LifecycleTrend = {
     totalFlags: number;
@@ -128,14 +129,17 @@ export const LifecycleInsights: FC = () => {
         stateConfig,
     );
 
+    const loadingLabel = 'lifecycle-trend-charts';
     // todo: use data from the actual endpoint when we have something useful to return
     const projects = state[`${statePrefix}project`]?.values ?? [allOption.id];
     const { insights, loading } = useInsights();
+    const loadingRef = useLoading(loading, `[data-loading="${loadingLabel}"]`);
 
     const { lifecycleTrends } = insights;
 
     return (
         <InsightsSection
+            ref={loadingRef}
             title='Flags lifecycle currently'
             filters={
                 <InsightsFilters
@@ -152,6 +156,7 @@ export const LifecycleInsights: FC = () => {
                             <TileHeader>
                                 <HeaderNumber>
                                     <PrettifyLargeNumber
+                                        data-loading={loadingLabel}
                                         value={data.totalFlags ?? 0}
                                         threshold={1000}
                                         precision={1}
@@ -175,7 +180,7 @@ export const LifecycleInsights: FC = () => {
                                     <dt>
                                         Median time for flags currently in stage
                                     </dt>
-                                    <dd data-loading-project-lifecycle-summary>
+                                    <dd data-loading={loadingLabel}>
                                         {normalizeDays(
                                             data.averageTimeInStageDays,
                                         )}
@@ -186,7 +191,7 @@ export const LifecycleInsights: FC = () => {
                                         Historical median time for flags in
                                         stage
                                     </dt>
-                                    <dd data-loading-project-lifecycle-summary>
+                                    <dd data-loading={loadingLabel}>
                                         {normalizeDays(
                                             data.averageTimeInStageDays,
                                         )}

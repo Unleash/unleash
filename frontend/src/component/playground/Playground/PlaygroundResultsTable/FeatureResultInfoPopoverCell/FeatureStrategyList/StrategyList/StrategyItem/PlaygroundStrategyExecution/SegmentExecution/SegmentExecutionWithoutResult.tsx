@@ -2,8 +2,8 @@ import { Fragment, type VFC } from 'react';
 import type { PlaygroundSegmentSchema } from 'openapi';
 import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { SegmentItem } from 'component/common/SegmentItem/LegacySegmentItem';
 import { ConstraintExecutionWithoutResults } from '../ConstraintExecution/ConstraintExecutionWithoutResults.tsx';
+import { SegmentItem } from 'component/common/SegmentItem/SegmentItem.tsx';
 
 interface ISegmentExecutionWithoutResultProps {
     segments?: PlaygroundSegmentSchema[];

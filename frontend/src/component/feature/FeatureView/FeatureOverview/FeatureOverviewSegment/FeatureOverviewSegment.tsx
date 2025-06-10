@@ -1,8 +1,8 @@
 import { Fragment } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
-import { SegmentItem } from 'component/common/SegmentItem/LegacySegmentItem';
 import type { ISegment } from 'interfaces/segment';
+import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
+import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
 
 interface IFeatureOverviewSegmentProps {
     segments?: ISegment[];
@@ -23,7 +23,7 @@ export const FeatureOverviewSegment = ({
                 <Fragment key={segment.id}>
                     <ConditionallyRender
                         condition={index > 0}
-                        show={<StrategySeparator text='AND' />}
+                        show={<ConstraintSeparator />}
                     />
                     <SegmentItem segment={segment} disabled={disabled} />
                 </Fragment>

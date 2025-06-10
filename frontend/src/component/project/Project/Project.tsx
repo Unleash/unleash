@@ -27,7 +27,6 @@ import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
 import { useEffect, useState, type ReactNode } from 'react';
 import ProjectFlags from './ProjectFlags.tsx';
-import ProjectHealth from './ProjectHealth/ProjectHealth.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import {
@@ -373,8 +372,6 @@ export const Project = () => {
                 }}
             />
             <Routes>
-                {/* FIXME: remove /health with `healthToTechDebt` flag - redirect to project status */}
-                <Route path='health' element={<ProjectHealth />} />
                 <Route
                     path='access/*'
                     element={

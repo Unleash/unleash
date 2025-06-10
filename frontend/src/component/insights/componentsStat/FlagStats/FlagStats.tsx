@@ -100,7 +100,9 @@ export const FlagStats: React.FC<IFlagStatsProps> = ({
                         aria-describedby={descriptionId}
                     >
                         {isLoading ? (
-                            <ScreenReaderOnly>Loading data</ScreenReaderOnly>
+                            <ScreenReaderOnly>
+                                Loading total flag count
+                            </ScreenReaderOnly>
                         ) : (
                             count
                         )}

@@ -10,20 +10,11 @@ import {
 import type { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordionViewBody } from './ConstraintAccordionViewBody/ConstraintAccordionViewBody.tsx';
 import { ConstraintAccordionViewHeader } from './ConstraintAccordionViewHeader/ConstraintAccordionViewHeader.tsx';
-import { oneOf } from 'utils/oneOf';
-import {
-    dateOperators,
-    numOperators,
-    semVerOperators,
-} from 'constants/operators';
 
 interface IConstraintAccordionViewProps {
     constraint: IConstraint;
-    onDelete?: () => void;
-    onEdit?: () => void;
     onUse?: () => void;
     sx?: SxProps<Theme>;
-    compact?: boolean;
     disabled?: boolean;
     renderAfter?: JSX.Element;
     borderStyle?: 'solid' | 'dashed';
@@ -73,11 +64,8 @@ const StyledWrapper = styled('div')({
 
 export const ConstraintAccordionView = ({
     constraint,
-    onEdit,
-    onDelete,
     onUse,
     sx = undefined,
-    compact = false,
     disabled = false,
     renderAfter,
     borderStyle = 'solid',
@@ -85,10 +73,6 @@ export const ConstraintAccordionView = ({
     const [expandable, setExpandable] = useState(true);
     const [expanded, setExpanded] = useState(false);
 
-    const singleValue = oneOf(
-        [...semVerOperators, ...numOperators, ...dateOperators],
-        constraint.operator,
-    );
     const handleClick = () => {
         if (expandable) {
             setExpanded(!expanded);
@@ -111,8 +95,6 @@ export const ConstraintAccordionView = ({
                 <StyledWrapper>
                     <ConstraintAccordionViewHeader
                         constraint={constraint}
-                        onEdit={onEdit}
-                        onDelete={onDelete}
                         onUse={onUse}
                         allowExpand={setExpandable}
                         disabled={disabled}

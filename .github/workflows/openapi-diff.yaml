@@ -142,7 +142,7 @@ jobs:
             if (diff.length > 60000) {
               body = `${marker} too long, check the this task output for details.`;
             } else if (diff.length > 1) {
-              body = `${marker}\n\n\`\`\`diff\n${diff}\n\`\`\``;
+              body = `${marker} (${diff.length})\n\n\`\`\`diff\n${diff}\n\`\`\``;
             } else {
               body = null;
             }

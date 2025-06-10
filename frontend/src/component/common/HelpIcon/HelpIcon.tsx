@@ -71,7 +71,7 @@ export const HelpIcon = ({
     }
 
     return (
-        <Tooltip title={tooltip} placement={placement} arrow>
+        <Tooltip title={tooltip} placement={placement} arrow id={tooltipId}>
             <StyledContainer size={size} tabIndex={0} aria-label='Help'>
                 {children ?? <HelpOutline />}
             </StyledContainer>

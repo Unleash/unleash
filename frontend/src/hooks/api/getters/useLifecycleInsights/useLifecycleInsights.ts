@@ -4,65 +4,31 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { LifecycleTrendsSchema } from 'openapi';
 
+const emptyTrendData = {
+    categories: {
+        experimental: {
+            flagsOlderThanWeek: 0,
+            newFlagsThisWeek: 0,
+        },
+        permanent: {
+            flagsOlderThanWeek: 0,
+            newFlagsThisWeek: 0,
+        },
+        release: {
+            flagsOlderThanWeek: 0,
+            newFlagsThisWeek: 0,
+        },
+    },
+    medianDaysHistorically: 0,
+    medianDaysInCurrentStage: 0,
+    totalFlags: 0,
+};
+
 const emptyLifecycleTrends: LifecycleTrendsSchema = {
     lifecycleTrends: {
-        cleanup: {
-            categories: {
-                experimental: {
-                    flagsOlderThanWeek: 0,
-                    newFlagsThisWeek: 0,
-                },
-                permanent: {
-                    flagsOlderThanWeek: 0,
-                    newFlagsThisWeek: 0,
-                },
-                release: {
-                    flagsOlderThanWeek: 0,
-                    newFlagsThisWeek: 0,
-                },
-            },
-            medianDaysHistorically: 0,
-            medianDaysInCurrentStage: 0,
-            totalFlags: 0,
-        },
-        develop: {
-            categories: {
-                experimental: {
-                    flagsOlderThanWeek: 0,
-                    newFlagsThisWeek: 0,
-                },
-                permanent: {
-                    flagsOlderThanWeek: 0,
-                    newFlagsThisWeek: 0,
-                },
-                release: {
-                    flagsOlderThanWeek: 0,
-                    newFlagsThisWeek: 0,
-                },
-            },
-            medianDaysHistorically: 0,
-            medianDaysInCurrentStage: 0,
-            totalFlags: 0,
-        },
-        production: {
-            categories: {
-                experimental: {
-                    flagsOlderThanWeek: 0,
-                    newFlagsThisWeek: 0,
-                },
-                permanent: {
-                    flagsOlderThanWeek: 0,
-                    newFlagsThisWeek: 0,
-                },
-                release: {
-                    flagsOlderThanWeek: 0,
-                    newFlagsThisWeek: 0,
-                },
-            },
-            medianDaysHistorically: 0,
-            medianDaysInCurrentStage: 0,
-            totalFlags: 0,
-        },
+        cleanup: emptyTrendData,
+        develop: emptyTrendData,
+        production: emptyTrendData,
     },
 };
 

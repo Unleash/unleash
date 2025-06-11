@@ -61,6 +61,6 @@ describe('FeatureOverviewEnvironment', () => {
         );
 
         const button = await screen.findByText('Add strategy');
-        expect(button).toBeDisabled();
+        expect(button).toHaveAttribute('aria-disabled', 'true');
     });
 });

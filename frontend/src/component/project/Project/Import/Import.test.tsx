@@ -148,5 +148,5 @@ test('Show validation errors', async () => {
     await screen.findByText('itemF');
 
     const importButton = screen.getByText('Import configuration');
-    expect(importButton).toBeDisabled();
+    expect(importButton).toHaveAttribute('aria-disabled', 'true');
 });

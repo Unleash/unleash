@@ -22,7 +22,6 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUncomplete } from '../FeatureOverview/FeatureLifecycle/useUncomplete.ts';
 
 const StyledBox = styled(Box)(({ theme }) => ({
-    marginRight: theme.spacing(2),
     marginBottom: theme.spacing(2),
 }));
 

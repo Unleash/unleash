@@ -2,7 +2,12 @@ import useSWR, { mutate, type SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
-import type { LifecycleTrendsSchema } from 'openapi';
+import type {
+    LifecycleTrendsSchema,
+    LifecycleTrendsSchemaLifecycleTrendsCleanup,
+    LifecycleTrendsSchemaLifecycleTrendsDevelop,
+    LifecycleTrendsSchemaLifecycleTrendsProduction,
+} from 'openapi';
 
 const emptyTrendData = {
     categories: {
@@ -32,6 +37,11 @@ const emptyLifecycleTrends: LifecycleTrendsSchema = {
     },
 };
 
+export type LifecycleTrend =
+    | LifecycleTrendsSchemaLifecycleTrendsCleanup
+    | LifecycleTrendsSchemaLifecycleTrendsDevelop
+    | LifecycleTrendsSchemaLifecycleTrendsProduction;
+
 export const useLifecycleInsights = (
     projects?: string[],
     options?: SWRConfiguration,
@@ -51,7 +61,7 @@ export const useLifecycleInsights = (
     }, [path]);
 
     return {
-        insights: data || emptyLifecycleTrends,
+        data: data || emptyLifecycleTrends,
         refetchInsights,
         loading: !error && !data,
         error,

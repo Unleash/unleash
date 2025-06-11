@@ -3,7 +3,6 @@ import type { FC } from 'react';
 import { FilterItemParam } from 'utils/serializeQueryParams';
 import { InsightsSection } from 'component/insights/sections/InsightsSection';
 import { InsightsFilters } from 'component/insights/InsightsFilters';
-import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import { LifecycleChart } from '../components/LifecycleChart/LifecycleChart.tsx';
 import { styled, useTheme } from '@mui/material';
 import {
@@ -13,32 +12,10 @@ import {
 import { FeatureLifecycleStageIcon } from 'component/common/FeatureLifecycle/FeatureLifecycleStageIcon.tsx';
 import { normalizeDays } from './normalize-days.ts';
 import useLoading from 'hooks/useLoading.ts';
-import { useLifecycleInsights } from 'hooks/api/getters/useLifecycleInsights/useLifecycleInsights.ts';
-
-type LifecycleTrend = {
-    totalFlags: number;
-    averageTimeInStageDays: number;
-    categories: {
-        experimental: {
-            flagsOlderThanWeek: number;
-            newFlagsThisWeek: number;
-        };
-        release: {
-            flagsOlderThanWeek: number;
-            newFlagsThisWeek: number;
-        };
-        permanent: {
-            flagsOlderThanWeek: number;
-            newFlagsThisWeek: number;
-        };
-    };
-};
-
-type LifecycleInsights = {
-    develop: LifecycleTrend;
-    production: LifecycleTrend;
-    cleanup: LifecycleTrend;
-};
+import {
+    type LifecycleTrend,
+    useLifecycleInsights,
+} from 'hooks/api/getters/useLifecycleInsights/useLifecycleInsights.ts';
 
 const useChartColors = () => {
     const theme = useTheme();
@@ -141,11 +118,12 @@ export const LifecycleInsights: FC = () => {
     );
 
     const loadingLabel = 'lifecycle-trend-charts';
-    const projects = state[`${statePrefix}projects`]?.values ?? [allOption.id];
-    const { insights, loading } = useLifecycleInsights(projects);
+    const projects = state[`${statePrefix}projects`]?.values ?? [];
+    const {
+        data: { lifecycleTrends },
+        loading,
+    } = useLifecycleInsights(projects);
     const loadingRef = useLoading(loading, `[data-loading="${loadingLabel}"]`);
-
-    const { lifecycleTrends } = insights;
 
     return (
         <InsightsSection
@@ -160,7 +138,7 @@ export const LifecycleInsights: FC = () => {
             }
         >
             <ChartRow>
-                {Object.entries(mockData).map(([stage, data]) => {
+                {Object.entries(lifecycleTrends).map(([stage, data]) => {
                     return (
                         <LifecycleTile key={stage}>
                             <TileHeader>
@@ -192,7 +170,7 @@ export const LifecycleInsights: FC = () => {
                                     </dt>
                                     <dd data-loading={loadingLabel}>
                                         {normalizeDays(
-                                            data.averageTimeInStageDays,
+                                            data.medianDaysInCurrentStage,
                                         )}
                                     </dd>
                                 </StatRow>
@@ -203,7 +181,7 @@ export const LifecycleInsights: FC = () => {
                                     </dt>
                                     <dd data-loading={loadingLabel}>
                                         {normalizeDays(
-                                            data.averageTimeInStageDays,
+                                            data.medianDaysHistorically,
                                         )}
                                     </dd>
                                 </StatRow>
@@ -306,61 +284,4 @@ const Chart: React.FC<{ stage: string; data: LifecycleTrend }> = ({
             }}
         />
     );
-};
-
-const mockData: LifecycleInsights = {
-    develop: {
-        totalFlags: 35,
-        averageTimeInStageDays: 28,
-        categories: {
-            experimental: {
-                flagsOlderThanWeek: 11,
-                newFlagsThisWeek: 4,
-            },
-            release: {
-                flagsOlderThanWeek: 12,
-                newFlagsThisWeek: 1,
-            },
-            permanent: {
-                flagsOlderThanWeek: 7,
-                newFlagsThisWeek: 0,
-            },
-        },
-    },
-    production: {
-        totalFlags: 10,
-        averageTimeInStageDays: 14,
-        categories: {
-            experimental: {
-                flagsOlderThanWeek: 2,
-                newFlagsThisWeek: 3,
-            },
-            release: {
-                flagsOlderThanWeek: 1,
-                newFlagsThisWeek: 1,
-            },
-            permanent: {
-                flagsOlderThanWeek: 3,
-                newFlagsThisWeek: 0,
-            },
-        },
-    },
-    cleanup: {
-        totalFlags: 5,
-        averageTimeInStageDays: 16,
-        categories: {
-            experimental: {
-                flagsOlderThanWeek: 0,
-                newFlagsThisWeek: 3,
-            },
-            release: {
-                flagsOlderThanWeek: 0,
-                newFlagsThisWeek: 1,
-            },
-            permanent: {
-                flagsOlderThanWeek: 1,
-                newFlagsThisWeek: 0,
-            },
-        },
-    },
 };

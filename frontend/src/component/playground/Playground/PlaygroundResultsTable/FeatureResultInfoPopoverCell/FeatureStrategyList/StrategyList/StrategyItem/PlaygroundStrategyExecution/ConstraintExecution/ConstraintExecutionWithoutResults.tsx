@@ -1,10 +1,10 @@
-import { Fragment, type VFC } from 'react';
+import { type FC, Fragment } from 'react';
 import type { PlaygroundConstraintSchema } from 'openapi';
 import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import { styled } from '@mui/material';
-import { ConstraintAccordionView } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
+import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
+import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
 
 interface IConstraintExecutionWithoutResultsProps {
     constraints?: PlaygroundConstraintSchema[];
@@ -16,7 +16,7 @@ export const ConstraintExecutionWrapper = styled('div')(() => ({
     flexDirection: 'column',
 }));
 
-export const ConstraintExecutionWithoutResults: VFC<
+export const ConstraintExecutionWithoutResults: FC<
     IConstraintExecutionWithoutResultsProps
 > = ({ constraints }) => {
     if (!constraints) return null;
@@ -27,7 +27,7 @@ export const ConstraintExecutionWithoutResults: VFC<
                 <Fragment key={objectId(constraint)}>
                     <ConditionallyRender
                         condition={index > 0}
-                        show={<StrategySeparator text='AND' />}
+                        show={<ConstraintSeparator />}
                     />
                     <ConstraintAccordionView
                         constraint={constraint}

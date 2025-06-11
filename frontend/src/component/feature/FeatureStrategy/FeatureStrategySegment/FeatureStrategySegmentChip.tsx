@@ -5,8 +5,8 @@ import Clear from '@mui/icons-material/Clear';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { constraintAccordionListId } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
 import { styled, type Theme, Tooltip } from '@mui/material';
+import { constraintAccordionListId } from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/NewConstraintAccordionList';
 
 interface IFeatureStrategySegmentListProps {
     segment: ISegment;

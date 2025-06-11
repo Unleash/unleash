@@ -1,6 +1,6 @@
 import type { IConstraint } from 'interfaces/strategy';
-import { formatOperatorDescription } from 'component/common/LegacyConstraintAccordion/ConstraintOperator/formatOperatorDescription';
 import { styled } from '@mui/material';
+import { formatOperatorDescription } from 'utils/formatOperatorDescription';
 
 interface IConstraintOperatorProps {
     constraint: IConstraint;

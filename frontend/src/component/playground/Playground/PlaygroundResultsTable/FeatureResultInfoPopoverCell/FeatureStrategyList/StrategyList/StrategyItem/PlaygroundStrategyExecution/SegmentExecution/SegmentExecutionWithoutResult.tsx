@@ -1,9 +1,9 @@
 import { Fragment, type VFC } from 'react';
 import type { PlaygroundSegmentSchema } from 'openapi';
-import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { SegmentItem } from 'component/common/SegmentItem/LegacySegmentItem';
 import { ConstraintExecutionWithoutResults } from '../ConstraintExecution/ConstraintExecutionWithoutResults.tsx';
+import { SegmentItem } from 'component/common/SegmentItem/SegmentItem.tsx';
+import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator.tsx';
 
 interface ISegmentExecutionWithoutResultProps {
     segments?: PlaygroundSegmentSchema[];
@@ -36,7 +36,7 @@ export const SegmentExecutionWithoutResult: VFC<
                             // Don't add if it's the last segment item
                             index !== segments.length - 1
                         }
-                        show={<StrategySeparator text='AND' />}
+                        show={<ConstraintSeparator />}
                     />
                 </Fragment>
             ))}

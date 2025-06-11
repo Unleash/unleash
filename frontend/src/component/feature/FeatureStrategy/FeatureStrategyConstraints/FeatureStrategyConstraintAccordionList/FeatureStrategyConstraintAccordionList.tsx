@@ -1,19 +1,18 @@
 import type React from 'react';
-import { forwardRef, type RefObject } from 'react';
+import { forwardRef, useImperativeHandle, type RefObject } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import type { IConstraint } from 'interfaces/strategy';
 
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import {
-    type IConstraintAccordionListRef,
-    useConstraintAccordionList,
-} from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
 import { EditableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/EditableConstraintsList';
 import { Limit } from 'component/common/Limit/Limit';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { RecentlyUsedConstraints } from '../RecentlyUsedConstraints/RecentlyUsedConstraints.tsx';
+import { useWeakMap } from 'hooks/useWeakMap.ts';
+import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext.ts';
+import { createEmptyConstraint } from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/createEmptyConstraint.ts';
 
 interface IConstraintAccordionListProps {
     constraints: IConstraint[];
@@ -47,11 +46,52 @@ const useConstraintLimit = (constraintsCount: number) => {
     };
 };
 
+interface IConstraintAccordionListRef {
+    addConstraint?: (contextName: string) => void;
+}
+
+interface IConstraintAccordionListItemState {
+    // Is the constraint new (never been saved)?
+    new?: boolean;
+    // Is the constraint currently being edited?
+    editing?: boolean;
+}
+
+const useConstraintAccordionList = (
+    setConstraints:
+        | React.Dispatch<React.SetStateAction<IConstraint[]>>
+        | undefined,
+    ref: React.RefObject<IConstraintAccordionListRef>,
+) => {
+    const state = useWeakMap<IConstraint, IConstraintAccordionListItemState>();
+    const { context } = useUnleashContext();
+
+    const addConstraint =
+        setConstraints &&
+        ((contextName: string) => {
+            const constraint = createEmptyConstraint(contextName);
+            state.set(constraint, { editing: true, new: true });
+            setConstraints((prev) => [...prev, constraint]);
+        });
+
+    useImperativeHandle(ref, () => ({
+        addConstraint,
+    }));
+
+    const onAdd =
+        addConstraint &&
+        (() => {
+            addConstraint(context[0].name);
+        });
+
+    return { onAdd, state, context };
+};
+
 export const FeatureStrategyConstraintAccordionList = forwardRef<
     IConstraintAccordionListRef | undefined,
     IConstraintAccordionListProps
 >(({ constraints, setConstraints, showCreateButton }, ref) => {
-    const { onAdd, state, context } = useConstraintAccordionList(
+    const { onAdd, context } = useConstraintAccordionList(
         setConstraints,
         ref as RefObject<IConstraintAccordionListRef>,
     );

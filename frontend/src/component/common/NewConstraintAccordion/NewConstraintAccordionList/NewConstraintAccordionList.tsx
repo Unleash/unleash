@@ -5,10 +5,10 @@ import type { IConstraint } from 'interfaces/strategy';
 import produce from 'immer';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IUseWeakMap } from 'hooks/useWeakMap';
-import { constraintId } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
 import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
 import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/EditableConstraint';
+import { constraintId } from './createEmptyConstraint.ts';
 
 export interface IConstraintAccordionListProps {
     constraints: IConstraint[];

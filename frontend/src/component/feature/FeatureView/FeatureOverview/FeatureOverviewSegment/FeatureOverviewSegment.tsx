@@ -1,8 +1,8 @@
 import { Fragment } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
-import { SegmentItem } from 'component/common/SegmentItem/LegacySegmentItem';
 import type { ISegment } from 'interfaces/segment';
+import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
 
 interface IFeatureOverviewSegmentProps {
     segments?: ISegment[];

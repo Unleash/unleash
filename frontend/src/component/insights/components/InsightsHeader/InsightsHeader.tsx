@@ -49,7 +49,7 @@ const StyledActionsSmallScreen = styled('div')(({ theme }) => ({
 
 export const InsightsHeader: VFC<DashboardHeaderProps> = ({ actions }) => {
     const showInactiveUsers = useUiFlag('showInactiveUsers');
-    const pageName = useUiFlag('sideMenuCleanup') ? 'Analytics' : 'Insights';
+    const pageName = 'Analytics';
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 

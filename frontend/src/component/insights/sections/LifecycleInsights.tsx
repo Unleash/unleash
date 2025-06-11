@@ -141,7 +141,6 @@ export const LifecycleInsights: FC = () => {
     );
 
     const loadingLabel = 'lifecycle-trend-charts';
-    // todo (lifecycleMetrics): use data from the actual endpoint when we have something useful to return
     const projects = state[`${statePrefix}project`]?.values ?? [allOption.id];
     const { insights, loading } = useInsights();
     const loadingRef = useLoading(loading, `[data-loading="${loadingLabel}"]`);

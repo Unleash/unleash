@@ -26,10 +26,10 @@ test('Enabled new project button when version and permission allow for it and li
     });
 
     const button = await screen.findByText('New project');
-    expect(button).toBeDisabled();
+    expect(button).toHaveAttribute('aria-disabled', 'true');
 
     await waitFor(async () => {
         const button = await screen.findByText('New project');
-        expect(button).not.toBeDisabled();
+        expect(button).not.toHaveAttribute('aria-disabled', 'true');
     });
 });

@@ -117,7 +117,7 @@ const BasePermissionButton = React.forwardRef<
                 <StyledButton
                     ref={ref}
                     onClick={disableButton ? undefined : onClick}
-                    aria-disabled={disableButton || !access}
+                    aria-disabled={disableButton || undefined}
                     aria-labelledby={id}
                     variant={variant}
                     color={color}

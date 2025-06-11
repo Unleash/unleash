@@ -41,7 +41,7 @@ test('Enabled new token button when limits, version and permission allow for it'
 
     await waitFor(async () => {
         const button = await screen.findByText('Create token');
-        expect(button).not.toBeDisabled();
+        expect(button).not.toHaveAttribute('aria-disabled');
     });
 });
 
@@ -54,5 +54,5 @@ test('Token limit reached', async () => {
     await screen.findByText('You have reached the limit for API tokens');
 
     const button = await screen.findByText('Create token');
-    expect(button).toBeDisabled();
+    expect(button).toHaveAttribute('aria-disabled', 'true');
 });

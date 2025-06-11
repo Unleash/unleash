@@ -46,5 +46,5 @@ test('Project limit reached', async () => {
     const button = await screen.findByRole('button', {
         name: 'Create project',
     });
-    expect(button).toBeDisabled();
+    expect(button).toHaveAttribute('aria-disabled', 'true');
 });

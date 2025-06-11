@@ -4,7 +4,6 @@ import { useProjectColor } from './useProjectColor.js';
 import { useTheme } from '@mui/material';
 import type { GroupedDataByProject } from './useGroupedProjectTrends.js';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { useFlag } from '@unleash/proxy-client-react';
 
 type ProjectFlagTrends = InstanceInsightsSchema['projectFlagTrends'];
 
@@ -26,7 +25,6 @@ export const useProjectChartData = (
     projectFlagTrends: GroupedDataByProject<ProjectFlagTrends>,
 ) => {
     const theme = useTheme();
-    const healthToTechDebtEnabled = useFlag('healthToTechDebt');
     const getProjectColor = useProjectColor();
     const { projects } = useProjects();
     const projectNames = new Map(
@@ -39,17 +37,7 @@ export const useProjectChartData = (
                 const color = getProjectColor(project);
                 return {
                     label: projectNames.get(project) || project,
-                    data: trends.map((item) => ({
-                        ...item,
-
-                        ...(healthToTechDebtEnabled
-                            ? {
-                                  technicalDebt: item.total
-                                      ? calculateTechDebt(item)
-                                      : undefined,
-                              }
-                            : {}),
-                    })),
+                    data: trends,
                     borderColor: color,
                     backgroundColor: color,
                     fill: false,

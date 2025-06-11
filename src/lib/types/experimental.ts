@@ -62,8 +62,7 @@ export type IFlagKey =
     | 'newGettingStartedEmail'
     | 'lifecycleMetrics'
     | 'customMetrics'
-    | 'createFlagDialogCache'
-    | 'sideMenuCleanup';
+    | 'createFlagDialogCache';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -290,10 +289,6 @@ const flags: IFlags = {
     ),
     createFlagDialogCache: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CREATE_FLAG_DIALOG_CACHE,
-        false,
-    ),
-    sideMenuCleanup: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SIDE_MENU_CLEANUP,
         false,
     ),
 };

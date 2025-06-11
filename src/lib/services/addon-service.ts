@@ -28,7 +28,7 @@ import type { IAddonDefinition } from '../types/model.js';
 import { minutesToMilliseconds } from 'date-fns';
 import type EventService from '../features/events/event-service.js';
 import { omitKeys } from '../util/index.js';
-import { NotFoundError } from '../error/index.js';
+import { BadDataError, NotFoundError } from '../error/index.js';
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service.js';
 import type { IEvent } from '../events/index.js';
 
@@ -224,6 +224,10 @@ export default class AddonService {
         const addonConfig = await addonSchema.validateAsync(data);
         await this.validateKnownProvider(addonConfig);
         await this.validateRequiredParameters(addonConfig);
+        const addon = this.addonProviders[addonConfig.provider];
+        if (addon.definition.deprecated) {
+            throw new BadDataError(addon.definition.deprecated);
+        }
 
         const createdAddon = await this.addonStore.insert(addonConfig);
         await this.addTagTypes(createdAddon.provider);

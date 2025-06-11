@@ -37,7 +37,10 @@ export interface ProjectSchema {
     favorite?: boolean;
     /** The number of features this project has */
     featureCount?: number;
-    /** An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100 */
+    /**
+     * Use `technicalDebt` instead.
+     * @deprecated
+     */
     health?: number;
     /** The id of this project */
     id: string;
@@ -69,6 +72,12 @@ export interface ProjectSchema {
      * @deprecated
      */
     staleFeatureCount?: number;
+    /**
+     * An indicator of the [project's technical debt](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100
+     * @minimum 0
+     * @maximum 100
+     */
+    technicalDebt?: number;
     /**
      * When this project was last updated.
      * @deprecated

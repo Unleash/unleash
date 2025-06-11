@@ -8,6 +8,7 @@ import type { ProjectInsightsSchemaHealth } from './projectInsightsSchemaHealth.
 import type { ProjectDoraMetricsSchema } from './projectDoraMetricsSchema.js';
 import type { ProjectInsightsSchemaMembers } from './projectInsightsSchemaMembers.js';
 import type { ProjectStatsSchema } from './projectStatsSchema.js';
+import type { ProjectInsightsSchemaTechnicalDebt } from './projectInsightsSchemaTechnicalDebt.js';
 
 /**
  * A high-level overview of a project insights. It contains information such as project statistics, overall health, types of flags, members overview, change requests overview.
@@ -15,7 +16,10 @@ import type { ProjectStatsSchema } from './projectStatsSchema.js';
 export interface ProjectInsightsSchema {
     /** The number of features of each type */
     featureTypeCounts: FeatureTypeCountSchema[];
-    /** Health summary of the project */
+    /**
+     * Use `technicalDebt` instead. Summary of the project health
+     * @deprecated
+     */
     health: ProjectInsightsSchemaHealth;
     /** Lead time (DORA) metrics */
     leadTime: ProjectDoraMetricsSchema;
@@ -23,4 +27,6 @@ export interface ProjectInsightsSchema {
     members: ProjectInsightsSchemaMembers;
     /** Project statistics */
     stats: ProjectStatsSchema;
+    /** Summary of the projects technical debt */
+    technicalDebt: ProjectInsightsSchemaTechnicalDebt;
 }

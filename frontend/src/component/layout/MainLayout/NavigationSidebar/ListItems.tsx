@@ -204,11 +204,13 @@ export const MenuListAccordion: FC<{
                     sx={{ padding: 0 }}
                     expandIcon={mode === 'full' ? <ExpandMoreIcon /> : null}
                 >
+                    {/* biome-ignore lint/a11y/useValidAriaRole: remove button role - accordion already has it */}
                     <ListItemButton
                         dense
                         sx={listItemButtonStyle}
                         selected={active && mode === 'mini'}
                         disableRipple
+                        role={undefined}
                     >
                         {mode === 'mini' ? (
                             <Tooltip title={title} placement='right'>

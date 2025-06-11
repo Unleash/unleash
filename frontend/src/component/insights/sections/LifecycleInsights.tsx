@@ -4,7 +4,6 @@ import { FilterItemParam } from 'utils/serializeQueryParams';
 import { InsightsSection } from 'component/insights/sections/InsightsSection';
 import { InsightsFilters } from 'component/insights/InsightsFilters';
 import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
-import { useInsights } from 'hooks/api/getters/useInsights/useInsights';
 import { LifecycleChart } from '../components/LifecycleChart/LifecycleChart.tsx';
 import { styled, useTheme } from '@mui/material';
 import {
@@ -14,6 +13,7 @@ import {
 import { FeatureLifecycleStageIcon } from 'component/common/FeatureLifecycle/FeatureLifecycleStageIcon.tsx';
 import { normalizeDays } from './normalize-days.ts';
 import useLoading from 'hooks/useLoading.ts';
+import { useLifecycleInsights } from 'hooks/api/getters/useLifecycleInsights/useLifecycleInsights.ts';
 
 type LifecycleTrend = {
     totalFlags: number;
@@ -133,7 +133,7 @@ const StatRow = styled('div')(({ theme }) => ({
 export const LifecycleInsights: FC = () => {
     const statePrefix = 'lifecycle-';
     const stateConfig = {
-        [`${statePrefix}project`]: FilterItemParam,
+        [`${statePrefix}projects`]: FilterItemParam,
     };
     const [state, setState] = usePersistentTableState(
         'insights-lifecycle',
@@ -141,8 +141,8 @@ export const LifecycleInsights: FC = () => {
     );
 
     const loadingLabel = 'lifecycle-trend-charts';
-    const projects = state[`${statePrefix}project`]?.values ?? [allOption.id];
-    const { insights, loading } = useInsights();
+    const projects = state[`${statePrefix}projects`]?.values ?? [allOption.id];
+    const { insights, loading } = useLifecycleInsights(projects);
     const loadingRef = useLoading(loading, `[data-loading="${loadingLabel}"]`);
 
     const { lifecycleTrends } = insights;

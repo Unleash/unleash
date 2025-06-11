@@ -1,5 +1,11 @@
 name: 'Publish to npm'
 on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Which version number should we use for the release"
+        type: 'string'
+        required: true
   workflow_call:
     inputs:
       version:

@@ -91,7 +91,7 @@ const StyledInfoIcon = styled(InfoOutlinedIcon)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const StyledIcon = styled('div')(({ theme }) => ({
+const StyledIcon = styled('span')(({ theme }) => ({
     width: theme.spacing(3),
     '& > svg': {
         fill: theme.palette.primary.main,

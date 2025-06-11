@@ -189,7 +189,10 @@ export const FeedbackList = () => {
                                 <Box>{experiment.commentCount} comments</Box>
                             </Box>
                             <AverageScore>
-                                {experiment.averageScore}/7
+                                {/* biome-ignore lint/suspicious/noGlobalIsNan: using isNaN to check if averageScore is not a number */}
+                                {isNaN(Number(experiment.averageScore))
+                                    ? 'N/A'
+                                    : `${experiment.averageScore}/7`}
                             </AverageScore>
                         </ActiveExperimentCard>
                     ))

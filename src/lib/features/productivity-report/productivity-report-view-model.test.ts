@@ -20,6 +20,18 @@ const mockMetrics = {
 };
 
 describe('productivityReportViewModel', () => {
+    it('should show technical debt', () => {
+        const viewModel = productivityReportViewModel({
+            ...mockData,
+            metrics: {
+                ...mockMetrics,
+                health: 85,
+            },
+        });
+
+        expect(viewModel.technicalDebt).toBe('15');
+    });
+
     describe('healthColor', () => {
         it('returns RED for health between 0 and 24', () => {
             const metrics: ProductivityReportMetrics = {
@@ -65,7 +77,7 @@ describe('productivityReportViewModel', () => {
     });
 
     describe('healthTrendMessage', () => {
-        it('returns correct trend message when health increased', () => {
+        it('returns correct trend message when technica debt decreased', () => {
             const metrics: ProductivityReportMetrics = {
                 ...mockMetrics,
                 health: 80,
@@ -82,7 +94,7 @@ describe('productivityReportViewModel', () => {
             );
         });
 
-        it('returns correct trend message when health decreased', () => {
+        it('returns correct trend message when technical debt increased', () => {
             const metrics: ProductivityReportMetrics = {
                 ...mockMetrics,
                 health: 60,
@@ -99,7 +111,7 @@ describe('productivityReportViewModel', () => {
             );
         });
 
-        it('returns correct message when health is the same', () => {
+        it('returns correct message when technical debt is the same', () => {
             const metrics: ProductivityReportMetrics = {
                 ...mockMetrics,
                 health: 70,

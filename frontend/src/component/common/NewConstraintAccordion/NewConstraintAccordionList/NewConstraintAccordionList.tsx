@@ -8,7 +8,7 @@ import type { IUseWeakMap } from 'hooks/useWeakMap';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
 import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
 import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/EditableConstraint';
-import { constraintId } from './createEmptyConstraint.ts';
+import { constraintId } from 'constants/constraintId';
 
 export interface IConstraintAccordionListProps {
     constraints: IConstraint[];

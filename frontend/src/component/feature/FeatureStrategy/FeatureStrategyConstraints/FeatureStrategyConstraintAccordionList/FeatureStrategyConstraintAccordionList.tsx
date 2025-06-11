@@ -12,7 +12,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { RecentlyUsedConstraints } from '../RecentlyUsedConstraints/RecentlyUsedConstraints.tsx';
 import { useWeakMap } from 'hooks/useWeakMap.ts';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext.ts';
-import { createEmptyEditableConstraint } from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/createEmptyConstraint.ts';
+import { createEmptyConstraint } from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/createEmptyConstraint.ts';
 
 interface IConstraintAccordionListProps {
     constraints: IConstraint[];
@@ -69,7 +69,7 @@ const useConstraintAccordionList = (
     const addConstraint =
         setConstraints &&
         ((contextName: string) => {
-            const constraint = createEmptyEditableConstraint(contextName);
+            const constraint = createEmptyConstraint(contextName);
             state.set(constraint, { editing: true, new: true });
             setConstraints((prev) => [...prev, constraint]);
         });

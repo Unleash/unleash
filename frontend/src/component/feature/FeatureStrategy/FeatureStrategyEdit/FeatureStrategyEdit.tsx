@@ -34,7 +34,7 @@ import {
     getChangeRequestConflictCreatedData,
     getChangeRequestConflictCreatedDataFromScheduleData,
 } from './change-request-conflict-data.ts';
-import { constraintId } from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/createEmptyConstraint.ts';
+import { constraintId } from 'constants/constraintId.ts';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');

@@ -3,7 +3,7 @@ import type { IConstraint } from 'interfaces/strategy';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
 import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
-import { constraintId } from '../NewConstraintAccordionList/createEmptyConstraint.ts';
+import { constraintId } from 'constants/constraintId';
 
 export interface IViewableConstraintsListProps {
     constraints: IConstraint[];

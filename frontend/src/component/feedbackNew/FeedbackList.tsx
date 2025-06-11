@@ -55,6 +55,7 @@ export const FeedbackList = () => {
         {
             Header: 'Feature',
             accessor: 'category',
+            minWidth: 100,
             Cell: ({
                 row: { original: feedback },
             }: IFeedbackSchemaCellProps) => (
@@ -75,6 +76,7 @@ export const FeedbackList = () => {
         {
             Header: 'Score',
             accessor: 'difficultyScore',
+            maxWidth: 90,
             Cell: ({
                 row: { original: feedback },
             }: IFeedbackSchemaCellProps) => (

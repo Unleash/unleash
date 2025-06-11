@@ -17,6 +17,10 @@ const StyledButton = styled(Button)({
     alignSelf: 'start',
 });
 
+const StyledSpan = styled('span')({
+    display: 'contents',
+});
+
 export interface IPermissionButtonProps extends Omit<ButtonProps, 'title'> {
     permission: string | string[];
     onClick?: (e: any) => void;
@@ -109,7 +113,7 @@ const BasePermissionButton = React.forwardRef<
                 title={formatAccessText(access, tooltipProps?.title)}
                 arrow
             >
-                <span>
+                <StyledSpan>
                     <StyledButton
                         ref={ref}
                         onClick={onClick}
@@ -122,7 +126,7 @@ const BasePermissionButton = React.forwardRef<
                     >
                         {children}
                     </StyledButton>
-                </span>
+                </StyledSpan>
             </TooltipResolver>
         );
     },

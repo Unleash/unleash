@@ -15,10 +15,9 @@ import {
 const StyledButton = styled(Button)({
     justifySelf: 'start',
     alignSelf: 'start',
-});
-
-const StyledSpan = styled('span')({
-    display: 'contents',
+    '&.Mui-disabled': {
+        pointerEvents: 'auto',
+    },
 });
 
 export interface IPermissionButtonProps extends Omit<ButtonProps, 'title'> {
@@ -100,10 +99,12 @@ const BasePermissionButton = React.forwardRef<
             environmentId,
             tooltipProps,
             hideLockIcon,
+            className,
             ...rest
         },
         ref,
     ) => {
+        const disableButton = disabled || !access;
         const id = useId();
         const endIcon = getEndIcon(access, rest.endIcon, hideLockIcon);
 
@@ -113,20 +114,21 @@ const BasePermissionButton = React.forwardRef<
                 title={formatAccessText(access, tooltipProps?.title)}
                 arrow
             >
-                <StyledSpan>
-                    <StyledButton
-                        ref={ref}
-                        onClick={onClick}
-                        disabled={disabled || !access}
-                        aria-labelledby={id}
-                        variant={variant}
-                        color={color}
-                        {...rest}
-                        endIcon={endIcon}
-                    >
-                        {children}
-                    </StyledButton>
-                </StyledSpan>
+                <StyledButton
+                    ref={ref}
+                    onClick={disableButton ? undefined : onClick}
+                    aria-disabled={disableButton || !access}
+                    aria-labelledby={id}
+                    variant={variant}
+                    color={color}
+                    className={
+                        disableButton ? `${className} Mui-disabled` : className
+                    }
+                    {...rest}
+                    endIcon={endIcon}
+                >
+                    {children}
+                </StyledButton>
             </TooltipResolver>
         );
     },

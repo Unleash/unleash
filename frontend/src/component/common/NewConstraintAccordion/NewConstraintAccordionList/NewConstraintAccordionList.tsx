@@ -6,9 +6,7 @@ import produce from 'immer';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IUseWeakMap } from 'hooks/useWeakMap';
 import { constraintId } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
-import { NewConstraintAccordion } from 'component/common/NewConstraintAccordion/NewConstraintAccordion';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
 import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/EditableConstraint';
 
@@ -52,7 +50,6 @@ export const NewConstraintAccordionList = forwardRef<
     IConstraintList
 >(({ constraints, setConstraints, state }, ref) => {
     const { context } = useUnleashContext();
-    const addEditStrategy = useUiFlag('addEditStrategy');
 
     const onEdit =
         setConstraints &&
@@ -113,34 +110,20 @@ export const NewConstraintAccordionList = forwardRef<
         <StyledContainer id={constraintAccordionListId}>
             <ConstraintsList>
                 {constraints.map((constraint, index) =>
-                    addEditStrategy ? (
-                        state.get(constraint)?.editing &&
-                        Boolean(setConstraints) ? (
-                            <EditableConstraint
-                                key={constraint[constraintId]}
-                                constraint={constraint}
-                                // @ts-ignore todo: find a better way to do this
-                                onDelete={() => onRemove(index)}
-                                // @ts-ignore
-                                onUpdate={onAutoSave(constraintId)}
-                            />
-                        ) : (
-                            <ConstraintAccordionView
-                                key={constraint[constraintId]}
-                                constraint={constraint}
-                            />
-                        )
-                    ) : (
-                        <NewConstraintAccordion
+                    state.get(constraint)?.editing &&
+                    Boolean(setConstraints) ? (
+                        <EditableConstraint
                             key={constraint[constraintId]}
                             constraint={constraint}
-                            onEdit={onEdit?.bind(null, constraint)}
-                            onCancel={onCancel.bind(null, index)}
-                            onDelete={onRemove?.bind(null, index)}
-                            onSave={onSave?.bind(null, index)}
-                            onAutoSave={onAutoSave?.(constraint[constraintId])}
-                            editing={Boolean(state.get(constraint)?.editing)}
-                            compact
+                            // @ts-ignore todo: find a better way to do this
+                            onDelete={() => onRemove(index)}
+                            // @ts-ignore
+                            onUpdate={onAutoSave(constraintId)}
+                        />
+                    ) : (
+                        <ConstraintAccordionView
+                            key={constraint[constraintId]}
+                            constraint={constraint}
                         />
                     ),
                 )}

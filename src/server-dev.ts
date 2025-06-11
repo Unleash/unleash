@@ -50,7 +50,6 @@ process.nextTick(async () => {
                         showUserDeviceCount: true,
                         deltaApi: true,
                         uniqueSdkTracking: true,
-                        addEditStrategy: true,
                         strictSchemaValidation: true,
                         registerFrontendClient: true,
                         reportUnknownFlags: true,

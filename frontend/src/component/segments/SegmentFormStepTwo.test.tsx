@@ -20,9 +20,7 @@ const setupRoutes = () => {
     ]);
 
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            addEditStrategy: true,
-        },
+        flags: {},
     });
 };
 

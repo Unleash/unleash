@@ -1,7 +1,6 @@
 import type { ComponentProps, FC, ReactNode } from 'react';
 import { StrategyEvaluationItem } from '../StrategyEvaluationItem/StrategyEvaluationItem.tsx';
 import type { ConstraintSchema } from 'openapi';
-import { formatOperatorDescription } from 'component/common/LegacyConstraintAccordion/ConstraintOperator/formatOperatorDescription';
 import { StrategyEvaluationChip } from '../StrategyEvaluationChip/StrategyEvaluationChip.tsx';
 import { styled, Tooltip } from '@mui/material';
 import { Truncator } from 'component/common/Truncator/Truncator';
@@ -11,6 +10,7 @@ import { formatConstraintValue } from 'utils/formatConstraintValue';
 import { useConstraintTooltips } from './hooks/useConstraintTooltips.ts';
 import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive.svg';
 import { isCaseSensitive } from './isCaseSensitive.ts';
+import { formatOperatorDescription } from 'component/common/NewConstraintAccordion/ConstraintOperator/formatOperatorDescription.ts';
 
 const Operator: FC<{
     label: ConstraintSchema['operator'];

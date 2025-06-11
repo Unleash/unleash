@@ -3,6 +3,8 @@ import type { IConstraint } from 'interfaces/strategy';
 import { oneOf } from 'utils/oneOf';
 import { operatorsForContext } from 'utils/operatorsForContext';
 
+export const constraintId = Symbol('id');
+
 export const createEmptyConstraint = (contextName: string): IConstraint => {
     const operator = operatorsForContext(contextName)[0];
 

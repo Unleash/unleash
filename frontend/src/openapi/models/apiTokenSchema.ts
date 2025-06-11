@@ -16,7 +16,7 @@ export interface ApiTokenSchema {
     alias?: string | null;
     /** When the token was created. */
     createdAt: string;
-    /** The environment the token has access to. `*` if it has access to all environments. */
+    /** The environment the token has access to. */
     environment?: string;
     /**
      * The token's expiration date. NULL if the token doesn't have an expiration set.

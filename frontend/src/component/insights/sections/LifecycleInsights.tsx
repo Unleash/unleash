@@ -65,6 +65,17 @@ const LifecycleTile = styled('article')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(3),
     minWidth: 0,
+
+    '.skeleton': {
+        '&::after': {
+            '--base-color': theme.palette.neutral.border,
+            '--initial': 'rgb(from var(--base-color) r g b / 0)',
+            '--middle': 'rgb(from var(--base-color) r g b / 0.2)',
+            '--peak': 'rgb(from var(--base-color) r g b / 0.5)',
+            background:
+                'linear-gradient(90deg, var(--initial) 0, var(--middle) 50%, var(--peak) 100%, var(--initial))',
+        },
+    },
 }));
 
 const lifecycleStageMap = {

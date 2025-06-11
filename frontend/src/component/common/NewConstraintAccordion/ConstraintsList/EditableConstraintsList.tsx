@@ -9,7 +9,7 @@ import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsLis
 import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/EditableConstraint';
 import {
     constraintId,
-    createEmptyConstraint,
+    createEmptyEditableConstraint,
 } from '../NewConstraintAccordionList/createEmptyConstraint.ts';
 export interface IEditableConstraintsListRef {
     addConstraint?: (contextName: string) => void;
@@ -35,7 +35,7 @@ export const EditableConstraintsList = forwardRef<
     useImperativeHandle(ref, () => ({
         addConstraint(contextName: string) {
             if (setConstraints) {
-                const constraint = createEmptyConstraint(contextName);
+                const constraint = createEmptyEditableConstraint(contextName);
                 setConstraints((prev) => [...prev, constraint]);
             }
         },

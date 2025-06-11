@@ -10,7 +10,7 @@ import { formatConstraintValue } from 'utils/formatConstraintValue';
 import { useConstraintTooltips } from './hooks/useConstraintTooltips.ts';
 import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive.svg';
 import { isCaseSensitive } from './isCaseSensitive.ts';
-import { formatOperatorDescription } from 'component/common/NewConstraintAccordion/ConstraintOperator/formatOperatorDescription.ts';
+import { formatOperatorDescription } from 'utils/formatOperatorDescription.ts';
 
 const Operator: FC<{
     label: ConstraintSchema['operator'];

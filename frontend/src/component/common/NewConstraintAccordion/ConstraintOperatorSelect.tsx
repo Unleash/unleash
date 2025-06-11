@@ -15,7 +15,7 @@ import {
     inOperators,
 } from 'constants/operators';
 import { useState } from 'react';
-import { formatOperatorDescription } from './ConstraintOperator/formatOperatorDescription.ts';
+import { formatOperatorDescription } from '../../../utils/formatOperatorDescription.ts';
 
 interface IConstraintOperatorSelectProps {
     options: Operator[];

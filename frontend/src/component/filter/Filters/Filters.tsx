@@ -77,7 +77,7 @@ type RenderFilterProps = {
     onChange: (value: FilterItemParamHolder) => void;
     filter: ITextFilterItem | IDateFilterItem;
     rangeChangeHandler: RangeChangeHandler;
-    preventAutoOpen?: boolean;
+    initMode?: 'auto-open' | 'manual';
 };
 
 const RenderFilter: FC<RenderFilterProps> = ({
@@ -86,7 +86,7 @@ const RenderFilter: FC<RenderFilterProps> = ({
     onChange,
     state,
     rangeChangeHandler,
-    preventAutoOpen,
+    initMode,
 }) => {
     const label = (
         <>
@@ -101,7 +101,7 @@ const RenderFilter: FC<RenderFilterProps> = ({
         return (
             <FilterDateItem
                 key={filter.label}
-                preventAutoOpen={preventAutoOpen}
+                initMode={initMode}
                 label={label}
                 name={filter.label}
                 state={state}
@@ -121,7 +121,7 @@ const RenderFilter: FC<RenderFilterProps> = ({
 
     return (
         <FilterItem
-            preventAutoOpen={preventAutoOpen}
+            initMode={initMode}
             key={filter.label}
             label={label}
             name={filter.label}
@@ -159,7 +159,7 @@ const SingleFilter: FC<SingleFilterProps> = ({
                 onChange={onChange}
                 rangeChangeHandler={rangeChangeHandler}
                 onChipClose={undefined}
-                preventAutoOpen
+                initMode='manual'
             />
         </StyledBox>
     );

@@ -19,7 +19,7 @@ export interface IFilterItemProps {
     state: FilterItemParams | null | undefined;
     singularOperators: [string, ...string[]];
     pluralOperators: [string, ...string[]];
-    preventAutoOpen?: boolean;
+    initMode?: 'auto-open' | 'manual';
 }
 
 export type FilterItemParams = {
@@ -81,7 +81,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
     state,
     singularOperators,
     pluralOperators,
-    preventAutoOpen = false,
+    initMode = 'auto-open',
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
@@ -95,7 +95,8 @@ export const FilterItem: FC<IFilterItemProps> = ({
     };
 
     useEffect(() => {
-        if (!state && !preventAutoOpen) {
+        console.log(name, initMode);
+        if (!state && initMode === 'auto-open') {
             open();
         }
     }, []);

@@ -15,7 +15,7 @@ import {
     type LifecycleTrend,
     useLifecycleInsights,
 } from 'hooks/api/getters/useLifecycleInsights/useLifecycleInsights.ts';
-import { LifecycleInsightsFilters } from '../LifecycleInsightsFilters.tsx';
+import { InsightsFilters } from '../InsightsFilters.tsx';
 
 const useChartColors = () => {
     const theme = useTheme();
@@ -110,7 +110,7 @@ const StatRow = styled('div')(({ theme }) => ({
 export const LifecycleInsights: FC = () => {
     const statePrefix = 'lifecycle-';
     const stateConfig = {
-        [`${statePrefix}projects`]: FilterItemParam,
+        [`${statePrefix}project`]: FilterItemParam,
     };
     const [state, setState] = usePersistentTableState(
         'insights-lifecycle',
@@ -118,7 +118,7 @@ export const LifecycleInsights: FC = () => {
     );
 
     const loadingLabel = 'lifecycle-trend-charts';
-    const projects = state[`${statePrefix}projects`]?.values ?? [];
+    const projects = state[`${statePrefix}project`]?.values ?? [];
     const {
         data: { lifecycleTrends },
         loading,
@@ -130,7 +130,7 @@ export const LifecycleInsights: FC = () => {
             ref={loadingRef}
             title='Flags lifecycle currently'
             filters={
-                <LifecycleInsightsFilters
+                <InsightsFilters
                     state={state}
                     onChange={setState}
                     filterNamePrefix={statePrefix}

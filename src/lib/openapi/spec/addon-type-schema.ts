@@ -136,7 +136,7 @@ export const addonTypeSchema = {
                     type: 'string',
                     description:
                         'A URL to where the addon configuration should redirect to install addons of this type.',
-                    example: 'https://unleash-slack-app.vercel.app/install',
+                    example: 'https://slack-app.getunleash.io/install',
                 },
                 title: {
                     type: 'string',

@@ -68,7 +68,7 @@ const slackAppDefinition: IAddonDefinition = {
     howTo: 'Below you can specify which Slack channels receive event notifications. The configuration settings allow you to choose the events and whether you want to filter them by projects and environments.\n\nYou can also select which channels to post to by configuring your feature flags with “slack” tags. For example, if you’d like the bot to post messages to the #general channel, you can configure your feature flag with the “slack:general” tag.\n\nThe Unleash Slack App bot has access to public channels by default. If you want the bot to post messages to private channels, you’ll need to invite it to those channels.',
     documentationUrl: 'https://docs.getunleash.io/docs/addons/slack-app',
     installation: {
-        url: 'https://unleash-slack-app.vercel.app/install',
+        url: 'https://slack-app.getunleash.io/install',
         title: 'Slack App installation',
         helpText:
             'After installing the Unleash Slack app in your Slack workspace, paste the access token into the appropriate field below in order to configure this integration.',

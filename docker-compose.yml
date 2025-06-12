@@ -25,6 +25,7 @@ services:
       # Disable SSL for database connections.
       DATABASE_SSL: "false"
       # Changing log levels:
+      LOG_LEVEL: "warn"
       INIT_FRONTEND_API_TOKENS: "default:development.unleash-insecure-frontend-api-token"
       # The default API token is insecure and should not be used in production.
       INIT_CLIENT_API_TOKENS: "default:development.unleash-insecure-api-token"

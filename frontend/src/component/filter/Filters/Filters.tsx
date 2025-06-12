@@ -49,12 +49,6 @@ export type IDateFilterItem = IBaseFilterItem & {
     toFilterKey?: string;
 };
 
-const isDateFilterItem = (
-    filter: IBaseFilterItem,
-): filter is IDateFilterItem => {
-    return 'dateOperators' in filter;
-};
-
 export type IFilterItem = ITextFilterItem | IDateFilterItem;
 
 const StyledCategoryIconWrapper = styled('div')(({ theme }) => ({

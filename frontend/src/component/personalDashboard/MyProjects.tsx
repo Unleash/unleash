@@ -39,12 +39,12 @@ import { ActionBox } from './ActionBox.tsx';
 import useLoading from 'hooks/useLoading';
 import { NoProjectsContactAdmin } from './NoProjectsContactAdmin.tsx';
 import { AskOwnerToAddYouToTheirProject } from './AskOwnerToAddYouToTheirProject.tsx';
-import { useFlag } from '@unleash/proxy-client-react';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const ActiveProjectDetails: FC<{
     project: PersonalDashboardSchemaProjectsItem;
 }> = ({ project }) => {
-    const healthToTechDebtEnabled = useFlag('healthToTechDebt');
+    const healthToTechDebtEnabled = useUiFlag('healthToTechDebt');
 
     const techicalDebt = project.technicalDebt;
     return (

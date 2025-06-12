@@ -18,7 +18,7 @@ import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { WidgetTitle } from './components/WidgetTitle/WidgetTitle.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useFlag } from '@unleash/proxy-client-react';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 export interface IChartsProps {
     flagTrends: InstanceInsightsSchema['flagTrends'];
@@ -105,7 +105,7 @@ export const InsightsCharts: FC<IChartsProps> = ({
     const showAllProjects = projects[0] === allOption.id;
     const isOneProjectSelected = projects.length === 1;
     const { isEnterprise } = useUiConfig();
-    const healthToDebtEnabled = useFlag('healthToTechDebt');
+    const healthToDebtEnabled = useUiFlag('healthToTechDebt');
 
     const lastUserTrend = userTrends[userTrends.length - 1];
     const lastFlagTrend = flagTrends[flagTrends.length - 1];

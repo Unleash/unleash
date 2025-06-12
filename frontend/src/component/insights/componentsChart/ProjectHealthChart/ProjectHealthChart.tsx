@@ -14,7 +14,7 @@ import {
 import { useTheme } from '@mui/material';
 import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
 import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
-import { useFlag } from '@unleash/proxy-client-react';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 interface IProjectHealthChartProps {
     projectFlagTrends: GroupedDataByProject<
@@ -46,7 +46,7 @@ export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
     const projectsData = useProjectChartData(projectFlagTrends);
     const theme = useTheme();
     const placeholderData = usePlaceholderData();
-    const healthToTechDebtEnabled = useFlag('healthToTechDebt');
+    const healthToTechDebtEnabled = useUiFlag('healthToTechDebt');
 
     const aggregateHealthData = useMemo(() => {
         const labels = Array.from(

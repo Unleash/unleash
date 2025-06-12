@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Lightbulb from '@mui/icons-material/LightbulbOutlined';
 import type { PersonalDashboardProjectDetailsSchemaInsights } from 'openapi';
 import { ActionBox } from './ActionBox.tsx';
-import { useFlag } from '@unleash/proxy-client-react';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const PercentageScore = styled('span')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
@@ -58,7 +58,7 @@ const ProjectHealthMessage: FC<{
     insights: PersonalDashboardProjectDetailsSchemaInsights;
     project: string;
 }> = ({ trend, insights, project }) => {
-    const healthToTechDebtEnabled = useFlag('healthToTechDebt');
+    const healthToTechDebtEnabled = useUiFlag('healthToTechDebt');
     const { avgHealthCurrentWindow, avgHealthPastWindow, health } = insights;
     const improveMessage = healthToTechDebtEnabled
         ? 'Remember to archive your stale feature flags to keep the technical debt low.'
@@ -202,7 +202,7 @@ export const ProjectSetupComplete: FC<{
     project: string;
     insights: PersonalDashboardProjectDetailsSchemaInsights;
 }> = ({ project, insights }) => {
-    const healthToTechDebtEnabled = useFlag('healthToTechDebt');
+    const healthToTechDebtEnabled = useUiFlag('healthToTechDebt');
     const projectHealthTrend = determineProjectHealthTrend(insights);
 
     return (

@@ -5,8 +5,8 @@ import { Badge } from 'component/common/Badge/Badge';
 import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
 import { HorizontalDistributionChart } from 'component/insights/components/HorizontalDistributionChart/HorizontalDistributionChart';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useFlag } from '@unleash/proxy-client-react';
 import { getTechnicalDebtColor } from 'utils/getTechnicalDebtColor.ts';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -108,7 +108,7 @@ const Distribution = ({ stale = 0, potentiallyStale = 0, total = 0 }) => {
 export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({
     tooltip,
 }) => {
-    const healthToTechDebtEnabled = useFlag('healthToTechDebt');
+    const healthToTechDebtEnabled = useUiFlag('healthToTechDebt');
 
     const data = tooltip?.dataPoints.map((point) => {
         return {

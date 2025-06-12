@@ -77,6 +77,7 @@ type RenderFilterProps = {
     onChange: (value: FilterItemParamHolder) => void;
     filter: ITextFilterItem | IDateFilterItem;
     rangeChangeHandler: RangeChangeHandler;
+    preventAutoOpen?: boolean;
 };
 
 const RenderFilter: FC<RenderFilterProps> = ({
@@ -85,6 +86,7 @@ const RenderFilter: FC<RenderFilterProps> = ({
     onChange,
     state,
     rangeChangeHandler,
+    preventAutoOpen,
 }) => {
     const label = (
         <>
@@ -99,6 +101,7 @@ const RenderFilter: FC<RenderFilterProps> = ({
         return (
             <FilterDateItem
                 key={filter.label}
+                preventAutoOpen={preventAutoOpen}
                 label={label}
                 name={filter.label}
                 state={state}
@@ -118,7 +121,7 @@ const RenderFilter: FC<RenderFilterProps> = ({
 
     return (
         <FilterItem
-            preventAutoOpen
+            preventAutoOpen={preventAutoOpen}
             key={filter.label}
             label={label}
             name={filter.label}
@@ -156,6 +159,7 @@ const SingleFilter: FC<SingleFilterProps> = ({
                 onChange={onChange}
                 rangeChangeHandler={rangeChangeHandler}
                 onChipClose={undefined}
+                preventAutoOpen
             />
         </StyledBox>
     );
@@ -265,6 +269,7 @@ const MultiFilter: FC<MultiFilterProps> = ({
 };
 
 export const Filters: FC<IFilterProps> = (props) => {
+    console.log('creating filters', props.availableFilters.length);
     const rangeChangeHandler = (filter: IDateFilterItem) => {
         const fromKey = filter.fromFilterKey;
         const toKey = filter.toFilterKey;
@@ -282,6 +287,7 @@ export const Filters: FC<IFilterProps> = (props) => {
 
     if (props.availableFilters.length === 1) {
         const filter = props.availableFilters[0];
+        console.log('OH NO, ONLY ONE FILTER\n\n\n\n\n', filter);
         return (
             <SingleFilter
                 rangeChangeHandler={rangeChangeHandler}

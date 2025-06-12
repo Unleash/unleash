@@ -107,7 +107,11 @@ const RenderFilter: FC<RenderFilterProps> = ({
                 }}
                 onRangeChange={rangeChangeHandler?.(filter)}
                 operators={filter.dateOperators}
-                onChipClose={() => onChipClose?.(filter.label)}
+                onChipClose={
+                    filter.persistent
+                        ? undefined
+                        : () => onChipClose?.(filter.label)
+                }
             />
         );
     }
@@ -122,7 +126,11 @@ const RenderFilter: FC<RenderFilterProps> = ({
             onChange={(value) => onChange({ [filter.filterKey]: value })}
             singularOperators={filter.singularOperators}
             pluralOperators={filter.pluralOperators}
-            onChipClose={() => onChipClose?.(filter.label)}
+            onChipClose={
+                filter.persistent
+                    ? undefined
+                    : () => onChipClose?.(filter.label)
+            }
         />
     );
 };

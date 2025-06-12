@@ -4,7 +4,7 @@
  * See `gen:api` script in package.json
  */
 
-export type InstanceInsightsSchemaLifecycleTrendsDevelopCategoriesRelease = {
+export type LifecycleTrendsSchemaLifecycleTrendsCleanupCategoriesPermanent = {
     flagsOlderThanWeek: number;
     newFlagsThisWeek: number;
 };

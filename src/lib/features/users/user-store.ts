@@ -1,17 +1,15 @@
-/* eslint camelcase: "off" */
+import type { Logger, LogProvider } from '../../logger.js';
+import User from '../../types/user.js';
 
-import type { Logger, LogProvider } from '../logger.js';
-import User from '../types/user.js';
-
-import NotFoundError from '../error/notfound-error.js';
+import NotFoundError from '../../error/notfound-error.js';
 import type {
     ICreateUser,
     IUserLookup,
     IUserStore,
     IUserUpdateFields,
-} from '../types/stores/user-store.js';
-import type { Db } from './db.js';
-import type { IFlagResolver } from '../types/index.js';
+} from '../../types/stores/user-store.js';
+import type { Db } from '../../db/db.js';
+import type { Knex } from 'knex';
 
 const TABLE = 'users';
 const PASSWORD_HASH_TABLE = 'used_passwords';
@@ -63,17 +61,14 @@ const rowToUser = (row) => {
     });
 };
 
-class UserStore implements IUserStore {
+export class UserStore implements IUserStore {
     private db: Db;
 
     private logger: Logger;
 
-    private flagResolver: IFlagResolver;
-
-    constructor(db: Db, getLogger: LogProvider, flagResolver: IFlagResolver) {
+    constructor(db: Db, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('user-store.ts');
-        this.flagResolver = flagResolver;
     }
 
     async getPasswordsPreviouslyUsed(userId: number): Promise<string[]> {
@@ -130,7 +125,7 @@ class UserStore implements IUserStore {
         return this.insert(user);
     }
 
-    buildSelectUser(q: IUserLookup): any {
+    buildSelectUser(q: IUserLookup): Knex.QueryBuilder<User> {
         const query = this.activeAll();
         if (q.id) {
             return query.where('id', q.id);
@@ -144,13 +139,13 @@ class UserStore implements IUserStore {
         throw new Error('Can only find users with id, username or email.');
     }
 
-    activeAll(): any {
+    activeAll(): Knex.QueryBuilder<User> {
         return this.db(TABLE).where({
             deleted_at: null,
         });
     }
 
-    activeUsers(): any {
+    activeUsers(): Knex.QueryBuilder<User> {
         return this.db(TABLE).where({
             deleted_at: null,
             is_service: false,
@@ -164,9 +159,25 @@ class UserStore implements IUserStore {
         return item ? item.id : undefined;
     }
 
-    async getAll(): Promise<User[]> {
-        const users = await this.activeUsers().select(USER_COLUMNS);
-        return users.map(rowToUser);
+    async getAll(params?: {
+        limit: number;
+        offset: number;
+        sortBy?: string;
+        sortOrder?: 'asc' | 'desc';
+    }): Promise<User[]> {
+        const usersQuery = this.activeUsers().select(USER_COLUMNS);
+        if (params) {
+            if (params.sortBy) {
+                usersQuery.orderBy(params.sortBy, params.sortOrder);
+            }
+            if (params.limit) {
+                usersQuery.limit(params.limit);
+            }
+            if (params.offset) {
+                usersQuery.offset(params.offset);
+            }
+        }
+        return (await usersQuery).map(rowToUser);
     }
 
     async search(query: string): Promise<User[]> {
@@ -191,11 +202,13 @@ class UserStore implements IUserStore {
     }
 
     async delete(id: number): Promise<void> {
-        return this.activeUsers()
+        await this.activeUsers()
             .where({ id })
             .update({
                 deleted_at: new Date(),
+                // @ts-expect-error email is non-nullable in User type
                 email: null,
+                // @ts-expect-error username is non-nullable in User type
                 username: null,
                 scim_id: null,
                 scim_external_id: null,
@@ -221,6 +234,7 @@ class UserStore implements IUserStore {
         disallowNPreviousPasswords: number,
     ): Promise<void> {
         await this.activeUsers().where('id', userId).update({
+            // @ts-expect-error password_hash does not exist in User type
             password_hash: passwordHash,
         });
         // We apparently set this to null, but you should be allowed to have null, so need to allow this
@@ -237,12 +251,13 @@ class UserStore implements IUserStore {
     }
 
     async incLoginAttempts(user: User): Promise<void> {
-        return this.buildSelectUser(user).increment('login_attempts', 1);
+        await this.buildSelectUser(user).increment('login_attempts', 1);
     }
 
     async successfullyLogin(user: User): Promise<number> {
         const currentDate = new Date();
         const updateQuery = this.buildSelectUser(user).update({
+            // @ts-expect-error login_attempts does not exist in User type
             login_attempts: 0,
             seen_at: currentDate,
         });
@@ -262,6 +277,7 @@ class UserStore implements IUserStore {
             firstLoginOrder = countEarlierUsers;
 
             await updateQuery.update({
+                // @ts-expect-error first_seen_at does not exist in User type
                 first_seen_at: currentDate,
             });
         }
@@ -333,4 +349,3 @@ class UserStore implements IUserStore {
         return firstInstanceUser ? firstInstanceUser.created_at : null;
     }
 }
-export default UserStore;

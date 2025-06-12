@@ -15,7 +15,7 @@ import ClientInstanceStore from './client-instance-store.js';
 import ClientApplicationsStore from './client-applications-store.js';
 import ContextFieldStore from '../features/context/context-field-store.js';
 import SettingStore from './setting-store.js';
-import UserStore from './user-store.js';
+import { UserStore } from '../features/users/user-store.js';
 import ProjectStore from '../features/project/project-store.js';
 import TagStore from './tag-store.js';
 import TagTypeStore from '../features/tag-type/tag-type-store.js';
@@ -105,7 +105,7 @@ export const createStores = (
             config.flagResolver,
         ),
         settingStore: new SettingStore(db, getLogger),
-        userStore: new UserStore(db, getLogger, config.flagResolver),
+        userStore: new UserStore(db, getLogger),
         accountStore: new AccountStore(db, getLogger),
         projectStore: new ProjectStore(db, eventBus, config),
         tagStore: new TagStore(db, eventBus, getLogger),

@@ -10,7 +10,7 @@ import {
 import type { IUnleashConfig } from '../../types/index.js';
 import type { Db } from '../../db/db.js';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
-import UserStore from '../../db/user-store.js';
+import { UserStore } from '../users/user-store.js';
 import ProjectStore from '../project/project-store.js';
 import EnvironmentStore from '../project-environments/environment-store.js';
 import StrategyStore from '../../db/strategy-store.js';
@@ -57,7 +57,7 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         getLogger,
         flagResolver,
     );
-    const userStore = new UserStore(db, getLogger, flagResolver);
+    const userStore = new UserStore(db, getLogger);
     const projectStore = new ProjectStore(db, eventBus, config);
     const environmentStore = new EnvironmentStore(db, eventBus, config);
     const strategyStore = new StrategyStore(db, getLogger);

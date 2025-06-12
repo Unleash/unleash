@@ -15,7 +15,7 @@ export interface IFilterItemProps {
     label: ReactNode;
     options: Array<{ label: string; value: string }>;
     onChange: (value: FilterItemParams) => void;
-    onChipClose: () => void;
+    onChipClose?: () => void;
     state: FilterItemParams | null | undefined;
     singularOperators: [string, ...string[]];
     pluralOperators: [string, ...string[]];
@@ -108,11 +108,13 @@ export const FilterItem: FC<IFilterItemProps> = ({
         .filter((label): label is string => label !== undefined);
     const currentOperator = state ? state.operator : currentOperators[0];
 
-    const onDelete = () => {
-        onChange({ operator: singularOperators[0], values: [] });
-        onClose();
-        onChipClose();
-    };
+    const onDelete = onChipClose
+        ? () => {
+              onChange({ operator: singularOperators[0], values: [] });
+              onClose();
+              onChipClose();
+          }
+        : undefined;
 
     const filteredOptions = options.filter((option) =>
         option.label.toLowerCase().includes(searchText.toLowerCase()),

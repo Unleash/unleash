@@ -237,6 +237,7 @@ const MultiFilter: FC<MultiFilterProps> = ({
 
                 return (
                     <RenderFilter
+                        key={filter.filterKey}
                         filter={filter}
                         state={state[filter.filterKey]}
                         onChange={onChange}

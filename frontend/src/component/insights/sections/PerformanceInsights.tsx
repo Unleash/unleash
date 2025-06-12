@@ -130,6 +130,7 @@ export const PerformanceInsights: FC = () => {
                     <StyledWidgetStats width={350} padding={0}>
                         <HealthStats
                             value={summary.averageHealth}
+                            technicalDebt={summary.technicalDebt}
                             healthy={summary.active}
                             stale={summary.stale}
                             potentiallyStale={summary.potentiallyStale}

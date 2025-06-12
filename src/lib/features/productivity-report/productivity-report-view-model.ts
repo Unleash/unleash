@@ -27,6 +27,7 @@ export const productivityReportViewModel = ({
     userName,
     userEmail,
     ...metrics,
+    technicalDebt: Math.max(0, 100 - metrics.health).toString(),
     unleashUrl,
     healthColor() {
         const healthRating = this.health;

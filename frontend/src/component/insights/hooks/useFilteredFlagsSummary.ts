@@ -71,6 +71,12 @@ export const useFilteredFlagsSummary = (
             averageHealth: sum.total
                 ? ((sum.active / (sum.total || 1)) * 100).toFixed(0)
                 : '100',
+            technicalDebt: sum.total
+                ? (
+                      ((sum.stale + sum.potentiallyStale) / sum.total) *
+                      100
+                  ).toFixed(0)
+                : '0',
             medianTimeToProduction,
         };
     }, [filteredProjectFlagTrends]);

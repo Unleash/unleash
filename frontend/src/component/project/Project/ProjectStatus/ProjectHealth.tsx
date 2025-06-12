@@ -115,23 +115,25 @@ const Wrapper = styled(HealthGridTile)(({ theme }) => ({
 export const ProjectHealth = () => {
     const projectId = useRequiredPathParam('projectId');
     const {
-        data: { health, staleFlags },
+        data: { health, technicalDebt, staleFlags },
     } = useProjectStatus(projectId);
     const { isOss } = useUiConfig();
     const theme = useTheme();
     const healthToDebtEnabled = useFlag('healthToTechDebt');
     const circumference = 2 * Math.PI * ChartRadius;
     const healthRating = health.current;
-    const technicalDebt = 100 - healthRating; // TODO: get from backend
 
     const gapLength = 0.3;
     const filledLength = 1 - gapLength;
     const offset = 0.75 - gapLength / 2;
     const healthLength = (healthRating / 100) * circumference * 0.7;
-    const technicalDebtLength = (technicalDebt / 100) * circumference * 0.7;
+    const technicalDebtLength =
+        ((technicalDebt.current || 0) / 100) * circumference * 0.7;
 
     const healthColor = useHealthColor(healthRating);
-    const technicalDebtColor = useTechnicalDebtColor(technicalDebt);
+    const technicalDebtColor = useTechnicalDebtColor(
+        technicalDebt.current || 0,
+    );
 
     return (
         <Wrapper>
@@ -174,7 +176,9 @@ export const ProjectHealth = () => {
                             fill={theme.palette.text.primary}
                             fontSize={theme.typography.h1.fontSize}
                         >
-                            {healthToDebtEnabled ? technicalDebt : healthRating}
+                            {healthToDebtEnabled
+                                ? technicalDebt.current || 0
+                                : healthRating}
                             %
                         </text>
                     </StyledSVG>

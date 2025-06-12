@@ -5,6 +5,7 @@ import { useFlag } from '@unleash/proxy-client-react';
 
 interface IHealthStatsProps {
     value?: string | number;
+    technicalDebt?: string | number;
     healthy: number;
     stale: number;
     potentiallyStale: number;
@@ -66,19 +67,13 @@ const StyledMainValue = styled(StyledValue)(({ theme }) => ({
 
 export const HealthStats: FC<IHealthStatsProps> = ({
     value,
+    technicalDebt,
     healthy,
     stale,
     potentiallyStale,
     title,
 }) => {
     const healthToDebtEnabled = useFlag('healthToTechDebt');
-
-    // TODO: get the following from backend
-    const unhealthy = stale + potentiallyStale;
-    const technicalDebtValue = (
-        (unhealthy / (healthy + unhealthy)) *
-        100
-    ).toFixed(1);
 
     return (
         <StyledContainer>
@@ -91,7 +86,7 @@ export const HealthStats: FC<IHealthStatsProps> = ({
                     <StyledIcon />
                     {healthToDebtEnabled ? 'Technical debt' : 'Instance health'}
                     {healthToDebtEnabled ? (
-                        <StyledMainValue>{`${technicalDebtValue}%`}</StyledMainValue>
+                        <StyledMainValue>{`${technicalDebt}%`}</StyledMainValue>
                     ) : (
                         <StyledMainValue>{`${value || 0}%`}</StyledMainValue>
                     )}

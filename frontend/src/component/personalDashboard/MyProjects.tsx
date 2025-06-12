@@ -46,7 +46,7 @@ const ActiveProjectDetails: FC<{
 }> = ({ project }) => {
     const healthToTechDebtEnabled = useFlag('healthToTechDebt');
 
-    const techicalDebt = 100 - project.health; // TODO: health to technical debt from backend
+    const techicalDebt = project.technicalDebt;
     return (
         <Box sx={{ display: 'flex', gap: 2 }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>

@@ -115,9 +115,7 @@ export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({
             label: point.label,
             title: point.dataset.label,
             color: point.dataset.borderColor,
-            value: point.raw as InstanceInsightsSchemaProjectFlagTrendsItem & {
-                technicalDebt?: number | null;
-            }, // TODO: get from backend
+            value: point.raw as InstanceInsightsSchemaProjectFlagTrendsItem,
         };
     });
 

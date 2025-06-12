@@ -2,7 +2,6 @@ import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import type { FC } from 'react';
 import { FilterItemParam } from 'utils/serializeQueryParams';
 import { InsightsSection } from 'component/insights/sections/InsightsSection';
-import { InsightsFilters } from 'component/insights/InsightsFilters';
 import { LifecycleChart } from '../components/LifecycleChart/LifecycleChart.tsx';
 import { styled, useTheme } from '@mui/material';
 import {
@@ -16,6 +15,7 @@ import {
     type LifecycleTrend,
     useLifecycleInsights,
 } from 'hooks/api/getters/useLifecycleInsights/useLifecycleInsights.ts';
+import { LifecycleInsightsFilters } from '../LifecycleInsightsFilters.tsx';
 
 const useChartColors = () => {
     const theme = useTheme();
@@ -130,7 +130,7 @@ export const LifecycleInsights: FC = () => {
             ref={loadingRef}
             title='Flags lifecycle currently'
             filters={
-                <InsightsFilters
+                <LifecycleInsightsFilters
                     state={state}
                     onChange={setState}
                     filterNamePrefix={statePrefix}

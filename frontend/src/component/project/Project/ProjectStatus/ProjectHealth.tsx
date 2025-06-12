@@ -188,7 +188,7 @@ export const ProjectHealth = () => {
                         {healthToDebtEnabled ? (
                             <>
                                 Your current technical debt rating is{' '}
-                                {technicalDebt}%.
+                                {technicalDebt.current}%.
                             </>
                         ) : (
                             <>

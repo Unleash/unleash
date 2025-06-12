@@ -269,7 +269,6 @@ const MultiFilter: FC<MultiFilterProps> = ({
 };
 
 export const Filters: FC<IFilterProps> = (props) => {
-    console.log('creating filters', props.availableFilters.length);
     const rangeChangeHandler = (filter: IDateFilterItem) => {
         const fromKey = filter.fromFilterKey;
         const toKey = filter.toFilterKey;

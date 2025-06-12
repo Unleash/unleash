@@ -241,11 +241,7 @@ const MultiFilter: FC<MultiFilterProps> = ({
                         state={state[filter.filterKey]}
                         onChange={onChange}
                         rangeChangeHandler={rangeChangeHandler}
-                        onChipClose={
-                            filter.persistent
-                                ? undefined
-                                : () => deselectFilter(filter.label)
-                        }
+                        onChipClose={() => deselectFilter(filter.label)}
                     />
                 );
             })}

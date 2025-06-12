@@ -287,7 +287,6 @@ export const Filters: FC<IFilterProps> = (props) => {
 
     if (props.availableFilters.length === 1) {
         const filter = props.availableFilters[0];
-        console.log('OH NO, ONLY ONE FILTER\n\n\n\n\n', filter);
         return (
             <SingleFilter
                 rangeChangeHandler={rangeChangeHandler}

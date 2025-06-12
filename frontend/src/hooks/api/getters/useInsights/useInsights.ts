@@ -27,7 +27,6 @@ export const useInsights = (
     return {
         insights:
             data ||
-            /* @ts-expect-error FIXME (lifecycleMetrics): lifecycle trends */
             ({
                 userTrends: [],
                 flagTrends: [],

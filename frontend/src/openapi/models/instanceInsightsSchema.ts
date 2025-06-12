@@ -5,7 +5,6 @@
  */
 import type { InstanceInsightsSchemaEnvironmentTypeTrendsItem } from './instanceInsightsSchemaEnvironmentTypeTrendsItem.js';
 import type { InstanceInsightsSchemaFlagTrendsItem } from './instanceInsightsSchemaFlagTrendsItem.js';
-import type { InstanceInsightsSchemaLifecycleTrends } from './instanceInsightsSchemaLifecycleTrends.js';
 import type { InstanceInsightsSchemaMetricsSummaryTrendsItem } from './instanceInsightsSchemaMetricsSummaryTrendsItem.js';
 import type { InstanceInsightsSchemaProjectFlagTrendsItem } from './instanceInsightsSchemaProjectFlagTrendsItem.js';
 import type { InstanceInsightsSchemaUserTrendsItem } from './instanceInsightsSchemaUserTrendsItem.js';
@@ -18,8 +17,6 @@ export interface InstanceInsightsSchema {
     environmentTypeTrends: InstanceInsightsSchemaEnvironmentTypeTrendsItem[];
     /** How number of flags changed over time */
     flagTrends: InstanceInsightsSchemaFlagTrendsItem[];
-    /** Aggregated view of feature flag lifecycle across environments */
-    lifecycleTrends: InstanceInsightsSchemaLifecycleTrends;
     /** How metrics data per project changed over time */
     metricsSummaryTrends: InstanceInsightsSchemaMetricsSummaryTrendsItem[];
     /** How number of flags per project changed over time */

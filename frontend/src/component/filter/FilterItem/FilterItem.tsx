@@ -95,7 +95,6 @@ export const FilterItem: FC<IFilterItemProps> = ({
     };
 
     useEffect(() => {
-        console.log(name, initMode);
         if (!state && initMode === 'auto-open') {
             open();
         }

@@ -1,4 +1,4 @@
-import { styled } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import { forwardRef, type PropsWithChildren, type ReactNode } from 'react';
 
 const StyledSection = styled('section')(({ theme }) => ({
@@ -27,7 +27,7 @@ export const InsightsSection = forwardRef<
 >(({ title, children, filters: HeaderActions }, ref) => (
     <StyledSection ref={ref}>
         <SectionTitleRow>
-            <h2>{title}</h2>
+            <Typography variant='h2'>{title}</Typography>
             {HeaderActions}
         </SectionTitleRow>
         {children}

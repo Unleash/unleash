@@ -21,13 +21,17 @@ const SectionTitleRow = styled('div')(({ theme }) => ({
     rowGap: theme.spacing(2),
 }));
 
+const StyledHeader = styled('h2')(({ theme }) => ({
+    fontSize: theme.typography.h2.fontSize,
+}));
+
 export const InsightsSection = forwardRef<
     HTMLElement,
     PropsWithChildren<{ title: string; filters?: ReactNode }>
 >(({ title, children, filters: HeaderActions }, ref) => (
     <StyledSection ref={ref}>
         <SectionTitleRow>
-            <h2>{title}</h2>
+            <StyledHeader>{title}</StyledHeader>
             {HeaderActions}
         </SectionTitleRow>
         {children}

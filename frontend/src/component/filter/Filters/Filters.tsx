@@ -118,6 +118,7 @@ const RenderFilter: FC<RenderFilterProps> = ({
 
     return (
         <FilterItem
+            preventAutoOpen
             key={filter.label}
             label={label}
             name={filter.label}

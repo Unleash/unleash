@@ -19,6 +19,7 @@ export interface IFilterItemProps {
     state: FilterItemParams | null | undefined;
     singularOperators: [string, ...string[]];
     pluralOperators: [string, ...string[]];
+    preventAutoOpen?: boolean;
 }
 
 export type FilterItemParams = {
@@ -80,6 +81,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
     state,
     singularOperators,
     pluralOperators,
+    preventAutoOpen = false,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
@@ -93,7 +95,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
     };
 
     useEffect(() => {
-        if (!state) {
+        if (!state && !preventAutoOpen) {
             open();
         }
     }, []);

@@ -2,7 +2,6 @@ import type { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo.tsx';
 import { styled } from '@mui/system';
 import { ConstraintAccordionViewActions } from '../../ConstraintAccordionViewActions/ConstraintAccordionViewActions.tsx';
-import { ConstraintAccordionEditActions } from '../../ConstraintAccordionEditActions/ConstraintAccordionEditActions.tsx';
 
 interface IConstraintAccordionViewHeaderProps {
     constraint: IConstraint;
@@ -38,12 +37,7 @@ export const ConstraintAccordionViewHeader = ({
                 expanded={expanded}
                 disabled={disabled}
             />
-            {onUse ? (
-                <ConstraintAccordionViewActions onUse={onUse} />
-            ) : (
-                // @deprecated : remove onEdit and onDelete from current file together with NewConstraintAccordionList and addEditStrategy flag
-                <ConstraintAccordionEditActions />
-            )}
+            {onUse ? <ConstraintAccordionViewActions onUse={onUse} /> : null}
         </StyledContainer>
     );
 };

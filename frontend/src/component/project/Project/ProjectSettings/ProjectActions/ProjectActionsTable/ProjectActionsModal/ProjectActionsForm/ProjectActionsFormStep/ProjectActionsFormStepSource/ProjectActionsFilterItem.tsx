@@ -137,7 +137,6 @@ export const ProjectActionsFilterItem = ({
         </>
     );
 
-    // Adapted from `/frontend/src/component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditHeader/ConstraintAccordionEditHeader.tsx`
     const [showCaseSensitiveButton, setShowCaseSensitiveButton] =
         useState(false);
 

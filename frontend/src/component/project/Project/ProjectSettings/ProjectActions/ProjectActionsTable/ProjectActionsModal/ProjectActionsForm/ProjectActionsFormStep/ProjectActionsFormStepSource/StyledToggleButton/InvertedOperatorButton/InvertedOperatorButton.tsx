@@ -6,14 +6,13 @@ import {
     StyledToggleButtonOff,
     StyledToggleButtonOn,
 } from '../StyledToggleButton.tsx';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender.tsx';
+import { ConditionallyRender } from '../../../../ConditionallyRender/ConditionallyRender.tsx';
 
 interface InvertedOperatorButtonProps {
     localConstraint: Pick<IConstraint, 'inverted'>;
     setInvertedOperator: () => void;
 }
 
-// todo: move to project filter actions item
 export const InvertedOperatorButton = ({
     localConstraint,
     setInvertedOperator,

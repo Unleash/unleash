@@ -27,8 +27,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { CaseSensitiveButton } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/StyledToggleButton/CaseSensitiveButton/CaseSensitiveButton';
 import { InvertedOperatorButton } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/StyledToggleButton/InvertedOperatorButton/InvertedOperatorButton';
 import type { IConstraint } from 'interfaces/strategy.ts';
-import { FreeTextInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/FreeTextInput/FreeTextInput.tsx';
-import { SingleValue } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/SingleValue/SingleValue.tsx';
+import { FreeTextInput } from './ProjectActionsFilterItemInputs/FreeTextInput/FreeTextInput.tsx';
+import { SingleValue } from './ProjectActionsFilterItemInputs/SingleValue/SingleValue.tsx';
 import { constraintValidator } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/useEditableConstraint/constraint-validator.ts';
 
 const StyledDeleteButton = styled(IconButton)({

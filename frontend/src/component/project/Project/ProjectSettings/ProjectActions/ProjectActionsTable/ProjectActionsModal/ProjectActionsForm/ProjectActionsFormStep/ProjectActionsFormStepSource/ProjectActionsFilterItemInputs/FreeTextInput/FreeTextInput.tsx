@@ -61,7 +61,6 @@ const LimitContainer = styled(Box)(({ theme }) => ({
 
 const ENTER = 'Enter';
 
-// todo: move to project filter actions
 export const FreeTextInput = ({
     values,
     removeValue,

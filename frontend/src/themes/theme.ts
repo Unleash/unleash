@@ -251,16 +251,6 @@ const theme = {
         },
 
         /**
-         * For Environment Accordion.
-         * @deprecated Use `elevation1` for `disabled` and `elevation2` for `expanded` instead.
-         * remove with the flagOverviewRedesign flag
-         */
-        envAccordion: {
-            disabled: colors.grey[100],
-            expanded: colors.grey[200],
-        },
-
-        /**
          * MUI grey colors
          */
         grey: {

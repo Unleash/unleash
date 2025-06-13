@@ -4,7 +4,7 @@ import { SectionSeparator } from '../SectionSeparator/SectionSeparator.tsx';
 import { styled } from '@mui/material';
 
 const StyledLabel = styled('span')(({ theme }) => ({
-    background: theme.palette.envAccordion.expanded,
+    background: theme.palette.background.elevation2,
     padding: theme.spacing(0, 2),
 }));
 

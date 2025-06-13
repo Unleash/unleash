@@ -1,6 +1,5 @@
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { Alert, Typography, useTheme, styled, IconButton } from '@mui/material';
-import { PlaygroundResultChip } from '../../PlaygroundResultChip/LegacyPlaygroundResultChip.tsx';
 import CloseOutlined from '@mui/icons-material/CloseOutlined';
 import type React from 'react';
 import {
@@ -8,6 +7,7 @@ import {
     hasCustomStrategies,
     hasOnlyCustomStrategies,
 } from './helpers.ts';
+import { PlaygroundResultChip } from '../../PlaygroundResultChip/PlaygroundResultChip.tsx';
 
 const HeaderRow = styled('div')({
     display: 'flex',

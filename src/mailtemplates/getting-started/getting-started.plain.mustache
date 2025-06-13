@@ -1,29 +1,27 @@
 Welcome to Unleash {{ name }}!
 
-You have been invited to your organization's Unleash account - the new way of delivering software. 
+You have been invited to your organization's Unleash account.
 
 {{# passwordLink }}
+Start using Unleash by clicking the sign-up link below. Follow the steps provided to set your password and get started.
 
-Below is your magic sign-in link. Just click the button and follow the steps provided to update your password and get started using Unleash.
-
-Visit {{{ passwordLink }}} to get started.
+{{{ passwordLink }}}
 {{/ passwordLink }}
-{{^ passwordLink }}
 
-Use the link below to access your Unleash instance:
+{{^ passwordLink }}
+Start using Unleash by clicking the log in link below.
 
 {{{ unleashUrl }}}
-
 {{/ passwordLink }}
 
-By the way - did you know we have built Unleash on best practice when releasing new features. Our solution removes pressure from developers, allowing you to focus on delivering value through experimentation.
-Looking forward to having a lot of fun together.
+Once you're up and running, you might want to take a look at the following resources:
 
-Useful resources: 
+- Documentation: https://docs.getunleash.io
+- Code examples: https://github.com/unleash
+- SDKs: https://docs.getunleash.io/reference/sdks
 
-- https://docs.getunleash.io
-- https://github.com/unleash
-- https://docs.getunleash.io/reference/sdks
-
-Best 
+Best,
 Your Unleash team
+
+By starting to use Unleash, you are agreeing to our Terms of Service: https://www.getunleash.io/terms-of-service
+This email was sent to {{ recipient }}

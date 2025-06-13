@@ -59,7 +59,6 @@ export type IFlagKey =
     | 'registerFrontendClient'
     | 'reportUnknownFlags'
     | 'lastSeenBulkQuery'
-    | 'newGettingStartedEmail'
     | 'lifecycleMetrics'
     | 'customMetrics'
     | 'createFlagDialogCache';
@@ -277,10 +276,6 @@ const flags: IFlags = {
     ),
     lastSeenBulkQuery: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_LAST_SEEN_BULK_QUERY,
-        false,
-    ),
-    newGettingStartedEmail: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_GETTING_STARTED_EMAIL,
         false,
     ),
     lifecycleMetrics: parseEnvVarBoolean(

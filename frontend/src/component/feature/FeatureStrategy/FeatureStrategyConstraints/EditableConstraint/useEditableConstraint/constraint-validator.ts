@@ -1,11 +1,11 @@
 import { isValid, parseISO } from 'date-fns';
 import semver from 'semver';
 import {
-    type EditableConstraint,
-    isDateConstraint,
-    isNumberConstraint,
-    isSemVerConstraint,
-} from './editable-constraint-type.js';
+    isDateOperator,
+    isNumOperator,
+    isSemVerOperator,
+    type Operator,
+} from 'constants/operators.js';
 export type ConstraintValidationResult = [boolean, string];
 
 const numberValidator = (value: string): ConstraintValidationResult => {
@@ -59,14 +59,14 @@ const dateValidator = (value: string): ConstraintValidationResult => {
     return [true, ''];
 };
 
-export const constraintValidator = (constraint: EditableConstraint) => {
-    if (isDateConstraint(constraint)) {
+export const constraintValidator = (operator: Operator) => {
+    if (isDateOperator(operator)) {
         return dateValidator;
     }
-    if (isSemVerConstraint(constraint)) {
+    if (isSemVerOperator(operator)) {
         return semVerValidator;
     }
-    if (isNumberConstraint(constraint)) {
+    if (isNumOperator(operator)) {
         return numberValidator;
     }
     return stringListValidator;

@@ -11,9 +11,14 @@ import Input from 'component/common/Input/Input';
 import { ProjectActionsFormItem } from '../ProjectActionsFormItem.tsx';
 import { ConstraintOperatorSelect } from 'component/common/NewConstraintAccordion/ConstraintOperatorSelect';
 import {
+    inOperators,
+    isInOperator,
+    isNumOperator,
+    isSemVerOperator,
+    isStringOperator,
+    numOperators,
     type Operator,
-    allOperators,
-    dateOperators,
+    semVerOperators,
     stringOperators,
 } from 'constants/operators';
 import { useEffect, useState } from 'react';
@@ -21,8 +26,10 @@ import { oneOf } from 'utils/oneOf';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { CaseSensitiveButton } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/StyledToggleButton/CaseSensitiveButton/CaseSensitiveButton';
 import { InvertedOperatorButton } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/StyledToggleButton/InvertedOperatorButton/InvertedOperatorButton';
-import { ResolveInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/ResolveInput/ResolveInput';
-import { useConstraintInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
+import type { IConstraint } from 'interfaces/strategy.ts';
+import { FreeTextInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/FreeTextInput/FreeTextInput.tsx';
+import { SingleValue } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/SingleValue/SingleValue.tsx';
+import { constraintValidator } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/useEditableConstraint/constraint-validator.ts';
 
 const StyledDeleteButton = styled(IconButton)({
     marginRight: '-6px',
@@ -134,21 +141,27 @@ export const ProjectActionsFilterItem = ({
     const [showCaseSensitiveButton, setShowCaseSensitiveButton] =
         useState(false);
 
-    const validOperators = allOperators.filter(
-        (operator) => !oneOf(dateOperators, operator),
-    );
+    const validOperators = [
+        ...inOperators,
+        ...stringOperators,
+        ...numOperators,
+        ...semVerOperators,
+    ];
 
-    const { input, validator, setError, error } = useConstraintInput({
-        contextDefinition: { legalValues: [] },
-        localConstraint: { operator, value, values },
-    });
+    const [error, setError] = useState('');
+    const validator = constraintValidator(operator);
 
     const validate = () => {
         stateChanged({
             ...filter,
             error: undefined,
         });
-        const [typeValidatorResult, err] = validator();
+
+        if (value === undefined && values === undefined) {
+            return;
+        }
+        const validatorArgs = values ? values : [value || ''];
+        const [typeValidatorResult, err] = validator(...validatorArgs);
         if (!typeValidatorResult) {
             setError(err);
             stateChanged({
@@ -270,19 +283,83 @@ export const ProjectActionsFilterItem = ({
                 <StyledResolveInputWrapper>
                     <ResolveInput
                         setValues={setValues}
-                        setValuesWithRecord={setValues}
                         setValue={setValue}
                         setError={setError}
                         localConstraint={{ value, values }}
-                        constraintValues={values || []}
-                        constraintValue={value || ''}
-                        input={input}
+                        operator={operator}
                         error={error}
-                        contextDefinition={{ legalValues: [] }}
                         removeValue={removeValue}
                     />
                 </StyledResolveInputWrapper>
             </StyledFilter>
         </ProjectActionsFormItem>
     );
+};
+
+interface IResolveInputProps {
+    localConstraint: Pick<IConstraint, 'value' | 'values'>;
+    setValue: (value: string) => void;
+    setValues: (values: string[]) => void;
+    setError: React.Dispatch<React.SetStateAction<string>>;
+    removeValue: (index: number) => void;
+    operator: Operator;
+    error: string;
+}
+
+const ResolveInput = ({
+    operator,
+    localConstraint,
+    setValue,
+    setValues,
+    setError,
+    removeValue,
+    error,
+}: IResolveInputProps) => {
+    if (isInOperator(operator)) {
+        return (
+            <FreeTextInput
+                values={localConstraint.values || []}
+                removeValue={removeValue}
+                setValues={setValues}
+                error={error}
+                setError={setError}
+            />
+        );
+    }
+
+    if (isStringOperator(operator)) {
+        return (
+            <FreeTextInput
+                values={localConstraint.values || []}
+                removeValue={removeValue}
+                setValues={setValues}
+                error={error}
+                setError={setError}
+            />
+        );
+    }
+
+    if (isNumOperator(operator)) {
+        return (
+            <SingleValue
+                setValue={setValue}
+                value={localConstraint.value}
+                type='number'
+                error={error}
+                setError={setError}
+            />
+        );
+    }
+
+    if (isSemVerOperator(operator)) {
+        return (
+            <SingleValue
+                setValue={setValue}
+                value={localConstraint.value}
+                type='semver'
+                error={error}
+                setError={setError}
+            />
+        );
+    }
 };

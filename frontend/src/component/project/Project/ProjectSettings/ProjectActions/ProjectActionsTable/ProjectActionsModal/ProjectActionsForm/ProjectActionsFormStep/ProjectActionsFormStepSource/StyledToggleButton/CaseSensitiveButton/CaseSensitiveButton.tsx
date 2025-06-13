@@ -5,14 +5,15 @@ import {
     StyledToggleButtonOff,
     StyledToggleButtonOn,
 } from '../StyledToggleButton.tsx';
-import { ConditionallyRender } from '../../../../ConditionallyRender/ConditionallyRender.tsx';
 import type { IConstraint } from 'interfaces/strategy';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender.tsx';
 
 interface CaseSensitiveButtonProps {
     localConstraint: Pick<IConstraint, 'caseInsensitive'>;
     setCaseInsensitive: () => void;
 }
 
+// todo: move to project filter actions item
 export const CaseSensitiveButton = ({
     localConstraint,
     setCaseInsensitive,

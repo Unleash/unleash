@@ -20,8 +20,8 @@ import {
 import { useEffect, useState } from 'react';
 import { oneOf } from 'utils/oneOf';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { CaseSensitiveButton } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/StyledToggleButton/CaseSensitiveButton/CaseSensitiveButton';
-import { InvertedOperatorButton } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/StyledToggleButton/InvertedOperatorButton/InvertedOperatorButton';
+import { CaseSensitiveButton } from './StyledToggleButton/CaseSensitiveButton/CaseSensitiveButton.tsx';
+import { InvertedOperatorButton } from './StyledToggleButton/InvertedOperatorButton/InvertedOperatorButton.tsx';
 import { constraintValidator } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/useEditableConstraint/constraint-validator.ts';
 import { ResolveInput } from './ProjectActionsFilterItemInputs/ResolveInput.tsx';
 

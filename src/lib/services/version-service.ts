@@ -1,4 +1,4 @@
-import fetch from 'make-fetch-happen';
+import ky from 'ky';
 import type { IUnleashStores } from '../types/stores.js';
 import type { IUnleashConfig } from '../types/option.js';
 import version from '../util/version.js';
@@ -143,9 +143,8 @@ export default class VersionService {
                     versionPayload.featureInfo = await telemetryDataProvider();
                 }
                 if (this.versionCheckUrl) {
-                    const res = await fetch(this.versionCheckUrl, {
-                        method: 'POST',
-                        body: JSON.stringify(versionPayload),
+                    const res = await ky.post(this.versionCheckUrl, {
+                        json: versionPayload,
                         headers: { 'Content-Type': 'application/json' },
                     });
                     if (res.ok) {

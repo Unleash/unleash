@@ -36,7 +36,6 @@ export default class SlackAddon extends Addon {
         this.flagResolver = args.flagResolver;
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async handleEvent(
         event: IEvent,
         parameters: ISlackAddonParameters,
@@ -79,7 +78,7 @@ export default class SlackAddon extends Addon {
         const requests = slackChannels.map((channel) => {
             const body = {
                 username,
-                icon_emoji: emojiIcon, // eslint-disable-line camelcase
+                icon_emoji: emojiIcon,
                 text,
                 channel: `#${channel}`,
                 attachments: [

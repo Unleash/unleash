@@ -1,4 +1,4 @@
-import fetch from 'make-fetch-happen';
+import ky from 'ky';
 import { addonDefinitionSchema } from './addon-schema.js';
 import type { Logger } from '../logger.js';
 import type { IAddonConfig, IAddonDefinition } from '../types/model.js';
@@ -60,13 +60,9 @@ export default abstract class Addon {
         options: any = {},
         retries: number = 1,
     ): Promise<Response> {
-        // biome-ignore lint/suspicious/noImplicitAnyLet: Due to calling upstream, it's not easy knowing the real type here
-        let res;
         try {
-            res = await fetch(url, {
-                retry: {
-                    retries,
-                },
+            const res = await ky(url, {
+                retry: retries,
                 ...options,
             });
             return res;
@@ -78,12 +74,10 @@ export default abstract class Addon {
                 } status code ${e.code}`,
                 e,
             );
-            res = { status: e.code, ok: false };
+            return { status: e.code, ok: false } as Response;
         }
-        return res;
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     abstract handleEvent(
         event: IEvent,
         parameters: any,

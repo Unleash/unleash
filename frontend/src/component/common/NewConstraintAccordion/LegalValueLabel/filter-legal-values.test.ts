@@ -1,4 +1,4 @@
-import { filterLegalValues } from './LegalValueLabel.jsx';
+import { filterLegalValues } from './LegalValueLabel.js';
 
 describe('filterLegalValues function tests', () => {
     const mockLegalValues = [

@@ -8,12 +8,12 @@ import {
     useTheme,
 } from '@mui/material';
 import { flexRow } from '../../../../../themes/themeStyles.ts';
-import { PlaygroundResultChip } from '../../PlaygroundResultsTable/PlaygroundResultChip/LegacyPlaygroundResultChip.tsx';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import type React from 'react';
 import { useState } from 'react';
 import type { AdvancedPlaygroundEnvironmentFeatureSchema } from 'openapi';
 import { PlaygroundEnvironmentTable } from '../../PlaygroundEnvironmentTable/PlaygroundEnvironmentTable.tsx';
+import { PlaygroundResultChip } from '../../PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip.tsx';
 
 const StyledContainer = styled(
     'div',

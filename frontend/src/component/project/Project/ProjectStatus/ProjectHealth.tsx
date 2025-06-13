@@ -5,8 +5,8 @@ import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectS
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { HealthGridTile } from './ProjectHealthGrid.styles';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
-import { useFlag } from '@unleash/proxy-client-react';
 import { getTechnicalDebtColor } from 'utils/getTechnicalDebtColor.ts';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const ChartRadius = 40;
 const ChartStrokeWidth = 13;
@@ -119,7 +119,7 @@ export const ProjectHealth = () => {
     } = useProjectStatus(projectId);
     const { isOss } = useUiConfig();
     const theme = useTheme();
-    const healthToDebtEnabled = useFlag('healthToTechDebt');
+    const healthToDebtEnabled = useUiFlag('healthToTechDebt');
     const circumference = 2 * Math.PI * ChartRadius;
     const healthRating = health.current;
 
@@ -188,7 +188,7 @@ export const ProjectHealth = () => {
                         {healthToDebtEnabled ? (
                             <>
                                 Your current technical debt rating is{' '}
-                                {technicalDebt}%.
+                                {technicalDebt.current}%.
                             </>
                         ) : (
                             <>

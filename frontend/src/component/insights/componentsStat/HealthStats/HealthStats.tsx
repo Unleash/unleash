@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from 'react';
 import { Box, Divider, Link, styled } from '@mui/material';
 import { ReactComponent as InstanceHealthIcon } from 'assets/icons/instance-health.svg';
-import { useFlag } from '@unleash/proxy-client-react';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IHealthStatsProps {
     value?: string | number;
@@ -73,7 +73,7 @@ export const HealthStats: FC<IHealthStatsProps> = ({
     potentiallyStale,
     title,
 }) => {
-    const healthToDebtEnabled = useFlag('healthToTechDebt');
+    const healthToDebtEnabled = useUiFlag('healthToTechDebt');
 
     return (
         <StyledContainer>

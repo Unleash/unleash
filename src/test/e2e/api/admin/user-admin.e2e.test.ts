@@ -409,7 +409,7 @@ test('Anonymises name, username and email fields if anonymiseEventLog flag is se
     expect(body.users[0].username).toEqual(''); // Not set, so anonymise should return the empty string.
 });
 
-test('creates user with email md5 hash', async () => {
+test('creates user with email sha256 hash', async () => {
     await app.request
         .post('/api/admin/user-admin')
         .send({
@@ -424,7 +424,7 @@ test('creates user with email md5 hash', async () => {
         .where({ email: 'hasher@getunleash.ai' })
         .first(['email_hash']);
 
-    const expectedHash = createHash('md5')
+    const expectedHash = createHash('sha256')
         .update('hasher@getunleash.ai')
         .digest('hex');
 

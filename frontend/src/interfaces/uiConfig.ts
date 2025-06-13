@@ -90,6 +90,7 @@ export type UiFlags = {
     customMetrics?: boolean;
     lifecycleMetrics?: boolean;
     createFlagDialogCache?: boolean;
+    healthToTechDebt?: boolean;
 };
 
 export interface IVersionInfo {

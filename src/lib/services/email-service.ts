@@ -427,12 +427,13 @@ export class EmailService {
                 recipient,
             };
 
-            let gettingStartedTemplate = 'getting-started';
-            if (this.flagResolver.isEnabled('newGettingStartedEmail')) {
-                gettingStartedTemplate = 'getting-started-new';
-                if (passwordLink === unleashUrl) {
-                    delete context.passwordLink;
-                }
+            const gettingStartedTemplate = 'getting-started';
+
+            // If the password link is the base Unleash URL, we remove it from the context
+            // This can happen if the instance is using SSO instead of password-based authentication
+            // In that case, our template should show the alternative path: You don't set a password, you log in with SSO
+            if (passwordLink === unleashUrl) {
+                delete context.passwordLink;
             }
 
             const bodyHtml = await this.compileTemplate(

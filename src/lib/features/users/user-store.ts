@@ -104,7 +104,7 @@ export class UserStore implements IUserStore {
 
     async insert(user: ICreateUser): Promise<User> {
         const emailHash = user.email
-            ? this.db.raw('md5(?)', [user.email])
+            ? this.db.raw(`encode(sha256(?::bytea), 'hex')`, [user.email])
             : null;
         const rows = await this.db(TABLE)
             .insert({

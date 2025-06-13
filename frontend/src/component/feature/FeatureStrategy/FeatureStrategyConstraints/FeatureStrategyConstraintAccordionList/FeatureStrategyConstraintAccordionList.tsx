@@ -20,8 +20,6 @@ interface IConstraintAccordionListProps {
     showCreateButton?: boolean;
 }
 
-export const constraintAccordionListId = 'constraintAccordionListId';
-
 const StyledContainer = styled('div')({
     width: '100%',
     display: 'flex',
@@ -102,7 +100,7 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
     }
 
     return (
-        <StyledContainer id={constraintAccordionListId}>
+        <StyledContainer>
             <ConditionallyRender
                 condition={Boolean(showCreateButton && onAdd)}
                 show={

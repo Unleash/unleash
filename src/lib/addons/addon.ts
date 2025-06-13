@@ -60,9 +60,8 @@ export default abstract class Addon {
         options: any = {},
         retries: number = 1,
     ): Promise<Response> {
-        let res;
         try {
-            res = await ky(url, {
+            const res = await ky(url, {
                 retry: retries,
                 ...options,
             });
@@ -75,9 +74,8 @@ export default abstract class Addon {
                 } status code ${(e as any).code}`,
                 e,
             );
-            res = { status: e.code, ok: false };
+            return { status: e.code, ok: false };
         }
-        return res;
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

@@ -195,14 +195,6 @@ const theme = {
         },
 
         /**
-         * For Environment Accordion
-         */
-        envAccordion: {
-            disabled: '#2B2A3C',
-            expanded: '#1A1924',
-        },
-
-        /**
          * MUI grey colors
          */
         grey: {

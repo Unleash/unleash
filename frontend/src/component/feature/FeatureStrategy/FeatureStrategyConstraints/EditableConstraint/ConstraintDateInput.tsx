@@ -6,7 +6,7 @@ import { styled } from '@mui/material';
 import { getAllTimezones } from 'countries-and-timezones';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import type { ConstraintValidatorOutput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/constraintValidators';
+import type { ConstraintValidatorOutput } from './ConstraintValidatorOutput.ts';
 
 interface IDateSingleValueProps {
     setValue: (value: string) => void;

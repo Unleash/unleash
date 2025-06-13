@@ -74,7 +74,7 @@ export default abstract class Addon {
                 } status code ${(e as any).code}`,
                 e,
             );
-            return { status: e.code, ok: false };
+            return { status: e.code, ok: false } as Response;
         }
     }
 

@@ -12,7 +12,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { RecentlyUsedConstraints } from '../RecentlyUsedConstraints/RecentlyUsedConstraints.tsx';
 import { useWeakMap } from 'hooks/useWeakMap.ts';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext.ts';
-import { createEmptyConstraint } from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/createEmptyConstraint.ts';
+import { createEmptyConstraint } from 'utils/createEmptyConstraint.ts';
 
 interface IConstraintAccordionListProps {
     constraints: IConstraint[];

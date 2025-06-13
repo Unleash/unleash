@@ -3,7 +3,7 @@ import { styled } from '@mui/material';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { ValueChip } from './ValueList.tsx';
 import { AddValuesPopover, type OnAddActions } from './AddValuesPopover.tsx';
-import type { ConstraintValidatorOutput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/constraintValidators';
+import type { ConstraintValidatorOutput } from './ConstraintValidatorOutput.ts';
 
 const StyledChip = styled(ValueChip, {
     shouldForwardProp: (prop) => prop !== 'hasValue',

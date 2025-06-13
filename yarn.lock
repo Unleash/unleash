@@ -5026,7 +5026,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ky@npm:^1.0.0":
+"ky@npm:^1.8.1":
   version: 1.8.1
   resolution: "ky@npm:1.8.1"
   checksum: 10c0/48ab4b348dd7d8c6aa0f82df76fa32e99ade3c5513d50f58b0db5b945146deb6d8c18b2a61a0655b08385efa04b3bf1ed4098fff0329e3bd6c670c8a88668d9f
@@ -8279,7 +8279,7 @@ __metadata:
     json-schema-to-ts: "npm:2.12.0"
     json2csv: "npm:^5.0.7"
     knex: "npm:^3.1.0"
-    ky: "npm:^1.0.0"
+    ky: "npm:^1.8.1"
     lint-staged: "npm:15.4.3"
     lodash.get: "npm:^4.4.2"
     lodash.groupby: "npm:^4.6.0"

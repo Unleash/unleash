@@ -50,6 +50,8 @@ export interface IFeatureUsageInfo {
     productionChanges60: number;
     productionChanges90: number;
     postgresVersion: string;
+    licenseType: string;
+    hostedBy: string;
 }
 
 export default class VersionService {

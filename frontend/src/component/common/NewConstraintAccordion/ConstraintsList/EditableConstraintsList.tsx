@@ -7,7 +7,7 @@ import produce from 'immer';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
 import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/EditableConstraint';
-import { createEmptyConstraint } from '../NewConstraintAccordionList/createEmptyConstraint.ts';
+import { createEmptyConstraint } from '../../../../utils/createEmptyConstraint.ts';
 import { constraintId } from 'constants/constraintId.ts';
 export interface IEditableConstraintsListRef {
     addConstraint?: (contextName: string) => void;

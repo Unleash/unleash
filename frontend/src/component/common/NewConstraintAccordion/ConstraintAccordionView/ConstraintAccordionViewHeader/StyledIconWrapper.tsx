@@ -2,7 +2,7 @@ import { forwardRef, type ReactNode } from 'react';
 import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-export const StyledIconWrapperBase = styled('div')<{
+const StyledIconWrapperBase = styled('div')<{
     prefix?: boolean;
 }>(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation2,

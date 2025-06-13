@@ -9,7 +9,6 @@ import type { ActionsFilterState } from '../../useProjectActionsForm.ts';
 import Delete from '@mui/icons-material/Delete';
 import Input from 'component/common/Input/Input';
 import { ProjectActionsFormItem } from '../ProjectActionsFormItem.tsx';
-import { ConstraintOperatorSelect } from 'component/common/NewConstraintAccordion/ConstraintOperatorSelect';
 import {
     inOperators,
     numOperators,
@@ -24,6 +23,7 @@ import { CaseSensitiveButton } from './StyledToggleButton/CaseSensitiveButton/Ca
 import { InvertedOperatorButton } from './StyledToggleButton/InvertedOperatorButton/InvertedOperatorButton.tsx';
 import { constraintValidator } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/useEditableConstraint/constraint-validator.ts';
 import { ResolveInput } from './ProjectActionsFilterItemInputs/ResolveInput.tsx';
+import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
 
 const StyledDeleteButton = styled(IconButton)({
     marginRight: '-6px',

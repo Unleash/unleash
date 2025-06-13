@@ -29,11 +29,7 @@ export const ConstraintExecutionWithoutResults: FC<
                         condition={index > 0}
                         show={<ConstraintSeparator />}
                     />
-                    <ConstraintAccordionView
-                        constraint={constraint}
-                        compact
-                        disabled
-                    />
+                    <ConstraintAccordionView constraint={constraint} disabled />
                 </Fragment>
             ))}
         </ConstraintExecutionWrapper>

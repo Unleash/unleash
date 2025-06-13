@@ -18,6 +18,7 @@ const useStyles = makeStyles()((theme) => ({
     },
 }));
 
+// todo: move to project actions filter
 export const SingleValue = ({
     setValue,
     value,

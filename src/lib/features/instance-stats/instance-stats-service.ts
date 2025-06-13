@@ -433,6 +433,8 @@ export class InstanceStatsService {
             userActive,
             productionChanges,
             postgresVersion,
+            licenseType,
+            hostedBy,
         ] = await Promise.all([
             this.getToggleCount(),
             this.getRegisteredUsers(),
@@ -454,6 +456,8 @@ export class InstanceStatsService {
             this.getActiveUsers(),
             this.getProductionChanges(),
             this.postgresVersion(),
+            this.getLicenseType(),
+            this.getHostedBy(),
         ]);
         const versionInfo = await this.versionService.getVersionInfo();
 
@@ -487,8 +491,18 @@ export class InstanceStatsService {
             productionChanges60: productionChanges.last60,
             productionChanges90: productionChanges.last90,
             postgresVersion,
+            licenseType,
+            hostedBy,
         };
         return featureInfo;
+    }
+
+    getHostedBy(): string {
+        return 'self-hosted';
+    }
+
+    getLicenseType(): string {
+        return 'oss';
     }
 
     featuresExported(): Promise<number> {

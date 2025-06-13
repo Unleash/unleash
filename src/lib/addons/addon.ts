@@ -71,7 +71,7 @@ export default abstract class Addon {
             this.logger.warn(
                 `Error querying ${url} with method ${
                     method || 'GET'
-                } status code ${(e as any).code}`,
+                } status code ${e.code}`,
                 e,
             );
             return { status: e.code, ok: false } as Response;

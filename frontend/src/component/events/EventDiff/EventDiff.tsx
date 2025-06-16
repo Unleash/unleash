@@ -1,6 +1,9 @@
 import { diff } from 'deep-diff';
-import { useTheme } from '@mui/system';
-import type { JSX, CSSProperties } from 'react';
+import { styled, useTheme } from '@mui/system';
+import { type JSX, type CSSProperties, useState, type FC } from 'react';
+import { JsonDiffComponent, type JsonValue } from 'json-diff-react';
+import { Button } from '@mui/material';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const DIFF_PREFIXES: Record<string, string> = {
     A: ' ',
@@ -17,10 +20,65 @@ interface IEventDiffResult {
 
 interface IEventDiffProps {
     entry: { data?: unknown; preData?: unknown };
+    /**
+     * @deprecated remove with flag improvedJsonDiff
+     */
     sort?: (a: IEventDiffResult, b: IEventDiffResult) => number;
 }
 
-const EventDiff = ({
+const DiffStyles = styled('div')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontFamily: 'monospace',
+    whiteSpace: 'pre',
+    fontSize: theme.typography.body2.fontSize,
+
+    '.deletion, .addition': {
+        position: 'relative',
+        '::before': {
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            marginLeft: '-10px',
+        },
+    },
+
+    '.addition': {
+        color: theme.palette.eventLog.diffAdd,
+        '::before': {
+            content: '"+"',
+        },
+    },
+    '.deletion': {
+        color: theme.palette.eventLog.diffSub,
+        '::before': {
+            content: '"-"',
+        },
+    },
+}));
+
+const NewEventDiff: FC<IEventDiffProps> = ({ entry }) => {
+    const [full, setFull] = useState(false);
+    return (
+        <>
+            <Button onClick={() => setFull(!full)}>
+                {full ? 'Show only changed properties' : 'Show all properties'}
+            </Button>
+            <DiffStyles>
+                <JsonDiffComponent
+                    jsonA={(entry.preData ?? {}) as JsonValue}
+                    jsonB={(entry.data ?? {}) as JsonValue}
+                    jsonDiffOptions={{
+                        full: full,
+                        maxElisions: 2,
+                        excludeKeys: ['id', 'createdAt', 'updatedAt'],
+                    }}
+                />
+            </DiffStyles>
+        </>
+    );
+};
+
+const OldEventDiff: FC<IEventDiffProps> = ({
     entry,
     sort = (a, b) => a.key.localeCompare(b.key),
 }: IEventDiffProps) => {
@@ -113,11 +171,20 @@ const EventDiff = ({
     }
 
     return (
-        // biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation>
-        <pre style={{ overflowX: 'auto', overflowY: 'hidden' }} tabIndex={0}>
-            <code>{changes.length === 0 ? '(no changes)' : changes}</code>
-        </pre>
+        <>
+            <pre style={{ overflowX: 'auto', overflowY: 'hidden' }}>
+                <code>{changes.length === 0 ? '(no changes)' : changes}</code>
+            </pre>
+        </>
     );
+};
+
+const EventDiff: FC<IEventDiffProps> = (props) => {
+    const useNewJsonDiff = useUiFlag('improvedJsonDiff');
+    if (useNewJsonDiff) {
+        return <NewEventDiff {...props} />;
+    }
+    return <OldEventDiff {...props} />;
 };
 
 export default EventDiff;

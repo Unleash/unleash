@@ -1,4 +1,4 @@
-import { translateAndSerializeMetrics } from './translate-metrics.js';
+import { MetricsTranslator } from './translate-metrics.js';
 import { Registry } from 'prom-client';
 
 describe('translate-metrics', () => {
@@ -29,7 +29,8 @@ describe('translate-metrics', () => {
         ];
 
         const registry = new Registry();
-        const result = await translateAndSerializeMetrics(metrics, registry);
+        const translator = new MetricsTranslator(registry);
+        const result = await translator.translateAndSerializeMetrics(metrics);
         expect(typeof result).toBe('string');
         expect(result).toContain('# HELP labeled_counter with labels');
         expect(result).toContain('# TYPE labeled_counter counter');
@@ -60,7 +61,8 @@ describe('translate-metrics', () => {
         ];
 
         const registry = new Registry();
-        const result = await translateAndSerializeMetrics(metrics, registry);
+        const translator = new MetricsTranslator(registry);
+        const result = await translator.translateAndSerializeMetrics(metrics);
         expect(typeof result).toBe('string');
         expect(result).toContain('# HELP test_counter test counter');
         expect(result).toContain('# TYPE test_counter counter');
@@ -71,6 +73,7 @@ describe('translate-metrics', () => {
 
     it('should handle re-labeling of metrics', async () => {
         const registry = new Registry();
+        const translator = new MetricsTranslator(registry);
 
         const metrics1 = [
             {
@@ -97,7 +100,7 @@ describe('translate-metrics', () => {
             },
         ];
 
-        const result1 = await translateAndSerializeMetrics(metrics1, registry);
+        const result1 = await translator.translateAndSerializeMetrics(metrics1);
         expect(result1).toContain('counter_with_labels{foo="bar"} 5');
         expect(result1).toContain('gauge_with_labels{env="prod"} 10');
 
@@ -126,7 +129,7 @@ describe('translate-metrics', () => {
             },
         ];
 
-        const result2 = await translateAndSerializeMetrics(metrics2, registry);
+        const result2 = await translator.translateAndSerializeMetrics(metrics2);
 
         expect(result2).toContain(
             'counter_with_labels{foo="bar",baz="qux"} 15',

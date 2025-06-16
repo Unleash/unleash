@@ -1,8 +1,7 @@
 import { diff } from 'deep-diff';
-import { styled, useTheme } from '@mui/system';
 import { type JSX, type CSSProperties, useState, type FC, useId } from 'react';
 import { JsonDiffComponent, type JsonValue } from 'json-diff-react';
-import { Button } from '@mui/material';
+import { Button, styled, useTheme } from '@mui/material';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 const DIFF_PREFIXES: Record<string, string> = {

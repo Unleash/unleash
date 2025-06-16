@@ -1277,6 +1277,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ewoudenberg/difflib@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@ewoudenberg/difflib@npm:0.1.0"
+  dependencies:
+    heap: "npm:>= 0.2.0"
+  checksum: 10c0/3060807c91f39c5c1e5421fe51573bb2bffcab48cb32e9dcc69ce0d43e658dbf5959421382541012628ca6b842d252fc157a79f70cea8088a864572fec2bd094
+  languageName: node
+  linkType: hard
+
 "@exodus/schemasafe@npm:^1.0.0-rc.2":
   version: 1.3.0
   resolution: "@exodus/schemasafe@npm:1.3.0"
@@ -6079,6 +6088,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"heap@npm:>= 0.2.0":
+  version: 0.2.7
+  resolution: "heap@npm:0.2.7"
+  checksum: 10c0/341c5d51ae13dc8346c371a8a69c57c972fcb9a3233090d3dd5ba29d483d6b5b4e75492443cbfeacd46608bb30e6680f646ffb7a6205900221735587d07a79b6
+  languageName: node
+  linkType: hard
+
 "hoist-non-react-statics@npm:^3.3.1":
   version: 3.3.2
   resolution: "hoist-non-react-statics@npm:3.3.2"
@@ -6803,6 +6819,17 @@ __metadata:
     deeks: "npm:3.1.0"
     doc-path: "npm:4.1.1"
   checksum: 10c0/109b7636ba3ef9b8c53580f89280568e1ecd106b6328f44636869a62eac1f9f2db7a52de0eee04832fa20d4bd9c592ad3fe1a4cf06af0eee3ee612b85f29ed75
+  languageName: node
+  linkType: hard
+
+"json-diff-react@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "json-diff-react@npm:1.0.1"
+  dependencies:
+    "@ewoudenberg/difflib": "npm:^0.1.0"
+    react: "npm:^18.2.0"
+    react-dom: "npm:^18.2.0"
+  checksum: 10c0/085c395f61a8fb148d60c91bb279dbc071e76a89f96634da41df03b72ae365f916f3e5a12e77d6f4f64a680572849ae61d5a5853e1b83f9d7f31e7e8aa8e6de0
   languageName: node
   linkType: hard
 
@@ -8567,7 +8594,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:18.3.1":
+"react-dom@npm:18.3.1, react-dom@npm:^18.2.0":
   version: 18.3.1
   resolution: "react-dom@npm:18.3.1"
   dependencies:
@@ -8826,7 +8853,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:18.3.1":
+"react@npm:18.3.1, react@npm:^18.2.0":
   version: 18.3.1
   resolution: "react@npm:18.3.1"
   dependencies:
@@ -10369,6 +10396,7 @@ __metadata:
     immer: "npm:9.0.21"
     jsdom: "npm:25.0.1"
     json-2-csv: "npm:^5.5.5"
+    json-diff-react: "npm:^1.0.1"
     lodash.clonedeep: "npm:4.5.0"
     lodash.isequal: "npm:^4.5.0"
     lodash.mapvalues: "npm:^4.6.0"

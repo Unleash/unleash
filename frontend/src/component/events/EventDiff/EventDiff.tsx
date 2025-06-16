@@ -1,6 +1,6 @@
 import { diff } from 'deep-diff';
 import { styled, useTheme } from '@mui/system';
-import { type JSX, type CSSProperties, useState, type FC } from 'react';
+import { type JSX, type CSSProperties, useState, type FC, useId } from 'react';
 import { JsonDiffComponent, type JsonValue } from 'json-diff-react';
 import { Button } from '@mui/material';
 import { useUiFlag } from 'hooks/useUiFlag';
@@ -58,12 +58,18 @@ const DiffStyles = styled('div')(({ theme }) => ({
 
 const NewEventDiff: FC<IEventDiffProps> = ({ entry }) => {
     const [full, setFull] = useState(false);
+    const diffId = useId();
+
     return (
         <>
-            <Button onClick={() => setFull(!full)}>
+            <Button
+                onClick={() => setFull(!full)}
+                aria-controls={diffId}
+                aria-expanded={full}
+            >
                 {full ? 'Show only changed properties' : 'Show all properties'}
             </Button>
-            <DiffStyles>
+            <DiffStyles id={diffId}>
                 <JsonDiffComponent
                     jsonA={(entry.preData ?? {}) as JsonValue}
                     jsonB={(entry.data ?? {}) as JsonValue}

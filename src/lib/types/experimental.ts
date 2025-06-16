@@ -60,7 +60,8 @@ export type IFlagKey =
     | 'lastSeenBulkQuery'
     | 'lifecycleMetrics'
     | 'customMetrics'
-    | 'createFlagDialogCache';
+    | 'createFlagDialogCache'
+    | 'changeRequestApproverEmails';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -279,6 +280,10 @@ const flags: IFlags = {
     ),
     createFlagDialogCache: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CREATE_FLAG_DIALOG_CACHE,
+        false,
+    ),
+    changeRequestApproverEmails: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_APPROVER_EMAILS,
         false,
     ),
 };

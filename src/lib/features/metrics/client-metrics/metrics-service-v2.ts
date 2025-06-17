@@ -75,7 +75,7 @@ export default class ClientMetricsServiceV2 {
         try {
             await this.clientMetricsStoreV2.clearMetrics(hoursAgo);
         } catch (e) {
-            this.logger.error(
+            this.logger.warn(
                 `Failed to clear client metrics older than ${hoursAgo} hours: ${e.message}`,
             );
         }
@@ -274,7 +274,7 @@ export default class ClientMetricsServiceV2 {
                 await this.clientMetricsStoreV2.batchInsertMetrics(copy);
                 this.config.eventBus.emit(CLIENT_METRICS_ADDED, copy);
             } catch (error) {
-                this.logger.error(
+                this.logger.warn(
                     `Failed to bulk add client metrics: ${error.message}`,
                 );
             }

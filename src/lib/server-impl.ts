@@ -393,6 +393,7 @@ async function create(
 export {
     start,
     create,
+    scheduleServices,
     createDb,
     resetDb,
     getDbConfig,

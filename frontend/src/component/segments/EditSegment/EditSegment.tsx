@@ -24,15 +24,31 @@ import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentL
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
+import type { ISegment } from 'interfaces/segment.ts';
+import { constraintId } from 'constants/constraintId.ts';
+import { v4 as uuidv4 } from 'uuid';
 
 interface IEditSegmentProps {
     modal?: boolean;
 }
 
+const addIdSymbolToConstraints = (segment?: ISegment): ISegment | undefined => {
+    if (!segment) return;
+
+    const constraints = segment.constraints.map((constraint) => {
+        return { ...constraint, [constraintId]: uuidv4() };
+    });
+
+    return { ...segment, constraints };
+};
+
 export const EditSegment = ({ modal }: IEditSegmentProps) => {
     const projectId = useOptionalPathParam('projectId');
     const segmentId = useRequiredPathParam('segmentId');
-    const { segment } = useSegment(Number(segmentId));
+    const { segment: segmentWithoutConstraintIds } = useSegment(
+        Number(segmentId),
+    );
+    const segment = addIdSymbolToConstraints(segmentWithoutConstraintIds);
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();

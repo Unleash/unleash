@@ -229,7 +229,7 @@ export async function createApp(
     await initialServiceSetup(config, services);
 
     if (!config.disableScheduler) {
-        await scheduleServices(services, config);
+        scheduleServices(services, config);
     }
 
     const metricsMonitor = fm.createMetricsMonitor();

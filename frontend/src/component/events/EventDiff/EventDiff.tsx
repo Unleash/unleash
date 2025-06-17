@@ -37,7 +37,6 @@ const DiffStyles = styled('div')(({ theme }) => ({
             position: 'absolute',
             left: 0,
             top: 0,
-            marginLeft: '-10px',
         },
     },
 

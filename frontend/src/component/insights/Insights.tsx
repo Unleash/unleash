@@ -7,6 +7,7 @@ import { StyledContainer } from './InsightsCharts.styles.ts';
 import { LifecycleInsights } from './sections/LifecycleInsights.tsx';
 import { PerformanceInsights } from './sections/PerformanceInsights.tsx';
 import { UserInsights } from './sections/UserInsights.tsx';
+import { TestComponent } from './TestComponent.tsx';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(2),
@@ -17,6 +18,7 @@ const NewInsights: FC = () => {
         <StyledWrapper>
             <InsightsHeader />
             <StyledContainer>
+                <TestComponent />
                 <LifecycleInsights />
                 <PerformanceInsights />
                 <UserInsights />

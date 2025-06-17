@@ -1438,15 +1438,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:4.17.21":
-  version: 4.17.21
-  resolution: "@types/express@npm:4.17.21"
+"@types/express@npm:4.17.23":
+  version: 4.17.23
+  resolution: "@types/express@npm:4.17.23"
   dependencies:
     "@types/body-parser": "npm:*"
     "@types/express-serve-static-core": "npm:^4.17.33"
     "@types/qs": "npm:*"
     "@types/serve-static": "npm:*"
-  checksum: 10c0/12e562c4571da50c7d239e117e688dc434db1bac8be55613294762f84fd77fbd0658ccd553c7d3ab02408f385bc93980992369dd30e2ecd2c68c358e6af8fabf
+  checksum: 10c0/60490cd4f73085007247e7d4fafad0a7abdafa34fa3caba2757512564ca5e094ece7459f0f324030a63d513f967bb86579a8682af76ae2fd718e889b0a2a4fe8
   languageName: node
   linkType: hard
 
@@ -7801,7 +7801,7 @@ __metadata:
     "@swc/core": "npm:1.11.31"
     "@types/bcryptjs": "npm:2.4.6"
     "@types/cors": "npm:2.8.19"
-    "@types/express": "npm:4.17.21"
+    "@types/express": "npm:4.17.23"
     "@types/express-session": "npm:1.18.1"
     "@types/faker": "npm:5.5.9"
     "@types/hash-sum": "npm:^1.0.0"

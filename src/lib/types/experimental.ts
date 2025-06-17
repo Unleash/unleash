@@ -61,6 +61,7 @@ export type IFlagKey =
     | 'lifecycleMetrics'
     | 'customMetrics'
     | 'createFlagDialogCache'
+    | 'improvedJsonDiff'
     | 'changeRequestApproverEmails';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -284,6 +285,10 @@ const flags: IFlags = {
     ),
     changeRequestApproverEmails: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_APPROVER_EMAILS,
+        false,
+    ),
+    improvedJsonDiff: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_IMPROVED_JSON_DIFF,
         false,
     ),
 };

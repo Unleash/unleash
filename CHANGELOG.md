@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.0.2] - 2025-06-17
+
+### Bug Fixes
+
+- Correct upgrade link ([#10138](https://github.com/Unleash/unleash/issues/10138))
+
+
+### Features
+
+- Report hostedBy and licenseType ([#10141](https://github.com/Unleash/unleash/issues/10141))
+
+- Translate impact metrics to prom format ([#10147](https://github.com/Unleash/unleash/issues/10147))
+
+- Expose impact metrics ([#10151](https://github.com/Unleash/unleash/issues/10151))
+
+
+### Miscellaneous Tasks
+
+- Clean up flag overview redesign ([#10140](https://github.com/Unleash/unleash/issues/10140))
+
+- Remove flag enterprise-payg ([#10139](https://github.com/Unleash/unleash/issues/10139))
+
+- Added flag for CR approver emails ([#10144](https://github.com/Unleash/unleash/issues/10144))
+
+- Add PSF to approved licenses list ([#10148](https://github.com/Unleash/unleash/issues/10148))
+
+- Now expose IFeatureUsageInfo to override telemetry checking ([#10149](https://github.com/Unleash/unleash/issues/10149))
+
+- Improve json diff view ([#10146](https://github.com/Unleash/unleash/issues/10146))
+
+- Use logger instead of console.error ([#10150](https://github.com/Unleash/unleash/issues/10150))
+
+
+### Refactor
+
+- Migrate from make-fetch-happen to ky and use ky natively ([#10134](https://github.com/Unleash/unleash/issues/10134))
+
+
 ## [7.0.1] - 2025-06-13
 
 ### Bug Fixes

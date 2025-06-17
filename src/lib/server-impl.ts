@@ -182,6 +182,7 @@ import { getDbConfig } from '../test/e2e/helpers/database-config.js';
 import { testDbPrefix } from '../test/e2e/helpers/database-init.js';
 import type { RequestHandler } from 'express';
 import { UPDATE_REVISION } from './features/feature-toggle/configuration-revision-service.js';
+import type { IFeatureUsageInfo } from './services/version-service.js';
 
 export async function initialServiceSetup(
     { authentication }: Pick<IUnleashConfig, 'authentication'>,
@@ -538,6 +539,7 @@ export type {
     ExportImportService,
     QueryOverride,
     IUserPermission,
+    IFeatureUsageInfo,
 };
 export * from './openapi/index.js';
 export * from './types/index.js';

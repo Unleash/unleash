@@ -44,7 +44,7 @@ class BackstageController extends Controller {
             });
 
             if (this.flagResolver.isEnabled('impactMetrics')) {
-                this.get('/prometheus/impact', async (req, res) => {
+                this.get('/impact/metrics', async (req, res) => {
                     res.set('Content-Type', impactRegister.contentType);
 
                     const metricsOutput = await impactRegister.metrics();

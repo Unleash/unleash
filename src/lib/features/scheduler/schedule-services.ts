@@ -152,13 +152,13 @@ export const scheduleServices = (
     );
 
     schedulerService.schedule(
-        () => clientMetricsServiceV2.bulkAdd(),
+        () => clientMetricsServiceV2.bulkAdd().catch(console.error),
         secondsToMilliseconds(5),
         'bulkAddMetrics',
     );
 
     schedulerService.schedule(
-        () => clientMetricsServiceV2.clearMetrics(48),
+        () => clientMetricsServiceV2.clearMetrics(48).catch(console.error),
         hoursToMilliseconds(12),
         'clearMetrics',
     );

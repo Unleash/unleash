@@ -62,18 +62,23 @@ const DiffStyles = styled('div')(({ theme }) => ({
 
 const NewEventDiff: FC<IEventDiffProps> = ({ entry, excludeKeys }) => {
     const changeType = entry.preData && entry.data ? 'edit' : undefined;
+    const showExpandButton = changeType === 'edit';
     const [full, setFull] = useState(false);
     const diffId = useId();
 
     return (
         <>
-            <Button
-                onClick={() => setFull(!full)}
-                aria-controls={diffId}
-                aria-expanded={full}
-            >
-                {full ? 'Show only changed properties' : 'Show all properties'}
-            </Button>
+            {showExpandButton ? (
+                <Button
+                    onClick={() => setFull(!full)}
+                    aria-controls={diffId}
+                    aria-expanded={full}
+                >
+                    {full
+                        ? 'Show only changed properties'
+                        : 'Show all properties'}
+                </Button>
+            ) : null}
             <DiffStyles data-change-type={changeType} id={diffId}>
                 <JsonDiffComponent
                     jsonA={(entry.preData ?? {}) as JsonValue}
@@ -191,7 +196,13 @@ const OldEventDiff: FC<IEventDiffProps> = ({
 const EventDiff: FC<IEventDiffProps> = (props) => {
     const useNewJsonDiff = useUiFlag('improvedJsonDiff');
     if (useNewJsonDiff) {
-        return <NewEventDiff {...props} />;
+        return (
+            <>
+                <NewEventDiff {...props} />
+                <hr />
+                <OldEventDiff {...props} />
+            </>
+        );
     }
     return <OldEventDiff {...props} />;
 };

@@ -70,7 +70,7 @@ export const EditableConstraintsList = forwardRef<
             <ConstraintsList>
                 {constraints.map((constraint, index) => (
                     <EditableConstraint
-                        key={constraint[constraintId]}
+                        key={constraint[constraintId] || index}
                         constraint={constraint}
                         onDelete={() => onDelete(index)}
                         onUpdate={onAutoSave(constraint[constraintId])}

@@ -72,13 +72,7 @@ export default class ClientMetricsServiceV2 {
     }
 
     async clearMetrics(hoursAgo: number) {
-        try {
-            await this.clientMetricsStoreV2.clearMetrics(hoursAgo);
-        } catch (e) {
-            this.logger.warn(
-                `Failed to clear client metrics older than ${hoursAgo} hours: ${e.message}`,
-            );
-        }
+        return this.clientMetricsStoreV2.clearMetrics(hoursAgo);
     }
 
     async clearDailyMetrics(daysAgo: number) {
@@ -266,18 +260,12 @@ export default class ClientMetricsServiceV2 {
 
     async bulkAdd(): Promise<void> {
         if (this.unsavedMetrics.length > 0) {
-            try {
-                // Make a copy of `unsavedMetrics` in case new metrics
-                // arrive while awaiting `batchInsertMetrics`.
-                const copy = [...this.unsavedMetrics];
-                this.unsavedMetrics = [];
-                await this.clientMetricsStoreV2.batchInsertMetrics(copy);
-                this.config.eventBus.emit(CLIENT_METRICS_ADDED, copy);
-            } catch (error) {
-                this.logger.warn(
-                    `Failed to bulk add client metrics: ${error.message}`,
-                );
-            }
+            // Make a copy of `unsavedMetrics` in case new metrics
+            // arrive while awaiting `batchInsertMetrics`.
+            const copy = [...this.unsavedMetrics];
+            this.unsavedMetrics = [];
+            await this.clientMetricsStoreV2.batchInsertMetrics(copy);
+            this.config.eventBus.emit(CLIENT_METRICS_ADDED, copy);
         }
     }
 

@@ -60,6 +60,7 @@ export type IFlagKey =
     | 'lastSeenBulkQuery'
     | 'lifecycleMetrics'
     | 'customMetrics'
+    | 'impactMetrics'
     | 'createFlagDialogCache'
     | 'improvedJsonDiff'
     | 'changeRequestApproverEmails';

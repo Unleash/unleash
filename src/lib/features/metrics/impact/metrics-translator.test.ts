@@ -1,4 +1,4 @@
-import { MetricsTranslator } from './translate-metrics.js';
+import { MetricsTranslator } from './metrics-translator.js';
 import { Registry } from 'prom-client';
 
 describe('translate-metrics', () => {

@@ -176,11 +176,9 @@ const OldEventDiff: FC<IEventDiffProps> = ({
     }
 
     return (
-        <>
-            <pre style={{ overflowX: 'auto', overflowY: 'hidden' }}>
-                <code>{changes.length === 0 ? '(no changes)' : changes}</code>
-            </pre>
-        </>
+        <pre style={{ overflowX: 'auto', overflowY: 'hidden' }}>
+            <code>{changes.length === 0 ? '(no changes)' : changes}</code>
+        </pre>
     );
 };
 

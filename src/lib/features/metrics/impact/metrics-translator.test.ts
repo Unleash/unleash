@@ -1,7 +1,7 @@
 import { MetricsTranslator } from './metrics-translator.js';
 import { Registry } from 'prom-client';
 
-describe('translate-metrics', () => {
+describe('MetricsTranslator', () => {
     it('should handle metrics with labels', async () => {
         const metrics = [
             {

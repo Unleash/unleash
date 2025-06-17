@@ -47,15 +47,21 @@ const DiffStyles = styled('div')(({ theme }) => ({
             content: '"+"',
         },
     },
+
     '.deletion': {
         color: theme.palette.eventLog.diffSub,
         '::before': {
             content: '"-"',
         },
     },
+
+    '&:not([data-change-type="edit"]) :where(.addition, .deletion)::before': {
+        content: 'none',
+    },
 }));
 
-const NewEventDiff: FC<IEventDiffProps> = ({ entry }) => {
+const NewEventDiff: FC<IEventDiffProps> = ({ entry, excludeKeys }) => {
+    const changeType = entry.preData && entry.data ? 'edit' : undefined;
     const [full, setFull] = useState(false);
     const diffId = useId();
 
@@ -68,7 +74,7 @@ const NewEventDiff: FC<IEventDiffProps> = ({ entry }) => {
             >
                 {full ? 'Show only changed properties' : 'Show all properties'}
             </Button>
-            <DiffStyles id={diffId}>
+            <DiffStyles data-change-type={changeType} id={diffId}>
                 <JsonDiffComponent
                     jsonA={(entry.preData ?? {}) as JsonValue}
                     jsonB={(entry.data ?? {}) as JsonValue}

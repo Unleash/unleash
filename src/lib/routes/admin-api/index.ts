@@ -35,6 +35,7 @@ import { InactiveUsersController } from '../../users/inactive/inactive-users-con
 import { UiObservabilityController } from '../../features/ui-observability-controller/ui-observability-controller.js';
 import { SearchApi } from './search/index.js';
 import PersonalDashboardController from '../../features/personal-dashboard/personal-dashboard-controller.js';
+import ImpactMetricsController from '../../features/impact-metrics/impact-metrics-controller.js';
 import FeatureLifecycleCountController from '../../features/feature-lifecycle/feature-lifecycle-count-controller.js';
 import type { IUnleashServices } from '../../services/index.js';
 import CustomMetricsController from '../../features/metrics/custom/custom-metrics-controller.js';
@@ -136,6 +137,10 @@ export class AdminApi extends Controller {
         this.app.use(
             '/personal-dashboard',
             new PersonalDashboardController(config, services).router,
+        );
+        this.app.use(
+            '/impact-metrics',
+            new ImpactMetricsController(config, services).router,
         );
         this.app.use(
             '/environments',

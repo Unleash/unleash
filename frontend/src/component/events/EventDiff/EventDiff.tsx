@@ -23,6 +23,7 @@ interface IEventDiffProps {
      * @deprecated remove with flag improvedJsonDiff
      */
     sort?: (a: IEventDiffResult, b: IEventDiffResult) => number;
+    excludeKeys?: string[];
 }
 
 const DiffStyles = styled('div')(({ theme }) => ({
@@ -74,7 +75,7 @@ const NewEventDiff: FC<IEventDiffProps> = ({ entry }) => {
                     jsonDiffOptions={{
                         full: full,
                         maxElisions: 2,
-                        excludeKeys: ['id', 'createdAt', 'updatedAt'],
+                        excludeKeys: excludeKeys,
                     }}
                 />
             </DiffStyles>

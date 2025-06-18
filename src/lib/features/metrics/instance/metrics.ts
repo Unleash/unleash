@@ -226,20 +226,7 @@ export default class ClientMetricsController extends Controller {
                         app.sdkType === 'frontend' &&
                         typeof app.sdkVersion === 'string'
                     ) {
-                        if (
-                            this.flagResolver.isEnabled(
-                                'registerFrontendClient',
-                            )
-                        ) {
-                            this.clientInstanceService.registerFrontendClient({
-                                appName: app.appName,
-                                instanceId: app.instanceId,
-                                environment: app.environment,
-                                sdkType: app.sdkType,
-                                sdkVersion: app.sdkVersion,
-                                projects: app.projects,
-                            });
-                        }
+                        // Frontend client registration is disabled
                     } else {
                         promises.push(
                             this.clientInstanceService.registerBackendClient(

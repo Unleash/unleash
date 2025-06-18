@@ -142,7 +142,7 @@
     "@types/bcryptjs": "2.4.6",
     "@types/cors": "2.8.19",
     "@types/express": "4.17.23",
-    "@types/express-session": "1.18.1",
+    "@types/express-session": "1.18.2",
     "@types/faker": "5.5.9",
     "@types/hash-sum": "^1.0.0",
     "@types/js-yaml": "4.0.9",

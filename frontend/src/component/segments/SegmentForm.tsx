@@ -14,11 +14,13 @@ interface ISegmentProps {
     name: string;
     description: string;
     project?: string;
-    constraints: IConstraint[];
+    constraints: IConstraintWithId[];
     setName: React.Dispatch<React.SetStateAction<string>>;
     setDescription: React.Dispatch<React.SetStateAction<string>>;
     setProject: React.Dispatch<React.SetStateAction<string | undefined>>;
-    setConstraints: React.Dispatch<React.SetStateAction<IConstraintWithId[]>>;
+    setConstraints: React.Dispatch<
+        React.SetStateAction<(IConstraint | IConstraintWithId)[]>
+    >;
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
     clearErrors: () => void;

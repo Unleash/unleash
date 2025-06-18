@@ -773,6 +773,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             defaultDaysToBeConsideredInactive,
         );
 
+    const prometheusImpactMetricsApi =
+        options.prometheusImpactMetricsApi ||
+        process.env.PROMETHEUS_IMPACT_METRICS_API;
+
     return {
         db,
         session,
@@ -804,6 +808,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         clientFeatureCaching,
         accessControlMaxAge,
         prometheusApi,
+        prometheusImpactMetricsApi,
         publicFolder: options.publicFolder,
         disableScheduler: options.disableScheduler,
         isEnterprise: isEnterprise,

@@ -148,7 +148,7 @@
     "@types/js-yaml": "4.0.9",
     "@types/lodash.groupby": "4.6.9",
     "@types/lodash.isequal": "^4.5.8",
-    "@types/memoizee": "0.4.11",
+    "@types/memoizee": "0.4.12",
     "@types/mime": "4.0.0",
     "@types/murmurhash3js": "^3.0.7",
     "@types/mustache": "^4.2.5",

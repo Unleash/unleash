@@ -1517,10 +1517,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/memoizee@npm:0.4.11":
-  version: 0.4.11
-  resolution: "@types/memoizee@npm:0.4.11"
-  checksum: 10c0/4a8114e26971186b29b81add600e34ad45578f8847b5cf04209509f9f21c334171205405f19658f6176419fdad09cf18c084c21802257d71517f91761b97a10c
+"@types/memoizee@npm:0.4.12":
+  version: 0.4.12
+  resolution: "@types/memoizee@npm:0.4.12"
+  checksum: 10c0/573ca0c7e3db4306679bd0fbee92063e03406cd14d2bc4409d9a61ba731f1bb3925d3183a28ed6a8f480b3326ca03bdef6766c1649aa29592200f97fd0d38955
   languageName: node
   linkType: hard
 
@@ -7808,7 +7808,7 @@ __metadata:
     "@types/js-yaml": "npm:4.0.9"
     "@types/lodash.groupby": "npm:4.6.9"
     "@types/lodash.isequal": "npm:^4.5.8"
-    "@types/memoizee": "npm:0.4.11"
+    "@types/memoizee": "npm:0.4.12"
     "@types/mime": "npm:4.0.0"
     "@types/murmurhash3js": "npm:^3.0.7"
     "@types/mustache": "npm:^4.2.5"

@@ -91,6 +91,7 @@ export type UiFlags = {
     createFlagDialogCache?: boolean;
     healthToTechDebt?: boolean;
     improvedJsonDiff?: boolean;
+    impactMetrics?: boolean;
 };
 
 export interface IVersionInfo {

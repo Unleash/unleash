@@ -95,8 +95,8 @@ export const toIConstraint = (constraint: EditableConstraint): IConstraint => {
     } else {
         const { values, ...rest } = constraint;
         return {
-            values: Array.from(constraint.values),
             ...rest,
+            values: Array.from(constraint.values),
         };
     }
 };

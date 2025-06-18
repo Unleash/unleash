@@ -52,7 +52,8 @@ const SCHEDULED_CHANGE_CONFLICT_SUBJECT =
     'Unleash - Scheduled changes can no longer be applied';
 const SCHEDULED_EXECUTION_FAILED_SUBJECT =
     'Unleash - Scheduled change request could not be applied';
-
+const REQUESTED_CR_APPROVAL_SUBJECT =
+    'Unleash - new change request waiting to be reviewed';
 export const MAIL_ACCEPTED = '250 Accepted';
 
 export type ChangeRequestScheduleConflictData =
@@ -121,6 +122,67 @@ export class EmailService {
         }
     }
 
+    async sendRequestedCRApprovalEmail(
+        recipient: string,
+        changeRequestLink: string,
+        changeRequestTitle: string,
+    ): Promise<IEmailEnvelope> {
+        if (this.configured()) {
+            const year = new Date().getFullYear();
+            const bodyHtml = await this.compileTemplate(
+                'requested-cr-approval',
+                TemplateFormat.HTML,
+                {
+                    changeRequestLink,
+                    changeRequestTitle,
+                    year,
+                },
+            );
+            const bodyText = await this.compileTemplate(
+                'requested-cr-approval',
+                TemplateFormat.PLAIN,
+                {
+                    changeRequestLink,
+                    changeRequestTitle,
+                    year,
+                },
+            );
+            const email = {
+                from: this.sender,
+                to: recipient,
+                subject: REQUESTED_CR_APPROVAL_SUBJECT,
+                html: bodyHtml,
+                text: bodyText,
+            };
+            process.nextTick(() => {
+                this.mailer!.sendMail(email).then(
+                    () =>
+                        this.logger.info(
+                            'Successfully sent requested-cr-approval email',
+                        ),
+                    (e) =>
+                        this.logger.warn(
+                            'Failed to send requested-cr-approval email',
+                            e,
+                        ),
+                );
+            });
+            return Promise.resolve(email);
+        }
+        return new Promise((res) => {
+            this.logger.warn(
+                'No mailer is configured. Please read the docs on how to configure an email service',
+            );
+            this.logger.debug('Change request link: ', changeRequestLink);
+            res({
+                from: this.sender,
+                to: recipient,
+                subject: REQUESTED_CR_APPROVAL_SUBJECT,
+                html: '',
+                text: '',
+            });
+        });
+    }
     async sendScheduledExecutionFailedEmail(
         recipient: string,
         changeRequestLink: string,

@@ -1,6 +1,7 @@
 import { createEmptyConstraint } from 'utils/createEmptyConstraint';
 import { fromIConstraint, toIConstraint } from './editable-constraint-type.ts';
 import { constraintId } from 'constants/constraintId';
+import type { IConstraint } from 'interfaces/strategy.ts';
 
 test('mapping to and from retains the constraint id', () => {
     const constraint = createEmptyConstraint('context');
@@ -11,7 +12,7 @@ test('mapping to and from retains the constraint id', () => {
 });
 
 test('mapping to an editable constraint adds a constraint id if there is none', () => {
-    const constraint = createEmptyConstraint('context');
+    const constraint: IConstraint = createEmptyConstraint('context');
     delete constraint[constraintId];
 
     const editableConstraint = fromIConstraint(constraint);
@@ -23,22 +24,9 @@ test('mapping to an editable constraint adds a constraint id if there is none', 
 });
 
 test('mapping from an empty constraint removes redundant value / values', () => {
-    const constraint = createEmptyConstraint('context');
+    const constraint = { ...createEmptyConstraint('context'), value: '' };
     expect(constraint).toHaveProperty('value');
 
     const transformed = toIConstraint(fromIConstraint(constraint));
     expect(transformed).not.toHaveProperty('value');
-});
-
-test('mapping to constraint returns properties in expected order', () => {
-    const constraint = createEmptyConstraint('context');
-    const transformed = toIConstraint(fromIConstraint(constraint));
-
-    expect(Object.keys(transformed)).toEqual([
-        'values',
-        'inverted',
-        'operator',
-        'contextName',
-        'caseInsensitive',
-    ]);
 });

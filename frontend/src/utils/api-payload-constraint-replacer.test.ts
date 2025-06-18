@@ -44,7 +44,7 @@ test('only value OR values is present, not both', () => {
     expect(noValues).not.toHaveProperty('values');
 });
 
-test('constraint id is left out if necessary', () => {
+test('constraint id is not included', () => {
     const input: IConstraint = {
         [constraintId]: 'constraint-id',
         value: 'something',

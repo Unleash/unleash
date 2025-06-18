@@ -23,7 +23,7 @@ test('mapping to an editable constraint adds a constraint id if there is none', 
     expect(iConstraint[constraintId]).toEqual(editableConstraint[constraintId]);
 });
 
-test('mapping to from an empty constraint removes redundant value / values', () => {
+test('mapping from an empty constraint removes redundant value / values', () => {
     const constraint = createEmptyConstraint('context');
     expect('value' in constraint).toBe(true);
 

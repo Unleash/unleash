@@ -52,7 +52,8 @@ const SCHEDULED_CHANGE_CONFLICT_SUBJECT =
     'Unleash - Scheduled changes can no longer be applied';
 const SCHEDULED_EXECUTION_FAILED_SUBJECT =
     'Unleash - Scheduled change request could not be applied';
-const REQUESTED_CR_APPROVAL_SUBJECT = 'Unleash - ';
+const REQUESTED_CR_APPROVAL_SUBJECT =
+    'Unleash - new change request waiting to be reviewed';
 export const MAIL_ACCEPTED = '250 Accepted';
 
 export type ChangeRequestScheduleConflictData =

@@ -2,7 +2,7 @@ import { Box, Divider, styled, Typography, useTheme } from '@mui/material';
 import { ArcherContainer, ArcherElement } from 'react-archer';
 import { useNavigate } from 'react-router-dom';
 import type React from 'react';
-import { type FC, useLayoutEffect, useRef, useState } from 'react';
+import { useRef, useState, useLayoutEffect } from 'react';
 import type {
     ApplicationOverviewEnvironmentSchema,
     ApplicationOverviewSchema,
@@ -16,7 +16,6 @@ import WarningAmberRounded from '@mui/icons-material/WarningAmberRounded';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { getApplicationIssues } from './ApplicationIssues/ApplicationIssues.tsx';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledTable = styled('table')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
@@ -141,7 +140,7 @@ const SuccessStatus = () => (
     </StyledStatus>
 );
 
-const WarningStatus: FC<{ children?: React.ReactNode }> = ({ children }) => (
+const WarningStatus = ({ children }: { children?: React.ReactNode }) => (
     <StyledStatus mode='warning'>
         <WarningAmberRounded
             sx={(theme) => ({
@@ -197,8 +196,6 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
     const { elementRef, width } = useElementWidth();
     const navigate = useNavigate();
     const theme = useTheme();
-    const registerFrontendClientEnabled = useUiFlag('registerFrontendClient');
-
     const mode = getApplicationIssues(data);
 
     return (
@@ -296,23 +293,7 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                                 {environment.instanceCount}
                                             </StyledCell>
                                         </tr>
-                                        {!registerFrontendClientEnabled ? (
-                                            <tr>
-                                                <StyledCell>SDK:</StyledCell>
-                                                <StyledCell>
-                                                    {environment.sdks.map(
-                                                        (sdk) => (
-                                                            <div key={sdk}>
-                                                                {sdk}
-                                                            </div>
-                                                        ),
-                                                    )}
-                                                </StyledCell>
-                                            </tr>
-                                        ) : null}
-
-                                        {registerFrontendClientEnabled &&
-                                        environment.backendSdks.length > 0 ? (
+                                        {environment.backendSdks.length > 0 && (
                                             <tr>
                                                 <StyledCell>
                                                     Backend SDK:
@@ -327,10 +308,10 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                                     )}
                                                 </StyledCell>
                                             </tr>
-                                        ) : null}
+                                        )}
 
-                                        {registerFrontendClientEnabled &&
-                                        environment.frontendSdks.length > 0 ? (
+                                        {environment.frontendSdks.length >
+                                            0 && (
                                             <tr>
                                                 <StyledCell>
                                                     Frontend SDK:
@@ -345,7 +326,7 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                                     )}
                                                 </StyledCell>
                                             </tr>
-                                        ) : null}
+                                        )}
 
                                         <tr>
                                             <StyledCell>Last seen:</StyledCell>

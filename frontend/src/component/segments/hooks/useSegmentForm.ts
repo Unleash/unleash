@@ -87,7 +87,9 @@ export const useSegmentForm = (
         project,
         setProject,
         constraints,
-        setConstraints,
+        setConstraints: setConstraints as React.Dispatch<
+            React.SetStateAction<IConstraint[]>
+        >,
         getSegmentPayload,
         clearErrors,
         errors,

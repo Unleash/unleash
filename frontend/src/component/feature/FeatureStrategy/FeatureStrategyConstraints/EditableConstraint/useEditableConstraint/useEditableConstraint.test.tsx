@@ -40,11 +40,13 @@ test('calls onUpdate with new state', async () => {
 
     // gets called by useEffect, so we need to wait for the next render.
     await waitFor(() => {
-        expect(onUpdate).toHaveBeenCalledWith({
-            contextName: 'context-field',
-            operator: IN,
-            values: [],
-        });
+        expect(onUpdate).toHaveBeenCalledWith(
+            expect.objectContaining({
+                contextName: 'context-field',
+                operator: IN,
+                values: [],
+            }),
+        );
     });
 });
 

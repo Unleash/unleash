@@ -24,10 +24,10 @@ test('mapping to an editable constraint adds a constraint id if there is none', 
 
 test('mapping from an empty constraint removes redundant value / values', () => {
     const constraint = createEmptyConstraint('context');
-    expect('value' in constraint).toBe(true);
+    expect(constraint).toHaveProperty('value');
 
     const transformed = toIConstraint(fromIConstraint(constraint));
-    expect('value' in transformed).toBe(false);
+    expect(transformed).not.toHaveProperty('value');
 });
 
 test('mapping to constraint returns properties in expected order', () => {

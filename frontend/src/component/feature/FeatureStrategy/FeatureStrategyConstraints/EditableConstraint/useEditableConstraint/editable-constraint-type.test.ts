@@ -12,7 +12,6 @@ test('mapping to and from retains the constraint id', () => {
 
 test('mapping to an editable constraint adds a constraint id if there is none', () => {
     const constraint = createEmptyConstraint('context');
-    // @ts-expect-error: this violates the type constraint
     delete constraint[constraintId];
 
     const editableConstraint = fromIConstraint(constraint);

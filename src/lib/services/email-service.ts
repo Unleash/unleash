@@ -127,12 +127,14 @@ export class EmailService {
         changeRequestTitle: string,
     ): Promise<IEmailEnvelope> {
         if (this.configured()) {
+            const year = new Date().getFullYear();
             const bodyHtml = await this.compileTemplate(
                 'requested-cr-approval',
                 TemplateFormat.HTML,
                 {
                     changeRequestLink,
                     changeRequestTitle,
+                    year,
                 },
             );
             const bodyText = await this.compileTemplate(
@@ -141,6 +143,7 @@ export class EmailService {
                 {
                     changeRequestLink,
                     changeRequestTitle,
+                    year,
                 },
             );
             const email = {

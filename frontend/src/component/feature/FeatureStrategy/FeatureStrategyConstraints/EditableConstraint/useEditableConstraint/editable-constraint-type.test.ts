@@ -10,6 +10,18 @@ test('mapping to and from retains the constraint id', () => {
     );
 });
 
+test('mapping to an editable constraint adds a constraint id if there is none', () => {
+    const constraint = createEmptyConstraint('context');
+    delete constraint[constraintId];
+
+    const editableConstraint = fromIConstraint(constraint);
+
+    expect(editableConstraint[constraintId]).toBeDefined();
+
+    const iConstraint = toIConstraint(editableConstraint);
+    expect(iConstraint[constraintId]).toEqual(editableConstraint[constraintId]);
+});
+
 test('mapping to from an empty constraint removes redundant value / values', () => {
     const constraint = createEmptyConstraint('context');
     expect('value' in constraint).toBe(true);

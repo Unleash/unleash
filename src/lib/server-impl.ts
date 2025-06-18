@@ -1,7 +1,7 @@
 import stoppable, { type StoppableServer } from 'stoppable';
 import { promisify } from 'util';
 import version from './util/version.js';
-import { migrateDb, resetDb } from '../migrator.js';
+import { migrateDb, requiresMigration, resetDb } from '../migrator.js';
 import getApp from './app.js';
 import type MetricsMonitor from './metrics.js';
 import { createMetricsMonitor } from './metrics.js';
@@ -336,21 +336,25 @@ async function start(
         if (config.db.disableMigration) {
             logger.info('DB migration: disabled');
         } else {
-            logger.info('DB migration: start');
-            if (config.flagResolver.isEnabled('migrationLock')) {
-                logger.info('Running migration with lock');
-                const lock = withDbLock(config.db, {
-                    lockKey: defaultLockKey,
-                    timeout: defaultTimeout,
-                    logger,
-                });
-                await lock(migrateDb)(config);
-            } else {
-                logger.info('Running migration without lock');
-                await migrateDb(config);
-            }
+            if (await requiresMigration(config)) {
+                logger.info('DB migration: start');
+                if (config.flagResolver.isEnabled('migrationLock')) {
+                    logger.info('Running migration with lock');
+                    const lock = withDbLock(config.db, {
+                        lockKey: defaultLockKey,
+                        timeout: defaultTimeout,
+                        logger,
+                    });
+                    await lock(migrateDb)(config);
+                } else {
+                    logger.info('Running migration without lock');
+                    await migrateDb(config);
+                }
 
-            logger.info('DB migration: end');
+                logger.info('DB migration: end');
+            } else {
+                logger.info('DB migration: no migration needed');
+            }
         }
     } catch (err) {
         logger.error('Failed to migrate db', err);

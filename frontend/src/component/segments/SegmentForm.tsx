@@ -18,9 +18,7 @@ interface ISegmentProps {
     setName: React.Dispatch<React.SetStateAction<string>>;
     setDescription: React.Dispatch<React.SetStateAction<string>>;
     setProject: React.Dispatch<React.SetStateAction<string | undefined>>;
-    setConstraints: React.Dispatch<
-        React.SetStateAction<(IConstraint | IConstraintWithId)[]>
-    >;
+    setConstraints: React.Dispatch<React.SetStateAction<IConstraint[]>>;
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
     clearErrors: () => void;

@@ -171,11 +171,6 @@ import type {
 import type { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType.js';
 import { UnknownFlagsService } from '../features/metrics/unknown-flags/unknown-flags-service.js';
 import type FeatureLinkService from '../features/feature-links/feature-link-service.js';
-import {
-    createFakeImpactMetricsService,
-    createImpactMetricsService,
-} from '../features/impact-metrics/createImpactMetricsService.js';
-import type ImpactMetricsService from '../features/impact-metrics/impact-metrics-service.js';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -446,10 +441,6 @@ export const createServices = (
         ? withTransactional(createUserSubscriptionsService(config), db)
         : withFakeTransactional(createFakeUserSubscriptionsService(config));
 
-    const impactMetricsService = db
-        ? createImpactMetricsService(config)
-        : createFakeImpactMetricsService(config);
-
     return {
         transactionalAccessService,
         accessService,
@@ -516,7 +507,6 @@ export const createServices = (
         integrationEventsService,
         onboardingService,
         personalDashboardService,
-        impactMetricsService,
         projectStatusService,
         transactionalUserSubscriptionsService,
         uniqueConnectionService,
@@ -648,7 +638,6 @@ export interface IUnleashServices {
     integrationEventsService: IntegrationEventsService;
     onboardingService: OnboardingService;
     personalDashboardService: PersonalDashboardService;
-    impactMetricsService: ImpactMetricsService;
     projectStatusService: ProjectStatusService;
     transactionalUserSubscriptionsService: WithTransactional<UserSubscriptionsService>;
     uniqueConnectionService: UniqueConnectionService;

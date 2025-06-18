@@ -13,7 +13,6 @@ import {
 } from 'component/insights/InsightsCharts.styles';
 import { useImpactMetricsMetadata } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePlaceholderData } from '../hooks/usePlaceholderData.js';
 import { ImpactMetricsControls } from './ImpactMetricsControls.tsx';
 import { getDateRange, getDisplayFormat, getTimeUnit } from './time-utils.ts';
@@ -24,7 +23,7 @@ export const ImpactMetrics: FC<ImpactMetricsProps> = () => {
     const theme = useTheme();
     const [selectedSeries, setSelectedSeries] = useState<string>('');
     const [selectedRange, setSelectedRange] = useState<
-        'day' | 'week' | 'month'
+        'hour' | 'day' | 'week' | 'month'
     >('day');
     const [beginAtZero, setBeginAtZero] = useState(false);
 
@@ -111,17 +110,6 @@ export const ImpactMetrics: FC<ImpactMetricsProps> = () => {
                             width: '100%',
                         }}
                     >
-                        <ConditionallyRender
-                            condition={Boolean(hasError)}
-                            show={
-                                <Alert severity='error'>
-                                    Failed to load impact metrics. Please check
-                                    if Prometheus is configured and the feature
-                                    flag is enabled.
-                                </Alert>
-                            }
-                        />
-
                         <ImpactMetricsControls
                             selectedSeries={selectedSeries}
                             onSeriesChange={setSelectedSeries}
@@ -133,21 +121,22 @@ export const ImpactMetrics: FC<ImpactMetricsProps> = () => {
                             loading={metadataLoading}
                         />
 
-                        <ConditionallyRender
-                            condition={!selectedSeries && !isLoading}
-                            show={
-                                <Typography
-                                    variant='body2'
-                                    color='text.secondary'
-                                >
-                                    Select a metric series to view the chart
-                                </Typography>
-                            }
-                        />
+                        {!selectedSeries && !isLoading ? (
+                            <Typography variant='body2' color='text.secondary'>
+                                Select a metric series to view the chart
+                            </Typography>
+                        ) : null}
                     </Box>
                 </StyledWidgetStats>
 
                 <StyledChartContainer>
+                    {hasError ? (
+                        <Alert severity='error'>
+                            Failed to load impact metrics. Please check if
+                            Prometheus is configured and the feature flag is
+                            enabled.
+                        </Alert>
+                    ) : null}
                     <LineChart
                         data={
                             notEnoughData || isLoading ? placeholderData : data

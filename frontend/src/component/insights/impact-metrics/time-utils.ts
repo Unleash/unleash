@@ -1,5 +1,7 @@
 export const getTimeUnit = (selectedRange: string) => {
     switch (selectedRange) {
+        case 'hour':
+            return 'minute';
         case 'day':
             return 'hour';
         case 'week':
@@ -14,8 +16,10 @@ export const getTimeUnit = (selectedRange: string) => {
 export const getDisplayFormat = (selectedRange: string) => {
     // TODO: localized format
     switch (selectedRange) {
+        case 'hour':
+            return 'HH:mm:ss';
         case 'day':
-            return 'MMM dd HH:mm';
+            return 'HH:mm';
         case 'week':
             return 'MMM dd';
         case 'month':
@@ -25,11 +29,18 @@ export const getDisplayFormat = (selectedRange: string) => {
     }
 };
 
-export const getDateRange = (selectedRange: 'day' | 'week' | 'month') => {
+export const getDateRange = (
+    selectedRange: 'hour' | 'day' | 'week' | 'month',
+) => {
     const now = new Date();
     const endTime = now;
 
     switch (selectedRange) {
+        case 'hour': {
+            const startTime = new Date(now);
+            startTime.setMinutes(now.getMinutes() - 60, 0, 0);
+            return { min: startTime, max: endTime };
+        }
         case 'day': {
             const startTime = new Date(now);
             startTime.setHours(now.getHours() - 24, 0, 0, 0);

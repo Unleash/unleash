@@ -15,8 +15,8 @@ import {
 export interface ImpactMetricsControlsProps {
     selectedSeries: string;
     onSeriesChange: (series: string) => void;
-    selectedRange: 'day' | 'week' | 'month';
-    onRangeChange: (range: 'day' | 'week' | 'month') => void;
+    selectedRange: 'hour' | 'day' | 'week' | 'month';
+    onRangeChange: (range: 'hour' | 'day' | 'week' | 'month') => void;
     beginAtZero: boolean;
     onBeginAtZeroChange: (beginAtZero: boolean) => void;
     metricSeries: string[];
@@ -71,10 +71,13 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
                 labelId='range-select-label'
                 value={selectedRange}
                 onChange={(e) =>
-                    onRangeChange(e.target.value as 'day' | 'week' | 'month')
+                    onRangeChange(
+                        e.target.value as 'hour' | 'day' | 'week' | 'month',
+                    )
                 }
                 label='Time Range'
             >
+                <MenuItem value='hour'>Last hour</MenuItem>
                 <MenuItem value='day'>Last 24 hours</MenuItem>
                 <MenuItem value='week'>Last 7 days</MenuItem>
                 <MenuItem value='month'>Last 30 days</MenuItem>

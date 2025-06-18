@@ -5,7 +5,7 @@ export type TimeSeriesData = [number, number][];
 
 export type ImpactMetricsQuery = {
     series: string;
-    range: 'day' | 'week' | 'month';
+    range: 'hour' | 'day' | 'week' | 'month';
 };
 
 export const useImpactMetricsData = (query?: ImpactMetricsQuery) => {

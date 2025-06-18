@@ -35,6 +35,7 @@ import {
     getChangeRequestConflictCreatedDataFromScheduleData,
 } from './change-request-conflict-data.ts';
 import { constraintId } from 'constants/constraintId.ts';
+import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
@@ -352,7 +353,11 @@ export const formatUpdateStrategyApiCode = (
     };
 
     const url = `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategyId}`;
-    const payload = JSON.stringify(sortedStrategy, undefined, 2);
+    const payload = JSON.stringify(
+        sortedStrategy,
+        apiPayloadConstraintReplacer,
+        2,
+    );
 
     return `curl --location --request PUT '${url}' \\
     --header 'Authorization: INSERT_API_KEY' \\

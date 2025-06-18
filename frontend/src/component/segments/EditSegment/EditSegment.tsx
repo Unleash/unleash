@@ -27,6 +27,7 @@ import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPe
 import type { ISegment } from 'interfaces/segment.ts';
 import { constraintId } from 'constants/constraintId.ts';
 import { v4 as uuidv4 } from 'uuid';
+import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 
 interface IEditSegmentProps {
     modal?: boolean;
@@ -88,7 +89,7 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
         }/api/admin/segments/${segmentId}' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
---data-raw '${JSON.stringify(getSegmentPayload(), undefined, 2)}'`;
+--data-raw '${JSON.stringify(getSegmentPayload(), apiPayloadConstraintReplacer, 2)}'`;
     };
 
     const highestPermissionChangeRequestEnv =

@@ -48,30 +48,11 @@ export const useSegmentForm = (
     }, [nameError]);
 
     const getSegmentPayload = () => {
-        const sortedConstraints = constraints.map((constraint) => {
-            const { inverted, operator, contextName, caseInsensitive } =
-                constraint;
-            const baseProps = {
-                inverted,
-                operator,
-                contextName,
-                caseInsensitive,
-            };
-            return constraint.values
-                ? {
-                      values: constraint.values,
-                      ...baseProps,
-                  }
-                : {
-                      value: constraint.value,
-                      ...baseProps,
-                  };
-        });
         return {
             name,
             description,
             project,
-            constraints: sortedConstraints,
+            constraints,
         };
     };
 

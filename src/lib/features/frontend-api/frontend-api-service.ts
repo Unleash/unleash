@@ -135,21 +135,7 @@ export class FrontendApiService {
             ip,
         );
 
-        if (
-            metrics.instanceId &&
-            typeof sdkVersion === 'string' &&
-            this.flagResolver.isEnabled('registerFrontendClient')
-        ) {
-            const client = {
-                appName: metrics.appName,
-                instanceId: metrics.instanceId,
-                sdkVersion: sdkVersion,
-                sdkType: 'frontend' as const,
-                environment: environment,
-                projects: this.resolveProject(token),
-            };
-            this.services.clientInstanceService.registerFrontendClient(client);
-        }
+        // Frontend client registration has been removed as part of the registerFrontendClient flag removal
     }
 
     private async clientForFrontendApiToken(token: IApiUser): Promise<Unleash> {

@@ -85,7 +85,6 @@ export type UiFlags = {
     showUserDeviceCount?: boolean;
     consumptionModel?: boolean;
     edgeObservability?: boolean;
-    registerFrontendClient?: boolean;
     customMetrics?: boolean;
     lifecycleMetrics?: boolean;
     createFlagDialogCache?: boolean;

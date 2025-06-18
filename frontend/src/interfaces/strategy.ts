@@ -72,12 +72,6 @@ export interface IConstraintWithId extends IConstraint {
     [constraintId]: string;
 }
 
-export const isConstraintWithId = (
-    constraint: IConstraint,
-): constraint is IConstraintWithId => {
-    return constraint[constraintId] !== undefined;
-};
-
 export interface IFeatureStrategySortOrder {
     id: string;
     sortOrder: number;

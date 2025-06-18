@@ -57,7 +57,8 @@ export async function requiresMigration({
             env: 'custom',
         });
 
-        return dbm.check();
+        const pendingMigrations = await dbm.check();
+        return pendingMigrations.length > 0;
     });
 }
 

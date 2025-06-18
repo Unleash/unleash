@@ -1,4 +1,3 @@
-import { constraintId } from 'constants/constraintId';
 import {
     type DateOperator,
     isDateOperator,
@@ -11,7 +10,6 @@ import {
     isSemVerOperator,
 } from 'constants/operators';
 import type { IConstraint } from 'interfaces/strategy';
-import { v4 as uuidv4 } from 'uuid';
 
 type EditableConstraintBase = Omit<
     IConstraint,
@@ -74,14 +72,12 @@ export const fromIConstraint = (
     const { value, values, operator, ...rest } = constraint;
     if (isSingleValueOperator(operator)) {
         return {
-            [constraintId]: uuidv4(),
             ...rest,
             operator,
             value: value ?? '',
         };
     } else {
         return {
-            [constraintId]: uuidv4(),
             ...rest,
             operator,
             values: new Set(values),
@@ -90,29 +86,13 @@ export const fromIConstraint = (
 };
 
 export const toIConstraint = (constraint: EditableConstraint): IConstraint => {
-    const {
-        inverted,
-        operator,
-        contextName,
-        caseInsensitive,
-        [constraintId]: id,
-    } = constraint;
-    const baseValues = {
-        inverted,
-        operator,
-        contextName,
-        caseInsensitive,
-        [constraintId]: id,
-    };
     if ('value' in constraint) {
-        return {
-            value: constraint.value,
-            ...baseValues,
-        };
+        return constraint;
     } else {
+        const { values, ...rest } = constraint;
         return {
-            values: Array.from(constraint.values),
-            ...baseValues,
+            ...rest,
+            values: Array.from(values),
         };
     }
 };

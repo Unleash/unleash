@@ -1,3 +1,4 @@
+import { constraintId } from 'constants/constraintId';
 import {
     type DateOperator,
     isDateOperator,
@@ -86,13 +87,29 @@ export const fromIConstraint = (
 };
 
 export const toIConstraint = (constraint: EditableConstraint): IConstraint => {
+    const {
+        inverted,
+        operator,
+        contextName,
+        caseInsensitive,
+        [constraintId]: id,
+    } = constraint;
+    const baseValues = {
+        inverted,
+        operator,
+        contextName,
+        caseInsensitive,
+        [constraintId]: id,
+    };
     if ('value' in constraint) {
-        return constraint;
-    } else {
-        const { values, ...rest } = constraint;
         return {
-            ...rest,
-            values: Array.from(values),
+            value: constraint.value,
+            ...baseValues,
+        };
+    } else {
+        return {
+            values: Array.from(constraint.values),
+            ...baseValues,
         };
     }
 };

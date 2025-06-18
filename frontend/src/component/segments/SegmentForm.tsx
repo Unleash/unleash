@@ -1,4 +1,4 @@
-import type { IConstraint } from 'interfaces/strategy';
+import type { IConstraint, IConstraintWithId } from 'interfaces/strategy';
 import { SegmentFormStepOne } from './SegmentFormStepOne.tsx';
 import { SegmentFormStepTwo } from './SegmentFormStepTwo.tsx';
 import type React from 'react';
@@ -18,7 +18,7 @@ interface ISegmentProps {
     setName: React.Dispatch<React.SetStateAction<string>>;
     setDescription: React.Dispatch<React.SetStateAction<string>>;
     setProject: React.Dispatch<React.SetStateAction<string | undefined>>;
-    setConstraints: React.Dispatch<React.SetStateAction<IConstraint[]>>;
+    setConstraints: React.Dispatch<React.SetStateAction<IConstraintWithId[]>>;
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
     clearErrors: () => void;

@@ -1,11 +1,13 @@
 import { constraintId } from 'constants/constraintId';
 import { dateOperators } from 'constants/operators';
-import type { IConstraint } from 'interfaces/strategy';
+import type { IConstraintWithId } from 'interfaces/strategy';
 import { oneOf } from 'utils/oneOf';
 import { operatorsForContext } from 'utils/operatorsForContext';
 import { v4 as uuidv4 } from 'uuid';
 
-export const createEmptyConstraint = (contextName: string): IConstraint => {
+export const createEmptyConstraint = (
+    contextName: string,
+): IConstraintWithId => {
     const operator = operatorsForContext(contextName)[0];
 
     const value = oneOf(dateOperators, operator)

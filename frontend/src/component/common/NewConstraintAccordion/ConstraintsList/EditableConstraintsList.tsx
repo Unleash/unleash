@@ -1,22 +1,21 @@
 import type React from 'react';
-import { useEffect, useImperativeHandle } from 'react';
+import { useImperativeHandle } from 'react';
 import { forwardRef } from 'react';
 import { styled } from '@mui/material';
-import type { IConstraint } from 'interfaces/strategy';
+import type { IConstraint, IConstraintWithId } from 'interfaces/strategy';
 import produce from 'immer';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
 import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/EditableConstraint';
 import { createEmptyConstraint } from '../../../../utils/createEmptyConstraint.ts';
 import { constraintId } from 'constants/constraintId.ts';
-import { v4 as uuidv4 } from 'uuid';
 export interface IEditableConstraintsListRef {
     addConstraint?: (contextName: string) => void;
 }
 
 export interface IEditableConstraintsListProps {
-    constraints: IConstraint[];
-    setConstraints: React.Dispatch<React.SetStateAction<IConstraint[]>>;
+    constraints: IConstraintWithId[];
+    setConstraints: React.Dispatch<React.SetStateAction<IConstraintWithId[]>>;
 }
 
 const StyledContainer = styled('div')({
@@ -39,17 +38,6 @@ export const EditableConstraintsList = forwardRef<
             }
         },
     }));
-
-    useEffect(() => {
-        if (!constraints.every((constraint) => constraintId in constraint)) {
-            setConstraints(
-                constraints.map((constraint) => ({
-                    [constraintId]: uuidv4(),
-                    ...constraint,
-                })),
-            );
-        }
-    }, [constraints, setConstraints]);
 
     const onDelete = (index: number) => {
         setConstraints(
@@ -82,7 +70,7 @@ export const EditableConstraintsList = forwardRef<
             <ConstraintsList>
                 {constraints.map((constraint, index) => (
                     <EditableConstraint
-                        key={constraint[constraintId] || index}
+                        key={constraint[constraintId]}
                         constraint={constraint}
                         onDelete={() => onDelete(index)}
                         onUpdate={onAutoSave(constraint[constraintId])}

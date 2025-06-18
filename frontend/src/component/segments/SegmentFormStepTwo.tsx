@@ -13,7 +13,7 @@ import {
     UPDATE_SEGMENT,
 } from 'component/providers/AccessProvider/permissions';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import type { IConstraint } from 'interfaces/strategy';
+import type { IConstraintWithId } from 'interfaces/strategy';
 import { useNavigate } from 'react-router-dom';
 import { EditableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/EditableConstraintsList';
 import type { IEditableConstraintsListRef } from 'component/common/NewConstraintAccordion/ConstraintsList/EditableConstraintsList';
@@ -33,8 +33,8 @@ import { GO_BACK } from 'constants/navigate';
 
 interface ISegmentFormPartTwoProps {
     project?: string;
-    constraints: IConstraint[];
-    setConstraints: React.Dispatch<React.SetStateAction<IConstraint[]>>;
+    constraints: IConstraintWithId[];
+    setConstraints: React.Dispatch<React.SetStateAction<IConstraintWithId[]>>;
     setCurrentStep: React.Dispatch<React.SetStateAction<SegmentFormStep>>;
     mode: SegmentFormMode;
     children?: React.ReactNode;

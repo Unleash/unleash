@@ -69,6 +69,7 @@ process.nextTick(async () => {
                         },
                     ],
                 },
+                prometheusImpactMetricsApi: 'http://localhost:9090',
                 /* can be tweaked to control configuration caching for /api/client/features
                 clientFeatureCaching: {
                     enabled: true,

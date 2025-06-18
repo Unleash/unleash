@@ -101,6 +101,7 @@ exports[`should create default config 1`] = `
   "preHook": undefined,
   "preRouterHook": undefined,
   "prometheusApi": undefined,
+  "prometheusImpactMetricsApi": undefined,
   "publicFolder": undefined,
   "rateLimiting": {
     "callSignalEndpointMaxPerSecond": 1,

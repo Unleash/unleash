@@ -1,7 +1,6 @@
 import { constraintId } from 'constants/constraintId';
-import { dateOperators, isSingleValueOperator } from 'constants/operators';
+import { isDateOperator, isSingleValueOperator } from 'constants/operators';
 import type { IConstraintWithId } from 'interfaces/strategy';
-import { oneOf } from 'utils/oneOf';
 import { operatorsForContext } from 'utils/operatorsForContext';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -24,9 +23,7 @@ export const createEmptyConstraint = (
     };
 
     if (isSingleValueOperator(operator)) {
-        const value = oneOf(dateOperators, operator)
-            ? new Date().toISOString()
-            : '';
+        const value = isDateOperator(operator) ? new Date().toISOString() : '';
 
         return makeConstraint({ value });
     }

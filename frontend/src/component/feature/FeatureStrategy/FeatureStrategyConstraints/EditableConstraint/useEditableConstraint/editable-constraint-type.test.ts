@@ -1,6 +1,7 @@
 import { createEmptyConstraint } from 'utils/createEmptyConstraint';
 import { fromIConstraint, toIConstraint } from './editable-constraint-type.ts';
 import { constraintId } from 'constants/constraintId';
+import type { IConstraint } from 'interfaces/strategy.ts';
 
 test('mapping to and from retains the constraint id', () => {
     const constraint = createEmptyConstraint('context');
@@ -11,8 +12,7 @@ test('mapping to and from retains the constraint id', () => {
 });
 
 test('mapping to an editable constraint adds a constraint id if there is none', () => {
-    const constraint = createEmptyConstraint('context');
-    // @ts-expect-error: this violates the type constraint
+    const constraint: IConstraint = createEmptyConstraint('context');
     delete constraint[constraintId];
 
     const editableConstraint = fromIConstraint(constraint);

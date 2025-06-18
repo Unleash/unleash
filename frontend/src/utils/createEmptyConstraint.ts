@@ -1,5 +1,5 @@
 import { constraintId } from 'constants/constraintId';
-import { dateOperators } from 'constants/operators';
+import { dateOperators, isSingleValueOperator } from 'constants/operators';
 import type { IConstraintWithId } from 'interfaces/strategy';
 import { oneOf } from 'utils/oneOf';
 import { operatorsForContext } from 'utils/operatorsForContext';
@@ -10,17 +10,26 @@ export const createEmptyConstraint = (
 ): IConstraintWithId => {
     const operator = operatorsForContext(contextName)[0];
 
-    const value = oneOf(dateOperators, operator)
-        ? new Date().toISOString()
-        : '';
-
-    return {
-        contextName,
-        operator,
-        value,
-        values: [],
-        caseInsensitive: false,
-        inverted: false,
-        [constraintId]: uuidv4(),
+    const makeConstraint = (
+        props: { value: string } | { values: string[] },
+    ): IConstraintWithId => {
+        return {
+            contextName,
+            operator,
+            ...props,
+            caseInsensitive: false,
+            inverted: false,
+            [constraintId]: uuidv4(),
+        };
     };
+
+    if (isSingleValueOperator(operator)) {
+        const value = oneOf(dateOperators, operator)
+            ? new Date().toISOString()
+            : '';
+
+        return makeConstraint({ value });
+    }
+
+    return makeConstraint({ values: [] });
 };

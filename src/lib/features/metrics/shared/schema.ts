@@ -85,6 +85,35 @@ export const customMetricsSchema = joi
         metrics: joi.array().items(customMetricSchema).required(),
     });
 
+export const metricSampleSchema = joi
+    .object()
+    .options({ stripUnknown: true })
+    .keys({
+        value: joi.number().required(),
+        labels: joi
+            .object()
+            .pattern(
+                joi.string(),
+                joi.alternatives().try(joi.string(), joi.number()),
+            )
+            .optional(),
+    });
+
+export const impactMetricSchema = joi
+    .object()
+    .options({ stripUnknown: true })
+    .keys({
+        name: joi.string().required(),
+        help: joi.string().required(),
+        type: joi.string().required(),
+        samples: joi.array().items(metricSampleSchema).required(),
+    });
+
+export const impactMetricsSchema = joi
+    .array()
+    .items(impactMetricSchema)
+    .empty();
+
 export const batchMetricsSchema = joi
     .object()
     .options({ stripUnknown: true })

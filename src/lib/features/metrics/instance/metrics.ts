@@ -58,7 +58,6 @@ export default class ClientMetricsController extends Controller {
             | 'customMetricsService'
         >,
         config: IUnleashConfig,
-        metricsTranslator: MetricsTranslator,
     ) {
         super(config);
         const { getLogger } = config;
@@ -69,7 +68,6 @@ export default class ClientMetricsController extends Controller {
         this.metricsV2 = clientMetricsServiceV2;
         this.customMetricsService = customMetricsService;
         this.flagResolver = config.flagResolver;
-        this.metricsTranslator = metricsTranslator;
 
         this.route({
             method: 'post',
@@ -171,7 +169,7 @@ export default class ClientMetricsController extends Controller {
                     this.flagResolver.isEnabled('impactMetrics') &&
                     impactMetrics
                 ) {
-                    this.metricsTranslator.translateMetrics(impactMetrics);
+                    await this.metricsV2.registerImpactMetrics(impactMetrics);
                 }
 
                 res.getHeaderNames().forEach((header) =>

@@ -22,7 +22,12 @@ export const useImpactMetricsData = (query?: ImpactMetricsQuery) => {
 
     const PATH = createPath();
 
-    const { data, refetch, loading, error } = useApiGetter<TimeSeriesData>(
+    const { data, refetch, loading, error } = useApiGetter<{
+        start?: string;
+        end?: string;
+        step?: string;
+        data: TimeSeriesData;
+    }>(
         shouldFetch ? formatApiPath(PATH) : null,
         shouldFetch
             ? () => fetcher(formatApiPath(PATH), 'Impact metrics data')
@@ -34,7 +39,9 @@ export const useImpactMetricsData = (query?: ImpactMetricsQuery) => {
     );
 
     return {
-        data: data || [],
+        data: data || {
+            data: [],
+        },
         refetch,
         loading: shouldFetch ? loading : false,
         error,

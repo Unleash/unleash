@@ -15,7 +15,8 @@ import { useImpactMetricsMetadata } from 'hooks/api/getters/useImpactMetricsMeta
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import { usePlaceholderData } from '../hooks/usePlaceholderData.js';
 import { ImpactMetricsControls } from './ImpactMetricsControls.tsx';
-import { getDateRange, getDisplayFormat, getTimeUnit } from './time-utils.ts';
+import { getDisplayFormat, getTimeUnit } from './time-utils.ts';
+import { fromUnixTime } from 'date-fns';
 
 type ImpactMetricsProps = {};
 
@@ -33,7 +34,7 @@ export const ImpactMetrics: FC<ImpactMetricsProps> = () => {
         error: metadataError,
     } = useImpactMetricsMetadata();
     const {
-        data: timeSeriesData,
+        data: { start, end, data: timeSeriesData },
         loading: dataLoading,
         error: dataError,
     } = useImpactMetricsData(
@@ -86,7 +87,10 @@ export const ImpactMetrics: FC<ImpactMetricsProps> = () => {
         [data, isLoading],
     );
 
-    const { min: minTime, max: maxTime } = getDateRange(selectedRange);
+    const minTime = start
+        ? fromUnixTime(Number.parseInt(start, 10))
+        : undefined;
+    const maxTime = end ? fromUnixTime(Number.parseInt(end, 10)) : undefined;
 
     const placeholder = selectedSeries ? (
         <NotEnoughData description='Send impact metrics using Unleash SDK and select data series to view the chart.' />

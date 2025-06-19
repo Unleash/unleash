@@ -18,9 +18,7 @@ import { ImpactMetricsControls } from './ImpactMetricsControls.tsx';
 import { getDisplayFormat, getTimeUnit } from './time-utils.ts';
 import { fromUnixTime } from 'date-fns';
 
-type ImpactMetricsProps = {};
-
-export const ImpactMetrics: FC<ImpactMetricsProps> = () => {
+export const ImpactMetrics: FC = () => {
     const theme = useTheme();
     const [selectedSeries, setSelectedSeries] = useState<string>('');
     const [selectedRange, setSelectedRange] = useState<

@@ -1,5 +1,5 @@
 ---
-title: Insights
+title: Analytics
 ---
 
 :::note Availability
@@ -9,16 +9,16 @@ title: Insights
 :::
 
 
-Insights is a feature designed to help you better understand and gain insights into what is happening in your Unleash instance. You can view insights across all projects or by selecting single or multiple projects using the filter.
+Analytics is a feature designed to help you better understand and gain insights into what is happening in your Unleash instance. You can view analytics across all projects or by selecting single or multiple projects using the filter.
 
 In total, there are 6 different charts available that show information over time:
 
-- Total users (Pro, Enterprise)
-- Flags (Pro, Enterprise)
-- Health (Enterprise)
-- Median time to production (Enterprise)
-- Flag evaluation metrics (Enterprise)
-- Updates per environment type (Enterprise)
+- Total users
+- Flags
+- Technical debt
+- Median time to production
+- Flag evaluation metrics
+- Updates per environment type
 
 
 ### Total users
@@ -33,9 +33,9 @@ The flags chart displays the total number of active (not archived) feature flags
 
 ![Flags chart](/img/insights-total-flags.png)
 
-### Health
+### Technical debt
 
-The health chart represents the percentage of flags in the selected projects that are not stale or potentially stale. This chart helps you monitor the overall health of your feature flags, ensuring that they are actively maintained and relevant. The chart also shows how the overall health changes over time, allowing you to identify potential issues early and take corrective actions.
+The technical debt rating shows the percentage of active flags in a project compared to stale or potentially stale flags. This helps you ensure all flags are actively maintained and relevant. You can also view these changes over time to identify potential issues early and take corrective actions.
 
 ![Health chart](/img/insights-health.png)
 

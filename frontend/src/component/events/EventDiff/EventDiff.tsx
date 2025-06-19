@@ -58,6 +58,12 @@ const DiffStyles = styled('div')(({ theme }) => ({
     '&:not([data-change-type="edit"]) :where(.addition, .deletion)::before': {
         content: 'none',
     },
+
+    '.diff:not(:has(*))': {
+        '::before': {
+            content: '"(no changes)"',
+        },
+    },
 }));
 
 const ExpandButton = styled(Button)(({ theme }) => ({

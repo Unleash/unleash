@@ -6,7 +6,7 @@ import type {
     IClientMetricsEnv,
     IClientMetricsStoreV2,
 } from './client-metrics-store-v2-type.js';
-import { clientMetricsSchema } from '../shared/schema.js';
+import { clientMetricsSchema, impactMetricsSchema } from '../shared/schema.js';
 import { compareAsc, secondsToMilliseconds } from 'date-fns';
 import {
     CLIENT_METRICS,
@@ -30,6 +30,11 @@ import {
     MAX_UNKNOWN_FLAGS,
     type UnknownFlagsService,
 } from '../unknown-flags/unknown-flags-service.js';
+import {
+    type Metric,
+    MetricsTranslator,
+} from '../impact/metrics-translator.js';
+import { impactRegister } from '../impact/impact-register.js';
 
 export default class ClientMetricsServiceV2 {
     private config: IUnleashConfig;
@@ -45,6 +50,8 @@ export default class ClientMetricsServiceV2 {
     private flagResolver: Pick<IFlagResolver, 'isEnabled' | 'getVariant'>;
 
     private logger: Logger;
+
+    private impactMetricsTranslator: MetricsTranslator;
 
     private cachedFeatureNames: () => Promise<string[]>;
 
@@ -69,6 +76,7 @@ export default class ClientMetricsServiceV2 {
                 maxAge: secondsToMilliseconds(10),
             },
         );
+        this.impactMetricsTranslator = new MetricsTranslator(impactRegister);
     }
 
     async clearMetrics(hoursAgo: number) {
@@ -185,6 +193,11 @@ export default class ClientMetricsServiceV2 {
             ...metrics,
         ]);
         this.lastSeenService.updateLastSeen(metrics);
+    }
+
+    async registerImpactMetrics(impactMetrics: Metric[]) {
+        const value = await impactMetricsSchema.validateAsync(impactMetrics);
+        this.impactMetricsTranslator.translateMetrics(value);
     }
 
     async registerClientMetrics(

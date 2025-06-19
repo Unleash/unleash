@@ -11,7 +11,7 @@ import type { Metric } from './metrics-translator.js';
 let app: IUnleashTest;
 let db: ITestDb;
 
-const sendImpactMetrics = async (impactMetrics: Metric[]) =>
+const sendImpactMetrics = async (impactMetrics: Metric[], status = 202) =>
     app.request
         .post('/api/client/metrics')
         .send({
@@ -24,7 +24,7 @@ const sendImpactMetrics = async (impactMetrics: Metric[]) =>
             },
             impactMetrics,
         })
-        .expect(202);
+        .expect(status);
 
 beforeAll(async () => {
     db = await dbInit('impact_metrics', getLogger);
@@ -70,6 +70,25 @@ test('should store impact metrics in memory and be able to retrieve them', async
             ],
         },
     ]);
+
+    await sendImpactMetrics([]);
+    // missing help
+    await sendImpactMetrics(
+        [
+            // @ts-expect-error
+            {
+                name: 'labeled_counter',
+                type: 'counter',
+                samples: [
+                    {
+                        labels: { foo: 'bar' },
+                        value: 10,
+                    },
+                ],
+            },
+        ],
+        400,
+    );
 
     const response = await app.request
         .get('/internal-backstage/impact/metrics')

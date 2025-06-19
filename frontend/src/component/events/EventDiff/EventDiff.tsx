@@ -60,6 +60,11 @@ const DiffStyles = styled('div')(({ theme }) => ({
     },
 }));
 
+const ExpandButton = styled(Button)(({ theme }) => ({
+    display: 'inline-flex',
+    gap: theme.spacing(0.5),
+}));
+
 const NewEventDiff: FC<IEventDiffProps> = ({ entry, excludeKeys }) => {
     const changeType = entry.preData && entry.data ? 'edit' : undefined;
     const showExpandButton = changeType === 'edit';
@@ -69,15 +74,18 @@ const NewEventDiff: FC<IEventDiffProps> = ({ entry, excludeKeys }) => {
     return (
         <>
             {showExpandButton ? (
-                <Button
+                <ExpandButton
                     onClick={() => setFull(!full)}
                     aria-controls={diffId}
                     aria-expanded={full}
                 >
-                    {full
-                        ? 'Show only changed properties'
-                        : 'Show all properties'}
-                </Button>
+                    <span aria-hidden>{full ? '-' : '+'}</span>
+                    <span>
+                        {full
+                            ? 'Show only changed properties'
+                            : 'Show all properties'}
+                    </span>
+                </ExpandButton>
             ) : null}
             <DiffStyles data-change-type={changeType} id={diffId}>
                 <JsonDiffComponent

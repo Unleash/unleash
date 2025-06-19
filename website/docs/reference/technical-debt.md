@@ -32,7 +32,7 @@ While a flag's state does not affect its behavior in applications, using states 
 
 ## Project status
 
-Each project has a **Project status** dashboard, where you can view its technical debt status and the total number of unhealthy flags. All active flags are considered healthy, while stale and potentially stale flags are considered unhealthy. To keep your project technica debt low, [archive stale feature flags](/reference/feature-toggles#archive-a-feature-flag) and remove code from your codebase.
+Each project has a **Project status** dashboard, where you can view its technical debt status and the total number of unhealthy flags. All active flags are considered healthy, while stale and potentially stale flags are considered unhealthy. To keep your project technical debt low, [archive stale feature flags](/reference/feature-toggles#archive-a-feature-flag) and remove code from your codebase.
 
 ![Project status dashboard](/img/project-status-dashboard.png)
 

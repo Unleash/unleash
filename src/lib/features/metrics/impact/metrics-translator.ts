@@ -1,11 +1,11 @@
 import { Counter, Gauge, type Registry } from 'prom-client';
 
-interface MetricSample {
+export interface MetricSample {
     labels?: Record<string, string | number>;
     value: number;
 }
 
-interface Metric {
+export interface Metric {
     name: string;
     help: string;
     type: 'counter' | 'gauge';

@@ -52,7 +52,7 @@ export const SegmentChange: FC<ISegmentChangeProps> = ({
                     px: 3,
                 }}
             >
-                <Typography>Segment name: </Typography>
+                <Typography>Segment:</Typography>
 
                 <Link
                     component={RouterLink}

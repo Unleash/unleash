@@ -47,7 +47,6 @@ export type IFlagKey =
     | 'releasePlans'
     | 'productivityReportEmail'
     | 'productivityReportUnsubscribers'
-    | 'enterprise-payg'
     | 'showUserDeviceCount'
     | 'memorizeStats'
     | 'streaming'
@@ -59,10 +58,12 @@ export type IFlagKey =
     | 'registerFrontendClient'
     | 'reportUnknownFlags'
     | 'lastSeenBulkQuery'
-    | 'newGettingStartedEmail'
     | 'lifecycleMetrics'
     | 'customMetrics'
-    | 'createFlagDialogCache';
+    | 'impactMetrics'
+    | 'createFlagDialogCache'
+    | 'improvedJsonDiff'
+    | 'changeRequestApproverEmails';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -234,10 +235,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_PRODUCTIVITY_REPORT_UNSUBSCRIBERS,
         false,
     ),
-    'enterprise-payg': parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ENTERPRISE_PAYG,
-        false,
-    ),
     showUserDeviceCount: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SHOW_USER_DEVICE_COUNT,
         false,
@@ -279,16 +276,24 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_LAST_SEEN_BULK_QUERY,
         false,
     ),
-    newGettingStartedEmail: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_GETTING_STARTED_EMAIL,
-        false,
-    ),
     lifecycleMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_METRICS,
         false,
     ),
     createFlagDialogCache: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CREATE_FLAG_DIALOG_CACHE,
+        false,
+    ),
+    changeRequestApproverEmails: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_APPROVER_EMAILS,
+        false,
+    ),
+    improvedJsonDiff: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_IMPROVED_JSON_DIFF,
+        false,
+    ),
+    impactMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS,
         false,
     ),
 };

@@ -1,6 +1,5 @@
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { Alert, IconButton, Typography, useTheme, styled } from '@mui/material';
-import { PlaygroundResultChip } from '../../PlaygroundResultChip/LegacyPlaygroundResultChip.tsx';
 import CloseOutlined from '@mui/icons-material/CloseOutlined';
 import type React from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -9,6 +8,7 @@ import {
     hasCustomStrategies,
     hasOnlyCustomStrategies,
 } from './helpers.ts';
+import { PlaygroundResultChip } from '../../PlaygroundResultChip/PlaygroundResultChip.tsx';
 
 const StyledDivWrapper = styled('div')({
     display: 'flex',

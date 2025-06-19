@@ -143,28 +143,6 @@ const StyledAlertBox = styled(Box)(({ theme }) => ({
     },
 }));
 
-const StyledEnvironmentBox = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-}));
-
-const EnvironmentIconBox = styled(Box)(({ theme }) => ({
-    transform: 'scale(0.9)',
-    display: 'flex',
-    alignItems: 'center',
-}));
-
-const EnvironmentTypography = styled(Typography, {
-    shouldForwardProp: (prop) => prop !== 'enabled',
-})<{ enabled: boolean }>(({ enabled }) => ({
-    fontWeight: enabled ? 'bold' : 'normal',
-}));
-
-const EnvironmentTypographyHeader = styled(Typography)(({ theme }) => ({
-    marginRight: theme.spacing(0.5),
-    color: theme.palette.text.secondary,
-}));
-
 const StyledTab = styled(Tab)(({ theme }) => ({
     width: '100px',
 }));
@@ -173,11 +151,11 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     marginLeft: theme.spacing(1),
 }));
 
-const StyledConstraintSeparator = styled(ConstraintSeparator)(({ theme }) => ({
+const StyledConstraintSeparator = styled(ConstraintSeparator)({
     top: '-10px',
     left: '0',
     transform: 'translateY(0)',
-}));
+});
 
 export const FeatureStrategyForm = ({
     projectId,

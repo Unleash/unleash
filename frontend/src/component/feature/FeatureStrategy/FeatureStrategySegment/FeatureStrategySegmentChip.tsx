@@ -6,13 +6,13 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled, type Theme, Tooltip } from '@mui/material';
-import { constraintAccordionListId } from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/NewConstraintAccordionList';
 
 interface IFeatureStrategySegmentListProps {
     segment: ISegment;
     setSegments: React.Dispatch<React.SetStateAction<ISegment[]>>;
     preview?: ISegment;
     setPreview: React.Dispatch<React.SetStateAction<ISegment | undefined>>;
+    'aria-controls'?: string;
 }
 
 const StyledChip = styled('span')(({ theme }) => ({
@@ -48,6 +48,7 @@ export const FeatureStrategySegmentChip = ({
     setSegments,
     preview,
     setPreview,
+    'aria-controls': ariaControls,
 }: IFeatureStrategySegmentListProps) => {
     const onRemove = () => {
         setSegments((prev) => {
@@ -91,7 +92,7 @@ export const FeatureStrategySegmentChip = ({
                     type='button'
                     onClick={onTogglePreview}
                     aria-expanded={segment === preview}
-                    aria-controls={constraintAccordionListId}
+                    aria-controls={ariaControls}
                 >
                     {togglePreviewIcon}
                 </StyledButton>

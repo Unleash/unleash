@@ -23,7 +23,7 @@ import {
     StyledWidgetContent,
     StyledWidgetStats,
 } from '../InsightsCharts.styles';
-import { useFlag } from '@unleash/proxy-client-react';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export const PerformanceInsights: FC = () => {
     const statePrefix = 'performance-';
@@ -48,7 +48,7 @@ export const PerformanceInsights: FC = () => {
         state[`${statePrefix}to`]?.values[0],
     );
 
-    const healthToTechDebtEnabled = useFlag('healthToTechDebt');
+    const healthToTechDebtEnabled = useUiFlag('healthToTechDebt');
 
     const projects = state[`${statePrefix}project`]?.values ?? [allOption.id];
 

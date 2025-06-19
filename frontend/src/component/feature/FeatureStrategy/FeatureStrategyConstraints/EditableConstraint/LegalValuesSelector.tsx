@@ -10,7 +10,7 @@ import {
 import {
     filterLegalValues,
     LegalValueLabel,
-} from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/LegalValueLabel/LegalValueLabel';
+} from 'component/common/NewConstraintAccordion/LegalValueLabel/LegalValueLabel.tsx';
 import { ConstraintValueSearch } from './ConstraintValueSearch.tsx';
 import type { ILegalValue } from 'interfaces/context';
 import React from 'react';

@@ -16,7 +16,7 @@ import FeatureOverviewEnvironmentMetrics from './EnvironmentHeader/FeatureOvervi
 import { FeatureOverviewEnvironmentToggle } from './EnvironmentHeader/FeatureOverviewEnvironmentToggle/FeatureOverviewEnvironmentToggle.tsx';
 import { useState } from 'react';
 import type { IReleasePlan } from 'interfaces/releasePlans';
-import { EnvironmentAccordionBody as NewEnvironmentAccordionBody } from './EnvironmentAccordionBody/EnvironmentAccordionBody.tsx';
+import { EnvironmentAccordionBody } from './EnvironmentAccordionBody/EnvironmentAccordionBody.tsx';
 import { Box } from '@mui/material';
 import { ReleaseTemplatesFeedback } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/ReleaseTemplatesFeedback/ReleaseTemplatesFeedback';
 
@@ -119,7 +119,7 @@ export const FeatureOverviewEnvironment = ({
                 </EnvironmentHeader>
                 <NewStyledAccordionDetails>
                     <StyledEnvironmentAccordionContainer>
-                        <NewEnvironmentAccordionBody
+                        <EnvironmentAccordionBody
                             featureEnvironment={environment}
                             isDisabled={!environment.enabled}
                             otherEnvironments={otherEnvironments}

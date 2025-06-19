@@ -12,15 +12,13 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { RecentlyUsedConstraints } from '../RecentlyUsedConstraints/RecentlyUsedConstraints.tsx';
 import { useWeakMap } from 'hooks/useWeakMap.ts';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext.ts';
-import { createEmptyConstraint } from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/createEmptyConstraint.ts';
+import { createEmptyConstraint } from 'utils/createEmptyConstraint.ts';
 
 interface IConstraintAccordionListProps {
     constraints: IConstraint[];
     setConstraints?: React.Dispatch<React.SetStateAction<IConstraint[]>>;
     showCreateButton?: boolean;
 }
-
-export const constraintAccordionListId = 'constraintAccordionListId';
 
 const StyledContainer = styled('div')({
     width: '100%',
@@ -102,7 +100,7 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
     }
 
     return (
-        <StyledContainer id={constraintAccordionListId}>
+        <StyledContainer>
             <ConditionallyRender
                 condition={Boolean(showCreateButton && onAdd)}
                 show={

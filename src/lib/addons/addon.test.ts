@@ -55,8 +55,12 @@ test('Supports custom number of retries', async () => {
     const res = await addon.fetchRetry(
         url,
         {
-            onRetry: () => {
-                retries = retries + 1;
+            hooks: {
+                beforeRetry: [
+                    () => {
+                        retries = retries + 1;
+                    },
+                ],
             },
         },
         2,

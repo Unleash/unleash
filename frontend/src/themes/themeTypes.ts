@@ -130,14 +130,6 @@ declare module '@mui/material/styles' {
         links: string;
 
         /**
-         * For Environment Accordion
-         */
-        envAccordion: {
-            disabled: string;
-            expanded: string;
-        };
-
-        /**
          * Variants, percentage split in strategies
          **/
         variants: string[];

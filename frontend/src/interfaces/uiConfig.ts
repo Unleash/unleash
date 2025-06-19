@@ -81,7 +81,6 @@ export type UiFlags = {
     enableLegacyVariants?: boolean;
     flagCreator?: boolean;
     releasePlans?: boolean;
-    'enterprise-payg'?: boolean;
     productivityReportEmail?: boolean;
     showUserDeviceCount?: boolean;
     consumptionModel?: boolean;
@@ -90,6 +89,8 @@ export type UiFlags = {
     customMetrics?: boolean;
     lifecycleMetrics?: boolean;
     createFlagDialogCache?: boolean;
+    healthToTechDebt?: boolean;
+    improvedJsonDiff?: boolean;
 };
 
 export interface IVersionInfo {

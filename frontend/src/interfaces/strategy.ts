@@ -68,6 +68,10 @@ export interface IConstraint {
     [constraintId]?: string;
 }
 
+export interface IConstraintWithId extends IConstraint {
+    [constraintId]: string;
+}
+
 export interface IFeatureStrategySortOrder {
     id: string;
     sortOrder: number;

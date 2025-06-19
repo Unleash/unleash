@@ -164,6 +164,7 @@ export interface IUnleashOptions {
     clientFeatureCaching?: Partial<IClientCachingOption>;
     accessControlMaxAge?: number;
     prometheusApi?: string;
+    prometheusImpactMetricsApi?: string;
     publicFolder?: string;
     disableScheduler?: boolean;
     metricsRateLimiting?: Partial<IMetricsRateLimiting>;
@@ -288,6 +289,7 @@ export interface IUnleashConfig {
     clientFeatureCaching: IClientCachingOption;
     accessControlMaxAge: number;
     prometheusApi?: string;
+    prometheusImpactMetricsApi?: string;
     publicFolder?: string;
     disableScheduler?: boolean;
     isEnterprise: boolean;

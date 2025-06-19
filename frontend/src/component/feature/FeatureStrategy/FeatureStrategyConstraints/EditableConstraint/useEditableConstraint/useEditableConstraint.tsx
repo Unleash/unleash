@@ -76,7 +76,7 @@ export const useEditableConstraint = (
         [JSON.stringify(context), localConstraint.contextName],
     );
 
-    const validator = constraintValidator(localConstraint);
+    const validator = constraintValidator(localConstraint.operator);
 
     useEffect(() => {
         if (

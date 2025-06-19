@@ -13,10 +13,10 @@ import type { IUnleashServices } from '../../services/index.js';
  * @param services
  * @param config
  */
-export const scheduleServices = async (
+export const scheduleServices = (
     services: IUnleashServices,
     config: IUnleashConfig,
-): Promise<void> => {
+): void => {
     const {
         accountService,
         schedulerService,

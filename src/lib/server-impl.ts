@@ -1,7 +1,7 @@
 import stoppable, { type StoppableServer } from 'stoppable';
 import { promisify } from 'util';
 import version from './util/version.js';
-import { migrateDb, resetDb } from '../migrator.js';
+import { migrateDb, requiresMigration, resetDb } from '../migrator.js';
 import getApp from './app.js';
 import type MetricsMonitor from './metrics.js';
 import { createMetricsMonitor } from './metrics.js';
@@ -182,6 +182,7 @@ import { getDbConfig } from '../test/e2e/helpers/database-config.js';
 import { testDbPrefix } from '../test/e2e/helpers/database-init.js';
 import type { RequestHandler } from 'express';
 import { UPDATE_REVISION } from './features/feature-toggle/configuration-revision-service.js';
+import type { IFeatureUsageInfo } from './services/version-service.js';
 
 export async function initialServiceSetup(
     { authentication }: Pick<IUnleashConfig, 'authentication'>,
@@ -228,7 +229,7 @@ export async function createApp(
     await initialServiceSetup(config, services);
 
     if (!config.disableScheduler) {
-        await scheduleServices(services, config);
+        scheduleServices(services, config);
     }
 
     const metricsMonitor = fm.createMetricsMonitor();
@@ -335,21 +336,25 @@ async function start(
         if (config.db.disableMigration) {
             logger.info('DB migration: disabled');
         } else {
-            logger.info('DB migration: start');
-            if (config.flagResolver.isEnabled('migrationLock')) {
-                logger.info('Running migration with lock');
-                const lock = withDbLock(config.db, {
-                    lockKey: defaultLockKey,
-                    timeout: defaultTimeout,
-                    logger,
-                });
-                await lock(migrateDb)(config);
-            } else {
-                logger.info('Running migration without lock');
-                await migrateDb(config);
-            }
+            if (await requiresMigration(config)) {
+                logger.info('DB migration: start');
+                if (config.flagResolver.isEnabled('migrationLock')) {
+                    logger.info('Running migration with lock');
+                    const lock = withDbLock(config.db, {
+                        lockKey: defaultLockKey,
+                        timeout: defaultTimeout,
+                        logger,
+                    });
+                    await lock(migrateDb)(config);
+                } else {
+                    logger.info('Running migration without lock');
+                    await migrateDb(config);
+                }
 
-            logger.info('DB migration: end');
+                logger.info('DB migration: end');
+            } else {
+                logger.info('DB migration: no migration needed');
+            }
         }
     } catch (err) {
         logger.error('Failed to migrate db', err);
@@ -392,6 +397,7 @@ async function create(
 export {
     start,
     create,
+    scheduleServices,
     createDb,
     resetDb,
     getDbConfig,
@@ -538,6 +544,7 @@ export type {
     ExportImportService,
     QueryOverride,
     IUserPermission,
+    IFeatureUsageInfo,
 };
 export * from './openapi/index.js';
 export * from './types/index.js';

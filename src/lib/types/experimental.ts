@@ -292,6 +292,10 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_IMPROVED_JSON_DIFF,
         false,
     ),
+    impactMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

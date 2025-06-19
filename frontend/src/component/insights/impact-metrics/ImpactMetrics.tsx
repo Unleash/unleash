@@ -103,12 +103,12 @@ export const ImpactMetrics: FC<ImpactMetricsProps> = () => {
             <StyledWidget>
                 <StyledWidgetStats>
                     <Box
-                        sx={{
+                        sx={(theme) => ({
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: 2,
+                            gap: theme.spacing(2),
                             width: '100%',
-                        }}
+                        })}
                     >
                         <ImpactMetricsControls
                             selectedSeries={selectedSeries}

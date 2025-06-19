@@ -36,4 +36,4 @@ Each project has a **Project status** dashboard, where you can view its technica
 
 ![Project status dashboard](/img/project-status-dashboard.png)
 
-Your overall project health rating is the percentage of healthy flags in your project. To view your project health over time, go to [Insights](/reference/insights).
+Your overall project technical debt is the percentage of stale or potentially stale flags in your project. To view your project technical debt over time, go to [Insights](/reference/insights).

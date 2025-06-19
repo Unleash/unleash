@@ -3408,9 +3408,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uiw/codemirror-extensions-basic-setup@npm:4.23.10":
-  version: 4.23.10
-  resolution: "@uiw/codemirror-extensions-basic-setup@npm:4.23.10"
+"@uiw/codemirror-extensions-basic-setup@npm:4.23.13":
+  version: 4.23.13
+  resolution: "@uiw/codemirror-extensions-basic-setup@npm:4.23.13"
   dependencies:
     "@codemirror/autocomplete": "npm:^6.0.0"
     "@codemirror/commands": "npm:^6.0.0"
@@ -3427,7 +3427,7 @@ __metadata:
     "@codemirror/search": ">=6.0.0"
     "@codemirror/state": ">=6.0.0"
     "@codemirror/view": ">=6.0.0"
-  checksum: 10c0/64c233857b1bf878bf630297b1d4b3df14e13761ff38ceccf7a1fa21d521be288311333b7cbff927889f9a899848f4fccefd975ea5fa8d626ea4aef088f13ee8
+  checksum: 10c0/db0d1c60c8b13f69aa02b969618d3b9f5aafab23af3c8d9be9a88016aff94de1e45a1c850daf7740d265a3e5452a916112f73e5c22857346a7002c243c934159
   languageName: node
   linkType: hard
 
@@ -3455,15 +3455,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uiw/react-codemirror@npm:4.23.10":
-  version: 4.23.10
-  resolution: "@uiw/react-codemirror@npm:4.23.10"
+"@uiw/react-codemirror@npm:4.23.13":
+  version: 4.23.13
+  resolution: "@uiw/react-codemirror@npm:4.23.13"
   dependencies:
     "@babel/runtime": "npm:^7.18.6"
     "@codemirror/commands": "npm:^6.1.0"
     "@codemirror/state": "npm:^6.1.1"
     "@codemirror/theme-one-dark": "npm:^6.0.0"
-    "@uiw/codemirror-extensions-basic-setup": "npm:4.23.10"
+    "@uiw/codemirror-extensions-basic-setup": "npm:4.23.13"
     codemirror: "npm:^6.0.0"
   peerDependencies:
     "@babel/runtime": ">=7.11.0"
@@ -3473,7 +3473,7 @@ __metadata:
     codemirror: ">=6.0.0"
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
-  checksum: 10c0/cbcb928c84df2a6a03fd7789a3db317f6358961fd96197d2a3edb3ffbb00deff1cfa05fa1494c849393784bb89ae3f41425982f609f73bad0855a5e6522c328d
+  checksum: 10c0/95e79e50fa1a28cbfaf982def6ff82c5ecf18fe7eca077b4bc4cba1d43580541fcb1c38effbd299acff97f77372d8bc910642adc3d6e610c5125a9f0b85f379e
   languageName: node
   linkType: hard
 
@@ -10372,7 +10372,7 @@ __metadata:
     "@types/semver": "npm:7.5.8"
     "@types/uuid": "npm:^9.0.0"
     "@uiw/codemirror-theme-duotone": "npm:4.23.13"
-    "@uiw/react-codemirror": "npm:4.23.10"
+    "@uiw/react-codemirror": "npm:4.23.13"
     "@unleash/proxy-client-react": "npm:^5.0.0"
     "@vitejs/plugin-react": "npm:4.3.4"
     cartesian: "npm:^1.0.1"

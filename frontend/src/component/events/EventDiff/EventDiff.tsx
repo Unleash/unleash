@@ -55,8 +55,16 @@ const DiffStyles = styled('div')(({ theme }) => ({
         },
     },
 
-    '&:not([data-change-type="edit"]) :where(.addition, .deletion)::before': {
-        content: 'none',
+    '&[data-change-type="replacement"]': {
+        ':has(.addition)': {
+            color: theme.palette.eventLog.diffAdd,
+        },
+        ':has(.deletion)': {
+            color: theme.palette.eventLog.diffSub,
+        },
+        '.addition::before, .deletion::before': {
+            content: 'none',
+        },
     },
 
     '.diff:not(:has(*))': {
@@ -71,7 +79,7 @@ const ButtonIcon = styled('span')(({ theme }) => ({
 }));
 
 const NewEventDiff: FC<IEventDiffProps> = ({ entry, excludeKeys }) => {
-    const changeType = entry.preData && entry.data ? 'edit' : undefined;
+    const changeType = entry.preData && entry.data ? 'edit' : 'replacement';
     const showExpandButton = changeType === 'edit';
     const [full, setFull] = useState(false);
     const diffId = useId();
@@ -207,13 +215,7 @@ const OldEventDiff: FC<IEventDiffProps> = ({
 const EventDiff: FC<IEventDiffProps> = (props) => {
     const useNewJsonDiff = useUiFlag('improvedJsonDiff');
     if (useNewJsonDiff) {
-        return (
-            <>
-                <NewEventDiff {...props} />
-                <hr />
-                <OldEventDiff {...props} />
-            </>
-        );
+        return <NewEventDiff {...props} />;
     }
     return <OldEventDiff {...props} />;
 };

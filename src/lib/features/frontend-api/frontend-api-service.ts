@@ -135,10 +135,7 @@ export class FrontendApiService {
             ip,
         );
 
-        if (
-            metrics.instanceId &&
-            typeof sdkVersion === 'string'
-        ) {
+        if (metrics.instanceId && typeof sdkVersion === 'string') {
             const client = {
                 appName: metrics.appName,
                 instanceId: metrics.instanceId,

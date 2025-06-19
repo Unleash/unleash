@@ -45,13 +45,7 @@ let services: IUnleashServices;
 let destroy: () => Promise<void>;
 
 beforeAll(async () => {
-    const setup = await getSetup({
-        experimental: {
-            flags: {
-                registerFrontendClient: true,
-            },
-        },
-    });
+    const setup = await getSetup({});
     request = setup.request;
     stores = setup.stores;
     destroy = setup.destroy;

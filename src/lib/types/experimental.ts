@@ -55,7 +55,6 @@ export type IFlagKey =
     | 'uniqueSdkTracking'
     | 'consumptionModel'
     | 'edgeObservability'
-    | 'registerFrontendClient'
     | 'reportUnknownFlags'
     | 'lastSeenBulkQuery'
     | 'lifecycleMetrics'
@@ -262,10 +261,6 @@ const flags: IFlags = {
     ),
     edgeObservability: parseEnvVarBoolean(
         process.env.EXPERIMENTAL_EDGE_OBSERVABILITY,
-        false,
-    ),
-    registerFrontendClient: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_REGISTER_FRONTEND_CLIENT,
         false,
     ),
     reportUnknownFlags: parseEnvVarBoolean(

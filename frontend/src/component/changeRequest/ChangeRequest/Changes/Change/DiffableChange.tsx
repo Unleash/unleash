@@ -1,11 +1,5 @@
 import type React from 'react';
-import {
-    type PropsWithChildren,
-    useId,
-    useState,
-    type FC,
-    type ReactNode,
-} from 'react';
+import type { FC, ReactNode } from 'react';
 import { Box, styled, Tooltip, Typography } from '@mui/material';
 import { Tab, Tabs, TabsList, TabPanel } from '@mui/base';
 import BlockIcon from '@mui/icons-material/Block';
@@ -171,41 +165,12 @@ const DeleteStrategy: FC<{
     );
 };
 
-const tabA11yProps = (baseId: string) => (index: number) => ({
-    id: `${baseId}-tab-${index}`,
-    'aria-controls': `${baseId}-${index}`,
-});
-
-const TabPanelZ: FC<
-    PropsWithChildren<{
-        index: number;
-        value: number;
-        id: string;
-        'aria-labelledby': string;
-    }>
-> = ({ children, index, value, id, 'aria-labelledby': ariaLabelledBy }) => {
-    return (
-        <div
-            role='tabpanel'
-            hidden={value !== index}
-            id={id}
-            aria-labelledby={ariaLabelledBy}
-        >
-            {value === index ? children : null}
-        </div>
-    );
-};
-
 const UpdateStrategy: FC<{
     change: IChangeRequestUpdateStrategy;
     changeRequestState: ChangeRequestState;
     currentStrategy: IFeatureStrategy | undefined;
     actions?: ReactNode;
 }> = ({ change, changeRequestState, currentStrategy, actions }) => {
-    const [tabIndex, setTabIndex] = useState(0);
-    const baseId = useId();
-    const allyProps = tabA11yProps(baseId);
-
     const previousTitle =
         changeRequestState === 'Applied'
             ? change.payload.snapshot?.title

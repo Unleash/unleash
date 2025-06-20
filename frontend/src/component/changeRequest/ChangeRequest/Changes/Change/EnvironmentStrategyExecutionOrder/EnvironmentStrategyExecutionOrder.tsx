@@ -105,7 +105,7 @@ export const EnvironmentStrategyExecutionOrder = ({
             </StyledChangeHeader>
             <StyledStrategyExecutionWrapper>
                 {updatedStrategies.map((strategy, index) => (
-                    <StyledStrategyContainer>
+                    <StyledStrategyContainer key={strategy.id}>
                         {`${index + 1}: `}
                         {formatStrategyName(strategy?.name || '')}
                         {strategy?.title && ` - ${strategy.title}`}

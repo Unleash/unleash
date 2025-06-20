@@ -27,9 +27,9 @@ export const ViewableConstraintsList = ({
     return (
         <StyledContainer>
             <ConstraintsList>
-                {constraints.map((constraint) => (
+                {constraints.map((constraint, index) => (
                     <ConstraintAccordionView
-                        key={constraint[constraintId]}
+                        key={constraint[constraintId] || index}
                         constraint={constraint}
                     />
                 ))}

@@ -220,4 +220,7 @@ const EventDiff: FC<IEventDiffProps> = (props) => {
     return <OldEventDiff {...props} />;
 };
 
+/**
+ * @deprecated remove the default export with flag improvedJsonDiff. Switch imports in files that use this to the named import instead.
+ */
 export default EventDiff;

@@ -9,13 +9,14 @@ import {
     formatStrategyName,
     GetFeatureStrategyIcon,
 } from 'utils/strategyNames';
-import EventDiff from 'component/events/EventDiff/EventDiff';
+import EventDiff, { NewEventDiff } from 'component/events/EventDiff/EventDiff';
 import omit from 'lodash.omit';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { Typography, styled } from '@mui/material';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { textTruncated } from 'themes/themeStyles';
 import { NameWithChangeInfo } from '../NameWithChangeInfo/NameWithChangeInfo.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',
@@ -47,12 +48,22 @@ export const StrategyDiff: FC<{
         | IChangeRequestDeleteStrategy;
     currentStrategy?: IFeatureStrategy;
 }> = ({ change, currentStrategy }) => {
+    const useNewDiff = useUiFlag('improvedJsonDiff');
     const changeRequestStrategy =
         change.action === 'deleteStrategy' ? undefined : change.payload;
 
     const sortedCurrentStrategy = sortSegments(currentStrategy);
     const sortedChangeRequestStrategy = sortSegments(changeRequestStrategy);
-
+    if (useNewDiff) {
+        return (
+            <NewEventDiff
+                entry={{
+                    preData: omit(sortedCurrentStrategy, 'sortOrder'),
+                    data: omit(sortedChangeRequestStrategy, 'snapshot'),
+                }}
+            />
+        );
+    }
     return (
         <StyledCodeSection>
             <EventDiff

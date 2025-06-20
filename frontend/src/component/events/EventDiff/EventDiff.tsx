@@ -78,7 +78,7 @@ const ButtonIcon = styled('span')(({ theme }) => ({
     marginInlineEnd: theme.spacing(0.5),
 }));
 
-const NewEventDiff: FC<IEventDiffProps> = ({ entry, excludeKeys }) => {
+export const NewEventDiff: FC<IEventDiffProps> = ({ entry, excludeKeys }) => {
     const changeType = entry.preData && entry.data ? 'edit' : 'replacement';
     const showExpandButton = changeType === 'edit';
     const [full, setFull] = useState(false);
@@ -220,4 +220,7 @@ const EventDiff: FC<IEventDiffProps> = (props) => {
     return <OldEventDiff {...props} />;
 };
 
+/**
+ * @deprecated remove the default export with flag improvedJsonDiff. Switch imports in files that use this to the named import instead.
+ */
 export default EventDiff;

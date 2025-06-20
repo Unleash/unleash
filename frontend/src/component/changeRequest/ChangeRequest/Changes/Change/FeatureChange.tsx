@@ -15,6 +15,7 @@ import { ArchiveFeatureChange } from './ArchiveFeatureChange.tsx';
 import { DependencyChange } from './DependencyChange.tsx';
 import { Link } from 'react-router-dom';
 import { ReleasePlanChange } from './ReleasePlanChange.tsx';
+import { DiffableChange } from './DiffableChange.tsx';
 
 const StyledSingleChangeBox = styled(Box, {
     shouldForwardProp: (prop: string) => !prop.startsWith('$'),
@@ -166,14 +167,25 @@ export const FeatureChange: FC<{
                 {change.action === 'addStrategy' ||
                 change.action === 'deleteStrategy' ||
                 change.action === 'updateStrategy' ? (
-                    <StrategyChange
-                        actions={actions}
-                        change={change}
-                        featureName={feature.name}
-                        environmentName={changeRequest.environment}
-                        projectId={changeRequest.project}
-                        changeRequestState={changeRequest.state}
-                    />
+                    <>
+                        <StrategyChange
+                            actions={actions}
+                            change={change}
+                            featureName={feature.name}
+                            environmentName={changeRequest.environment}
+                            projectId={changeRequest.project}
+                            changeRequestState={changeRequest.state}
+                        />
+                        <hr />
+                        <DiffableChange
+                            actions={actions}
+                            change={change}
+                            featureName={feature.name}
+                            environmentName={changeRequest.environment}
+                            projectId={changeRequest.project}
+                            changeRequestState={changeRequest.state}
+                        />
+                    </>
                 ) : null}
                 {change.action === 'patchVariant' && (
                     <VariantPatch

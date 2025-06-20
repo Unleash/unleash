@@ -32,8 +32,6 @@ While a flag's state does not affect its behavior in applications, using states 
 
 ## Project status
 
-Each project has a **Project status** dashboard, where you can view its technical debt status and the total number of unhealthy flags. All active flags are considered healthy, while stale and potentially stale flags are considered unhealthy. To keep your project technical debt low, [archive stale feature flags](/reference/feature-toggles#archive-a-feature-flag) and remove code from your codebase.
+Each project has a **Project status** dashboard, where you can view its technical debt rating—the percentage of healthy flags compared to stale or potentially stale flags. To keep your project's technical debt low, [archive stale feature flags](/reference/feature-toggles#archive-a-feature-flag) and remove them from your codebase. To view your project's technical debt rating over time, go to [Analytics](/reference/insights).
 
 ![Project status dashboard](/img/project-status-dashboard.png)
-
-Your project's technical debt rating is the percentage of stale or potentially stale flags in your project. To view your project's technical debt rating over time, go to [Analytics](/reference/insights).

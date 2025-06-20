@@ -1,6 +1,6 @@
 import type React from 'react';
 import type { FC, ReactNode } from 'react';
-import { Box, styled, Tooltip, Typography } from '@mui/material';
+import { Box, type Button, styled, Tooltip, Typography } from '@mui/material';
 import { Tab, Tabs, TabsList, TabPanel } from '@mui/base';
 import BlockIcon from '@mui/icons-material/Block';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
@@ -165,6 +165,20 @@ const DeleteStrategy: FC<{
     );
 };
 
+const RightHandSide = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+    alignItems: 'center',
+}));
+
+const StyledTabsList = styled(TabsList)(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.text.primary,
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: theme.spacing(0, 2),
+}));
+
 const UpdateStrategy: FC<{
     change: IChangeRequestUpdateStrategy;
     changeRequestState: ChangeRequestState;
@@ -211,13 +225,19 @@ const UpdateStrategy: FC<{
                         />
                     </StrategyTooltipLink>
                 </ChangeItemInfo>
-                <div>
+                <RightHandSide>
                     <TabsList>
-                        <Tab value={0}>Change</Tab>
+                        <Tab<typeof Button>
+                            // component={Button}
+                            // slots={{ root: Button }}
+                            value={0}
+                        >
+                            Change
+                        </Tab>
                         <Tab value={1}>Diff</Tab>
                     </TabsList>
                     {actions}
-                </div>
+                </RightHandSide>
             </ChangeItemCreateEditDeleteWrapper>
             <ConditionallyRender
                 condition={

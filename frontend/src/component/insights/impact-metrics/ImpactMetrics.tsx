@@ -19,7 +19,8 @@ import {
     getDisplayFormat,
     getSeriesLabel,
     getTimeUnit,
-} from './impact-metrics-utils.ts';
+    formatLargeNumbers,
+} from './utils.ts';
 import { fromUnixTime } from 'date-fns';
 import { useSeriesColor } from './hooks/useSeriesColor.ts';
 
@@ -254,6 +255,14 @@ export const ImpactMetrics: FC = () => {
                                               },
                                               ticks: {
                                                   precision: 0,
+                                                  callback: (
+                                                      value: unknown,
+                                                  ): string | number =>
+                                                      typeof value === 'number'
+                                                          ? formatLargeNumbers(
+                                                                value,
+                                                            )
+                                                          : (value as number),
                                               },
                                           },
                                       },

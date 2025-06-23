@@ -48,3 +48,13 @@ export const getSeriesLabel = (metric: Record<string, string>): string => {
 
     return `${__name__} (${labelParts})`;
 };
+
+export const formatLargeNumbers = (value: number): string => {
+    if (value >= 1000000) {
+        return `${(value / 1000000).toFixed(0)}M`;
+    }
+    if (value >= 1000) {
+        return `${(value / 1000).toFixed(0)}k`;
+    }
+    return value.toString();
+};

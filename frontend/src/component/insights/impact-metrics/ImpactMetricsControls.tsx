@@ -11,6 +11,8 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
+import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
+import { Highlighter } from 'component/common/Highlighter/Highlighter';
 
 export interface ImpactMetricsControlsProps {
     selectedSeries: string;
@@ -19,7 +21,7 @@ export interface ImpactMetricsControlsProps {
     onRangeChange: (range: 'hour' | 'day' | 'week' | 'month') => void;
     beginAtZero: boolean;
     onBeginAtZeroChange: (beginAtZero: boolean) => void;
-    metricSeries: string[];
+    metricSeries: (ImpactMetricsSeries & { name: string })[];
     loading?: boolean;
 }
 
@@ -49,9 +51,29 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
 
         <Autocomplete
             options={metricSeries}
-            value={selectedSeries || null}
-            onChange={(_, newValue) => onSeriesChange(newValue || '')}
+            getOptionLabel={(option) => option.name}
+            value={
+                metricSeries.find((option) => option.name === selectedSeries) ||
+                null
+            }
+            onChange={(_, newValue) => onSeriesChange(newValue?.name || '')}
             disabled={loading}
+            renderOption={(props, option, { inputValue }) => (
+                <Box component='li' {...props}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <Typography variant='body2'>
+                            <Highlighter search={inputValue}>
+                                {option.name}
+                            </Highlighter>
+                        </Typography>
+                        <Typography variant='caption' color='text.secondary'>
+                            <Highlighter search={inputValue}>
+                                {option.help}
+                            </Highlighter>
+                        </Typography>
+                    </Box>
+                </Box>
+            )}
             renderInput={(params) => (
                 <TextField
                     {...params}

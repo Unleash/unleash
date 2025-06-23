@@ -46,6 +46,16 @@ export const ImpactMetrics: FC = () => {
         type: 'constant',
     });
 
+    const metricSeries = useMemo(() => {
+        if (!metadata?.series) {
+            return [];
+        }
+        return Object.entries(metadata.series).map(([name, rest]) => ({
+            name,
+            ...rest,
+        }));
+    }, [metadata]);
+
     const data = useMemo(() => {
         if (!timeSeriesData.length) {
             return {
@@ -119,7 +129,7 @@ export const ImpactMetrics: FC = () => {
                             onRangeChange={setSelectedRange}
                             beginAtZero={beginAtZero}
                             onBeginAtZeroChange={setBeginAtZero}
-                            metricSeries={metadata.series}
+                            metricSeries={metricSeries}
                             loading={metadataLoading}
                         />
 

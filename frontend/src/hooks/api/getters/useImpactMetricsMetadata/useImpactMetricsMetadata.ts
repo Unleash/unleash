@@ -1,9 +1,13 @@
 import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter.js';
 import { formatApiPath } from 'utils/formatPath';
 
+export type ImpactMetricsSeries = {
+    type: string;
+    help: string;
+};
+
 export type ImpactMetricsMetadata = {
-    series: string[];
-    labels: string[];
+    series: Record<string, ImpactMetricsSeries>;
 };
 
 export const useImpactMetricsMetadata = () => {
@@ -14,7 +18,7 @@ export const useImpactMetricsMetadata = () => {
         );
 
     return {
-        metadata: data || { series: [], labels: [] },
+        metadata: data,
         refetch,
         loading,
         error,

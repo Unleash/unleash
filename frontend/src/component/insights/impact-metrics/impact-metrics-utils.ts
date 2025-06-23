@@ -25,3 +25,26 @@ export const getDisplayFormat = (selectedRange: string) => {
             return 'MMM dd HH:mm';
     }
 };
+
+export const getSeriesLabel = (metric: Record<string, string>): string => {
+    const { __name__, ...labels } = metric;
+
+    const labelParts = Object.entries(labels)
+        .filter(([key, value]) => key !== '__name__' && value)
+        .map(([key, value]) => `${key}=${value}`)
+        .join(', ');
+
+    if (!__name__ && !labelParts) {
+        return 'Series';
+    }
+
+    if (!__name__) {
+        return labelParts;
+    }
+
+    if (!labelParts) {
+        return __name__;
+    }
+
+    return `${__name__} (${labelParts})`;
+};

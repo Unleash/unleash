@@ -15,16 +15,30 @@ import { useImpactMetricsMetadata } from 'hooks/api/getters/useImpactMetricsMeta
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import { usePlaceholderData } from '../hooks/usePlaceholderData.js';
 import { ImpactMetricsControls } from './ImpactMetricsControls.tsx';
-import { getDisplayFormat, getTimeUnit } from './time-utils.ts';
+import {
+    getDisplayFormat,
+    getSeriesLabel,
+    getTimeUnit,
+} from './impact-metrics-utils.ts';
 import { fromUnixTime } from 'date-fns';
+import { useSeriesColor } from './hooks/useSeriesColor.ts';
 
 export const ImpactMetrics: FC = () => {
     const theme = useTheme();
+    const getSeriesColor = useSeriesColor();
     const [selectedSeries, setSelectedSeries] = useState<string>('');
     const [selectedRange, setSelectedRange] = useState<
         'hour' | 'day' | 'week' | 'month'
     >('day');
     const [beginAtZero, setBeginAtZero] = useState(false);
+    const [selectedLabels, setSelectedLabels] = useState<
+        Record<string, string[]>
+    >({});
+
+    const handleSeriesChange = (series: string) => {
+        setSelectedSeries(series);
+        setSelectedLabels({}); // labels are series-specific
+    };
 
     const {
         metadata,
@@ -32,12 +46,19 @@ export const ImpactMetrics: FC = () => {
         error: metadataError,
     } = useImpactMetricsMetadata();
     const {
-        data: { start, end, data: timeSeriesData },
+        data: { start, end, series: timeSeriesData, labels: availableLabels },
         loading: dataLoading,
         error: dataError,
     } = useImpactMetricsData(
         selectedSeries
-            ? { series: selectedSeries, range: selectedRange }
+            ? {
+                  series: selectedSeries,
+                  range: selectedRange,
+                  labels:
+                      Object.keys(selectedLabels).length > 0
+                          ? selectedLabels
+                          : undefined,
+              }
             : undefined,
     );
 
@@ -57,7 +78,7 @@ export const ImpactMetrics: FC = () => {
     }, [metadata]);
 
     const data = useMemo(() => {
-        if (!timeSeriesData.length) {
+        if (!timeSeriesData || timeSeriesData.length === 0) {
             return {
                 labels: [],
                 datasets: [
@@ -70,29 +91,75 @@ export const ImpactMetrics: FC = () => {
             };
         }
 
-        const timestamps = timeSeriesData.map(
-            ([epochTimestamp]) => new Date(epochTimestamp * 1000),
-        );
-        const values = timeSeriesData.map(([, value]) => value);
+        if (timeSeriesData.length === 1) {
+            const series = timeSeriesData[0];
+            const timestamps = series.data.map(
+                ([epochTimestamp]) => new Date(epochTimestamp * 1000),
+            );
+            const values = series.data.map(([, value]) => value);
 
-        return {
-            labels: timestamps,
-            datasets: [
-                {
-                    data: values,
-                    borderColor: theme.palette.primary.main,
-                    backgroundColor: theme.palette.primary.light,
-                },
-            ],
-        };
-    }, [timeSeriesData, theme]);
+            return {
+                labels: timestamps,
+                datasets: [
+                    {
+                        data: values,
+                        borderColor: theme.palette.primary.main,
+                        backgroundColor: theme.palette.primary.light,
+                        label: getSeriesLabel(series.metric),
+                    },
+                ],
+            };
+        } else {
+            const allTimestamps = new Set<number>();
+            timeSeriesData.forEach((series) => {
+                series.data.forEach(([timestamp]) => {
+                    allTimestamps.add(timestamp);
+                });
+            });
+            const sortedTimestamps = Array.from(allTimestamps).sort(
+                (a, b) => a - b,
+            );
+            const labels = sortedTimestamps.map(
+                (timestamp) => new Date(timestamp * 1000),
+            );
+
+            const datasets = timeSeriesData.map((series) => {
+                const seriesLabel = getSeriesLabel(series.metric);
+                const color = getSeriesColor(seriesLabel);
+
+                const dataMap = new Map(series.data);
+
+                const data = sortedTimestamps.map(
+                    (timestamp) => dataMap.get(timestamp) ?? null,
+                );
+
+                return {
+                    label: seriesLabel,
+                    data,
+                    borderColor: color,
+                    backgroundColor: color,
+                    fill: false,
+                    spanGaps: false, // Don't connect nulls
+                };
+            });
+
+            return {
+                labels,
+                datasets,
+            };
+        }
+    }, [timeSeriesData, theme, getSeriesColor]);
 
     const hasError = metadataError || dataError;
     const isLoading = metadataLoading || dataLoading;
     const shouldShowPlaceholder = !selectedSeries || isLoading || hasError;
     const notEnoughData = useMemo(
-        () => !isLoading && !data.datasets.some((d) => d.data.length > 1),
-        [data, isLoading],
+        () =>
+            !isLoading &&
+            (!timeSeriesData ||
+                timeSeriesData.length === 0 ||
+                !data.datasets.some((d) => d.data.length > 1)),
+        [data, isLoading, timeSeriesData],
     );
 
     const minTime = start
@@ -124,13 +191,16 @@ export const ImpactMetrics: FC = () => {
                     >
                         <ImpactMetricsControls
                             selectedSeries={selectedSeries}
-                            onSeriesChange={setSelectedSeries}
+                            onSeriesChange={handleSeriesChange}
                             selectedRange={selectedRange}
                             onRangeChange={setSelectedRange}
                             beginAtZero={beginAtZero}
                             onBeginAtZeroChange={setBeginAtZero}
                             metricSeries={metricSeries}
                             loading={metadataLoading}
+                            selectedLabels={selectedLabels}
+                            onLabelsChange={setSelectedLabels}
+                            availableLabels={availableLabels}
                         />
 
                         {!selectedSeries && !isLoading ? (
@@ -189,7 +259,15 @@ export const ImpactMetrics: FC = () => {
                                       },
                                       plugins: {
                                           legend: {
-                                              display: false,
+                                              display:
+                                                  timeSeriesData &&
+                                                  timeSeriesData.length > 1,
+                                              position: 'bottom' as const,
+                                              labels: {
+                                                  usePointStyle: true,
+                                                  boxWidth: 8,
+                                                  padding: 12,
+                                              },
                                           },
                                       },
                                       animations: {

@@ -101,21 +101,12 @@ export default class ClientInstanceService {
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
 
-        if (this.flagResolver.isEnabled('lastSeenBulkQuery')) {
-            this.seenClients[this.clientKey(value)] = {
-                appName: value.appName,
-                instanceId: value.instanceId,
-                environment: value.environment,
-                clientIp: clientIp,
-            };
-        } else {
-            await this.clientInstanceStore.setLastSeen({
-                appName: value.appName,
-                instanceId: value.instanceId,
-                environment: value.environment,
-                clientIp: clientIp,
-            });
-        }
+        this.seenClients[this.clientKey(value)] = {
+            appName: value.appName,
+            instanceId: value.instanceId,
+            environment: value.environment,
+            clientIp: clientIp,
+        };
     }
 
     public registerFrontendClient(data: IFrontendClientApp): void {

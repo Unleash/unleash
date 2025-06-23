@@ -309,10 +309,19 @@ export interface IFlagResolver {
     isEnabled: (expName: IFlagKey, context?: IFlagContext) => boolean;
     getVariant: (expName: IFlagKey, context?: IFlagContext) => Variant;
     getStaticContext: () => IFlagContext;
+    impactMetrics?: IImpactMetricsResolver;
 }
 
 export interface IExternalFlagResolver {
     isEnabled: (flagName: IFlagKey, context?: IFlagContext) => boolean;
     getVariant: (flagName: IFlagKey, context?: IFlagContext) => Variant;
     getStaticContext: () => IFlagContext;
+    impactMetrics?: IImpactMetricsResolver;
+}
+
+export interface IImpactMetricsResolver {
+    defineCounter(name: string, help: string);
+    defineGauge(name: string, help: string);
+    incrementCounter(name: string, value?: number, featureName?: string): void;
+    updateGauge(name: string, value: number, featureName?: string): void;
 }

@@ -5,6 +5,6 @@ exports.up = function(db, cb) {
 
 exports.down = function(db, cb) {
   db.runSql(`
-DROP INDEX IF EXISTS cr_req_approvers_notifiied_at_idx;
+DROP INDEX IF EXISTS cr_req_approvers_notified_at_idx;
 ALTER TABLE change_request_requested_approvers DROP COLUMN notified_at;`, cb);
 };

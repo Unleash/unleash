@@ -137,6 +137,11 @@ export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
                                   : 'health',
                               xAxisKey: 'date',
                           },
+                          plugins: {
+                              legend: {
+                                  display: !isAggregate,
+                              },
+                          },
                           scales: {
                               y: {
                                   min: 0,

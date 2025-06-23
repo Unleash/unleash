@@ -2727,6 +2727,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cross-spawn@npm:^7.0.6":
+  version: 7.0.6
+  resolution: "cross-spawn@npm:7.0.6"
+  dependencies:
+    path-key: "npm:^3.1.0"
+    shebang-command: "npm:^2.0.0"
+    which: "npm:^2.0.1"
+  checksum: 10c0/053ea8b2135caff68a9e81470e845613e374e7309a47731e81639de3eaeb90c3d01af0e0b44d2ab9d50b43467223b88567dfeb3262db942dc063b9976718ffc1
+  languageName: node
+  linkType: hard
+
 "d@npm:1, d@npm:^1.0.1, d@npm:^1.0.2":
   version: 1.0.2
   resolution: "d@npm:1.0.2"
@@ -7125,13 +7136,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"string-argv@npm:^0.3.1":
-  version: 0.3.1
-  resolution: "string-argv@npm:0.3.1"
-  checksum: 10c0/f59582070f0a4a2d362d8331031f313771ad2b939b223b0593d7765de2689c975e0069186cef65977a29af9deec248c7e480ea4015d153ead754aea5e4bcfe7c
-  languageName: node
-  linkType: hard
-
 "string-argv@npm:^0.3.2":
   version: 0.3.2
   resolution: "string-argv@npm:0.3.2"
@@ -7557,19 +7561,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsc-watch@npm:6.2.1":
-  version: 6.2.1
-  resolution: "tsc-watch@npm:6.2.1"
+"tsc-watch@npm:7.1.1":
+  version: 7.1.1
+  resolution: "tsc-watch@npm:7.1.1"
   dependencies:
-    cross-spawn: "npm:^7.0.3"
+    cross-spawn: "npm:^7.0.6"
     node-cleanup: "npm:^2.1.2"
     ps-tree: "npm:^1.2.0"
-    string-argv: "npm:^0.3.1"
+    string-argv: "npm:^0.3.2"
   peerDependencies:
     typescript: "*"
   bin:
     tsc-watch: dist/lib/tsc-watch.js
-  checksum: 10c0/f5fe19e5ac9f4c42a5600c20aee9ff49e282f11813aead65ed58fa11d98a20f5a82bf4f931897270f49f6475dd54e9aab9c46a07c3801b8d237dfbe77bcf1bfc
+  checksum: 10c0/e69b530c2664213574aa67bb47544cf8d4e55ea46cd2a8929f44d8b8c8a70c3574b9ebe7b1752348690b276ece895f8db86fcf84c1d88be9868eb0705cce2dad
   languageName: node
   linkType: hard
 
@@ -7866,7 +7870,7 @@ __metadata:
     tldts: "npm:7.0.6"
     ts-node: "npm:10.9.2"
     ts-toolbelt: "npm:^9.6.0"
-    tsc-watch: "npm:6.2.1"
+    tsc-watch: "npm:7.1.1"
     type-is: "npm:^2.0.0"
     typescript: "npm:5.8.3"
     ulidx: "npm:^2.4.1"

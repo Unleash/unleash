@@ -127,7 +127,7 @@
     "stoppable": "^1.1.0",
     "tldts": "7.0.6",
     "ts-toolbelt": "^9.6.0",
-    "type-is": "^1.6.18",
+    "type-is": "^2.0.0",
     "ulidx": "^2.4.1",
     "unleash-client": "^6.6.0",
     "uuid": "^9.0.0"

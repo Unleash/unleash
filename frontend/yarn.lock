@@ -2877,14 +2877,14 @@ __metadata:
   linkType: hard
 
 "@tanstack/react-virtual@npm:^3.11.3":
-  version: 3.13.9
-  resolution: "@tanstack/react-virtual@npm:3.13.9"
+  version: 3.13.10
+  resolution: "@tanstack/react-virtual@npm:3.13.10"
   dependencies:
-    "@tanstack/virtual-core": "npm:3.13.9"
+    "@tanstack/virtual-core": "npm:3.13.10"
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/aa05fb24e30686516e74ccdec94a83d195615a4f29bc866a53ee6b0107e466c6d6e3e947b3fb0613b907b0f982d74b00367868cf6b1ac956562d0e7c24d6764b
+  checksum: 10c0/587ef4db703cc9d870ee68b3f1471118fe69920e8f59cf627a359d518331c6684069fb3e159cd35ac458ea60a829b66953b774314833e1cb10b365255791559e
   languageName: node
   linkType: hard
 
@@ -2895,10 +2895,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/virtual-core@npm:3.13.9":
-  version: 3.13.9
-  resolution: "@tanstack/virtual-core@npm:3.13.9"
-  checksum: 10c0/6e9526a9d52f8ddc54af8a1dc7380814b10ab38d8a4265e362a5b69c3132097ace51496d4206fe8aa90e33129aaf1a177c93d7ed018b5564b78e057fc9cdb48d
+"@tanstack/virtual-core@npm:3.13.10":
+  version: 3.13.10
+  resolution: "@tanstack/virtual-core@npm:3.13.10"
+  checksum: 10c0/ecfe56cc37db088416abb1f1b9641cc7b05b387bb532e4fe42f30a5477e55fdbb724f54e8dc5c3d8b380a5e9f80cc11426519825f8ecbcb6ca717639ba702cc8
   languageName: node
   linkType: hard
 
@@ -3199,20 +3199,20 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 22.13.10
-  resolution: "@types/node@npm:22.13.10"
+  version: 24.0.3
+  resolution: "@types/node@npm:24.0.3"
   dependencies:
-    undici-types: "npm:~6.20.0"
-  checksum: 10c0/a3865f9503d6f718002374f7b87efaadfae62faa499c1a33b12c527cfb9fd86f733e1a1b026b80c5a0e4a965701174bc3305595a7d36078aa1abcf09daa5dee9
+    undici-types: "npm:~7.8.0"
+  checksum: 10c0/9c3c4e87600d1cf11e291c2fd4bfd806a615455463c30a0ef6dc9c801b3423344d9b82b8084e3ccabce485a7421ebb61a66e9676181bd7d9aea4759998a120d5
   languageName: node
   linkType: hard
 
 "@types/node@npm:^22.0.0":
-  version: 22.15.18
-  resolution: "@types/node@npm:22.15.18"
+  version: 22.15.32
+  resolution: "@types/node@npm:22.15.32"
   dependencies:
     undici-types: "npm:~6.21.0"
-  checksum: 10c0/e23178c568e2dc6b93b6aa3b8dfb45f9556e527918c947fe7406a4c92d2184c7396558912400c3b1b8d0fa952ec63819aca2b8e4d3545455fc6f1e9623e09ca6
+  checksum: 10c0/63a2fa52adf1134d1b3bee8b1862d4b8e4550fffc190551068d3d41a41d9e5c0c8f1cb81faa18767b260637360f662115c26c5e4e7718868ead40c4a57cbc0e3
   languageName: node
   linkType: hard
 
@@ -3313,10 +3313,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/semver@npm:7.5.8":
-  version: 7.5.8
-  resolution: "@types/semver@npm:7.5.8"
-  checksum: 10c0/8663ff927234d1c5fcc04b33062cb2b9fcfbe0f5f351ed26c4d1e1581657deebd506b41ff7fdf89e787e3d33ce05854bc01686379b89e9c49b564c4cfa988efa
+"@types/semver@npm:7.7.0":
+  version: 7.7.0
+  resolution: "@types/semver@npm:7.7.0"
+  checksum: 10c0/6b5f65f647474338abbd6ee91a6bbab434662ddb8fe39464edcbcfc96484d388baad9eb506dff217b6fc1727a88894930eb1f308617161ac0f376fe06be4e1ee
   languageName: node
   linkType: hard
 
@@ -3408,9 +3408,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uiw/codemirror-extensions-basic-setup@npm:4.23.10":
-  version: 4.23.10
-  resolution: "@uiw/codemirror-extensions-basic-setup@npm:4.23.10"
+"@uiw/codemirror-extensions-basic-setup@npm:4.23.13":
+  version: 4.23.13
+  resolution: "@uiw/codemirror-extensions-basic-setup@npm:4.23.13"
   dependencies:
     "@codemirror/autocomplete": "npm:^6.0.0"
     "@codemirror/commands": "npm:^6.0.0"
@@ -3427,22 +3427,22 @@ __metadata:
     "@codemirror/search": ">=6.0.0"
     "@codemirror/state": ">=6.0.0"
     "@codemirror/view": ">=6.0.0"
-  checksum: 10c0/64c233857b1bf878bf630297b1d4b3df14e13761ff38ceccf7a1fa21d521be288311333b7cbff927889f9a899848f4fccefd975ea5fa8d626ea4aef088f13ee8
+  checksum: 10c0/db0d1c60c8b13f69aa02b969618d3b9f5aafab23af3c8d9be9a88016aff94de1e45a1c850daf7740d265a3e5452a916112f73e5c22857346a7002c243c934159
   languageName: node
   linkType: hard
 
-"@uiw/codemirror-theme-duotone@npm:4.23.10":
-  version: 4.23.10
-  resolution: "@uiw/codemirror-theme-duotone@npm:4.23.10"
+"@uiw/codemirror-theme-duotone@npm:4.23.13":
+  version: 4.23.13
+  resolution: "@uiw/codemirror-theme-duotone@npm:4.23.13"
   dependencies:
-    "@uiw/codemirror-themes": "npm:4.23.10"
-  checksum: 10c0/058fe2ec927fb7d9fdd7a040c1fa52ed52b2b786e2917ae981a687b1aafeac26022900aac625c2018288c9bd7ab9e056854d6628eaaea46a4251b0022693df7c
+    "@uiw/codemirror-themes": "npm:4.23.13"
+  checksum: 10c0/3c0994d7731fdad1537d66f331b3bc1f4308e9388001b3a1d168c8e4b751f28661652533b0c830b3f30456132572686a298af0672f3f36872a08fdc1cf9b1e47
   languageName: node
   linkType: hard
 
-"@uiw/codemirror-themes@npm:4.23.10":
-  version: 4.23.10
-  resolution: "@uiw/codemirror-themes@npm:4.23.10"
+"@uiw/codemirror-themes@npm:4.23.13":
+  version: 4.23.13
+  resolution: "@uiw/codemirror-themes@npm:4.23.13"
   dependencies:
     "@codemirror/language": "npm:^6.0.0"
     "@codemirror/state": "npm:^6.0.0"
@@ -3451,19 +3451,19 @@ __metadata:
     "@codemirror/language": ">=6.0.0"
     "@codemirror/state": ">=6.0.0"
     "@codemirror/view": ">=6.0.0"
-  checksum: 10c0/29f980789a535ae021ca8d8bec3ecee4dda8cb11c5451729c04481310cc04cd7c00ddb3011137f5cc305d565bc0a3464ebd88fdde9359e296d8f0a6cf6477811
+  checksum: 10c0/4e3bc3f12681727d41ae3c60c17fab5be267cb2675ace8ce6c56c66d6453715bf6d00c9b356d27df70f2104b0eaeda8c734faf2f05b38af05e7c5b2306f2a182
   languageName: node
   linkType: hard
 
-"@uiw/react-codemirror@npm:4.23.10":
-  version: 4.23.10
-  resolution: "@uiw/react-codemirror@npm:4.23.10"
+"@uiw/react-codemirror@npm:4.23.13":
+  version: 4.23.13
+  resolution: "@uiw/react-codemirror@npm:4.23.13"
   dependencies:
     "@babel/runtime": "npm:^7.18.6"
     "@codemirror/commands": "npm:^6.1.0"
     "@codemirror/state": "npm:^6.1.1"
     "@codemirror/theme-one-dark": "npm:^6.0.0"
-    "@uiw/codemirror-extensions-basic-setup": "npm:4.23.10"
+    "@uiw/codemirror-extensions-basic-setup": "npm:4.23.13"
     codemirror: "npm:^6.0.0"
   peerDependencies:
     "@babel/runtime": ">=7.11.0"
@@ -3473,7 +3473,7 @@ __metadata:
     codemirror: ">=6.0.0"
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
-  checksum: 10c0/cbcb928c84df2a6a03fd7789a3db317f6358961fd96197d2a3edb3ffbb00deff1cfa05fa1494c849393784bb89ae3f41425982f609f73bad0855a5e6522c328d
+  checksum: 10c0/95e79e50fa1a28cbfaf982def6ff82c5ecf18fe7eca077b4bc4cba1d43580541fcb1c38effbd299acff97f77372d8bc910642adc3d6e610c5125a9f0b85f379e
   languageName: node
   linkType: hard
 
@@ -8548,14 +8548,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-activity-calendar@npm:^2.7.8":
-  version: 2.7.8
-  resolution: "react-activity-calendar@npm:2.7.8"
+"react-activity-calendar@npm:^2.7.11":
+  version: 2.7.12
+  resolution: "react-activity-calendar@npm:2.7.12"
   dependencies:
     date-fns: "npm:^4.1.0"
   peerDependencies:
     react: ^18.0.0 || ^19.0.0
-  checksum: 10c0/e18d17cadc65480a8fa1df390598d7a4741a211b164091ca85fd2a21673fa667a5921f7b856e4ed92c2e8dedfb961426f163e517ea37336f2c3afb987740620d
+  checksum: 10c0/6e329c18d37e05c9f26efee3af229e9289744d9f6bac03a08b4911b62786a410d0f7cfe58ace1e52706da4adc250e82906a77ef6d2665e52d1e271edcdd8b60e
   languageName: node
   linkType: hard
 
@@ -8630,14 +8630,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-error-boundary@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "react-error-boundary@npm:5.0.0"
+"react-error-boundary@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "react-error-boundary@npm:6.0.0"
   dependencies:
     "@babel/runtime": "npm:^7.12.5"
   peerDependencies:
     react: ">=16.13.1"
-  checksum: 10c0/38da5e7e81016a4750d3b090e3c740c2c1125c0bb9de14e1ab92ee3b5190d34517c199935302718a24aa35d3f89081412b3444edc23f63729bde2e862a2fbfec
+  checksum: 10c0/1914d600dee95a14f14af4afe9867b0d35c26c4f7826d23208800ba2a99728659029aad60a6ef95e13430b4d79c2c4c9b3585f50bf508450478760d2e4e732d8
   languageName: node
   linkType: hard
 
@@ -8665,14 +8665,14 @@ __metadata:
   linkType: hard
 
 "react-github-calendar@npm:^4.5.1":
-  version: 4.5.6
-  resolution: "react-github-calendar@npm:4.5.6"
+  version: 4.5.7
+  resolution: "react-github-calendar@npm:4.5.7"
   dependencies:
-    react-activity-calendar: "npm:^2.7.8"
-    react-error-boundary: "npm:^5.0.0"
+    react-activity-calendar: "npm:^2.7.11"
+    react-error-boundary: "npm:^6.0.0"
   peerDependencies:
     react: ^18.0.0 || ^19.0.0
-  checksum: 10c0/74e995a528a3cf2a4ac4634415b614a0f6ad170f066d2d58142f15b815e8855de8b2ecf426ea054dd5d29143185dedc9a4ec7a8fa4dea4cbad6b7ef0f4411b5a
+  checksum: 10c0/a274776d8f6547d342573a42618196f436d4e555a5eb84b7b43fda0350a5174959ae74bc9d230c8cdca1b8982e4f586583200292126d4aa05cb1e3d350b579d4
   languageName: node
   linkType: hard
 
@@ -9241,12 +9241,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:7.7.1":
-  version: 7.7.1
-  resolution: "semver@npm:7.7.1"
+"semver@npm:7.7.2":
+  version: 7.7.2
+  resolution: "semver@npm:7.7.2"
   bin:
     semver: bin/semver.js
-  checksum: 10c0/fd603a6fb9c399c6054015433051bdbe7b99a940a8fb44b85c2b524c4004b023d7928d47cb22154f8d054ea7ee8597f586605e05b52047f048278e4ac56ae958
+  checksum: 10c0/aca305edfbf2383c22571cb7714f48cadc7ac95371b4b52362fb8eeffdfbc0de0669368b82b2b15978f8848f01d7114da65697e56cd8c37b0dab8c58e543f9ea
   languageName: node
   linkType: hard
 
@@ -10221,17 +10221,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~6.20.0":
-  version: 6.20.0
-  resolution: "undici-types@npm:6.20.0"
-  checksum: 10c0/68e659a98898d6a836a9a59e6adf14a5d799707f5ea629433e025ac90d239f75e408e2e5ff086afc3cace26f8b26ee52155293564593fbb4a2f666af57fc59bf
-  languageName: node
-  linkType: hard
-
 "undici-types@npm:~6.21.0":
   version: 6.21.0
   resolution: "undici-types@npm:6.21.0"
   checksum: 10c0/c01ed51829b10aa72fc3ce64b747f8e74ae9b60eafa19a7b46ef624403508a54c526ffab06a14a26b3120d055e1104d7abe7c9017e83ced038ea5cf52f8d5e04
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~7.8.0":
+  version: 7.8.0
+  resolution: "undici-types@npm:7.8.0"
+  checksum: 10c0/9d9d246d1dc32f318d46116efe3cfca5a72d4f16828febc1918d94e58f6ffcf39c158aa28bf5b4fc52f410446bc7858f35151367bd7a49f21746cab6497b709b
   languageName: node
   linkType: hard
 
@@ -10369,10 +10369,10 @@ __metadata:
     "@types/react-router-dom": "npm:5.3.3"
     "@types/react-table": "npm:7.7.20"
     "@types/react-test-renderer": "npm:18.3.1"
-    "@types/semver": "npm:7.5.8"
+    "@types/semver": "npm:7.7.0"
     "@types/uuid": "npm:^9.0.0"
-    "@uiw/codemirror-theme-duotone": "npm:4.23.10"
-    "@uiw/react-codemirror": "npm:4.23.10"
+    "@uiw/codemirror-theme-duotone": "npm:4.23.13"
+    "@uiw/react-codemirror": "npm:4.23.13"
     "@unleash/proxy-client-react": "npm:^5.0.0"
     "@vitejs/plugin-react": "npm:4.3.4"
     cartesian: "npm:^1.0.1"
@@ -10422,7 +10422,7 @@ __metadata:
     react-table: "npm:7.8.0"
     react-test-renderer: "npm:18.3.1"
     sass: "npm:1.85.1"
-    semver: "npm:7.7.1"
+    semver: "npm:7.7.2"
     swr: "npm:2.3.3"
     tss-react: "npm:4.9.15"
     typescript: "npm:5.8.3"

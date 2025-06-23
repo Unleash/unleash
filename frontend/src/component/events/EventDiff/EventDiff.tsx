@@ -23,6 +23,7 @@ interface IEventDiffProps {
      * @deprecated remove with flag improvedJsonDiff
      */
     sort?: (a: IEventDiffResult, b: IEventDiffResult) => number;
+    excludeKeys?: string[];
 }
 
 const DiffStyles = styled('div')(({ theme }) => ({
@@ -37,7 +38,6 @@ const DiffStyles = styled('div')(({ theme }) => ({
             position: 'absolute',
             left: 0,
             top: 0,
-            marginLeft: '-10px',
         },
     },
 
@@ -47,35 +47,65 @@ const DiffStyles = styled('div')(({ theme }) => ({
             content: '"+"',
         },
     },
+
     '.deletion': {
         color: theme.palette.eventLog.diffSub,
         '::before': {
             content: '"-"',
         },
     },
+
+    '&[data-change-type="replacement"]': {
+        ':has(.addition)': {
+            color: theme.palette.eventLog.diffAdd,
+        },
+        ':has(.deletion)': {
+            color: theme.palette.eventLog.diffSub,
+        },
+        '.addition::before, .deletion::before': {
+            content: 'none',
+        },
+    },
+
+    '.diff:not(:has(*))': {
+        '::before': {
+            content: '"(no changes)"',
+        },
+    },
 }));
 
-const NewEventDiff: FC<IEventDiffProps> = ({ entry }) => {
+const ButtonIcon = styled('span')(({ theme }) => ({
+    marginInlineEnd: theme.spacing(0.5),
+}));
+
+const NewEventDiff: FC<IEventDiffProps> = ({ entry, excludeKeys }) => {
+    const changeType = entry.preData && entry.data ? 'edit' : 'replacement';
+    const showExpandButton = changeType === 'edit';
     const [full, setFull] = useState(false);
     const diffId = useId();
 
     return (
         <>
-            <Button
-                onClick={() => setFull(!full)}
-                aria-controls={diffId}
-                aria-expanded={full}
-            >
-                {full ? 'Show only changed properties' : 'Show all properties'}
-            </Button>
-            <DiffStyles id={diffId}>
+            {showExpandButton ? (
+                <Button
+                    onClick={() => setFull(!full)}
+                    aria-controls={diffId}
+                    aria-expanded={full}
+                >
+                    <ButtonIcon aria-hidden>{full ? '-' : '+'}</ButtonIcon>
+                    {full
+                        ? 'Show only changed properties'
+                        : 'Show all properties'}
+                </Button>
+            ) : null}
+            <DiffStyles data-change-type={changeType} id={diffId}>
                 <JsonDiffComponent
                     jsonA={(entry.preData ?? {}) as JsonValue}
                     jsonB={(entry.data ?? {}) as JsonValue}
                     jsonDiffOptions={{
                         full: full,
                         maxElisions: 2,
-                        excludeKeys: ['id', 'createdAt', 'updatedAt'],
+                        excludeKeys: excludeKeys,
                     }}
                 />
             </DiffStyles>

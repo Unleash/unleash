@@ -37,6 +37,7 @@ import { useDefaultStrategy } from '../../../project/Project/ProjectSettings/Pro
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 import { Limit } from 'component/common/Limit/Limit';
+import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 
 const useStrategyLimit = (strategyCount: number) => {
     const { uiConfig } = useUiConfig();
@@ -280,7 +281,7 @@ export const formatAddStrategyApiCode = (
     }
 
     const url = `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies`;
-    const payload = JSON.stringify(strategy, undefined, 2);
+    const payload = JSON.stringify(strategy, apiPayloadConstraintReplacer, 2);
 
     return `curl --location --request POST '${url}' \\
     --header 'Authorization: INSERT_API_KEY' \\

@@ -338,3 +338,137 @@ test('getMaxRevisionId should exclude FEATURE_CREATED and FEATURE_TAGGED events'
     expect(updatedEvent!.id).toBeGreaterThan(taggedEvent!.id);
     expect(segmentEvent!.id).toBeGreaterThan(updatedEvent!.id);
 });
+
+test('Should filter events by ID using IS operator', async () => {
+    const event1 = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+        data: { name: 'feature1' },
+    };
+    const event2 = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+        data: { name: 'feature2' },
+    };
+    const event3 = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+        data: { name: 'feature3' },
+    };
+
+    await eventStore.store(event1);
+    await eventStore.store(event2);
+    await eventStore.store(event3);
+
+    const allEvents = await eventStore.getAll();
+    const targetEvent = allEvents.find((e) => e.data.name === 'feature2');
+
+    const filteredEvents = await eventStore.searchEvents(
+        {
+            offset: 0,
+            limit: 10,
+        },
+        [
+            {
+                field: 'id',
+                operator: 'IS',
+                values: [targetEvent!.id.toString()],
+            },
+        ],
+    );
+
+    expect(filteredEvents).toHaveLength(1);
+    expect(filteredEvents[0].id).toBe(targetEvent!.id);
+    expect(filteredEvents[0].data.name).toBe('feature2');
+});
+
+test('Should filter events by ID using IS_ANY_OF operator', async () => {
+    const event1 = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+        data: { name: 'feature1' },
+    };
+    const event2 = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+        data: { name: 'feature2' },
+    };
+    const event3 = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+        data: { name: 'feature3' },
+    };
+
+    await eventStore.store(event1);
+    await eventStore.store(event2);
+    await eventStore.store(event3);
+
+    const allEvents = await eventStore.getAll();
+    const targetEvent1 = allEvents.find((e) => e.data.name === 'feature1');
+    const targetEvent3 = allEvents.find((e) => e.data.name === 'feature3');
+
+    const filteredEvents = await eventStore.searchEvents(
+        {
+            offset: 0,
+            limit: 10,
+        },
+        [
+            {
+                field: 'id',
+                operator: 'IS_ANY_OF',
+                values: [
+                    targetEvent1!.id.toString(),
+                    targetEvent3!.id.toString(),
+                ],
+            },
+        ],
+    );
+
+    expect(filteredEvents).toHaveLength(2);
+    const eventIds = filteredEvents.map((e) => e.id);
+    expect(eventIds).toContain(targetEvent1!.id);
+    expect(eventIds).toContain(targetEvent3!.id);
+    expect(eventIds).not.toContain(
+        allEvents.find((e) => e.data.name === 'feature2')!.id,
+    );
+});
+
+test('Should return empty result when filtering by non-existent ID', async () => {
+    const event = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+        data: { name: 'feature1' },
+    };
+
+    await eventStore.store(event);
+
+    const filteredEvents = await eventStore.searchEvents(
+        {
+            offset: 0,
+            limit: 10,
+        },
+        [
+            {
+                field: 'id',
+                operator: 'IS',
+                values: ['999999'],
+            },
+        ],
+    );
+
+    expect(filteredEvents).toHaveLength(0);
+});

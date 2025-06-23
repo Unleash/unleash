@@ -27,6 +27,7 @@ import { CLIENT_METRICS } from '../../../events/index.js';
 import type { CustomMetricsSchema } from '../../../openapi/spec/custom-metrics-schema.js';
 import type { StoredCustomMetric } from '../custom/custom-metrics-store.js';
 import type { CustomMetricsService } from '../custom/custom-metrics-service.js';
+import type { MetricsTranslator } from '../impact/metrics-translator.js';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;
@@ -38,6 +39,8 @@ export default class ClientMetricsController extends Controller {
     metricsV2: ClientMetricsServiceV2;
 
     customMetricsService: CustomMetricsService;
+
+    metricsTranslator: MetricsTranslator;
 
     flagResolver: IFlagResolver;
 
@@ -150,16 +153,25 @@ export default class ClientMetricsController extends Controller {
         } else {
             try {
                 const { body: data, ip: clientIp, user } = req;
-                data.environment = this.metricsV2.resolveMetricsEnvironment(
-                    user,
-                    data,
-                );
+                const { impactMetrics, ...metricsData } = data;
+                metricsData.environment =
+                    this.metricsV2.resolveMetricsEnvironment(user, metricsData);
                 await this.clientInstanceService.registerInstance(
-                    data,
+                    metricsData,
                     clientIp,
                 );
 
-                await this.metricsV2.registerClientMetrics(data, clientIp);
+                await this.metricsV2.registerClientMetrics(
+                    metricsData,
+                    clientIp,
+                );
+                if (
+                    this.flagResolver.isEnabled('impactMetrics') &&
+                    impactMetrics
+                ) {
+                    await this.metricsV2.registerImpactMetrics(impactMetrics);
+                }
+
                 res.getHeaderNames().forEach((header) =>
                     res.removeHeader(header),
                 );

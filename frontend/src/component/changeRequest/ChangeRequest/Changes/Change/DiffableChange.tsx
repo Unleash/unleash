@@ -1,6 +1,13 @@
 import type React from 'react';
 import type { FC, ReactNode } from 'react';
-import { Box, type Button, styled, Tooltip, Typography } from '@mui/material';
+import {
+    Box,
+    Button,
+    type ButtonProps,
+    styled,
+    Tooltip,
+    Typography,
+} from '@mui/material';
 import { Tab, Tabs, TabsList, TabPanel } from '@mui/base';
 import BlockIcon from '@mui/icons-material/Block';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
@@ -171,12 +178,81 @@ const RightHandSide = styled('div')(({ theme }) => ({
     alignItems: 'center',
 }));
 
-const StyledTabsList = styled(TabsList)(({ theme }) => ({
-    backgroundColor: theme.palette.background.paper,
-    color: theme.palette.text.primary,
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: theme.spacing(0, 2),
+const StyledTabList = styled(TabsList)(({ theme }) => ({
+    display: 'inline-flex',
+    flexDirection: 'row',
+    gap: theme.spacing(0.5),
+}));
+
+export const StyledTabz = styled(
+    ({
+        label,
+        value,
+        ...props
+    }: ButtonProps & { label: string; value: number }) => (
+        <Button
+            variant='text'
+            tab-index={-1}
+            component='div'
+            data-label={label}
+            role='tab'
+            {...props}
+        >
+            <StyledTab value={value}>{label}</StyledTab>
+        </Button>
+    ),
+)(({ theme }) => ({
+    ':has([aria-selected="true"])': {
+        backgroundColor: theme.palette.background.elevation1,
+    },
+    whiteSpace: 'nowrap',
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    '::before': {
+        content: 'attr(data-label)',
+        fontWeight: 'bold',
+        visibility: 'hidden',
+        display: 'block',
+        padding: theme.spacing(1, 2),
+    },
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+    whiteSpace: 'nowrap',
+    color: theme.palette.text.secondary,
+    fontWeight: 'normal',
+    '&[aria-selected="true"]': {
+        fontWeight: 'bold',
+        color: theme.palette.primary.main,
+        background: theme.palette.background.elevation1,
+    },
+}));
+
+const StyledTab = styled(Tab)(({ theme }) => ({
+    cursor: 'pointer',
+    whiteSpace: 'nowrap',
+    backgroundColor: 'transparent',
+    border: 'none',
+    color: theme.palette.text.secondary,
+    position: 'absolute',
+    padding: theme.spacing(1, 2),
+    '&[aria-selected="true"]': {
+        fontWeight: 'bold',
+        color: theme.palette.primary.main,
+    },
+    span: {},
+    // '::before': {
+    //     content: 'attr(data-label)',
+    //     fontWeight: 'bold',
+    //     visibility: 'hidden',
+    //     display: 'block',
+    // },
+    // ':hover': {
+    //     background: theme.palette.background.elevation2,
+    // },
+    ':focus-visible': {
+        outline: 'none',
+    },
 }));
 
 const UpdateStrategy: FC<{
@@ -199,7 +275,10 @@ const UpdateStrategy: FC<{
     );
 
     return (
-        <Tabs aria-label='View rendered change or JSON diff'>
+        <Tabs
+            aria-label='View rendered change or JSON diff'
+            selectionFollowsFocus
+        >
             <ChangeOverwriteWarning
                 data={{
                     current: currentStrategy,
@@ -226,16 +305,21 @@ const UpdateStrategy: FC<{
                     </StrategyTooltipLink>
                 </ChangeItemInfo>
                 <RightHandSide>
-                    <TabsList>
-                        <Tab<typeof Button>
-                            // component={Button}
-                            // slots={{ root: Button }}
+                    <StyledTabList>
+                        <Tab<typeof StyledButton>
                             value={0}
+                            slots={{ root: StyledButton }}
                         >
                             Change
                         </Tab>
-                        <Tab value={1}>Diff</Tab>
-                    </TabsList>
+                        <Tab<typeof StyledButton>
+                            value={1}
+                            slots={{ root: StyledButton }}
+                        >
+                            View diff
+                        </Tab>
+                    </StyledTabList>
+                    <Button variant='text'>Change</Button>
                     {actions}
                 </RightHandSide>
             </ChangeItemCreateEditDeleteWrapper>

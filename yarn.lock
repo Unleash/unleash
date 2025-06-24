@@ -3601,14 +3601,14 @@ __metadata:
   linkType: hard
 
 "fetch-mock@npm:^12.0.0":
-  version: 12.5.2
-  resolution: "fetch-mock@npm:12.5.2"
+  version: 12.5.3
+  resolution: "fetch-mock@npm:12.5.3"
   dependencies:
     "@types/glob-to-regexp": "npm:^0.4.4"
     dequal: "npm:^2.0.3"
     glob-to-regexp: "npm:^0.4.1"
     regexparam: "npm:^3.0.0"
-  checksum: 10c0/015ca2c7eba304beb0df06e15399c50ed0f3e167a2b1ea218a8505c468ddeae0cfab1e5d4efcdee2a62aa17c9c8a1d8ccb5e1683b00a55e7a93bb5b31b183688
+  checksum: 10c0/820c5b66d855c4b48698d57f7b46861515eb05a0511f98f648c05573e3b891e1a693c8f5e2db603cac32167e28673799251268a78bcd178d06e6457151f92616
   languageName: node
   linkType: hard
 

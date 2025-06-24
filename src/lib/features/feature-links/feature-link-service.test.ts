@@ -6,12 +6,20 @@ import {
     NotFoundError,
     OperationDeniedError,
 } from '../../error/index.js';
+import { fakeImpactMetricsResolver } from '../../../test/fixtures/fake-impact-metrics.js';
 
 test('create, update and delete feature link', async () => {
+    const flagResolver = { impactMetrics: fakeImpactMetricsResolver() };
     const { featureLinkStore, featureLinkService } =
         createFakeFeatureLinkService({
             getLogger,
+            flagResolver,
         } as unknown as IUnleashConfig);
+
+    flagResolver.impactMetrics.defineCounter(
+        'feature_link_count',
+        'Count of feature links',
+    );
 
     const link = await featureLinkService.createLink(
         'default',
@@ -28,6 +36,10 @@ test('create, update and delete feature link', async () => {
         title: 'some title',
         domain: 'example',
     });
+
+    expect(
+        flagResolver.impactMetrics.counters.get('feature_link_count')!.value,
+    ).toBe(1);
 
     const newLink = await featureLinkService.updateLink(
         { projectId: 'default', linkId: link.id },
@@ -53,8 +65,10 @@ test('create, update and delete feature link', async () => {
 });
 
 test('cannot delete/update non existent link', async () => {
+    const flagResolver = { impactMetrics: fakeImpactMetricsResolver() };
     const { featureLinkService } = createFakeFeatureLinkService({
         getLogger,
+        flagResolver,
     } as unknown as IUnleashConfig);
 
     await expect(
@@ -77,8 +91,10 @@ test('cannot delete/update non existent link', async () => {
 });
 
 test('cannot create/update invalid link', async () => {
+    const flagResolver = { impactMetrics: fakeImpactMetricsResolver() };
     const { featureLinkService } = createFakeFeatureLinkService({
         getLogger,
+        flagResolver,
     } as unknown as IUnleashConfig);
 
     await expect(
@@ -107,8 +123,10 @@ test('cannot create/update invalid link', async () => {
 });
 
 test('cannot exceed allowed link count', async () => {
+    const flagResolver = { impactMetrics: fakeImpactMetricsResolver() };
     const { featureLinkService } = createFakeFeatureLinkService({
         getLogger,
+        flagResolver,
     } as unknown as IUnleashConfig);
 
     for (let i = 0; i < 10; i++) {

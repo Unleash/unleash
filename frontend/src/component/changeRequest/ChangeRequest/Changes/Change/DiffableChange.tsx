@@ -1,6 +1,13 @@
 import type React from 'react';
 import type { FC, ReactNode } from 'react';
-import { Box, Button, styled, Tooltip, Typography } from '@mui/material';
+import {
+    Box,
+    Button,
+    type ButtonProps,
+    styled,
+    Tooltip,
+    Typography,
+} from '@mui/material';
 import { Tab, Tabs, TabsList, TabPanel } from '@mui/base';
 import BlockIcon from '@mui/icons-material/Block';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
@@ -188,6 +195,27 @@ const StyledButton = styled(Button)(({ theme }) => ({
     },
 }));
 
+export const StyledTab = styled(
+    ({ value, children }: ButtonProps & { value: number }) => (
+        <Tab value={value} slots={{ root: StyledButton }}>
+            {children}
+        </Tab>
+    ),
+)(({ theme }) => ({
+    position: 'absolute',
+    top: theme.spacing(-0.5),
+    left: theme.spacing(2),
+    transform: 'translateY(-50%)',
+    padding: theme.spacing(0.75, 1),
+    lineHeight: 1,
+    fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.text.primary,
+    background: theme.palette.background.application,
+    borderRadius: theme.shape.borderRadiusExtraLarge,
+    zIndex: theme.zIndex.fab,
+    textTransform: 'uppercase',
+}));
+
 const UpdateStrategy: FC<{
     change: IChangeRequestUpdateStrategy;
     changeRequestState: ChangeRequestState;
@@ -239,18 +267,8 @@ const UpdateStrategy: FC<{
                 </ChangeItemInfo>
                 <RightHandSide>
                     <StyledTabList>
-                        <Tab<typeof StyledButton>
-                            value={0}
-                            slots={{ root: StyledButton }}
-                        >
-                            Change
-                        </Tab>
-                        <Tab<typeof StyledButton>
-                            value={1}
-                            slots={{ root: StyledButton }}
-                        >
-                            View diff
-                        </Tab>
+                        <StyledTab value={0}>Change</StyledTab>
+                        <StyledTab value={1}>View diff</StyledTab>
                     </StyledTabList>
                     {actions}
                 </RightHandSide>

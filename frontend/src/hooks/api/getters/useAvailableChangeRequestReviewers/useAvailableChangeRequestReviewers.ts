@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
 
+// TODO: These will likely be created by Orval next time it is run
 export interface AvailableReviewerSchema {
     id: string;
     name?: string;

@@ -1,5 +1,13 @@
 import type { FC } from 'react';
-import { styled, Button, Checkbox, TextField, useTheme } from '@mui/material';
+import {
+    styled,
+    Button,
+    Checkbox,
+    TextField,
+    useTheme,
+    type AutocompleteChangeReason,
+    type FilterOptionsState,
+} from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import AutocompleteVirtual from 'component/common/AutocompleteVirtual/AutcompleteVirtual';
@@ -99,6 +107,32 @@ export const DraftChangeRequestActions: FC<{
             environmentChangeRequest.environment,
         );
 
+    const autoCompleteChange = (
+        event: React.SyntheticEvent,
+        newValue: AvailableReviewerSchema[],
+        reason: AutocompleteChangeReason,
+    ) => {
+        if (
+            event.type === 'keydown' &&
+            (event as React.KeyboardEvent).key === 'Backspace' &&
+            reason === 'removeOption'
+        ) {
+            return;
+        }
+        setReviewers(newValue);
+    };
+
+    const filterOptions = (
+        options: AvailableReviewerSchema[],
+        { inputValue }: FilterOptionsState<AvailableReviewerSchema>,
+    ) =>
+        options.filter(
+            ({ name, username, email }) =>
+                caseInsensitiveSearch(inputValue, email) ||
+                caseInsensitiveSearch(inputValue, name) ||
+                caseInsensitiveSearch(inputValue, username),
+        );
+
     return (
         <>
             <AutocompleteVirtual
@@ -109,26 +143,10 @@ export const DraftChangeRequestActions: FC<{
                 multiple
                 disableCloseOnSelect
                 value={reviewers as AvailableReviewerSchema[]}
-                onChange={(event, newValue, reason) => {
-                    if (
-                        event.type === 'keydown' &&
-                        (event as React.KeyboardEvent).key === 'Backspace' &&
-                        reason === 'removeOption'
-                    ) {
-                        return;
-                    }
-                    setReviewers(newValue);
-                }}
+                onChange={autoCompleteChange}
                 options={availableReviewers}
                 renderOption={renderOption}
-                filterOptions={(options, { inputValue }) =>
-                    options.filter(
-                        ({ name, username, email }) =>
-                            caseInsensitiveSearch(inputValue, email) ||
-                            caseInsensitiveSearch(inputValue, name) ||
-                            caseInsensitiveSearch(inputValue, username),
-                    )
-                }
+                filterOptions={filterOptions}
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 getOptionLabel={(option: AvailableReviewerSchema) =>
                     option.email || option.name || option.username || ''

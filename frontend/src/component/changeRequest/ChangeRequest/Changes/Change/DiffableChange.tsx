@@ -1,13 +1,6 @@
 import type React from 'react';
 import type { FC, ReactNode } from 'react';
-import {
-    Box,
-    Button,
-    type ButtonProps,
-    styled,
-    Tooltip,
-    Typography,
-} from '@mui/material';
+import { Box, Button, styled, Tooltip, Typography } from '@mui/material';
 import { Tab, Tabs, TabsList, TabPanel } from '@mui/base';
 import BlockIcon from '@mui/icons-material/Block';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
@@ -184,39 +177,6 @@ const StyledTabList = styled(TabsList)(({ theme }) => ({
     gap: theme.spacing(0.5),
 }));
 
-export const StyledTabz = styled(
-    ({
-        label,
-        value,
-        ...props
-    }: ButtonProps & { label: string; value: number }) => (
-        <Button
-            variant='text'
-            tab-index={-1}
-            component='div'
-            data-label={label}
-            role='tab'
-            {...props}
-        >
-            <StyledTab value={value}>{label}</StyledTab>
-        </Button>
-    ),
-)(({ theme }) => ({
-    ':has([aria-selected="true"])': {
-        backgroundColor: theme.palette.background.elevation1,
-    },
-    whiteSpace: 'nowrap',
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    '::before': {
-        content: 'attr(data-label)',
-        fontWeight: 'bold',
-        visibility: 'hidden',
-        display: 'block',
-        padding: theme.spacing(1, 2),
-    },
-}));
-
 const StyledButton = styled(Button)(({ theme }) => ({
     whiteSpace: 'nowrap',
     color: theme.palette.text.secondary,
@@ -225,33 +185,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
         fontWeight: 'bold',
         color: theme.palette.primary.main,
         background: theme.palette.background.elevation1,
-    },
-}));
-
-const StyledTab = styled(Tab)(({ theme }) => ({
-    cursor: 'pointer',
-    whiteSpace: 'nowrap',
-    backgroundColor: 'transparent',
-    border: 'none',
-    color: theme.palette.text.secondary,
-    position: 'absolute',
-    padding: theme.spacing(1, 2),
-    '&[aria-selected="true"]': {
-        fontWeight: 'bold',
-        color: theme.palette.primary.main,
-    },
-    span: {},
-    // '::before': {
-    //     content: 'attr(data-label)',
-    //     fontWeight: 'bold',
-    //     visibility: 'hidden',
-    //     display: 'block',
-    // },
-    // ':hover': {
-    //     background: theme.palette.background.elevation2,
-    // },
-    ':focus-visible': {
-        outline: 'none',
     },
 }));
 
@@ -319,7 +252,6 @@ const UpdateStrategy: FC<{
                             View diff
                         </Tab>
                     </StyledTabList>
-                    <Button variant='text'>Change</Button>
                     {actions}
                 </RightHandSide>
             </ChangeItemCreateEditDeleteWrapper>

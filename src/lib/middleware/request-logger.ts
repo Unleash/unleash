@@ -14,7 +14,7 @@ const requestLogger: (config: IUnleashConfig) => RequestHandler = (config) => {
         if (enable) {
             res.on('finish', () => {
                 const { pathname } = url.parse(req.originalUrl);
-                if (res.statusCode >= 400 || res.statusCode < 500) {
+                if (res.statusCode >= 400 && res.statusCode < 500) {
                     impactMetrics?.incrementCounter(CLIENT_ERROR_COUNT);
                 }
                 if (res.statusCode >= 500) {

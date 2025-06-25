@@ -30,7 +30,7 @@ export const transactionContext = {
         return storage.getStore()?.type;
     },
 
-    getOperationId(): string | number | undefined {
+    getOperationId(): number | undefined {
         return storage.getStore()?.id;
     },
 

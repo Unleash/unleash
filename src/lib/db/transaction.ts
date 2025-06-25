@@ -1,5 +1,6 @@
 import type { Knex } from 'knex';
 import type { IUnleashConfig } from '../types/index.ts';
+import { transactionContext } from '../util/transactionContext.js';
 
 export type KnexTransaction = Knex.Transaction;
 
@@ -75,13 +76,14 @@ export function withTransactional<S>(
 ): WithTransactional<S> {
     const service = serviceFactory(db) as WithTransactional<S>;
 
-    service.transactional = async <R>(fn: (service: S) => R) =>
-        // Maybe: inTransaction(db, async (trx: Knex.Transaction) => fn(serviceFactory(trx)));
-        // this assumes that the caller didn't start a transaction already and opens a new one.
-        db.transaction(async (trx: Knex.Transaction) => {
-            const transactionalService = serviceFactory(trx);
-            return fn(transactionalService);
+    service.transactional = async <R>(fn: (service: S) => R): Promise<R> => {
+        return db.transaction(async (trx) => {
+            return transactionContext.run(async () => {
+                const transactionalService = serviceFactory(trx);
+                return fn(transactionalService);
+            });
         });
+    };
 
     return service;
 }

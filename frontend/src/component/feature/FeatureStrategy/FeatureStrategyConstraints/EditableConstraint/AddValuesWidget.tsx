@@ -74,6 +74,7 @@ export const AddValuesWidget = forwardRef<HTMLButtonElement, AddValuesProps>(
                     ref={positioningRef}
                     onClick={() => setOpen(true)}
                     type='button'
+                    data-testid='CONSTRAINT_ADD_VALUES_BUTTON'
                 >
                     <Add />
                     <span>Add values</span>

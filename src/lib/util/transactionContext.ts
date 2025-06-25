@@ -5,11 +5,10 @@ export interface OperationContext {
     id: number;
 }
 
-// Generate a numeric transaction ID based on timestamp + random component
 function generateNumericTransactionId(): number {
-    const timestamp = Date.now(); // 13 digits
-    const random = Math.floor(Math.random() * 1000); // 3 digits max
-    return timestamp * 1000 + random; // Ensures uniqueness
+    const timestamp = Date.now();
+    const random = Math.floor(Math.random() * 1000);
+    return timestamp * 1000 + random;
 }
 
 const storage = new AsyncLocalStorage<OperationContext>();

@@ -68,7 +68,7 @@ export default class FlagResolver implements IFlagResolver {
     }
 
     get impactMetrics(): IImpactMetricsResolver | undefined {
-        return this.externalResolver.impactMetrics;
+        return this.externalResolver?.impactMetrics;
     }
 }
 

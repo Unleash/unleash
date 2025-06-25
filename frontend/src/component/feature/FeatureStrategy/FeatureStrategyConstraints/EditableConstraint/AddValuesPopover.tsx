@@ -1,5 +1,6 @@
 import {
     Button,
+    ClickAwayListener,
     type InputBaseComponentProps,
     Popover,
     styled,
@@ -14,6 +15,14 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
         border: `1px solid ${theme.palette.divider}`,
         padding: theme.spacing(2),
         width: '250px',
+    },
+
+    '&.MuiPopover-root': {
+        pointerEvents: 'none',
+    },
+
+    '& .MuiPopover-paper': {
+        pointerEvents: 'all',
     },
 }));
 
@@ -92,59 +101,61 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
                 horizontal: 'left',
             }}
         >
-            <form
-                onSubmit={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    if (!inputValue?.trim()) {
-                        setError('Value cannot be empty or whitespace');
-                        return;
-                    } else {
-                        onAdd(inputValue, {
-                            setError,
-                            clearInput: () => setInputValue(''),
-                        });
-                    }
-                }}
-            >
-                <InputRow>
-                    <ScreenReaderOnly>
-                        <label htmlFor={inputId}>Constraint Value</label>
-                    </ScreenReaderOnly>
-                    <StyledTextField
-                        id={inputId}
-                        placeholder='Enter value'
-                        value={inputValue}
-                        onChange={(e) => {
-                            setInputValue(e.target.value);
-                            setError('');
-                        }}
-                        size='small'
-                        variant='standard'
-                        fullWidth
-                        inputRef={inputRef}
-                        autoFocus
-                        error={!!error}
-                        helperText={error}
-                        aria-describedby={helpTextId}
-                        inputProps={{
-                            ...inputProps,
-                        }}
-                        data-testid='CONSTRAINT_VALUES_INPUT'
-                    />
-                    <AddButton
-                        variant='text'
-                        type='submit'
-                        size='small'
-                        color='primary'
-                        disabled={!inputValue?.trim()}
-                        data-testid='CONSTRAINT_VALUES_ADD_BUTTON'
-                    >
-                        Add
-                    </AddButton>
-                </InputRow>
-                <HelpText id={helpTextId}>{helpText}</HelpText>
-            </form>
+            <ClickAwayListener onClickAway={onClose}>
+                <form
+                    onSubmit={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        if (!inputValue?.trim()) {
+                            setError('Value cannot be empty or whitespace');
+                            return;
+                        } else {
+                            onAdd(inputValue, {
+                                setError,
+                                clearInput: () => setInputValue(''),
+                            });
+                        }
+                    }}
+                >
+                    <InputRow>
+                        <ScreenReaderOnly>
+                            <label htmlFor={inputId}>Constraint Value</label>
+                        </ScreenReaderOnly>
+                        <StyledTextField
+                            id={inputId}
+                            placeholder='Enter value'
+                            value={inputValue}
+                            onChange={(e) => {
+                                setInputValue(e.target.value);
+                                setError('');
+                            }}
+                            size='small'
+                            variant='standard'
+                            fullWidth
+                            inputRef={inputRef}
+                            autoFocus
+                            error={!!error}
+                            helperText={error}
+                            aria-describedby={helpTextId}
+                            inputProps={{
+                                ...inputProps,
+                            }}
+                            data-testid='CONSTRAINT_VALUES_INPUT'
+                        />
+                        <AddButton
+                            variant='text'
+                            type='submit'
+                            size='small'
+                            color='primary'
+                            disabled={!inputValue?.trim()}
+                            data-testid='CONSTRAINT_VALUES_ADD_BUTTON'
+                        >
+                            Add
+                        </AddButton>
+                    </InputRow>
+                    <HelpText id={helpTextId}>{helpText}</HelpText>
+                </form>
+            </ClickAwayListener>
         </StyledPopover>
     );
 };

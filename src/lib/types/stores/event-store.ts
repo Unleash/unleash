@@ -14,6 +14,7 @@ export interface IEventSearchParams {
     to?: string;
     createdBy?: string;
     type?: string;
+    types?: string[];
     environment?: string;
     offset: number;
     limit: number;

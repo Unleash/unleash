@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@codemirror/lang-json": "6.0.1",
+    "@codemirror/lang-json": "6.0.2",
     "@emotion/react": "11.11.4",
     "@emotion/styled": "11.11.5",
     "@mui/icons-material": "5.15.3",

@@ -42,7 +42,7 @@ export type WithTransactional<S> = S & {
     transactional: <R>(fn: (service: S) => R) => Promise<R>;
 };
 
-export type WithTrackedTransactional<S> = S & {
+export type withContextualTransactional<S> = S & {
     trackedTransactional: <R>(
         fn: (transactionContext: TransactionContext) => R,
     ) => Promise<R>;
@@ -96,8 +96,8 @@ export function withTransactional<S>(
 export function withContextualTransactional<S>(
     serviceFactory: (db: Knex) => S,
     db: Knex,
-): WithTrackedTransactional<S> {
-    const service = serviceFactory(db) as WithTrackedTransactional<S>;
+): withContextualTransactional<S> {
+    const service = serviceFactory(db) as withContextualTransactional<S>;
 
     service.trackedTransactional = async <R>(
         fn: (transactionContext: TransactionContext) => R,

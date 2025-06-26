@@ -1,7 +1,4 @@
-import {
-    TransactionContext,
-    type OperationContext,
-} from './transactionContext.js';
+import { TransactionContext } from './transactionContext.js';
 import { vi } from 'vitest';
 
 describe('TransactionContext', () => {
@@ -30,33 +27,6 @@ describe('TransactionContext', () => {
             expect(txContext.transaction).toBe(mockTransaction);
         });
 
-        it('should create transaction context with custom operation', () => {
-            const customOperation: OperationContext = {
-                type: 'change-request',
-                id: 42,
-            };
-
-            const txContext = new TransactionContext(
-                mockTransaction,
-                customOperation,
-            );
-
-            expect(txContext.operationContext.type).toBe('change-request');
-            expect(txContext.operationContext.id).toBe(42);
-            expect(txContext.transaction).toBe(mockTransaction);
-        });
-
-        it('should create transaction context with partial operation context', () => {
-            const txContext = new TransactionContext(mockTransaction, {
-                type: 'change-request',
-            });
-
-            expect(txContext.operationContext.type).toBe('change-request');
-            expect(txContext.operationContext.id).toBeDefined();
-            expect(typeof txContext.operationContext.id).toBe('number');
-            expect(txContext.transaction).toBe(mockTransaction);
-        });
-
         it('should generate unique IDs for different contexts', () => {
             const txContext1 = new TransactionContext(mockTransaction);
             const txContext2 = new TransactionContext(mockTransaction);
@@ -68,18 +38,18 @@ describe('TransactionContext', () => {
     });
 
     describe('operationContext', () => {
-        it('should allow updating operation context', () => {
+        it('should allow setting custom operation context', () => {
             const txContext = new TransactionContext(mockTransaction);
 
             expect(txContext.operationContext.type).toBe('transaction');
 
             txContext.operationContext = {
                 type: 'change-request',
-                id: 123,
+                id: 42,
             };
 
             expect(txContext.operationContext.type).toBe('change-request');
-            expect(txContext.operationContext.id).toBe(123);
+            expect(txContext.operationContext.id).toBe(42);
         });
 
         it('should allow partial updates to operation context', () => {

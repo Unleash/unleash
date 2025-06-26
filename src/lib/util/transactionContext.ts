@@ -15,14 +15,11 @@ export class TransactionContext {
     public readonly transaction: Knex.Transaction;
     public operationContext: OperationContext;
 
-    constructor(
-        transaction: Knex.Transaction,
-        operationContext?: Partial<OperationContext>,
-    ) {
+    constructor(transaction: Knex.Transaction) {
         this.transaction = transaction;
         this.operationContext = {
-            type: operationContext?.type || 'transaction',
-            id: operationContext?.id || generateNumericTransactionId(),
+            type: 'transaction',
+            id: generateNumericTransactionId(),
         };
     }
 }

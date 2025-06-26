@@ -16,7 +16,7 @@ import type { IPrivateProjectChecker } from '../private-project/privateProjectCh
 import type { ProjectAccess } from '../private-project/privateProjectStore.js';
 import type { IAccessReadModel } from '../access/access-read-model-type.js';
 import lodash from 'lodash';
-import type { IEventList, IBaseEvent, IEvent } from '../../events/index.js';
+import type { IEventList, IBaseEvent } from '../../events/index.js';
 import type { ITag } from '../../tags/index.js';
 const { isEqual } = lodash;
 
@@ -100,28 +100,6 @@ export default class EventService {
         return {
             events,
             totalEvents,
-        };
-    }
-
-    async searchUserEvents(
-        search: IEventSearchParams,
-    ): Promise<{ events: IEvent[] }> {
-        const queryParams = this.convertToDbParams(search);
-
-        const events = await this.eventStore.searchEvents(
-            {
-                limit: search.limit,
-                offset: search.offset,
-                query: search.query,
-                types: search.types,
-            },
-            queryParams,
-            {
-                withIp: this.isEnterprise,
-            },
-        );
-        return {
-            events,
         };
     }
 

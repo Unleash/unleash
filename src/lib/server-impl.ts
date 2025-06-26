@@ -126,7 +126,7 @@ import metricsHelper from './util/metrics-helper.js';
 import type { ReleasePlanMilestoneWriteModel } from './features/release-plans/release-plan-milestone-store.js';
 import type { ReleasePlanMilestoneStrategyWriteModel } from './features/release-plans/release-plan-milestone-strategy-store.js';
 import type { IChangeRequestAccessReadModel } from './features/change-request-access-service/change-request-access-read-model.js';
-import EventStore from './db/event-store.js';
+import { EventStore } from './db/event-store.js';
 import RoleStore from './db/role-store.js';
 import { AccessStore } from './db/access-store.js';
 import {

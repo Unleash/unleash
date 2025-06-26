@@ -1,7 +1,7 @@
 import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store.js';
 import type { Db } from '../../db/db.js';
-import EventStore from './event-store.js';
+import { EventStore } from './event-store.js';
 import FeatureTagStore from '../../db/feature-tag-store.js';
 import { EventService } from '../../services/index.js';
 import type {

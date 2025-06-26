@@ -20,7 +20,7 @@ import SegmentStore from '../segment/segment-store.js';
 import RoleStore from '../../db/role-store.js';
 import SettingStore from '../../db/setting-store.js';
 import ClientInstanceStore from '../../db/client-instance-store.js';
-import EventStore from '../events/event-store.js';
+import { EventStore } from '../events/event-store.js';
 import { ApiTokenStore } from '../../db/api-token-store.js';
 import { ClientMetricsStoreV2 } from '../metrics/client-metrics/client-metrics-store-v2.js';
 import VersionService from '../../services/version-service.js';

@@ -1,6 +1,6 @@
 import type { Knex } from 'knex';
 import type { IUnleashConfig } from '../types/index.ts';
-import { transactionContext } from '../util/transactionContext.js';
+import { TransactionContext } from '../util/transactionContext.js';
 
 export type KnexTransaction = Knex.Transaction;
 
@@ -42,6 +42,12 @@ export type WithTransactional<S> = S & {
     transactional: <R>(fn: (service: S) => R) => Promise<R>;
 };
 
+export type WithTrackedTransactional<S> = S & {
+    trackedTransactional: <R>(
+        fn: (transactionContext: TransactionContext) => R,
+    ) => Promise<R>;
+};
+
 export type WithRollbackTransaction<S> = S & {
     rollbackTransaction: <R>(fn: (service: S) => R) => Promise<R>;
 };
@@ -76,12 +82,29 @@ export function withTransactional<S>(
 ): WithTransactional<S> {
     const service = serviceFactory(db) as WithTransactional<S>;
 
-    service.transactional = async <R>(fn: (service: S) => R): Promise<R> => {
+    service.transactional = async <R>(fn: (service: S) => R) =>
+        // Maybe: inTransaction(db, async (trx: Knex.Transaction) => fn(serviceFactory(trx)));
+        // this assumes that the caller didn't start a transaction already and opens a new one.
+        db.transaction(async (trx: Knex.Transaction) => {
+            const transactionalService = serviceFactory(trx);
+            return fn(transactionalService);
+        });
+
+    return service;
+}
+
+export function withContextualTransactional<S>(
+    serviceFactory: (db: Knex) => S,
+    db: Knex,
+): WithTrackedTransactional<S> {
+    const service = serviceFactory(db) as WithTrackedTransactional<S>;
+
+    service.trackedTransactional = async <R>(
+        fn: (transactionContext: TransactionContext) => R,
+    ): Promise<R> => {
         return db.transaction(async (trx) => {
-            return transactionContext.run(async () => {
-                const transactionalService = serviceFactory(trx);
-                return fn(transactionalService);
-            });
+            const transactionContext = new TransactionContext(trx);
+            return fn(transactionContext);
         });
     };
 

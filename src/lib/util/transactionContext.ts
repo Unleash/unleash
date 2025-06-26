@@ -1,4 +1,4 @@
-import { AsyncLocalStorage } from 'async_hooks';
+import type { Knex } from 'knex';
 
 export interface OperationContext {
     type: 'change-request' | 'transaction';
@@ -11,38 +11,18 @@ function generateNumericTransactionId(): number {
     return timestamp * 1000 + random;
 }
 
-const storage = new AsyncLocalStorage<OperationContext>();
+export class TransactionContext {
+    public readonly transaction: Knex.Transaction;
+    public operationContext: OperationContext;
 
-export const transactionContext = {
-    run<T>(callback: () => Promise<T>): Promise<T> {
-        const data: OperationContext = {
-            type: 'transaction',
-            id: generateNumericTransactionId(),
+    constructor(
+        transaction: Knex.Transaction,
+        operationContext?: Partial<OperationContext>,
+    ) {
+        this.transaction = transaction;
+        this.operationContext = {
+            type: operationContext?.type || 'transaction',
+            id: operationContext?.id || generateNumericTransactionId(),
         };
-        return storage.run(data, callback) as Promise<T>;
-    },
-
-    getOperation(): OperationContext | undefined {
-        return storage.getStore();
-    },
-
-    getOperationType(): OperationContext['type'] | undefined {
-        return storage.getStore()?.type;
-    },
-
-    getOperationId(): number | undefined {
-        return storage.getStore()?.id;
-    },
-
-    setOperation(operation: OperationContext): void {
-        const store = storage.getStore();
-        if (store) {
-            store.id = operation.id;
-            store.type = operation.type;
-        } else {
-            throw new Error(
-                'No active transaction context found when setting operation',
-            );
-        }
-    },
-};
+    }
+}

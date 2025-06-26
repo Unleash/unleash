@@ -674,7 +674,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codemirror/lang-json@npm:6.0.1, @codemirror/lang-json@npm:^6.0.1":
+"@codemirror/lang-json@npm:6.0.2":
+  version: 6.0.2
+  resolution: "@codemirror/lang-json@npm:6.0.2"
+  dependencies:
+    "@codemirror/language": "npm:^6.0.0"
+    "@lezer/json": "npm:^1.0.0"
+  checksum: 10c0/4a36022226557d0571c143f907638eb2d46c0f7cf96c6d9a86dac397a789efa2b387e3dd3df94bac21e27692892443b24f8129c044c9012df66e68f5080745b0
+  languageName: node
+  linkType: hard
+
+"@codemirror/lang-json@npm:^6.0.1":
   version: 6.0.1
   resolution: "@codemirror/lang-json@npm:6.0.1"
   dependencies:
@@ -10342,7 +10352,7 @@ __metadata:
   resolution: "unleash-frontend-local@workspace:."
   dependencies:
     "@biomejs/biome": "npm:1.9.4"
-    "@codemirror/lang-json": "npm:6.0.1"
+    "@codemirror/lang-json": "npm:6.0.2"
     "@emotion/react": "npm:11.11.4"
     "@emotion/styled": "npm:11.11.5"
     "@mui/icons-material": "npm:5.15.3"

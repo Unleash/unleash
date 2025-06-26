@@ -136,20 +136,20 @@ export const addonTypeSchema = {
                     type: 'string',
                     description:
                         'A URL to where the addon configuration should redirect to install addons of this type.',
-                    example: 'https://slack-app.getunleash.io/install',
+                    example: 'https://app-for-slack.getunleash.io/install',
                 },
                 title: {
                     type: 'string',
                     description:
                         'The title of the installation configuration. This will be displayed to the user when installing addons of this type.',
-                    example: 'Slack App installation',
+                    example: 'App for Slack installation',
                 },
                 helpText: {
                     type: 'string',
                     description:
                         'The help text of the installation configuration. This will be displayed to the user when installing addons of this type.',
                     example:
-                        'Clicking the Install button will send you to Slack to initiate the installation procedure for the Unleash Slack app for your workspace',
+                        'Clicking the Install button will send you to Slack to initiate the installation procedure for the Unleash App for Slack for your workspace',
                 },
             },
         },
@@ -174,7 +174,7 @@ export const addonTypeSchema = {
                         description:
                             'The text of the alert. This is what will be displayed to the user.',
                         example:
-                            "Please ensure you have the Unleash Slack App installed in your Slack workspace if you haven't installed it already. If you want the Unleash Slack App bot to post messages to private channels, you'll need to invite it to those channels.",
+                            "Please ensure you have the Unleash App for Slack installed in your Slack workspace if you haven't installed it already. If you want the Unleash App for Slack bot to post messages to private channels, you'll need to invite it to those channels.",
                     },
                 },
             },

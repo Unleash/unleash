@@ -1,6 +1,17 @@
 import type { Knex } from 'knex';
 import type { IUnleashConfig } from '../types/index.ts';
-import { TransactionContext } from '../util/transactionContext.js';
+
+export interface TransactionUserParams {
+    type: 'change-request' | 'transaction';
+    value: number;
+}
+
+// Generate a numeric transaction ID based on timestamp + random component
+function generateNumericTransactionId(): number {
+    const timestamp = Date.now();
+    const random = Math.floor(Math.random() * 1000);
+    return timestamp * 1000 + random;
+}
 
 export type KnexTransaction = Knex.Transaction;
 
@@ -39,12 +50,9 @@ export type ServiceFactory<S> = (
 ) => DeferredServiceFactory<S>;
 
 export type WithTransactional<S> = S & {
-    transactional: <R>(fn: (service: S) => R) => Promise<R>;
-};
-
-export type withContextualTransactional<S> = S & {
-    trackedTransactional: <R>(
-        fn: (transactionContext: TransactionContext) => R,
+    transactional: <R>(
+        fn: (service: S) => R,
+        transactionContext?: TransactionUserParams,
     ) => Promise<R>;
 };
 
@@ -82,31 +90,20 @@ export function withTransactional<S>(
 ): WithTransactional<S> {
     const service = serviceFactory(db) as WithTransactional<S>;
 
-    service.transactional = async <R>(fn: (service: S) => R) =>
-        // Maybe: inTransaction(db, async (trx: Knex.Transaction) => fn(serviceFactory(trx)));
-        // this assumes that the caller didn't start a transaction already and opens a new one.
+    service.transactional = async <R>(
+        fn: (service: S) => R,
+        transactionContext?: TransactionUserParams,
+    ) =>
         db.transaction(async (trx: Knex.Transaction) => {
+            const defaultContext: TransactionUserParams = {
+                type: 'transaction',
+                value: generateNumericTransactionId(),
+            };
+
+            trx.userParams = transactionContext || defaultContext;
             const transactionalService = serviceFactory(trx);
             return fn(transactionalService);
         });
-
-    return service;
-}
-
-export function withContextualTransactional<S>(
-    serviceFactory: (db: Knex) => S,
-    db: Knex,
-): withContextualTransactional<S> {
-    const service = serviceFactory(db) as withContextualTransactional<S>;
-
-    service.trackedTransactional = async <R>(
-        fn: (transactionContext: TransactionContext) => R,
-    ): Promise<R> => {
-        return db.transaction(async (trx) => {
-            const transactionContext = new TransactionContext(trx);
-            return fn(transactionContext);
-        });
-    };
 
     return service;
 }

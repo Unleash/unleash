@@ -10439,12 +10439,12 @@ __metadata:
   linkType: soft
 
 "unleash-proxy-client@npm:^3.7.3":
-  version: 3.7.3
-  resolution: "unleash-proxy-client@npm:3.7.3"
+  version: 3.7.6
+  resolution: "unleash-proxy-client@npm:3.7.6"
   dependencies:
     tiny-emitter: "npm:^2.1.0"
     uuid: "npm:^9.0.1"
-  checksum: 10c0/3a061d4e3587325046fea0133fe405fef143dbcfdd6ed20c54200b46a22bf49acdccb6dcc0b250400a9ace2350b0065f856731a5712598d27c1e9266a141f559
+  checksum: 10c0/ad365f6cbf4792506a47168f998e2d8af58db631af07a5a431d414a8d8dff49563e7caf3e0d8dbc77e9a92a6e848db412fb3c5a116fcac8870102fb4ee767594
   languageName: node
   linkType: hard
 

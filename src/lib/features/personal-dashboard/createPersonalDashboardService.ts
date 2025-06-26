@@ -7,7 +7,7 @@ import { ProjectOwnersReadModel } from '../project/project-owners-read-model.js'
 import { FakeProjectOwnersReadModel } from '../project/fake-project-owners-read-model.js';
 import { ProjectReadModel } from '../project/project-read-model.js';
 import { FakeProjectReadModel } from '../project/fake-project-read-model.js';
-import EventStore from '../../db/event-store.js';
+import { EventStore } from '../../db/event-store.js';
 import { FeatureEventFormatterMd } from '../../addons/feature-event-formatter-md.js';
 import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
 import { FakePrivateProjectChecker } from '../private-project/fakePrivateProjectChecker.js';

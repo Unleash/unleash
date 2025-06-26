@@ -15,6 +15,7 @@ export interface IEventSearchParams {
     createdBy?: string;
     type?: string;
     environment?: string;
+    order?: 'asc' | 'desc'; // desc by default
     offset: number;
     limit: number;
 }

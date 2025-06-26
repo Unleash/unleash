@@ -3,7 +3,7 @@ import { FakeFeatureLifecycleStore } from './fake-feature-lifecycle-store.js';
 import { FeatureLifecycleService } from './feature-lifecycle-service.js';
 import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';
 import type { IUnleashConfig } from '../../types/index.js';
-import EventStore from '../../db/event-store.js';
+import { EventStore } from '../../db/event-store.js';
 import type { Db } from '../../db/db.js';
 import { FeatureLifecycleStore } from './feature-lifecycle-store.js';
 import EnvironmentStore from '../project-environments/environment-store.js';

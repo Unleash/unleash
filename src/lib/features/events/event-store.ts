@@ -101,7 +101,7 @@ export interface IEventTable {
 
 const TABLE = 'events';
 
-class EventStore implements IEventStore {
+export class EventStore implements IEventStore {
     private db: Db;
 
     // only one shared event emitter should exist across all event store instances
@@ -375,7 +375,7 @@ class EventStore implements IEventStore {
     ): Promise<IEvent[]> {
         const query = this.buildSearchQuery(queryParams, params.query)
             .select(options?.withIp ? [...EVENT_COLUMNS, 'ip'] : EVENT_COLUMNS)
-            .orderBy('created_at', 'desc')
+            .orderBy('created_at', params.order || 'desc')
             .limit(Number(params.limit) ?? 100)
             .offset(Number(params.offset) ?? 0);
 

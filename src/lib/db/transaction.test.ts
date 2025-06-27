@@ -88,8 +88,8 @@ describe('transaction utilities', () => {
 
             expect(mockTransaction.userParams).toBeDefined();
             expect(mockTransaction.userParams.type).toBe('transaction');
-            expect(mockTransaction.userParams.value).toBeDefined();
-            expect(typeof mockTransaction.userParams.value).toBe('number');
+            expect(mockTransaction.userParams.id).toBeDefined();
+            expect(typeof mockTransaction.userParams.id).toBe('string');
         });
 
         it('should use provided transactionContext when given', async () => {
@@ -99,7 +99,7 @@ describe('transaction utilities', () => {
             );
             const customContext: TransactionUserParams = {
                 type: 'change-request',
-                value: 42,
+                id: '01HQVX5K8P9EXAMPLE123456',
             };
 
             await serviceWithTransactional.transactional((service) => {
@@ -108,28 +108,33 @@ describe('transaction utilities', () => {
 
             expect(mockTransaction.userParams).toEqual(customContext);
             expect(mockTransaction.userParams.type).toBe('change-request');
-            expect(mockTransaction.userParams.value).toBe(42);
+            expect(mockTransaction.userParams.id).toBe(
+                '01HQVX5K8P9EXAMPLE123456',
+            );
         });
 
-        it('should generate unique numeric IDs for default context', async () => {
+        it('should generate unique ULID strings for default context', async () => {
             const serviceWithTransactional = withTransactional(
                 mockServiceFactory,
                 mockDb,
             );
-            const userParamsValues: number[] = [];
+            const userParamsIds: string[] = [];
 
             for (let i = 0; i < 3; i++) {
                 await serviceWithTransactional.transactional((service) => {
-                    userParamsValues.push(mockTransaction.userParams.value);
+                    userParamsIds.push(mockTransaction.userParams.id);
                     return service.getData();
                 });
             }
 
-            expect(userParamsValues).toHaveLength(3);
-            expect(userParamsValues.every((id) => typeof id === 'number')).toBe(
+            expect(userParamsIds).toHaveLength(3);
+            expect(userParamsIds.every((id) => typeof id === 'string')).toBe(
                 true,
             );
-            expect(new Set(userParamsValues).size).toBe(3);
+            expect(new Set(userParamsIds).size).toBe(3);
+            userParamsIds.forEach((id) => {
+                expect(id).toMatch(/^[0-9A-HJKMNP-TV-Z]{26}$/);
+            });
         });
 
         it('should create transactional service with transaction instance', async () => {

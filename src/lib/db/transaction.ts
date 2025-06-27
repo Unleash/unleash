@@ -1,15 +1,14 @@
 import type { Knex } from 'knex';
 import type { IUnleashConfig } from '../types/index.ts';
+import { ulid } from 'ulidx';
 
 export interface TransactionUserParams {
     type: 'change-request' | 'transaction';
-    value: number;
+    id: string;
 }
 
-function generateNumericTransactionId(): number {
-    const timestamp = Date.now();
-    const random = Math.floor(Math.random() * 1000);
-    return timestamp * 1000 + random;
+function generateTransactionId(): string {
+    return ulid();
 }
 
 export type KnexTransaction = Knex.Transaction;
@@ -96,7 +95,7 @@ export function withTransactional<S>(
         db.transaction(async (trx: Knex.Transaction) => {
             const defaultContext: TransactionUserParams = {
                 type: 'transaction',
-                value: generateNumericTransactionId(),
+                id: generateTransactionId(),
             };
 
             trx.userParams = transactionContext || defaultContext;

@@ -4,6 +4,7 @@ import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashCon
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
 import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
 import { constraintId } from 'constants/constraintId';
+import { objectId } from 'utils/objectId';
 
 export interface IViewableConstraintsListProps {
     constraints: IConstraint[];
@@ -29,7 +30,7 @@ export const ViewableConstraintsList = ({
             <ConstraintsList>
                 {constraints.map((constraint, index) => (
                     <ConstraintAccordionView
-                        key={constraint[constraintId] || index}
+                        key={constraint[constraintId] || objectId(constraint)}
                         constraint={constraint}
                     />
                 ))}

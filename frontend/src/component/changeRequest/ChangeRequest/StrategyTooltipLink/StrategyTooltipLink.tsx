@@ -58,8 +58,12 @@ export const StrategyDiff: FC<{
         return (
             <NewEventDiff
                 entry={{
-                    preData: omit(sortedCurrentStrategy, 'sortOrder'),
-                    data: omit(sortedChangeRequestStrategy, 'snapshot'),
+                    preData: sortedCurrentStrategy
+                        ? omit(sortedCurrentStrategy, 'sortOrder')
+                        : undefined,
+                    data: sortedChangeRequestStrategy
+                        ? omit(sortedChangeRequestStrategy, 'snapshot')
+                        : undefined,
                 }}
             />
         );

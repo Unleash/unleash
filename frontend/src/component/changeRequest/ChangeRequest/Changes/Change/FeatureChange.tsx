@@ -15,6 +15,8 @@ import { ArchiveFeatureChange } from './ArchiveFeatureChange.tsx';
 import { DependencyChange } from './DependencyChange.tsx';
 import { Link } from 'react-router-dom';
 import { ReleasePlanChange } from './ReleasePlanChange.tsx';
+import { DiffableChange } from './DiffableChange.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledSingleChangeBox = styled(Box, {
     shouldForwardProp: (prop: string) => !prop.startsWith('$'),
@@ -86,6 +88,11 @@ export const FeatureChange: FC<{
     const lastIndex = feature.defaultChange
         ? feature.changes.length + 1
         : feature.changes.length;
+
+    const useDiffableChangeComponent = useUiFlag('crDiffView');
+    const StrategyChangeComponent = useDiffableChangeComponent
+        ? DiffableChange
+        : StrategyChange;
 
     return (
         <StyledSingleChangeBox
@@ -166,7 +173,7 @@ export const FeatureChange: FC<{
                 {change.action === 'addStrategy' ||
                 change.action === 'deleteStrategy' ||
                 change.action === 'updateStrategy' ? (
-                    <StrategyChange
+                    <StrategyChangeComponent
                         actions={actions}
                         change={change}
                         featureName={feature.name}

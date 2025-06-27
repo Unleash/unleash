@@ -6,11 +6,25 @@ import dbInit, {
     type ITestDb,
 } from '../../../../test/e2e/helpers/database-init.js';
 import getLogger from '../../../../test/fixtures/no-logger.js';
-import { MetricsTranslator } from './metrics-translator.js';
-import { impactRegister } from './impact-register.js';
+import type { Metric } from './metrics-translator.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
+
+const sendImpactMetrics = async (impactMetrics: Metric[], status = 202) =>
+    app.request
+        .post('/api/client/metrics')
+        .send({
+            appName: 'impact-metrics-app',
+            instanceId: 'instance-id',
+            bucket: {
+                start: Date.now(),
+                stop: Date.now(),
+                toggles: {},
+            },
+            impactMetrics,
+        })
+        .expect(status);
 
 beforeAll(async () => {
     db = await dbInit('impact_metrics', getLogger);
@@ -29,32 +43,52 @@ afterAll(async () => {
 });
 
 test('should store impact metrics in memory and be able to retrieve them', async () => {
-    // TODO: replace with POST metrics when it's ready
-    const metricsTranslator = new MetricsTranslator(impactRegister);
+    await sendImpactMetrics([
+        {
+            name: 'labeled_counter',
+            help: 'with labels',
+            type: 'counter',
+            samples: [
+                {
+                    labels: { foo: 'bar' },
+                    value: 5,
+                },
+            ],
+        },
+    ]);
 
-    metricsTranslator.translateMetric({
-        name: 'labeled_counter',
-        help: 'with labels',
-        type: 'counter' as const,
-        samples: [
+    await sendImpactMetrics([
+        {
+            name: 'labeled_counter',
+            help: 'with labels',
+            type: 'counter',
+            samples: [
+                {
+                    labels: { foo: 'bar' },
+                    value: 10,
+                },
+            ],
+        },
+    ]);
+
+    await sendImpactMetrics([]);
+    // missing help
+    await sendImpactMetrics(
+        [
+            // @ts-expect-error
             {
-                labels: { foo: 'bar' },
-                value: 5,
+                name: 'labeled_counter',
+                type: 'counter',
+                samples: [
+                    {
+                        labels: { foo: 'bar' },
+                        value: 10,
+                    },
+                ],
             },
         ],
-    });
-
-    metricsTranslator.translateMetric({
-        name: 'labeled_counter',
-        help: 'with labels',
-        type: 'counter' as const,
-        samples: [
-            {
-                labels: { foo: 'bar' },
-                value: 10,
-            },
-        ],
-    });
+        400,
+    );
 
     const response = await app.request
         .get('/internal-backstage/impact/metrics')

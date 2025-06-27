@@ -6,6 +6,7 @@ import { Box, styled } from '@mui/material';
 import { EnvironmentStrategyOrderDiff } from './EnvironmentStrategyOrderDiff.tsx';
 import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
 import { formatStrategyName } from '../../../../../../utils/strategyNames.tsx';
+import type { IFeatureStrategy } from 'interfaces/strategy.ts';
 
 const ChangeItemInfo = styled(Box)({
     display: 'flex',
@@ -74,14 +75,14 @@ export const EnvironmentStrategyExecutionOrder = ({
                 .map((strategy) => strategy.id) ?? [],
     };
 
-    const updatedStrategies = change.payload
+    const updatedStrategies: IFeatureStrategy[] = change.payload
         .map(({ id }) => {
             return environmentStrategies.find((s) => s.id === id);
         })
-        .filter(Boolean);
+        .filter((strategy): strategy is IFeatureStrategy => Boolean(strategy));
 
     const data = {
-        strategyIds: updatedStrategies.map((strategy) => strategy!.id),
+        strategyIds: updatedStrategies.map((strategy) => strategy.id),
     };
 
     return (

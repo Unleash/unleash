@@ -190,6 +190,23 @@ export const useChangeRequestApi = () => {
 
         return makeRequest(req.caller, req.id);
     };
+    const updateRequestedReviewers = async (
+        project: string,
+        changeRequestId: number,
+        reviewers: string[],
+    ) => {
+        trackEvent('change_request', {
+            props: {
+                eventType: 'reviewers updated',
+            },
+        });
+        const path = `api/admin/projects/${project}/change-requests/${changeRequestId}/reviewers`;
+        const req = createRequest(path, {
+            method: 'PUT',
+            body: JSON.stringify({ reviewers }),
+        });
+        return makeRequest(req.caller, req.id);
+    };
 
     return {
         addChange,
@@ -200,6 +217,7 @@ export const useChangeRequestApi = () => {
         discardDraft,
         addComment,
         updateTitle,
+        updateRequestedReviewers,
         errors,
         loading,
     };

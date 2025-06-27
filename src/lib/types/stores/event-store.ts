@@ -6,6 +6,7 @@ import type { IQueryOperations } from '../../features/events/event-store.js';
 import type { IQueryParam } from '../../features/feature-toggle/types/feature-toggle-strategies-store-type.js';
 
 export interface IEventSearchParams {
+    id?: string;
     project?: string;
     query?: string;
     feature?: string;
@@ -14,6 +15,7 @@ export interface IEventSearchParams {
     createdBy?: string;
     type?: string;
     environment?: string;
+    order?: 'asc' | 'desc'; // desc by default
     offset: number;
     limit: number;
 }

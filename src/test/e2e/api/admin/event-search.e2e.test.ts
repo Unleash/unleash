@@ -618,3 +618,103 @@ test('should filter events by environment using IS_ANY_OF', async () => {
         total: 2,
     });
 });
+
+test('should filter events by ID', async () => {
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { name: 'feature1' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { name: 'feature2' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { name: 'feature3' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    const { body: allEventsResponse } = await searchEvents({});
+    const targetEvent = allEventsResponse.events.find(
+        (e: any) => e.data.name === 'feature2',
+    );
+
+    const { body } = await searchEvents({ id: `IS:${targetEvent.id}` });
+
+    expect(body).toMatchObject({
+        events: [
+            {
+                id: targetEvent.id,
+                type: 'feature-created',
+                data: { name: 'feature2' },
+            },
+        ],
+        total: 1,
+    });
+});
+
+test('should filter events by multiple IDs using IS_ANY_OF', async () => {
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { name: 'feature1' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { name: 'feature2' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { name: 'feature3' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    const { body: allEventsResponse } = await searchEvents({});
+    const targetEvent1 = allEventsResponse.events.find(
+        (e: any) => e.data.name === 'feature1',
+    );
+    const targetEvent3 = allEventsResponse.events.find(
+        (e: any) => e.data.name === 'feature3',
+    );
+
+    const { body } = await searchEvents({
+        id: `IS_ANY_OF:${targetEvent1.id},${targetEvent3.id}`,
+    });
+
+    expect(body.total).toBe(2);
+    expect(body.events).toHaveLength(2);
+
+    const returnedIds = body.events.map((e: any) => e.id);
+    expect(returnedIds).toContain(targetEvent1.id);
+    expect(returnedIds).toContain(targetEvent3.id);
+
+    const feature2Event = allEventsResponse.events.find(
+        (e: any) => e.data.name === 'feature2',
+    );
+    expect(returnedIds).not.toContain(feature2Event.id);
+});

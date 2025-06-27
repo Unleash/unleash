@@ -17,7 +17,6 @@ export type IFlagKey =
     | 'migrationLock'
     | 'demo'
     | 'googleAuthEnabled'
-    | 'disableBulkToggle'
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
     | 'disableMetrics'
@@ -57,12 +56,12 @@ export type IFlagKey =
     | 'edgeObservability'
     | 'registerFrontendClient'
     | 'reportUnknownFlags'
-    | 'lastSeenBulkQuery'
     | 'lifecycleMetrics'
     | 'customMetrics'
     | 'impactMetrics'
     | 'createFlagDialogCache'
     | 'improvedJsonDiff'
+    | 'crDiffView'
     | 'changeRequestApproverEmails';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -103,10 +102,6 @@ const flags: IFlags = {
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
     googleAuthEnabled: parseEnvVarBoolean(
         process.env.GOOGLE_AUTH_ENABLED,
-        false,
-    ),
-    disableBulkToggle: parseEnvVarBoolean(
-        process.env.DISABLE_BULK_TOGGLE,
         false,
     ),
     filterInvalidClientMetrics: parseEnvVarBoolean(
@@ -272,10 +267,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_REPORT_UNKNOWN_FLAGS,
         false,
     ),
-    lastSeenBulkQuery: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_LAST_SEEN_BULK_QUERY,
-        false,
-    ),
     lifecycleMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_METRICS,
         false,
@@ -290,6 +281,10 @@ const flags: IFlags = {
     ),
     improvedJsonDiff: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_IMPROVED_JSON_DIFF,
+        false,
+    ),
+    crDiffView: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CR_DIFF_VIEW,
         false,
     ),
     impactMetrics: parseEnvVarBoolean(
@@ -319,10 +314,19 @@ export interface IFlagResolver {
     isEnabled: (expName: IFlagKey, context?: IFlagContext) => boolean;
     getVariant: (expName: IFlagKey, context?: IFlagContext) => Variant;
     getStaticContext: () => IFlagContext;
+    impactMetrics?: IImpactMetricsResolver;
 }
 
 export interface IExternalFlagResolver {
     isEnabled: (flagName: IFlagKey, context?: IFlagContext) => boolean;
     getVariant: (flagName: IFlagKey, context?: IFlagContext) => Variant;
     getStaticContext: () => IFlagContext;
+    impactMetrics?: IImpactMetricsResolver;
+}
+
+export interface IImpactMetricsResolver {
+    defineCounter(name: string, help: string);
+    defineGauge(name: string, help: string);
+    incrementCounter(name: string, value?: number, featureName?: string): void;
+    updateGauge(name: string, value: number, featureName?: string): void;
 }

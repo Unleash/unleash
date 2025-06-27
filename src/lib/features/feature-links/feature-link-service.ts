@@ -4,6 +4,7 @@ import {
     FeatureLinkRemovedEvent,
     FeatureLinkUpdatedEvent,
     type IAuditUser,
+    type IFlagResolver,
     type IUnleashConfig,
 } from '../../types/index.js';
 import type {
@@ -18,6 +19,7 @@ import {
 } from '../../error/index.js';
 import normalizeUrl from 'normalize-url';
 import { parse } from 'tldts';
+import { FEAUTRE_LINK_COUNT } from '../metrics/impact/define-impact-metrics.js';
 
 interface IFeatureLinkStoreObj {
     featureLinkStore: IFeatureLinkStore;
@@ -27,15 +29,20 @@ export default class FeatureLinkService {
     private logger: Logger;
     private featureLinkStore: IFeatureLinkStore;
     private eventService: EventService;
+    private flagResolver: IFlagResolver;
 
     constructor(
         stores: IFeatureLinkStoreObj,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        {
+            getLogger,
+            flagResolver,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
         eventService: EventService,
     ) {
         this.logger = getLogger('feature-links/feature-link-service.ts');
         this.featureLinkStore = stores.featureLinkStore;
         this.eventService = eventService;
+        this.flagResolver = flagResolver;
     }
 
     async getAll(): Promise<IFeatureLink[]> {
@@ -71,6 +78,8 @@ export default class FeatureLinkService {
             url: normalizedUrl,
             domain: domainWithoutSuffix,
         });
+
+        this.flagResolver.impactMetrics?.incrementCounter(FEAUTRE_LINK_COUNT);
 
         await this.eventService.storeEvent(
             new FeatureLinkAddedEvent({

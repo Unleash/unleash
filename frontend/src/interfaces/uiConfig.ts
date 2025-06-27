@@ -59,7 +59,6 @@ export type UiFlags = {
     personalAccessTokensKillSwitch?: boolean;
     demo?: boolean;
     googleAuthEnabled?: boolean;
-    disableBulkToggle?: boolean;
     advancedPlayground?: boolean;
     strategyVariant?: boolean;
     doraMetrics?: boolean;
@@ -91,6 +90,8 @@ export type UiFlags = {
     createFlagDialogCache?: boolean;
     healthToTechDebt?: boolean;
     improvedJsonDiff?: boolean;
+    crDiffView?: boolean;
+    changeRequestApproverEmails?: boolean;
 };
 
 export interface IVersionInfo {

@@ -222,7 +222,7 @@ export default class EventService {
             if (parsed) queryParams.push(parsed);
         }
 
-        ['project', 'type', 'environment'].forEach((field) => {
+        ['project', 'type', 'environment', 'id'].forEach((field) => {
             if (params[field]) {
                 const parsed = parseSearchOperatorValue(field, params[field]);
                 if (parsed) queryParams.push(parsed);

@@ -674,7 +674,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codemirror/lang-json@npm:6.0.1, @codemirror/lang-json@npm:^6.0.1":
+"@codemirror/lang-json@npm:6.0.2":
+  version: 6.0.2
+  resolution: "@codemirror/lang-json@npm:6.0.2"
+  dependencies:
+    "@codemirror/language": "npm:^6.0.0"
+    "@lezer/json": "npm:^1.0.0"
+  checksum: 10c0/4a36022226557d0571c143f907638eb2d46c0f7cf96c6d9a86dac397a789efa2b387e3dd3df94bac21e27692892443b24f8129c044c9012df66e68f5080745b0
+  languageName: node
+  linkType: hard
+
+"@codemirror/lang-json@npm:^6.0.1":
   version: 6.0.1
   resolution: "@codemirror/lang-json@npm:6.0.1"
   dependencies:
@@ -3199,20 +3209,20 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 24.0.3
-  resolution: "@types/node@npm:24.0.3"
+  version: 24.0.4
+  resolution: "@types/node@npm:24.0.4"
   dependencies:
     undici-types: "npm:~7.8.0"
-  checksum: 10c0/9c3c4e87600d1cf11e291c2fd4bfd806a615455463c30a0ef6dc9c801b3423344d9b82b8084e3ccabce485a7421ebb61a66e9676181bd7d9aea4759998a120d5
+  checksum: 10c0/590e8cb0ec59fb9cd566402120e690d87ecbdf57f1ee2b8493266121ed33aa4b25949a0c6156b84a6ffb9250baaf1f80e9af142da542ed603e6ee73fc4d1115f
   languageName: node
   linkType: hard
 
 "@types/node@npm:^22.0.0":
-  version: 22.15.32
-  resolution: "@types/node@npm:22.15.32"
+  version: 22.15.33
+  resolution: "@types/node@npm:22.15.33"
   dependencies:
     undici-types: "npm:~6.21.0"
-  checksum: 10c0/63a2fa52adf1134d1b3bee8b1862d4b8e4550fffc190551068d3d41a41d9e5c0c8f1cb81faa18767b260637360f662115c26c5e4e7718868ead40c4a57cbc0e3
+  checksum: 10c0/ee040c29c891aa37fffc27d04a8529318c391356346933646b7692eaf62236831ad532f6ebaf43ebd6a2ef1f0f091860d8a0a83a4e3c5a4f66d37aa1b2c99f31
   languageName: node
   linkType: hard
 
@@ -3237,12 +3247,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:18.3.5":
-  version: 18.3.5
-  resolution: "@types/react-dom@npm:18.3.5"
+"@types/react-dom@npm:18.3.7":
+  version: 18.3.7
+  resolution: "@types/react-dom@npm:18.3.7"
   peerDependencies:
     "@types/react": ^18.0.0
-  checksum: 10c0/b163d35a6b32a79f5782574a7aeb12a31a647e248792bf437e6d596e2676961c394c5e3c6e91d1ce44ae90441dbaf93158efb4f051c0d61e2612f1cb04ce4faa
+  checksum: 10c0/8bd309e2c3d1604a28a736a24f96cbadf6c05d5288cfef8883b74f4054c961b6b3a5e997fd5686e492be903c8f3380dba5ec017eff3906b1256529cd2d39603e
   languageName: node
   linkType: hard
 
@@ -3303,20 +3313,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:18.3.18":
-  version: 18.3.18
-  resolution: "@types/react@npm:18.3.18"
+"@types/react@npm:18.3.23":
+  version: 18.3.23
+  resolution: "@types/react@npm:18.3.23"
   dependencies:
     "@types/prop-types": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 10c0/8fb2b00672072135d0858dc9db07873ea107cc238b6228aaa2a9afd1ef7a64a7074078250db38afbeb19064be8ea6af5eac32d404efdd5f45e093cc4829d87f8
+  checksum: 10c0/49331800b76572eb2992a5c44801dbf8c612a5f99c8f4e4200f06c7de6f3a6e9455c661784a6c5469df96fa45622cb4a9d0982c44e6a0d5719be5f2ef1f545ed
   languageName: node
   linkType: hard
 
-"@types/semver@npm:7.5.8":
-  version: 7.5.8
-  resolution: "@types/semver@npm:7.5.8"
-  checksum: 10c0/8663ff927234d1c5fcc04b33062cb2b9fcfbe0f5f351ed26c4d1e1581657deebd506b41ff7fdf89e787e3d33ce05854bc01686379b89e9c49b564c4cfa988efa
+"@types/semver@npm:7.7.0":
+  version: 7.7.0
+  resolution: "@types/semver@npm:7.7.0"
+  checksum: 10c0/6b5f65f647474338abbd6ee91a6bbab434662ddb8fe39464edcbcfc96484d388baad9eb506dff217b6fc1727a88894930eb1f308617161ac0f376fe06be4e1ee
   languageName: node
   linkType: hard
 
@@ -3408,9 +3418,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uiw/codemirror-extensions-basic-setup@npm:4.23.10":
-  version: 4.23.10
-  resolution: "@uiw/codemirror-extensions-basic-setup@npm:4.23.10"
+"@uiw/codemirror-extensions-basic-setup@npm:4.23.13":
+  version: 4.23.13
+  resolution: "@uiw/codemirror-extensions-basic-setup@npm:4.23.13"
   dependencies:
     "@codemirror/autocomplete": "npm:^6.0.0"
     "@codemirror/commands": "npm:^6.0.0"
@@ -3427,22 +3437,22 @@ __metadata:
     "@codemirror/search": ">=6.0.0"
     "@codemirror/state": ">=6.0.0"
     "@codemirror/view": ">=6.0.0"
-  checksum: 10c0/64c233857b1bf878bf630297b1d4b3df14e13761ff38ceccf7a1fa21d521be288311333b7cbff927889f9a899848f4fccefd975ea5fa8d626ea4aef088f13ee8
+  checksum: 10c0/db0d1c60c8b13f69aa02b969618d3b9f5aafab23af3c8d9be9a88016aff94de1e45a1c850daf7740d265a3e5452a916112f73e5c22857346a7002c243c934159
   languageName: node
   linkType: hard
 
-"@uiw/codemirror-theme-duotone@npm:4.23.10":
-  version: 4.23.10
-  resolution: "@uiw/codemirror-theme-duotone@npm:4.23.10"
+"@uiw/codemirror-theme-duotone@npm:4.23.13":
+  version: 4.23.13
+  resolution: "@uiw/codemirror-theme-duotone@npm:4.23.13"
   dependencies:
-    "@uiw/codemirror-themes": "npm:4.23.10"
-  checksum: 10c0/058fe2ec927fb7d9fdd7a040c1fa52ed52b2b786e2917ae981a687b1aafeac26022900aac625c2018288c9bd7ab9e056854d6628eaaea46a4251b0022693df7c
+    "@uiw/codemirror-themes": "npm:4.23.13"
+  checksum: 10c0/3c0994d7731fdad1537d66f331b3bc1f4308e9388001b3a1d168c8e4b751f28661652533b0c830b3f30456132572686a298af0672f3f36872a08fdc1cf9b1e47
   languageName: node
   linkType: hard
 
-"@uiw/codemirror-themes@npm:4.23.10":
-  version: 4.23.10
-  resolution: "@uiw/codemirror-themes@npm:4.23.10"
+"@uiw/codemirror-themes@npm:4.23.13":
+  version: 4.23.13
+  resolution: "@uiw/codemirror-themes@npm:4.23.13"
   dependencies:
     "@codemirror/language": "npm:^6.0.0"
     "@codemirror/state": "npm:^6.0.0"
@@ -3451,19 +3461,19 @@ __metadata:
     "@codemirror/language": ">=6.0.0"
     "@codemirror/state": ">=6.0.0"
     "@codemirror/view": ">=6.0.0"
-  checksum: 10c0/29f980789a535ae021ca8d8bec3ecee4dda8cb11c5451729c04481310cc04cd7c00ddb3011137f5cc305d565bc0a3464ebd88fdde9359e296d8f0a6cf6477811
+  checksum: 10c0/4e3bc3f12681727d41ae3c60c17fab5be267cb2675ace8ce6c56c66d6453715bf6d00c9b356d27df70f2104b0eaeda8c734faf2f05b38af05e7c5b2306f2a182
   languageName: node
   linkType: hard
 
-"@uiw/react-codemirror@npm:4.23.10":
-  version: 4.23.10
-  resolution: "@uiw/react-codemirror@npm:4.23.10"
+"@uiw/react-codemirror@npm:4.23.13":
+  version: 4.23.13
+  resolution: "@uiw/react-codemirror@npm:4.23.13"
   dependencies:
     "@babel/runtime": "npm:^7.18.6"
     "@codemirror/commands": "npm:^6.1.0"
     "@codemirror/state": "npm:^6.1.1"
     "@codemirror/theme-one-dark": "npm:^6.0.0"
-    "@uiw/codemirror-extensions-basic-setup": "npm:4.23.10"
+    "@uiw/codemirror-extensions-basic-setup": "npm:4.23.13"
     codemirror: "npm:^6.0.0"
   peerDependencies:
     "@babel/runtime": ">=7.11.0"
@@ -3473,7 +3483,7 @@ __metadata:
     codemirror: ">=6.0.0"
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
-  checksum: 10c0/cbcb928c84df2a6a03fd7789a3db317f6358961fd96197d2a3edb3ffbb00deff1cfa05fa1494c849393784bb89ae3f41425982f609f73bad0855a5e6522c328d
+  checksum: 10c0/95e79e50fa1a28cbfaf982def6ff82c5ecf18fe7eca077b4bc4cba1d43580541fcb1c38effbd299acff97f77372d8bc910642adc3d6e610c5125a9f0b85f379e
   languageName: node
   linkType: hard
 
@@ -8548,14 +8558,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-activity-calendar@npm:^2.7.8":
-  version: 2.7.8
-  resolution: "react-activity-calendar@npm:2.7.8"
+"react-activity-calendar@npm:^2.7.11":
+  version: 2.7.12
+  resolution: "react-activity-calendar@npm:2.7.12"
   dependencies:
     date-fns: "npm:^4.1.0"
   peerDependencies:
     react: ^18.0.0 || ^19.0.0
-  checksum: 10c0/e18d17cadc65480a8fa1df390598d7a4741a211b164091ca85fd2a21673fa667a5921f7b856e4ed92c2e8dedfb961426f163e517ea37336f2c3afb987740620d
+  checksum: 10c0/6e329c18d37e05c9f26efee3af229e9289744d9f6bac03a08b4911b62786a410d0f7cfe58ace1e52706da4adc250e82906a77ef6d2665e52d1e271edcdd8b60e
   languageName: node
   linkType: hard
 
@@ -8630,14 +8640,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-error-boundary@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "react-error-boundary@npm:5.0.0"
+"react-error-boundary@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "react-error-boundary@npm:6.0.0"
   dependencies:
     "@babel/runtime": "npm:^7.12.5"
   peerDependencies:
     react: ">=16.13.1"
-  checksum: 10c0/38da5e7e81016a4750d3b090e3c740c2c1125c0bb9de14e1ab92ee3b5190d34517c199935302718a24aa35d3f89081412b3444edc23f63729bde2e862a2fbfec
+  checksum: 10c0/1914d600dee95a14f14af4afe9867b0d35c26c4f7826d23208800ba2a99728659029aad60a6ef95e13430b4d79c2c4c9b3585f50bf508450478760d2e4e732d8
   languageName: node
   linkType: hard
 
@@ -8665,14 +8675,14 @@ __metadata:
   linkType: hard
 
 "react-github-calendar@npm:^4.5.1":
-  version: 4.5.6
-  resolution: "react-github-calendar@npm:4.5.6"
+  version: 4.5.7
+  resolution: "react-github-calendar@npm:4.5.7"
   dependencies:
-    react-activity-calendar: "npm:^2.7.8"
-    react-error-boundary: "npm:^5.0.0"
+    react-activity-calendar: "npm:^2.7.11"
+    react-error-boundary: "npm:^6.0.0"
   peerDependencies:
     react: ^18.0.0 || ^19.0.0
-  checksum: 10c0/74e995a528a3cf2a4ac4634415b614a0f6ad170f066d2d58142f15b815e8855de8b2ecf426ea054dd5d29143185dedc9a4ec7a8fa4dea4cbad6b7ef0f4411b5a
+  checksum: 10c0/a274776d8f6547d342573a42618196f436d4e555a5eb84b7b43fda0350a5174959ae74bc9d230c8cdca1b8982e4f586583200292126d4aa05cb1e3d350b579d4
   languageName: node
   linkType: hard
 
@@ -9241,12 +9251,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:7.7.1":
-  version: 7.7.1
-  resolution: "semver@npm:7.7.1"
+"semver@npm:7.7.2":
+  version: 7.7.2
+  resolution: "semver@npm:7.7.2"
   bin:
     semver: bin/semver.js
-  checksum: 10c0/fd603a6fb9c399c6054015433051bdbe7b99a940a8fb44b85c2b524c4004b023d7928d47cb22154f8d054ea7ee8597f586605e05b52047f048278e4ac56ae958
+  checksum: 10c0/aca305edfbf2383c22571cb7714f48cadc7ac95371b4b52362fb8eeffdfbc0de0669368b82b2b15978f8848f01d7114da65697e56cd8c37b0dab8c58e543f9ea
   languageName: node
   linkType: hard
 
@@ -10038,9 +10048,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tss-react@npm:4.9.15":
-  version: 4.9.15
-  resolution: "tss-react@npm:4.9.15"
+"tss-react@npm:4.9.18":
+  version: 4.9.18
+  resolution: "tss-react@npm:4.9.18"
   dependencies:
     "@emotion/cache": "npm:*"
     "@emotion/serialize": "npm:*"
@@ -10048,7 +10058,7 @@ __metadata:
   peerDependencies:
     "@emotion/react": ^11.4.1
     "@emotion/server": ^11.4.0
-    "@mui/material": ^5.0.0 || ^6.0.0
+    "@mui/material": ^5.0.0 || ^6.0.0 || ^7.0.0
     "@types/react": ^16.8.0 || ^17.0.2 || ^18.0.0 || ^19.0.0
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   peerDependenciesMeta:
@@ -10056,7 +10066,7 @@ __metadata:
       optional: true
     "@mui/material":
       optional: true
-  checksum: 10c0/f11069b19ec276f34a26f5f4a987c53f7898a16dcb344b3102c977070ce1a378ae14fa8a84330b2554564206d15c781cd7d181df89fc1c5039ce84047f6c9f33
+  checksum: 10c0/81bfdfee892c1eb1bf253b2b456b9d573911d8b2668c757e2f5c56d01def00139bd780efe85fe9115dd7bb15477840e816586d6e999317456ca1e6cf7c1dccd3
   languageName: node
   linkType: hard
 
@@ -10342,7 +10352,7 @@ __metadata:
   resolution: "unleash-frontend-local@workspace:."
   dependencies:
     "@biomejs/biome": "npm:1.9.4"
-    "@codemirror/lang-json": "npm:6.0.1"
+    "@codemirror/lang-json": "npm:6.0.2"
     "@emotion/react": "npm:11.11.4"
     "@emotion/styled": "npm:11.11.5"
     "@mui/icons-material": "npm:5.15.3"
@@ -10364,15 +10374,15 @@ __metadata:
     "@types/lodash.mapvalues": "npm:^4.6.9"
     "@types/lodash.omit": "npm:4.5.9"
     "@types/node": "npm:^22.0.0"
-    "@types/react": "npm:18.3.18"
-    "@types/react-dom": "npm:18.3.5"
+    "@types/react": "npm:18.3.23"
+    "@types/react-dom": "npm:18.3.7"
     "@types/react-router-dom": "npm:5.3.3"
     "@types/react-table": "npm:7.7.20"
     "@types/react-test-renderer": "npm:18.3.1"
-    "@types/semver": "npm:7.5.8"
+    "@types/semver": "npm:7.7.0"
     "@types/uuid": "npm:^9.0.0"
-    "@uiw/codemirror-theme-duotone": "npm:4.23.10"
-    "@uiw/react-codemirror": "npm:4.23.10"
+    "@uiw/codemirror-theme-duotone": "npm:4.23.13"
+    "@uiw/react-codemirror": "npm:4.23.13"
     "@unleash/proxy-client-react": "npm:^5.0.0"
     "@vitejs/plugin-react": "npm:4.3.4"
     cartesian: "npm:^1.0.1"
@@ -10422,9 +10432,9 @@ __metadata:
     react-table: "npm:7.8.0"
     react-test-renderer: "npm:18.3.1"
     sass: "npm:1.85.1"
-    semver: "npm:7.7.1"
+    semver: "npm:7.7.2"
     swr: "npm:2.3.3"
-    tss-react: "npm:4.9.15"
+    tss-react: "npm:4.9.18"
     typescript: "npm:5.8.3"
     unleash-proxy-client: "npm:^3.7.3"
     use-query-params: "npm:^2.2.1"
@@ -10439,12 +10449,12 @@ __metadata:
   linkType: soft
 
 "unleash-proxy-client@npm:^3.7.3":
-  version: 3.7.3
-  resolution: "unleash-proxy-client@npm:3.7.3"
+  version: 3.7.6
+  resolution: "unleash-proxy-client@npm:3.7.6"
   dependencies:
     tiny-emitter: "npm:^2.1.0"
     uuid: "npm:^9.0.1"
-  checksum: 10c0/3a061d4e3587325046fea0133fe405fef143dbcfdd6ed20c54200b46a22bf49acdccb6dcc0b250400a9ace2350b0065f856731a5712598d27c1e9266a141f559
+  checksum: 10c0/ad365f6cbf4792506a47168f998e2d8af58db631af07a5a431d414a8d8dff49563e7caf3e0d8dbc77e9a92a6e848db412fb3c5a116fcac8870102fb4ee767594
   languageName: node
   linkType: hard
 
@@ -10991,8 +11001,8 @@ __metadata:
   linkType: hard
 
 "ws@npm:^8.18.0":
-  version: 8.18.1
-  resolution: "ws@npm:8.18.1"
+  version: 8.18.2
+  resolution: "ws@npm:8.18.2"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ">=5.0.2"
@@ -11001,7 +11011,7 @@ __metadata:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: 10c0/e498965d6938c63058c4310ffb6967f07d4fa06789d3364829028af380d299fe05762961742971c764973dce3d1f6a2633fe8b2d9410c9b52e534b4b882a99fa
+  checksum: 10c0/4b50f67931b8c6943c893f59c524f0e4905bbd183016cfb0f2b8653aa7f28dad4e456b9d99d285bbb67cca4fedd9ce90dfdfaa82b898a11414ebd66ee99141e4
   languageName: node
   linkType: hard
 

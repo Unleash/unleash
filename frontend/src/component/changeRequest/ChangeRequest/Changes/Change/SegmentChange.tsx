@@ -36,13 +36,11 @@ export const SegmentChange: FC<ISegmentChangeProps> = ({
             <Box
                 sx={(theme) => ({
                     backgroundColor: theme.palette.neutral.light,
-                    borderRadius: (theme) =>
-                        `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0`,
+                    borderRadius: `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0`,
                     border: '1px solid',
-                    borderColor: (theme) =>
-                        segmentChange.conflict
-                            ? theme.palette.warning.border
-                            : theme.palette.divider,
+                    borderColor: segmentChange.conflict
+                        ? theme.palette.warning.border
+                        : theme.palette.divider,
                     borderBottom: 'none',
                     overflow: 'hidden',
                 })}

@@ -146,7 +146,10 @@ const DeleteStrategy: FC<{
             : currentStrategy;
 
     return (
-        <>
+        <Tabs
+            aria-label='View rendered change or JSON diff'
+            selectionFollowsFocus
+        >
             <ChangeItemCreateEditDeleteWrapper className='delete-strategy-information-wrapper'>
                 <ChangeItemInfo>
                     <Typography
@@ -163,12 +166,26 @@ const DeleteStrategy: FC<{
                         />
                     </StrategyTooltipLink>
                 </ChangeItemInfo>
-                <div>{actions}</div>
+                <RightHandSide>
+                    <StyledTabList>
+                        <StyledTab value={0}>Change</StyledTab>
+                        <StyledTab value={1}>View diff</StyledTab>
+                    </StyledTabList>
+                    {actions}
+                </RightHandSide>
             </ChangeItemCreateEditDeleteWrapper>
-            {referenceStrategy && (
-                <StrategyExecution strategy={referenceStrategy} />
-            )}
-        </>
+            <TabPanel value={0}>
+                {referenceStrategy && (
+                    <StrategyExecution strategy={referenceStrategy} />
+                )}
+            </TabPanel>
+            <TabPanel value={1}>
+                <StrategyDiff
+                    change={change}
+                    currentStrategy={referenceStrategy}
+                />
+            </TabPanel>
+        </Tabs>
     );
 };
 
@@ -331,7 +348,7 @@ const AddStrategy: FC<{
     change: IChangeRequestAddStrategy;
     actions?: ReactNode;
 }> = ({ change, actions }) => (
-    <>
+    <Tabs aria-label='View rendered change or JSON diff' selectionFollowsFocus>
         <ChangeItemCreateEditDeleteWrapper>
             <ChangeItemInfo>
                 <Typography
@@ -354,19 +371,31 @@ const AddStrategy: FC<{
                     />
                 </div>
             </ChangeItemInfo>
-            <StrategyDiff change={change} currentStrategy={undefined} />
-            <div>{actions}</div>
+            <RightHandSide>
+                <StyledTabList>
+                    <StyledTab value={0}>Change</StyledTab>
+                    <StyledTab value={1}>View diff</StyledTab>
+                </StyledTabList>
+                {actions}
+            </RightHandSide>
         </ChangeItemCreateEditDeleteWrapper>
-        <StrategyExecution strategy={change.payload} />
-        {change.payload.variants?.length ? (
-            <StyledBox>
-                <StyledTypography>Adding strategy variants:</StyledTypography>
-                <EnvironmentVariantsTable
-                    variants={change.payload.variants || []}
-                />
-            </StyledBox>
-        ) : null}
-    </>
+        <TabPanel value={0}>
+            <StrategyExecution strategy={change.payload} />
+            {change.payload.variants?.length ? (
+                <StyledBox>
+                    <StyledTypography>
+                        Adding strategy variants:
+                    </StyledTypography>
+                    <EnvironmentVariantsTable
+                        variants={change.payload.variants || []}
+                    />
+                </StyledBox>
+            ) : null}
+        </TabPanel>
+        <TabPanel value={1}>
+            <StrategyDiff change={change} currentStrategy={undefined} />
+        </TabPanel>
+    </Tabs>
 );
 
 export const DiffableChange: FC<{

@@ -22,7 +22,7 @@ jobs:
         run: |
           npm install --prefix ./svg-contributors
           ./svg-contributors/bin/contributors -o unleash -n unleash -l 500
-      - uses: aws-actions/configure-aws-credentials@v2
+      - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

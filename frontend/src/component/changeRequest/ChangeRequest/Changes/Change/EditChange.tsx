@@ -26,6 +26,7 @@ import { FeatureStrategyForm } from '../../../../feature/FeatureStrategy/Feature
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 import { v4 as uuidv4 } from 'uuid';
 import { constraintId } from 'constants/constraintId.ts';
+import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 
 interface IEditChangeProps {
     change: IChangeRequestAddStrategy | IChangeRequestUpdateStrategy;
@@ -208,7 +209,7 @@ export const formatUpdateStrategyApiCode = (
     }
 
     const url = `${unleashUrl}/api/admin/projects/${projectId}/change-requests/${changeRequestId}/changes/${changeId}`;
-    const payload = JSON.stringify(strategy, undefined, 2);
+    const payload = JSON.stringify(strategy, apiPayloadConstraintReplacer, 2);
 
     return `curl --location --request PUT '${url}' \\
     --header 'Authorization: INSERT_API_KEY' \\

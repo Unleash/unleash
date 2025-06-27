@@ -70,7 +70,7 @@ test('Add single archive feature change to change request', async () => {
 
     expect(screen.getByText('Archive feature flag')).toBeInTheDocument();
     await screen.findByText(
-        'Archiving features with dependencies will also remove those dependencies.',
+        'Archiving flags with dependencies will also remove those dependencies.',
     );
     const button = await screen.findByText('Add change to draft');
 
@@ -100,7 +100,7 @@ test('Add multiple archive feature changes to change request', async () => {
 
     await screen.findByText('Archive feature flags');
     await screen.findByText(
-        'Archiving features with dependencies will also remove those dependencies.',
+        'Archiving flags with dependencies will also remove those dependencies.',
     );
     const button = await screen.findByText('Add to change request');
 
@@ -163,7 +163,7 @@ test('Show error message when multiple parents of orphaned children are archived
     );
     expect(
         screen.queryByText(
-            'Archiving features with dependencies will also remove those dependencies.',
+            'Archiving flags with dependencies will also remove those dependencies.',
         ),
     ).not.toBeInTheDocument();
 });
@@ -189,7 +189,7 @@ test('Show error message when 1 parent of orphaned children is archived', async 
     );
     expect(
         screen.queryByText(
-            'Archiving features with dependencies will also remove those dependencies.',
+            'Archiving flags with dependencies will also remove those dependencies.',
         ),
     ).not.toBeInTheDocument();
 });

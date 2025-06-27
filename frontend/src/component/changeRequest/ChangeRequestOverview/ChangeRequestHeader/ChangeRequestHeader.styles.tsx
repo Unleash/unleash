@@ -18,15 +18,6 @@ export const StyledInnerContainer = styled(Box)(({ theme }) => ({
     alignItems: 'center',
 }));
 
-// export const StyledHeader = styled(({ children, ...props }) => (
-//     <Typography {...props}>{children}</Typography>
-// ))(({ theme }) => ({
-//     display: 'flex',
-//     alignItems: 'center',
-//     marginRight: theme.spacing(1),
-//     fontSize: theme.fontSizes.mainHeader,
-// }));
-
 export const StyledHeader = styled(Typography)<TypographyProps>(
     ({ theme }) => ({
         display: 'flex',

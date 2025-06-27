@@ -64,7 +64,7 @@
   },
   "resolutions": {
     "http-proxy-middleware": "3.0.5",
-    "express/path-to-regexp": "0.1.12"
+    "express/path-to-regexp": "1.9.0"
   },
   "packageManager": "yarn@4.9.2"
 }

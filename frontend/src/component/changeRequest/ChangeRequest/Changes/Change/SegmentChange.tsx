@@ -39,8 +39,8 @@ export const SegmentChange: FC<ISegmentChangeProps> = ({
                     borderRadius: `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0`,
                     border: '1px solid',
                     borderColor: segmentChange.conflict
-                            ? theme.palette.warning.border
-                            : theme.palette.divider,
+                        ? theme.palette.warning.border
+                        : theme.palette.divider,
                     borderBottom: 'none',
                     overflow: 'hidden',
                 })}

@@ -95,10 +95,6 @@ export class ApiTokenService {
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('/services/api-token-service.ts');
         this.resourceLimits = config.resourceLimits;
-        if (!this.flagResolver.isEnabled('useMemoizedActiveTokens')) {
-            // This is probably not needed because the scheduler will run it
-            this.fetchActiveTokens();
-        }
         this.updateLastSeen();
         this.timer = (functionName: string) =>
             metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {

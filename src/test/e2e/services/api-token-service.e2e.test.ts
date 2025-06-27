@@ -21,11 +21,6 @@ let projectService: ProjectService;
 beforeAll(async () => {
     const config = createTestConfig({
         server: { baseUriPath: '/test' },
-        experimental: {
-            flags: {
-                useMemoizedActiveTokens: true,
-            },
-        },
     });
     db = await dbInit('api_token_service_serial', getLogger);
     stores = db.stores;

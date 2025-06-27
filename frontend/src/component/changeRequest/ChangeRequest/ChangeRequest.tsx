@@ -1,11 +1,11 @@
 import type { VFC } from 'react';
 import { Box, Typography } from '@mui/material';
 import type { ChangeRequestType } from '../changeRequest.types';
+import { FeatureToggleChanges } from './Changes/FeatureToggleChanges.tsx';
 import { FeatureChange } from './Changes/Change/FeatureChange.tsx';
 import { ChangeActions } from './Changes/Change/ChangeActions.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SegmentChange } from './Changes/Change/SegmentChange.tsx';
-import { SwitchableChangeCard } from './Changes/SwitchableChangeCard.tsx';
 
 interface IChangeRequestProps {
     changeRequest: ChangeRequestType;
@@ -54,13 +54,10 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                 }
             />
             {changeRequest.features?.map((feature) => (
-                <SwitchableChangeCard
+                <FeatureToggleChanges
                     key={feature.name}
-                    flag={{
-                        name: feature.name,
-                        projectId: changeRequest.project,
-                    }}
-                    resourceType='Feature flag'
+                    featureName={feature.name}
+                    projectId={changeRequest.project}
                     onNavigate={onNavigate}
                     conflict={feature.conflict}
                 >
@@ -101,7 +98,7 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                             feature={feature}
                         />
                     ) : null}
-                </SwitchableChangeCard>
+                </FeatureToggleChanges>
             ))}
         </Box>
     );

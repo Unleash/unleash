@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@codemirror/lang-json": "6.0.1",
+    "@codemirror/lang-json": "6.0.2",
     "@emotion/react": "11.11.4",
     "@emotion/styled": "11.11.5",
     "@mui/icons-material": "5.15.3",
@@ -59,8 +59,8 @@
     "@types/lodash.mapvalues": "^4.6.9",
     "@types/lodash.omit": "4.5.9",
     "@types/node": "^22.0.0",
-    "@types/react": "18.3.18",
-    "@types/react-dom": "18.3.5",
+    "@types/react": "18.3.23",
+    "@types/react-dom": "18.3.7",
     "@types/react-router-dom": "5.3.3",
     "@types/react-table": "7.7.20",
     "@types/react-test-renderer": "18.3.1",
@@ -116,7 +116,7 @@
     "sass": "1.85.1",
     "semver": "7.7.2",
     "swr": "2.3.3",
-    "tss-react": "4.9.15",
+    "tss-react": "4.9.18",
     "typescript": "5.8.3",
     "unleash-proxy-client": "^3.7.3",
     "use-query-params": "^2.2.1",
@@ -136,7 +136,7 @@
     "vite": "5.4.19",
     "semver": "7.7.2",
     "ws": "^8.18.0",
-    "@types/react": "18.3.18"
+    "@types/react": "18.3.23"
   },
   "jest": {
     "moduleNameMapper": {

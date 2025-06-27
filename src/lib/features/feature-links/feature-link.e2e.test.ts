@@ -19,17 +19,7 @@ let featureLinkReadModel: IFeatureLinksReadModel;
 
 beforeAll(async () => {
     db = await dbInit('feature_link', getLogger);
-    app = await setupAppWithAuth(
-        db.stores,
-        {
-            experimental: {
-                flags: {
-                    featureLinks: true,
-                },
-            },
-        },
-        db.rawDatabase,
-    );
+    app = await setupAppWithAuth(db.stores, {}, db.rawDatabase);
     eventStore = db.stores.eventStore;
     featureLinkStore = db.stores.featureLinkStore;
     featureLinkReadModel = new FeatureLinksReadModel(

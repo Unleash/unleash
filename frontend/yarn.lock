@@ -674,7 +674,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codemirror/lang-json@npm:6.0.1, @codemirror/lang-json@npm:^6.0.1":
+"@codemirror/lang-json@npm:6.0.2":
+  version: 6.0.2
+  resolution: "@codemirror/lang-json@npm:6.0.2"
+  dependencies:
+    "@codemirror/language": "npm:^6.0.0"
+    "@lezer/json": "npm:^1.0.0"
+  checksum: 10c0/4a36022226557d0571c143f907638eb2d46c0f7cf96c6d9a86dac397a789efa2b387e3dd3df94bac21e27692892443b24f8129c044c9012df66e68f5080745b0
+  languageName: node
+  linkType: hard
+
+"@codemirror/lang-json@npm:^6.0.1":
   version: 6.0.1
   resolution: "@codemirror/lang-json@npm:6.0.1"
   dependencies:
@@ -3237,12 +3247,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:18.3.5":
-  version: 18.3.5
-  resolution: "@types/react-dom@npm:18.3.5"
+"@types/react-dom@npm:18.3.7":
+  version: 18.3.7
+  resolution: "@types/react-dom@npm:18.3.7"
   peerDependencies:
     "@types/react": ^18.0.0
-  checksum: 10c0/b163d35a6b32a79f5782574a7aeb12a31a647e248792bf437e6d596e2676961c394c5e3c6e91d1ce44ae90441dbaf93158efb4f051c0d61e2612f1cb04ce4faa
+  checksum: 10c0/8bd309e2c3d1604a28a736a24f96cbadf6c05d5288cfef8883b74f4054c961b6b3a5e997fd5686e492be903c8f3380dba5ec017eff3906b1256529cd2d39603e
   languageName: node
   linkType: hard
 
@@ -3303,13 +3313,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:18.3.18":
-  version: 18.3.18
-  resolution: "@types/react@npm:18.3.18"
+"@types/react@npm:18.3.23":
+  version: 18.3.23
+  resolution: "@types/react@npm:18.3.23"
   dependencies:
     "@types/prop-types": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 10c0/8fb2b00672072135d0858dc9db07873ea107cc238b6228aaa2a9afd1ef7a64a7074078250db38afbeb19064be8ea6af5eac32d404efdd5f45e093cc4829d87f8
+  checksum: 10c0/49331800b76572eb2992a5c44801dbf8c612a5f99c8f4e4200f06c7de6f3a6e9455c661784a6c5469df96fa45622cb4a9d0982c44e6a0d5719be5f2ef1f545ed
   languageName: node
   linkType: hard
 
@@ -10038,9 +10048,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tss-react@npm:4.9.15":
-  version: 4.9.15
-  resolution: "tss-react@npm:4.9.15"
+"tss-react@npm:4.9.18":
+  version: 4.9.18
+  resolution: "tss-react@npm:4.9.18"
   dependencies:
     "@emotion/cache": "npm:*"
     "@emotion/serialize": "npm:*"
@@ -10048,7 +10058,7 @@ __metadata:
   peerDependencies:
     "@emotion/react": ^11.4.1
     "@emotion/server": ^11.4.0
-    "@mui/material": ^5.0.0 || ^6.0.0
+    "@mui/material": ^5.0.0 || ^6.0.0 || ^7.0.0
     "@types/react": ^16.8.0 || ^17.0.2 || ^18.0.0 || ^19.0.0
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   peerDependenciesMeta:
@@ -10056,7 +10066,7 @@ __metadata:
       optional: true
     "@mui/material":
       optional: true
-  checksum: 10c0/f11069b19ec276f34a26f5f4a987c53f7898a16dcb344b3102c977070ce1a378ae14fa8a84330b2554564206d15c781cd7d181df89fc1c5039ce84047f6c9f33
+  checksum: 10c0/81bfdfee892c1eb1bf253b2b456b9d573911d8b2668c757e2f5c56d01def00139bd780efe85fe9115dd7bb15477840e816586d6e999317456ca1e6cf7c1dccd3
   languageName: node
   linkType: hard
 
@@ -10342,7 +10352,7 @@ __metadata:
   resolution: "unleash-frontend-local@workspace:."
   dependencies:
     "@biomejs/biome": "npm:1.9.4"
-    "@codemirror/lang-json": "npm:6.0.1"
+    "@codemirror/lang-json": "npm:6.0.2"
     "@emotion/react": "npm:11.11.4"
     "@emotion/styled": "npm:11.11.5"
     "@mui/icons-material": "npm:5.15.3"
@@ -10364,8 +10374,8 @@ __metadata:
     "@types/lodash.mapvalues": "npm:^4.6.9"
     "@types/lodash.omit": "npm:4.5.9"
     "@types/node": "npm:^22.0.0"
-    "@types/react": "npm:18.3.18"
-    "@types/react-dom": "npm:18.3.5"
+    "@types/react": "npm:18.3.23"
+    "@types/react-dom": "npm:18.3.7"
     "@types/react-router-dom": "npm:5.3.3"
     "@types/react-table": "npm:7.7.20"
     "@types/react-test-renderer": "npm:18.3.1"
@@ -10424,7 +10434,7 @@ __metadata:
     sass: "npm:1.85.1"
     semver: "npm:7.7.2"
     swr: "npm:2.3.3"
-    tss-react: "npm:4.9.15"
+    tss-react: "npm:4.9.18"
     typescript: "npm:5.8.3"
     unleash-proxy-client: "npm:^3.7.3"
     use-query-params: "npm:^2.2.1"
@@ -10439,12 +10449,12 @@ __metadata:
   linkType: soft
 
 "unleash-proxy-client@npm:^3.7.3":
-  version: 3.7.3
-  resolution: "unleash-proxy-client@npm:3.7.3"
+  version: 3.7.6
+  resolution: "unleash-proxy-client@npm:3.7.6"
   dependencies:
     tiny-emitter: "npm:^2.1.0"
     uuid: "npm:^9.0.1"
-  checksum: 10c0/3a061d4e3587325046fea0133fe405fef143dbcfdd6ed20c54200b46a22bf49acdccb6dcc0b250400a9ace2350b0065f856731a5712598d27c1e9266a141f559
+  checksum: 10c0/ad365f6cbf4792506a47168f998e2d8af58db631af07a5a431d414a8d8dff49563e7caf3e0d8dbc77e9a92a6e848db412fb3c5a116fcac8870102fb4ee767594
   languageName: node
   linkType: hard
 
@@ -10991,8 +11001,8 @@ __metadata:
   linkType: hard
 
 "ws@npm:^8.18.0":
-  version: 8.18.1
-  resolution: "ws@npm:8.18.1"
+  version: 8.18.2
+  resolution: "ws@npm:8.18.2"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ">=5.0.2"
@@ -11001,7 +11011,7 @@ __metadata:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: 10c0/e498965d6938c63058c4310ffb6967f07d4fa06789d3364829028af380d299fe05762961742971c764973dce3d1f6a2633fe8b2d9410c9b52e534b4b882a99fa
+  checksum: 10c0/4b50f67931b8c6943c893f59c524f0e4905bbd183016cfb0f2b8653aa7f28dad4e456b9d99d285bbb67cca4fedd9ce90dfdfaa82b898a11414ebd66ee99141e4
   languageName: node
   linkType: hard
 

@@ -139,6 +139,14 @@ export const DemoSteps = ({
                     }
                 }
 
+                step.onStep?.({
+                    el,
+                    index,
+                    next,
+                    step,
+                    signal: abortController.signal,
+                });
+
                 if (!step.nextButton) {
                     const clickHandler = (e: Event) => {
                         abortController.abort();

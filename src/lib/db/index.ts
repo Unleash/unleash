@@ -7,7 +7,7 @@ import {
     ReleasePlanTemplateStore,
 } from '../types/index.js';
 
-import EventStore from '../features/events/event-store.js';
+import { EventStore } from '../features/events/event-store.js';
 import FeatureToggleStore from '../features/feature-toggle/feature-toggle-store.js';
 import FeatureTypeStore from './feature-type-store.js';
 import StrategyStore from './strategy-store.js';

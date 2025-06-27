@@ -91,6 +91,7 @@ export type UiFlags = {
     healthToTechDebt?: boolean;
     improvedJsonDiff?: boolean;
     impactMetrics?: boolean;
+    changeRequestApproverEmails?: boolean;
 };
 
 export interface IVersionInfo {

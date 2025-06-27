@@ -1,4 +1,4 @@
-import EventStore from './event-store.js';
+import { EventStore } from './event-store.js';
 import getLogger from '../../../test/fixtures/no-logger.js';
 import dbInit, {
     type ITestDb,

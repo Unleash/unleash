@@ -90,6 +90,7 @@ export type UiFlags = {
     createFlagDialogCache?: boolean;
     healthToTechDebt?: boolean;
     improvedJsonDiff?: boolean;
+    crDiffView?: boolean;
     changeRequestApproverEmails?: boolean;
 };
 

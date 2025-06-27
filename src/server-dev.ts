@@ -57,6 +57,7 @@ process.nextTick(async () => {
                         lifecycleMetrics: true,
                         improvedJsonDiff: true,
                         impactMetrics: true,
+                        crDiffView: true,
                     },
                 },
                 authentication: {

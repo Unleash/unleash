@@ -34,6 +34,8 @@ import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/Sch
 import type { PlausibleChangeRequestState } from '../changeRequest.types';
 import { useNavigate } from 'react-router-dom';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { ChangeRequestRequestedApprovers } from './ChangeRequestRequestedApprovers/ChangeRequestRequestedApprovers.tsx';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -106,6 +108,7 @@ export const ChangeRequestOverview: FC = () => {
         useChangeRequestsEnabled(projectId);
     const [disabled, setDisabled] = useState(false);
     const navigate = useNavigate();
+    const approversEnabled = useUiFlag('changeRequestApproverEmails');
 
     if (!changeRequest) {
         return null;
@@ -288,7 +291,19 @@ export const ChangeRequestOverview: FC = () => {
             <ChangeRequestBody>
                 <StyledAsideBox>
                     <ChangeRequestTimeline {...timelineProps} />
-                    <ChangeRequestReviewers changeRequest={changeRequest} />
+                    <ConditionallyRender
+                        condition={approversEnabled}
+                        show={
+                            <ChangeRequestRequestedApprovers
+                                changeRequest={changeRequest}
+                            />
+                        }
+                        elseShow={
+                            <ChangeRequestReviewers
+                                changeRequest={changeRequest}
+                            />
+                        }
+                    />
                 </StyledAsideBox>
                 <StyledPaper elevation={0}>
                     <StyledInnerContainer>

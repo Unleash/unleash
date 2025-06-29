@@ -143,8 +143,7 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
                 }
                 label='Begin at zero'
             />
-
-            {availableLabels && Object.keys(availableLabels).length > 0 && (
+            {availableLabels && Object.keys(availableLabels).length > 0 ? (
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Typography variant='subtitle2'>
@@ -198,7 +197,7 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
                         ),
                     )}
                 </Box>
-            )}
+            ) : null}
         </Box>
     );
 };

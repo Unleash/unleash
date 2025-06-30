@@ -484,7 +484,7 @@ export class EventStore implements IEventStore {
     }
 
     eventToDbRow(e: IBaseEvent): Omit<IEventTable, 'id' | 'created_at'> {
-        const transactionContext = (this.db as any).userParams;
+        const transactionContext = this.db.userParams;
 
         return {
             type: e.type,

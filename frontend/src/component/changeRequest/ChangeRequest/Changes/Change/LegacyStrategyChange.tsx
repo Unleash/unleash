@@ -1,14 +1,6 @@
 import type React from 'react';
 import type { FC, ReactNode } from 'react';
-import {
-    Box,
-    Button,
-    type ButtonProps,
-    styled,
-    Tooltip,
-    Typography,
-} from '@mui/material';
-import { Tab, Tabs, TabsList, TabPanel } from '@mui/base';
+import { Box, styled, Tooltip, Typography } from '@mui/material';
 import BlockIcon from '@mui/icons-material/Block';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import {
@@ -37,10 +29,12 @@ export const ChangeItemWrapper = styled(Box)({
 });
 
 const ChangeItemCreateEditDeleteWrapper = styled(Box)(({ theme }) => ({
-    display: 'flex',
+    display: 'grid',
+    gridTemplateColumns: 'auto auto',
     justifyContent: 'space-between',
     gap: theme.spacing(1),
     alignItems: 'center',
+    marginBottom: theme.spacing(2),
     width: '100%',
 }));
 
@@ -163,62 +157,14 @@ const DeleteStrategy: FC<{
                         />
                     </StrategyTooltipLink>
                 </ChangeItemInfo>
-                {actions}
+                <div>{actions}</div>
             </ChangeItemCreateEditDeleteWrapper>
-            <TabPanel>
-                {referenceStrategy && (
-                    <StrategyExecution strategy={referenceStrategy} />
-                )}
-            </TabPanel>
-            <TabPanel>
-                <StrategyDiff
-                    change={change}
-                    currentStrategy={referenceStrategy}
-                />
-            </TabPanel>
+            {referenceStrategy && (
+                <StrategyExecution strategy={referenceStrategy} />
+            )}
         </>
     );
 };
-
-const ActionsContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(1),
-    alignItems: 'center',
-}));
-
-const StyledTabList = styled(TabsList)(({ theme }) => ({
-    display: 'inline-flex',
-    flexDirection: 'row',
-    gap: theme.spacing(0.5),
-}));
-
-const StyledButton = styled(Button)(({ theme }) => ({
-    whiteSpace: 'nowrap',
-    color: theme.palette.text.secondary,
-    fontWeight: 'normal',
-    '&[aria-selected="true"]': {
-        fontWeight: 'bold',
-        color: theme.palette.primary.main,
-        background: theme.palette.background.elevation1,
-    },
-}));
-
-export const StyledTab = styled(({ children }: ButtonProps) => (
-    <Tab slots={{ root: StyledButton }}>{children}</Tab>
-))(({ theme }) => ({
-    position: 'absolute',
-    top: theme.spacing(-0.5),
-    left: theme.spacing(2),
-    transform: 'translateY(-50%)',
-    padding: theme.spacing(0.75, 1),
-    lineHeight: 1,
-    fontSize: theme.fontSizes.smallerBody,
-    color: theme.palette.text.primary,
-    background: theme.palette.background.application,
-    borderRadius: theme.shape.borderRadiusExtraLarge,
-    zIndex: theme.zIndex.fab,
-    textTransform: 'uppercase',
-}));
 
 const UpdateStrategy: FC<{
     change: IChangeRequestUpdateStrategy;
@@ -266,7 +212,7 @@ const UpdateStrategy: FC<{
                         />
                     </StrategyTooltipLink>
                 </ChangeItemInfo>
-                {actions}
+                <div>{actions}</div>
             </ChangeItemCreateEditDeleteWrapper>
             <ConditionallyRender
                 condition={
@@ -288,36 +234,27 @@ const UpdateStrategy: FC<{
                     </Typography>
                 }
             />
-
-            <TabPanel>
-                <StrategyExecution strategy={change.payload} />
-                {hasVariantDiff ? (
-                    <StyledBox>
-                        {change.payload.variants?.length ? (
-                            <>
-                                <StyledTypography>
-                                    {currentStrategy?.variants?.length
-                                        ? 'Updating strategy variants to:'
-                                        : 'Adding strategy variants:'}
-                                </StyledTypography>
-                                <EnvironmentVariantsTable
-                                    variants={change.payload.variants || []}
-                                />
-                            </>
-                        ) : (
+            <StrategyExecution strategy={change.payload} />
+            {hasVariantDiff ? (
+                <StyledBox>
+                    {change.payload.variants?.length ? (
+                        <>
                             <StyledTypography>
-                                Removed all strategy variants.
+                                {currentStrategy?.variants?.length
+                                    ? 'Updating strategy variants to:'
+                                    : 'Adding strategy variants:'}
                             </StyledTypography>
-                        )}
-                    </StyledBox>
-                ) : null}
-            </TabPanel>
-            <TabPanel>
-                <StrategyDiff
-                    change={change}
-                    currentStrategy={referenceStrategy}
-                />
-            </TabPanel>
+                            <EnvironmentVariantsTable
+                                variants={change.payload.variants || []}
+                            />
+                        </>
+                    ) : (
+                        <StyledTypography>
+                            Removed all strategy variants.
+                        </StyledTypography>
+                    )}
+                </StyledBox>
+            ) : null}
         </>
     );
 };
@@ -351,28 +288,25 @@ const AddStrategy: FC<{
                     />
                 </div>
             </ChangeItemInfo>
-            {actions}
+            <div>{actions}</div>
         </ChangeItemCreateEditDeleteWrapper>
-        <TabPanel>
-            <StrategyExecution strategy={change.payload} />
-            {change.payload.variants?.length ? (
-                <StyledBox>
-                    <StyledTypography>
-                        Adding strategy variants:
-                    </StyledTypography>
-                    <EnvironmentVariantsTable
-                        variants={change.payload.variants || []}
-                    />
-                </StyledBox>
-            ) : null}
-        </TabPanel>
-        <TabPanel>
-            <StrategyDiff change={change} currentStrategy={undefined} />
-        </TabPanel>
+        <StrategyExecution strategy={change.payload} />
+        {change.payload.variants?.length ? (
+            <StyledBox>
+                <StyledTypography>Adding strategy variants:</StyledTypography>
+                <EnvironmentVariantsTable
+                    variants={change.payload.variants || []}
+                />
+            </StyledBox>
+        ) : null}
     </>
 );
 
-export const StrategyChange: FC<{
+/**
+ * Deprecated: use StrategyChange instead. Remove file with flag crDiffView
+ * @deprecated
+ */
+export const LegacyStrategyChange: FC<{
     actions?: ReactNode;
     change:
         | IChangeRequestAddStrategy
@@ -397,31 +331,17 @@ export const StrategyChange: FC<{
         environmentName,
     );
 
-    const Actions = (
-        <ActionsContainer>
-            <StyledTabList>
-                <StyledTab>Change</StyledTab>
-                <StyledTab>View diff</StyledTab>
-            </StyledTabList>
-            {actions}
-        </ActionsContainer>
-    );
-
     return (
-        <Tabs
-            aria-label='View rendered change or JSON diff'
-            selectionFollowsFocus
-            defaultValue={0}
-        >
+        <>
             {change.action === 'addStrategy' && (
-                <AddStrategy change={change} actions={Actions} />
+                <AddStrategy change={change} actions={actions} />
             )}
             {change.action === 'deleteStrategy' && (
                 <DeleteStrategy
                     change={change}
                     changeRequestState={changeRequestState}
                     currentStrategy={currentStrategy}
-                    actions={Actions}
+                    actions={actions}
                 />
             )}
             {change.action === 'updateStrategy' && (
@@ -429,9 +349,9 @@ export const StrategyChange: FC<{
                     change={change}
                     changeRequestState={changeRequestState}
                     currentStrategy={currentStrategy}
-                    actions={Actions}
+                    actions={actions}
                 />
             )}
-        </Tabs>
+        </>
     );
 };

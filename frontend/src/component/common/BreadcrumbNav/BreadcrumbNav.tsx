@@ -58,7 +58,6 @@ const BreadcrumbNav = () => {
     }
 
     if (location.pathname === '/impact-metrics') {
-        // Hide breadcrumb on Impact Metrics page
         return null;
     }
 

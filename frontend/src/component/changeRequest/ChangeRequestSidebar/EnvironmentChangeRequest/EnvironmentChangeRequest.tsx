@@ -74,7 +74,7 @@ export const EnvironmentChangeRequest: FC<{
     const [commentText, setCommentText] = useState('');
     const { user } = useAuthUser();
     const [title, setTitle] = useState(environmentChangeRequest.title);
-    const { changeState, updateRequestedReviewers } = useChangeRequestApi();
+    const { changeState, updateRequestedApprovers } = useChangeRequestApi();
     const [reviewers, setReviewers] = useState<AvailableReviewerSchema[]>([]);
 
     const [disabled, setDisabled] = useState(false);
@@ -83,7 +83,7 @@ export const EnvironmentChangeRequest: FC<{
         setDisabled(true);
         try {
             if (reviewers && reviewers.length > 0) {
-                await updateRequestedReviewers(
+                await updateRequestedApprovers(
                     project,
                     environmentChangeRequest.id,
                     reviewers.map((reviewer) => reviewer.id),

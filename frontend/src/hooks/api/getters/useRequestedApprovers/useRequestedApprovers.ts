@@ -4,7 +4,7 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
 
 // TODO: These will likely be created by Orval next time it is run
-export interface AvailableReviewerSchema {
+export interface ReviewerSchema {
     id: number;
     name?: string;
     email: string;
@@ -12,20 +12,20 @@ export interface AvailableReviewerSchema {
     imageUrl?: string;
 }
 
-export interface IAvailableReviewersResponse {
-    reviewers: AvailableReviewerSchema[];
+export interface IReviewersResponse {
+    reviewers: ReviewerSchema[];
     refetchReviewers: () => void;
     loading: boolean;
     error?: Error;
 }
 
-export const useAvailableChangeRequestReviewers = (
+export const useRequestedApprovers = (
     project: string,
-    environment: string,
-): IAvailableReviewersResponse => {
+    changeRequestId: number,
+): IReviewersResponse => {
     const { data, error, mutate } = useSWR(
         formatApiPath(
-            `api/admin/projects/${project}/change-requests/available-reviewers/${environment}`,
+            `api/admin/projects/${project}/change-requests/${changeRequestId}/approvers`,
         ),
         fetcher,
     );
@@ -43,6 +43,6 @@ export const useAvailableChangeRequestReviewers = (
 
 const fetcher = (path: string) => {
     return fetch(path)
-        .then(handleErrorResponses('Available Change Request Reviewers'))
+        .then(handleErrorResponses('Requested Approvers'))
         .then((res) => res.json());
 };

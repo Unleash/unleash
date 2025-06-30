@@ -10,11 +10,10 @@ import type {
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
-import { EventDiff } from 'component/events/EventDiff/EventDiff';
+import EventDiff from 'component/events/EventDiff/EventDiff';
 import { ReleasePlan } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlan';
 import { ReleasePlanMilestone } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/ReleasePlanMilestone';
 import type { IReleasePlan } from 'interfaces/releasePlans';
-import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -112,34 +111,36 @@ const StartMilestone: FC<{
     if (!newMilestone) return;
 
     return (
-        <Tabs>
+        <>
             <ChangeItemCreateEditDeleteWrapper>
                 <ChangeItemInfo>
                     <Typography color='success.dark'>
                         + Start milestone:
                     </Typography>
                     <Typography>{newMilestone.name}</Typography>
+                    <TooltipLink
+                        tooltip={
+                            <StyledCodeSection>
+                                <EventDiff
+                                    entry={{
+                                        preData: previousMilestone,
+                                        data: newMilestone,
+                                    }}
+                                />
+                            </StyledCodeSection>
+                        }
+                        tooltipProps={{
+                            maxWidth: 500,
+                            maxHeight: 600,
+                        }}
+                    >
+                        <ViewDiff>View Diff</ViewDiff>
+                    </TooltipLink>
                 </ChangeItemInfo>
-                <div>
-                    <TabList>
-                        <Tab>Change</Tab>
-                        <Tab>View diff</Tab>
-                    </TabList>
-                    {actions}
-                </div>
+                <div>{actions}</div>
             </ChangeItemCreateEditDeleteWrapper>
-            <TabPanel>
-                <ReleasePlanMilestone readonly milestone={newMilestone} />
-            </TabPanel>
-            <TabPanel variant='diff'>
-                <EventDiff
-                    entry={{
-                        preData: previousMilestone,
-                        data: newMilestone,
-                    }}
-                />
-            </TabPanel>
-        </Tabs>
+            <ReleasePlanMilestone readonly milestone={newMilestone} />
+        </>
     );
 };
 
@@ -182,82 +183,83 @@ const AddReleasePlan: FC<{
         releasePlanTemplateId: change.payload.templateId,
     };
 
-    if (!currentReleasePlan) {
-        return (
-            <>
-                <ChangeItemCreateEditDeleteWrapper>
-                    <ChangeItemInfo>
-                        <Typography color='success.dark'>
-                            + Adding release plan:
-                        </Typography>
-                        <Typography>{planPreview.name}</Typography>
-                    </ChangeItemInfo>
-                    <div>{actions}</div>
-                </ChangeItemCreateEditDeleteWrapper>
-                <ReleasePlan plan={planPreview} readonly />
-            </>
-        );
-    }
-
     return (
-        <Tabs>
+        <>
             <ChangeItemCreateEditDeleteWrapper>
                 <ChangeItemInfo>
-                    <Typography>
-                        Replacing{' '}
-                        <TooltipLink
-                            tooltip={
-                                <div
+                    {currentReleasePlan ? (
+                        <Typography>
+                            Replacing{' '}
+                            <TooltipLink
+                                tooltip={
+                                    <div
+                                        onMouseEnter={() =>
+                                            openCurrentTooltip()
+                                        }
+                                        onMouseLeave={() =>
+                                            closeCurrentTooltip()
+                                        }
+                                    >
+                                        <ReleasePlan
+                                            plan={currentReleasePlan}
+                                            readonly
+                                        />
+                                    </div>
+                                }
+                                tooltipProps={{
+                                    open: currentTooltipOpen,
+                                    maxWidth: 500,
+                                    maxHeight: 600,
+                                }}
+                            >
+                                <span
                                     onMouseEnter={() => openCurrentTooltip()}
                                     onMouseLeave={() => closeCurrentTooltip()}
                                 >
-                                    <ReleasePlan
-                                        plan={currentReleasePlan}
-                                        readonly
+                                    current
+                                </span>
+                            </TooltipLink>{' '}
+                            release plan with:
+                        </Typography>
+                    ) : (
+                        <Typography color='success.dark'>
+                            + Adding release plan:
+                        </Typography>
+                    )}
+                    <Typography>{planPreview.name}</Typography>
+                    {currentReleasePlan && (
+                        <TooltipLink
+                            tooltip={
+                                <StyledCodeSection>
+                                    <EventDiff
+                                        entry={{
+                                            preData: currentReleasePlan,
+                                            data: planPreviewDiff,
+                                        }}
                                     />
-                                </div>
+                                </StyledCodeSection>
                             }
                             tooltipProps={{
-                                open: currentTooltipOpen,
                                 maxWidth: 500,
                                 maxHeight: 600,
                             }}
                         >
-                            <span
-                                onMouseEnter={() => openCurrentTooltip()}
-                                onMouseLeave={() => closeCurrentTooltip()}
-                            >
-                                current
-                            </span>
-                        </TooltipLink>{' '}
-                        release plan with:
-                    </Typography>
-                    <Typography>{planPreview.name}</Typography>
+                            <ViewDiff>View Diff</ViewDiff>
+                        </TooltipLink>
+                    )}
                 </ChangeItemInfo>
-                <div>
-                    <TabList>
-                        <Tab>Changes</Tab>
-                        <Tab>View diff</Tab>
-                    </TabList>
-                    {actions}
-                </div>
+                <div>{actions}</div>
             </ChangeItemCreateEditDeleteWrapper>
-            <TabPanel>
-                <ReleasePlan plan={planPreview} readonly />
-            </TabPanel>
-            <TabPanel variant='diff'>
-                <EventDiff
-                    entry={{
-                        preData: currentReleasePlan,
-                        data: planPreviewDiff,
-                    }}
-                />
-            </TabPanel>
-        </Tabs>
+            <ReleasePlan plan={planPreview} readonly />
+        </>
     );
 };
 
-export const ReleasePlanChange: FC<{
+/**
+ * Deprecated: use ReleasePlanChange instead. Remove file with flag crDiffView
+ * @deprecated
+ */
+export const LegacyReleasePlanChange: FC<{
     actions?: ReactNode;
     change:
         | IChangeRequestAddReleasePlan

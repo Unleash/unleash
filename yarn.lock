@@ -1167,8 +1167,8 @@ __metadata:
   linkType: hard
 
 "@slack/web-api@npm:^7.9.1":
-  version: 7.9.1
-  resolution: "@slack/web-api@npm:7.9.1"
+  version: 7.9.3
+  resolution: "@slack/web-api@npm:7.9.3"
   dependencies:
     "@slack/logger": "npm:^4.0.0"
     "@slack/types": "npm:^2.9.0"
@@ -1182,7 +1182,7 @@ __metadata:
     p-queue: "npm:^6"
     p-retry: "npm:^4"
     retry: "npm:^0.13.1"
-  checksum: 10c0/76d5d935518f3c2ab9eea720c0736f5722ac6c3244f4b1ba29aa3f3525803ecc00662209c8a1cce2c2a94ec71d607c05f5f6a24456dd3e60fa65b3fe0c7b9820
+  checksum: 10c0/a08342156683abe6cd05659c6a51eeb782adcd7f418df43ad212501f0d0da77c6caf57785491a7f024116499e1819da589b803622318454b8abe6b375ba1d8c0
   languageName: node
   linkType: hard
 
@@ -5984,9 +5984,9 @@ __metadata:
   linkType: hard
 
 "pg-connection-string@npm:^2.5.0, pg-connection-string@npm:^2.9.0":
-  version: 2.9.0
-  resolution: "pg-connection-string@npm:2.9.0"
-  checksum: 10c0/7145d00688200685a9d9931a7fc8d61c75f348608626aef88080ece956ceb4ff1cbdee29c3284e41b7a3345bab0e4f50f9edc256e270bfa3a563af4ea78bb490
+  version: 2.9.1
+  resolution: "pg-connection-string@npm:2.9.1"
+  checksum: 10c0/9a646529bbc0843806fc5de98ce93735a4612b571f11867178a85665d11989a827e6fd157388ca0e34ec948098564fce836c178cfd499b9f0e8cd9972b8e2e5c
   languageName: node
   linkType: hard
 

@@ -16,7 +16,7 @@ export const ArchiveFeatureChange: FC<IArchiveFeatureChange> = ({
     actions,
 }) => (
     <ChangeItemWrapper>
-        <ArchiveBox>Archiving feature</ArchiveBox>
+        <ArchiveBox>Archiving flag</ArchiveBox>
         {actions}
     </ChangeItemWrapper>
 );

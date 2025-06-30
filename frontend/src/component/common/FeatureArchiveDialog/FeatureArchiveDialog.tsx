@@ -26,7 +26,7 @@ interface IFeatureArchiveDialogProps {
 const RemovedDependenciesAlert = () => {
     return (
         <Alert severity='warning' sx={{ m: (theme) => theme.spacing(2, 0) }}>
-            Archiving features with dependencies will also remove those
+            Archiving flags with dependencies will also remove those
             dependencies.
         </Alert>
     );

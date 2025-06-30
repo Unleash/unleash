@@ -12,16 +12,18 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(2),
 }));
 
-const NewInsights: FC = () => (
-    <StyledWrapper>
-        <InsightsHeader />
-        <StyledContainer>
-            <LifecycleInsights />
-            <PerformanceInsights />
-            <UserInsights />
-        </StyledContainer>
-    </StyledWrapper>
-);
+const NewInsights: FC = () => {
+    return (
+        <StyledWrapper>
+            <InsightsHeader />
+            <StyledContainer>
+                <LifecycleInsights />
+                <PerformanceInsights />
+                <UserInsights />
+            </StyledContainer>
+        </StyledWrapper>
+    );
+};
 
 export const Insights: FC<{ withCharts?: boolean }> = (props) => {
     const useNewInsights = useUiFlag('lifecycleMetrics');

@@ -21,7 +21,6 @@ import { flexRow } from 'themes/themeStyles';
 import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning.tsx';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -30,11 +29,12 @@ export const ChangeItemWrapper = styled(Box)({
 });
 
 const ChangeItemCreateEditDeleteWrapper = styled(Box)(({ theme }) => ({
-    display: 'flex',
+    display: 'grid',
+    gridTemplateColumns: 'auto auto',
     justifyContent: 'space-between',
     gap: theme.spacing(1),
     alignItems: 'center',
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(2),
     width: '100%',
 }));
 
@@ -141,7 +141,7 @@ const DeleteStrategy: FC<{
 
     return (
         <>
-            <ChangeItemCreateEditDeleteWrapper>
+            <ChangeItemCreateEditDeleteWrapper className='delete-strategy-information-wrapper'>
                 <ChangeItemInfo>
                     <Typography
                         sx={(theme) => ({
@@ -157,19 +157,11 @@ const DeleteStrategy: FC<{
                         />
                     </StrategyTooltipLink>
                 </ChangeItemInfo>
-                {actions}
+                <div>{actions}</div>
             </ChangeItemCreateEditDeleteWrapper>
-            <TabPanel>
-                {referenceStrategy && (
-                    <StrategyExecution strategy={referenceStrategy} />
-                )}
-            </TabPanel>
-            <TabPanel variant='diff'>
-                <StrategyDiff
-                    change={change}
-                    currentStrategy={referenceStrategy}
-                />
-            </TabPanel>
+            {referenceStrategy && (
+                <StrategyExecution strategy={referenceStrategy} />
+            )}
         </>
     );
 };
@@ -220,7 +212,7 @@ const UpdateStrategy: FC<{
                         />
                     </StrategyTooltipLink>
                 </ChangeItemInfo>
-                {actions}
+                <div>{actions}</div>
             </ChangeItemCreateEditDeleteWrapper>
             <ConditionallyRender
                 condition={
@@ -242,36 +234,27 @@ const UpdateStrategy: FC<{
                     </Typography>
                 }
             />
-
-            <TabPanel>
-                <StrategyExecution strategy={change.payload} />
-                {hasVariantDiff ? (
-                    <StyledBox>
-                        {change.payload.variants?.length ? (
-                            <>
-                                <StyledTypography>
-                                    {currentStrategy?.variants?.length
-                                        ? 'Updating strategy variants to:'
-                                        : 'Adding strategy variants:'}
-                                </StyledTypography>
-                                <EnvironmentVariantsTable
-                                    variants={change.payload.variants || []}
-                                />
-                            </>
-                        ) : (
+            <StrategyExecution strategy={change.payload} />
+            {hasVariantDiff ? (
+                <StyledBox>
+                    {change.payload.variants?.length ? (
+                        <>
                             <StyledTypography>
-                                Removed all strategy variants.
+                                {currentStrategy?.variants?.length
+                                    ? 'Updating strategy variants to:'
+                                    : 'Adding strategy variants:'}
                             </StyledTypography>
-                        )}
-                    </StyledBox>
-                ) : null}
-            </TabPanel>
-            <TabPanel variant='diff'>
-                <StrategyDiff
-                    change={change}
-                    currentStrategy={referenceStrategy}
-                />
-            </TabPanel>
+                            <EnvironmentVariantsTable
+                                variants={change.payload.variants || []}
+                            />
+                        </>
+                    ) : (
+                        <StyledTypography>
+                            Removed all strategy variants.
+                        </StyledTypography>
+                    )}
+                </StyledBox>
+            ) : null}
         </>
     );
 };
@@ -305,28 +288,25 @@ const AddStrategy: FC<{
                     />
                 </div>
             </ChangeItemInfo>
-            {actions}
+            <div>{actions}</div>
         </ChangeItemCreateEditDeleteWrapper>
-        <TabPanel>
-            <StrategyExecution strategy={change.payload} />
-            {change.payload.variants?.length ? (
-                <StyledBox>
-                    <StyledTypography>
-                        Adding strategy variants:
-                    </StyledTypography>
-                    <EnvironmentVariantsTable
-                        variants={change.payload.variants || []}
-                    />
-                </StyledBox>
-            ) : null}
-        </TabPanel>
-        <TabPanel variant='diff'>
-            <StrategyDiff change={change} currentStrategy={undefined} />
-        </TabPanel>
+        <StrategyExecution strategy={change.payload} />
+        {change.payload.variants?.length ? (
+            <StyledBox>
+                <StyledTypography>Adding strategy variants:</StyledTypography>
+                <EnvironmentVariantsTable
+                    variants={change.payload.variants || []}
+                />
+            </StyledBox>
+        ) : null}
     </>
 );
 
-export const StrategyChange: FC<{
+/**
+ * Deprecated: use StrategyChange instead. Remove file with flag crDiffView
+ * @deprecated
+ */
+export const LegacyStrategyChange: FC<{
     actions?: ReactNode;
     change:
         | IChangeRequestAddStrategy
@@ -351,27 +331,17 @@ export const StrategyChange: FC<{
         environmentName,
     );
 
-    const actionsWithTabs = (
-        <>
-            <TabList>
-                <Tab>Change</Tab>
-                <Tab>View diff</Tab>
-            </TabList>
-            {actions}
-        </>
-    );
-
     return (
-        <Tabs>
+        <>
             {change.action === 'addStrategy' && (
-                <AddStrategy change={change} actions={actionsWithTabs} />
+                <AddStrategy change={change} actions={actions} />
             )}
             {change.action === 'deleteStrategy' && (
                 <DeleteStrategy
                     change={change}
                     changeRequestState={changeRequestState}
                     currentStrategy={currentStrategy}
-                    actions={actionsWithTabs}
+                    actions={actions}
                 />
             )}
             {change.action === 'updateStrategy' && (
@@ -379,9 +349,9 @@ export const StrategyChange: FC<{
                     change={change}
                     changeRequestState={changeRequestState}
                     currentStrategy={currentStrategy}
-                    actions={actionsWithTabs}
+                    actions={actions}
                 />
             )}
-        </Tabs>
+        </>
     );
 };

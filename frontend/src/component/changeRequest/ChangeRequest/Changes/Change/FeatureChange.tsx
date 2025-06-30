@@ -8,13 +8,16 @@ import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert, Box, styled } from '@mui/material';
 import { ToggleStatusChange } from './ToggleStatusChange.tsx';
-import { StrategyChange } from './StrategyChange.tsx';
+import { LegacyStrategyChange } from './LegacyStrategyChange.tsx';
 import { VariantPatch } from './VariantPatch/VariantPatch.tsx';
 import { EnvironmentStrategyExecutionOrder } from './EnvironmentStrategyExecutionOrder/EnvironmentStrategyExecutionOrder.tsx';
 import { ArchiveFeatureChange } from './ArchiveFeatureChange.tsx';
 import { DependencyChange } from './DependencyChange.tsx';
 import { Link } from 'react-router-dom';
+import { LegacyReleasePlanChange } from './LegacyReleasePlanChange.tsx';
 import { ReleasePlanChange } from './ReleasePlanChange.tsx';
+import { StrategyChange } from './StrategyChange.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledSingleChangeBox = styled(Box, {
     shouldForwardProp: (prop: string) => !prop.startsWith('$'),
@@ -70,6 +73,7 @@ const InlineList = styled('ul')(({ theme }) => ({
 
 const ChangeInnerBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(3),
+    // todo: remove with flag crDiffView
     '&:has(.delete-strategy-information-wrapper)': {
         backgroundColor: theme.palette.error.light,
     },
@@ -86,6 +90,15 @@ export const FeatureChange: FC<{
     const lastIndex = feature.defaultChange
         ? feature.changes.length + 1
         : feature.changes.length;
+
+    const useDiffableChangeComponent = useUiFlag('crDiffView');
+    const StrategyChangeComponent = useDiffableChangeComponent
+        ? StrategyChange
+        : LegacyStrategyChange;
+
+    const ReleasePlanChangeComponent = useDiffableChangeComponent
+        ? ReleasePlanChange
+        : LegacyReleasePlanChange;
 
     return (
         <StyledSingleChangeBox
@@ -166,7 +179,7 @@ export const FeatureChange: FC<{
                 {change.action === 'addStrategy' ||
                 change.action === 'deleteStrategy' ||
                 change.action === 'updateStrategy' ? (
-                    <StrategyChange
+                    <StrategyChangeComponent
                         actions={actions}
                         change={change}
                         featureName={feature.name}
@@ -197,7 +210,7 @@ export const FeatureChange: FC<{
                 {(change.action === 'addReleasePlan' ||
                     change.action === 'deleteReleasePlan' ||
                     change.action === 'startMilestone') && (
-                    <ReleasePlanChange
+                    <ReleasePlanChangeComponent
                         actions={actions}
                         change={change}
                         featureName={feature.name}

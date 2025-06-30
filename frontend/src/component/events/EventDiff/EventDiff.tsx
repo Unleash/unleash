@@ -29,7 +29,7 @@ interface IEventDiffProps {
 const DiffStyles = styled('div')(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontFamily: 'monospace',
-    whiteSpace: 'pre',
+    whiteSpace: 'pre-wrap',
     fontSize: theme.typography.body2.fontSize,
 
     '.deletion, .addition': {
@@ -78,7 +78,7 @@ const ButtonIcon = styled('span')(({ theme }) => ({
     marginInlineEnd: theme.spacing(0.5),
 }));
 
-const NewEventDiff: FC<IEventDiffProps> = ({ entry, excludeKeys }) => {
+export const NewEventDiff: FC<IEventDiffProps> = ({ entry, excludeKeys }) => {
     const changeType = entry.preData && entry.data ? 'edit' : 'replacement';
     const showExpandButton = changeType === 'edit';
     const [full, setFull] = useState(false);
@@ -212,7 +212,7 @@ const OldEventDiff: FC<IEventDiffProps> = ({
     );
 };
 
-const EventDiff: FC<IEventDiffProps> = (props) => {
+export const EventDiff: FC<IEventDiffProps> = (props) => {
     const useNewJsonDiff = useUiFlag('improvedJsonDiff');
     if (useNewJsonDiff) {
         return <NewEventDiff {...props} />;
@@ -220,4 +220,7 @@ const EventDiff: FC<IEventDiffProps> = (props) => {
     return <OldEventDiff {...props} />;
 };
 
+/**
+ * @deprecated remove the default export with flag improvedJsonDiff. Switch imports in files that use this to the named import instead.
+ */
 export default EventDiff;

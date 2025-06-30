@@ -15,7 +15,7 @@ import { ArchiveFeatureChange } from './ArchiveFeatureChange.tsx';
 import { DependencyChange } from './DependencyChange.tsx';
 import { Link } from 'react-router-dom';
 import { ReleasePlanChange } from './ReleasePlanChange.tsx';
-import { DiffableChange } from './DiffableChange.tsx';
+import { DiffableChange } from './StrategyChange.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledSingleChangeBox = styled(Box, {

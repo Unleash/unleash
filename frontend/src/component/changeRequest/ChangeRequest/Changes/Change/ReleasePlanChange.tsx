@@ -10,10 +10,11 @@ import type {
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
-import EventDiff from 'component/events/EventDiff/EventDiff';
+import { EventDiff } from 'component/events/EventDiff/EventDiff';
 import { ReleasePlan } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlan';
 import { ReleasePlanMilestone } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/ReleasePlanMilestone';
 import type { IReleasePlan } from 'interfaces/releasePlans';
+import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -111,36 +112,34 @@ const StartMilestone: FC<{
     if (!newMilestone) return;
 
     return (
-        <>
+        <Tabs>
             <ChangeItemCreateEditDeleteWrapper>
                 <ChangeItemInfo>
                     <Typography color='success.dark'>
                         + Start milestone:
                     </Typography>
                     <Typography>{newMilestone.name}</Typography>
-                    <TooltipLink
-                        tooltip={
-                            <StyledCodeSection>
-                                <EventDiff
-                                    entry={{
-                                        preData: previousMilestone,
-                                        data: newMilestone,
-                                    }}
-                                />
-                            </StyledCodeSection>
-                        }
-                        tooltipProps={{
-                            maxWidth: 500,
-                            maxHeight: 600,
-                        }}
-                    >
-                        <ViewDiff>View Diff</ViewDiff>
-                    </TooltipLink>
                 </ChangeItemInfo>
-                <div>{actions}</div>
+                <div>
+                    <TabList>
+                        <Tab>Change</Tab>
+                        <Tab>View diff</Tab>
+                    </TabList>
+                    {actions}
+                </div>
             </ChangeItemCreateEditDeleteWrapper>
-            <ReleasePlanMilestone readonly milestone={newMilestone} />
-        </>
+            <TabPanel>
+                <ReleasePlanMilestone readonly milestone={newMilestone} />
+            </TabPanel>
+            <TabPanel>
+                <EventDiff
+                    entry={{
+                        preData: previousMilestone,
+                        data: newMilestone,
+                    }}
+                />
+            </TabPanel>
+        </Tabs>
     );
 };
 
@@ -231,6 +230,7 @@ const AddReleasePlan: FC<{
                         <TooltipLink
                             tooltip={
                                 <StyledCodeSection>
+                                    {/*  todo: handle this case */}
                                     <EventDiff
                                         entry={{
                                             preData: currentReleasePlan,

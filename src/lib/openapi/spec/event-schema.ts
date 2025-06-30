@@ -111,7 +111,6 @@ export const eventSchema = {
         },
         groupType: {
             type: 'string',
-            enum: ['change-request', 'transaction'],
             description:
                 'The type of transaction group this event belongs to, if applicable.',
             example: 'change-request',

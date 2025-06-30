@@ -212,7 +212,7 @@ const OldEventDiff: FC<IEventDiffProps> = ({
     );
 };
 
-const EventDiff: FC<IEventDiffProps> = (props) => {
+export const EventDiff: FC<IEventDiffProps> = (props) => {
     const useNewJsonDiff = useUiFlag('improvedJsonDiff');
     if (useNewJsonDiff) {
         return <NewEventDiff {...props} />;

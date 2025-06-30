@@ -4,12 +4,12 @@ import type {
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import type React from 'react';
-import type { FC } from 'react';
+import { Fragment, type FC } from 'react';
 import {
     formatStrategyName,
     GetFeatureStrategyIcon,
 } from 'utils/strategyNames';
-import EventDiff, { NewEventDiff } from 'component/events/EventDiff/EventDiff';
+import { EventDiff } from 'component/events/EventDiff/EventDiff';
 import omit from 'lodash.omit';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { Typography, styled } from '@mui/material';
@@ -41,6 +41,9 @@ const sortSegments = <T extends { segments?: number[] }>(
     };
 };
 
+const omitIfDefined = (obj: any, keys: string[]) =>
+    obj ? omit(obj, keys) : obj;
+
 export const StrategyDiff: FC<{
     change:
         | IChangeRequestAddStrategy
@@ -54,29 +57,22 @@ export const StrategyDiff: FC<{
 
     const sortedCurrentStrategy = sortSegments(currentStrategy);
     const sortedChangeRequestStrategy = sortSegments(changeRequestStrategy);
-    if (useNewDiff) {
-        return (
-            <NewEventDiff
-                entry={{
-                    preData: sortedCurrentStrategy
-                        ? omit(sortedCurrentStrategy, 'sortOrder')
-                        : undefined,
-                    data: sortedChangeRequestStrategy
-                        ? omit(sortedChangeRequestStrategy, 'snapshot')
-                        : undefined,
-                }}
-            />
-        );
-    }
+
+    const Wrapper = useNewDiff ? Fragment : StyledCodeSection;
+    const omissionFunction = useNewDiff ? omitIfDefined : omit;
     return (
-        <StyledCodeSection>
+        <Wrapper>
             <EventDiff
                 entry={{
-                    preData: omit(sortedCurrentStrategy, 'sortOrder'),
-                    data: omit(sortedChangeRequestStrategy, 'snapshot'),
+                    preData: omissionFunction(sortedCurrentStrategy, [
+                        'sortOrder',
+                    ]),
+                    data: omissionFunction(sortedChangeRequestStrategy, [
+                        'snapshot',
+                    ]),
                 }}
             />
-        </StyledCodeSection>
+        </Wrapper>
     );
 };
 

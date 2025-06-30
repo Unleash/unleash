@@ -8,14 +8,13 @@ import type {
 } from 'component/changeRequest/changeRequest.types';
 import { useSegment } from 'hooks/api/getters/useSegment/useSegment';
 import { SegmentDiff, SegmentTooltipLink } from '../../SegmentTooltipLink.tsx';
-
 import { ViewableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/ViewableConstraintsList';
 
 import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning.tsx';
+import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
 
 const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: 'auto 40px',
+    display: 'flex',
     gap: theme.spacing(1),
     alignItems: 'center',
     width: '100%',
@@ -68,58 +67,89 @@ export const SegmentChangeDetails: FC<{
     const referenceSegment =
         changeRequestState === 'Applied' ? snapshotSegment : currentSegment;
 
+    const actionsWithTabs = (
+        <>
+            <TabList>
+                <Tab>Change</Tab>
+                <Tab>View diff</Tab>
+            </TabList>
+            {actions}
+        </>
+    );
+
     return (
-        <SegmentContainer conflict={change.conflict}>
-            {change.action === 'deleteSegment' && (
-                <ChangeItemWrapper>
-                    <ChangeItemInfo>
-                        <Typography
-                            sx={(theme) => ({
-                                color: theme.palette.error.main,
-                            })}
-                        >
-                            - Deleting segment:
-                        </Typography>
-                        <SegmentTooltipLink
-                            name={change.payload.name}
-                            previousName={previousName}
-                        >
+        <Tabs>
+            <SegmentContainer conflict={change.conflict}>
+                {change.action === 'deleteSegment' && (
+                    <>
+                        <ChangeItemWrapper>
+                            <ChangeItemInfo>
+                                <Typography
+                                    sx={(theme) => ({
+                                        color: theme.palette.error.main,
+                                    })}
+                                >
+                                    - Deleting segment:
+                                </Typography>
+                                <SegmentTooltipLink
+                                    name={change.payload.name}
+                                    previousName={previousName}
+                                >
+                                    <SegmentDiff
+                                        change={change}
+                                        currentSegment={referenceSegment}
+                                    />
+                                </SegmentTooltipLink>
+                            </ChangeItemInfo>
+                            {actionsWithTabs}
+                        </ChangeItemWrapper>
+
+                        <TabPanel />
+                        <TabPanel>
                             <SegmentDiff
                                 change={change}
                                 currentSegment={referenceSegment}
                             />
-                        </SegmentTooltipLink>
-                    </ChangeItemInfo>
-                    <div>{actions}</div>
-                </ChangeItemWrapper>
-            )}
-            {change.action === 'updateSegment' && (
-                <>
-                    <ChangeOverwriteWarning
-                        data={{
-                            current: currentSegment,
-                            change,
-                            changeType: 'segment',
-                        }}
-                        changeRequestState={changeRequestState}
-                    />
-                    <ChangeItemCreateEditWrapper>
-                        <ChangeItemInfo>
-                            <Typography>Editing segment:</Typography>
-                            <SegmentTooltipLink name={change.payload.name}>
-                                <SegmentDiff
-                                    change={change}
-                                    currentSegment={referenceSegment}
-                                />
-                            </SegmentTooltipLink>
-                        </ChangeItemInfo>
-                        <div>{actions}</div>
-                    </ChangeItemCreateEditWrapper>
-                    <ViewableConstraintsList
-                        constraints={change.payload.constraints}
-                    />
-                </>
-            )}
-        </SegmentContainer>
+                        </TabPanel>
+                    </>
+                )}
+                {change.action === 'updateSegment' && (
+                    <>
+                        <ChangeOverwriteWarning
+                            data={{
+                                current: currentSegment,
+                                change,
+                                changeType: 'segment',
+                            }}
+                            changeRequestState={changeRequestState}
+                        />
+                        <ChangeItemCreateEditWrapper>
+                            <ChangeItemInfo>
+                                <Typography>Editing segment:</Typography>
+                                <SegmentTooltipLink name={change.payload.name}>
+                                    <SegmentDiff
+                                        change={change}
+                                        currentSegment={referenceSegment}
+                                    />
+                                </SegmentTooltipLink>
+                            </ChangeItemInfo>
+                            {actionsWithTabs}
+                        </ChangeItemCreateEditWrapper>
+
+                        <TabPanel>
+                            <ViewableConstraintsList
+                                constraints={change.payload.constraints}
+                            />
+                        </TabPanel>
+                        <TabPanel>
+                            <SegmentDiff
+                                change={change}
+                                currentSegment={referenceSegment}
+                            />
+                        </TabPanel>
+                    </>
+                )}
+            </SegmentContainer>
+        </Tabs>
     );
 };

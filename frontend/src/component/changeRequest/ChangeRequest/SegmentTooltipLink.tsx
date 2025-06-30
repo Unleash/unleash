@@ -3,7 +3,7 @@ import type {
     IChangeRequestUpdateSegment,
 } from 'component/changeRequest/changeRequest.types';
 import type React from 'react';
-import type { FC } from 'react';
+import { Fragment, type FC } from 'react';
 import omit from 'lodash.omit';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { styled } from '@mui/material';
@@ -11,6 +11,7 @@ import { textTruncated } from 'themes/themeStyles';
 import type { ISegment } from 'interfaces/segment';
 import { NameWithChangeInfo } from './NameWithChangeInfo/NameWithChangeInfo.tsx';
 import { EventDiff } from 'component/events/EventDiff/EventDiff.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',
@@ -23,22 +24,30 @@ const StyledCodeSection = styled('div')(({ theme }) => ({
     },
 }));
 
+const omitIfDefined = (obj: any, keys: string[]) =>
+    obj ? omit(obj, keys) : obj;
+
 export const SegmentDiff: FC<{
     change: IChangeRequestUpdateSegment | IChangeRequestDeleteSegment;
     currentSegment?: ISegment;
 }> = ({ change, currentSegment }) => {
+    const useNewDiff = useUiFlag('improvedJsonDiff');
     const changeRequestSegment =
         change.action === 'deleteSegment' ? undefined : change.payload;
+    const Wrapper = useNewDiff ? Fragment : StyledCodeSection;
 
     return (
-        <StyledCodeSection>
+        <Wrapper>
             <EventDiff
                 entry={{
-                    preData: omit(currentSegment, ['createdAt', 'createdBy']),
-                    data: omit(changeRequestSegment, ['snapshot']),
+                    preData: omitIfDefined(currentSegment, [
+                        'createdAt',
+                        'createdBy',
+                    ]),
+                    data: omitIfDefined(changeRequestSegment, ['snapshot']),
                 }}
             />
-        </StyledCodeSection>
+        </Wrapper>
     );
 };
 interface IStrategyTooltipLinkProps {

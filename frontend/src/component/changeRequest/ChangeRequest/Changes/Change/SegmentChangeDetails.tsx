@@ -105,7 +105,7 @@ export const SegmentChangeDetails: FC<{
                         </ChangeItemWrapper>
 
                         <TabPanel />
-                        <TabPanel variant='diff'>
+                        <TabPanel sx={{ mt: 1 }} variant='diff'>
                             <SegmentDiff
                                 change={change}
                                 currentSegment={referenceSegment}

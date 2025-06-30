@@ -5,6 +5,8 @@ on:
 
 permissions:
   pull-requests: write
+  contents: write
+  issues: read
 
 jobs:
   flag-cleanup:

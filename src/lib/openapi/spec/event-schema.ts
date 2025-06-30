@@ -110,22 +110,14 @@ export const eventSchema = {
             example: '192.168.1.1',
         },
         groupType: {
-            anyOf: [
-                {
-                    type: 'string',
-                    enum: ['change-request', 'transaction'],
-                },
-                {
-                    type: 'null',
-                },
-            ],
+            type: 'string',
+            enum: ['change-request', 'transaction'],
             description:
                 'The type of transaction group this event belongs to, if applicable.',
             example: 'change-request',
         },
         groupId: {
             type: 'string',
-            nullable: true,
             description:
                 'The unique identifier for the transaction group this event belongs to, if applicable.',
             example: '01HQVX5K8P9EXAMPLE123456',

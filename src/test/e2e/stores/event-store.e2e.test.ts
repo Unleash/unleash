@@ -541,8 +541,8 @@ test('Should handle missing transaction context gracefully', async () => {
     );
 
     expect(storedEvent).toBeTruthy();
-    expect(storedEvent!.groupType).toBeNull();
-    expect(storedEvent!.groupId).toBeNull();
+    expect(storedEvent!.groupType).toBeUndefined();
+    expect(storedEvent!.groupId).toBeUndefined();
 });
 
 test('Should store transaction context in batch operations', async () => {

@@ -99,8 +99,8 @@ export interface IEventTable {
     environment?: string;
     tags: ITag[];
     ip?: string;
-    group_type?: string;
-    group_id?: string;
+    group_type: string | null;
+    group_id: string | null;
 }
 
 const TABLE = 'events';
@@ -478,8 +478,8 @@ export class EventStore implements IEventStore {
             featureName: row.feature_name,
             project: row.project,
             environment: row.environment,
-            groupType: row.group_type,
-            groupId: row.group_id,
+            groupType: row.group_type || undefined,
+            groupId: row.group_id || undefined,
         };
     }
 
@@ -500,8 +500,8 @@ export class EventStore implements IEventStore {
             project: e.project,
             environment: e.environment,
             ip: e.ip,
-            group_type: transactionContext?.type,
-            group_id: transactionContext?.id,
+            group_type: transactionContext?.type || null,
+            group_id: transactionContext?.id || null,
         };
     }
 

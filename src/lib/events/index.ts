@@ -397,8 +397,8 @@ export interface IEvent extends Omit<IBaseEvent, 'ip'> {
     id: number;
     createdAt: Date;
     ip?: string;
-    groupType?: string | null;
-    groupId?: string | null;
+    groupType?: string;
+    groupId?: string;
 }
 
 export interface IEnrichedEvent extends IEvent {

@@ -51,4 +51,14 @@ export const Tabs = ({ children }: PropsWithChildren) => (
     </MuiTabs>
 );
 
-export const TabPanel = MuiTabPanel;
+export const TabPanel = styled(MuiTabPanel, {
+    shouldForwardProp: (prop) => prop !== 'variant',
+})<{ variant?: 'diff' | 'change' }>(({ theme, variant }) =>
+    variant === 'diff'
+        ? {
+              padding: theme.spacing(2),
+              borderRadius: theme.shape.borderRadiusLarge,
+              border: `1px solid ${theme.palette.divider}`,
+          }
+        : {},
+);

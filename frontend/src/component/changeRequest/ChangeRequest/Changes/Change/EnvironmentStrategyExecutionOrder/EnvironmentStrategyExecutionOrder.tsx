@@ -114,7 +114,7 @@ export const EnvironmentStrategyExecutionOrder = ({
                             ))}
                         </StyledStrategyExecutionWrapper>
                     </TabPanel>
-                    <TabPanel>
+                    <TabPanel variant='diff'>
                         <EnvironmentStrategyOrderDiff
                             preData={preData}
                             data={data}

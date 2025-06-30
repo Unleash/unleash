@@ -255,6 +255,10 @@ const AddReleasePlan: FC<{
     );
 };
 
+/**
+ * Deprecated: use ReleasePlanChange instead. Remove file with flag crDiffView
+ * @deprecated
+ */
 export const LegacyReleasePlanChange: FC<{
     actions?: ReactNode;
     change:

@@ -255,7 +255,7 @@ const AddReleasePlan: FC<{
     );
 };
 
-export const ReleasePlanChange: FC<{
+export const LegacyReleasePlanChange: FC<{
     actions?: ReactNode;
     change:
         | IChangeRequestAddReleasePlan

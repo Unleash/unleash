@@ -14,7 +14,8 @@ import { EnvironmentStrategyExecutionOrder } from './EnvironmentStrategyExecutio
 import { ArchiveFeatureChange } from './ArchiveFeatureChange.tsx';
 import { DependencyChange } from './DependencyChange.tsx';
 import { Link } from 'react-router-dom';
-import { ReleasePlanChange } from './LegacyReleasePlanChange.tsx';
+import { LegacyReleasePlanChange } from './LegacyReleasePlanChange.tsx';
+import { ReleasePlanChange } from './ReleasePlanChange.tsx';
 import { StrategyChange } from './StrategyChange.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 
@@ -93,6 +94,10 @@ export const FeatureChange: FC<{
     const StrategyChangeComponent = useDiffableChangeComponent
         ? StrategyChange
         : LegacyStrategyChange;
+
+    const ReleasePlanChangeComponent = useDiffableChangeComponent
+        ? ReleasePlanChange
+        : LegacyReleasePlanChange;
 
     return (
         <StyledSingleChangeBox
@@ -204,7 +209,7 @@ export const FeatureChange: FC<{
                 {(change.action === 'addReleasePlan' ||
                     change.action === 'deleteReleasePlan' ||
                     change.action === 'startMilestone') && (
-                    <ReleasePlanChange
+                    <ReleasePlanChangeComponent
                         actions={actions}
                         change={change}
                         featureName={feature.name}

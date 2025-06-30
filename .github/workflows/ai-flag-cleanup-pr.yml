@@ -1,0 +1,258 @@
+name: AI flag cleanup PR
+
+on:
+  workflow_call:
+    inputs:
+      issue-number:
+        description: "Flag completed issue number"
+        required: true
+        type: number
+      model:
+        description: "Model to use"
+        required: true
+        type: string
+      api_key_env_name:
+        description: "The name of the API key environment variable. For example, OPENAI_API_KEY, ANTHROPIC_API_KEY, etc. See more info: https://aider.chat/docs/llms.html"
+        required: true
+        type: string
+      base-branch:
+        description: "Base branch to create PR against (e.g. main)"
+        required: false
+        type: string
+        default: ${{ github.event.repository.default_branch }}
+      chat-timeout:
+        description: "Timeout for flag cleanup, in minutes"
+        required: false
+        type: number
+        default: 10
+    secrets:
+      api_key_env_value:
+        description: "The API key"
+        required: true
+
+permissions:
+  pull-requests: write
+  contents: write
+  issues: read
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Create a new branch
+        uses: actions/github-script@v7
+        id: create_branch
+        with:
+          script: |
+            const kebabCase = (str) => {
+              return str
+                  .toLowerCase()
+                  .trim()
+                  .replace(/[^\w\s-]/g, '') // Remove invalid characters
+                  .replace(/\s+/g, '-')     // Replace spaces with dashes
+                  .replace(/^-+|-+$/g, ''); // Remove leading/trailing dashes
+            };
+
+            const fixBranchUrl = (url) => url
+              .replace(/\/git\/commits/, '/commit')
+              .replace(/api.github.com\/repos/, 'github.com');
+
+            // New branch should be based on the base-branch, so we need to get its SHA
+            const baseBranch = await github.rest.repos.getBranch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              branch: '${{ inputs.base-branch }}'
+            });
+
+            const { repo, owner } = context.repo;
+            const branchName = 'feature/aider-' + kebabCase(context.payload.issue.title);
+            const refName = `refs/heads/${branchName}`
+            const refShortName = `heads/${branchName}`
+
+            // Get existing ref if exists
+            const existingRef = await github.rest.git.getRef({
+              owner,
+              repo,
+              ref: refShortName
+            }).catch(() => null);
+
+            if (existingRef) {
+              try {
+                // If there's a branch for this ref, return the ref
+                await github.rest.repos.getBranch({
+                  owner,
+                  repo,
+                  branch: branchName
+                });
+
+                console.log(`Branch ${branchName} already exists with SHA ${existingRef.data.object.sha}`);
+                console.log(`Branch URL: ${fixBranchUrl(existingRef.data.object.url)}`);
+
+                return { ref: existingRef.data.ref }
+              } catch (e) {
+                console.error(e);
+                // State recovery: If there's a ref but no branch, delete the ref and create a new branch
+                // This can happen if the branch was deleted manually. The ref will still exist.
+                console.log(`Branch ${branchName} doesn't exist, deleting ref ${refShortName}`);
+                await github.rest.git.deleteRef({
+                  owner,
+                  repo,
+                  ref: refShortName
+                });
+              }
+            }
+
+            // Create branch
+            const result = await github.rest.git.createRef({
+              owner,
+              repo,
+              ref: refName,
+              sha: baseBranch.data.commit.sha
+            });
+
+            console.log(`Created branch ${branchName} with SHA ${result.data.object.sha}`);
+            console.log(`Branch URL: ${fixBranchUrl(result.data.object.url)}`);
+
+            return { ref: result.data.ref }
+
+      - name: Get issue
+        uses: actions/github-script@v7
+        id: get_issue
+        with:
+          script: |
+            console.log('Fetching issue #${{ inputs.issue-number }}')
+            const { repo, owner } = context.repo;
+            const result = await github.rest.issues.get({
+              owner,
+              repo,
+              issue_number: ${{ inputs.issue-number }}
+            });
+            console.log(`Fetched issue #${result.data.number}: ${result.data.title}`)
+
+            return {
+              title: result.data.title.replace(/"/g, "'").replace(/`/g, '\\`'),
+              body: result.data.body.replace(/"/g, "'").replace(/`/g, '\\`'),
+            };
+
+      - name: Extract flag name
+        id: extract_flag
+        run: |
+          TITLE="${{ fromJson(steps.get_issue.outputs.result).title }}"
+          if [[ "$TITLE" =~ Flag[[:space:]]([a-zA-Z0-9_-]+)[[:space:]]marked ]]; then
+            echo "flag-name=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Could not extract flag name from title: $TITLE"
+            exit 1
+          fi
+
+      - name: Install ripgrep
+        run: sudo apt-get update && sudo apt-get install -y ripgrep
+
+      - name: Find files using the flag
+        id: find_files
+        run: |
+          FLAG="${{ steps.extract_flag.outputs.flag-name }}"
+          rg -l "$FLAG" . > files.txt
+
+          if [[ ! -s files.txt ]]; then
+            echo "❌ No files found using flag '$FLAG'."
+            exit 1
+          fi
+
+          xargs git add < files.txt
+
+      - name: Create prompt
+        uses: actions/github-script@v7
+        id: create_prompt
+        with:
+          result-encoding: string
+          script: |
+            const body = `${{ fromJson(steps.get_issue.outputs.result).body }}`;
+
+            return `Apply all necessary changes to clean up this feature flag based on the issue description below.
+
+            After making the changes, provide a Markdown summary of what was changed, written for a developer reviewing the PR. These changes should be under a "AI Flag Cleanup Summary" section.
+
+            Explain:
+            - What was removed
+            - What was kept
+            - Why these changes were made
+
+            Write a natural summary in proper Markdown. Keep it clear, focused, and readable.
+
+            --- Issue Description ---
+            ${body}`;
+
+      - name: Apply cleanup with Aider
+        uses: mirrajabi/aider-github-action@v1.1.0
+        timeout-minutes: ${{ inputs.chat-timeout }}
+        with:
+          branch: ${{ fromJson(steps.create_branch.outputs.result).ref }}
+          model: ${{ inputs.model }}
+          aider_args: '--yes --message "${{ steps.create_prompt.outputs.result }}"'
+          api_key_env_name: ${{ inputs.api_key_env_name }}
+          api_key_env_value: ${{ secrets.api_key_env_value }}
+
+      - name: Extract summary from Aider output
+        id: extract_summary
+        run: |
+          SUMMARY=$(awk '/AI Flag Cleanup Summary/ {found=1} found' .aider.chat.history.md)
+
+          echo "summary<<EOF" >> $GITHUB_OUTPUT
+          echo "$SUMMARY" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { repo, owner } = context.repo;
+            const branchRef = '${{ fromJson(steps.create_branch.outputs.result).ref }}'
+            const flagName = '${{ steps.extract_flag.outputs.flag-name }}';
+
+            // If PR already exists, return it
+            const pulls = await github.rest.pulls.list({
+              owner,
+              repo,
+              state: 'open',
+              per_page: 100
+            });
+
+            const existingPR = pulls.data.find((pr) => pr.head.ref === branchRef);
+            if (existingPR) {
+              console.log(`PR #${existingPR.number} already exists: ${existingPR.html_url}`);
+              return existingPR;
+            }
+
+            const newPR = await github.rest.pulls.create({
+              title: `[AI] ${flagName} flag cleanup`,
+              owner,
+              repo,
+              head: branchRef,
+              base: 'refs/heads/${{ inputs.base-branch }}',
+              body: [
+                `This PR cleans up the ${flagName} flag. These changes were automatically generated by AI and should be reviewed carefully.`,
+                '',
+                `Fixes #${{ inputs.issue-number }}`,
+                '',
+                `${{ steps.extract_summary.outputs.summary }}`
+              ].join('\n')
+            });
+            github.rest.issues.addLabels({
+              owner,
+              repo,
+              issue_number: newPR.data.number,
+              labels: ['unleash-ai-flag-cleanup']
+            });
+
+            console.log(`Created PR #${newPR.data.number}: ${newPR.data.html_url}`);
+      - name: Upload aider chat history
+        uses: actions/upload-artifact@v4
+        with:
+          name: aider-chat-output
+          path: ".aider.chat.history.md"

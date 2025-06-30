@@ -1,22 +1,24 @@
 name: AI flag cleanup
+
 on:
   issues:
     types: [labeled]
-
-permissions:
-  pull-requests: write
-  contents: write
-  issues: read
+  workflow_dispatch:
+    inputs:
+      issue-number:
+        description: 'Flag completed issue number'
+        required: true
+        type: number
 
 jobs:
   flag-cleanup:
-    uses: mirrajabi/aider-github-workflows/.github/workflows/aider-issue-to-pr.yml@v1.0.0
-    if: github.event.label.name == 'unleash-flag-completed'
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'issues' && github.event.label.name == 'unleash-flag-completed')
+    uses: ./.github/workflows/ai-flag-cleanup-pr.yml
     with:
-      issue-number: ${{ github.event.issue.number }}
-      base-branch: ${{ github.event.repository.default_branch }}
-      chat-timeout: 10
-      api_key_env_name: GEMINI_API_KEY
+      issue-number: ${{ github.event.issue.number || inputs.issue-number }}
       model: gemini
+      api_key_env_name: GEMINI_API_KEY
     secrets:
       api_key_env_value: ${{ secrets.GEMINI_API_KEY }}

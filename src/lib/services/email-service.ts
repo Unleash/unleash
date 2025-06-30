@@ -45,6 +45,13 @@ export interface IEmailEnvelope {
     headers?: Record<string, string>;
 }
 
+export interface ICrApprovalParameters {
+    changeRequestLink: string;
+    changeRequestTitle: string;
+    requesterName: string;
+    requesterEmail: string;
+}
+
 const RESET_MAIL_SUBJECT = 'Unleash - Reset your password';
 const GETTING_STARTED_SUBJECT = 'Welcome to Unleash';
 const PRODUCTIVITY_REPORT = 'Unleash - productivity report';
@@ -124,8 +131,7 @@ export class EmailService {
 
     async sendRequestedCRApprovalEmail(
         recipient: string,
-        changeRequestLink: string,
-        changeRequestTitle: string,
+        crApprovalParams: ICrApprovalParameters,
     ): Promise<IEmailEnvelope> {
         if (this.configured()) {
             const year = new Date().getFullYear();
@@ -133,8 +139,7 @@ export class EmailService {
                 'requested-cr-approval',
                 TemplateFormat.HTML,
                 {
-                    changeRequestLink,
-                    changeRequestTitle,
+                    ...crApprovalParams,
                     year,
                 },
             );
@@ -142,8 +147,7 @@ export class EmailService {
                 'requested-cr-approval',
                 TemplateFormat.PLAIN,
                 {
-                    changeRequestLink,
-                    changeRequestTitle,
+                    ...crApprovalParams,
                     year,
                 },
             );
@@ -173,7 +177,6 @@ export class EmailService {
             this.logger.warn(
                 'No mailer is configured. Please read the docs on how to configure an email service',
             );
-            this.logger.debug('Change request link: ', changeRequestLink);
             res({
                 from: this.sender,
                 to: recipient,

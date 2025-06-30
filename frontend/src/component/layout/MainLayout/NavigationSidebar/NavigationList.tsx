@@ -12,6 +12,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 import { AdminMenuNavigation } from '../AdminMenu/AdminNavigationItems.tsx';
 import { ConfigurationAccordion } from './ConfigurationAccordion.tsx';
+import { useRoutes } from './useRoutes.ts';
 
 export const OtherLinksList = () => {
     const { uiConfig } = useUiConfig();
@@ -38,6 +39,7 @@ export const PrimaryNavigationList: FC<{
     onClick: (activeItem: string) => void;
     activeItem?: string;
 }> = ({ mode, setMode, onClick, activeItem }) => {
+    const { routes } = useRoutes();
     const PrimaryListItem = ({
         href,
         text,
@@ -52,17 +54,15 @@ export const PrimaryNavigationList: FC<{
         />
     );
 
-    const { isOss } = useUiConfig();
-
     return (
         <List>
-            <PrimaryListItem href='/personal' text='Dashboard' />
-            <PrimaryListItem href='/projects' text='Projects' />
-            <PrimaryListItem href='/search' text='Flags overview' />
-            <PrimaryListItem href='/playground' text='Playground' />
-            {!isOss() ? (
-                <PrimaryListItem href='/insights' text='Analytics' />
-            ) : null}
+            {routes.primaryRoutes.map((route) => (
+                <PrimaryListItem
+                    key={route.path}
+                    href={route.path}
+                    text={route.title}
+                />
+            ))}
             <ConfigurationAccordion
                 mode={mode}
                 setMode={setMode}

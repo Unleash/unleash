@@ -32,9 +32,10 @@ export const SegmentDiff: FC<{
     currentSegment?: ISegment;
 }> = ({ change, currentSegment }) => {
     const useNewDiff = useUiFlag('improvedJsonDiff');
+    const Wrapper = useNewDiff ? Fragment : StyledCodeSection;
+
     const changeRequestSegment =
         change.action === 'deleteSegment' ? undefined : change.payload;
-    const Wrapper = useNewDiff ? Fragment : StyledCodeSection;
 
     return (
         <Wrapper>

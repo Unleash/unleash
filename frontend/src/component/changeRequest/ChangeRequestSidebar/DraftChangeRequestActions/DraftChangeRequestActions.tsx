@@ -74,7 +74,7 @@ const renderOption = (
 const renderTags = (value: AvailableReviewerSchema[]) => (
     <StyledTags>
         {value.length > 1
-            ? `${value.length} users selected`
+            ? `${value.length} reviewers`
             : value[0].name || value[0].username || value[0].email}
     </StyledTags>
 );

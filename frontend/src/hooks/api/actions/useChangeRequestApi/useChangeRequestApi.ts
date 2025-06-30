@@ -190,17 +190,17 @@ export const useChangeRequestApi = () => {
 
         return makeRequest(req.caller, req.id);
     };
-    const updateRequestedReviewers = async (
+    const updateRequestedApprovers = async (
         project: string,
         changeRequestId: number,
-        reviewers: string[],
+        reviewers: number[],
     ) => {
         trackEvent('change_request', {
             props: {
-                eventType: 'reviewers updated',
+                eventType: 'approvers updated',
             },
         });
-        const path = `api/admin/projects/${project}/change-requests/${changeRequestId}/reviewers`;
+        const path = `api/admin/projects/${project}/change-requests/${changeRequestId}/approvers`;
         const req = createRequest(path, {
             method: 'PUT',
             body: JSON.stringify({ reviewers }),
@@ -217,7 +217,7 @@ export const useChangeRequestApi = () => {
         discardDraft,
         addComment,
         updateTitle,
-        updateRequestedReviewers,
+        updateRequestedApprovers,
         errors,
         loading,
     };

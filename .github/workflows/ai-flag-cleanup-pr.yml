@@ -157,14 +157,14 @@ jobs:
         id: find_files
         run: |
           FLAG="${{ steps.extract_flag.outputs.flag-name }}"
-          rg -l "$FLAG" . > files.txt
+          FILES=$(rg -0 -l "$FLAG" . | xargs -0 -I{} printf '"%s" ' "{}")
 
-          if [[ ! -s files.txt ]]; then
+          if [[ -z "$FILES" ]]; then
             echo "❌ No files found using flag '$FLAG'."
             exit 1
           fi
 
-          xargs git add < files.txt
+          echo "file_args=$FILES" >> "$GITHUB_OUTPUT"
 
       - name: Create prompt
         uses: actions/github-script@v7
@@ -194,7 +194,7 @@ jobs:
         with:
           branch: ${{ fromJson(steps.create_branch.outputs.result).ref }}
           model: ${{ inputs.model }}
-          aider_args: '--yes --message "${{ steps.create_prompt.outputs.result }}"'
+          aider_args: '--yes ${{ steps.find_files.outputs.file_args }} --message "${{ steps.create_prompt.outputs.result }}"'
           api_key_env_name: ${{ inputs.api_key_env_name }}
           api_key_env_value: ${{ secrets.api_key_env_value }}
 

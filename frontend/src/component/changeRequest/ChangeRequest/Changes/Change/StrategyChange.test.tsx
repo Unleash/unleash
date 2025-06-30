@@ -1,5 +1,5 @@
 import { render } from 'utils/testRenderer';
-import { LegacyStrategyChange } from './LegacyStrategyChange.tsx';
+import { StrategyChange } from './StrategyChange.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -7,7 +7,6 @@ import { Route, Routes } from 'react-router-dom';
 
 const server = testServerSetup();
 
-// todo (crDiffView): revamp this to use the new components instead.
 const feature = 'my_feature';
 const projectId = 'default';
 const environmentName = 'production';
@@ -68,7 +67,7 @@ test('Editing strategy before change request is applied diffs against current st
             <Route
                 path='/projects/:projectId'
                 element={
-                    <LegacyStrategyChange
+                    <StrategyChange
                         featureName={feature}
                         environmentName={environmentName}
                         projectId={projectId}
@@ -130,7 +129,7 @@ test('Editing strategy after change request is applied diffs against the snapsho
             <Route
                 path='/projects/:projectId'
                 element={
-                    <LegacyStrategyChange
+                    <StrategyChange
                         featureName='my_feature'
                         environmentName='production'
                         projectId='default'
@@ -201,7 +200,7 @@ test('Deleting strategy before change request is applied diffs against current s
             <Route
                 path='/projects/:projectId'
                 element={
-                    <LegacyStrategyChange
+                    <StrategyChange
                         featureName={feature}
                         environmentName={environmentName}
                         projectId={projectId}
@@ -238,7 +237,7 @@ test('Deleting strategy after change request is applied diffs against the snapsh
             <Route
                 path='/projects/:projectId'
                 element={
-                    <LegacyStrategyChange
+                    <StrategyChange
                         featureName={feature}
                         environmentName={environmentName}
                         projectId={projectId}
@@ -292,7 +291,7 @@ test('Adding strategy always diffs against undefined strategy', async () => {
             <Route
                 path='/projects/:projectId'
                 element={
-                    <LegacyStrategyChange
+                    <StrategyChange
                         featureName={feature}
                         environmentName={environmentName}
                         projectId={projectId}
@@ -340,7 +339,7 @@ test('Segments order does not matter for diff calculation', async () => {
             <Route
                 path='/projects/:projectId'
                 element={
-                    <LegacyStrategyChange
+                    <StrategyChange
                         featureName={feature}
                         environmentName={environmentName}
                         projectId={projectId}

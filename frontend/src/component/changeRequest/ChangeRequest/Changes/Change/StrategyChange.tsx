@@ -341,7 +341,9 @@ const AddStrategy: FC<{
                 <StrategyTooltipLink
                     name={change.payload.name}
                     title={change.payload.title}
-                />
+                >
+                    <StrategyDiff change={change} currentStrategy={undefined} />
+                </StrategyTooltipLink>
                 <div>
                     <DisabledEnabledState
                         disabled

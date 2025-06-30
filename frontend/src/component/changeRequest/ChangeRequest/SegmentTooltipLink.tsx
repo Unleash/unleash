@@ -4,13 +4,13 @@ import type {
 } from 'component/changeRequest/changeRequest.types';
 import type React from 'react';
 import type { FC } from 'react';
-import EventDiff from 'component/events/EventDiff/EventDiff';
 import omit from 'lodash.omit';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { styled } from '@mui/material';
 import { textTruncated } from 'themes/themeStyles';
 import type { ISegment } from 'interfaces/segment';
 import { NameWithChangeInfo } from './NameWithChangeInfo/NameWithChangeInfo.tsx';
+import { EventDiff } from 'component/events/EventDiff/EventDiff.tsx';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',

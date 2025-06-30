@@ -7,6 +7,8 @@ import { EnvironmentStrategyOrderDiff } from './EnvironmentStrategyOrderDiff.tsx
 import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
 import { formatStrategyName } from '../../../../../../utils/strategyNames.tsx';
 import type { IFeatureStrategy } from 'interfaces/strategy.ts';
+import { Tab, TabList, TabPanel, Tabs } from '../ChangeTabComponents.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const ChangeItemInfo = styled(Box)({
     display: 'flex',
@@ -44,7 +46,88 @@ interface IEnvironmentStrategyExecutionOrderProps {
     actions?: ReactNode;
 }
 
-export const EnvironmentStrategyExecutionOrder = ({
+export const EnvironmentStrategyExecutionOrderWithDiff = ({
+    feature,
+    environment,
+    change,
+    project,
+    actions,
+}: IEnvironmentStrategyExecutionOrderProps) => {
+    const { feature: featureData, loading } = useFeature(project, feature);
+
+    if (loading) return null;
+
+    const featureEnvironment = featureData.environments.find(
+        ({ name }) => environment === name,
+    );
+    const environmentStrategies = featureEnvironment?.strategies || [];
+
+    const preData = {
+        strategyIds:
+            environmentStrategies
+                .sort((strategy1, strategy2) => {
+                    if (
+                        typeof strategy1.sortOrder === 'number' &&
+                        typeof strategy2.sortOrder === 'number'
+                    ) {
+                        return strategy1.sortOrder - strategy2.sortOrder;
+                    }
+                    return 0;
+                })
+                .map((strategy) => strategy.id) ?? [],
+    };
+
+    const updatedStrategies: IFeatureStrategy[] = change.payload
+        .map(({ id }) => {
+            return environmentStrategies.find((s) => s.id === id);
+        })
+        .filter((strategy): strategy is IFeatureStrategy => Boolean(strategy));
+
+    const data = {
+        strategyIds: updatedStrategies.map((strategy) => strategy.id),
+    };
+
+    return (
+        <Tabs>
+            <ChangeItemInfo>
+                <StyledChangeHeader>
+                    <p>Updating strategy execution order to:</p>
+                    <div>
+                        <TabList>
+                            <Tab>Change</Tab>
+                            <Tab>View diff</Tab>
+                        </TabList>
+                        {actions}
+                    </div>
+                </StyledChangeHeader>
+                <TabPanel>
+                    <StyledStrategyExecutionWrapper>
+                        {updatedStrategies.map((strategy, index) => (
+                            <StyledStrategyContainer key={strategy.id}>
+                                {`${index + 1}: `}
+                                {formatStrategyName(strategy?.name || '')}
+                                {strategy?.title && ` - ${strategy.title}`}
+                                <StrategyExecution strategy={strategy!} />
+                            </StyledStrategyContainer>
+                        ))}
+                    </StyledStrategyExecutionWrapper>
+                </TabPanel>
+                <TabPanel>
+                    <EnvironmentStrategyOrderDiff
+                        preData={preData}
+                        data={data}
+                    />
+                </TabPanel>
+            </ChangeItemInfo>
+        </Tabs>
+    );
+};
+
+/**
+ * Remove with flag crDiffView
+ * @deprecated
+ */
+const LegacyEnvironmentStrategyExecutionOrder = ({
     feature,
     environment,
     change,
@@ -116,4 +199,15 @@ export const EnvironmentStrategyExecutionOrder = ({
             </StyledStrategyExecutionWrapper>
         </ChangeItemInfo>
     );
+};
+
+export const EnvironmentStrategyExecutionOrder = (
+    props: IEnvironmentStrategyExecutionOrderProps,
+) => {
+    const useDiffableComponent = useUiFlag('crDiffView');
+    if (useDiffableComponent) {
+        return <EnvironmentStrategyExecutionOrderWithDiff {...props} />;
+    }
+
+    return <LegacyEnvironmentStrategyExecutionOrder {...props} />;
 };

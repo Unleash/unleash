@@ -8,7 +8,8 @@ import {
     styled,
     Paper,
 } from '@mui/material';
-import { Edit, Delete } from '@mui/icons-material';
+import Edit from '@mui/icons-material/Edit';
+import Delete from '@mui/icons-material/Delete';
 import {
     LineChart,
     NotEnoughData,

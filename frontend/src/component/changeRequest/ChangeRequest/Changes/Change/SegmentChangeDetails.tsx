@@ -1,12 +1,6 @@
 import type React from 'react';
 import type { FC, ReactNode } from 'react';
-import {
-    Box,
-    Button,
-    type ButtonProps,
-    styled,
-    Typography,
-} from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import type {
     ChangeRequestState,
     IChangeRequestDeleteSegment,
@@ -14,10 +8,10 @@ import type {
 } from 'component/changeRequest/changeRequest.types';
 import { useSegment } from 'hooks/api/getters/useSegment/useSegment';
 import { SegmentDiff, SegmentTooltipLink } from '../../SegmentTooltipLink.tsx';
-import { Tab, TabPanel, Tabs, TabsList } from '@mui/base';
 import { ViewableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/ViewableConstraintsList';
 
 import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning.tsx';
+import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
 
 const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -59,46 +53,6 @@ const SegmentContainer = styled(Box, {
     borderRadius: `0 0 ${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px`,
 }));
 
-const ActionsContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(1),
-    alignItems: 'center',
-}));
-
-const StyledTabList = styled(TabsList)(({ theme }) => ({
-    display: 'inline-flex',
-    flexDirection: 'row',
-    gap: theme.spacing(0.5),
-}));
-
-const StyledButton = styled(Button)(({ theme }) => ({
-    whiteSpace: 'nowrap',
-    color: theme.palette.text.secondary,
-    fontWeight: 'normal',
-    '&[aria-selected="true"]': {
-        fontWeight: 'bold',
-        color: theme.palette.primary.main,
-        background: theme.palette.background.elevation1,
-    },
-}));
-
-export const StyledTab = styled(({ children }: ButtonProps) => (
-    <Tab slots={{ root: StyledButton }}>{children}</Tab>
-))(({ theme }) => ({
-    position: 'absolute',
-    top: theme.spacing(-0.5),
-    left: theme.spacing(2),
-    transform: 'translateY(-50%)',
-    padding: theme.spacing(0.75, 1),
-    lineHeight: 1,
-    fontSize: theme.fontSizes.smallerBody,
-    color: theme.palette.text.primary,
-    background: theme.palette.background.application,
-    borderRadius: theme.shape.borderRadiusExtraLarge,
-    zIndex: theme.zIndex.fab,
-    textTransform: 'uppercase',
-}));
-
 export const SegmentChangeDetails: FC<{
     actions?: ReactNode;
     change: IChangeRequestUpdateSegment | IChangeRequestDeleteSegment;
@@ -114,21 +68,17 @@ export const SegmentChangeDetails: FC<{
         changeRequestState === 'Applied' ? snapshotSegment : currentSegment;
 
     const actionsWithTabs = (
-        <ActionsContainer>
-            <StyledTabList>
-                <StyledTab>Change</StyledTab>
-                <StyledTab>View diff</StyledTab>
-            </StyledTabList>
+        <>
+            <TabList>
+                <Tab>Change</Tab>
+                <Tab>View diff</Tab>
+            </TabList>
             {actions}
-        </ActionsContainer>
+        </>
     );
 
     return (
-        <Tabs
-            aria-label='View rendered change or JSON diff'
-            selectionFollowsFocus
-            defaultValue={0}
-        >
+        <Tabs>
             <SegmentContainer conflict={change.conflict}>
                 {change.action === 'deleteSegment' && (
                     <>

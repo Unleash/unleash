@@ -18,6 +18,11 @@ import dbInit, { type ITestDb } from '../helpers/database-init.js';
 import getLogger from '../../fixtures/no-logger.js';
 import type { IEventStore } from '../../../lib/types/stores/event-store.js';
 import type { IAuditUser, IUnleashStores } from '../../../lib/types/index.js';
+import {
+    withTransactional,
+    type TransactionUserParams,
+} from '../../../lib/db/transaction.js';
+import { EventStore } from '../../../lib/features/events/event-store.js';
 
 import { vi } from 'vitest';
 
@@ -40,7 +45,6 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     await eventStore.deleteAll();
-    delete (eventStore as any).db.userParams;
 });
 afterAll(async () => {
     if (db) {
@@ -475,11 +479,16 @@ test('Should return empty result when filtering by non-existent ID', async () =>
 });
 
 test('Should store and retrieve transaction context fields', async () => {
-    const mockTransactionContext = {
-        type: 'change-request' as const,
+    const mockTransactionContext: TransactionUserParams = {
+        type: 'change-request',
         id: '01HQVX5K8P9EXAMPLE123456',
     };
-    (eventStore as any).db.userParams = mockTransactionContext;
+
+    // Create a service with transactional capability
+    const eventStoreService = withTransactional(
+        (db) => new EventStore(db, getLogger),
+        db.rawDatabase,
+    );
 
     const event = {
         type: FEATURE_CREATED,
@@ -495,7 +504,10 @@ test('Should store and retrieve transaction context fields', async () => {
         },
     };
 
-    await eventStore.store(event);
+    // Use the transactional method with custom context
+    await eventStoreService.transactional(async (transactionalEventStore) => {
+        await transactionalEventStore.store(event);
+    }, mockTransactionContext);
 
     const events = await eventStore.getAll();
     const storedEvent = events.find(
@@ -535,12 +547,15 @@ test('Should handle missing transaction context gracefully', async () => {
 });
 
 test('Should store transaction context in batch operations', async () => {
-    const mockTransactionContext = {
-        type: 'transaction' as const,
+    const mockTransactionContext: TransactionUserParams = {
+        type: 'transaction',
         id: '01HQVX5K8P9BATCH123456',
     };
 
-    (eventStore as any).db.userParams = mockTransactionContext;
+    const eventStoreService = withTransactional(
+        (db) => new EventStore(db, getLogger),
+        db.rawDatabase,
+    );
 
     const events = [
         {
@@ -563,7 +578,9 @@ test('Should store transaction context in batch operations', async () => {
         },
     ];
 
-    await eventStore.batchStore(events);
+    await eventStoreService.transactional(async (transactionalEventStore) => {
+        await transactionalEventStore.batchStore(events);
+    }, mockTransactionContext);
 
     const allEvents = await eventStore.getAll();
     const batchEvents = allEvents.filter(
@@ -577,4 +594,40 @@ test('Should store transaction context in batch operations', async () => {
         expect(event.groupType).toBe('transaction');
         expect(event.groupId).toBe('01HQVX5K8P9BATCH123456');
     });
+});
+
+test('Should auto-generate transaction context when none provided', async () => {
+    const eventStoreService = withTransactional(
+        (db) => new EventStore(db, getLogger),
+        db.rawDatabase,
+    );
+
+    const event = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        featureName: 'test-feature-auto-context',
+        project: 'test-project',
+        ip: '127.0.0.1',
+        data: {
+            name: 'test-feature-auto-context',
+            enabled: true,
+            strategies: [{ name: 'default' }],
+        },
+    };
+
+    await eventStoreService.transactional(async (transactionalEventStore) => {
+        await transactionalEventStore.store(event);
+    });
+
+    const events = await eventStore.getAll();
+    const storedEvent = events.find(
+        (e) => e.featureName === 'test-feature-auto-context',
+    );
+
+    expect(storedEvent).toBeTruthy();
+    expect(storedEvent!.groupType).toBe('transaction');
+    expect(storedEvent!.groupId).toBeTruthy();
+    expect(typeof storedEvent!.groupId).toBe('string');
+    expect(storedEvent!.groupId).toMatch(/^[0-9A-HJKMNP-TV-Z]{26}$/);
 });

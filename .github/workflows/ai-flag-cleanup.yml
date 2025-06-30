@@ -3,6 +3,9 @@ on:
   issues:
     types: [labeled]
 
+permissions:
+  pull-requests: write
+
 jobs:
   flag-cleanup:
     uses: mirrajabi/aider-github-workflows/.github/workflows/aider-issue-to-pr.yml@v1.0.0

@@ -164,7 +164,7 @@ const DeleteStrategy: FC<{
                     <StrategyExecution strategy={referenceStrategy} />
                 )}
             </TabPanel>
-            <TabPanel>
+            <TabPanel variant='diff'>
                 <StrategyDiff
                     change={change}
                     currentStrategy={referenceStrategy}
@@ -266,7 +266,7 @@ const UpdateStrategy: FC<{
                     </StyledBox>
                 ) : null}
             </TabPanel>
-            <TabPanel>
+            <TabPanel variant='diff'>
                 <StrategyDiff
                     change={change}
                     currentStrategy={referenceStrategy}
@@ -320,7 +320,7 @@ const AddStrategy: FC<{
                 </StyledBox>
             ) : null}
         </TabPanel>
-        <TabPanel>
+        <TabPanel variant='diff'>
             <StrategyDiff change={change} currentStrategy={undefined} />
         </TabPanel>
     </>

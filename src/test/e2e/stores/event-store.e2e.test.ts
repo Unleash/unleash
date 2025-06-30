@@ -504,7 +504,6 @@ test('Should store and retrieve transaction context fields', async () => {
         },
     };
 
-    // Use the transactional method with custom context
     await eventStoreService.transactional(async (transactionalEventStore) => {
         await transactionalEventStore.store(event);
     }, mockTransactionContext);

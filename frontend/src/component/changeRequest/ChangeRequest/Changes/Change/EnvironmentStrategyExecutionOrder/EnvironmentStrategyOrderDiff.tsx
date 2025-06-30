@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import EventDiff from 'component/events/EventDiff/EventDiff';
+import { EventDiff } from 'component/events/EventDiff/EventDiff';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',

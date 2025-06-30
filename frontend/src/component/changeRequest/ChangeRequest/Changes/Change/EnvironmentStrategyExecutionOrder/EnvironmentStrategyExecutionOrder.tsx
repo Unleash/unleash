@@ -7,6 +7,8 @@ import { EnvironmentStrategyOrderDiff } from './EnvironmentStrategyOrderDiff.tsx
 import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
 import { formatStrategyName } from '../../../../../../utils/strategyNames.tsx';
 import type { IFeatureStrategy } from 'interfaces/strategy.ts';
+import { Tab, TabList, TabPanel, Tabs } from '../ChangeTabComponents.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const ChangeItemInfo = styled(Box)({
     display: 'flex',
@@ -52,6 +54,7 @@ export const EnvironmentStrategyExecutionOrder = ({
     actions,
 }: IEnvironmentStrategyExecutionOrderProps) => {
     const { feature: featureData, loading } = useFeature(project, feature);
+    const useDiffableComponent = useUiFlag('crDiffView');
 
     if (loading) return null;
 
@@ -84,6 +87,43 @@ export const EnvironmentStrategyExecutionOrder = ({
     const data = {
         strategyIds: updatedStrategies.map((strategy) => strategy.id),
     };
+
+    if (useDiffableComponent) {
+        return (
+            <Tabs>
+                <ChangeItemInfo>
+                    <StyledChangeHeader>
+                        <p>Updating strategy execution order to:</p>
+                        <div>
+                            <TabList>
+                                <Tab>Change</Tab>
+                                <Tab>View diff</Tab>
+                            </TabList>
+                            {actions}
+                        </div>
+                    </StyledChangeHeader>
+                    <TabPanel>
+                        <StyledStrategyExecutionWrapper>
+                            {updatedStrategies.map((strategy, index) => (
+                                <StyledStrategyContainer key={strategy.id}>
+                                    {`${index + 1}: `}
+                                    {formatStrategyName(strategy?.name || '')}
+                                    {strategy?.title && ` - ${strategy.title}`}
+                                    <StrategyExecution strategy={strategy!} />
+                                </StyledStrategyContainer>
+                            ))}
+                        </StyledStrategyExecutionWrapper>
+                    </TabPanel>
+                    <TabPanel>
+                        <EnvironmentStrategyOrderDiff
+                            preData={preData}
+                            data={data}
+                        />
+                    </TabPanel>
+                </ChangeItemInfo>
+            </Tabs>
+        );
+    }
 
     return (
         <ChangeItemInfo>

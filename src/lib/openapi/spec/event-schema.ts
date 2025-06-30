@@ -109,6 +109,18 @@ export const eventSchema = {
                 'The IP address of the user that created the event. Only available in Enterprise.',
             example: '192.168.1.1',
         },
+        groupType: {
+            type: 'string',
+            description:
+                'The type of transaction group this event belongs to, if applicable.',
+            example: 'change-request',
+        },
+        groupId: {
+            type: 'string',
+            description:
+                'The unique identifier for the transaction group this event belongs to, if applicable.',
+            example: '01HQVX5K8P9EXAMPLE123456',
+        },
     },
     components: {
         schemas: {

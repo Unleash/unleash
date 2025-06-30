@@ -41,6 +41,7 @@ const ChangeItemCreateEditDeleteWrapper = styled(Box)(({ theme }) => ({
     justifyContent: 'space-between',
     gap: theme.spacing(1),
     alignItems: 'center',
+    marginBottom: theme.spacing(1),
     width: '100%',
 }));
 
@@ -397,7 +398,7 @@ export const StrategyChange: FC<{
         environmentName,
     );
 
-    const Actions = (
+    const actionsWithTabs = (
         <ActionsContainer>
             <StyledTabList>
                 <StyledTab>Change</StyledTab>
@@ -414,14 +415,14 @@ export const StrategyChange: FC<{
             defaultValue={0}
         >
             {change.action === 'addStrategy' && (
-                <AddStrategy change={change} actions={Actions} />
+                <AddStrategy change={change} actions={actionsWithTabs} />
             )}
             {change.action === 'deleteStrategy' && (
                 <DeleteStrategy
                     change={change}
                     changeRequestState={changeRequestState}
                     currentStrategy={currentStrategy}
-                    actions={Actions}
+                    actions={actionsWithTabs}
                 />
             )}
             {change.action === 'updateStrategy' && (
@@ -429,7 +430,7 @@ export const StrategyChange: FC<{
                     change={change}
                     changeRequestState={changeRequestState}
                     currentStrategy={currentStrategy}
-                    actions={Actions}
+                    actions={actionsWithTabs}
                 />
             )}
         </Tabs>

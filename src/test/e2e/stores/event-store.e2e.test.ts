@@ -40,6 +40,7 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     await eventStore.deleteAll();
+    delete (eventStore as any).db.userParams;
 });
 afterAll(async () => {
     if (db) {
@@ -478,8 +479,6 @@ test('Should store and retrieve transaction context fields', async () => {
         type: 'change-request' as const,
         id: '01HQVX5K8P9EXAMPLE123456',
     };
-
-    // Set userParams on the database connection to simulate transaction context
     (eventStore as any).db.userParams = mockTransactionContext;
 
     const event = {
@@ -498,7 +497,6 @@ test('Should store and retrieve transaction context fields', async () => {
 
     await eventStore.store(event);
 
-    // Retrieve the stored event
     const events = await eventStore.getAll();
     const storedEvent = events.find(
         (e) => e.featureName === 'test-feature-with-context',
@@ -507,15 +505,9 @@ test('Should store and retrieve transaction context fields', async () => {
     expect(storedEvent).toBeTruthy();
     expect(storedEvent!.groupType).toBe('change-request');
     expect(storedEvent!.groupId).toBe('01HQVX5K8P9EXAMPLE123456');
-
-    // Clean up userParams
-    delete (eventStore as any).db.userParams;
 });
 
 test('Should handle missing transaction context gracefully', async () => {
-    // Ensure no userParams are set
-    delete (eventStore as any).db.userParams;
-
     const event = {
         type: FEATURE_CREATED,
         createdBy: 'test-user',
@@ -532,7 +524,6 @@ test('Should handle missing transaction context gracefully', async () => {
 
     await eventStore.store(event);
 
-    // Retrieve the stored event
     const events = await eventStore.getAll();
     const storedEvent = events.find(
         (e) => e.featureName === 'test-feature-no-context',
@@ -549,7 +540,6 @@ test('Should store transaction context in batch operations', async () => {
         id: '01HQVX5K8P9BATCH123456',
     };
 
-    // Set userParams on the database connection
     (eventStore as any).db.userParams = mockTransactionContext;
 
     const events = [
@@ -575,7 +565,6 @@ test('Should store transaction context in batch operations', async () => {
 
     await eventStore.batchStore(events);
 
-    // Retrieve the stored events
     const allEvents = await eventStore.getAll();
     const batchEvents = allEvents.filter(
         (e) =>
@@ -588,7 +577,4 @@ test('Should store transaction context in batch operations', async () => {
         expect(event.groupType).toBe('transaction');
         expect(event.groupId).toBe('01HQVX5K8P9BATCH123456');
     });
-
-    // Clean up userParams
-    delete (eventStore as any).db.userParams;
 });

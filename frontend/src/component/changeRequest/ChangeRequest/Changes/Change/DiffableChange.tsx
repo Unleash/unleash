@@ -149,6 +149,7 @@ const DeleteStrategy: FC<{
         <Tabs
             aria-label='View rendered change or JSON diff'
             selectionFollowsFocus
+            defaultValue={0}
         >
             <ChangeItemCreateEditDeleteWrapper className='delete-strategy-information-wrapper'>
                 <ChangeItemInfo>
@@ -168,18 +169,18 @@ const DeleteStrategy: FC<{
                 </ChangeItemInfo>
                 <RightHandSide>
                     <StyledTabList>
-                        <StyledTab value={0}>Change</StyledTab>
-                        <StyledTab value={1}>View diff</StyledTab>
+                        <StyledTab>Change</StyledTab>
+                        <StyledTab>View diff</StyledTab>
                     </StyledTabList>
                     {actions}
                 </RightHandSide>
             </ChangeItemCreateEditDeleteWrapper>
-            <TabPanel value={0}>
+            <TabPanel>
                 {referenceStrategy && (
                     <StrategyExecution strategy={referenceStrategy} />
                 )}
             </TabPanel>
-            <TabPanel value={1}>
+            <TabPanel>
                 <StrategyDiff
                     change={change}
                     currentStrategy={referenceStrategy}
@@ -212,13 +213,9 @@ const StyledButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-export const StyledTab = styled(
-    ({ value, children }: ButtonProps & { value: number }) => (
-        <Tab value={value} slots={{ root: StyledButton }}>
-            {children}
-        </Tab>
-    ),
-)(({ theme }) => ({
+export const StyledTab = styled(({ children }: ButtonProps) => (
+    <Tab slots={{ root: StyledButton }}>{children}</Tab>
+))(({ theme }) => ({
     position: 'absolute',
     top: theme.spacing(-0.5),
     left: theme.spacing(2),
@@ -256,6 +253,7 @@ const UpdateStrategy: FC<{
         <Tabs
             aria-label='View rendered change or JSON diff'
             selectionFollowsFocus
+            defaultValue={0}
         >
             <ChangeOverwriteWarning
                 data={{
@@ -284,8 +282,8 @@ const UpdateStrategy: FC<{
                 </ChangeItemInfo>
                 <RightHandSide>
                     <StyledTabList>
-                        <StyledTab value={0}>Change</StyledTab>
-                        <StyledTab value={1}>View diff</StyledTab>
+                        <StyledTab>Change</StyledTab>
+                        <StyledTab>View diff</StyledTab>
                     </StyledTabList>
                     {actions}
                 </RightHandSide>
@@ -311,7 +309,7 @@ const UpdateStrategy: FC<{
                 }
             />
 
-            <TabPanel value={0}>
+            <TabPanel>
                 <StrategyExecution strategy={change.payload} />
                 {hasVariantDiff ? (
                     <StyledBox>
@@ -334,7 +332,7 @@ const UpdateStrategy: FC<{
                     </StyledBox>
                 ) : null}
             </TabPanel>
-            <TabPanel value={1}>
+            <TabPanel>
                 <StrategyDiff
                     change={change}
                     currentStrategy={referenceStrategy}
@@ -348,7 +346,11 @@ const AddStrategy: FC<{
     change: IChangeRequestAddStrategy;
     actions?: ReactNode;
 }> = ({ change, actions }) => (
-    <Tabs aria-label='View rendered change or JSON diff' selectionFollowsFocus>
+    <Tabs
+        aria-label='View rendered change or JSON diff'
+        selectionFollowsFocus
+        defaultValue={0}
+    >
         <ChangeItemCreateEditDeleteWrapper>
             <ChangeItemInfo>
                 <Typography
@@ -373,13 +375,13 @@ const AddStrategy: FC<{
             </ChangeItemInfo>
             <RightHandSide>
                 <StyledTabList>
-                    <StyledTab value={0}>Change</StyledTab>
-                    <StyledTab value={1}>View diff</StyledTab>
+                    <StyledTab>Change</StyledTab>
+                    <StyledTab>View diff</StyledTab>
                 </StyledTabList>
                 {actions}
             </RightHandSide>
         </ChangeItemCreateEditDeleteWrapper>
-        <TabPanel value={0}>
+        <TabPanel>
             <StrategyExecution strategy={change.payload} />
             {change.payload.variants?.length ? (
                 <StyledBox>
@@ -392,7 +394,7 @@ const AddStrategy: FC<{
                 </StyledBox>
             ) : null}
         </TabPanel>
-        <TabPanel value={1}>
+        <TabPanel>
             <StrategyDiff change={change} currentStrategy={undefined} />
         </TabPanel>
     </Tabs>

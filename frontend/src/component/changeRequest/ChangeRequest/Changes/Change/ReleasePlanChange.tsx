@@ -182,76 +182,78 @@ const AddReleasePlan: FC<{
         releasePlanTemplateId: change.payload.templateId,
     };
 
-    return (
-        <>
-            <ChangeItemCreateEditDeleteWrapper>
-                <ChangeItemInfo>
-                    {currentReleasePlan ? (
-                        <Typography>
-                            Replacing{' '}
-                            <TooltipLink
-                                tooltip={
-                                    <div
-                                        onMouseEnter={() =>
-                                            openCurrentTooltip()
-                                        }
-                                        onMouseLeave={() =>
-                                            closeCurrentTooltip()
-                                        }
-                                    >
-                                        <ReleasePlan
-                                            plan={currentReleasePlan}
-                                            readonly
-                                        />
-                                    </div>
-                                }
-                                tooltipProps={{
-                                    open: currentTooltipOpen,
-                                    maxWidth: 500,
-                                    maxHeight: 600,
-                                }}
-                            >
-                                <span
-                                    onMouseEnter={() => openCurrentTooltip()}
-                                    onMouseLeave={() => closeCurrentTooltip()}
-                                >
-                                    current
-                                </span>
-                            </TooltipLink>{' '}
-                            release plan with:
-                        </Typography>
-                    ) : (
+    if (!currentReleasePlan) {
+        return (
+            <>
+                <ChangeItemCreateEditDeleteWrapper>
+                    <ChangeItemInfo>
                         <Typography color='success.dark'>
                             + Adding release plan:
                         </Typography>
-                    )}
-                    <Typography>{planPreview.name}</Typography>
-                    {currentReleasePlan && (
+                        <Typography>{planPreview.name}</Typography>
+                    </ChangeItemInfo>
+                    <div>{actions}</div>
+                </ChangeItemCreateEditDeleteWrapper>
+                <ReleasePlan plan={planPreview} readonly />
+            </>
+        );
+    }
+
+    return (
+        <Tabs>
+            <ChangeItemCreateEditDeleteWrapper>
+                <ChangeItemInfo>
+                    <Typography>
+                        Replacing{' '}
                         <TooltipLink
                             tooltip={
-                                <StyledCodeSection>
-                                    {/*  todo: handle this case */}
-                                    <EventDiff
-                                        entry={{
-                                            preData: currentReleasePlan,
-                                            data: planPreviewDiff,
-                                        }}
+                                <div
+                                    onMouseEnter={() => openCurrentTooltip()}
+                                    onMouseLeave={() => closeCurrentTooltip()}
+                                >
+                                    <ReleasePlan
+                                        plan={currentReleasePlan}
+                                        readonly
                                     />
-                                </StyledCodeSection>
+                                </div>
                             }
                             tooltipProps={{
+                                open: currentTooltipOpen,
                                 maxWidth: 500,
                                 maxHeight: 600,
                             }}
                         >
-                            <ViewDiff>View Diff</ViewDiff>
-                        </TooltipLink>
-                    )}
+                            <span
+                                onMouseEnter={() => openCurrentTooltip()}
+                                onMouseLeave={() => closeCurrentTooltip()}
+                            >
+                                current
+                            </span>
+                        </TooltipLink>{' '}
+                        release plan with:
+                    </Typography>
+                    <Typography>{planPreview.name}</Typography>
                 </ChangeItemInfo>
-                <div>{actions}</div>
+                <div>
+                    <TabList>
+                        <Tab>Changes</Tab>
+                        <Tab>View diff</Tab>
+                    </TabList>
+                    {actions}
+                </div>
             </ChangeItemCreateEditDeleteWrapper>
-            <ReleasePlan plan={planPreview} readonly />
-        </>
+            <TabPanel>
+                <ReleasePlan plan={planPreview} readonly />
+            </TabPanel>
+            <TabPanel>
+                <EventDiff
+                    entry={{
+                        preData: currentReleasePlan,
+                        data: planPreviewDiff,
+                    }}
+                />
+            </TabPanel>
+        </Tabs>
     );
 };
 

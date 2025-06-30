@@ -26,6 +26,20 @@ const sendImpactMetrics = async (impactMetrics: Metric[], status = 202) =>
         })
         .expect(status);
 
+const sendBulkMetricsWithImpact = async (
+    impactMetrics: Metric[],
+    status = 202,
+) => {
+    return app.request
+        .post('/api/client/metrics/bulk')
+        .send({
+            applications: [],
+            metrics: [],
+            impactMetrics,
+        })
+        .expect(status);
+};
+
 beforeAll(async () => {
     db = await dbInit('impact_metrics', getLogger);
     app = await setupAppWithCustomConfig(db.stores, {
@@ -72,7 +86,7 @@ test('should store impact metrics in memory and be able to retrieve them', async
     ]);
 
     await sendImpactMetrics([]);
-    // missing help
+    // missing help = no error but value ignored
     await sendImpactMetrics(
         [
             // @ts-expect-error
@@ -87,7 +101,7 @@ test('should store impact metrics in memory and be able to retrieve them', async
                 ],
             },
         ],
-        400,
+        202,
     );
 
     const response = await app.request
@@ -100,4 +114,49 @@ test('should store impact metrics in memory and be able to retrieve them', async
     expect(metricsText).toContain('# HELP labeled_counter with labels');
     expect(metricsText).toContain('# TYPE labeled_counter counter');
     expect(metricsText).toMatch(/labeled_counter{foo="bar"} 15/);
+});
+
+test('should store impact metrics sent via bulk metrics endpoint', async () => {
+    await sendBulkMetricsWithImpact([
+        {
+            name: 'bulk_counter',
+            help: 'bulk counter with labels',
+            type: 'counter',
+            samples: [
+                {
+                    labels: { source: 'bulk' },
+                    value: 7,
+                },
+            ],
+        },
+    ]);
+
+    await sendBulkMetricsWithImpact([
+        {
+            name: 'bulk_counter',
+            help: 'bulk counter with labels',
+            type: 'counter',
+            samples: [
+                {
+                    labels: { source: 'bulk' },
+                    value: 8,
+                },
+            ],
+        },
+    ]);
+
+    await sendBulkMetricsWithImpact([]);
+
+    const response = await app.request
+        .get('/internal-backstage/impact/metrics')
+        .expect('Content-Type', /text/)
+        .expect(200);
+
+    const metricsText = response.text;
+
+    expect(metricsText).toContain(
+        '# HELP bulk_counter bulk counter with labels',
+    );
+    expect(metricsText).toContain('# TYPE bulk_counter counter');
+    expect(metricsText).toMatch(/bulk_counter{source="bulk"} 15/);
 });

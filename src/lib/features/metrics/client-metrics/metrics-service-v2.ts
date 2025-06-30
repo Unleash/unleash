@@ -196,8 +196,14 @@ export default class ClientMetricsServiceV2 {
     }
 
     async registerImpactMetrics(impactMetrics: Metric[]) {
-        const value = await impactMetricsSchema.validateAsync(impactMetrics);
-        this.impactMetricsTranslator.translateMetrics(value);
+        try {
+            const value =
+                await impactMetricsSchema.validateAsync(impactMetrics);
+            this.impactMetricsTranslator.translateMetrics(value);
+        } catch (e) {
+            // impact metrics should not affect other metrics on failure
+            this.logger.warn(e);
+        }
     }
 
     async registerClientMetrics(

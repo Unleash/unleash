@@ -484,7 +484,6 @@ test('Should store and retrieve transaction context fields', async () => {
         id: '01HQVX5K8P9EXAMPLE123456',
     };
 
-    // Create a service with transactional capability
     const eventStoreService = withTransactional(
         (db) => new EventStore(db, getLogger),
         db.rawDatabase,

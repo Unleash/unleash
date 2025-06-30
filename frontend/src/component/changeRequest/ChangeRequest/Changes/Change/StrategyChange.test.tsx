@@ -1,5 +1,5 @@
 import { render } from 'utils/testRenderer';
-import { StrategyChange } from './StrategyChange.tsx';
+import { StrategyChange } from './LegacyStrategyChange.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -7,6 +7,7 @@ import { Route, Routes } from 'react-router-dom';
 
 const server = testServerSetup();
 
+// todo (crDiffView): revamp this to use the new components instead.
 const feature = 'my_feature';
 const projectId = 'default';
 const environmentName = 'production';

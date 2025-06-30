@@ -174,12 +174,6 @@ const DeleteStrategy: FC<{
     );
 };
 
-const ActionsContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(1),
-    alignItems: 'center',
-}));
-
 const UpdateStrategy: FC<{
     change: IChangeRequestUpdateStrategy;
     changeRequestState: ChangeRequestState;
@@ -358,13 +352,13 @@ export const StrategyChange: FC<{
     );
 
     const actionsWithTabs = (
-        <ActionsContainer>
+        <>
             <TabList>
                 <Tab>Change</Tab>
                 <Tab>View diff</Tab>
             </TabList>
             {actions}
-        </ActionsContainer>
+        </>
     );
 
     return (

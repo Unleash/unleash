@@ -59,14 +59,15 @@ export const StrategyDiff: FC<{
     const sortedChangeRequestStrategy = sortSegments(changeRequestStrategy);
 
     const Wrapper = useNewDiff ? Fragment : StyledCodeSection;
+    const omissionFunction = useNewDiff ? omitIfDefined : omit;
     return (
         <Wrapper>
             <EventDiff
                 entry={{
-                    preData: omitIfDefined(sortedCurrentStrategy, [
+                    preData: omissionFunction(sortedCurrentStrategy, [
                         'sortOrder',
                     ]),
-                    data: omitIfDefined(sortedChangeRequestStrategy, [
+                    data: omissionFunction(sortedChangeRequestStrategy, [
                         'snapshot',
                     ]),
                 }}

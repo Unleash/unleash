@@ -33,6 +33,7 @@ export const SegmentDiff: FC<{
 }> = ({ change, currentSegment }) => {
     const useNewDiff = useUiFlag('improvedJsonDiff');
     const Wrapper = useNewDiff ? Fragment : StyledCodeSection;
+    const omissionFunction = useNewDiff ? omitIfDefined : omit;
 
     const changeRequestSegment =
         change.action === 'deleteSegment' ? undefined : change.payload;
@@ -41,11 +42,11 @@ export const SegmentDiff: FC<{
         <Wrapper>
             <EventDiff
                 entry={{
-                    preData: omitIfDefined(currentSegment, [
+                    preData: omissionFunction(currentSegment, [
                         'createdAt',
                         'createdBy',
                     ]),
-                    data: omitIfDefined(changeRequestSegment, ['snapshot']),
+                    data: omissionFunction(changeRequestSegment, ['snapshot']),
                 }}
             />
         </Wrapper>

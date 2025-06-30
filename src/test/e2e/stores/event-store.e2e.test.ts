@@ -472,3 +472,123 @@ test('Should return empty result when filtering by non-existent ID', async () =>
 
     expect(filteredEvents).toHaveLength(0);
 });
+
+test('Should store and retrieve transaction context fields', async () => {
+    const mockTransactionContext = {
+        type: 'change-request' as const,
+        id: '01HQVX5K8P9EXAMPLE123456',
+    };
+
+    // Set userParams on the database connection to simulate transaction context
+    (eventStore as any).db.userParams = mockTransactionContext;
+
+    const event = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        featureName: 'test-feature-with-context',
+        project: 'test-project',
+        ip: '127.0.0.1',
+        data: {
+            name: 'test-feature-with-context',
+            enabled: true,
+            strategies: [{ name: 'default' }],
+        },
+    };
+
+    await eventStore.store(event);
+
+    // Retrieve the stored event
+    const events = await eventStore.getAll();
+    const storedEvent = events.find(
+        (e) => e.featureName === 'test-feature-with-context',
+    );
+
+    expect(storedEvent).toBeTruthy();
+    expect(storedEvent!.groupType).toBe('change-request');
+    expect(storedEvent!.groupId).toBe('01HQVX5K8P9EXAMPLE123456');
+
+    // Clean up userParams
+    delete (eventStore as any).db.userParams;
+});
+
+test('Should handle missing transaction context gracefully', async () => {
+    // Ensure no userParams are set
+    delete (eventStore as any).db.userParams;
+
+    const event = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        featureName: 'test-feature-no-context',
+        project: 'test-project',
+        ip: '127.0.0.1',
+        data: {
+            name: 'test-feature-no-context',
+            enabled: true,
+            strategies: [{ name: 'default' }],
+        },
+    };
+
+    await eventStore.store(event);
+
+    // Retrieve the stored event
+    const events = await eventStore.getAll();
+    const storedEvent = events.find(
+        (e) => e.featureName === 'test-feature-no-context',
+    );
+
+    expect(storedEvent).toBeTruthy();
+    expect(storedEvent!.groupType).toBeNull();
+    expect(storedEvent!.groupId).toBeNull();
+});
+
+test('Should store transaction context in batch operations', async () => {
+    const mockTransactionContext = {
+        type: 'transaction' as const,
+        id: '01HQVX5K8P9BATCH123456',
+    };
+
+    // Set userParams on the database connection
+    (eventStore as any).db.userParams = mockTransactionContext;
+
+    const events = [
+        {
+            type: FEATURE_CREATED,
+            createdBy: 'test-user',
+            createdByUserId: TEST_USER_ID,
+            featureName: 'batch-feature-1',
+            project: 'test-project',
+            ip: '127.0.0.1',
+            data: { name: 'batch-feature-1' },
+        },
+        {
+            type: FEATURE_UPDATED,
+            createdBy: 'test-user',
+            createdByUserId: TEST_USER_ID,
+            featureName: 'batch-feature-2',
+            project: 'test-project',
+            ip: '127.0.0.1',
+            data: { name: 'batch-feature-2' },
+        },
+    ];
+
+    await eventStore.batchStore(events);
+
+    // Retrieve the stored events
+    const allEvents = await eventStore.getAll();
+    const batchEvents = allEvents.filter(
+        (e) =>
+            e.featureName === 'batch-feature-1' ||
+            e.featureName === 'batch-feature-2',
+    );
+
+    expect(batchEvents).toHaveLength(2);
+    batchEvents.forEach((event) => {
+        expect(event.groupType).toBe('transaction');
+        expect(event.groupId).toBe('01HQVX5K8P9BATCH123456');
+    });
+
+    // Clean up userParams
+    delete (eventStore as any).db.userParams;
+});

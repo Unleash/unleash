@@ -41,6 +41,8 @@ const EVENT_COLUMNS = [
     'feature_name',
     'project',
     'environment',
+    'group_type',
+    'group_id',
 ] as const;
 
 export type IQueryOperations =
@@ -97,6 +99,8 @@ export interface IEventTable {
     environment?: string;
     tags: ITag[];
     ip?: string;
+    group_type?: string;
+    group_id?: string;
 }
 
 const TABLE = 'events';
@@ -157,7 +161,9 @@ export class EventStore implements IEventStore {
 
     async batchStore(events: IBaseEvent[]): Promise<void> {
         try {
-            await this.db(TABLE).insert(events.map(this.eventToDbRow));
+            await this.db(TABLE).insert(
+                events.map((event) => this.eventToDbRow(event)),
+            );
         } catch (error: unknown) {
             this.logger.warn(
                 `Failed to store events: ${JSON.stringify(events)}`,
@@ -472,10 +478,14 @@ export class EventStore implements IEventStore {
             featureName: row.feature_name,
             project: row.project,
             environment: row.environment,
+            groupType: row.group_type,
+            groupId: row.group_id,
         };
     }
 
     eventToDbRow(e: IBaseEvent): Omit<IEventTable, 'id' | 'created_at'> {
+        const transactionContext = (this.db as any).userParams;
+
         return {
             type: e.type,
             created_by: e.createdBy ?? 'admin',
@@ -490,6 +500,8 @@ export class EventStore implements IEventStore {
             project: e.project,
             environment: e.environment,
             ip: e.ip,
+            group_type: transactionContext?.type,
+            group_id: transactionContext?.id,
         };
     }
 

@@ -8,14 +8,14 @@ import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert, Box, styled } from '@mui/material';
 import { ToggleStatusChange } from './ToggleStatusChange.tsx';
-import { StrategyChange } from './LegacyStrategyChange.tsx';
+import { LegacyStrategyChange } from './LegacyStrategyChange.tsx';
 import { VariantPatch } from './VariantPatch/VariantPatch.tsx';
 import { EnvironmentStrategyExecutionOrder } from './EnvironmentStrategyExecutionOrder/EnvironmentStrategyExecutionOrder.tsx';
 import { ArchiveFeatureChange } from './ArchiveFeatureChange.tsx';
 import { DependencyChange } from './DependencyChange.tsx';
 import { Link } from 'react-router-dom';
 import { ReleasePlanChange } from './ReleasePlanChange.tsx';
-import { DiffableChange } from './StrategyChange.tsx';
+import { StrategyChange } from './StrategyChange.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledSingleChangeBox = styled(Box, {
@@ -91,8 +91,8 @@ export const FeatureChange: FC<{
 
     const useDiffableChangeComponent = useUiFlag('crDiffView');
     const StrategyChangeComponent = useDiffableChangeComponent
-        ? DiffableChange
-        : StrategyChange;
+        ? StrategyChange
+        : LegacyStrategyChange;
 
     return (
         <StyledSingleChangeBox

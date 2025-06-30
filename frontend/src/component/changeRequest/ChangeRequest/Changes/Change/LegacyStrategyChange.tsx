@@ -302,7 +302,11 @@ const AddStrategy: FC<{
     </>
 );
 
-export const StrategyChange: FC<{
+/**
+ * Deprecated: use StrategyChange instead. Remove file with flag crDiffView
+ * @deprecated
+ */
+export const LegacyStrategyChange: FC<{
     actions?: ReactNode;
     change:
         | IChangeRequestAddStrategy

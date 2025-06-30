@@ -370,7 +370,7 @@ const AddStrategy: FC<{
     </>
 );
 
-export const DiffableChange: FC<{
+export const StrategyChange: FC<{
     actions?: ReactNode;
     change:
         | IChangeRequestAddStrategy

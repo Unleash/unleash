@@ -141,7 +141,7 @@ const DeleteStrategy: FC<{
 
     return (
         <>
-            <ChangeItemCreateEditDeleteWrapper className='delete-strategy-information-wrapper'>
+            <ChangeItemCreateEditDeleteWrapper>
                 <ChangeItemInfo>
                     <Typography
                         sx={(theme) => ({

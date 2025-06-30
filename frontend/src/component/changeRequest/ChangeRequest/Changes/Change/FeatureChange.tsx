@@ -14,7 +14,7 @@ import { EnvironmentStrategyExecutionOrder } from './EnvironmentStrategyExecutio
 import { ArchiveFeatureChange } from './ArchiveFeatureChange.tsx';
 import { DependencyChange } from './DependencyChange.tsx';
 import { Link } from 'react-router-dom';
-import { ReleasePlanChange } from './ReleasePlanChange.tsx';
+import { ReleasePlanChange } from './LegacyReleasePlanChange.tsx';
 import { StrategyChange } from './StrategyChange.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 

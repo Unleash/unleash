@@ -146,11 +146,7 @@ const DeleteStrategy: FC<{
             : currentStrategy;
 
     return (
-        <Tabs
-            aria-label='View rendered change or JSON diff'
-            selectionFollowsFocus
-            defaultValue={0}
-        >
+        <>
             <ChangeItemCreateEditDeleteWrapper className='delete-strategy-information-wrapper'>
                 <ChangeItemInfo>
                     <Typography
@@ -167,13 +163,7 @@ const DeleteStrategy: FC<{
                         />
                     </StrategyTooltipLink>
                 </ChangeItemInfo>
-                <RightHandSide>
-                    <StyledTabList>
-                        <StyledTab>Change</StyledTab>
-                        <StyledTab>View diff</StyledTab>
-                    </StyledTabList>
-                    {actions}
-                </RightHandSide>
+                {actions}
             </ChangeItemCreateEditDeleteWrapper>
             <TabPanel>
                 {referenceStrategy && (
@@ -186,11 +176,11 @@ const DeleteStrategy: FC<{
                     currentStrategy={referenceStrategy}
                 />
             </TabPanel>
-        </Tabs>
+        </>
     );
 };
 
-const RightHandSide = styled('div')(({ theme }) => ({
+const ActionsContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
     alignItems: 'center',
@@ -250,11 +240,7 @@ const UpdateStrategy: FC<{
     );
 
     return (
-        <Tabs
-            aria-label='View rendered change or JSON diff'
-            selectionFollowsFocus
-            defaultValue={0}
-        >
+        <>
             <ChangeOverwriteWarning
                 data={{
                     current: currentStrategy,
@@ -280,13 +266,7 @@ const UpdateStrategy: FC<{
                         />
                     </StrategyTooltipLink>
                 </ChangeItemInfo>
-                <RightHandSide>
-                    <StyledTabList>
-                        <StyledTab>Change</StyledTab>
-                        <StyledTab>View diff</StyledTab>
-                    </StyledTabList>
-                    {actions}
-                </RightHandSide>
+                {actions}
             </ChangeItemCreateEditDeleteWrapper>
             <ConditionallyRender
                 condition={
@@ -338,7 +318,7 @@ const UpdateStrategy: FC<{
                     currentStrategy={referenceStrategy}
                 />
             </TabPanel>
-        </Tabs>
+        </>
     );
 };
 
@@ -346,11 +326,7 @@ const AddStrategy: FC<{
     change: IChangeRequestAddStrategy;
     actions?: ReactNode;
 }> = ({ change, actions }) => (
-    <Tabs
-        aria-label='View rendered change or JSON diff'
-        selectionFollowsFocus
-        defaultValue={0}
-    >
+    <>
         <ChangeItemCreateEditDeleteWrapper>
             <ChangeItemInfo>
                 <Typography
@@ -373,13 +349,7 @@ const AddStrategy: FC<{
                     />
                 </div>
             </ChangeItemInfo>
-            <RightHandSide>
-                <StyledTabList>
-                    <StyledTab>Change</StyledTab>
-                    <StyledTab>View diff</StyledTab>
-                </StyledTabList>
-                {actions}
-            </RightHandSide>
+            {actions}
         </ChangeItemCreateEditDeleteWrapper>
         <TabPanel>
             <StrategyExecution strategy={change.payload} />
@@ -397,7 +367,7 @@ const AddStrategy: FC<{
         <TabPanel>
             <StrategyDiff change={change} currentStrategy={undefined} />
         </TabPanel>
-    </Tabs>
+    </>
 );
 
 export const DiffableChange: FC<{
@@ -425,17 +395,31 @@ export const DiffableChange: FC<{
         environmentName,
     );
 
+    const Actions = (
+        <ActionsContainer>
+            <StyledTabList>
+                <StyledTab>Change</StyledTab>
+                <StyledTab>View diff</StyledTab>
+            </StyledTabList>
+            {actions}
+        </ActionsContainer>
+    );
+
     return (
-        <>
+        <Tabs
+            aria-label='View rendered change or JSON diff'
+            selectionFollowsFocus
+            defaultValue={0}
+        >
             {change.action === 'addStrategy' && (
-                <AddStrategy change={change} actions={actions} />
+                <AddStrategy change={change} actions={Actions} />
             )}
             {change.action === 'deleteStrategy' && (
                 <DeleteStrategy
                     change={change}
                     changeRequestState={changeRequestState}
                     currentStrategy={currentStrategy}
-                    actions={actions}
+                    actions={Actions}
                 />
             )}
             {change.action === 'updateStrategy' && (
@@ -443,9 +427,9 @@ export const DiffableChange: FC<{
                     change={change}
                     changeRequestState={changeRequestState}
                     currentStrategy={currentStrategy}
-                    actions={actions}
+                    actions={Actions}
                 />
             )}
-        </>
+        </Tabs>
     );
 };

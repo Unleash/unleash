@@ -1,14 +1,6 @@
 import type React from 'react';
 import type { FC, ReactNode } from 'react';
-import {
-    Box,
-    Button,
-    type ButtonProps,
-    styled,
-    Tooltip,
-    Typography,
-} from '@mui/material';
-import { Tab, Tabs, TabsList, TabPanel } from '@mui/base';
+import { Box, styled, Tooltip, Typography } from '@mui/material';
 import BlockIcon from '@mui/icons-material/Block';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import {
@@ -29,6 +21,7 @@ import { flexRow } from 'themes/themeStyles';
 import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning.tsx';
 import type { IFeatureStrategy } from 'interfaces/strategy';
+import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -185,40 +178,6 @@ const ActionsContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
     alignItems: 'center',
-}));
-
-const StyledTabList = styled(TabsList)(({ theme }) => ({
-    display: 'inline-flex',
-    flexDirection: 'row',
-    gap: theme.spacing(0.5),
-}));
-
-const StyledButton = styled(Button)(({ theme }) => ({
-    whiteSpace: 'nowrap',
-    color: theme.palette.text.secondary,
-    fontWeight: 'normal',
-    '&[aria-selected="true"]': {
-        fontWeight: 'bold',
-        color: theme.palette.primary.main,
-        background: theme.palette.background.elevation1,
-    },
-}));
-
-export const StyledTab = styled(({ children }: ButtonProps) => (
-    <Tab slots={{ root: StyledButton }}>{children}</Tab>
-))(({ theme }) => ({
-    position: 'absolute',
-    top: theme.spacing(-0.5),
-    left: theme.spacing(2),
-    transform: 'translateY(-50%)',
-    padding: theme.spacing(0.75, 1),
-    lineHeight: 1,
-    fontSize: theme.fontSizes.smallerBody,
-    color: theme.palette.text.primary,
-    background: theme.palette.background.application,
-    borderRadius: theme.shape.borderRadiusExtraLarge,
-    zIndex: theme.zIndex.fab,
-    textTransform: 'uppercase',
 }));
 
 const UpdateStrategy: FC<{
@@ -400,20 +359,16 @@ export const StrategyChange: FC<{
 
     const actionsWithTabs = (
         <ActionsContainer>
-            <StyledTabList>
-                <StyledTab>Change</StyledTab>
-                <StyledTab>View diff</StyledTab>
-            </StyledTabList>
+            <TabList>
+                <Tab>Change</Tab>
+                <Tab>View diff</Tab>
+            </TabList>
             {actions}
         </ActionsContainer>
     );
 
     return (
-        <Tabs
-            aria-label='View rendered change or JSON diff'
-            selectionFollowsFocus
-            defaultValue={0}
-        >
+        <Tabs>
             {change.action === 'addStrategy' && (
                 <AddStrategy change={change} actions={actionsWithTabs} />
             )}

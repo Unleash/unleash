@@ -73,6 +73,7 @@ const InlineList = styled('ul')(({ theme }) => ({
 
 const ChangeInnerBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(3),
+    // todo: remove with flag crDiffView
     '&:has(.delete-strategy-information-wrapper)': {
         backgroundColor: theme.palette.error.light,
     },

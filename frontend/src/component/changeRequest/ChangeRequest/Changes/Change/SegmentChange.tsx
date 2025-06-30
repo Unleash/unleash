@@ -5,7 +5,7 @@ import type {
     ChangeRequestState,
     ISegmentChange,
 } from '../../../changeRequest.types';
-import { SegmentChangeDetails } from './SegmentChangeDetails.tsx';
+import { LegacySegmentChangeDetails } from './LegacySegmentChangeDetails.tsx';
 import { ConflictWarning } from './ConflictWarning.tsx';
 import { useSegment } from 'hooks/api/getters/useSegment/useSegment.ts';
 
@@ -75,7 +75,7 @@ export const SegmentChange: FC<ISegmentChangeProps> = ({
                     </Link>
                 </Box>
             </Box>
-            <SegmentChangeDetails
+            <LegacySegmentChangeDetails
                 change={segmentChange}
                 actions={actions}
                 changeRequestState={changeRequestState}

@@ -29,7 +29,7 @@ interface IEventDiffProps {
 const DiffStyles = styled('div')(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontFamily: 'monospace',
-    whiteSpace: 'pre',
+    whiteSpace: 'pre-wrap',
     fontSize: theme.typography.body2.fontSize,
 
     '.deletion, .addition': {

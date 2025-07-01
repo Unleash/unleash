@@ -199,6 +199,7 @@ jobs:
           EOF
 
       - name: Apply cleanup with Aider
+        id: aider
         uses: mirrajabi/aider-github-action@v1.1.0
         timeout-minutes: ${{ inputs.chat-timeout }}
         with:
@@ -214,7 +215,10 @@ jobs:
       - name: Extract summary from Aider output
         id: extract_summary
         run: |
-          SUMMARY=$(awk '/AI Flag Cleanup Summary/ {found=1} found' .aider.chat.history.md)
+          echo "Extracting summary from aider output..."
+          echo "${{ steps.aider.outputs.output }}" > aider_output.txt
+
+          SUMMARY=$(awk '/AI Flag Cleanup Summary/ {found=1} found' aider_output.txt)
 
           echo "summary<<EOF" >> $GITHUB_OUTPUT
           echo "$SUMMARY" >> $GITHUB_OUTPUT

@@ -283,9 +283,11 @@ export default class ClientInstanceService {
             );
         result.projects = accessibleProjects;
         result.environments.forEach((environment) => {
-            environment.issues.outdatedSdks = findOutdatedSDKs(
-                environment.sdks,
-            );
+            const sdks = [
+                ...environment.frontendSdks,
+                ...environment.backendSdks,
+            ];
+            environment.issues.outdatedSdks = findOutdatedSDKs(sdks);
         });
         return result;
     }

@@ -177,14 +177,11 @@ jobs:
 
       - name: Install build tools & Aider
         run: |
-          bring in C compiler, headers, and ffi dev
           sudo apt-get update
           sudo apt-get install -y build-essential python3-dev libffi-dev
 
-          ensure pip can build wheels
           python -m pip install --upgrade pip setuptools wheel
 
-          now install the Aider CLI
           pip install aider-chat
 
       - name: Run Aider CLI and capture summary

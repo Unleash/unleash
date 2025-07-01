@@ -195,7 +195,7 @@ jobs:
           ${{ inputs.api_key_env_name }}: ${{ secrets.api_key_env_value }}
         run: |
           mapfile -d '' FILES < <(cat "${{ steps.find_files.outputs.file_list }}")
-          aimer --model "${{ inputs.model }}" --yes "${FILES[@]}" --message-file cleanup_prompt.txt \
+          aider --model "${{ inputs.model }}" --yes "${FILES[@]}" --message-file cleanup_prompt.txt \
             | tee aider_output.txt
 
           SUMMARY=$(sed -n '/^=== AI Flag Cleanup Summary Start ===$/,/^=== AI Flag Cleanup Summary End ===$/{
@@ -251,6 +251,6 @@ jobs:
               labels: ['unleash-ai-flag-cleanup']
             });
 
-            console.log(`Created PR #${pr.data.number}: ${pr.data.html_url}`);
+            console.log(`Created PR #${pr.number}: ${pr.html_url}`);
 
             return pr;

@@ -5,18 +5,18 @@ import { textTruncated } from 'themes/themeStyles';
 import { NameWithChangeInfo } from './NameWithChangeInfo/NameWithChangeInfo.tsx';
 import { Truncator } from 'component/common/Truncator/Truncator.tsx';
 
-interface IStrategyTooltipLinkProps {
+type ChangeStrategyNameProps = {
     name: string;
     title?: string;
     previousTitle?: string;
-}
+};
 
 const Truncated = styled('span')(() => ({
     ...textTruncated,
     maxWidth: 500,
 }));
 
-export const ChangeStrategyName: FC<IStrategyTooltipLinkProps> = ({
+export const ChangeStrategyName: FC<ChangeStrategyNameProps> = ({
     name,
     title,
     previousTitle,

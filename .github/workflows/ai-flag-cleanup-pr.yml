@@ -209,9 +209,7 @@ jobs:
             | tee aider_output.txt
 
           SUMMARY=$(sed -n '/^[[:space:]]*=== AI Flag Cleanup Summary Start ===[[:space:]]*$/,/^[[:space:]]*=== AI Flag Cleanup Summary End ===[[:space:]]*$/{
-            # delete any line that *is* a (possibly indented) marker
             /^[[:space:]]*===.*Summary (Start|End)===.*$/d
-            # print everything else *as-is*
             p
           }' aider_output.txt)
 

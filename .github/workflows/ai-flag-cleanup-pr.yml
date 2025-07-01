@@ -33,7 +33,7 @@ on:
 permissions:
   pull-requests: write
   contents: write
-  issues: read
+  issues: write
 
 jobs:
   create-pull-request:
@@ -220,9 +220,15 @@ jobs:
 
           SUMMARY=$(awk '/AI Flag Cleanup Summary/ {found=1} found' aider_output.txt)
 
-          echo "summary<<EOF" >> $GITHUB_OUTPUT
-          echo "$SUMMARY" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          echo "----- BEGIN EXTRACTED SUMMARY -----"
+          printf '%s\n' "$SUMMARY"
+          echo "----- END EXTRACTED SUMMARY -----"
+
+          {
+            echo 'summary<<EOF'
+            printf '%s\n' "$SUMMARY"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
 
       - name: Create Pull Request
         uses: actions/github-script@v7

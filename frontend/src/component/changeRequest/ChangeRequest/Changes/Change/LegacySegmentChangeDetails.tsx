@@ -82,7 +82,7 @@ export const LegacySegmentChangeDetails: FC<{
                                 color: theme.palette.error.main,
                             })}
                         >
-                            - Deleting segment:
+                            - Deleting segment
                         </Typography>
                         <SegmentTooltipLink
                             name={change.payload.name}
@@ -109,7 +109,7 @@ export const LegacySegmentChangeDetails: FC<{
                     />
                     <ChangeItemCreateEditWrapper>
                         <ChangeItemInfo>
-                            <Typography>Editing segment:</Typography>
+                            <Typography>Editing segment</Typography>
                             <SegmentTooltipLink name={change.payload.name}>
                                 <SegmentDiff
                                     change={change}

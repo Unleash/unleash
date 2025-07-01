@@ -1,8 +1,9 @@
 import type { FC } from 'react';
 import { formatStrategyName } from 'utils/strategyNames';
-import { Typography, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import { textTruncated } from 'themes/themeStyles';
 import { NameWithChangeInfo } from './NameWithChangeInfo/NameWithChangeInfo.tsx';
+import { Truncator } from 'component/common/Truncator/Truncator.tsx';
 
 interface IStrategyTooltipLinkProps {
     name: string;
@@ -10,7 +11,7 @@ interface IStrategyTooltipLinkProps {
     previousTitle?: string;
 }
 
-const Truncated = styled('div')(() => ({
+const Truncated = styled('span')(() => ({
     ...textTruncated,
     maxWidth: 500,
 }));
@@ -22,7 +23,7 @@ export const ChangeStrategyName: FC<IStrategyTooltipLinkProps> = ({
 }) => {
     return (
         <Truncated>
-            <Typography component='span'>{formatStrategyName(name)}</Typography>
+            <Truncator component='span'>{formatStrategyName(name)}</Truncator>
             <NameWithChangeInfo newName={title} previousName={previousTitle} />
         </Truncated>
     );

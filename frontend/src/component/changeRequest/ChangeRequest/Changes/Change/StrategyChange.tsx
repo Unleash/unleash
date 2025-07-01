@@ -20,6 +20,7 @@ import type { IFeatureStrategy } from 'interfaces/strategy';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
 import { ChangeStrategyName } from './ChangeStrategyName.tsx';
 import { StrategyDiff } from './StrategyDiff.tsx';
+import { AddedStrategy, ChangeItemInfo, Deleted } from './Change.styles.tsx';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -35,17 +36,6 @@ const ChangeItemCreateEditDeleteWrapper = styled(Box)(({ theme }) => ({
     marginBottom: theme.spacing(1),
     width: '100%',
 }));
-
-const ChangeItemInfo: FC<{ children?: React.ReactNode }> = styled(Box)(
-    ({ theme }) => ({
-        display: 'flex',
-        flexFlow: 'row',
-        alignItems: 'center',
-        flex: 'auto',
-        gap: theme.spacing(1),
-        '::before': { content: '"Change: "', fontWeight: 'bold' },
-    }),
-);
 
 const StyledBox: FC<{ children?: React.ReactNode }> = styled(Box)(
     ({ theme }) => ({
@@ -112,7 +102,7 @@ const EditHeader: FC<{
         return <Typography color='success.dark'>Editing strategy</Typography>;
     }
 
-    return <Typography>Editing strategy:</Typography>;
+    return <Typography>Editing strategy</Typography>;
 };
 
 const hasDiff = (object: unknown, objectToCompare: unknown) =>
@@ -141,14 +131,7 @@ const DeleteStrategy: FC<{
         <>
             <ChangeItemCreateEditDeleteWrapper>
                 <ChangeItemInfo>
-                    <Typography
-                        sx={(theme) => ({
-                            color: theme.palette.error.main,
-                            '::before': { content: '"- "' },
-                        })}
-                    >
-                        Deleting strategy
-                    </Typography>
+                    <Deleted>Deleting strategy</Deleted>
                     <ChangeStrategyName name={name || ''} title={title} />
                 </ChangeItemInfo>
                 {actions}
@@ -272,16 +255,9 @@ const AddStrategy: FC<{
     <>
         <ChangeItemCreateEditDeleteWrapper>
             <ChangeItemInfo>
-                <Typography
-                    color={
-                        change.payload?.disabled
-                            ? 'action.disabled'
-                            : 'success.dark'
-                    }
-                    sx={{ '::before': { content: '"+ "' } }}
-                >
+                <AddedStrategy disabled={change.payload?.disabled}>
                     Adding strategy
-                </Typography>
+                </AddedStrategy>
                 <ChangeStrategyName
                     name={change.payload.name}
                     title={change.payload.title}

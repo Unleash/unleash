@@ -246,8 +246,11 @@ export default class FrontendAPIController extends Controller {
         req: ApiUserRequest<unknown, unknown, FrontendApiClientSchema>,
         res: Response<string>,
     ) {
-        // Client registration is not yet supported by @unleash/proxy,
-        // but proxy clients may still expect a 200 from this endpoint.
+        await this.services.clientInstanceService.registerFrontendClient({
+            ...req.body,
+            clientIp: req.ip,
+            createdBy: req.user.username,
+        });
         res.sendStatus(200);
     }
 

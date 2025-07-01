@@ -55,7 +55,6 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
-                    registerFrontendClient: true,
                 },
             },
         },
@@ -191,10 +190,14 @@ test('should show correct application metrics', async () => {
 
 test('should report frontend application instances', async () => {
     await app.request
-        .post('/api/frontend/client/metrics')
+        .post('/api/frontend/client/register')
         .set('Authorization', frontendToken.secret)
-        .set('Unleash-Sdk', 'unleash-client-js:1.0.0')
-        .send(metrics)
+        .send({
+            appName: metrics.appName,
+            instanceId: metrics.instanceId,
+            sdkVersion: 'unleash-client-js:1.0.0',
+            environment: DEFAULT_ENV,
+        })
         .expect(200);
     await app.services.clientInstanceService.bulkAdd();
 
@@ -208,7 +211,7 @@ test('should report frontend application instances', async () => {
         instances: [
             {
                 instanceId: metrics.instanceId,
-                clientIp: null,
+                clientIp: '::ffff:127.0.0.1',
                 sdkVersion: 'unleash-client-js:1.0.0',
             },
         ],

@@ -3,10 +3,6 @@ import type { FC, ReactNode } from 'react';
 import { Box, styled, Tooltip, Typography } from '@mui/material';
 import BlockIcon from '@mui/icons-material/Block';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
-import {
-    StrategyDiff,
-    StrategyTooltipLink,
-} from '../../StrategyTooltipLink/StrategyTooltipLink.tsx';
 import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
 import type {
     ChangeRequestState,
@@ -22,6 +18,8 @@ import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureV
 import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning.tsx';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
+import { ChangeStrategyName } from './ChangeStrategyName.tsx';
+import { StrategyDiff } from './StrategyDiff.tsx';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -151,7 +149,7 @@ const DeleteStrategy: FC<{
                     >
                         Deleting strategy
                     </Typography>
-                    <StrategyTooltipLink name={name || ''} title={title} />
+                    <ChangeStrategyName name={name || ''} title={title} />
                 </ChangeItemInfo>
                 {actions}
             </ChangeItemCreateEditDeleteWrapper>
@@ -205,7 +203,7 @@ const UpdateStrategy: FC<{
                         wasDisabled={currentStrategy?.disabled}
                         willBeDisabled={change.payload?.disabled}
                     />
-                    <StrategyTooltipLink
+                    <ChangeStrategyName
                         name={change.payload.name}
                         title={change.payload.title}
                         previousTitle={previousTitle}
@@ -284,7 +282,7 @@ const AddStrategy: FC<{
                 >
                     Adding strategy
                 </Typography>
-                <StrategyTooltipLink
+                <ChangeStrategyName
                     name={change.payload.name}
                     title={change.payload.title}
                 />

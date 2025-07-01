@@ -15,7 +15,7 @@ const Truncated = styled('div')(() => ({
     maxWidth: 500,
 }));
 
-export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
+export const ChangeStrategyName: FC<IStrategyTooltipLinkProps> = ({
     name,
     title,
     previousTitle,

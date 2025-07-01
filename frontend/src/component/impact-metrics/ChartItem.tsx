@@ -10,11 +10,11 @@ import {
 } from '@mui/material';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
+import DragHandle from '@mui/icons-material/DragHandle';
 import {
     LineChart,
     NotEnoughData,
 } from '../insights/components/LineChart/LineChart.tsx';
-import { StyledChartContainer } from 'component/insights/InsightsCharts.styles';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import { usePlaceholderData } from '../insights/hooks/usePlaceholderData.js';
 import { getDisplayFormat, getTimeUnit, formatLargeNumbers } from './utils.ts';
@@ -49,11 +49,25 @@ const getConfigDescription = (config: ChartConfig): string => {
     return parts.join(' • ');
 };
 
-const StyledHeader = styled(Typography)(({ theme }) => ({
+const StyledHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     padding: theme.spacing(2, 3),
+    borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
+const StyledDragHandle = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'move',
+    padding: theme.spacing(0.5),
+    borderRadius: theme.shape.borderRadius,
+    color: theme.palette.text.secondary,
+    '&:hover': {
+        backgroundColor: theme.palette.action.hover,
+        color: theme.palette.text.primary,
+    },
 }));
 
 const StyledWidget = styled(Paper)(({ theme }) => ({
@@ -61,7 +75,36 @@ const StyledWidget = styled(Paper)(({ theme }) => ({
     boxShadow: 'none',
     display: 'flex',
     flexDirection: 'column',
+    height: '100%',
+    overflow: 'hidden',
 }));
+
+const StyledChartContent = styled(Box)({
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: 0,
+});
+
+const StyledImpactChartContainer = styled(Box)(({ theme }) => ({
+    position: 'relative',
+    minWidth: 0,
+    flexGrow: 1,
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    margin: 'auto 0',
+    padding: theme.spacing(3),
+}));
+
+const StyledChartWrapper = styled(Box)({
+    height: '100%',
+    width: '100%',
+    '& > div': {
+        height: '100% !important',
+        width: '100% !important',
+    },
+});
 
 export const ChartItem: FC<ChartItemProps> = ({ config, onEdit, onDelete }) => {
     const {
@@ -109,103 +152,127 @@ export const ChartItem: FC<ChartItemProps> = ({ config, onEdit, onDelete }) => {
     return (
         <StyledWidget>
             <StyledHeader>
-                <Box>
-                    {config.title && (
-                        <Typography variant='h6' gutterBottom>
-                            {config.title}
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+                    <StyledDragHandle className='grid-item-drag-handle'>
+                        <DragHandle fontSize='small' />
+                    </StyledDragHandle>
+                    <Box>
+                        {config.title && (
+                            <Typography variant='h6' gutterBottom>
+                                {config.title}
+                            </Typography>
+                        )}
+                        <Typography
+                            variant='body2'
+                            color='text.secondary'
+                            sx={{ mb: 1 }}
+                        >
+                            {getConfigDescription(config)}
                         </Typography>
-                    )}
-                    <Typography
-                        variant='body2'
-                        color='text.secondary'
-                        sx={{ mb: 1 }}
-                    >
-                        {getConfigDescription(config)}
-                    </Typography>
+                    </Box>
                 </Box>
                 <Box>
-                    <IconButton onClick={() => onEdit(config)} sx={{ mr: 1 }}>
-                        <Edit />
+                    <IconButton
+                        onClick={() => onEdit(config)}
+                        size='small'
+                        sx={{ mr: 1 }}
+                    >
+                        <Edit fontSize='small' />
                     </IconButton>
-                    <IconButton onClick={() => onDelete(config.id)}>
-                        <Delete />
+                    <IconButton
+                        onClick={() => onDelete(config.id)}
+                        size='small'
+                    >
+                        <Delete fontSize='small' />
                     </IconButton>
                 </Box>
             </StyledHeader>
 
-            <StyledChartContainer>
-                {hasError ? (
-                    <Alert severity='error'>
-                        Failed to load impact metrics. Please check if
-                        Prometheus is configured and the feature flag is
-                        enabled.
-                    </Alert>
-                ) : null}
-                <LineChart
-                    data={notEnoughData || isLoading ? placeholderData : data}
-                    overrideOptions={
-                        shouldShowPlaceholder
-                            ? {}
-                            : {
-                                  scales: {
-                                      x: {
-                                          type: 'time',
-                                          min: minTime?.getTime(),
-                                          max: maxTime?.getTime(),
-                                          time: {
-                                              unit: getTimeUnit(
-                                                  config.selectedRange,
-                                              ),
-                                              displayFormats: {
-                                                  [getTimeUnit(
-                                                      config.selectedRange,
-                                                  )]: getDisplayFormat(
-                                                      config.selectedRange,
-                                                  ),
+            <StyledChartContent>
+                <StyledImpactChartContainer>
+                    {hasError ? (
+                        <Alert severity='error'>
+                            Failed to load impact metrics. Please check if
+                            Prometheus is configured and the feature flag is
+                            enabled.
+                        </Alert>
+                    ) : null}
+                    <StyledChartWrapper>
+                        <LineChart
+                            data={
+                                notEnoughData || isLoading
+                                    ? placeholderData
+                                    : data
+                            }
+                            aspectRatio={1.5}
+                            overrideOptions={
+                                shouldShowPlaceholder
+                                    ? { maintainAspectRatio: false }
+                                    : {
+                                          maintainAspectRatio: false,
+                                          scales: {
+                                              x: {
+                                                  type: 'time',
+                                                  min: minTime?.getTime(),
+                                                  max: maxTime?.getTime(),
+                                                  time: {
+                                                      unit: getTimeUnit(
+                                                          config.selectedRange,
+                                                      ),
+                                                      displayFormats: {
+                                                          [getTimeUnit(
+                                                              config.selectedRange,
+                                                          )]: getDisplayFormat(
+                                                              config.selectedRange,
+                                                          ),
+                                                      },
+                                                      tooltipFormat: 'PPpp',
+                                                  },
                                               },
-                                              tooltipFormat: 'PPpp',
+                                              y: {
+                                                  beginAtZero:
+                                                      config.beginAtZero,
+                                                  title: {
+                                                      display: false,
+                                                  },
+                                                  ticks: {
+                                                      precision: 0,
+                                                      callback: (
+                                                          value: unknown,
+                                                      ): string | number =>
+                                                          typeof value ===
+                                                          'number'
+                                                              ? formatLargeNumbers(
+                                                                    value,
+                                                                )
+                                                              : (value as number),
+                                                  },
+                                              },
                                           },
-                                      },
-                                      y: {
-                                          beginAtZero: config.beginAtZero,
-                                          title: {
-                                              display: false,
+                                          plugins: {
+                                              legend: {
+                                                  display:
+                                                      timeSeriesData &&
+                                                      timeSeriesData.length > 1,
+                                                  position: 'bottom' as const,
+                                                  labels: {
+                                                      usePointStyle: true,
+                                                      boxWidth: 8,
+                                                      padding: 12,
+                                                  },
+                                              },
                                           },
-                                          ticks: {
-                                              precision: 0,
-                                              callback: (
-                                                  value: unknown,
-                                              ): string | number =>
-                                                  typeof value === 'number'
-                                                      ? formatLargeNumbers(
-                                                            value,
-                                                        )
-                                                      : (value as number),
+                                          animations: {
+                                              x: { duration: 0 },
+                                              y: { duration: 0 },
                                           },
-                                      },
-                                  },
-                                  plugins: {
-                                      legend: {
-                                          display:
-                                              timeSeriesData &&
-                                              timeSeriesData.length > 1,
-                                          position: 'bottom' as const,
-                                          labels: {
-                                              usePointStyle: true,
-                                              boxWidth: 8,
-                                              padding: 12,
-                                          },
-                                      },
-                                  },
-                                  animations: {
-                                      x: { duration: 0 },
-                                      y: { duration: 0 },
-                                  },
-                              }
-                    }
-                    cover={cover}
-                />
-            </StyledChartContainer>
+                                      }
+                            }
+                            cover={cover}
+                        />
+                    </StyledChartWrapper>
+                </StyledImpactChartContainer>
+            </StyledChartContent>
         </StyledWidget>
     );
 };

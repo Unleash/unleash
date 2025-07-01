@@ -12,7 +12,7 @@ import {
     Alert,
     styled,
 } from '@mui/material';
-import { ImpactMetricsControls } from './ImpactMetricsControls.tsx';
+import { ImpactMetricsControls } from './ImpactMetricsControls/ImpactMetricsControls.tsx';
 import {
     LineChart,
     NotEnoughData,

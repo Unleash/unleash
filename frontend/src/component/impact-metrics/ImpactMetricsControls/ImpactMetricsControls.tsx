@@ -1,29 +1,33 @@
 import type { FC } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, FormControlLabel, Checkbox } from '@mui/material';
 import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import type { ImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import { SeriesSelector } from './components/SeriesSelector.tsx';
-import { RangeSelector, type TimeRange } from './components/RangeSelector.tsx';
-import { BeginAtZeroToggle } from './components/BeginAtZeroToggle.tsx';
+import { RangeSelector } from './components/RangeSelector.tsx';
 import { LabelsFilter } from './components/LabelsFilter.tsx';
+import type { ChartFormState } from '../hooks/useChartFormState.ts';
 
 export type ImpactMetricsControlsProps = {
-    selectedSeries: string;
-    onSeriesChange: (series: string) => void;
-    selectedRange: TimeRange;
-    onRangeChange: (range: TimeRange) => void;
-    beginAtZero: boolean;
-    onBeginAtZeroChange: (beginAtZero: boolean) => void;
+    formData: ChartFormState['formData'];
+    actions: Pick<
+        ChartFormState['actions'],
+        | 'handleSeriesChange'
+        | 'setSelectedRange'
+        | 'setBeginAtZero'
+        | 'setSelectedLabels'
+    >;
     metricSeries: (ImpactMetricsSeries & { name: string })[];
     loading?: boolean;
-    selectedLabels: Record<string, string[]>;
-    onLabelsChange: (labels: Record<string, string[]>) => void;
     availableLabels?: ImpactMetricsLabels;
 };
 
-export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = (
-    props,
-) => (
+export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
+    formData,
+    actions,
+    metricSeries,
+    loading,
+    availableLabels,
+}) => (
     <Box
         sx={(theme) => ({
             display: 'flex',
@@ -39,27 +43,32 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = (
         </Typography>
 
         <SeriesSelector
-            value={props.selectedSeries}
-            onChange={props.onSeriesChange}
-            options={props.metricSeries}
-            loading={props.loading}
+            value={formData.selectedSeries}
+            onChange={actions.handleSeriesChange}
+            options={metricSeries}
+            loading={loading}
         />
 
         <RangeSelector
-            value={props.selectedRange}
-            onChange={props.onRangeChange}
+            value={formData.selectedRange}
+            onChange={actions.setSelectedRange}
         />
 
-        <BeginAtZeroToggle
-            value={props.beginAtZero}
-            onChange={props.onBeginAtZeroChange}
+        <FormControlLabel
+            control={
+                <Checkbox
+                    checked={formData.beginAtZero}
+                    onChange={(e) => actions.setBeginAtZero(e.target.checked)}
+                />
+            }
+            label='Begin at zero'
         />
 
-        {props.availableLabels && (
+        {availableLabels && (
             <LabelsFilter
-                selectedLabels={props.selectedLabels}
-                onChange={props.onLabelsChange}
-                availableLabels={props.availableLabels}
+                selectedLabels={formData.selectedLabels}
+                onChange={actions.setSelectedLabels}
+                availableLabels={availableLabels}
             />
         )}
     </Box>

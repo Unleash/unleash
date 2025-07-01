@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import { useState, useEffect } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -12,7 +11,7 @@ import {
 } from '@mui/material';
 import { ImpactMetricsControls } from './ImpactMetricsControls/ImpactMetricsControls.tsx';
 import { ImpactMetricsChartPreview } from './ImpactMetricsChartPreview.tsx';
-import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
+import { useChartFormState } from './hooks/useChartFormState.ts';
 import type { ChartConfig } from './types.ts';
 import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 
@@ -58,66 +57,18 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
     metricSeries,
     loading = false,
 }) => {
-    const [title, setTitle] = useState(initialConfig?.title || '');
-    const [selectedSeries, setSelectedSeries] = useState(
-        initialConfig?.selectedSeries || '',
-    );
-    const [selectedRange, setSelectedRange] = useState<
-        'hour' | 'day' | 'week' | 'month'
-    >(initialConfig?.selectedRange || 'day');
-    const [beginAtZero, setBeginAtZero] = useState(
-        initialConfig?.beginAtZero || false,
-    );
-    const [selectedLabels, setSelectedLabels] = useState<
-        Record<string, string[]>
-    >(initialConfig?.selectedLabels || {});
-
-    const {
-        data: { labels: currentAvailableLabels },
-    } = useImpactMetricsData(
-        selectedSeries
-            ? {
-                  series: selectedSeries,
-                  range: selectedRange,
-              }
-            : undefined,
-    );
-
-    useEffect(() => {
-        if (open && initialConfig) {
-            setTitle(initialConfig.title || '');
-            setSelectedSeries(initialConfig.selectedSeries);
-            setSelectedRange(initialConfig.selectedRange);
-            setBeginAtZero(initialConfig.beginAtZero);
-            setSelectedLabels(initialConfig.selectedLabels);
-        } else if (open && !initialConfig) {
-            setTitle('');
-            setSelectedSeries('');
-            setSelectedRange('day');
-            setBeginAtZero(false);
-            setSelectedLabels({});
-        }
-    }, [open, initialConfig]);
+    const { formData, actions, isValid, currentAvailableLabels } =
+        useChartFormState({
+            open,
+            initialConfig,
+        });
 
     const handleSave = () => {
-        if (!selectedSeries) return;
+        if (!isValid) return;
 
-        onSave({
-            title: title || undefined,
-            selectedSeries,
-            selectedRange,
-            beginAtZero,
-            selectedLabels,
-        });
+        onSave(actions.getConfigToSave());
         onClose();
     };
-
-    const handleSeriesChange = (series: string) => {
-        setSelectedSeries(series);
-        setSelectedLabels({});
-    };
-
-    const isValid = selectedSeries.length > 0;
 
     return (
         <Dialog
@@ -148,33 +99,27 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
                     <StyledConfigPanel>
                         <TextField
                             label='Chart Title (optional)'
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
+                            value={formData.title}
+                            onChange={(e) => actions.setTitle(e.target.value)}
                             fullWidth
                             variant='outlined'
                             size='small'
                         />
 
                         <ImpactMetricsControls
-                            selectedSeries={selectedSeries}
-                            onSeriesChange={handleSeriesChange}
-                            selectedRange={selectedRange}
-                            onRangeChange={setSelectedRange}
-                            beginAtZero={beginAtZero}
-                            onBeginAtZeroChange={setBeginAtZero}
+                            formData={formData}
+                            actions={actions}
                             metricSeries={metricSeries}
                             loading={loading}
-                            selectedLabels={selectedLabels}
-                            onLabelsChange={setSelectedLabels}
                             availableLabels={currentAvailableLabels}
                         />
                     </StyledConfigPanel>
                     <StyledPreviewPanel>
                         <ImpactMetricsChartPreview
-                            selectedSeries={selectedSeries}
-                            selectedRange={selectedRange}
-                            selectedLabels={selectedLabels}
-                            beginAtZero={beginAtZero}
+                            selectedSeries={formData.selectedSeries}
+                            selectedRange={formData.selectedRange}
+                            selectedLabels={formData.selectedLabels}
+                            beginAtZero={formData.beginAtZero}
                         />
                     </StyledPreviewPanel>
                 </Box>

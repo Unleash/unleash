@@ -1,11 +1,5 @@
 import type { FC } from 'react';
-import {
-    Box,
-    Autocomplete,
-    TextField,
-    Typography,
-    Chip,
-} from '@mui/material';
+import { Box, Autocomplete, TextField, Typography, Chip } from '@mui/material';
 import type { ImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 
 export type LabelsFilterProps = {
@@ -62,7 +56,9 @@ export const LabelsFilter: FC<LabelsFilterProps> = ({
                     }
                     renderTags={(value, getTagProps) =>
                         value.map((option, index) => {
-                            const { key, ...chipProps } = getTagProps({ index });
+                            const { key, ...chipProps } = getTagProps({
+                                index,
+                            });
                             return (
                                 <Chip
                                     {...chipProps}

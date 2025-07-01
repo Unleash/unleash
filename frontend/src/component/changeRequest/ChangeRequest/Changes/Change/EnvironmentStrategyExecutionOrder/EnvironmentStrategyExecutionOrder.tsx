@@ -93,7 +93,7 @@ export const EnvironmentStrategyExecutionOrder = ({
             <Tabs>
                 <ChangeItemInfo>
                     <StyledChangeHeader>
-                        <p>Updating strategy execution order to:</p>
+                        <p>Updating strategy execution order to</p>
                         <div>
                             <TabList>
                                 <Tab>Change</Tab>
@@ -140,7 +140,7 @@ export const EnvironmentStrategyExecutionOrder = ({
                         maxHeight: 600,
                     }}
                 >
-                    Updating strategy execution order to:
+                    Updating strategy execution order to
                 </TooltipLink>
                 {actions}
             </StyledChangeHeader>

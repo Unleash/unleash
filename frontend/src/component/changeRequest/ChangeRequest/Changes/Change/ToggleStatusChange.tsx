@@ -15,7 +15,7 @@ export const ToggleStatusChange: VFC<IToggleStatusChange> = ({
     return (
         <ChangeItemWrapper>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                New status:{' '}
+                New status
                 <Badge
                     sx={(theme) => ({ marginLeft: theme.spacing(1) })}
                     color={enabled ? 'success' : 'error'}

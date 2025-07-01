@@ -219,7 +219,7 @@ const AddReleasePlan: FC<{
                                     current
                                 </span>
                             </TooltipLink>{' '}
-                            release plan with:
+                            release plan with
                         </Typography>
                     ) : (
                         <Typography color='success.dark'>

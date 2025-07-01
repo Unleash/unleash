@@ -159,11 +159,11 @@ export default class FrontendAPIController extends Controller {
                     tags: ['Frontend API'],
                     summary: 'Register a client SDK',
                     description:
-                        'This is for future use. Currently Frontend client registration is not supported. Returning 200 for clients that expect this status code. If the Frontend API is disabled 404 is returned.',
+                        'Registers a frontend client SDK. If the Frontend API is disabled 404 is returned.',
                     operationId: 'registerFrontendClient',
                     requestBody: createRequestSchema('frontendApiClientSchema'),
                     responses: {
-                        200: emptyResponse,
+                        202: emptyResponse,
                         ...getStandardResponses(400, 401, 404),
                     },
                 }),
@@ -246,9 +246,11 @@ export default class FrontendAPIController extends Controller {
         req: ApiUserRequest<unknown, unknown, FrontendApiClientSchema>,
         res: Response<string>,
     ) {
-        // Client registration is not yet supported by @unleash/proxy,
-        // but proxy clients may still expect a 200 from this endpoint.
-        res.sendStatus(200);
+        this.services.frontendApiService.registerFrontendClient(
+            req.user,
+            req.body,
+        );
+        res.sendStatus(202);
     }
 
     private static createContext(req: ApiUserRequest): Context {

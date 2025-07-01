@@ -148,6 +148,24 @@ export class FrontendApiService {
         }
     }
 
+    registerFrontendClient(
+        token: IApiUser,
+        data: FrontendApiClientSchema,
+    ): void {
+        FrontendApiService.assertExpectedTokenType(token);
+
+        if (data.sdkVersion) {
+            this.services.clientInstanceService.registerFrontendClient({
+                appName: data.appName,
+                instanceId: data.instanceId,
+                sdkVersion: data.sdkVersion,
+                sdkType: 'frontend',
+                environment: data.environment,
+                projects: this.resolveProject(token),
+            });
+        }
+    }
+
     private async clientForFrontendApiToken(token: IApiUser): Promise<Unleash> {
         FrontendApiService.assertExpectedTokenType(token);
 

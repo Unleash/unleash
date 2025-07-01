@@ -15,7 +15,7 @@ const StyledGridContainer = styled('div')(({ theme }) => ({
     '& .react-grid-item': {
         transition: 'all 200ms ease',
         border: `1px solid ${theme.palette.divider}`,
-        borderRadius: theme.shape.borderRadius,
+        borderRadius: `${theme.shape.borderRadiusMedium}px`,
         backgroundColor: theme.palette.background.paper,
         overflow: 'hidden',
         '&.react-grid-item--placeholder': {
@@ -44,16 +44,15 @@ const StyledGridContainer = styled('div')(({ theme }) => ({
     },
     '& .react-resizable-handle': {
         position: 'absolute',
-        width: '20px',
-        height: '20px',
+        width: theme.spacing(3),
+        height: theme.spacing(3),
         bottom: '0px',
         right: '0px',
         cursor: 'se-resize',
-        backgroundImage: `url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMgMTdMMTcgM00zIDEzTDEzIDNNNyAxN0wxNyA3IiBzdHJva2U9IiM5OTkiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPgo=')`,
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
-        '&:hover': {
-            backgroundImage: `url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMgMTdMMTcgM00zIDEzTDEzIDNNNyAxN0wxNyA3IiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPgo=')`,
+        '&::after': {
+            display: 'none',
         },
     },
 }));
@@ -93,7 +92,6 @@ export const GridLayoutWrapper: FC<GridLayoutWrapperProps> = ({
     isResizable = true,
     compactType = 'vertical',
 }) => {
-    // Memoize layouts to prevent unnecessary re-renders
     const layouts = useMemo(() => {
         const baseLayout = items.map((item, index) => ({
             i: item.id,
@@ -133,7 +131,6 @@ export const GridLayoutWrapper: FC<GridLayoutWrapperProps> = ({
         };
     }, [items, cols]);
 
-    // Memoize children to improve performance
     const children = useMemo(
         () => items.map((item) => <div key={item.id}>{item.component}</div>),
         [items],

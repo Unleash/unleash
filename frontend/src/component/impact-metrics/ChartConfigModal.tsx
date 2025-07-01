@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -8,21 +8,11 @@ import {
     Button,
     TextField,
     Box,
-    Typography,
-    Alert,
     styled,
 } from '@mui/material';
 import { ImpactMetricsControls } from './ImpactMetricsControls/ImpactMetricsControls.tsx';
-import {
-    LineChart,
-    NotEnoughData,
-} from '../insights/components/LineChart/LineChart.tsx';
-import { StyledChartContainer } from 'component/insights/InsightsCharts.styles';
+import { ImpactMetricsChartPreview } from './ImpactMetricsChartPreview.tsx';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
-import { usePlaceholderData } from '../insights/hooks/usePlaceholderData.js';
-import { getDisplayFormat, getTimeUnit, formatLargeNumbers } from './utils.ts';
-import { fromUnixTime } from 'date-fns';
-import { useChartData } from './hooks/useChartData.ts';
 import type { ChartConfig } from './types.ts';
 import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 
@@ -82,25 +72,6 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
         Record<string, string[]>
     >(initialConfig?.selectedLabels || {});
 
-    // Data for preview
-    const {
-        data: { start, end, series: timeSeriesData },
-        loading: dataLoading,
-        error: dataError,
-    } = useImpactMetricsData(
-        selectedSeries
-            ? {
-                  series: selectedSeries,
-                  range: selectedRange,
-                  labels:
-                      Object.keys(selectedLabels).length > 0
-                          ? selectedLabels
-                          : undefined,
-              }
-            : undefined,
-    );
-
-    // Fetch available labels for the currently selected series
     const {
         data: { labels: currentAvailableLabels },
     } = useImpactMetricsData(
@@ -111,40 +82,6 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
               }
             : undefined,
     );
-
-    const placeholderData = usePlaceholderData({
-        fill: true,
-        type: 'constant',
-    });
-
-    const data = useChartData(timeSeriesData);
-
-    const hasError = !!dataError;
-    const isLoading = dataLoading;
-    const shouldShowPlaceholder = !selectedSeries || isLoading || hasError;
-    const notEnoughData = useMemo(
-        () =>
-            !isLoading &&
-            (!timeSeriesData ||
-                timeSeriesData.length === 0 ||
-                !data.datasets.some((d) => d.data.length > 1)),
-        [data, isLoading, timeSeriesData],
-    );
-
-    const minTime = start
-        ? fromUnixTime(Number.parseInt(start, 10))
-        : undefined;
-    const maxTime = end ? fromUnixTime(Number.parseInt(end, 10)) : undefined;
-
-    const placeholder = selectedSeries ? (
-        <NotEnoughData description='Send impact metrics using Unleash SDK and select data series to view the chart.' />
-    ) : (
-        <NotEnoughData
-            title='Select a metric series to view the chart.'
-            description=''
-        />
-    );
-    const cover = notEnoughData ? placeholder : isLoading;
 
     useEffect(() => {
         if (open && initialConfig) {
@@ -232,100 +169,13 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
                             availableLabels={currentAvailableLabels}
                         />
                     </StyledConfigPanel>
-
-                    {/* Preview Panel */}
                     <StyledPreviewPanel>
-                        <Typography variant='h6' color='text.secondary'>
-                            Preview
-                        </Typography>
-
-                        {!selectedSeries && !isLoading ? (
-                            <Typography variant='body2' color='text.secondary'>
-                                Select a metric series to view the preview
-                            </Typography>
-                        ) : null}
-
-                        <StyledChartContainer>
-                            {hasError ? (
-                                <Alert severity='error'>
-                                    Failed to load impact metrics. Please check
-                                    if Prometheus is configured and the feature
-                                    flag is enabled.
-                                </Alert>
-                            ) : null}
-                            <LineChart
-                                data={
-                                    notEnoughData || isLoading
-                                        ? placeholderData
-                                        : data
-                                }
-                                overrideOptions={
-                                    shouldShowPlaceholder
-                                        ? {}
-                                        : {
-                                              scales: {
-                                                  x: {
-                                                      type: 'time',
-                                                      min: minTime?.getTime(),
-                                                      max: maxTime?.getTime(),
-                                                      time: {
-                                                          unit: getTimeUnit(
-                                                              selectedRange,
-                                                          ),
-                                                          displayFormats: {
-                                                              [getTimeUnit(
-                                                                  selectedRange,
-                                                              )]:
-                                                                  getDisplayFormat(
-                                                                      selectedRange,
-                                                                  ),
-                                                          },
-                                                          tooltipFormat: 'PPpp',
-                                                      },
-                                                  },
-                                                  y: {
-                                                      beginAtZero,
-                                                      title: {
-                                                          display: false,
-                                                      },
-                                                      ticks: {
-                                                          precision: 0,
-                                                          callback: (
-                                                              value: unknown,
-                                                          ): string | number =>
-                                                              typeof value ===
-                                                              'number'
-                                                                  ? formatLargeNumbers(
-                                                                        value,
-                                                                    )
-                                                                  : (value as number),
-                                                      },
-                                                  },
-                                              },
-                                              plugins: {
-                                                  legend: {
-                                                      display:
-                                                          timeSeriesData &&
-                                                          timeSeriesData.length >
-                                                              1,
-                                                      position:
-                                                          'bottom' as const,
-                                                      labels: {
-                                                          usePointStyle: true,
-                                                          boxWidth: 8,
-                                                          padding: 12,
-                                                      },
-                                                  },
-                                              },
-                                              animations: {
-                                                  x: { duration: 0 },
-                                                  y: { duration: 0 },
-                                              },
-                                          }
-                                }
-                                cover={cover}
-                            />
-                        </StyledChartContainer>
+                        <ImpactMetricsChartPreview
+                            selectedSeries={selectedSeries}
+                            selectedRange={selectedRange}
+                            selectedLabels={selectedLabels}
+                            beginAtZero={beginAtZero}
+                        />
                     </StyledPreviewPanel>
                 </Box>
             </DialogContent>

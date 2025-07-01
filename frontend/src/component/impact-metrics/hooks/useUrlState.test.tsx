@@ -1,12 +1,12 @@
 import { render } from 'utils/testRenderer';
-import { useUrlState } from './useUrlState.ts';
+import { useImpactMetricsState } from './useImpactMetricsState.ts';
 import { Route, Routes } from 'react-router-dom';
 import { createLocalStorage } from '../../../utils/createLocalStorage.ts';
 import type { FC } from 'react';
 import type { ImpactMetricsState } from '../types.ts';
 
 const TestComponent: FC = () => {
-    const { charts, layout } = useUrlState();
+    const { charts, layout } = useImpactMetricsState();
 
     return (
         <div>

@@ -7,7 +7,7 @@ import { useImpactMetricsMetadata } from 'hooks/api/getters/useImpactMetricsMeta
 import { ChartConfigModal } from './ChartConfigModal.tsx';
 import { ChartItem } from './ChartItem.tsx';
 import { GridLayoutWrapper, type GridItem } from './GridLayoutWrapper.tsx';
-import { useUrlState } from './hooks/useUrlState.ts';
+import { useImpactMetricsState } from './hooks/useImpactMetricsState.ts';
 import type { ChartConfig, LayoutItem } from './types.ts';
 
 const StyledEmptyState = styled(Paper)(({ theme }) => ({
@@ -23,7 +23,7 @@ export const ImpactMetrics: FC = () => {
     const [editingChart, setEditingChart] = useState<ChartConfig | undefined>();
 
     const { charts, layout, addChart, updateChart, deleteChart, updateLayout } =
-        useUrlState();
+        useImpactMetricsState();
 
     const {
         metadata,

@@ -20,7 +20,7 @@ const createArrayParam = <T>() => ({
 const ChartsParam = createArrayParam<ChartConfig>();
 const LayoutParam = createArrayParam<LayoutItem>();
 
-export const useUrlState = () => {
+export const useImpactMetricsState = () => {
     const stateConfig = {
         charts: withDefault(ChartsParam, []),
         layout: withDefault(LayoutParam, []),

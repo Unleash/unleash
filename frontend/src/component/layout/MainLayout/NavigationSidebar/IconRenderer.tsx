@@ -15,6 +15,7 @@ import GroupsIcon from '@mui/icons-material/GroupsOutlined';
 import RoleIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import SettingsIcon from '@mui/icons-material/Settings';
 import InsightsIcon from '@mui/icons-material/Insights';
+import ImpactMetricsIcon from '@mui/icons-material/TrendingUpOutlined';
 import ApiAccessIcon from '@mui/icons-material/KeyOutlined';
 import SingleSignOnIcon from '@mui/icons-material/AssignmentOutlined';
 import NetworkIcon from '@mui/icons-material/HubOutlined';
@@ -44,6 +45,7 @@ const icons: Record<
 > = {
     '/search': FlagOutlinedIcon,
     '/insights': InsightsIcon,
+    '/impact-metrics': ImpactMetricsIcon,
     '/applications': ApplicationsIcon,
     '/context': ContextFieldsIcon,
     '/feature-toggle-type': FlagTypesIcon,

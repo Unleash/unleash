@@ -7,20 +7,16 @@ import { StyledContainer } from './InsightsCharts.styles.ts';
 import { LifecycleInsights } from './sections/LifecycleInsights.tsx';
 import { PerformanceInsights } from './sections/PerformanceInsights.tsx';
 import { UserInsights } from './sections/UserInsights.tsx';
-import { ImpactMetrics } from './impact-metrics/ImpactMetrics.tsx';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(2),
 }));
 
 const NewInsights: FC = () => {
-    const impactMetricsEnabled = useUiFlag('impactMetrics');
-
     return (
         <StyledWrapper>
             <InsightsHeader />
             <StyledContainer>
-                {impactMetricsEnabled ? <ImpactMetrics /> : null}
                 <LifecycleInsights />
                 <PerformanceInsights />
                 <UserInsights />

@@ -137,6 +137,17 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
+    "enterprise": true,
+    "flag": "impactMetrics",
+    "menu": {
+      "primary": true,
+    },
+    "path": "/impact-metrics",
+    "title": "Impact metrics",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
     "menu": {},
     "parent": "/applications",
     "path": "/applications/:name/*",

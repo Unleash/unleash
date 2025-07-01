@@ -12,6 +12,8 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 import { AdminMenuNavigation } from '../AdminMenu/AdminNavigationItems.tsx';
 import { ConfigurationAccordion } from './ConfigurationAccordion.tsx';
+import { useRoutes } from './useRoutes.ts';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 export const OtherLinksList = () => {
     const { uiConfig } = useUiConfig();
@@ -38,6 +40,7 @@ export const PrimaryNavigationList: FC<{
     onClick: (activeItem: string) => void;
     activeItem?: string;
 }> = ({ mode, setMode, onClick, activeItem }) => {
+    const { routes } = useRoutes();
     const PrimaryListItem = ({
         href,
         text,
@@ -53,6 +56,7 @@ export const PrimaryNavigationList: FC<{
     );
 
     const { isOss } = useUiConfig();
+    const impactMetricsEnabled = useUiFlag('impactMetrics');
 
     return (
         <List>
@@ -62,6 +66,9 @@ export const PrimaryNavigationList: FC<{
             <PrimaryListItem href='/playground' text='Playground' />
             {!isOss() ? (
                 <PrimaryListItem href='/insights' text='Analytics' />
+            ) : null}
+            {!isOss() && impactMetricsEnabled ? (
+                <PrimaryListItem href='/impact-metrics' text='Impact Metrics' />
             ) : null}
             <ConfigurationAccordion
                 mode={mode}

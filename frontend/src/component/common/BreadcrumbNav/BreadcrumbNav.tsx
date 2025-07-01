@@ -57,6 +57,10 @@ const BreadcrumbNav = () => {
         return null;
     }
 
+    if (location.pathname === '/impact-metrics') {
+        return null;
+    }
+
     if (paths.length === 1 && paths[0] === 'projects-archive') {
         // It's not possible to use `projects/archive`, because it's :projectId path
         paths = ['projects', 'archive'];

@@ -51,7 +51,6 @@ export type IFlagKey =
     | 'streaming'
     | 'etagVariant'
     | 'deltaApi'
-    | 'uniqueSdkTracking'
     | 'consumptionModel'
     | 'edgeObservability'
     | 'reportUnknownFlags'
@@ -244,10 +243,6 @@ const flags: IFlags = {
     },
     deltaApi: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DELTA_API,
-        false,
-    ),
-    uniqueSdkTracking: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_UNIQUE_SDK_TRACKING,
         false,
     ),
     consumptionModel: parseEnvVarBoolean(

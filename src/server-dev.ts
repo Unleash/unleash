@@ -49,7 +49,6 @@ process.nextTick(async () => {
                         releasePlans: false,
                         showUserDeviceCount: true,
                         deltaApi: true,
-                        uniqueSdkTracking: true,
                         strictSchemaValidation: true,
                         reportUnknownFlags: true,
                         customMetrics: true,

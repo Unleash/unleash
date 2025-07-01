@@ -231,26 +231,12 @@ export default class ClientMetricsController extends Controller {
             try {
                 const promises: Promise<void>[] = [];
                 for (const app of applications) {
-                    if (
-                        app.sdkType === 'frontend' &&
-                        typeof app.sdkVersion === 'string'
-                    ) {
-                        this.clientInstanceService.registerFrontendClient({
-                            appName: app.appName,
-                            instanceId: app.instanceId,
-                            environment: app.environment,
-                            sdkType: app.sdkType,
-                            sdkVersion: app.sdkVersion,
-                            projects: app.projects,
-                        });
-                    } else {
-                        promises.push(
-                            this.clientInstanceService.registerBackendClient(
-                                app,
-                                clientIp,
-                            ),
-                        );
-                    }
+                    promises.push(
+                        this.clientInstanceService.registerClient(
+                            app,
+                            clientIp,
+                        ),
+                    );
                 }
                 if (metrics && metrics.length > 0) {
                     const data: IClientMetricsEnv[] =

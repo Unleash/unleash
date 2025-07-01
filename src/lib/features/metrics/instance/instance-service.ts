@@ -109,20 +109,13 @@ export default class ClientInstanceService {
         };
     }
 
-    public registerFrontendClient(data: IFrontendClientApp): void {
-        data.createdBy = SYSTEM_USER.username!;
-
-        this.seenClients[this.clientKey(data)] = data;
-    }
-
-    public async registerBackendClient(
+    public async registerClient(
         data: PartialSome<IClientApp, 'instanceId'>,
         clientIp: string,
     ): Promise<void> {
         const value = await clientRegisterSchema.validateAsync(data);
         value.clientIp = clientIp;
         value.createdBy = SYSTEM_USER.username!;
-        value.sdkType = 'backend';
         this.seenClients[this.clientKey(value)] = value;
         this.eventBus.emit(CLIENT_REGISTERED, value);
 

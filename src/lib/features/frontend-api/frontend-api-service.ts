@@ -144,7 +144,10 @@ export class FrontendApiService {
                 environment: environment,
                 projects: this.resolveProject(token),
             };
-            this.services.clientInstanceService.registerFrontendClient(client);
+            await this.services.clientInstanceService.registerClient(
+                client,
+                ip,
+            );
         }
     }
 

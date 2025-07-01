@@ -194,11 +194,9 @@ jobs:
           OUTPUT=$(aider --model "${{ inputs.model }}" --yes "${FILES[@]}" --message-file cleanup_prompt.txt)
           echo "$OUTPUT" > aider_output.txt
 
-          SUMMARY=$(awk '
-            /^=== AI Flag Cleanup Summary Start ===$/ {in=1; next}
-            /^=== AI Flag Cleanup Summary End ===$/   {in=0}
-            in { print }
-          ' aider_output.txt)
+          SUMMARY=$(sed -n '/^=== AI Flag Cleanup Summary Start ===$/,/^=== AI Flag Cleanup Summary End ===$/{
+            /^===/!p
+          }' aider_output.txt)
 
           echo "summary<<EOF" >> $GITHUB_OUTPUT
           echo "$SUMMARY"       >> $GITHUB_OUTPUT

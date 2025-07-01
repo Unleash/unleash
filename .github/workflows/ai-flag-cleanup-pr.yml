@@ -44,9 +44,41 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
+      - name: Get issue
+        uses: actions/github-script@v7
+        id: get_issue
+        with:
+          script: |
+            console.log('Fetching issue #${{ inputs.issue-number }}')
+            const { repo, owner } = context.repo;
+            const result = await github.rest.issues.get({
+              owner,
+              repo,
+              issue_number: ${{ inputs.issue-number }}
+            });
+            console.log(`Fetched issue #${result.data.number}: ${result.data.title}`)
+
+            return {
+              title: result.data.title.replace(/"/g, "'").replace(/`/g, '\\`'),
+              body: result.data.body.replace(/"/g, "'").replace(/`/g, '\\`'),
+            };
+
+      - name: Extract flag name
+        id: extract_flag
+        run: |
+          TITLE="${{ fromJson(steps.get_issue.outputs.result).title }}"
+          if [[ "$TITLE" =~ Flag[[:space:]]([a-zA-Z0-9_-]+)[[:space:]]marked ]]; then
+            echo "flag-name=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Could not extract flag name from title: $TITLE"
+            exit 1
+          fi
+
       - name: Create a new branch
         uses: actions/github-script@v7
         id: create_branch
+        env:
+          FLAG_NAME: ${{ steps.extract_flag.outputs.flag-name }}
         with:
           script: |
             const kebabCase = (str) => {
@@ -70,7 +102,8 @@ jobs:
             });
 
             const { repo, owner } = context.repo;
-            const branchName = 'feature/aider-' + kebabCase(context.payload.issue.title);
+            const flagName = process.env.FLAG_NAME;
+            const branchName = `chore/unleash-ai-${kebabCase(flagName)}-flag-cleanup`;
             const refName = `refs/heads/${branchName}`
             const refShortName = `heads/${branchName}`
 
@@ -120,35 +153,6 @@ jobs:
 
             return { ref: result.data.ref }
 
-      - name: Get issue
-        uses: actions/github-script@v7
-        id: get_issue
-        with:
-          script: |
-            console.log('Fetching issue #${{ inputs.issue-number }}')
-            const { repo, owner } = context.repo;
-            const result = await github.rest.issues.get({
-              owner,
-              repo,
-              issue_number: ${{ inputs.issue-number }}
-            });
-            console.log(`Fetched issue #${result.data.number}: ${result.data.title}`)
-
-            return {
-              title: result.data.title.replace(/"/g, "'").replace(/`/g, '\\`'),
-              body: result.data.body.replace(/"/g, "'").replace(/`/g, '\\`'),
-            };
-
-      - name: Extract flag name
-        id: extract_flag
-        run: |
-          TITLE="${{ fromJson(steps.get_issue.outputs.result).title }}"
-          if [[ "$TITLE" =~ Flag[[:space:]]([a-zA-Z0-9_-]+)[[:space:]]marked ]]; then
-            echo "flag-name=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
-          else
-            echo "❌ Could not extract flag name from title: $TITLE"
-            exit 1
-          fi
 
       - name: Install ripgrep
         run: sudo apt-get update && sudo apt-get install -y ripgrep
@@ -188,13 +192,22 @@ jobs:
             --- Issue Description ---
             ${body}`;
 
+      - name: Write prompt to file
+        run: |
+          cat <<EOF > cleanup_prompt.txt
+          ${{ steps.create_prompt.outputs.result }}
+          EOF
+
       - name: Apply cleanup with Aider
         uses: mirrajabi/aider-github-action@v1.1.0
         timeout-minutes: ${{ inputs.chat-timeout }}
         with:
           branch: ${{ fromJson(steps.create_branch.outputs.result).ref }}
           model: ${{ inputs.model }}
-          aider_args: '--yes ${{ steps.find_files.outputs.file_args }} --message "${{ steps.create_prompt.outputs.result }}"'
+          aider_args: >-
+            --yes
+            ${{ steps.find_files.outputs.file_args }}
+            --message-file cleanup_prompt.txt
           api_key_env_name: ${{ inputs.api_key_env_name }}
           api_key_env_value: ${{ secrets.api_key_env_value }}
 

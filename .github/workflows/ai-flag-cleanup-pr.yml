@@ -65,11 +65,14 @@ jobs:
       - name: Extract flag name
         id: extract_flag
         run: |
-          TITLE="${{ fromJson(steps.get_issue.outputs.result).title }}"
+          read -r TITLE <<'EOF'
+          ${{ fromJson(steps.get_issue.outputs.result).title }}
+          EOF
+
           if [[ "$TITLE" =~ Flag[[:space:]]([a-zA-Z0-9_-]+)[[:space:]]marked ]]; then
             echo "flag-name=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
           else
-            echo "❌ Could not extract flag name from title: $TITLE"
+            echo "❌ Could not extract flag name from title: $TITLE" >&2
             exit 1
           fi
 
@@ -173,15 +176,11 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       - name: Install build tools & Aider
         run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential python3-dev libffi-dev
-
-          python -m pip install --upgrade pip setuptools wheel
-
+          python -m pip install --upgrade pip
           pip install aider-chat
 
       - name: Run Aider CLI and capture summary

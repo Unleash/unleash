@@ -180,14 +180,17 @@ jobs:
 
             return `Apply all necessary changes to clean up this feature flag based on the issue description below.
 
-            After making the changes, provide a Markdown summary of what was changed, written for a developer reviewing the PR. These changes should be under a "AI Flag Cleanup Summary" section.
+            After making the changes, provide a Markdown summary of what was changed, written for a developer reviewing the PR. Keep it clear, focused, and readable. Surround the summary with the following lines:
 
-            Explain:
+            === AI Flag Cleanup Summary Start ===
+            (summary goes here)
+            === AI Flag Cleanup Summary End ===
+
+            Make sure to include:
             - What was removed
             - What was kept
-            - Why these changes were made
-
-            Write a natural summary in proper Markdown. Keep it clear, focused, and readable.
+            - Why the changes were made
+            - Any other relevant information
 
             --- Issue Description ---
             ${body}`;
@@ -212,13 +215,18 @@ jobs:
           api_key_env_name: ${{ inputs.api_key_env_name }}
           api_key_env_value: ${{ secrets.api_key_env_value }}
 
+      - name: Dump Aider output
+        run: |
+          echo "Full aider output:"
+          echo "${{ steps.aider.outputs.output }}"
+
       - name: Extract summary from Aider output
         id: extract_summary
         run: |
           echo "Extracting summary from aider output..."
           echo "${{ steps.aider.outputs.output }}" > aider_output.txt
 
-          SUMMARY=$(awk '/AI Flag Cleanup Summary/ {found=1} found' aider_output.txt)
+          SUMMARY=$(awk '/^=== AI Flag Cleanup Summary Start ===$/ {found=1; next} /^=== AI Flag Cleanup Summary End ===$/ {found=0} found' aider_output.txt)
 
           echo "----- BEGIN EXTRACTED SUMMARY -----"
           printf '%s\n' "$SUMMARY"

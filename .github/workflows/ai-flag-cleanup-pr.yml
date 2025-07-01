@@ -136,12 +136,13 @@ jobs:
         id: find_files
         run: |
           FLAG="${{ steps.extract_flag.outputs.flag-name }}"
-          FILES=$(rg -0 -l "$FLAG" . | xargs -0 -I{} printf '"%s" ' "{}")
+          mapfile -d '' FILES < <(rg -0 -l "$FLAG" .)
           if [[ -z "$FILES" ]]; then
             echo "❌ No files found for flag '$FLAG'"
             exit 1
           fi
-          echo "file_args=$FILES" >> $GITHUB_OUTPUT
+          printf '%s\0' "${FILES[@]}" > file_list.bin
+          echo "file_list=./file_list.bin" >> $GITHUB_OUTPUT
 
       - name: Create prompt
         uses: actions/github-script@v7
@@ -169,7 +170,7 @@ jobs:
 
       - name: Write prompt
         run: |
-          cat <<EOF > cleanup_prompt.txt
+          cat <<'EOF' > cleanup_prompt.txt
           ${{ steps.create_prompt.outputs.result }}
           EOF
 
@@ -189,8 +190,8 @@ jobs:
         env:
           ${{ inputs.api_key_env_name }}: ${{ secrets.api_key_env_value }}
         run: |
-          FILE_ARGS=${{ steps.find_files.outputs.file_args }}
-          OUTPUT=$(aider --model "${{ inputs.model }}" --yes $FILE_ARGS --message-file cleanup_prompt.txt)
+          mapfile -d '' FILES < <(cat "${{ steps.find_files.outputs.file_list }}")
+          OUTPUT=$(aider --model "${{ inputs.model }}" --yes "${FILES[@]}" --message-file cleanup_prompt.txt)
           echo "$OUTPUT" > aider_output.txt
 
           SUMMARY=$(awk '

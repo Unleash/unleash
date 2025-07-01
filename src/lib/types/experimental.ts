@@ -55,7 +55,6 @@ export type IFlagKey =
     | 'edgeObservability'
     | 'reportUnknownFlags'
     | 'lifecycleMetrics'
-    | 'customMetrics'
     | 'createFlagDialogCache'
     | 'improvedJsonDiff'
     | 'crDiffView'

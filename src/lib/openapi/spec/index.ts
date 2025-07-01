@@ -113,6 +113,7 @@ export * from './health-overview-schema.js';
 export * from './health-report-schema.js';
 export * from './id-schema.js';
 export * from './ids-schema.js';
+export * from './impact-metrics-schema.js';
 export * from './import-toggles-schema.js';
 export * from './import-toggles-validate-item-schema.js';
 export * from './import-toggles-validate-schema.js';

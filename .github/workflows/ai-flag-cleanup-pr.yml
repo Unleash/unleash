@@ -40,20 +40,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      # 1. Initial checkout (needed to read the issue & create the branch)
       - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
 
-      # 2. Fetch the issue title & body
       - name: Get issue
         uses: actions/github-script@v7
         id: get_issue
         with:
           script: |
             console.log('Fetching issue #${{ inputs.issue-number }}')
-            const { repo, owner } = context.repo;
+            const { owner, repo } = context.repo;
             const result = await github.rest.issues.get({
               owner,
               repo,
@@ -64,7 +62,6 @@ jobs:
               body:  result.data.body.replace(/"/g, "'").replace(/`/g, '\\`')
             };
 
-      # 3. Extract the flag name from the title
       - name: Extract flag name
         id: extract_flag
         run: |
@@ -76,71 +73,62 @@ jobs:
             exit 1
           fi
 
-      # 4. Create the branch on GitHub – returns a plain string in `steps.create_branch.outputs.result`
       - name: Create a new branch
-        uses: actions/github-script@v7
         id: create_branch
+        uses: actions/github-script@v7
         env:
           FLAG_NAME: ${{ steps.extract_flag.outputs.flag-name }}
         with:
           script: |
-            // helper
-            const kebabCase = (s) => s
+            const kebab = (s) => s
               .toLowerCase().trim()
               .replace(/[^\w\s-]/g, '')
               .replace(/\s+/g, '-')
               .replace(/^-+|-+$/g, '');
 
-            const base = '${{ inputs.base-branch }}';
             const { owner, repo } = context.repo;
+            const base = '${{ inputs.base-branch }}';
             const baseBranch = await github.rest.repos.getBranch({ owner, repo, branch: base });
 
-            const branchName = `chore/unleash-ai-${kebabCase(process.env.FLAG_NAME)}-flag-cleanup`;
+            const branchName = `chore/unleash-ai-${kebab(process.env.FLAG_NAME)}-flag-cleanup`;
             const refFull  = `refs/heads/${branchName}`;
             const refShort = `heads/${branchName}`;
 
-            // if a stale ref exists, delete it:
+            // remove stale ref if it exists without branch
             const existing = await github.rest.git.getRef({ owner, repo, ref: refShort }).catch(() => null);
             if (existing) {
               try {
-                // branch exists → just return its ref
                 await github.rest.repos.getBranch({ owner, repo, branch: branchName });
-                return existing.data.ref;
+                return branchName;
               } catch {
-                // ref only, no branch → delete the ref, then fall through
                 await github.rest.git.deleteRef({ owner, repo, ref: refShort });
               }
             }
 
-            // create new branch
-            const created = await github.rest.git.createRef({
-              owner,
-              repo,
+            // create new
+            await github.rest.git.createRef({
+              owner, repo,
               ref: refFull,
               sha: baseBranch.data.commit.sha
             });
-            return created.data.ref;
+            return branchName;
 
-      # 5. Check out that new branch locally
       - name: Check out new branch
         uses: actions/checkout@v4
         with:
           ref: ${{ steps.create_branch.outputs.result }}
           fetch-depth: 0
 
-      # 6. Configure Git so Aider’s commit is valid
       - name: Configure Git
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name  "github-actions[bot]"
 
-      # 7. Install ripgrep (to search for flag usages)
       - name: Install ripgrep
         run: sudo apt-get update && sudo apt-get install -y ripgrep
 
-      # 8. Find all files referencing the flag
-      - name: Find files using the flag
+      - name: Find files
         id: find_files
         run: |
           FLAG="${{ steps.extract_flag.outputs.flag-name }}"
@@ -151,7 +139,6 @@ jobs:
           fi
           echo "file_args=$FILES" >> $GITHUB_OUTPUT
 
-      # 9. Build the AI prompt
       - name: Create prompt
         uses: actions/github-script@v7
         id: create_prompt
@@ -176,24 +163,22 @@ jobs:
             --- Issue Description ---
             ${body}`;
 
-      # 10. Write that prompt to a file
-      - name: Write prompt to file
+      - name: Write prompt
         run: |
           cat <<EOF > cleanup_prompt.txt
           ${{ steps.create_prompt.outputs.result }}
           EOF
 
-      # 11. Install Python & the Aider CLI
-      - name: Set up Python & install Aider
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
+
       - name: Install Aider
         run: |
           python -m pip install --upgrade pip
           pip install aider-chat
 
-      # 12. Run Aider, capture full output & extract summary
       - name: Run Aider CLI and capture summary
         id: run_aider
         timeout-minutes: ${{ inputs.chat-timeout }}
@@ -214,54 +199,45 @@ jobs:
           echo "$SUMMARY"       >> $GITHUB_OUTPUT
           echo "EOF"            >> $GITHUB_OUTPUT
 
-      # 13. Push Aider’s automatic commit
-      - name: Push Aider’s commit
-        run: |
-          git push -u origin HEAD
+      - name: Push commit
+        run: git push -u origin HEAD
 
-      # 14. Create (or reuse) the Pull Request with your AI summary
       - name: Create Pull Request
         uses: actions/github-script@v7
         with:
           script: |
-            const { repo, owner } = context.repo;
-            const branchRef = '${{ steps.create_branch.outputs.result }}';
-            const flagName  = '${{ steps.extract_flag.outputs.flag-name }}';
-            const summary   = `\${{ steps.run_aider.outputs.summary }}`;
+            const { owner, repo } = context.repo;
+            const branch = '${{ steps.create_branch.outputs.result }}';
+            const flag   = '${{ steps.extract_flag.outputs.flag-name }}';
+            const summary= `\${{ steps.run_aider.outputs.summary }}`;
 
             // look for an existing open PR
-            const pulls = await github.rest.pulls.list({
-              owner, repo, state: 'open', per_page: 100
-            });
-            const existing = pulls.data.find(p => p.head.ref === branchRef);
-            if (existing) {
-              console.log(`PR #${existing.number} already exists: ${existing.html_url}`);
-              return existing;
+            const prs = await github.rest.pulls.list({ owner, repo, state: 'open', per_page: 100 });
+            const hit = prs.data.find(p => p.head.ref === branch);
+            if (hit) {
+              console.log(`Reusing PR #${hit.number}: ${hit.html_url}`);
+              return hit;
             }
 
-            // create a new PR
+            // create a new one
             const body = [
-              `This PR cleans up the ${flagName} flag. These changes were automatically generated by AI and should be reviewed carefully.`,
+              `This PR cleans up the ${flag} flag. These changes were automatically generated by AI and should be reviewed carefully.`,
               '',
               `Fixes #${{ inputs.issue-number }}`,
               '',
               summary
             ].join('\n');
 
-            const newPR = await github.rest.pulls.create({
-              owner,
-              repo,
-              title: `[AI] ${flagName} flag cleanup`,
-              head: branchRef,
-              base: 'refs/heads/${{ inputs.base-branch }}',
+            const pr = await github.rest.pulls.create({
+              owner, repo,
+              title: `[AI] ${flag} flag cleanup`,
+              head:  branch,
+              base:  '${{ inputs.base-branch }}',
               body
             });
-
             await github.rest.issues.addLabels({
-              owner,
-              repo,
-              issue_number: newPR.data.number,
+              owner, repo,
+              issue_number: pr.data.number,
               labels: ['unleash-ai-flag-cleanup']
             });
-
-            console.log(`Created PR #${newPR.data.number}: ${newPR.data.html_url}`);
+            console.log(`Created PR #${pr.data.number}: ${pr.data.html_url}`);

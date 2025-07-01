@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      # 1. Initial checkout (to read the issue & create branch)
+      # 1. Initial checkout (needed to read the issue & create the branch)
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -59,13 +59,12 @@ jobs:
               repo,
               issue_number: ${{ inputs.issue-number }}
             });
-            console.log(`Fetched issue #${result.data.number}: ${result.data.title}`)
             return {
               title: result.data.title.replace(/"/g, "'").replace(/`/g, '\\`'),
-              body: result.data.body.replace(/"/g, "'").replace(/`/g, '\\`'),
+              body:  result.data.body.replace(/"/g, "'").replace(/`/g, '\\`')
             };
 
-      # 3. Parse the flag name from the title
+      # 3. Extract the flag name from the title
       - name: Extract flag name
         id: extract_flag
         run: |
@@ -77,7 +76,7 @@ jobs:
             exit 1
           fi
 
-      # 4. Create the new branch on GitHub
+      # 4. Create the branch on GitHub – returns a plain string in `steps.create_branch.outputs.result`
       - name: Create a new branch
         uses: actions/github-script@v7
         id: create_branch
@@ -85,53 +84,48 @@ jobs:
           FLAG_NAME: ${{ steps.extract_flag.outputs.flag-name }}
         with:
           script: |
-            const kebabCase = (str) => str
-              .toLowerCase()
-              .trim()
+            // helper
+            const kebabCase = (s) => s
+              .toLowerCase().trim()
               .replace(/[^\w\s-]/g, '')
               .replace(/\s+/g, '-')
               .replace(/^-+|-+$/g, '');
-            const fixUrl = (url) => url
-              .replace(/\/git\/commits/, '/commit')
-              .replace(/api.github.com\/repos/, 'github.com');
 
             const base = '${{ inputs.base-branch }}';
-            const baseBranch = await github.rest.repos.getBranch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              branch: base
-            });
+            const { owner, repo } = context.repo;
+            const baseBranch = await github.rest.repos.getBranch({ owner, repo, branch: base });
 
             const branchName = `chore/unleash-ai-${kebabCase(process.env.FLAG_NAME)}-flag-cleanup`;
-            const ref = `refs/heads/${branchName}`;
-            const short = `heads/${branchName}`;
-            const { owner, repo } = context.repo;
+            const refFull  = `refs/heads/${branchName}`;
+            const refShort = `heads/${branchName}`;
 
-            const existing = await github.rest.git.getRef({ owner, repo, ref: short })
-              .catch(() => null);
-
+            // if a stale ref exists, delete it:
+            const existing = await github.rest.git.getRef({ owner, repo, ref: refShort }).catch(() => null);
             if (existing) {
               try {
+                // branch exists → just return its ref
                 await github.rest.repos.getBranch({ owner, repo, branch: branchName });
-                console.log(`Branch ${branchName} exists at ${existing.data.object.sha}`);
-                return { ref: existing.data.ref };
+                return existing.data.ref;
               } catch {
-                console.log(`Deleting stale ref ${short}`);
-                await github.rest.git.deleteRef({ owner, repo, ref: short });
+                // ref only, no branch → delete the ref, then fall through
+                await github.rest.git.deleteRef({ owner, repo, ref: refShort });
               }
             }
 
+            // create new branch
             const created = await github.rest.git.createRef({
-              owner, repo, ref, sha: baseBranch.data.commit.sha
+              owner,
+              repo,
+              ref: refFull,
+              sha: baseBranch.data.commit.sha
             });
-            console.log(`Created ${branchName} @ ${created.data.object.sha}`);
-            return { ref: created.data.ref };
+            return created.data.ref;
 
-      # 5. Checkout that new branch locally
+      # 5. Check out that new branch locally
       - name: Check out new branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ fromJson(steps.create_branch.outputs.ref) }}
+          ref: ${{ steps.create_branch.outputs.result }}
           fetch-depth: 0
 
       # 6. Configure Git so Aider’s commit is valid
@@ -141,7 +135,7 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name  "github-actions[bot]"
 
-      # 7. Install ripgrep to find flag usages
+      # 7. Install ripgrep (to search for flag usages)
       - name: Install ripgrep
         run: sudo apt-get update && sudo apt-get install -y ripgrep
 
@@ -182,14 +176,14 @@ jobs:
             --- Issue Description ---
             ${body}`;
 
-      # 10. Write that prompt to disk
+      # 10. Write that prompt to a file
       - name: Write prompt to file
         run: |
           cat <<EOF > cleanup_prompt.txt
           ${{ steps.create_prompt.outputs.result }}
           EOF
 
-      # 11. Install Python & Aider CLI
+      # 11. Install Python & the Aider CLI
       - name: Set up Python & install Aider
         uses: actions/setup-python@v4
         with:
@@ -220,22 +214,22 @@ jobs:
           echo "$SUMMARY"       >> $GITHUB_OUTPUT
           echo "EOF"            >> $GITHUB_OUTPUT
 
-      # 13. Push the AI-made commit
+      # 13. Push Aider’s automatic commit
       - name: Push Aider’s commit
         run: |
           git push -u origin HEAD
 
-      # 14. Create or reuse the pull request
+      # 14. Create (or reuse) the Pull Request with your AI summary
       - name: Create Pull Request
         uses: actions/github-script@v7
         with:
           script: |
             const { repo, owner } = context.repo;
-            const branchRef = '${{ fromJson(steps.create_branch.outputs.ref) }}';
+            const branchRef = '${{ steps.create_branch.outputs.result }}';
             const flagName  = '${{ steps.extract_flag.outputs.flag-name }}';
             const summary   = `\${{ steps.run_aider.outputs.summary }}`;
 
-            // check for existing open PR
+            // look for an existing open PR
             const pulls = await github.rest.pulls.list({
               owner, repo, state: 'open', per_page: 100
             });
@@ -245,7 +239,7 @@ jobs:
               return existing;
             }
 
-            // otherwise create a new one
+            // create a new PR
             const body = [
               `This PR cleans up the ${flagName} flag. These changes were automatically generated by AI and should be reviewed carefully.`,
               '',
@@ -255,15 +249,19 @@ jobs:
             ].join('\n');
 
             const newPR = await github.rest.pulls.create({
-              owner, repo,
+              owner,
+              repo,
               title: `[AI] ${flagName} flag cleanup`,
               head: branchRef,
               base: 'refs/heads/${{ inputs.base-branch }}',
               body
             });
+
             await github.rest.issues.addLabels({
-              owner, repo,
+              owner,
+              repo,
               issue_number: newPR.data.number,
               labels: ['unleash-ai-flag-cleanup']
             });
+
             console.log(`Created PR #${newPR.data.number}: ${newPR.data.html_url}`);

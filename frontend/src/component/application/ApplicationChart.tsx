@@ -16,7 +16,6 @@ import WarningAmberRounded from '@mui/icons-material/WarningAmberRounded';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { getApplicationIssues } from './ApplicationIssues/ApplicationIssues.tsx';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledTable = styled('table')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
@@ -197,7 +196,6 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
     const { elementRef, width } = useElementWidth();
     const navigate = useNavigate();
     const theme = useTheme();
-    const registerFrontendClientEnabled = useUiFlag('registerFrontendClient');
 
     const mode = getApplicationIssues(data);
 

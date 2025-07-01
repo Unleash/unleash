@@ -9,7 +9,7 @@ import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { styled } from '@mui/material';
 import { textTruncated } from 'themes/themeStyles';
 import type { ISegment } from 'interfaces/segment';
-import { NameWithChangeInfo } from './NameWithChangeInfo/NameWithChangeInfo.tsx';
+import { NameWithChangeInfo } from './Changes/Change/NameWithChangeInfo/NameWithChangeInfo.tsx';
 import { EventDiff } from 'component/events/EventDiff/EventDiff.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 

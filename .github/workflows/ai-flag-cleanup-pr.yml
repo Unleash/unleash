@@ -155,7 +155,7 @@ jobs:
 
             After making the changes, provide a **Markdown summary** of what was changed, written for a developer reviewing the PR. Keep it clear, focused, and readable. Use the exact following format (including start & end separator lines, headings, bullets, emojis):
 
-
+            ```md
             === AI Flag Cleanup Summary Start ===
 
             ## 🧹 AI Flag Cleanup Summary
@@ -176,6 +176,7 @@ jobs:
             (Your reasoning for the changes made, including any relevant context or decisions that do not belong at the top of the summary.)
 
             === AI Flag Cleanup Summary End ===
+            ```
 
 
             --- Issue Description ---

@@ -230,7 +230,7 @@ export default class ClientMetricsController extends Controller {
             res.status(204).end();
         } else {
             const { body, ip: clientIp } = req;
-            const { metrics, applications } = body;
+            const { metrics, applications, impactMetrics } = body;
             try {
                 const promises: Promise<void>[] = [];
                 for (const app of applications) {
@@ -275,6 +275,17 @@ export default class ClientMetricsController extends Controller {
                     );
                     this.config.eventBus.emit(CLIENT_METRICS, data);
                 }
+
+                if (
+                    this.flagResolver.isEnabled('impactMetrics') &&
+                    impactMetrics &&
+                    impactMetrics.length > 0
+                ) {
+                    promises.push(
+                        this.metricsV2.registerImpactMetrics(impactMetrics),
+                    );
+                }
+
                 await Promise.all(promises);
 
                 res.status(202).end();

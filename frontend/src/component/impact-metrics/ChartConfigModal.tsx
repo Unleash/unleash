@@ -10,8 +10,9 @@ import {
     Box,
     Typography,
     Alert,
+    styled,
 } from '@mui/material';
-import { ImpactMetricsControls } from './ImpactMetricsControls.tsx';
+import { ImpactMetricsControls } from './ImpactMetricsControls/ImpactMetricsControls.tsx';
 import {
     LineChart,
     NotEnoughData,
@@ -24,6 +25,31 @@ import { fromUnixTime } from 'date-fns';
 import { useChartData } from './hooks/useChartData.ts';
 import type { ChartConfig } from './types.ts';
 import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
+
+export const StyledConfigPanel = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
+    [theme.breakpoints.down('lg')]: {
+        flex: 'none',
+    },
+    [theme.breakpoints.up('lg')]: {
+        flex: '0 0 400px',
+    },
+}));
+
+export const StyledPreviewPanel = styled(Box)(({ theme }) => ({
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+    [theme.breakpoints.down('lg')]: {
+        minHeight: '300px',
+    },
+    [theme.breakpoints.up('lg')]: {
+        minHeight: '400px',
+    },
+}));
 
 export interface ChartConfigModalProps {
     open: boolean;
@@ -182,15 +208,7 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
                         height: '100%',
                     })}
                 >
-                    {/* Configuration Panel */}
-                    <Box
-                        sx={(theme) => ({
-                            flex: { xs: 'none', lg: '0 0 400px' },
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: theme.spacing(3),
-                        })}
-                    >
+                    <StyledConfigPanel>
                         <TextField
                             label='Chart Title (optional)'
                             value={title}
@@ -213,18 +231,10 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
                             onLabelsChange={setSelectedLabels}
                             availableLabels={currentAvailableLabels}
                         />
-                    </Box>
+                    </StyledConfigPanel>
 
                     {/* Preview Panel */}
-                    <Box
-                        sx={(theme) => ({
-                            flex: 1,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: theme.spacing(2),
-                            minHeight: { xs: '300px', lg: '400px' },
-                        })}
-                    >
+                    <StyledPreviewPanel>
                         <Typography variant='h6' color='text.secondary'>
                             Preview
                         </Typography>
@@ -316,7 +326,7 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
                                 cover={cover}
                             />
                         </StyledChartContainer>
-                    </Box>
+                    </StyledPreviewPanel>
                 </Box>
             </DialogContent>
             <DialogActions>

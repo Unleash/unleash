@@ -93,6 +93,7 @@ export type UiFlags = {
     impactMetrics?: boolean;
     crDiffView?: boolean;
     changeRequestApproverEmails?: boolean;
+    eventGrouping?: boolean;
 };
 
 export interface IVersionInfo {

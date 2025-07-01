@@ -1,4 +1,3 @@
-import type React from 'react';
 import { useRef, useState, type FC, type ReactNode } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import type {
@@ -15,6 +14,7 @@ import { ReleasePlan } from 'component/feature/FeatureView/FeatureOverview/Relea
 import { ReleasePlanMilestone } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/ReleasePlanMilestone';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
+import { ChangeItemInfo } from './Change.styles.tsx';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -30,29 +30,6 @@ const ChangeItemCreateEditDeleteWrapper = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     marginBottom: theme.spacing(2),
     width: '100%',
-}));
-
-const ChangeItemInfo: FC<{ children?: React.ReactNode }> = styled(Box)(
-    ({ theme }) => ({
-        display: 'flex',
-        gap: theme.spacing(1),
-    }),
-);
-
-const ViewDiff = styled('span')(({ theme }) => ({
-    color: theme.palette.primary.main,
-    marginLeft: theme.spacing(1),
-}));
-
-const StyledCodeSection = styled('div')(({ theme }) => ({
-    overflowX: 'auto',
-    '& code': {
-        wordWrap: 'break-word',
-        whiteSpace: 'pre-wrap',
-        fontFamily: 'monospace',
-        lineHeight: 1.5,
-        fontSize: theme.fontSizes.smallBody,
-    },
 }));
 
 const DeleteReleasePlan: FC<{

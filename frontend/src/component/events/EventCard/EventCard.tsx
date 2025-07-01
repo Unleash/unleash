@@ -5,6 +5,7 @@ import { formatDateYMDHMS } from 'utils/formatDate';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material';
 import type { EventSchema } from 'openapi';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IEventCardProps {
     entry: EventSchema;
@@ -72,6 +73,7 @@ export const StyledCodeSection = styled('div')(({ theme }) => ({
 
 const EventCard = ({ entry }: IEventCardProps) => {
     const { locationSettings } = useLocationSettings();
+    const eventGroupingEnabled = useUiFlag('eventGrouping');
 
     const createdAtFormatted = formatDateYMDHMS(
         entry.createdAt,
@@ -135,6 +137,26 @@ const EventCard = ({ entry }: IEventCardProps) => {
                                 Environment:
                             </StyledDefinitionTerm>
                             <dd>{entry.environment}</dd>
+                        </>
+                    }
+                />
+                <ConditionallyRender
+                    condition={
+                        eventGroupingEnabled &&
+                        Boolean(entry.data?.changeRequestId)
+                    }
+                    show={
+                        <>
+                            <StyledDefinitionTerm>
+                                Change request id:
+                            </StyledDefinitionTerm>
+                            <dd>
+                                <Link
+                                    to={`/projects/${entry.project}/change-requests/${entry.data?.changeRequestId}`}
+                                >
+                                    {String(entry.data?.changeRequestId)}
+                                </Link>
+                            </dd>
                         </>
                     }
                 />

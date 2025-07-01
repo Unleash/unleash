@@ -208,11 +208,9 @@ jobs:
           aider --model "${{ inputs.model }}" --yes "${FILES[@]}" --message-file cleanup_prompt.txt \
             | tee aider_output.txt
 
-          SUMMARY=$(sed -n -e '/^[[:space:]]*=== AI Flag Cleanup Summary Start ===[[:space:]]*$/,/^[[:space:]]*=== AI Flag Cleanup Summary End ===[[:space:]]*$/{
-            /^[[:space:]]*===/!{
-              s/^[[:space:]]*//
-              p
-            }
+          SUMMARY=$(sed -n '/^=== AI Flag Cleanup Summary Start ===$/,/^=== AI Flag Cleanup Summary End ===$/{
+            /^===/d
+            p
           }' aider_output.txt)
 
           echo "summary<<EOF" >> $GITHUB_OUTPUT

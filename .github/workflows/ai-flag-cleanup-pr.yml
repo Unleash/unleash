@@ -79,6 +79,7 @@ jobs:
         env:
           FLAG_NAME: ${{ steps.extract_flag.outputs.flag-name }}
         with:
+          result-encoding: string
           script: |
             const kebab = (s) => s
               .toLowerCase().trim()

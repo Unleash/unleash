@@ -155,9 +155,13 @@ jobs:
 
             After making the changes, provide a Markdown summary of what was changed, written for a developer reviewing the PR. Keep it clear, focused, and readable. Surround the summary with the following lines:
 
+
             === AI Flag Cleanup Summary Start ===
+
             (summary goes here)
+
             === AI Flag Cleanup Summary End ===
+
 
             Make sure to include:
             - What was removed
@@ -191,8 +195,8 @@ jobs:
           ${{ inputs.api_key_env_name }}: ${{ secrets.api_key_env_value }}
         run: |
           mapfile -d '' FILES < <(cat "${{ steps.find_files.outputs.file_list }}")
-          OUTPUT=$(aider --model "${{ inputs.model }}" --yes "${FILES[@]}" --message-file cleanup_prompt.txt)
-          echo "$OUTPUT" > aider_output.txt
+          aimer --model "${{ inputs.model }}" --yes "${FILES[@]}" --message-file cleanup_prompt.txt \
+            | tee aider_output.txt
 
           SUMMARY=$(sed -n '/^=== AI Flag Cleanup Summary Start ===$/,/^=== AI Flag Cleanup Summary End ===$/{
             /^===/!p
@@ -201,11 +205,6 @@ jobs:
           echo "summary<<EOF" >> $GITHUB_OUTPUT
           echo "$SUMMARY"       >> $GITHUB_OUTPUT
           echo "EOF"            >> $GITHUB_OUTPUT
-
-      - name: Dump full Aider output
-        run: |
-          echo "=== Full Aider output ==="
-          cat aider_output.txt
 
       - name: Push commit
         run: git push -u origin HEAD

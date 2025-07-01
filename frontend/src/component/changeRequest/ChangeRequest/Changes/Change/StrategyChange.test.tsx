@@ -27,6 +27,12 @@ const strategy = {
 };
 
 const setupApi = () => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: {
+            improvedJsonDiff: true,
+        },
+    });
+
     testServerRoute(
         server,
         `/api/admin/projects/${projectId}/features/${feature}`,
@@ -120,9 +126,13 @@ test('Editing strategy before change request is applied diffs against current st
         name: 'View diff',
     });
     await userEvent.click(viewDiff);
-    await screen.findByText(`- parameters.rollout: "${currentRollout}"`);
-    await screen.findByText('- variants.0.name: "current_variant"');
-    await screen.findByText('+ variants.0.name: "change_variant"');
+
+    const rollout = await screen.findByText(`rollout: "${currentRollout}"`);
+    expect(rollout).toHaveClass('deletion');
+    const oldName = await screen.findByText('name: "current_variant"');
+    expect(oldName).toHaveClass('deletion');
+    const newName = await screen.findByText('name: "change_variant"');
+    expect(newName).toHaveClass('addition');
 });
 
 test('Editing strategy after change request is applied diffs against the snapshot', async () => {
@@ -192,10 +202,18 @@ test('Editing strategy after change request is applied diffs against the snapsho
         name: 'View diff',
     });
     await userEvent.click(viewDiff);
-    await screen.findByText(`- parameters.rollout: "${snapshotRollout}"`);
-    await screen.findByText(`+ parameters.rollout: "${changeRequestRollout}"`);
-    await screen.findByText('- variants.0.name: "snapshot_variant"');
-    await screen.findByText('+ variants.0.name: "change_variant"');
+
+    const oldRollout = await screen.findByText(`rollout: "${snapshotRollout}"`);
+    expect(oldRollout).toHaveClass('deletion');
+    const newRollout = await screen.findByText(
+        `rollout: "${changeRequestRollout}"`,
+    );
+
+    expect(newRollout).toHaveClass('addition');
+    const oldName = await screen.findByText('name: "snapshot_variant"');
+    expect(oldName).toHaveClass('deletion');
+    const newName = await screen.findByText('name: "change_variant"');
+    expect(newName).toHaveClass('addition');
 });
 
 test('Deleting strategy before change request is applied diffs against current strategy', async () => {
@@ -234,7 +252,8 @@ test('Deleting strategy before change request is applied diffs against current s
         name: 'View diff',
     });
     await userEvent.click(viewDiff);
-    await screen.findByText('- constraints (deleted)');
+    const element = await screen.findByText('name: "flexibleRollout"');
+    expect(element).toHaveClass('deletion');
 });
 
 test('Deleting strategy after change request is applied diffs against the snapshot', async () => {
@@ -290,7 +309,9 @@ test('Deleting strategy after change request is applied diffs against the snapsh
         name: 'View diff',
     });
     await userEvent.click(viewDiff);
-    await screen.findByText('- constraints (deleted)');
+
+    const element = await screen.findByText('name: "snapshot_variant"');
+    expect(element).toHaveClass('deletion');
 });
 
 test('Adding strategy always diffs against undefined strategy', async () => {
@@ -341,7 +362,9 @@ test('Adding strategy always diffs against undefined strategy', async () => {
         name: 'View diff',
     });
     await userEvent.click(viewDiff);
-    await screen.findByText(`+ name: "flexibleRollout"`);
+
+    const element = await screen.findByText('name: "flexibleRollout"');
+    expect(element).toHaveClass('addition');
 });
 
 test('Segments order does not matter for diff calculation', async () => {
@@ -378,5 +401,7 @@ test('Segments order does not matter for diff calculation', async () => {
         name: 'View diff',
     });
     await userEvent.click(viewDiff);
-    await screen.findByText('(no changes)');
+
+    const segmentsChangeElement = screen.queryByText('segments: [');
+    expect(segmentsChangeElement).not.toBeInTheDocument();
 });

@@ -151,7 +151,7 @@ jobs:
           result-encoding: string
           script: |
             const body = `${{ fromJson(steps.get_issue.outputs.result).body }}`;
-            return `Apply all necessary changes to clean up this feature flag based on the issue description below.
+            return `Based on the issue description below, refactor the codebase to permanently apply the desired outcome for this feature flag (e.g. enable, keep variant, or discard), by removing all conditional checks and dead branches, preserving only the correct code path.
 
             After making the changes, provide a **Markdown summary** of what was changed, written for a developer reviewing the PR. Keep it clear, focused, and readable. Use the exact following format (including start & end separator lines, headings, bullets, emojis):
 

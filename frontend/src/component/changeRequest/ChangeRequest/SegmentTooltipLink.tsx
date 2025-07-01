@@ -1,18 +1,16 @@
-// deprecated: remove with flag crDiffView
 import type {
     IChangeRequestDeleteSegment,
     IChangeRequestUpdateSegment,
 } from 'component/changeRequest/changeRequest.types';
 import type React from 'react';
-import { Fragment, type FC } from 'react';
+import type { FC } from 'react';
+import { EventDiff } from 'component/events/EventDiff/EventDiff';
 import omit from 'lodash.omit';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { styled } from '@mui/material';
 import { textTruncated } from 'themes/themeStyles';
 import type { ISegment } from 'interfaces/segment';
 import { NameWithChangeInfo } from './Changes/Change/NameWithChangeInfo/NameWithChangeInfo.tsx';
-import { EventDiff } from 'component/events/EventDiff/EventDiff.tsx';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',
@@ -25,32 +23,22 @@ const StyledCodeSection = styled('div')(({ theme }) => ({
     },
 }));
 
-const omitIfDefined = (obj: any, keys: string[]) =>
-    obj ? omit(obj, keys) : obj;
-
 export const SegmentDiff: FC<{
     change: IChangeRequestUpdateSegment | IChangeRequestDeleteSegment;
     currentSegment?: ISegment;
 }> = ({ change, currentSegment }) => {
-    const useNewDiff = useUiFlag('improvedJsonDiff');
-    const Wrapper = useNewDiff ? Fragment : StyledCodeSection;
-    const omissionFunction = useNewDiff ? omitIfDefined : omit;
-
     const changeRequestSegment =
         change.action === 'deleteSegment' ? undefined : change.payload;
 
     return (
-        <Wrapper>
+        <StyledCodeSection>
             <EventDiff
                 entry={{
-                    preData: omissionFunction(currentSegment, [
-                        'createdAt',
-                        'createdBy',
-                    ]),
-                    data: omissionFunction(changeRequestSegment, ['snapshot']),
+                    preData: omit(currentSegment, ['createdAt', 'createdBy']),
+                    data: omit(changeRequestSegment, ['snapshot']),
                 }}
             />
-        </Wrapper>
+        </StyledCodeSection>
     );
 };
 interface IStrategyTooltipLinkProps {

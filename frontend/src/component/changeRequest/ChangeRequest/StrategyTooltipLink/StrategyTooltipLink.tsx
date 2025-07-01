@@ -4,7 +4,7 @@ import type {
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import type React from 'react';
-import { Fragment, type FC } from 'react';
+import type { FC } from 'react';
 import {
     formatStrategyName,
     GetFeatureStrategyIcon,
@@ -15,7 +15,6 @@ import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { Typography, styled } from '@mui/material';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { textTruncated } from 'themes/themeStyles';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { NameWithChangeInfo } from '../Changes/Change/NameWithChangeInfo/NameWithChangeInfo.tsx';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
@@ -41,9 +40,6 @@ const sortSegments = <T extends { segments?: number[] }>(
     };
 };
 
-const omitIfDefined = (obj: any, keys: string[]) =>
-    obj ? omit(obj, keys) : obj;
-
 export const StrategyDiff: FC<{
     change:
         | IChangeRequestAddStrategy
@@ -51,28 +47,21 @@ export const StrategyDiff: FC<{
         | IChangeRequestDeleteStrategy;
     currentStrategy?: IFeatureStrategy;
 }> = ({ change, currentStrategy }) => {
-    const useNewDiff = useUiFlag('improvedJsonDiff');
     const changeRequestStrategy =
         change.action === 'deleteStrategy' ? undefined : change.payload;
 
     const sortedCurrentStrategy = sortSegments(currentStrategy);
     const sortedChangeRequestStrategy = sortSegments(changeRequestStrategy);
 
-    const Wrapper = useNewDiff ? Fragment : StyledCodeSection;
-    const omissionFunction = useNewDiff ? omitIfDefined : omit;
     return (
-        <Wrapper>
+        <StyledCodeSection>
             <EventDiff
                 entry={{
-                    preData: omissionFunction(sortedCurrentStrategy, [
-                        'sortOrder',
-                    ]),
-                    data: omissionFunction(sortedChangeRequestStrategy, [
-                        'snapshot',
-                    ]),
+                    preData: omit(sortedCurrentStrategy, 'sortOrder'),
+                    data: omit(sortedChangeRequestStrategy, 'snapshot'),
                 }}
             />
-        </Wrapper>
+        </StyledCodeSection>
     );
 };
 

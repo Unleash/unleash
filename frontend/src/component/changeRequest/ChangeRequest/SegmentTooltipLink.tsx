@@ -1,3 +1,4 @@
+// deprecated: remove with flag crDiffView
 import type {
     IChangeRequestDeleteSegment,
     IChangeRequestUpdateSegment,

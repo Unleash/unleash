@@ -153,21 +153,30 @@ jobs:
             const body = `${{ fromJson(steps.get_issue.outputs.result).body }}`;
             return `Apply all necessary changes to clean up this feature flag based on the issue description below.
 
-            After making the changes, provide a Markdown summary of what was changed, written for a developer reviewing the PR. Keep it clear, focused, and readable. Surround the summary with the following lines:
+            After making the changes, provide a **Markdown summary** of what was changed, written for a developer reviewing the PR. Keep it clear, focused, and readable. Use the exact following format (including start & end separator lines, headings, bullets, emojis):
 
 
             === AI Flag Cleanup Summary Start ===
 
-            (summary goes here)
+            ## 🧹 AI Flag Cleanup Summary
+
+            (Short summary of the changes made)
+
+            (Include any details that you think are critical for the reviewer to know, if any, prefixing them with an appropriate emoji)
+
+            ### 🚮 Removed
+            - **(Category)**
+              - (list of removed items)
+
+            ### 🛠 Kept
+            - **(Category)**
+              - (list of kept items)
+
+            ### 📝 Why
+            (Your reasoning for the changes made, including any relevant context or decisions that do not belong at the top of the summary.)
 
             === AI Flag Cleanup Summary End ===
 
-
-            Make sure to include:
-            - What was removed
-            - What was kept
-            - Why the changes were made
-            - Any other relevant information
 
             --- Issue Description ---
             ${body}`;

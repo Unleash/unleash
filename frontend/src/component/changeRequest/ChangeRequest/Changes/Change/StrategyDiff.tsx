@@ -1,17 +1,12 @@
-// deprecated. Remove with flag crDiffView
 import type {
     IChangeRequestAddStrategy,
     IChangeRequestDeleteStrategy,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import type { FC } from 'react';
-import { formatStrategyName } from 'utils/strategyNames';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
 import omit from 'lodash.omit';
-import { Typography, styled } from '@mui/material';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { textTruncated } from 'themes/themeStyles';
-import { NameWithChangeInfo } from '../Changes/Change/NameWithChangeInfo/NameWithChangeInfo.tsx';
 
 const sortSegments = <T extends { segments?: number[] }>(
     item?: T,
@@ -48,29 +43,5 @@ export const StrategyDiff: FC<{
                 data: omitIfDefined(sortedChangeRequestStrategy, ['snapshot']),
             }}
         />
-    );
-};
-
-interface IStrategyTooltipLinkProps {
-    name: string;
-    title?: string;
-    previousTitle?: string;
-}
-
-const Truncated = styled('div')(() => ({
-    ...textTruncated,
-    maxWidth: 500,
-}));
-
-export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
-    name,
-    title,
-    previousTitle,
-}) => {
-    return (
-        <Truncated>
-            <Typography component='span'>{formatStrategyName(name)}</Typography>
-            <NameWithChangeInfo newName={title} previousName={previousTitle} />
-        </Truncated>
     );
 };

@@ -202,24 +202,29 @@ jobs:
           echo "$SUMMARY"       >> $GITHUB_OUTPUT
           echo "EOF"            >> $GITHUB_OUTPUT
 
+      - name: Dump full Aider output
+        run: |
+          echo "=== Full Aider output ==="
+          cat aider_output.txt
+
       - name: Push commit
         run: git push -u origin HEAD
 
       - name: Create Pull Request
         uses: actions/github-script@v7
         with:
+          result-encoding: string
           script: |
             const { owner, repo } = context.repo;
-            const branch = '${{ steps.create_branch.outputs.result }}';
-            const flag   = '${{ steps.extract_flag.outputs.flag-name }}';
-            const summary= `\${{ steps.run_aider.outputs.summary }}`;
+            const branch  = '${{ steps.create_branch.outputs.result }}';
+            const flag    = '${{ steps.extract_flag.outputs.flag-name }}';
+            const summary = `\${{ steps.run_aider.outputs.summary }}`;
 
             // look for an existing open PR
-            const prs = await github.rest.pulls.list({ owner, repo, state: 'open', per_page: 100 });
-            const hit = prs.data.find(p => p.head.ref === branch);
-            if (hit) {
-              console.log(`Reusing PR #${hit.number}: ${hit.html_url}`);
-              return hit;
+            const { data: prs } = await github.rest.pulls.list({ owner, repo, state: 'open', per_page: 100 });
+            const existing = prs.find(p => p.head.ref === branch);
+            if (existing) {
+              return existing;
             }
 
             // create a new one
@@ -231,16 +236,20 @@ jobs:
               summary
             ].join('\n');
 
-            const pr = await github.rest.pulls.create({
-              owner, repo,
+            const { data: pr } = await github.rest.pulls.create({
+              owner,
+              repo,
               title: `[AI] ${flag} flag cleanup`,
-              head:  branch,
-              base:  '${{ inputs.base-branch }}',
+              head: branch,
+              base: '${{ inputs.base-branch }}',
               body
             });
+
             await github.rest.issues.addLabels({
-              owner, repo,
-              issue_number: pr.data.number,
+              owner,
+              repo,
+              issue_number: pr.number,
               labels: ['unleash-ai-flag-cleanup']
             });
-            console.log(`Created PR #${pr.data.number}: ${pr.data.html_url}`);
+
+            return pr;

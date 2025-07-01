@@ -217,7 +217,7 @@ jobs:
             const { owner, repo } = context.repo;
             const branch  = '${{ steps.create_branch.outputs.result }}';
             const flag    = '${{ steps.extract_flag.outputs.flag-name }}';
-            const summary = `\${{ steps.run_aider.outputs.summary }}`;
+            const summary = ${{ toJson(steps.run_aider.outputs.summary) }};
 
             // look for an existing open PR
             const { data: prs } = await github.rest.pulls.list({ owner, repo, state: 'open', per_page: 100 });
@@ -250,5 +250,7 @@ jobs:
               issue_number: pr.number,
               labels: ['unleash-ai-flag-cleanup']
             });
+
+            console.log(`Created PR #${pr.data.number}: ${pr.data.html_url}`);
 
             return pr;

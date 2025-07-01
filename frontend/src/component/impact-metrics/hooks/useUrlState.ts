@@ -63,21 +63,22 @@ export const useUrlState = () => {
                       )
                     : 0;
 
-            const newLayoutItem: LayoutItem = {
-                i: newChart.id,
-                x: 0,
-                y: maxY,
-                w: 6,
-                h: 4,
-                minW: 4,
-                minH: 2,
-                maxW: 12,
-                maxH: 8,
-            };
-
             updateState({
                 charts: [...currentState.charts, newChart],
-                layout: [...currentState.layout, newLayoutItem],
+                layout: [
+                    ...currentState.layout,
+                    {
+                        i: newChart.id,
+                        x: 0,
+                        y: maxY,
+                        w: 6,
+                        h: 4,
+                        minW: 4,
+                        minH: 2,
+                        maxW: 12,
+                        maxH: 8,
+                    },
+                ],
             });
         },
         [currentState.charts, currentState.layout, updateState],

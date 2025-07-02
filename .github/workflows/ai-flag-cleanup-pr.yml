@@ -147,8 +147,8 @@ jobs:
           APP_ID: ${{ secrets.UNLEASH_BOT_APP_ID }}
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git config --global user.email "${APP_ID}+unleash-ai-flag-cleanup[bot]@users.noreply.github.com"
-          git config --global user.name  "unleash-ai-flag-cleanup[bot]"
+          git config --global user.email "${APP_ID}+unleash-bot[bot]@users.noreply.github.com"
+          git config --global user.name  "unleash-bot[bot]"
 
       - name: Install ripgrep
         run: sudo apt-get update && sudo apt-get install -y ripgrep
@@ -226,7 +226,7 @@ jobs:
           ${{ inputs.api_key_env_name }}: ${{ secrets.api_key_env_value }}
         run: |
           mapfile -d '' FILES < <(cat "${{ steps.find_files.outputs.file_list }}")
-          aider --model "${{ inputs.model }}" --yes "${FILES[@]}" --message-file cleanup_prompt.txt \
+          aider --model "${{ inputs.model }}" --yes "${FILES[@]}" --message-file cleanup_prompt.txt --no-attribute-author --no-attribute-committer \
             | tee aider_output.txt
 
           SUMMARY=$(sed -n '/=== AI Flag Cleanup Summary Start ===/,/=== AI Flag Cleanup Summary End ===/{

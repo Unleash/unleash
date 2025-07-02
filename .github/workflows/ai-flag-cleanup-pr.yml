@@ -58,12 +58,13 @@ jobs:
           ref:                 ${{ github.ref }}
           token:               ${{ steps.app_token.outputs.token }}
           fetch-depth:         0
-          persist-credentials: true
+          persist-credentials: false
 
       - name: Get issue
         uses: actions/github-script@v7
         id: get_issue
         with:
+          github-token: ${{ steps.app_token.outputs.token }}
           script: |
             console.log('Fetching issue #${{ inputs.issue-number }}')
             const { owner, repo } = context.repo;
@@ -97,6 +98,7 @@ jobs:
         env:
           FLAG_NAME: ${{ steps.extract_flag.outputs.flag-name }}
         with:
+          github-token: ${{ steps.app_token.outputs.token }}
           result-encoding: string
           script: |
             const kebab = (s) => s
@@ -138,7 +140,7 @@ jobs:
           ref:                 ${{ steps.create_branch.outputs.result }}
           token:               ${{ steps.app_token.outputs.token }}
           fetch-depth:         0
-          persist-credentials: true
+          persist-credentials: false
 
       - name: Configure Git
         env:
@@ -164,42 +166,39 @@ jobs:
           echo "file_list=./file_list.bin" >> $GITHUB_OUTPUT
 
       - name: Create prompt
-        uses: actions/github-script@v7
         id: create_prompt
-        with:
-          result-encoding: string
-          script: |
-            const body = `${{ fromJson(steps.get_issue.outputs.result).body }}`;
-            return `Based on the issue description below, refactor the codebase to permanently apply the desired outcome for this feature flag (e.g. enable, keep variant, or discard), by removing all conditional checks and dead branches, preserving only the correct code path.
+        run: |
+          const body = `${{ fromJson(steps.get_issue.outputs.result).body }}`;
+          return `Based on the issue description below, refactor the codebase to permanently apply the desired outcome for this feature flag (e.g. enable, keep variant, or discard), by removing all conditional checks and dead branches, preserving only the correct code path.
 
-            After making the changes, provide a **Markdown summary** of what was changed, written for a developer reviewing the PR. Keep it clear, focused, and readable. Use the exact following format (including start & end separator lines, headings, bullets, emojis):
+          After making the changes, provide a **Markdown summary** of what was changed, written for a developer reviewing the PR. Keep it clear, focused, and readable. Use the exact following format (including start & end separator lines, headings, bullets, emojis):
 
-            \`\`\`md
-            === AI Flag Cleanup Summary Start ===
+          \`\`\`md
+          === AI Flag Cleanup Summary Start ===
 
-            ## 🧹 AI Flag Cleanup Summary
+          ## 🧹 AI Flag Cleanup Summary
 
-            (Short summary of the changes made)
+          (Short summary of the changes made)
 
-            (Include any details that you think are critical for the reviewer to know, if any, prefixing them with an appropriate emoji)
+          (Include any details that you think are critical for the reviewer to know, if any, prefixing them with an appropriate emoji)
 
-            ### 🚮 Removed
-            - **(Category)**
-              - (list of removed items)
+          ### 🚮 Removed
+          - **(Category)**
+            - (list of removed items)
 
-            ### 🛠 Kept
-            - **(Category)**
-              - (list of kept items)
+          ### 🛠 Kept
+          - **(Category)**
+            - (list of kept items)
 
-            ### 📝 Why
-            (Your reasoning for the changes made, including any relevant context or decisions that do not belong at the top of the summary.)
+          ### 📝 Why
+          (Your reasoning for the changes made, including any relevant context or decisions that do not belong at the top of the summary.)
 
-            === AI Flag Cleanup Summary End ===
-            \`\`\`
+          === AI Flag Cleanup Summary End ===
+          \`\`\`
 
 
-            --- Issue Description ---
-            ${body}`;
+          --- Issue Description ---
+          ${body}`;
 
       - name: Write prompt
         run: |
@@ -243,6 +242,7 @@ jobs:
       - name: Create Pull Request
         uses: actions/github-script@v7
         with:
+          github-token: ${{ steps.app_token.outputs.token }}
           result-encoding: string
           script: |
             const { owner, repo } = context.repo;

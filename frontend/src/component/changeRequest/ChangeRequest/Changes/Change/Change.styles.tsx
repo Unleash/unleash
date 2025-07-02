@@ -1,6 +1,7 @@
 import { styled, Typography, type TypographyProps } from '@mui/material';
 import type { FC, PropsWithChildren } from 'react';
 
+// todo: consider using these
 export const Action: FC<TypographyProps> = ({ children, ...props }) => (
     <Typography component='span' {...props}>
         {children}

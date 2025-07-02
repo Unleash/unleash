@@ -35,6 +35,7 @@ const ChangeItemCreateEditDeleteWrapper = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     marginBottom: theme.spacing(1),
     width: '100%',
+    flexFlow: 'row wrap',
 }));
 
 const StyledBox: FC<{ children?: React.ReactNode }> = styled(Box)(
@@ -324,13 +325,13 @@ export const StrategyChange: FC<{
     );
 
     const actionsWithTabs = (
-        <>
+        <div>
             <TabList>
                 <Tab>Change</Tab>
                 <Tab>View diff</Tab>
             </TabList>
             {actions}
-        </>
+        </div>
     );
 
     return (

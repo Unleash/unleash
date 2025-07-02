@@ -299,6 +299,13 @@ const AddStrategy: FC<{
     </>
 );
 
+const ActionsContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row wrap',
+    alignItems: 'center',
+    columnGap: theme.spacing(1),
+}));
+
 export const StrategyChange: FC<{
     actions?: ReactNode;
     change:
@@ -325,13 +332,13 @@ export const StrategyChange: FC<{
     );
 
     const actionsWithTabs = (
-        <div>
+        <ActionsContainer>
             <TabList>
                 <Tab>Change</Tab>
                 <Tab>View diff</Tab>
             </TabList>
             {actions}
-        </div>
+        </ActionsContainer>
     );
 
     return (

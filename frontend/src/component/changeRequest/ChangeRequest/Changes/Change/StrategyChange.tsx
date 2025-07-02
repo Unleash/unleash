@@ -55,7 +55,7 @@ const DisabledEnabledState: FC<{ show?: boolean; disabled: boolean }> = ({
     if (disabled) {
         return (
             <Tooltip
-                title='This strategy will not be taken into account when evaluating feature flag.'
+                title='This strategy will not be taken into account when evaluating the feature flag.'
                 arrow
                 sx={{ cursor: 'pointer' }}
             >
@@ -68,7 +68,7 @@ const DisabledEnabledState: FC<{ show?: boolean; disabled: boolean }> = ({
 
     return (
         <Tooltip
-            title='This was disabled before and with this change it will be taken into account when evaluating feature flag.'
+            title='This strategy was disabled before. With this change, it will be taken into account when evaluating the feature flag.'
             arrow
             sx={{ cursor: 'pointer' }}
         >

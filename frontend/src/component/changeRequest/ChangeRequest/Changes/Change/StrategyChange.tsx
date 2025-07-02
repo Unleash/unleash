@@ -22,12 +22,6 @@ import { ChangeStrategyName } from './ChangeStrategyName.tsx';
 import { StrategyDiff } from './StrategyDiff.tsx';
 import { ChangeItemInfo } from './Change.styles.tsx';
 
-export const ChangeItemWrapper = styled(Box)({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-});
-
 const ChangeItemCreateEditDeleteWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
@@ -266,9 +260,10 @@ const AddStrategy: FC<{
                             ? 'text.secondary'
                             : 'success.dark'
                     }
+                    component='span'
                 >
                     + Adding strategy
-                </Typography>
+                </Typography>{' '}
                 <ChangeStrategyName
                     name={change.payload.name}
                     title={change.payload.title}

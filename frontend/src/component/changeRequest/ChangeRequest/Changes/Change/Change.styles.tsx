@@ -33,12 +33,13 @@ export const ChangeItemInfo = styled(
         </Typography>
     ),
 )(({ theme }) => ({
-    // display: 'flex',
-    // justifyItems: 'flex-start',
-    // flexFlow: 'row',
-    // alignItems: 'center',
-    // flex: 'auto',
-    // gap: `1ch`,
+    display: 'flex',
+    justifyItems: 'flex-start',
+    flexFlow: 'row wrap',
+    alignItems: 'center',
+    flex: 'auto',
+    columnGap: `1ch`,
+    rowGap: theme.spacing(1),
 }));
 
 export const ChangeItemWrapper = styled('div')(({ theme }) => ({

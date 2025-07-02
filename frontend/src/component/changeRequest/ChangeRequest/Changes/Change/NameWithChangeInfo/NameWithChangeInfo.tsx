@@ -14,8 +14,8 @@ const NewName = styled(Typography)<TypographyProps>({
 });
 
 export const NameWithChangeInfo: FC<{
-    newName: string | undefined;
-    previousName: string | undefined;
+    newName?: string;
+    previousName?: string;
 }> = ({ newName, previousName }) => {
     const titleHasChanged = Boolean(previousName && previousName !== newName);
     const titleHasChangedOrBeenAdded = Boolean(

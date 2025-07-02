@@ -11,8 +11,8 @@ import { ViewableConstraintsList } from 'component/common/NewConstraintAccordion
 import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning.tsx';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
 import { ChangeItemInfo, ChangeItemWrapper } from './Change.styles.tsx';
-import { ChangeSegmentName } from './ChangeSegmentName.tsx';
 import { SegmentDiff } from './SegmentDiff.tsx';
+import { NameWithChangeInfo } from './NameWithChangeInfo/NameWithChangeInfo.tsx';
 
 const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -84,8 +84,8 @@ export const SegmentChangeDetails: FC<{
                                 >
                                     - Deleting segment
                                 </Typography>
-                                <ChangeSegmentName
-                                    name={change.payload.name}
+                                <NameWithChangeInfo
+                                    newName={change.payload.name}
                                     previousName={previousName}
                                 />
                             </ChangeItemInfo>
@@ -116,7 +116,9 @@ export const SegmentChangeDetails: FC<{
                                 <Typography component='span'>
                                     Editing segment
                                 </Typography>
-                                <ChangeSegmentName name={change.payload.name} />
+                                <NameWithChangeInfo
+                                    newName={change.payload.name}
+                                />
                             </ChangeItemInfo>
                             {actionsWithTabs}
                         </ChangeItemCreateEditWrapper>

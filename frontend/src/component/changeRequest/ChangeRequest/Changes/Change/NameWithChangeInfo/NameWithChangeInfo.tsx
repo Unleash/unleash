@@ -6,6 +6,7 @@ import { textTruncated } from 'themes/themeStyles';
 const Truncated = styled('span')(() => ({
     ...textTruncated,
     maxWidth: 500,
+    display: 'block',
 }));
 
 export const NameWithChangeInfo: FC<{

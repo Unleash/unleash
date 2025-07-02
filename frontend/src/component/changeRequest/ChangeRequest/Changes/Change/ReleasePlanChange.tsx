@@ -51,8 +51,8 @@ const DeleteReleasePlan: FC<{
                         - Deleting release plan
                     </Typography>
                     <Typography>{releasePlan.name}</Typography>
+                    {actions}
                 </ChangeItemInfo>
-                <div>{actions}</div>
             </ChangeItemWrapper>
             <ReleasePlan plan={releasePlan} readonly />
         </>
@@ -162,8 +162,8 @@ const AddReleasePlan: FC<{
                             + Adding release plan
                         </Typography>
                         <Typography>{planPreview.name}</Typography>
+                        {actions}
                     </ChangeItemInfo>
-                    <div>{actions}</div>
                 </ChangeItemWrapper>
                 <ReleasePlan plan={planPreview} readonly />
             </>

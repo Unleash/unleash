@@ -15,12 +15,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
     },
 }));
 
-const AddDependencyText = styled(Typography)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-}));
-
 export const DependencyChange: FC<{
     actions?: ReactNode;
     change: IChangeRequestAddDependency | IChangeRequestDeleteDependency;
@@ -33,11 +27,7 @@ export const DependencyChange: FC<{
                 <>
                     <ChangeItemWrapper>
                         <ChangeItemInfo>
-                            <Typography
-                                component='span'
-                                color={'success.dark'}
-                                // sx={{ display: 'inline' }}
-                            >
+                            <Typography component='span' color={'success.dark'}>
                                 + Adding dependency
                             </Typography>
                             <StyledLink
@@ -50,23 +40,25 @@ export const DependencyChange: FC<{
                             {change.payload.variants?.length
                                 ? `(${change.payload.variants?.join(', ')})`
                                 : null}
+                            {actions}
                         </ChangeItemInfo>
-                        {actions}
                     </ChangeItemWrapper>
                 </>
             )}
             {change.action === 'deleteDependency' && (
                 <ChangeItemWrapper>
-                    <AddDependencyWrapper>
+                    <ChangeItemInfo>
                         <Typography
                             sx={(theme) => ({
                                 color: theme.palette.error.main,
                             })}
+                            component='span'
+                            display='inline'
                         >
                             - Deleting dependencies
                         </Typography>
-                    </AddDependencyWrapper>
-                    {actions}
+                        {actions}
+                    </ChangeItemInfo>
                 </ChangeItemWrapper>
             )}
         </>

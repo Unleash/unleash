@@ -18,7 +18,7 @@ export const ArchiveFeatureChange: FC<IArchiveFeatureChange> = ({
     <ChangeItemWrapper>
         <ChangeItemInfo>
             <ArchiveBox>Archiving flag</ArchiveBox>
+            {actions}
         </ChangeItemInfo>
-        {actions}
     </ChangeItemWrapper>
 );

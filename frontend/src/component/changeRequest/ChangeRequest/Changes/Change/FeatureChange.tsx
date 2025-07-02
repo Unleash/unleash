@@ -15,7 +15,10 @@ import {
     ArchiveFeatureChange,
     LegacyArchiveFeatureChange,
 } from './ArchiveFeatureChange.tsx';
-import { DependencyChange } from './DependencyChange.tsx';
+import {
+    DependencyChange,
+    LegacyDependencyChange,
+} from './DependencyChange.tsx';
 import { Link } from 'react-router-dom';
 import { LegacyReleasePlanChange } from './LegacyReleasePlanChange.tsx';
 import { ReleasePlanChange } from './ReleasePlanChange.tsx';
@@ -107,6 +110,10 @@ export const FeatureChange: FC<{
         ? ArchiveFeatureChange
         : LegacyArchiveFeatureChange;
 
+    const DependencyChangeComponent = useDiffableChangeComponent
+        ? DependencyChange
+        : LegacyDependencyChange;
+
     return (
         <StyledSingleChangeBox
             key={objectId(change)}
@@ -166,7 +173,7 @@ export const FeatureChange: FC<{
             <ChangeInnerBox>
                 {(change.action === 'addDependency' ||
                     change.action === 'deleteDependency') && (
-                    <DependencyChange
+                    <DependencyChangeComponent
                         actions={actions}
                         change={change}
                         projectId={changeRequest.project}

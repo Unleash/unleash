@@ -147,6 +147,13 @@ export const DraftChangeRequestActions: FC<{
                 options={availableReviewers}
                 renderOption={renderOption}
                 filterOptions={filterOptions}
+                freeSolo={reviewers.length >= 10 ? false : undefined}
+                getOptionDisabled={(options) => {
+                    return (
+                        reviewers.length >= 10 &&
+                        !reviewers.find((opt) => opt.id === options.id)
+                    );
+                }}
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 getOptionLabel={(option: AvailableReviewerSchema) =>
                     option.email || option.name || option.username || ''

@@ -12,7 +12,6 @@ import {
     createRequestSchema,
     createResponseSchema,
     emptyResponse,
-    type FrontendApiClientSchema,
     frontendApiFeaturesSchema,
     type FrontendApiFeaturesSchema,
     getStandardResponses,
@@ -150,35 +149,6 @@ export default class FrontendAPIController extends Controller {
         });
 
         this.route({
-            method: 'post',
-            path: '/client/register',
-            handler: this.registerFrontendApiClient,
-            permission: NONE,
-            middleware: [
-                this.services.openApiService.validPath({
-                    tags: ['Frontend API'],
-                    summary: 'Register a client SDK',
-                    description:
-                        'This is for future use. Currently Frontend client registration is not supported. Returning 200 for clients that expect this status code. If the Frontend API is disabled 404 is returned.',
-                    operationId: 'registerFrontendClient',
-                    requestBody: createRequestSchema('frontendApiClientSchema'),
-                    responses: {
-                        200: emptyResponse,
-                        ...getStandardResponses(400, 401, 404),
-                    },
-                }),
-                rateLimit({
-                    windowMs: minutesToMilliseconds(1),
-                    max: config.metricsRateLimiting
-                        .frontendRegisterMaxPerMinute,
-                    validate: false,
-                    standardHeaders: true,
-                    legacyHeaders: false,
-                }),
-            ],
-        });
-
-        this.route({
             method: 'get',
             path: '/health',
             handler: FrontendAPIController.endpointNotImplemented,
@@ -239,15 +209,6 @@ export default class FrontendAPIController extends Controller {
             req.headers['unleash-sdk'],
         );
 
-        res.sendStatus(200);
-    }
-
-    private async registerFrontendApiClient(
-        req: ApiUserRequest<unknown, unknown, FrontendApiClientSchema>,
-        res: Response<string>,
-    ) {
-        // Client registration is not yet supported by @unleash/proxy,
-        // but proxy clients may still expect a 200 from this endpoint.
         res.sendStatus(200);
     }
 

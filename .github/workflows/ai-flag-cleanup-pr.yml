@@ -254,7 +254,7 @@ jobs:
             const { data: pr } = await github.rest.pulls.create({
               owner,
               repo,
-              title: `[AI] ${flag} flag cleanup`,
+              title: `chore(AI): ${flag} flag cleanup`,
               head: branch,
               base: '${{ inputs.base-branch }}',
               body

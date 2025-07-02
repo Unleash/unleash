@@ -28,15 +28,23 @@ const Change = styled('span')({
 export const ChangeItemInfo = styled(
     ({ children, ...props }: PropsWithChildren) => (
         <Typography {...props}>
-            <Change>Change:</Change>
+            <Change>Change: </Change>
             {children}
         </Typography>
     ),
 )(({ theme }) => ({
+    // display: 'flex',
+    // justifyItems: 'flex-start',
+    // flexFlow: 'row',
+    // alignItems: 'center',
+    // flex: 'auto',
+    // gap: `1ch`,
+}));
+
+export const ChangeItemWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
-    justifyItems: 'flex-start',
-    flexFlow: 'row',
+    flexFlow: 'row wrap',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    flex: 'auto',
-    gap: `1ch`,
+    gap: theme.spacing(1),
 }));

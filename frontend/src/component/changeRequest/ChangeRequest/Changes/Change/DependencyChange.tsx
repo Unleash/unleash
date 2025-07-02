@@ -1,11 +1,11 @@
-import type { ReactNode, VFC } from 'react';
-import { Box, styled, Typography } from '@mui/material';
+import type { FC, ReactNode } from 'react';
+import { styled, Typography } from '@mui/material';
 import type {
     IChangeRequestAddDependency,
     IChangeRequestDeleteDependency,
 } from 'component/changeRequest/changeRequest.types';
 import { Link } from 'react-router-dom';
-import { ChangeItemWrapper } from './StrategyChange.tsx';
+import { ChangeItemInfo, ChangeItemWrapper } from './Change.styles';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     maxWidth: '100%',
@@ -15,13 +15,13 @@ const StyledLink = styled(Link)(({ theme }) => ({
     },
 }));
 
-const AddDependencyWrapper = styled(Box)(({ theme }) => ({
+const AddDependencyText = styled(Typography)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
 }));
 
-export const DependencyChange: VFC<{
+export const DependencyChange: FC<{
     actions?: ReactNode;
     change: IChangeRequestAddDependency | IChangeRequestDeleteDependency;
     projectId: string;
@@ -32,8 +32,12 @@ export const DependencyChange: VFC<{
             {change.action === 'addDependency' && (
                 <>
                     <ChangeItemWrapper>
-                        <AddDependencyWrapper>
-                            <Typography color={'success.dark'}>
+                        <ChangeItemInfo>
+                            <Typography
+                                component='span'
+                                color={'success.dark'}
+                                // sx={{ display: 'inline' }}
+                            >
                                 + Adding dependency
                             </Typography>
                             <StyledLink
@@ -46,7 +50,7 @@ export const DependencyChange: VFC<{
                             {change.payload.variants?.length
                                 ? `(${change.payload.variants?.join(', ')})`
                                 : null}
-                        </AddDependencyWrapper>
+                        </ChangeItemInfo>
                         {actions}
                     </ChangeItemWrapper>
                 </>

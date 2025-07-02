@@ -1,7 +1,7 @@
 import type { ReactNode, VFC } from 'react';
 import { Box } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
-import { ChangeItemWrapper } from './StrategyChange.tsx';
+import { ChangeItemInfo, ChangeItemWrapper } from './Change.styles';
 
 interface IToggleStatusChange {
     enabled: boolean;
@@ -14,15 +14,17 @@ export const ToggleStatusChange: VFC<IToggleStatusChange> = ({
 }) => {
     return (
         <ChangeItemWrapper>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                New status
-                <Badge
-                    sx={(theme) => ({ marginLeft: theme.spacing(1) })}
-                    color={enabled ? 'success' : 'error'}
-                >
-                    {enabled ? ' Enabled' : 'Disabled'}
-                </Badge>
-            </Box>
+            <ChangeItemInfo>
+                <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
+                    New status
+                    <Badge
+                        sx={(theme) => ({ marginLeft: theme.spacing(1) })}
+                        color={enabled ? 'success' : 'error'}
+                    >
+                        {enabled ? ' Enabled' : 'Disabled'}
+                    </Badge>
+                </Box>
+            </ChangeItemInfo>
             {actions}
         </ChangeItemWrapper>
     );

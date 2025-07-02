@@ -10,23 +10,25 @@ import { ViewableConstraintsList } from 'component/common/NewConstraintAccordion
 
 import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning.tsx';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
-import { ChangeItemInfo } from './Change.styles.tsx';
+import { ChangeItemInfo, ChangeItemWrapper } from './Change.styles.tsx';
 import { ChangeSegmentName } from './ChangeSegmentName.tsx';
 import { SegmentDiff } from './SegmentDiff.tsx';
 
 const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
+    flexFlow: 'row wrap',
     gap: theme.spacing(1),
     alignItems: 'center',
     width: '100%',
     margin: theme.spacing(0, 0, 1, 0),
 }));
 
-export const ChangeItemWrapper = styled(Box)({
+const ActionsContainer = styled('div')(({ theme }) => ({
     display: 'flex',
-    justifyContent: 'space-between',
+    flexFlow: 'row wrap',
     alignItems: 'center',
-});
+    columnGap: theme.spacing(1),
+}));
 
 const SegmentContainer = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'conflict',
@@ -58,13 +60,13 @@ export const SegmentChangeDetails: FC<{
         changeRequestState === 'Applied' ? snapshotSegment : currentSegment;
 
     const actionsWithTabs = (
-        <>
+        <ActionsContainer>
             <TabList>
                 <Tab>Change</Tab>
                 <Tab>View diff</Tab>
             </TabList>
             {actions}
-        </>
+        </ActionsContainer>
     );
 
     return (

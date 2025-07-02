@@ -8,10 +8,6 @@ import 'react-resizable/css/styles.css';
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const StyledGridContainer = styled('div')(({ theme }) => ({
-    '& .react-grid-layout': {
-        position: 'relative',
-        minHeight: '200px',
-    },
     '& .react-grid-item': {
         borderRadius: `${theme.shape.borderRadiusMedium}px`,
     },

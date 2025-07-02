@@ -147,7 +147,7 @@ jobs:
           APP_ID: ${{ secrets.UNLEASH_BOT_APP_ID }}
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git config --global user.email "${APP_ID}+unleash-bot@users.noreply.github.com"
+          git config --global user.email "194219037+unleash-bot[bot]@users.noreply.github.com"
           git config --global user.name  "unleash-bot"
 
       - name: Install ripgrep
@@ -224,9 +224,9 @@ jobs:
         timeout-minutes: ${{ inputs.chat-timeout }}
         env:
           GIT_AUTHOR_NAME: 'unleash-bot'
-          GIT_AUTHOR_EMAIL: '${{ secrets.UNLEASH_BOT_APP_ID }}+unleash-bot@users.noreply.github.com'
+          GIT_AUTHOR_EMAIL: '194219037+unleash-bot[bot]@users.noreply.github.com'
           GIT_COMMITTER_NAME: 'unleash-bot'
-          GIT_COMMITTER_EMAIL: '${{ secrets.UNLEASH_BOT_APP_ID }}+unleash-bot@users.noreply.github.com'
+          GIT_COMMITTER_EMAIL: '194219037+unleash-bot[bot]@users.noreply.github.com'
           ${{ inputs.api_key_env_name }}: ${{ secrets.api_key_env_value }}
         run: |
           mapfile -d '' FILES < <(cat "${{ steps.find_files.outputs.file_list }}")

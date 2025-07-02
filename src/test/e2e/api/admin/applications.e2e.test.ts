@@ -55,7 +55,6 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
-                    registerFrontendClient: true,
                 },
             },
         },
@@ -139,10 +138,6 @@ test('should show correct application metrics', async () => {
                 name: DEFAULT_ENV,
                 frontendSdks: [],
                 backendSdks: [
-                    'unleash-client-node:3.2.1',
-                    'unleash-client-node:3.2.2',
-                ],
-                sdks: [
                     'unleash-client-node:3.2.1',
                     'unleash-client-node:3.2.2',
                 ],
@@ -246,7 +241,8 @@ test('should show missing features and strategies', async () => {
             {
                 instanceCount: 1,
                 name: DEFAULT_ENV,
-                sdks: ['unleash-client-node:1.0.0'],
+                backendSdks: ['unleash-client-node:1.0.0'],
+                frontendSdks: [],
                 issues: {
                     missingFeatures: ['toggle-name-2', 'toggle-name-3'],
                     outdatedSdks: ['unleash-client-node:1.0.0'],

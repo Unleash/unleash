@@ -8,6 +8,7 @@ import type {
 import type { Logger } from '../../logger.js';
 import type {
     ClientMetricsSchema,
+    FrontendApiClientSchema,
     FrontendApiFeatureSchema,
 } from '../../openapi/index.js';
 import ApiUser from '../../types/api-user.js';
@@ -135,11 +136,7 @@ export class FrontendApiService {
             ip,
         );
 
-        if (
-            metrics.instanceId &&
-            typeof sdkVersion === 'string' &&
-            this.flagResolver.isEnabled('registerFrontendClient')
-        ) {
+        if (metrics.instanceId && typeof sdkVersion === 'string') {
             const client = {
                 appName: metrics.appName,
                 instanceId: metrics.instanceId,
@@ -150,6 +147,25 @@ export class FrontendApiService {
             };
             this.services.clientInstanceService.registerFrontendClient(client);
         }
+    }
+
+    async registerClient(
+        token: IApiUser,
+        data: FrontendApiClientSchema,
+        ip: string,
+    ): Promise<void> {
+        FrontendApiService.assertExpectedTokenType(token);
+        const environment = data.environment || token.environment;
+
+        this.services.clientInstanceService.registerFrontendClient({
+            appName: data.appName,
+            instanceId: data.instanceId,
+            sdkVersion: data.sdkVersion,
+            clientIp: ip,
+            projects: this.resolveProject(token),
+            environment,
+            sdkType: 'frontend',
+        });
     }
 
     private async clientForFrontendApiToken(token: IApiUser): Promise<Unleash> {

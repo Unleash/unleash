@@ -112,7 +112,10 @@ export default class ClientInstanceService {
     public registerFrontendClient(data: IFrontendClientApp): void {
         data.createdBy = SYSTEM_USER.username!;
 
-        this.seenClients[this.clientKey(data)] = data;
+        this.seenClients[this.clientKey(data)] = {
+            ...data,
+            sdkType: 'frontend',
+        };
     }
 
     public async registerBackendClient(

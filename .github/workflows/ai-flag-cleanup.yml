@@ -17,7 +17,7 @@ jobs:
       (github.event_name == 'issues' && github.event.label.name == 'unleash-flag-completed')
     uses: ./.github/workflows/ai-flag-cleanup-pr.yml
     with:
-      issue-number: ${{ github.event.issue.number || inputs.issue-number }}
+      issue-number: ${{ github.event.issue.number || fromJson(inputs['issue-number']) }}
       model: gemini
       api_key_env_name: GEMINI_API_KEY
     secrets:

@@ -51,13 +51,3 @@ export const ChangeItemWrapper = styled('div')(({ theme }) => ({
     alignItems: 'center',
     gap: theme.spacing(1),
 }));
-
-/**
- * Deprecated: use ChangeItemWrapper instead; remove with flag crDiffView
- * @deprecated
- */
-export const LegacyChangeItemWrapper = styled('span')({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-});

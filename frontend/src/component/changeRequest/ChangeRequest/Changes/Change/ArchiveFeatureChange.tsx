@@ -1,10 +1,7 @@
 import type { FC, ReactNode } from 'react';
-import {
-    ChangeItemInfo,
-    ChangeItemWrapper,
-    LegacyChangeItemWrapper,
-} from './Change.styles.tsx';
+import { ChangeItemInfo, ChangeItemWrapper } from './Change.styles.tsx';
 import { styled } from '@mui/material';
+import { ChangeItemWrapper as LegacyChangeItemWrapper } from './LegacyStrategyChange.tsx';
 
 type ArchiveFeatureChange = {
     actions?: ReactNode;

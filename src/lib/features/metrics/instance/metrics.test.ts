@@ -530,7 +530,7 @@ describe('bulk metrics', () => {
             .post('/api/client/metrics/bulk')
             .set('Authorization', frontendToken.secret)
             .send({ applications: [], metrics: [] })
-            .expect(403);
+            .expect(202);
         await authed.request
             .post('/api/client/metrics/bulk')
             .set('Authorization', clientToken.secret)

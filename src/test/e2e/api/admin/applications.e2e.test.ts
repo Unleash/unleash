@@ -191,11 +191,22 @@ test('should show correct application metrics', async () => {
 
 test('should report frontend application instances', async () => {
     await app.request
-        .post('/api/frontend/client/metrics')
+        .post('/api/client/metrics/bulk')
         .set('Authorization', frontendToken.secret)
-        .set('Unleash-Sdk', 'unleash-client-js:1.0.0')
-        .send(metrics)
-        .expect(200);
+        .send({
+            applications: [
+                {
+                    appName: metrics.appName,
+                    instanceId: metrics.instanceId,
+                    sdkVersion: 'unleash-client-js:1.0.0',
+                    sdkType: 'frontend',
+                    environment: DEFAULT_ENV,
+                    projects: ['default'],
+                },
+            ],
+            metrics: [],
+        })
+        .expect(202);
     await app.services.clientInstanceService.bulkAdd();
 
     const { body } = await app.request

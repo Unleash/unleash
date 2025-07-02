@@ -236,7 +236,6 @@ export default class FrontendAPIController extends Controller {
             req.user,
             req.body,
             req.ip,
-            req.headers['unleash-sdk'],
         );
 
         res.sendStatus(200);

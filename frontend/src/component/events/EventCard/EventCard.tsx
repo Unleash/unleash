@@ -95,7 +95,7 @@ const EventCard = ({ entry }: IEventCardProps) => {
                 <dd>{entry.id}</dd>
                 <ConditionallyRender
                     condition={
-                        !eventGroupingEnabled && entry.groupId !== undefined
+                        eventGroupingEnabled && entry.groupId !== undefined
                     }
                     show={
                         <>

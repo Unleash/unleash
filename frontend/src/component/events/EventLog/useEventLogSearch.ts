@@ -73,7 +73,7 @@ export const useEventLogSearch = (
         type: FilterItemParam,
         environment: FilterItemParam,
         id: StringParam,
-        groupId: StringParam,
+        groupId: FilterItemParam,
         ...extraParameters(logType),
     };
 

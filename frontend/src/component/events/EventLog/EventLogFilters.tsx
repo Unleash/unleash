@@ -10,6 +10,8 @@ import { EventSchemaType, type FeatureSearchResponseSchema } from 'openapi';
 import type { ProjectSchema } from 'openapi';
 import { useEventCreators } from 'hooks/api/getters/useEventCreators/useEventCreators';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
+import { useLocation } from 'react-router-dom';
+import { FilterItemParam } from 'utils/serializeQueryParams';
 
 export const useEventLogFilters = (
     projects: ProjectSchema[],
@@ -17,9 +19,14 @@ export const useEventLogFilters = (
 ) => {
     const { environments } = useEnvironments();
     const { eventCreators } = useEventCreators();
+    const location = useLocation();
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
 
     useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const hasGroupId = searchParams.has('groupId');
+        const groupIdValue = searchParams.get('groupId');
+
         const projectOptions =
             projects?.map((project: ProjectSchema) => ({
                 label: project.name,
@@ -49,6 +56,22 @@ export const useEventLogFilters = (
                 label: env.name,
                 value: env.name,
             })) ?? [];
+
+        const groupIdOptions =
+            hasGroupId && groupIdValue
+                ? (() => {
+                      const parsedGroupId =
+                          FilterItemParam.decode(groupIdValue);
+                      return parsedGroupId
+                          ? [
+                                {
+                                    label: parsedGroupId.values[0],
+                                    value: parsedGroupId.values[0],
+                                },
+                            ]
+                          : [];
+                  })()
+                : [];
 
         const availableFilters: IFilterItem[] = [
             {
@@ -87,6 +110,19 @@ export const useEventLogFilters = (
                 singularOperators: ['IS'],
                 pluralOperators: ['IS_ANY_OF'],
             },
+            ...(hasGroupId
+                ? ([
+                      {
+                          label: 'Group ID',
+                          icon: 'group',
+                          options: groupIdOptions,
+                          filterKey: 'groupId',
+                          singularOperators: ['IS'],
+                          pluralOperators: ['IS_ANY_OF'],
+                          persistent: false,
+                      },
+                  ] as IFilterItem[])
+                : []),
             ...(projectOptions.length > 1
                 ? ([
                       {
@@ -131,6 +167,7 @@ export const useEventLogFilters = (
         JSON.stringify(projects),
         JSON.stringify(eventCreators),
         JSON.stringify(environments),
+        location.search,
     ]);
 
     return availableFilters;

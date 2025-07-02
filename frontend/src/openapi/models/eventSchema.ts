@@ -47,6 +47,10 @@ export interface EventSchema {
      */
     ip?: string | null;
     /**
+     * The event group ID.
+     */
+    groupId?: string;
+    /**
      * The concise, human-readable name of the event.
      * @nullable
      */

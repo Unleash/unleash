@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { styled } from '@mui/material';
 import type { EventSchema } from 'openapi';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useLocation } from 'react-router-dom';
 
 interface IEventCardProps {
     entry: EventSchema;
@@ -74,17 +75,41 @@ export const StyledCodeSection = styled('div')(({ theme }) => ({
 const EventCard = ({ entry }: IEventCardProps) => {
     const { locationSettings } = useLocationSettings();
     const eventGroupingEnabled = useUiFlag('eventGrouping');
+    const location = useLocation();
 
     const createdAtFormatted = formatDateYMDHMS(
         entry.createdAt,
         locationSettings.locale,
     );
 
+    const getGroupIdLink = () => {
+        const searchParams = new URLSearchParams(location.search);
+        searchParams.set('groupId', `IS:${entry.groupId}`);
+        return `${location.pathname}?${searchParams.toString()}`;
+    };
+
     return (
         <StyledContainerListItem>
             <dl>
                 <StyledDefinitionTerm>Event id:</StyledDefinitionTerm>
                 <dd>{entry.id}</dd>
+                <ConditionallyRender
+                    condition={
+                        eventGroupingEnabled && entry.groupId !== undefined
+                    }
+                    show={
+                        <>
+                            <StyledDefinitionTerm>
+                                Group id:
+                            </StyledDefinitionTerm>
+                            <dd>
+                                <Link to={getGroupIdLink()}>
+                                    {entry.groupId}
+                                </Link>
+                            </dd>
+                        </>
+                    }
+                />
                 <StyledDefinitionTerm>Changed at:</StyledDefinitionTerm>
                 <dd>{createdAtFormatted}</dd>
                 <StyledDefinitionTerm>Event:</StyledDefinitionTerm>

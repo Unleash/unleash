@@ -143,8 +143,6 @@ jobs:
           persist-credentials: true
 
       - name: Configure Git
-        env:
-          APP_ID: ${{ secrets.UNLEASH_BOT_APP_ID }}
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git config --global user.email "194219037+unleash-bot[bot]@users.noreply.github.com"

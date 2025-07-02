@@ -166,37 +166,44 @@ jobs:
           echo "file_list=./file_list.bin" >> $GITHUB_OUTPUT
 
       - name: Create prompt
-        uses: actions/github-script@v7
         id: create_prompt
-        with:
-          result-encoding: string
-          script: |
-            const body = `${{ fromJson(steps.get_issue.outputs.result).body }}`;
-            return `Based on the issue description below, refactor the codebase to permanently apply the desired outcome for this feature flag (e.g. enable, keep variant, or discard), by removing all conditional checks and dead branches, preserving only the correct code path.
-            After making the changes, provide a **Markdown summary** of what was changed, written for a developer reviewing the PR. Keep it clear, focused, and readable. Use the exact following format (including start & end separator lines, headings, bullets, emojis):
-            \`\`\`md
-            === AI Flag Cleanup Summary Start ===
-            ## 🧹 AI Flag Cleanup Summary
-            (Short summary of the changes made)
-            (Include any details that you think are critical for the reviewer to know, if any, prefixing them with an appropriate emoji)
-            ### 🚮 Removed
-            - **(Category)**
-              - (list of removed items)
-            ### 🛠 Kept
-            - **(Category)**
-              - (list of kept items)
-            ### 📝 Why
-            (Your reasoning for the changes made, including any relevant context or decisions that do not belong at the top of the summary.)
-            === AI Flag Cleanup Summary End ===
-            \`\`\`
-            --- Issue Description ---
-            ${body}`;
-
-      - name: Write prompt
         run: |
+          ISSUE_BODY="${{ fromJson(steps.get_issue.outputs.result).body }}"
           cat <<'EOF' > cleanup_prompt.txt
-          ${{ steps.create_prompt.outputs.result }}
+          Based on the issue description below, refactor the codebase to permanently apply the desired outcome for this feature flag (e.g. enable, keep variant, or discard), by removing all conditional checks and dead branches, preserving only the correct code path.
+
+          After making the changes, provide a **Markdown summary** of what was changed, written for a developer reviewing the PR. Keep it clear, focused, and readable. Use the exact following format (including start & end separator lines, headings, bullets, emojis):
+
+          \`\`\`md
+
+          === AI Flag Cleanup Summary Start ===
+
+          ## 🧹 AI Flag Cleanup Summary
+
+          (Short summary of the changes made)
+
+          (Include any details that you think are critical for the reviewer to know, if any, prefixing them with an appropriate emoji)
+
+          ### 🚮 Removed
+          - **(Category)**
+            - (list of removed items)
+
+          ### 🛠 Kept
+          - **(Category)**
+            - (list of kept items)
+
+          ### 📝 Why
+          (Your reasoning for the changes made, including any relevant context or decisions that do not belong at the top of the summary.)
+
+          === AI Flag Cleanup Summary End ===
+
+          \`\`\`
+
+          --- Issue Description ---
+          $ISSUE_BODY
           EOF
+
+          echo "prompt-file=cleanup_prompt.txt" >> $GITHUB_OUTPUT
 
       - name: Set up Python
         uses: actions/setup-python@v4

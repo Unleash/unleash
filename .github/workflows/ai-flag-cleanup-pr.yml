@@ -46,6 +46,7 @@ jobs:
         with:
           app-id:        ${{ secrets.UNLEASH_BOT_APP_ID }}
           private-key:   ${{ secrets.UNLEASH_BOT_PRIVATE_KEY }}
+          repositories:  ${{ github.repository }}
 
 
       - name: Checkout

@@ -174,17 +174,16 @@ export default class ClientInstanceService {
             const uniqueRegistrations = Object.values(this.seenClients);
             const uniqueApps: Partial<IClientApplication>[] = Object.values(
                 uniqueRegistrations.reduce((soFar, reg) => {
-                    let existingProjects = [];
-                    if (soFar[`${reg.appName} ${reg.environment}`]) {
-                        existingProjects =
-                            soFar[`${reg.appName} ${reg.environment}`]
-                                .projects || [];
-                    }
-                    soFar[`${reg.appName} ${reg.environment}`] = {
+                    const key = `${reg.appName} ${reg.environment}`;
+                    const existing = soFar[key] || {};
+                    soFar[key] = {
+                        ...existing,
                         ...reg,
                         projects: [
-                            ...existingProjects,
-                            ...(reg.projects || []),
+                            ...new Set([
+                                ...(existing.projects || []),
+                                ...(reg.projects || []),
+                            ]),
                         ],
                     };
                     return soFar;

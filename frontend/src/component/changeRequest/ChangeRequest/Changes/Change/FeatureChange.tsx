@@ -11,7 +11,10 @@ import { ToggleStatusChange } from './ToggleStatusChange.tsx';
 import { LegacyStrategyChange } from './LegacyStrategyChange.tsx';
 import { VariantPatch } from './VariantPatch/VariantPatch.tsx';
 import { EnvironmentStrategyExecutionOrder } from './EnvironmentStrategyExecutionOrder/EnvironmentStrategyExecutionOrder.tsx';
-import { ArchiveFeatureChange } from './ArchiveFeatureChange.tsx';
+import {
+    ArchiveFeatureChange,
+    LegacyArchiveFeatureChange,
+} from './ArchiveFeatureChange.tsx';
 import { DependencyChange } from './DependencyChange.tsx';
 import { Link } from 'react-router-dom';
 import { LegacyReleasePlanChange } from './LegacyReleasePlanChange.tsx';
@@ -100,6 +103,10 @@ export const FeatureChange: FC<{
         ? ReleasePlanChange
         : LegacyReleasePlanChange;
 
+    const ArchiveFlagComponent = useDiffableChangeComponent
+        ? ArchiveFeatureChange
+        : LegacyArchiveFeatureChange;
+
     return (
         <StyledSingleChangeBox
             key={objectId(change)}
@@ -173,7 +180,7 @@ export const FeatureChange: FC<{
                     />
                 )}
                 {change.action === 'archiveFeature' && (
-                    <ArchiveFeatureChange actions={actions} />
+                    <ArchiveFlagComponent actions={actions} />
                 )}
 
                 {change.action === 'addStrategy' ||

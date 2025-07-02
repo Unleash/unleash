@@ -13,46 +13,11 @@ const StyledGridContainer = styled('div')(({ theme }) => ({
         minHeight: '200px',
     },
     '& .react-grid-item': {
-        transition: 'all 200ms ease',
-        border: `1px solid ${theme.palette.divider}`,
         borderRadius: `${theme.shape.borderRadiusMedium}px`,
-        backgroundColor: theme.palette.background.paper,
-        overflow: 'hidden',
-        '&.react-grid-item--placeholder': {
-            backgroundColor: theme.palette.action.hover,
-            opacity: 0.6,
-            borderStyle: 'dashed',
-            borderWidth: '2px',
-            borderColor: theme.palette.primary.main,
-        },
-        '&:hover:not(.react-grid-item--dragging)': {
-            boxShadow: theme.shadows[4],
-            borderColor: theme.palette.primary.light,
-        },
-        '&.react-grid-item--dragging': {
-            opacity: 0.8,
-            zIndex: 1000,
-            transform: 'rotate(2deg)',
-            boxShadow: theme.shadows[8],
-            borderColor: theme.palette.primary.main,
-        },
-        '&.react-grid-item--resizing': {
-            opacity: 0.9,
-            zIndex: 999,
-            boxShadow: theme.shadows[6],
-        },
     },
     '& .react-resizable-handle': {
-        position: 'absolute',
-        width: theme.spacing(3),
-        height: theme.spacing(3),
-        bottom: '0px',
-        right: '0px',
-        cursor: 'se-resize',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
         '&::after': {
-            display: 'none',
+            opacity: 0.5,
         },
     },
 }));

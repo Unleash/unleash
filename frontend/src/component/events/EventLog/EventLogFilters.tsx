@@ -11,6 +11,7 @@ import type { ProjectSchema } from 'openapi';
 import { useEventCreators } from 'hooks/api/getters/useEventCreators/useEventCreators';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { useLocation } from 'react-router-dom';
+import { FilterItemParam } from 'utils/serializeQueryParams';
 
 export const useEventLogFilters = (
     projects: ProjectSchema[],
@@ -58,12 +59,18 @@ export const useEventLogFilters = (
 
         const groupIdOptions =
             hasGroupId && groupIdValue
-                ? [
-                      {
-                          label: groupIdValue.replace(/^IS:/, ''), // Remove IS: prefix for display
-                          value: groupIdValue,
-                      },
-                  ]
+                ? (() => {
+                      const parsedGroupId =
+                          FilterItemParam.decode(groupIdValue);
+                      return parsedGroupId
+                          ? [
+                                {
+                                    label: parsedGroupId.values[0],
+                                    value: parsedGroupId.values[0],
+                                },
+                            ]
+                          : [];
+                  })()
                 : [];
 
         const availableFilters: IFilterItem[] = [
@@ -107,7 +114,7 @@ export const useEventLogFilters = (
                 ? ([
                       {
                           label: 'Group ID',
-                          icon: 'link',
+                          icon: 'group',
                           options: groupIdOptions,
                           filterKey: 'groupId',
                           singularOperators: ['IS'],

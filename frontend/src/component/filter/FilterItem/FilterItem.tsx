@@ -131,6 +131,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
             );
             onChange({ operator: currentOperator, values: newOptions });
         } else {
+            console.log('woggle');
             const newOptions = [
                 ...(selectedOptions ?? []),
                 (
@@ -140,6 +141,11 @@ export const FilterItem: FC<IFilterItemProps> = ({
                     }
                 ).value,
             ];
+            console.log(
+                { operator: currentOperator, values: newOptions },
+                selectedOptions,
+                value,
+            );
             onChange({ operator: currentOperator, values: newOptions });
         }
     };

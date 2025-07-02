@@ -77,6 +77,7 @@ export const SegmentChangeDetails: FC<{
                         <ChangeItemWrapper>
                             <ChangeItemInfo>
                                 <Typography
+                                    component='span'
                                     sx={(theme) => ({
                                         color: theme.palette.error.main,
                                     })}
@@ -112,7 +113,9 @@ export const SegmentChangeDetails: FC<{
                         />
                         <ChangeItemCreateEditWrapper>
                             <ChangeItemInfo>
-                                <Typography>Editing segment</Typography>
+                                <Typography component='span'>
+                                    Editing segment
+                                </Typography>
                                 <ChangeSegmentName name={change.payload.name} />
                             </ChangeItemInfo>
                             {actionsWithTabs}

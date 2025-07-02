@@ -3,7 +3,7 @@ import { Typography, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { textTruncated } from 'themes/themeStyles';
 
-const Truncated = styled('div')(() => ({
+const Truncated = styled('span')(() => ({
     ...textTruncated,
     maxWidth: 500,
 }));
@@ -30,7 +30,7 @@ export const NameWithChangeInfo: FC<{
                 condition={Boolean(newName)}
                 show={
                     <Truncated>
-                        <Typography>{newName}</Typography>
+                        <Typography component='span'>{newName}</Typography>
                     </Truncated>
                 }
             />

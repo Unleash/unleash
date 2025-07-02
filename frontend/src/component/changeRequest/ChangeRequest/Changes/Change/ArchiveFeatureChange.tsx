@@ -1,8 +1,8 @@
 import type { FC, ReactNode } from 'react';
-import { Box, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import { ChangeItemInfo, ChangeItemWrapper } from './Change.styles.tsx';
 
-const ArchiveBox = styled(Box)(({ theme }) => ({
+const ArchiveBox = styled('span')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     color: theme.palette.error.main,

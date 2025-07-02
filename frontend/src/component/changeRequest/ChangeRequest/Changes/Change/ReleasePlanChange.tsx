@@ -47,10 +47,11 @@ const DeleteReleasePlan: FC<{
                         sx={(theme) => ({
                             color: theme.palette.error.main,
                         })}
+                        component='span'
                     >
                         - Deleting release plan
                     </Typography>
-                    <Typography>{releasePlan.name}</Typography>
+                    <Typography component='span'>{releasePlan.name}</Typography>
                     {actions}
                 </ChangeItemInfo>
             </ChangeItemWrapper>
@@ -86,10 +87,12 @@ const StartMilestone: FC<{
         <Tabs>
             <ChangeItemWrapper>
                 <ChangeItemInfo>
-                    <Typography color='success.dark'>
+                    <Typography component='span' color='success.dark'>
                         + Start milestone
                     </Typography>
-                    <Typography>{newMilestone.name}</Typography>
+                    <Typography component='span'>
+                        {newMilestone.name}
+                    </Typography>
                 </ChangeItemInfo>
                 <div>
                     <TabList>
@@ -158,10 +161,12 @@ const AddReleasePlan: FC<{
             <>
                 <ChangeItemWrapper>
                     <ChangeItemInfo>
-                        <Typography color='success.dark'>
+                        <Typography component='span' color='success.dark'>
                             + Adding release plan
                         </Typography>
-                        <Typography>{planPreview.name}</Typography>
+                        <Typography component='span'>
+                            {planPreview.name}
+                        </Typography>
                         {actions}
                     </ChangeItemInfo>
                 </ChangeItemWrapper>
@@ -174,7 +179,7 @@ const AddReleasePlan: FC<{
         <Tabs>
             <ChangeItemWrapper>
                 <ChangeItemInfo>
-                    <Typography>
+                    <Typography component='span'>
                         Replacing{' '}
                         <TooltipLink
                             tooltip={
@@ -203,7 +208,7 @@ const AddReleasePlan: FC<{
                         </TooltipLink>{' '}
                         release plan with
                     </Typography>
-                    <Typography>{planPreview.name}</Typography>
+                    <Typography component='span'>{planPreview.name}</Typography>
                 </ChangeItemInfo>
                 <div>
                     <TabList>

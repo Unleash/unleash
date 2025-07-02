@@ -1,9 +1,11 @@
 import { styled, Typography } from '@mui/material';
 import type { PropsWithChildren } from 'react';
 
-const Action = styled(Typography)(({ theme }) => ({
-    whiteSpace: 'nowrap',
-}));
+export const Action = styled(({ children, ...props }: PropsWithChildren) => (
+    <Typography component='span' {...props}>
+        {children}
+    </Typography>
+))(({ theme }) => ({}));
 
 export const Deleted = styled(Action)(({ theme }) => ({
     color: theme.palette.error.main,

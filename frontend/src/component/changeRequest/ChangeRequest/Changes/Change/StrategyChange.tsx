@@ -84,18 +84,30 @@ const EditHeader: FC<{
     willBeDisabled?: boolean;
 }> = ({ wasDisabled = false, willBeDisabled = false }) => {
     if (wasDisabled && willBeDisabled) {
-        return <Typography color='text.secondary'>Editing strategy</Typography>;
+        return (
+            <Typography component='span' color='text.secondary'>
+                Editing strategy
+            </Typography>
+        );
     }
 
     if (!wasDisabled && willBeDisabled) {
-        return <Typography color='error.dark'>Editing strategy</Typography>;
+        return (
+            <Typography component='span' color='error.dark'>
+                Editing strategy
+            </Typography>
+        );
     }
 
     if (wasDisabled && !willBeDisabled) {
-        return <Typography color='success.dark'>Editing strategy</Typography>;
+        return (
+            <Typography component='span' color='success.dark'>
+                Editing strategy
+            </Typography>
+        );
     }
 
-    return <Typography>Editing strategy</Typography>;
+    return <Typography component='span'>Editing strategy</Typography>;
 };
 
 const hasDiff = (object: unknown, objectToCompare: unknown) =>
@@ -125,6 +137,7 @@ const DeleteStrategy: FC<{
             <ChangeItemCreateEditDeleteWrapper>
                 <ChangeItemInfo>
                     <Typography
+                        component='span'
                         sx={(theme) => ({
                             color: theme.palette.error.main,
                         })}

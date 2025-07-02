@@ -96,7 +96,7 @@ export const EnvironmentStrategyExecutionOrder = ({
                 <ChangeContent>
                     <ChangeItemWrapper>
                         <ChangeItemInfo>
-                            <p>Updating strategy execution order to</p>
+                            <span>Updating strategy execution order to</span>
                         </ChangeItemInfo>
                         <div>
                             <TabList>

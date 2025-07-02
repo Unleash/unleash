@@ -230,7 +230,7 @@ jobs:
           ${{ inputs.api_key_env_name }}: ${{ secrets.api_key_env_value }}
         run: |
           mapfile -d '' FILES < <(cat "${{ steps.find_files.outputs.file_list }}")
-          aider --model "${{ inputs.model }}" --yes "${FILES[@]}" --message-file cleanup_prompt.txt --no-attribute-author --no-attribute-committer --no-attribute-co-authored-by \
+          aider --model "${{ inputs.model }}" --yes --no-attribute-author --no-attribute-committer --no-attribute-co-authored-by "${FILES[@]}" --message-file cleanup_prompt.txt \
             | tee aider_output.txt
 
           SUMMARY=$(sed -n '/=== AI Flag Cleanup Summary Start ===/,/=== AI Flag Cleanup Summary End ===/{

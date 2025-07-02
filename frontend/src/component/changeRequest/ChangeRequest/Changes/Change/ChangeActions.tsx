@@ -120,6 +120,7 @@ export const ChangeActions: FC<{
                             aria-expanded={open ? 'true' : undefined}
                             onClick={handleClick}
                             type='button'
+                            sx={{ marginLeft: 'auto' }}
                         >
                             <MoreVert />
                         </IconButton>

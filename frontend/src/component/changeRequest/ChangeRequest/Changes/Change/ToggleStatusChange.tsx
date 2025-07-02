@@ -1,5 +1,4 @@
 import type { FC, ReactNode } from 'react';
-import { Box } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import { ChangeItemInfo, ChangeItemWrapper } from './Change.styles';
 
@@ -15,17 +14,12 @@ export const ToggleStatusChange: FC<IToggleStatusChange> = ({
     return (
         <ChangeItemWrapper>
             <ChangeItemInfo>
-                <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
-                    New status
-                    <Badge
-                        sx={(theme) => ({ marginLeft: theme.spacing(1) })}
-                        color={enabled ? 'success' : 'error'}
-                    >
-                        {enabled ? ' Enabled' : 'Disabled'}
-                    </Badge>
-                </Box>
+                New status
+                <Badge color={enabled ? 'success' : 'error'}>
+                    {enabled ? ' Enabled' : 'Disabled'}
+                </Badge>
+                {actions}
             </ChangeItemInfo>
-            {actions}
         </ChangeItemWrapper>
     );
 };

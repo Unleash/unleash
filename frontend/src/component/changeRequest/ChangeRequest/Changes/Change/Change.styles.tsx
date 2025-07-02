@@ -39,7 +39,7 @@ export const ChangeItemInfo = styled(
     alignItems: 'center',
     flex: 'auto',
     columnGap: `1ch`,
-    rowGap: theme.spacing(1),
+    rowGap: theme.spacing(0.5),
 }));
 
 export const ChangeItemWrapper = styled('div')(({ theme }) => ({

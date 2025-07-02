@@ -42,7 +42,7 @@ jobs:
 
       - name: Generate GitHub App token
         id: app_token
-        uses: peter-evans/create-github-app-token@v2
+        uses: actions/create-github-app-token@v2
         with:
           app_id:        ${{ secrets.UNLEASH_BOT_APP_ID }}
           private_key:   ${{ secrets.UNLEASH_BOT_PRIVATE_KEY }}

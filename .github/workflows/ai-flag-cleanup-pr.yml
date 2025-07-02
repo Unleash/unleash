@@ -44,7 +44,7 @@ jobs:
         id: app_token
         uses: actions/create-github-app-token@v2
         with:
-          app-id:        ${{ secrets.UNLEASH_BOT_APP_ID }}
+          app-id:        1234
           private-key:   ${{ secrets.UNLEASH_BOT_PRIVATE_KEY }}
           repositories:  ${{ github.repository }}
 

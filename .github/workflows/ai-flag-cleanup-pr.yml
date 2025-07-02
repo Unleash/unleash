@@ -44,9 +44,8 @@ jobs:
         id: app_token
         uses: actions/create-github-app-token@v2
         with:
-          app_id:        ${{ secrets.UNLEASH_BOT_APP_ID }}
-          private_key:   ${{ secrets.UNLEASH_BOT_PRIVATE_KEY }}
-          repository:    ${{ github.repository }}
+          app-id:        ${{ secrets.UNLEASH_BOT_APP_ID }}
+          private-key:   ${{ secrets.UNLEASH_BOT_PRIVATE_KEY }}
 
 
       - name: Checkout

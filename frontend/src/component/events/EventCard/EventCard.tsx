@@ -100,7 +100,7 @@ const EventCard = ({ entry }: IEventCardProps) => {
                     show={
                         <>
                             <StyledDefinitionTerm>
-                                Transaction id:
+                                Group id:
                             </StyledDefinitionTerm>
                             <dd>
                                 <Link to={getGroupIdLink()}>

@@ -1,11 +1,11 @@
-import { styled, Typography } from '@mui/material';
-import type { PropsWithChildren } from 'react';
+import { styled, Typography, type TypographyProps } from '@mui/material';
+import type { FC, PropsWithChildren } from 'react';
 
-export const Action = styled(({ children, ...props }: PropsWithChildren) => (
+export const Action: FC<TypographyProps> = ({ children, ...props }) => (
     <Typography component='span' {...props}>
         {children}
     </Typography>
-))(({ theme }) => ({}));
+);
 
 export const Deleted = styled(Action)(({ theme }) => ({
     color: theme.palette.error.main,

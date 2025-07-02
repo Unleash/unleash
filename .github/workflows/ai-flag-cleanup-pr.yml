@@ -148,7 +148,7 @@ jobs:
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git config --global user.email "${APP_ID}+unleash-bot[bot]@users.noreply.github.com"
-          git config --global user.name  "unleash-bot[bot]"
+          git config --global user.name  "unleash-bot"
 
       - name: Install ripgrep
         run: sudo apt-get update && sudo apt-get install -y ripgrep
@@ -223,10 +223,14 @@ jobs:
         id: run_aider
         timeout-minutes: ${{ inputs.chat-timeout }}
         env:
+          GIT_AUTHOR_NAME: 'unleash-bot'
+          GIT_AUTHOR_EMAIL: '${{ secrets.UNLEASH_BOT_APP_ID }}+unleash-bot[bot]@users.noreply.github.com'
+          GIT_COMMITTER_NAME: 'unleash-bot'
+          GIT_COMMITTER_EMAIL: '${{ secrets.UNLEASH_BOT_APP_ID }}+unleash-bot[bot]@users.noreply.github.com'
           ${{ inputs.api_key_env_name }}: ${{ secrets.api_key_env_value }}
         run: |
           mapfile -d '' FILES < <(cat "${{ steps.find_files.outputs.file_list }}")
-          aider --model "${{ inputs.model }}" --yes "${FILES[@]}" --message-file cleanup_prompt.txt --no-attribute-author --no-attribute-committer \
+          aider --model "${{ inputs.model }}" --yes "${FILES[@]}" --message-file cleanup_prompt.txt --no-attribute-author --no-attribute-committer --no-attribute-co-authored-by \
             | tee aider_output.txt
 
           SUMMARY=$(sed -n '/=== AI Flag Cleanup Summary Start ===/,/=== AI Flag Cleanup Summary End ===/{
@@ -270,6 +274,8 @@ jobs:
                 pull_number: existing.number,
                 body
               });
+
+              console.log(`Updated PR #${existing.number}: ${existing.html_url}`);
               return existing;
             }
 
@@ -290,5 +296,4 @@ jobs:
             });
 
             console.log(`Created PR #${pr.number}: ${pr.html_url}`);
-
             return pr;

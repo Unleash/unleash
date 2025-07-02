@@ -7,6 +7,7 @@ import type { IQueryParam } from '../../features/feature-toggle/types/feature-to
 
 export interface IEventSearchParams {
     id?: string;
+    groupId?: string;
     project?: string;
     query?: string;
     feature?: string;

@@ -16,6 +16,8 @@ import {
 import { createEventsService } from '../../../../lib/features/index.js';
 import { createTestConfig } from '../../../config/test-config.js';
 import { FEATURE_CREATED, USER_CREATED } from '../../../../lib/events/index.js';
+import { withTransactional } from '../../../../lib/db/transaction.js';
+import { EventStore } from '../../../../lib/features/events/event-store.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -717,4 +719,141 @@ test('should filter events by multiple IDs using IS_ANY_OF', async () => {
         (e: any) => e.data.name === 'feature2',
     );
     expect(returnedIds).not.toContain(feature2Event.id);
+});
+
+test('should filter events by group ID', async () => {
+    const eventStoreService = withTransactional(
+        (db) => new EventStore(db, getLogger),
+        db.rawDatabase,
+    );
+
+    const events = [
+        {
+            type: FEATURE_CREATED,
+            project: 'default',
+            data: { name: 'feature1' },
+            createdBy: 'test-user',
+            createdByUserId: TEST_USER_ID,
+            ip: '127.0.0.1',
+        },
+        {
+            type: FEATURE_CREATED,
+            project: 'default',
+            data: { name: 'feature2' },
+            createdBy: 'test-user',
+            createdByUserId: TEST_USER_ID,
+            ip: '127.0.0.1',
+        },
+    ];
+
+    await eventStoreService.transactional(
+        async (transactionalEventStore) => {
+            await transactionalEventStore.batchStore(events);
+        },
+        { type: 'transaction', id: '1' },
+    );
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { name: 'feature3' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    const { body } = await searchEvents({ groupId: 'IS:1' });
+
+    expect(body.total).toBe(2);
+    expect(body.events).toHaveLength(2);
+    expect(body.events.every((e: any) => e.groupId === '1')).toBe(true);
+});
+
+test('should filter events by multiple group IDs using IS_ANY_OF', async () => {
+    const eventStoreService = withTransactional(
+        (db) => new EventStore(db, getLogger),
+        db.rawDatabase,
+    );
+
+    const event1 = {
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { name: 'feature1' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    };
+    const event2 = {
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { name: 'feature2' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    };
+    const event3 = {
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { name: 'feature3' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    };
+
+    await eventStoreService.transactional(
+        async (transactionalEventStore) => {
+            await transactionalEventStore.store(event1);
+        },
+        { type: 'transaction', id: '10' },
+    );
+
+    await eventStoreService.transactional(
+        async (transactionalEventStore) => {
+            await transactionalEventStore.store(event2);
+        },
+        { type: 'transaction', id: '20' },
+    );
+
+    await eventStoreService.transactional(
+        async (transactionalEventStore) => {
+            await transactionalEventStore.store(event3);
+        },
+        { type: 'transaction', id: '30' },
+    );
+
+    const { body } = await searchEvents({ groupId: 'IS_ANY_OF:10,30' });
+
+    expect(body.total).toBe(2);
+    expect(body.events).toHaveLength(2);
+
+    const returnedGroupIds = body.events.map((e: any) => e.groupId);
+    expect(returnedGroupIds).toContain('10');
+    expect(returnedGroupIds).toContain('30');
+    expect(returnedGroupIds).not.toContain('20');
+});
+
+test('Should return empty result when filtering by non-existent group ID', async () => {
+    const eventStoreService = withTransactional(
+        (db) => new EventStore(db, getLogger),
+        db.rawDatabase,
+    );
+
+    await eventStoreService.transactional(
+        async (transactionalEventStore) => {
+            await transactionalEventStore.store({
+                type: FEATURE_CREATED,
+                project: 'default',
+                data: { name: 'feature1' },
+                createdBy: 'test-user',
+                createdByUserId: TEST_USER_ID,
+                ip: '127.0.0.1',
+            });
+        },
+        { type: 'transaction', id: '1' },
+    );
+
+    const { body } = await searchEvents({ groupId: 'IS:999' });
+
+    expect(body.total).toBe(0);
+    expect(body.events).toHaveLength(0);
 });

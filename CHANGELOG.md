@@ -2,6 +2,134 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.0.4] - 2025-07-02
+
+### Bug Fixes
+
+- Increase line height for project title ([#10158](https://github.com/Unleash/unleash/issues/10158))
+
+- Order properties correctly when mapping from Editable Constraint to IConstraint ([#10163](https://github.com/Unleash/unleash/issues/10163))
+
+- Update dependency type-is to v2 ([#10195](https://github.com/Unleash/unleash/issues/10195))
+
+- Impact metrics undefined ([#10210](https://github.com/Unleash/unleash/issues/10210))
+
+- Update dependency uuid to v11 ([#10226](https://github.com/Unleash/unleash/issues/10226))
+
+- Update dependency @slack/web-api to v7.9.3 ([#10238](https://github.com/Unleash/unleash/issues/10238))
+
+- Update dependency pg-connection-string to v2.9.1 ([#10239](https://github.com/Unleash/unleash/issues/10239))
+
+- Update dependency git-url-parse to v16.1.0 ([#10240](https://github.com/Unleash/unleash/issues/10240))
+
+- Private projects visibility for users in editor and admin groups ([#10265](https://github.com/Unleash/unleash/issues/10265))
+
+
+### Documentation
+
+- Update technical debt info ([#10132](https://github.com/Unleash/unleash/issues/10132))
+
+
+### Feat
+
+- Impact metrics fronted ([#10182](https://github.com/Unleash/unleash/issues/10182))
+
+
+### Features
+
+- Do not lock until migrations are needed ([#10170](https://github.com/Unleash/unleash/issues/10170))
+
+- Add prometheusImpactMetricsApi option to configuration ([#10168](https://github.com/Unleash/unleash/issues/10168))
+
+- Ingest new impact metrics ([#10169](https://github.com/Unleash/unleash/issues/10169))
+
+- Support event id in search ([#10176](https://github.com/Unleash/unleash/issues/10176))
+
+- Validate impact metrics ([#10181](https://github.com/Unleash/unleash/issues/10181))
+
+- Support id in search event ([#10180](https://github.com/Unleash/unleash/issues/10180))
+
+- Expand resolver interface with impact metrics ([#10199](https://github.com/Unleash/unleash/issues/10199))
+
+- Count created feature links with impact metrics ([#10201](https://github.com/Unleash/unleash/issues/10201))
+
+- Requesting reviews when submitting change requests ([#10202](https://github.com/Unleash/unleash/issues/10202))
+
+- Count errors and gauge for heap memory ([#10203](https://github.com/Unleash/unleash/issues/10203))
+
+- Impact metrics resolver ([#10209](https://github.com/Unleash/unleash/issues/10209))
+
+- Ability to search events by type with pagination ([#10217](https://github.com/Unleash/unleash/issues/10217))
+
+- Add transaction context store ([#10211](https://github.com/Unleash/unleash/issues/10211))
+
+- Transaction grouping, use ulids and strings ([#10230](https://github.com/Unleash/unleash/issues/10230))
+
+- Add requested approvers to overview ([#10232](https://github.com/Unleash/unleash/issues/10232))
+
+- Add tab switcher for change to json diff view in CR ([#10179](https://github.com/Unleash/unleash/issues/10179))
+
+- Start storing event group type and id ([#10233](https://github.com/Unleash/unleash/issues/10233))
+
+- Start storing every transaction id in events table ([#10236](https://github.com/Unleash/unleash/issues/10236))
+
+- Bulk impact metrics ([#10251](https://github.com/Unleash/unleash/issues/10251))
+
+- Start showing CR id in UI and make it clickable ([#10259](https://github.com/Unleash/unleash/issues/10259))
+
+- Impact metrics page with multiple charts ([#10252](https://github.com/Unleash/unleash/issues/10252))
+
+- Now it is possible to search events by group id ([#10275](https://github.com/Unleash/unleash/issues/10275))
+
+
+### Miscellaneous Tasks
+
+- Added table for requested approvers for CRs ([#10159](https://github.com/Unleash/unleash/issues/10159))
+
+- Added requested cr approval email template and emailService method ([#10161](https://github.com/Unleash/unleash/issues/10161))
+
+- Don't reorder constraint properties / make id's non-optional ([#10160](https://github.com/Unleash/unleash/issues/10160))
+
+- Added notified at to change request requested approvals ([#10196](https://github.com/Unleash/unleash/issues/10196))
+
+- Bulk metrics - remove a flag ([#10190](https://github.com/Unleash/unleash/issues/10190))
+
+- Bring back impact metrics ([#10212](https://github.com/Unleash/unleash/issues/10212))
+
+- Fix demo by adapting to new constraints flow ([#10213](https://github.com/Unleash/unleash/issues/10213))
+
+- Added new event for updated requested approvers list ([#10216](https://github.com/Unleash/unleash/issues/10216))
+
+- Update Slack App to App for Slack ([#10218](https://github.com/Unleash/unleash/issues/10218))
+
+- Allow backdrop click through on AddValuesPopover ([#10214](https://github.com/Unleash/unleash/issues/10214))
+
+- Added name and email of requester to track down spammers ([#10235](https://github.com/Unleash/unleash/issues/10235))
+
+- Use `pre-wrap` for whitespace to break when necessary. ([#10245](https://github.com/Unleash/unleash/issues/10245))
+
+- AI flag cleanup action test ([#10242](https://github.com/Unleash/unleash/issues/10242))
+
+- Add permissions to ai flag cleanup workflow ([#10249](https://github.com/Unleash/unleash/issues/10249))
+
+- Add missing permissions to AI flag cleanup workflow ([#10250](https://github.com/Unleash/unleash/issues/10250))
+
+- AI flag cleanup extended experiment ([#10254](https://github.com/Unleash/unleash/issues/10254))
+
+- Remove examples folder ([#10258](https://github.com/Unleash/unleash/issues/10258))
+
+- Improve the approve request email message ([#10264](https://github.com/Unleash/unleash/issues/10264))
+
+- Remove view diff links in new components + remove colons ([#10262](https://github.com/Unleash/unleash/issues/10262))
+
+
+### Testing
+
+- Impact metrics collection e2e ([#10162](https://github.com/Unleash/unleash/issues/10162))
+
+- Impact metrics e2e ([#10178](https://github.com/Unleash/unleash/issues/10178))
+
+
 ## [7.0.3] - 2025-06-17
 
 ## [7.0.2] - 2025-06-17

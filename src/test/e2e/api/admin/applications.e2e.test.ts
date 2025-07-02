@@ -142,10 +142,6 @@ test('should show correct application metrics', async () => {
                     'unleash-client-node:3.2.1',
                     'unleash-client-node:3.2.2',
                 ],
-                sdks: [
-                    'unleash-client-node:3.2.1',
-                    'unleash-client-node:3.2.2',
-                ],
             },
         ],
         featureCount: 3,
@@ -246,7 +242,8 @@ test('should show missing features and strategies', async () => {
             {
                 instanceCount: 1,
                 name: DEFAULT_ENV,
-                sdks: ['unleash-client-node:1.0.0'],
+                frontendSdks: [],
+                backendSdks: ['unleash-client-node:1.0.0'],
                 issues: {
                     missingFeatures: ['toggle-name-2', 'toggle-name-3'],
                     outdatedSdks: ['unleash-client-node:1.0.0'],

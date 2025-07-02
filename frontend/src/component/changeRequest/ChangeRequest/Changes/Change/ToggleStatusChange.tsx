@@ -1,4 +1,4 @@
-import type { ReactNode, VFC } from 'react';
+import type { FC, ReactNode } from 'react';
 import { Box } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import { ChangeItemInfo, ChangeItemWrapper } from './Change.styles';
@@ -8,7 +8,7 @@ interface IToggleStatusChange {
     actions?: ReactNode;
 }
 
-export const ToggleStatusChange: VFC<IToggleStatusChange> = ({
+export const ToggleStatusChange: FC<IToggleStatusChange> = ({
     enabled,
     actions,
 }) => {

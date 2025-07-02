@@ -1,4 +1,3 @@
-import type React from 'react';
 import type { FC, ReactNode } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import type {
@@ -7,11 +6,13 @@ import type {
     IChangeRequestUpdateSegment,
 } from 'component/changeRequest/changeRequest.types';
 import { useSegment } from 'hooks/api/getters/useSegment/useSegment';
-import { SegmentDiff, SegmentTooltipLink } from '../../SegmentTooltipLink.tsx';
 import { ViewableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/ViewableConstraintsList';
 
 import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning.tsx';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
+import { ChangeItemInfo } from './Change.styles.tsx';
+import { ChangeSegmentName } from './ChangeSegmentName.tsx';
+import { SegmentDiff } from './SegmentDiff.tsx';
 
 const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -26,17 +27,6 @@ export const ChangeItemWrapper = styled(Box)({
     justifyContent: 'space-between',
     alignItems: 'center',
 });
-
-const ChangeItemInfo: FC<{ children?: React.ReactNode }> = styled(Box)(
-    ({ theme }) => ({
-        display: 'grid',
-        gridTemplateColumns: '150px auto',
-        gridAutoFlow: 'column',
-        alignItems: 'center',
-        flexGrow: 1,
-        gap: theme.spacing(1),
-    }),
-);
 
 const SegmentContainer = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'conflict',
@@ -89,17 +79,12 @@ export const SegmentChangeDetails: FC<{
                                         color: theme.palette.error.main,
                                     })}
                                 >
-                                    - Deleting segment:
+                                    - Deleting segment
                                 </Typography>
-                                <SegmentTooltipLink
+                                <ChangeSegmentName
                                     name={change.payload.name}
                                     previousName={previousName}
-                                >
-                                    <SegmentDiff
-                                        change={change}
-                                        currentSegment={referenceSegment}
-                                    />
-                                </SegmentTooltipLink>
+                                />
                             </ChangeItemInfo>
                             {actionsWithTabs}
                         </ChangeItemWrapper>
@@ -125,13 +110,8 @@ export const SegmentChangeDetails: FC<{
                         />
                         <ChangeItemCreateEditWrapper>
                             <ChangeItemInfo>
-                                <Typography>Editing segment:</Typography>
-                                <SegmentTooltipLink name={change.payload.name}>
-                                    <SegmentDiff
-                                        change={change}
-                                        currentSegment={referenceSegment}
-                                    />
-                                </SegmentTooltipLink>
+                                <Typography>Editing segment</Typography>
+                                <ChangeSegmentName name={change.payload.name} />
                             </ChangeItemInfo>
                             {actionsWithTabs}
                         </ChangeItemCreateEditWrapper>

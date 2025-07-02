@@ -34,7 +34,7 @@ export const DependencyChange: VFC<{
                     <ChangeItemWrapper>
                         <AddDependencyWrapper>
                             <Typography color={'success.dark'}>
-                                + Adding dependency:
+                                + Adding dependency
                             </Typography>
                             <StyledLink
                                 to={`/projects/${projectId}/features/${change.payload.feature}`}

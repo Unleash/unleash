@@ -3,10 +3,6 @@ import type { FC, ReactNode } from 'react';
 import { Box, styled, Tooltip, Typography } from '@mui/material';
 import BlockIcon from '@mui/icons-material/Block';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
-import {
-    StrategyDiff,
-    StrategyTooltipLink,
-} from '../../StrategyTooltipLink/StrategyTooltipLink.tsx';
 import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
 import type {
     ChangeRequestState,
@@ -22,6 +18,9 @@ import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureV
 import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning.tsx';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
+import { ChangeStrategyName } from './ChangeStrategyName.tsx';
+import { StrategyDiff } from './StrategyDiff.tsx';
+import { ChangeItemInfo } from './Change.styles.tsx';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -37,17 +36,6 @@ const ChangeItemCreateEditDeleteWrapper = styled(Box)(({ theme }) => ({
     marginBottom: theme.spacing(1),
     width: '100%',
 }));
-
-const ChangeItemInfo: FC<{ children?: React.ReactNode }> = styled(Box)(
-    ({ theme }) => ({
-        display: 'grid',
-        gridTemplateColumns: '150px auto',
-        gridAutoFlow: 'column',
-        alignItems: 'center',
-        flexGrow: 1,
-        gap: theme.spacing(1),
-    }),
-);
 
 const StyledBox: FC<{ children?: React.ReactNode }> = styled(Box)(
     ({ theme }) => ({
@@ -101,20 +89,18 @@ const EditHeader: FC<{
     willBeDisabled?: boolean;
 }> = ({ wasDisabled = false, willBeDisabled = false }) => {
     if (wasDisabled && willBeDisabled) {
-        return (
-            <Typography color='action.disabled'>Editing strategy:</Typography>
-        );
+        return <Typography color='text.secondary'>Editing strategy</Typography>;
     }
 
     if (!wasDisabled && willBeDisabled) {
-        return <Typography color='error.dark'>Editing strategy:</Typography>;
+        return <Typography color='error.dark'>Editing strategy</Typography>;
     }
 
     if (wasDisabled && !willBeDisabled) {
-        return <Typography color='success.dark'>Editing strategy:</Typography>;
+        return <Typography color='success.dark'>Editing strategy</Typography>;
     }
 
-    return <Typography>Editing strategy:</Typography>;
+    return <Typography>Editing strategy</Typography>;
 };
 
 const hasDiff = (object: unknown, objectToCompare: unknown) =>
@@ -148,14 +134,9 @@ const DeleteStrategy: FC<{
                             color: theme.palette.error.main,
                         })}
                     >
-                        - Deleting strategy:
+                        - Deleting strategy
                     </Typography>
-                    <StrategyTooltipLink name={name || ''} title={title}>
-                        <StrategyDiff
-                            change={change}
-                            currentStrategy={referenceStrategy}
-                        />
-                    </StrategyTooltipLink>
+                    <ChangeStrategyName name={name || ''} title={title} />
                 </ChangeItemInfo>
                 {actions}
             </ChangeItemCreateEditDeleteWrapper>
@@ -209,16 +190,11 @@ const UpdateStrategy: FC<{
                         wasDisabled={currentStrategy?.disabled}
                         willBeDisabled={change.payload?.disabled}
                     />
-                    <StrategyTooltipLink
+                    <ChangeStrategyName
                         name={change.payload.name}
                         title={change.payload.title}
                         previousTitle={previousTitle}
-                    >
-                        <StrategyDiff
-                            change={change}
-                            currentStrategy={referenceStrategy}
-                        />
-                    </StrategyTooltipLink>
+                    />
                 </ChangeItemInfo>
                 {actions}
             </ChangeItemCreateEditDeleteWrapper>
@@ -286,24 +262,20 @@ const AddStrategy: FC<{
                 <Typography
                     color={
                         change.payload?.disabled
-                            ? 'action.disabled'
+                            ? 'text.secondary'
                             : 'success.dark'
                     }
                 >
-                    + Adding strategy:
+                    + Adding strategy
                 </Typography>
-                <StrategyTooltipLink
+                <ChangeStrategyName
                     name={change.payload.name}
                     title={change.payload.title}
-                >
-                    <StrategyDiff change={change} currentStrategy={undefined} />
-                </StrategyTooltipLink>
-                <div>
-                    <DisabledEnabledState
-                        disabled
-                        show={change.payload?.disabled === true}
-                    />
-                </div>
+                />
+                <DisabledEnabledState
+                    disabled
+                    show={change.payload?.disabled === true}
+                />
             </ChangeItemInfo>
             {actions}
         </ChangeItemCreateEditDeleteWrapper>

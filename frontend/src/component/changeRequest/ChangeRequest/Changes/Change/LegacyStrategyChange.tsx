@@ -102,19 +102,19 @@ const EditHeader: FC<{
 }> = ({ wasDisabled = false, willBeDisabled = false }) => {
     if (wasDisabled && willBeDisabled) {
         return (
-            <Typography color='action.disabled'>Editing strategy:</Typography>
+            <Typography color='action.disabled'>Editing strategy</Typography>
         );
     }
 
     if (!wasDisabled && willBeDisabled) {
-        return <Typography color='error.dark'>Editing strategy:</Typography>;
+        return <Typography color='error.dark'>Editing strategy</Typography>;
     }
 
     if (wasDisabled && !willBeDisabled) {
-        return <Typography color='success.dark'>Editing strategy:</Typography>;
+        return <Typography color='success.dark'>Editing strategy</Typography>;
     }
 
-    return <Typography>Editing strategy:</Typography>;
+    return <Typography>Editing strategy</Typography>;
 };
 
 const hasDiff = (object: unknown, objectToCompare: unknown) =>
@@ -148,7 +148,7 @@ const DeleteStrategy: FC<{
                             color: theme.palette.error.main,
                         })}
                     >
-                        - Deleting strategy:
+                        - Deleting strategy
                     </Typography>
                     <StrategyTooltipLink name={name || ''} title={title}>
                         <StrategyDiff
@@ -273,7 +273,7 @@ const AddStrategy: FC<{
                             : 'success.dark'
                     }
                 >
-                    + Adding strategy:
+                    + Adding strategy
                 </Typography>
                 <StrategyTooltipLink
                     name={change.payload.name}

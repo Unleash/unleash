@@ -76,7 +76,7 @@ const DeleteReleasePlan: FC<{
                             color: theme.palette.error.main,
                         })}
                     >
-                        - Deleting release plan:
+                        - Deleting release plan
                     </Typography>
                     <Typography>{releasePlan.name}</Typography>
                 </ChangeItemInfo>
@@ -219,11 +219,11 @@ const AddReleasePlan: FC<{
                                     current
                                 </span>
                             </TooltipLink>{' '}
-                            release plan with:
+                            release plan with
                         </Typography>
                     ) : (
                         <Typography color='success.dark'>
-                            + Adding release plan:
+                            + Adding release plan
                         </Typography>
                     )}
                     <Typography>{planPreview.name}</Typography>

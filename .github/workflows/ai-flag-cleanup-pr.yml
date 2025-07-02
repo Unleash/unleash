@@ -169,12 +169,13 @@ jobs:
         id: create_prompt
         run: |
           ISSUE_BODY="${{ fromJson(steps.get_issue.outputs.result).body }}"
-          cat <<EOF > cleanup_prompt.txt
+          cat <<'EOF' > cleanup_prompt.txt
           Based on the issue description below, refactor the codebase to permanently apply the desired outcome for this feature flag (e.g. enable, keep variant, or discard), by removing all conditional checks and dead branches, preserving only the correct code path.
 
           After making the changes, provide a **Markdown summary** of what was changed, written for a developer reviewing the PR. Keep it clear, focused, and readable. Use the exact following format (including start & end separator lines, headings, bullets, emojis):
 
           \`\`\`md
+
           === AI Flag Cleanup Summary Start ===
 
           ## 🧹 AI Flag Cleanup Summary
@@ -195,6 +196,7 @@ jobs:
           (Your reasoning for the changes made, including any relevant context or decisions that do not belong at the top of the summary.)
 
           === AI Flag Cleanup Summary End ===
+
           \`\`\`
 
           --- Issue Description ---
@@ -202,12 +204,6 @@ jobs:
           EOF
 
           echo "prompt-file=cleanup_prompt.txt" >> $GITHUB_OUTPUT
-
-      - name: Write prompt
-        run: |
-          cat <<'EOF' > cleanup_prompt.txt
-          ${{ steps.create_prompt.outputs.result }}
-          EOF
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -230,7 +226,13 @@ jobs:
           ${{ inputs.api_key_env_name }}: ${{ secrets.api_key_env_value }}
         run: |
           mapfile -d '' FILES < <(cat "${{ steps.find_files.outputs.file_list }}")
-          aider --model "${{ inputs.model }}" --yes --no-attribute-author --no-attribute-committer --no-attribute-co-authored-by "${FILES[@]}" --message-file cleanup_prompt.txt \
+          aider --model "${{ inputs.model }}" \
+            --yes \
+            --message-file cleanup_prompt.txt \
+            --no-attribute-author \
+            --no-attribute-committer \
+            --no-attribute-co-authored-by \
+             "${FILES[@]}" \
             | tee aider_output.txt
 
           SUMMARY=$(sed -n '/=== AI Flag Cleanup Summary Start ===/,/=== AI Flag Cleanup Summary End ===/{

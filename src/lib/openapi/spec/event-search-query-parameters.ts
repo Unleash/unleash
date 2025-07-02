@@ -23,6 +23,17 @@ export const eventSearchQueryParameters = [
         in: 'query',
     },
     {
+        name: 'groupId',
+        schema: {
+            type: 'string',
+            example: 'IS:123',
+            pattern: '^(IS|IS_ANY_OF):(.*?)(,([0-9]+))*$',
+        },
+        description:
+            'Filter by group ID using supported operators: IS, IS_ANY_OF.',
+        in: 'query',
+    },
+    {
         name: 'feature',
         schema: {
             type: 'string',

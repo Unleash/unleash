@@ -29,6 +29,10 @@ on:
       api_key_env_value:
         description: "The API key"
         required: true
+      UNLEASH_BOT_APP_ID:
+        required: true
+      UNLEASH_BOT_PRIVATE_KEY:
+        required: true
 
 permissions:
   pull-requests: write
@@ -44,8 +48,9 @@ jobs:
         id: app_token
         uses: actions/create-github-app-token@v2
         with:
-          app-id:        1234
+          app-id:        ${{ secrets.UNLEASH_BOT_APP_ID }}
           private-key:   ${{ secrets.UNLEASH_BOT_PRIVATE_KEY }}
+          owner:         ${{ github.repository_owner }}
           repositories:  ${{ github.repository }}
 
 

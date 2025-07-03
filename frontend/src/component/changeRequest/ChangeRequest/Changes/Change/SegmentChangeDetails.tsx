@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from 'react';
-import { Box, styled, Typography } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import type {
     ChangeRequestState,
     IChangeRequestDeleteSegment,
@@ -10,7 +10,12 @@ import { ViewableConstraintsList } from 'component/common/NewConstraintAccordion
 
 import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning.tsx';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
-import { ChangeItemInfo, ChangeItemWrapper } from './Change.styles.tsx';
+import {
+    Action,
+    ChangeItemInfo,
+    ChangeItemWrapper,
+    Deleted,
+} from './Change.styles.tsx';
 import { SegmentDiff } from './SegmentDiff.tsx';
 import { NameWithChangeInfo } from './NameWithChangeInfo/NameWithChangeInfo.tsx';
 
@@ -76,14 +81,7 @@ export const SegmentChangeDetails: FC<{
                     <>
                         <ChangeItemWrapper>
                             <ChangeItemInfo>
-                                <Typography
-                                    component='span'
-                                    sx={(theme) => ({
-                                        color: theme.palette.error.main,
-                                    })}
-                                >
-                                    - Deleting segment
-                                </Typography>
+                                <Deleted>Deleting segment</Deleted>
                                 <NameWithChangeInfo
                                     newName={change.payload.name}
                                     previousName={previousName}
@@ -113,9 +111,7 @@ export const SegmentChangeDetails: FC<{
                         />
                         <ChangeItemCreateEditWrapper>
                             <ChangeItemInfo>
-                                <Typography component='span'>
-                                    Editing segment
-                                </Typography>
+                                <Action>Editing segment</Action>
                                 <NameWithChangeInfo
                                     newName={change.payload.name}
                                 />

@@ -13,6 +13,9 @@ const RED = '#d93644';
 const GREEN = '#68a611';
 const ORANGE = '#d76500';
 
+const ARROW_UP = '&#9650;';
+const ARROW_DOWN = '&#9660;';
+
 export const productivityReportViewModel = ({
     unleashUrl,
     userEmail,
@@ -23,76 +26,82 @@ export const productivityReportViewModel = ({
     userEmail: string;
     userName: string;
     metrics: ProductivityReportMetrics;
-}) => ({
-    userName,
-    userEmail,
-    flagsCreated: metrics.flagsCreated,
-    productionUpdates: metrics.productionUpdates,
-    previousMonth: metrics.previousMonth,
-    health: metrics.health,
-    technicalDebt: Math.max(0, 100 - metrics.health).toString(),
-    unleashUrl,
-    technicalDebtColor() {
-        const technicalDebtRating = Math.max(0, 100 - metrics.health);
-        if (technicalDebtRating < 25) {
-            return GREEN;
-        }
-        if (technicalDebtRating < 75) {
-            return ORANGE;
-        }
-        return RED;
-    },
-    actionText(): string | null {
-        const improveMessage =
-            'Remember to archive stale flags to reduce technical debt and keep your project healthy';
-        const previousHealth = this.previousMonth?.health || 0;
-        if (this.health <= 74) {
-            return improveMessage;
-        }
-        if (this.health < previousHealth) {
-            return improveMessage;
-        }
-        return null;
-    },
-    technicalDebtTrendMessage() {
-        return this.previousMonthText(
-            '%',
-            100 - this.health,
-            this.previousMonth ? 100 - this.previousMonth.health : undefined,
-            true,
-        );
-    },
-    flagsCreatedTrendMessage() {
-        return this.previousMonthText(
-            '',
-            this.flagsCreated,
-            this.previousMonth?.flagsCreated,
-        );
-    },
-    productionUpdatedTrendMessage() {
-        return this.previousMonthText(
-            '',
-            this.productionUpdates,
-            this.previousMonth?.productionUpdates,
-        );
-    },
-    previousMonthText(
-        unit: '' | '%',
-        currentValue: number,
-        previousValue?: number,
-        reversed: boolean = false,
-    ) {
-        if (previousValue == null) {
+}) => {
+    const { health, previousMonth, flagsCreated, productionUpdates } = metrics;
+    const technicalDebt = Math.max(0, 100 - health) || 0;
+
+    return {
+        userName,
+        userEmail,
+        flagsCreated: flagsCreated,
+        productionUpdates: productionUpdates,
+        previousMonth,
+        health: health,
+        technicalDebt: technicalDebt.toString(),
+        unleashUrl,
+        technicalDebtColor() {
+            if (technicalDebt < 25) {
+                return GREEN;
+            }
+            if (technicalDebt < 75) {
+                return ORANGE;
+            }
+            return RED;
+        },
+        actionText(): string | null {
+            const improveMessage =
+                'Remember to archive stale flags to reduce technical debt and keep your project healthy';
+            const previousHealth = previousMonth?.health || 0;
+            if (health <= 74) {
+                return improveMessage;
+            }
+            if (health < previousHealth) {
+                return improveMessage;
+            }
             return null;
-        }
-        if (currentValue > previousValue) {
-            const color = reversed ? RED : GREEN;
-            return `<span style='color: ${color}'>&#9650;</span> ${currentValue - previousValue}${unit} more than previous month`;
-        }
-        if (previousValue > currentValue) {
-            const color = reversed ? GREEN : RED;
-            return `<span style='color: ${color}'>&#9660;</span> ${previousValue - currentValue}${unit} less than previous month`;
-        }
-        return `Same as last month`;
-    },
-});
+        },
+        technicalDebtTrendMessage() {
+            if (!previousMonth || Number.isNaN(previousMonth.health)) {
+                return null;
+            }
+            const previousTechnicalDebt = Math.max(
+                0,
+                100 - previousMonth.health,
+            );
+
+            if (technicalDebt > previousTechnicalDebt) {
+                return `<span style='color: ${RED}'>${ARROW_UP}</span> ${technicalDebt - previousTechnicalDebt}% more than previous month`;
+            }
+            if (previousTechnicalDebt > technicalDebt) {
+                return `<span style='color: ${GREEN}'>${ARROW_DOWN}</span> ${previousTechnicalDebt - technicalDebt}% less than previous month`;
+            }
+            return 'Same as last month';
+        },
+        flagsCreatedTrendMessage() {
+            if (!previousMonth) {
+                return null;
+            }
+
+            if (flagsCreated > previousMonth.flagsCreated) {
+                return `<span style='color: ${GREEN}'>${ARROW_UP}</span> ${flagsCreated - previousMonth.flagsCreated} more than previous month`;
+            }
+            if (previousMonth.flagsCreated > flagsCreated) {
+                return `<span style='color: ${RED}'>${ARROW_DOWN}</span> ${previousMonth.flagsCreated - flagsCreated} less than previous month`;
+            }
+            return 'Same as last month';
+        },
+        productionUpdatedTrendMessage() {
+            if (!previousMonth) {
+                return null;
+            }
+
+            if (productionUpdates > previousMonth.productionUpdates) {
+                return `<span style='color: ${GREEN}'>${ARROW_UP}</span> ${productionUpdates - previousMonth.productionUpdates} more than previous month`;
+            }
+            if (previousMonth.productionUpdates > productionUpdates) {
+                return `<span style='color: ${RED}'>${ARROW_DOWN}</span> ${previousMonth.productionUpdates - productionUpdates} less than previous month`;
+            }
+            return 'Same as last month';
+        },
+    };
+};

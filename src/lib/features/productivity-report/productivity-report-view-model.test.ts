@@ -44,8 +44,6 @@ describe('productivityReportViewModel', () => {
                 metrics,
             });
 
-            console.log(viewModel);
-
             expect(viewModel.technicalDebtColor()).toBe('#d93644');
         });
 

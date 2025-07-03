@@ -21,4 +21,6 @@ jobs:
       model: gemini
       api_key_env_name: GEMINI_API_KEY
     secrets:
-      api_key_env_value: ${{ secrets.GEMINI_API_KEY }}
+      api_key_env_value:       ${{ secrets.GEMINI_API_KEY }}
+      UNLEASH_BOT_APP_ID:      ${{ secrets.UNLEASH_BOT_APP_ID }}
+      UNLEASH_BOT_PRIVATE_KEY: ${{ secrets.UNLEASH_BOT_PRIVATE_KEY }}

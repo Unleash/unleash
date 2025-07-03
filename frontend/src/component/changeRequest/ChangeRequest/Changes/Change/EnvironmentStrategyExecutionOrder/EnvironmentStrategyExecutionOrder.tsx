@@ -12,6 +12,7 @@ import { useUiFlag } from 'hooks/useUiFlag.ts';
 import {
     ChangeItemInfo as NewChangeItemInfo,
     ChangeItemWrapper,
+    Action,
 } from '../Change.styles.tsx';
 
 const ChangeItemInfo = styled(Box)({
@@ -102,7 +103,9 @@ export const EnvironmentStrategyExecutionOrder = ({
                 <ChangeContent>
                     <ChangeItemWrapper>
                         <NewChangeItemInfo>
-                            Updating strategy execution order to
+                            <Action>
+                                Updating strategy execution order to
+                            </Action>
                         </NewChangeItemInfo>
                         <div>
                             <TabList>

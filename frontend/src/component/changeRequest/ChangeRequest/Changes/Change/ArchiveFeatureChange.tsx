@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from 'react';
-import { ChangeItemInfo, ChangeItemWrapper } from './Change.styles.tsx';
+import { Action, ChangeItemInfo, ChangeItemWrapper } from './Change.styles.tsx';
 import { styled } from '@mui/material';
 import { ChangeItemWrapper as LegacyChangeItemWrapper } from './LegacyStrategyChange.tsx';
 
@@ -30,7 +30,7 @@ export const LegacyArchiveFeatureChange: FC<ArchiveFeatureChange> = ({
 
 export const ArchiveFeatureChange: FC<ArchiveFeatureChange> = ({ actions }) => (
     <ChangeItemWrapper>
-        <ArchiveBox>Archiving flag</ArchiveBox>
+        <Action color='error.main'>Archiving flag</Action>
         {actions}
     </ChangeItemWrapper>
 );

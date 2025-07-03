@@ -89,13 +89,22 @@ const ChangeInnerBox = styled(Box)(({ theme }) => ({
 }));
 
 export const FeatureChange: FC<{
-    actions: ReactNode;
+    actions?: ReactNode;
     index: number;
     changeRequest: ChangeRequestType;
     change: IFeatureChange;
     feature: IChangeRequestFeature;
     onNavigate?: () => void;
-}> = ({ index, change, feature, changeRequest, actions, onNavigate }) => {
+    isDefaultChange?: boolean;
+}> = ({
+    index,
+    change,
+    feature,
+    changeRequest,
+    actions,
+    onNavigate,
+    isDefaultChange,
+}) => {
     const lastIndex = feature.defaultChange
         ? feature.changes.length + 1
         : feature.changes.length;
@@ -189,6 +198,7 @@ export const FeatureChange: FC<{
                 )}
                 {change.action === 'updateEnabled' && (
                     <StatusChangeComponent
+                        isDefaultChange={isDefaultChange}
                         enabled={change.payload.enabled}
                         actions={actions}
                     />
@@ -202,6 +212,7 @@ export const FeatureChange: FC<{
                 change.action === 'updateStrategy' ? (
                     <StrategyChangeComponent
                         actions={actions}
+                        isDefaultChange={isDefaultChange}
                         change={change}
                         featureName={feature.name}
                         environmentName={changeRequest.environment}

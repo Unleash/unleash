@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from 'react';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import { ChangeItemWrapper as LegacyChangeItemWrapper } from './LegacyStrategyChange.tsx';
 import { Action, ChangeItemInfo, ChangeItemWrapper } from './Change.styles';
@@ -7,7 +7,14 @@ import { Action, ChangeItemInfo, ChangeItemWrapper } from './Change.styles';
 interface IToggleStatusChange {
     enabled: boolean;
     actions?: ReactNode;
+    isDefaultChange?: boolean;
 }
+
+const StatusWillChange = () => (
+    <Typography variant='body2' component='span' color='text.secondary'>
+        Feature status will change
+    </Typography>
+);
 
 /**
  * @deprecated use ToggleStatusChange instead; remove with flag crDiffView
@@ -15,6 +22,7 @@ interface IToggleStatusChange {
 export const LegacyToggleStatusChange: FC<IToggleStatusChange> = ({
     enabled,
     actions,
+    isDefaultChange,
 }) => {
     return (
         <LegacyChangeItemWrapper>
@@ -27,6 +35,7 @@ export const LegacyToggleStatusChange: FC<IToggleStatusChange> = ({
                     {enabled ? ' Enabled' : 'Disabled'}
                 </Badge>
             </Box>
+            {isDefaultChange ? <StatusWillChange /> : null}
             {actions}
         </LegacyChangeItemWrapper>
     );
@@ -35,6 +44,7 @@ export const LegacyToggleStatusChange: FC<IToggleStatusChange> = ({
 export const ToggleStatusChange: FC<IToggleStatusChange> = ({
     enabled,
     actions,
+    isDefaultChange,
 }) => {
     return (
         <ChangeItemWrapper>
@@ -43,6 +53,7 @@ export const ToggleStatusChange: FC<IToggleStatusChange> = ({
                 <Badge color={enabled ? 'success' : 'error'}>
                     {enabled ? ' Enabled' : 'Disabled'}
                 </Badge>
+                {isDefaultChange ? <StatusWillChange /> : null}
                 {actions}
             </ChangeItemInfo>
         </ChangeItemWrapper>

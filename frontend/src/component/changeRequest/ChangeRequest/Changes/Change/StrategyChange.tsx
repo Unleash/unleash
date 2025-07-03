@@ -20,7 +20,12 @@ import type { IFeatureStrategy } from 'interfaces/strategy';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
 import { ChangeStrategyName } from './ChangeStrategyName.tsx';
 import { StrategyDiff } from './StrategyDiff.tsx';
-import { ChangeItemInfo } from './Change.styles.tsx';
+import {
+    Action,
+    AddedStrategy,
+    ChangeItemInfo,
+    Deleted,
+} from './Change.styles.tsx';
 
 const ChangeItemCreateEditDeleteWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -84,30 +89,18 @@ const EditHeader: FC<{
     willBeDisabled?: boolean;
 }> = ({ wasDisabled = false, willBeDisabled = false }) => {
     if (wasDisabled && willBeDisabled) {
-        return (
-            <Typography component='span' color='text.secondary'>
-                Editing strategy
-            </Typography>
-        );
+        return <Action color='text.secondary'>Editing strategy</Action>;
     }
 
     if (!wasDisabled && willBeDisabled) {
-        return (
-            <Typography component='span' color='error.dark'>
-                Editing strategy
-            </Typography>
-        );
+        return <Action color='error.dark'>Editing strategy</Action>;
     }
 
     if (wasDisabled && !willBeDisabled) {
-        return (
-            <Typography component='span' color='success.dark'>
-                Editing strategy
-            </Typography>
-        );
+        return <Action color='success.dark'>Editing strategy</Action>;
     }
 
-    return <Typography component='span'>Editing strategy</Typography>;
+    return <Action>Editing strategy</Action>;
 };
 
 const hasDiff = (object: unknown, objectToCompare: unknown) =>
@@ -136,14 +129,7 @@ const DeleteStrategy: FC<{
         <>
             <ChangeItemCreateEditDeleteWrapper>
                 <ChangeItemInfo>
-                    <Typography
-                        component='span'
-                        sx={(theme) => ({
-                            color: theme.palette.error.main,
-                        })}
-                    >
-                        - Deleting strategy
-                    </Typography>
+                    <Deleted>Deleting strategy</Deleted>
                     <ChangeStrategyName name={name || ''} title={title} />
                 </ChangeItemInfo>
                 {actions}
@@ -267,16 +253,9 @@ const AddStrategy: FC<{
     <>
         <ChangeItemCreateEditDeleteWrapper>
             <ChangeItemInfo>
-                <Typography
-                    color={
-                        change.payload?.disabled
-                            ? 'text.secondary'
-                            : 'success.dark'
-                    }
-                    component='span'
-                >
-                    + Adding strategy
-                </Typography>{' '}
+                <AddedStrategy disabled={change.payload?.disabled}>
+                    Adding strategy
+                </AddedStrategy>
                 <ChangeStrategyName
                     name={change.payload.name}
                     title={change.payload.title}

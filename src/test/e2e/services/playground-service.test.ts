@@ -204,10 +204,6 @@ describe('the playground service (e2e)', () => {
         segments?: SegmentSchema[];
     }): Promise<PlaygroundFeatureEvaluationResult[]> => {
         await seedDatabaseForPlaygroundTest(db, features, env, segments);
-
-        //     const activeSegments = await db.stores.segmentStore.getAllFeatureStrategySegments()
-        // console.log("active segments db seeding", activeSegments)
-
         const projects = '*';
 
         const serviceFeatures = await service.evaluateQuery(

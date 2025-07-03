@@ -18,7 +18,6 @@ import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureV
 import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning.tsx';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
-import { ChangeStrategyName } from './ChangeStrategyName.tsx';
 import { StrategyDiff } from './StrategyDiff.tsx';
 import {
     Action,
@@ -27,6 +26,7 @@ import {
     ChangeItemWrapper,
     Deleted,
 } from './Change.styles.tsx';
+import { NameWithChangeInfo } from './NameWithChangeInfo/NameWithChangeInfo.tsx';
 
 const StyledBox: FC<{ children?: React.ReactNode }> = styled(Box)(
     ({ theme }) => ({
@@ -103,10 +103,6 @@ const DeleteStrategy: FC<{
     currentStrategy: IFeatureStrategy | undefined;
     actions?: ReactNode;
 }> = ({ change, changeRequestState, currentStrategy, actions }) => {
-    const name =
-        changeRequestState === 'Applied'
-            ? change.payload?.snapshot?.name
-            : currentStrategy?.name;
     const title =
         changeRequestState === 'Applied'
             ? change.payload?.snapshot?.title
@@ -121,7 +117,10 @@ const DeleteStrategy: FC<{
             <ChangeItemWrapper>
                 <ChangeItemInfo>
                     <Deleted>Deleting strategy</Deleted>
-                    <ChangeStrategyName name={name || ''} title={title} />
+                    <NameWithChangeInfo
+                        newName={title}
+                        previousName={referenceStrategy?.title}
+                    />
                 </ChangeItemInfo>
                 {actions}
             </ChangeItemWrapper>
@@ -175,10 +174,9 @@ const UpdateStrategy: FC<{
                         wasDisabled={currentStrategy?.disabled}
                         willBeDisabled={change.payload?.disabled}
                     />
-                    <ChangeStrategyName
-                        name={change.payload.name}
-                        title={change.payload.title}
-                        previousTitle={previousTitle}
+                    <NameWithChangeInfo
+                        newName={change.payload.title}
+                        previousName={previousTitle}
                     />
                 </ChangeItemInfo>
                 {actions}
@@ -248,10 +246,7 @@ const AddStrategy: FC<{
                 <AddedStrategy disabled={change.payload?.disabled}>
                     Adding {isDefaultChange && 'default'} strategy
                 </AddedStrategy>
-                <ChangeStrategyName
-                    name={change.payload.name}
-                    title={change.payload.title}
-                />
+                <NameWithChangeInfo newName={change.payload.title} />
                 <DisabledEnabledState
                     disabled
                     show={change.payload?.disabled === true}

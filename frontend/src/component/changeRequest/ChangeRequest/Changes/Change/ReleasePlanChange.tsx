@@ -191,9 +191,8 @@ const AddReleasePlan: FC<{
                                 current
                             </span>
                         </TooltipLink>{' '}
-                        release plan with
+                        release plan with {planPreview.name}
                     </Action>
-                    <Typography component='span'>{planPreview.name}</Typography>
                 </ChangeItemInfo>
                 <div>
                     <TabList>

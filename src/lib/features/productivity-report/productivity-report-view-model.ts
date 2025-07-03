@@ -33,10 +33,10 @@ export const productivityReportViewModel = ({
     return {
         userName,
         userEmail,
-        flagsCreated: flagsCreated,
-        productionUpdates: productionUpdates,
+        flagsCreated,
+        productionUpdates,
         previousMonth,
-        health: health,
+        health,
         technicalDebt: technicalDebt.toString(),
         unleashUrl,
         technicalDebtColor() {

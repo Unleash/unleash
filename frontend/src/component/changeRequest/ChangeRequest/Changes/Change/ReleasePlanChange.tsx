@@ -1,5 +1,5 @@
 import { useRef, useState, type FC, type ReactNode } from 'react';
-import { Box, styled, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import type {
     ChangeRequestState,
     IChangeRequestAddReleasePlan,
@@ -14,17 +14,13 @@ import { ReleasePlan } from 'component/feature/FeatureView/FeatureOverview/Relea
 import { ReleasePlanMilestone } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/ReleasePlanMilestone';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
-import { ChangeItemInfo, ChangeItemWrapper } from './Change.styles.tsx';
-
-const ChangeItemCreateEditDeleteWrapper = styled(Box)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: 'auto auto',
-    justifyContent: 'space-between',
-    gap: theme.spacing(1),
-    alignItems: 'center',
-    marginBottom: theme.spacing(2),
-    width: '100%',
-}));
+import {
+    Action,
+    Added,
+    ChangeItemInfo,
+    ChangeItemWrapper,
+    Deleted,
+} from './Change.styles.tsx';
 
 const DeleteReleasePlan: FC<{
     change: IChangeRequestDeleteReleasePlan;
@@ -43,14 +39,7 @@ const DeleteReleasePlan: FC<{
         <>
             <ChangeItemWrapper>
                 <ChangeItemInfo>
-                    <Typography
-                        sx={(theme) => ({
-                            color: theme.palette.error.main,
-                        })}
-                        component='span'
-                    >
-                        - Deleting release plan
-                    </Typography>
+                    <Deleted>Deleting release plan</Deleted>
                     <Typography component='span'>{releasePlan.name}</Typography>
                     {actions}
                 </ChangeItemInfo>
@@ -87,9 +76,7 @@ const StartMilestone: FC<{
         <Tabs>
             <ChangeItemWrapper>
                 <ChangeItemInfo>
-                    <Typography component='span' color='success.dark'>
-                        + Start milestone
-                    </Typography>
+                    <Added>Start milestone</Added>
                     <Typography component='span'>
                         {newMilestone.name}
                     </Typography>
@@ -161,9 +148,7 @@ const AddReleasePlan: FC<{
             <>
                 <ChangeItemWrapper>
                     <ChangeItemInfo>
-                        <Typography component='span' color='success.dark'>
-                            + Adding release plan
-                        </Typography>
+                        <Added>Adding release plan</Added>
                         <Typography component='span'>
                             {planPreview.name}
                         </Typography>
@@ -179,7 +164,7 @@ const AddReleasePlan: FC<{
         <Tabs>
             <ChangeItemWrapper>
                 <ChangeItemInfo>
-                    <Typography component='span'>
+                    <Action>
                         Replacing{' '}
                         <TooltipLink
                             tooltip={
@@ -207,7 +192,7 @@ const AddReleasePlan: FC<{
                             </span>
                         </TooltipLink>{' '}
                         release plan with
-                    </Typography>
+                    </Action>
                     <Typography component='span'>{planPreview.name}</Typography>
                 </ChangeItemInfo>
                 <div>

@@ -59,6 +59,8 @@ export default class AddonService {
     fetchAddonConfigs: (() => Promise<IAddon[]>) &
         memoizee.Memoized<() => Promise<IAddon[]>>;
 
+    private eventHandlers: Map<string, (event: IEvent) => void>;
+
     constructor(
         {
             addonStore,
@@ -83,6 +85,7 @@ export default class AddonService {
         this.logger = getLogger('services/addon-service.js');
         this.tagTypeService = tagTypeService;
         this.eventService = eventService;
+        this.eventHandlers = new Map();
 
         this.addonProviders =
             addons ||
@@ -124,42 +127,57 @@ export default class AddonService {
     }
 
     registerEventHandler(): void {
-        SUPPORTED_EVENTS.forEach((eventName) =>
-            this.eventService.onEvent(eventName, this.handleEvent(eventName)),
-        );
+        SUPPORTED_EVENTS.forEach((eventName) => {
+            const handler = this.handleEvent(eventName);
+            this.eventHandlers.set(eventName, handler);
+            this.eventService.onEvent(eventName, handler);
+        });
     }
 
     handleEvent(eventName: string): (event: IEvent) => void {
         const { addonProviders } = this;
         return (event) => {
-            this.fetchAddonConfigs().then((addonInstances) => {
-                addonInstances
-                    .filter((addon) => addon.events.includes(eventName))
-                    .filter(
-                        (addon) =>
-                            !event.project ||
-                            !addon.projects ||
-                            addon.projects.length === 0 ||
-                            addon.projects[0] === WILDCARD_OPTION ||
-                            addon.projects.includes(event.project),
-                    )
-                    .filter(
-                        (addon) =>
-                            !event.environment ||
-                            !addon.environments ||
-                            addon.environments.length === 0 ||
-                            addon.environments[0] === WILDCARD_OPTION ||
-                            addon.environments.includes(event.environment),
-                    )
-                    .filter((addon) => addonProviders[addon.provider])
-                    .forEach((addon) =>
-                        addonProviders[addon.provider].handleEvent(
-                            event,
-                            addon.parameters,
-                            addon.id,
-                        ),
-                    );
-            });
+            this.fetchAddonConfigs()
+                .then((addonInstances) => {
+                    addonInstances
+                        .filter((addon) => addon.events.includes(eventName))
+                        .filter(
+                            (addon) =>
+                                !event.project ||
+                                !addon.projects ||
+                                addon.projects.length === 0 ||
+                                addon.projects[0] === WILDCARD_OPTION ||
+                                addon.projects.includes(event.project),
+                        )
+                        .filter(
+                            (addon) =>
+                                !event.environment ||
+                                !addon.environments ||
+                                addon.environments.length === 0 ||
+                                addon.environments[0] === WILDCARD_OPTION ||
+                                addon.environments.includes(event.environment),
+                        )
+                        .filter((addon) => addonProviders[addon.provider])
+                        .forEach((addon) =>
+                            addonProviders[addon.provider].handleEvent(
+                                event,
+                                addon.parameters,
+                                addon.id,
+                            ),
+                        );
+                })
+                .catch((error) => {
+                    if (error.message === 'aborted') {
+                        this.logger.debug(
+                            `Addon event handling aborted during shutdown for event ${eventName}`,
+                        );
+                    } else {
+                        this.logger.warn(
+                            `Failed to handle addon event ${eventName}:`,
+                            error,
+                        );
+                    }
+                });
         };
     }
 
@@ -349,6 +367,20 @@ export default class AddonService {
     }
 
     destroy(): void {
+        // Clean up event handlers first to prevent race conditions during teardown
+        this.eventHandlers.forEach((handler, eventName) => {
+            try {
+                this.eventService.off(eventName, handler);
+            } catch (error) {
+                this.logger.debug(
+                    `Failed to remove event handler for ${eventName}:`,
+                    error,
+                );
+            }
+        });
+        this.eventHandlers.clear();
+
+        // Then destroy addon providers
         Object.values(this.addonProviders).forEach((addon) =>
             addon.destroy?.(),
         );

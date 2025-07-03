@@ -6,7 +6,6 @@ import { textTruncated } from 'themes/themeStyles';
 const Truncated = styled('span')(() => ({
     ...textTruncated,
     maxWidth: 500,
-    display: 'block',
 }));
 
 const NewName = styled(Typography)<TypographyProps>({

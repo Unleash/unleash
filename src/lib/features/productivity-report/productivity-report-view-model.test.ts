@@ -88,8 +88,8 @@ describe('productivityReportViewModel', () => {
                 metrics,
             });
 
-            expect(viewModel.technicalDebtTrendMessage()).toBe(
-                "<span style='color: #68a611'>&#9660;</span> 10% less than previous month",
+            expect(viewModel.technicalDebtTrendMessage()).toMatchInlineSnapshot(
+                `"<span style='color: #68a611'>&#9660;</span> 10% less than previous month"`,
             );
         });
 
@@ -104,8 +104,8 @@ describe('productivityReportViewModel', () => {
                 metrics,
             });
 
-            expect(viewModel.technicalDebtTrendMessage()).toBe(
-                "<span style='color: #d93644'>&#9650;</span> 10% more than previous month",
+            expect(viewModel.technicalDebtTrendMessage()).toMatchInlineSnapshot(
+                `"<span style='color: #d93644'>&#9650;</span> 10% more than previous month"`,
             );
         });
 
@@ -140,9 +140,9 @@ describe('productivityReportViewModel', () => {
                 ...mockData,
                 metrics,
             });
-            expect(viewModel.flagsCreatedTrendMessage()).toBe(
-                "<span style='color: #68a611'>&#9650;</span> 2 more than previous month",
-            );
+            expect(
+                viewModel.flagsCreatedTrendMessage(),
+            ).toMatchInlineSnapshot(`"<span style='color: #68a611'>&#9650;</span> 2 more than previous month"`);
         });
     });
     describe('productionUpdatedTrendMessage', () => {
@@ -159,9 +159,9 @@ describe('productivityReportViewModel', () => {
                 ...mockData,
                 metrics,
             });
-            expect(viewModel.productionUpdatedTrendMessage()).toBe(
-                "<span style='color: #d93644'>&#9660;</span> 3 less than previous month",
-            );
+            expect(
+                viewModel.productionUpdatedTrendMessage(),
+            ).toMatchInlineSnapshot(`"<span style='color: #d93644'>&#9660;</span> 3 less than previous month"`);
         });
     });
     describe('Missing previous month data', () => {
@@ -217,9 +217,7 @@ describe('productivityReportViewModel', () => {
                 metrics,
             });
 
-            expect(viewModel.actionText()).toBe(
-                'Remember to archive stale flags to reduce technical debt and keep your project healthy',
-            );
+            expect(viewModel.actionText()).toMatchInlineSnapshot(`"Remember to archive stale flags to reduce technical debt and keep your project healthy"`);
         });
 
         it('health improved but below healthy threshold', () => {
@@ -237,9 +235,7 @@ describe('productivityReportViewModel', () => {
                 metrics,
             });
 
-            expect(viewModel.actionText()).toBe(
-                'Remember to archive stale flags to reduce technical debt and keep your project healthy',
-            );
+            expect(viewModel.actionText()).toMatchInlineSnapshot(`"Remember to archive stale flags to reduce technical debt and keep your project healthy"`);
         });
 
         it('healthy with no previous month data', () => {

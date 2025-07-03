@@ -158,6 +158,7 @@ export const ChangeRequestAddRequestedApprovers: FC<{
 }> = ({ changeRequest, saveClicked, existingReviewers }) => {
     const theme = useTheme();
     const [reviewers, setReviewers] = useState<AvailableReviewerSchema[]>([]);
+    const allReviewers = [...existingReviewers, ...reviewers];
     const { reviewers: fetchedReviewers, loading: isLoading } =
         useAvailableChangeRequestReviewers(
             changeRequest.project,
@@ -207,6 +208,13 @@ export const ChangeRequestAddRequestedApprovers: FC<{
                 options={availableReviewers}
                 renderOption={renderOption}
                 filterOptions={filterOptions}
+                freeSolo={allReviewers.length >= 10 ? false : undefined}
+                getOptionDisabled={(options) => {
+                    return (
+                        allReviewers.length >= 10 &&
+                        !reviewers.find((opt) => opt.id === options.id)
+                    );
+                }}
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 getOptionLabel={(option: AvailableReviewerSchema) =>
                     option.email || option.name || option.username || ''

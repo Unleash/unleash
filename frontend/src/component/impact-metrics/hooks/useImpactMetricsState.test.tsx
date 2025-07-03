@@ -22,7 +22,7 @@ const TestWrapper = () => (
     </Routes>
 );
 
-describe('useUrlState', () => {
+describe('useImpactMetricsState', () => {
     beforeEach(() => {
         window.localStorage.clear();
     });

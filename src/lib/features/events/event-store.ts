@@ -381,7 +381,10 @@ export class EventStore implements IEventStore {
     ): Promise<IEvent[]> {
         const query = this.buildSearchQuery(queryParams, params.query)
             .select(options?.withIp ? [...EVENT_COLUMNS, 'ip'] : EVENT_COLUMNS)
-            .orderBy('created_at', params.order || 'desc')
+            .orderBy([
+                { column: 'created_at', order: params.order || 'desc' },
+                { column: 'id', order: params.order || 'desc' },
+            ])
             .limit(Number(params.limit) ?? 100)
             .offset(Number(params.offset) ?? 0);
 

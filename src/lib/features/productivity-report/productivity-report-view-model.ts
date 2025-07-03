@@ -26,18 +26,21 @@ export const productivityReportViewModel = ({
 }) => ({
     userName,
     userEmail,
-    ...metrics,
+    flagsCreated: metrics.flagsCreated,
+    productionUpdates: metrics.productionUpdates,
+    previousMonth: metrics.previousMonth,
+    health: metrics.health,
     technicalDebt: Math.max(0, 100 - metrics.health).toString(),
     unleashUrl,
-    healthColor() {
-        const healthRating = this.health;
-        const healthColor =
-            healthRating >= 0 && healthRating <= 24
-                ? RED
-                : healthRating >= 25 && healthRating <= 74
+    technicalDebtColor() {
+        const technicalDebtRating = 100 - this.health;
+        const technicalDebtColor =
+            technicalDebtRating >= 0 && technicalDebtRating <= 24
+                ? GREEN
+                : technicalDebtRating >= 25 && technicalDebtRating <= 74
                   ? ORANGE
-                  : GREEN;
-        return healthColor;
+                  : RED;
+        return technicalDebtColor;
     },
     actionText(): string | null {
         const improveMessage =
@@ -51,11 +54,12 @@ export const productivityReportViewModel = ({
         }
         return null;
     },
-    healthTrendMessage() {
+    technicalDebtTrendMessage() {
         return this.previousMonthText(
             '%',
-            this.health,
-            this.previousMonth?.health,
+            100 - this.health,
+            this.previousMonth ? 100 - this.previousMonth.health : undefined,
+            true,
         );
     },
     flagsCreatedTrendMessage() {
@@ -76,15 +80,18 @@ export const productivityReportViewModel = ({
         unit: '' | '%',
         currentValue: number,
         previousValue?: number,
+        reversed: boolean = false,
     ) {
         if (previousValue == null) {
             return null;
         }
         if (currentValue > previousValue) {
-            return `<span style='color: ${GREEN}'>&#9650;</span> ${currentValue - previousValue}${unit} more than previous month`;
+            const color = reversed ? RED : GREEN;
+            return `<span style='color: ${color}'>&#9650;</span> ${currentValue - previousValue}${unit} more than previous month`;
         }
         if (previousValue > currentValue) {
-            return `<span style='color: ${RED}'>&#9660;</span> ${previousValue - currentValue}${unit} less than previous month`;
+            const color = reversed ? GREEN : RED;
+            return `<span style='color: ${color}'>&#9660;</span> ${previousValue - currentValue}${unit} less than previous month`;
         }
         return `Same as last month`;
     },

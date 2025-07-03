@@ -32,11 +32,11 @@ describe('productivityReportViewModel', () => {
         expect(viewModel.technicalDebt).toBe('15');
     });
 
-    describe('healthColor', () => {
-        it('returns RED for health between 0 and 24', () => {
+    describe('technicalDebtColor', () => {
+        it('returns GREEN for technical debt between 0 and 24', () => {
             const metrics: ProductivityReportMetrics = {
                 ...mockMetrics,
-                health: 20,
+                health: 80, // 20% technical debt
             };
 
             const viewModel = productivityReportViewModel({
@@ -44,13 +44,13 @@ describe('productivityReportViewModel', () => {
                 metrics,
             });
 
-            expect(viewModel.healthColor()).toBe('#d93644');
+            expect(viewModel.technicalDebtColor()).toBe('#68a611');
         });
 
-        it('returns ORANGE for health between 25 and 74', () => {
+        it('returns ORANGE for technical debt between 25 and 74', () => {
             const metrics: ProductivityReportMetrics = {
                 ...mockMetrics,
-                health: 50,
+                health: 50, // 50% technical debt
             };
 
             const viewModel = productivityReportViewModel({
@@ -58,13 +58,13 @@ describe('productivityReportViewModel', () => {
                 metrics,
             });
 
-            expect(viewModel.healthColor()).toBe('#d76500');
+            expect(viewModel.technicalDebtColor()).toBe('#d76500');
         });
 
-        it('returns GREEN for health 75 or above', () => {
+        it('returns RED for technical debt 75 or above', () => {
             const metrics: ProductivityReportMetrics = {
                 ...mockMetrics,
-                health: 80,
+                health: 20, // 80% technical debt
             };
 
             const viewModel = productivityReportViewModel({
@@ -72,12 +72,12 @@ describe('productivityReportViewModel', () => {
                 metrics,
             });
 
-            expect(viewModel.healthColor()).toBe('#68a611');
+            expect(viewModel.technicalDebtColor()).toBe('#d93644');
         });
     });
 
-    describe('healthTrendMessage', () => {
-        it('returns correct trend message when technica debt decreased', () => {
+    describe('technicalDebtTrendMessage', () => {
+        it('returns correct trend message when technical debt decreased', () => {
             const metrics: ProductivityReportMetrics = {
                 ...mockMetrics,
                 health: 80,
@@ -89,8 +89,8 @@ describe('productivityReportViewModel', () => {
                 metrics,
             });
 
-            expect(viewModel.healthTrendMessage()).toBe(
-                "<span style='color: #68a611'>&#9650;</span> 10% more than previous month",
+            expect(viewModel.technicalDebtTrendMessage()).toBe(
+                "<span style='color: #68a611'>&#9660;</span> 10% less than previous month",
             );
         });
 
@@ -106,8 +106,8 @@ describe('productivityReportViewModel', () => {
                 metrics,
             });
 
-            expect(viewModel.healthTrendMessage()).toBe(
-                "<span style='color: #d93644'>&#9660;</span> 10% less than previous month",
+            expect(viewModel.technicalDebtTrendMessage()).toBe(
+                "<span style='color: #d93644'>&#9650;</span> 10% more than previous month",
             );
         });
 
@@ -123,7 +123,9 @@ describe('productivityReportViewModel', () => {
                 metrics,
             });
 
-            expect(viewModel.healthTrendMessage()).toBe('Same as last month');
+            expect(viewModel.technicalDebtTrendMessage()).toBe(
+                'Same as last month',
+            );
         });
     });
 
@@ -185,7 +187,7 @@ describe('productivityReportViewModel', () => {
                 metrics,
             });
 
-            expect(viewModel.healthTrendMessage()).toBe(null);
+            expect(viewModel.technicalDebtTrendMessage()).toBe(null);
             expect(viewModel.flagsCreatedTrendMessage()).toBe(null);
             expect(viewModel.productionUpdatedTrendMessage()).toBe(null);
         });

@@ -146,7 +146,7 @@ test('Can send productivity report email', async () => {
     expect(content.html).toContain('localhost/profile');
     expect(content.html).toContain('#68a611');
     expect(content.html).toContain('1%');
-    expect(content.html).toContain('10% more than previous month');
+    expect(content.html).toContain('10% less than previous month');
     expect(content.text).toContain('localhost/insights');
     expect(content.text).toContain('localhost/profile');
     expect(content.text).toContain('localhost/profile');

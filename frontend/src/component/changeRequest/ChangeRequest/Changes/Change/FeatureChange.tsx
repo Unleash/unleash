@@ -89,7 +89,8 @@ const ChangeInnerBox = styled(Box)(({ theme }) => ({
 }));
 
 export const FeatureChange: FC<{
-    actions: ReactNode;
+    isDefaultChange?: boolean;
+    actions?: ReactNode;
     index: number;
     changeRequest: ChangeRequestType;
     change: IFeatureChange;
@@ -189,6 +190,7 @@ export const FeatureChange: FC<{
                 )}
                 {change.action === 'updateEnabled' && (
                     <StatusChangeComponent
+                        isDefaultChange
                         enabled={change.payload.enabled}
                         actions={actions}
                     />

@@ -1,5 +1,5 @@
 import { useRef, useState, type FC, type ReactNode } from 'react';
-import { Typography } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import type {
     ChangeRequestState,
     IChangeRequestAddReleasePlan,
@@ -21,6 +21,12 @@ import {
     ChangeItemWrapper,
     Deleted,
 } from './Change.styles.tsx';
+
+const StyledTabs = styled(Tabs)(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'column',
+    gap: theme.spacing(1),
+}));
 
 const DeleteReleasePlan: FC<{
     change: IChangeRequestDeleteReleasePlan;
@@ -73,7 +79,7 @@ const StartMilestone: FC<{
     if (!newMilestone) return;
 
     return (
-        <Tabs>
+        <StyledTabs>
             <ChangeItemWrapper>
                 <ChangeItemInfo>
                     <Added>Start milestone</Added>
@@ -100,7 +106,7 @@ const StartMilestone: FC<{
                     }}
                 />
             </TabPanel>
-        </Tabs>
+        </StyledTabs>
     );
 };
 
@@ -161,7 +167,7 @@ const AddReleasePlan: FC<{
     }
 
     return (
-        <Tabs>
+        <StyledTabs>
             <ChangeItemWrapper>
                 <ChangeItemInfo>
                     <Action>
@@ -213,7 +219,7 @@ const AddReleasePlan: FC<{
                     }}
                 />
             </TabPanel>
-        </Tabs>
+        </StyledTabs>
     );
 };
 

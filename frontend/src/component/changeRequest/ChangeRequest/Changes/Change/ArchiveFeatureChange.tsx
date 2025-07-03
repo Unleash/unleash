@@ -30,7 +30,9 @@ export const LegacyArchiveFeatureChange: FC<ArchiveFeatureChange> = ({
 
 export const ArchiveFeatureChange: FC<ArchiveFeatureChange> = ({ actions }) => (
     <ChangeItemWrapper>
-        <Action color='error.main'>Archiving flag</Action>
-        {actions}
+        <ChangeItemInfo>
+            <Action color='error.main'>Archiving flag</Action>
+            {actions}
+        </ChangeItemInfo>
     </ChangeItemWrapper>
 );

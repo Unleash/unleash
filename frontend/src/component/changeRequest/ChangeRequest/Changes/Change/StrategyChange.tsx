@@ -24,18 +24,9 @@ import {
     Action,
     AddedStrategy,
     ChangeItemInfo,
+    ChangeItemWrapper,
     Deleted,
 } from './Change.styles.tsx';
-
-const ChangeItemCreateEditDeleteWrapper = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'space-between',
-    gap: theme.spacing(1),
-    alignItems: 'center',
-    marginBottom: theme.spacing(1),
-    width: '100%',
-    flexFlow: 'row wrap',
-}));
 
 const StyledBox: FC<{ children?: React.ReactNode }> = styled(Box)(
     ({ theme }) => ({
@@ -127,13 +118,13 @@ const DeleteStrategy: FC<{
 
     return (
         <>
-            <ChangeItemCreateEditDeleteWrapper>
+            <ChangeItemWrapper>
                 <ChangeItemInfo>
                     <Deleted>Deleting strategy</Deleted>
                     <ChangeStrategyName name={name || ''} title={title} />
                 </ChangeItemInfo>
                 {actions}
-            </ChangeItemCreateEditDeleteWrapper>
+            </ChangeItemWrapper>
             <TabPanel>
                 {referenceStrategy && (
                     <StrategyExecution strategy={referenceStrategy} />
@@ -178,7 +169,7 @@ const UpdateStrategy: FC<{
                 }}
                 changeRequestState={changeRequestState}
             />
-            <ChangeItemCreateEditDeleteWrapper>
+            <ChangeItemWrapper>
                 <ChangeItemInfo>
                     <EditHeader
                         wasDisabled={currentStrategy?.disabled}
@@ -191,7 +182,7 @@ const UpdateStrategy: FC<{
                     />
                 </ChangeItemInfo>
                 {actions}
-            </ChangeItemCreateEditDeleteWrapper>
+            </ChangeItemWrapper>
             <ConditionallyRender
                 condition={
                     change.payload?.disabled !== currentStrategy?.disabled
@@ -251,7 +242,7 @@ const AddStrategy: FC<{
     actions?: ReactNode;
 }> = ({ change, actions }) => (
     <>
-        <ChangeItemCreateEditDeleteWrapper>
+        <ChangeItemWrapper>
             <ChangeItemInfo>
                 <AddedStrategy disabled={change.payload?.disabled}>
                     Adding strategy
@@ -266,7 +257,7 @@ const AddStrategy: FC<{
                 />
             </ChangeItemInfo>
             {actions}
-        </ChangeItemCreateEditDeleteWrapper>
+        </ChangeItemWrapper>
         <TabPanel>
             <StrategyExecution strategy={change.payload} />
             {change.payload.variants?.length ? (
@@ -291,6 +282,12 @@ const ActionsContainer = styled('div')(({ theme }) => ({
     flexFlow: 'row wrap',
     alignItems: 'center',
     columnGap: theme.spacing(1),
+}));
+
+const StyledTabs = styled(Tabs)(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'column',
+    gap: theme.spacing(1),
 }));
 
 export const StrategyChange: FC<{
@@ -329,7 +326,7 @@ export const StrategyChange: FC<{
     );
 
     return (
-        <Tabs>
+        <StyledTabs>
             {change.action === 'addStrategy' && (
                 <AddStrategy change={change} actions={actionsWithTabs} />
             )}
@@ -349,6 +346,6 @@ export const StrategyChange: FC<{
                     actions={actionsWithTabs}
                 />
             )}
-        </Tabs>
+        </StyledTabs>
     );
 };

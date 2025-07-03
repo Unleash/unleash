@@ -367,7 +367,6 @@ export default class AddonService {
     }
 
     destroy(): void {
-        // Clean up event handlers first to prevent race conditions during teardown
         this.eventHandlers.forEach((handler, eventName) => {
             try {
                 this.eventService.off(eventName, handler);
@@ -380,7 +379,6 @@ export default class AddonService {
         });
         this.eventHandlers.clear();
 
-        // Then destroy addon providers
         Object.values(this.addonProviders).forEach((addon) =>
             addon.destroy?.(),
         );

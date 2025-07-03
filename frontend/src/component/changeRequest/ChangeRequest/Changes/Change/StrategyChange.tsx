@@ -103,10 +103,6 @@ const DeleteStrategy: FC<{
     currentStrategy: IFeatureStrategy | undefined;
     actions?: ReactNode;
 }> = ({ change, changeRequestState, currentStrategy, actions }) => {
-    const name =
-        changeRequestState === 'Applied'
-            ? change.payload?.snapshot?.name
-            : currentStrategy?.name;
     const title =
         changeRequestState === 'Applied'
             ? change.payload?.snapshot?.title
@@ -123,7 +119,7 @@ const DeleteStrategy: FC<{
                     <Deleted>Deleting strategy</Deleted>
                     <NameWithChangeInfo
                         newName={title}
-                        previousName={currentStrategy?.title}
+                        previousName={referenceStrategy?.title}
                     />
                 </ChangeItemInfo>
                 {actions}

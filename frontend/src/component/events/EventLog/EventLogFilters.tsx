@@ -143,7 +143,7 @@ export const useEventLogFilters = (
                 ? ([
                       {
                           label: 'Group ID',
-                          icon: 'group',
+                          icon: 'tag',
                           options: removableOptions.groupId,
                           filterKey: 'groupId',
                           singularOperators: ['IS'],

@@ -2,7 +2,7 @@ import { styled, Typography, type TypographyProps } from '@mui/material';
 import type { FC, PropsWithChildren } from 'react';
 
 export const Action: FC<TypographyProps> = ({ children, ...props }) => (
-    <Typography component='span' {...props}>
+    <Typography component='span' {...props} sx={{ outline: '2px solid red' }}>
         {children}
     </Typography>
 );

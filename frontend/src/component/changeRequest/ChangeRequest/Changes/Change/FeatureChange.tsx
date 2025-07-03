@@ -7,7 +7,10 @@ import type {
 import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert, Box, styled } from '@mui/material';
-import { ToggleStatusChange } from './ToggleStatusChange.tsx';
+import {
+    LegacyToggleStatusChange,
+    ToggleStatusChange,
+} from './ToggleStatusChange.tsx';
 import { LegacyStrategyChange } from './LegacyStrategyChange.tsx';
 import { VariantPatch } from './VariantPatch/VariantPatch.tsx';
 import { EnvironmentStrategyExecutionOrder } from './EnvironmentStrategyExecutionOrder/EnvironmentStrategyExecutionOrder.tsx';
@@ -114,6 +117,10 @@ export const FeatureChange: FC<{
         ? DependencyChange
         : LegacyDependencyChange;
 
+    const StatusChangeComponent = useDiffableChangeComponent
+        ? ToggleStatusChange
+        : LegacyToggleStatusChange;
+
     return (
         <StyledSingleChangeBox
             key={objectId(change)}
@@ -181,7 +188,7 @@ export const FeatureChange: FC<{
                     />
                 )}
                 {change.action === 'updateEnabled' && (
-                    <ToggleStatusChange
+                    <StatusChangeComponent
                         enabled={change.payload.enabled}
                         actions={actions}
                     />

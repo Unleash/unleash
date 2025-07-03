@@ -20,7 +20,7 @@ export const Added = styled(Action)(({ theme }) => ({
 export const AddedStrategy = styled(Added, {
     shouldForwardProp: (prop) => prop !== 'disabled',
 })<{ disabled?: boolean }>(({ theme, disabled }) => ({
-    color: disabled ? theme.palette.text.disabled : undefined,
+    color: disabled ? theme.palette.text.secondary : undefined,
 }));
 
 const Change = styled('span')({

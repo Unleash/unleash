@@ -33,14 +33,14 @@ export const productivityReportViewModel = ({
     technicalDebt: Math.max(0, 100 - metrics.health).toString(),
     unleashUrl,
     technicalDebtColor() {
-        const technicalDebtRating = 100 - this.health;
-        const technicalDebtColor =
-            technicalDebtRating >= 0 && technicalDebtRating <= 24
-                ? GREEN
-                : technicalDebtRating >= 25 && technicalDebtRating <= 74
-                  ? ORANGE
-                  : RED;
-        return technicalDebtColor;
+        const technicalDebtRating = Math.max(0, 100 - metrics.health);
+        if (technicalDebtRating < 25) {
+            return GREEN;
+        }
+        if (technicalDebtRating < 75) {
+            return ORANGE;
+        }
+        return RED;
     },
     actionText(): string | null {
         const improveMessage =

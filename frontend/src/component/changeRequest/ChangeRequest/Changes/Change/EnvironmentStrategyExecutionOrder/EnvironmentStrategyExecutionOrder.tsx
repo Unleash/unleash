@@ -11,9 +11,12 @@ import { Tab, TabList, TabPanel, Tabs } from '../ChangeTabComponents.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { ChangeItemInfo, ChangeItemWrapper } from '../Change.styles.tsx';
 
-const ChangeContent = styled(Box)(({ theme }) => ({
+const ChangeItem = styled(Box)({
     display: 'flex',
     flexDirection: 'column',
+});
+
+const ChangeContent = styled(ChangeItem)(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
@@ -96,7 +99,7 @@ export const EnvironmentStrategyExecutionOrder = ({
                 <ChangeContent>
                     <ChangeItemWrapper>
                         <ChangeItemInfo>
-                            <span>Updating strategy execution order to</span>
+                            Updating strategy execution order to
                         </ChangeItemInfo>
                         <div>
                             <TabList>
@@ -130,7 +133,7 @@ export const EnvironmentStrategyExecutionOrder = ({
     }
 
     return (
-        <ChangeContent>
+        <ChangeItem>
             <StyledChangeHeader>
                 <TooltipLink
                     tooltip={
@@ -158,6 +161,6 @@ export const EnvironmentStrategyExecutionOrder = ({
                     </StyledStrategyContainer>
                 ))}
             </StyledStrategyExecutionWrapper>
-        </ChangeContent>
+        </ChangeItem>
     );
 };

@@ -43,15 +43,13 @@ class BackstageController extends Controller {
                 res.end(metricsOutput);
             });
 
-            if (this.flagResolver.isEnabled('impactMetrics')) {
-                this.get('/impact/metrics', async (req, res) => {
-                    res.set('Content-Type', impactRegister.contentType);
+            this.get('/impact/metrics', async (req, res) => {
+                res.set('Content-Type', impactRegister.contentType);
 
-                    const metricsOutput = await impactRegister.metrics();
+                const metricsOutput = await impactRegister.metrics();
 
-                    res.end(metricsOutput);
-                });
-            }
+                res.end(metricsOutput);
+            });
         }
 
         if (config.server.enableHeapSnapshotEnpoint) {

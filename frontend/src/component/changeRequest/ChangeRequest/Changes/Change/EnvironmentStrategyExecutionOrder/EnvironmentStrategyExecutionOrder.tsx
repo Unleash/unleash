@@ -9,14 +9,17 @@ import { formatStrategyName } from '../../../../../../utils/strategyNames.tsx';
 import type { IFeatureStrategy } from 'interfaces/strategy.ts';
 import { Tab, TabList, TabPanel, Tabs } from '../ChangeTabComponents.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
-import { ChangeItemInfo, ChangeItemWrapper } from '../Change.styles.tsx';
+import {
+    ChangeItemInfo as NewChangeItemInfo,
+    ChangeItemWrapper,
+} from '../Change.styles.tsx';
 
-const LegacyChangeItemInfo = styled(Box)({
+const ChangeItemInfo = styled(Box)({
     display: 'flex',
     flexDirection: 'column',
 });
 
-const ChangeContent = styled(LegacyChangeItemInfo)(({ theme }) => ({
+const ChangeContent = styled(ChangeItemInfo)(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
@@ -98,9 +101,9 @@ export const EnvironmentStrategyExecutionOrder = ({
             <Tabs>
                 <ChangeContent>
                     <ChangeItemWrapper>
-                        <ChangeItemInfo>
+                        <NewChangeItemInfo>
                             Updating strategy execution order to
-                        </ChangeItemInfo>
+                        </NewChangeItemInfo>
                         <div>
                             <TabList>
                                 <Tab>Change</Tab>
@@ -133,7 +136,7 @@ export const EnvironmentStrategyExecutionOrder = ({
     }
 
     return (
-        <LegacyChangeItemInfo>
+        <ChangeItemInfo>
             <StyledChangeHeader>
                 <TooltipLink
                     tooltip={
@@ -161,6 +164,6 @@ export const EnvironmentStrategyExecutionOrder = ({
                     </StyledStrategyContainer>
                 ))}
             </StyledStrategyExecutionWrapper>
-        </LegacyChangeItemInfo>
+        </ChangeItemInfo>
     );
 };

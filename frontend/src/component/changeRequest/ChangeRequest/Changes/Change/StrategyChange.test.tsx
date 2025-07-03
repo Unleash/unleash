@@ -242,7 +242,7 @@ test('Deleting strategy before change request is applied diffs against current s
         { route: `/projects/${projectId}` },
     );
 
-    await screen.findByText('- Deleting strategy');
+    await screen.findByText('Deleting strategy');
     await screen.findByText('Gradual rollout');
     await screen.findByText('current_title');
 
@@ -298,7 +298,7 @@ test('Deleting strategy after change request is applied diffs against the snapsh
         { route: `/projects/${projectId}` },
     );
 
-    await screen.findByText('- Deleting strategy');
+    await screen.findByText('Deleting strategy');
     await screen.findByText('Gradual rollout');
     await screen.findByText('snapshot_title');
     expect(screen.queryByText('current_title')).not.toBeInTheDocument();
@@ -352,7 +352,7 @@ test('Adding strategy always diffs against undefined strategy', async () => {
         { route: `/projects/${projectId}` },
     );
 
-    await screen.findByText('+ Adding strategy');
+    await screen.findByText('Adding strategy');
     await screen.findByText('change_request_title');
 
     const variants = await screen.findAllByText('change_variant');

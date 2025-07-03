@@ -11,12 +11,7 @@ interface IToggleStatusChange {
 }
 
 const StatusWillChange = () => (
-    <Typography
-        variant='body2'
-        component='span'
-        color='text.secondary'
-        sx={{ marginLeft: 'auto' }}
-    >
+    <Typography variant='body2' component='span' color='text.secondary'>
         Feature status will change
     </Typography>
 );

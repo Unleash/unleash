@@ -81,3 +81,31 @@ test('When no groupId in URL params, should not include groupId filter', () => {
 
     expect(filterKeys).not.toContain('groupId');
 });
+
+test('When id is in URL params, should include id filter', () => {
+    const { result } = renderWithRouter(
+        () => useEventLogFilters([], []),
+        ['/?id=IS:456'],
+    );
+    const filterKeys = result.current.map((filter) => filter.filterKey);
+
+    expect(filterKeys).toContain('id');
+});
+
+test('When no id in URL params, should not include id filter', () => {
+    const { result } = renderWithRouter(() => useEventLogFilters([], []));
+    const filterKeys = result.current.map((filter) => filter.filterKey);
+
+    expect(filterKeys).not.toContain('id');
+});
+
+test('When both id and groupId are in URL params, should include both filters', () => {
+    const { result } = renderWithRouter(
+        () => useEventLogFilters([], []),
+        ['/?id=IS:456&groupId=IS:123'],
+    );
+    const filterKeys = result.current.map((filter) => filter.filterKey);
+
+    expect(filterKeys).toContain('id');
+    expect(filterKeys).toContain('groupId');
+});

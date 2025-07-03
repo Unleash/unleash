@@ -22,10 +22,42 @@ export const useEventLogFilters = (
     const location = useLocation();
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
 
+    const createRemovableFilterOptions = (
+        searchParams: URLSearchParams,
+        paramNames: string[],
+    ) => {
+        return paramNames.reduce(
+            (acc, paramName) => {
+                const hasParam = searchParams.has(paramName);
+                const paramValue = searchParams.get(paramName);
+
+                acc[paramName] =
+                    hasParam && paramValue
+                        ? (() => {
+                              const parsed = FilterItemParam.decode(paramValue);
+                              return parsed
+                                  ? [
+                                        {
+                                            label: parsed.values[0],
+                                            value: parsed.values[0],
+                                        },
+                                    ]
+                                  : [];
+                          })()
+                        : [];
+                return acc;
+            },
+            {} as Record<string, Array<{ label: string; value: string }>>,
+        );
+    };
+
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
-        const hasGroupId = searchParams.has('groupId');
-        const groupIdValue = searchParams.get('groupId');
+
+        const removableOptions = createRemovableFilterOptions(searchParams, [
+            'id',
+            'groupId',
+        ]);
 
         const projectOptions =
             projects?.map((project: ProjectSchema) => ({
@@ -56,22 +88,6 @@ export const useEventLogFilters = (
                 label: env.name,
                 value: env.name,
             })) ?? [];
-
-        const groupIdOptions =
-            hasGroupId && groupIdValue
-                ? (() => {
-                      const parsedGroupId =
-                          FilterItemParam.decode(groupIdValue);
-                      return parsedGroupId
-                          ? [
-                                {
-                                    label: parsedGroupId.values[0],
-                                    value: parsedGroupId.values[0],
-                                },
-                            ]
-                          : [];
-                  })()
-                : [];
 
         const availableFilters: IFilterItem[] = [
             {
@@ -110,12 +126,25 @@ export const useEventLogFilters = (
                 singularOperators: ['IS'],
                 pluralOperators: ['IS_ANY_OF'],
             },
-            ...(hasGroupId
+            ...(removableOptions.id.length > 0
+                ? ([
+                      {
+                          label: 'Event ID',
+                          icon: 'tag',
+                          options: removableOptions.id,
+                          filterKey: 'id',
+                          singularOperators: ['IS'],
+                          pluralOperators: ['IS_ANY_OF'],
+                          persistent: false,
+                      },
+                  ] as IFilterItem[])
+                : []),
+            ...(removableOptions.groupId.length > 0
                 ? ([
                       {
                           label: 'Group ID',
-                          icon: 'group',
-                          options: groupIdOptions,
+                          icon: 'tag',
+                          options: removableOptions.groupId,
                           filterKey: 'groupId',
                           singularOperators: ['IS'],
                           pluralOperators: ['IS_ANY_OF'],

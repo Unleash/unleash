@@ -22,7 +22,7 @@ interface IChangeRequestSidebarProps {
 const StyledPageContent = styled(PageContent)(({ theme }) => ({
     height: '100vh',
     overflow: 'auto',
-    minWidth: '50vw',
+    maxWidth: 'max(40vw, 1000px)',
     padding: theme.spacing(6),
     [theme.breakpoints.down('md')]: {
         padding: theme.spacing(4, 2),

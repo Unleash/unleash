@@ -7,12 +7,21 @@ import type {
 import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert, Box, styled } from '@mui/material';
-import { ToggleStatusChange } from './ToggleStatusChange.tsx';
+import {
+    LegacyToggleStatusChange,
+    ToggleStatusChange,
+} from './ToggleStatusChange.tsx';
 import { LegacyStrategyChange } from './LegacyStrategyChange.tsx';
 import { VariantPatch } from './VariantPatch/VariantPatch.tsx';
 import { EnvironmentStrategyExecutionOrder } from './EnvironmentStrategyExecutionOrder/EnvironmentStrategyExecutionOrder.tsx';
-import { ArchiveFeatureChange } from './ArchiveFeatureChange.tsx';
-import { DependencyChange } from './DependencyChange.tsx';
+import {
+    ArchiveFeatureChange,
+    LegacyArchiveFeatureChange,
+} from './ArchiveFeatureChange.tsx';
+import {
+    DependencyChange,
+    LegacyDependencyChange,
+} from './DependencyChange.tsx';
 import { Link } from 'react-router-dom';
 import { LegacyReleasePlanChange } from './LegacyReleasePlanChange.tsx';
 import { ReleasePlanChange } from './ReleasePlanChange.tsx';
@@ -100,6 +109,18 @@ export const FeatureChange: FC<{
         ? ReleasePlanChange
         : LegacyReleasePlanChange;
 
+    const ArchiveFlagComponent = useDiffableChangeComponent
+        ? ArchiveFeatureChange
+        : LegacyArchiveFeatureChange;
+
+    const DependencyChangeComponent = useDiffableChangeComponent
+        ? DependencyChange
+        : LegacyDependencyChange;
+
+    const StatusChangeComponent = useDiffableChangeComponent
+        ? ToggleStatusChange
+        : LegacyToggleStatusChange;
+
     return (
         <StyledSingleChangeBox
             key={objectId(change)}
@@ -159,7 +180,7 @@ export const FeatureChange: FC<{
             <ChangeInnerBox>
                 {(change.action === 'addDependency' ||
                     change.action === 'deleteDependency') && (
-                    <DependencyChange
+                    <DependencyChangeComponent
                         actions={actions}
                         change={change}
                         projectId={changeRequest.project}
@@ -167,13 +188,13 @@ export const FeatureChange: FC<{
                     />
                 )}
                 {change.action === 'updateEnabled' && (
-                    <ToggleStatusChange
+                    <StatusChangeComponent
                         enabled={change.payload.enabled}
                         actions={actions}
                     />
                 )}
                 {change.action === 'archiveFeature' && (
-                    <ArchiveFeatureChange actions={actions} />
+                    <ArchiveFlagComponent actions={actions} />
                 )}
 
                 {change.action === 'addStrategy' ||

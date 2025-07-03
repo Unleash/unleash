@@ -9,11 +9,20 @@ import { formatStrategyName } from '../../../../../../utils/strategyNames.tsx';
 import type { IFeatureStrategy } from 'interfaces/strategy.ts';
 import { Tab, TabList, TabPanel, Tabs } from '../ChangeTabComponents.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
+import {
+    ChangeItemInfo as NewChangeItemInfo,
+    ChangeItemWrapper,
+    Action,
+} from '../Change.styles.tsx';
 
 const ChangeItemInfo = styled(Box)({
     display: 'flex',
     flexDirection: 'column',
 });
+
+const ChangeContent = styled(ChangeItemInfo)(({ theme }) => ({
+    gap: theme.spacing(2),
+}));
 
 const StyledChangeHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -91,9 +100,13 @@ export const EnvironmentStrategyExecutionOrder = ({
     if (useDiffableComponent) {
         return (
             <Tabs>
-                <ChangeItemInfo>
-                    <StyledChangeHeader>
-                        <p>Updating strategy execution order to</p>
+                <ChangeContent>
+                    <ChangeItemWrapper>
+                        <NewChangeItemInfo>
+                            <Action>
+                                Updating strategy execution order to
+                            </Action>
+                        </NewChangeItemInfo>
                         <div>
                             <TabList>
                                 <Tab>Change</Tab>
@@ -101,7 +114,7 @@ export const EnvironmentStrategyExecutionOrder = ({
                             </TabList>
                             {actions}
                         </div>
-                    </StyledChangeHeader>
+                    </ChangeItemWrapper>
                     <TabPanel>
                         <StyledStrategyExecutionWrapper>
                             {updatedStrategies.map((strategy, index) => (
@@ -120,7 +133,7 @@ export const EnvironmentStrategyExecutionOrder = ({
                             data={data}
                         />
                     </TabPanel>
-                </ChangeItemInfo>
+                </ChangeContent>
             </Tabs>
         );
     }

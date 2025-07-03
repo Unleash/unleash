@@ -20,22 +20,13 @@ import type { IFeatureStrategy } from 'interfaces/strategy';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
 import { ChangeStrategyName } from './ChangeStrategyName.tsx';
 import { StrategyDiff } from './StrategyDiff.tsx';
-import { ChangeItemInfo } from './Change.styles.tsx';
-
-export const ChangeItemWrapper = styled(Box)({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-});
-
-const ChangeItemCreateEditDeleteWrapper = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'space-between',
-    gap: theme.spacing(1),
-    alignItems: 'center',
-    marginBottom: theme.spacing(1),
-    width: '100%',
-}));
+import {
+    Action,
+    AddedStrategy,
+    ChangeItemInfo,
+    ChangeItemWrapper,
+    Deleted,
+} from './Change.styles.tsx';
 
 const StyledBox: FC<{ children?: React.ReactNode }> = styled(Box)(
     ({ theme }) => ({
@@ -60,7 +51,7 @@ const DisabledEnabledState: FC<{ show?: boolean; disabled: boolean }> = ({
     if (disabled) {
         return (
             <Tooltip
-                title='This strategy will not be taken into account when evaluating feature flag.'
+                title='This strategy will not be taken into account when evaluating the feature flag.'
                 arrow
                 sx={{ cursor: 'pointer' }}
             >
@@ -73,7 +64,7 @@ const DisabledEnabledState: FC<{ show?: boolean; disabled: boolean }> = ({
 
     return (
         <Tooltip
-            title='This was disabled before and with this change it will be taken into account when evaluating feature flag.'
+            title='This strategy was disabled before. With this change, it will be taken into account when evaluating the feature flag.'
             arrow
             sx={{ cursor: 'pointer' }}
         >
@@ -89,18 +80,18 @@ const EditHeader: FC<{
     willBeDisabled?: boolean;
 }> = ({ wasDisabled = false, willBeDisabled = false }) => {
     if (wasDisabled && willBeDisabled) {
-        return <Typography color='text.secondary'>Editing strategy</Typography>;
+        return <Action color='text.secondary'>Editing strategy</Action>;
     }
 
     if (!wasDisabled && willBeDisabled) {
-        return <Typography color='error.dark'>Editing strategy</Typography>;
+        return <Action color='error.dark'>Editing strategy</Action>;
     }
 
     if (wasDisabled && !willBeDisabled) {
-        return <Typography color='success.dark'>Editing strategy</Typography>;
+        return <Action color='success.dark'>Editing strategy</Action>;
     }
 
-    return <Typography>Editing strategy</Typography>;
+    return <Action>Editing strategy</Action>;
 };
 
 const hasDiff = (object: unknown, objectToCompare: unknown) =>
@@ -127,19 +118,13 @@ const DeleteStrategy: FC<{
 
     return (
         <>
-            <ChangeItemCreateEditDeleteWrapper>
+            <ChangeItemWrapper>
                 <ChangeItemInfo>
-                    <Typography
-                        sx={(theme) => ({
-                            color: theme.palette.error.main,
-                        })}
-                    >
-                        - Deleting strategy
-                    </Typography>
+                    <Deleted>Deleting strategy</Deleted>
                     <ChangeStrategyName name={name || ''} title={title} />
                 </ChangeItemInfo>
                 {actions}
-            </ChangeItemCreateEditDeleteWrapper>
+            </ChangeItemWrapper>
             <TabPanel>
                 {referenceStrategy && (
                     <StrategyExecution strategy={referenceStrategy} />
@@ -184,7 +169,7 @@ const UpdateStrategy: FC<{
                 }}
                 changeRequestState={changeRequestState}
             />
-            <ChangeItemCreateEditDeleteWrapper>
+            <ChangeItemWrapper>
                 <ChangeItemInfo>
                     <EditHeader
                         wasDisabled={currentStrategy?.disabled}
@@ -197,7 +182,7 @@ const UpdateStrategy: FC<{
                     />
                 </ChangeItemInfo>
                 {actions}
-            </ChangeItemCreateEditDeleteWrapper>
+            </ChangeItemWrapper>
             <ConditionallyRender
                 condition={
                     change.payload?.disabled !== currentStrategy?.disabled
@@ -257,17 +242,11 @@ const AddStrategy: FC<{
     actions?: ReactNode;
 }> = ({ change, actions }) => (
     <>
-        <ChangeItemCreateEditDeleteWrapper>
+        <ChangeItemWrapper>
             <ChangeItemInfo>
-                <Typography
-                    color={
-                        change.payload?.disabled
-                            ? 'text.secondary'
-                            : 'success.dark'
-                    }
-                >
-                    + Adding strategy
-                </Typography>
+                <AddedStrategy disabled={change.payload?.disabled}>
+                    Adding strategy
+                </AddedStrategy>
                 <ChangeStrategyName
                     name={change.payload.name}
                     title={change.payload.title}
@@ -278,7 +257,7 @@ const AddStrategy: FC<{
                 />
             </ChangeItemInfo>
             {actions}
-        </ChangeItemCreateEditDeleteWrapper>
+        </ChangeItemWrapper>
         <TabPanel>
             <StrategyExecution strategy={change.payload} />
             {change.payload.variants?.length ? (
@@ -297,6 +276,19 @@ const AddStrategy: FC<{
         </TabPanel>
     </>
 );
+
+const ActionsContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row wrap',
+    alignItems: 'center',
+    columnGap: theme.spacing(1),
+}));
+
+const StyledTabs = styled(Tabs)(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'column',
+    gap: theme.spacing(1),
+}));
 
 export const StrategyChange: FC<{
     actions?: ReactNode;
@@ -324,17 +316,17 @@ export const StrategyChange: FC<{
     );
 
     const actionsWithTabs = (
-        <>
+        <ActionsContainer>
             <TabList>
                 <Tab>Change</Tab>
                 <Tab>View diff</Tab>
             </TabList>
             {actions}
-        </>
+        </ActionsContainer>
     );
 
     return (
-        <Tabs>
+        <StyledTabs>
             {change.action === 'addStrategy' && (
                 <AddStrategy change={change} actions={actionsWithTabs} />
             )}
@@ -354,6 +346,6 @@ export const StrategyChange: FC<{
                     actions={actionsWithTabs}
                 />
             )}
-        </Tabs>
+        </StyledTabs>
     );
 };

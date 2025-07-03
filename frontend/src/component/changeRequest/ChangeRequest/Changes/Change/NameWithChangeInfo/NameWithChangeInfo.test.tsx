@@ -19,7 +19,7 @@ test.each(['', undefined])(
         ).toBeNull();
 
         // expect ins element with new strategy name
-        await screen.findByText(newName, { selector: 'p' });
+        await screen.findByText(newName, { selector: 'ins' });
     },
 );
 
@@ -35,7 +35,9 @@ test.each(['', undefined])(
         );
 
         // expect no ins elements
-        expect(screen.queryByText(newName || '', { selector: 'p' })).toBeNull();
+        expect(
+            screen.queryByText(newName || '', { selector: 'ins' }),
+        ).toBeNull();
 
         // expect del element with old strategy name
         await screen.findByText(previousName, { selector: 'del' });
@@ -53,13 +55,25 @@ test('Should render the old name as deleted and the new name as inserted if the 
     await screen.findByText(previousName, { selector: 'del' });
 
     // expect ins element with new strategy name
-    await screen.findByText(newName, { selector: 'p' });
+    await screen.findByText(newName, { selector: 'ins' });
+});
+
+test('Should render the name in a span if it has not changed', async () => {
+    const name = 'name';
+    render(<NameWithChangeInfo newName={name} previousName={name} />);
+
+    // expect no del or ins elements
+    expect(screen.queryByText(name, { selector: 'ins' })).toBeNull();
+    expect(screen.queryByText(name, { selector: 'del' })).toBeNull();
+
+    // expect span element with the strategy name
+    await screen.findByText(name, { selector: 'span' });
 });
 
 test('Should render nothing if there was no name and there is still no name', async () => {
     render(<NameWithChangeInfo newName={undefined} previousName={undefined} />);
 
-    expect(screen.queryByText('', { selector: 'p' })).toBeNull();
+    expect(screen.queryByText('', { selector: 'ins' })).toBeNull();
     expect(screen.queryByText('', { selector: 'del' })).toBeNull();
     expect(screen.queryByText('', { selector: 'span' })).toBeNull();
 });

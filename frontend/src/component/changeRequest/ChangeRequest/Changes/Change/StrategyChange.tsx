@@ -239,13 +239,14 @@ const UpdateStrategy: FC<{
 
 const AddStrategy: FC<{
     change: IChangeRequestAddStrategy;
+    isDefaultChange?: boolean;
     actions?: ReactNode;
-}> = ({ change, actions }) => (
+}> = ({ change, isDefaultChange, actions }) => (
     <>
         <ChangeItemWrapper>
             <ChangeItemInfo>
                 <AddedStrategy disabled={change.payload?.disabled}>
-                    Adding strategy
+                    Adding {isDefaultChange && 'default'} strategy
                 </AddedStrategy>
                 <ChangeStrategyName
                     name={change.payload.name}
@@ -300,6 +301,7 @@ export const StrategyChange: FC<{
     featureName: string;
     projectId: string;
     changeRequestState: ChangeRequestState;
+    isDefaultChange?: boolean;
 }> = ({
     actions,
     change,
@@ -307,6 +309,7 @@ export const StrategyChange: FC<{
     environmentName,
     projectId,
     changeRequestState,
+    isDefaultChange,
 }) => {
     const currentStrategy = useCurrentStrategy(
         change,
@@ -328,7 +331,11 @@ export const StrategyChange: FC<{
     return (
         <StyledTabs>
             {change.action === 'addStrategy' && (
-                <AddStrategy change={change} actions={actionsWithTabs} />
+                <AddStrategy
+                    change={change}
+                    actions={actionsWithTabs}
+                    isDefaultChange={isDefaultChange}
+                />
             )}
             {change.action === 'deleteStrategy' && (
                 <DeleteStrategy

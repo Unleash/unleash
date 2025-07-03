@@ -262,7 +262,8 @@ const UpdateStrategy: FC<{
 const AddStrategy: FC<{
     change: IChangeRequestAddStrategy;
     actions?: ReactNode;
-}> = ({ change, actions }) => (
+    isDefaultChange?: boolean;
+}> = ({ change, actions, isDefaultChange }) => (
     <>
         <ChangeItemCreateEditDeleteWrapper>
             <ChangeItemInfo>
@@ -288,7 +289,14 @@ const AddStrategy: FC<{
                     />
                 </div>
             </ChangeItemInfo>
-            <div>{actions}</div>
+            <div>
+                {isDefaultChange ? (
+                    <Typography variant='body2' color='text.secondary'>
+                        Default strategy will be added
+                    </Typography>
+                ) : null}
+                {actions}
+            </div>
         </ChangeItemCreateEditDeleteWrapper>
         <StrategyExecution strategy={change.payload} />
         {change.payload.variants?.length ? (
@@ -316,6 +324,7 @@ export const LegacyStrategyChange: FC<{
     featureName: string;
     projectId: string;
     changeRequestState: ChangeRequestState;
+    isDefaultChange?: boolean;
 }> = ({
     actions,
     change,
@@ -323,6 +332,7 @@ export const LegacyStrategyChange: FC<{
     environmentName,
     projectId,
     changeRequestState,
+    isDefaultChange,
 }) => {
     const currentStrategy = useCurrentStrategy(
         change,
@@ -334,7 +344,11 @@ export const LegacyStrategyChange: FC<{
     return (
         <>
             {change.action === 'addStrategy' && (
-                <AddStrategy change={change} actions={actions} />
+                <AddStrategy
+                    change={change}
+                    actions={actions}
+                    isDefaultChange={isDefaultChange}
+                />
             )}
             {change.action === 'deleteStrategy' && (
                 <DeleteStrategy

@@ -89,13 +89,13 @@ const ChangeInnerBox = styled(Box)(({ theme }) => ({
 }));
 
 export const FeatureChange: FC<{
-    isDefaultChange?: boolean;
     actions?: ReactNode;
     index: number;
     changeRequest: ChangeRequestType;
     change: IFeatureChange;
     feature: IChangeRequestFeature;
     onNavigate?: () => void;
+    isDefaultChange?: boolean;
 }> = ({
     index,
     change,

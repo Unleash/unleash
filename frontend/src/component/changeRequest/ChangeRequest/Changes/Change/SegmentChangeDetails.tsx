@@ -17,7 +17,7 @@ import {
     Deleted,
 } from './Change.styles.tsx';
 import { SegmentDiff } from './SegmentDiff.tsx';
-import { NameWithChangeInfo } from './NameWithChangeInfo/NameWithChangeInfo.tsx';
+import { ChangeSegmentName } from './ChangeSegmentName.tsx';
 
 const ActionsContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -72,8 +72,8 @@ export const SegmentChangeDetails: FC<{
                         <ChangeItemWrapper>
                             <ChangeItemInfo>
                                 <Deleted>Deleting segment</Deleted>
-                                <NameWithChangeInfo
-                                    newName={change.payload.name}
+                                <ChangeSegmentName
+                                    name={change.payload.name}
                                     previousName={previousName}
                                 />
                             </ChangeItemInfo>
@@ -102,8 +102,9 @@ export const SegmentChangeDetails: FC<{
                         <ChangeItemWrapper>
                             <ChangeItemInfo>
                                 <Action>Editing segment</Action>
-                                <NameWithChangeInfo
-                                    newName={change.payload.name}
+                                <ChangeSegmentName
+                                    name={change.payload.name}
+                                    previousName={previousName}
                                 />
                             </ChangeItemInfo>
                             {actionsWithTabs}

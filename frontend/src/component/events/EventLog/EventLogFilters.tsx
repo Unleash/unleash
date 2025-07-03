@@ -22,37 +22,39 @@ export const useEventLogFilters = (
     const location = useLocation();
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
 
+    const createRemovableFilterOptions = (
+        searchParams: URLSearchParams,
+        paramNames: string[],
+    ) => {
+        return paramNames.reduce(
+            (acc, paramName) => {
+                const hasParam = searchParams.has(paramName);
+                const paramValue = searchParams.get(paramName);
+
+                acc[paramName] =
+                    hasParam && paramValue
+                        ? (() => {
+                              const parsed = FilterItemParam.decode(paramValue);
+                              return parsed
+                                  ? [
+                                        {
+                                            label: parsed.values[0],
+                                            value: parsed.values[0],
+                                        },
+                                    ]
+                                  : [];
+                          })()
+                        : [];
+                return acc;
+            },
+            {} as Record<string, Array<{ label: string; value: string }>>,
+        );
+    };
+
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
 
-        const createRemovableFilterOptions = (paramNames: string[]) => {
-            return paramNames.reduce(
-                (acc, paramName) => {
-                    const hasParam = searchParams.has(paramName);
-                    const paramValue = searchParams.get(paramName);
-
-                    acc[paramName] =
-                        hasParam && paramValue
-                            ? (() => {
-                                  const parsed =
-                                      FilterItemParam.decode(paramValue);
-                                  return parsed
-                                      ? [
-                                            {
-                                                label: parsed.values[0],
-                                                value: parsed.values[0],
-                                            },
-                                        ]
-                                      : [];
-                              })()
-                            : [];
-                    return acc;
-                },
-                {} as Record<string, Array<{ label: string; value: string }>>,
-            );
-        };
-
-        const removableOptions = createRemovableFilterOptions([
+        const removableOptions = createRemovableFilterOptions(searchParams, [
             'id',
             'groupId',
         ]);

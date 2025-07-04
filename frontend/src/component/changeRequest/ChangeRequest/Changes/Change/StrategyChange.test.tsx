@@ -243,7 +243,6 @@ test('Deleting strategy before change request is applied diffs against current s
     );
 
     await screen.findByText('Deleting strategy');
-    await screen.findByText('Gradual rollout');
     await screen.findByText('current_title');
 
     await screen.findByText('current_variant');
@@ -299,7 +298,6 @@ test('Deleting strategy after change request is applied diffs against the snapsh
     );
 
     await screen.findByText('Deleting strategy');
-    await screen.findByText('Gradual rollout');
     await screen.findByText('snapshot_title');
     expect(screen.queryByText('current_title')).not.toBeInTheDocument();
 

@@ -103,10 +103,7 @@ export default async function getApp(
     if (config.enableOAS && services.openApiService) {
         services.openApiService.useDocs(app);
     }
-    // Support CORS preflight requests for the frontend endpoints.
-    // Preflight requests should not have Authorization headers,
-    // so this must be handled before the API token middleware.
-    app.options(
+    app.use(
         `${baseUriPath}/api/frontend*`,
         corsOriginMiddleware(services, config),
     );

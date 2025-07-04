@@ -19,7 +19,6 @@ import {
 } from '../../openapi/index.js';
 import type { Context } from 'unleash-client';
 import { enrichContextWithIp } from './index.js';
-import { corsOriginMiddleware } from '../../middleware/index.js';
 import NotImplementedError from '../../error/not-implemented-error.js';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
@@ -64,10 +63,6 @@ export default class FrontendAPIController extends Controller {
                 className: 'FrontendAPIController',
                 functionName,
             });
-
-        // Support CORS requests for the frontend endpoints.
-        // Preflight requests are handled in `app.ts`.
-        this.app.use(corsOriginMiddleware(services, config));
 
         this.route({
             method: 'get',

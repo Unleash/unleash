@@ -109,7 +109,7 @@ export const EnvironmentStrategyExecutionOrder = ({
                         </NewChangeItemInfo>
                         <div>
                             <TabList>
-                                <Tab>Change</Tab>
+                                <Tab>View change</Tab>
                                 <Tab>View diff</Tab>
                             </TabList>
                             {actions}

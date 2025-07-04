@@ -90,10 +90,7 @@ export const useEditableConstraint = (
             }
             return constraintValidator(localConstraint.operator)(...values);
         },
-        [
-            JSON.stringify(constraint.operator),
-            JSON.stringify(constraint.values),
-        ],
+        [constraint.operator, JSON.stringify(constraint.values)],
     );
 
     useEffect(() => {

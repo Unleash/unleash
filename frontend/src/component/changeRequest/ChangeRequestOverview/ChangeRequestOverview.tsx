@@ -37,23 +37,23 @@ import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChan
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { ChangeRequestRequestedApprovers } from './ChangeRequestRequestedApprovers/ChangeRequestRequestedApprovers.tsx';
 
+const breakpoint = 'md';
+
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
     display: 'flex',
     flexDirection: 'column',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down(breakpoint)]: {
         width: '100%',
     },
 }));
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     marginTop: theme.spacing(2),
-    marginLeft: theme.spacing(2),
     width: '70%',
     padding: theme.spacing(1, 2),
     borderRadius: theme.shape.borderRadiusLarge,
-    [theme.breakpoints.down('sm')]: {
-        marginLeft: 0,
+    [theme.breakpoints.down(breakpoint)]: {
         width: '100%',
     },
 }));
@@ -74,7 +74,8 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 const ChangeRequestBody = styled(Box)(({ theme }) => ({
     display: 'flex',
-    [theme.breakpoints.down('sm')]: {
+    columnGap: theme.spacing(2),
+    [theme.breakpoints.down(breakpoint)]: {
         flexDirection: 'column',
     },
 }));

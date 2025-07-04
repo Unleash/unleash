@@ -25,7 +25,7 @@ export const SeriesSelector: FC<SeriesSelectorProps> = ({
         onChange={(_, newValue) => onChange(newValue?.name || '')}
         disabled={loading}
         renderOption={(props, option, { inputValue }) => (
-            <Box component='li' {...props}>
+            <Box component='li' {...props} key={option.name}>
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     <Typography variant='body2'>
                         <Highlighter search={inputValue}>

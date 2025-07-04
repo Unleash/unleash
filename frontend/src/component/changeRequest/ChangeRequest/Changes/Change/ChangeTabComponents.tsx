@@ -41,11 +41,15 @@ export const Tab = styled(({ children }: ButtonProps) => (
     textTransform: 'uppercase',
 }));
 
-export const Tabs = ({ children }: PropsWithChildren) => (
+export const Tabs = ({
+    className,
+    children,
+}: PropsWithChildren<{ className?: string }>) => (
     <MuiTabs
         aria-label='View rendered change or JSON diff'
         selectionFollowsFocus
         defaultValue={0}
+        className={className}
     >
         {children}
     </MuiTabs>

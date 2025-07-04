@@ -1,6 +1,6 @@
 import { useState, type VFC } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
-import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
+import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import CheckCircle from '@mui/icons-material/CheckCircle';
@@ -22,7 +22,6 @@ interface IChangeRequestSidebarProps {
 const StyledPageContent = styled(PageContent)(({ theme }) => ({
     height: '100vh',
     overflow: 'auto',
-    minWidth: '50vw',
     padding: theme.spacing(6),
     [theme.breakpoints.down('md')]: {
         padding: theme.spacing(4, 2),
@@ -106,11 +105,7 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
 
     if (!loading && !data) {
         return (
-            <DynamicSidebarModal
-                open={open}
-                onClose={onClose}
-                label='Review changes'
-            >
+            <SidebarModal open={open} onClose={onClose} label='Review changes'>
                 <StyledPageContent
                     disableBorder={true}
                     header={<PageHeader titleElement='Review your changes' />}
@@ -119,16 +114,12 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                     {/* FIXME: empty state */}
                     <BackButton onClick={onClose}>Close</BackButton>
                 </StyledPageContent>
-            </DynamicSidebarModal>
+            </SidebarModal>
         );
     }
 
     return (
-        <DynamicSidebarModal
-            open={open}
-            onClose={onClose}
-            label='Review changes'
-        >
+        <SidebarModal open={open} onClose={onClose} label='Review changes'>
             <StyledPageContent
                 disableBorder={true}
                 header={<ReviewChangesHeader />}
@@ -159,6 +150,6 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                     </ChangeRequestPlausibleProvider>
                 ))}
             </StyledPageContent>
-        </DynamicSidebarModal>
+        </SidebarModal>
     );
 };

@@ -4,6 +4,7 @@ import type { IConstraint } from 'interfaces/strategy';
 import {
     type EditableConstraint,
     fromIConstraint,
+    isMultiValueConstraint,
     isSingleValueConstraint,
     toIConstraint,
 } from './editable-constraint-type.ts';
@@ -16,8 +17,8 @@ import {
     type ConstraintUpdateAction,
 } from './constraint-reducer.ts';
 import {
-    type ConstraintValidationResult,
     constraintValidator,
+    type ConstraintValidationResult,
 } from './constraint-validator.ts';
 import {
     getDeletedLegalValues,
@@ -76,7 +77,20 @@ export const useEditableConstraint = (
         [JSON.stringify(context), localConstraint.contextName],
     );
 
-    const validator = constraintValidator(localConstraint.operator);
+    const baseValidator = constraintValidator(localConstraint.operator);
+
+    const validator = (...values: string[]) => {
+        if (
+            isMultiValueConstraint(localConstraint) &&
+            values.every((value) => localConstraint.values.has(value))
+        ) {
+            if (values.length === 1) {
+                return [false, `${values[0]} is already added.`];
+            }
+            return [false, `All the values are already added`];
+        }
+        return baseValidator(...values);
+    };
 
     useEffect(() => {
         if (
@@ -104,7 +118,7 @@ export const useEditableConstraint = (
             isSingleValueConstraint(localConstraint)
         ) {
             return getInvalidLegalValues(
-                (value) => validator(value)[0],
+                (value) => baseValidator(value)[0],
                 contextDefinition.legalValues,
             );
         }

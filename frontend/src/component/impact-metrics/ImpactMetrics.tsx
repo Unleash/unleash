@@ -1,19 +1,29 @@
 import type { FC } from 'react';
-import { useMemo, useState } from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import { useMemo, useState, useCallback } from 'react';
+import { Typography, Button, Paper, styled } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { PageHeader } from 'component/common/PageHeader/PageHeader.tsx';
 import { useImpactMetricsMetadata } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { ChartConfigModal } from './ChartConfigModal.tsx';
 import { ChartItem } from './ChartItem.tsx';
-import { useUrlState } from './hooks/useUrlState.ts';
-import type { ChartConfig } from './types.ts';
+import { GridLayoutWrapper, type GridItem } from './GridLayoutWrapper.tsx';
+import { useImpactMetricsState } from './hooks/useImpactMetricsState.ts';
+import type { ChartConfig, LayoutItem } from './types.ts';
+
+const StyledEmptyState = styled(Paper)(({ theme }) => ({
+    textAlign: 'center',
+    padding: theme.spacing(8),
+    backgroundColor: theme.palette.background.default,
+    borderRadius: theme.shape.borderRadius * 2,
+    border: `2px dashed ${theme.palette.divider}`,
+}));
 
 export const ImpactMetrics: FC = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [editingChart, setEditingChart] = useState<ChartConfig | undefined>();
 
-    const { charts, addChart, updateChart, deleteChart } = useUrlState();
+    const { charts, layout, addChart, updateChart, deleteChart, updateLayout } =
+        useImpactMetricsState();
 
     const {
         metadata,
@@ -50,6 +60,41 @@ export const ImpactMetrics: FC = () => {
         setModalOpen(false);
     };
 
+    const handleLayoutChange = useCallback(
+        (layout: any[]) => {
+            updateLayout(layout as LayoutItem[]);
+        },
+        [updateLayout],
+    );
+
+    const gridItems: GridItem[] = useMemo(
+        () =>
+            charts.map((config, index) => {
+                const existingLayout = layout?.find(
+                    (item) => item.i === config.id,
+                );
+                return {
+                    id: config.id,
+                    component: (
+                        <ChartItem
+                            config={config}
+                            onEdit={handleEditChart}
+                            onDelete={deleteChart}
+                        />
+                    ),
+                    w: existingLayout?.w ?? 6,
+                    h: existingLayout?.h ?? 4,
+                    x: existingLayout?.x,
+                    y: existingLayout?.y,
+                    minW: 4,
+                    minH: 2,
+                    maxW: 12,
+                    maxH: 8,
+                };
+            }),
+        [charts, layout, handleEditChart, deleteChart],
+    );
+
     const hasError = metadataError;
 
     return (
@@ -62,73 +107,57 @@ export const ImpactMetrics: FC = () => {
                     </Typography>
                 }
                 actions={
-                    charts.length > 0 ? (
-                        <Button
-                            variant='contained'
-                            startIcon={<Add />}
-                            onClick={handleAddChart}
-                            disabled={metadataLoading || !!hasError}
-                        >
-                            Add Chart
-                        </Button>
-                    ) : null
+                    <Button
+                        variant='contained'
+                        startIcon={<Add />}
+                        onClick={handleAddChart}
+                        disabled={metadataLoading || !!hasError}
+                    >
+                        Add Chart
+                    </Button>
                 }
             />
-            <Box
-                sx={(theme) => ({
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: theme.spacing(2),
-                    width: '100%',
-                })}
-            >
-                {charts.length === 0 && !metadataLoading && !hasError ? (
-                    <Box
-                        sx={(theme) => ({
-                            textAlign: 'center',
-                            py: theme.spacing(8),
-                        })}
-                    >
-                        <Typography variant='h6' gutterBottom>
-                            No charts configured
-                        </Typography>
-                        <Typography
-                            variant='body2'
-                            color='text.secondary'
-                            sx={{ mb: 3 }}
-                        >
-                            Add your first impact metrics chart to start
-                            tracking performance
-                        </Typography>
-                        <Button
-                            variant='contained'
-                            startIcon={<Add />}
-                            onClick={handleAddChart}
-                            disabled={metadataLoading || !!hasError}
-                        >
-                            Add Chart
-                        </Button>
-                    </Box>
-                ) : (
-                    charts.map((config) => (
-                        <ChartItem
-                            key={config.id}
-                            config={config}
-                            onEdit={handleEditChart}
-                            onDelete={deleteChart}
-                        />
-                    ))
-                )}
 
-                <ChartConfigModal
-                    open={modalOpen}
-                    onClose={() => setModalOpen(false)}
-                    onSave={handleSaveChart}
-                    initialConfig={editingChart}
-                    metricSeries={metricSeries}
-                    loading={metadataLoading}
+            {charts.length === 0 && !metadataLoading && !hasError ? (
+                <StyledEmptyState>
+                    <Typography variant='h6' gutterBottom>
+                        No charts configured
+                    </Typography>
+                    <Typography
+                        variant='body2'
+                        color='text.secondary'
+                        sx={{ mb: 3 }}
+                    >
+                        Add your first impact metrics chart to start tracking
+                        performance with a beautiful drag-and-drop grid layout
+                    </Typography>
+                    <Button
+                        variant='contained'
+                        startIcon={<Add />}
+                        onClick={handleAddChart}
+                        disabled={metadataLoading || !!hasError}
+                    >
+                        Add Chart
+                    </Button>
+                </StyledEmptyState>
+            ) : charts.length > 0 ? (
+                <GridLayoutWrapper
+                    items={gridItems}
+                    onLayoutChange={handleLayoutChange}
+                    rowHeight={180}
+                    margin={[16, 16]}
+                    cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
                 />
-            </Box>
+            ) : null}
+
+            <ChartConfigModal
+                open={modalOpen}
+                onClose={() => setModalOpen(false)}
+                onSave={handleSaveChart}
+                initialConfig={editingChart}
+                metricSeries={metricSeries}
+                loading={metadataLoading}
+            />
         </>
     );
 };

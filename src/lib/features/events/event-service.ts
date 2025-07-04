@@ -110,6 +110,13 @@ export default class EventService {
         return this.eventStore.on(eventName, listener);
     }
 
+    off(
+        eventName: string | symbol,
+        listener: (...args: any[]) => void,
+    ): EventEmitter {
+        return this.eventStore.off(eventName, listener);
+    }
+
     private async enhanceEventsWithTags(
         events: IBaseEvent[],
     ): Promise<IBaseEvent[]> {

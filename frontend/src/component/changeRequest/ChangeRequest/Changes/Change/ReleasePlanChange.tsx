@@ -1,5 +1,5 @@
 import { useRef, useState, type FC, type ReactNode } from 'react';
-import { Box, styled, Typography } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import type {
     ChangeRequestState,
     IChangeRequestAddReleasePlan,
@@ -14,22 +14,18 @@ import { ReleasePlan } from 'component/feature/FeatureView/FeatureOverview/Relea
 import { ReleasePlanMilestone } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/ReleasePlanMilestone';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
-import { ChangeItemInfo } from './Change.styles.tsx';
+import {
+    Action,
+    Added,
+    ChangeItemInfo,
+    ChangeItemWrapper,
+    Deleted,
+} from './Change.styles.tsx';
 
-export const ChangeItemWrapper = styled(Box)({
+const StyledTabs = styled(Tabs)(({ theme }) => ({
     display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-});
-
-const ChangeItemCreateEditDeleteWrapper = styled(Box)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: 'auto auto',
-    justifyContent: 'space-between',
+    flexFlow: 'column',
     gap: theme.spacing(1),
-    alignItems: 'center',
-    marginBottom: theme.spacing(2),
-    width: '100%',
 }));
 
 const DeleteReleasePlan: FC<{
@@ -47,19 +43,13 @@ const DeleteReleasePlan: FC<{
 
     return (
         <>
-            <ChangeItemCreateEditDeleteWrapper>
+            <ChangeItemWrapper>
                 <ChangeItemInfo>
-                    <Typography
-                        sx={(theme) => ({
-                            color: theme.palette.error.main,
-                        })}
-                    >
-                        - Deleting release plan
-                    </Typography>
-                    <Typography>{releasePlan.name}</Typography>
+                    <Deleted>Deleting release plan</Deleted>
+                    <Typography component='span'>{releasePlan.name}</Typography>
+                    {actions}
                 </ChangeItemInfo>
-                <div>{actions}</div>
-            </ChangeItemCreateEditDeleteWrapper>
+            </ChangeItemWrapper>
             <ReleasePlan plan={releasePlan} readonly />
         </>
     );
@@ -89,22 +79,22 @@ const StartMilestone: FC<{
     if (!newMilestone) return;
 
     return (
-        <Tabs>
-            <ChangeItemCreateEditDeleteWrapper>
+        <StyledTabs>
+            <ChangeItemWrapper>
                 <ChangeItemInfo>
-                    <Typography color='success.dark'>
-                        + Start milestone
+                    <Added>Start milestone</Added>
+                    <Typography component='span'>
+                        {newMilestone.name}
                     </Typography>
-                    <Typography>{newMilestone.name}</Typography>
                 </ChangeItemInfo>
                 <div>
                     <TabList>
-                        <Tab>Change</Tab>
+                        <Tab>View change</Tab>
                         <Tab>View diff</Tab>
                     </TabList>
                     {actions}
                 </div>
-            </ChangeItemCreateEditDeleteWrapper>
+            </ChangeItemWrapper>
             <TabPanel>
                 <ReleasePlanMilestone readonly milestone={newMilestone} />
             </TabPanel>
@@ -116,7 +106,7 @@ const StartMilestone: FC<{
                     }}
                 />
             </TabPanel>
-        </Tabs>
+        </StyledTabs>
     );
 };
 
@@ -162,25 +152,25 @@ const AddReleasePlan: FC<{
     if (!currentReleasePlan) {
         return (
             <>
-                <ChangeItemCreateEditDeleteWrapper>
+                <ChangeItemWrapper>
                     <ChangeItemInfo>
-                        <Typography color='success.dark'>
-                            + Adding release plan
+                        <Added>Adding release plan</Added>
+                        <Typography component='span'>
+                            {planPreview.name}
                         </Typography>
-                        <Typography>{planPreview.name}</Typography>
+                        {actions}
                     </ChangeItemInfo>
-                    <div>{actions}</div>
-                </ChangeItemCreateEditDeleteWrapper>
+                </ChangeItemWrapper>
                 <ReleasePlan plan={planPreview} readonly />
             </>
         );
     }
 
     return (
-        <Tabs>
-            <ChangeItemCreateEditDeleteWrapper>
+        <StyledTabs>
+            <ChangeItemWrapper>
                 <ChangeItemInfo>
-                    <Typography>
+                    <Action>
                         Replacing{' '}
                         <TooltipLink
                             tooltip={
@@ -207,18 +197,17 @@ const AddReleasePlan: FC<{
                                 current
                             </span>
                         </TooltipLink>{' '}
-                        release plan with
-                    </Typography>
-                    <Typography>{planPreview.name}</Typography>
+                        release plan with {planPreview.name}
+                    </Action>
                 </ChangeItemInfo>
                 <div>
                     <TabList>
-                        <Tab>Changes</Tab>
+                        <Tab>View change</Tab>
                         <Tab>View diff</Tab>
                     </TabList>
                     {actions}
                 </div>
-            </ChangeItemCreateEditDeleteWrapper>
+            </ChangeItemWrapper>
             <TabPanel>
                 <ReleasePlan plan={planPreview} readonly />
             </TabPanel>
@@ -230,7 +219,7 @@ const AddReleasePlan: FC<{
                     }}
                 />
             </TabPanel>
-        </Tabs>
+        </StyledTabs>
     );
 };
 

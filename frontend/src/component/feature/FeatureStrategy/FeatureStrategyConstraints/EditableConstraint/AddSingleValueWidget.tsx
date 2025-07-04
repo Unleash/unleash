@@ -5,6 +5,13 @@ import { ValueChip } from './ValueList.tsx';
 import { AddValuesPopover, type OnAddActions } from './AddValuesPopover.tsx';
 import type { ConstraintValidatorOutput } from './ConstraintValidatorOutput.ts';
 
+// No, escape handling doesn't work correctly with chips and popovers in MUI v5.
+// This is an intentional trade-off for now because the chip makes it easy to
+// use delete/backspace to clear the value and otherwise works pretty well (cf
+// https://github.com/Unleash/unleash/pull/9859).
+//
+// In MUI v6 and onwards this will "just work"
+// (https://mui.com/material-ui/migration/upgrade-to-v6/#chip)
 const StyledChip = styled(ValueChip, {
     shouldForwardProp: (prop) => prop !== 'hasValue',
 })<{ hasValue: boolean }>(({ theme, hasValue }) => ({

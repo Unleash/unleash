@@ -77,6 +77,8 @@ export const useEditableConstraint = (
         [JSON.stringify(context), localConstraint.contextName],
     );
 
+    const baseValidator = constraintValidator(localConstraint.operator);
+
     const validator = useCallback(
         (...values: string[]) => {
             if (
@@ -88,7 +90,7 @@ export const useEditableConstraint = (
                 }
                 return [false, `All the values are already added`];
             }
-            return constraintValidator(localConstraint.operator)(...values);
+            return baseValidator(...values);
         },
         [constraint.operator, JSON.stringify(constraint.values)],
     );
@@ -119,7 +121,7 @@ export const useEditableConstraint = (
             isSingleValueConstraint(localConstraint)
         ) {
             return getInvalidLegalValues(
-                (value) => validator(value)[0],
+                (value) => baseValidator(value)[0],
                 contextDefinition.legalValues,
             );
         }

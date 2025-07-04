@@ -154,6 +154,27 @@ describe('validators', () => {
             ]);
         },
     );
+
+    test.each(multipleValueOperators)(
+        'if all values already exist in the constraint values, (multi-value operator) %s gives an error',
+        (operator) => {
+            const initial: IConstraint = {
+                contextName: 'context-field',
+                operator: operator,
+                values: ['a', 'b'],
+            };
+
+            const { result } = renderHook(() =>
+                useEditableConstraint(initial, () => {}),
+            );
+
+            checkValidator(result.current.validator, [
+                ['a', false],
+                [['a', 'c'], true],
+                [['a', 'b'], false],
+            ]);
+        },
+    );
 });
 
 describe('legal values', () => {

@@ -80,14 +80,7 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
         <StyledPopover
             open={open}
             onTransitionEnter={() => {
-                if (inputValue && !initialValue?.trim()) {
-                    // if the input value is not empty and the current value is
-                    // empty or whitespace
-                    setInputValue('');
-                } else if (inputValue) {
-                    // select the text in the input field
-                    inputRef?.current?.select();
-                }
+                inputRef?.current?.select();
             }}
             disableScrollLock
             anchorEl={anchorEl}

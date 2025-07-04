@@ -15,12 +15,9 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { flexRow, focusable } from 'themes/themeStyles';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
-import { ReactComponent as CelebatoryUnleashLogo } from 'assets/img/unleashHoliday.svg';
-import { ReactComponent as CelebatoryUnleashLogoWhite } from 'assets/img/unleashHolidayDark.svg';
 import { ReactComponent as LogoOnlyWhite } from 'assets/img/logo.svg';
 import { ReactComponent as LogoOnly } from 'assets/img/logoDark.svg';
 import { Link } from 'react-router-dom';
-import { useFlag } from '@unleash/proxy-client-react';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 
 export const StretchContainer = styled(Box, {
@@ -47,8 +44,6 @@ const StyledLink = styled(Link)(({ theme }) => focusable(theme));
 const StyledUnleashLogoWhite = styled(UnleashLogoWhite)({ width: '150px' });
 
 const StyledUnleashLogo = styled(UnleashLogo)({ width: '150px' });
-
-const StyledCelebatoryLogo = styled(CelebatoryUnleashLogo)({ width: '150px' });
 
 const StyledUnleashLogoOnly = styled(LogoOnly)(({ theme }) => ({
     width: '58px',
@@ -80,7 +75,6 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
     NewInUnleash,
 }) => {
     const { routes } = useRoutes();
-    const celebrateUnleashFrontend = useFlag('celebrateUnleashFrontend');
     const { showOnlyAdminMenu } = useNewAdminMenu();
 
     const [mode, setMode] = useNavigationMode();
@@ -101,22 +95,10 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
                     <StyledLink to='/' sx={flexRow} aria-label='Home'>
                         <ThemeMode
                             darkmode={
-                                <ConditionallyRender
-                                    condition={celebrateUnleashFrontend}
-                                    show={<CelebatoryUnleashLogoWhite />}
-                                    elseShow={
-                                        <StyledUnleashLogoWhite aria-label='Unleash logo' />
-                                    }
-                                />
+                                <StyledUnleashLogoWhite aria-label='Unleash logo' />
                             }
                             lightmode={
-                                <ConditionallyRender
-                                    condition={celebrateUnleashFrontend}
-                                    show={<StyledCelebatoryLogo />}
-                                    elseShow={
-                                        <StyledUnleashLogo aria-label='Unleash logo' />
-                                    }
-                                />
+                                <StyledUnleashLogo aria-label='Unleash logo' />
                             }
                         />
                     </StyledLink>

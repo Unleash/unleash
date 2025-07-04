@@ -156,7 +156,7 @@ describe('validators', () => {
     );
 
     test.each(multipleValueOperators)(
-        'if all values already exist in the constraint values, (multi-value operator) %s gives an error',
+        'multi-value operator %s should reject fully duplicate inputs and accept new values',
         (operator) => {
             const initial: IConstraint = {
                 contextName: 'context-field',

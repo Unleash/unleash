@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useReducer } from 'react';
+import { useEffect, useMemo, useReducer } from 'react';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IConstraint } from 'interfaces/strategy';
 import {
@@ -79,28 +79,18 @@ export const useEditableConstraint = (
 
     const baseValidator = constraintValidator(localConstraint.operator);
 
-    const validator = useCallback(
-        (...values: string[]) => {
-            if (
-                isMultiValueConstraint(localConstraint) &&
-                values.every((value) => localConstraint.values.has(value))
-            ) {
-                if (values.length === 1) {
-                    return [false, `${values[0]} is already added.`];
-                }
-                return [false, `All the values are already added`];
+    const validator = (...values: string[]) => {
+        if (
+            isMultiValueConstraint(localConstraint) &&
+            values.every((value) => localConstraint.values.has(value))
+        ) {
+            if (values.length === 1) {
+                return [false, `${values[0]} is already added.`];
             }
-            return baseValidator(...values);
-        },
-        [
-            JSON.stringify(localConstraint.operator),
-            JSON.stringify(
-                isMultiValueConstraint(localConstraint)
-                    ? Array.from(localConstraint.values)
-                    : [],
-            ),
-        ],
-    );
+            return [false, `All the values are already added`];
+        }
+        return baseValidator(...values);
+    };
 
     useEffect(() => {
         if (

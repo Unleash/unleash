@@ -89,7 +89,7 @@ const StartMilestone: FC<{
                 </ChangeItemInfo>
                 <div>
                     <TabList>
-                        <Tab>Change</Tab>
+                        <Tab>View change</Tab>
                         <Tab>View diff</Tab>
                     </TabList>
                     {actions}
@@ -202,7 +202,7 @@ const AddReleasePlan: FC<{
                 </ChangeItemInfo>
                 <div>
                     <TabList>
-                        <Tab>Changes</Tab>
+                        <Tab>View change</Tab>
                         <Tab>View diff</Tab>
                     </TabList>
                     {actions}

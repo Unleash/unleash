@@ -57,7 +57,7 @@ export const SegmentChangeDetails: FC<{
     const actionsWithTabs = (
         <ActionsContainer>
             <TabList>
-                <Tab>Change</Tab>
+                <Tab>View change</Tab>
                 <Tab>View diff</Tab>
             </TabList>
             {actions}

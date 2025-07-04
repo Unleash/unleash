@@ -154,6 +154,27 @@ describe('validators', () => {
             ]);
         },
     );
+
+    test.each(multipleValueOperators)(
+        'multi-value operator %s should reject fully duplicate inputs and accept new values',
+        (operator) => {
+            const initial: IConstraint = {
+                contextName: 'context-field',
+                operator: operator,
+                values: ['a', 'b'],
+            };
+
+            const { result } = renderHook(() =>
+                useEditableConstraint(initial, () => {}),
+            );
+
+            checkValidator(result.current.validator, [
+                ['a', false],
+                [['a', 'c'], true],
+                [['a', 'b'], false],
+            ]);
+        },
+    );
 });
 
 describe('legal values', () => {

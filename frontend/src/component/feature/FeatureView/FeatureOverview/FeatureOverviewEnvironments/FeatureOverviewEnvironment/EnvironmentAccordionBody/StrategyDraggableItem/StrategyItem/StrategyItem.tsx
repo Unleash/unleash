@@ -1,6 +1,6 @@
 import type { DragEventHandler, FC, ReactNode } from 'react';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { StrategyExecution } from './StrategyExecution/StrategyExecution';
+import { StrategyExecution } from './StrategyExecution/StrategyExecution.tsx';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 
 type StrategyItemProps = {

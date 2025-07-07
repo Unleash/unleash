@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestChangeSchema } from './changeRequestChangeSchema';
-import type { ChangeRequestDefaultChangeSchema } from './changeRequestDefaultChangeSchema';
+import type { ChangeRequestChangeSchema } from './changeRequestChangeSchema.js';
+import type { ChangeRequestDefaultChangeSchema } from './changeRequestDefaultChangeSchema.js';
 
 /**
  * A feature and all its suggested changes.

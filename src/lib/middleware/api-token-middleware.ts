@@ -1,7 +1,7 @@
-import { ApiTokenType } from '../types/models/api-token';
-import type { IUnleashConfig } from '../types/option';
-import type { IApiRequest, IAuthRequest } from '../routes/unleash-types';
-import type { IUnleashServices } from '../server-impl';
+import { ApiTokenType } from '../types/model.js';
+import type { IUnleashConfig } from '../types/option.js';
+import type { IApiRequest, IAuthRequest } from '../routes/unleash-types.js';
+import type { IUnleashServices } from '../services/index.js';
 
 const isClientApi = ({ path }) => {
     return path && path.indexOf('/api/client') > -1;
@@ -64,9 +64,7 @@ const apiAccessMiddleware = (
                         (apiUser.type === CLIENT &&
                             !isClientApi(req) &&
                             !isEdgeMetricsApi(req)) ||
-                        (apiUser.type === FRONTEND && !isProxyApi(req)) ||
-                        (apiUser.type === FRONTEND &&
-                            !flagResolver.isEnabled('embedProxy'))
+                        (apiUser.type === FRONTEND && !isProxyApi(req))
                     ) {
                         res.status(403).send({
                             message: TOKEN_TYPE_ERROR_MESSAGE,

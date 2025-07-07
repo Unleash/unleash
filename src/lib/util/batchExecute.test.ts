@@ -1,18 +1,18 @@
-import { jest } from '@jest/globals';
-import { batchExecute } from './batchExecute';
+import { type Mock, vi } from 'vitest';
+import { batchExecute } from './batchExecute.js';
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe('batchExecute', () => {
-    let mockExecuteFn: jest.Mock;
+    let mockExecuteFn: Mock;
 
     beforeEach(() => {
-        mockExecuteFn = jest.fn();
+        mockExecuteFn = vi.fn();
     });
 
     afterEach(() => {
-        jest.clearAllTimers();
-        jest.clearAllMocks();
+        vi.clearAllTimers();
+        vi.clearAllMocks();
     });
 
     it('should process each item in batches of the specified size', async () => {
@@ -23,7 +23,7 @@ describe('batchExecute', () => {
         batchExecute(items, batchSize, delayMs, mockExecuteFn);
 
         for (let i = 0; i < 2; i++) {
-            jest.advanceTimersByTime(delayMs);
+            vi.advanceTimersByTime(delayMs);
             await Promise.resolve();
         }
 
@@ -42,11 +42,11 @@ describe('batchExecute', () => {
 
         expect(mockExecuteFn).toHaveBeenCalledTimes(5);
 
-        jest.advanceTimersByTime(delayMs);
+        vi.advanceTimersByTime(delayMs);
         await Promise.resolve();
         expect(mockExecuteFn).toHaveBeenCalledTimes(10);
 
-        jest.advanceTimersByTime(delayMs);
+        vi.advanceTimersByTime(delayMs);
         await Promise.resolve();
         expect(mockExecuteFn).toHaveBeenCalledTimes(15);
     });

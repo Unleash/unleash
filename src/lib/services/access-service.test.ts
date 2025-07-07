@@ -1,29 +1,33 @@
-import NameExistsError from '../error/name-exists-error';
-import getLogger from '../../test/fixtures/no-logger';
-import { createFakeAccessService } from '../features/access/createAccessService';
+import NameExistsError from '../error/name-exists-error.js';
+import getLogger from '../../test/fixtures/no-logger.js';
+import { createFakeAccessService } from '../features/access/createAccessService.js';
 import {
     AccessService,
     type IRoleCreation,
     type IRoleValidation,
-} from './access-service';
-import { createTestConfig } from '../../test/config/test-config';
-import { CUSTOM_ROOT_ROLE_TYPE } from '../util/constants';
-import FakeGroupStore from '../../test/fixtures/fake-group-store';
-import { FakeAccountStore } from '../../test/fixtures/fake-account-store';
-import FakeRoleStore from '../../test/fixtures/fake-role-store';
-import FakeEnvironmentStore from '../features/project-environments/fake-environment-store';
-import FakeAccessStore from '../../test/fixtures/fake-access-store';
-import { GroupService } from '../services/group-service';
-import type { IRole } from '../../lib/types/stores/access-store';
+} from './access-service.js';
+import { createTestConfig } from '../../test/config/test-config.js';
+import { CUSTOM_ROOT_ROLE_TYPE } from '../util/constants.js';
+import FakeGroupStore from '../../test/fixtures/fake-group-store.js';
+import { FakeAccountStore } from '../../test/fixtures/fake-account-store.js';
+import FakeRoleStore from '../../test/fixtures/fake-role-store.js';
+import FakeEnvironmentStore from '../features/project-environments/fake-environment-store.js';
+import FakeAccessStore from '../../test/fixtures/fake-access-store.js';
+import { GroupService } from '../services/group-service.js';
+import type {
+    IRole,
+    IRoleWithProject,
+} from '../../lib/types/stores/access-store.js';
 import {
     type IGroup,
-    ROLE_CREATED,
     SYSTEM_USER,
     SYSTEM_USER_AUDIT,
-} from '../../lib/types';
-import BadDataError from '../../lib/error/bad-data-error';
-import { createFakeEventsService } from '../../lib/features/events/createEventsService';
-import { createFakeAccessReadModel } from '../features/access/createAccessReadModel';
+} from '../../lib/types/index.js';
+import BadDataError from '../../lib/error/bad-data-error.js';
+import { createFakeEventsService } from '../../lib/features/events/createEventsService.js';
+import { createFakeAccessReadModel } from '../features/access/createAccessReadModel.js';
+import { ROLE_CREATED } from '../events/index.js';
+import { expect } from 'vitest';
 
 function getSetup() {
     const config = createTestConfig({
@@ -53,9 +57,13 @@ test('should fail when name exists', async () => {
         SYSTEM_USER_AUDIT,
     );
 
-    expect(accessService.validateRole(existingRole)).rejects.toThrow(
-        new NameExistsError(
-            `There already exists a role with the name ${existingRole.name}`,
+    await expect(() =>
+        accessService.validateRole(existingRole),
+    ).rejects.toThrowError(
+        expect.errorWithMessage(
+            new NameExistsError(
+                `There already exists a role with the name ${existingRole.name}`,
+            ),
         ),
     );
 });
@@ -107,7 +115,7 @@ test('should not accept empty names', async () => {
 
     await expect(
         accessService.validateRole(withWhitespaceName),
-    ).rejects.toThrow('"name" is not allowed to be empty');
+    ).rejects.toThrowError('"name" is not allowed to be empty');
 });
 
 test('should trim leading and trailing whitespace from names', async () => {
@@ -326,26 +334,38 @@ test('should return true if user has admin role', async () => {
     const { accessReadModel, accessStore } = getSetup();
 
     const userId = 1;
-    accessStore.getRolesForUserId = jest
-        .fn()
-        .mockResolvedValue([{ id: 1, name: 'ADMIN', type: 'custom' }]);
+    let calledWithSameId = false;
+    // @ts-expect-error role is missing the project. Should admin have a project?
+    const role: IRoleWithProject = {
+        id: userId,
+        name: 'ADMIN',
+        type: 'custom',
+    };
+    accessStore.getRolesForUserId = (id: number) => {
+        calledWithSameId = id === userId;
+        return Promise.resolve([role]);
+    };
 
     const result = await accessReadModel.isRootAdmin(userId);
 
     expect(result).toBe(true);
-    expect(accessStore.getRolesForUserId).toHaveBeenCalledWith(userId);
+    expect(calledWithSameId).toBe(true);
 });
 
 test('should return false if user does not have admin role', async () => {
     const { accessReadModel, accessStore } = getSetup();
 
     const userId = 2;
-    accessStore.getRolesForUserId = jest
-        .fn()
-        .mockResolvedValue([{ id: 2, name: 'user', type: 'custom' }]);
+    let calledWithSameId = false;
+    // @ts-expect-error role is missing the project. Should admin have a project?
+    const role: IRoleWithProject = { id: userId, name: 'user', type: 'custom' };
+    accessStore.getRolesForUserId = (id: number) => {
+        calledWithSameId = id === userId;
+        return Promise.resolve([role]);
+    };
 
     const result = await accessReadModel.isRootAdmin(userId);
 
     expect(result).toBe(false);
-    expect(accessStore.getRolesForUserId).toHaveBeenCalledWith(userId);
+    expect(calledWithSameId).toBe(true);
 });

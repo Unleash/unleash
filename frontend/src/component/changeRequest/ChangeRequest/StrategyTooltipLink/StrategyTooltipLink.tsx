@@ -1,3 +1,4 @@
+// deprecated: remove with flag crDiffView
 import type {
     IChangeRequestAddStrategy,
     IChangeRequestDeleteStrategy,
@@ -9,13 +10,13 @@ import {
     formatStrategyName,
     GetFeatureStrategyIcon,
 } from 'utils/strategyNames';
-import EventDiff from 'component/events/EventDiff/EventDiff';
+import { EventDiff } from 'component/events/EventDiff/EventDiff';
 import omit from 'lodash.omit';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { Typography, styled } from '@mui/material';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { textTruncated } from 'themes/themeStyles';
-import { NameWithChangeInfo } from '../NameWithChangeInfo/NameWithChangeInfo';
+import { NameWithChangeInfo } from '../Changes/Change/NameWithChangeInfo/NameWithChangeInfo.tsx';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',

@@ -5,7 +5,7 @@ import {
     calculateOverageCost,
     calculateTotalUsage,
 } from 'utils/traffic-calculations';
-import { BILLING_TRAFFIC_PRICE } from './BillingPlan';
+import { BILLING_TRAFFIC_PRICE } from './BillingPlan.jsx';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 
 export const useOverageCost = (includedTraffic: number) => {

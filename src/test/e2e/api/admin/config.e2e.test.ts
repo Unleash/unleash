@@ -1,11 +1,11 @@
-import dbInit, { type ITestDb } from '../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import getLogger from '../../../fixtures/no-logger';
-import { simpleAuthSettingsKey } from '../../../../lib/types/settings/simple-auth-settings';
-import { RoleName, TEST_AUDIT_USER } from '../../../../lib/types';
+} from '../../helpers/test-helper.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { simpleAuthSettingsKey } from '../../../../lib/types/settings/simple-auth-settings.js';
+import { RoleName, TEST_AUDIT_USER } from '../../../../lib/types/index.js';
 import { addDays, minutesToMilliseconds } from 'date-fns';
 
 let db: ITestDb;
@@ -58,39 +58,10 @@ test('gets ui config with disablePasswordAuth', async () => {
 
 test('gets ui config with frontendSettings', async () => {
     const frontendApiOrigins = ['https://example.net'];
-    await app.services.frontendApiService.setFrontendSettings(
-        { frontendApiOrigins },
+    await app.services.frontendApiService.setFrontendCorsSettings(
+        frontendApiOrigins,
         TEST_AUDIT_USER,
     );
-    await app.request
-        .get('/api/admin/ui-config')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) =>
-            expect(res.body.frontendApiOrigins).toEqual(frontendApiOrigins),
-        );
-});
-
-test('sets ui config with frontendSettings', async () => {
-    const frontendApiOrigins = ['https://example.org'];
-    await app.request
-        .get('/api/admin/ui-config')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => expect(res.body.frontendApiOrigins).toEqual(['*']));
-    await app.request
-        .post('/api/admin/ui-config')
-        .send({ frontendSettings: { frontendApiOrigins: [] } })
-        .expect(204);
-    await app.request
-        .get('/api/admin/ui-config')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => expect(res.body.frontendApiOrigins).toEqual([]));
-    await app.request
-        .post('/api/admin/ui-config')
-        .send({ frontendSettings: { frontendApiOrigins } })
-        .expect(204);
     await app.request
         .get('/api/admin/ui-config')
         .expect('Content-Type', /json/)

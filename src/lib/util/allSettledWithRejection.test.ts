@@ -1,4 +1,4 @@
-import { allSettledWithRejection } from './allSettledWithRejection';
+import { allSettledWithRejection } from './allSettledWithRejection.js';
 
 describe('allSettledWithRejection', () => {
     it('should resolve if all promises resolve', async () => {

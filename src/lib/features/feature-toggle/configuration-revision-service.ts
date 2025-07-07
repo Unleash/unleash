@@ -1,10 +1,10 @@
-import type { Logger } from '../../logger';
+import type { Logger } from '../../logger.js';
 import type {
     IEventStore,
     IFlagResolver,
     IUnleashConfig,
     IUnleashStores,
-} from '../../types';
+} from '../../types/index.js';
 import EventEmitter from 'events';
 
 export const UPDATE_REVISION = 'UPDATE_REVISION';

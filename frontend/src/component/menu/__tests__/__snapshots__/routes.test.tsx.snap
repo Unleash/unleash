@@ -38,14 +38,6 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "menu": {},
-    "parent": "/archive",
-    "path": "/projects/:projectId/archived",
-    "title": ":projectId",
-    "type": "protected",
-  },
-  {
-    "component": [Function],
-    "menu": {},
     "parent": "/projects/:projectId/features/:featureId/",
     "path": "/projects/:projectId/features/:featureId/copy",
     "title": "Copy",
@@ -101,6 +93,7 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
+    "enterprise": true,
     "menu": {},
     "path": "/projects-archive",
     "title": "Projects archive",
@@ -108,17 +101,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "menu": {
-      "primary": true,
-    },
-    "notFlag": "flagsReleaseManagementUI",
-    "path": "/search",
-    "title": "Search",
-    "type": "protected",
-  },
-  {
-    "component": [Function],
-    "flag": "flagsReleaseManagementUI",
     "menu": {
       "primary": true,
     },
@@ -150,7 +132,25 @@ exports[`returns all baseRoutes 1`] = `
       "primary": true,
     },
     "path": "/insights",
-    "title": "Insights",
+    "title": "Analytics",
+    "type": "protected",
+  },
+  {
+    "component": {
+      "$$typeof": Symbol(react.lazy),
+      "_init": [Function],
+      "_payload": {
+        "_result": [Function],
+        "_status": -1,
+      },
+    },
+    "enterprise": true,
+    "flag": "impactMetrics",
+    "menu": {
+      "primary": true,
+    },
+    "path": "/impact-metrics",
+    "title": "Impact metrics",
     "type": "protected",
   },
   {
@@ -168,6 +168,16 @@ exports[`returns all baseRoutes 1`] = `
     },
     "path": "/applications",
     "title": "Applications",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "flag": "customMetrics",
+    "menu": {
+      "main": true,
+    },
+    "path": "/custom-metrics",
+    "title": "Custom metrics",
     "type": "protected",
   },
   {

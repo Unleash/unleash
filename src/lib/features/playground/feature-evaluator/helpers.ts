@@ -1,6 +1,6 @@
-import type { IStrategyConfig } from '../../../types';
-import type { FeatureStrategiesEvaluationResult } from './client';
-import type { Context } from './context';
+import type { IStrategyConfig } from '../../../types/index.js';
+import type { FeatureStrategiesEvaluationResult } from './client.js';
+import type { Context } from './context.js';
 
 export type FallbackFunction = (name: string, context: Context) => boolean;
 

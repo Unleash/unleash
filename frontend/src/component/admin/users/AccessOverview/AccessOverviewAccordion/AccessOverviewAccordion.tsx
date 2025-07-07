@@ -8,7 +8,7 @@ import {
 import {
     AccessOverviewList,
     type IAccessOverviewPermissionCategory,
-} from './AccessOverviewList';
+} from './AccessOverviewList.tsx';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,

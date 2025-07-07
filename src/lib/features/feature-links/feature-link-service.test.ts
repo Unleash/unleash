@@ -1,24 +1,45 @@
-import { createFakeFeatureLinkService } from './createFeatureLinkService';
-import type { IAuditUser, IUnleashConfig } from '../../types';
-import getLogger from '../../../test/fixtures/no-logger';
-import { BadDataError, NotFoundError } from '../../error';
+import { createFakeFeatureLinkService } from './createFeatureLinkService.js';
+import type { IAuditUser, IUnleashConfig } from '../../types/index.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import {
+    BadDataError,
+    NotFoundError,
+    OperationDeniedError,
+} from '../../error/index.js';
+import { fakeImpactMetricsResolver } from '../../../test/fixtures/fake-impact-metrics.js';
 
 test('create, update and delete feature link', async () => {
+    const flagResolver = { impactMetrics: fakeImpactMetricsResolver() };
     const { featureLinkStore, featureLinkService } =
         createFakeFeatureLinkService({
             getLogger,
+            flagResolver,
         } as unknown as IUnleashConfig);
+
+    flagResolver.impactMetrics.defineCounter(
+        'feature_link_count',
+        'Count of feature links',
+    );
 
     const link = await featureLinkService.createLink(
         'default',
-        { featureName: 'feature', url: 'example.com', title: 'some title' },
+        {
+            featureName: 'feature',
+            url: 'complex.example.com',
+            title: 'some title',
+        },
         {} as IAuditUser,
     );
     expect(link).toMatchObject({
         featureName: 'feature',
-        url: 'https://example.com',
+        url: 'https://complex.example.com',
         title: 'some title',
+        domain: 'example',
     });
+
+    expect(
+        flagResolver.impactMetrics.counters.get('feature_link_count')!.value,
+    ).toBe(1);
 
     const newLink = await featureLinkService.updateLink(
         { projectId: 'default', linkId: link.id },
@@ -33,6 +54,7 @@ test('create, update and delete feature link', async () => {
         featureName: 'feature',
         url: 'https://example1.com',
         title: 'new title',
+        domain: 'example1',
     });
 
     await featureLinkService.deleteLink(
@@ -43,8 +65,10 @@ test('create, update and delete feature link', async () => {
 });
 
 test('cannot delete/update non existent link', async () => {
+    const flagResolver = { impactMetrics: fakeImpactMetricsResolver() };
     const { featureLinkService } = createFakeFeatureLinkService({
         getLogger,
+        flagResolver,
     } as unknown as IUnleashConfig);
 
     await expect(
@@ -67,8 +91,10 @@ test('cannot delete/update non existent link', async () => {
 });
 
 test('cannot create/update invalid link', async () => {
+    const flagResolver = { impactMetrics: fakeImpactMetricsResolver() };
     const { featureLinkService } = createFakeFeatureLinkService({
         getLogger,
+        flagResolver,
     } as unknown as IUnleashConfig);
 
     await expect(
@@ -94,4 +120,36 @@ test('cannot create/update invalid link', async () => {
             {} as IAuditUser,
         ),
     ).rejects.toThrow(BadDataError);
+});
+
+test('cannot exceed allowed link count', async () => {
+    const flagResolver = { impactMetrics: fakeImpactMetricsResolver() };
+    const { featureLinkService } = createFakeFeatureLinkService({
+        getLogger,
+        flagResolver,
+    } as unknown as IUnleashConfig);
+
+    for (let i = 0; i < 10; i++) {
+        await featureLinkService.createLink(
+            'default',
+            {
+                featureName: 'feature',
+                url: 'example.com',
+                title: 'some title',
+            },
+            {} as IAuditUser,
+        );
+    }
+
+    await expect(
+        featureLinkService.createLink(
+            'default',
+            {
+                featureName: 'feature',
+                url: 'example.com',
+                title: 'some title',
+            },
+            {} as IAuditUser,
+        ),
+    ).rejects.toThrow(OperationDeniedError);
 });

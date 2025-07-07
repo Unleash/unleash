@@ -8,15 +8,14 @@ import type {
     ApplicationOverviewSchema,
 } from 'openapi';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { HelpIcon } from '../common/HelpIcon/HelpIcon';
+import { HelpIcon } from '../common/HelpIcon/HelpIcon.tsx';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 import CloudCircle from '@mui/icons-material/CloudCircle';
 import Flag from '@mui/icons-material/Flag';
 import WarningAmberRounded from '@mui/icons-material/WarningAmberRounded';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { getApplicationIssues } from './ApplicationIssues/ApplicationIssues';
-import { useUiFlag } from 'hooks/useUiFlag';
+import { getApplicationIssues } from './ApplicationIssues/ApplicationIssues.tsx';
 
 const StyledTable = styled('table')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
@@ -197,7 +196,6 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
     const { elementRef, width } = useElementWidth();
     const navigate = useNavigate();
     const theme = useTheme();
-    const registerFrontendClientEnabled = useUiFlag('registerFrontendClient');
 
     const mode = getApplicationIssues(data);
 
@@ -296,23 +294,8 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                                 {environment.instanceCount}
                                             </StyledCell>
                                         </tr>
-                                        {!registerFrontendClientEnabled ? (
-                                            <tr>
-                                                <StyledCell>SDK:</StyledCell>
-                                                <StyledCell>
-                                                    {environment.sdks.map(
-                                                        (sdk) => (
-                                                            <div key={sdk}>
-                                                                {sdk}
-                                                            </div>
-                                                        ),
-                                                    )}
-                                                </StyledCell>
-                                            </tr>
-                                        ) : null}
 
-                                        {registerFrontendClientEnabled &&
-                                        environment.backendSdks.length > 0 ? (
+                                        {environment.backendSdks.length > 0 ? (
                                             <tr>
                                                 <StyledCell>
                                                     Backend SDK:
@@ -329,8 +312,7 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                             </tr>
                                         ) : null}
 
-                                        {registerFrontendClientEnabled &&
-                                        environment.frontendSdks.length > 0 ? (
+                                        {environment.frontendSdks.length > 0 ? (
                                             <tr>
                                                 <StyledCell>
                                                     Frontend SDK:

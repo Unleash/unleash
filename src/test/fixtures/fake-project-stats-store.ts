@@ -1,9 +1,9 @@
-import type { IProjectStats } from '../../lib/features/project/project-service';
+import type { IProjectStats } from '../../lib/features/project/project-service.js';
 import type {
     ICreateEnabledDates,
     IProjectStatsStore,
-} from '../../lib/types/stores/project-stats-store-type';
-import type { DoraFeaturesSchema } from '../../lib/openapi';
+} from '../../lib/types/stores/project-stats-store-type.js';
+import type { DoraFeaturesSchema } from '../../lib/openapi/index.js';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 export default class FakeProjectStatsStore implements IProjectStatsStore {

@@ -1,19 +1,17 @@
 import dbInit, {
     type ITestDb,
-} from '../../../../test/e2e/helpers/database-init';
+} from '../../../../test/e2e/helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../../test/e2e/helpers/test-helper';
-import getLogger from '../../../../test/fixtures/no-logger';
+} from '../../../../test/e2e/helpers/test-helper.js';
+import getLogger from '../../../../test/fixtures/no-logger.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('archive_test_serial', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('archive_test_serial', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
         {
@@ -30,16 +28,6 @@ beforeAll(async () => {
 afterAll(async () => {
     await app.destroy();
     await db.destroy();
-});
-
-test('Should get empty features via admin', async () => {
-    await app.request
-        .get('/api/admin/archive/features')
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .expect((res) => {
-            expect(res.body.features).toHaveLength(0);
-        });
 });
 
 test('Should be allowed to reuse deleted toggle name', async () => {
@@ -61,64 +49,45 @@ test('Should be allowed to reuse deleted toggle name', async () => {
         .expect(200);
 });
 
-test('Should get archived toggles via admin', async () => {
-    await app.request
-        .post('/api/admin/projects/default/features')
-        .send({
-            name: 'archived.test.1',
-            archived: true,
-        })
-        .expect(201);
-    await app.request
-        .post('/api/admin/projects/default/features')
-        .send({
-            name: 'archived.test.2',
-            archived: true,
-        })
-        .expect(201);
-    await app.request
-        .get('/api/admin/archive/features')
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .expect((res) => {
-            expect(res.body.features).toHaveLength(2);
-        });
-});
-
 test('Should get archived toggles via project', async () => {
     await db.stores.featureToggleStore.deleteAll();
 
+    const proj1 = 'proj-1';
+    const proj2 = 'proj-2';
+
     await db.stores.projectStore.create({
-        id: 'proj-1',
-        name: 'proj-1',
+        id: proj1,
+        name: proj1,
         description: '',
         mode: 'open' as const,
     });
     await db.stores.projectStore.create({
-        id: 'proj-2',
-        name: 'proj-2',
+        id: proj2,
+        name: proj2,
         description: '',
         mode: 'open' as const,
     });
 
-    await db.stores.featureToggleStore.create('proj-1', {
+    await db.stores.featureToggleStore.create(proj1, {
         name: 'feat-proj-1',
         archived: true,
         createdByUserId: 9999,
     });
-    await db.stores.featureToggleStore.create('proj-2', {
+    await db.stores.featureToggleStore.create(proj2, {
         name: 'feat-proj-2',
         archived: true,
         createdByUserId: 9999,
     });
-    await db.stores.featureToggleStore.create('proj-2', {
+    await db.stores.featureToggleStore.create(proj2, {
         name: 'feat-proj-2-2',
         archived: true,
         createdByUserId: 9999,
     });
 
     await app.request
-        .get('/api/admin/archive/features/proj-1')
+        .get(
+            `/api/admin/search/features?project=IS%3A${proj1}&archived=IS%3Atrue`,
+        )
         .expect(200)
         .expect('Content-Type', /json/)
         .expect((res) => {
@@ -126,19 +95,13 @@ test('Should get archived toggles via project', async () => {
         });
 
     await app.request
-        .get('/api/admin/archive/features/proj-2')
+        .get(
+            `/api/admin/search/features?project=IS%3A${proj2}&archived=IS%3Atrue`,
+        )
         .expect(200)
         .expect('Content-Type', /json/)
         .expect((res) => {
             expect(res.body.features).toHaveLength(2);
-        });
-
-    await app.request
-        .get('/api/admin/archive/features')
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .expect((res) => {
-            expect(res.body.features).toHaveLength(3);
         });
 });
 
@@ -160,26 +123,6 @@ test('Should disable all environments when reviving a toggle', async () => {
         archived: true,
         createdByUserId: 9999,
     });
-
-    await db.stores.environmentStore.create({
-        name: 'development',
-        enabled: true,
-        type: 'development',
-        sortOrder: 1,
-    });
-
-    await db.stores.environmentStore.create({
-        name: 'production',
-        enabled: true,
-        type: 'production',
-        sortOrder: 2,
-    });
-
-    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
-        'feat-proj-1',
-        'default',
-        true,
-    );
     await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
         'feat-proj-1',
         'production',

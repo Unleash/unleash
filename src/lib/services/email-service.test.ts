@@ -1,7 +1,7 @@
-import nodemailer from 'nodemailer';
-import { EmailService } from './email-service';
-import noLoggerProvider from '../../test/fixtures/no-logger';
-import type { IUnleashConfig } from '../types';
+import { EmailService, type TransportProvider } from './email-service.js';
+import noLoggerProvider from '../../test/fixtures/no-logger.js';
+import type { IUnleashConfig } from '../types/index.js';
+import { vi } from 'vitest';
 
 test('Can send reset email', async () => {
     const emailService = new EmailService({
@@ -40,6 +40,9 @@ test('Can send welcome mail', async () => {
             sender: 'noreply@getunleash.ai',
         },
         getLogger: noLoggerProvider,
+        flagResolver: {
+            isEnabled: () => true,
+        },
     } as unknown as IUnleashConfig);
     const content = await emailService.sendGettingStartedMail(
         'Some username',
@@ -51,24 +54,27 @@ test('Can send welcome mail', async () => {
 });
 
 test('Can supply additional SMTP transport options', async () => {
-    const spy = jest.spyOn(nodemailer, 'createTransport');
+    const transport = vi.fn() as unknown as TransportProvider;
 
-    new EmailService({
-        email: {
-            host: 'smtp.unleash.test',
-            port: 9999,
-            secure: false,
-            sender: 'noreply@getunleash.ai',
-            transportOptions: {
-                tls: {
-                    rejectUnauthorized: true,
+    new EmailService(
+        {
+            email: {
+                host: 'smtp.unleash.test',
+                port: 9999,
+                secure: false,
+                sender: 'noreply@getunleash.ai',
+                transportOptions: {
+                    tls: {
+                        rejectUnauthorized: true,
+                    },
                 },
             },
-        },
-        getLogger: noLoggerProvider,
-    } as unknown as IUnleashConfig);
+            getLogger: noLoggerProvider,
+        } as unknown as IUnleashConfig,
+        transport,
+    );
 
-    expect(spy).toHaveBeenCalledWith({
+    expect(transport).toHaveBeenCalledWith({
         auth: {
             user: '',
             pass: '',
@@ -135,14 +141,53 @@ test('Can send productivity report email', async () => {
     );
     expect(content.from).toBe('noreply@getunleash.ai');
     expect(content.subject).toBe('Unleash - productivity report');
-    expect(content.html.includes('Productivity Report')).toBe(true);
-    expect(content.html.includes('localhost/insights')).toBe(true);
-    expect(content.html.includes('localhost/profile')).toBe(true);
-    expect(content.html.includes('#68a611')).toBe(true);
-    expect(content.html.includes('10% more than previous month')).toBe(true);
-    expect(content.text.includes('localhost/insights')).toBe(true);
-    expect(content.text.includes('localhost/profile')).toBe(true);
-    expect(content.text.includes('localhost/profile')).toBe(true);
+    expect(content.html).toContain('Productivity Report');
+    expect(content.html).toContain('localhost/insights');
+    expect(content.html).toContain('localhost/profile');
+    expect(content.html).toContain('#68a611');
+    expect(content.html).toContain('1%');
+    expect(content.html).toContain('10% less than previous month');
+    expect(content.text).toContain('localhost/insights');
+    expect(content.text).toContain('localhost/profile');
+    expect(content.text).toContain('localhost/profile');
+    expect(content.text).toContain('Your instance technical debt: 1%');
+});
+
+test('Sets correct color for technical debt', async () => {
+    const emailService = new EmailService({
+        server: {
+            unleashUrl: 'http://localhost',
+        },
+        email: {
+            host: 'test',
+            port: 587,
+            secure: false,
+            smtpuser: '',
+            smtppass: '',
+            sender: 'noreply@getunleash.ai',
+        },
+        getLogger: noLoggerProvider,
+    } as unknown as IUnleashConfig);
+
+    const content = await emailService.sendProductivityReportEmail(
+        'user@user.com',
+        'customerId',
+        {
+            flagsCreated: 1,
+            productionUpdates: 2,
+            health: 20,
+            previousMonth: {
+                health: 50,
+                flagsCreated: 1,
+                productionUpdates: 3,
+            },
+        },
+    );
+    expect(content.html).not.toContain('#68a611');
+    expect(content.html).toContain('#d93644');
+    expect(content.html).toContain(
+        'Remember to archive stale flags to reduce technical debt and keep your project healthy',
+    );
 });
 
 test('Should add optional headers to productivity email', async () => {

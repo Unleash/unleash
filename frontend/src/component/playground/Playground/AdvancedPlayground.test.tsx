@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import AdvancedPlayground from './AdvancedPlayground';
+import AdvancedPlayground from './AdvancedPlayground.tsx';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import userEvent from '@testing-library/user-event';

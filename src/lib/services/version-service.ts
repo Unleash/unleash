@@ -1,9 +1,9 @@
-import fetch from 'make-fetch-happen';
-import type { IUnleashStores } from '../types/stores';
-import type { IUnleashConfig } from '../types/option';
-import version from '../util/version';
-import type { Logger } from '../logger';
-import type { ISettingStore } from '../types/stores/settings-store';
+import ky from 'ky';
+import type { IUnleashStores } from '../types/stores.js';
+import type { IUnleashConfig } from '../types/option.js';
+import version from '../util/version.js';
+import type { Logger } from '../logger.js';
+import type { ISettingStore } from '../types/stores/settings-store.js';
 
 export interface IVersionInfo {
     oss: string;
@@ -50,6 +50,8 @@ export interface IFeatureUsageInfo {
     productionChanges60: number;
     productionChanges90: number;
     postgresVersion: string;
+    licenseType: string;
+    hostedBy: string;
 }
 
 export default class VersionService {
@@ -141,9 +143,8 @@ export default class VersionService {
                     versionPayload.featureInfo = await telemetryDataProvider();
                 }
                 if (this.versionCheckUrl) {
-                    const res = await fetch(this.versionCheckUrl, {
-                        method: 'POST',
-                        body: JSON.stringify(versionPayload),
+                    const res = await ky.post(this.versionCheckUrl, {
+                        json: versionPayload,
                         headers: { 'Content-Type': 'application/json' },
                     });
                     if (res.ok) {

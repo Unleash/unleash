@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { TrafficUsageDataSegmentedCombinedSchema } from 'openapi';
 import { cleanTrafficData } from 'utils/traffic-calculations';
 
@@ -23,7 +23,7 @@ export const useTrafficSearch = (
         to: string;
     },
 ): InstanceTrafficMetricsResponse => {
-    const apiPath = `api/admin/metrics/traffic-search?grouping=${grouping}&from=${from}&to=${to}`;
+    const apiPath = `api/admin/metrics/traffic?grouping=${grouping}&from=${from}&to=${to}`;
 
     const { data, error, mutate } = useSWR(formatApiPath(apiPath), fetcher);
 

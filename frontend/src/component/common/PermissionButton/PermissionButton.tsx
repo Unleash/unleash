@@ -15,6 +15,9 @@ import {
 const StyledButton = styled(Button)({
     justifySelf: 'start',
     alignSelf: 'start',
+    '&.Mui-disabled': {
+        pointerEvents: 'auto',
+    },
 });
 
 export interface IPermissionButtonProps extends Omit<ButtonProps, 'title'> {
@@ -96,10 +99,12 @@ const BasePermissionButton = React.forwardRef<
             environmentId,
             tooltipProps,
             hideLockIcon,
+            className,
             ...rest
         },
         ref,
     ) => {
+        const disableButton = disabled || !access;
         const id = useId();
         const endIcon = getEndIcon(access, rest.endIcon, hideLockIcon);
 
@@ -111,11 +116,14 @@ const BasePermissionButton = React.forwardRef<
             >
                 <StyledButton
                     ref={ref}
-                    onClick={onClick}
-                    disabled={disabled || !access}
+                    onClick={disableButton ? undefined : onClick}
+                    aria-disabled={disableButton || undefined}
                     aria-labelledby={id}
                     variant={variant}
                     color={color}
+                    className={
+                        disableButton ? `${className} Mui-disabled` : className
+                    }
                     {...rest}
                     endIcon={endIcon}
                 >

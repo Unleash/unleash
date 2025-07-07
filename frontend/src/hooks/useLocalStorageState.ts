@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { createLocalStorage } from '../utils/createLocalStorage';
+import { createLocalStorage } from '../utils/createLocalStorage.js';
 
 export const useLocalStorageState = <T extends object | string>(
     key: string,
@@ -13,7 +13,13 @@ export const useLocalStorageState = <T extends object | string>(
 
     useEffect(() => {
         setStoredValue(localValue);
-    }, [localValue]);
+    }, [localValue, setStoredValue]);
 
-    return [localValue, setLocalValue] as const;
+    return [
+        localValue,
+        (value: T | ((prevState: T) => T)) => {
+            setStoredValue(value);
+            setLocalValue(value);
+        },
+    ] as const;
 };

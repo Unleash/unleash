@@ -1,22 +1,22 @@
-import FakeEventStore from '../../../test/fixtures/fake-event-store';
-import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
-import type { Db } from '../../db/db';
-import EventStore from './event-store';
-import FeatureTagStore from '../../db/feature-tag-store';
-import { EventService } from '../../services';
+import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
+import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store.js';
+import type { Db } from '../../db/db.js';
+import { EventStore } from './event-store.js';
+import FeatureTagStore from '../../db/feature-tag-store.js';
+import { EventService } from '../../services/index.js';
 import type {
     IEventStore,
     IFeatureTagStore,
     IUnleashConfig,
-} from '../../types';
+} from '../../types/index.js';
 import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
-} from '../private-project/createPrivateProjectChecker';
+} from '../private-project/createPrivateProjectChecker.js';
 import {
     createAccessReadModel,
     createFakeAccessReadModel,
-} from '../access/createAccessReadModel';
+} from '../access/createAccessReadModel.js';
 
 export const createEventsService: (
     db: Db,

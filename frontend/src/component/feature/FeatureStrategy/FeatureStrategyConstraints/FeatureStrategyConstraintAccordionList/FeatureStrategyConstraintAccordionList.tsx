@@ -1,29 +1,24 @@
 import type React from 'react';
-import { forwardRef, type RefObject } from 'react';
+import { forwardRef, useImperativeHandle, type RefObject } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import type { IConstraint } from 'interfaces/strategy';
 
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import {
-    type IConstraintAccordionListRef,
-    useConstraintAccordionList,
-} from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
-import { NewConstraintAccordionList } from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/NewConstraintAccordionList';
 import { EditableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/EditableConstraintsList';
 import { Limit } from 'component/common/Limit/Limit';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { RecentlyUsedConstraints } from '../RecentlyUsedConstraints/RecentlyUsedConstraints';
+import { RecentlyUsedConstraints } from '../RecentlyUsedConstraints/RecentlyUsedConstraints.tsx';
+import { useWeakMap } from 'hooks/useWeakMap.ts';
+import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext.ts';
+import { createEmptyConstraint } from 'utils/createEmptyConstraint.ts';
 
 interface IConstraintAccordionListProps {
     constraints: IConstraint[];
     setConstraints?: React.Dispatch<React.SetStateAction<IConstraint[]>>;
     showCreateButton?: boolean;
 }
-
-export const constraintAccordionListId = 'constraintAccordionListId';
 
 const StyledContainer = styled('div')({
     width: '100%',
@@ -49,23 +44,63 @@ const useConstraintLimit = (constraintsCount: number) => {
     };
 };
 
+interface IConstraintAccordionListRef {
+    addConstraint?: (contextName: string) => void;
+}
+
+interface IConstraintAccordionListItemState {
+    // Is the constraint new (never been saved)?
+    new?: boolean;
+    // Is the constraint currently being edited?
+    editing?: boolean;
+}
+
+const useConstraintAccordionList = (
+    setConstraints:
+        | React.Dispatch<React.SetStateAction<IConstraint[]>>
+        | undefined,
+    ref: React.RefObject<IConstraintAccordionListRef>,
+) => {
+    const state = useWeakMap<IConstraint, IConstraintAccordionListItemState>();
+    const { context } = useUnleashContext();
+
+    const addConstraint =
+        setConstraints &&
+        ((contextName: string) => {
+            const constraint = createEmptyConstraint(contextName);
+            state.set(constraint, { editing: true, new: true });
+            setConstraints((prev) => [...prev, constraint]);
+        });
+
+    useImperativeHandle(ref, () => ({
+        addConstraint,
+    }));
+
+    const onAdd =
+        addConstraint &&
+        (() => {
+            addConstraint(context[0].name);
+        });
+
+    return { onAdd, state, context };
+};
+
 export const FeatureStrategyConstraintAccordionList = forwardRef<
     IConstraintAccordionListRef | undefined,
     IConstraintAccordionListProps
 >(({ constraints, setConstraints, showCreateButton }, ref) => {
-    const { onAdd, state, context } = useConstraintAccordionList(
+    const { onAdd, context } = useConstraintAccordionList(
         setConstraints,
         ref as RefObject<IConstraintAccordionListRef>,
     );
     const { limit, limitReached } = useConstraintLimit(constraints.length);
-    const addEditStrategy = useUiFlag('addEditStrategy');
 
     if (context.length === 0) {
         return null;
     }
 
     return (
-        <StyledContainer id={constraintAccordionListId}>
+        <StyledContainer>
             <ConditionallyRender
                 condition={Boolean(showCreateButton && onAdd)}
                 show={
@@ -93,25 +128,13 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                                 }
                             />
                         </StyledHelpIconBox>
-                        <ConditionallyRender
-                            condition={Boolean(addEditStrategy)}
-                            show={
-                                <EditableConstraintsList
-                                    ref={ref}
-                                    setConstraints={setConstraints}
-                                    constraints={constraints}
-                                />
-                            }
-                            elseShow={
-                                <NewConstraintAccordionList
-                                    ref={ref}
-                                    setConstraints={setConstraints}
-                                    constraints={constraints}
-                                    state={state}
-                                />
-                            }
-                        />
-
+                        {setConstraints ? (
+                            <EditableConstraintsList
+                                ref={ref}
+                                setConstraints={setConstraints}
+                                constraints={constraints}
+                            />
+                        ) : null}
                         <Box
                             sx={(theme) => ({
                                 marginTop: theme.spacing(2),
@@ -137,13 +160,9 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                         >
                             Add constraint
                         </Button>
-                        <ConditionallyRender
-                            condition={Boolean(addEditStrategy)}
-                            show={
-                                <RecentlyUsedConstraints
-                                    setConstraints={setConstraints}
-                                />
-                            }
+                        <RecentlyUsedConstraints
+                            setConstraints={setConstraints}
+                            constraints={constraints}
                         />
                     </div>
                 }

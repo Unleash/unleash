@@ -3,7 +3,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import type { IRole } from 'interfaces/role';
 import { useProjectRoleAccessUsage } from 'hooks/api/getters/useProjectRoleAccessUsage/useProjectRoleAccessUsage';
-import { RoleDeleteDialogProjectRoleTable } from './RoleDeleteDialogProjectRoleTable';
+import { RoleDeleteDialogProjectRoleTable } from './RoleDeleteDialogProjectRoleTable.tsx';
 
 const StyledTableContainer = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(1.5),

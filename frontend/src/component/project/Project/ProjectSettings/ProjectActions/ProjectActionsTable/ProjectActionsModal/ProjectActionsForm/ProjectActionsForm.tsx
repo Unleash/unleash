@@ -7,10 +7,10 @@ import type {
     ActionsFilterState,
     ActionsActionState,
     ProjectActionsFormErrors,
-} from './useProjectActionsForm';
+} from './useProjectActionsForm.ts';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
-import { ProjectActionsFormStepSource } from './ProjectActionsFormStep/ProjectActionsFormStepSource/ProjectActionsFormStepSource';
-import { ProjectActionsFormStepActions } from './ProjectActionsFormStep/ProjectActionsFormStepActions/ProjectActionsFormStepActions';
+import { ProjectActionsFormStepSource } from './ProjectActionsFormStep/ProjectActionsFormStepSource/ProjectActionsFormStepSource.tsx';
+import { ProjectActionsFormStepActions } from './ProjectActionsFormStep/ProjectActionsFormStepActions/ProjectActionsFormStepActions.tsx';
 
 const StyledServiceAccountAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),

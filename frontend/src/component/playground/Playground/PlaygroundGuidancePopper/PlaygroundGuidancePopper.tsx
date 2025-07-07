@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Close from '@mui/icons-material/Close';
 import Help from '@mui/icons-material/Help';
 import { Box, IconButton, Popover, styled } from '@mui/material';
-import { PlaygroundGuidance } from '../PlaygroundGuidance/PlaygroundGuidance';
+import { PlaygroundGuidance } from '../PlaygroundGuidance/PlaygroundGuidance.tsx';
 
 const StyledPopover = styled(Popover)(({ theme }) => ({
     '& .MuiPaper-root': {

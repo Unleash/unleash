@@ -2,7 +2,6 @@ import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { useContext, useState } from 'react';
 import { styled, Tooltip, Chip } from '@mui/material';
 import useFeatureTags from 'hooks/api/getters/useFeatureTags/useFeatureTags';
-import DeleteTagIcon from '@mui/icons-material/Cancel';
 import ClearIcon from '@mui/icons-material/Clear';
 import { ManageTagsDialog } from 'component/feature/FeatureView/FeatureOverview/ManageTagsDialog/ManageTagsDialog';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
@@ -12,10 +11,9 @@ import type { ITag } from 'interfaces/tags';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { StyledMetaDataItem } from './FeatureOverviewMetaData';
-import { AddTagButton } from './AddTagButton';
+import { StyledMetaDataItem } from './FeatureOverviewMetaData.tsx';
+import { AddTagButton } from './AddTagButton.tsx';
 import { Tag } from 'component/common/Tag/Tag';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { formatTag } from 'utils/format-tag';
 
 const StyledLabel = styled('span')(({ theme }) => ({
@@ -162,58 +160,22 @@ interface ITagItemProps {
 }
 
 const TagItem = ({ tag, canUpdateTags, onTagRemove }: ITagItemProps) => {
-    const isTagTypeColorEnabled = useUiFlag('tagTypeColor');
     const tagLabel = formatTag(tag);
     const isOverflowing = tagLabel.length > 25;
-    const deleteIcon = (
-        <Tooltip title='Remove tag' arrow>
-            <DeleteTagIcon />
-        </Tooltip>
-    );
+
     const onDelete = canUpdateTags ? () => onTagRemove(tag) : undefined;
 
-    if (isTagTypeColorEnabled) {
-        const deleteIcon = (
-            <Tooltip title='Remove tag' arrow>
-                <ClearIcon sx={{ height: '20px', width: '20px' }} />
-            </Tooltip>
-        );
-
-        return (
-            <Tooltip key={tagLabel} title={isOverflowing ? tagLabel : ''} arrow>
-                <span>
-                    <Tag
-                        tag={tag}
-                        onDelete={onDelete}
-                        deleteIcon={deleteIcon}
-                    />
-                </span>
-            </Tooltip>
-        );
-    }
+    const deleteIcon = (
+        <Tooltip title='Remove tag' arrow>
+            <ClearIcon sx={{ height: '20px', width: '20px' }} />
+        </Tooltip>
+    );
 
     return (
-        <StyledTag
-            key={tagLabel}
-            label={
-                <Tooltip
-                    key={tagLabel}
-                    title={isOverflowing ? tagLabel : ''}
-                    arrow
-                >
-                    <span>
-                        {tagLabel.substring(0, 25)}
-                        {isOverflowing ? (
-                            <StyledEllipsis>…</StyledEllipsis>
-                        ) : (
-                            ''
-                        )}
-                    </span>
-                </Tooltip>
-            }
-            size='small'
-            deleteIcon={deleteIcon}
-            onDelete={onDelete}
-        />
+        <Tooltip key={tagLabel} title={isOverflowing ? tagLabel : ''} arrow>
+            <span>
+                <Tag tag={tag} onDelete={onDelete} deleteIcon={deleteIcon} />
+            </span>
+        </Tooltip>
     );
 };

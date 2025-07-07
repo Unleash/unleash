@@ -1,9 +1,10 @@
 import { styled } from '@mui/material';
 import type { IConstraint } from 'interfaces/strategy';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import { constraintId } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
 import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
+import { constraintId } from 'constants/constraintId';
+import { objectId } from 'utils/objectId';
 
 export interface IViewableConstraintsListProps {
     constraints: IConstraint[];
@@ -27,9 +28,9 @@ export const ViewableConstraintsList = ({
     return (
         <StyledContainer>
             <ConstraintsList>
-                {constraints.map((constraint, index) => (
+                {constraints.map((constraint) => (
                     <ConstraintAccordionView
-                        key={constraint[constraintId]}
+                        key={constraint[constraintId] || objectId(constraint)}
                         constraint={constraint}
                     />
                 ))}

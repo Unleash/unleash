@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { healthOverviewSchema } from './health-overview-schema';
+import { healthOverviewSchema } from './health-overview-schema.js';
 
 export const healthReportSchema = {
     ...healthOverviewSchema,

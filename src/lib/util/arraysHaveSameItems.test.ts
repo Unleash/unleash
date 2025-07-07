@@ -1,4 +1,4 @@
-import { arraysHaveSameItems } from './arraysHaveSameItems';
+import { arraysHaveSameItems } from './arraysHaveSameItems.js';
 
 test('arraysHaveSameItems', () => {
     expect(arraysHaveSameItems([], [])).toEqual(true);

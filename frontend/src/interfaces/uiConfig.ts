@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import type { Variant } from 'utils/variants';
-import type { ResourceLimitsSchema } from '../openapi';
+import type { ResourceLimitsSchema } from 'openapi';
 import {} from '@unleash/proxy-client-react/dist/FlagContext';
 import type { IMutableContext } from 'unleash-proxy-client';
 
@@ -29,8 +29,6 @@ export interface IUiConfig {
     prometheusAPIAvailable: boolean;
     maintenanceMode?: boolean;
     toast?: IProclamationToast;
-    segmentValuesLimit?: number;
-    strategySegmentsLimit?: number;
     frontendApiOrigins?: string[];
     resourceLimits: ResourceLimitsSchema;
     oidcConfiguredThroughEnv?: boolean;
@@ -54,7 +52,6 @@ export type UiFlags = {
     T?: boolean;
     UNLEASH_CLOUD?: boolean;
     UG?: boolean;
-    embedProxyFrontend?: boolean;
     maintenanceMode?: boolean;
     messageBanner?: Variant;
     banner?: Variant;
@@ -62,7 +59,6 @@ export type UiFlags = {
     personalAccessTokensKillSwitch?: boolean;
     demo?: boolean;
     googleAuthEnabled?: boolean;
-    disableBulkToggle?: boolean;
     advancedPlayground?: boolean;
     strategyVariant?: boolean;
     doraMetrics?: boolean;
@@ -84,18 +80,19 @@ export type UiFlags = {
     enableLegacyVariants?: boolean;
     flagCreator?: boolean;
     releasePlans?: boolean;
-    'enterprise-payg'?: boolean;
     productivityReportEmail?: boolean;
     showUserDeviceCount?: boolean;
     consumptionModel?: boolean;
     edgeObservability?: boolean;
-    tagTypeColor?: boolean;
-    addEditStrategy?: boolean;
-    newStrategyDropdown?: boolean;
-    flagsReleaseManagementUI?: boolean;
-    cleanupReminder?: boolean;
-    registerFrontendClient?: boolean;
-    featureLinks?: boolean;
+    customMetrics?: boolean;
+    lifecycleMetrics?: boolean;
+    createFlagDialogCache?: boolean;
+    healthToTechDebt?: boolean;
+    improvedJsonDiff?: boolean;
+    impactMetrics?: boolean;
+    crDiffView?: boolean;
+    changeRequestApproverEmails?: boolean;
+    eventGrouping?: boolean;
 };
 
 export interface IVersionInfo {

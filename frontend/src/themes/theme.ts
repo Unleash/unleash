@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material/styles';
-import { colors } from './colors';
+import { colors } from './colors.js';
 import { focusable } from 'themes/themeStyles';
 
 export const baseTheme = {
@@ -248,16 +248,6 @@ const theme = {
             inactive: colors.orange[200],
             abandoned: colors.red[200],
             primary: colors.purple[100],
-        },
-
-        /**
-         * For Environment Accordion.
-         * @deprecated Use `elevation1` for `disabled` and `elevation2` for `expanded` instead.
-         * remove with the flagOverviewRedesign flag
-         */
-        envAccordion: {
-            disabled: colors.grey[100],
-            expanded: colors.grey[200],
         },
 
         /**

@@ -29,9 +29,8 @@ import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { sortTypes } from 'utils/sortTypes';
-import { AddTagTypeButton } from './AddTagTypeButton/AddTagTypeButton';
+import { AddTagTypeButton } from './AddTagTypeButton/AddTagTypeButton.tsx';
 import { Search } from 'component/common/Search/Search';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledColorDot = styled('div')<{ $color: string }>(
     ({ theme, $color }) => ({
@@ -57,7 +56,6 @@ export const TagTypeList = () => {
     const { deleteTagType } = useTagTypesApi();
     const { tagTypes, refetch, loading } = useTagTypes();
     const { setToastData, setToastApiError } = useToast();
-    const isTagTypeColorEnabled = Boolean(useUiFlag('tagTypeColor'));
 
     const data = useMemo(() => {
         if (loading) {
@@ -105,9 +103,7 @@ export const TagTypeList = () => {
                     return (
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             <ConditionallyRender
-                                condition={
-                                    isTagTypeColorEnabled && Boolean(color)
-                                }
+                                condition={Boolean(color)}
                                 show={<StyledColorDot $color={color} />}
                             />
                             <LinkCell
@@ -162,7 +158,7 @@ export const TagTypeList = () => {
                 disableSortBy: true,
             },
         ],
-        [navigate, isTagTypeColorEnabled],
+        [navigate],
     );
 
     const initialState = useMemo(

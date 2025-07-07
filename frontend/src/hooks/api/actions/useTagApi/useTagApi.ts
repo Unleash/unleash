@@ -1,4 +1,4 @@
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 import type { TagSchema, TagsBulkAddSchema } from 'openapi';
 
 const useTagApi = () => {

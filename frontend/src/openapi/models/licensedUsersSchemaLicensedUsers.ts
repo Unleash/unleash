@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { LicensedUserSchema } from './licensedUserSchema';
+import type { LicensedUserSchema } from './licensedUserSchema.js';
 
 /**
  * An object containing historical and current licensed user data.

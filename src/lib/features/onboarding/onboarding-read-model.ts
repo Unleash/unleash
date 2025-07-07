@@ -1,10 +1,10 @@
-import type { Db } from '../../db/db';
+import type { Db } from '../../db/db.js';
 import type {
     IOnboardingReadModel,
     InstanceOnboarding,
     ProjectOnboarding,
     OnboardingStatus,
-} from './onboarding-read-model-type';
+} from './onboarding-read-model-type.js';
 
 const instanceEventLookup = {
     'first-user-login': 'firstLogin',

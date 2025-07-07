@@ -1,13 +1,13 @@
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { Alert, Typography, useTheme, styled, IconButton } from '@mui/material';
-import { PlaygroundResultChip } from '../../PlaygroundResultChip/LegacyPlaygroundResultChip';
 import CloseOutlined from '@mui/icons-material/CloseOutlined';
 import type React from 'react';
 import {
     checkForEmptyValues,
     hasCustomStrategies,
     hasOnlyCustomStrategies,
-} from './helpers';
+} from './helpers.ts';
+import { PlaygroundResultChip } from '../../PlaygroundResultChip/PlaygroundResultChip.tsx';
 
 const HeaderRow = styled('div')({
     display: 'flex',

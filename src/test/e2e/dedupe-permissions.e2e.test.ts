@@ -1,12 +1,16 @@
-import { getDbConfig } from './helpers/database-config';
-import { createTestConfig } from '../config/test-config';
+import { getDbConfig } from './helpers/database-config.js';
+import { createTestConfig } from '../config/test-config.js';
 import { getInstance } from 'db-migrate';
 import { log } from 'db-migrate-shared';
-import { Client } from 'pg';
-import type { IDBOption } from '../../lib/types';
+import postgresPkg from 'pg';
+const { Client } = postgresPkg;
+import type { IDBOption } from '../../lib/types/index.js';
+import { fileURLToPath } from 'node:url';
+import path from 'path';
 
 log.setLogLevel('error');
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 async function initSchema(db: IDBOption): Promise<void> {
     const client = new Client(db);
     await client.connect();
@@ -16,7 +20,6 @@ async function initSchema(db: IDBOption): Promise<void> {
 }
 
 test('Dedupe permissions migration correctly dedupes permissions', async () => {
-    jest.setTimeout(15000);
     const config = createTestConfig({
         db: {
             ...getDbConfig(),
@@ -172,4 +175,4 @@ test('Dedupe permissions migration correctly dedupes permissions', async () => {
 
     await client.end();
     await dbm.reset();
-});
+}, 15000);

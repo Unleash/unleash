@@ -1,11 +1,14 @@
-import { type IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import type { ApiTokenService } from '../../../../lib/services/api-token-service';
-import { ApiTokenType } from '../../../../lib/types/models/api-token';
-import { DEFAULT_ENV } from '../../../../lib/util/constants';
-import { TEST_AUDIT_USER } from '../../../../lib/types';
-import { User } from '../../../../lib/server-impl';
+import {
+    type IUnleashTest,
+    setupAppWithAuth,
+} from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import type { ApiTokenService } from '../../../../lib/services/index.js';
+import { ApiTokenType } from '../../../../lib/types/model.js';
+import { DEFAULT_ENV } from '../../../../lib/util/index.js';
+import { TEST_AUDIT_USER } from '../../../../lib/types/index.js';
+import User from '../../../../lib/types/user.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -130,11 +133,11 @@ afterAll(async () => {
 });
 
 test('doesnt return feature flags if project deleted', async () => {
-    const token = await apiTokenService.createApiToken({
+    const token = await apiTokenService.createApiTokenWithProjects({
         type: ApiTokenType.CLIENT,
         tokenName: deletionTokenName,
         environment,
-        project: deletionProject,
+        projects: [deletionProject],
     });
 
     await app.services.projectService.deleteProject(

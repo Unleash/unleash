@@ -1,5 +1,5 @@
-import type { IRole } from './role';
-import type { IUser } from './user';
+import type { IRole } from './role.js';
+import type { IUser } from './user.js';
 
 export interface ICreateInvitedUser {
     username?: string;

@@ -1,5 +1,5 @@
 import { type ReactElement, useMemo, useState, type ReactNode } from 'react';
-import { AnnouncerContext } from '../AnnouncerContext/AnnouncerContext';
+import { AnnouncerContext } from '../AnnouncerContext/AnnouncerContext.tsx';
 import { AnnouncerElement } from 'component/common/Announcer/AnnouncerElement/AnnouncerElement';
 
 interface IAnnouncerProviderProps {

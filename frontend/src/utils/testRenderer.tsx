@@ -9,7 +9,7 @@ import { ThemeProvider } from 'themes/ThemeProvider';
 import type { IPermission } from 'interfaces/user';
 import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
 import { AccessProviderMock } from 'component/providers/AccessProvider/AccessProviderMock';
-import { UIProviderContainer } from '../component/providers/UIProvider/UIProviderContainer';
+import { UIProviderContainer } from '../component/providers/UIProvider/UIProviderContainer.tsx';
 import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
 import { QueryParamProvider } from 'use-query-params';
 import { FeedbackProvider } from 'component/feedbackNew/FeedbackProvider';

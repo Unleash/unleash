@@ -1,10 +1,13 @@
-import { type IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import type { ApiTokenService } from '../../../../lib/services/api-token-service';
-import { ApiTokenType } from '../../../../lib/types/models/api-token';
-import { DEFAULT_ENV } from '../../../../lib/util/constants';
-import { TEST_AUDIT_USER } from '../../../../lib/types';
+import {
+    type IUnleashTest,
+    setupAppWithAuth,
+} from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import type { ApiTokenService } from '../../../../lib/services/api-token-service.js';
+import { ApiTokenType } from '../../../../lib/types/model.js';
+import { DEFAULT_ENV } from '../../../../lib/util/constants.js';
+import { TEST_AUDIT_USER } from '../../../../lib/types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -122,11 +125,11 @@ afterAll(async () => {
 });
 
 test('returns feature flag with "default" config', async () => {
-    const token = await apiTokenService.createApiToken({
+    const token = await apiTokenService.createApiTokenWithProjects({
         type: ApiTokenType.CLIENT,
         tokenName,
         environment: DEFAULT_ENV,
-        project,
+        projects: [project],
     });
     await app.request
         .get('/api/client/features')
@@ -144,11 +147,11 @@ test('returns feature flag with "default" config', async () => {
 });
 
 test('returns feature flag with testing environment config', async () => {
-    const token = await apiTokenService.createApiToken({
+    const token = await apiTokenService.createApiTokenWithProjects({
         type: ApiTokenType.CLIENT,
         tokenName: tokenName,
         environment,
-        project,
+        projects: [project],
     });
     await app.request
         .get('/api/client/features')
@@ -170,11 +173,11 @@ test('returns feature flag with testing environment config', async () => {
 });
 
 test('returns feature flag for project2', async () => {
-    const token = await apiTokenService.createApiToken({
+    const token = await apiTokenService.createApiTokenWithProjects({
         type: ApiTokenType.CLIENT,
         tokenName: tokenName,
         environment,
-        project: project2,
+        projects: [project2],
     });
     await app.request
         .get('/api/client/features')
@@ -190,11 +193,11 @@ test('returns feature flag for project2', async () => {
 });
 
 test('returns feature flag for all projects', async () => {
-    const token = await apiTokenService.createApiToken({
+    const token = await apiTokenService.createApiTokenWithProjects({
         type: ApiTokenType.CLIENT,
         tokenName: tokenName,
         environment,
-        project: '*',
+        projects: ['*'],
     });
     await app.request
         .get('/api/client/features')

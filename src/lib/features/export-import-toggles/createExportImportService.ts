@@ -1,54 +1,60 @@
-import type { Db } from '../../db/db';
-import type { IUnleashConfig } from '../../types';
-import ExportImportService from './export-import-service';
-import { ImportTogglesStore } from './import-toggles-store';
-import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
-import TagStore from '../../db/tag-store';
-import TagTypeStore from '../tag-type/tag-type-store';
-import FeatureTagStore from '../../db/feature-tag-store';
-import StrategyStore from '../../db/strategy-store';
-import ContextFieldStore from '../context/context-field-store';
-import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store';
+import type { Db } from '../../db/db.js';
+import type { IUnleashConfig } from '../../types/index.js';
+import ExportImportService from './export-import-service.js';
+import { ImportTogglesStore } from './import-toggles-store.js';
+import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
+import TagStore from '../../db/tag-store.js';
+import TagTypeStore from '../tag-type/tag-type-store.js';
+import FeatureTagStore from '../../db/feature-tag-store.js';
+import StrategyStore from '../../db/strategy-store.js';
+import ContextFieldStore from '../context/context-field-store.js';
+import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store.js';
 import {
     FeatureTagService,
     StrategyService,
     TagTypeService,
-} from '../../services';
+} from '../../services/index.js';
 import {
     createAccessService,
     createFakeAccessService,
-} from '../access/createAccessService';
+} from '../access/createAccessService.js';
 import {
     createFakeFeatureToggleService,
     createFeatureToggleService,
-} from '../feature-toggle/createFeatureToggleService';
-import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
-import FakeFeatureToggleStore from '../feature-toggle/fakes/fake-feature-toggle-store';
-import FakeTagStore from '../../../test/fixtures/fake-tag-store';
-import FakeTagTypeStore from '../tag-type/fake-tag-type-store';
-import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
-import FakeContextFieldStore from '../context/fake-context-field-store';
-import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';
-import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
-import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
-import { createPrivateProjectChecker } from '../private-project/createPrivateProjectChecker';
-import type { DeferredServiceFactory } from '../../db/transaction';
-import { DependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model';
-import { FakeDependentFeaturesReadModel } from '../dependent-features/fake-dependent-features-read-model';
+} from '../feature-toggle/createFeatureToggleService.js';
+import { FeatureEnvironmentStore } from '../../db/feature-environment-store.js';
+import FakeFeatureToggleStore from '../feature-toggle/fakes/fake-feature-toggle-store.js';
+import FakeTagStore from '../../../test/fixtures/fake-tag-store.js';
+import FakeTagTypeStore from '../tag-type/fake-tag-type-store.js';
+import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store.js';
+import FakeContextFieldStore from '../context/fake-context-field-store.js';
+import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store.js';
+import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store.js';
+import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store.js';
+import { createPrivateProjectChecker } from '../private-project/createPrivateProjectChecker.js';
+import type { DeferredServiceFactory } from '../../db/transaction.js';
+import { DependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model.js';
+import { FakeDependentFeaturesReadModel } from '../dependent-features/fake-dependent-features-read-model.js';
 import {
     createDependentFeaturesService,
     createFakeDependentFeaturesService,
-} from '../dependent-features/createDependentFeaturesService';
+} from '../dependent-features/createDependentFeaturesService.js';
 import {
     createEventsService,
     createFakeEventsService,
-} from '../events/createEventsService';
-import { SegmentReadModel } from '../segment/segment-read-model';
-import { FakeSegmentReadModel } from '../segment/fake-segment-read-model';
+} from '../events/createEventsService.js';
+import { SegmentReadModel } from '../segment/segment-read-model.js';
+import { FakeSegmentReadModel } from '../segment/fake-segment-read-model.js';
 import {
     createContextService,
     createFakeContextService,
-} from '../context/createContextService';
+} from '../context/createContextService.js';
+import { FakeFeatureLinksReadModel } from '../feature-links/fake-feature-links-read-model.js';
+import { FeatureLinksReadModel } from '../feature-links/feature-links-read-model.js';
+import {
+    createFakeFeatureLinkService,
+    createFeatureLinkService,
+} from '../feature-links/createFeatureLinkService.js';
 
 export const createFakeExportImportTogglesService = (
     config: IUnleashConfig,
@@ -94,6 +100,11 @@ export const createFakeExportImportTogglesService = (
 
     const dependentFeaturesService = createFakeDependentFeaturesService(config);
 
+    const featureLinksReadModel = new FakeFeatureLinksReadModel();
+
+    const featureLinkService =
+        createFakeFeatureLinkService(config).featureLinkService;
+
     return new ExportImportService(
         {
             importTogglesStore,
@@ -114,9 +125,11 @@ export const createFakeExportImportTogglesService = (
             strategyService,
             tagTypeService,
             dependentFeaturesService,
+            featureLinkService,
         },
         dependentFeaturesReadModel,
         segmentReadModel,
+        featureLinksReadModel,
     );
 };
 
@@ -184,6 +197,10 @@ export const deferredExportImportTogglesService = (
         const dependentFeaturesService =
             createDependentFeaturesService(config)(db);
 
+        const featureLinksReadModel = new FeatureLinksReadModel(db, eventBus);
+
+        const featureLinkService = createFeatureLinkService(config)(db);
+
         return new ExportImportService(
             {
                 importTogglesStore,
@@ -204,9 +221,11 @@ export const deferredExportImportTogglesService = (
                 strategyService,
                 tagTypeService,
                 dependentFeaturesService,
+                featureLinkService,
             },
             dependentFeaturesReadModel,
             segmentReadModel,
+            featureLinksReadModel,
         );
     };
 };

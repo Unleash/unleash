@@ -23,7 +23,7 @@ import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmen
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { EnvironmentTypeSelector } from 'component/environments/EnvironmentForm/EnvironmentTypeSelector';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { EnvironmentProjectSelect } from './EnvironmentProjectSelect/EnvironmentProjectSelect';
+import { EnvironmentProjectSelect } from './EnvironmentProjectSelect/EnvironmentProjectSelect.tsx';
 import { SelectProjectInput } from 'component/admin/apiToken/ApiTokenForm/ProjectSelector/SelectProjectInput/SelectProjectInput';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import useApiTokensApi, {
@@ -164,7 +164,7 @@ export const EnvironmentCloneModal = ({
     });
 
     const getApiTokenCreatePayload = (): IApiTokenCreate => ({
-        username: `${name}_token`,
+        tokenName: `${name}_token`,
         type: 'CLIENT',
         environment: name,
         projects: tokenProjects,

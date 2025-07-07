@@ -2,7 +2,7 @@ import type {
     IFeatureLifecycleStage,
     IProjectLifecycleStageDuration,
     StageName,
-} from '../../types';
+} from '../../types/index.js';
 
 export type StageCount = {
     stage: StageName;

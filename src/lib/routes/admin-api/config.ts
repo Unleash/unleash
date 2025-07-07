@@ -1,33 +1,35 @@
 import type { Response } from 'express';
-import type { AuthedRequest } from '../../types/core';
-import type { IUnleashServices } from '../../types/services';
-import { IAuthType, type IUnleashConfig } from '../../types/option';
-import version from '../../util/version';
-import Controller from '../controller';
-import type VersionService from '../../services/version-service';
-import type SettingService from '../../services/setting-service';
+import type { AuthedRequest } from '../../types/core.js';
+import type { IUnleashServices } from '../../services/index.js';
+import { IAuthType, type IUnleashConfig } from '../../types/option.js';
+import version from '../../util/version.js';
+import Controller from '../controller.js';
+import type VersionService from '../../services/version-service.js';
+import type SettingService from '../../services/setting-service.js';
 import {
     type SimpleAuthSettings,
     simpleAuthSettingsKey,
-} from '../../types/settings/simple-auth-settings';
-import { ADMIN, NONE, UPDATE_CORS } from '../../types/permissions';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
+} from '../../types/settings/simple-auth-settings.js';
+import { ADMIN, NONE, UPDATE_CORS } from '../../types/permissions.js';
+import { createResponseSchema } from '../../openapi/util/create-response-schema.js';
 import {
     uiConfigSchema,
     type UiConfigSchema,
-} from '../../openapi/spec/ui-config-schema';
-import type { OpenApiService } from '../../services/openapi-service';
-import type { EmailService } from '../../services/email-service';
-import { emptyResponse } from '../../openapi/util/standard-responses';
-import type { IAuthRequest } from '../unleash-types';
-import NotFoundError from '../../error/notfound-error';
-import type { SetUiConfigSchema } from '../../openapi/spec/set-ui-config-schema';
-import type { SetCorsSchema } from '../../openapi/spec/set-cors-schema';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import type { FrontendApiService, SessionService } from '../../services';
-import type MaintenanceService from '../../features/maintenance/maintenance-service';
-import type ClientInstanceService from '../../features/metrics/instance/instance-service';
-import type { IFlagResolver } from '../../types';
+} from '../../openapi/spec/ui-config-schema.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
+import type { EmailService } from '../../services/email-service.js';
+import { emptyResponse } from '../../openapi/util/standard-responses.js';
+import type { IAuthRequest } from '../unleash-types.js';
+import NotFoundError from '../../error/notfound-error.js';
+import type { SetCorsSchema } from '../../openapi/spec/set-cors-schema.js';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
+import type {
+    FrontendApiService,
+    SessionService,
+} from '../../services/index.js';
+import type MaintenanceService from '../../features/maintenance/maintenance-service.js';
+import type ClientInstanceService from '../../features/metrics/instance/instance-service.js';
+import type { IFlagResolver } from '../../types/index.js';
 
 class ConfigController extends Controller {
     private versionService: VersionService;
@@ -102,25 +104,6 @@ class ConfigController extends Controller {
 
         this.route({
             method: 'post',
-            path: '',
-            handler: this.setUiConfig,
-            permission: ADMIN,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Admin UI'],
-                    summary: 'Set UI configuration',
-                    description:
-                        'Deprecated. Use `./cors` instead. Sets the UI configuration for this Unleash instance.',
-                    operationId: 'setUiConfig',
-                    requestBody: createRequestSchema('setUiConfigSchema'),
-                    responses: { 200: emptyResponse },
-                    deprecated: true,
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'post',
             path: '/cors',
             handler: this.setCors,
             permission: [ADMIN, UPDATE_CORS],
@@ -188,8 +171,6 @@ class ConfigController extends Controller {
             unleashUrl: this.config.server.unleashUrl,
             baseUriPath: this.config.server.baseUriPath,
             authenticationType: this.config.authentication?.type,
-            segmentValuesLimit: this.config.resourceLimits.segmentValues,
-            strategySegmentsLimit: this.config.resourceLimits.strategySegments,
             frontendApiOrigins: frontendSettings.frontendApiOrigins,
             versionInfo: await this.versionService.getVersionInfo(),
             prometheusAPIAvailable: this.config.prometheusApi !== undefined,
@@ -207,22 +188,6 @@ class ConfigController extends Controller {
             uiConfigSchema.$id,
             response,
         );
-    }
-
-    async setUiConfig(
-        req: IAuthRequest<void, void, SetUiConfigSchema>,
-        res: Response<string>,
-    ): Promise<void> {
-        if (req.body.frontendSettings) {
-            await this.frontendApiService.setFrontendSettings(
-                req.body.frontendSettings,
-                req.audit,
-            );
-            res.sendStatus(204);
-            return;
-        }
-
-        throw new NotFoundError();
     }
 
     async setCors(

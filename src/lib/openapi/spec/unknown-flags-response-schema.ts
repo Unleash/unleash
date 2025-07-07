@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { unknownFlagSchema } from './unknown-flag-schema';
+import { unknownFlagSchema } from './unknown-flag-schema.js';
 
 export const unknownFlagsResponseSchema = {
     $id: '#/components/schemas/unknownFlagsResponseSchema',

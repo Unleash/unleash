@@ -21,16 +21,16 @@ import { createLocalStorage } from 'utils/createLocalStorage';
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
-import { AdvancedPlaygroundEnvironmentCell } from './AdvancedPlaygroundEnvironmentCell/AdvancedPlaygroundEnvironmentCell';
+import { AdvancedPlaygroundEnvironmentCell } from './AdvancedPlaygroundEnvironmentCell/AdvancedPlaygroundEnvironmentCell.tsx';
 import type {
     AdvancedPlaygroundRequestSchema,
     AdvancedPlaygroundFeatureSchema,
     AdvancedPlaygroundFeatureSchemaEnvironments,
 } from 'openapi';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
-import { AdvancedPlaygroundEnvironmentDiffCell } from './AdvancedPlaygroundEnvironmentCell/AdvancedPlaygroundEnvironmentDiffCell';
+import { AdvancedPlaygroundEnvironmentDiffCell } from './AdvancedPlaygroundEnvironmentCell/AdvancedPlaygroundEnvironmentDiffCell.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { countCombinations, getBucket } from './combinationCounter';
+import { countCombinations, getBucket } from './combinationCounter.ts';
 
 const defaultSort: SortingRule<string> = { id: 'name' };
 const { value, setValue } = createLocalStorage(

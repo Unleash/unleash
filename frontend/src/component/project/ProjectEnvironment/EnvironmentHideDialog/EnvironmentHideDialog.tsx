@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import type { IProjectEnvironment } from 'interfaces/environments';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import Input from 'component/common/Input/Input';
-import { ProjectEnvironmentTableSingle } from './ProjectEnvironmentTableSingle/ProjectEnvironmentTableSingle';
+import { ProjectEnvironmentTableSingle } from './ProjectEnvironmentTableSingle/ProjectEnvironmentTableSingle.tsx';
 
 const StyledLabel = styled('p')(({ theme }) => ({
     marginTop: theme.spacing(3),

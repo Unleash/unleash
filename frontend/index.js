@@ -1,9 +1,10 @@
 require('pkginfo')(module, 'version');
-const path = require('path');
-
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 const { version } = module.exports;
 
 module.exports = {
-    publicFolder: path.join(__dirname, 'build'),
+    publicFolder: path.join(dirname, 'build'),
     version,
 };

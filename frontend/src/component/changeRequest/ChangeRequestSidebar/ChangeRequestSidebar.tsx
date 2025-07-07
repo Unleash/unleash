@@ -1,17 +1,17 @@
 import { useState, type VFC } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
-import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
+import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import CheckCircle from '@mui/icons-material/CheckCircle';
-import { ChangeRequest } from '../ChangeRequest/ChangeRequest';
+import { ChangeRequest } from '../ChangeRequest/ChangeRequest.tsx';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { EnvironmentChangeRequest } from './EnvironmentChangeRequest/EnvironmentChangeRequest';
-import { ReviewChangesHeader } from './ReviewChangesHeader/ReviewChangesHeader';
-import { ChangeRequestPlausibleProvider } from '../ChangeRequestContext';
+import { EnvironmentChangeRequest } from './EnvironmentChangeRequest/EnvironmentChangeRequest.tsx';
+import { ReviewChangesHeader } from './ReviewChangesHeader/ReviewChangesHeader.tsx';
+import { ChangeRequestPlausibleProvider } from '../ChangeRequestContext.tsx';
 
 interface IChangeRequestSidebarProps {
     open: boolean;
@@ -22,7 +22,6 @@ interface IChangeRequestSidebarProps {
 const StyledPageContent = styled(PageContent)(({ theme }) => ({
     height: '100vh',
     overflow: 'auto',
-    minWidth: '50vw',
     padding: theme.spacing(6),
     [theme.breakpoints.down('md')]: {
         padding: theme.spacing(4, 2),
@@ -106,11 +105,7 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
 
     if (!loading && !data) {
         return (
-            <DynamicSidebarModal
-                open={open}
-                onClose={onClose}
-                label='Review changes'
-            >
+            <SidebarModal open={open} onClose={onClose} label='Review changes'>
                 <StyledPageContent
                     disableBorder={true}
                     header={<PageHeader titleElement='Review your changes' />}
@@ -119,16 +114,12 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                     {/* FIXME: empty state */}
                     <BackButton onClick={onClose}>Close</BackButton>
                 </StyledPageContent>
-            </DynamicSidebarModal>
+            </SidebarModal>
         );
     }
 
     return (
-        <DynamicSidebarModal
-            open={open}
-            onClose={onClose}
-            label='Review changes'
-        >
+        <SidebarModal open={open} onClose={onClose} label='Review changes'>
             <StyledPageContent
                 disableBorder={true}
                 header={<ReviewChangesHeader />}
@@ -159,6 +150,6 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
                     </ChangeRequestPlausibleProvider>
                 ))}
             </StyledPageContent>
-        </DynamicSidebarModal>
+        </SidebarModal>
     );
 };

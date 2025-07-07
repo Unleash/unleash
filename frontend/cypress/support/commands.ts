@@ -10,11 +10,9 @@ import {
     deleteSegment_UI,
     deleteFeatureStrategy_UI,
     addFlexibleRolloutStrategyToFeature_UI,
-    addUserIdStrategyToFeature_UI,
     updateFlexibleRolloutStrategy_UI,
     do_login,
-    //@ts-ignore
-} from './UI';
+} from './UI.ts';
 import {
     addUserToProject_API,
     createFeature_API,
@@ -24,8 +22,7 @@ import {
     deleteProject_API,
     updateUserPassword_API,
     createEnvironment_API,
-    //@ts-ignore
-} from './API';
+} from './API.ts';
 
 Cypress.on('window:before:load', (window) => {
     Object.defineProperty(window.navigator, 'language', { value: 'en' });
@@ -47,10 +44,6 @@ Cypress.Commands.add('updateUserPassword_API', updateUserPassword_API);
 Cypress.Commands.add('createFeature_UI', createFeature_UI);
 Cypress.Commands.add('deleteFeatureStrategy_UI', deleteFeatureStrategy_UI);
 Cypress.Commands.add('createFeature_API', createFeature_API);
-Cypress.Commands.add(
-    'addUserIdStrategyToFeature_UI',
-    addUserIdStrategyToFeature_UI,
-);
 Cypress.Commands.add(
     'addFlexibleRolloutStrategyToFeature_UI',
     addFlexibleRolloutStrategyToFeature_UI,

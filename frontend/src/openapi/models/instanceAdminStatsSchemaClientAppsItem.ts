@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { InstanceAdminStatsSchemaClientAppsItemRange } from './instanceAdminStatsSchemaClientAppsItemRange';
+import type { InstanceAdminStatsSchemaClientAppsItemRange } from './instanceAdminStatsSchemaClientAppsItemRange.js';
 
 /**
  * An entry describing how many client applications has been observed over the defined range

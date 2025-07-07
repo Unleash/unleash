@@ -1,14 +1,14 @@
 import type EventEmitter from 'events';
-import type { Logger, LogProvider } from '../logger';
+import type { Logger, LogProvider } from '../logger.js';
 import type {
     IClientInstance,
     IClientInstanceStore,
     INewClientInstance,
-} from '../types/stores/client-instance-store';
+} from '../types/stores/client-instance-store.js';
 import { subDays } from 'date-fns';
-import type { Db } from './db';
-import metricsHelper from '../util/metrics-helper';
-import { DB_TIME } from '../metric-events';
+import type { Db } from './db.js';
+import metricsHelper from '../util/metrics-helper.js';
+import { DB_TIME } from '../metric-events.js';
 
 const COLUMNS = [
     'app_name',
@@ -61,9 +61,9 @@ export default class ClientInstanceStore implements IClientInstanceStore {
             });
     }
 
-    async removeInstancesOlderThanTwoDays(): Promise<void> {
+    async removeOldInstances(): Promise<void> {
         const rows = await this.db(TABLE)
-            .whereRaw("last_seen < now() - interval '2 days'")
+            .whereRaw("last_seen < now() - interval '1 days'")
             .del();
 
         if (rows > 0) {
@@ -71,33 +71,16 @@ export default class ClientInstanceStore implements IClientInstanceStore {
         }
     }
 
-    async setLastSeen({
-        appName,
-        instanceId,
-        environment,
-        clientIp,
-    }: INewClientInstance): Promise<void> {
-        await this.db(TABLE)
-            .insert({
-                app_name: appName,
-                instance_id: instanceId,
-                environment,
-                last_seen: new Date(),
-                client_ip: clientIp,
-            })
-            .onConflict(['app_name', 'instance_id', 'environment'])
-            .merge({
-                last_seen: new Date(),
-                client_ip: clientIp,
-            });
-    }
-
     async bulkUpsert(instances: INewClientInstance[]): Promise<void> {
+        const stopTimer = this.metricTimer('bulkUpsert');
+
         const rows = instances.map(mapToDb);
         await this.db(TABLE)
             .insert(rows)
             .onConflict(['app_name', 'instance_id', 'environment'])
             .merge();
+
+        stopTimer();
     }
 
     async delete({

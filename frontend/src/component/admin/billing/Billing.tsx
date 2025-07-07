@@ -5,8 +5,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { Alert } from '@mui/material';
-import { BillingDashboard } from './BillingDashboard/BillingDashboard';
-import { BillingHistory } from './BillingHistory/BillingHistory';
+import { BillingDashboard } from './BillingDashboard/BillingDashboard.tsx';
+import { BillingHistory } from './BillingHistory/BillingHistory.tsx';
 import useInvoices from 'hooks/api/getters/useInvoices/useInvoices';
 
 export const Billing = () => {

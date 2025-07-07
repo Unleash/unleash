@@ -1,10 +1,10 @@
-import type { Db } from '../../db/db';
+import type { Db } from '../../db/db.js';
 import type {
     BasePersonalProject,
     IPersonalDashboardReadModel,
     PersonalFeature,
     PersonalProject,
-} from './personal-dashboard-read-model-type';
+} from './personal-dashboard-read-model-type.js';
 
 type IntermediateProjectResult = Omit<PersonalProject, 'roles'> & {
     roles: {

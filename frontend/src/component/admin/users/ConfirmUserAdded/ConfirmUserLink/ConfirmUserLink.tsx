@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import { Alert } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { LinkField } from '../../LinkField/LinkField';
+import { LinkField } from '../../LinkField/LinkField.tsx';
 
 interface IConfirmUserLink {
     open: boolean;

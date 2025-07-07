@@ -3,9 +3,9 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { useRef, useState, type FC } from 'react';
 import { format } from 'date-fns';
-import type { ChartDataSelection } from './chart-data-selection';
-import { selectablePeriods } from './selectable-periods';
-import { parseMonthString } from './dates';
+import type { ChartDataSelection } from './chart-data-selection.ts';
+import { selectablePeriods } from './selectable-periods.ts';
+import { parseMonthString } from './dates.ts';
 
 const dropdownWidth = '15rem';
 const dropdownInlinePadding = (theme: Theme) => theme.spacing(3);

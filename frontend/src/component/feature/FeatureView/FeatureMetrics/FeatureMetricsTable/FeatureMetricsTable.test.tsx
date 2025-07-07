@@ -1,7 +1,7 @@
 import { render } from 'utils/testRenderer';
-import { FeatureMetricsTable } from './FeatureMetricsTable';
+import { FeatureMetricsTable } from './FeatureMetricsTable.tsx';
 import { screen } from '@testing-library/react';
-import { formatDateYMDHM } from '../../../../../utils/formatDate';
+import { formatDateYMDHM } from '../../../../../utils/formatDate.ts';
 
 test('render local time for hourly results', async () => {
     render(

@@ -4,10 +4,10 @@ import Joyride, {
     type TooltipRenderProps,
 } from 'react-joyride';
 import { useTheme } from '@mui/material';
-import type { ITutorialTopic, ITutorialTopicStep } from '../demo-topics';
+import type { ITutorialTopic, ITutorialTopicStep } from '../demo-topics.ts';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { DemoStepTooltip } from './DemoStepTooltip/DemoStepTooltip';
+import { DemoStepTooltip } from './DemoStepTooltip/DemoStepTooltip.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IDemoStepsProps {
@@ -138,6 +138,14 @@ export const DemoSteps = ({
                         focusEl?.focus();
                     }
                 }
+
+                step.onStep?.({
+                    el,
+                    index,
+                    next,
+                    step,
+                    signal: abortController.signal,
+                });
 
                 if (!step.nextButton) {
                     const clickHandler = (e: Event) => {

@@ -1,6 +1,6 @@
 import { render } from 'utils/testRenderer';
 import { Route, Routes } from 'react-router-dom';
-import BreadcrumbNav from './BreadcrumbNav';
+import BreadcrumbNav from './BreadcrumbNav.tsx';
 import { screen } from '@testing-library/react';
 
 test('decode URI encoded path in breadcrumbs nav', async () => {

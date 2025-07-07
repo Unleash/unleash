@@ -1,5 +1,5 @@
 import React from 'react';
-import type { IToast } from 'interfaces/toast';
+import type { IToast } from '../interfaces/toast.ts';
 
 interface IUIContext {
     toastData: IToast;

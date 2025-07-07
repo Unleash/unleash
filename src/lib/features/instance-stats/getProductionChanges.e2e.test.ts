@@ -1,9 +1,11 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 import {
     createGetProductionChanges,
     type GetProductionChanges,
-} from './getProductionChanges';
+} from './getProductionChanges.js';
 import subDays from 'date-fns/subDays';
 let db: ITestDb;
 let getProductionChanges: GetProductionChanges;

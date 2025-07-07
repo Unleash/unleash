@@ -1,7 +1,7 @@
 import { screen, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { FeatureMetricsHours } from './FeatureMetricsHours';
+import { FeatureMetricsHours } from './FeatureMetricsHours.tsx';
 import userEvent from '@testing-library/user-event';
 
 const server = testServerSetup();

@@ -1,4 +1,4 @@
-import { clearCacheEntries } from './useClearSWRCache';
+import { clearCacheEntries } from './useClearSWRCache.js';
 
 describe('manageCacheEntries', () => {
     it('should clear old cache entries and keep the current one when SWR_CACHE_SIZE is not provided', () => {

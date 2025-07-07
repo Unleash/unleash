@@ -1,7 +1,7 @@
-import { render } from '../../utils/testRenderer';
+import { render } from 'utils/testRenderer';
 import { fireEvent, screen } from '@testing-library/react';
-import { Insights } from './Insights';
-import { testServerRoute, testServerSetup } from '../../utils/testServer';
+import { Insights } from './Insights.tsx';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { vi } from 'vitest';
 
 const server = testServerSetup();
@@ -27,6 +27,9 @@ const setupApi = () => {
 
 const currentTime = '2024-04-25T08:05:00.000Z';
 
+// todo(lifecycleMetrics): this test won't be relevant anymore because the
+// filters are on each section instead of the top-level component. Consider
+// rewriting this for the individual section components instead.
 test('Filter insights by project and date', async () => {
     vi.setSystemTime(currentTime);
     setupApi();

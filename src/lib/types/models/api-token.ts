@@ -1,94 +1,19 @@
-import BadDataError from '../../error/bad-data-error';
-import type { IEnvironment } from '../model';
+import BadDataError from '../../error/bad-data-error.js';
+import type { IApiTokenCreate, IEnvironment } from '../model.js';
+import { ApiTokenType } from '../model.js';
 
 export const ALL = '*';
-
-export enum ApiTokenType {
-    CLIENT = 'client',
-    ADMIN = 'admin',
-    FRONTEND = 'frontend',
-}
-
-export interface ILegacyApiTokenCreate {
-    secret: string;
-    /**
-     * @deprecated Use tokenName instead
-     */
-    username?: string;
-    type: ApiTokenType;
-    environment?: string;
-    project?: string;
-    projects?: string[];
-    expiresAt?: Date;
-    tokenName?: string;
-}
-
-export interface IApiTokenCreate {
-    secret: string;
-    tokenName: string;
-    alias?: string;
-    type: ApiTokenType;
-    environment: string;
-    projects: string[];
-    expiresAt?: Date;
-    /**
-     * @deprecated Use tokenName instead
-     */
-    username?: string;
-}
-
-export interface IApiToken extends Omit<IApiTokenCreate, 'alias'> {
-    createdAt: Date;
-    seenAt?: Date;
-    environment: string;
-    project: string;
-    alias?: string | null;
-}
 
 export const isAllProjects = (projects: string[]): boolean => {
     return projects && projects.length === 1 && projects[0] === ALL;
 };
 
-export const mapLegacyProjects = (
-    project?: string,
-    projects?: string[],
-): string[] => {
-    let cleanedProjects: string[];
-    if (project) {
-        cleanedProjects = [project];
-    } else if (projects) {
-        cleanedProjects = projects;
-        if (cleanedProjects.includes('*')) {
-            cleanedProjects = ['*'];
-        }
-    } else {
-        throw new BadDataError(
-            'API tokens must either contain a project or projects field',
-        );
+export const resolveValidProjects = (projects: string[]): string[] => {
+    if (projects.includes('*')) {
+        return ['*'];
     }
-    return cleanedProjects;
-};
 
-export const mapLegacyToken = (
-    token: Omit<ILegacyApiTokenCreate, 'secret'>,
-): Omit<IApiTokenCreate, 'secret'> => {
-    const cleanedProjects = mapLegacyProjects(token.project, token.projects);
-    return {
-        tokenName: token.username ?? token.tokenName!,
-        type: token.type,
-        environment: token.environment || 'development',
-        projects: cleanedProjects,
-        expiresAt: token.expiresAt,
-    };
-};
-
-export const mapLegacyTokenWithSecret = (
-    token: ILegacyApiTokenCreate,
-): IApiTokenCreate => {
-    return {
-        ...mapLegacyToken(token),
-        secret: token.secret,
-    };
+    return projects;
 };
 
 export const validateApiToken = ({

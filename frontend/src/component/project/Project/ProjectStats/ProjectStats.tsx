@@ -1,7 +1,7 @@
 import { Box, styled, Typography } from '@mui/material';
 import type { ProjectStatsSchema } from 'openapi/models';
-import { HelpPopper } from './HelpPopper';
-import { StatusBox } from './StatusBox';
+import { HelpPopper } from './HelpPopper.tsx';
+import { StatusBox } from './StatusBox.tsx';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',

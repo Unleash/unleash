@@ -3,8 +3,8 @@
 import type { VFC } from 'react';
 import { List, ListItem, ListItemText, Grid, styled } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ApiDetails } from './ApiDetails/ApiDetails';
-import { FooterTitle } from './FooterTitle';
+import { ApiDetails } from './ApiDetails/ApiDetails.tsx';
+import { FooterTitle } from './FooterTitle.tsx';
 import { focusable } from 'themes/themeStyles';
 
 const StyledFooter = styled('footer')(({ theme }) => ({
@@ -178,19 +178,6 @@ export const Footer: VFC = () => {
                             <section title='Unleash SDK'>
                                 <FooterTitle>Frontend SDKs</FooterTitle>
                                 <StyledList dense>
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://docs.getunleash.io/reference/unleash-proxy'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    Unleash Proxy
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>
                                     <StyledListItem>
                                         <ListItemText
                                             primary={

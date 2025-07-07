@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useRef } from 'react';
-import { useOnClickOutside } from './useOnClickOutside';
+import { useOnClickOutside } from './useOnClickOutside.ts';
 
 function TestComponent(props: { outsideClickHandler: () => void }) {
     const divRef = useRef(null);

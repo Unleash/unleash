@@ -1,27 +1,27 @@
 import { v4 as uuidv4 } from 'uuid';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../test/e2e/helpers/test-helper';
-import getLogger from '../../../test/fixtures/no-logger';
-import type { CreateDependentFeatureSchema } from '../../openapi';
+} from '../../../test/e2e/helpers/test-helper.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import type { CreateDependentFeatureSchema } from '../../openapi/index.js';
 import {
     FEATURE_DEPENDENCIES_REMOVED,
     FEATURE_DEPENDENCY_ADDED,
     FEATURE_DEPENDENCY_REMOVED,
-    type IEventStore,
-} from '../../types';
-import { DEFAULT_ENV } from '../../util';
+} from '../../events/index.js';
+import { DEFAULT_ENV } from '../../util/index.js';
+import type { IEventStore } from '../../server-impl.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
 let eventStore: IEventStore;
 
 beforeAll(async () => {
-    db = await dbInit('dependent_features', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('dependent_features', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
         {

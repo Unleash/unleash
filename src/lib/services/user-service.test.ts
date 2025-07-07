@@ -1,20 +1,21 @@
 import { URL } from 'url';
-import UserService from './user-service';
-import UserStoreMock from '../../test/fixtures/fake-user-store';
-import AccessServiceMock from '../../test/fixtures/access-service-mock';
-import ResetTokenService from './reset-token-service';
-import { EmailService } from './email-service';
-import OwaspValidationError from '../error/owasp-validation-error';
-import type { IUnleashConfig } from '../types/option';
-import { createTestConfig } from '../../test/config/test-config';
-import SessionService from './session-service';
-import FakeSessionStore from '../../test/fixtures/fake-session-store';
-import User from '../types/user';
-import FakeResetTokenStore from '../../test/fixtures/fake-reset-token-store';
-import SettingService from './setting-service';
-import FakeSettingStore from '../../test/fixtures/fake-setting-store';
-import { extractAuditInfoFromUser } from '../util';
-import { createFakeEventsService } from '../features';
+import UserService from './user-service.js';
+import UserStoreMock from '../../test/fixtures/fake-user-store.js';
+import AccessServiceMock from '../../test/fixtures/access-service-mock.js';
+import ResetTokenService from './reset-token-service.js';
+import { EmailService, type IEmailEnvelope } from './email-service.js';
+import OwaspValidationError from '../error/owasp-validation-error.js';
+import type { IUnleashConfig } from '../types/option.js';
+import { createTestConfig } from '../../test/config/test-config.js';
+import SessionService from './session-service.js';
+import FakeSessionStore from '../../test/fixtures/fake-session-store.js';
+import User from '../types/user.js';
+import FakeResetTokenStore from '../../test/fixtures/fake-reset-token-store.js';
+import SettingService from './setting-service.js';
+import FakeSettingStore from '../../test/fixtures/fake-setting-store.js';
+import { extractAuditInfoFromUser } from '../util/index.js';
+import { createFakeEventsService } from '../features/index.js';
+import { vi, expect, test, describe, beforeEach } from 'vitest';
 const config: IUnleashConfig = createTestConfig();
 
 const systemUser = new User({ id: -1, username: 'system' });
@@ -74,10 +75,10 @@ describe('Default admin initialization', () => {
     const CUSTOM_ADMIN_PASSWORD = 'custom-password';
 
     let userService: UserService;
-    const sendGettingStartedMailMock = jest.fn();
+    const sendGettingStartedMailMock = vi.fn() as () => Promise<IEmailEnvelope>;
 
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
 
         const userStore = new UserStoreMock();
         const accessService = new AccessServiceMock();
@@ -88,7 +89,7 @@ describe('Default admin initialization', () => {
         );
         const emailService = new EmailService(config);
 
-        emailService.configured = jest.fn(() => true);
+        emailService.configured = vi.fn(() => true);
         emailService.sendGettingStartedMail = sendGettingStartedMailMock;
 
         const sessionStore = new FakeSessionStore();
@@ -184,7 +185,7 @@ describe('Default admin initialization', () => {
     });
 
     test('Should use the correct environment variables when initializing the default admin account', async () => {
-        jest.resetModules();
+        vi.resetModules();
 
         process.env.UNLEASH_DEFAULT_ADMIN_USERNAME = CUSTOM_ADMIN_USERNAME;
         process.env.UNLEASH_DEFAULT_ADMIN_PASSWORD = CUSTOM_ADMIN_PASSWORD;
@@ -462,7 +463,7 @@ test('Should send password reset email if user exists', async () => {
     });
 
     const knownUser = service.createResetPasswordEmail('known@example.com');
-    expect(knownUser).resolves.toBeInstanceOf(URL);
+    await expect(knownUser).resolves.toBeInstanceOf(URL);
 });
 
 test('Should throttle password reset email', async () => {
@@ -508,17 +509,17 @@ test('Should throttle password reset email', async () => {
         generateImageUrl: () => '',
     });
 
-    jest.useFakeTimers();
+    vi.useFakeTimers();
 
     const attempt1 = service.createResetPasswordEmail('known@example.com');
     await expect(attempt1).resolves.toBeInstanceOf(URL);
 
     const attempt2 = service.createResetPasswordEmail('known@example.com');
-    await expect(attempt2).rejects.toThrow(
+    await expect(attempt2).rejects.toThrowError(
         'You can only send one new reset password email per minute, per user. Please try again later.',
     );
 
-    jest.runAllTimers();
+    vi.runAllTimers();
 
     const attempt3 = service.createResetPasswordEmail('known@example.com');
     await expect(attempt3).resolves.toBeInstanceOf(URL);

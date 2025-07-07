@@ -1,14 +1,15 @@
 import type {
     IImportTogglesStore,
     ProjectFeaturesLimit,
-} from './import-toggles-store-type';
-import type { Db } from '../../db/db';
+} from './import-toggles-store-type.js';
+import type { Db } from '../../db/db.js';
 
 const T = {
     featureStrategies: 'feature_strategies',
     features: 'features',
     featureTag: 'feature_tag',
     projectSettings: 'project_settings',
+    links: 'feature_link',
 };
 export class ImportTogglesStore implements IImportTogglesStore {
     private db: Db;
@@ -123,5 +124,9 @@ export class ImportTogglesStore implements IImportTogglesStore {
 
     async deleteTagsForFeatures(features: string[]): Promise<void> {
         return this.db(T.featureTag).whereIn('feature_name', features).del();
+    }
+
+    async deleteLinksForFeatures(features: string[]): Promise<void> {
+        return this.db(T.links).whereIn('feature_name', features).del();
     }
 }

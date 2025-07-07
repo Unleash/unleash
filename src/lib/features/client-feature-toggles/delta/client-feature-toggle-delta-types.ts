@@ -1,5 +1,5 @@
-import type { ClientFeatureSchema } from '../../../openapi';
-import type { IClientSegment } from '../../../types';
+import type { ClientFeatureSchema } from '../../../openapi/index.js';
+import type { IClientSegment } from '../../../types/index.js';
 
 export type DeltaHydrationEvent = {
     eventId: number;

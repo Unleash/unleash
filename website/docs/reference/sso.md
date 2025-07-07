@@ -13,7 +13,7 @@ title: Single Sign-On
 
 Unleash provides single sign-on (SSO) support through SAML 2.0, OpenID Connect, and username/password authentication.
 
-To configure SSO, navigate to **Admin > Single sign-on** in the Unleash Admin UI. Admin access is required.
+To configure SSO, navigate to **Admin settings > Single sign-on** in the Unleash Admin UI. Admin access is required.
 
 For step-by-step configuration instructions, refer to the following guides:
 - [OpenID Connect with Okta](../how-to/how-to-add-sso-open-id-connect)

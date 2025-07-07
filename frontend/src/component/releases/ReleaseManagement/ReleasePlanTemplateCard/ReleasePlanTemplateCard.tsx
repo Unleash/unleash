@@ -4,8 +4,8 @@ import { styled } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Card } from 'component/common/Card/Card';
 import { Truncator } from 'component/common/Truncator/Truncator';
-import { ReleasePlanTemplateCardActions } from './ReleasePlanTemplateCardActions';
-import { ReleasePlanTemplateCardFooter } from './ReleasePlanTemplateCardFooter';
+import { ReleasePlanTemplateCardActions } from './ReleasePlanTemplateCardActions.tsx';
+import { ReleasePlanTemplateCardFooter } from './ReleasePlanTemplateCardFooter.tsx';
 
 const StyledCardLink = styled(Link)(({ theme }) => ({
     color: 'inherit',

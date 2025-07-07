@@ -1,6 +1,6 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
-import { ReleasePlan } from './ReleasePlan';
+import { ReleasePlan } from './ReleasePlan.tsx';
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
 import { styled, Typography, Alert } from '@mui/material';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';

@@ -2,16 +2,20 @@ import type { EventEmitter } from 'stream';
 import {
     createEventsService,
     createFeatureToggleService,
-} from '../../lib/features';
-import { FEATURES_CREATED_BY_PROCESSED } from '../../lib/metric-events';
-import type { EventService, FeatureToggleService } from '../../lib/services';
+} from '../../lib/features/index.js';
+import { FEATURES_CREATED_BY_PROCESSED } from '../../lib/metric-events.js';
+import type {
+    EventService,
+    FeatureToggleService,
+} from '../../lib/services/index.js';
 import {
     ADMIN_TOKEN_USER,
     type IUnleashConfig,
     type IUnleashStores,
-} from '../../lib/types';
-import { createTestConfig } from '../config/test-config';
-import dbInit, { type ITestDb } from './helpers/database-init';
+} from '../../lib/types/index.js';
+import { createTestConfig } from '../config/test-config.js';
+import dbInit, { type ITestDb } from './helpers/database-init.js';
+import { DEFAULT_ENV } from '../../lib/server-impl.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -142,7 +146,7 @@ test('admin tokens get populated to admin token user', async () => {
         secret: 'token1',
         username: 'adm-token',
         type: 'admin',
-        environment: 'default',
+        environment: DEFAULT_ENV,
         token_name: 'admin-token',
     });
 
@@ -219,7 +223,7 @@ test('emits event with updated rows count', async () => {
         secret: 'token2',
         username: 'adm-token2',
         type: 'admin',
-        environment: 'default',
+        environment: DEFAULT_ENV,
         token_name: 'admin-token2',
     });
 

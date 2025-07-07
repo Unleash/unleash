@@ -1,27 +1,26 @@
-import {
-    setupAppWithAuth,
-    setupAppWithCustomAuth,
-} from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import { ApiTokenType } from '../../../../lib/types/models/api-token';
-import { RoleName } from '../../../../lib/types/model';
+import { setupAppWithCustomAuth } from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { ApiTokenType } from '../../../../lib/types/model.js';
+import { RoleName } from '../../../../lib/types/model.js';
 import {
     CREATE_CLIENT_API_TOKEN,
     CREATE_PROJECT_API_TOKEN,
     DELETE_CLIENT_API_TOKEN,
-    type IUnleashServices,
     type IUnleashStores,
     READ_CLIENT_API_TOKEN,
     READ_FRONTEND_API_TOKEN,
     SYSTEM_USER,
     SYSTEM_USER_AUDIT,
     SYSTEM_USER_ID,
-    TEST_AUDIT_USER,
     UPDATE_CLIENT_API_TOKEN,
-} from '../../../../lib/types';
+} from '../../../../lib/types/index.js';
 import { addDays } from 'date-fns';
-import type { AccessService, UserService } from '../../../../lib/services';
+import type {
+    AccessService,
+    IUnleashServices,
+    UserService,
+} from '../../../../lib/services/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -76,8 +75,7 @@ test('editor users should only get client or frontend tokens', async () => {
     await stores.apiTokenStore.insert({
         environment: '',
         projects: [],
-        tokenName: '',
-        username: 'test',
+        tokenName: 'test',
         secret: '*:environment.1234',
         type: ApiTokenType.CLIENT,
     });
@@ -85,8 +83,7 @@ test('editor users should only get client or frontend tokens', async () => {
     await stores.apiTokenStore.insert({
         environment: '',
         projects: [],
-        tokenName: '',
-        username: 'frontend',
+        tokenName: 'frontend',
         secret: '*:environment.12345',
         type: ApiTokenType.FRONTEND,
     });
@@ -94,8 +91,7 @@ test('editor users should only get client or frontend tokens', async () => {
     await stores.apiTokenStore.insert({
         environment: '',
         projects: [],
-        tokenName: '',
-        username: 'test',
+        tokenName: 'test',
         secret: '*:*.sdfsdf2d',
         type: ApiTokenType.ADMIN,
     });
@@ -138,8 +134,7 @@ test('viewer users should not be allowed to fetch tokens', async () => {
     await stores.apiTokenStore.insert({
         environment: '',
         projects: [],
-        tokenName: '',
-        username: 'test',
+        tokenName: 'test',
         secret: '*:environment.1234',
         type: ApiTokenType.CLIENT,
     });
@@ -147,8 +142,7 @@ test('viewer users should not be allowed to fetch tokens', async () => {
     await stores.apiTokenStore.insert({
         environment: '',
         projects: [],
-        tokenName: '',
-        username: 'test',
+        tokenName: 'test',
         secret: '*:*.sdfsdf2d',
         type: ApiTokenType.ADMIN,
     });
@@ -158,102 +152,6 @@ test('viewer users should not be allowed to fetch tokens', async () => {
         .expect('Content-Type', /json/)
         .expect(403);
 
-    await destroy();
-});
-
-test('Only token-admins should be allowed to create token', async () => {
-    expect.assertions(0);
-
-    const preHook = (app, config, { userService, accessService }) => {
-        app.use('/api/admin/', async (req, res, next) => {
-            const role = await accessService.getPredefinedRole(RoleName.EDITOR);
-            req.user = await userService.createUser({
-                email: 'editor2@example.com',
-                rootRole: role.id,
-            });
-            next();
-        });
-    };
-
-    const { request, destroy } = await setupAppWithCustomAuth(
-        stores,
-        preHook,
-        undefined,
-        db.rawDatabase,
-    );
-
-    await request
-        .post('/api/admin/api-tokens')
-        .send({
-            username: 'default-admin',
-            type: 'admin',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(403);
-
-    await destroy();
-});
-
-test('Token-admin should not be allowed to create token', async () => {
-    expect.assertions(0);
-
-    const preHook = (app, config, { userService, accessService }) => {
-        app.use('/api/admin/', async (req, res, next) => {
-            const role = await accessService.getPredefinedRole(RoleName.ADMIN);
-            req.user = await userService.createUser({
-                email: 'admin@example.com',
-                rootRole: role.id,
-            });
-            next();
-        });
-    };
-
-    const { request, destroy } = await setupAppWithCustomAuth(
-        stores,
-        preHook,
-        undefined,
-        db.rawDatabase,
-    );
-
-    await request
-        .post('/api/admin/api-tokens')
-        .send({
-            username: 'default-admin',
-            type: 'admin',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(403);
-
-    await destroy();
-});
-
-test('An admin should be forbidden to create an admin token', async () => {
-    const { request, destroy, services } = await setupAppWithAuth(
-        stores,
-        undefined,
-        db.rawDatabase,
-    );
-
-    const { secret } =
-        await services.apiTokenService.createApiTokenWithProjects(
-            {
-                tokenName: 'default-admin',
-                type: ApiTokenType.ADMIN,
-                projects: ['*'],
-                environment: '*',
-            },
-            TEST_AUDIT_USER,
-        );
-
-    await request
-        .post('/api/admin/api-tokens')
-        .send({
-            username: 'default-admin',
-            type: 'admin',
-        })
-        .set('Authorization', secret)
-        .set('Content-Type', 'application/json')
-        .expect(403);
     await destroy();
 });
 
@@ -309,7 +207,7 @@ test('A role with only CREATE_PROJECT_API_TOKEN can create project tokens', asyn
     await request
         .post('/api/admin/projects/default/api-tokens')
         .send({
-            username: 'client-token-maker',
+            tokenName: 'client-token-maker',
             type: 'client',
             projects: ['default'],
         })
@@ -371,7 +269,7 @@ describe('Fine grained API token permissions', () => {
             await request
                 .post('/api/admin/api-tokens')
                 .send({
-                    username: 'default-client',
+                    tokenName: 'default-client',
                     type: 'client',
                 })
                 .set('Content-Type', 'application/json')
@@ -428,65 +326,8 @@ describe('Fine grained API token permissions', () => {
             await request
                 .post('/api/admin/api-tokens')
                 .send({
-                    username: 'default-frontend',
+                    tokenName: 'default-frontend',
                     type: 'frontend',
-                })
-                .set('Content-Type', 'application/json')
-                .expect(403);
-            await destroy();
-        });
-        test('should NOT be allowed to create ADMIN tokens', async () => {
-            const preHook = (
-                app,
-                config,
-                {
-                    userService,
-                    accessService,
-                }: Pick<IUnleashServices, 'userService' | 'accessService'>,
-            ) => {
-                app.use('/api/admin/', async (req, res, next) => {
-                    const role = await accessService.getPredefinedRole(
-                        RoleName.VIEWER,
-                    );
-                    const user = await userService.createUser({
-                        email: 'mylittlepony_admin@example.com',
-                        rootRole: role.id,
-                    });
-                    req.user = user;
-                    const createClientApiTokenRole =
-                        await accessService.createRole(
-                            {
-                                name: 'client_token_creator_cannot_create_admin',
-                                description: 'Can create client tokens',
-                                permissions: [],
-                                type: 'root-custom',
-                                createdByUserId: SYSTEM_USER_ID,
-                            },
-                            SYSTEM_USER_AUDIT,
-                        );
-                    await accessService.addPermissionToRole(
-                        role.id,
-                        CREATE_CLIENT_API_TOKEN,
-                    );
-                    await accessService.addUserToRole(
-                        user.id,
-                        createClientApiTokenRole.id,
-                        'default',
-                    );
-                    next();
-                });
-            };
-            const { request, destroy } = await setupAppWithCustomAuth(
-                stores,
-                preHook,
-                undefined,
-                db.rawDatabase,
-            );
-            await request
-                .post('/api/admin/api-tokens')
-                .send({
-                    username: 'default-admin',
-                    type: 'admin',
                 })
                 .set('Content-Type', 'application/json')
                 .expect(403);
@@ -543,9 +384,8 @@ describe('Fine grained API token permissions', () => {
             await stores.apiTokenStore.insert({
                 environment: '',
                 projects: [],
-                tokenName: '',
 
-                username: 'client',
+                tokenName: 'client',
                 secret: '*:environment.client_secret',
                 type: ApiTokenType.CLIENT,
             });
@@ -553,16 +393,14 @@ describe('Fine grained API token permissions', () => {
             await stores.apiTokenStore.insert({
                 environment: '',
                 projects: [],
-                tokenName: '',
-                username: 'admin',
+                tokenName: 'admin',
                 secret: '*:*.sdfsdf2admin_secret',
                 type: ApiTokenType.ADMIN,
             });
             await stores.apiTokenStore.insert({
                 environment: '',
                 projects: [],
-                tokenName: '',
-                username: 'frontender',
+                tokenName: 'frontender',
                 secret: '*:environment:sdfsdf2dfrontend_Secret',
                 type: ApiTokenType.FRONTEND,
             });
@@ -628,8 +466,7 @@ describe('Fine grained API token permissions', () => {
             await stores.apiTokenStore.insert({
                 environment: '',
                 projects: [],
-                tokenName: '',
-                username: 'client',
+                tokenName: 'client',
                 secret: '*:environment.client_secret_1234',
                 type: ApiTokenType.CLIENT,
             });
@@ -637,16 +474,14 @@ describe('Fine grained API token permissions', () => {
             await stores.apiTokenStore.insert({
                 environment: '',
                 projects: [],
-                tokenName: '',
-                username: 'admin',
+                tokenName: 'admin',
                 secret: '*:*.admin_secret_1234',
                 type: ApiTokenType.ADMIN,
             });
             await stores.apiTokenStore.insert({
                 environment: '',
                 projects: [],
-                tokenName: '',
-                username: 'frontender',
+                tokenName: 'frontender',
                 secret: '*:environment.frontend_secret_1234',
                 type: ApiTokenType.FRONTEND,
             });
@@ -690,8 +525,7 @@ describe('Fine grained API token permissions', () => {
             await stores.apiTokenStore.insert({
                 environment: '',
                 projects: [],
-                tokenName: '',
-                username: 'client',
+                tokenName: 'client',
                 secret: '*:environment.client_secret_4321',
                 type: ApiTokenType.CLIENT,
             });
@@ -699,16 +533,14 @@ describe('Fine grained API token permissions', () => {
             await stores.apiTokenStore.insert({
                 environment: '',
                 projects: [],
-                tokenName: '',
-                username: 'admin',
+                tokenName: 'admin',
                 secret: '*:*.admin_secret_4321',
                 type: ApiTokenType.ADMIN,
             });
             await stores.apiTokenStore.insert({
                 environment: '',
                 projects: [],
-                tokenName: '',
-                username: 'frontender',
+                tokenName: 'frontender',
                 secret: '*:environment.frontend_secret_4321',
                 type: ApiTokenType.FRONTEND,
             });
@@ -751,24 +583,21 @@ describe('Fine grained API token permissions', () => {
             await stores.apiTokenStore.insert({
                 environment: '',
                 projects: [],
-                tokenName: '',
-                username: 'client',
+                tokenName: 'client',
                 secret: '*:environment.client_secret_4321',
                 type: ApiTokenType.CLIENT,
             });
             await stores.apiTokenStore.insert({
                 environment: '',
                 projects: [],
-                tokenName: '',
-                username: 'admin',
+                tokenName: 'admin',
                 secret: '*:*.admin_secret_4321',
                 type: ApiTokenType.ADMIN,
             });
             await stores.apiTokenStore.insert({
                 environment: '',
                 projects: [],
-                tokenName: '',
-                username: 'frontender',
+                tokenName: 'frontender',
                 secret: '*:environment.frontend_secret_4321',
                 type: ApiTokenType.FRONTEND,
             });
@@ -839,8 +668,7 @@ describe('Fine grained API token permissions', () => {
                 const token = await stores.apiTokenStore.insert({
                     environment: '',
                     projects: [],
-                    tokenName: '',
-                    username: 'cilent',
+                    tokenName: 'cilent',
                     secret: '*:environment.update_client_token',
                     type: ApiTokenType.CLIENT,
                 });
@@ -901,8 +729,7 @@ describe('Fine grained API token permissions', () => {
                 const token = await stores.apiTokenStore.insert({
                     environment: '',
                     projects: [],
-                    tokenName: '',
-                    username: 'frontend',
+                    tokenName: 'frontend',
                     secret: '*:environment.update_frontend_token',
                     type: ApiTokenType.FRONTEND,
                 });
@@ -963,9 +790,8 @@ describe('Fine grained API token permissions', () => {
                 const token = await stores.apiTokenStore.insert({
                     environment: '',
                     projects: [],
-                    tokenName: '',
 
-                    username: 'admin',
+                    tokenName: 'admin',
                     secret: '*:*.update_admin_token',
                     type: ApiTokenType.ADMIN,
                 });
@@ -1029,8 +855,7 @@ describe('Fine grained API token permissions', () => {
                 const token = await stores.apiTokenStore.insert({
                     environment: '',
                     projects: [],
-                    tokenName: '',
-                    username: 'cilent',
+                    tokenName: 'cilent',
                     secret: '*:environment.delete_client_token',
                     type: ApiTokenType.CLIENT,
                 });
@@ -1091,8 +916,7 @@ describe('Fine grained API token permissions', () => {
                 const token = await stores.apiTokenStore.insert({
                     environment: '',
                     projects: [],
-                    tokenName: '',
-                    username: 'frontend',
+                    tokenName: 'frontend',
                     secret: '*:environment.delete_frontend_token',
                     type: ApiTokenType.FRONTEND,
                 });
@@ -1152,8 +976,7 @@ describe('Fine grained API token permissions', () => {
                 const token = await stores.apiTokenStore.insert({
                     environment: '',
                     projects: [],
-                    tokenName: '',
-                    username: 'admin',
+                    tokenName: 'admin',
                     secret: '*:*:delete_admin_token',
                     type: ApiTokenType.ADMIN,
                 });

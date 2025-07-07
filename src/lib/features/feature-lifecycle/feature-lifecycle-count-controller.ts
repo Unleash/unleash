@@ -1,17 +1,20 @@
 import {
     type IFeatureLifecycleReadModel,
     type IUnleashConfig,
-    type IUnleashServices,
+    type IUnleashStores,
     NONE,
-} from '../../types';
-import type { OpenApiService } from '../../services';
-import { createResponseSchema, getStandardResponses } from '../../openapi';
-import Controller from '../../routes/controller';
+} from '../../types/index.js';
+import type { IUnleashServices, OpenApiService } from '../../services/index.js';
+import {
+    createResponseSchema,
+    getStandardResponses,
+} from '../../openapi/index.js';
+import Controller from '../../routes/controller.js';
 import type { Request, Response } from 'express';
 import {
     type FeatureLifecycleCountSchema,
     featureLifecycleCountSchema,
-} from '../../openapi/spec/feature-lifecycle-count-schema';
+} from '../../openapi/spec/feature-lifecycle-count-schema.js';
 
 export default class FeatureLifecycleCountController extends Controller {
     private featureLifecycleReadModel: IFeatureLifecycleReadModel;
@@ -20,13 +23,10 @@ export default class FeatureLifecycleCountController extends Controller {
 
     constructor(
         config: IUnleashConfig,
+        { openApiService }: Pick<IUnleashServices, 'openApiService'>,
         {
-            openApiService,
             featureLifecycleReadModel,
-        }: Pick<
-            IUnleashServices,
-            'openApiService' | 'featureLifecycleReadModel'
-        >,
+        }: Pick<IUnleashStores, 'featureLifecycleReadModel'>,
     ) {
         super(config);
         this.featureLifecycleReadModel = featureLifecycleReadModel;

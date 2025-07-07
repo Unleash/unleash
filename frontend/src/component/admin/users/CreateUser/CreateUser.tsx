@@ -1,23 +1,27 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useNavigate } from 'react-router-dom';
-import UserForm from '../UserForm/UserForm';
+import UserForm from '../UserForm/UserForm.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 import useToast from 'hooks/useToast';
-import useAddUserForm from '../hooks/useAddUserForm';
-import ConfirmUserAdded from '../ConfirmUserAdded/ConfirmUserAdded';
+import useAddUserForm from '../hooks/useAddUserForm.ts';
+import ConfirmUserAdded from '../ConfirmUserAdded/ConfirmUserAdded.tsx';
 import { useState } from 'react';
 import { scrollToTop } from 'component/common/util';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
-import { SeatCostWarning } from './SeatCostWarning/SeatCostWarning';
+import { SeatCostWarning } from './SeatCostWarning/SeatCostWarning.tsx';
+import useQueryParams from 'hooks/useQueryParams.ts';
 
 const CreateUser = () => {
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
+    const params = useQueryParams();
+    const initialName = params.get('name') || '';
+    const initialEmail = params.get('email') || '';
     const {
         name,
         setName,
@@ -32,7 +36,7 @@ const CreateUser = () => {
         validateEmail,
         errors,
         clearErrors,
-    } = useAddUserForm();
+    } = useAddUserForm(initialName, initialEmail);
     const [showConfirm, setShowConfirm] = useState(false);
     const [inviteLink, setInviteLink] = useState('');
 

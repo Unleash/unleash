@@ -1,32 +1,33 @@
 import {
     type PlaygroundFeatureEvaluationResult,
     PlaygroundService,
-} from '../../../lib/features/playground/playground-service';
+} from '../../../lib/features/playground/playground-service.js';
 import {
     clientFeaturesAndSegments,
     commonISOTimestamp,
-} from '../../arbitraries.test';
-import { generate as generateContext } from '../../../lib/openapi/spec/sdk-context-schema.test';
+} from '../../arbitraries.test.js';
+import { generate as generateContext } from '../../../lib/openapi/spec/sdk-context-schema.test.js';
 import fc from 'fast-check';
-import { createTestConfig } from '../../config/test-config';
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import type { IUnleashStores } from '../../../lib/types/stores';
-import type FeatureToggleService from '../../../lib/features/feature-toggle/feature-toggle-service';
+import { createTestConfig } from '../../config/test-config.js';
+import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import type { IUnleashStores } from '../../../lib/types/stores.js';
+import type { FeatureToggleService } from '../../../lib/features/feature-toggle/feature-toggle-service.js';
 import {
     type FeatureToggle,
     type ISegment,
     WeightType,
-} from '../../../lib/types/model';
-import type { PlaygroundFeatureSchema } from '../../../lib/openapi/spec/playground-feature-schema';
-import { offlineUnleashClientNode } from '../../../lib/features/playground/offline-unleash-client.test';
-import type { ClientFeatureSchema } from '../../../lib/openapi/spec/client-feature-schema';
-import type { SdkContextSchema } from '../../../lib/openapi/spec/sdk-context-schema';
-import type { SegmentSchema } from '../../../lib/openapi/spec/segment-schema';
-import { playgroundStrategyEvaluation } from '../../../lib/openapi/spec/playground-strategy-schema';
-import type { PlaygroundSegmentSchema } from '../../../lib/openapi/spec/playground-segment-schema';
-import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
-import { createFeatureToggleService } from '../../../lib/features';
-import { SegmentReadModel } from '../../../lib/features/segment/segment-read-model';
+} from '../../../lib/types/model.js';
+import type { PlaygroundFeatureSchema } from '../../../lib/openapi/spec/playground-feature-schema.js';
+import { offlineUnleashClientNode } from '../../../lib/features/playground/offline-unleash-client.test.js';
+import type { ClientFeatureSchema } from '../../../lib/openapi/spec/client-feature-schema.js';
+import type { SdkContextSchema } from '../../../lib/openapi/spec/sdk-context-schema.js';
+import type { SegmentSchema } from '../../../lib/openapi/spec/segment-schema.js';
+import { playgroundStrategyEvaluation } from '../../../lib/openapi/spec/playground-strategy-schema.js';
+import type { PlaygroundSegmentSchema } from '../../../lib/openapi/spec/playground-segment-schema.js';
+import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker.js';
+import { createFeatureToggleService } from '../../../lib/features/index.js';
+import { SegmentReadModel } from '../../../lib/features/segment/segment-read-model.js';
+import { DEFAULT_ENV } from '../../../lib/server-impl.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -136,9 +137,9 @@ export const seedDatabaseForPlaygroundTest = async (
                 feature.enabled,
             );
 
-            await database.stores.featureToggleStore.saveVariants(
-                feature.project!,
+            await database.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
                 feature.name,
+                environment,
                 [
                     ...(feature.variants ?? []).map((variant) => ({
                         ...variant,
@@ -194,7 +195,7 @@ describe('the playground service (e2e)', () => {
     const insertAndEvaluateFeatures = async ({
         features,
         context,
-        env = 'default',
+        env = DEFAULT_ENV,
         segments,
     }: {
         features: ClientFeatureSchema[];
@@ -203,10 +204,6 @@ describe('the playground service (e2e)', () => {
         segments?: SegmentSchema[];
     }): Promise<PlaygroundFeatureEvaluationResult[]> => {
         await seedDatabaseForPlaygroundTest(db, features, env, segments);
-
-        //     const activeSegments = await db.stores.segmentStore.getAllFeatureStrategySegments()
-        // console.log("active segments db seeding", activeSegments)
-
         const projects = '*';
 
         const serviceFeatures = await service.evaluateQuery(

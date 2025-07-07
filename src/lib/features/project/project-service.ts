@@ -1,16 +1,17 @@
 import { subDays } from 'date-fns';
-import { ValidationError } from 'joi';
+import joi from 'joi';
+const { ValidationError } = joi;
 import createSlug from 'slug';
-import type { IAuditUser, IUser } from '../../types/user';
+import type { IAuditUser, IUser } from '../../types/user.js';
 import type {
     AccessService,
     AccessWithRoles,
-} from '../../services/access-service';
-import NameExistsError from '../../error/name-exists-error';
-import InvalidOperationError from '../../error/invalid-operation-error';
-import { nameType } from '../../routes/util';
-import { projectSchema } from '../../services/project-schema';
-import NotFoundError from '../../error/notfound-error';
+} from '../../services/access-service.js';
+import NameExistsError from '../../error/name-exists-error.js';
+import InvalidOperationError from '../../error/invalid-operation-error.js';
+import { nameType } from '../../routes/util.js';
+import { projectSchema } from '../../services/project-schema.js';
+import NotFoundError from '../../error/notfound-error.js';
 import {
     ADMIN,
     ADMIN_TOKEN_USER,
@@ -44,8 +45,6 @@ import {
     ProjectCreatedEvent,
     ProjectDeletedEvent,
     ProjectGroupAddedEvent,
-    ProjectGroupRemovedEvent,
-    ProjectGroupUpdateRoleEvent,
     ProjectRevivedEvent,
     ProjectUpdatedEvent,
     ProjectUserRemovedEvent,
@@ -54,44 +53,42 @@ import {
     SYSTEM_USER_ID,
     type IProjectReadModel,
     type IOnboardingReadModel,
-} from '../../types';
+} from '../../types/index.js';
 import type {
-    IProjectAccessModel,
     IRoleDescriptor,
     IRoleWithProject,
-} from '../../types/stores/access-store';
-import type FeatureToggleService from '../feature-toggle/feature-toggle-service';
-import IncompatibleProjectError from '../../error/incompatible-project-error';
-import { arraysHaveSameItems } from '../../util';
-import type { GroupService } from '../../services/group-service';
-import type { IGroupRole } from '../../types/group';
-import type { FavoritesService } from '../../services/favorites-service';
-import { calculateAverageTimeToProd } from '../feature-toggle/time-to-production/time-to-production';
-import type { IProjectStatsStore } from '../../types/stores/project-stats-store-type';
-import { uniqueByKey } from '../../util/unique';
-import { BadDataError, PermissionError } from '../../error';
+} from '../../types/stores/access-store.js';
+import type { FeatureToggleService } from '../feature-toggle/feature-toggle-service.js';
+import IncompatibleProjectError from '../../error/incompatible-project-error.js';
+import { arraysHaveSameItems } from '../../util/index.js';
+import type { GroupService } from '../../services/group-service.js';
+import type { FavoritesService } from '../../services/favorites-service.js';
+import { calculateAverageTimeToProd } from '../feature-toggle/time-to-production/time-to-production.js';
+import type { IProjectStatsStore } from '../../types/stores/project-stats-store-type.js';
+import { uniqueByKey } from '../../util/unique.js';
+import { BadDataError, PermissionError } from '../../error/index.js';
 import type {
     ProjectDoraMetricsSchema,
     ResourceLimitsSchema,
-} from '../../openapi';
-import { checkFeatureNamingData } from '../feature-naming-pattern/feature-naming-validation';
-import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
-import type EventService from '../events/event-service';
+} from '../../openapi/index.js';
+import { checkFeatureNamingData } from '../feature-naming-pattern/feature-naming-validation.js';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
+import type EventService from '../events/event-service.js';
 import type {
     IProjectApplicationsSearchParams,
     IProjectEnterpriseSettingsUpdate,
     IProjectQuery,
     IProjectsQuery,
-} from './project-store-type';
-import type { IProjectFlagCreatorsReadModel } from './project-flag-creators-read-model.type';
-import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
+} from './project-store-type.js';
+import type { IProjectFlagCreatorsReadModel } from './project-flag-creators-read-model.type.js';
+import { throwExceedsLimitError } from '../../error/exceeds-limit-error.js';
 import type EventEmitter from 'events';
-import type { ApiTokenService } from '../../services/api-token-service';
-import type { ProjectForUi } from './project-read-model-type';
-import { canGrantProjectRole } from './can-grant-project-role';
-import { batchExecute } from '../../util/batchExecute';
-import metricsHelper from '../../util/metrics-helper';
-import { FUNCTION_TIME } from '../../metric-events';
+import type { ApiTokenService } from '../../services/index.js';
+import type { ProjectForUi } from './project-read-model-type.js';
+import { canGrantProjectRole } from './can-grant-project-role.js';
+import { batchExecute } from '../../util/index.js';
+import metricsHelper from '../../util/metrics-helper.js';
+import { FUNCTION_TIME } from '../../metric-events.js';
 
 type Days = number;
 type Count = number;
@@ -110,17 +107,6 @@ export interface IProjectStats {
 interface ICalculateStatus {
     projectId: string;
     updates: IProjectStats;
-}
-
-function includes(
-    list: number[],
-    {
-        id,
-    }: {
-        id: number;
-    },
-): boolean {
-    return list.some((l) => l === id);
 }
 
 export default class ProjectService {
@@ -805,73 +791,6 @@ export default class ProjectService {
         );
     }
 
-    /**
-     * @deprecated use removeGroupAccess
-     */
-    async removeGroup(
-        projectId: string,
-        roleId: number,
-        groupId: number,
-        auditUser: IAuditUser,
-    ): Promise<void> {
-        const group = await this.groupService.getGroup(groupId);
-        const role = await this.accessService.getRole(roleId);
-        const project = await this.getProject(projectId);
-        if (group.id == null)
-            throw new ValidationError(
-                'Unexpected empty group id',
-                [],
-                undefined,
-            );
-
-        await this.accessService.removeGroupFromRole(
-            group.id,
-            role.id,
-            project.id,
-        );
-
-        await this.eventService.storeEvent(
-            new ProjectGroupRemovedEvent({
-                project: projectId,
-                auditUser,
-                preData: {
-                    groupId: group.id,
-                    projectId: project.id,
-                    roleName: role.name,
-                },
-            }),
-        );
-    }
-
-    async addRoleAccess(
-        projectId: string,
-        roleId: number,
-        usersAndGroups: IProjectAccessModel,
-        auditUser: IAuditUser,
-    ): Promise<void> {
-        await this.accessService.addRoleAccessToProject(
-            usersAndGroups.users,
-            usersAndGroups.groups,
-            projectId,
-            roleId,
-            auditUser,
-        );
-
-        await this.eventService.storeEvent(
-            new ProjectAccessAddedEvent({
-                project: projectId,
-                auditUser,
-                data: {
-                    roles: {
-                        roleId,
-                        groupIds: usersAndGroups.groups.map(({ id }) => id),
-                        userIds: usersAndGroups.users.map(({ id }) => id),
-                    },
-                },
-            }),
-        );
-    }
-
     private isAdmin(userId: number, roles: IRoleWithProject[]): boolean {
         return (
             userId === SYSTEM_USER_ID ||
@@ -1061,20 +980,6 @@ export default class ProjectService {
         }
     }
 
-    async findProjectGroupRole(
-        projectId: string,
-        roleId: number,
-    ): Promise<IGroupRole> {
-        const roles = await this.groupService.getRolesForProject(projectId);
-        const role = roles.find((r) => r.roleId === roleId);
-        if (!role) {
-            throw new NotFoundError(
-                `Couldn't find roleId=${roleId} on project=${projectId}`,
-            );
-        }
-        return role;
-    }
-
     async findProjectRole(
         projectId: string,
         roleId: number,
@@ -1185,56 +1090,6 @@ export default class ProjectService {
                     roleId,
                     roleName: role.name,
                     email: user.email,
-                },
-            }),
-        );
-    }
-
-    async changeGroupRole(
-        projectId: string,
-        roleId: number,
-        userId: number,
-        auditUser: IAuditUser,
-    ): Promise<void> {
-        const usersWithRoles = await this.getAccessToProject(projectId);
-        const userGroup = usersWithRoles.groups.find((u) => u.id === userId);
-        if (!userGroup)
-            throw new ValidationError('Unexpected empty user', [], undefined);
-        const currentRole = usersWithRoles.roles.find((r) =>
-            userGroup.roles?.includes(r.id),
-        );
-        if (!currentRole)
-            throw new ValidationError(
-                'Unexpected empty current role',
-                [],
-                undefined,
-            );
-
-        if (currentRole.id === roleId) {
-            // Nothing to do....
-            return;
-        }
-
-        await this.accessService.updateGroupProjectRole(
-            userId,
-            roleId,
-            projectId,
-        );
-        const role = await this.findProjectGroupRole(projectId, roleId);
-
-        await this.eventService.storeEvent(
-            new ProjectGroupUpdateRoleEvent({
-                project: projectId,
-                auditUser,
-                preData: {
-                    userId,
-                    roleId: currentRole.id,
-                    roleName: currentRole.name,
-                },
-                data: {
-                    userId,
-                    roleId,
-                    roleName: role.name,
                 },
             }),
         );
@@ -1425,6 +1280,7 @@ export default class ProjectService {
             featureNaming: project.featureNaming,
             defaultStickiness: project.defaultStickiness,
             health: project.health || 0,
+            technicalDebt: 100 - (project.health || 0),
             favorite: favorite,
             updatedAt: project.updatedAt,
             createdAt: project.createdAt,
@@ -1480,8 +1336,10 @@ export default class ProjectService {
             mode: project.mode,
             featureLimit: project.featureLimit,
             featureNaming: project.featureNaming,
+            linkTemplates: project.linkTemplates,
             defaultStickiness: project.defaultStickiness,
             health: project.health || 0,
+            technicalDebt: 100 - (project.health || 0),
             favorite: favorite,
             updatedAt: project.updatedAt,
             archivedAt: project.archivedAt,

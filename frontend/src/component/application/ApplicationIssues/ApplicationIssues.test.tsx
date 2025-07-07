@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { ApplicationIssues } from './ApplicationIssues';
+import { ApplicationIssues } from './ApplicationIssues.tsx';
 import type { ApplicationOverviewSchema } from 'openapi';
 
 test('Display all application issues', async () => {

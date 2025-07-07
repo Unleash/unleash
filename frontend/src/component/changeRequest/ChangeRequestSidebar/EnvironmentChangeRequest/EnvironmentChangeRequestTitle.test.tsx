@@ -1,6 +1,6 @@
 import { type FC, useState } from 'react';
 import { screen } from '@testing-library/react';
-import { ChangeRequestTitle } from './ChangeRequestTitle';
+import { ChangeRequestTitle } from './ChangeRequestTitle.tsx';
 import type { UnscheduledChangeRequest } from 'component/changeRequest/changeRequest.types';
 import userEvent from '@testing-library/user-event';
 import { testServerRoute, testServerSetup } from 'utils/testServer';

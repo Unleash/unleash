@@ -1,9 +1,12 @@
-import { validateSchema } from '../validate';
-import type { ProjectStatusSchema } from './project-status-schema';
+import { validateSchema } from '../validate.js';
+import type { ProjectStatusSchema } from './project-status-schema.js';
 
 test('projectStatusSchema', () => {
     const data: ProjectStatusSchema = {
         health: {
+            current: 50,
+        },
+        technicalDebt: {
             current: 50,
         },
         lifecycleSummary: {

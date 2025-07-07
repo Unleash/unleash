@@ -1,17 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { mergeAllOfs } from '../util/all-of';
-const adminSchema = {
-    required: ['type'],
-    type: 'object',
-    properties: {
-        type: {
-            type: 'string',
-            pattern: '^[Aa][Dd][Mm][Ii][Nn]$',
-            description: `An admin token. Must be the string "admin" (not case sensitive).`,
-            example: 'admin',
-        },
-    },
-} as const;
+import { mergeAllOfs } from '../util/all-of.js';
 
 const tokenNameSchema = {
     type: 'object',
@@ -21,20 +9,6 @@ const tokenNameSchema = {
             type: 'string',
             description: 'The name of the token.',
             example: 'token-64522',
-        },
-    },
-} as const;
-
-const usernameSchema = {
-    type: 'object',
-    required: ['username'],
-    properties: {
-        username: {
-            deprecated: true,
-            type: 'string',
-            description:
-                'The name of the token. This property was deprecated in v5. Use `tokenName` instead.',
-            example: 'token-64523',
         },
     },
 } as const;
@@ -100,12 +74,7 @@ export const createApiTokenSchema = {
     type: 'object',
     description:
         'The data required to create an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).',
-    oneOf: [
-        mergeAllOfs([expireSchema, adminSchema, tokenNameSchema]),
-        mergeAllOfs([expireSchema, adminSchema, usernameSchema]),
-        mergeAllOfs([expireSchema, clientFrontendSchema, tokenNameSchema]),
-        mergeAllOfs([expireSchema, clientFrontendSchema, usernameSchema]),
-    ],
+    oneOf: [mergeAllOfs([expireSchema, clientFrontendSchema, tokenNameSchema])],
     components: {},
 } as const;
 

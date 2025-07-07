@@ -1,4 +1,5 @@
-import { parse } from 'pg-connection-string';
+import pgs from 'pg-connection-string';
+const { parse } = pgs;
 import merge from 'deepmerge';
 import { readFileSync, existsSync } from 'fs';
 import {
@@ -22,38 +23,39 @@ import {
     type IVersionOption,
     type ISSLOption,
     type UsernameAdminUser,
-} from './types/option';
-import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
-import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
-import { formatBaseUri } from './util/format-base-uri';
+} from './types/option.js';
+import {
+    getDefaultLogProvider,
+    LogLevel,
+    validateLogProvider,
+} from './logger.js';
+import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all.js';
+import { formatBaseUri } from './util/format-base-uri.js';
 import {
     hoursToMilliseconds,
     minutesToMilliseconds,
     secondsToMilliseconds,
 } from 'date-fns';
 import EventEmitter from 'events';
-import {
-    ApiTokenType,
-    mapLegacyToken,
-    validateApiToken,
-} from './types/models/api-token';
+import { validateApiToken } from './types/models/api-token.js';
 import {
     parseEnvVarBoolean,
     parseEnvVarJSON,
     parseEnvVarNumber,
     parseEnvVarStrings,
-} from './util/parseEnvVar';
+} from './util/parseEnvVar.js';
 import {
     defaultExperimentalOptions,
     type IExperimentalOptions,
-} from './types/experimental';
+} from './types/experimental.js';
 import {
     DEFAULT_SEGMENT_VALUES_LIMIT,
     DEFAULT_STRATEGY_SEGMENTS_LIMIT,
-} from './util/segments';
-import FlagResolver from './util/flag-resolver';
-import { validateOrigins } from './util/validateOrigin';
-import type { ResourceLimitsSchema } from './openapi/spec/resource-limits-schema';
+} from './util/segments.js';
+import FlagResolver from './util/flag-resolver.js';
+import { validateOrigins } from './util/validateOrigin.js';
+import type { ResourceLimitsSchema } from './openapi/spec/resource-limits-schema.js';
+import { ApiTokenType } from './internals.js';
 
 const safeToUpper = (s?: string) => (s ? s.toUpperCase() : s);
 
@@ -415,13 +417,13 @@ const loadTokensFromString = (
         const [environment = '*'] = rest.split('.');
         const token = {
             createdAt: undefined,
-            project,
+            projects: [project],
             environment,
             secret,
             type: tokenType,
             tokenName: 'admin',
         };
-        validateApiToken(mapLegacyToken(token));
+        validateApiToken(token);
         return token;
     });
     return tokens;
@@ -613,7 +615,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.secureHeaders ||
         parseEnvVarBoolean(process.env.SECURE_HEADERS, false);
 
-    const enableOAS = parseEnvVarBoolean(process.env.ENABLE_OAS, true);
+    const enableOAS =
+        options.enableOAS === undefined
+            ? parseEnvVarBoolean(process.env.ENABLE_OAS, true)
+            : options.enableOAS;
 
     const additionalCspAllowedDomains: ICspDomainConfig =
         parseCspConfig(options.additionalCspAllowedDomains) ||
@@ -768,6 +773,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             defaultDaysToBeConsideredInactive,
         );
 
+    const prometheusImpactMetricsApi =
+        options.prometheusImpactMetricsApi ||
+        process.env.PROMETHEUS_IMPACT_METRICS_API;
+
     return {
         db,
         session,
@@ -799,6 +808,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         clientFeatureCaching,
         accessControlMaxAge,
         prometheusApi,
+        prometheusImpactMetricsApi,
         publicFolder: options.publicFolder,
         disableScheduler: options.disableScheduler,
         isEnterprise: isEnterprise,
@@ -813,9 +823,3 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         unleashFrontendToken,
     };
 }
-
-module.exports = {
-    createConfig,
-    resolveIsOss,
-    authTypeFromString,
-};

@@ -2,8 +2,8 @@ import type {
     IClientInstance,
     IClientInstanceStore,
     INewClientInstance,
-} from '../../lib/types/stores/client-instance-store';
-import NotFoundError from '../../lib/error/notfound-error';
+} from '../../lib/types/stores/client-instance-store.js';
+import NotFoundError from '../../lib/error/notfound-error.js';
 import groupBy from 'lodash.groupby';
 
 export default class FakeClientInstanceStore implements IClientInstanceStore {
@@ -26,10 +26,6 @@ export default class FakeClientInstanceStore implements IClientInstanceStore {
             ),
             1,
         );
-    }
-
-    setLastSeen(): Promise<void> {
-        return Promise.resolve();
     }
 
     async getBySdkName(sdkName: string): Promise<IClientInstance[]> {
@@ -117,7 +113,7 @@ export default class FakeClientInstanceStore implements IClientInstanceStore {
         this.instances.push({ createdAt: new Date(), ...details });
     }
 
-    removeInstancesOlderThanTwoDays(): Promise<void> {
+    removeOldInstances(): Promise<void> {
         return Promise.resolve(undefined);
     }
 }

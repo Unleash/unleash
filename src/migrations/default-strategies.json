@@ -5,18 +5,6 @@
     "parameters": []
   },
   {
-    "name": "userWithId",
-    "description": "Active for users with a userId defined in the userIds-list",
-    "parameters": [
-      {
-        "name": "userIds",
-        "type": "list",
-        "description": "",
-        "required": false
-      }
-    ]
-  },
-  {
     "name": "applicationHostname",
     "description": "Active for client instances with a hostName in the hostNames-list.",
     "parameters": [

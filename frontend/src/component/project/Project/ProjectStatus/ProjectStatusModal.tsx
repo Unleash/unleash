@@ -1,11 +1,11 @@
 import { Button, styled } from '@mui/material';
 import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { ReactComponent as ProjectStatusSvg } from 'assets/icons/projectStatus.svg';
-import { ProjectActivity } from './ProjectActivity';
-import { ProjectLifecycleSummary } from './ProjectLifecycleSummary';
+import { ProjectActivity } from './ProjectActivity.tsx';
+import { ProjectLifecycleSummary } from './ProjectLifecycleSummary.tsx';
 import type { FC } from 'react';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { ProjectHealthGrid } from './ProjectHealthGrid';
+import { ProjectHealthGrid } from './ProjectHealthGrid.tsx';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import FeedbackIcon from '@mui/icons-material/ChatOutlined';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -17,7 +17,7 @@ const ModalContentContainer = styled('section')(({ theme }) => ({
     backgroundColor: theme.palette.background.default,
     display: 'flex',
     flexFlow: 'column',
-    gap: theme.spacing(2),
+    gap: theme.spacing(2.5),
     paddingInline: theme.spacing(4),
     paddingBlock: theme.spacing(3.75),
 }));
@@ -159,7 +159,6 @@ export const ProjectStatusModal = ({ open, onClose, onFollowLink }: Props) => {
                 </HeaderRow>
                 <WidgetContainer>
                     <Row>
-                        <RowHeader>Health</RowHeader>
                         <ProjectHealthGrid />
                     </Row>
                     {!isOss() && (

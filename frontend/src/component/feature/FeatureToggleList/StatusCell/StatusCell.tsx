@@ -1,7 +1,7 @@
 import { type FC, useMemo } from 'react';
 import type { FeatureSearchResponseSchema } from 'openapi';
 import { styled } from '@mui/material';
-import { getStatus } from './getStatus';
+import { getStatus } from './getStatus.ts';
 import DifferenceIcon from '@mui/icons-material/Difference';
 import { Link } from 'react-router-dom';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';

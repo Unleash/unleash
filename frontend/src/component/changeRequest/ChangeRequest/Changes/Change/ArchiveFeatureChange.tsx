@@ -1,22 +1,38 @@
 import type { FC, ReactNode } from 'react';
-import { Box, styled } from '@mui/material';
-import { ChangeItemWrapper } from './StrategyChange';
+import { Action, ChangeItemInfo, ChangeItemWrapper } from './Change.styles.tsx';
+import { styled } from '@mui/material';
+import { ChangeItemWrapper as LegacyChangeItemWrapper } from './LegacyStrategyChange.tsx';
 
-const ArchiveBox = styled(Box)(({ theme }) => ({
+type ArchiveFeatureChange = {
+    actions?: ReactNode;
+};
+
+const ArchiveBox = styled('span')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     color: theme.palette.error.main,
 }));
 
-interface IArchiveFeatureChange {
-    actions?: ReactNode;
-}
-
-export const ArchiveFeatureChange: FC<IArchiveFeatureChange> = ({
+/**
+ * Deprecated: use ArchiveFeatureChange instead; remove with flag crDiffView
+ * @deprecated
+ */
+export const LegacyArchiveFeatureChange: FC<ArchiveFeatureChange> = ({
     actions,
 }) => (
+    <LegacyChangeItemWrapper>
+        <ChangeItemInfo>
+            <ArchiveBox>Archiving flag</ArchiveBox>
+            {actions}
+        </ChangeItemInfo>
+    </LegacyChangeItemWrapper>
+);
+
+export const ArchiveFeatureChange: FC<ArchiveFeatureChange> = ({ actions }) => (
     <ChangeItemWrapper>
-        <ArchiveBox>Archiving feature</ArchiveBox>
-        {actions}
+        <ChangeItemInfo>
+            <Action color='error.main'>Archiving flag</Action>
+            {actions}
+        </ChangeItemInfo>
     </ChangeItemWrapper>
 );

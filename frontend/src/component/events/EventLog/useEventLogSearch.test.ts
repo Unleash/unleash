@@ -1,4 +1,4 @@
-import { calculatePaginationInfo } from './useEventLogSearch';
+import { calculatePaginationInfo } from './useEventLogSearch.js';
 
 test.each([
     [{ offset: 5, pageSize: 2 }, { currentPage: 2 }],

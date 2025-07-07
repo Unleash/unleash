@@ -1,9 +1,12 @@
-import { type IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
-import { type IUnleashStores, RoleName } from '../../../../lib/types';
-import type { AccessService } from '../../../../lib/services';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import type { IRole } from '../../../../lib/types/stores/access-store';
+import {
+    type IUnleashTest,
+    setupAppWithAuth,
+} from '../../helpers/test-helper.js';
+import { type IUnleashStores, RoleName } from '../../../../lib/types/index.js';
+import type { AccessService } from '../../../../lib/services/index.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import type { IRole } from '../../../../lib/types/stores/access-store.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -68,7 +71,7 @@ const unfavoriteProject = async (projectName = 'default') => {
 
 const getProject = async (projectName = 'default') => {
     return app.request
-        .get(`/api/admin/projects/${projectName}`)
+        .get(`/api/admin/projects/${projectName}/overview`)
         .set('Content-Type', 'application/json')
         .expect(200);
 };
@@ -117,28 +120,6 @@ afterEach(async () => {
 
 beforeEach(async () => {
     await loginRegularUser();
-});
-
-test('should be favorited in project endpoint', async () => {
-    const featureName = 'test-feature';
-    await createFeature(featureName);
-    await favoriteFeature(featureName);
-    await favoriteProject();
-
-    const { body } = await app.request
-        .get('/api/admin/projects/default')
-        .set('Content-Type', 'application/json')
-        .expect(200);
-
-    expect(body).toMatchObject({
-        favorite: true,
-        features: [
-            {
-                name: featureName,
-                favorite: true,
-            },
-        ],
-    });
 });
 
 test('feature should not be favorited by default', async () => {

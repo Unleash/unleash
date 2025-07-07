@@ -6,7 +6,7 @@ import {
     styled,
     Typography,
 } from '@mui/material';
-import { UserProfileContent } from './UserProfileContent/UserProfileContent';
+import { UserProfileContent } from './UserProfileContent/UserProfileContent.tsx';
 import type { IUser } from 'interfaces/user';
 import { useId } from 'hooks/useId';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';

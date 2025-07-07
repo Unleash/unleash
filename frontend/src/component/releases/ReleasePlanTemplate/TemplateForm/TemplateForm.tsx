@@ -2,8 +2,8 @@ import Input from 'component/common/Input/Input';
 import { Alert, styled, useTheme } from '@mui/material';
 import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { TemplateFormDescription } from './TemplateFormDescription';
-import { MilestoneList } from './MilestoneList/MilestoneList';
+import { TemplateFormDescription } from './TemplateFormDescription.tsx';
+import { MilestoneList } from './MilestoneList/MilestoneList.tsx';
 import type { IExtendedMilestonePayload } from 'component/releases/hooks/useTemplateForm';
 
 const StyledInput = styled(Input)(({ theme }) => ({

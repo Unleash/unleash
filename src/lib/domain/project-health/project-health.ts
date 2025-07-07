@@ -3,11 +3,11 @@ import type {
     IFeatureToggleStore,
     IProject,
     IProjectHealthReport,
-} from '../../types';
+} from '../../types/index.js';
 import type {
     IFeatureType,
     IFeatureTypeStore,
-} from '../../types/stores/feature-type-store';
+} from '../../types/stores/feature-type-store.js';
 
 type IPartialFeatures = Array<{
     stale?: boolean;

@@ -1,23 +1,19 @@
 import type { FC } from 'react';
-import type {
-    FeatureSearchResponseSchema,
-    TagSchema,
-} from '../../../../../openapi';
+import type { FeatureSearchResponseSchema, TagSchema } from 'openapi';
 import { Box, IconButton, styled, Chip } from '@mui/material';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
-import { useSearchHighlightContext } from '../../SearchHighlightContext/SearchHighlightContext';
-import { Highlighter } from '../../../Highlighter/Highlighter';
+import { useSearchHighlightContext } from '../../SearchHighlightContext/SearchHighlightContext.tsx';
+import { Highlighter } from '../../../Highlighter/Highlighter.tsx';
 import { StyledDescription, StyledTitle } from '../LinkCell/LinkCell.styles';
 import { Link } from 'react-router-dom';
-import { Badge } from '../../../Badge/Badge';
-import { HtmlTooltip } from '../../../HtmlTooltip/HtmlTooltip';
+import { Badge } from '../../../Badge/Badge.tsx';
+import { HtmlTooltip } from '../../../HtmlTooltip/HtmlTooltip.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { getLocalizedDateString } from '../../../util';
+import { getLocalizedDateString } from '../../../util.ts';
 import { Tag } from 'component/common/Tag/Tag';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { formatTag } from 'utils/format-tag';
 
 interface IFeatureNameCellProps {
@@ -175,38 +171,18 @@ interface ITagItemProps {
 }
 
 const TagItem: FC<ITagItemProps> = ({ tag, onClick }) => {
-    const isTagTypeColorEnabled = useUiFlag('tagTypeColor');
     const tagFullText = formatTag(tag);
 
-    if (isTagTypeColorEnabled) {
-        const tagComponent = (
-            <Box onClick={() => onClick(tag)} sx={{ cursor: 'pointer' }}>
-                <Tag tag={tag} maxLength={30} />
-            </Box>
-        );
-
-        return (
-            <HtmlTooltip key={tagFullText} title={tagFullText} arrow>
-                <span>{tagComponent}</span>
-            </HtmlTooltip>
-        );
-    }
-
-    // For non-color tags, use the StyledTag approach
-    const isOverflowing = tagFullText.length > 30;
-    const displayText = isOverflowing
-        ? `${tagFullText.substring(0, 30)}...`
-        : tagFullText;
+    const tagComponent = (
+        <Box onClick={() => onClick(tag)} sx={{ cursor: 'pointer' }}>
+            <Tag tag={tag} maxLength={30} />
+        </Box>
+    );
 
     return (
-        <StyledTag
-            key={tagFullText}
-            label={displayText}
-            size='small'
-            onClick={() => onClick(tag)}
-            sx={{ cursor: 'pointer' }}
-            title={isOverflowing ? tagFullText : undefined}
-        />
+        <HtmlTooltip key={tagFullText} title={tagFullText} arrow>
+            <span>{tagComponent}</span>
+        </HtmlTooltip>
     );
 };
 
@@ -214,8 +190,6 @@ const RestTags: FC<{
     tags: TagSchema[];
     onClick: (tag: string) => void;
 }> = ({ tags, onClick }) => {
-    const isTagTypeColorEnabled = useUiFlag('tagTypeColor');
-
     return (
         <HtmlTooltip
             title={tags.map((tag) => {
@@ -226,11 +200,7 @@ const RestTags: FC<{
                         onClick={() => onClick(formattedTag)}
                         key={formattedTag}
                     >
-                        {isTagTypeColorEnabled ? (
-                            <Tag tag={tag} maxLength={30} />
-                        ) : (
-                            formattedTag
-                        )}
+                        <Tag tag={tag} maxLength={30} />
                     </Box>
                 );
             })}
@@ -238,9 +208,7 @@ const RestTags: FC<{
             <CustomTagButton
                 sx={{
                     cursor: 'initial',
-                    ...(isTagTypeColorEnabled && {
-                        borderRadius: (theme) => theme.spacing(2),
-                    }),
+                    borderRadius: (theme) => theme.spacing(2),
                 }}
             >
                 {tags.length} more...

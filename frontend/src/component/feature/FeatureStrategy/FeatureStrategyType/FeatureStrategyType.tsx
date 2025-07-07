@@ -1,7 +1,6 @@
 import type { IFeatureStrategy, IStrategy } from 'interfaces/strategy';
 import DefaultStrategy from 'component/feature/StrategyTypes/DefaultStrategy/DefaultStrategy';
 import FlexibleStrategy from 'component/feature/StrategyTypes/FlexibleStrategy/FlexibleStrategy';
-import UserWithIdStrategy from 'component/feature/StrategyTypes/UserWithIdStrategy/UserWithId';
 import GeneralStrategy from 'component/feature/StrategyTypes/GeneralStrategy/GeneralStrategy';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import produce from 'immer';
@@ -46,15 +45,6 @@ export const FeatureStrategyType = ({
             return (
                 <FlexibleStrategy
                     context={context}
-                    parameters={strategy.parameters ?? {}}
-                    updateParameter={updateParameter}
-                    editable={hasAccess}
-                    errors={errors}
-                />
-            );
-        case 'userWithId':
-            return (
-                <UserWithIdStrategy
                     parameters={strategy.parameters ?? {}}
                     updateParameter={updateParameter}
                     editable={hasAccess}

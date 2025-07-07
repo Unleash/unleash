@@ -1,5 +1,5 @@
-import { PrivateProjectChecker } from './privateProjectChecker';
-import type { IPrivateProjectStore } from './privateProjectStoreType';
+import { PrivateProjectChecker } from './privateProjectChecker.js';
+import type { IPrivateProjectStore } from './privateProjectStoreType.js';
 
 test('filter user accessible projects', async () => {
     const checker = new PrivateProjectChecker(

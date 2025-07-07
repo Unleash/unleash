@@ -1,7 +1,7 @@
 import { styled } from '@mui/material';
 import { DELETE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { DeleteProjectDialogue } from '../../DeleteProject/DeleteProjectDialogue';
+import { DeleteProjectDialogue } from '../../DeleteProject/DeleteProjectDialogue.tsx';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useUiFlag } from 'hooks/useUiFlag';

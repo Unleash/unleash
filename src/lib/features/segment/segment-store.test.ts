@@ -1,8 +1,15 @@
-import type { ISegmentStore } from './segment-store-type';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
-import NotFoundError from '../../error/notfound-error';
-import { type IUnleashStores, type IUser, TEST_AUDIT_USER } from '../../types';
+import type { ISegmentStore } from './segment-store-type.js';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import NotFoundError from '../../error/notfound-error.js';
+import {
+    type IUnleashStores,
+    type IUser,
+    TEST_AUDIT_USER,
+} from '../../types/index.js';
+import { DEFAULT_ENV } from '../../server-impl.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -72,7 +79,7 @@ describe('usage counting', () => {
 
         await db.rawDatabase.table('change_requests').insert({
             id: CR_ID,
-            environment: 'default',
+            environment: DEFAULT_ENV,
             state: 'In Review',
             project: 'default',
             created_by: user.id,
@@ -168,7 +175,7 @@ describe('usage counting', () => {
             await stores.featureStrategiesStore.createStrategyFeatureEnv({
                 featureName: flag.name,
                 projectId: 'default',
-                environment: 'default',
+                environment: DEFAULT_ENV,
                 strategyName: 'flexibleRollout',
                 segments: [segment1.id],
                 parameters: {
@@ -181,7 +188,7 @@ describe('usage counting', () => {
 
         await db.rawDatabase.table('change_requests').insert({
             id: CR_ID,
-            environment: 'default',
+            environment: DEFAULT_ENV,
             state: 'In Review',
             project: 'default',
             created_by: user.id,

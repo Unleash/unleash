@@ -1,14 +1,15 @@
-import createStores from '../../../../../test/fixtures/store';
+import createStores from '../../../../../test/fixtures/store.js';
 import EventEmitter from 'events';
-import getLogger from '../../../../../test/fixtures/no-logger';
-import type { IUnleashConfig } from '../../../../types';
-import { LastSeenService } from '../last-seen-service';
+import getLogger from '../../../../../test/fixtures/no-logger.js';
+import type { IUnleashConfig } from '../../../../types/index.js';
+import { type LastSeenInput, LastSeenService } from '../last-seen-service.js';
+import { vi } from 'vitest';
 
 function initLastSeenService(flagEnabled = true) {
     const stores = createStores();
 
     const eventBus = new EventEmitter();
-    eventBus.emit = jest.fn();
+    eventBus.emit = vi.fn() as () => boolean;
 
     const config = {
         eventBus,
@@ -37,7 +38,7 @@ function initLastSeenService(flagEnabled = true) {
 test('should not add duplicates per feature/environment', async () => {
     const { lastSeenService, featureToggleStore, lastSeenStore } =
         initLastSeenService(false);
-    const lastSeenSpy = jest.spyOn(lastSeenStore, 'setLastSeen');
+    const lastSeenSpy = vi.spyOn(lastSeenStore, 'setLastSeen');
 
     lastSeenService.updateLastSeen([
         {
@@ -94,7 +95,9 @@ test('should call last seen at store with correct data', async () => {
             timestamp: new Date(),
         },
     ]);
-    lastSeenStore.setLastSeen = jest.fn();
+    lastSeenStore.setLastSeen = vi.fn() as (
+        data: LastSeenInput[],
+    ) => Promise<void>;
     await lastSeenService.store();
 
     expect(lastSeenStore.setLastSeen).toHaveBeenCalledWith([

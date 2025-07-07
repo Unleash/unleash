@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
-import useUiConfig from '../useUiConfig/useUiConfig';
+import useUiConfig from '../useUiConfig/useUiConfig.js';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
-import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
 import { useUiFlag } from 'hooks/useUiFlag';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 

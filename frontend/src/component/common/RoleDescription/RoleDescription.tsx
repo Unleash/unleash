@@ -1,6 +1,6 @@
 import { type SxProps, type Theme, styled } from '@mui/material';
 import SupervisedUserCircle from '@mui/icons-material/SupervisedUserCircle';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
 import { useRole } from 'hooks/api/getters/useRole/useRole';
 import {
     PREDEFINED_ROLE_TYPES,

@@ -1,4 +1,4 @@
-import { tagTypeSchema } from './tag-type-schema';
+import { tagTypeSchema } from './tag-type-schema.js';
 import type { FromSchema } from 'json-schema-to-ts';
 
 export const tagTypesSchema = {

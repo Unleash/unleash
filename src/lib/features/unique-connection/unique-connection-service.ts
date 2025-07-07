@@ -1,14 +1,14 @@
-import type { IUnleashConfig } from '../../types/option';
-import type { IFlagResolver, IUnleashStores } from '../../types';
-import type { Logger } from '../../logger';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IFlagResolver, IUnleashStores } from '../../types/index.js';
+import type { Logger } from '../../logger.js';
 import type {
     BucketId,
     IUniqueConnectionStore,
-} from './unique-connection-store-type';
+} from './unique-connection-store-type.js';
 import HyperLogLog from 'hyperloglog-lite';
 import type EventEmitter from 'events';
-import { SDK_CONNECTION_ID_RECEIVED } from '../../metric-events';
-import { REGISTERS_EXPONENT } from './hyperloglog-config';
+import { SDK_CONNECTION_ID_RECEIVED } from '../../metric-events.js';
+import { REGISTERS_EXPONENT } from './hyperloglog-config.js';
 
 export class UniqueConnectionService {
     private logger: Logger;

@@ -1,15 +1,21 @@
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import { FEATURE_CREATED, type IBaseEvent } from '../../../../lib/types/events';
-import { randomId } from '../../../../lib/util/random-id';
-import type { EventService } from '../../../../lib/services';
-import { type IUnleashConfig, SYSTEM_USER } from '../../../../lib/types';
-import { createEventsService } from '../../../../lib/features';
-import { createTestConfig } from '../../../config/test-config';
+} from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import {
+    FEATURE_CREATED,
+    type IBaseEvent,
+} from '../../../../lib/events/index.js';
+import { randomId } from '../../../../lib/util/random-id.js';
+import type { EventService } from '../../../../lib/services/index.js';
+import {
+    type IUnleashConfig,
+    SYSTEM_USER,
+} from '../../../../lib/types/index.js';
+import { createEventsService } from '../../../../lib/features/index.js';
+import { createTestConfig } from '../../../config/test-config.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -81,75 +87,6 @@ test('Can filter by project', async () => {
         .expect((res) => {
             expect(res.body.events).toHaveLength(1);
             expect(res.body.events[0].data.id).toEqual('feature');
-        });
-});
-
-test('can search for events', async () => {
-    const events: IBaseEvent[] = [
-        {
-            type: FEATURE_CREATED,
-            project: randomId(),
-            data: { id: randomId() },
-            tags: [],
-            createdBy: randomId(),
-            createdByUserId: TEST_USER_ID,
-            ip: '127.0.0.1',
-        },
-        {
-            type: FEATURE_CREATED,
-            project: randomId(),
-            data: { id: randomId() },
-            preData: { id: randomId() },
-            tags: [{ type: 'simple', value: randomId() }],
-            createdBy: randomId(),
-            createdByUserId: TEST_USER_ID,
-            ip: '127.0.0.1',
-        },
-    ];
-
-    await Promise.all(
-        events.map((event) => {
-            return eventService.storeEvent(event);
-        }),
-    );
-
-    await app.request
-        .post('/api/admin/events/search')
-        .send({})
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.events).toHaveLength(2);
-        });
-    await app.request
-        .post('/api/admin/events/search')
-        .send({ limit: 1, offset: 1 })
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.events).toHaveLength(1);
-        });
-    await app.request
-        .post('/api/admin/events/search')
-        .send({ query: events[1].data.id })
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.events).toHaveLength(1);
-            expect(res.body.events[0].data.id).toEqual(events[1].data.id);
-        });
-    await app.request
-        .post('/api/admin/events/search')
-        .send({ query: events[1].preData.id })
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.events).toHaveLength(1);
-            expect(res.body.events[0].preData.id).toEqual(events[1].preData.id);
-        });
-    await app.request
-        .post('/api/admin/events/search')
-        .send({ query: events[1].tags![0].value })
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.events).toHaveLength(1);
-            expect(res.body.events[0].data.id).toEqual(events[1].data.id);
         });
 });
 

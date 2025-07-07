@@ -13,7 +13,7 @@ import {
     isTrialInstance,
 } from 'utils/instanceTrial';
 import { formatDistanceToNowStrict, parseISO } from 'date-fns';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig.ts';
 
 const StyledWarningBar = styled('aside')(({ theme }) => ({
     position: 'relative',

@@ -1,12 +1,14 @@
-import { createTestConfig } from '../../../test/config/test-config';
-import { BadDataError } from '../../error';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import { BadDataError } from '../../error/index.js';
 import {
     type IFlagResolver,
     type ProjectCreated,
     RoleName,
     TEST_AUDIT_USER,
-} from '../../types';
-import { createFakeProjectService } from './createProjectService';
+} from '../../types/index.js';
+import { createFakeProjectService } from './createProjectService.js';
+
+import { vi } from 'vitest';
 
 describe('enterprise extension: enable change requests', () => {
     const createService = (mode: 'oss' | 'enterprise' = 'enterprise') => {
@@ -73,7 +75,9 @@ describe('enterprise extension: enable change requests', () => {
     test("it does not call the change request enablement function if we're not enterprise", async () => {
         const { service } = createService('oss');
 
-        const fn = jest.fn();
+        const fn = vi.fn() as () => Promise<
+            { name: string; requiredApprovals: number }[] | undefined
+        >;
 
         const projectId = 'fake-project-id';
         await service.createProject(
@@ -330,7 +334,7 @@ describe('enterprise extension: enable change requests', () => {
         const { service } = createService();
 
         const projectId = 'fake-project-id';
-        expect(
+        await expect(
             service.createProject(
                 {
                     id: projectId,
@@ -353,7 +357,7 @@ describe('enterprise extension: enable change requests', () => {
         const { service } = createService('oss');
 
         const projectId = 'fake-project-id';
-        expect(
+        await expect(
             service.createProject(
                 {
                     id: projectId,

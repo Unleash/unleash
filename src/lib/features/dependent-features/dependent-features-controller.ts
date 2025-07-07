@@ -1,14 +1,13 @@
 import type { Response } from 'express';
-import Controller from '../../routes/controller';
-import type { OpenApiService } from '../../services';
+import Controller from '../../routes/controller.js';
+import type { IUnleashServices, OpenApiService } from '../../services/index.js';
 import {
     type IFlagResolver,
     type IUnleashConfig,
-    type IUnleashServices,
     NONE,
     UPDATE_FEATURE_DEPENDENCY,
-} from '../../types';
-import type { Logger } from '../../logger';
+} from '../../types/index.js';
+import type { Logger } from '../../logger.js';
 import {
     type CreateDependentFeatureSchema,
     createRequestSchema,
@@ -19,10 +18,10 @@ import {
     type ParentFeatureOptionsSchema,
     type ParentVariantOptionsSchema,
     parentVariantOptionsSchema,
-} from '../../openapi';
-import type { IAuthRequest } from '../../routes/unleash-types';
-import type { DependentFeaturesService } from './dependent-features-service';
-import type { WithTransactional } from '../../db/transaction';
+} from '../../openapi/index.js';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
+import type { DependentFeaturesService } from './dependent-features-service.js';
+import type { WithTransactional } from '../../db/transaction.js';
 
 interface ProjectParams {
     projectId: string;

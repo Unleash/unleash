@@ -1,22 +1,22 @@
 import EventEmitter from 'events';
-import type { Segment } from 'unleash-client/lib/strategy/strategy';
-import type { FeatureInterface } from 'unleash-client/lib/feature';
-import type { IApiUser } from '../../types/api-user';
+import type { Segment } from 'unleash-client/lib/strategy/strategy.js';
+import type { FeatureInterface } from 'unleash-client/lib/feature.js';
+import type { IApiUser } from '../../types/api-user.js';
 import type {
     IFeatureToggleClient,
     ISegmentReadModel,
     IUnleashConfig,
-} from '../../types';
+} from '../../types/index.js';
 import {
     mapFeatureForClient,
     mapSegmentsForClient,
-} from '../playground/offline-unleash-client';
-import { ALL_ENVS } from '../../util/constants';
-import type { Logger } from '../../logger';
-import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service';
-import type { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type';
-import metricsHelper from '../../util/metrics-helper';
-import { FUNCTION_TIME } from '../../metric-events';
+} from '../playground/offline-unleash-client.js';
+import { ALL_ENVS, DEFAULT_ENV } from '../../util/constants.js';
+import type { Logger } from '../../logger.js';
+import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service.js';
+import type { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type.js';
+import metricsHelper from '../../util/metrics-helper.js';
+import { FUNCTION_TIME } from '../../metric-events.js';
 
 type Config = Pick<IUnleashConfig, 'getLogger' | 'flagResolver' | 'eventBus'>;
 
@@ -141,7 +141,7 @@ export class GlobalFrontendApiCache extends EventEmitter {
 
     private environmentNameForToken(token: IApiUser): string {
         if (token.environment === ALL_ENVS) {
-            return 'default';
+            return DEFAULT_ENV;
         }
         return token.environment;
     }

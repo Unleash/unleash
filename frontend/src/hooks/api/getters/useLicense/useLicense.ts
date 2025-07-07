@@ -1,6 +1,6 @@
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
-import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR.js';
 import type { BannerVariant } from 'interfaces/banner';
 
 export interface LicenseInfo {

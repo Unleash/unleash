@@ -3,7 +3,7 @@ import {
     getLocalStorageItem,
     setSessionStorageItem,
     getSessionStorageItem,
-} from './storage';
+} from './storage.js';
 import { vi } from 'vitest';
 
 // Mocking the global localStorage

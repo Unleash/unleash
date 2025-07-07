@@ -54,10 +54,6 @@ declare namespace Cypress {
         deleteSegment_UI(segmentName: string, id: string): Chainable;
 
         // STRATEGY
-        addUserIdStrategyToFeature_UI(
-            featureName: string,
-            projectName: string,
-        ): Chainable;
         addFlexibleRolloutStrategyToFeature_UI(
             options: AddFlexibleRolloutStrategyOptions,
         ): Chainable;

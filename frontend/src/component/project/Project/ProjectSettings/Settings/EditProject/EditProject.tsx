@@ -8,12 +8,12 @@ import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { Alert, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { UpdateEnterpriseSettings } from './UpdateEnterpriseSettings';
-import { UpdateProject } from './UpdateProject';
+import { UpdateEnterpriseSettings } from './UpdateEnterpriseSettings.tsx';
+import { UpdateProject } from './UpdateProject.tsx';
 import useProjectOverview, {
     featuresCount,
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { ArchiveProjectForm } from './ArchiveProjectForm';
+import { ArchiveProjectForm } from './ArchiveProjectForm.tsx';
 
 const StyledFormContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -49,7 +49,9 @@ const EditProject = () => {
                     condition={isEnterprise()}
                     show={<UpdateEnterpriseSettings project={project} />}
                 />
-                <ArchiveProjectForm featureCount={featuresCount(project)} />
+                <ArchiveProjectForm
+                    featureCount={featuresCount(project) ?? 0}
+                />
             </StyledFormContainer>
         </>
     );

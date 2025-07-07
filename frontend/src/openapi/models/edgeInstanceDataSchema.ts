@@ -3,12 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ConnectionConsumptionSchema } from './connectionConsumptionSchema';
-import type { EdgeUpstreamLatencySchema } from './edgeUpstreamLatencySchema';
-import type { EdgeProcessMetricsSchema } from './edgeProcessMetricsSchema';
-import type { RequestConsumptionSchema } from './requestConsumptionSchema';
-import type { EdgeRequestStatsSchema } from './edgeRequestStatsSchema';
-import type { EdgeInstanceTrafficSchema } from './edgeInstanceTrafficSchema';
+import type { ConnectionConsumptionSchema } from './connectionConsumptionSchema.js';
+import type { EdgeUpstreamLatencySchema } from './edgeUpstreamLatencySchema.js';
+import type { EdgeProcessMetricsSchema } from './edgeProcessMetricsSchema.js';
+import type { RequestConsumptionSchema } from './requestConsumptionSchema.js';
+import type { EdgeRequestStatsSchema } from './edgeRequestStatsSchema.js';
+import type { EdgeInstanceTrafficSchema } from './edgeInstanceTrafficSchema.js';
 
 /**
  * Represents Edge instance observability data.

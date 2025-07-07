@@ -1,8 +1,8 @@
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { IChangeRequestEnvironmentConfig } from 'component/changeRequest/changeRequest.types';
-import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
-import useUiConfig from '../useUiConfig/useUiConfig';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
+import useUiConfig from '../useUiConfig/useUiConfig.js';
 
 export const useChangeRequestConfig = (projectId: string) => {
     const { isEnterprise } = useUiConfig();

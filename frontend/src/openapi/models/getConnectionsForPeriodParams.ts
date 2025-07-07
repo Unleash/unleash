@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { GetConnectionsForPeriodGrouping } from './getConnectionsForPeriodGrouping';
+import type { GetConnectionsForPeriodGrouping } from './getConnectionsForPeriodGrouping.js';
 
 export type GetConnectionsForPeriodParams = {
     /**

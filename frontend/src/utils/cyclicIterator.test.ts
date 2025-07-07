@@ -1,4 +1,4 @@
-import { CyclicIterator } from './cyclicIterator';
+import { CyclicIterator } from './cyclicIterator.js';
 
 test('loops around the list', () => {
     const iterator = new CyclicIterator<number>([1, 3, 5, 7]);

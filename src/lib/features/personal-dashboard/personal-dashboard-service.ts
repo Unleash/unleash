@@ -1,27 +1,27 @@
 import type {
     IProjectOwnersReadModel,
     UserProjectOwner,
-} from '../project/project-owners-read-model.type';
+} from '../project/project-owners-read-model.type.js';
 import type {
     IPersonalDashboardReadModel,
     PersonalFeature,
     PersonalProject,
-} from './personal-dashboard-read-model-type';
-import type { IProjectReadModel } from '../project/project-read-model-type';
-import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
+} from './personal-dashboard-read-model-type.js';
+import type { IProjectReadModel } from '../project/project-read-model-type.js';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import type {
     IAccessStore,
     IAccountStore,
-    IEvent,
     IEventStore,
     IOnboardingReadModel,
     MinimalUser,
-} from '../../types';
-import type { FeatureEventFormatter } from '../../addons/feature-event-formatter-md';
-import { generateImageUrl } from '../../util';
-import type { PersonalDashboardProjectDetailsSchema } from '../../openapi';
-import type { IRoleWithProject } from '../../types/stores/access-store';
-import { NotFoundError } from '../../error';
+} from '../../types/index.js';
+import type { FeatureEventFormatter } from '../../addons/feature-event-formatter-md.js';
+import { generateImageUrl } from '../../util/index.js';
+import type { PersonalDashboardProjectDetailsSchema } from '../../openapi/index.js';
+import type { IRoleWithProject } from '../../types/stores/access-store.js';
+import { NotFoundError } from '../../error/index.js';
+import type { IEvent } from '../../events/index.js';
 
 type PersonalDashboardProjectDetailsUnserialized = Omit<
     PersonalDashboardProjectDetailsSchema,
@@ -96,6 +96,7 @@ export class PersonalDashboardService {
             id: project.id,
             name: project.name,
             health: project.health,
+            technicalDebt: 100 - (project.health || 0),
             memberCount: project.memberCount,
             featureCount: project.featureCount,
         }));
@@ -193,6 +194,7 @@ export class PersonalDashboardService {
             projectInsights?.potentiallyStaleFeatureCount || 0;
         const staleFlags = projectInsights?.staleFeatureCount || 0;
         const currentHealth = projectInsights?.health || 0;
+        const technicalDebt = projectInsights?.technicalDebt || 0;
 
         return {
             latestEvents,
@@ -206,6 +208,10 @@ export class PersonalDashboardService {
                 potentiallyStaleFlags,
                 staleFlags,
                 activeFlags: totalFlags - staleFlags - potentiallyStaleFlags,
+                technicalDebt,
+                /**
+                 * @deprecated
+                 */
                 health: currentHealth,
             },
         };

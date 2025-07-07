@@ -1,11 +1,25 @@
-import { NotFoundError } from '../../error';
+import { NotFoundError } from '../../error/index.js';
 import type {
     IFeatureLink,
     IFeatureLinkStore,
-} from './feature-link-store-type';
+} from './feature-link-store-type.js';
 
 export default class FakeFeatureLinkStore implements IFeatureLinkStore {
     private links: IFeatureLink[] = [];
+
+    async count(query?: Partial<Omit<IFeatureLink, 'id'>>): Promise<number> {
+        if (!query) {
+            return this.links.length;
+        }
+
+        const filteredLinks = this.links.filter((link) => {
+            return Object.entries(query).every(([key, value]) => {
+                return link[key] === value;
+            });
+        });
+
+        return filteredLinks.length;
+    }
 
     async insert(link: Omit<IFeatureLink, 'id'>): Promise<IFeatureLink> {
         const newLink: IFeatureLink = {

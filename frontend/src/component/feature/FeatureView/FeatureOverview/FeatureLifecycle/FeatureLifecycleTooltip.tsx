@@ -6,15 +6,15 @@ import CloudCircle from '@mui/icons-material/CloudCircle';
 import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';
 import { FeatureLifecycleStageIcon } from 'component/common/FeatureLifecycle/FeatureLifecycleStageIcon';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
-import { StyledIconWrapper } from '../../FeatureEnvironmentSeen/FeatureEnvironmentSeen';
-import { useLastSeenColors } from '../../FeatureEnvironmentSeen/useLastSeenColors';
-import type { LifecycleStage } from './LifecycleStage';
+import { StyledIconWrapper } from '../../FeatureEnvironmentSeen/FeatureEnvironmentSeen.tsx';
+import { useLastSeenColors } from '../../FeatureEnvironmentSeen/useLastSeenColors.ts';
+import type { LifecycleStage } from './LifecycleStage.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import {
     DELETE_FEATURE,
     UPDATE_FEATURE,
 } from 'component/providers/AccessProvider/permissions';
-import { isSafeToArchive } from './isSafeToArchive';
+import { isSafeToArchive } from './isSafeToArchive.ts';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { formatDistanceToNow, parseISO } from 'date-fns';

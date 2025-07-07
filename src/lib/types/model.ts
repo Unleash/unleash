@@ -1,20 +1,16 @@
-import type { ITagType } from '../features/tag-type/tag-type-store-type';
-import type { LogProvider } from '../logger';
-import type { IRole } from './stores/access-store';
-import type { IUser } from './user';
-import type { ALL_OPERATORS } from '../util';
-import type { IProjectStats } from '../features/project/project-service';
-import type {
-    CreateFeatureStrategySchema,
-    ProjectOverviewSchema,
-} from '../openapi';
-import type { ProjectEnvironment } from '../features/project/project-store-type';
-import type { FeatureSearchEnvironmentSchema } from '../openapi/spec/feature-search-environment-schema';
-import type { IntegrationEventsService } from '../features/integration-events/integration-events-service';
-import type { IFlagResolver } from './experimental';
-import type { Collaborator } from '../features/feature-toggle/types/feature-collaborators-read-model-type';
+import type { ITagType } from '../features/tag-type/tag-type-store-type.js';
+import type { LogProvider } from '../logger.js';
+import type { IRole } from './stores/access-store.js';
+import type { IUser } from './user.js';
+import type { ALL_OPERATORS } from '../util/index.js';
+import type { IProjectStats } from '../features/project/project-service.js';
+import type { ProjectEnvironment } from '../features/project/project-store-type.js';
+import type { IntegrationEventsService } from '../features/integration-events/integration-events-service.js';
+import type { IFlagResolver } from './experimental.js';
+import type { Collaborator } from '../features/feature-toggle/types/feature-collaborators-read-model-type.js';
 import type { EventEmitter } from 'events';
-import type { IFeatureLink } from '../features/feature-links/feature-links-read-model-type';
+import type { ITag } from '../tags/index.js';
+import type { IFeatureLink } from '../features/feature-links/feature-links-read-model-type.js';
 
 export type Operator = (typeof ALL_OPERATORS)[number];
 
@@ -107,12 +103,21 @@ export interface IFeatureToggleClient {
     favorite?: boolean;
 }
 
+export interface FeatureStrategy {
+    name: string;
+    title?: string | null;
+    disabled?: boolean | null;
+    sortOrder?: number;
+    constraints?: IConstraint[];
+    variants?: IStrategyVariant[];
+    parameters?: { [key: string]: string };
+}
 export interface IFeatureEnvironmentInfo {
     name: string;
     environment: string;
     enabled: boolean;
     strategies: IFeatureStrategy[];
-    defaultStrategy: CreateFeatureStrategySchema | null;
+    defaultStrategy: FeatureStrategy | undefined;
 }
 
 export interface FeatureToggleWithEnvironment extends FeatureToggle {
@@ -124,7 +129,7 @@ export interface FeatureToggleView extends FeatureToggleWithEnvironment {
     children: string[];
     lifecycle: IFeatureLifecycleStage | undefined;
     collaborators?: { users: Collaborator[] };
-    links: IFeatureLink[];
+    links: Omit<IFeatureLink, 'feature'>[];
 }
 
 export interface IEnvironmentDetail extends IEnvironmentBase {
@@ -191,6 +196,30 @@ export interface IFeatureDependency {
 
 export type IStrategyVariant = Omit<IVariant, 'overrides'>;
 
+export enum ApiTokenType {
+    CLIENT = 'client',
+    ADMIN = 'admin',
+    FRONTEND = 'frontend',
+}
+
+export interface IApiTokenCreate {
+    secret: string;
+    tokenName: string;
+    alias?: string;
+    type: ApiTokenType;
+    environment: string;
+    projects: string[];
+    expiresAt?: Date;
+}
+
+export interface IApiToken extends Omit<IApiTokenCreate, 'alias'> {
+    createdAt: Date;
+    seenAt?: Date;
+    environment: string;
+    project: string;
+    alias?: string | null;
+}
+
 export interface IEnvironment {
     name: string;
     type: string;
@@ -206,7 +235,7 @@ export interface IEnvironment {
 export interface IProjectEnvironment extends IEnvironment {
     projectApiTokenCount?: number;
     projectEnabledToggleCount?: number;
-    defaultStrategy?: CreateFeatureStrategySchema;
+    defaultStrategy?: FeatureStrategy;
 }
 
 export interface IProjectsAvailableOnEnvironment extends IProjectEnvironment {
@@ -258,13 +287,33 @@ export interface IFeatureOverview {
     environments: IEnvironmentOverview[];
     lifecycle?: IFeatureLifecycleStage;
 }
+export interface FeatureEnvironment {
+    name: string;
+    featureName?: string;
+    environment?: string;
+    type?: string;
+    enabled: boolean;
+    sortOrder?: number;
+    variantCount: number;
+    changeRequestIds?: number[];
+    milestoneName?: string;
+    milestoneOrder?: number;
+    totalMilestones?: number;
+    lastSeenAt?: Date;
+    hasStrategies?: boolean;
+    hasEnabledStrategies?: boolean;
+}
+export interface FeatureSearchEnvironment extends FeatureEnvironment {
+    yes: number;
+    no: number;
+}
 
 export type IFeatureSearchOverview = Exclude<
     IFeatureOverview,
     'environments'
 > & {
     dependencyType: 'parent' | 'child' | null;
-    environments: FeatureSearchEnvironmentSchema[];
+    environments: FeatureSearchEnvironment[];
     archivedAt: string;
     createdBy: {
         id: number;
@@ -293,7 +342,7 @@ export interface IProjectHealth {
     features: IFeatureOverview[];
     members: number;
     version: number;
-    health: number;
+    technicalDebt: number;
     favorite?: boolean;
     updatedAt?: Date;
     createdAt: Date | undefined;
@@ -302,7 +351,17 @@ export interface IProjectHealth {
     featureLimit?: number;
     featureNaming?: IFeatureNaming;
     defaultStickiness: string;
+    /**
+     * @deprecated
+     */
+    health: number;
 }
+
+export type ProjectOnboardingStatus =
+    | {
+          status: 'onboarding-started' | 'onboarded';
+      }
+    | { status: 'first-flag-created'; feature: string };
 
 export interface IProjectOverview {
     name: string;
@@ -311,7 +370,7 @@ export interface IProjectOverview {
     featureTypeCounts: IFeatureTypeCount[];
     members: number;
     version: number;
-    health: number;
+    technicalDebt: number;
     favorite?: boolean;
     updatedAt?: Date;
     archivedAt?: Date;
@@ -321,7 +380,12 @@ export interface IProjectOverview {
     featureLimit?: number;
     featureNaming?: IFeatureNaming;
     defaultStickiness: string;
-    onboardingStatus: ProjectOverviewSchema['onboardingStatus'];
+    onboardingStatus: ProjectOnboardingStatus;
+    linkTemplates?: IProjectLinkTemplate[];
+    /**
+     * @deprecated
+     */
+    health: number;
 }
 
 export interface IProjectHealthReport extends IProjectHealth {
@@ -332,6 +396,11 @@ export interface IProjectHealthReport extends IProjectHealth {
 
 export interface IProjectParam {
     projectId: string;
+}
+
+export interface IProjectLinkTemplate {
+    title?: string;
+    urlTemplate: string;
 }
 
 export interface IArchivedQuery {
@@ -352,12 +421,6 @@ export interface IFeatureToggleQuery {
 export interface IFeatureToggleDeltaQuery extends IFeatureToggleQuery {
     toggleNames?: string[];
     environment: string;
-}
-
-export interface ITag {
-    value: string;
-    type: string;
-    color?: string | null;
 }
 
 export interface IAddonParameterDefinition {
@@ -561,6 +624,7 @@ export interface IProject {
     defaultStickiness: string;
     featureLimit?: number;
     featureNaming?: IFeatureNaming;
+    linkTemplates?: IProjectLinkTemplate[];
 }
 
 export interface IProjectApplications {

@@ -1,17 +1,20 @@
-import { createTestConfig } from '../../../test/config/test-config';
-import { InstanceStatsService } from './instance-stats-service';
-import createStores from '../../../test/fixtures/store';
-import VersionService from '../../services/version-service';
-import { createFakeGetActiveUsers } from './getActiveUsers';
-import { createFakeGetProductionChanges } from './getProductionChanges';
-import { registerPrometheusMetrics } from '../../metrics';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import { InstanceStatsService } from './instance-stats-service.js';
+import createStores from '../../../test/fixtures/store.js';
+import VersionService from '../../services/version-service.js';
+import { createFakeGetActiveUsers } from './getActiveUsers.js';
+import { createFakeGetProductionChanges } from './getProductionChanges.js';
+import { registerPrometheusMetrics } from '../../metrics.js';
 import { register } from 'prom-client';
 import type {
     IClientInstanceStore,
     IFlagResolver,
     IUnleashStores,
-} from '../../types';
-import { createFakeGetLicensedUsers } from './getLicensedUsers';
+} from '../../types/index.js';
+import { createFakeGetLicensedUsers } from './getLicensedUsers.js';
+import { vi } from 'vitest';
+import { DEFAULT_ENV } from '../../server-impl.js';
+
 let instanceStatsService: InstanceStatsService;
 let versionService: VersionService;
 let clientInstanceStore: IClientInstanceStore;
@@ -20,7 +23,7 @@ let flagResolver: IFlagResolver;
 
 let updateMetrics: () => Promise<void>;
 beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     register.clear();
 
@@ -47,8 +50,8 @@ beforeEach(() => {
     );
     updateMetrics = collectAggDbMetrics;
 
-    jest.spyOn(clientInstanceStore, 'getDistinctApplicationsCount');
-    jest.spyOn(instanceStatsService, 'getStats');
+    vi.spyOn(clientInstanceStore, 'getDistinctApplicationsCount');
+    vi.spyOn(instanceStatsService, 'getStats');
 
     expect(instanceStatsService.getStats).toHaveBeenCalledTimes(0);
 });
@@ -82,7 +85,7 @@ describe.each([true, false])(
     'When feature enabled is %s',
     (featureEnabled: boolean) => {
         beforeEach(() => {
-            jest.spyOn(flagResolver, 'getVariant').mockReturnValue({
+            vi.spyOn(flagResolver, 'getVariant').mockReturnValue({
                 name: 'memorizeStats',
                 enabled: featureEnabled,
                 feature_enabled: featureEnabled,
@@ -91,9 +94,7 @@ describe.each([true, false])(
 
         test(`should${featureEnabled ? ' ' : ' not '}memoize query results`, async () => {
             const segmentStore = stores.segmentStore;
-            jest.spyOn(segmentStore, 'count').mockReturnValue(
-                Promise.resolve(5),
-            );
+            vi.spyOn(segmentStore, 'count').mockReturnValue(Promise.resolve(5));
             expect(segmentStore.count).toHaveBeenCalledTimes(0);
             expect(await instanceStatsService.segmentCount()).toBe(5);
             expect(segmentStore.count).toHaveBeenCalledTimes(1);
@@ -105,7 +106,7 @@ describe.each([true, false])(
 
         test(`should${featureEnabled ? ' ' : ' not '}memoize async query results`, async () => {
             const trafficDataUsageStore = stores.trafficDataUsageStore;
-            jest.spyOn(
+            vi.spyOn(
                 trafficDataUsageStore,
                 'getTrafficDataUsageForPeriod',
             ).mockReturnValue(
@@ -140,13 +141,13 @@ describe.each([true, false])(
         test(`getStats should${featureEnabled ? ' ' : ' not '}be memorized`, async () => {
             const featureStrategiesReadModel =
                 stores.featureStrategiesReadModel;
-            jest.spyOn(
+            vi.spyOn(
                 featureStrategiesReadModel,
                 'getMaxFeatureEnvironmentStrategies',
             ).mockReturnValue(
                 Promise.resolve({
                     feature: 'x',
-                    environment: 'default',
+                    environment: DEFAULT_ENV,
                     count: 3,
                 }),
             );

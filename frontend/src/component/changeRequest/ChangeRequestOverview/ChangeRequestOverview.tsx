@@ -1,57 +1,59 @@
 import { Alert, Box, Button, styled, Typography } from '@mui/material';
 import { type FC, useContext, useState } from 'react';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
-import { ChangeRequestHeader } from './ChangeRequestHeader/ChangeRequestHeader';
+import { ChangeRequestHeader } from './ChangeRequestHeader/ChangeRequestHeader.tsx';
 import {
     ChangeRequestTimeline,
     type ISuggestChangeTimelineProps,
-} from './ChangeRequestTimeline/ChangeRequestTimeline';
-import { ChangeRequest } from '../ChangeRequest/ChangeRequest';
+} from './ChangeRequestTimeline/ChangeRequestTimeline.tsx';
+import { ChangeRequest } from '../ChangeRequest/ChangeRequest.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { ChangeRequestReviewStatus } from './ChangeRequestReviewStatus/ChangeRequestReviewStatus';
+import { ChangeRequestReviewStatus } from './ChangeRequestReviewStatus/ChangeRequestReviewStatus.tsx';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Paper from '@mui/material/Paper';
-import { ReviewButton } from './ReviewButton/ReviewButton';
+import { ReviewButton } from './ReviewButton/ReviewButton.tsx';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';
-import { ChangeRequestComment } from './ChangeRequestComments/ChangeRequestComment';
-import { AddCommentField } from './ChangeRequestComments/AddCommentField';
+import { ChangeRequestComment } from './ChangeRequestComments/ChangeRequestComment.tsx';
+import { AddCommentField } from './ChangeRequestComments/AddCommentField.tsx';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { changesCount } from '../changesCount';
-import { ChangeRequestReviewers } from './ChangeRequestReviewers/ChangeRequestReviewers';
-import { ChangeRequestRejectDialogue } from './ChangeRequestRejectDialog/ChangeRequestRejectDialog';
-import { ApplyButton } from './ApplyButton/ApplyButton';
+import { changesCount } from '../changesCount.ts';
+import { ChangeRequestReviewers } from './ChangeRequestReviewers/ChangeRequestReviewers.tsx';
+import { ChangeRequestRejectDialogue } from './ChangeRequestRejectDialog/ChangeRequestRejectDialog.tsx';
+import { ApplyButton } from './ApplyButton/ApplyButton.tsx';
 import {
     ChangeRequestApplyScheduledDialogue,
     ChangeRequestRejectScheduledDialogue,
-} from './ChangeRequestScheduledDialogs/changeRequestScheduledDialogs';
-import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/ScheduleChangeRequestDialog';
+} from './ChangeRequestScheduledDialogs/changeRequestScheduledDialogs.tsx';
+import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/ScheduleChangeRequestDialog.tsx';
 import type { PlausibleChangeRequestState } from '../changeRequest.types';
 import { useNavigate } from 'react-router-dom';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { ChangeRequestRequestedApprovers } from './ChangeRequestRequestedApprovers/ChangeRequestRequestedApprovers.tsx';
+
+const breakpoint = 'md';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
     display: 'flex',
     flexDirection: 'column',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down(breakpoint)]: {
         width: '100%',
     },
 }));
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     marginTop: theme.spacing(2),
-    marginLeft: theme.spacing(2),
     width: '70%',
     padding: theme.spacing(1, 2),
     borderRadius: theme.shape.borderRadiusLarge,
-    [theme.breakpoints.down('sm')]: {
-        marginLeft: 0,
+    [theme.breakpoints.down(breakpoint)]: {
         width: '100%',
     },
 }));
@@ -72,7 +74,8 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 const ChangeRequestBody = styled(Box)(({ theme }) => ({
     display: 'flex',
-    [theme.breakpoints.down('sm')]: {
+    columnGap: theme.spacing(2),
+    [theme.breakpoints.down(breakpoint)]: {
         flexDirection: 'column',
     },
 }));
@@ -106,6 +109,7 @@ export const ChangeRequestOverview: FC = () => {
         useChangeRequestsEnabled(projectId);
     const [disabled, setDisabled] = useState(false);
     const navigate = useNavigate();
+    const approversEnabled = useUiFlag('changeRequestApproverEmails');
 
     if (!changeRequest) {
         return null;
@@ -288,7 +292,19 @@ export const ChangeRequestOverview: FC = () => {
             <ChangeRequestBody>
                 <StyledAsideBox>
                     <ChangeRequestTimeline {...timelineProps} />
-                    <ChangeRequestReviewers changeRequest={changeRequest} />
+                    <ConditionallyRender
+                        condition={approversEnabled}
+                        show={
+                            <ChangeRequestRequestedApprovers
+                                changeRequest={changeRequest}
+                            />
+                        }
+                        elseShow={
+                            <ChangeRequestReviewers
+                                changeRequest={changeRequest}
+                            />
+                        }
+                    />
                 </StyledAsideBox>
                 <StyledPaper elevation={0}>
                     <StyledInnerContainer>

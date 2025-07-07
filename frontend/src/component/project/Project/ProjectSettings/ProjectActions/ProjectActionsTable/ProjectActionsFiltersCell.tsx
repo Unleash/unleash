@@ -2,7 +2,7 @@ import { styled, Typography } from '@mui/material';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import type { IActionSet } from 'interfaces/action';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
-import { formatOperatorDescription } from 'component/common/NewConstraintAccordion/ConstraintOperator/formatOperatorDescription';
+import { formatOperatorDescription } from 'utils/formatOperatorDescription';
 
 const StyledItem = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,

@@ -1,16 +1,17 @@
+// deprecated: remove with flag crDiffView
 import type {
     IChangeRequestDeleteSegment,
     IChangeRequestUpdateSegment,
 } from 'component/changeRequest/changeRequest.types';
 import type React from 'react';
 import type { FC } from 'react';
-import EventDiff from 'component/events/EventDiff/EventDiff';
+import { EventDiff } from 'component/events/EventDiff/EventDiff';
 import omit from 'lodash.omit';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { styled } from '@mui/material';
 import { textTruncated } from 'themes/themeStyles';
 import type { ISegment } from 'interfaces/segment';
-import { NameWithChangeInfo } from './NameWithChangeInfo/NameWithChangeInfo';
+import { NameWithChangeInfo } from './Changes/Change/NameWithChangeInfo/NameWithChangeInfo.tsx';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',

@@ -6,8 +6,9 @@ import type {
     IFlags,
     IFlagResolver,
     IFlagKey,
-} from '../types/experimental';
-import { getDefaultVariant } from 'unleash-client/lib/variant';
+    IImpactMetricsResolver,
+} from '../types/experimental.js';
+import { getDefaultVariant } from 'unleash-client/lib/variant.js';
 
 export default class FlagResolver implements IFlagResolver {
     private experiments: IFlags;
@@ -64,6 +65,10 @@ export default class FlagResolver implements IFlagResolver {
 
     getStaticContext(): IFlagContext {
         return this.externalResolver.getStaticContext();
+    }
+
+    get impactMetrics(): IImpactMetricsResolver | undefined {
+        return this.externalResolver?.impactMetrics;
     }
 }
 

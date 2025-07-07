@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import useTagTypeForm from '../TagTypeForm/useTagTypeForm';
-import TagTypeForm from '../TagTypeForm/TagTypeForm';
+import useTagTypeForm from '../TagTypeForm/useTagTypeForm.ts';
+import TagTypeForm from '../TagTypeForm/TagTypeForm.tsx';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { CREATE_TAG_TYPE } from 'component/providers/AccessProvider/permissions';
@@ -25,7 +25,6 @@ const CreateTagType = () => {
         validateNameUniqueness,
         errors,
         clearErrors,
-        isTagTypeColorEnabled,
     } = useTagTypeForm();
     const { createTag, loading } = useTagTypesApi();
 
@@ -81,7 +80,6 @@ const CreateTagType = () => {
                 mode='Create'
                 clearErrors={clearErrors}
                 validateNameUniqueness={validateNameUniqueness}
-                isTagTypeColorEnabled={isTagTypeColorEnabled}
             >
                 <CreateButton name='type' permission={CREATE_TAG_TYPE} />
             </TagTypeForm>

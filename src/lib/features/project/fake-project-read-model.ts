@@ -1,8 +1,8 @@
-import type { IProjectReadModel } from '../../types';
+import type { IProjectReadModel } from '../../types/index.js';
 import type {
     ProjectForUi,
     ProjectForInsights,
-} from './project-read-model-type';
+} from './project-read-model-type.js';
 
 export class FakeProjectReadModel implements IProjectReadModel {
     getFeatureProject(): Promise<{ project: string; createdAt: Date } | null> {

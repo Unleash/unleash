@@ -1,4 +1,4 @@
-import type { ProjectOverviewSchema } from '../../openapi';
+import type { ProjectOverviewSchema } from '../../openapi/index.js';
 
 export type OnboardingStatus = ProjectOverviewSchema['onboardingStatus'];
 

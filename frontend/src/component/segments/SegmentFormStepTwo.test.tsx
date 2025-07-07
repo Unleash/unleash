@@ -2,13 +2,13 @@ import { render } from 'utils/testRenderer';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { SegmentFormStepTwo } from './SegmentFormStepTwo';
-import type { IConstraint } from 'interfaces/strategy';
+import { SegmentFormStepTwo } from './SegmentFormStepTwo.tsx';
 import { vi } from 'vitest';
 import {
     CREATE_SEGMENT,
     UPDATE_PROJECT_SEGMENT,
 } from 'component/providers/AccessProvider/permissions';
+import type { IConstraintWithId } from 'interfaces/strategy.ts';
 
 const server = testServerSetup();
 
@@ -20,15 +20,13 @@ const setupRoutes = () => {
     ]);
 
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            addEditStrategy: true,
-        },
+        flags: {},
     });
 };
 
 const defaultProps = {
     project: undefined,
-    constraints: [] as IConstraint[],
+    constraints: [] as IConstraintWithId[],
     setConstraints: vi.fn(),
     setCurrentStep: vi.fn(),
     mode: 'create' as const,

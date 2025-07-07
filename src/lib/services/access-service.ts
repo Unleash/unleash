@@ -1,7 +1,6 @@
-import * as permissions from '../types/permissions';
-import type { IAuditUser, IUser } from '../types/user';
+import * as permissions from '../types/permissions.js';
+import type { IAuditUser, IUser } from '../types/user.js';
 import type {
-    IAccessInfo,
     IAccessStore,
     IGroupWithProjectRoles,
     IProjectRoleUsage,
@@ -12,9 +11,9 @@ import type {
     IUserPermission,
     IUserRole,
     IUserWithProjectRoles,
-} from '../types/stores/access-store';
-import type { Logger } from '../logger';
-import type { IAccountStore, IUnleashStores } from '../types/stores';
+} from '../types/stores/access-store.js';
+import type { Logger } from '../logger.js';
+import type { IAccountStore, IUnleashStores } from '../types/stores.js';
 import {
     type IAvailablePermissions,
     type ICustomRole,
@@ -22,33 +21,33 @@ import {
     type IRoleData,
     type IUserWithRole,
     RoleName,
-} from '../types/model';
-import type { IRoleStore } from '../types/stores/role-store';
-import NameExistsError from '../error/name-exists-error';
-import type { IEnvironmentStore } from '../features/project-environments/environment-store-type';
-import RoleInUseError from '../error/role-in-use-error';
-import { roleSchema } from '../schema/role-schema';
+} from '../types/model.js';
+import type { IRoleStore } from '../types/stores/role-store.js';
+import NameExistsError from '../error/name-exists-error.js';
+import type { IEnvironmentStore } from '../features/project-environments/environment-store-type.js';
+import RoleInUseError from '../error/role-in-use-error.js';
+import { roleSchema } from '../schema/role-schema.js';
 import {
     ALL_ENVS,
     ALL_PROJECTS,
     CUSTOM_PROJECT_ROLE_TYPE,
     CUSTOM_ROOT_ROLE_TYPE,
     ROOT_ROLE_TYPES,
-} from '../util/constants';
-import { DEFAULT_PROJECT } from '../types/project';
-import InvalidOperationError from '../error/invalid-operation-error';
-import BadDataError from '../error/bad-data-error';
-import type { IGroup } from '../types/group';
-import type { GroupService } from './group-service';
+} from '../util/constants.js';
+import { DEFAULT_PROJECT } from '../types/project.js';
+import InvalidOperationError from '../error/invalid-operation-error.js';
+import BadDataError from '../error/bad-data-error.js';
+import type { IGroup } from '../types/group.js';
+import type { GroupService } from './group-service.js';
 import {
     type IUnleashConfig,
     type IUserAccessOverview,
     RoleCreatedEvent,
     RoleDeletedEvent,
     RoleUpdatedEvent,
-} from '../types';
-import type EventService from '../features/events/event-service';
-import { NotFoundError } from '../error';
+} from '../types/index.js';
+import type EventService from '../features/events/event-service.js';
+import { NotFoundError } from '../error/index.js';
 
 const { ADMIN } = permissions;
 
@@ -342,22 +341,6 @@ export class AccessService {
         return this.store.addGroupToRole(groupId, roleId, createdBy, projectId);
     }
 
-    async addRoleAccessToProject(
-        users: IAccessInfo[],
-        groups: IAccessInfo[],
-        projectId: string,
-        roleId: number,
-        auditUser: IAuditUser,
-    ): Promise<void> {
-        return this.store.addRoleAccessToProject(
-            users,
-            groups,
-            projectId,
-            roleId,
-            auditUser.username,
-        );
-    }
-
     async addAccessToProject(
         roles: number[],
         groups: number[],
@@ -472,28 +455,12 @@ export class AccessService {
         return this.store.removeUserFromRole(userId, roleId, projectId);
     }
 
-    async removeGroupFromRole(
-        groupId: number,
-        roleId: number,
-        projectId: string,
-    ): Promise<void> {
-        return this.store.removeGroupFromRole(groupId, roleId, projectId);
-    }
-
     async updateUserProjectRole(
         userId: number,
         roleId: number,
         projectId: string,
     ): Promise<void> {
         return this.store.updateUserProjectRole(userId, roleId, projectId);
-    }
-
-    async updateGroupProjectRole(
-        userId: number,
-        roleId: number,
-        projectId: string,
-    ): Promise<void> {
-        return this.store.updateGroupProjectRole(userId, roleId, projectId);
     }
 
     //This actually only exists for testing purposes

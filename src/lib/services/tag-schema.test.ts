@@ -1,4 +1,5 @@
-import { tagSchema } from './tag-schema';
+import { tagSchema } from './tag-schema.js';
+import { test, expect } from 'vitest';
 
 test('should require url friendly type if defined', () => {
     const tag = {
@@ -8,7 +9,7 @@ test('should require url friendly type if defined', () => {
 
     const { error } = tagSchema.validate(tag);
     if (error === undefined) {
-        fail('Did not receive an expected error');
+        expect.fail('Did not receive an expected error');
     }
     expect(error.details[0].message).toEqual('"type" must be URL friendly');
 });

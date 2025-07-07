@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { Box, styled } from '@mui/material';
 import type { IFeatureStrategyParameters } from 'interfaces/strategy';
-import RolloutSlider from '../RolloutSlider/RolloutSlider';
+import ConditionalRolloutSlider from '../RolloutSlider/ConditionalRolloutSlider.tsx';
 import Input from 'component/common/Input/Input';
 import {
     FLEXIBLE_STRATEGY_GROUP_ID,
@@ -11,9 +11,9 @@ import {
     parseParameterNumber,
     parseParameterString,
 } from 'utils/parseParameter';
-import { StickinessSelect } from './StickinessSelect/StickinessSelect';
+import { StickinessSelect } from './StickinessSelect/StickinessSelect.tsx';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
-import Loader from '../../../common/Loader/Loader';
+import Loader from '../../../common/Loader/Loader.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { useLocation } from 'react-router';
@@ -100,7 +100,7 @@ const FlexibleStrategy = ({
 
     return (
         <StyledBox>
-            <RolloutSlider
+            <ConditionalRolloutSlider
                 name='Rollout'
                 value={rollout}
                 disabled={!editable}

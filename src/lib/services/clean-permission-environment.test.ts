@@ -1,4 +1,4 @@
-import { cleanPermissionEnvironment } from './access-service';
+import { cleanPermissionEnvironment } from './access-service.js';
 
 test('should convert all empty strings to null', () => {
     const permissions = [

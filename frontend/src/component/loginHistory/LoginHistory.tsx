@@ -1,6 +1,6 @@
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
-import { LoginHistoryTable } from './LoginHistoryTable/LoginHistoryTable';
+import { LoginHistoryTable } from './LoginHistoryTable/LoginHistoryTable.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { READ_LOGS } from '@server/types/permissions';

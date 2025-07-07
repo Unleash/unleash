@@ -1,9 +1,8 @@
-import { validateSchema } from '../validate';
-import type { UserSchema } from './user-schema';
+import { validateSchema } from '../validate.js';
+import type { UserSchema } from './user-schema.js';
 
 test('userSchema', () => {
     const data: UserSchema = {
-        isAPI: false,
         id: 1,
         username: 'admin',
         imageUrl: 'avatar',

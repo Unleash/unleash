@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express';
 import { is } from 'type-is';
-import ContentTypeError from '../error/content-type-error';
+import ContentTypeError from '../error/content-type-error.js';
 
 const DEFAULT_ACCEPTED_CONTENT_TYPE = 'application/json';
 

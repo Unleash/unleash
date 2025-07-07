@@ -1,9 +1,9 @@
-import type { ClientFeaturesResponse, FeatureInterface } from '../feature';
-import type { BootstrapProvider } from './bootstrap-provider';
-import type { StorageProvider } from './storage-provider';
-import type { Segment } from '../strategy/strategy';
-import { EventEmitter } from 'stream';
+import type { ClientFeaturesResponse, FeatureInterface } from '../feature.js';
+import type { BootstrapProvider } from './bootstrap-provider.js';
+import type { StorageProvider } from './storage-provider.js';
+import type { Segment } from '../strategy/strategy.js';
 import { UnleashEvents } from 'unleash-client';
+import EventEmitter from 'events';
 
 export interface RepositoryInterface {
     getToggle(name: string): FeatureInterface;

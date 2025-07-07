@@ -1,6 +1,8 @@
 import { diff } from 'deep-diff';
-import { useTheme } from '@mui/system';
-import type { JSX, CSSProperties } from 'react';
+import { type JSX, type CSSProperties, useState, type FC, useId } from 'react';
+import { JsonDiffComponent, type JsonValue } from 'json-diff-react';
+import { Button, styled, useTheme } from '@mui/material';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const DIFF_PREFIXES: Record<string, string> = {
     A: ' ',
@@ -17,10 +19,101 @@ interface IEventDiffResult {
 
 interface IEventDiffProps {
     entry: { data?: unknown; preData?: unknown };
+    /**
+     * @deprecated remove with flag improvedJsonDiff
+     */
     sort?: (a: IEventDiffResult, b: IEventDiffResult) => number;
+    excludeKeys?: string[];
 }
 
-const EventDiff = ({
+const DiffStyles = styled('div')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontFamily: 'monospace',
+    whiteSpace: 'pre-wrap',
+    fontSize: theme.typography.body2.fontSize,
+
+    '.deletion, .addition': {
+        position: 'relative',
+        '::before': {
+            position: 'absolute',
+            left: 0,
+            top: 0,
+        },
+    },
+
+    '.addition': {
+        color: theme.palette.eventLog.diffAdd,
+        '::before': {
+            content: '"+"',
+        },
+    },
+
+    '.deletion': {
+        color: theme.palette.eventLog.diffSub,
+        '::before': {
+            content: '"-"',
+        },
+    },
+
+    '&[data-change-type="replacement"]': {
+        ':has(.addition)': {
+            color: theme.palette.eventLog.diffAdd,
+        },
+        ':has(.deletion)': {
+            color: theme.palette.eventLog.diffSub,
+        },
+        '.addition::before, .deletion::before': {
+            content: 'none',
+        },
+    },
+
+    '.diff:not(:has(*))': {
+        '::before': {
+            content: '"(no changes)"',
+        },
+    },
+}));
+
+const ButtonIcon = styled('span')(({ theme }) => ({
+    marginInlineEnd: theme.spacing(0.5),
+}));
+
+export const NewEventDiff: FC<IEventDiffProps> = ({ entry, excludeKeys }) => {
+    const changeType = entry.preData && entry.data ? 'edit' : 'replacement';
+    const showExpandButton = changeType === 'edit';
+    const [full, setFull] = useState(false);
+    const diffId = useId();
+
+    return (
+        <>
+            {showExpandButton ? (
+                <Button
+                    onClick={() => setFull(!full)}
+                    aria-controls={diffId}
+                    aria-expanded={full}
+                >
+                    <ButtonIcon aria-hidden>{full ? '-' : '+'}</ButtonIcon>
+                    {full
+                        ? 'Show only changed properties'
+                        : 'Show all properties'}
+                </Button>
+            ) : null}
+            <DiffStyles data-change-type={changeType} id={diffId}>
+                <JsonDiffComponent
+                    jsonA={(entry.preData ?? {}) as JsonValue}
+                    jsonB={(entry.data ?? {}) as JsonValue}
+                    jsonDiffOptions={{
+                        full: full,
+                        maxElisions: 2,
+                        excludeKeys: excludeKeys,
+                    }}
+                />
+            </DiffStyles>
+        </>
+    );
+};
+
+const OldEventDiff: FC<IEventDiffProps> = ({
     entry,
     sort = (a, b) => a.key.localeCompare(b.key),
 }: IEventDiffProps) => {
@@ -113,11 +206,21 @@ const EventDiff = ({
     }
 
     return (
-        // biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation>
-        <pre style={{ overflowX: 'auto', overflowY: 'hidden' }} tabIndex={0}>
+        <pre style={{ overflowX: 'auto', overflowY: 'hidden' }}>
             <code>{changes.length === 0 ? '(no changes)' : changes}</code>
         </pre>
     );
 };
 
+export const EventDiff: FC<IEventDiffProps> = (props) => {
+    const useNewJsonDiff = useUiFlag('improvedJsonDiff');
+    if (useNewJsonDiff) {
+        return <NewEventDiff {...props} />;
+    }
+    return <OldEventDiff {...props} />;
+};
+
+/**
+ * @deprecated remove the default export with flag improvedJsonDiff. Switch imports in files that use this to the named import instead.
+ */
 export default EventDiff;

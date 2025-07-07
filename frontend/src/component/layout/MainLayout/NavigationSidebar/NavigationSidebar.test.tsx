@@ -1,15 +1,9 @@
 import { render } from 'utils/testRenderer';
-import { NavigationSidebar } from './NavigationSidebar';
+import { NavigationSidebar } from './NavigationSidebar.tsx';
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { Route, Routes } from 'react-router-dom';
 import { listItemButtonClasses as classes } from '@mui/material/ListItemButton';
-import {
-    type LastViewedFlag,
-    useLastViewedFlags,
-} from 'hooks/useLastViewedFlags';
-import { type FC, useEffect } from 'react';
-import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const server = testServerSetup();
@@ -69,42 +63,9 @@ test('select active item', async () => {
         { route: '/search' },
     );
 
-    const searchLink = screen.getByRole('link', { name: 'Search' });
+    const searchLink = screen.getByRole('link', { name: 'Flags overview' });
 
     expect(searchLink).toHaveClass(classes.selected);
-});
-
-test('print recent projects and flags', async () => {
-    testServerRoute(server, `/api/admin/projects/projectA/overview`, {
-        name: 'projectNameA',
-    });
-
-    const TestNavigationSidebar: FC<{
-        project?: string;
-        flags?: LastViewedFlag[];
-    }> = ({ project, flags }) => {
-        const { setLastViewed: setProject } = useLastViewedProject();
-        const { setLastViewed: setFlag } = useLastViewedFlags();
-
-        useEffect(() => {
-            setProject(project);
-            flags?.forEach((flag) => {
-                setFlag(flag);
-            });
-        }, []);
-
-        return <NavigationSidebar />;
-    };
-
-    render(
-        <TestNavigationSidebar
-            project={'projectA'}
-            flags={[{ featureId: 'featureA', projectId: 'projectB' }]}
-        />,
-    );
-
-    await screen.findByText('projectNameA');
-    await screen.findByText('featureA');
 });
 
 describe('order of items in navigation', () => {

@@ -1,5 +1,5 @@
-import type { IFeatureEnvironment, IVariant } from '../model';
-import type { Store } from './store';
+import type { IFeatureEnvironment, IVariant } from '../model.js';
+import type { Store } from './store.js';
 
 export interface FeatureEnvironmentKey {
     featureName: string;
@@ -80,7 +80,6 @@ export interface IFeatureEnvironmentStore
         environments: string[],
         variants: IVariant[],
     ): Promise<void>;
-
     addFeatureEnvironment(
         featureEnvironment: IFeatureEnvironment,
     ): Promise<void>;

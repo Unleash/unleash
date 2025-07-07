@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { NetworkConnectedEdgeInstanceLatency } from './NetworkConnectedEdgeInstanceLatency';
+import { NetworkConnectedEdgeInstanceLatency } from './NetworkConnectedEdgeInstanceLatency.tsx';
 
 const StyledInstance = styled('div')(({ theme }) => ({
     width: '100%',

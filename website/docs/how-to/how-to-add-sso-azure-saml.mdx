@@ -33,7 +33,7 @@ To configure SSO for the new application, do the following:
 1. In the overview page of the application, go to **Manage > Single sign-on** and click **SAML**.
 2. In the **Basic SAML Configuration** section, click **Edit**.
 3. Click **Add identifier** and enter the Unleash identifier. For hosted instances, that is `https://<region>.app.unleash-hosted.com/<your_unleash_instance_name>`.
-4. Click **Add reply URL** and enter the URL shown in the Unleash Admin UI at **Admin > Single sign-on > SAML 2.0**. For example, `<your_unleash_url>/auth/saml/callback`.
+4. Click **Add reply URL** and enter the URL shown in the Unleash Admin UI at **Admin settings > Single sign-on > SAML 2.0**. For example, `<your_unleash_url>/auth/saml/callback`.
 5. Click **Save**.
 
 ### Manage attributes and claims
@@ -73,7 +73,7 @@ To find your Microsoft Entra identifier, go to the single sign-on settings of yo
 
 To finalize the configuration, do the following:
 
-1. In the Unleash Admin UI, go to **Admin > Single sign-on > SAML 2.0**.
+1. In the Unleash Admin UI, go to **Admin settings > Single sign-on > SAML 2.0**.
 2. In **Entity ID**, enter your [Microsoft Entra identifier](#microsoft-entra-identifier).
 3. In **Single sign-on URL**, enter your [Login URL](#login-url).
 4. In **X.509 Certificate**, [enter your SAML certificate](#saml-certificate).
@@ -101,6 +101,6 @@ Microsoft Entra limits the number of groups emitted in a SAML response to 150, i
 :::
 
 To enable group syncing in Unleash, do the following:
-1. In the Unleash Admin UI, go to **Admin > Single sign-on > SAML 2.0**.
+1. In the Unleash Admin UI, go to **Admin settings > Single sign-on > SAML 2.0**.
 2. Select **Enable Group Syncing** and add the name in your group in Group Field JSON Path.
 3. Click **Save**.

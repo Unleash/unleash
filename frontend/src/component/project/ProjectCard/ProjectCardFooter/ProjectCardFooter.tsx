@@ -4,7 +4,7 @@ import { Box, styled } from '@mui/material';
 import {
     ProjectOwners,
     type IProjectOwnersProps,
-} from './ProjectOwners/ProjectOwners';
+} from './ProjectOwners/ProjectOwners.tsx';
 import type { ProjectSchemaOwners } from 'openapi';
 
 interface IProjectCardFooterProps {

@@ -1,6 +1,7 @@
-import Joi, { ValidationError } from 'joi';
-import type { IUser } from './user';
-import { SYSTEM_USER_AUDIT } from './core';
+import Joi from 'joi';
+const { ValidationError } = Joi;
+import type { IUser } from './user.js';
+import { SYSTEM_USER_AUDIT } from './core.js';
 
 export interface IGroup {
     id: number;

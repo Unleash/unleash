@@ -1,7 +1,7 @@
-import type { IUnleashConfig } from '../types';
-import type { IAuthRequest } from '../routes/unleash-types';
-import NotFoundError from '../error/notfound-error';
-import type { AccountService } from '../services/account-service';
+import type { IUnleashConfig } from '../types/index.js';
+import type { IAuthRequest } from '../routes/unleash-types.js';
+import NotFoundError from '../error/notfound-error.js';
+import type { AccountService } from '../services/account-service.js';
 
 const patMiddleware = (
     { getLogger }: Pick<IUnleashConfig, 'getLogger'>,

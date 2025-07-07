@@ -1,7 +1,10 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import type { FilterItemParams } from 'component/filter/FilterItem/FilterItem';
-import { FilterDateItem, type IFilterDateItemProps } from './FilterDateItem';
+import {
+    FilterDateItem,
+    type IFilterDateItemProps,
+} from './FilterDateItem.tsx';
 
 const getDate = async (option: string) => screen.findByText(option);
 

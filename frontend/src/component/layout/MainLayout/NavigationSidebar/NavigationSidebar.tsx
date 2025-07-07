@@ -1,24 +1,15 @@
 import { Box, styled } from '@mui/material';
 import { type FC, useState, useEffect } from 'react';
-import { useNavigationMode } from './useNavigationMode';
-import { ShowHide } from './ShowHide';
-import { useRoutes } from './useRoutes';
-import { useExpanded } from './useExpanded';
+import { useNavigationMode } from './useNavigationMode.ts';
+import { ShowHide } from './ShowHide.tsx';
+import { useRoutes } from './useRoutes.ts';
+import { useExpanded } from './useExpanded.ts';
 import {
-    OtherLinksList,
     PrimaryNavigationList,
-    RecentFlagsNavigation,
-    RecentProjectsNavigation,
-    SecondaryNavigation,
-    SecondaryNavigationList,
     AdminSettingsNavigation,
-    AdminSettingsLink,
-} from './NavigationList';
-import { FullListItem, MiniListItem } from './ListItems';
-import { useInitialPathname } from './useInitialPathname';
-import { useLastViewedProject } from 'hooks/useLastViewedProject';
-import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
-import type { NewInUnleash } from './NewInUnleash/NewInUnleash';
+} from './NavigationList.tsx';
+import { useInitialPathname } from './useInitialPathname.ts';
+import type { NewInUnleash } from './NewInUnleash/NewInUnleash.tsx';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flexRow, focusable } from 'themes/themeStyles';
@@ -31,27 +22,6 @@ import { ReactComponent as LogoOnly } from 'assets/img/logoDark.svg';
 import { Link } from 'react-router-dom';
 import { useFlag } from '@unleash/proxy-client-react';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
-
-export const MobileNavigationSidebar: FC<{
-    onClick: () => void;
-    NewInUnleash?: typeof NewInUnleash;
-}> = ({ onClick, NewInUnleash }) => {
-    const { routes } = useRoutes();
-
-    return (
-        <>
-            {NewInUnleash ? <NewInUnleash /> : null}
-            <PrimaryNavigationList mode='full' onClick={onClick} />
-            <SecondaryNavigationList
-                routes={routes.mainNavRoutes}
-                mode='full'
-                onClick={onClick}
-            />
-            <AdminSettingsLink mode={'full'} onClick={onClick} />
-            <OtherLinksList />
-        </>
-    );
-};
 
 export const StretchContainer = styled(Box, {
     shouldForwardProp: (propName) =>
@@ -119,13 +89,6 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
 
     const [activeItem, setActiveItem] = useState(initialPathname);
 
-    const { lastViewed: lastViewedProject } = useLastViewedProject();
-    const showRecentProject = mode === 'full' && lastViewedProject;
-
-    const { lastViewed: lastViewedFlags } = useLastViewedFlags();
-    const showRecentFlags = mode === 'full' && lastViewedFlags.length > 0;
-    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
-
     useEffect(() => {
         setActiveItem(initialPathname);
     }, [initialPathname]);
@@ -174,24 +137,10 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
                     <>
                         <PrimaryNavigationList
                             mode={mode}
+                            setMode={setMode}
                             onClick={setActiveItem}
                             activeItem={activeItem}
                         />
-                        <SecondaryNavigation
-                            expanded={expanded.includes('configure')}
-                            onExpandChange={(expand) => {
-                                changeExpanded('configure', expand);
-                            }}
-                            mode={mode}
-                            title='Configure'
-                        >
-                            <SecondaryNavigationList
-                                routes={routes.mainNavRoutes}
-                                mode={mode}
-                                onClick={setActiveItem}
-                                activeItem={activeItem}
-                            />
-                        </SecondaryNavigation>
 
                         <AdminSettingsNavigation
                             onClick={setActiveItem}
@@ -204,22 +153,6 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
                             expanded={expanded.includes('admin')}
                             routes={routes.adminRoutes}
                         />
-
-                        {showRecentProject && (
-                            <RecentProjectsNavigation
-                                mode={mode}
-                                projectId={lastViewedProject}
-                                onClick={() => setActiveItem('/projects')}
-                            />
-                        )}
-
-                        {showRecentFlags && (
-                            <RecentFlagsNavigation
-                                mode={mode}
-                                flags={lastViewedFlags}
-                                onClick={() => setActiveItem('/projects')}
-                            />
-                        )}
 
                         {/* this will push the show/hide to the bottom on short nav list */}
                         <Box sx={{ flex: 1 }} />

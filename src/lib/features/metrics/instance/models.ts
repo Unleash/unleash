@@ -1,6 +1,6 @@
-import type { IClientInstance } from '../../../types/stores/client-instance-store';
-import type { ApplicationOverviewSchema } from '../../../openapi/spec/application-overview-schema';
-import type { ApplicationOverviewEnvironmentSchema } from '../../../openapi/spec/application-overview-environment-schema';
+import type { IClientInstance } from '../../../types/stores/client-instance-store.js';
+import type { ApplicationOverviewSchema } from '../../../openapi/spec/application-overview-schema.js';
+import type { ApplicationOverviewEnvironmentSchema } from '../../../openapi/spec/application-overview-environment-schema.js';
 
 export interface IYesNoCount {
     yes: number;

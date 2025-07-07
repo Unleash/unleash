@@ -1,4 +1,4 @@
-import { UnleashError } from './unleash-error';
+import { UnleashError } from './unleash-error.js';
 
 class InvalidTokenError extends UnleashError {
     statusCode = 401;
@@ -9,4 +9,3 @@ class InvalidTokenError extends UnleashError {
 }
 
 export default InvalidTokenError;
-module.exports = InvalidTokenError;

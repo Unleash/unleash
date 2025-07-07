@@ -1,10 +1,10 @@
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import { DEFAULT_PROJECT } from '../../../../lib/types';
+} from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { DEFAULT_PROJECT } from '../../../../lib/types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -68,7 +68,9 @@ afterAll(async () => {
 test('returns three archived flags', async () => {
     expect.assertions(1);
     return app.request
-        .get('/api/admin/archive/features')
+        .get(
+            `/api/admin/search/features?project=IS%3A${DEFAULT_PROJECT}&archived=IS%3Atrue`,
+        )
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
@@ -79,7 +81,9 @@ test('returns three archived flags', async () => {
 test('returns three archived flags with archivedAt', async () => {
     expect.assertions(2);
     return app.request
-        .get('/api/admin/archive/features')
+        .get(
+            `/api/admin/search/features?project=IS%3A${DEFAULT_PROJECT}&archived=IS%3Atrue`,
+        )
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
@@ -238,7 +242,9 @@ test('Should be able to bulk archive features', async () => {
         .expect(202);
 
     const { body } = await app.request
-        .get(`/api/admin/archive/features/${DEFAULT_PROJECT}`)
+        .get(
+            `/api/admin/search/features?project=IS%3A${DEFAULT_PROJECT}&archived=IS%3Atrue`,
+        )
         .expect(200);
 
     const archivedFeatures = body.features.filter(

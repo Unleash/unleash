@@ -1,5 +1,5 @@
-import { validateSchema } from '../validate';
-import type { ConstraintSchema } from './constraint-schema';
+import { validateSchema } from '../validate.js';
+import type { ConstraintSchema } from './constraint-schema.js';
 
 test('constraintSchema', () => {
     const data: ConstraintSchema = {

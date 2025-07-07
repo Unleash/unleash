@@ -107,3 +107,5 @@ website/.yarn/*
 !website/.yarn/sdks
 !website/.yarn/versions
 
+coverage/.tmp
+coverage/*

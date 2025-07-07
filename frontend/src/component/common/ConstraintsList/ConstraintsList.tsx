@@ -1,6 +1,6 @@
 import { Children, isValidElement, type FC, type ReactNode } from 'react';
 import { styled } from '@mui/material';
-import { ConstraintSeparator } from './ConstraintSeparator/ConstraintSeparator';
+import { ConstraintSeparator } from './ConstraintSeparator/ConstraintSeparator.tsx';
 
 const StyledList = styled('ul')(({ theme }) => ({
     display: 'flex',
@@ -33,7 +33,6 @@ export const ConstraintsList: FC<{ children: ReactNode }> = ({ children }) => {
             result.push(
                 <StyledListItem key={index}>
                     {index > 0 ? (
-                        // todo (addEditStrategy): change divider for edit screen (probably a new component or a prop)
                         <ConstraintSeparator key={`${index}-divider`} />
                     ) : null}
                     {child}

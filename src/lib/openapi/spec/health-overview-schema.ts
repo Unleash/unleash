@@ -1,19 +1,19 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { parametersSchema } from './parameters-schema';
-import { variantSchema } from './variant-schema';
-import { overrideSchema } from './override-schema';
-import { featureStrategySchema } from './feature-strategy-schema';
-import { featureSchema } from './feature-schema';
-import { constraintSchema } from './constraint-schema';
-import { environmentSchema } from './environment-schema';
-import { featureEnvironmentSchema } from './feature-environment-schema';
-import { projectStatsSchema } from './project-stats-schema';
-import { createFeatureStrategySchema } from './create-feature-strategy-schema';
-import { projectEnvironmentSchema } from './project-environment-schema';
-import { createStrategyVariantSchema } from './create-strategy-variant-schema';
-import { strategyVariantSchema } from './strategy-variant-schema';
-import { createFeatureNamingPatternSchema } from './create-feature-naming-pattern-schema';
-import { tagSchema } from './tag-schema';
+import { parametersSchema } from './parameters-schema.js';
+import { variantSchema } from './variant-schema.js';
+import { overrideSchema } from './override-schema.js';
+import { featureStrategySchema } from './feature-strategy-schema.js';
+import { featureSchema } from './feature-schema.js';
+import { constraintSchema } from './constraint-schema.js';
+import { environmentSchema } from './environment-schema.js';
+import { featureEnvironmentSchema } from './feature-environment-schema.js';
+import { projectStatsSchema } from './project-stats-schema.js';
+import { createFeatureStrategySchema } from './create-feature-strategy-schema.js';
+import { projectEnvironmentSchema } from './project-environment-schema.js';
+import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
+import { strategyVariantSchema } from './strategy-variant-schema.js';
+import { createFeatureNamingPatternSchema } from './create-feature-naming-pattern-schema.js';
+import { tagSchema } from './tag-schema.js';
 
 export const healthOverviewSchema = {
     $id: '#/components/schemas/healthOverviewSchema',
@@ -26,6 +26,7 @@ export const healthOverviewSchema = {
         'mode',
         'members',
         'health',
+        'technicalDebt',
         'environments',
         'features',
     ],
@@ -75,9 +76,17 @@ export const healthOverviewSchema = {
         },
         health: {
             type: 'integer',
-            description:
-                'The overall [health rating](https://docs.getunleash.io/reference/technical-debt#project-status) of the project.',
+            description: 'Use `technicalDebt` instead.',
             example: 95,
+            deprecated: true,
+        },
+        technicalDebt: {
+            type: 'number',
+            example: 25,
+            minimum: 0,
+            maximum: 100,
+            description:
+                "An indicator of the [project's technical debt](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100",
         },
         environments: {
             type: 'array',

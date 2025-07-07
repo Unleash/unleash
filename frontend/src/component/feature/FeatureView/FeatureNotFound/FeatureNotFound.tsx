@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import { getCreateTogglePath } from 'utils/routePathHelpers';
-import { useFeaturesArchive } from 'hooks/api/getters/useFeaturesArchive/useFeaturesArchive';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { styled } from '@mui/material';
+import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 
 const StyledFeatureId = styled('strong')({
     wordBreak: 'break-all',
@@ -11,7 +11,10 @@ const StyledFeatureId = styled('strong')({
 export const FeatureNotFound = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const { archivedFeatures } = useFeaturesArchive();
+    const { features: archivedFeatures } = useFeatureSearch({
+        project: `IS:${projectId}`,
+        archived: 'IS:true',
+    });
 
     const createFeatureTogglePath = getCreateTogglePath(projectId, {
         name: featureId,

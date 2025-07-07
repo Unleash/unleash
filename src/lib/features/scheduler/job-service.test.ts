@@ -1,7 +1,9 @@
-import { createTestConfig } from '../../../test/config/test-config';
-import { JobStore } from './job-store';
-import { JobService } from './job-service';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import { JobStore } from './job-store.js';
+import { JobService } from './job-service.js';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
 
 let db: ITestDb;
 let store: JobStore;

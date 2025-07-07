@@ -2,8 +2,8 @@ import { MenuItem, styled, TextField } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { useEffect, useMemo } from 'react';
-import { timeSpanOptions } from '../EventTimelineProvider';
-import { useEventTimelineContext } from '../EventTimelineContext';
+import { timeSpanOptions } from '../EventTimelineProvider.tsx';
+import { useEventTimelineContext } from '../EventTimelineContext.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 

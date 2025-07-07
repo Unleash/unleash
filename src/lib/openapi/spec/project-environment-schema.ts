@@ -1,6 +1,6 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { createFeatureStrategySchema } from './create-feature-strategy-schema';
-import { createStrategyVariantSchema } from './create-strategy-variant-schema';
+import { createFeatureStrategySchema } from './create-feature-strategy-schema.js';
+import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
 
 export const projectEnvironmentSchema = {
     $id: '#/components/schemas/projectEnvironmentSchema',

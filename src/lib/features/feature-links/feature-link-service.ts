@@ -1,18 +1,25 @@
-import type { Logger } from '../../logger';
+import type { Logger } from '../../logger.js';
 import {
     FeatureLinkAddedEvent,
     FeatureLinkRemovedEvent,
     FeatureLinkUpdatedEvent,
     type IAuditUser,
+    type IFlagResolver,
     type IUnleashConfig,
-} from '../../types';
+} from '../../types/index.js';
 import type {
     IFeatureLink,
     IFeatureLinkStore,
-} from './feature-link-store-type';
-import type EventService from '../events/event-service';
-import { BadDataError, NotFoundError } from '../../error';
+} from './feature-link-store-type.js';
+import type EventService from '../events/event-service.js';
+import {
+    BadDataError,
+    NotFoundError,
+    OperationDeniedError,
+} from '../../error/index.js';
 import normalizeUrl from 'normalize-url';
+import { parse } from 'tldts';
+import { FEAUTRE_LINK_COUNT } from '../metrics/impact/define-impact-metrics.js';
 
 interface IFeatureLinkStoreObj {
     featureLinkStore: IFeatureLinkStore;
@@ -22,15 +29,20 @@ export default class FeatureLinkService {
     private logger: Logger;
     private featureLinkStore: IFeatureLinkStore;
     private eventService: EventService;
+    private flagResolver: IFlagResolver;
 
     constructor(
         stores: IFeatureLinkStoreObj,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        {
+            getLogger,
+            flagResolver,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
         eventService: EventService,
     ) {
         this.logger = getLogger('feature-links/feature-link-service.ts');
         this.featureLinkStore = stores.featureLinkStore;
         this.eventService = eventService;
+        this.flagResolver = flagResolver;
     }
 
     async getAll(): Promise<IFeatureLink[]> {
@@ -47,15 +59,27 @@ export default class FeatureLinkService {
 
     async createLink(
         projectId: string,
-        newLink: Omit<IFeatureLink, 'id'>,
+        newLink: Omit<IFeatureLink, 'id' | 'domain'>,
         auditUser: IAuditUser,
     ): Promise<IFeatureLink> {
+        const countLinks = await this.featureLinkStore.count({
+            featureName: newLink.featureName,
+        });
+        if (countLinks >= 10) {
+            throw new OperationDeniedError(
+                'Too many links (10) exist for this feature',
+            );
+        }
         const normalizedUrl = this.normalize(newLink.url);
+        const { domainWithoutSuffix } = parse(normalizedUrl);
 
         const link = await this.featureLinkStore.insert({
             ...newLink,
             url: normalizedUrl,
+            domain: domainWithoutSuffix,
         });
+
+        this.flagResolver.impactMetrics?.incrementCounter(FEAUTRE_LINK_COUNT);
 
         await this.eventService.storeEvent(
             new FeatureLinkAddedEvent({
@@ -71,10 +95,11 @@ export default class FeatureLinkService {
 
     async updateLink(
         { projectId, linkId }: { projectId: string; linkId: string },
-        updatedLink: Omit<IFeatureLink, 'id'>,
+        updatedLink: Omit<IFeatureLink, 'id' | 'domain'>,
         auditUser: IAuditUser,
     ): Promise<IFeatureLink> {
         const normalizedUrl = this.normalize(updatedLink.url);
+        const { domainWithoutSuffix } = parse(normalizedUrl);
 
         const preData = await this.featureLinkStore.get(linkId);
 
@@ -85,6 +110,7 @@ export default class FeatureLinkService {
         const link = await this.featureLinkStore.update(linkId, {
             ...updatedLink,
             url: normalizedUrl,
+            domain: domainWithoutSuffix,
         });
 
         await this.eventService.storeEvent(

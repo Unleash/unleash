@@ -1,13 +1,12 @@
 import type { Request, Response } from 'express';
-import Controller from '../../routes/controller';
+import Controller from '../../routes/controller.js';
 import {
     type IFlagResolver,
     type IUnleashConfig,
-    type IUnleashServices,
     NONE,
-} from '../../types';
-import type { Logger } from '../../logger';
-import type { IApiUser } from '../../types/api-user';
+} from '../../types/index.js';
+import type { Logger } from '../../logger.js';
+import type { IApiUser } from '../../types/api-user.js';
 import {
     type ClientMetricsSchema,
     createRequestSchema,
@@ -17,16 +16,15 @@ import {
     frontendApiFeaturesSchema,
     type FrontendApiFeaturesSchema,
     getStandardResponses,
-} from '../../openapi';
+} from '../../openapi/index.js';
 import type { Context } from 'unleash-client';
-import { enrichContextWithIp } from './index';
-import { corsOriginMiddleware } from '../../middleware';
-import NotImplementedError from '../../error/not-implemented-error';
-import NotFoundError from '../../error/notfound-error';
+import { enrichContextWithIp } from './index.js';
+import NotImplementedError from '../../error/not-implemented-error.js';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
-import metricsHelper from '../../util/metrics-helper';
-import { FUNCTION_TIME } from '../../metric-events';
+import metricsHelper from '../../util/metrics-helper.js';
+import { FUNCTION_TIME } from '../../metric-events.js';
+import type { IUnleashServices } from '../../services/index.js';
 
 interface ApiUserRequest<
     PARAM = any,
@@ -65,10 +63,6 @@ export default class FrontendAPIController extends Controller {
                 className: 'FrontendAPIController',
                 functionName,
             });
-
-        // Support CORS requests for the frontend endpoints.
-        // Preflight requests are handled in `app.ts`.
-        this.app.use(corsOriginMiddleware(services, config));
 
         this.route({
             method: 'get',
@@ -208,9 +202,6 @@ export default class FrontendAPIController extends Controller {
         req: ApiUserRequest,
         res: Response<FrontendApiFeaturesSchema>,
     ) {
-        if (!this.config.flagResolver.isEnabled('embedProxy')) {
-            throw new NotFoundError();
-        }
         const toggles =
             await this.services.frontendApiService.getFrontendApiFeatures(
                 req.user,
@@ -231,10 +222,6 @@ export default class FrontendAPIController extends Controller {
         req: ApiUserRequest<unknown, unknown, ClientMetricsSchema>,
         res: Response,
     ) {
-        if (!this.config.flagResolver.isEnabled('embedProxy')) {
-            throw new NotFoundError();
-        }
-
         if (this.config.flagResolver.isEnabled('disableMetrics')) {
             res.sendStatus(204);
             return;
@@ -254,9 +241,6 @@ export default class FrontendAPIController extends Controller {
         req: ApiUserRequest<unknown, unknown, FrontendApiClientSchema>,
         res: Response<string>,
     ) {
-        if (!this.config.flagResolver.isEnabled('embedProxy')) {
-            throw new NotFoundError();
-        }
         // Client registration is not yet supported by @unleash/proxy,
         // but proxy clients may still expect a 200 from this endpoint.
         res.sendStatus(200);

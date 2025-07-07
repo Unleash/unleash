@@ -3,14 +3,15 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ContextFieldSchema } from './contextFieldSchema';
-import type { FeatureDependenciesSchema } from './featureDependenciesSchema';
-import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
-import type { FeatureSchema } from './featureSchema';
-import type { FeatureStrategySchema } from './featureStrategySchema';
-import type { FeatureTagSchema } from './featureTagSchema';
-import type { ExportResultSchemaSegmentsItem } from './exportResultSchemaSegmentsItem';
-import type { TagTypeSchema } from './tagTypeSchema';
+import type { ContextFieldSchema } from './contextFieldSchema.js';
+import type { FeatureDependenciesSchema } from './featureDependenciesSchema.js';
+import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema.js';
+import type { FeatureSchema } from './featureSchema.js';
+import type { FeatureStrategySchema } from './featureStrategySchema.js';
+import type { FeatureTagSchema } from './featureTagSchema.js';
+import type { FeatureLinksSchema } from './featureLinksSchema.js';
+import type { ExportResultSchemaSegmentsItem } from './exportResultSchemaSegmentsItem.js';
+import type { TagTypeSchema } from './tagTypeSchema.js';
 
 /**
  * The result of the export operation, providing you with the feature flag definitions, strategy definitions and the rest of the elements relevant to the features (tags, environments etc.)
@@ -28,6 +29,8 @@ export interface ExportResultSchema {
     featureStrategies: FeatureStrategySchema[];
     /** A list of all the tags that have been applied to any of the features in the `features` list. */
     featureTags?: FeatureTagSchema[];
+    /** A list of links for features in `features` list. */
+    links?: FeatureLinksSchema[];
     /** A list of all the segments that are used by the strategies in the `featureStrategies` list. */
     segments?: ExportResultSchemaSegmentsItem[];
     /** A list of all of the tag types that are used in the `featureTags` list. */

@@ -1,6 +1,5 @@
-import type React from 'react';
 import { useRef, useState, type FC, type ReactNode } from 'react';
-import { Box, styled, Typography } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import type {
     ChangeRequestState,
     IChangeRequestAddReleasePlan,
@@ -10,48 +9,23 @@ import type {
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
-import EventDiff from 'component/events/EventDiff/EventDiff';
+import { EventDiff } from 'component/events/EventDiff/EventDiff';
 import { ReleasePlan } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlan';
 import { ReleasePlanMilestone } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/ReleasePlanMilestone';
 import type { IReleasePlan } from 'interfaces/releasePlans';
+import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
+import {
+    Action,
+    Added,
+    ChangeItemInfo,
+    ChangeItemWrapper,
+    Deleted,
+} from './Change.styles.tsx';
 
-export const ChangeItemWrapper = styled(Box)({
+const StyledTabs = styled(Tabs)(({ theme }) => ({
     display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-});
-
-const ChangeItemCreateEditDeleteWrapper = styled(Box)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: 'auto auto',
-    justifyContent: 'space-between',
+    flexFlow: 'column',
     gap: theme.spacing(1),
-    alignItems: 'center',
-    marginBottom: theme.spacing(2),
-    width: '100%',
-}));
-
-const ChangeItemInfo: FC<{ children?: React.ReactNode }> = styled(Box)(
-    ({ theme }) => ({
-        display: 'flex',
-        gap: theme.spacing(1),
-    }),
-);
-
-const ViewDiff = styled('span')(({ theme }) => ({
-    color: theme.palette.primary.main,
-    marginLeft: theme.spacing(1),
-}));
-
-const StyledCodeSection = styled('div')(({ theme }) => ({
-    overflowX: 'auto',
-    '& code': {
-        wordWrap: 'break-word',
-        whiteSpace: 'pre-wrap',
-        fontFamily: 'monospace',
-        lineHeight: 1.5,
-        fontSize: theme.fontSizes.smallBody,
-    },
 }));
 
 const DeleteReleasePlan: FC<{
@@ -69,19 +43,13 @@ const DeleteReleasePlan: FC<{
 
     return (
         <>
-            <ChangeItemCreateEditDeleteWrapper>
+            <ChangeItemWrapper>
                 <ChangeItemInfo>
-                    <Typography
-                        sx={(theme) => ({
-                            color: theme.palette.error.main,
-                        })}
-                    >
-                        - Deleting release plan:
-                    </Typography>
-                    <Typography>{releasePlan.name}</Typography>
+                    <Deleted>Deleting release plan</Deleted>
+                    <Typography component='span'>{releasePlan.name}</Typography>
+                    {actions}
                 </ChangeItemInfo>
-                <div>{actions}</div>
-            </ChangeItemCreateEditDeleteWrapper>
+            </ChangeItemWrapper>
             <ReleasePlan plan={releasePlan} readonly />
         </>
     );
@@ -111,36 +79,34 @@ const StartMilestone: FC<{
     if (!newMilestone) return;
 
     return (
-        <>
-            <ChangeItemCreateEditDeleteWrapper>
+        <StyledTabs>
+            <ChangeItemWrapper>
                 <ChangeItemInfo>
-                    <Typography color='success.dark'>
-                        + Start milestone:
+                    <Added>Start milestone</Added>
+                    <Typography component='span'>
+                        {newMilestone.name}
                     </Typography>
-                    <Typography>{newMilestone.name}</Typography>
-                    <TooltipLink
-                        tooltip={
-                            <StyledCodeSection>
-                                <EventDiff
-                                    entry={{
-                                        preData: previousMilestone,
-                                        data: newMilestone,
-                                    }}
-                                />
-                            </StyledCodeSection>
-                        }
-                        tooltipProps={{
-                            maxWidth: 500,
-                            maxHeight: 600,
-                        }}
-                    >
-                        <ViewDiff>View Diff</ViewDiff>
-                    </TooltipLink>
                 </ChangeItemInfo>
-                <div>{actions}</div>
-            </ChangeItemCreateEditDeleteWrapper>
-            <ReleasePlanMilestone readonly milestone={newMilestone} />
-        </>
+                <div>
+                    <TabList>
+                        <Tab>View change</Tab>
+                        <Tab>View diff</Tab>
+                    </TabList>
+                    {actions}
+                </div>
+            </ChangeItemWrapper>
+            <TabPanel>
+                <ReleasePlanMilestone readonly milestone={newMilestone} />
+            </TabPanel>
+            <TabPanel variant='diff'>
+                <EventDiff
+                    entry={{
+                        preData: previousMilestone,
+                        data: newMilestone,
+                    }}
+                />
+            </TabPanel>
+        </StyledTabs>
     );
 };
 
@@ -183,75 +149,77 @@ const AddReleasePlan: FC<{
         releasePlanTemplateId: change.payload.templateId,
     };
 
+    if (!currentReleasePlan) {
+        return (
+            <>
+                <ChangeItemWrapper>
+                    <ChangeItemInfo>
+                        <Added>Adding release plan</Added>
+                        <Typography component='span'>
+                            {planPreview.name}
+                        </Typography>
+                        {actions}
+                    </ChangeItemInfo>
+                </ChangeItemWrapper>
+                <ReleasePlan plan={planPreview} readonly />
+            </>
+        );
+    }
+
     return (
-        <>
-            <ChangeItemCreateEditDeleteWrapper>
+        <StyledTabs>
+            <ChangeItemWrapper>
                 <ChangeItemInfo>
-                    {currentReleasePlan ? (
-                        <Typography>
-                            Replacing{' '}
-                            <TooltipLink
-                                tooltip={
-                                    <div
-                                        onMouseEnter={() =>
-                                            openCurrentTooltip()
-                                        }
-                                        onMouseLeave={() =>
-                                            closeCurrentTooltip()
-                                        }
-                                    >
-                                        <ReleasePlan
-                                            plan={currentReleasePlan}
-                                            readonly
-                                        />
-                                    </div>
-                                }
-                                tooltipProps={{
-                                    open: currentTooltipOpen,
-                                    maxWidth: 500,
-                                    maxHeight: 600,
-                                }}
-                            >
-                                <span
+                    <Action>
+                        Replacing{' '}
+                        <TooltipLink
+                            tooltip={
+                                <div
                                     onMouseEnter={() => openCurrentTooltip()}
                                     onMouseLeave={() => closeCurrentTooltip()}
                                 >
-                                    current
-                                </span>
-                            </TooltipLink>{' '}
-                            release plan with:
-                        </Typography>
-                    ) : (
-                        <Typography color='success.dark'>
-                            + Adding release plan:
-                        </Typography>
-                    )}
-                    <Typography>{planPreview.name}</Typography>
-                    {currentReleasePlan && (
-                        <TooltipLink
-                            tooltip={
-                                <StyledCodeSection>
-                                    <EventDiff
-                                        entry={{
-                                            preData: currentReleasePlan,
-                                            data: planPreviewDiff,
-                                        }}
+                                    <ReleasePlan
+                                        plan={currentReleasePlan}
+                                        readonly
                                     />
-                                </StyledCodeSection>
+                                </div>
                             }
                             tooltipProps={{
+                                open: currentTooltipOpen,
                                 maxWidth: 500,
                                 maxHeight: 600,
                             }}
                         >
-                            <ViewDiff>View Diff</ViewDiff>
-                        </TooltipLink>
-                    )}
+                            <span
+                                onMouseEnter={() => openCurrentTooltip()}
+                                onMouseLeave={() => closeCurrentTooltip()}
+                            >
+                                current
+                            </span>
+                        </TooltipLink>{' '}
+                        release plan with {planPreview.name}
+                    </Action>
                 </ChangeItemInfo>
-                <div>{actions}</div>
-            </ChangeItemCreateEditDeleteWrapper>
-            <ReleasePlan plan={planPreview} readonly />
-        </>
+                <div>
+                    <TabList>
+                        <Tab>View change</Tab>
+                        <Tab>View diff</Tab>
+                    </TabList>
+                    {actions}
+                </div>
+            </ChangeItemWrapper>
+            <TabPanel>
+                <ReleasePlan plan={planPreview} readonly />
+            </TabPanel>
+            <TabPanel variant='diff'>
+                <EventDiff
+                    entry={{
+                        preData: currentReleasePlan,
+                        data: planPreviewDiff,
+                    }}
+                />
+            </TabPanel>
+        </StyledTabs>
     );
 };
 

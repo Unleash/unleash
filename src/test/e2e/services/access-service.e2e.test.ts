@@ -1,14 +1,14 @@
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
+import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import getLogger from '../../fixtures/no-logger.js';
 
 import type {
     AccessService,
     IRoleUpdate,
     PermissionRef,
-} from '../../../lib/services/access-service';
+} from '../../../lib/services/access-service.js';
 
-import * as permissions from '../../../lib/types/permissions';
-import { RoleName } from '../../../lib/types/model';
+import * as permissions from '../../../lib/types/permissions.js';
+import { RoleName } from '../../../lib/types/model.js';
 import {
     type ICreateGroupUserModel,
     type IUnleashStores,
@@ -16,23 +16,24 @@ import {
     type IUserAccessOverview,
     SYSTEM_USER_AUDIT,
     TEST_AUDIT_USER,
-} from '../../../lib/types';
-import { createTestConfig } from '../../config/test-config';
-import { DEFAULT_PROJECT } from '../../../lib/types/project';
+} from '../../../lib/types/index.js';
+import { createTestConfig } from '../../config/test-config.js';
+import { DEFAULT_PROJECT } from '../../../lib/types/project.js';
 import {
     ALL_PROJECTS,
     CUSTOM_ROOT_ROLE_TYPE,
-} from '../../../lib/util/constants';
+    DEFAULT_ENV,
+} from '../../../lib/util/constants.js';
 import {
     createAccessService,
     createFeatureToggleService,
     createProjectService,
-} from '../../../lib/features';
-import { BadDataError } from '../../../lib/error';
-import type FeatureToggleService from '../../../lib/features/feature-toggle/feature-toggle-service';
-import type { ProjectService } from '../../../lib/services';
-import type { IRole } from '../../../lib/types/stores/access-store';
-import { extractAuditInfoFromUser } from '../../../lib/util';
+} from '../../../lib/features/index.js';
+import { BadDataError } from '../../../lib/error/index.js';
+import type { FeatureToggleService } from '../../../lib/features/feature-toggle/feature-toggle-service.js';
+import type { ProjectService } from '../../../lib/services/index.js';
+import type { IRole } from '../../../lib/types/stores/access-store.js';
+import { extractAuditInfoFromUser } from '../../../lib/util/index.js';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -93,7 +94,7 @@ const createRole = async (rolePermissions: PermissionRef[]) => {
 };
 
 const hasCommonProjectAccess = async (user, projectName, condition) => {
-    const defaultEnv = 'default';
+    const defaultEnv = DEFAULT_ENV;
 
     const {
         CREATE_FEATURE,
@@ -312,7 +313,7 @@ test('should remove CREATE_FEATURE on default environment', async () => {
     await accessService.addPermissionToRole(
         editRole.id,
         permissions.CREATE_FEATURE,
-        'default',
+        DEFAULT_ENV,
     );
 
     // TODO: to validate the remove works, we should make sure that we had permission before removing it
@@ -571,7 +572,7 @@ test('should support permission with "ALL" environment requirement', async () =>
     await accessStore.addPermissionsToRole(
         customRole.id,
         [{ name: CREATE_FEATURE_STRATEGY }],
-        'default',
+        DEFAULT_ENV,
     );
     await accessStore.addUserToRole(user.id, customRole.id, ALL_PROJECTS);
 
@@ -579,7 +580,7 @@ test('should support permission with "ALL" environment requirement', async () =>
         user,
         CREATE_FEATURE_STRATEGY,
         'default',
-        'default',
+        DEFAULT_ENV,
     );
 
     expect(hasAccess).toBe(true);
@@ -588,7 +589,7 @@ test('should support permission with "ALL" environment requirement', async () =>
         user,
         CREATE_FEATURE_STRATEGY,
         'default',
-        'development',
+        'production',
     );
     expect(hasNotAccess).toBe(false);
 });
@@ -601,7 +602,7 @@ test('Should have access to create a strategy in an environment', async () => {
             user,
             CREATE_FEATURE_STRATEGY,
             'default',
-            'default',
+            DEFAULT_ENV,
         ),
     ).toBe(true);
 });
@@ -627,7 +628,7 @@ test('Should have access to edit a strategy in an environment', async () => {
             user,
             UPDATE_FEATURE_STRATEGY,
             'default',
-            'default',
+            DEFAULT_ENV,
         ),
     ).toBe(true);
 });
@@ -640,7 +641,7 @@ test('Should have access to delete a strategy in an environment', async () => {
             user,
             DELETE_FEATURE_STRATEGY,
             'default',
-            'default',
+            DEFAULT_ENV,
         ),
     ).toBe(true);
 });

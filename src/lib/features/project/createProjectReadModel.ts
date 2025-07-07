@@ -1,9 +1,9 @@
 import type EventEmitter from 'events';
-import type { Db } from '../../server-impl';
-import type { IProjectReadModel } from './project-read-model-type';
-import type { IFlagResolver } from '../../types';
-import { ProjectReadModel } from './project-read-model';
-import { FakeProjectReadModel } from './fake-project-read-model';
+import type { Db } from '../../types/index.js';
+import type { IProjectReadModel } from './project-read-model-type.js';
+import type { IFlagResolver } from '../../types/index.js';
+import { ProjectReadModel } from './project-read-model.js';
+import { FakeProjectReadModel } from './fake-project-read-model.js';
 
 export const createProjectReadModel = (
     db: Db,

@@ -1,5 +1,5 @@
-import type { Logger } from '../logger';
-import type { IUnleash } from '../types/core';
+import type { Logger } from '../logger.js';
+import type { IUnleash } from '../types/core.js';
 
 function registerGracefulShutdown(unleash: IUnleash, logger: Logger): void {
     const unleashCloser = (signal: string) => async () => {
@@ -9,6 +9,7 @@ function registerGracefulShutdown(unleash: IUnleash, logger: Logger): void {
             logger.info('Unleash has been successfully stopped.');
             process.exit(0);
         } catch (e) {
+            console.log('Exiting with code 1');
             logger.error('Unable to shutdown Unleash. Hard exit!');
             process.exit(1);
         }

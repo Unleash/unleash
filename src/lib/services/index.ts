@@ -1,67 +1,68 @@
-import type {
-    IUnleashConfig,
-    IUnleashServices,
-    IUnleashStores,
-} from '../types';
-import FeatureTypeService from './feature-type-service';
-import EventService from '../features/events/event-service';
-import HealthService from './health-service';
+import type { IUnleashConfig, IUnleashStores } from '../types/index.js';
+import FeatureTypeService from './feature-type-service.js';
+import EventService from '../features/events/event-service.js';
+import HealthService from './health-service.js';
 
-import ProjectService from '../features/project/project-service';
-import ClientInstanceService from '../features/metrics/instance/instance-service';
-import ClientMetricsServiceV2 from '../features/metrics/client-metrics/metrics-service-v2';
-import TagTypeService from '../features/tag-type/tag-type-service';
-import TagService from './tag-service';
-import StrategyService from './strategy-service';
-import AddonService from './addon-service';
-import ContextService from '../features/context/context-service';
-import VersionService from './version-service';
-import { EmailService } from './email-service';
-import { AccessService } from './access-service';
-import { ApiTokenService } from './api-token-service';
-import UserService from './user-service';
-import ResetTokenService from './reset-token-service';
-import SettingService from './setting-service';
-import SessionService from './session-service';
-import UserFeedbackService from './user-feedback-service';
-import FeatureToggleService from '../features/feature-toggle/feature-toggle-service';
-import EnvironmentService from '../features/project-environments/environment-service';
-import FeatureTagService from './feature-tag-service';
-import ProjectHealthService from './project-health-service';
-import UserSplashService from './user-splash-service';
-import { SegmentService } from '../features/segment/segment-service';
-import { OpenApiService } from './openapi-service';
-import { ClientSpecService } from './client-spec-service';
-import { PlaygroundService } from '../features/playground/playground-service';
-import { GroupService } from './group-service';
-import { FrontendApiService } from '../features/frontend-api/frontend-api-service';
-import EdgeService from './edge-service';
-import PatService from './pat-service';
-import { PublicSignupTokenService } from './public-signup-token-service';
-import { LastSeenService } from '../features/metrics/last-seen/last-seen-service';
-import { InstanceStatsService } from '../features/instance-stats/instance-stats-service';
-import { FavoritesService } from './favorites-service';
-import MaintenanceService from '../features/maintenance/maintenance-service';
-import { AccountService } from './account-service';
-import { SchedulerService } from '../features/scheduler/scheduler-service';
-import { ProjectInsightsService } from '../features/project-insights/project-insights-service';
+import ProjectService from '../features/project/project-service.js';
+import ClientInstanceService from '../features/metrics/instance/instance-service.js';
+import ClientMetricsServiceV2 from '../features/metrics/client-metrics/metrics-service-v2.js';
+import { CustomMetricsService } from '../features/metrics/custom/custom-metrics-service.js';
+import TagTypeService from '../features/tag-type/tag-type-service.js';
+import TagService from './tag-service.js';
+import StrategyService from './strategy-service.js';
+import AddonService from './addon-service.js';
+import ContextService from '../features/context/context-service.js';
+import VersionService from './version-service.js';
+import { EmailService } from './email-service.js';
+import { AccessService } from './access-service.js';
+import { ApiTokenService } from './api-token-service.js';
+import UserService from './user-service.js';
+import ResetTokenService from './reset-token-service.js';
+import SettingService from './setting-service.js';
+import SessionService from './session-service.js';
+import UserFeedbackService from './user-feedback-service.js';
+import { FeatureToggleService } from '../features/feature-toggle/feature-toggle-service.js';
+import EnvironmentService from '../features/project-environments/environment-service.js';
+import FeatureTagService from './feature-tag-service.js';
+import ProjectHealthService from './project-health-service.js';
+import UserSplashService from './user-splash-service.js';
+import { SegmentService } from '../features/segment/segment-service.js';
+import { OpenApiService } from './openapi-service.js';
+import { ClientSpecService } from './client-spec-service.js';
+import { PlaygroundService } from '../features/playground/playground-service.js';
+import { GroupService } from './group-service.js';
+import { FrontendApiService } from '../features/frontend-api/frontend-api-service.js';
+import EdgeService from './edge-service.js';
+import PatService from './pat-service.js';
+import { PublicSignupTokenService } from './public-signup-token-service.js';
+import { LastSeenService } from '../features/metrics/last-seen/last-seen-service.js';
+import { InstanceStatsService } from '../features/instance-stats/instance-stats-service.js';
+import { FavoritesService } from './favorites-service.js';
+import MaintenanceService from '../features/maintenance/maintenance-service.js';
+import { AccountService } from './account-service.js';
+import { SchedulerService } from '../features/scheduler/scheduler-service.js';
+import { ProjectInsightsService } from '../features/project-insights/project-insights-service.js';
 import type { Knex } from 'knex';
 import {
     createExportImportTogglesService,
     createFakeExportImportTogglesService,
     deferredExportImportTogglesService,
-} from '../features/export-import-toggles/createExportImportService';
-import type { Db } from '../db/db';
-import { withFakeTransactional, withTransactional } from '../db/transaction';
+} from '../features/export-import-toggles/createExportImportService.js';
+import type { Db } from '../db/db.js';
+import {
+    withFakeTransactional,
+    type WithTransactional,
+    withTransactional,
+} from '../db/transaction.js';
 import {
     createChangeRequestAccessReadModel,
     createFakeChangeRequestAccessService,
-} from '../features/change-request-access-service/createChangeRequestAccessReadModel';
+} from '../features/change-request-access-service/createChangeRequestAccessReadModel.js';
 import {
     createChangeRequestSegmentUsageReadModel,
     createFakeChangeRequestSegmentUsageReadModel,
-} from '../features/change-request-segment-usage-service/createChangeRequestSegmentUsageReadModel';
-import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
+} from '../features/change-request-segment-usage-service/createChangeRequestSegmentUsageReadModel.js';
+import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service.js';
 import {
     createAccessService,
     createEnvironmentService,
@@ -69,6 +70,8 @@ import {
     createFakeAccessService,
     createFakeEnvironmentService,
     createFakeEventsService,
+    createFakeFeatureLinkService,
+    createFakeFeatureToggleService,
     createFakeProjectService,
     createFakeUserSubscriptionsService,
     createFeatureLifecycleService,
@@ -76,93 +79,98 @@ import {
     createFeatureToggleService,
     createProjectService,
     createUserSubscriptionsService,
-} from '../features';
-import EventAnnouncerService from './event-announcer-service';
-import { createGroupService } from '../features/group/createGroupService';
+} from '../features/index.js';
+import EventAnnouncerService from './event-announcer-service.js';
+import { createGroupService } from '../features/group/createGroupService.js';
 import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
-} from '../features/private-project/createPrivateProjectChecker';
-import { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
+} from '../features/private-project/createPrivateProjectChecker.js';
+import { DependentFeaturesService } from '../features/dependent-features/dependent-features-service.js';
 import {
     createDependentFeaturesService,
     createFakeDependentFeaturesService,
-} from '../features/dependent-features/createDependentFeaturesService';
-import { DependentFeaturesReadModel } from '../features/dependent-features/dependent-features-read-model';
-import { FakeDependentFeaturesReadModel } from '../features/dependent-features/fake-dependent-features-read-model';
+} from '../features/dependent-features/createDependentFeaturesService.js';
+import { DependentFeaturesReadModel } from '../features/dependent-features/dependent-features-read-model.js';
+import { FakeDependentFeaturesReadModel } from '../features/dependent-features/fake-dependent-features-read-model.js';
 import {
     createFakeLastSeenService,
     createLastSeenService,
-} from '../features/metrics/last-seen/createLastSeenService';
+} from '../features/metrics/last-seen/createLastSeenService.js';
 import {
     createClientFeatureToggleService,
     createFakeClientFeatureToggleService,
-} from '../features/client-feature-toggles/createClientFeatureToggleService';
-import { ClientFeatureToggleService } from '../features/client-feature-toggles/client-feature-toggle-service';
+} from '../features/client-feature-toggles/createClientFeatureToggleService.js';
+import { ClientFeatureToggleService } from '../features/client-feature-toggles/client-feature-toggle-service.js';
 import {
     createFakeFeatureSearchService,
     createFeatureSearchService,
-} from '../features/feature-search/createFeatureSearchService';
-import { FeatureSearchService } from '../features/feature-search/feature-search-service';
+} from '../features/feature-search/createFeatureSearchService.js';
+import { FeatureSearchService } from '../features/feature-search/feature-search-service.js';
 import {
     createFakeTagTypeService,
     createTagTypeService,
-} from '../features/tag-type/createTagTypeService';
+} from '../features/tag-type/createTagTypeService.js';
 import {
     createFakeInstanceStatsService,
     createInstanceStatsService,
-} from '../features/instance-stats/createInstanceStatsService';
-import { InactiveUsersService } from '../users/inactive/inactive-users-service';
+} from '../features/instance-stats/createInstanceStatsService.js';
+import { InactiveUsersService } from '../users/inactive/inactive-users-service.js';
 import {
     createFakeFrontendApiService,
     createFrontendApiService,
-} from '../features/frontend-api/createFrontendApiService';
+} from '../features/frontend-api/createFrontendApiService.js';
 import {
     createFakeProjectInsightsService,
     createProjectInsightsService,
-} from '../features/project-insights/createProjectInsightsService';
-import { JobService } from '../features/scheduler/job-service';
-import { UserSubscriptionsService } from '../features/user-subscriptions/user-subscriptions-service';
-import { JobStore } from '../features/scheduler/job-store';
-import { FeatureLifecycleService } from '../features/feature-lifecycle/feature-lifecycle-service';
-import { createFakeFeatureLifecycleService } from '../features/feature-lifecycle/createFeatureLifecycle';
-import { FeatureLifecycleReadModel } from '../features/feature-lifecycle/feature-lifecycle-read-model';
-import { FakeFeatureLifecycleReadModel } from '../features/feature-lifecycle/fake-feature-lifecycle-read-model';
+} from '../features/project-insights/createProjectInsightsService.js';
+import { JobService } from '../features/scheduler/job-service.js';
+import { UserSubscriptionsService } from '../features/user-subscriptions/user-subscriptions-service.js';
+import { JobStore } from '../features/scheduler/job-store.js';
+import { FeatureLifecycleService } from '../features/feature-lifecycle/feature-lifecycle-service.js';
+import { createFakeFeatureLifecycleService } from '../features/feature-lifecycle/createFeatureLifecycle.js';
+import { FeatureLifecycleReadModel } from '../features/feature-lifecycle/feature-lifecycle-read-model.js';
+import { FakeFeatureLifecycleReadModel } from '../features/feature-lifecycle/fake-feature-lifecycle-read-model.js';
 import {
     createApiTokenService,
     createFakeApiTokenService,
-} from '../features/api-tokens/createApiTokenService';
-import { IntegrationEventsService } from '../features/integration-events/integration-events-service';
-import { FeatureCollaboratorsReadModel } from '../features/feature-toggle/feature-collaborators-read-model';
-import { FakeFeatureCollaboratorsReadModel } from '../features/feature-toggle/fake-feature-collaborators-read-model';
+} from '../features/api-tokens/createApiTokenService.js';
+import { IntegrationEventsService } from '../features/integration-events/integration-events-service.js';
 import {
     createFakePlaygroundService,
     createPlaygroundService,
-} from '../features/playground/createPlaygroundService';
+} from '../features/playground/createPlaygroundService.js';
 import {
     createFakeOnboardingService,
     createOnboardingService,
-} from '../features/onboarding/createOnboardingService';
-import { OnboardingService } from '../features/onboarding/onboarding-service';
-import { PersonalDashboardService } from '../features/personal-dashboard/personal-dashboard-service';
+} from '../features/onboarding/createOnboardingService.js';
+import { OnboardingService } from '../features/onboarding/onboarding-service.js';
+import { PersonalDashboardService } from '../features/personal-dashboard/personal-dashboard-service.js';
 import {
     createFakePersonalDashboardService,
     createPersonalDashboardService,
-} from '../features/personal-dashboard/createPersonalDashboardService';
+} from '../features/personal-dashboard/createPersonalDashboardService.js';
 import {
     createFakeProjectStatusService,
     createProjectStatusService,
-} from '../features/project-status/createProjectStatusService';
-import { ProjectStatusService } from '../features/project-status/project-status-service';
+} from '../features/project-status/createProjectStatusService.js';
+import { ProjectStatusService } from '../features/project-status/project-status-service.js';
 import {
     createContextService,
     createFakeContextService,
-} from '../features/context/createContextService';
-import { UniqueConnectionService } from '../features/unique-connection/unique-connection-service';
-import { createFakeFeatureLinkService } from '../features/feature-links/createFeatureLinkService';
-import { FeatureLinksReadModel } from '../features/feature-links/feature-links-read-model';
-import { FakeFeatureLinksReadModel } from '../features/feature-links/fake-feature-links-read-model';
-import { UnknownFlagsService } from '../features/metrics/unknown-flags/unknown-flags-service';
+} from '../features/context/createContextService.js';
+import { UniqueConnectionService } from '../features/unique-connection/unique-connection-service.js';
+import type {
+    IFeatureLifecycleReadModel,
+    ISegmentService,
+} from '../internals.js';
+import type {
+    IExportService,
+    IImportService,
+} from '../features/export-import-toggles/export-import-service.js';
+import type { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType.js';
+import { UnknownFlagsService } from '../features/metrics/unknown-flags/unknown-flags-service.js';
+import type FeatureLinkService from '../features/feature-links/feature-link-service.js';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -197,12 +205,16 @@ export const createServices = (
 
     const unknownFlagsService = new UnknownFlagsService(stores, config);
 
+    // Initialize custom metrics service
+    const customMetricsService = new CustomMetricsService(config);
+
     const clientMetricsServiceV2 = new ClientMetricsServiceV2(
         stores,
         config,
         lastSeenService,
         unknownFlagsService,
     );
+
     const dependentFeaturesReadModel = db
         ? new DependentFeaturesReadModel(db)
         : new FakeDependentFeaturesReadModel();
@@ -287,28 +299,6 @@ export const createServices = (
         ? createFeatureSearchService(config)(db)
         : createFakeFeatureSearchService(config);
 
-    const featureCollaboratorsReadModel = db
-        ? new FeatureCollaboratorsReadModel(db)
-        : new FakeFeatureCollaboratorsReadModel();
-
-    const featureLinkReadModel = db
-        ? new FeatureLinksReadModel(db)
-        : new FakeFeatureLinksReadModel();
-
-    const featureToggleService = new FeatureToggleService(
-        stores,
-        config,
-        segmentService,
-        accessService,
-        eventService,
-        changeRequestAccessReadModel,
-        privateProjectChecker,
-        dependentFeaturesReadModel,
-        dependentFeaturesService,
-        featureLifecycleReadModel,
-        featureCollaboratorsReadModel,
-        featureLinkReadModel,
-    );
     const transactionalEnvironmentService = db
         ? withTransactional(createEnvironmentService(config), db)
         : withFakeTransactional(createFakeEnvironmentService(config));
@@ -348,8 +338,21 @@ export const createServices = (
     const importService = db
         ? withTransactional(deferredExportImportTogglesService(config), db)
         : withFakeTransactional(createFakeExportImportTogglesService(config));
-    const transactionalFeatureToggleService = (txDb: Knex.Transaction) =>
-        createFeatureToggleService(txDb, config);
+
+    const transactionalFeatureLinkService = db
+        ? withTransactional(createFeatureLinkService(config), db)
+        : withFakeTransactional(
+              createFakeFeatureLinkService(config).featureLinkService,
+          );
+
+    const featureLinkService = transactionalFeatureLinkService;
+
+    const featureToggleService = db
+        ? withTransactional((db) => createFeatureToggleService(db, config), db)
+        : withFakeTransactional(
+              createFakeFeatureToggleService(config).featureToggleService,
+          );
+    const transactionalFeatureToggleService = featureToggleService;
     const transactionalGroupService = (txDb: Knex.Transaction) =>
         createGroupService(txDb, config);
     const userSplashService = new UserSplashService(stores, config);
@@ -438,12 +441,6 @@ export const createServices = (
         ? withTransactional(createUserSubscriptionsService(config), db)
         : withFakeTransactional(createFakeUserSubscriptionsService(config));
 
-    const transactionalFeatureLinkService = db
-        ? withTransactional(createFeatureLinkService(config), db)
-        : withFakeTransactional(
-              createFakeFeatureLinkService(config).featureLinkService,
-          );
-
     return {
         transactionalAccessService,
         accessService,
@@ -461,6 +458,7 @@ export const createServices = (
         tagService,
         clientInstanceService,
         clientMetricsServiceV2,
+        customMetricsService,
         contextService,
         transactionalContextService,
         versionService,
@@ -514,6 +512,7 @@ export const createServices = (
         uniqueConnectionService,
         featureLifecycleReadModel,
         transactionalFeatureLinkService,
+        featureLinkService,
         unknownFlagsService,
     };
 };
@@ -572,3 +571,78 @@ export {
     FeatureLifecycleReadModel,
     UnknownFlagsService,
 };
+
+export interface IUnleashServices {
+    transactionalAccessService: WithTransactional<AccessService>;
+    accessService: AccessService;
+    accountService: AccountService;
+    addonService: AddonService;
+    apiTokenService: ApiTokenService;
+    clientInstanceService: ClientInstanceService;
+    clientMetricsServiceV2: ClientMetricsServiceV2;
+    customMetricsService: CustomMetricsService;
+    contextService: ContextService;
+    transactionalContextService: WithTransactional<ContextService>;
+    emailService: EmailService;
+    environmentService: EnvironmentService;
+    transactionalEnvironmentService: WithTransactional<EnvironmentService>;
+    eventService: EventService;
+    edgeService: EdgeService;
+    featureTagService: FeatureTagService;
+    featureToggleService: FeatureToggleService;
+    featureTypeService: FeatureTypeService;
+    groupService: GroupService;
+    healthService: HealthService;
+    projectHealthService: ProjectHealthService;
+    projectService: ProjectService;
+    transactionalProjectService: WithTransactional<ProjectService>;
+    playgroundService: PlaygroundService;
+    frontendApiService: FrontendApiService;
+    publicSignupTokenService: PublicSignupTokenService;
+    resetTokenService: ResetTokenService;
+    sessionService: SessionService;
+    settingService: SettingService;
+    strategyService: StrategyService;
+    tagService: TagService;
+    tagTypeService: TagTypeService;
+    transactionalTagTypeService: WithTransactional<TagTypeService>;
+    userFeedbackService: UserFeedbackService;
+    userService: UserService;
+    versionService: VersionService;
+    userSplashService: UserSplashService;
+    segmentService: ISegmentService;
+    openApiService: OpenApiService;
+    clientSpecService: ClientSpecService;
+    patService: PatService;
+    lastSeenService: LastSeenService;
+    instanceStatsService: InstanceStatsService;
+    favoritesService: FavoritesService;
+    maintenanceService: MaintenanceService;
+    exportService: IExportService;
+    importService: WithTransactional<IImportService>;
+    configurationRevisionService: ConfigurationRevisionService;
+    schedulerService: SchedulerService;
+    eventAnnouncerService: EventAnnouncerService;
+    transactionalFeatureToggleService: WithTransactional<FeatureToggleService>;
+    transactionalGroupService: (db: Knex.Transaction) => GroupService;
+    privateProjectChecker: IPrivateProjectChecker;
+    dependentFeaturesService: DependentFeaturesService;
+    transactionalDependentFeaturesService: WithTransactional<DependentFeaturesService>;
+    clientFeatureToggleService: ClientFeatureToggleService;
+    featureSearchService: FeatureSearchService;
+    inactiveUsersService: InactiveUsersService;
+    projectInsightsService: ProjectInsightsService;
+    jobService: JobService;
+    featureLifecycleService: FeatureLifecycleService;
+    transactionalFeatureLifecycleService: WithTransactional<FeatureLifecycleService>;
+    integrationEventsService: IntegrationEventsService;
+    onboardingService: OnboardingService;
+    personalDashboardService: PersonalDashboardService;
+    projectStatusService: ProjectStatusService;
+    transactionalUserSubscriptionsService: WithTransactional<UserSubscriptionsService>;
+    uniqueConnectionService: UniqueConnectionService;
+    featureLifecycleReadModel: IFeatureLifecycleReadModel;
+    transactionalFeatureLinkService: WithTransactional<FeatureLinkService>;
+    featureLinkService: FeatureLinkService;
+    unknownFlagsService: UnknownFlagsService;
+}

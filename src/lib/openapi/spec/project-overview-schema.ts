@@ -1,19 +1,20 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { parametersSchema } from './parameters-schema';
-import { variantSchema } from './variant-schema';
-import { overrideSchema } from './override-schema';
-import { featureStrategySchema } from './feature-strategy-schema';
-import { featureSchema } from './feature-schema';
-import { constraintSchema } from './constraint-schema';
-import { environmentSchema } from './environment-schema';
-import { featureEnvironmentSchema } from './feature-environment-schema';
-import { projectStatsSchema } from './project-stats-schema';
-import { createFeatureStrategySchema } from './create-feature-strategy-schema';
-import { projectEnvironmentSchema } from './project-environment-schema';
-import { createStrategyVariantSchema } from './create-strategy-variant-schema';
-import { strategyVariantSchema } from './strategy-variant-schema';
-import { createFeatureNamingPatternSchema } from './create-feature-naming-pattern-schema';
-import { featureTypeCountSchema } from './feature-type-count-schema';
+import { parametersSchema } from './parameters-schema.js';
+import { variantSchema } from './variant-schema.js';
+import { overrideSchema } from './override-schema.js';
+import { featureStrategySchema } from './feature-strategy-schema.js';
+import { featureSchema } from './feature-schema.js';
+import { constraintSchema } from './constraint-schema.js';
+import { environmentSchema } from './environment-schema.js';
+import { featureEnvironmentSchema } from './feature-environment-schema.js';
+import { projectStatsSchema } from './project-stats-schema.js';
+import { createFeatureStrategySchema } from './create-feature-strategy-schema.js';
+import { projectEnvironmentSchema } from './project-environment-schema.js';
+import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
+import { strategyVariantSchema } from './strategy-variant-schema.js';
+import { createFeatureNamingPatternSchema } from './create-feature-naming-pattern-schema.js';
+import { featureTypeCountSchema } from './feature-type-count-schema.js';
+import { projectLinkTemplateSchema } from './project-link-template-schema.js';
 
 export const projectOverviewSchema = {
     $id: '#/components/schemas/projectOverviewSchema',
@@ -67,6 +68,14 @@ export const projectOverviewSchema = {
         featureNaming: {
             $ref: '#/components/schemas/createFeatureNamingPatternSchema',
         },
+        linkTemplates: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/projectLinkTemplateSchema',
+            },
+            description:
+                'A list of templates for links that will be automatically added to new feature flags.',
+        },
         members: {
             type: 'number',
             example: 4,
@@ -75,8 +84,16 @@ export const projectOverviewSchema = {
         health: {
             type: 'number',
             example: 50,
+            deprecated: true,
+            description: 'Use `technicalDebt` instead.',
+        },
+        technicalDebt: {
+            type: 'number',
+            example: 25,
+            minimum: 0,
+            maximum: 100,
             description:
-                "An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100",
+                "An indicator of the [project's technical debt](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100",
         },
         environments: {
             type: 'array',
@@ -188,6 +205,7 @@ export const projectOverviewSchema = {
             projectStatsSchema,
             createFeatureNamingPatternSchema,
             featureTypeCountSchema,
+            projectLinkTemplateSchema,
         },
     },
 } as const;

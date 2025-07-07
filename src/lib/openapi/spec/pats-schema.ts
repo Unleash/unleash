@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { patSchema } from './pat-schema';
+import { patSchema } from './pat-schema.js';
 
 export const patsSchema = {
     $id: '#/components/schemas/patsSchema',

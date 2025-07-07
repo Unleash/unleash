@@ -1,5 +1,5 @@
 import { Alert, Divider, Grid, styled, Typography } from '@mui/material';
-import { BillingInformationButton } from './BillingInformationButton/BillingInformationButton';
+import { BillingInformationButton } from './BillingInformationButton/BillingInformationButton.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { InstanceState } from 'interfaces/instance';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

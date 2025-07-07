@@ -1,15 +1,15 @@
 import type EventEmitter from 'events';
-import type { Logger, LogProvider } from '../logger';
+import type { Logger, LogProvider } from '../logger.js';
 import type {
     IAddon,
     IAddonDto,
     IAddonStore,
-} from '../types/stores/addon-store';
+} from '../types/stores/addon-store.js';
 
-import metricsHelper from '../util/metrics-helper';
-import { DB_TIME } from '../metric-events';
-import NotFoundError from '../error/notfound-error';
-import type { Db } from './db';
+import metricsHelper from '../util/metrics-helper.js';
+import { DB_TIME } from '../metric-events.js';
+import NotFoundError from '../error/notfound-error.js';
+import type { Db } from './db.js';
 
 const COLUMNS = [
     'id',

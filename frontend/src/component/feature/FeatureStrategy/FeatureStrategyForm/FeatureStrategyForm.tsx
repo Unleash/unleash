@@ -17,9 +17,9 @@ import type {
     IFeatureStrategyParameters,
     IStrategyParameter,
 } from 'interfaces/strategy';
-import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType';
-import { FeatureStrategyEnabled } from './FeatureStrategyEnabled/FeatureStrategyEnabled';
-import { FeatureStrategyConstraints } from '../FeatureStrategyConstraints/FeatureStrategyConstraints';
+import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType.tsx';
+import { FeatureStrategyEnabled } from './FeatureStrategyEnabled/FeatureStrategyEnabled.tsx';
+import { FeatureStrategyConstraints } from '../FeatureStrategyConstraints/FeatureStrategyConstraints.tsx';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -31,22 +31,21 @@ import type { ISegment } from 'interfaces/segment';
 import type { IFormErrors } from 'hooks/useFormErrors';
 import { validateParameterValue } from 'utils/validateParameterValue';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
-import { FeatureStrategyChangeRequestAlert } from './FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert';
+import { FeatureStrategyChangeRequestAlert } from './FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert.tsx';
 import {
     FeatureStrategyProdGuard,
     useFeatureStrategyProdGuard,
-} from '../FeatureStrategyProdGuard/FeatureStrategyProdGuard';
-import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
+} from '../FeatureStrategyProdGuard/FeatureStrategyProdGuard.tsx';
+import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit.tsx';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
-import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle';
-import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled';
+import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle.tsx';
+import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { BuiltInStrategies, formatStrategyName } from 'utils/strategyNames';
 import { Badge } from 'component/common/Badge/Badge';
-import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
-import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests';
+import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests.tsx';
 import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
 
 interface IFeatureStrategyFormProps {
@@ -144,28 +143,6 @@ const StyledAlertBox = styled(Box)(({ theme }) => ({
     },
 }));
 
-const StyledEnvironmentBox = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-}));
-
-const EnvironmentIconBox = styled(Box)(({ theme }) => ({
-    transform: 'scale(0.9)',
-    display: 'flex',
-    alignItems: 'center',
-}));
-
-const EnvironmentTypography = styled(Typography, {
-    shouldForwardProp: (prop) => prop !== 'enabled',
-})<{ enabled: boolean }>(({ enabled }) => ({
-    fontWeight: enabled ? 'bold' : 'normal',
-}));
-
-const EnvironmentTypographyHeader = styled(Typography)(({ theme }) => ({
-    marginRight: theme.spacing(0.5),
-    color: theme.palette.text.secondary,
-}));
-
 const StyledTab = styled(Tab)(({ theme }) => ({
     width: '100px',
 }));
@@ -174,11 +151,11 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     marginLeft: theme.spacing(1),
 }));
 
-const StyledConstraintSeparator = styled(ConstraintSeparator)(({ theme }) => ({
+const StyledConstraintSeparator = styled(ConstraintSeparator)({
     top: '-10px',
     left: '0',
     transform: 'translateY(0)',
-}));
+});
 
 export const FeatureStrategyForm = ({
     projectId,
@@ -348,32 +325,7 @@ export const FeatureStrategyForm = ({
             <StyledHeaderBox>
                 <StyledTitle>
                     {formatStrategyName(strategy.name || '')}
-                    <ConditionallyRender
-                        condition={strategy.name === 'flexibleRollout'}
-                        show={
-                            <Badge color='success' sx={{ marginLeft: '1rem' }}>
-                                {strategy.parameters?.rollout}%
-                            </Badge>
-                        }
-                    />
                 </StyledTitle>
-                {foundEnvironment ? (
-                    <StyledEnvironmentBox>
-                        <EnvironmentTypographyHeader>
-                            Environment:
-                        </EnvironmentTypographyHeader>
-                        <EnvironmentIconBox>
-                            <EnvironmentIcon
-                                enabled={foundEnvironment.enabled}
-                            />{' '}
-                            <EnvironmentTypography
-                                enabled={foundEnvironment.enabled}
-                            >
-                                {foundEnvironment.name}
-                            </EnvironmentTypography>
-                        </EnvironmentIconBox>
-                    </StyledEnvironmentBox>
-                ) : null}
             </StyledHeaderBox>
 
             <StyledAlertBox>
@@ -412,16 +364,6 @@ export const FeatureStrategyForm = ({
                             </Link>{' '}
                             instead.
                         </Alert>
-                    }
-                />
-                <ConditionallyRender
-                    condition={!isChangeRequest}
-                    show={
-                        <FeatureStrategyEnabled
-                            projectId={feature.project}
-                            featureId={feature.name}
-                            environmentId={environmentId}
-                        />
                     }
                 />
             </StyledAlertBox>
@@ -481,6 +423,17 @@ export const FeatureStrategyForm = ({
                                         ...strategyState,
                                         disabled: !strategyState.disabled,
                                     }))
+                                }
+                            />
+
+                            <ConditionallyRender
+                                condition={!isChangeRequest}
+                                show={
+                                    <FeatureStrategyEnabled
+                                        projectId={feature.project}
+                                        featureId={feature.name}
+                                        environmentId={environmentId}
+                                    />
                                 }
                             />
                         </>

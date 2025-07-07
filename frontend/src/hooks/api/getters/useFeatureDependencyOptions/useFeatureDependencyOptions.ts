@@ -1,5 +1,5 @@
 import { formatApiPath } from 'utils/formatPath';
-import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter';
+import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter.js';
 
 const parentOptionsPath = (projectId: string, childFeatureId: string) =>
     `/api/admin/projects/${projectId}/features/${childFeatureId}/parents`;

@@ -1,9 +1,8 @@
-import type { IAuthRequest } from '../routes/unleash-types';
+import type { IAuthRequest } from '../routes/unleash-types.js';
 import type { NextFunction, Response } from 'express';
-import type { LogProvider } from '../logger';
-import { AuthenticationRequired } from '../server-impl';
-import UnauthorizedError from '../error/unauthorized-error';
-
+import type { LogProvider } from '../logger.js';
+import UnauthorizedError from '../error/unauthorized-error.js';
+import { AuthenticationRequired } from '../types/index.js';
 const authorizationMiddleware = (
     getLogger: LogProvider,
     baseUriPath: string,

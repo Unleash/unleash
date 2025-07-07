@@ -210,7 +210,7 @@ However, we recommend not deleting feature flags unless they are completely remo
 :::
 
 
-Tags can be used to group feature flags by any criteria, such as functionality, teams, or products, to make them easier to filter and manage. Tags are organized by type, which you can define in the Admin UI under **Configure > Tag types**.
+Tags can be used to group feature flags by any criteria, such as functionality, teams, or products, to make them easier to filter and manage. Tags are organized by type and color which you can define in the Admin UI under **Configure > Tag types**.
 
 To assign tags to a feature flag, do the following:
 1. Open the feature flag and go to the **Tags for this feature flag** section.
@@ -219,3 +219,17 @@ To assign tags to a feature flag, do the following:
 4. Click **Save tags**.
 
 For example, you can create a `slack` tag type and assign Slack channel names as tag values. This lets you configure a Slack integration to send updates about specific feature flags to the correct channels.
+
+## External links
+
+:::note Availability
+
+**Version**: `7.0+`
+
+:::
+
+You can add external links to your feature flags, allowing you to connect them to related resources like key metrics, analytics, or issue trackers. You can add a link on the **Overview** page of any feature flag.
+
+In addition, you can define link templates at the project level in **Settings > Project settings > Enterprise settings > Project link templates**. These templates automatically populate links for all new feature flags within that project. For example, you can create templates to find all usages of 
+a feature flag in your repository or automatically link to a Jira issue when a flag is created from Jira.
+

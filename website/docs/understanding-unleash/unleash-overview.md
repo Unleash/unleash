@@ -1,5 +1,5 @@
 ---
-title: Unleash architecture
+title: Unleash architecture overview
 pagination_next: understanding-unleash/the-anatomy-of-unleash
 ---
 

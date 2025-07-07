@@ -3,9 +3,9 @@ import {
     type IAccessStore,
     type IUnleashStores,
     SYSTEM_USER_ID,
-} from '../../types';
-import type { IAccessReadModel } from './access-read-model-type';
-import * as permissions from '../../types/permissions';
+} from '../../types/index.js';
+import type { IAccessReadModel } from './access-read-model-type.js';
+import * as permissions from '../../types/permissions.js';
 
 const { ADMIN } = permissions;
 

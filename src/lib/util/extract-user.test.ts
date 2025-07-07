@@ -1,6 +1,9 @@
-import { SYSTEM_USER } from '../../lib/types';
-import type { IUser } from '../server-impl';
-import { extractUserIdFromUser, extractUsernameFromUser } from './extract-user';
+import { SYSTEM_USER } from '../../lib/types/index.js';
+import type { IUser } from '../types/index.js';
+import {
+    extractUserIdFromUser,
+    extractUsernameFromUser,
+} from './extract-user.js';
 
 describe('extractUsernameFromUser', () => {
     test('Should return the email if it exists', () => {

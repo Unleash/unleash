@@ -1,8 +1,8 @@
-import { SKIP_CHANGE_REQUEST } from '../../types';
-import type { Db } from '../../db/db';
-import type { AccessService } from '../../services';
-import type User from '../../types/user';
-import type { IChangeRequestAccessReadModel } from './change-request-access-read-model';
+import { SKIP_CHANGE_REQUEST } from '../../types/index.js';
+import type { Db } from '../../db/db.js';
+import type { AccessService } from '../../services/index.js';
+import type User from '../../types/user.js';
+import type { IChangeRequestAccessReadModel } from './change-request-access-read-model.js';
 
 export class ChangeRequestAccessReadModel
     implements IChangeRequestAccessReadModel

@@ -4,8 +4,8 @@ import { Box, Typography, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { Link } from 'react-router-dom';
-import { HorizontalDistributionChart } from '../../components/HorizontalDistributionChart/HorizontalDistributionChart';
-import { UserDistributionInfo } from './UserDistributionInfo';
+import { HorizontalDistributionChart } from '../../components/HorizontalDistributionChart/HorizontalDistributionChart.tsx';
+import { UserDistributionInfo } from './UserDistributionInfo.tsx';
 
 const StyledUserContainer = styled(Box)(({ theme }) => ({
     position: 'relative',

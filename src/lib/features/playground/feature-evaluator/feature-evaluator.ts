@@ -1,17 +1,17 @@
-import Client, { type FeatureStrategiesEvaluationResult } from './client';
-import Repository, { type RepositoryInterface } from './repository';
-import type { Context } from './context';
-import { Strategy, defaultStrategies } from './strategy';
+import Client, { type FeatureStrategiesEvaluationResult } from './client.js';
+import Repository, { type RepositoryInterface } from './repository/index.js';
+import type { Context } from './context.js';
+import { Strategy, defaultStrategies } from './strategy/index.js';
 
-import type { ClientFeaturesResponse, FeatureInterface } from './feature';
-import type { Variant } from './variant';
-import { type FallbackFunction, createFallbackFunction } from './helpers';
+import type { ClientFeaturesResponse, FeatureInterface } from './feature.js';
+import type { Variant } from './variant.js';
+import { type FallbackFunction, createFallbackFunction } from './helpers.js';
 import {
     type BootstrapOptions,
     resolveBootstrapProvider,
-} from './repository/bootstrap-provider';
-import type { StorageProvider } from './repository/storage-provider';
-import InMemStorageProvider from './repository/storage-provider-in-mem';
+} from './repository/bootstrap-provider.js';
+import type { StorageProvider } from './repository/storage-provider.js';
+import InMemStorageProvider from './repository/storage-provider-in-mem.js';
 
 export { Strategy };
 

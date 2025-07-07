@@ -1,6 +1,7 @@
 import { type FC, useState } from 'react';
 import {
     List,
+    ListItem,
     ListItemButton,
     ListItemIcon,
     ListItemText,
@@ -11,27 +12,31 @@ import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/Feat
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { formatDateYMD } from 'utils/formatDate';
 import { parseISO } from 'date-fns';
-import { DependencyRow } from './DependencyRow';
+import { DependencyRow } from './DependencyRow.tsx';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { useShowDependentFeatures } from './useShowDependentFeatures';
-import { FeatureLifecycle } from '../FeatureLifecycle/FeatureLifecycle';
-import { MarkCompletedDialogue } from '../FeatureLifecycle/MarkCompletedDialogue';
-import { TagRow } from './TagRow';
+import { useShowDependentFeatures } from './useShowDependentFeatures.ts';
+import { FeatureLifecycle } from '../FeatureLifecycle/FeatureLifecycle.tsx';
+import { MarkCompletedDialogue } from '../FeatureLifecycle/MarkCompletedDialogue.tsx';
+import { TagRow } from './TagRow.tsx';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
-import { Collaborators } from './Collaborators';
-import { EnvironmentVisibilityMenu } from './EnvironmentVisibilityMenu/EnvironmentVisibilityMenu';
+import { Collaborators } from './Collaborators.tsx';
+import { EnvironmentVisibilityMenu } from './EnvironmentVisibilityMenu/EnvironmentVisibilityMenu.tsx';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import type {
     FeatureLink,
     IFeatureToggle,
-} from '../../../../../interfaces/featureToggle';
+} from '../../../../../interfaces/featureToggle.ts';
 import AddIcon from '@mui/icons-material/Add';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { Badge } from 'component/common/Badge/Badge';
 import LinkIcon from '@mui/icons-material/Link';
-import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
+import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions.ts';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { AddLinkDialogue } from './AddLinkDialogue';
+import { EditLinkDialogue, AddLinkDialogue } from './LinkDialogue.tsx';
+import { useFeatureLinkApi } from 'hooks/api/actions/useFeatureLinkApi/useFeatureLinkApi';
+import useToast from 'hooks/useToast';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import { ExtraActions } from './ExtraActions.tsx';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -101,12 +106,17 @@ interface FeatureLinksProps {
 
 const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
     const [showAddLinkDialogue, setShowAddLinkDialogue] = useState(false);
+    const [editLink, setEditLink] = useState<FeatureLink | null>(null);
+    const { deleteLink, loading } = useFeatureLinkApi(project, feature);
+    const { setToastData, setToastApiError } = useToast();
+    const { refetchFeature } = useFeature(project, feature);
 
     const addLinkButton = (
         <PermissionButton
             size='small'
             startIcon={<AddIcon />}
             permission={UPDATE_FEATURE}
+            disabled={links.length >= 10}
             projectId={project}
             variant='text'
             onClick={() => setShowAddLinkDialogue(true)}
@@ -118,29 +128,56 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
     const renderLinkItems = () => (
         <List>
             {links.map((link) => (
-                <ListItemButton
+                <ListItem
+                    secondaryAction={
+                        <ExtraActions
+                            capabilityId='link'
+                            feature={feature}
+                            onEdit={() => {
+                                setEditLink(link);
+                            }}
+                            onDelete={async () => {
+                                try {
+                                    await deleteLink(link.id);
+                                    setToastData({
+                                        text: 'Link removed',
+                                        type: 'success',
+                                    });
+                                    refetchFeature();
+                                } catch (error) {
+                                    setToastApiError(formatUnknownError(error));
+                                }
+                            }}
+                        />
+                    }
                     key={link.id}
-                    component='a'
-                    href={link.url}
-                    target='_blank'
-                    rel='noopener noreferrer'
+                    disablePadding
+                    dense
                 >
-                    <StyledListItemIcon>
-                        <LinkIcon color='primary' />
-                    </StyledListItemIcon>
-                    <ListItemText
-                        primary={link.title}
-                        secondary={link.url}
-                        secondaryTypographyProps={{
-                            sx: {
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap',
-                                display: 'block',
-                            },
-                        }}
-                    />
-                </ListItemButton>
+                    <ListItemButton
+                        component='a'
+                        href={link.url}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        disableGutters
+                    >
+                        <StyledListItemIcon>
+                            <LinkIcon color='primary' />
+                        </StyledListItemIcon>
+                        <ListItemText
+                            primary={link.title}
+                            secondary={link.url}
+                            secondaryTypographyProps={{
+                                sx: {
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    display: 'block',
+                                },
+                            }}
+                        />
+                    </ListItemButton>
+                </ListItem>
             ))}
         </List>
     );
@@ -178,8 +215,14 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
             <AddLinkDialogue
                 project={project}
                 featureId={feature}
-                showAddLinkDialogue={showAddLinkDialogue}
+                showDialogue={showAddLinkDialogue}
                 onClose={() => setShowAddLinkDialogue(false)}
+            />
+            <EditLinkDialogue
+                project={project}
+                featureId={feature}
+                link={editLink}
+                onClose={() => setEditLink(null)}
             />
         </>
     );
@@ -202,17 +245,13 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
 
     const showDependentFeatures = useShowDependentFeatures(project);
 
-    const featureLinksEnabled = useUiFlag('featureLinks');
-
     return (
         <>
-            {featureLinksEnabled ? (
-                <FeatureLinks
-                    links={feature.links || []}
-                    project={feature.project}
-                    feature={feature.name}
-                />
-            ) : null}
+            <FeatureLinks
+                links={feature.links || []}
+                project={feature.project}
+                feature={feature.name}
+            />
             <StyledMetaDataContainer>
                 <div>
                     <StyledTitle>Flag details</StyledTitle>

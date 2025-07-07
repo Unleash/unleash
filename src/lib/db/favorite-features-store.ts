@@ -1,9 +1,9 @@
 import type EventEmitter from 'events';
-import type { IFavoriteFeaturesStore } from '../types';
-import type { Logger, LogProvider } from '../logger';
-import type { IFavoriteFeatureKey } from '../types/stores/favorite-features';
-import type { IFavoriteFeature } from '../types/favorites';
-import type { Db } from './db';
+import type { IFavoriteFeaturesStore } from '../types/index.js';
+import type { Logger, LogProvider } from '../logger.js';
+import type { IFavoriteFeatureKey } from '../types/stores/favorite-features.js';
+import type { IFavoriteFeature } from '../types/favorites.js';
+import type { Db } from './db.js';
 
 const T = {
     FAVORITE_FEATURES: 'favorite_features',

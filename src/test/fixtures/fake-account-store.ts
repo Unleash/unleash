@@ -1,10 +1,10 @@
-import type { IUser } from '../../lib/types/user';
+import type { IUser } from '../../lib/types/user.js';
 import type {
     // ICreateUser,
     IUserLookup,
     IAccountStore,
     IAdminCount,
-} from '../../lib/types/stores/account-store';
+} from '../../lib/types/stores/account-store.js';
 
 export class FakeAccountStore implements IAccountStore {
     data: IUser[];

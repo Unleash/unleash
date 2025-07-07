@@ -30,7 +30,7 @@ import {
 } from 'component/user/Profile/PersonalAPITokensTab/CreatePersonalAPIToken/PersonalAPITokenForm/PersonalAPITokenForm';
 import { useServiceAccountTokensApi } from 'hooks/api/actions/useServiceAccountTokensApi/useServiceAccountTokensApi';
 import type { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
-import { ServiceAccountTokens } from './ServiceAccountTokens/ServiceAccountTokens';
+import { ServiceAccountTokens } from './ServiceAccountTokens/ServiceAccountTokens.tsx';
 import type { IServiceAccount } from 'interfaces/service-account';
 import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
 import type { IRole } from 'interfaces/role';

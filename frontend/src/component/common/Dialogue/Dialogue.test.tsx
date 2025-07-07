@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { Dialogue } from './Dialogue';
+import { Dialogue } from './Dialogue.tsx';
 import { vi } from 'vitest';
 
 test('modal should close when escape is pressed', () => {

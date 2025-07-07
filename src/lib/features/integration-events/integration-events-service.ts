@@ -1,10 +1,10 @@
-import type { Logger } from '../../logger';
-import type { IFlagResolver, IUnleashConfig } from '../../types';
+import type { Logger } from '../../logger.js';
+import type { IFlagResolver, IUnleashConfig } from '../../types/index.js';
 import type {
     IntegrationEventsStore,
     IntegrationEventWriteModel,
-} from './integration-events-store';
-import type { IntegrationEventSchema } from '../../openapi/spec/integration-event-schema';
+} from './integration-events-store.js';
+import type { IntegrationEventSchema } from '../../openapi/spec/integration-event-schema.js';
 
 export class IntegrationEventsService {
     private readonly logger: Logger;

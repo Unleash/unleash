@@ -1,13 +1,13 @@
-import type { Db } from '../../db/db';
-import type { Logger, LogProvider } from '../../logger';
+import type { Db } from '../../db/db.js';
+import type { Logger, LogProvider } from '../../logger.js';
 import type {
     IContextField,
     IContextFieldDto,
     IContextFieldStore,
     ILegalValue,
-} from './context-field-store-type';
-import NotFoundError from '../../error/notfound-error';
-import type { IFlagResolver } from '../../types';
+} from './context-field-store-type.js';
+import NotFoundError from '../../error/notfound-error.js';
+import type { IFlagResolver } from '../../types/index.js';
 
 const COLUMNS = [
     'name',
@@ -20,6 +20,7 @@ const COLUMNS = [
 const T = {
     contextFields: 'context_fields',
     featureStrategies: 'feature_strategies',
+    features: 'features',
 };
 
 type ContextFieldDB = {
@@ -88,17 +89,21 @@ class ContextFieldStore implements IContextFieldStore {
 
     async getAll(): Promise<IContextField[]> {
         const rows = await this.db
-            .select(
-                this.prefixColumns(),
-                'used_in_projects',
-                'used_in_features',
-            )
-            .countDistinct(
-                `${T.featureStrategies}.project_name AS used_in_projects`,
-            )
-            .countDistinct(
-                `${T.featureStrategies}.feature_name AS used_in_features`,
-            )
+            .select([
+                ...this.prefixColumns(),
+                this.db.raw(
+                    `COUNT(DISTINCT CASE
+                        WHEN ${T.features}.archived_at IS NULL
+                        THEN ${T.featureStrategies}.project_name
+                    END) AS used_in_projects`,
+                ),
+                this.db.raw(
+                    `COUNT(DISTINCT CASE
+                        WHEN ${T.features}.archived_at IS NULL
+                        THEN ${T.featureStrategies}.feature_name
+                    END) AS used_in_features`,
+                ),
+            ])
             .from(T.contextFields)
             .joinRaw(
                 `LEFT JOIN ${T.featureStrategies} ON EXISTS (
@@ -107,12 +112,18 @@ class ContextFieldStore implements IContextFieldStore {
                         WHERE elem ->> 'contextName' = ${T.contextFields}.name
                       )`,
             )
+            .leftJoin(
+                T.features,
+                `${T.features}.name`,
+                `${T.featureStrategies}.feature_name`,
+            )
             .groupBy(
                 this.prefixColumns(
                     COLUMNS.filter((column) => column !== 'legal_values'),
                 ),
             )
             .orderBy('name', 'asc');
+
         return rows.map(mapRow);
     }
 
@@ -144,7 +155,6 @@ class ContextFieldStore implements IContextFieldStore {
         return present;
     }
 
-    // TODO: write tests for the changes you made here?
     async create(contextField: IContextFieldDto): Promise<IContextField> {
         const [row] = await this.db(T.contextFields)
             .insert(this.fieldToRow(contextField))

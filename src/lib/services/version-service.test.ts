@@ -1,9 +1,9 @@
 import nock from 'nock';
-import createStores from '../../test/fixtures/store';
-import version from '../util/version';
-import getLogger from '../../test/fixtures/no-logger';
-import VersionService from './version-service';
-import { randomId } from '../util/random-id';
+import createStores from '../../test/fixtures/store.js';
+import version from '../util/version.js';
+import getLogger from '../../test/fixtures/no-logger.js';
+import VersionService from './version-service.js';
+import { randomId } from '../util/random-id.js';
 
 beforeAll(() => {
     nock.disableNetConnect();
@@ -41,6 +41,8 @@ const fakeTelemetryData = {
     productionChanges60: 0,
     productionChanges90: 0,
     postgresVersion: '17.1 (Debian 17.1-1.pgdg120+1)',
+    licenseType: 'test',
+    hostedBy: 'self-hosted',
 };
 
 test('yields current versions', async () => {

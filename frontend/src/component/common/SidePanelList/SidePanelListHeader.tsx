@@ -2,7 +2,7 @@ import { styled } from '@mui/material';
 import {
     type SidePanelListColumn,
     StyledSidePanelListColumn,
-} from './SidePanelList';
+} from './SidePanelList.tsx';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',

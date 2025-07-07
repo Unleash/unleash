@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AdvancedPlaygroundEnvironmentFeatureSchemaVariantPayload } from './advancedPlaygroundEnvironmentFeatureSchemaVariantPayload';
+import type { AdvancedPlaygroundEnvironmentFeatureSchemaVariantPayload } from './advancedPlaygroundEnvironmentFeatureSchemaVariantPayload.js';
 
 /**
  * The feature variant you receive based on the provided context or the _disabled

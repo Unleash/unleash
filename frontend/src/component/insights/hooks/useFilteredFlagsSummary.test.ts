@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useFilteredFlagsSummary } from './useFilteredFlagsSummary';
+import { useFilteredFlagsSummary } from './useFilteredFlagsSummary.js';
 
 describe('useFilteredFlagTrends', () => {
     it('should summarize only last week of project flag trends', () => {
@@ -64,6 +64,7 @@ describe('useFilteredFlagTrends', () => {
             averageUsers: 2,
             averageHealth: '79',
             medianTimeToProduction: 3,
+            technicalDebt: '21',
         });
     });
 
@@ -92,6 +93,7 @@ describe('useFilteredFlagTrends', () => {
             potentiallyStale: 0,
             averageUsers: 0,
             averageHealth: '100',
+            technicalDebt: '0',
             medianTimeToProduction: 4,
         });
     });
@@ -134,6 +136,7 @@ describe('useFilteredFlagTrends', () => {
             averageUsers: 1.5,
             averageHealth: '100',
             medianTimeToProduction: 3.5,
+            technicalDebt: '0',
         });
     });
 
@@ -163,6 +166,7 @@ describe('useFilteredFlagTrends', () => {
             averageUsers: 0,
             averageHealth: '100',
             medianTimeToProduction: undefined,
+            technicalDebt: '0',
         });
     });
 
@@ -216,6 +220,7 @@ describe('useFilteredFlagTrends', () => {
             averageUsers: 0,
             averageHealth: '100',
             medianTimeToProduction: 5,
+            technicalDebt: '0',
         });
     });
 });

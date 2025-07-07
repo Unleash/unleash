@@ -1,6 +1,6 @@
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import { OverwriteWarning } from './OverwriteWarning';
+import { OverwriteWarning } from './OverwriteWarning.tsx';
 import type { ChangeRequestState } from 'component/changeRequest/changeRequest.types';
 
 test.each([

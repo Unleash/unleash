@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestDefaultChangeSchemaPayload } from './changeRequestDefaultChangeSchemaPayload';
+import type { ChangeRequestDefaultChangeSchemaPayload } from './changeRequestDefaultChangeSchemaPayload.js';
 
 /**
  * A description of a default change that will be applied with the change request to prevent invalid states.

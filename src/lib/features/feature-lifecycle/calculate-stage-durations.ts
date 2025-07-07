@@ -1,7 +1,10 @@
-import type { IProjectLifecycleStageDuration, StageName } from '../../types';
-import type { FeatureLifecycleProjectItem } from './feature-lifecycle-store-type';
+import type {
+    IProjectLifecycleStageDuration,
+    StageName,
+} from '../../types/index.js';
+import type { FeatureLifecycleProjectItem } from './feature-lifecycle-store-type.js';
 import { differenceInMinutes } from 'date-fns';
-import { median } from '../../util/median';
+import { median } from '../../util/median.js';
 
 export function calculateStageDurations(
     featureLifeCycles: FeatureLifecycleProjectItem[],

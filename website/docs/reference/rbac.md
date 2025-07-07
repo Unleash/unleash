@@ -293,7 +293,7 @@ role that encapsulates the needed permissions.
 
 The access overview page helps administrators see exactly what a user can do in Unleash and which roles grant those permissions. You can explore permissions at the root level or for specific environments and projects.
 
-To view a user’s permissions, go to **Admin > Users**. Select a user and click **Access overview**.
+To view a user’s permissions, go to **Admin settings > User config > Users**. Select a user and click **Access overview**.
 
 
 ## User groups
@@ -373,8 +373,8 @@ group. This can be done by navigating to the Unleash group you want to enable sy
 the "SSO group ID/name" property.
 
 [^1]: The project-level permission is still required for the [**create/overwrite variants
-** (PUT)](/docs/reference/api/unleash/overwrite-feature-variants.api.mdx) and [**update variants
-** (PATCH)](/docs/reference/api/unleash/patch-feature-variants.api.mdx) API endpoints, but it is not used for anything
+** (PUT)](/reference/api/unleash/overwrite-feature-variants) and [**update variants
+** (PATCH)](/reference/api/unleash/patch-feature-variants) API endpoints, but it is not used for anything
 within the admin UI. The API endpoints have been superseded by the [**create/overwrite environment variants
-** (PUT)](/docs/reference/api/unleash/overwrite-feature-variants-on-environments.api.mdx) and [**update environment
-variants** (PATCH)](/docs/reference/api/unleash/patch-environments-feature-variants.api.mdx) endpoints, respectively.
+** (PUT)](/reference/api/unleash/overwrite-feature-variants-on-environments) and [**update environment
+variants** (PATCH)](/reference/api/unleash/patch-environments-feature-variants) endpoints, respectively.

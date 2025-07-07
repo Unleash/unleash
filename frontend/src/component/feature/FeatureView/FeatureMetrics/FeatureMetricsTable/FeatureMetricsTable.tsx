@@ -9,7 +9,7 @@ import { useMemo } from 'react';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import theme from 'themes/theme';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
-import { ApplicationsCell } from './ApplicationsCell';
+import { ApplicationsCell } from './ApplicationsCell.tsx';
 
 interface IFeatureMetricsTableProps {
     metrics: IFeatureMetricsRaw[];

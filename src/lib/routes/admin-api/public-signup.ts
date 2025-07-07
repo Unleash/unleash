@@ -1,19 +1,19 @@
 import type { Response } from 'express';
 
-import Controller from '../controller';
+import Controller from '../controller.js';
 import {
     ADMIN,
     type IUnleashConfig,
-    type IUnleashServices,
     serializeDates,
-} from '../../types';
-import type { Logger } from '../../logger';
+} from '../../types/index.js';
+import type { Logger } from '../../logger.js';
 import type {
     AccessService,
+    IUnleashServices,
     OpenApiService,
     PublicSignupTokenService,
-} from '../../services';
-import type { IAuthRequest } from '../unleash-types';
+} from '../../services/index.js';
+import type { IAuthRequest } from '../unleash-types.js';
 import {
     createRequestSchema,
     createResponseSchema,
@@ -25,8 +25,8 @@ import {
     type PublicSignupTokensSchema,
     type PublicSignupTokenUpdateSchema,
     resourceCreatedResponseSchema,
-} from '../../openapi';
-import type UserService from '../../services/user-service';
+} from '../../openapi/index.js';
+import type UserService from '../../services/user-service.js';
 
 interface TokenParam {
     token: string;

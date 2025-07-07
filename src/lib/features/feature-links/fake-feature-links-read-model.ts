@@ -1,10 +1,14 @@
 import type {
     IFeatureLink,
     IFeatureLinksReadModel,
-} from './feature-links-read-model-type';
+} from './feature-links-read-model-type.js';
 
 export class FakeFeatureLinksReadModel implements IFeatureLinksReadModel {
-    async getLinks(feature: string): Promise<IFeatureLink[]> {
+    async getTopDomains(): Promise<{ domain: string; count: number }[]> {
+        return [];
+    }
+
+    async getLinks(...features: string[]): Promise<IFeatureLink[]> {
         return [];
     }
 }

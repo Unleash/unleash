@@ -8,15 +8,15 @@ import { styled, useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
-import { ProjectGroup } from './ProjectGroup';
-import { ProjectsListSort } from './ProjectsListSort/ProjectsListSort';
-import { useProjectsListState } from './hooks/useProjectsListState';
+import { ProjectGroup } from './ProjectGroup.tsx';
+import { ProjectsListSort } from './ProjectsListSort/ProjectsListSort.tsx';
+import { useProjectsListState } from './hooks/useProjectsListState.ts';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { ProjectCreationButton } from './ProjectCreationButton/ProjectCreationButton';
-import { useGroupedProjects } from './hooks/useGroupedProjects';
-import { useProjectsSearchAndSort } from './hooks/useProjectsSearchAndSort';
-import { ProjectArchiveLink } from './ProjectArchiveLink/ProjectArchiveLink';
-import { ProjectsListHeader } from './ProjectsListHeader/ProjectsListHeader';
+import { ProjectCreationButton } from './ProjectCreationButton/ProjectCreationButton.tsx';
+import { useGroupedProjects } from './hooks/useGroupedProjects.ts';
+import { useProjectsSearchAndSort } from './hooks/useProjectsSearchAndSort.ts';
+import { ProjectArchiveLink } from './ProjectArchiveLink/ProjectArchiveLink.tsx';
+import { ProjectsListHeader } from './ProjectsListHeader/ProjectsListHeader.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
@@ -78,7 +78,7 @@ export const ProjectList = () => {
                                 }
                             />
 
-                            <ProjectArchiveLink />
+                            {!isOss() && <ProjectArchiveLink />}
                             <ProjectCreationButton
                                 isDialogOpen={Boolean(state.create)}
                                 setIsDialogOpen={(create) =>

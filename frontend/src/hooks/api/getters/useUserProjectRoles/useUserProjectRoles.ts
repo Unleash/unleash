@@ -1,7 +1,7 @@
-import { getUserProjectRolesFetcher } from './getUserProjectRolesFetcher';
+import { getUserProjectRolesFetcher } from './getUserProjectRolesFetcher.js';
 import useSWR, { type SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
-import type { IUserProjectRoles } from '../../../../interfaces/userProjectRoles';
+import type { IUserProjectRoles } from '../../../../interfaces/userProjectRoles.js';
 
 export const useUserProjectRoles = (
     projectId: string,

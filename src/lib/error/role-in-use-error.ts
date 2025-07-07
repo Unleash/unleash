@@ -1,4 +1,4 @@
-import { UnleashError } from './unleash-error';
+import { UnleashError } from './unleash-error.js';
 
 class RoleInUseError extends UnleashError {
     statusCode = 400;

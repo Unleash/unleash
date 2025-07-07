@@ -1,7 +1,7 @@
 import type {
     ChangeRequestStrategy,
     IChangeRequestSegmentUsageReadModel,
-} from './change-request-segment-usage-read-model';
+} from './change-request-segment-usage-read-model.js';
 
 export class FakeChangeRequestSegmentUsageReadModel
     implements IChangeRequestSegmentUsageReadModel

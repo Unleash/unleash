@@ -7,24 +7,24 @@ import {
     styled,
     Typography,
 } from '@mui/material';
-import { WelcomeDialog } from './WelcomeDialog';
+import { WelcomeDialog } from './WelcomeDialog.tsx';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboard';
 import { usePersonalDashboardProjectDetails } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
-import { MyProjects } from './MyProjects';
+import { MyProjects } from './MyProjects.tsx';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
-import { useDashboardState } from './useDashboardState';
-import { MyFlags } from './MyFlags';
+import { useDashboardState } from './useDashboardState.ts';
+import { MyFlags } from './MyFlags.tsx';
 import { usePageTitle } from 'hooks/usePageTitle';
-import { fromPersonalDashboardProjectDetailsOutput } from './RemoteData';
+import { fromPersonalDashboardProjectDetailsOutput } from './RemoteData.ts';
 import { useEffect } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { InfoSection } from './InfoSection';
+import { InfoSection } from './InfoSection.tsx';
 import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
-import { AccordionContent } from './SharedComponents';
+import { AccordionContent } from './SharedComponents.tsx';
 import { Link } from 'react-router-dom';
 
 const WelcomeSection = styled('div')(({ theme }) => ({

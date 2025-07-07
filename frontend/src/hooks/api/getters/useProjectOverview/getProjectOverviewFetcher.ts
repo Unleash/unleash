@@ -1,5 +1,5 @@
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 
 export const getProjectOverviewFetcher = (id: string) => {
     const fetcher = () => {

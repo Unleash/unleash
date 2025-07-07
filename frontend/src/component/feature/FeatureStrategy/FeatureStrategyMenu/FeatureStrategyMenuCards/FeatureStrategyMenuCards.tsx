@@ -7,10 +7,10 @@ import {
     Tooltip,
 } from '@mui/material';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
-import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard';
+import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
-import { FeatureReleasePlanCard } from '../FeatureReleasePlanCard/FeatureReleasePlanCard';
+import { FeatureReleasePlanCard } from '../FeatureReleasePlanCard/FeatureReleasePlanCard.tsx';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
@@ -91,7 +91,7 @@ const StyledInfoIcon = styled(InfoOutlinedIcon)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const StyledIcon = styled('div')(({ theme }) => ({
+const StyledIcon = styled('span')(({ theme }) => ({
     width: theme.spacing(3),
     '& > svg': {
         fill: theme.palette.primary.main,

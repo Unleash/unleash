@@ -1,37 +1,46 @@
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
-import UserService from '../../../lib/services/user-service';
-import { AccessService } from '../../../lib/services/access-service';
-import ResetTokenService from '../../../lib/services/reset-token-service';
-import { EmailService } from '../../../lib/services/email-service';
-import { createTestConfig } from '../../config/test-config';
-import SessionService from '../../../lib/services/session-service';
-import NotFoundError from '../../../lib/error/notfound-error';
-import type { IRole } from '../../../lib/types/stores/access-store';
-import { RoleName } from '../../../lib/types/model';
-import SettingService from '../../../lib/services/setting-service';
-import { simpleAuthSettingsKey } from '../../../lib/types/settings/simple-auth-settings';
+import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import getLogger from '../../fixtures/no-logger.js';
+import UserService from '../../../lib/services/user-service.js';
+import { AccessService } from '../../../lib/services/access-service.js';
+import ResetTokenService from '../../../lib/services/reset-token-service.js';
+import { EmailService } from '../../../lib/services/email-service.js';
+import { createTestConfig } from '../../config/test-config.js';
+import SessionService from '../../../lib/services/session-service.js';
+import NotFoundError from '../../../lib/error/notfound-error.js';
+import type { IRole } from '../../../lib/types/stores/access-store.js';
+import { RoleName } from '../../../lib/types/model.js';
+import SettingService from '../../../lib/services/setting-service.js';
+import { simpleAuthSettingsKey } from '../../../lib/types/settings/simple-auth-settings.js';
 import { addDays, minutesToMilliseconds } from 'date-fns';
-import { GroupService } from '../../../lib/services/group-service';
-import { BadDataError } from '../../../lib/error';
-import PasswordMismatch from '../../../lib/error/password-mismatch';
-import type { EventService } from '../../../lib/services';
+import { GroupService } from '../../../lib/services/group-service.js';
+import { BadDataError } from '../../../lib/error/index.js';
+import PasswordMismatch from '../../../lib/error/password-mismatch.js';
+import type { EventService } from '../../../lib/services/index.js';
 import {
     CREATE_ADDON,
     type IUnleashStores,
     type IUserStore,
     SYSTEM_USER_AUDIT,
     TEST_AUDIT_USER,
+} from '../../../lib/types/index.js';
+import {
     USER_CREATED,
     USER_DELETED,
     USER_UPDATED,
-} from '../../../lib/types';
-import { CUSTOM_ROOT_ROLE_TYPE } from '../../../lib/util';
-import { PasswordPreviouslyUsedError } from '../../../lib/error/password-previously-used';
-import { createEventsService } from '../../../lib/features';
+} from '../../../lib/events/index.js';
+import { CUSTOM_ROOT_ROLE_TYPE } from '../../../lib/util/index.js';
+import { PasswordPreviouslyUsedError } from '../../../lib/error/password-previously-used.js';
+import { createEventsService } from '../../../lib/features/index.js';
 import type EventEmitter from 'events';
-import { USER_LOGIN } from '../../../lib/metric-events';
-
+import { USER_LOGIN } from '../../../lib/metric-events.js';
+import {
+    beforeAll,
+    afterAll,
+    beforeEach,
+    test,
+    describe,
+    expect,
+} from 'vitest';
 let db: ITestDb;
 let stores: IUnleashStores;
 let userService: UserService;
@@ -236,7 +245,7 @@ test('should not be able to login with deleted user', async () => {
 
     await expect(
         userService.loginUser('deleted_user', 'unleash4all'),
-    ).rejects.toThrow(
+    ).rejects.errorWithMessage(
         new PasswordMismatch(
             'The combination of password and username you provided is invalid. If you have forgotten your password, visit /forgotten-password or get in touch with your instance administrator.',
         ),
@@ -258,7 +267,7 @@ test('should not be able to login without password_hash on user', async () => {
 
     await expect(
         userService.loginUser('deleted_user', 'anything-should-fail'),
-    ).rejects.toThrow(
+    ).rejects.errorWithMessage(
         new PasswordMismatch(
             'The combination of password and username you provided is invalid. If you have forgotten your password, visit /forgotten-password or get in touch with your instance administrator.',
         ),
@@ -457,7 +466,9 @@ test('should throw if rootRole is wrong via SSO', async () => {
             name: 'some',
             autoCreate: true,
         }),
-    ).rejects.toThrow(new BadDataError('Could not find rootRole=Member'));
+    ).rejects.errorWithMessage(
+        new BadDataError('Could not find rootRole=Member'),
+    );
 });
 
 test('should update user name when signing in via SSO', async () => {
@@ -520,7 +531,7 @@ test('should throw if autoCreate is false via SSO', async () => {
             name: 'some',
             autoCreate: false,
         }),
-    ).rejects.toThrow(new NotFoundError('No user found'));
+    ).rejects.errorWithMessage(new NotFoundError('No user found'));
 });
 
 test('should support a root role id when logging in and creating user via SSO', async () => {
@@ -577,7 +588,7 @@ describe('Should not be able to use any of previous 5 passwords', () => {
                 user.id,
                 password,
             ),
-        ).rejects.toThrow(new PasswordPreviouslyUsedError());
+        ).rejects.errorWithMessage(new PasswordPreviouslyUsedError());
     });
     test('Is still able to change password to one not used', async () => {
         const name = 'new-password-is-allowed';

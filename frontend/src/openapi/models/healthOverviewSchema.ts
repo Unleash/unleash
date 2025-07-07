@@ -3,11 +3,11 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema';
-import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema';
-import type { FeatureSchema } from './featureSchema';
-import type { HealthOverviewSchemaMode } from './healthOverviewSchemaMode';
-import type { ProjectStatsSchema } from './projectStatsSchema';
+import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema.js';
+import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema.js';
+import type { FeatureSchema } from './featureSchema.js';
+import type { HealthOverviewSchemaMode } from './healthOverviewSchemaMode.js';
+import type { ProjectStatsSchema } from './projectStatsSchema.js';
 
 /**
  * An overview of a project's stats and its health as described in the documentation on [technical debt](https://docs.getunleash.io/reference/technical-debt)
@@ -37,7 +37,10 @@ export interface HealthOverviewSchema {
     featureNaming?: CreateFeatureNamingPatternSchema;
     /** An array containing an overview of all the features of the project and their individual status */
     features: FeatureSchema[];
-    /** The overall [health rating](https://docs.getunleash.io/reference/technical-debt#project-status) of the project. */
+    /**
+     * Use `technicalDebt` instead.
+     * @deprecated
+     */
     health: number;
     /**
      * The number of users/members in the project.
@@ -50,6 +53,12 @@ export interface HealthOverviewSchema {
     name: string;
     /** Project statistics */
     stats?: ProjectStatsSchema;
+    /**
+     * An indicator of the [project's technical debt](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100
+     * @minimum 0
+     * @maximum 100
+     */
+    technicalDebt: number;
     /**
      * When the project was last updated.
      * @nullable

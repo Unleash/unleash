@@ -1,6 +1,6 @@
 import { useTheme } from '@mui/material';
 import { useMemo } from 'react';
-import { fillGradientPrimary } from '../components/LineChart/LineChart';
+import { fillGradientPrimary } from '../components/LineChart/LineChart.jsx';
 
 type PlaceholderDataOptions = {
     fill?: boolean;

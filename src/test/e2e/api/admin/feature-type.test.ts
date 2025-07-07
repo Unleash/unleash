@@ -1,18 +1,22 @@
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
 import {
+    createUserWithRootRole,
     type IUnleashTest,
-    setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import { validateSchema } from '../../../../lib/openapi/validate';
-import { featureTypesSchema } from '../../../../lib/openapi/spec/feature-types-schema';
+    setupAppWithAuth,
+} from '../../helpers/test-helper.js';
+import { validateSchema } from '../../../../lib/openapi/validate.js';
+import { featureTypesSchema } from '../../../../lib/openapi/spec/feature-types-schema.js';
+import { RoleName } from '../../../../lib/types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
 
+const adminEmail = 'admin-user@getunleash.io';
+
 beforeAll(async () => {
     db = await dbInit('feature_type_api_serial', getLogger);
-    app = await setupAppWithCustomConfig(
+    app = await setupAppWithAuth(
         db.stores,
         {
             experimental: {
@@ -23,6 +27,17 @@ beforeAll(async () => {
         },
         db.rawDatabase,
     );
+
+    await createUserWithRootRole({
+        app,
+        stores: db.stores,
+        email: adminEmail,
+        roleName: RoleName.ADMIN,
+    });
+});
+
+beforeEach(async () => {
+    await app.login({ email: adminEmail });
 });
 
 afterAll(async () => {

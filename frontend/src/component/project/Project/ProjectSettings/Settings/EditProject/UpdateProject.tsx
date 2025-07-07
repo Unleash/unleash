@@ -1,5 +1,5 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import ProjectForm from '../../../ProjectForm/ProjectForm';
+import ProjectForm from '../../../ProjectForm/ProjectForm.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import {
     PROJECT_SETTINGS_WRITE,
@@ -7,17 +7,17 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
-} from '../../../hooks/useProjectForm';
+} from '../../../hooks/useProjectForm.ts';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import type { IProjectOverview } from 'interfaces/project';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { styled } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import type { ProjectOverviewSchema } from 'openapi';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     minHeight: 0,
@@ -38,7 +38,7 @@ const StyledFormContainer = styled('div')(({ theme }) => ({
 }));
 
 interface IUpdateProject {
-    project: IProjectOverview;
+    project: ProjectOverviewSchema;
 }
 const EDIT_PROJECT_BTN = 'EDIT_PROJECT_BTN';
 export const UpdateProject = ({ project }: IUpdateProject) => {
@@ -66,7 +66,7 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
     } = useProjectForm(
         id,
         project.name,
-        project.description,
+        project.description || undefined,
         defaultStickiness,
         String(project.featureLimit),
     );

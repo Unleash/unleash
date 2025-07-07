@@ -3,13 +3,14 @@ import {
     mapFeaturesForClient,
     mapSegmentsForClient,
     offlineUnleashClient,
-} from './offline-unleash-client';
+} from './offline-unleash-client.js';
 import {
     Unleash as UnleashClientNode,
     InMemStorageProvider as InMemStorageProviderNode,
 } from 'unleash-client';
 import { once } from 'events';
-import { playgroundStrategyEvaluation } from '../../openapi/spec/playground-strategy-schema';
+import { playgroundStrategyEvaluation } from '../../openapi/spec/playground-strategy-schema.js';
+import { DEFAULT_ENV } from '../../server-impl.js';
 
 export const offlineUnleashClientNode = async ({
     features,
@@ -54,7 +55,7 @@ describe('offline client', () => {
                     stale: false,
                 },
             ],
-            context: { appName: 'other-app', environment: 'default' },
+            context: { appName: 'other-app', environment: DEFAULT_ENV },
             logError: console.log,
         });
 
@@ -108,7 +109,7 @@ describe('offline client', () => {
                     stale: false,
                 },
             ],
-            context: { appName, environment: 'default' },
+            context: { appName, environment: DEFAULT_ENV },
             logError: console.log,
         });
 
@@ -430,13 +431,6 @@ describe('offline client', () => {
                     groupId: 'killer',
                     rollout: '34',
                     stickiness: 'userId',
-                },
-            },
-            {
-                name: 'userWithId',
-                constraints: [],
-                parameters: {
-                    userIds: 'uoea,ueoa',
                 },
             },
             {

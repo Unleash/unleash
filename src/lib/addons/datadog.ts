@@ -1,21 +1,21 @@
-import Addon from './addon';
+import Addon from './addon.js';
 
-import definition from './datadog-definition';
+import definition from './datadog-definition.js';
 import Mustache from 'mustache';
 import {
     type IAddonConfig,
     type IFlagResolver,
     serializeDates,
-} from '../types';
+} from '../types/index.js';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
-} from './feature-event-formatter-md';
-import type { IEvent } from '../types/events';
-import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
+} from './feature-event-formatter-md.js';
+import type { IEvent } from '../events/index.js';
+import type { IntegrationEventState } from '../features/integration-events/integration-events-store.js';
 
 interface IDatadogParameters {
-    url: string;
+    url?: string;
     apiKey: string;
     sourceTypeName?: string;
     customHeaders?: string;

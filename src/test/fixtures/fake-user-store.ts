@@ -1,10 +1,10 @@
-import type User from '../../lib/types/user';
-import type { IUser } from '../../lib/types/user';
+import type User from '../../lib/types/user.js';
+import type { IUser } from '../../lib/types/user.js';
 import type {
     ICreateUser,
     IUserLookup,
     IUserStore,
-} from '../../lib/types/stores/user-store';
+} from '../../lib/types/stores/user-store.js';
 
 class UserStoreMock implements IUserStore {
     data: IUser[];
@@ -159,7 +159,7 @@ class UserStoreMock implements IUserStore {
         return Promise.resolve(undefined);
     }
 
-    deleteScimUsers(): Promise<void> {
+    deleteScimUsers(): Promise<User[]> {
         throw new Error('Method not implemented.');
     }
 
@@ -191,7 +191,5 @@ class UserStoreMock implements IUserStore {
         throw new Error('Not implemented');
     }
 }
-
-module.exports = UserStoreMock;
 
 export default UserStoreMock;

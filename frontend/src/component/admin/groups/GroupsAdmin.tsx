@@ -1,11 +1,11 @@
 import { Route, Routes } from 'react-router-dom';
 import { UG } from 'component/common/flags';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
-import { GroupsList } from './GroupsList/GroupsList';
+import { GroupsList } from './GroupsList/GroupsList.tsx';
 import { ADMIN } from '@server/types/permissions';
-import { CreateGroup } from './CreateGroup/CreateGroup';
-import { EditGroupContainer } from './EditGroup/EditGroup';
-import { Group } from './Group/Group';
+import { CreateGroup } from './CreateGroup/CreateGroup.tsx';
+import { EditGroupContainer } from './EditGroup/EditGroup.tsx';
+import { Group } from './Group/Group.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 

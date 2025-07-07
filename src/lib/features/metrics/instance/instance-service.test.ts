@@ -1,21 +1,26 @@
-import ClientInstanceService from './instance-service';
-import type { IClientApp } from '../../../types/model';
-import FakeEventStore from '../../../../test/fixtures/fake-event-store';
-import { createTestConfig } from '../../../../test/config/test-config';
-import { FakePrivateProjectChecker } from '../../private-project/fakePrivateProjectChecker';
-import type { IClientApplicationsStore, IUnleashConfig } from '../../../types';
-import FakeClientMetricsStoreV2 from '../client-metrics/fake-client-metrics-store-v2';
-import FakeStrategiesStore from '../../../../test/fixtures/fake-strategies-store';
-import FakeFeatureToggleStore from '../../feature-toggle/fakes/fake-feature-toggle-store';
-import type { IApplicationOverview } from './models';
+import ClientInstanceService from './instance-service.js';
+import type { IClientApp } from '../../../types/model.js';
+import FakeEventStore from '../../../../test/fixtures/fake-event-store.js';
+import { createTestConfig } from '../../../../test/config/test-config.js';
+import { FakePrivateProjectChecker } from '../../private-project/fakePrivateProjectChecker.js';
+import type {
+    IClientApplicationsStore,
+    IUnleashConfig,
+} from '../../../types/index.js';
+import FakeClientMetricsStoreV2 from '../client-metrics/fake-client-metrics-store-v2.js';
+import FakeStrategiesStore from '../../../../test/fixtures/fake-strategies-store.js';
+import FakeFeatureToggleStore from '../../feature-toggle/fakes/fake-feature-toggle-store.js';
+import type { IApplicationOverview } from './models.js';
+
+import { vi } from 'vitest';
 
 let config: IUnleashConfig;
 beforeAll(() => {
     config = createTestConfig({});
 });
 test('Multiple registrations of same appname and instanceid within same time period should only cause one registration', async () => {
-    const appStoreSpy = jest.fn();
-    const bulkSpy = jest.fn();
+    const appStoreSpy = vi.fn();
+    const bulkSpy = vi.fn();
     const clientApplicationsStore: any = {
         bulkUpsert: appStoreSpy,
     };
@@ -51,7 +56,8 @@ test('Multiple registrations of same appname and instanceid within same time per
     expect(appStoreSpy).toHaveBeenCalledTimes(1);
     expect(bulkSpy).toHaveBeenCalledTimes(1);
 
-    const registrations = appStoreSpy.mock.calls[0][0];
+    const registrations: IClientApp[] = appStoreSpy.mock
+        .calls[0][0] as IClientApp[];
 
     expect(registrations.length).toBe(1);
     expect(registrations[0].appName).toBe(client1.appName);
@@ -59,12 +65,12 @@ test('Multiple registrations of same appname and instanceid within same time per
     expect(registrations[0].started).toBe(client1.started);
     expect(registrations[0].interval).toBe(client1.interval);
 
-    jest.useRealTimers();
+    vi.useRealTimers();
 });
 
 test('Multiple unique clients causes multiple registrations', async () => {
-    const appStoreSpy = jest.fn();
-    const bulkSpy = jest.fn();
+    const appStoreSpy = vi.fn();
+    const bulkSpy = vi.fn();
     const clientApplicationsStore: any = {
         bulkUpsert: appStoreSpy,
     };
@@ -106,15 +112,15 @@ test('Multiple unique clients causes multiple registrations', async () => {
     await clientMetrics.registerBackendClient(client2, '127.0.0.1');
 
     await clientMetrics.bulkAdd(); // in prod called by a SchedulerService
-
-    const registrations = appStoreSpy.mock.calls[0][0];
+    const registrations: IClientApp[] = appStoreSpy.mock
+        .calls[0][0] as IClientApp[];
 
     expect(registrations.length).toBe(2);
 });
 
 test('Same client registered outside of dedup interval will be registered twice', async () => {
-    const appStoreSpy = jest.fn();
-    const bulkSpy = jest.fn();
+    const appStoreSpy = vi.fn();
+    const bulkSpy = vi.fn();
     const clientApplicationsStore: any = {
         bulkUpsert: appStoreSpy,
     };
@@ -164,8 +170,8 @@ test('Same client registered outside of dedup interval will be registered twice'
 });
 
 test('No registrations during a time period will not call stores', async () => {
-    const appStoreSpy = jest.fn();
-    const bulkSpy = jest.fn();
+    const appStoreSpy = vi.fn();
+    const bulkSpy = vi.fn();
     const clientApplicationsStore: any = {
         bulkUpsert: appStoreSpy,
     };

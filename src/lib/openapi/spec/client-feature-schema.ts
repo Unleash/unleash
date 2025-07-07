@@ -1,11 +1,11 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { constraintSchema } from './constraint-schema';
-import { parametersSchema } from './parameters-schema';
-import { featureStrategySchema } from './feature-strategy-schema';
-import { variantSchema } from './variant-schema';
-import { overrideSchema } from './override-schema';
-import { strategyVariantSchema } from './strategy-variant-schema';
-import { dependentFeatureSchema } from './dependent-feature-schema';
+import { constraintSchema } from './constraint-schema.js';
+import { parametersSchema } from './parameters-schema.js';
+import { featureStrategySchema } from './feature-strategy-schema.js';
+import { variantSchema } from './variant-schema.js';
+import { overrideSchema } from './override-schema.js';
+import { strategyVariantSchema } from './strategy-variant-schema.js';
+import { dependentFeatureSchema } from './dependent-feature-schema.js';
 
 export const clientFeatureSchema = {
     $id: '#/components/schemas/clientFeatureSchema',

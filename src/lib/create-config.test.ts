@@ -1,5 +1,5 @@
-import { createConfig, resolveIsOss } from './create-config';
-import { ApiTokenType } from './types/models/api-token';
+import { createConfig, resolveIsOss } from './create-config.js';
+import { ApiTokenType } from './types/model.js';
 
 test('should create default config', async () => {
     const config = createConfig({
@@ -27,7 +27,7 @@ test('should create default config', async () => {
 test('should add initApiToken for admin token from options', async () => {
     const token = {
         environment: '*',
-        project: '*',
+        projects: ['*'],
         secret: '*:*.some-random-string',
         type: ApiTokenType.ADMIN,
         tokenName: 'admin',
@@ -52,7 +52,9 @@ test('should add initApiToken for admin token from options', async () => {
     expect(config.authentication.initApiTokens[0].environment).toBe(
         token.environment,
     );
-    expect(config.authentication.initApiTokens[0].project).toBe(token.project);
+    expect(config.authentication.initApiTokens[0].projects).toMatchObject(
+        token.projects,
+    );
     expect(config.authentication.initApiTokens[0].type).toBe(
         ApiTokenType.ADMIN,
     );
@@ -61,7 +63,7 @@ test('should add initApiToken for admin token from options', async () => {
 test('should add initApiToken for client token from options', async () => {
     const token = {
         environment: 'development',
-        project: 'default',
+        projects: ['default'],
         secret: 'default:development.some-random-string',
         type: ApiTokenType.CLIENT,
         tokenName: 'admin',
@@ -86,7 +88,9 @@ test('should add initApiToken for client token from options', async () => {
     expect(config.authentication.initApiTokens[0].environment).toBe(
         token.environment,
     );
-    expect(config.authentication.initApiTokens[0].project).toBe(token.project);
+    expect(config.authentication.initApiTokens[0].projects).toMatchObject(
+        token.projects,
+    );
     expect(config.authentication.initApiTokens[0].type).toBe(
         ApiTokenType.CLIENT,
     );
@@ -110,7 +114,9 @@ test('should add initApiToken for admin token from env var', async () => {
 
     expect(config.authentication.initApiTokens).toHaveLength(2);
     expect(config.authentication.initApiTokens[0].environment).toBe('*');
-    expect(config.authentication.initApiTokens[0].project).toBe('*');
+    expect(config.authentication.initApiTokens[0].projects).toMatchObject([
+        '*',
+    ]);
     expect(config.authentication.initApiTokens[0].type).toBe(
         ApiTokenType.ADMIN,
     );
@@ -146,7 +152,7 @@ test('should merge initApiToken from options and env vars', async () => {
     process.env.INIT_CLIENT_API_TOKENS = 'default:development.some-token1';
     const token = {
         environment: '*',
-        project: '*',
+        projects: ['*'],
         secret: '*:*.some-random-string',
         type: ApiTokenType.ADMIN,
         tokenName: 'admin',
@@ -193,7 +199,9 @@ test('should add initApiToken for client token from env var', async () => {
     expect(config.authentication.initApiTokens[0].environment).toBe(
         'development',
     );
-    expect(config.authentication.initApiTokens[0].project).toBe('default');
+    expect(config.authentication.initApiTokens[0].projects).toMatchObject([
+        'default',
+    ]);
     expect(config.authentication.initApiTokens[0].type).toBe(
         ApiTokenType.CLIENT,
     );
@@ -207,7 +215,7 @@ test('should add initApiToken for client token from env var', async () => {
 test('should handle cases where no env var specified for tokens', async () => {
     const token = {
         environment: '*',
-        project: '*',
+        projects: ['*'],
         secret: '*:*.some-random-string',
         type: ApiTokenType.ADMIN,
         tokenName: 'admin',
@@ -506,7 +514,7 @@ test('create config should be idempotent in terms of tokens', async () => {
     process.env.INIT_FRONTEND_API_TOKENS = 'frontend:development.some-token1';
     const token = {
         environment: '*',
-        project: '*',
+        projects: ['*'],
         secret: '*:*.some-random-string',
         type: ApiTokenType.ADMIN,
         tokenName: 'admin',

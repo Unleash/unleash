@@ -12,11 +12,11 @@ import {
 import { Alert, styled } from '@mui/material';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import EditDefaultStrategy from './ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';
+import EditDefaultStrategy from './ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy.tsx';
 import useProjectOverview, {
     useProjectOverviewNameOrId,
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { ProjectEnvironment } from './ProjectEnvironment/ProjectEnvironment';
+import { ProjectEnvironment } from './ProjectEnvironment/ProjectEnvironment.tsx';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -61,7 +61,7 @@ export const ProjectDefaultStrategySettings = () => {
                     specific environment. These will be used when you enable a
                     toggle environment that has no strategies defined
                 </StyledAlert>
-                {project?.environments.map((environment) => (
+                {project?.environments?.map((environment) => (
                     <ProjectEnvironment
                         environment={environment}
                         key={environment.environment}

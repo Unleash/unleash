@@ -1,7 +1,7 @@
-import type { Db } from '../../db/db';
-import type { Logger, LogProvider } from '../../logger';
-import type { IPrivateProjectStore } from './privateProjectStoreType';
-import { ADMIN_TOKEN_USER } from '../../types';
+import type { Db } from '../../db/db.js';
+import type { Logger, LogProvider } from '../../logger.js';
+import type { IPrivateProjectStore } from './privateProjectStoreType.js';
+import { ADMIN_TOKEN_USER } from '../../types/index.js';
 
 export type ProjectAccess =
     | {
@@ -38,6 +38,20 @@ class PrivateProjectStore implements IPrivateProjectStore {
             .andWhere({
                 'roles.name': 'Viewer',
                 'roles.type': 'root',
+            })
+            .whereNotExists((builder) => {
+                builder
+                    .select('*')
+                    .from('group_user')
+                    .join('groups', 'group_user.group_id', 'groups.id')
+                    .join(
+                        'roles as group_roles',
+                        'groups.root_role_id',
+                        'group_roles.id',
+                    )
+                    .whereRaw('group_user.user_id = role_user.user_id')
+                    .whereIn('group_roles.name', ['Admin', 'Editor'])
+                    .andWhere('group_roles.type', 'root');
             })
             .count('*')
             .then((res) => Number(res[0].count));

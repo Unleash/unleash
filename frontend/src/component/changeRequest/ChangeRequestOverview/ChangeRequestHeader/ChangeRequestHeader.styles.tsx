@@ -1,4 +1,4 @@
-import { styled } from '@mui/material';
+import { styled, type TypographyProps } from '@mui/material';
 import { Box, Card, Paper, Typography } from '@mui/material';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 
@@ -18,12 +18,14 @@ export const StyledInnerContainer = styled(Box)(({ theme }) => ({
     alignItems: 'center',
 }));
 
-export const StyledHeader = styled(Typography)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    marginRight: theme.spacing(1),
-    fontSize: theme.fontSizes.mainHeader,
-}));
+export const StyledHeader = styled(Typography)<TypographyProps>(
+    ({ theme }) => ({
+        display: 'flex',
+        alignItems: 'center',
+        marginRight: theme.spacing(1),
+        fontSize: theme.fontSizes.mainHeader,
+    }),
+);
 
 export const StyledCard = styled(Card)(({ theme }) => ({
     padding: theme.spacing(0.75, 1.5),

@@ -1,15 +1,17 @@
-import { getLogger } from 'log4js';
-import {
-    type IBaseEvent,
-    type IEventStore,
-    type IFeatureTagStore,
-    type IUnleashConfig,
-    USER_UPDATED,
-} from '../../internals';
-import type { IAccessReadModel } from '../access/access-read-model-type';
-import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
-import type { ProjectAccess } from '../private-project/privateProjectStore';
-import EventService, { filterAccessibleProjects } from './event-service';
+import log4js from 'log4js';
+const { getLogger } = log4js;
+import type {
+    IEventStore,
+    IFeatureTagStore,
+    IUnleashConfig,
+} from '../../internals.js';
+import type { IAccessReadModel } from '../access/access-read-model-type.js';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
+import type { ProjectAccess } from '../private-project/privateProjectStore.js';
+import EventService, { filterAccessibleProjects } from './event-service.js';
+import { type IBaseEvent, USER_UPDATED } from '../../events/index.js';
+
+import { vi } from 'vitest';
 
 describe('filterPrivateProjectsFromParams', () => {
     it('should return IS_ANY_OF with allowed projects when projectParam is undefined and mode is limited', () => {
@@ -122,13 +124,13 @@ describe('storeEvents', () => {
         'should store the event %s',
         async (preDataAndData: Pick<IBaseEvent, 'preData' | 'data'>) => {
             const eventStore = {
-                batchStore: jest.fn(),
+                batchStore: vi.fn(),
             } as unknown as IEventStore;
             const eventService = new EventService(
                 {
                     eventStore,
                     featureTagStore: {
-                        getAllByFeatures: jest.fn().mockReturnValue([]),
+                        getAllByFeatures: vi.fn().mockReturnValue([]),
                     } as unknown as IFeatureTagStore,
                 },
                 { getLogger, eventBus: undefined } as unknown as IUnleashConfig,
@@ -150,13 +152,13 @@ describe('storeEvents', () => {
     );
     test('should not store the event when predata and data are the same', async () => {
         const eventStore = {
-            batchStore: jest.fn(),
+            batchStore: vi.fn(),
         } as unknown as IEventStore;
         const eventService = new EventService(
             {
                 eventStore,
                 featureTagStore: {
-                    getAllByFeatures: jest.fn().mockReturnValue([]),
+                    getAllByFeatures: vi.fn().mockReturnValue([]),
                 } as unknown as IFeatureTagStore,
             },
             { getLogger, eventBus: undefined } as unknown as IUnleashConfig,

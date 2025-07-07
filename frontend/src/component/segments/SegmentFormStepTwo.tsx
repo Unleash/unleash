@@ -13,12 +13,11 @@ import {
     UPDATE_SEGMENT,
 } from 'component/providers/AccessProvider/permissions';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import type { IConstraint } from 'interfaces/strategy';
+import type { IConstraint, IConstraintWithId } from 'interfaces/strategy';
 import { useNavigate } from 'react-router-dom';
-import { ConstraintAccordionList } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
 import { EditableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/EditableConstraintsList';
 import type { IEditableConstraintsListRef } from 'component/common/NewConstraintAccordion/ConstraintsList/EditableConstraintsList';
-import type { SegmentFormStep, SegmentFormMode } from './SegmentForm';
+import type { SegmentFormStep, SegmentFormMode } from './SegmentForm.tsx';
 import {
     AutocompleteBox,
     type IAutocompleteBoxOption,
@@ -31,11 +30,10 @@ import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValues
 import AccessContext from 'contexts/AccessContext';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 import { GO_BACK } from 'constants/navigate';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface ISegmentFormPartTwoProps {
     project?: string;
-    constraints: IConstraint[];
+    constraints: IConstraintWithId[];
     setConstraints: React.Dispatch<React.SetStateAction<IConstraint[]>>;
     setCurrentStep: React.Dispatch<React.SetStateAction<SegmentFormStep>>;
     mode: SegmentFormMode;
@@ -122,7 +120,6 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
             ? [CREATE_SEGMENT, UPDATE_PROJECT_SEGMENT]
             : [UPDATE_SEGMENT, UPDATE_PROJECT_SEGMENT];
     const { segmentValuesLimit } = useSegmentLimits();
-    const addEditStrategy = useUiFlag('addEditStrategy');
 
     const overSegmentValuesLimit: boolean = Boolean(
         segmentValuesLimit && segmentValuesCount > segmentValuesLimit,
@@ -202,31 +199,13 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                     }
                 />
                 <StyledConstraintContainer>
-                    <ConditionallyRender
-                        condition={addEditStrategy}
-                        show={
-                            <EditableConstraintsList
-                                ref={constraintsAccordionListRef}
-                                constraints={constraints}
-                                setConstraints={
-                                    hasAccess(modePermission, project)
-                                        ? setConstraints
-                                        : undefined
-                                }
-                            />
-                        }
-                        elseShow={
-                            <ConstraintAccordionList
-                                ref={constraintsAccordionListRef}
-                                constraints={constraints}
-                                setConstraints={
-                                    hasAccess(modePermission, project)
-                                        ? setConstraints
-                                        : undefined
-                                }
-                            />
-                        }
-                    />
+                    {hasAccess(modePermission, project) && setConstraints ? (
+                        <EditableConstraintsList
+                            ref={constraintsAccordionListRef}
+                            constraints={constraints}
+                            setConstraints={setConstraints}
+                        />
+                    ) : null}
                 </StyledConstraintContainer>
             </StyledForm>
             <StyledButtonContainer>

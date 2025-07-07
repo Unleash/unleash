@@ -2,7 +2,7 @@ import React from 'react';
 import {
     IntegrationParameter,
     type IIntegrationParameterProps,
-} from './IntegrationParameter/IntegrationParameter';
+} from './IntegrationParameter/IntegrationParameter.tsx';
 import type { AddonTypeSchema } from 'openapi';
 
 interface IIntegrationParametersProps {

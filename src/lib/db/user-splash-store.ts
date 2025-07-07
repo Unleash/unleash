@@ -1,11 +1,11 @@
 import type { EventEmitter } from 'events';
-import type { LogProvider, Logger } from '../logger';
+import type { LogProvider, Logger } from '../logger.js';
 import type {
     IUserSplash,
     IUserSplashKey,
     IUserSplashStore,
-} from '../types/stores/user-splash-store';
-import type { Db } from './db';
+} from '../types/stores/user-splash-store.js';
+import type { Db } from './db.js';
 
 const COLUMNS = ['user_id', 'splash_id', 'seen'];
 const TABLE = 'user_splash';
@@ -101,5 +101,3 @@ export default class UserSplashStore implements IUserSplashStore {
         return userSplashs.map(rowToField);
     }
 }
-
-module.exports = UserSplashStore;

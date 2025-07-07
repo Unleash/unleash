@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { doraFeaturesSchema } from './dora-features-schema';
+import { doraFeaturesSchema } from './dora-features-schema.js';
 
 export const projectDoraMetricsSchema = {
     $id: '#/components/schemas/projectDoraMetricsSchema',

@@ -1,5 +1,5 @@
-import type { Db } from '../../../db/db';
-import { MAX_UNKNOWN_FLAGS } from './unknown-flags-service';
+import type { Db } from '../../../db/db.js';
+import { MAX_UNKNOWN_FLAGS } from './unknown-flags-service.js';
 
 const TABLE = 'unknown_flags';
 
@@ -33,7 +33,10 @@ export class UnknownFlagsStore implements IUnknownFlagsStore {
                     app_name: flag.appName,
                     seen_at: flag.seenAt,
                 }));
-                await tx(TABLE).insert(rows);
+                await tx(TABLE)
+                    .insert(rows)
+                    .onConflict(['name', 'app_name'])
+                    .merge(['seen_at']);
             }
         });
     }

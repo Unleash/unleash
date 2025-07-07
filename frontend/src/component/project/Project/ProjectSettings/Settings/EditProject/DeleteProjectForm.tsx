@@ -1,4 +1,4 @@
-import { DeleteProject } from '../DeleteProject';
+import { DeleteProject } from '../DeleteProject.tsx';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';

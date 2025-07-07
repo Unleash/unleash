@@ -5,7 +5,7 @@ import type {
     IClientMetricsEnv,
     IClientMetricsEnvKey,
     IClientMetricsStoreV2,
-} from './client-metrics-store-v2-type';
+} from './client-metrics-store-v2-type.js';
 
 export default class FakeClientMetricsStoreV2
     extends EventEmitter
@@ -19,7 +19,7 @@ export default class FakeClientMetricsStoreV2
     }
 
     getFeatureFlagNames(): Promise<string[]> {
-        throw new Error('Method not implemented.');
+        return Promise.resolve([]);
     }
 
     getSeenTogglesForApp(

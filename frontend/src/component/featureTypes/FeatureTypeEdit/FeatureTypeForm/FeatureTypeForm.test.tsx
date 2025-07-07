@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { FeatureTypeForm } from './FeatureTypeForm';
+import { FeatureTypeForm } from './FeatureTypeForm.tsx';
 
 const mockFeatureType = {
     id: '1',
@@ -29,7 +29,10 @@ describe('FeatureTypeForm', () => {
         );
         expect(screen.getByLabelText('Expected lifetime')).toBeDisabled();
         expect(screen.getByLabelText("doesn't expire")).toBeDisabled();
-        expect(screen.getByText('Save feature flag type')).toBeDisabled();
+        expect(screen.getByText('Save feature flag type')).toHaveAttribute(
+            'aria-disabled',
+            'true',
+        );
     });
 
     it('should check "doesn\'t expire" when lifetime is 0', () => {
@@ -87,6 +90,9 @@ describe('FeatureTypeForm', () => {
                 loading={false}
             />,
         );
-        expect(screen.getByText('Save feature flag type')).toBeDisabled();
+        expect(screen.getByText('Save feature flag type')).toHaveAttribute(
+            'aria-disabled',
+            'true',
+        );
     });
 });

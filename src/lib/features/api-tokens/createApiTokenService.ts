@@ -1,14 +1,14 @@
-import type { Db, IUnleashConfig } from '../../server-impl';
-import EnvironmentStore from '../project-environments/environment-store';
-import { ApiTokenService, type EventService } from '../../services';
-import FakeEnvironmentStore from '../project-environments/fake-environment-store';
-import type { IEnvironmentStore } from '../../types';
+import type { Db, IUnleashConfig } from '../../types/index.js';
+import EnvironmentStore from '../project-environments/environment-store.js';
+import { ApiTokenService, type EventService } from '../../services/index.js';
+import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';
+import type { IEnvironmentStore } from '../../types/index.js';
 import {
     createEventsService,
     createFakeEventsService,
-} from '../events/createEventsService';
-import FakeApiTokenStore from '../../../test/fixtures/fake-api-token-store';
-import { ApiTokenStore } from '../../db/api-token-store';
+} from '../events/createEventsService.js';
+import FakeApiTokenStore from '../../../test/fixtures/fake-api-token-store.js';
+import { ApiTokenStore } from '../../db/api-token-store.js';
 
 export const createApiTokenService = (
     db: Db,

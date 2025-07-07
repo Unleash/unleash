@@ -1,6 +1,6 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { tagSchema } from './tag-schema';
-import { projectFeatureEnvironmentSchema } from './project-feature-environment-schema';
+import { tagSchema } from './tag-schema.js';
+import { projectFeatureEnvironmentSchema } from './project-feature-environment-schema.js';
 
 export const projectFeatureSchema = {
     $id: '#/components/schemas/projectFeatureSchema',

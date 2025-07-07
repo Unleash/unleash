@@ -1,24 +1,22 @@
 import type React from 'react';
-import { useImperativeHandle } from 'react';
+import { useEffect, useImperativeHandle } from 'react';
 import { forwardRef } from 'react';
 import { styled } from '@mui/material';
 import type { IConstraint } from 'interfaces/strategy';
 import produce from 'immer';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import {
-    constraintId,
-    createEmptyConstraint,
-} from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
-import { EditableConstraintWrapper } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraintWrapper';
-
+import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/EditableConstraint';
+import { createEmptyConstraint } from '../../../../utils/createEmptyConstraint.ts';
+import { constraintId } from 'constants/constraintId.ts';
+import { v4 as uuidv4 } from 'uuid';
 export interface IEditableConstraintsListRef {
     addConstraint?: (contextName: string) => void;
 }
 
 export interface IEditableConstraintsListProps {
     constraints: IConstraint[];
-    setConstraints?: React.Dispatch<React.SetStateAction<IConstraint[]>>;
+    setConstraints: React.Dispatch<React.SetStateAction<IConstraint[]>>;
 }
 
 const StyledContainer = styled('div')({
@@ -42,29 +40,27 @@ export const EditableConstraintsList = forwardRef<
         },
     }));
 
-    const onRemove =
-        setConstraints &&
-        ((index: number) => {
+    useEffect(() => {
+        if (!constraints.every((constraint) => constraintId in constraint)) {
             setConstraints(
-                produce((draft) => {
-                    draft.splice(index, 1);
-                }),
+                constraints.map((constraint) => ({
+                    [constraintId]: uuidv4(),
+                    ...constraint,
+                })),
             );
-        });
+        }
+    }, [constraints, setConstraints]);
 
-    const onSave =
-        setConstraints &&
-        ((index: number, constraint: IConstraint) => {
-            setConstraints(
-                produce((draft) => {
-                    draft[index] = constraint;
-                }),
-            );
-        });
+    const onDelete = (index: number) => {
+        setConstraints(
+            produce((draft) => {
+                draft.splice(index, 1);
+            }),
+        );
+    };
 
     const onAutoSave =
-        setConstraints &&
-        ((id: string | undefined) => (constraint: IConstraint) => {
+        (id: string | undefined) => (constraint: IConstraint) => {
             setConstraints(
                 produce((draft) => {
                     return draft.map((oldConstraint) => {
@@ -75,7 +71,7 @@ export const EditableConstraintsList = forwardRef<
                     });
                 }),
             );
-        });
+        };
 
     if (context.length === 0) {
         return null;
@@ -85,12 +81,11 @@ export const EditableConstraintsList = forwardRef<
         <StyledContainer>
             <ConstraintsList>
                 {constraints.map((constraint, index) => (
-                    <EditableConstraintWrapper
+                    <EditableConstraint
                         key={constraint[constraintId]}
                         constraint={constraint}
-                        onDelete={onRemove?.bind(null, index)}
-                        onSave={onSave!.bind(null, index)}
-                        onAutoSave={onAutoSave?.(constraint[constraintId])}
+                        onDelete={() => onDelete(index)}
+                        onUpdate={onAutoSave(constraint[constraintId])}
                     />
                 ))}
             </ConstraintsList>

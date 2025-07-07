@@ -2,7 +2,7 @@ import type { IUiConfig } from 'interfaces/uiConfig';
 import {
     getChangeRequestConflictCreatedData,
     getChangeRequestConflictCreatedDataFromScheduleData,
-} from './change-request-conflict-data';
+} from './change-request-conflict-data.js';
 import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 
 const uiConfig: Pick<IUiConfig, 'baseUriPath' | 'versionInfo'> = {

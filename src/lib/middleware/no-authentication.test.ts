@@ -1,7 +1,7 @@
-import type { IAuthRequest } from '../routes/unleash-types';
+import type { IAuthRequest } from '../routes/unleash-types.js';
 import supertest from 'supertest';
 import express from 'express';
-import noAuthentication from './no-authentication';
+import noAuthentication from './no-authentication.js';
 
 test('should add dummy user object to all requests', () => {
     expect.assertions(1);

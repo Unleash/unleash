@@ -2,7 +2,7 @@ import { Typography, type TypographyProps, styled } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Badge } from 'component/common/Badge/Badge';
 import type { Step } from 'react-joyride';
-import { specificUser, gradualRollout, variants } from './demo-setup';
+import { specificUser, gradualRollout, variants } from './demo-setup.ts';
 import { basePath, formatAssetPath } from 'utils/formatPath';
 import demoUserId from 'assets/img/demo-userid.png';
 
@@ -12,6 +12,13 @@ export interface ITutorialTopicStep extends Step {
     backCloseModal?: boolean;
     backCollapseExpanded?: boolean;
     preventDefault?: boolean;
+    onStep?: (params: {
+        el: HTMLElement;
+        index: number;
+        next: (i?: number) => void;
+        step: ITutorialTopicStep;
+        signal: AbortSignal;
+    }) => void;
     anyClick?: boolean;
     optional?: boolean;
     focus?: boolean | string;
@@ -247,6 +254,16 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
+                title: 'Add constraint value',
+                target: 'button[data-testid="CONSTRAINT_ADD_VALUES_BUTTON"]',
+                content: (
+                    <Description>
+                        Add a new constraint value by using this button.
+                    </Description>
+                ),
+                optional: true,
+            },
+            {
                 title: 'Input value',
                 target: 'div[data-testid="CONSTRAINT_VALUES_INPUT"]',
                 content: (
@@ -273,15 +290,29 @@ export const TOPICS: ITutorialTopic[] = [
                 placement: 'right',
                 nextButton: true,
                 focus: 'input',
+                onStep: ({ el, next, index, signal }) => {
+                    const input = el.querySelector('input');
+
+                    input?.addEventListener(
+                        'keydown',
+                        (e) => {
+                            if (e.key === 'Enter' && input.value.trim()) {
+                                next(index);
+                            }
+                        },
+                        { signal },
+                    );
+                },
             },
             {
                 title: 'Add value',
-                target: 'button[data-testid="CONSTRAINT_VALUES_ADD_BUTTON"]',
+                target: 'button[data-testid="CONSTRAINT_VALUES_ADD_BUTTON"]:not(:disabled)',
                 content: (
                     <Description>
                         Add the constraint value by using this button.
                     </Description>
                 ),
+                optional: true,
             },
             {
                 title: 'Save constraint setup',
@@ -624,6 +655,16 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
+                title: 'Add constraint value',
+                target: 'button[data-testid="CONSTRAINT_ADD_VALUES_BUTTON"]',
+                content: (
+                    <Description>
+                        Add a new constraint value by using this button.
+                    </Description>
+                ),
+                optional: true,
+            },
+            {
                 title: 'Input value',
                 target: 'div[data-testid="CONSTRAINT_VALUES_INPUT"]',
                 content: (
@@ -650,15 +691,29 @@ export const TOPICS: ITutorialTopic[] = [
                 placement: 'right',
                 nextButton: true,
                 focus: 'input',
+                onStep: ({ el, next, index, signal }) => {
+                    const input = el.querySelector('input');
+
+                    input?.addEventListener(
+                        'keydown',
+                        (e) => {
+                            if (e.key === 'Enter' && input.value.trim()) {
+                                next(index);
+                            }
+                        },
+                        { signal },
+                    );
+                },
             },
             {
                 title: 'Add value',
-                target: 'button[data-testid="CONSTRAINT_VALUES_ADD_BUTTON"]',
+                target: 'button[data-testid="CONSTRAINT_VALUES_ADD_BUTTON"]:not(:disabled)',
                 content: (
                     <Description>
                         Add the constraint value by using this button.
                     </Description>
                 ),
+                optional: true,
             },
             {
                 title: 'Save constraint setup',

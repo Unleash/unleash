@@ -47,17 +47,17 @@ const sidebars: SidebarsConfig = {
             items: [
                 {
                     type: 'doc',
-                    label: 'What is a feature flag?',
+                    label: 'Quickstart',
+                    id: 'quickstart',
+                },
+                {
+                    type: 'doc',
+                    label: 'Introduction to feature flags',
                     id: 'topics/what-is-a-feature-flag',
                 },
                 {
                     type: 'doc',
-                    label: 'Unleash fundamentals',
-                    id: 'understanding-unleash/the-anatomy-of-unleash',
-                },
-                {
-                    type: 'doc',
-                    label: 'Architecture overview',
+                    label: 'Unleash architecture overview',
                     id: 'understanding-unleash/unleash-overview',
                 },
             ],
@@ -65,6 +65,10 @@ const sidebars: SidebarsConfig = {
         {
             label: 'Core concepts',
             type: 'category',
+            link: {
+                type: 'doc',
+                id: 'understanding-unleash/the-anatomy-of-unleash',
+            },
             items: [
                 {
                     label: 'Projects and environments',
@@ -182,7 +186,7 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             items: [
                 {
-                    label: 'Feature flag best practices',
+                    label: 'Feature management best practices',
                     collapsed: true,
                     type: 'category',
                     link: {
@@ -205,56 +209,10 @@ const sidebars: SidebarsConfig = {
                             label: 'Migrating from homegrown feature management solutions',
                             id: 'topics/feature-flag-migration/feature-flag-migration-best-practices',
                         },
-                        {
-                            type: 'doc',
-                            label: 'Scaling Unleash',
-                            id: 'feature-flag-tutorials/use-cases/scaling-unleash',
-                        },
                     ],
                 },
                 {
-                    label: 'Common patterns and use cases',
-                    type: 'category',
-                    collapsed: true,
-                    link: {
-                        type: 'doc',
-                        id: 'feature-flag-tutorials/use-cases/gradual-rollout',
-                    },
-                    items: [
-                        {
-                            type: 'doc',
-                            label: 'Gradual rollout',
-                            id: 'feature-flag-tutorials/use-cases/gradual-rollout',
-                        },
-                        {
-                            type: 'doc',
-                            label: 'A/B testing',
-                            id: 'feature-flag-tutorials/use-cases/a-b-testing',
-                        },
-                        {
-                            type: 'doc',
-                            label: 'Feature flags for AI',
-                            id: 'feature-flag-tutorials/use-cases/ai',
-                        },
-                        {
-                            type: 'doc',
-                            label: 'Trunk-based development',
-                            id: 'feature-flag-tutorials/use-cases/trunk-based-development',
-                        },
-                        {
-                            type: 'doc',
-                            label: 'User management, access controls, and auditing',
-                            id: 'feature-flag-tutorials/use-cases/user-management-access-controls',
-                        },
-                        {
-                            type: 'doc',
-                            label: 'Security and compliance',
-                            id: 'feature-flag-tutorials/use-cases/security-compliance',
-                        },
-                    ],
-                },
-                {
-                    label: 'Developer tutorials',
+                    label: 'Development and release workflows',
                     type: 'category',
                     collapsed: true,
                     link: {
@@ -273,6 +231,63 @@ const sidebars: SidebarsConfig = {
                         },
                         {
                             type: 'doc',
+                            label: 'Trunk-based development',
+                            id: 'feature-flag-tutorials/use-cases/trunk-based-development',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Gradual rollout',
+                            id: 'feature-flag-tutorials/use-cases/gradual-rollout',
+                        },
+                    ],
+                },
+                                {
+                    label: 'Enterprise-grade security and scale',
+                    type: 'category',
+                    collapsed: true,
+                    link: {
+                        type: 'doc',
+                        id: 'feature-flag-tutorials/use-cases/user-management-access-controls',
+                    },
+                    items: [
+                        {
+                            type: 'doc',
+                            label: 'User management, access controls, and auditing',
+                            id: 'feature-flag-tutorials/use-cases/user-management-access-controls',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Security and compliance',
+                            id: 'feature-flag-tutorials/use-cases/security-compliance',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Scaling Unleash',
+                            id: 'feature-flag-tutorials/use-cases/scaling-unleash',
+                        },
+                    ],
+                },
+                                {
+                    label: 'Experimentation and analytics',
+                    type: 'category',
+                    collapsed: true,
+                    link: {
+                        type: 'doc',
+                        id: 'feature-flag-tutorials/use-cases/a-b-testing',
+                    },
+                    items: [
+                        {
+                            type: 'doc',
+                            label: 'A/B testing',
+                            id: 'feature-flag-tutorials/use-cases/a-b-testing',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Feature flags for AI',
+                            id: 'feature-flag-tutorials/use-cases/ai',
+                        },
+                        {
+                            type: 'doc',
                             label: 'Use impression data for analytics',
                             id: 'feature-flag-tutorials/use-cases/how-to-capture-impression-data',
                         },
@@ -280,7 +295,7 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                     type: 'category',
-                    label: 'Language and framework guides',
+                    label: 'Language and framework examples',
                     collapsed: true,
                     link: {
                         type: 'doc',

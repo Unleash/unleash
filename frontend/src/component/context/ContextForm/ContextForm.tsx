@@ -14,7 +14,7 @@ import Add from '@mui/icons-material/Add';
 import type { ILegalValue } from 'interfaces/context';
 import { ContextFormChip } from 'component/context/ContectFormChip/ContextFormChip';
 import { ContextFormChipList } from 'component/context/ContectFormChip/ContextFormChipList';
-import { ContextFieldUsage } from '../ContextFieldUsage/ContextFieldUsage';
+import { ContextFieldUsage } from '../ContextFieldUsage/ContextFieldUsage.tsx';
 
 interface IContextForm {
     contextName: string;

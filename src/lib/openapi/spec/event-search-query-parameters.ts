@@ -1,4 +1,4 @@
-import type { FromQueryParams } from '../util/from-query-params';
+import type { FromQueryParams } from '../util/from-query-params.js';
 
 export const eventSearchQueryParameters = [
     {
@@ -9,6 +9,28 @@ export const eventSearchQueryParameters = [
         },
         description:
             'Find events by a free-text search query. The query will be matched against the event data payload (if any).',
+        in: 'query',
+    },
+    {
+        name: 'id',
+        schema: {
+            type: 'string',
+            example: 'IS:123',
+            pattern: '^(IS|IS_ANY_OF):(.*?)(,([0-9]+))*$',
+        },
+        description:
+            'Filter by event ID using supported operators: IS, IS_ANY_OF.',
+        in: 'query',
+    },
+    {
+        name: 'groupId',
+        schema: {
+            type: 'string',
+            example: 'IS:123',
+            pattern: '^(IS|IS_ANY_OF):(.*?)(,([0-9]+))*$',
+        },
+        description:
+            'Filter by group ID using supported operators: IS, IS_ANY_OF.',
         in: 'query',
     },
     {
@@ -98,6 +120,17 @@ export const eventSearchQueryParameters = [
         },
         description:
             'The number of feature environments to return in a page. By default it is set to 50. The maximum is 1000.',
+        in: 'query',
+    },
+    {
+        name: 'environment',
+        schema: {
+            type: 'string',
+            example: 'IS:production',
+            pattern: '^(IS|IS_ANY_OF):(.*?)(,([a-zA-Z0-9_]+))*$',
+        },
+        description:
+            'Filter by environment name using supported operators: IS, IS_ANY_OF.',
         in: 'query',
     },
 ] as const;

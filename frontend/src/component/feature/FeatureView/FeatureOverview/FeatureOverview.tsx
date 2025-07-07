@@ -1,4 +1,4 @@
-import FeatureOverviewMetaData from './FeatureOverviewMetaData/FeatureOverviewMetaData';
+import FeatureOverviewMetaData from './FeatureOverviewMetaData/FeatureOverviewMetaData.tsx';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import {
@@ -11,14 +11,13 @@ import { styled } from '@mui/material';
 import { FeatureStrategyCreate } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
 import { useEffect, useState } from 'react';
 import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { FeatureOverviewEnvironments } from './FeatureOverviewEnvironments/FeatureOverviewEnvironments';
-import { useEnvironmentVisibility } from './FeatureOverviewMetaData/EnvironmentVisibilityMenu/hooks/useEnvironmentVisibility';
+import { FeatureOverviewEnvironments } from './FeatureOverviewEnvironments/FeatureOverviewEnvironments.tsx';
+import { useEnvironmentVisibility } from './FeatureOverviewMetaData/EnvironmentVisibilityMenu/hooks/useEnvironmentVisibility.ts';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
-import { StrategyDragTooltip } from './StrategyDragTooltip';
-import { CleanupReminder } from '../CleanupReminder/CleanupReminder';
-import { useFeature } from '../../../../hooks/api/getters/useFeature/useFeature';
+import { StrategyDragTooltip } from './StrategyDragTooltip.tsx';
+import { CleanupReminder } from '../CleanupReminder/CleanupReminder.tsx';
+import { useFeature } from '../../../../hooks/api/getters/useFeature/useFeature.ts';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -53,8 +52,10 @@ export const FeatureOverview = () => {
     const { splash } = useAuthSplash();
     const [showTooltip, setShowTooltip] = useState(false);
     const [hasClosedTooltip, setHasClosedTooltip] = useState(false);
-    const { feature, refetchFeature } = useFeature(projectId, featureId);
-    const cleanupReminderEnabled = useUiFlag('cleanupReminder');
+    const { feature, refetchFeature, loading } = useFeature(
+        projectId,
+        featureId,
+    );
     const dragTooltipSplashId = 'strategy-drag-tooltip';
     const shouldShowStrategyDragTooltip = !splash?.[dragTooltipSplashId];
     const toggleShowTooltip = (envIsOpen: boolean) => {
@@ -69,19 +70,19 @@ export const FeatureOverview = () => {
 
     return (
         <div>
-            {cleanupReminderEnabled ? (
-                <CleanupReminder feature={feature} onChange={refetchFeature} />
-            ) : null}
+            <CleanupReminder feature={feature} onChange={refetchFeature} />
             <StyledContainer>
                 <div>
-                    <FeatureOverviewMetaData
-                        hiddenEnvironments={hiddenEnvironments}
-                        onEnvironmentVisibilityChange={
-                            onEnvironmentVisibilityChange
-                        }
-                        feature={feature}
-                        onChange={refetchFeature}
-                    />
+                    {!loading ? (
+                        <FeatureOverviewMetaData
+                            hiddenEnvironments={hiddenEnvironments}
+                            onEnvironmentVisibilityChange={
+                                onEnvironmentVisibilityChange
+                            }
+                            feature={feature}
+                            onChange={refetchFeature}
+                        />
+                    ) : null}
                 </div>
                 <StyledMainContent>
                     <FeatureOverviewEnvironments

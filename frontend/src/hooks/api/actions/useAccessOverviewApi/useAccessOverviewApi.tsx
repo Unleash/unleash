@@ -1,4 +1,4 @@
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.ts';
 
 export const useAccessOverviewApi = () => {
     const { loading, makeRequest, createRequest, errors } = useAPI({

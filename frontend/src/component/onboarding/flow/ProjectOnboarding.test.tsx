@@ -1,7 +1,7 @@
 import { render } from 'utils/testRenderer';
 import { Route, Routes } from 'react-router-dom';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { ProjectOnboarding } from './ProjectOnboarding';
+import { ProjectOnboarding } from './ProjectOnboarding.tsx';
 import { screen } from '@testing-library/react';
 
 const server = testServerSetup();

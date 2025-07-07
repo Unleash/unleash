@@ -1,17 +1,17 @@
 import supertest from 'supertest';
-import { createServices } from '../../services';
-import { createTestConfig } from '../../../test/config/test-config';
+import { createServices } from '../../services/index.js';
+import { createTestConfig } from '../../../test/config/test-config.js';
 
-import createStores from '../../../test/fixtures/store';
+import createStores from '../../../test/fixtures/store.js';
 
-import getApp from '../../app';
+import getApp from '../../app.js';
 import {
     FeatureCreatedEvent,
     ProjectAccessAddedEvent,
     ProjectUserAddedEvent,
     ProjectUserRemovedEvent,
-} from '../../types/events';
-import { TEST_AUDIT_USER } from '../../types';
+} from '../../types/index.js';
+import { TEST_AUDIT_USER } from '../../types/index.js';
 
 const TEST_USER_ID = -9999;
 async function getSetup(anonymise: boolean = false) {

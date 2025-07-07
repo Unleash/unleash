@@ -1,18 +1,18 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../test/e2e/helpers/test-helper';
-import { DEFAULT_ENV } from '../../util/constants';
+} from '../../../test/e2e/helpers/test-helper.js';
+import { DEFAULT_ENV } from '../../util/constants.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('environment_api_serial', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('environment_api_serial', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
         {
@@ -32,24 +32,33 @@ afterAll(async () => {
 });
 
 test('Can list all existing environments', async () => {
-    await app.request
+    const { body } = await app.request
         .get('/api/admin/environments')
         .expect(200)
-        .expect('Content-Type', /json/)
-        .expect((res) => {
-            expect(res.body.version).toBe(1);
-            expect(res.body.environments[0]).toStrictEqual({
-                name: DEFAULT_ENV,
-                enabled: true,
-                sortOrder: 1,
-                type: 'production',
-                protected: true,
-                requiredApprovals: null,
-                projectCount: 1,
-                apiTokenCount: 0,
-                enabledToggleCount: 0,
-            });
-        });
+        .expect('Content-Type', /json/);
+    expect(body.version).toBe(1);
+    expect(body.environments[0]).toStrictEqual({
+        name: DEFAULT_ENV,
+        enabled: true,
+        sortOrder: 2,
+        type: 'development',
+        protected: false,
+        requiredApprovals: null,
+        projectCount: 1,
+        apiTokenCount: 0,
+        enabledToggleCount: 0,
+    });
+    expect(body.environments[1]).toStrictEqual({
+        name: 'production',
+        enabled: true,
+        sortOrder: 3,
+        type: 'production',
+        protected: false,
+        requiredApprovals: null,
+        projectCount: 1,
+        apiTokenCount: 0,
+        enabledToggleCount: 0,
+    });
 });
 
 test('Can update sort order', async () => {

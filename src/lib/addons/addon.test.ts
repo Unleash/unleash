@@ -1,15 +1,18 @@
 import nock from 'nock';
-import noLogger from '../../test/fixtures/no-logger';
+import noLogger from '../../test/fixtures/no-logger.js';
 
-import SlackAddon from './slack';
-import type { IAddonConfig, IFlagResolver } from '../types';
-import type { IntegrationEventsService } from '../services';
+import SlackAddon from './slack.js';
+import type { IAddonConfig, IFlagResolver } from '../types/index.js';
+import type { IntegrationEventsService } from '../services/index.js';
 import type EventEmitter from 'events';
 
 beforeEach(() => {
     nock.disableNetConnect();
 });
 
+afterAll(() => {
+    nock.enableNetConnect();
+});
 const url = 'https://test.some.com';
 
 const ARGS: IAddonConfig = {
@@ -52,8 +55,12 @@ test('Supports custom number of retries', async () => {
     const res = await addon.fetchRetry(
         url,
         {
-            onRetry: () => {
-                retries = retries + 1;
+            hooks: {
+                beforeRetry: [
+                    () => {
+                        retries = retries + 1;
+                    },
+                ],
             },
         },
         2,

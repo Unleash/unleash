@@ -1,4 +1,4 @@
-import type { IUserSubscriptionsReadModel } from './user-subscriptions-read-model-type';
+import type { IUserSubscriptionsReadModel } from './user-subscriptions-read-model-type.js';
 
 export class FakeUserSubscriptionsReadModel
     implements IUserSubscriptionsReadModel

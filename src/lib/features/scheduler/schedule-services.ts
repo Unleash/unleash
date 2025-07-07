@@ -3,18 +3,20 @@ import {
     minutesToMilliseconds,
     secondsToMilliseconds,
 } from 'date-fns';
-import type { IUnleashConfig, IUnleashServices } from '../../server-impl';
+import type { IUnleashConfig } from '../../types/index.js';
+import type { IUnleashServices } from '../../services/index.js';
 
 /**
  * Schedules service methods.
  *
  * In order to promote runtime control, you should **not use** a flagResolver inside this method. Instead, implement your flag usage inside the scheduled methods themselves.
  * @param services
+ * @param config
  */
-export const scheduleServices = async (
+export const scheduleServices = (
     services: IUnleashServices,
     config: IUnleashConfig,
-): Promise<void> => {
+): void => {
     const {
         accountService,
         schedulerService,
@@ -72,9 +74,7 @@ export const scheduleServices = async (
     );
 
     schedulerService.schedule(
-        clientInstanceService.removeInstancesOlderThanTwoDays.bind(
-            clientInstanceService,
-        ),
+        clientInstanceService.removeOldInstances.bind(clientInstanceService),
         hoursToMilliseconds(24),
         'removeInstancesOlderThanTwoDays',
     );

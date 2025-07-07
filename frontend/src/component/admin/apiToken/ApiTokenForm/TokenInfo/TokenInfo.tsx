@@ -1,17 +1,17 @@
 import type React from 'react';
 import { StyledInput, StyledInputDescription } from '../ApiTokenForm.styles';
-import type { ApiTokenFormErrorType } from '../useApiTokenForm';
+import type { ApiTokenFormErrorType } from '../useApiTokenForm.ts';
 
 interface ITokenInfoProps {
-    username: string;
-    setUsername: React.Dispatch<React.SetStateAction<string>>;
+    tokenName: string;
+    setTokenName: React.Dispatch<React.SetStateAction<string>>;
 
     errors: { [key: string]: string };
     clearErrors: (error?: ApiTokenFormErrorType) => void;
 }
 export const TokenInfo = ({
-    username,
-    setUsername,
+    tokenName,
+    setTokenName,
     errors,
     clearErrors,
 }: ITokenInfoProps) => {
@@ -21,13 +21,13 @@ export const TokenInfo = ({
                 What would you like to call this token?
             </StyledInputDescription>
             <StyledInput
-                value={username}
-                name='username'
-                onChange={(e) => setUsername(e.target.value)}
+                value={tokenName}
+                name='tokenName'
+                onChange={(e) => setTokenName(e.target.value)}
                 label='Token name'
-                error={errors.username !== undefined}
-                errorText={errors.username}
-                onFocus={() => clearErrors('username')}
+                error={errors.tokenName !== undefined}
+                errorText={errors.tokenName}
+                onFocus={() => clearErrors('tokenName')}
                 autoFocus
             />
         </>

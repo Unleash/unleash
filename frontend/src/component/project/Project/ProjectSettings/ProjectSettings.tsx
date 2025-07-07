@@ -11,15 +11,15 @@ import {
 } from 'component/common/VerticalTabs/VerticalTabs';
 import { ProjectAccess } from 'component/project/ProjectAccess/ProjectAccess';
 import ProjectEnvironmentList from 'component/project/ProjectEnvironment/ProjectEnvironment';
-import { ChangeRequestConfiguration } from './ChangeRequestConfiguration/ChangeRequestConfiguration';
+import { ChangeRequestConfiguration } from './ChangeRequestConfiguration/ChangeRequestConfiguration.tsx';
 import { ProjectApiAccess } from 'component/project/Project/ProjectSettings/ProjectApiAccess/ProjectApiAccess';
-import { ProjectSegments } from './ProjectSegments/ProjectSegments';
-import { ProjectDefaultStrategySettings } from './ProjectDefaultStrategySettings/ProjectDefaultStrategySettings';
-import { Settings } from './Settings/Settings';
+import { ProjectSegments } from './ProjectSegments/ProjectSegments.tsx';
+import { ProjectDefaultStrategySettings } from './ProjectDefaultStrategySettings/ProjectDefaultStrategySettings.tsx';
+import { Settings } from './Settings/Settings.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import { Box, styled } from '@mui/material';
-import { ProjectActions } from './ProjectActions/ProjectActions';
+import { ProjectActions } from './ProjectActions/ProjectActions.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledBadgeContainer = styled(Box)({

@@ -1,27 +1,26 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
 import {
     insertLastSeenAt,
     type IUnleashTest,
     setupAppWithAuth,
-} from '../../../test/e2e/helpers/test-helper';
-import getLogger from '../../../test/fixtures/no-logger';
-import type { FeatureSearchQueryParameters } from '../../openapi/spec/feature-search-query-parameters';
+} from '../../../test/e2e/helpers/test-helper.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import type { FeatureSearchQueryParameters } from '../../openapi/spec/feature-search-query-parameters.js';
 import {
-    CREATE_FEATURE_STRATEGY,
     DEFAULT_PROJECT,
     type IUnleashStores,
-    UPDATE_FEATURE_ENVIRONMENT,
-} from '../../types';
-import { DEFAULT_ENV } from '../../util';
+    TEST_AUDIT_USER,
+} from '../../types/index.js';
+import { DEFAULT_ENV } from '../../util/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
 let stores: IUnleashStores;
 
 beforeAll(async () => {
-    db = await dbInit('feature_search', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('feature_search', getLogger);
     app = await setupAppWithAuth(
         db.stores,
         {
@@ -29,7 +28,6 @@ beforeAll(async () => {
                 flags: {
                     strictSchemaValidation: true,
                     anonymiseEventLog: true,
-                    flagsOverviewSearch: true,
                 },
             },
         },
@@ -44,36 +42,20 @@ beforeAll(async () => {
         })
         .expect(200);
 
-    await stores.environmentStore.create({
-        name: 'development',
-        type: 'development',
-    });
-
-    await app.linkProjectToEnvironment('default', 'development');
-
-    await stores.accessStore.addPermissionsToRole(
-        body.rootRole,
-        [
-            { name: UPDATE_FEATURE_ENVIRONMENT },
-            { name: CREATE_FEATURE_STRATEGY },
-        ],
-        'development',
+    await app.services.userService.createUser(
+        {
+            username: 'admin@test.com',
+            rootRole: 1,
+        },
+        TEST_AUDIT_USER,
     );
 
-    await stores.environmentStore.create({
-        name: 'production',
-        type: 'production',
-    });
-
-    await app.linkProjectToEnvironment('default', 'production');
-
-    await stores.accessStore.addPermissionsToRole(
-        body.rootRole,
-        [
-            { name: UPDATE_FEATURE_ENVIRONMENT },
-            { name: CREATE_FEATURE_STRATEGY },
-        ],
-        'production',
+    await app.services.userService.createUser(
+        {
+            username: 'admin2@test.com',
+            rootRole: 1,
+        },
+        TEST_AUDIT_USER,
     );
 });
 
@@ -223,7 +205,9 @@ const searchFeaturesWithoutQueryParams = async (expectedCode = 200) => {
 };
 const getProjectArchive = async (projectId = 'default', expectedCode = 200) => {
     return app.request
-        .get(`/api/admin/archive/features/${projectId}`)
+        .get(
+            `/api/admin/search/features?project=IS%3A${projectId}&archived=IS%3Atrue`,
+        )
         .expect(expectedCode);
 };
 
@@ -430,12 +414,12 @@ test('should filter features by tag that has colon inside', async () => {
 test('should filter features by environment status', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');
-    await app.enableFeature('my_feature_a', 'default');
+    await app.enableFeature('my_feature_a', DEFAULT_ENV);
 
     const { body } = await filterFeaturesByEnvironmentStatus([
-        'default:enabled',
+        `${DEFAULT_ENV}:enabled`,
         'nonexistentEnv:disabled',
-        'default:wrongStatus',
+        `${DEFAULT_ENV}:wrongStatus`,
     ]);
 
     expect(body).toMatchObject({
@@ -507,10 +491,10 @@ test('should sort features', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_c');
     await app.createFeature('my_feature_b');
-    await app.enableFeature('my_feature_c', 'default');
+    await app.enableFeature('my_feature_c', DEFAULT_ENV);
     await app.favoriteFeature('my_feature_b');
 
-    await insertLastSeenAt('my_feature_c', db.rawDatabase, 'default');
+    await insertLastSeenAt('my_feature_c', db.rawDatabase, DEFAULT_ENV);
 
     const { body: ascName } = await sortFeatures({
         sortBy: 'name',
@@ -555,7 +539,7 @@ test('should sort features', async () => {
     });
 
     const { body: environmentAscSort } = await sortFeatures({
-        sortBy: 'environment:default',
+        sortBy: `environment:${DEFAULT_ENV}`,
         sortOrder: 'asc',
     });
 
@@ -569,7 +553,7 @@ test('should sort features', async () => {
     });
 
     const { body: environmentDescSort } = await sortFeatures({
-        sortBy: 'environment:default',
+        sortBy: `environment:${DEFAULT_ENV}`,
         sortOrder: 'desc',
     });
 
@@ -583,7 +567,7 @@ test('should sort features', async () => {
     });
 
     const { body: favoriteEnvironmentDescSort } = await sortFeatures({
-        sortBy: 'environment:default',
+        sortBy: `environment:${DEFAULT_ENV}`,
         sortOrder: 'desc',
         favoritesFirst: 'true',
     });
@@ -845,11 +829,6 @@ test('should return segments in payload with no duplicates/nulls', async () => {
                 name: 'my_feature_a',
                 segments: [mySegment.name],
                 environments: [
-                    {
-                        name: 'default',
-                        hasStrategies: true,
-                        hasEnabledStrategies: true,
-                    },
                     {
                         name: 'development',
                         hasStrategies: true,
@@ -1164,11 +1143,6 @@ test('should return environment usage metrics and lifecycle', async () => {
                 lifecycle: { stage: 'completed', status: 'discarded' },
                 environments: [
                     {
-                        name: 'default',
-                        yes: 0,
-                        no: 0,
-                    },
-                    {
                         name: 'development',
                         yes: 10,
                         no: 4,
@@ -1336,15 +1310,26 @@ const createChangeRequest = async ({
     feature,
     environment,
     state,
-}: { id: number; feature: string; environment: string; state: string }) => {
-    await db
-        .rawDatabase('change_requests')
-        .insert({ id, environment, state, project: 'default', created_by: 1 });
+    createdBy,
+}: {
+    id: number;
+    feature: string;
+    environment: string;
+    state: string;
+    createdBy: number;
+}) => {
+    await db.rawDatabase('change_requests').insert({
+        id,
+        environment,
+        state,
+        project: 'default',
+        created_by: createdBy,
+    });
     await db.rawDatabase('change_request_events').insert({
         id,
         feature,
         action: 'updateEnabled',
-        created_by: 1,
+        created_by: createdBy,
         change_request_id: id,
     });
 };
@@ -1358,48 +1343,56 @@ test('should return change request ids per environment', async () => {
         feature: 'my_feature_a',
         environment: 'production',
         state: 'In review',
+        createdBy: 1,
     });
     await createChangeRequest({
         id: 2,
         feature: 'my_feature_a',
         environment: 'production',
         state: 'Applied',
+        createdBy: 1,
     });
     await createChangeRequest({
         id: 3,
         feature: 'my_feature_a',
         environment: 'production',
         state: 'Cancelled',
+        createdBy: 1,
     });
     await createChangeRequest({
         id: 4,
         feature: 'my_feature_a',
         environment: 'production',
         state: 'Rejected',
+        createdBy: 1,
     });
     await createChangeRequest({
         id: 5,
         feature: 'my_feature_a',
         environment: 'development',
         state: 'Draft',
+        createdBy: 1,
     });
     await createChangeRequest({
         id: 6,
         feature: 'my_feature_a',
         environment: 'development',
         state: 'Scheduled',
+        createdBy: 1,
     });
     await createChangeRequest({
         id: 7,
         feature: 'my_feature_a',
         environment: 'development',
         state: 'Approved',
+        createdBy: 2,
     });
     await createChangeRequest({
         id: 8,
         feature: 'my_feature_b',
         environment: 'development',
         state: 'Approved',
+        createdBy: 3,
     });
 
     const { body } = await searchFeatures({});
@@ -1409,7 +1402,6 @@ test('should return change request ids per environment', async () => {
             {
                 name: 'my_feature_a',
                 environments: [
-                    { name: 'default', changeRequestIds: [] },
                     { name: 'development', changeRequestIds: [5, 6, 7] },
                     { name: 'production', changeRequestIds: [1] },
                 ],
@@ -1417,7 +1409,6 @@ test('should return change request ids per environment', async () => {
             {
                 name: 'my_feature_b',
                 environments: [
-                    { name: 'default', changeRequestIds: [] },
                     { name: 'development', changeRequestIds: [8] },
                     { name: 'production', changeRequestIds: [] },
                 ],
@@ -1518,7 +1509,6 @@ test('should return release plan milestones', async () => {
             {
                 name: 'my_feature_a',
                 environments: [
-                    { name: 'default' },
                     {
                         name: 'development',
                         totalMilestones: 3,
@@ -1530,6 +1520,5 @@ test('should return release plan milestones', async () => {
             },
         ],
     });
-    expect(body.features[0].environments[0].milestoneName).toBeUndefined();
-    expect(body.features[0].environments[2].milestoneName).toBeUndefined();
+    expect(body.features[0].environments[1].milestoneName).toBeUndefined();
 });

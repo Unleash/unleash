@@ -1,10 +1,9 @@
-import dbInit, { type ITestDb } from '../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import getLogger from '../../../fixtures/no-logger';
-
+} from '../../helpers/test-helper.js';
+import getLogger from '../../../fixtures/no-logger.js';
 const MASKED_VALUE = '*****';
 
 let app: IUnleashTest;
@@ -286,7 +285,7 @@ describe('missing descriptions', () => {
                 .post('/api/admin/addons')
                 .send(addonWithoutDescription);
 
-            return app.request
+            await app.request
                 .put(`/api/admin/addons/${body.id}`)
                 .send({
                     ...addonWithoutDescription,

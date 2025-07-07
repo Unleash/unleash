@@ -1,5 +1,5 @@
-import { GenericUnleashError } from './unleash-error';
-import { EXCEEDS_LIMIT } from '../metric-events';
+import { GenericUnleashError } from './unleash-error.js';
+import { EXCEEDS_LIMIT } from '../metric-events.js';
 import type EventEmitter from 'events';
 
 export class ExceedsLimitError extends GenericUnleashError {

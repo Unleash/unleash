@@ -1,6 +1,6 @@
 import { Box, styled } from '@mui/material';
 import type { ChangeRequestState } from 'component/changeRequest/changeRequest.types';
-import type { ChangesThatWouldBeOverwritten } from './strategy-change-diff-calculation';
+import type { ChangesThatWouldBeOverwritten } from './strategy-change-diff-calculation.ts';
 
 const ChangesToOverwriteContainer = styled(Box)(({ theme }) => ({
     color: theme.palette.warning.dark,

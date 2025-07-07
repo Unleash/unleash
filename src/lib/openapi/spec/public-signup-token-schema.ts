@@ -1,6 +1,6 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { userSchema } from './user-schema';
-import { roleSchema } from './role-schema';
+import { userSchema } from './user-schema.js';
+import { roleSchema } from './role-schema.js';
 
 export const publicSignupTokenSchema = {
     $id: '#/components/schemas/publicSignupTokenSchema',

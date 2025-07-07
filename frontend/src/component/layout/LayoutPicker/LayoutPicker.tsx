@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { MainLayout } from '../MainLayout/MainLayout';
+import { MainLayout } from '../MainLayout/MainLayout.tsx';
 
 interface ILayoutPickerProps {
     children: ReactNode;

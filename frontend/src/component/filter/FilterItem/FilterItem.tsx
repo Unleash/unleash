@@ -8,17 +8,18 @@ import {
     StyledPopover,
     StyledTextField,
 } from './FilterItem.styles';
-import { FilterItemChip } from './FilterItemChip/FilterItemChip';
+import { FilterItemChip } from './FilterItemChip/FilterItemChip.tsx';
 
 export interface IFilterItemProps {
     name: string;
     label: ReactNode;
     options: Array<{ label: string; value: string }>;
     onChange: (value: FilterItemParams) => void;
-    onChipClose: () => void;
+    onChipClose?: () => void;
     state: FilterItemParams | null | undefined;
     singularOperators: [string, ...string[]];
     pluralOperators: [string, ...string[]];
+    initMode?: 'auto-open' | 'manual';
 }
 
 export type FilterItemParams = {
@@ -80,6 +81,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
     state,
     singularOperators,
     pluralOperators,
+    initMode = 'auto-open',
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
@@ -93,7 +95,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
     };
 
     useEffect(() => {
-        if (!state) {
+        if (!state && initMode === 'auto-open') {
             open();
         }
     }, []);
@@ -108,11 +110,13 @@ export const FilterItem: FC<IFilterItemProps> = ({
         .filter((label): label is string => label !== undefined);
     const currentOperator = state ? state.operator : currentOperators[0];
 
-    const onDelete = () => {
-        onChange({ operator: singularOperators[0], values: [] });
-        onClose();
-        onChipClose();
-    };
+    const onDelete = onChipClose
+        ? () => {
+              onChange({ operator: singularOperators[0], values: [] });
+              onClose();
+              onChipClose();
+          }
+        : undefined;
 
     const filteredOptions = options.filter((option) =>
         option.label.toLowerCase().includes(searchText.toLowerCase()),

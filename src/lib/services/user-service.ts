@@ -3,51 +3,57 @@ import owasp from 'owasp-password-strength-test';
 import Joi from 'joi';
 
 import type { URL } from 'url';
-import type { Logger } from '../logger';
+import type { Logger } from '../logger.js';
 import User, {
     type IAuditUser,
     type IUser,
     type IUserWithRootRole,
-} from '../types/user';
-import isEmail from '../util/is-email';
-import type { AccessService } from './access-service';
-import type ResetTokenService from './reset-token-service';
-import NotFoundError from '../error/notfound-error';
-import OwaspValidationError from '../error/owasp-validation-error';
-import type { EmailService } from './email-service';
+} from '../types/user.js';
+import isEmail from '../util/is-email.js';
+import type { AccessService } from './access-service.js';
+import type ResetTokenService from './reset-token-service.js';
+import NotFoundError from '../error/notfound-error.js';
+import OwaspValidationError from '../error/owasp-validation-error.js';
+import type { EmailService } from './email-service.js';
 import type {
     IAuthOption,
     IUnleashConfig,
     UsernameAdminUser,
-} from '../types/option';
-import type SessionService from './session-service';
-import type { IUnleashStores } from '../types/stores';
-import PasswordUndefinedError from '../error/password-undefined';
+} from '../types/option.js';
+import type SessionService from './session-service.js';
+import type { IUnleashStores } from '../types/stores.js';
+import PasswordUndefinedError from '../error/password-undefined.js';
 import {
     ScimUsersDeleted,
     UserCreatedEvent,
     UserDeletedEvent,
     UserUpdatedEvent,
-} from '../types/events';
-import type { IUserStore } from '../types/stores/user-store';
-import { RoleName } from '../types/model';
-import type SettingService from './setting-service';
-import type { SimpleAuthSettings } from '../server-impl';
-import { simpleAuthSettingsKey } from '../types/settings/simple-auth-settings';
-import DisabledError from '../error/disabled-error';
-import BadDataError from '../error/bad-data-error';
-import { isDefined } from '../util/isDefined';
-import type { TokenUserSchema } from '../openapi/spec/token-user-schema';
-import PasswordMismatch from '../error/password-mismatch';
-import type EventService from '../features/events/event-service';
+} from '../types/index.js';
+import type { IUserStore } from '../types/index.js';
+import { RoleName } from '../types/model.js';
+import type SettingService from './setting-service.js';
+import {
+    type SimpleAuthSettings,
+    simpleAuthSettingsKey,
+} from '../types/settings/simple-auth-settings.js';
+import DisabledError from '../error/disabled-error.js';
+import BadDataError from '../error/bad-data-error.js';
+import { isDefined } from '../util/index.js';
+import type { TokenUserSchema } from '../openapi/index.js';
+import PasswordMismatch from '../error/password-mismatch.js';
+import type EventService from '../features/events/event-service.js';
 
-import { type IFlagResolver, SYSTEM_USER, SYSTEM_USER_AUDIT } from '../types';
-import { PasswordPreviouslyUsedError } from '../error/password-previously-used';
-import { RateLimitError } from '../error/rate-limit-error';
+import {
+    type IFlagResolver,
+    SYSTEM_USER,
+    SYSTEM_USER_AUDIT,
+} from '../types/index.js';
+import { PasswordPreviouslyUsedError } from '../error/password-previously-used.js';
+import { RateLimitError } from '../error/rate-limit-error.js';
 import type EventEmitter from 'events';
-import { USER_LOGIN } from '../metric-events';
+import { USER_LOGIN } from '../metric-events.js';
 
-export interface ICreateUser {
+export interface ICreateUserWithRole {
     name?: string;
     email?: string;
     username?: string;
@@ -249,7 +255,7 @@ class UserService {
     }
 
     async createUser(
-        { username, email, name, password, rootRole }: ICreateUser,
+        { username, email, name, password, rootRole }: ICreateUserWithRole,
         auditUser: IAuditUser = SYSTEM_USER_AUDIT,
     ): Promise<IUserWithRootRole> {
         if (!username && !email) {
@@ -295,7 +301,7 @@ class UserService {
     }
 
     async newUserInviteLink(
-        user: IUserWithRootRole,
+        { id: userId }: Pick<IUserWithRootRole, 'id'>,
         auditUser: IAuditUser = SYSTEM_USER_AUDIT,
     ): Promise<string> {
         const passwordAuthSettings =
@@ -307,7 +313,7 @@ class UserService {
         let inviteLink = this.unleashUrl;
         if (!passwordAuthSettings.disabled) {
             const inviteUrl = await this.resetTokenService.createNewUserUrl(
-                user.id,
+                userId,
                 auditUser.username,
             );
             inviteLink = inviteUrl.toString();
@@ -397,14 +403,26 @@ class UserService {
     }
 
     async deleteScimUsers(auditUser: IAuditUser): Promise<void> {
-        await this.store.deleteScimUsers();
-
-        await this.eventService.storeEvent(
-            new ScimUsersDeleted({
-                data: null,
-                auditUser,
-            }),
+        const users = await this.store.deleteScimUsers();
+        // Note: after deletion we can't get the role for the user
+        const viewerRole = await this.accessService.getPredefinedRole(
+            RoleName.VIEWER,
         );
+        if (users.length > 0) {
+            const deletions = users.map((user) => {
+                return new UserDeletedEvent({
+                    deletedUser: { ...user, rootRole: viewerRole.id },
+                    auditUser,
+                });
+            });
+            await this.eventService.storeEvents([
+                ...deletions,
+                new ScimUsersDeleted({
+                    data: null,
+                    auditUser,
+                }),
+            ]);
+        }
     }
 
     async loginUser(

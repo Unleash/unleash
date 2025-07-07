@@ -1,10 +1,10 @@
 import { Box, Radio, RadioGroup, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { LegalValueLabel } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/LegalValueLabel/LegalValueLabel';
+import { LegalValueLabel } from 'component/common/NewConstraintAccordion/LegalValueLabel/LegalValueLabel.tsx';
 import { useState } from 'react';
 import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/useFeatureLifecycleApi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { SingleVariantOptions } from './SingleVariantOptions';
+import { SingleVariantOptions } from './SingleVariantOptions.tsx';
 import { useParentVariantOptions } from 'hooks/api/getters/useFeatureDependencyOptions/useFeatureDependencyOptions';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 

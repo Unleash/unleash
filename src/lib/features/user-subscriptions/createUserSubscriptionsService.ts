@@ -1,13 +1,13 @@
-import type { Db, IUnleashConfig } from '../../server-impl';
-import { UserSubscriptionsService } from './user-subscriptions-service';
-import { UserUnsubscribeStore } from './user-unsubscribe-store';
+import type { Db, IUnleashConfig } from '../../types/index.js';
+import { UserSubscriptionsService } from './user-subscriptions-service.js';
+import { UserUnsubscribeStore } from './user-unsubscribe-store.js';
 import {
     createEventsService,
     createFakeEventsService,
-} from '../events/createEventsService';
-import { FakeUserUnsubscribeStore } from './fake-user-unsubscribe-store';
-import { UserSubscriptionsReadModel } from './user-subscriptions-read-model';
-import { FakeUserSubscriptionsReadModel } from './fake-user-subscriptions-read-model';
+} from '../events/createEventsService.js';
+import { FakeUserUnsubscribeStore } from './fake-user-unsubscribe-store.js';
+import { UserSubscriptionsReadModel } from './user-subscriptions-read-model.js';
+import { FakeUserSubscriptionsReadModel } from './fake-user-subscriptions-read-model.js';
 
 export const createUserSubscriptionsService =
     (config: IUnleashConfig) =>

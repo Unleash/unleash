@@ -1,11 +1,11 @@
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import type User from '../../../../lib/types/user';
-import { TEST_AUDIT_USER } from '../../../../lib/types';
+} from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import type User from '../../../../lib/types/user.js';
+import { TEST_AUDIT_USER } from '../../../../lib/types/index.js';
 // import { DEFAULT_ENV } from '../../../../lib/util/constants';
 
 const testUser = { name: 'test', id: -9999 } as User;
@@ -152,26 +152,26 @@ describe.each([
             .expect(200);
 
         if (etagVariant.feature_enabled) {
-            expect(res.headers.etag).toBe(`"61824cd0:17:${etagVariant.name}"`);
+            expect(res.headers.etag).toBe(`"76d8bb0e:16:${etagVariant.name}"`);
             expect(res.body.meta.etag).toBe(
-                `"61824cd0:17:${etagVariant.name}"`,
+                `"76d8bb0e:16:${etagVariant.name}"`,
             );
         } else {
-            expect(res.headers.etag).toBe('"61824cd0:16"');
-            expect(res.body.meta.etag).toBe('"61824cd0:16"');
+            expect(res.headers.etag).toBe('"76d8bb0e:16"');
+            expect(res.body.meta.etag).toBe('"76d8bb0e:16"');
         }
     });
 
     test(`returns ${etagVariant.feature_enabled ? 200 : 304} for pre-calculated hash${etagVariant.feature_enabled ? ' because hash changed' : ''}`, async () => {
         const res = await app.request
             .get('/api/client/features')
-            .set('if-none-match', '"61824cd0:16"')
+            .set('if-none-match', '"76d8bb0e:16"')
             .expect(etagVariant.feature_enabled ? 200 : 304);
 
         if (etagVariant.feature_enabled) {
-            expect(res.headers.etag).toBe(`"61824cd0:17:${etagVariant.name}"`);
+            expect(res.headers.etag).toBe(`"76d8bb0e:16:${etagVariant.name}"`);
             expect(res.body.meta.etag).toBe(
-                `"61824cd0:17:${etagVariant.name}"`,
+                `"76d8bb0e:16:${etagVariant.name}"`,
             );
         }
     });
@@ -193,13 +193,13 @@ describe.each([
             .expect(200);
 
         if (etagVariant.feature_enabled) {
-            expect(res.headers.etag).toBe(`"61824cd0:17:${etagVariant.name}"`);
+            expect(res.headers.etag).toBe(`"76d8bb0e:16:${etagVariant.name}"`);
             expect(res.body.meta.etag).toBe(
-                `"61824cd0:17:${etagVariant.name}"`,
+                `"76d8bb0e:16:${etagVariant.name}"`,
             );
         } else {
-            expect(res.headers.etag).toBe('"61824cd0:17"');
-            expect(res.body.meta.etag).toBe('"61824cd0:17"');
+            expect(res.headers.etag).toBe('"76d8bb0e:16"');
+            expect(res.body.meta.etag).toBe('"76d8bb0e:16"');
         }
     });
 });

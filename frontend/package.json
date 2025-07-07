@@ -9,6 +9,7 @@
   "engines": {
     "node": ">=18"
   },
+  "type": "module",
   "scripts": {
     "build": "yarn run lint:material:icons && vite build",
     "dev": "vite",
@@ -29,14 +30,14 @@
     "ts:check": "tsc",
     "e2e": "NODE_OPTIONS=\"${NODE_OPTIONS:-} --no-experimental-fetch\" yarn run cypress open --config baseUrl='http://localhost:3000' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
     "e2e:oss": "yarn --cwd frontend run cypress run --spec \"cypress/oss/**/*.spec.ts\" --config baseUrl=\"http://localhost:${EXPOSED_PORT:-4242}\" --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
-    "gen:api": "NODE_OPTIONS=\"${NODE_OPTIONS:-} --no-experimental-fetch\" orval --config orval.config.js",
-    "gen:api:demo": "NODE_OPTIONS=\"${NODE_OPTIONS:-} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://app.unleash-hosted.com/demo/docs/openapi.json yarn run gen:api",
-    "gen:api:sandbox": "NODE_OPTIONS=\"${NODE_OPTIONS:-} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://sandbox.getunleash.io/demo2/docs/openapi.json yarn run gen:api",
+    "gen:api": "orval --config orval.config.ts",
+    "gen:api:demo": "UNLEASH_OPENAPI_URL=https://app.unleash-hosted.com/demo/docs/openapi.json yarn run gen:api",
+    "gen:api:sandbox": "UNLEASH_OPENAPI_URL=https://sandbox.getunleash.io/demo2/docs/openapi.json yarn run gen:api",
     "gen:api:clean": "yarn gen:api && rm -rf src/openapi/apis && sed -i.bak '1q' src/openapi/index.ts && rm src/openapi/index.ts.bak"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@codemirror/lang-json": "6.0.1",
+    "@codemirror/lang-json": "6.0.2",
     "@emotion/react": "11.11.4",
     "@emotion/styled": "11.11.5",
     "@mui/icons-material": "5.15.3",
@@ -57,16 +58,17 @@
     "@types/lodash.isequal": "^4.5.8",
     "@types/lodash.mapvalues": "^4.6.9",
     "@types/lodash.omit": "4.5.9",
-    "@types/node": "^20.12.12",
-    "@types/react": "18.3.18",
-    "@types/react-dom": "18.3.5",
+    "@types/node": "^22.0.0",
+    "@types/react": "18.3.23",
+    "@types/react-dom": "18.3.7",
+    "@types/react-grid-layout": "^1.3.5",
     "@types/react-router-dom": "5.3.3",
     "@types/react-table": "7.7.20",
     "@types/react-test-renderer": "18.3.1",
-    "@types/semver": "7.5.8",
+    "@types/semver": "7.7.0",
     "@types/uuid": "^9.0.0",
-    "@uiw/codemirror-theme-duotone": "4.23.10",
-    "@uiw/react-codemirror": "4.23.10",
+    "@uiw/codemirror-theme-duotone": "4.23.13",
+    "@uiw/react-codemirror": "4.23.13",
     "@unleash/proxy-client-react": "^5.0.0",
     "@vitejs/plugin-react": "4.3.4",
     "cartesian": "^1.0.1",
@@ -85,7 +87,7 @@
     "deep-diff": "1.0.2",
     "dequal": "2.0.3",
     "fast-json-patch": "3.1.1",
-    "http-proxy-middleware": "2.0.8",
+    "http-proxy-middleware": "2.0.9",
     "immer": "9.0.21",
     "jsdom": "25.0.1",
     "lodash.clonedeep": "4.5.0",
@@ -94,7 +96,7 @@
     "lodash.omit": "4.5.0",
     "millify": "^6.0.0",
     "msw": "2.7.3",
-    "orval": "^6.31.0",
+    "orval": "^7.9.0",
     "pkginfo": "0.4.1",
     "plausible-tracker": "0.3.9",
     "prop-types": "15.8.1",
@@ -106,6 +108,7 @@
     "react-dropzone": "14.3.8",
     "react-error-boundary": "3.1.4",
     "react-github-calendar": "^4.5.1",
+    "react-grid-layout": "^1.5.2",
     "react-hooks-global-state": "2.1.0",
     "react-joyride": "^2.5.3",
     "react-markdown": "^8.0.4",
@@ -113,10 +116,10 @@
     "react-table": "7.8.0",
     "react-test-renderer": "18.3.1",
     "sass": "1.85.1",
-    "semver": "7.7.1",
+    "semver": "7.7.2",
     "swr": "2.3.3",
-    "tss-react": "4.9.15",
-    "typescript": "5.4.5",
+    "tss-react": "4.9.18",
+    "typescript": "5.8.3",
     "unleash-proxy-client": "^3.7.3",
     "use-query-params": "^2.2.1",
     "vanilla-jsoneditor": "^0.23.0",
@@ -133,9 +136,9 @@
     "jsonpath-plus": "10.3.0",
     "json5": "^2.2.2",
     "vite": "5.4.19",
-    "semver": "7.7.1",
+    "semver": "7.7.2",
     "ws": "^8.18.0",
-    "@types/react": "18.3.18"
+    "@types/react": "18.3.23"
   },
   "jest": {
     "moduleNameMapper": {
@@ -156,8 +159,10 @@
       "last 1 safari version"
     ]
   },
-  "packageManager": "yarn@4.7.0",
+  "packageManager": "yarn@4.9.2",
   "dependencies": {
-    "json-2-csv": "^5.5.5"
+    "chartjs-plugin-datalabels": "^2.2.0",
+    "json-2-csv": "^5.5.5",
+    "json-diff-react": "^1.0.1"
   }
 }

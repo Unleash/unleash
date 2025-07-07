@@ -1,10 +1,10 @@
 import type { SWRConfiguration } from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { RequestsPerSecondSchema } from 'openapi';
-import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
-import useUiConfig from '../useUiConfig/useUiConfig';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
+import useUiConfig from '../useUiConfig/useUiConfig.js';
 
 export interface IInstanceMetricsResponse {
     metrics: RequestsPerSecondSchema;

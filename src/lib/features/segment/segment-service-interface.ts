@@ -1,11 +1,11 @@
-import type { ChangeRequestStrategy } from '../change-request-segment-usage-service/change-request-segment-usage-read-model';
-import type { UpsertSegmentSchema } from '../../openapi';
+import type { ChangeRequestStrategy } from '../change-request-segment-usage-service/change-request-segment-usage-read-model.js';
+import type { UpsertSegmentSchema } from '../../openapi/index.js';
 import type {
     IAuditUser,
     IFeatureStrategy,
     ISegment,
     IUser,
-} from '../../types';
+} from '../../types/index.js';
 
 export type StrategiesUsingSegment = {
     strategies: IFeatureStrategy[];

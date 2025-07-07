@@ -16,15 +16,15 @@ import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashCon
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { AddContextButton } from '../AddContextButton';
+import { AddContextButton } from '../AddContextButton.tsx';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { sortTypes } from 'utils/sortTypes';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
-import { ContextActionsCell } from '../ContextActionsCell';
+import { ContextActionsCell } from '../ContextActionsCell.tsx';
 import Adjust from '@mui/icons-material/Adjust';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { Search } from 'component/common/Search/Search';
-import { UsedInCell } from '../UsedInCell';
+import { UsedInCell } from '../UsedInCell.tsx';
 
 const ContextList: VFC = () => {
     const [showDelDialogue, setShowDelDialogue] = useState(false);
@@ -97,7 +97,7 @@ const ContextList: VFC = () => {
                 align: 'center',
                 Cell: ({
                     row: {
-                        original: { name },
+                        original: { name, usedInFeatures },
                     },
                 }: any) => (
                     <ContextActionsCell
@@ -106,6 +106,7 @@ const ContextList: VFC = () => {
                             setName(name);
                             setShowDelDialogue(true);
                         }}
+                        allowDelete={usedInFeatures === 0}
                     />
                 ),
                 width: 150,

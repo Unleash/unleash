@@ -1,37 +1,37 @@
-import type { IUnleashConfig } from '../../types/option';
-import type { IUnleashServices } from '../../types/services';
-import type StrategyService from '../../services/strategy-service';
-import type { Logger } from '../../logger';
-import Controller from '../controller';
-import { extractUsername } from '../../util/extract-user';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashServices } from '../../services/index.js';
+import type StrategyService from '../../services/strategy-service.js';
+import type { Logger } from '../../logger.js';
+import Controller from '../controller.js';
+import { extractUsername } from '../../util/extract-user.js';
 import {
     CREATE_STRATEGY,
     DELETE_STRATEGY,
     NONE,
     UPDATE_STRATEGY,
-} from '../../types/permissions';
+} from '../../types/permissions.js';
 import type { Request, Response } from 'express';
-import type { IAuthRequest } from '../unleash-types';
-import type { OpenApiService } from '../../services/openapi-service';
+import type { IAuthRequest } from '../unleash-types.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../openapi/util/standard-responses';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
+} from '../../openapi/util/standard-responses.js';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
 import {
     createResponseSchema,
     resourceCreatedResponseSchema,
-} from '../../openapi/util/create-response-schema';
+} from '../../openapi/util/create-response-schema.js';
 import {
     strategySchema,
     type StrategySchema,
-} from '../../openapi/spec/strategy-schema';
+} from '../../openapi/spec/strategy-schema.js';
 import {
     strategiesSchema,
     type StrategiesSchema,
-} from '../../openapi/spec/strategies-schema';
-import type { CreateStrategySchema } from '../../openapi/spec/create-strategy-schema';
-import type { UpdateStrategySchema } from '../../openapi/spec/update-strategy-schema';
+} from '../../openapi/spec/strategies-schema.js';
+import type { CreateStrategySchema } from '../../openapi/spec/create-strategy-schema.js';
+import type { UpdateStrategySchema } from '../../openapi/spec/update-strategy-schema.js';
 
 const version = 1;
 
@@ -122,12 +122,11 @@ class StrategyController extends Controller {
             permission: CREATE_STRATEGY,
             middleware: [
                 openApiService.validPath({
-                    deprecated: true,
                     tags: ['Strategies'],
                     operationId: 'createStrategy',
                     summary: 'Create a strategy',
                     description:
-                        'Creates a custom strategy type based on the supplied data. Custom strategies are deprecated and should not be used. Prefer using built in strategies with constraints instead.',
+                        'Creates a custom strategy type based on the supplied data.',
                     requestBody: createRequestSchema('createStrategySchema'),
                     responses: {
                         201: resourceCreatedResponseSchema('strategySchema'),

@@ -1,4 +1,4 @@
-import { useKeyboardShortcut } from './useKeyboardShortcut';
+import { useKeyboardShortcut } from './useKeyboardShortcut.js';
 
 export const useKeyboardCopy = (handler: () => void) =>
     useKeyboardShortcut(

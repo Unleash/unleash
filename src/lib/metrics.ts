@@ -2,7 +2,7 @@ import { collectDefaultMetrics } from 'prom-client';
 import memoizee from 'memoizee';
 import type EventEmitter from 'events';
 import type { Knex } from 'knex';
-import * as events from './metric-events';
+import * as events from './metric-events.js';
 import {
     DB_POOL_UPDATE,
     FEATURE_ARCHIVED,
@@ -23,21 +23,25 @@ import {
     PROJECT_ARCHIVED,
     PROJECT_REVIVED,
     PROJECT_DELETED,
-} from './types/events';
-import type { IUnleashConfig } from './types/option';
-import type { IUnleashStores } from './types/stores';
+    RELEASE_PLAN_ADDED,
+    RELEASE_PLAN_REMOVED,
+    RELEASE_PLAN_MILESTONE_STARTED,
+} from './events/index.js';
+import type { IUnleashConfig } from './types/option.js';
+import type { IUnleashStores } from './types/stores.js';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
-import type { InstanceStatsService } from './features/instance-stats/instance-stats-service';
-import type { IEnvironment, ISdkHeartbeat } from './types';
+import type { InstanceStatsService } from './features/instance-stats/instance-stats-service.js';
+import type { IEnvironment, ISdkHeartbeat } from './types/index.js';
 import {
     createCounter,
     createGauge,
     createSummary,
     createHistogram,
-} from './util/metrics';
-import type { SchedulerService } from './services';
-import type { IClientMetricsEnv } from './features/metrics/client-metrics/client-metrics-store-v2-type';
-import { DbMetricsMonitor } from './metrics-gauge';
+} from './util/metrics/index.js';
+import type { SchedulerService } from './services/index.js';
+import type { IClientMetricsEnv } from './features/metrics/client-metrics/client-metrics-store-v2-type.js';
+import { DbMetricsMonitor } from './metrics-gauge.js';
+import { HEAP_MEMORY_TOTAL } from './features/metrics/impact/define-impact-metrics.js';
 
 export function registerPrometheusPostgresMetrics(
     db: Knex,
@@ -656,6 +660,22 @@ export function registerPrometheusMetrics(
             })),
     });
 
+    dbMetrics.registerGaugeDbMetric({
+        name: 'feature_link_by_domain',
+        help: 'Count most popular domains used in feature links',
+        labelNames: ['domain'],
+        query: () => {
+            return stores.featureLinkReadModel.getTopDomains();
+        },
+        map: (result) =>
+            result.map(({ domain, count }) => ({
+                value: count,
+                labels: {
+                    domain,
+                },
+            })),
+    });
+
     const featureLifecycleStageEnteredCounter = createCounter({
         name: 'feature_lifecycle_stage_entered',
         help: 'Count how many features entered a given stage',
@@ -883,8 +903,8 @@ export function registerPrometheusMetrics(
         featureFlagUpdateTotal.increment({
             toggle: featureName,
             project,
-            environment: 'default',
-            environmentType: 'production',
+            environment: 'n/a',
+            environmentType: 'n/a',
             action: 'updated',
         });
     });
@@ -986,6 +1006,58 @@ export function registerPrometheusMetrics(
             action: 'revived',
         });
     });
+
+    eventStore.on(
+        RELEASE_PLAN_ADDED,
+        async ({ featureName, project, environment }) => {
+            const environmentType = await resolveEnvironmentType(
+                environment,
+                cachedEnvironments,
+            );
+            featureFlagUpdateTotal.increment({
+                toggle: featureName,
+                project,
+                environment,
+                environmentType,
+                action: 'updated',
+            });
+        },
+    );
+
+    eventStore.on(
+        RELEASE_PLAN_REMOVED,
+        async ({ featureName, project, environment }) => {
+            const environmentType = await resolveEnvironmentType(
+                environment,
+                cachedEnvironments,
+            );
+            featureFlagUpdateTotal.increment({
+                toggle: featureName,
+                project,
+                environment,
+                environmentType,
+                action: 'updated',
+            });
+        },
+    );
+
+    eventStore.on(
+        RELEASE_PLAN_MILESTONE_STARTED,
+        async ({ featureName, project, environment }) => {
+            const environmentType = await resolveEnvironmentType(
+                environment,
+                cachedEnvironments,
+            );
+            featureFlagUpdateTotal.increment({
+                toggle: featureName,
+                project,
+                environment,
+                environmentType,
+                action: 'updated',
+            });
+        },
+    );
+
     eventStore.on(PROJECT_CREATED, () => {
         projectActionsCounter.increment({ action: PROJECT_CREATED });
     });
@@ -1066,6 +1138,10 @@ export function registerPrometheusMetrics(
         collectAggDbMetrics: dbMetrics.refreshMetrics,
         collectStaticCounters: async () => {
             try {
+                config.flagResolver.impactMetrics?.updateGauge(
+                    HEAP_MEMORY_TOTAL,
+                    process.memoryUsage().heapUsed,
+                );
                 featureTogglesArchivedTotal.reset();
                 featureTogglesArchivedTotal.set(
                     await instanceStatsService.getArchivedToggleCount(),

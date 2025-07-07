@@ -1,9 +1,10 @@
 import supertest from 'supertest';
-import { createTestConfig } from '../../../test/config/test-config';
-import createStores from '../../../test/fixtures/store';
-import permissions from '../../../test/fixtures/permissions';
-import getApp from '../../app';
-import { createServices } from '../../services';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import createStores from '../../../test/fixtures/store.js';
+import permissions from '../../../test/fixtures/permissions.js';
+import getApp from '../../app.js';
+import { createServices } from '../../services/index.js';
+import { vi } from 'vitest';
 
 async function getSetup() {
     const randomBase = `/random${Math.round(Math.random() * 1000)}`;
@@ -112,14 +113,14 @@ test('validate format when updating strategy', async () => {
 });
 
 test('editable=false will stop delete request', async () => {
-    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
+    vi.spyOn(global.console, 'error').mockImplementation(() => vi.fn());
     const { request, base } = await getSetup();
     const name = 'default';
     return request.delete(`${base}/api/admin/strategies/${name}`).expect(500);
 });
 
 test('editable=false will stop edit request', async () => {
-    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
+    vi.spyOn(global.console, 'error').mockImplementation(() => vi.fn());
     const { request, base } = await getSetup();
     const name = 'default';
     return request

@@ -30,6 +30,8 @@ export const ImportExplanation: FC = () => (
                 <li>variants</li>
                 <li>tags</li>
                 <li>feature flag status</li>
+                <li>feature dependencies</li>
+                <li>feature links</li>
             </ul>
         </ImportExplanationDescription>
         <ImportExplanationHeader>Exceptions?</ImportExplanationHeader>

@@ -1,16 +1,16 @@
 import type { EventEmitter } from 'events';
-import metricsHelper from '../util/metrics-helper';
-import { DB_TIME } from '../metric-events';
-import type { Logger, LogProvider } from '../logger';
-import NotFoundError from '../error/notfound-error';
+import metricsHelper from '../util/metrics-helper.js';
+import { DB_TIME } from '../metric-events.js';
+import type { Logger, LogProvider } from '../logger.js';
+import NotFoundError from '../error/notfound-error.js';
 import type {
     IResetQuery,
     IResetToken,
     IResetTokenCreate,
     IResetTokenQuery,
     IResetTokenStore,
-} from '../types/stores/reset-token-store';
-import type { Db } from './db';
+} from '../types/stores/reset-token-store.js';
+import type { Db } from './db.js';
 
 const TABLE = 'reset_tokens';
 

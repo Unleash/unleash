@@ -1,10 +1,12 @@
-import type { LogProvider } from '../logger';
-import { SchedulerService } from '../features/scheduler/scheduler-service';
-import { createTestConfig } from '../../test/config/test-config';
-import FakeSettingStore from '../../test/fixtures/fake-setting-store';
-import SettingService from './setting-service';
-import type EventService from '../features/events/event-service';
-import MaintenanceService from '../features/maintenance/maintenance-service';
+import type { LogProvider } from '../logger.js';
+import { SchedulerService } from '../features/scheduler/scheduler-service.js';
+import { createTestConfig } from '../../test/config/test-config.js';
+import FakeSettingStore from '../../test/fixtures/fake-setting-store.js';
+import SettingService from './setting-service.js';
+import type EventService from '../features/events/event-service.js';
+import MaintenanceService from '../features/maintenance/maintenance-service.js';
+
+import { vi } from 'vitest';
 
 function ms(timeMs: number) {
     return new Promise((resolve) => setTimeout(resolve, timeMs));
@@ -49,45 +51,45 @@ beforeEach(() => {
 });
 
 test('Schedules job immediately', async () => {
-    const job = jest.fn();
+    const job = vi.fn() as () => Promise<void> as () => Promise<void>;
     await schedulerService.schedule(job, 10, 'test-id');
 
-    expect(job).toBeCalledTimes(1);
+    expect(job).toHaveBeenCalledTimes(1);
     schedulerService.stop();
 });
 
 test('Can schedule a single regular job', async () => {
-    const job = jest.fn();
+    const job = vi.fn() as () => Promise<void>;
     await schedulerService.schedule(job, 50, 'test-id-3');
     await ms(75);
 
-    expect(job).toBeCalledTimes(2);
+    expect(job).toHaveBeenCalledTimes(2);
     schedulerService.stop();
 });
 
 test('Can schedule multiple jobs at the same interval', async () => {
-    const job = jest.fn();
-    const anotherJob = jest.fn();
+    const job = vi.fn() as () => Promise<void>;
+    const anotherJob = vi.fn() as () => Promise<void>;
 
     await schedulerService.schedule(job, 50, 'test-id-6');
     await schedulerService.schedule(anotherJob, 50, 'test-id-7');
     await ms(75);
 
-    expect(job).toBeCalledTimes(2);
-    expect(anotherJob).toBeCalledTimes(2);
+    expect(job).toHaveBeenCalledTimes(2);
+    expect(anotherJob).toHaveBeenCalledTimes(2);
     schedulerService.stop();
 });
 
 test('Can schedule multiple jobs at the different intervals', async () => {
-    const job = jest.fn();
-    const anotherJob = jest.fn();
+    const job = vi.fn() as () => Promise<void>;
+    const anotherJob = vi.fn() as () => Promise<void>;
 
     await schedulerService.schedule(job, 100, 'test-id-8');
     await schedulerService.schedule(anotherJob, 200, 'test-id-9');
     await ms(250);
 
-    expect(job).toBeCalledTimes(3);
-    expect(anotherJob).toBeCalledTimes(2);
+    expect(job).toHaveBeenCalledTimes(3);
+    expect(anotherJob).toHaveBeenCalledTimes(2);
     schedulerService.stop();
 });
 

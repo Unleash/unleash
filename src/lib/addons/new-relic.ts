@@ -1,21 +1,20 @@
-import Addon from './addon';
+import Addon from './addon.js';
 
-import definition from './new-relic-definition';
+import definition from './new-relic-definition.js';
 import Mustache from 'mustache';
 import {
     type IAddonConfig,
-    type IEvent,
-    type IEventType,
     type IFlagResolver,
     serializeDates,
-} from '../types';
+} from '../types/index.js';
+import type { IEvent, IEventType } from '../events/index.js';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
-} from './feature-event-formatter-md';
+} from './feature-event-formatter-md.js';
 import { gzip } from 'node:zlib';
 import { promisify } from 'util';
-import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
+import type { IntegrationEventState } from '../features/integration-events/integration-events-store.js';
 
 const asyncGzip = promisify(gzip);
 

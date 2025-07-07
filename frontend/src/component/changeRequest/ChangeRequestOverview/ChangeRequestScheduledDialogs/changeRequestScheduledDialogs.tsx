@@ -1,10 +1,10 @@
 import type { FC } from 'react';
-import { APPLY_CHANGE_REQUEST } from '../../../providers/AccessProvider/permissions';
-import PermissionButton from '../../../common/PermissionButton/PermissionButton';
+import { APPLY_CHANGE_REQUEST } from '../../../providers/AccessProvider/permissions.ts';
+import PermissionButton from '../../../common/PermissionButton/PermissionButton.tsx';
 import {
     ChangeRequestScheduledDialog,
     type ChangeRequestScheduledDialogProps,
-} from './ChangeRequestScheduledDialog';
+} from './ChangeRequestScheduledDialog.tsx';
 
 export const ChangeRequestApplyScheduledDialogue: FC<
     Omit<

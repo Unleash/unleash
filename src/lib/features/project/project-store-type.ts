@@ -1,16 +1,17 @@
 import type {
     IEnvironmentProjectLink,
     ProjectModeCount,
-} from './project-store';
+} from './project-store.js';
 import type {
     IEnvironment,
     IFeatureNaming,
     IProject,
     IProjectApplications,
+    IProjectLinkTemplate,
     ProjectMode,
-} from '../../types/model';
-import type { Store } from '../../types/stores/store';
-import type { CreateFeatureStrategySchema } from '../../openapi';
+} from '../../types/model.js';
+import type { Store } from '../../types/stores/store.js';
+import type { CreateFeatureStrategySchema } from '../../openapi/index.js';
 
 export interface IProjectInsert {
     id: string;
@@ -21,12 +22,14 @@ export interface IProjectInsert {
     mode?: ProjectMode;
     featureLimit?: number;
     featureNaming?: IFeatureNaming;
+    linkTemplates?: IProjectLinkTemplate[];
 }
 
 export interface IProjectEnterpriseSettingsUpdate {
     id: string;
     mode?: ProjectMode;
     featureNaming?: IFeatureNaming;
+    linkTemplates?: IProjectLinkTemplate[];
 }
 
 export interface IProjectSettings {
@@ -36,6 +39,7 @@ export interface IProjectSettings {
     featureNamingPattern?: string;
     featureNamingExample?: string;
     featureNamingDescription?: string;
+    linkTemplates?: IProjectLinkTemplate[];
 }
 
 export interface IProjectHealthUpdate {
@@ -116,7 +120,7 @@ export interface IProjectStore extends Store<IProject, string> {
     getDefaultStrategy(
         projectId: string,
         environment: string,
-    ): Promise<CreateFeatureStrategySchema | null>;
+    ): Promise<CreateFeatureStrategySchema | undefined>;
 
     updateDefaultStrategy(
         projectId: string,
@@ -125,6 +129,8 @@ export interface IProjectStore extends Store<IProject, string> {
     ): Promise<CreateFeatureStrategySchema>;
 
     isFeatureLimitReached(id: string): Promise<boolean>;
+
+    getProjectLinkTemplates(projectId: string): Promise<IProjectLinkTemplate[]>;
 
     getProjectModeCounts(): Promise<ProjectModeCount[]>;
     getApplicationsByProject(

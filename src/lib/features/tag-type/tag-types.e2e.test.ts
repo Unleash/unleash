@@ -1,16 +1,22 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
 import {
+    createUserWithRootRole,
     type IUnleashTest,
-    setupAppWithCustomConfig,
-} from '../../../test/e2e/helpers/test-helper';
-import getLogger from '../../../test/fixtures/no-logger';
+    setupAppWithAuth,
+} from '../../../test/e2e/helpers/test-helper.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import { RoleName } from '../../types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
 
+const adminEmail = 'admin-user@getunleash.io';
+
 beforeAll(async () => {
     db = await dbInit('tag_types_api_serial', getLogger);
-    app = await setupAppWithCustomConfig(
+    app = await setupAppWithAuth(
         db.stores,
         {
             experimental: {
@@ -21,6 +27,17 @@ beforeAll(async () => {
         },
         db.rawDatabase,
     );
+
+    await createUserWithRootRole({
+        app,
+        stores: db.stores,
+        email: adminEmail,
+        roleName: RoleName.ADMIN,
+    });
+});
+
+beforeEach(async () => {
+    await app.login({ email: adminEmail });
 });
 
 afterAll(async () => {

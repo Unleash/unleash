@@ -2,13 +2,13 @@ import {
     type IUnleashTest,
     setupApp,
     setupAppWithBaseUrl,
-} from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
+} from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
 import SwaggerParser from '@apidevtools/swagger-parser';
 import enforcer from 'openapi-enforcer';
 import semver from 'semver';
-import { openApiTags } from '../../../../lib/openapi/util/openapi-tags';
+import { openApiTags } from '../../../../lib/openapi/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -34,13 +34,7 @@ test('should serve the OpenAPI spec', async () => {
     return app.request
         .get('/docs/openapi.json')
         .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            // Don't use the version field in snapshot tests. Having the version
-            // listed in automated testing causes issues when trying to deploy
-            // new versions of the API (due to mismatch between new tag versions etc).
-            delete res.body.info.version;
-        });
+        .expect(200);
 });
 
 test('should serve the OpenAPI spec with a `version` property', async () => {

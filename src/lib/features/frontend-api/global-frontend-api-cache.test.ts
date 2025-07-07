@@ -1,18 +1,20 @@
 import {
     GlobalFrontendApiCache,
     type GlobalFrontendApiCacheState,
-} from './global-frontend-api-cache';
-import noLogger from '../../../test/fixtures/no-logger';
-import { FakeSegmentReadModel } from '../segment/fake-segment-read-model';
-import FakeClientFeatureToggleReadModel from './fake-client-feature-toggle-read-model';
+} from './global-frontend-api-cache.js';
+import noLogger from '../../../test/fixtures/no-logger.js';
+import { FakeSegmentReadModel } from '../segment/fake-segment-read-model.js';
+import FakeClientFeatureToggleReadModel from './fake-client-feature-toggle-read-model.js';
 import EventEmitter from 'events';
 import type {
     IApiUser,
     IFeatureToggleClient,
     IFlagResolver,
     ISegment,
-} from '../../types';
-import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service';
+} from '../../types/index.js';
+import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service.js';
+
+import { vi } from 'vitest';
 
 const state = async (
     cache: GlobalFrontendApiCache,
@@ -51,7 +53,7 @@ const createCache = (
     const config = {
         getLogger: noLogger,
         flagResolver: alwaysOnFlagResolver,
-        eventBus: <any>{ emit: jest.fn() },
+        eventBus: <any>{ emit: vi.fn() },
     };
     const segmentReadModel = new FakeSegmentReadModel([segment as ISegment]);
     const clientFeatureToggleReadModel = new FakeClientFeatureToggleReadModel(
@@ -139,7 +141,7 @@ test('Can read initial features', async () => {
 
     const defaultProjectFeatures = cache.getToggles({
         environment: '*',
-        projects: ['*'],
+        projects: ['default'],
     } as IApiUser);
     expect(defaultProjectFeatures.length).toBe(0);
 

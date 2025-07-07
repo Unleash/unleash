@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import useTagTypesApi from 'hooks/api/actions/useTagTypesApi/useTagTypesApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface TagTypePayload {
     name: string;
@@ -19,7 +18,6 @@ const useTagTypeForm = (
     const [color, setColor] = useState(initialColor);
     const [errors, setErrors] = useState({});
     const { validateTagName } = useTagTypesApi();
-    const isTagTypeColorEnabled = Boolean(useUiFlag('tagTypeColor'));
 
     useEffect(() => {
         setTagName(initialTagName);
@@ -37,11 +35,8 @@ const useTagTypeForm = (
         const payload: TagTypePayload = {
             name: tagName,
             description: tagDesc,
+            color: color,
         };
-
-        if (isTagTypeColorEnabled && color) {
-            payload.color = color;
-        }
 
         return payload;
     };
@@ -85,7 +80,6 @@ const useTagTypeForm = (
         clearErrors,
         validateNameUniqueness,
         errors,
-        isTagTypeColorEnabled,
     };
 };
 

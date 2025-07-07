@@ -1,7 +1,7 @@
 import type { VFC } from 'react';
 import { useParams } from 'react-router-dom';
 import type { FeatureTypeSchema } from 'openapi';
-import { FeatureTypeForm } from './FeatureTypeForm/FeatureTypeForm';
+import { FeatureTypeForm } from './FeatureTypeForm/FeatureTypeForm.tsx';
 
 type FeatureTypeEditProps = {
     featureTypes: FeatureTypeSchema[];

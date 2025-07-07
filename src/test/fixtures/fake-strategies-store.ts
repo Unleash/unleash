@@ -4,8 +4,8 @@ import type {
     IStrategy,
     IStrategyImport,
     IStrategyStore,
-} from '../../lib/types/stores/strategy-store';
-import NotFoundError from '../../lib/error/notfound-error';
+} from '../../lib/types/stores/strategy-store.js';
+import NotFoundError from '../../lib/error/notfound-error.js';
 
 export default class FakeStrategiesStore implements IStrategyStore {
     count(): Promise<number> {
@@ -32,14 +32,16 @@ export default class FakeStrategiesStore implements IStrategyStore {
             if (update.parameters === '') {
                 params = [];
             } else {
-                params = JSON.parse(update.parameters);
+                params = JSON.parse(<string>update.parameters);
             }
         } else {
             params = update.parameters;
         }
         this.strategies.push({
+            // @ts-ignore: Always overwritten editable
             editable: true,
             deprecated: false,
+            // @ts-ignore: Always overwritten description
             description: '',
             displayName: update.name,
             ...update,
@@ -106,7 +108,7 @@ export default class FakeStrategiesStore implements IStrategyStore {
     }
 
     async importStrategy(data: IStrategyImport): Promise<void> {
-        return this.createStrategy(data);
+        return this.createStrategy({ editable: true, ...data });
     }
 
     async reactivateStrategy({ name }: Pick<IStrategy, 'name'>): Promise<void> {

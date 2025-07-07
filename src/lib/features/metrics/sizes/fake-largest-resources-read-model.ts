@@ -1,4 +1,4 @@
-import type { ILargestResourcesReadModel } from './largest-resources-read-model-type';
+import type { ILargestResourcesReadModel } from './largest-resources-read-model-type.js';
 
 export class FakeLargestResourcesReadModel
     implements ILargestResourcesReadModel

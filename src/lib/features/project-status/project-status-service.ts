@@ -1,5 +1,5 @@
-import { calculateProjectHealthRating } from '../../domain/project-health/project-health';
-import type { ProjectStatusSchema } from '../../openapi';
+import { calculateProjectHealthRating } from '../../domain/project-health/project-health.js';
+import type { ProjectStatusSchema } from '../../openapi/index.js';
 import type {
     IApiTokenStore,
     IEventStore,
@@ -8,9 +8,9 @@ import type {
     IProjectStore,
     ISegmentStore,
     IUnleashStores,
-} from '../../types';
-import type { IProjectLifecycleSummaryReadModel } from './project-lifecycle-read-model/project-lifecycle-read-model-type';
-import type { IProjectStaleFlagsReadModel } from './project-stale-flags-read-model/project-stale-flags-read-model-type';
+} from '../../types/index.js';
+import type { IProjectLifecycleSummaryReadModel } from './project-lifecycle-read-model/project-lifecycle-read-model-type.js';
+import type { IProjectStaleFlagsReadModel } from './project-stale-flags-read-model/project-stale-flags-read-model-type.js';
 
 export class ProjectStatusService {
     private eventStore: IEventStore;
@@ -87,6 +87,9 @@ export class ProjectStatusService {
             activityCountByDate,
             health: {
                 current: currentHealth,
+            },
+            technicalDebt: {
+                current: 100 - currentHealth,
             },
             lifecycleSummary,
             staleFlags: {

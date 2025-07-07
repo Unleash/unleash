@@ -13,14 +13,15 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useNavigate } from 'react-router-dom';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useSegmentForm } from '../hooks/useSegmentForm';
-import { SegmentForm } from '../SegmentForm';
+import { useSegmentForm } from '../hooks/useSegmentForm.ts';
+import { SegmentForm } from '../SegmentForm.tsx';
 import { feedbackCESContext } from 'component/feedback/FeedbackCESContext/FeedbackCESContext';
 import { segmentsDocsLink } from 'component/segments/SegmentDocs';
 import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValuesCount';
 import { SEGMENT_CREATE_BTN_ID } from 'utils/testIds';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 
 interface ICreateSegmentProps {
     modal?: boolean;
@@ -61,7 +62,7 @@ export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
         return `curl --location --request POST '${uiConfig.unleashUrl}/api/admin/segments' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
---data-raw '${JSON.stringify(getSegmentPayload(), undefined, 2)}'`;
+--data-raw '${JSON.stringify(getSegmentPayload(), apiPayloadConstraintReplacer, 2)}'`;
     };
 
     const handleSubmit = async (e: React.FormEvent) => {

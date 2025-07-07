@@ -1,9 +1,11 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 import type {
     IUniqueConnectionStore,
     IUnleashStores,
-} from '../../../lib/types';
+} from '../../../lib/types/index.js';
 import HyperLogLog from 'hyperloglog-lite';
 import { isAfter } from 'date-fns';
 

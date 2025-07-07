@@ -1,23 +1,24 @@
-import type { IUnleashConfig } from '../../types/option';
-import type { IFeatureTagStore, IUnleashStores } from '../../types/stores';
-import type { Logger } from '../../logger';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IFeatureTagStore, IUnleashStores } from '../../types/stores.js';
+import type { Logger } from '../../logger.js';
 import type {
     IEventSearchParams,
     IEventStore,
-} from '../../types/stores/event-store';
-import type { IBaseEvent, IEventList } from '../../types/events';
-import type { DeprecatedSearchEventsSchema } from '../../openapi/spec/deprecated-search-events-schema';
-import type EventEmitter from 'events';
-import type { IApiUser, ITag, IUser } from '../../types';
-import { ApiTokenType } from '../../types/models/api-token';
-import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events';
-import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type';
-import { parseSearchOperatorValue } from '../feature-search/search-utils';
+} from '../../types/stores/event-store.js';
+import type { IApiUser, IUser } from '../../types/index.js';
+import type EventEmitter from 'node:events';
+import { ApiTokenType } from '../../types/model.js';
+import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events.js';
+import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
+import { parseSearchOperatorValue } from '../feature-search/search-utils.js';
 import { addDays, formatISO } from 'date-fns';
-import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
-import type { ProjectAccess } from '../private-project/privateProjectStore';
-import type { IAccessReadModel } from '../access/access-read-model-type';
-import { isEqual } from 'lodash';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
+import type { ProjectAccess } from '../private-project/privateProjectStore.js';
+import type { IAccessReadModel } from '../access/access-read-model-type.js';
+import lodash from 'lodash';
+import type { IEventList, IBaseEvent } from '../../events/index.js';
+import type { ITag } from '../../tags/index.js';
+const { isEqual } = lodash;
 
 export default class EventService {
     private logger: Logger;
@@ -65,18 +66,6 @@ export default class EventService {
         };
     }
 
-    async deprecatedSearchEvents(
-        search: DeprecatedSearchEventsSchema,
-    ): Promise<IEventList> {
-        const totalEvents =
-            await this.eventStore.deprecatedFilteredCount(search);
-        const events = await this.eventStore.deprecatedSearchEvents(search);
-        return {
-            events,
-            totalEvents,
-        };
-    }
-
     async searchEvents(
         search: IEventSearchParams,
         userId: number,
@@ -94,12 +83,8 @@ export default class EventService {
         queryParams.push(...projectFilter);
 
         const totalEvents = await this.eventStore.searchEventsCount(
-            {
-                limit: search.limit,
-                offset: search.offset,
-                query: search.query,
-            },
             queryParams,
+            search.query,
         );
         const events = await this.eventStore.searchEvents(
             {
@@ -118,11 +103,18 @@ export default class EventService {
         };
     }
 
-    async onEvent(
+    onEvent(
         eventName: string | symbol,
         listener: (...args: any[]) => void,
-    ): Promise<EventEmitter> {
+    ): EventEmitter {
         return this.eventStore.on(eventName, listener);
+    }
+
+    off(
+        eventName: string | symbol,
+        listener: (...args: any[]) => void,
+    ): EventEmitter {
+        return this.eventStore.off(eventName, listener);
     }
 
     private async enhanceEventsWithTags(
@@ -213,7 +205,6 @@ export default class EventService {
                             representation: 'date',
                         }),
                     );
-
                 queryParams.push({
                     field: parsed.field,
                     operator: 'IS_BEFORE',
@@ -238,7 +229,12 @@ export default class EventService {
             if (parsed) queryParams.push(parsed);
         }
 
-        ['project', 'type'].forEach((field) => {
+        if (params.groupId) {
+            const parsed = parseSearchOperatorValue('group_id', params.groupId);
+            if (parsed) queryParams.push(parsed);
+        }
+
+        ['project', 'type', 'environment', 'id'].forEach((field) => {
             if (params[field]) {
                 const parsed = parseSearchOperatorValue(field, params[field]);
                 if (parsed) queryParams.push(parsed);

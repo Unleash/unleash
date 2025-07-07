@@ -1,9 +1,9 @@
-import type { IApiTokenStore } from '../../lib/types/stores/api-token-store';
+import type { IApiTokenStore } from '../../lib/types/stores/api-token-store.js';
 import type {
     ApiTokenType,
     IApiToken,
     IApiTokenCreate,
-} from '../../lib/types/models/api-token';
+} from '../../lib/types/model.js';
 
 import EventEmitter from 'events';
 

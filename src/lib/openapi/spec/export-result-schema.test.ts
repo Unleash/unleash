@@ -1,5 +1,5 @@
-import { validateSchema } from '../validate';
-import type { ExportResultSchema } from './export-result-schema';
+import { validateSchema } from '../validate.js';
+import type { ExportResultSchema } from './export-result-schema.js';
 
 test('exportResultSchema', () => {
     const data: ExportResultSchema = {

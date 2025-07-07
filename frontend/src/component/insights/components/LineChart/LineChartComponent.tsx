@@ -20,10 +20,10 @@ import {
     ChartTooltip,
     ChartTooltipContainer,
     type TooltipState,
-} from './ChartTooltip/ChartTooltip';
+} from './ChartTooltip/ChartTooltip.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled } from '@mui/material';
-import { createOptions } from './createChartOptions';
+import { createOptions } from './createChartOptions.ts';
 import merge from 'deepmerge';
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -117,7 +117,7 @@ const LineChartComponent: FC<{
                 ),
                 overrideOptions ?? {},
             ]),
-        [theme, locationSettings, overrideOptions, cover],
+        [theme, locationSettings, setTooltip, overrideOptions, cover],
     );
 
     return (

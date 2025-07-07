@@ -16,14 +16,8 @@ Used to check the health of the running Unleash instance. This endpoint has two 
 }
 ```
 
-This response means everything is OK. Unleash is able to talk to the PostgreSQL
+This response means Unleash server is up.
 
 `Status: 500`
 
-```json
-{
-  "health": "BAD"
-}
-```
-
-This response indicates that Unleash is not able to talk to PostgreSQL and will not be able to serve requests.
+This response indicates that Unleash server is unhealthy.

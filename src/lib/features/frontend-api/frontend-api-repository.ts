@@ -1,15 +1,15 @@
 import EventEmitter from 'events';
-import type { RepositoryInterface } from 'unleash-client/lib/repository';
-import type { Segment } from 'unleash-client/lib/strategy/strategy';
+import type { RepositoryInterface } from 'unleash-client/lib/repository/index.js';
+import type { Segment } from 'unleash-client/lib/strategy/strategy.js';
 import type {
     EnhancedFeatureInterface,
     FeatureInterface,
-} from 'unleash-client/lib/feature';
-import type { IApiUser } from '../../types/api-user';
-import type { IUnleashConfig } from '../../types';
+} from 'unleash-client/lib/feature.js';
+import type { IApiUser } from '../../types/api-user.js';
+import type { IUnleashConfig } from '../../types/index.js';
 import { UnleashEvents } from 'unleash-client';
-import type { Logger } from '../../logger';
-import type { GlobalFrontendApiCache } from './global-frontend-api-cache';
+import type { Logger } from '../../logger.js';
+import type { GlobalFrontendApiCache } from './global-frontend-api-cache.js';
 
 type Config = Pick<IUnleashConfig, 'getLogger'>;
 

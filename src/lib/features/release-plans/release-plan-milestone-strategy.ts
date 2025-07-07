@@ -1,4 +1,4 @@
-import type { IFeatureStrategy } from '../../types';
+import type { IFeatureStrategy } from '../../types/index.js';
 
 export interface ReleasePlanMilestoneStrategy
     extends Partial<

@@ -26,10 +26,7 @@ import {
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
 import { useEffect, useState, type ReactNode } from 'react';
-import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
-import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
-import ProjectFlags from './ProjectFlags';
-import ProjectHealth from './ProjectHealth/ProjectHealth';
+import ProjectFlags from './ProjectFlags.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import {
@@ -39,25 +36,24 @@ import {
     useLocation,
     useSearchParams,
 } from 'react-router-dom';
-import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue';
-import { ProjectLog } from './ProjectLog/ProjectLog';
+import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue.tsx';
+import { ProjectLog } from './ProjectLog/ProjectLog.tsx';
 import { ChangeRequestOverview } from 'component/changeRequest/ChangeRequestOverview/ChangeRequestOverview';
-import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests/ProjectChangeRequests';
-import { ProjectSettings } from './ProjectSettings/ProjectSettings';
+import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests/ProjectChangeRequests.tsx';
+import { ProjectSettings } from './ProjectSettings/ProjectSettings.tsx';
 import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
-import { ImportModal } from './Import/ImportModal';
+import { ImportModal } from './Import/ImportModal.tsx';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import { Badge } from 'component/common/Badge/Badge';
 import type { UiFlags } from 'interfaces/uiConfig';
-import { HiddenProjectIconWithTooltip } from './HiddenProjectIconWithTooltip/HiddenProjectIconWithTooltip';
+import { HiddenProjectIconWithTooltip } from './HiddenProjectIconWithTooltip/HiddenProjectIconWithTooltip.tsx';
 import { ChangeRequestPlausibleProvider } from 'component/changeRequest/ChangeRequestContext';
-import { ProjectApplications } from '../ProjectApplications/ProjectApplications';
-import { ProjectInsights } from './ProjectInsights/ProjectInsights';
+import { ProjectApplications } from '../ProjectApplications/ProjectApplications.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { ProjectArchived } from './ArchiveProject/ProjectArchived';
-import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
+import { ProjectArchived } from './ArchiveProject/ProjectArchived.tsx';
+import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker.ts';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
-import { ProjectStatusModal } from './ProjectStatus/ProjectStatusModal';
+import { ProjectStatusModal } from './ProjectStatus/ProjectStatusModal.tsx';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -282,7 +278,7 @@ export const Project = () => {
                         <StyledDiv>
                             <StyledFavoriteIconButton
                                 onClick={onFavorite}
-                                isFavorite={project?.favorite}
+                                isFavorite={project?.favorite || false}
                             />
                             <StyledProjectTitle>
                                 <ConditionallyRender
@@ -376,7 +372,6 @@ export const Project = () => {
                 }}
             />
             <Routes>
-                <Route path='health' element={<ProjectHealth />} />
                 <Route
                     path='access/*'
                     element={
@@ -386,9 +381,6 @@ export const Project = () => {
                         />
                     }
                 />
-                <Route path='environments' element={<ProjectEnvironment />} />
-                <Route path='archive' element={<ProjectFeaturesArchive />} />
-                <Route path='insights' element={<ProjectInsights />} />
                 <Route path='logs' element={<ProjectLog />} />
                 <Route
                     path='change-requests'

@@ -1,8 +1,8 @@
-import type { IUnleashConfig } from '../types/option';
-import { createTestConfig } from '../../test/config/test-config';
-import type EventService from '../features/events/event-service';
-import FakeTagStore from '../../test/fixtures/fake-tag-store';
-import TagService from './tag-service';
+import type { IUnleashConfig } from '../types/option.js';
+import { createTestConfig } from '../../test/config/test-config.js';
+import type EventService from '../features/events/event-service.js';
+import FakeTagStore from '../../test/fixtures/fake-tag-store.js';
+import TagService from './tag-service.js';
 
 const config: IUnleashConfig = createTestConfig();
 

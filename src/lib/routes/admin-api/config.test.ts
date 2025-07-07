@@ -1,15 +1,15 @@
 import supertest, { type Test } from 'supertest';
-import { createTestConfig } from '../../../test/config/test-config';
+import { createTestConfig } from '../../../test/config/test-config.js';
 
-import createStores from '../../../test/fixtures/store';
-import getApp from '../../app';
-import { createServices } from '../../services';
+import createStores from '../../../test/fixtures/store.js';
+import getApp from '../../app.js';
+import { createServices } from '../../services/index.js';
 import {
     DEFAULT_SEGMENT_VALUES_LIMIT,
     DEFAULT_STRATEGY_SEGMENTS_LIMIT,
-} from '../../util/segments';
-import type TestAgent from 'supertest/lib/agent';
-import type { IUnleashStores } from '../../types';
+} from '../../util/segments.js';
+import type TestAgent from 'supertest/lib/agent.d.ts';
+import type { IUnleashStores } from '../../types/index.js';
 
 const uiConfig = {
     headerBackground: 'red',
@@ -53,8 +53,12 @@ test('should get ui config', async () => {
 
     expect(body.slogan).toEqual('hello');
     expect(body.headerBackground).toEqual('red');
-    expect(body.segmentValuesLimit).toEqual(DEFAULT_SEGMENT_VALUES_LIMIT);
-    expect(body.strategySegmentsLimit).toEqual(DEFAULT_STRATEGY_SEGMENTS_LIMIT);
+    expect(body.resourceLimits!.segmentValues).toEqual(
+        DEFAULT_SEGMENT_VALUES_LIMIT,
+    );
+    expect(body.resourceLimits!.strategySegments).toEqual(
+        DEFAULT_STRATEGY_SEGMENTS_LIMIT,
+    );
 });
 
 test('should update CORS settings', async () => {

@@ -1,7 +1,7 @@
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
 export interface IApiTokenCreate {
-    username: string;
+    tokenName: string;
     type: string;
     environment?: string;
     projects: string[];

@@ -1,10 +1,10 @@
-import { ClientFeatureToggleDelta } from './client-feature-toggle-delta';
-import EventStore from '../../events/event-store';
-import ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service';
-import type { IUnleashConfig } from '../../../types';
-import type { Db } from '../../../db/db';
-import ClientFeatureToggleDeltaReadModel from './client-feature-toggle-delta-read-model';
-import { SegmentReadModel } from '../../segment/segment-read-model';
+import { ClientFeatureToggleDelta } from './client-feature-toggle-delta.js';
+import { EventStore } from '../../events/event-store.js';
+import ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service.js';
+import type { IUnleashConfig } from '../../../types/index.js';
+import type { Db } from '../../../db/db.js';
+import ClientFeatureToggleDeltaReadModel from './client-feature-toggle-delta-read-model.js';
+import { SegmentReadModel } from '../../segment/segment-read-model.js';
 
 export const createClientFeatureToggleDelta = (
     db: Db,

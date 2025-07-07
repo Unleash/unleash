@@ -1,7 +1,7 @@
 import { type MockedFunction, vi } from 'vitest';
 import { render } from 'utils/testRenderer';
 import userEvent from '@testing-library/user-event';
-import { LifecycleFilters } from './LifecycleFilters';
+import { LifecycleFilters } from './LifecycleFilters.tsx';
 import { useLifecycleCount } from 'hooks/api/getters/useLifecycleCount/useLifecycleCount';
 
 vi.mock('hooks/api/getters/useLifecycleCount/useLifecycleCount');

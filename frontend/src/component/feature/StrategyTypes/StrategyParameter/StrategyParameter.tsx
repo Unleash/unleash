@@ -1,7 +1,7 @@
 import type React from 'react';
 import { FormControlLabel, Switch, TextField } from '@mui/material';
-import StrategyInputList from '../StrategyInputList/StrategyInputList';
-import RolloutSlider from '../RolloutSlider/RolloutSlider';
+import StrategyInputList from '../StrategyInputList/StrategyInputList.tsx';
+import ConditionalRolloutSlider from '../RolloutSlider/ConditionalRolloutSlider.tsx';
 import type {
     IFeatureStrategyParameters,
     IStrategyParameter,
@@ -57,7 +57,7 @@ export const StrategyParameter = ({
     if (type === 'percentage') {
         return (
             <div>
-                <RolloutSlider
+                <ConditionalRolloutSlider
                     name={name}
                     onChange={onChangePercentage}
                     disabled={!editable}

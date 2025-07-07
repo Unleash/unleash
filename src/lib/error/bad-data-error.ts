@@ -1,7 +1,7 @@
 import type { ErrorObject } from 'ajv';
 import type { ValidationError } from 'joi';
 import getProp from 'lodash.get';
-import { type ApiErrorSchema, UnleashError } from './unleash-error';
+import { type ApiErrorSchema, UnleashError } from './unleash-error.js';
 
 type ValidationErrorDescription = {
     message: string;

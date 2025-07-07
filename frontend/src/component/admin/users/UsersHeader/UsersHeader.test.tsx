@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { UsersHeader } from './UsersHeader';
+import { UsersHeader } from './UsersHeader.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 describe('UsersHeader', () => {

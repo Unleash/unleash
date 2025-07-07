@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { sortTypes } from 'utils/sortTypes';
 import type { Row, SortByFn } from 'react-table';
-import { usePlausibleTracker } from './usePlausibleTracker';
+import { usePlausibleTracker } from './usePlausibleTracker.js';
 
 type WithFavorite = {
     favorite: boolean;

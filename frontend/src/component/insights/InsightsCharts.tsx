@@ -1,23 +1,24 @@
 import type { FC } from 'react';
 import { Box, Paper, styled } from '@mui/material';
-import { UserStats } from './componentsStat/UserStats/UserStats';
-import { UsersChart } from './componentsChart/UsersChart/UsersChart';
-import { UsersPerProjectChart } from './componentsChart/UsersPerProjectChart/UsersPerProjectChart';
-import { FlagStats } from './componentsStat/FlagStats/FlagStats';
-import { FlagsChart } from './componentsChart/FlagsChart/FlagsChart';
-import { FlagsProjectChart } from './componentsChart/FlagsProjectChart/FlagsProjectChart';
-import { HealthStats } from './componentsStat/HealthStats/HealthStats';
-import { ProjectHealthChart } from './componentsChart/ProjectHealthChart/ProjectHealthChart';
-import { TimeToProduction } from './componentsStat/TimeToProduction/TimeToProduction';
-import { TimeToProductionChart } from './componentsChart/TimeToProductionChart/TimeToProductionChart';
-import { MetricsSummaryChart } from './componentsChart/MetricsSummaryChart/MetricsSummaryChart';
-import { UpdatesPerEnvironmentTypeChart } from './componentsChart/UpdatesPerEnvironmentTypeChart/UpdatesPerEnvironmentTypeChart';
+import { UserStats } from './componentsStat/UserStats/UserStats.tsx';
+import { UsersChart } from './componentsChart/UsersChart/UsersChart.tsx';
+import { UsersPerProjectChart } from './componentsChart/UsersPerProjectChart/UsersPerProjectChart.tsx';
+import { FlagStats } from './componentsStat/FlagStats/FlagStats.tsx';
+import { FlagsChart } from './componentsChart/FlagsChart/FlagsChart.tsx';
+import { FlagsProjectChart } from './componentsChart/FlagsProjectChart/FlagsProjectChart.tsx';
+import { HealthStats } from './componentsStat/HealthStats/HealthStats.tsx';
+import { ProjectHealthChart } from './componentsChart/ProjectHealthChart/ProjectHealthChart.tsx';
+import { TimeToProduction } from './componentsStat/TimeToProduction/TimeToProduction.tsx';
+import { TimeToProductionChart } from './componentsChart/TimeToProductionChart/TimeToProductionChart.tsx';
+import { MetricsSummaryChart } from './componentsChart/MetricsSummaryChart/MetricsSummaryChart.tsx';
+import { UpdatesPerEnvironmentTypeChart } from './componentsChart/UpdatesPerEnvironmentTypeChart/UpdatesPerEnvironmentTypeChart.tsx';
 import type { InstanceInsightsSchema } from 'openapi';
-import type { GroupedDataByProject } from './hooks/useGroupedProjectTrends';
+import type { GroupedDataByProject } from './hooks/useGroupedProjectTrends.ts';
 import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { WidgetTitle } from './components/WidgetTitle/WidgetTitle';
+import { WidgetTitle } from './components/WidgetTitle/WidgetTitle.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 export interface IChartsProps {
     flagTrends: InstanceInsightsSchema['flagTrends'];
@@ -104,6 +105,7 @@ export const InsightsCharts: FC<IChartsProps> = ({
     const showAllProjects = projects[0] === allOption.id;
     const isOneProjectSelected = projects.length === 1;
     const { isEnterprise } = useUiConfig();
+    const healthToDebtEnabled = useUiFlag('healthToTechDebt');
 
     const lastUserTrend = userTrends[userTrends.length - 1];
     const lastFlagTrend = flagTrends[flagTrends.length - 1];
@@ -189,9 +191,15 @@ export const InsightsCharts: FC<IChartsProps> = ({
                                     potentiallyStale={summary.potentiallyStale}
                                     title={
                                         <WidgetTitle
-                                            title='Health'
+                                            title={
+                                                healthToDebtEnabled
+                                                    ? 'Technical debt'
+                                                    : 'Health'
+                                            }
                                             tooltip={
-                                                'Percentage of flags that are not stale or potentially stale.'
+                                                healthToDebtEnabled
+                                                    ? 'Percentage of stale and potentially stale flags.'
+                                                    : 'Percentage of flags that are not stale or potentially stale.'
                                             }
                                         />
                                     }

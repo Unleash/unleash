@@ -1,8 +1,8 @@
 import { createTheme } from '@mui/material/styles';
 import { alpha } from '@mui/material';
 import { focusable } from 'themes/themeStyles';
-import { colors } from './colors';
-import { baseTheme } from './theme';
+import { colors } from './colors.js';
+import { baseTheme } from './theme.js';
 
 const actionColors = {
     0.54: 'rgba(223, 222, 255, 0.54)',
@@ -192,14 +192,6 @@ const theme = {
             inactive: '#875D21',
             abandoned: '#8A3E45',
             primary: '#302E42',
-        },
-
-        /**
-         * For Environment Accordion
-         */
-        envAccordion: {
-            disabled: '#2B2A3C',
-            expanded: '#1A1924',
         },
 
         /**

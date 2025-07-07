@@ -1,12 +1,12 @@
 import { vi } from 'vitest';
-import { CleanupReminder } from './CleanupReminder';
+import { CleanupReminder } from './CleanupReminder.tsx';
 import { render } from 'utils/testRenderer';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { screen, waitFor } from '@testing-library/react';
 import {
     DELETE_FEATURE,
     UPDATE_FEATURE,
-} from '../../../providers/AccessProvider/permissions';
+} from '../../../providers/AccessProvider/permissions.ts';
 
 const currentTime = '2024-04-25T08:05:00.000Z';
 const monthAgo = '2024-03-25T06:05:00.000Z';

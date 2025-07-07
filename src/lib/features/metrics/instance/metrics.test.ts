@@ -1,22 +1,25 @@
 import supertest, { type Test } from 'supertest';
-import getApp from '../../../app';
-import { createTestConfig } from '../../../../test/config/test-config';
-import { clientMetricsSchema } from '../shared/schema';
-import { createServices } from '../../../services';
+import getApp from '../../../app.js';
+import { createTestConfig } from '../../../../test/config/test-config.js';
+import { clientMetricsSchema } from '../shared/schema.js';
+import {
+    type IUnleashServices,
+    createServices,
+} from '../../../services/index.js';
 import {
     IAuthType,
     type IUnleashConfig,
     type IUnleashOptions,
-    type IUnleashServices,
     type IUnleashStores,
-} from '../../../types';
+} from '../../../types/index.js';
 import dbInit, {
     type ITestDb,
-} from '../../../../test/e2e/helpers/database-init';
+} from '../../../../test/e2e/helpers/database-init.js';
 import { startOfHour } from 'date-fns';
-import { ApiTokenType } from '../../../types/models/api-token';
-import type TestAgent from 'supertest/lib/agent';
-import type { BulkRegistrationSchema } from '../../../openapi';
+import { ApiTokenType } from '../../../types/model.js';
+import type TestAgent from 'supertest/lib/agent.d.ts';
+import type { BulkRegistrationSchema } from '../../../openapi/index.js';
+import { DEFAULT_ENV } from '../../../server-impl.js';
 
 let db: ITestDb;
 let config: IUnleashConfig;
@@ -42,13 +45,7 @@ let services: IUnleashServices;
 let destroy: () => Promise<void>;
 
 beforeAll(async () => {
-    const setup = await getSetup({
-        experimental: {
-            flags: {
-                registerFrontendClient: true,
-            },
-        },
-    });
+    const setup = await getSetup();
     request = setup.request;
     stores = setup.stores;
     destroy = setup.destroy;
@@ -104,29 +101,6 @@ test('should accept client metrics with yes/no', () => {
             },
         })
         .expect(202);
-});
-
-test('should accept client metrics with yes/no with metricsV2', async () => {
-    const testRunner = await getSetup();
-    await testRunner.request
-        .post('/api/client/metrics')
-        .send({
-            appName: 'demo',
-            instanceId: '1',
-            bucket: {
-                start: Date.now(),
-                stop: Date.now(),
-                toggles: {
-                    toggleA: {
-                        yes: 200,
-                        no: 0,
-                    },
-                },
-            },
-        })
-        .expect(202);
-
-    await testRunner.destroy();
 });
 
 test('should accept client metrics with variants', () => {
@@ -437,7 +411,7 @@ describe('bulk metrics', () => {
         });
     });
 
-    test('filters out metrics for environments we do not have access for. No auth setup so we can only access default env', async () => {
+    test('without access to production environment due to no auth setup, we can only access the default env', async () => {
         const now = new Date();
 
         await request
@@ -448,7 +422,7 @@ describe('bulk metrics', () => {
                     {
                         featureName: 'test_feature_one',
                         appName: 'test_application',
-                        environment: 'default',
+                        environment: DEFAULT_ENV,
                         timestamp: startOfHour(now),
                         yes: 1000,
                         no: 800,
@@ -457,7 +431,7 @@ describe('bulk metrics', () => {
                     {
                         featureName: 'test_feature_two',
                         appName: 'test_application',
-                        environment: 'development',
+                        environment: 'production',
                         timestamp: startOfHour(now),
                         yes: 1000,
                         no: 800,

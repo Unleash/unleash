@@ -7,7 +7,7 @@ import type {
 import type { IUnleashStores } from '../../../types/index.js';
 import type { UnknownFlag } from './unknown-flags-store.js';
 
-export const MAX_UNKNOWN_FLAGS = 10;
+export const MAX_UNKNOWN_FLAGS = 100;
 
 export class UnknownFlagsService {
     private logger: Logger;
@@ -31,10 +31,11 @@ export class UnknownFlagsService {
     }
 
     private getKey(flag: UnknownFlag) {
-        return `${flag.name}:${flag.appName}`;
+        return `${flag.name}:${flag.appName}:${flag.environment}`;
     }
 
     register(unknownFlags: UnknownFlag[]) {
+        if (!this.flagResolver.isEnabled('reportUnknownFlags')) return;
         for (const flag of unknownFlags) {
             const key = this.getKey(flag);
 
@@ -80,24 +81,9 @@ export class UnknownFlagsService {
         this.unknownFlagsCache.clear();
     }
 
-    async getGroupedUnknownFlags(): Promise<
-        { name: string; reportedBy: { appName: string; seenAt: Date }[] }[]
-    > {
-        const unknownFlags = await this.unknownFlagsStore.getAll();
-
-        const grouped = new Map<string, { appName: string; seenAt: Date }[]>();
-
-        for (const { name, appName, seenAt } of unknownFlags) {
-            if (!grouped.has(name)) {
-                grouped.set(name, []);
-            }
-            grouped.get(name)!.push({ appName, seenAt });
-        }
-
-        return Array.from(grouped.entries()).map(([name, reportedBy]) => ({
-            name,
-            reportedBy,
-        }));
+    async getAll(): Promise<UnknownFlag[]> {
+        if (!this.flagResolver.isEnabled('reportUnknownFlags')) return [];
+        return this.unknownFlagsStore.getAll();
     }
 
     async clear(hoursAgo: number) {

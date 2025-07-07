@@ -203,8 +203,8 @@ export const scheduleServices = (
     );
 
     schedulerService.schedule(
-        unknownFlagsService.clear.bind(unknownFlagsService, 24),
-        hoursToMilliseconds(24),
+        unknownFlagsService.clear.bind(unknownFlagsService, 2),
+        hoursToMilliseconds(2),
         'clearUnknownFlags',
     );
 };

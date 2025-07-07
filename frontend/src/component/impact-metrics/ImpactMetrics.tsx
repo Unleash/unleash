@@ -144,7 +144,6 @@ export const ImpactMetrics: FC = () => {
                 <GridLayoutWrapper
                     items={gridItems}
                     onLayoutChange={handleLayoutChange}
-                    rowHeight={180}
                 />
             ) : null}
 

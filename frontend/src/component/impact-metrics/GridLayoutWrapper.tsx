@@ -48,49 +48,23 @@ type LayoutItem = {
 type GridLayoutWrapperProps = {
     items: GridItem[];
     onLayoutChange?: (layout: LayoutItem[]) => void;
-    onOrderChange?: (itemOrder: string[]) => void;
     cols?: { lg: number; md: number; sm: number; xs: number; xxs: number };
     rowHeight?: number;
-    isDraggable?: boolean;
-    isResizable?: boolean;
-    compactType?: 'vertical' | 'horizontal' | null;
-    desktopLayout?: LayoutItem[];
-    itemOrder?: string[];
 };
 
 export const GridLayoutWrapper: FC<GridLayoutWrapperProps> = ({
     items,
     onLayoutChange,
-    onOrderChange,
     cols = { lg: 12, md: 12, sm: 6, xs: 4, xxs: 2 },
     rowHeight = 180,
-    compactType = 'vertical',
-    desktopLayout,
-    itemOrder,
 }) => {
     const theme = useTheme();
     const isMobileBreakpoint = useMediaQuery(theme.breakpoints.down('md'));
 
     const layout = useMemo(() => {
-        const getOrderedItems = () => {
-            if (itemOrder) {
-                const orderMap = new Map(
-                    itemOrder.map((id, index) => [id, index]),
-                );
-                return [...items].sort(
-                    (a, b) =>
-                        (orderMap.get(a.id) ?? items.indexOf(a)) -
-                        (orderMap.get(b.id) ?? items.indexOf(b)),
-                );
-            }
-            return items;
-        };
-
-        const orderedItems = getOrderedItems();
-
         if (isMobileBreakpoint) {
             let currentY = 0;
-            return orderedItems.map((item) => {
+            return items.map((item) => {
                 const layoutItem = {
                     i: item.id,
                     x: 0,
@@ -108,13 +82,7 @@ export const GridLayoutWrapper: FC<GridLayoutWrapperProps> = ({
             });
         }
 
-        if (desktopLayout) {
-            return desktopLayout.filter((layoutItem) =>
-                orderedItems.some((item) => item.id === layoutItem.i),
-            );
-        }
-
-        return orderedItems.map((item, index) => ({
+        return items.map((item, index) => ({
             i: item.id,
             x:
                 item.x ??
@@ -131,7 +99,7 @@ export const GridLayoutWrapper: FC<GridLayoutWrapperProps> = ({
             maxH: item.maxH ?? 8,
             static: item.static ?? false,
         }));
-    }, [items, cols, desktopLayout, itemOrder, isMobileBreakpoint]);
+    }, [items, cols, isMobileBreakpoint]);
 
     const children = useMemo(
         () => items.map((item) => <div key={item.id}>{item.component}</div>),
@@ -140,16 +108,11 @@ export const GridLayoutWrapper: FC<GridLayoutWrapperProps> = ({
 
     const handleLayoutChange = useCallback(
         (layout: LayoutItem[]) => {
-            if (isMobileBreakpoint) {
-                const newOrder = layout
-                    .sort((a, b) => a.y - b.y)
-                    .map((item) => item.i);
-                onOrderChange?.(newOrder);
-            } else {
+            if (!isMobileBreakpoint) {
                 onLayoutChange?.(layout);
             }
         },
-        [onLayoutChange, onOrderChange, isMobileBreakpoint],
+        [onLayoutChange, isMobileBreakpoint],
     );
 
     return (
@@ -169,7 +132,7 @@ export const GridLayoutWrapper: FC<GridLayoutWrapperProps> = ({
                 onLayoutChange={handleLayoutChange}
                 resizeHandles={['se']}
                 draggableHandle='.grid-item-drag-handle'
-                compactType={isMobileBreakpoint ? null : compactType}
+                compactType={isMobileBreakpoint ? null : 'vertical'}
                 preventCollision={false}
                 useCSSTransforms={true}
                 autoSize={true}

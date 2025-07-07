@@ -4,7 +4,7 @@ export class FakeUnknownFlagsStore implements IUnknownFlagsStore {
     private unknownFlagMap = new Map<string, UnknownFlag>();
 
     private getKey(flag: UnknownFlag): string {
-        return `${flag.name}:${flag.appName}`;
+        return `${flag.name}:${flag.appName}:${flag.environment}`;
     }
 
     async replaceAll(flags: UnknownFlag[]): Promise<void> {

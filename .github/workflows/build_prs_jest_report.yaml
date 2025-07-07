@@ -45,7 +45,7 @@ jobs:
       - name: Install deps
         run: yarn install
       - name: Build backend
-        run: yarn backend
+        run: yarn build:backend
       - name: Tests on 22.x
         id: coverage
         run: yarn test:coverage

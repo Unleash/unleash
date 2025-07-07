@@ -44,7 +44,6 @@ const StyledWidget = styled(Paper)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    overflow: 'hidden',
 }));
 
 const StyledChartContent = styled(Box)({

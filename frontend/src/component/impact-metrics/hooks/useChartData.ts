@@ -43,15 +43,25 @@ export const useChartData = (
                 ],
             };
         } else {
+            // Create a comprehensive timestamp range for consistent X-axis
             const allTimestamps = new Set<number>();
             timeSeriesData.forEach((series) => {
                 series.data.forEach(([timestamp]) => {
                     allTimestamps.add(timestamp);
                 });
             });
+
+            if (allTimestamps.size === 0) {
+                return {
+                    labels: [],
+                    datasets: [],
+                };
+            }
+
             const sortedTimestamps = Array.from(allTimestamps).sort(
                 (a, b) => a - b,
             );
+
             const labels = sortedTimestamps.map(
                 (timestamp) => new Date(timestamp * 1000),
             );
@@ -72,7 +82,8 @@ export const useChartData = (
                     borderColor: color,
                     backgroundColor: color,
                     fill: false,
-                    spanGaps: false,
+                    spanGaps: true, // Connect lines across null values
+                    tension: 0.1, // Add slight curve for better visual appeal
                 };
             });
 

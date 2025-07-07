@@ -104,6 +104,11 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                           },
                           tooltipFormat: 'PPpp',
                       },
+                      ticks: {
+                          maxRotation: 45,
+                          minRotation: 45,
+                          maxTicksLimit: 8,
+                      },
                   },
                   y: {
                       beginAtZero,

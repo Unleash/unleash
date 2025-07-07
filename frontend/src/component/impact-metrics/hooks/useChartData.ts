@@ -82,8 +82,6 @@ export const useChartData = (
                     borderColor: color,
                     backgroundColor: color,
                     fill: false,
-                    spanGaps: true, // Connect lines across null values
-                    tension: 0.1, // Add slight curve for better visual appeal
                 };
             });
 

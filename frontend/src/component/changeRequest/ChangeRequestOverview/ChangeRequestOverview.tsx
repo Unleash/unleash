@@ -546,11 +546,11 @@ export const ChangeRequestOverview: FC = () => {
                                         </StyledButtonContainer>
                                         <StyledBox>
                                             <StyledTypography>
-                                                Changes approved
+                                                Apply changes
                                             </StyledTypography>
                                             <Typography>
-                                                One approving review from
-                                                requested approvers
+                                                The change request has been
+                                                reviewed and approved
                                             </Typography>
                                         </StyledBox>
 

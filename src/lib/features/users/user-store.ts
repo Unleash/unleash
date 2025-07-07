@@ -290,8 +290,12 @@ export class UserStore implements IUserStore {
         await this.activeUsers().del();
     }
 
-    async deleteScimUsers(): Promise<void> {
-        await this.db(TABLE).whereNotNull('scim_id').del();
+    async deleteScimUsers(): Promise<User[]> {
+        const rows = await this.db(TABLE)
+            .whereNotNull('scim_id')
+            .del()
+            .returning(USER_COLUMNS);
+        return rows.map(rowToUser);
     }
 
     async count(): Promise<number> {

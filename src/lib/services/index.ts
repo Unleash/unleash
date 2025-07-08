@@ -169,7 +169,7 @@ import type {
 import type { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType.js';
 import { UnknownFlagsService } from '../features/metrics/unknown-flags/unknown-flags-service.js';
 import type FeatureLinkService from '../features/feature-links/feature-link-service.js';
-import { createUserService } from '../features/users/factory.js';
+import { createUserService } from '../features/users/createUserService.js';
 
 export const createServices = (
     stores: IUnleashStores,

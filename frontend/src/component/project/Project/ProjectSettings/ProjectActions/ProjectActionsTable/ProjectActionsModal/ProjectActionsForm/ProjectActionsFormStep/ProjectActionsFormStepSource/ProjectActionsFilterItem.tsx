@@ -11,13 +11,13 @@ import Input from 'component/common/Input/Input';
 import { ProjectActionsFormItem } from '../ProjectActionsFormItem.tsx';
 import {
     inOperators,
+    isStringOperator,
     numOperators,
     type Operator,
     semVerOperators,
     stringOperators,
 } from 'constants/operators';
 import { useEffect, useState } from 'react';
-import { oneOf } from 'utils/oneOf';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { CaseSensitiveButton } from './StyledToggleButton/CaseSensitiveButton/CaseSensitiveButton.tsx';
 import { InvertedOperatorButton } from './StyledToggleButton/InvertedOperatorButton/InvertedOperatorButton.tsx';
@@ -169,7 +169,7 @@ export const ProjectActionsFilterItem = ({
     }, [value, error]);
 
     useEffect(() => {
-        if (oneOf(stringOperators, operator)) {
+        if (isStringOperator(operator)) {
             setShowCaseSensitiveButton(true);
         } else {
             setShowCaseSensitiveButton(false);
@@ -177,7 +177,7 @@ export const ProjectActionsFilterItem = ({
     }, [operator]);
 
     const onOperatorChange = (operator: Operator) => {
-        if (oneOf(stringOperators, operator)) {
+        if (isStringOperator(operator)) {
             setShowCaseSensitiveButton(true);
         } else {
             setShowCaseSensitiveButton(false);

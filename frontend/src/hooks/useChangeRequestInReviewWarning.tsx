@@ -1,5 +1,4 @@
 import { Alert } from '@mui/material';
-import { oneOf } from 'utils/oneOf';
 import type { ChangeRequestType } from '../component/changeRequest/changeRequest.types';
 
 export const useChangeRequestInReviewWarning = (
@@ -11,7 +10,7 @@ export const useChangeRequestInReviewWarning = (
         return draft.some(
             (changeRequest) =>
                 changeRequest.environment === environment &&
-                oneOf(['In review', 'Approved'], changeRequest.state),
+                ['In review', 'Approved'].includes(changeRequest.state),
         );
     };
 

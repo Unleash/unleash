@@ -91,8 +91,6 @@ import {
     createDependentFeaturesService,
     createFakeDependentFeaturesService,
 } from '../features/dependent-features/createDependentFeaturesService.js';
-import { DependentFeaturesReadModel } from '../features/dependent-features/dependent-features-read-model.js';
-import { FakeDependentFeaturesReadModel } from '../features/dependent-features/fake-dependent-features-read-model.js';
 import {
     createFakeLastSeenService,
     createLastSeenService,
@@ -171,6 +169,7 @@ import type {
 import type { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType.js';
 import { UnknownFlagsService } from '../features/metrics/unknown-flags/unknown-flags-service.js';
 import type FeatureLinkService from '../features/feature-links/feature-link-service.js';
+import { createUserService } from '../features/users/factory.js';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -215,9 +214,6 @@ export const createServices = (
         unknownFlagsService,
     );
 
-    const dependentFeaturesReadModel = db
-        ? new DependentFeaturesReadModel(db)
-        : new FakeDependentFeaturesReadModel();
     const featureLifecycleReadModel = db
         ? new FeatureLifecycleReadModel(db)
         : new FakeFeatureLifecycleReadModel();
@@ -252,14 +248,10 @@ export const createServices = (
     );
     const sessionService = new SessionService(stores, config);
     const settingService = new SettingService(stores, config, eventService);
-    const userService = new UserService(stores, config, {
-        accessService,
-        resetTokenService,
-        emailService,
-        eventService,
-        sessionService,
-        settingService,
-    });
+    const userService = withTransactional(
+        (db) => createUserService(db, config),
+        db!,
+    );
     const accountService = new AccountService(stores, config, {
         accessService,
     });
@@ -607,7 +599,7 @@ export interface IUnleashServices {
     tagTypeService: TagTypeService;
     transactionalTagTypeService: WithTransactional<TagTypeService>;
     userFeedbackService: UserFeedbackService;
-    userService: UserService;
+    userService: WithTransactional<UserService>;
     versionService: VersionService;
     userSplashService: UserSplashService;
     segmentService: ISegmentService;

@@ -458,6 +458,13 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
+    "component": [Function],
+    "menu": {},
+    "path": "/unknown-flags",
+    "title": "Unknown flags",
+    "type": "protected",
+  },
+  {
     "component": {
       "$$typeof": Symbol(react.lazy),
       "_init": [Function],

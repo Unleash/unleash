@@ -52,6 +52,7 @@ import { ReleaseManagement } from 'component/releases/ReleaseManagement/ReleaseM
 import { CreateReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/CreateReleasePlanTemplate';
 import { EditReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/EditReleasePlanTemplate';
 import { ExploreCounters } from 'component/counters/ExploreCounters/ExploreCounters.js';
+import { UnknownFlagsTable } from 'component/unknownFlags/UnknownFlagsTable';
 
 export const routes: IRoute[] = [
     // Splash
@@ -467,6 +468,15 @@ export const routes: IRoute[] = [
         path: '/archive',
         title: 'Archived flags',
         component: FeaturesArchiveTable,
+        type: 'protected',
+        menu: {},
+    },
+
+    // Unknown flags
+    {
+        path: '/unknown-flags',
+        title: 'Unknown flags',
+        component: UnknownFlagsTable,
         type: 'protected',
         menu: {},
     },

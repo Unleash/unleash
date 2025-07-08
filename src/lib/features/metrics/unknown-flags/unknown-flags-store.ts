@@ -11,6 +11,10 @@ export type UnknownFlag = {
 
 export type QueryParams = {
     limit?: number;
+    orderBy?: {
+        column: string;
+        order: 'asc' | 'desc';
+    }[];
 };
 
 export interface IUnknownFlagsStore {
@@ -43,13 +47,17 @@ export class UnknownFlagsStore implements IUnknownFlagsStore {
         }
     }
 
-    async getAll({ limit }: QueryParams = {}): Promise<UnknownFlag[]> {
+    async getAll({ limit, orderBy }: QueryParams = {}): Promise<UnknownFlag[]> {
         let query = this.db(TABLE).select(
             'name',
             'app_name',
             'seen_at',
             'environment',
         );
+
+        if (orderBy) {
+            query = query.orderBy(orderBy);
+        }
 
         if (limit) {
             query = query.limit(limit);

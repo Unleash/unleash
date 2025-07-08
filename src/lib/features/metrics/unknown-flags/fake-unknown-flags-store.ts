@@ -18,8 +18,17 @@ export class FakeUnknownFlagsStore implements IUnknownFlagsStore {
         }
     }
 
-    async getAll({ limit }: QueryParams = {}): Promise<UnknownFlag[]> {
+    async getAll({ limit, orderBy }: QueryParams = {}): Promise<UnknownFlag[]> {
         const flags = Array.from(this.unknownFlagMap.values());
+        if (orderBy) {
+            flags.sort((a, b) => {
+                for (const { column, order } of orderBy) {
+                    if (a[column] < b[column]) return order === 'asc' ? -1 : 1;
+                    if (a[column] > b[column]) return order === 'asc' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
         if (!limit) return flags;
         return flags.slice(0, limit);
     }

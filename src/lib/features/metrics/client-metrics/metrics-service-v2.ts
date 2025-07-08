@@ -26,10 +26,7 @@ import {
 import type { ClientMetricsSchema } from '../../../../lib/openapi/index.js';
 import { nameSchema } from '../../../schema/feature-schema.js';
 import memoizee from 'memoizee';
-import {
-    MAX_UNKNOWN_FLAGS,
-    type UnknownFlagsService,
-} from '../unknown-flags/unknown-flags-service.js';
+import type { UnknownFlagsService } from '../unknown-flags/unknown-flags-service.js';
 import {
     type Metric,
     MetricsTranslator,
@@ -133,22 +130,16 @@ export default class ClientMetricsServiceV2 {
         validatedToggleNames: string[];
         unknownToggleNames: string[];
     }> {
-        let unknownToggleNames: string[] = [];
-
         const existingFlags = await this.cachedFeatureNames();
         const existingNames = toggleNames.filter((name) =>
             existingFlags.includes(name),
         );
 
+        let unknownToggleNames: string[] = [];
         if (this.flagResolver.isEnabled('reportUnknownFlags')) {
             try {
-                const nonExistingNames = toggleNames.filter(
+                unknownToggleNames = toggleNames.filter(
                     (name) => !existingFlags.includes(name),
-                );
-
-                unknownToggleNames = nonExistingNames.slice(
-                    0,
-                    MAX_UNKNOWN_FLAGS,
                 );
             } catch (e) {
                 this.logger.error(e);
@@ -256,7 +247,7 @@ export default class ClientMetricsServiceV2 {
             this.logger.info(
                 `Registering ${unknownFlags.length} unknown flags from ${value.appName} in the ${environment} environment. Some of the unknown flag names include: ${unknownFlags
                     .slice(0, 10)
-                    .map((f) => f.name)
+                    .map(({ name }) => `"${name}"`)
                     .join(', ')}`,
             );
             this.unknownFlagsService.register(unknownFlags);

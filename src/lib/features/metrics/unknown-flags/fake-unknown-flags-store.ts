@@ -1,4 +1,8 @@
-import type { IUnknownFlagsStore, UnknownFlag } from './unknown-flags-store.js';
+import type {
+    IUnknownFlagsStore,
+    UnknownFlag,
+    QueryParams,
+} from './unknown-flags-store.js';
 
 export class FakeUnknownFlagsStore implements IUnknownFlagsStore {
     private unknownFlagMap = new Map<string, UnknownFlag>();
@@ -7,15 +11,17 @@ export class FakeUnknownFlagsStore implements IUnknownFlagsStore {
         return `${flag.name}:${flag.appName}:${flag.environment}`;
     }
 
-    async replaceAll(flags: UnknownFlag[]): Promise<void> {
+    async insert(flags: UnknownFlag[]): Promise<void> {
         this.unknownFlagMap.clear();
         for (const flag of flags) {
             this.unknownFlagMap.set(this.getKey(flag), flag);
         }
     }
 
-    async getAll(): Promise<UnknownFlag[]> {
-        return Array.from(this.unknownFlagMap.values());
+    async getAll({ limit }: QueryParams = {}): Promise<UnknownFlag[]> {
+        const flags = Array.from(this.unknownFlagMap.values());
+        if (!limit) return flags;
+        return flags.slice(0, limit);
     }
 
     async clear(hoursAgo: number): Promise<void> {

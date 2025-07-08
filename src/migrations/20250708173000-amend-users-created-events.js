@@ -1,30 +1,35 @@
 exports.up = function(db, cb) {
   db.runSql(`
-    select u.id, u.username, u.email 
-    from users u 
-    where is_system = false and 
-          is_service = false and 
-          deleted_at is NULL and 
-          email is not null and 
-          NOT EXISTS (select * from events 
-                      where type = 'user-created' and 
-                      (data ->> 'id')::int = u.id limit 1);
+    INSERT INTO events (created_at, created_by, type, data, announced)
+    SELECT
+      u.created_at AS created_at,
+      'unleash_system_user' AS created_by,
+      'user-created' AS type,
+      json_build_object(
+        'id', u.id,
+        'email', u.email
+      )::jsonb AS data,
+      true AS announced
+    FROM users u
+    WHERE
+      is_system = false
+      AND is_service = false
+      AND deleted_at IS NULL
+      AND email IS NOT NULL
+      AND NOT EXISTS (
+        SELECT 1 FROM events
+        WHERE type = 'user-created'
+          AND (data ->> 'id')::int = u.id
+        LIMIT 1
+      )
+    ON CONFLICT DO NOTHING;
   `, (err, results) => {
-    if (err) return cb(err);
-
-    const userIds = results.rows.map(row => row.id);
-    if (userIds.length === 0) {
-      return cb();
+    if (err) {
+      console.log('Error inserting user-created events:', err);
+      return cb(err);
     }
-
-    const values = results.rows.map(row => `('unleash_system_user', 'user-created', '{"id": "${row.id}", "email": "${row.email}"}', true)`).join(', ');
-
-    console.log(`Inserting ${userIds.length} user-created events for users: ${userIds.join(', ')}`);
-    db.runSql(`
-      INSERT INTO events (created_by, type, data, announced)
-      VALUES ${values}
-      ON CONFLICT DO NOTHING;
-    `, cb);
+    console.log('Inserted user-created events:', results.results.);
+    cb();
   });
 };
 

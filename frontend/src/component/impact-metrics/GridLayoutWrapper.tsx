@@ -1,19 +1,19 @@
 import type { FC, ReactNode } from 'react';
 import { useMemo, useCallback } from 'react';
-import { Responsive, WidthProvider } from 'react-grid-layout';
-import { styled } from '@mui/material';
+import GridLayout, { WidthProvider } from 'react-grid-layout';
+import { styled, useTheme, useMediaQuery } from '@mui/material';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
-const ResponsiveGridLayout = WidthProvider(Responsive);
+const ResponsiveGridLayout = WidthProvider(GridLayout);
 
 const StyledGridContainer = styled('div')(({ theme }) => ({
     '& .react-grid-item': {
         borderRadius: `${theme.shape.borderRadiusMedium}px`,
     },
-    '& .react-resizable-handle': {
-        '&::after': {
-            opacity: 0.5,
+    '& .grid-item-drag-handle': {
+        [theme.breakpoints.down('md')]: {
+            display: 'none',
         },
     },
 }));
@@ -32,65 +32,74 @@ export type GridItem = {
     static?: boolean;
 };
 
+type LayoutItem = {
+    i: string;
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    minW?: number;
+    minH?: number;
+    maxW?: number;
+    maxH?: number;
+    static?: boolean;
+};
+
 type GridLayoutWrapperProps = {
     items: GridItem[];
-    onLayoutChange?: (layout: unknown[]) => void;
+    onLayoutChange?: (layout: LayoutItem[]) => void;
     cols?: { lg: number; md: number; sm: number; xs: number; xxs: number };
     rowHeight?: number;
-    margin?: [number, number];
-    isDraggable?: boolean;
-    isResizable?: boolean;
-    compactType?: 'vertical' | 'horizontal' | null;
 };
 
 export const GridLayoutWrapper: FC<GridLayoutWrapperProps> = ({
     items,
     onLayoutChange,
-    cols = { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
+    cols = { lg: 12, md: 12, sm: 6, xs: 4, xxs: 2 },
     rowHeight = 180,
-    margin = [16, 16],
-    isDraggable = true,
-    isResizable = true,
-    compactType = 'vertical',
 }) => {
-    const layouts = useMemo(() => {
-        const baseLayout = items.map((item, index) => ({
+    const theme = useTheme();
+    const isMobileBreakpoint = useMediaQuery(theme.breakpoints.down('md'));
+
+    const layout = useMemo(() => {
+        if (isMobileBreakpoint) {
+            let currentY = 0;
+            return items.map((item) => {
+                const layoutItem = {
+                    i: item.id,
+                    x: 0,
+                    y: currentY,
+                    w: cols.xs,
+                    h: item.h ?? 4,
+                    minW: cols.xs,
+                    minH: item.minH ?? 3,
+                    maxW: cols.xs,
+                    maxH: item.maxH ?? 8,
+                    static: false,
+                };
+                currentY += layoutItem.h;
+                return layoutItem;
+            });
+        }
+
+        return items.map((item, index) => ({
             i: item.id,
-            x: item.x ?? (index % cols.lg) * (item.w ?? 6),
-            y: item.y ?? Math.floor(index / cols.lg) * (item.h ?? 4),
-            w: item.w ?? 6,
+            x:
+                item.x ??
+                (index % Math.floor(cols.lg / (item.w ?? 4))) * (item.w ?? 4),
+            y:
+                item.y ??
+                Math.floor(index / Math.floor(cols.lg / (item.w ?? 4))) *
+                    (item.h ?? 4),
+            w: item.w ?? 4,
             h: item.h ?? 4,
-            minW: item.minW ?? 3,
+            minW: item.minW ?? 4,
             minH: item.minH ?? 3,
             maxW: item.maxW ?? 12,
             maxH: item.maxH ?? 8,
             static: item.static ?? false,
         }));
-
-        return {
-            lg: baseLayout,
-            md: baseLayout.map((item) => ({
-                ...item,
-                w: Math.min(item.w, cols.md),
-                x: Math.min(item.x, cols.md - item.w),
-            })),
-            sm: baseLayout.map((item) => ({
-                ...item,
-                w: Math.min(item.w, cols.sm),
-                x: Math.min(item.x, cols.sm - item.w),
-            })),
-            xs: baseLayout.map((item) => ({
-                ...item,
-                w: Math.min(item.w, cols.xs),
-                x: Math.min(item.x, cols.xs - item.w),
-            })),
-            xxs: baseLayout.map((item) => ({
-                ...item,
-                w: Math.min(item.w, cols.xxs),
-                x: Math.min(item.x, cols.xxs - item.w),
-            })),
-        };
-    }, [items, cols]);
+    }, [items, cols, isMobileBreakpoint]);
 
     const children = useMemo(
         () => items.map((item) => <div key={item.id}>{item.component}</div>),
@@ -98,31 +107,36 @@ export const GridLayoutWrapper: FC<GridLayoutWrapperProps> = ({
     );
 
     const handleLayoutChange = useCallback(
-        (layout: unknown[], layouts: unknown) => {
-            onLayoutChange?.(layout);
+        (layout: LayoutItem[]) => {
+            if (!isMobileBreakpoint) {
+                onLayoutChange?.(layout);
+            }
         },
-        [onLayoutChange],
+        [onLayoutChange, isMobileBreakpoint],
     );
 
     return (
         <StyledGridContainer>
             <ResponsiveGridLayout
                 className='impact-metrics-grid'
-                layouts={layouts}
-                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                cols={cols}
+                layout={layout}
+                cols={isMobileBreakpoint ? cols.xs : cols.lg}
                 rowHeight={rowHeight}
-                margin={margin}
+                margin={[
+                    Number.parseInt(theme.spacing(2)),
+                    Number.parseInt(theme.spacing(2)),
+                ]}
                 containerPadding={[0, 0]}
-                isDraggable={isDraggable}
-                isResizable={isResizable}
+                isDraggable={!isMobileBreakpoint}
+                isResizable={!isMobileBreakpoint}
                 onLayoutChange={handleLayoutChange}
                 resizeHandles={['se']}
                 draggableHandle='.grid-item-drag-handle'
-                compactType={compactType}
+                compactType={isMobileBreakpoint ? null : 'vertical'}
                 preventCollision={false}
                 useCSSTransforms={true}
                 autoSize={true}
+                allowOverlap={false}
             >
                 {children}
             </ResponsiveGridLayout>

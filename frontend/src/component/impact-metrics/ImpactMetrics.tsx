@@ -14,8 +14,8 @@ const StyledEmptyState = styled(Paper)(({ theme }) => ({
     textAlign: 'center',
     padding: theme.spacing(8),
     backgroundColor: theme.palette.background.default,
-    borderRadius: theme.shape.borderRadius * 2,
-    border: `2px dashed ${theme.palette.divider}`,
+    borderRadius: `${theme.shape.borderRadiusMedium}px`,
+    boxShadow: 'none',
 }));
 
 export const ImpactMetrics: FC = () => {
@@ -144,9 +144,6 @@ export const ImpactMetrics: FC = () => {
                 <GridLayoutWrapper
                     items={gridItems}
                     onLayoutChange={handleLayoutChange}
-                    rowHeight={180}
-                    margin={[16, 16]}
-                    cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
                 />
             ) : null}
 

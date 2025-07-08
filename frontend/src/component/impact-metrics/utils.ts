@@ -7,22 +7,24 @@ export const getTimeUnit = (selectedRange: string) => {
         case 'week':
             return 'day';
         case 'month':
-            return 'day';
+            return 'week';
         default:
-            return 'hour';
+            return 'day';
     }
 };
 
 export const getDisplayFormat = (selectedRange: string) => {
     switch (selectedRange) {
         case 'hour':
+            return 'HH:mm';
         case 'day':
             return 'HH:mm';
         case 'week':
+            return 'MMM dd';
         case 'month':
             return 'MMM dd';
         default:
-            return 'MMM dd HH:mm';
+            return 'MMM dd';
     }
 };
 

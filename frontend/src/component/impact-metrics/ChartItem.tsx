@@ -29,15 +29,6 @@ const getConfigDescription = (config: ChartConfig): string => {
     return parts.join(' • ');
 };
 
-const StyledChartWrapper = styled(Box)({
-    height: '100%',
-    width: '100%',
-    '& > div': {
-        height: '100% !important',
-        width: '100% !important',
-    },
-});
-
 const StyledWidget = styled(Paper)(({ theme }) => ({
     borderRadius: `${theme.shape.borderRadiusMedium}px`,
     boxShadow: 'none',
@@ -127,17 +118,15 @@ export const ChartItem: FC<ChartItemProps> = ({ config, onEdit, onDelete }) => (
 
         <StyledChartContent>
             <StyledImpactChartContainer>
-                <StyledChartWrapper>
-                    <ImpactMetricsChart
-                        selectedSeries={config.selectedSeries}
-                        selectedRange={config.selectedRange}
-                        selectedLabels={config.selectedLabels}
-                        beginAtZero={config.beginAtZero}
-                        aspectRatio={1.5}
-                        overrideOptions={{ maintainAspectRatio: false }}
-                        emptyDataDescription='Send impact metrics using Unleash SDK for this series to view the chart.'
-                    />
-                </StyledChartWrapper>
+                <ImpactMetricsChart
+                    selectedSeries={config.selectedSeries}
+                    selectedRange={config.selectedRange}
+                    selectedLabels={config.selectedLabels}
+                    beginAtZero={config.beginAtZero}
+                    aspectRatio={1.5}
+                    overrideOptions={{ maintainAspectRatio: false }}
+                    emptyDataDescription='Send impact metrics using Unleash SDK for this series to view the chart.'
+                />
             </StyledImpactChartContainer>
         </StyledChartContent>
     </StyledWidget>

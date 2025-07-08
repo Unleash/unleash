@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from 'react';
 import { useMemo } from 'react';
-import { Alert } from '@mui/material';
+import { Alert, Box, styled } from '@mui/material';
 import {
     LineChart,
     NotEnoughData,
@@ -23,6 +23,15 @@ type ImpactMetricsChartProps = {
     noSeriesPlaceholder?: ReactNode;
 };
 
+const StyledChartWrapper = styled(Box)({
+    height: '100%',
+    width: '100%',
+    '& > div': {
+        height: '100% !important',
+        width: '100% !important',
+    },
+});
+
 export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
     selectedSeries,
     selectedRange,
@@ -30,7 +39,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
     beginAtZero,
     aspectRatio,
     overrideOptions = {},
-    errorTitle = 'Failed to load impact metrics. Please check if Prometheus is configured and the feature flag is enabled.',
+    errorTitle = 'Failed to load impact metrics.',
     emptyDataDescription = 'Send impact metrics using Unleash SDK and select data series to view the chart.',
     noSeriesPlaceholder,
 }) => {
@@ -142,14 +151,19 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
           };
 
     return (
-        <>
-            {hasError ? <Alert severity='error'>{errorTitle}</Alert> : null}
+        <StyledChartWrapper>
             <LineChart
                 data={notEnoughData || isLoading ? placeholderData : data}
                 aspectRatio={aspectRatio}
                 overrideOptions={chartOptions}
-                cover={cover}
+                cover={
+                    hasError ? (
+                        <Alert severity='error'>{errorTitle}</Alert>
+                    ) : (
+                        cover
+                    )
+                }
             />
-        </>
+        </StyledChartWrapper>
     );
 };

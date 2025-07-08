@@ -322,16 +322,20 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
      * @deprecated
      * @param name
      */
-    async getProjectId(name: string): Promise<string> {
-        return this.db
-            .first(['project'])
-            .from(TABLE)
-            .where({ name })
-            .then((r) => (r ? r.project : undefined))
-            .catch((e) => {
-                this.logger.error(e);
-                return undefined;
-            });
+    async getProjectIds(name: string): Promise<string[]> {
+        return (
+            this.db
+                .select(['project_id'])
+                .from('feature_project')
+                // .join('feature_project', 'feature_project.feature_name', 'feature.name')
+                // .where({ name })
+                .where('feature_project.feature_name', name)
+        );
+        // .then((r) => (r ? r.project : undefined))
+        // .catch((e) => {
+        //     this.logger.error(e);
+        //     return undefined;
+        // });
     }
 
     async exists(name: string): Promise<boolean> {
@@ -479,6 +483,11 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             const row = await this.db(TABLE)
                 .insert(this.insertToRow(project, data))
                 .returning(FEATURE_COLUMNS);
+
+            await this.db('feature_project').insert({
+                feature_name: data.name,
+                project_id: project,
+            });
 
             return this.rowToFeature(row[0]);
         } catch (err) {

@@ -108,7 +108,11 @@ export class DependentFeaturesService {
                 this.dependentFeaturesReadModel.getChildren([child]),
                 this.dependentFeaturesReadModel.getParents(parent),
                 this.featuresReadModel.featureExists(parent),
-                this.featuresReadModel.featuresInTheSameProject(child, parent),
+                this.featuresReadModel.featuresInTheSameProject(
+                    child,
+                    parent,
+                    projectId,
+                ),
             ]);
 
         if (grandchildren.length > 0) {

@@ -120,6 +120,7 @@ import {
     createFakeDependentFeaturesService,
     createFakeAccessService,
     corsOriginMiddleware,
+    impactRegister,
 } from './internals.js';
 import SessionStore from './db/session-store.js';
 import metricsHelper from './util/metrics-helper.js';
@@ -492,6 +493,7 @@ export {
     getDefaultStrategy,
     corsOriginMiddleware,
     ApiTokenType,
+    impactRegister,
 };
 
 export type {

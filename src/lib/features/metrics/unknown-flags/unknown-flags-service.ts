@@ -5,7 +5,7 @@ import type {
     IUnleashConfig,
 } from '../../../types/index.js';
 import type { IUnleashStores } from '../../../types/index.js';
-import type { UnknownFlag } from './unknown-flags-store.js';
+import type { QueryParams, UnknownFlag } from './unknown-flags-store.js';
 
 export class UnknownFlagsService {
     private logger: Logger;
@@ -50,9 +50,9 @@ export class UnknownFlagsService {
         this.unknownFlagsCache.clear();
     }
 
-    async getAll({ limit }: { limit?: number }): Promise<UnknownFlag[]> {
+    async getAll(queryParams: QueryParams): Promise<UnknownFlag[]> {
         if (!this.flagResolver.isEnabled('reportUnknownFlags')) return [];
-        return this.unknownFlagsStore.getAll({ limit });
+        return this.unknownFlagsStore.getAll(queryParams);
     }
 
     async clear(hoursAgo: number) {

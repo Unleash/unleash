@@ -63,6 +63,12 @@ export default class UnknownFlagsController extends Controller {
         }
         const unknownFlags = await this.unknownFlagsService.getAll({
             limit: 1000,
+            orderBy: [
+                {
+                    column: 'name',
+                    order: 'asc',
+                },
+            ],
         });
 
         this.openApiService.respondWithValidation(

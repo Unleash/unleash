@@ -44,10 +44,6 @@ import { useNavigate } from 'react-router-dom';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { ChangeRequestRequestedApprovers } from './ChangeRequestRequestedApprovers/ChangeRequestRequestedApprovers.tsx';
-import {
-    StyledButtonContainer,
-    StyledOuterContainer,
-} from './ChangeRequestReviewStatus/ChangeRequestReviewStatus.styles.ts';
 
 const breakpoint = 'md';
 
@@ -63,6 +59,12 @@ const StyledAsideBox = styled(Box)(({ theme }) => ({
 const StyledPaper = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(1, 2),
     borderRadius: theme.shape.borderRadiusLarge,
+}));
+
+const StyledApplyPaper = styled(Paper)(({ theme }) => ({
+    padding: theme.spacing(1, 2),
+    borderRadius: theme.shape.borderRadiusLarge,
+    marginTop: theme.spacing(2),
 }));
 
 const StyledDiv = styled('div')(({ theme }) => ({
@@ -82,6 +84,15 @@ const StyledButtonBox = styled(Box)(({ theme }) => ({
 
 const StyledInnerContainer = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
+}));
+
+const StyledApplyInnerContainer = styled(Box)(({ theme }) => ({
+    paddingBottom: theme.spacing(1.5),
+}));
+
+const StyledOuterContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    marginTop: theme.spacing(2),
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
@@ -109,6 +120,21 @@ const StyledBox = styled(Box)(({ theme }) => ({
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
     fontWeight: 'bold',
+}));
+
+const StyledButtonContainer = styled(Box)(({ theme }) => ({
+    borderRadius: `${theme.shape.borderRadiusMedium}px`,
+    backgroundColor: theme.palette.primary.main!,
+    padding: theme.spacing(1, 2),
+    marginRight: theme.spacing(2),
+    height: '45px',
+    width: '45px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    svg: {
+        color: theme.palette.background.paper,
+    },
 }));
 
 export const ChangeRequestOverview: FC = () => {
@@ -527,17 +553,10 @@ export const ChangeRequestOverview: FC = () => {
                             approversEnabled
                         }
                         show={
-                            <StyledPaper sx={{ mt: 2 }} elevation={0}>
-                                <StyledInnerContainer sx={{ pt: 0, pb: 1.5 }}>
+                            <StyledApplyPaper elevation={0}>
+                                <StyledApplyInnerContainer>
                                     <StyledOuterContainer>
-                                        <StyledButtonContainer
-                                            bgColor={
-                                                theme.palette.primary.main!
-                                            }
-                                            svgColor={
-                                                theme.palette.background.paper
-                                            }
-                                        >
+                                        <StyledButtonContainer>
                                             <ApprovedIcon
                                                 style={{
                                                     transform: `scale(1.5)`,
@@ -571,8 +590,8 @@ export const ChangeRequestOverview: FC = () => {
                                             </ApplyButton>
                                         </StyledApplyContainer>
                                     </StyledOuterContainer>
-                                </StyledInnerContainer>
-                            </StyledPaper>
+                                </StyledApplyInnerContainer>
+                            </StyledApplyPaper>
                         }
                     />
                 </StyledDiv>

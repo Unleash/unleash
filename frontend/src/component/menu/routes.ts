@@ -52,7 +52,7 @@ import { ReleaseManagement } from 'component/releases/ReleaseManagement/ReleaseM
 import { CreateReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/CreateReleasePlanTemplate';
 import { EditReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/EditReleasePlanTemplate';
 import { ExploreCounters } from 'component/counters/ExploreCounters/ExploreCounters.js';
-import { UnknownFlagsTable } from 'component/unknownFlags/UnknownFlagsTable.tsx';
+import { UnknownFlagsTable } from 'component/unknownFlags/UnknownFlagsTable';
 
 export const routes: IRoute[] = [
     // Splash

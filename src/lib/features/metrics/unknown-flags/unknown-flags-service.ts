@@ -50,7 +50,7 @@ export class UnknownFlagsService {
         this.unknownFlagsCache.clear();
     }
 
-    async getAll(queryParams: QueryParams): Promise<UnknownFlag[]> {
+    async getAll(queryParams?: QueryParams): Promise<UnknownFlag[]> {
         if (!this.flagResolver.isEnabled('reportUnknownFlags')) return [];
         return this.unknownFlagsStore.getAll(queryParams);
     }

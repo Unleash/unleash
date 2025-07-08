@@ -1,6 +1,17 @@
 import type { FC, ReactNode } from 'react';
 import { useMemo } from 'react';
-import { Alert } from '@mui/material';
+import { Alert, Box, styled, useTheme } from '@mui/material';
+import {
+    BarElement,
+    CategoryScale,
+    Chart as ChartJS,
+    LinearScale,
+    TimeScale,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+import 'chartjs-adapter-date-fns';
 import {
     LineChart,
     NotEnoughData,
@@ -11,11 +22,27 @@ import { getDisplayFormat, getTimeUnit, formatLargeNumbers } from './utils.ts';
 import { fromUnixTime } from 'date-fns';
 import { useChartData } from './hooks/useChartData.ts';
 
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    TimeScale,
+    Tooltip,
+    Legend,
+);
+
+const StyledBarChartContainer = styled(Box)({
+    position: 'relative',
+    width: '100%',
+    height: '100%',
+});
+
 type ImpactMetricsChartProps = {
     selectedSeries: string;
     selectedRange: 'hour' | 'day' | 'week' | 'month';
     selectedLabels: Record<string, string[]>;
     beginAtZero: boolean;
+    chartType?: 'line' | 'bar';
     aspectRatio?: number;
     overrideOptions?: Record<string, unknown>;
     errorTitle?: string;
@@ -28,12 +55,14 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
     selectedRange,
     selectedLabels,
     beginAtZero,
+    chartType = 'bar',
     aspectRatio,
     overrideOptions = {},
     errorTitle = 'Failed to load impact metrics. Please check if Prometheus is configured and the feature flag is enabled.',
     emptyDataDescription = 'Send impact metrics using Unleash SDK and select data series to view the chart.',
     noSeriesPlaceholder,
 }) => {
+    const theme = useTheme();
     const {
         data: { start, end, series: timeSeriesData },
         loading: dataLoading,
@@ -56,7 +85,54 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
         type: 'constant',
     });
 
+    const barPlaceholderData = useMemo(
+        () => ({
+            labels: placeholderData.labels,
+            datasets: placeholderData.datasets.map((dataset) => ({
+                label: dataset.label,
+                data: dataset.data,
+                backgroundColor: theme.palette.divider,
+                borderColor: theme.palette.divider,
+                borderWidth: 1,
+            })),
+        }),
+        [placeholderData, theme],
+    );
+
     const data = useChartData(timeSeriesData);
+
+    const barChartData = useMemo(() => {
+        if (!timeSeriesData || timeSeriesData.length === 0) {
+            return {
+                labels: [],
+                datasets: [
+                    {
+                        data: [],
+                        backgroundColor: theme.palette.primary.main,
+                        borderColor: theme.palette.primary.main,
+                        borderWidth: 1,
+                    },
+                ],
+            };
+        }
+
+        return {
+            labels: data.labels,
+            datasets: data.datasets.map((dataset) => ({
+                label: dataset.label,
+                data: dataset.data,
+                backgroundColor:
+                    typeof dataset.backgroundColor === 'string'
+                        ? dataset.backgroundColor
+                        : theme.palette.primary.main,
+                borderColor:
+                    typeof dataset.borderColor === 'string'
+                        ? dataset.borderColor
+                        : theme.palette.primary.main,
+                borderWidth: 1,
+            })),
+        };
+    }, [data, timeSeriesData, theme]);
 
     const hasError = !!dataError;
     const isLoading = dataLoading;
@@ -144,12 +220,42 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
     return (
         <>
             {hasError ? <Alert severity='error'>{errorTitle}</Alert> : null}
-            <LineChart
-                data={notEnoughData || isLoading ? placeholderData : data}
-                aspectRatio={aspectRatio}
-                overrideOptions={chartOptions}
-                cover={cover}
-            />
+            {chartType === 'bar' ? (
+                <StyledBarChartContainer>
+                    <Bar
+                        data={
+                            (notEnoughData || isLoading
+                                ? barPlaceholderData
+                                : barChartData) as any
+                        }
+                        options={chartOptions as any}
+                        height={aspectRatio ? 100 : undefined}
+                        width={aspectRatio ? 100 * aspectRatio : undefined}
+                    />
+                    {cover && (
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                inset: 0,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                                zIndex: 1,
+                            }}
+                        >
+                            {cover}
+                        </Box>
+                    )}
+                </StyledBarChartContainer>
+            ) : (
+                <LineChart
+                    data={notEnoughData || isLoading ? placeholderData : data}
+                    aspectRatio={aspectRatio}
+                    overrideOptions={chartOptions}
+                    cover={cover}
+                />
+            )}
         </>
     );
 };

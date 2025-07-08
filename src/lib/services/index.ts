@@ -248,10 +248,18 @@ export const createServices = (
     );
     const sessionService = new SessionService(stores, config);
     const settingService = new SettingService(stores, config, eventService);
-    const userService = withTransactional(
-        (db) => createUserService(db, config),
-        db!,
-    );
+    const userService = db
+        ? withTransactional((db) => createUserService(db, config), db)
+        : withFakeTransactional(
+              new UserService(stores, config, {
+                  accessService,
+                  resetTokenService,
+                  emailService,
+                  eventService,
+                  sessionService,
+                  settingService,
+              }),
+          );
     const accountService = new AccountService(stores, config, {
         accessService,
     });

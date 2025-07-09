@@ -1988,10 +1988,6 @@ export class FeatureToggleService {
                     auditUser,
                 }),
             );
-
-            if (this.flagResolver.isEnabled('paygTrialEvents') && enabled) {
-                // todo: handle hubspot reporting?
-            }
         }
         return feature!; // If we get here we know the toggle exists
     }

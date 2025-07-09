@@ -301,20 +301,6 @@ export default class EnvironmentStore implements IEnvironmentStore {
         return present;
     }
 
-    async getByName(name: string): Promise<IEnvironment> {
-        const stopTimer = this.timer('getByName');
-        const row = await this.db<IEnvironmentsTable>(TABLE)
-            .where({ name })
-            .first();
-        stopTimer();
-        if (!row) {
-            throw new NotFoundError(
-                `Could not find environment with name ${name}`,
-            );
-        }
-        return mapRow(row);
-    }
-
     async updateProperty(
         id: string,
         field: string,

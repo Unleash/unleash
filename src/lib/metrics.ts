@@ -41,7 +41,10 @@ import {
 import type { SchedulerService } from './services/index.js';
 import type { IClientMetricsEnv } from './features/metrics/client-metrics/client-metrics-store-v2-type.js';
 import { DbMetricsMonitor } from './metrics-gauge.js';
-import { HEAP_MEMORY_TOTAL } from './features/metrics/impact/define-impact-metrics.js';
+import {
+    HEAP_MEMORY_TOTAL,
+    REQUEST_COUNT,
+} from './features/metrics/impact/define-impact-metrics.js';
 
 export function registerPrometheusPostgresMetrics(
     db: Knex,
@@ -789,6 +792,7 @@ export function registerPrometheusMetrics(
                     appName,
                 })
                 .observe(time);
+            config.flagResolver.impactMetrics?.incrementCounter(REQUEST_COUNT);
         },
     );
 

@@ -1,3 +1,5 @@
+import postgresPkg from 'pg';
+const { Client } = postgresPkg;
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
@@ -19,6 +21,11 @@ import { omitKeys } from '../../../../lib/util/omit-keys.js';
 import type { ISessionStore } from '../../../../lib/types/stores/session-store.js';
 import type { IUnleashStores } from '../../../../lib/types/index.js';
 import { createHash } from 'crypto';
+import { createDb } from '../../../../lib/db/db-pool.js';
+import { migrateDb } from '../../../../migrator.js';
+import { createTestConfig } from '../../../config/test-config.js';
+import { v4 as uuidv4 } from 'uuid';
+import { getDbConfig } from '../../../../lib/server-impl.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -30,6 +37,67 @@ let roleStore: IRoleStore;
 let sessionStore: ISessionStore;
 let editorRole: IRole;
 let adminRole: IRole;
+
+describe('Users created without an event are amended', () => {
+    const testDbName = `migration_test_${uuidv4().replace(/-/g, '')}`;
+    const dbConnConfig = getDbConfig();
+    beforeAll(async () => {
+        // create a new empty database for this test
+        const client = new Client(dbConnConfig);
+        await client.connect();
+        await client.query(`CREATE DATABASE ${testDbName}`);
+        await client.end();
+    });
+
+    test('should amend users created without an event', async () => {
+        // connect to the new database
+        const config = createTestConfig({
+            db: {
+                ...dbConnConfig,
+                ssl: false,
+                database: testDbName,
+            },
+            getLogger,
+        });
+        const db = createDb(config);
+        // migrate up to the migration we want to test
+        await migrateDb(config, '20250707153020-unknown-flags-environment.js');
+
+        const eventsBefore = await db('events').select('*');
+        const insertedUser = (
+            await db('users')
+                .insert({
+                    created_at: new Date('2023-01-01T00:00:00Z'),
+                    email: 'some@getunelash.io',
+                    name: 'Some Name',
+                })
+                .returning('*')
+        )[0];
+
+        expect(insertedUser).toBeDefined();
+        expect(insertedUser.name).toBe('Some Name');
+        expect(insertedUser.created_at).toBeDefined();
+        const eventsAfter = await db('events').select('*');
+        expect(eventsAfter.length).toBe(eventsBefore.length);
+
+        // apply the rest of migrations
+        await migrateDb(config);
+        const eventsPostMigrations = await db('events').select('*');
+        expect(eventsPostMigrations.length).toBe(eventsBefore.length + 1);
+        const userCreatedEvent = eventsPostMigrations.find(
+            (e) => e.type === USER_CREATED && e.data.id === insertedUser.id,
+        );
+        expect(userCreatedEvent).toMatchObject({
+            type: 'user-created',
+            created_at: new Date('2023-01-01T00:00:00Z'),
+            data: {
+                id: insertedUser.id,
+                email: 'some@getunelash.io',
+                name: 'Some Name',
+            },
+        });
+    });
+});
 
 describe('User Admin API with email configuration', () => {
     beforeAll(async () => {

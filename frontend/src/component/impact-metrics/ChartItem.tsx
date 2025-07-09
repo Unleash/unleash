@@ -21,6 +21,10 @@ const getConfigDescription = (config: ChartConfig): string => {
 
     parts.push(`last ${config.selectedRange}`);
 
+    if (config.showRate) {
+        parts.push('rate per second');
+    }
+
     const labelCount = Object.keys(config.selectedLabels).length;
     if (labelCount > 0) {
         parts.push(`${labelCount} filter${labelCount > 1 ? 's' : ''}`);
@@ -123,6 +127,7 @@ export const ChartItem: FC<ChartItemProps> = ({ config, onEdit, onDelete }) => (
                     selectedRange={config.selectedRange}
                     selectedLabels={config.selectedLabels}
                     beginAtZero={config.beginAtZero}
+                    showRate={config.showRate}
                     aspectRatio={1.5}
                     overrideOptions={{ maintainAspectRatio: false }}
                     emptyDataDescription='Send impact metrics using Unleash SDK for this series to view the chart.'

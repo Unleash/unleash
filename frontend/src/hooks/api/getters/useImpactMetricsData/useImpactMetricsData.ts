@@ -16,12 +16,16 @@ export type ImpactMetricsResponse = {
     step?: string;
     series: ImpactMetricsSeries[];
     labels?: ImpactMetricsLabels;
+    debug?: {
+        query?: string;
+    };
 };
 
 export type ImpactMetricsQuery = {
     series: string;
     range: 'hour' | 'day' | 'week' | 'month';
     labels?: Record<string, string[]>;
+    showRate?: boolean;
 };
 
 export const useImpactMetricsData = (query?: ImpactMetricsQuery) => {
@@ -33,6 +37,10 @@ export const useImpactMetricsData = (query?: ImpactMetricsQuery) => {
             series: query.series,
             range: query.range,
         });
+
+        if (query.showRate !== undefined) {
+            params.append('showRate', query.showRate.toString());
+        }
 
         if (query.labels && Object.keys(query.labels).length > 0) {
             // Send labels as they are - the backend will handle the formatting

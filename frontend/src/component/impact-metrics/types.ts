@@ -3,6 +3,7 @@ export type ChartConfig = {
     selectedSeries: string;
     selectedRange: 'hour' | 'day' | 'week' | 'month';
     beginAtZero: boolean;
+    showRate: boolean;
     selectedLabels: Record<string, string[]>;
     title?: string;
 };

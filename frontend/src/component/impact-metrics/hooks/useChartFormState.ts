@@ -14,6 +14,7 @@ export type ChartFormState = {
         selectedSeries: string;
         selectedRange: 'hour' | 'day' | 'week' | 'month';
         beginAtZero: boolean;
+        showRate: boolean;
         selectedLabels: Record<string, string[]>;
     };
     actions: {
@@ -21,6 +22,7 @@ export type ChartFormState = {
         setSelectedSeries: (series: string) => void;
         setSelectedRange: (range: 'hour' | 'day' | 'week' | 'month') => void;
         setBeginAtZero: (beginAtZero: boolean) => void;
+        setShowRate: (showRate: boolean) => void;
         setSelectedLabels: (labels: Record<string, string[]>) => void;
         handleSeriesChange: (series: string) => void;
         getConfigToSave: () => Omit<ChartConfig, 'id'>;
@@ -46,6 +48,7 @@ export const useChartFormState = ({
     const [selectedLabels, setSelectedLabels] = useState<
         Record<string, string[]>
     >(initialConfig?.selectedLabels || {});
+    const [showRate, setShowRate] = useState(initialConfig?.showRate || false);
 
     const {
         data: { labels: currentAvailableLabels },
@@ -54,6 +57,7 @@ export const useChartFormState = ({
             ? {
                   series: selectedSeries,
                   range: selectedRange,
+                  showRate,
               }
             : undefined,
     );
@@ -65,12 +69,14 @@ export const useChartFormState = ({
             setSelectedRange(initialConfig.selectedRange);
             setBeginAtZero(initialConfig.beginAtZero);
             setSelectedLabels(initialConfig.selectedLabels);
+            setShowRate(initialConfig.showRate || false);
         } else if (open && !initialConfig) {
             setTitle('');
             setSelectedSeries('');
             setSelectedRange('day');
             setBeginAtZero(false);
             setSelectedLabels({});
+            setShowRate(false);
         }
     }, [open, initialConfig]);
 
@@ -85,6 +91,7 @@ export const useChartFormState = ({
         selectedRange,
         beginAtZero,
         selectedLabels,
+        showRate,
     });
 
     const isValid = selectedSeries.length > 0;
@@ -95,6 +102,7 @@ export const useChartFormState = ({
             selectedSeries,
             selectedRange,
             beginAtZero,
+            showRate,
             selectedLabels,
         },
         actions: {
@@ -102,6 +110,7 @@ export const useChartFormState = ({
             setSelectedSeries,
             setSelectedRange,
             setBeginAtZero,
+            setShowRate,
             setSelectedLabels,
             handleSeriesChange,
             getConfigToSave,

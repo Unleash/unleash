@@ -72,7 +72,6 @@ export class FeatureLifecycleService {
 
     listen() {
         this.eventStore.on(FEATURE_ENVIRONMENT_ENABLED, async (event) => {
-            // @ts-expect-error
             if (this.flagResolver.isEnabled('paygTrialEvents')) {
                 const envName = event.environment;
                 const environment = await this.environmentStore.get(envName);
@@ -94,7 +93,6 @@ export class FeatureLifecycleService {
         this.eventBus.on(
             CLIENT_METRICS, // or CLIENT_METRICS_ADDED? 🤷
             async (event) => {
-                // @ts-expect-error
                 if (this.flagResolver.isEnabled('paygTrialEvents')) {
                     // todo: report to HS
                 }

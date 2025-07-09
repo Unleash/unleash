@@ -58,6 +58,7 @@ process.nextTick(async () => {
                         impactMetrics: true,
                         crDiffView: true,
                         eventGrouping: true,
+                        paygTrialEvents: true,
                     },
                 },
                 authentication: {

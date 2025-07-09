@@ -63,6 +63,7 @@ export type IFlagKey =
     | 'improvedJsonDiff'
     | 'crDiffView'
     | 'changeRequestApproverEmails'
+    | 'paygTrialEvents'
     | 'eventGrouping';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -294,6 +295,10 @@ const flags: IFlags = {
     ),
     eventGrouping: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EVENT_GROUPING,
+        false,
+    ),
+    paygTrialEvents: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PAYG_TRIAL_EVENTS,
         false,
     ),
 };

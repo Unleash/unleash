@@ -14,14 +14,14 @@ import type VersionService from './version-service.js';
 
 type FlagEnabledEvent = {
     email: string;
-    client_id: string;
+    // client_id: string; needs to be populated by auth app
     date: string;
     project: string;
     environment_type: string;
 };
 
 type SdkConnectedEvent = {
-    client_id: string;
+    // client_id: string; needs to be populated by auth app
     date: string;
     sdk: string; // the same thing we report via the unleash-sdk header, e.g. unleash-client-js:1.0.0
     app_name: string;

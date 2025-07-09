@@ -1,6 +1,7 @@
 ---
-title: How to implement user management, access controls, and auditing with feature flags
+title: Implement user management, access controls, and auditing with feature flags
 slug: /feature-flag-tutorials/use-cases/user-management-access-controls-auditing
+pagination_next: feature-flag-tutorials/use-cases/security-compliance
 ---
 
 Feature flags are a game-changer for how software teams build, test, and release products. They enable you to roll out new features with confidence, manage risk, and keep your software development agile and secure.

@@ -10,8 +10,8 @@ Unleash provides a set of APIs to give you full programmatic control over your f
 
 | API            | Used by | Primary use case |
 |---------------|---------|---|
-| **Client API** | Server-side SDKs | Fetch all feature flag configurations. |
-| **Frontend API** | Client-side SDKs | Fetch evaluated feature flags for a specific [Unleash Context](/reference/unleash-context). |
+| **Client API** | Server-side SDKs | Fetch feature flag configurations. |
+| **Frontend API** | Client-side SDKs | Fetch enabled feature flags for a specific [Unleash Context](/reference/unleash-context). |
 | **Admin API** | [Admin UI](#the-unleash-admin-ui), internal tooling, and third-party [integrations](/reference/integrations) | Access and manage all resources within Unleash, such as context, environments, events, metrics, and users. |
 
 ## API authentication and tokens
@@ -21,8 +21,8 @@ All Unleash APIs require authentication using an [API token](/reference/api-toke
 ### Token types
 
 Unleash supports four types of API tokens:
-- **Client tokens**: Used to connect server-side SDKs, Unleash Edge, and the Unleash Proxy to the Client API. They are typically scoped to a specific project and environment.
-- **Frontend tokens**: Used to connect client-side SDKs to the Frontend API or Unleash Edge. These tokens are designed to be publicly accessible and have limited permissions.
+- **Client tokens**: Used to connect server-side SDKs, Unleash Edge, and the Unleash Proxy to the Client API. Can be scoped to a specific project and environment.
+- **Frontend tokens**: Used to connect client-side SDKs to the Frontend API or Unleash Edge. These tokens are designed to be publicly accessible and have limited permissions. Can be scoped to a specific project and environment.
 - **Personal access tokens**: Tied to a specific user account. They are useful for testing, debugging, or providing temporary access to tools and scripts that need to interact with the Admin API.
 - **Service account tokens**: The recommended method for providing API access to integrations, automation tools, and other non-human users. Service accounts provide a more secure and manageable way to grant Admin API access.
 
@@ -36,7 +36,7 @@ Ensure that the client token has access to the same project and environment (or 
 
 ### Create an API token
 
-Depending on your permissions, you can create API tokens in the Unleash Admin UI in three ways:
+Depending on your permissions, you can create API tokens in the Unleash Admin UI in four ways:
 
 - **Admin settings > Access control > API access**: for client or frontend tokens; requires the Admin root role, or a custom root role with API token permissions.
 - **Admin settings > Service accounts > New service account**: for creating a service account and assigning a token.

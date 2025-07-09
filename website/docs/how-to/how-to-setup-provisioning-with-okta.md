@@ -1,6 +1,6 @@
 ---
 title: Set up Okta provisioning
-pagination_next: how-to/how-to-setup-provisioning-with-okta
+pagination_next: how-to/how-to-setup-provisioning-with-entra
 ---
 
 :::note Availability

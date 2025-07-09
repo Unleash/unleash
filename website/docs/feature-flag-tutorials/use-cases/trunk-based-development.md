@@ -1,5 +1,5 @@
 ---
-title: How to do trunk-based development using feature flags
+title: Implement trunk-based development using feature flags
 slug: /feature-flag-tutorials/use-cases/trunk-based-development
 ---
 

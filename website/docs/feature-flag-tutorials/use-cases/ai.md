@@ -1,6 +1,5 @@
 ---
-title: How to use feature flags with AI
-slug: /feature-flag-tutorials/use-cases/ai
+title: Experiment with AI using feature flags
 ---
 
 Hello,

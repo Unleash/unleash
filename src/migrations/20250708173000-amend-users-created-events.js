@@ -7,6 +7,7 @@ exports.up = function(db, cb) {
       'user-created' AS type,
       json_build_object(
         'id', u.id,
+        'name', u.name,
         'email', u.email
       )::jsonb AS data,
       true AS announced
@@ -28,7 +29,9 @@ exports.up = function(db, cb) {
       console.log('Error inserting user-created events:', err);
       return cb(err);
     }
-    console.log('Inserted user-created events:', results.results.);
+    if (results.rowCount){
+      console.log('Amended user-created event log. Number of new records:', results.rowCount);
+    }
     cb();
   });
 };

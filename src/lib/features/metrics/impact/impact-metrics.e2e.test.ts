@@ -111,9 +111,15 @@ test('should store impact metrics in memory and be able to retrieve them', async
 
     const metricsText = response.text;
 
-    expect(metricsText).toContain('# HELP labeled_counter with labels');
-    expect(metricsText).toContain('# TYPE labeled_counter counter');
-    expect(metricsText).toMatch(/labeled_counter{foo="bar"} 15/);
+    expect(metricsText).toContain(
+        '# HELP unleash_counter_labeled_counter with labels',
+    );
+    expect(metricsText).toContain(
+        '# TYPE unleash_counter_labeled_counter counter',
+    );
+    expect(metricsText).toMatch(
+        /unleash_counter_labeled_counter{foo="bar"} 15/,
+    );
 });
 
 test('should store impact metrics sent via bulk metrics endpoint', async () => {
@@ -155,8 +161,12 @@ test('should store impact metrics sent via bulk metrics endpoint', async () => {
     const metricsText = response.text;
 
     expect(metricsText).toContain(
-        '# HELP bulk_counter bulk counter with labels',
+        '# HELP unleash_counter_bulk_counter bulk counter with labels',
     );
-    expect(metricsText).toContain('# TYPE bulk_counter counter');
-    expect(metricsText).toMatch(/bulk_counter{source="bulk"} 15/);
+    expect(metricsText).toContain(
+        '# TYPE unleash_counter_bulk_counter counter',
+    );
+    expect(metricsText).toMatch(
+        /unleash_counter_bulk_counter{source="bulk"} 15/,
+    );
 });

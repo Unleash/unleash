@@ -31,7 +31,8 @@ export class MetricsTranslator {
     }
 
     translateMetric(metric: Metric): Counter<string> | Gauge<string> | null {
-        const existingMetric = this.registry.getSingleMetric(metric.name);
+        const prefixedName = `unleash_${metric.type}_${metric.name}`;
+        const existingMetric = this.registry.getSingleMetric(prefixedName);
 
         const allLabelNames = new Set<string>();
         for (const sample of metric.samples) {
@@ -48,10 +49,10 @@ export class MetricsTranslator {
 
             if (existingMetric && existingMetric instanceof Counter) {
                 if (this.hasNewLabels(existingMetric, labelNames)) {
-                    this.registry.removeSingleMetric(metric.name);
+                    this.registry.removeSingleMetric(prefixedName);
 
                     counter = new Counter({
-                        name: metric.name,
+                        name: prefixedName,
                         help: metric.help,
                         registers: [this.registry],
                         labelNames,
@@ -61,7 +62,7 @@ export class MetricsTranslator {
                 }
             } else {
                 counter = new Counter({
-                    name: metric.name,
+                    name: prefixedName,
                     help: metric.help,
                     registers: [this.registry],
                     labelNames,
@@ -82,10 +83,10 @@ export class MetricsTranslator {
 
             if (existingMetric && existingMetric instanceof Gauge) {
                 if (this.hasNewLabels(existingMetric, labelNames)) {
-                    this.registry.removeSingleMetric(metric.name);
+                    this.registry.removeSingleMetric(prefixedName);
 
                     gauge = new Gauge({
-                        name: metric.name,
+                        name: prefixedName,
                         help: metric.help,
                         registers: [this.registry],
                         labelNames,
@@ -95,7 +96,7 @@ export class MetricsTranslator {
                 }
             } else {
                 gauge = new Gauge({
-                    name: metric.name,
+                    name: prefixedName,
                     help: metric.help,
                     registers: [this.registry],
                     labelNames,

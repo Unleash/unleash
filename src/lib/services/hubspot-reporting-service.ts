@@ -10,18 +10,19 @@ import type {
     IEventStore,
     IEnvironmentStore,
 } from '../types/index.js';
+import type VersionService from './version-service.js';
 
 type FlagEnabledEvent = {
     email: string;
     client_id: string;
-    date: Date;
+    date: string;
     project: string;
     environment_type: string;
 };
 
 type SdkConnectedEvent = {
     client_id: string;
-    date: Date;
+    date: string;
     sdk: string; // the same thing we report via the unleash-sdk header, e.g. unleash-client-js:1.0.0
     app_name: string;
 };
@@ -35,6 +36,8 @@ export class FeatureLifecycleService {
 
     private eventBus: EventEmitter;
 
+    private versionService: VersionService;
+
     private logger: Logger;
 
     constructor(
@@ -44,6 +47,12 @@ export class FeatureLifecycleService {
         }: {
             eventStore: IEventStore;
             environmentStore: IEnvironmentStore;
+        },
+
+        {
+            versionService,
+        }: {
+            versionService: VersionService;
         },
         {
             flagResolver,
@@ -55,6 +64,7 @@ export class FeatureLifecycleService {
         this.environmentStore = environmentStore;
         this.flagResolver = flagResolver;
         this.eventBus = eventBus;
+        this.versionService = versionService;
         this.logger = getLogger(
             'feature-lifecycle/feature-lifecycle-service.ts',
         );
@@ -62,6 +72,7 @@ export class FeatureLifecycleService {
 
     listen() {
         this.eventStore.on(FEATURE_ENVIRONMENT_ENABLED, async (event) => {
+            // @ts-expect-error
             if (this.flagResolver.isEnabled('paygTrialEvents')) {
                 const envName = event.environment;
                 const environment = await this.environmentStore.get(envName);
@@ -69,9 +80,11 @@ export class FeatureLifecycleService {
                 const environmentType =
                     environment?.type || `Unknown type. Name was ${envName}.`;
 
+                const instanceId = await this.versionService.getInstanceId();
+
                 const hsEvent: FlagEnabledEvent = {
                     email: event.createdBy,
-                    client_id: '', // todo: this.client_id?
+                    client_id: instanceId ?? 'No instance ID',
                     date: event.createdAt,
                     project: event.project,
                     environment_type: environmentType,
@@ -81,6 +94,7 @@ export class FeatureLifecycleService {
         this.eventBus.on(
             CLIENT_METRICS, // or CLIENT_METRICS_ADDED? 🤷
             async (event) => {
+                // @ts-expect-error
                 if (this.flagResolver.isEnabled('paygTrialEvents')) {
                     // todo: report to HS
                 }

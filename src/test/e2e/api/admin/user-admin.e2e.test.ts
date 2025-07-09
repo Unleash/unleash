@@ -84,8 +84,10 @@ describe('Users created without an event are amended', () => {
         await migrateDb(config);
         const eventsPostMigrations = await db('events').select('*');
         expect(eventsPostMigrations.length).toBe(eventsBefore.length + 1);
-        const newEntry = eventsPostMigrations[eventsPostMigrations.length - 1];
-        expect(newEntry).toMatchObject({
+        const userCreatedEvent = eventsPostMigrations.find(
+            (e) => e.type === USER_CREATED && e.data.id === insertedUser.id,
+        );
+        expect(userCreatedEvent).toMatchObject({
             type: 'user-created',
             created_at: new Date('2023-01-01T00:00:00Z'),
             data: {

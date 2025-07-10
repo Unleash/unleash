@@ -9,6 +9,8 @@ import { ChartItem } from './ChartItem.tsx';
 import { GridLayoutWrapper, type GridItem } from './GridLayoutWrapper.tsx';
 import { useImpactMetricsState } from './hooks/useImpactMetricsState.ts';
 import type { ChartConfig, LayoutItem } from './types.ts';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const StyledEmptyState = styled(Paper)(({ theme }) => ({
     textAlign: 'center',
@@ -21,9 +23,18 @@ const StyledEmptyState = styled(Paper)(({ theme }) => ({
 export const ImpactMetrics: FC = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [editingChart, setEditingChart] = useState<ChartConfig | undefined>();
+    const { setToastApiError } = useToast();
 
-    const { charts, layout, addChart, updateChart, deleteChart, updateLayout } =
-        useImpactMetricsState();
+    const {
+        charts,
+        layout,
+        loading: settingsLoading,
+        error: settingsError,
+        addChart,
+        updateChart,
+        deleteChart,
+        updateLayout,
+    } = useImpactMetricsState();
 
     const {
         metadata,
@@ -51,20 +62,39 @@ export const ImpactMetrics: FC = () => {
         setModalOpen(true);
     };
 
-    const handleSaveChart = (config: Omit<ChartConfig, 'id'>) => {
-        if (editingChart) {
-            updateChart(editingChart.id, config);
-        } else {
-            addChart(config);
+    const handleSaveChart = async (config: Omit<ChartConfig, 'id'>) => {
+        try {
+            if (editingChart) {
+                await updateChart(editingChart.id, config);
+            } else {
+                await addChart(config);
+            }
+            setModalOpen(false);
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
         }
-        setModalOpen(false);
     };
 
     const handleLayoutChange = useCallback(
-        (layout: any[]) => {
-            updateLayout(layout as LayoutItem[]);
+        async (layout: any[]) => {
+            try {
+                await updateLayout(layout as LayoutItem[]);
+            } catch (error) {
+                setToastApiError(formatUnknownError(error));
+            }
         },
-        [updateLayout],
+        [updateLayout, setToastApiError],
+    );
+
+    const handleDeleteChart = useCallback(
+        async (id: string) => {
+            try {
+                await deleteChart(id);
+            } catch (error) {
+                console.error('Failed to delete chart:', error);
+            }
+        },
+        [deleteChart],
     );
 
     const gridItems: GridItem[] = useMemo(
@@ -79,7 +109,7 @@ export const ImpactMetrics: FC = () => {
                         <ChartItem
                             config={config}
                             onEdit={handleEditChart}
-                            onDelete={deleteChart}
+                            onDelete={handleDeleteChart}
                         />
                     ),
                     w: existingLayout?.w ?? 6,
@@ -92,10 +122,11 @@ export const ImpactMetrics: FC = () => {
                     maxH: 8,
                 };
             }),
-        [charts, layout, handleEditChart, deleteChart],
+        [charts, layout, handleEditChart, handleDeleteChart],
     );
 
-    const hasError = metadataError;
+    const hasError = metadataError || settingsError;
+    const isLoading = metadataLoading || settingsLoading;
 
     return (
         <>
@@ -111,14 +142,14 @@ export const ImpactMetrics: FC = () => {
                         variant='contained'
                         startIcon={<Add />}
                         onClick={handleAddChart}
-                        disabled={metadataLoading || !!hasError}
+                        disabled={isLoading || !!hasError}
                     >
                         Add Chart
                     </Button>
                 }
             />
 
-            {charts.length === 0 && !metadataLoading && !hasError ? (
+            {charts.length === 0 && !isLoading && !hasError ? (
                 <StyledEmptyState>
                     <Typography variant='h6' gutterBottom>
                         No charts configured
@@ -135,7 +166,7 @@ export const ImpactMetrics: FC = () => {
                         variant='contained'
                         startIcon={<Add />}
                         onClick={handleAddChart}
-                        disabled={metadataLoading || !!hasError}
+                        disabled={isLoading || !!hasError}
                     >
                         Add Chart
                     </Button>
@@ -153,7 +184,7 @@ export const ImpactMetrics: FC = () => {
                 onSave={handleSaveChart}
                 initialConfig={editingChart}
                 metricSeries={metricSeries}
-                loading={metadataLoading}
+                loading={metadataLoading || settingsLoading}
             />
         </>
     );

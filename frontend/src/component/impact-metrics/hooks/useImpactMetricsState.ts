@@ -1,72 +1,40 @@
-import { useCallback, useMemo } from 'react';
-import { withDefault } from 'use-query-params';
-import { usePersistentTableState } from 'hooks/usePersistentTableState';
+import { useCallback } from 'react';
+import { useImpactMetricsSettings } from 'hooks/api/getters/useImpactMetricsSettings/useImpactMetricsSettings.js';
+import {useImpactMetricsSettingsApi} from 'hooks/api/actions/useImpactMetricsSettingsApi/useImpactMetricsSettingsApi.js';
 import type { ChartConfig, ImpactMetricsState, LayoutItem } from '../types.ts';
 
-const createArrayParam = <T>() => ({
-    encode: (items: T[]): string =>
-        items.length > 0 ? btoa(JSON.stringify(items)) : '',
-
-    decode: (value: string | (string | null)[] | null | undefined): T[] => {
-        if (typeof value !== 'string' || !value) return [];
-        try {
-            return JSON.parse(atob(value));
-        } catch {
-            return [];
-        }
-    },
-});
-
-const ChartsParam = createArrayParam<ChartConfig>();
-const LayoutParam = createArrayParam<LayoutItem>();
-
 export const useImpactMetricsState = () => {
-    const stateConfig = {
-        charts: withDefault(ChartsParam, []),
-        layout: withDefault(LayoutParam, []),
-    };
+    const {
+        settings,
+        loading: settingsLoading,
+        error: settingsError,
+        refetch,
+    } = useImpactMetricsSettings();
 
-    const [tableState, setTableState] = usePersistentTableState(
-        'impact-metrics-state',
-        stateConfig,
-    );
-
-    const currentState: ImpactMetricsState = useMemo(
-        () => ({
-            charts: tableState.charts || [],
-            layout: tableState.layout || [],
-        }),
-        [tableState.charts, tableState.layout],
-    );
-
-    const updateState = useCallback(
-        (newState: ImpactMetricsState) => {
-            setTableState({
-                charts: newState.charts,
-                layout: newState.layout,
-            });
-        },
-        [setTableState],
-    );
+    const {
+        updateSettings,
+        loading: actionLoading,
+        errors: actionErrors,
+    } = useImpactMetricsSettingsApi();
 
     const addChart = useCallback(
-        (config: Omit<ChartConfig, 'id'>) => {
+        async (config: Omit<ChartConfig, 'id'>) => {
             const newChart: ChartConfig = {
                 ...config,
                 id: `chart-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
             };
 
             const maxY =
-                currentState.layout.length > 0
+                settings.layout.length > 0
                     ? Math.max(
-                          ...currentState.layout.map((item) => item.y + item.h),
+                          ...settings.layout.map((item) => item.y + item.h),
                       )
                     : 0;
 
-            updateState({
-                charts: [...currentState.charts, newChart],
+            const newState: ImpactMetricsState = {
+                charts: [...settings.charts, newChart],
                 layout: [
-                    ...currentState.layout,
+                    ...settings.layout,
                     {
                         i: newChart.id,
                         x: 0,
@@ -79,46 +47,58 @@ export const useImpactMetricsState = () => {
                         maxH: 8,
                     },
                 ],
-            });
+            };
+
+            await updateSettings(newState);
+            refetch();
         },
-        [currentState.charts, currentState.layout, updateState],
+        [settings, updateSettings, refetch],
     );
 
     const updateChart = useCallback(
-        (id: string, updates: Partial<ChartConfig>) => {
-            updateState({
-                charts: currentState.charts.map((chart) =>
-                    chart.id === id ? { ...chart, ...updates } : chart,
-                ),
-                layout: currentState.layout,
-            });
+        async (id: string, updates: Partial<ChartConfig>) => {
+            const updatedCharts = settings.charts.map((chart) =>
+                chart.id === id ? { ...chart, ...updates } : chart,
+            );
+            const newState: ImpactMetricsState = {
+                charts: updatedCharts,
+                layout: settings.layout,
+            };
+            await updateSettings(newState);
+            refetch();
         },
-        [currentState.charts, currentState.layout, updateState],
+        [settings, updateSettings, refetch],
     );
 
     const deleteChart = useCallback(
-        (id: string) => {
-            updateState({
-                charts: currentState.charts.filter((chart) => chart.id !== id),
-                layout: currentState.layout.filter((item) => item.i !== id),
-            });
+        async (id: string) => {
+            const newState: ImpactMetricsState = {
+                charts: settings.charts.filter((chart) => chart.id !== id),
+                layout: settings.layout.filter((item) => item.i !== id),
+            };
+            await updateSettings(newState);
+            refetch();
         },
-        [currentState.charts, currentState.layout, updateState],
+        [settings, updateSettings, refetch],
     );
 
     const updateLayout = useCallback(
-        (newLayout: LayoutItem[]) => {
-            updateState({
-                charts: currentState.charts,
+        async (newLayout: LayoutItem[]) => {
+            const newState: ImpactMetricsState = {
+                charts: settings.charts,
                 layout: newLayout,
-            });
+            };
+            await updateSettings(newState);
+            refetch();
         },
-        [currentState.charts, updateState],
+        [settings, updateSettings, refetch],
     );
 
     return {
-        charts: currentState.charts || [],
-        layout: currentState.layout || [],
+        charts: settings.charts || [],
+        layout: settings.layout || [],
+        loading: settingsLoading || actionLoading,
+        error: settingsError || Object.keys(actionErrors).length > 0 ? actionErrors : undefined,
         addChart,
         updateChart,
         deleteChart,

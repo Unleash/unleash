@@ -14,7 +14,7 @@ export const useImpactMetricsSettingsApi = () => {
                 path,
                 {
                     method: 'PUT',
-                    body: JSON.stringify(settings)
+                    body: JSON.stringify(settings),
                 },
                 'updateImpactMetricsSettings',
             );

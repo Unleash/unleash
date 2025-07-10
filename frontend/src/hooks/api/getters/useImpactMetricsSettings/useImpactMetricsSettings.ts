@@ -4,10 +4,10 @@ import type { ImpactMetricsState } from 'component/impact-metrics/types.ts';
 
 export const useImpactMetricsSettings = () => {
     const PATH = `api/admin/impact-metrics/settings`;
-    const { data, refetch, loading, error } =
-        useApiGetter<ImpactMetricsState>(formatApiPath(PATH), () =>
-            fetcher(formatApiPath(PATH), 'Impact metrics settings'),
-        );
+    const { data, refetch, loading, error } = useApiGetter<ImpactMetricsState>(
+        formatApiPath(PATH),
+        () => fetcher(formatApiPath(PATH), 'Impact metrics settings'),
+    );
 
     return {
         settings: data || { charts: [], layout: [] },

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useImpactMetricsSettings } from 'hooks/api/getters/useImpactMetricsSettings/useImpactMetricsSettings.js';
-import {useImpactMetricsSettingsApi} from 'hooks/api/actions/useImpactMetricsSettingsApi/useImpactMetricsSettingsApi.js';
+import { useImpactMetricsSettingsApi } from 'hooks/api/actions/useImpactMetricsSettingsApi/useImpactMetricsSettingsApi.js';
 import type { ChartConfig, ImpactMetricsState, LayoutItem } from '../types.ts';
 
 export const useImpactMetricsState = () => {
@@ -98,7 +98,10 @@ export const useImpactMetricsState = () => {
         charts: settings.charts || [],
         layout: settings.layout || [],
         loading: settingsLoading || actionLoading,
-        error: settingsError || Object.keys(actionErrors).length > 0 ? actionErrors : undefined,
+        error:
+            settingsError || Object.keys(actionErrors).length > 0
+                ? actionErrors
+                : undefined,
         addChart,
         updateChart,
         deleteChart,

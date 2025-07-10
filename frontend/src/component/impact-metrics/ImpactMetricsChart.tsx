@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from 'react';
 import { useMemo } from 'react';
-import { Alert } from '@mui/material';
+import { Alert, Box, Typography } from '@mui/material';
 import {
     LineChart,
     NotEnoughData,
@@ -16,11 +16,13 @@ type ImpactMetricsChartProps = {
     selectedRange: 'hour' | 'day' | 'week' | 'month';
     selectedLabels: Record<string, string[]>;
     beginAtZero: boolean;
+    showRate?: boolean;
     aspectRatio?: number;
     overrideOptions?: Record<string, unknown>;
     errorTitle?: string;
     emptyDataDescription?: string;
     noSeriesPlaceholder?: ReactNode;
+    isPreview?: boolean;
 };
 
 export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
@@ -28,14 +30,16 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
     selectedRange,
     selectedLabels,
     beginAtZero,
+    showRate,
     aspectRatio,
     overrideOptions = {},
-    errorTitle = 'Failed to load impact metrics. Please check if Prometheus is configured and the feature flag is enabled.',
+    errorTitle = 'Failed to load impact metrics.',
     emptyDataDescription = 'Send impact metrics using Unleash SDK and select data series to view the chart.',
     noSeriesPlaceholder,
+    isPreview,
 }) => {
     const {
-        data: { start, end, series: timeSeriesData },
+        data: { start, end, series: timeSeriesData, debug },
         loading: dataLoading,
         error: dataError,
     } = useImpactMetricsData(
@@ -43,6 +47,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
             ? {
                   series: selectedSeries,
                   range: selectedRange,
+                  showRate,
                   labels:
                       Object.keys(selectedLabels).length > 0
                           ? selectedLabels
@@ -113,13 +118,14 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                   y: {
                       beginAtZero,
                       title: {
-                          display: false,
+                          display: !!showRate,
+                          text: showRate ? 'Rate per second' : '',
                       },
                       ticks: {
                           precision: 0,
                           callback: (value: unknown): string | number =>
                               typeof value === 'number'
-                                  ? formatLargeNumbers(value)
+                                  ? `${formatLargeNumbers(value)}${showRate ? '/s' : ''}`
                                   : (value as number),
                       },
                   },
@@ -143,13 +149,46 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
 
     return (
         <>
-            {hasError ? <Alert severity='error'>{errorTitle}</Alert> : null}
-            <LineChart
-                data={notEnoughData || isLoading ? placeholderData : data}
-                aspectRatio={aspectRatio}
-                overrideOptions={chartOptions}
-                cover={cover}
-            />
+            <Box
+                sx={
+                    !isPreview
+                        ? {
+                              height: '100%',
+                              width: '100%',
+                              '& > div': {
+                                  height: '100% !important',
+                                  width: '100% !important',
+                              },
+                          }
+                        : {}
+                }
+            >
+                <LineChart
+                    data={notEnoughData || isLoading ? placeholderData : data}
+                    aspectRatio={aspectRatio}
+                    overrideOptions={chartOptions}
+                    cover={
+                        hasError ? (
+                            <Alert severity='error'>{errorTitle}</Alert>
+                        ) : (
+                            cover
+                        )
+                    }
+                />
+            </Box>
+            {isPreview && debug?.query ? (
+                <Box
+                    sx={(theme) => ({
+                        margin: theme.spacing(2),
+                        padding: theme.spacing(2),
+                        background: theme.palette.background.elevation1,
+                    })}
+                >
+                    <Typography variant='caption' color='text.secondary'>
+                        <code>{debug.query}</code>
+                    </Typography>
+                </Box>
+            ) : null}
         </>
     );
 };

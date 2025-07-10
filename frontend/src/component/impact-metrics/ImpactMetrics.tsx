@@ -91,7 +91,7 @@ export const ImpactMetrics: FC = () => {
             try {
                 await deleteChart(id);
             } catch (error) {
-                console.error('Failed to delete chart:', error);
+                setToastApiError(formatUnknownError(error));
             }
         },
         [deleteChart],

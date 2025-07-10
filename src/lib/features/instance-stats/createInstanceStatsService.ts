@@ -10,7 +10,7 @@ import {
 import type { IUnleashConfig } from '../../types/index.js';
 import type { Db } from '../../db/db.js';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
-import UserStore from '../../db/user-store.js';
+import { UserStore } from '../users/user-store.js';
 import ProjectStore from '../project/project-store.js';
 import EnvironmentStore from '../project-environments/environment-store.js';
 import StrategyStore from '../../db/strategy-store.js';
@@ -20,7 +20,7 @@ import SegmentStore from '../segment/segment-store.js';
 import RoleStore from '../../db/role-store.js';
 import SettingStore from '../../db/setting-store.js';
 import ClientInstanceStore from '../../db/client-instance-store.js';
-import EventStore from '../events/event-store.js';
+import { EventStore } from '../events/event-store.js';
 import { ApiTokenStore } from '../../db/api-token-store.js';
 import { ClientMetricsStoreV2 } from '../metrics/client-metrics/client-metrics-store-v2.js';
 import VersionService from '../../services/version-service.js';
@@ -57,7 +57,7 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         getLogger,
         flagResolver,
     );
-    const userStore = new UserStore(db, getLogger, flagResolver);
+    const userStore = new UserStore(db, getLogger);
     const projectStore = new ProjectStore(db, eventBus, config);
     const environmentStore = new EnvironmentStore(db, eventBus, config);
     const strategyStore = new StrategyStore(db, getLogger);

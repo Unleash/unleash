@@ -84,8 +84,16 @@ export const projectOverviewSchema = {
         health: {
             type: 'number',
             example: 50,
+            deprecated: true,
+            description: 'Use `technicalDebt` instead.',
+        },
+        technicalDebt: {
+            type: 'number',
+            example: 25,
+            minimum: 0,
+            maximum: 100,
             description:
-                "An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100",
+                "An indicator of the [project's technical debt](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100",
         },
         environments: {
             type: 'array',

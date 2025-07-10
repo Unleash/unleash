@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Lightbulb from '@mui/icons-material/LightbulbOutlined';
 import type { PersonalDashboardProjectDetailsSchemaInsights } from 'openapi';
 import { ActionBox } from './ActionBox.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const PercentageScore = styled('span')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
@@ -57,13 +58,36 @@ const ProjectHealthMessage: FC<{
     insights: PersonalDashboardProjectDetailsSchemaInsights;
     project: string;
 }> = ({ trend, insights, project }) => {
+    const healthToTechDebtEnabled = useUiFlag('healthToTechDebt');
     const { avgHealthCurrentWindow, avgHealthPastWindow, health } = insights;
-    const improveMessage =
-        'Remember to archive your stale feature flags to keep the project health growing.';
+    const improveMessage = healthToTechDebtEnabled
+        ? 'Remember to archive your stale feature flags to keep the technical debt low.'
+        : 'Remember to archive your stale feature flags to keep the project health growing.';
     const keepDoingMessage =
         'This indicates that you are doing a good job of archiving your feature flags.';
+    const avgCurrentTechnicalDebt = 100 - (avgHealthCurrentWindow ?? 0);
+    const avgPastTechnicalDebt = 100 - (avgHealthPastWindow ?? 0);
 
     if (trend === 'improved') {
+        if (healthToTechDebtEnabled) {
+            return (
+                <>
+                    <Typography>
+                        On average, your project technical debt went down from{' '}
+                        <PercentageScore>
+                            {avgPastTechnicalDebt}%
+                        </PercentageScore>{' '}
+                        to{' '}
+                        <PercentageScore>
+                            {avgCurrentTechnicalDebt}%
+                        </PercentageScore>{' '}
+                        during the last 4 weeks.
+                    </Typography>
+                    <Typography>{keepDoingMessage}</Typography>
+                </>
+            );
+        }
+
         return (
             <>
                 <Typography>
@@ -78,6 +102,25 @@ const ProjectHealthMessage: FC<{
     }
 
     if (trend === 'declined') {
+        if (healthToTechDebtEnabled) {
+            return (
+                <>
+                    <Typography>
+                        On average, your project technical debt went up from{' '}
+                        <PercentageScore>
+                            {avgPastTechnicalDebt}%
+                        </PercentageScore>{' '}
+                        to{' '}
+                        <PercentageScore>
+                            {avgCurrentTechnicalDebt}%
+                        </PercentageScore>{' '}
+                        during the last 4 weeks.
+                    </Typography>
+                    <Typography>{improveMessage}</Typography>
+                </>
+            );
+        }
+
         return (
             <>
                 <Typography>
@@ -92,6 +135,21 @@ const ProjectHealthMessage: FC<{
     }
 
     if (trend === 'consistent') {
+        if (healthToTechDebtEnabled) {
+            return (
+                <>
+                    <Typography>
+                        On average, your project technical debt has remained at{' '}
+                        <PercentageScore>
+                            {avgCurrentTechnicalDebt}%
+                        </PercentageScore>{' '}
+                        during the last 4 weeks.
+                    </Typography>
+                    <Typography>{keepDoingMessage}</Typography>
+                </>
+            );
+        }
+
         return (
             <>
                 <Typography>
@@ -109,6 +167,21 @@ const ProjectHealthMessage: FC<{
     }
 
     if (trend === 'unknown') {
+        if (healthToTechDebtEnabled) {
+            return (
+                <>
+                    <Typography>
+                        Your current project technical debt is{' '}
+                        <PercentageScore>
+                            {avgCurrentTechnicalDebt}%
+                        </PercentageScore>
+                        .
+                    </Typography>
+                    <Typography>{improveMessage}</Typography>
+                </>
+            );
+        }
+
         return (
             <>
                 <Typography>
@@ -129,6 +202,7 @@ export const ProjectSetupComplete: FC<{
     project: string;
     insights: PersonalDashboardProjectDetailsSchemaInsights;
 }> = ({ project, insights }) => {
+    const healthToTechDebtEnabled = useUiFlag('healthToTechDebt');
     const projectHealthTrend = determineProjectHealthTrend(insights);
 
     return (
@@ -137,7 +211,9 @@ export const ProjectSetupComplete: FC<{
                 <>
                     <Lightbulb color='primary' />
                     <Typography sx={{ fontWeight: 'bold' }} component='h4'>
-                        Project health
+                        {healthToTechDebtEnabled
+                            ? 'Technical debt'
+                            : 'Project health'}
                     </Typography>
                 </>
             }

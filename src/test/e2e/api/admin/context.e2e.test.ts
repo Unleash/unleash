@@ -5,14 +5,13 @@ import {
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper.js';
 import getLogger from '../../../fixtures/no-logger.js';
+import { DEFAULT_ENV } from '../../../../lib/server-impl.js';
 
 let db: ITestDb;
 let app: IUnleashTest;
 
 beforeAll(async () => {
-    db = await dbInit('context_api_serial', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('context_api_serial', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
         {
@@ -33,13 +32,15 @@ afterAll(async () => {
 
 test('gets all context fields', async () => {
     expect.assertions(1);
-    return app.request
+    const { body } = await app.request
         .get('/api/admin/context')
         .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.length).toBe(3);
-        });
+        .expect(200);
+
+    // because tests share the database, we might have more fields than expected
+    expect(body.map((field) => field.name)).toEqual(
+        expect.arrayContaining(['environment', 'userId', 'sessionId']),
+    );
 });
 
 test('get the context field', async () => {
@@ -194,7 +195,7 @@ test('should not delete a context field that is in use by active flags', async (
         .expect(201);
     await app.request
         .post(
-            `/api/admin/projects/default/features/${feature}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${feature}/environments/${DEFAULT_ENV}/strategies`,
         )
         .send({
             name: 'default',
@@ -297,7 +298,7 @@ test('should show context field usage for active flags', async () => {
         .expect(201);
     await app.request
         .post(
-            `/api/admin/projects/default/features/${feature}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${feature}/environments/${DEFAULT_ENV}/strategies`,
         )
         .send({
             name: 'default',
@@ -327,7 +328,9 @@ test('should show context field usage for active flags', async () => {
 
     expect(body.strategies).toHaveLength(1);
     expect(body).toMatchObject({
-        strategies: [{ environment: 'default', featureName: 'contextFeature' }],
+        strategies: [
+            { environment: DEFAULT_ENV, featureName: 'contextFeature' },
+        ],
     });
 
     const { body: getAllBody } = await app.request

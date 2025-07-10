@@ -6,65 +6,58 @@ import Tabs from '@theme/Tabs';
 
 import TabItem from '@theme/TabItem';
 
-This guide helps you set up Unleash Enterprise in your own environment using [Docker](#set-up-unleash-with-docker). Alternatively, you can sign up for a [cloud-hosted trial instance](https://www.getunleash.io/pricing).
+The easiest way to get started with Unleash is through a [cloud-hosted free trial](https://www.getunleash.io/plans/enterprise-payg). This gives you a ready-to-use instance, so you can explore all Unleash features without any local setup.
 
-If you are looking to set up the open-source version of Unleash, please refer to the instructions in the [Unleash GitHub repository](https://github.com/Unleash/unleash?tab=readme-ov-file#get-started-with-unleash).
+In this guide, you'll:
 
-## Set up Unleash with Docker
+1. **Sign up** for a free, cloud-hosted Unleash Enterprise instance.
 
-To start Unleash locally, clone the Unleash repository and start the server with [Docker Compose](https://docs.docker.com/compose/):
+2. **Create your first feature flag** using the Unleash Admin UI.
 
-```shell
-git clone git@github.com:Unleash/unleash.git
+3. **Connect Unleash to your application** by integrating an SDK into your codebase.
 
-cd unleash
-docker compose -f docker-compose-enterprise.yml up -d
-```
+![The Unleash Admin UI onboarding experience](/img/onboarding-experience.png)
 
-This pulls the `unleashorg/unleash-enterprise` Docker image and uses a Docker Compose file to configure the Unleash server and its database.
+If you prefer to manage your own infrastructure, see the [self-hosted setup guide](./using-unleash/deploy/getting-started). To use the open-source version, see the instructions in the [Unleash GitHub repository](https://github.com/Unleash/unleash?tab=readme-ov-file#get-started-with-unleash).
 
-> This step uses `docker compose` (V2 syntax). If you have the older `docker-compose` (V1), use that command syntax instead.
+## Sign up for an Unleash Enterprise Cloud trial
 
-## Log in to the Unleash Admin UI
+Start by signing up for a [free 14-day trial](https://www.getunleash.io/plans/enterprise-payg) of Unleash Enterprise Cloud.
+After you submit the form, you will receive a confirmation email. Follow the link in the email to set your password and log in to your Unleash instance.
 
-In your browser, go to [http://localhost:4242](http://localhost:4242) and log in using the following credentials:
-- **username**: `admin`
-- **password**: `unleash4all`
+## Create your first feature flag
 
-![Unleash Admin UI log in screen](/img/quickstart-login.png)
+Once you've logged in, it's time to create your first feature flag:
 
-## Install your trial license
-
-Request a license by signing up for a self-hosted trial [here](https://www.getunleash.io/pricing). Once you've signed up, you'll receive an email from Unleash containing your trial license key.
-
-In the Admin UI, go to **Admin settings > Instance config > License**, copy the license key you received by email and click **Update license key**.
-
-The top banner now displays the number of days you have left on your free trial.
-
-![Unleash Admin UI log in screen](/img/quickstart-license.png)
-
-
-## Create your first flag
-
-To create your first flag:
-1. Open the **Default** project.
+1. In the Unleash Admin UI, open the **Default** project.
 2. Click **New feature flag**.
 3. Enter a name, and click **Create feature flag**.
 
 For more details on creating feature flags, see [How to create a feature flag](/how-to-create-feature-flag).
 
-## Connect an SDK
+## Connect your application to Unleash
 
-Next, use one of the client or server-side [SDKs](/reference/sdks) to connect Unleash with your application.
+Next, use one of the client or server-side [SDKs](/reference/sdks) to connect Unleash with your application. 
 
+<details>
+  <summary>Need an example application to test with?</summary>
+
+    Explore our SDK examples directly in your browser with CodeSandbox. Check out the [Unleash SDK Examples](https://github.com/Unleash/unleash-sdk-examples) repository to try one now.
+</details>
 
 <Tabs groupId="connect-sdk-quickstart">
 
 <TabItem value="sdk-client-side" label="Connect a client-side SDK">
 
-1. Create a [frontend API token](/reference/api-tokens-and-client-keys#frontend-tokens). 
-2. Determine your Unleash URL, for example: `http://localhost:4242/api/frontend`. 
-3. Use the SDK to connect to Unleash in your application.
+1. **Create an API token**
+
+    In the Unleash Admin UI, create a [frontend API token](/reference/api-tokens-and-client-keys#frontend-tokens) in **Admin settings > Access control > API access**. 
+2. **Get your Unleash API URL**
+
+    Find the base URL of your Unleash Cloud instance (for example, `https://us.app.unleash-hosted.com/some-instance-id`). Your frontend API URL is this base URL with `/api/frontend` appended to it.
+3. **Initialize the SDK**
+    
+    In your application code, initialize the SDK using your API URL and token.
 
 The following example shows how to use the [JavaScript SDK](/reference/sdks/javascript-browser) to connect to your Unleash instance:
 
@@ -72,9 +65,9 @@ The following example shows how to use the [JavaScript SDK](/reference/sdks/java
 import { UnleashClient } from "unleash-proxy-client";
 
 const unleash = new UnleashClient({
-    url: "https://<your-unleash-instance>/api/frontend",
-    clientKey: "<your-token>",
-    appName: "<your-app-name>",
+    url: "https://<YOUR_UNLEASH_INSTANCE>/api/frontend",
+    clientKey: "<YOUR_TOKEN>",
+    appName: "<YOUR_APP_NAME>",
 });
 
 unleash.on("synchronized", () => {
@@ -90,9 +83,15 @@ unleash.on("synchronized", () => {
 </TabItem>
 <TabItem value="sdk-server-side" label="Connect a server-side SDK">
 
-1. Create a [client API token](/reference/api-tokens-and-client-keys#client-tokens).
-2. Determine your Unleash URL, for example: `http://localhost:4242/api`.
-3. Use the SDK to connect to Unleash in your application.
+1. **Create an API token**
+
+    In the Unleash Admin UI, create a [client API token](/reference/api-tokens-and-client-keys#client-tokens) in **Admin settings > Access control > API access**. 
+2. **Get your Unleash API URL**
+
+    Find the base URL of your Unleash Cloud instance (for example, `https://us.app.unleash-hosted.com/some-instance-id`). Your API URL is this base URL with `/api` appended to it.
+3. **Initialize the SDK**
+
+    In your application code, initialize the SDK using your API URL and token.
 
 The following example shows how to use the [Node.js SDK](/reference/sdks/node) to connect to your Unleash instance:
 
@@ -100,10 +99,10 @@ The following example shows how to use the [Node.js SDK](/reference/sdks/node) t
 const { initialize } = require("unleash-client");
 
 const unleash = initialize({
-    url: "https://<your-unleash-instance>/api",
-    appName: "<your-app-name>",
+    url: "https://<YOUR_UNLEASH_INSTANCE>/api",
+    appName: "<YOUR_APP_NAME>",
     customHeaders: {
-        Authorization: "<your-token>",
+        Authorization: "<YOUR_TOKEN>",
     },
 });
 
@@ -119,8 +118,13 @@ unleash.on("synchronized", () => {
 </TabItem>
 </Tabs>
 
+For examples that show how to connect to Unleash in other programming languages, see the [Unleash SDK Examples repository](https://github.com/Unleash/unleash-sdk-examples).
+
+
 ## Next steps
 
-Check out our reference documentation that explains the [Unleash architecture](/understanding-unleash/unleash-overview), the different [hosting options](/understanding-unleash/hosting-options) available, and other [core concepts](/reference) you need to get the most out of Unleash. 
+You have successfully connected Unleash to your application. To continue exploring, see the following resources:
 
-Explore feature flag best practices and language-specific tutorials in our [developer guides](/topics).
+- **Core concepts**: Learn about the [Unleash architecture](/understanding-unleash/unleash-overview), available [hosting options](/understanding-unleash/hosting-options), and other [reference documentation](/reference).
+- **Developer guides**: Explore feature flag [best practices](/topics/feature-flags/feature-flag-best-practices) and [language-specific tutorials](/feature-flag-tutorials/react).
+- **Join the community**: Have questions or feedback? Join the [Unleash community on Slack](https://slack.unleash.run) to connect with other developers and the Unleash team.

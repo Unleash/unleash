@@ -23,6 +23,9 @@ import {
     PROJECT_ARCHIVED,
     PROJECT_REVIVED,
     PROJECT_DELETED,
+    RELEASE_PLAN_ADDED,
+    RELEASE_PLAN_REMOVED,
+    RELEASE_PLAN_MILESTONE_STARTED,
 } from './events/index.js';
 import type { IUnleashConfig } from './types/option.js';
 import type { IUnleashStores } from './types/stores.js';
@@ -38,6 +41,10 @@ import {
 import type { SchedulerService } from './services/index.js';
 import type { IClientMetricsEnv } from './features/metrics/client-metrics/client-metrics-store-v2-type.js';
 import { DbMetricsMonitor } from './metrics-gauge.js';
+import {
+    HEAP_MEMORY_TOTAL,
+    REQUEST_COUNT,
+} from './features/metrics/impact/define-impact-metrics.js';
 
 export function registerPrometheusPostgresMetrics(
     db: Knex,
@@ -661,10 +668,7 @@ export function registerPrometheusMetrics(
         help: 'Count most popular domains used in feature links',
         labelNames: ['domain'],
         query: () => {
-            if (flagResolver.isEnabled('featureLinks')) {
-                return stores.featureLinkReadModel.getTopDomains();
-            }
-            return Promise.resolve([]);
+            return stores.featureLinkReadModel.getTopDomains();
         },
         map: (result) =>
             result.map(({ domain, count }) => ({
@@ -788,6 +792,7 @@ export function registerPrometheusMetrics(
                     appName,
                 })
                 .observe(time);
+            config.flagResolver.impactMetrics?.incrementCounter(REQUEST_COUNT);
         },
     );
 
@@ -902,8 +907,8 @@ export function registerPrometheusMetrics(
         featureFlagUpdateTotal.increment({
             toggle: featureName,
             project,
-            environment: 'default',
-            environmentType: 'production',
+            environment: 'n/a',
+            environmentType: 'n/a',
             action: 'updated',
         });
     });
@@ -1005,6 +1010,58 @@ export function registerPrometheusMetrics(
             action: 'revived',
         });
     });
+
+    eventStore.on(
+        RELEASE_PLAN_ADDED,
+        async ({ featureName, project, environment }) => {
+            const environmentType = await resolveEnvironmentType(
+                environment,
+                cachedEnvironments,
+            );
+            featureFlagUpdateTotal.increment({
+                toggle: featureName,
+                project,
+                environment,
+                environmentType,
+                action: 'updated',
+            });
+        },
+    );
+
+    eventStore.on(
+        RELEASE_PLAN_REMOVED,
+        async ({ featureName, project, environment }) => {
+            const environmentType = await resolveEnvironmentType(
+                environment,
+                cachedEnvironments,
+            );
+            featureFlagUpdateTotal.increment({
+                toggle: featureName,
+                project,
+                environment,
+                environmentType,
+                action: 'updated',
+            });
+        },
+    );
+
+    eventStore.on(
+        RELEASE_PLAN_MILESTONE_STARTED,
+        async ({ featureName, project, environment }) => {
+            const environmentType = await resolveEnvironmentType(
+                environment,
+                cachedEnvironments,
+            );
+            featureFlagUpdateTotal.increment({
+                toggle: featureName,
+                project,
+                environment,
+                environmentType,
+                action: 'updated',
+            });
+        },
+    );
+
     eventStore.on(PROJECT_CREATED, () => {
         projectActionsCounter.increment({ action: PROJECT_CREATED });
     });
@@ -1085,6 +1142,10 @@ export function registerPrometheusMetrics(
         collectAggDbMetrics: dbMetrics.refreshMetrics,
         collectStaticCounters: async () => {
             try {
+                config.flagResolver.impactMetrics?.updateGauge(
+                    HEAP_MEMORY_TOTAL,
+                    process.memoryUsage().heapUsed,
+                );
                 featureTogglesArchivedTotal.reset();
                 featureTogglesArchivedTotal.set(
                     await instanceStatsService.getArchivedToggleCount(),

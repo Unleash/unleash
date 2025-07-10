@@ -56,6 +56,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
 }) => {
     const { isEnterprise } = useUiConfig();
     const signalsEnabled = useUiFlag('signals');
+    const filtered = providers?.filter((provider) => !provider.deprecated);
 
     const customProviders = [JIRA_INFO];
     const serverSdks = OFFICIAL_SDKS.filter((sdk) => sdk.type === 'server');
@@ -74,7 +75,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                     </Typography>
                 </div>
                 <StyledCardsGrid>
-                    {providers
+                    {filtered
                         ?.sort(
                             (a, b) =>
                                 a.displayName?.localeCompare(b.displayName) ||

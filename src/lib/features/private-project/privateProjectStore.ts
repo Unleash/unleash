@@ -39,6 +39,20 @@ class PrivateProjectStore implements IPrivateProjectStore {
                 'roles.name': 'Viewer',
                 'roles.type': 'root',
             })
+            .whereNotExists((builder) => {
+                builder
+                    .select('*')
+                    .from('group_user')
+                    .join('groups', 'group_user.group_id', 'groups.id')
+                    .join(
+                        'roles as group_roles',
+                        'groups.root_role_id',
+                        'group_roles.id',
+                    )
+                    .whereRaw('group_user.user_id = role_user.user_id')
+                    .whereIn('group_roles.name', ['Admin', 'Editor'])
+                    .andWhere('group_roles.type', 'root');
+            })
             .count('*')
             .then((res) => Number(res[0].count));
 

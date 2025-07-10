@@ -78,7 +78,7 @@ export interface ILoginUserRequest {
 const saltRounds = 10;
 const disallowNPreviousPasswords = 5;
 
-class UserService {
+export class UserService {
     private logger: Logger;
 
     private store: IUserStore;
@@ -403,14 +403,26 @@ class UserService {
     }
 
     async deleteScimUsers(auditUser: IAuditUser): Promise<void> {
-        await this.store.deleteScimUsers();
-
-        await this.eventService.storeEvent(
-            new ScimUsersDeleted({
-                data: null,
-                auditUser,
-            }),
+        const users = await this.store.deleteScimUsers();
+        // Note: after deletion we can't get the role for the user. This is a simplification
+        const viewerRole = await this.accessService.getPredefinedRole(
+            RoleName.VIEWER,
         );
+        if (users.length > 0) {
+            const deletions = users.map((user) => {
+                return new UserDeletedEvent({
+                    deletedUser: { ...user, rootRole: viewerRole.id },
+                    auditUser,
+                });
+            });
+            await this.eventService.storeEvents([
+                ...deletions,
+                new ScimUsersDeleted({
+                    data: null,
+                    auditUser,
+                }),
+            ]);
+        }
     }
 
     async loginUser(

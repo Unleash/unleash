@@ -1,20 +1,18 @@
-import type { FC } from 'react';
+import type { ComponentProps, FC } from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
 import type { NavigationMode } from './NavigationMode.tsx';
 import {
     ExternalFullListItem,
-    FullListItem,
-    MiniListItem,
+    MenuListItem,
     SignOutItem,
 } from './ListItems.tsx';
-import { Box, List, Typography } from '@mui/material';
+import { Box, List } from '@mui/material';
 import { IconRenderer } from './IconRenderer.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import FlagIcon from '@mui/icons-material/OutlinedFlag';
-import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
-import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 import { AdminMenuNavigation } from '../AdminMenu/AdminNavigationItems.tsx';
+import { ConfigurationAccordion } from './ConfigurationAccordion.tsx';
+import { useRoutes } from './useRoutes.ts';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 export const OtherLinksList = () => {
@@ -36,106 +34,48 @@ export const OtherLinksList = () => {
     );
 };
 
-export const RecentProjectsList: FC<{
-    projectId: string;
-    projectName: string;
-    mode: NavigationMode;
-    onClick: () => void;
-}> = ({ projectId, projectName, mode, onClick }) => {
-    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
-
-    return (
-        <List>
-            <DynamicListItem
-                href={`/projects/${projectId}`}
-                text={projectName}
-                onClick={onClick}
-                selected={false}
-            >
-                <ProjectIcon />
-            </DynamicListItem>
-        </List>
-    );
-};
-
-export const RecentFlagsList: FC<{
-    flags: { featureId: string; projectId: string }[];
-    mode: NavigationMode;
-    onClick: () => void;
-}> = ({ flags, mode, onClick }) => {
-    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
-
-    return (
-        <List>
-            {flags.map((flag) => (
-                <DynamicListItem
-                    href={`/projects/${flag.projectId}/features/${flag.featureId}`}
-                    text={flag.featureId}
-                    onClick={onClick}
-                    selected={false}
-                    key={flag.featureId}
-                >
-                    <FlagIcon />
-                </DynamicListItem>
-            ))}
-        </List>
-    );
-};
-
 export const PrimaryNavigationList: FC<{
     mode: NavigationMode;
+    setMode: (mode: NavigationMode) => void;
     onClick: (activeItem: string) => void;
     activeItem?: string;
-}> = ({ mode, onClick, activeItem }) => {
-    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
+}> = ({ mode, setMode, onClick, activeItem }) => {
+    const { routes } = useRoutes();
+    const PrimaryListItem = ({
+        href,
+        text,
+    }: Pick<ComponentProps<typeof MenuListItem>, 'href' | 'text'>) => (
+        <MenuListItem
+            href={href}
+            text={text}
+            icon={<IconRenderer path={href} />}
+            onClick={() => onClick(href)}
+            selected={activeItem === href}
+            mode={mode}
+        />
+    );
+
     const { isOss } = useUiConfig();
-    const sideMenuCleanup = useUiFlag('sideMenuCleanup');
+    const impactMetricsEnabled = useUiFlag('impactMetrics');
 
     return (
         <List>
-            <DynamicListItem
-                href='/personal'
-                text='Dashboard'
-                onClick={() => onClick('/personal')}
-                selected={activeItem === '/personal'}
-            >
-                <IconRenderer path='/personal' />
-            </DynamicListItem>
-
-            <DynamicListItem
-                href='/projects'
-                text='Projects'
-                onClick={() => onClick('/projects')}
-                selected={activeItem === '/projects'}
-            >
-                <IconRenderer path='/projects' />
-            </DynamicListItem>
-            <DynamicListItem
-                href='/search'
-                text='Flags overview'
-                onClick={() => onClick('/search')}
-                selected={activeItem === '/search'}
-            >
-                <IconRenderer path='/search' />
-            </DynamicListItem>
-            <DynamicListItem
-                href='/playground'
-                text='Playground'
-                onClick={() => onClick('/playground')}
-                selected={activeItem === '/playground'}
-            >
-                <IconRenderer path='/playground' />
-            </DynamicListItem>
+            <PrimaryListItem href='/personal' text='Dashboard' />
+            <PrimaryListItem href='/projects' text='Projects' />
+            <PrimaryListItem href='/search' text='Flags overview' />
+            <PrimaryListItem href='/playground' text='Playground' />
             {!isOss() ? (
-                <DynamicListItem
-                    href='/insights'
-                    text={sideMenuCleanup ? 'Analytics' : 'Insights'}
-                    onClick={() => onClick('/insights')}
-                    selected={activeItem === '/insights'}
-                >
-                    <IconRenderer path='/insights' />
-                </DynamicListItem>
+                <PrimaryListItem href='/insights' text='Analytics' />
             ) : null}
+            {!isOss() && impactMetricsEnabled ? (
+                <PrimaryListItem href='/impact-metrics' text='Impact Metrics' />
+            ) : null}
+            <ConfigurationAccordion
+                mode={mode}
+                setMode={setMode}
+                activeItem={activeItem}
+                onClick={() => onClick('configure')}
+            />
         </List>
     );
 };
@@ -173,71 +113,16 @@ export const AdminSettingsNavigation: FC<{
 export const AdminSettingsLink: FC<{
     mode: NavigationMode;
     onClick: (activeItem: string) => void;
-}> = ({ mode, onClick }) => {
-    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
-    return (
-        <Box>
-            <List>
-                <DynamicListItem
-                    href='/admin'
-                    text='Admin settings'
-                    onClick={() => onClick('/admin')}
-                >
-                    <IconRenderer path='/admin' />
-                </DynamicListItem>
-            </List>
-        </Box>
-    );
-};
-
-export const RecentProjectsNavigation: FC<{
-    mode: NavigationMode;
-    projectId: string;
-    onClick: () => void;
-}> = ({ mode, onClick, projectId }) => {
-    const { project, loading } = useProjectOverview(projectId);
-    const projectDeleted = !project.name && !loading;
-
-    if (projectDeleted) return null;
-    return (
-        <Box>
-            {mode === 'full' && (
-                <Typography
-                    sx={{
-                        fontWeight: 'bold',
-                        fontSize: 'small',
-                        ml: 2,
-                        mt: 1.5,
-                    }}
-                >
-                    Recent project
-                </Typography>
-            )}
-            <RecentProjectsList
-                projectId={projectId}
-                projectName={project.name}
+}> = ({ mode, onClick }) => (
+    <Box>
+        <List>
+            <MenuListItem
+                href='/admin'
+                text='Admin settings'
+                onClick={() => onClick('/admin')}
                 mode={mode}
-                onClick={onClick}
+                icon={<IconRenderer path='/admin' />}
             />
-        </Box>
-    );
-};
-
-export const RecentFlagsNavigation: FC<{
-    mode: NavigationMode;
-    flags: { featureId: string; projectId: string }[];
-    onClick: () => void;
-}> = ({ mode, onClick, flags }) => {
-    return (
-        <Box>
-            {mode === 'full' && (
-                <Typography
-                    sx={{ fontWeight: 'bold', fontSize: 'small', ml: 2 }}
-                >
-                    Recent flags
-                </Typography>
-            )}
-            <RecentFlagsList flags={flags} mode={mode} onClick={onClick} />
-        </Box>
-    );
-};
+        </List>
+    </Box>
+);

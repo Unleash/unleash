@@ -49,18 +49,8 @@ export interface UiConfigSchema {
     resourceLimits?: ResourceLimitsSchema;
     /** Whether the SAML configuration is set through environment variables or not. */
     samlConfiguredThroughEnv?: boolean;
-    /**
-     * The maximum number of values that can be used in a single segment.
-     * @deprecated
-     */
-    segmentValuesLimit?: number;
     /** The slogan to display in the UI footer. */
     slogan?: string;
-    /**
-     * The maximum number of segments that can be applied to a single strategy.
-     * @deprecated
-     */
-    strategySegmentsLimit?: number;
     /** The context object used to configure the Unleash instance. */
     unleashContext?: UiConfigSchemaUnleashContext;
     /** The URL of the Unleash instance. */

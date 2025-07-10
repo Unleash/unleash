@@ -15,6 +15,7 @@ import GroupsIcon from '@mui/icons-material/GroupsOutlined';
 import RoleIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import SettingsIcon from '@mui/icons-material/Settings';
 import InsightsIcon from '@mui/icons-material/Insights';
+import ImpactMetricsIcon from '@mui/icons-material/TrendingUpOutlined';
 import ApiAccessIcon from '@mui/icons-material/KeyOutlined';
 import SingleSignOnIcon from '@mui/icons-material/AssignmentOutlined';
 import NetworkIcon from '@mui/icons-material/HubOutlined';
@@ -35,7 +36,7 @@ import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunchOutlined';
-import BuildIcon from '@mui/icons-material/Build';
+import BuildIcon from '@mui/icons-material/BuildOutlined';
 
 // TODO: move to routes
 const icons: Record<
@@ -44,6 +45,7 @@ const icons: Record<
 > = {
     '/search': FlagOutlinedIcon,
     '/insights': InsightsIcon,
+    '/impact-metrics': ImpactMetricsIcon,
     '/applications': ApplicationsIcon,
     '/context': ContextFieldsIcon,
     '/feature-toggle-type': FlagTypesIcon,

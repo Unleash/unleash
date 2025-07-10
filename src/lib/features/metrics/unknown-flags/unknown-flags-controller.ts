@@ -45,7 +45,7 @@ export default class UnknownFlagsController extends Controller {
                     tags: ['Unstable'],
                     summary: 'Get latest reported unknown flag names',
                     description:
-                        'Returns a list of unknown flag names reported in the last 24 hours, if any. Maximum of 10.',
+                        'Returns a list of unknown flag reports from the last 7 days, if any. Maximum of 1000.',
                     responses: {
                         200: createResponseSchema('unknownFlagsResponseSchema'),
                     },
@@ -61,8 +61,15 @@ export default class UnknownFlagsController extends Controller {
         if (!this.flagResolver.isEnabled('reportUnknownFlags')) {
             throw new NotFoundError();
         }
-        const unknownFlags =
-            await this.unknownFlagsService.getGroupedUnknownFlags();
+        const unknownFlags = await this.unknownFlagsService.getAll({
+            limit: 1000,
+            orderBy: [
+                {
+                    column: 'name',
+                    order: 'asc',
+                },
+            ],
+        });
 
         this.openApiService.respondWithValidation(
             200,

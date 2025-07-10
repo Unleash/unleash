@@ -463,14 +463,6 @@ export class AccessService {
         return this.store.updateUserProjectRole(userId, roleId, projectId);
     }
 
-    async updateGroupProjectRole(
-        userId: number,
-        roleId: number,
-        projectId: string,
-    ): Promise<void> {
-        return this.store.updateGroupProjectRole(userId, roleId, projectId);
-    }
-
     //This actually only exists for testing purposes
     async addPermissionToRole(
         roleId: number,

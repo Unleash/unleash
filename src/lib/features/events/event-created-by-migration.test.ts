@@ -1,4 +1,4 @@
-import EventStore from './event-store.js';
+import { EventStore } from './event-store.js';
 import getLogger from '../../../test/fixtures/no-logger.js';
 import dbInit, {
     type ITestDb,
@@ -8,6 +8,7 @@ import type { IUnleashConfig } from '../../types/index.js';
 import { createTestConfig } from '../../../test/config/test-config.js';
 import { createEventsService } from './createEventsService.js';
 import EventEmitter from 'node:events';
+import { DEFAULT_ENV } from '../../server-impl.js';
 
 let db: ITestDb;
 
@@ -62,7 +63,7 @@ test('sets created_by_user_id on a mix of events and created_bys', async () => {
         secret: 'token1',
         username: 'adm-token',
         type: 'admin',
-        environment: 'default',
+        environment: DEFAULT_ENV,
         token_name: 'admin-token',
     });
 

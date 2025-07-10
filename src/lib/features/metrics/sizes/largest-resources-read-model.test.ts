@@ -6,6 +6,7 @@ import type { IFeatureToggleStore } from '../../feature-toggle/types/feature-tog
 import getLogger from '../../../../test/fixtures/no-logger.js';
 import type { IFeatureStrategiesStore } from '../../feature-toggle/types/feature-toggle-strategies-store-type.js';
 import type { IFeatureStrategy } from '../../../types/index.js';
+import { DEFAULT_ENV } from '../../../server-impl.js';
 
 let db: ITestDb;
 let largestResourcesReadModel: ILargestResourcesReadModel;
@@ -41,7 +42,7 @@ const createFeature = async (config: FeatureConfig) => {
     await featureStrategiesStore.createStrategyFeatureEnv({
         strategyName: 'flexibleRollout',
         projectId: 'default',
-        environment: 'default',
+        environment: DEFAULT_ENV,
         featureName: config.featureName,
         constraints: config.constraints,
         parameters: config.parameters,

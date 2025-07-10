@@ -2,6 +2,7 @@ import { writeHeapSnapshot } from 'v8';
 import { tmpdir } from 'os';
 import { join } from 'path';
 import { register as prometheusRegister } from 'prom-client';
+import { impactRegister } from '../features/metrics/impact/impact-register.js';
 import Controller from './controller.js';
 import type { IUnleashConfig } from '../types/option.js';
 import type { IFlagResolver } from '../types/index.js';
@@ -38,6 +39,14 @@ class BackstageController extends Controller {
                         metricsOutput = `${metricsOutput}\n${customMetrics}`;
                     }
                 }
+
+                res.end(metricsOutput);
+            });
+
+            this.get('/impact/metrics', async (req, res) => {
+                res.set('Content-Type', impactRegister.contentType);
+
+                const metricsOutput = await impactRegister.metrics();
 
                 res.end(metricsOutput);
             });

@@ -1,9 +1,11 @@
 import type { FC, ReactNode } from 'react';
 import { Box, Divider, Link, styled } from '@mui/material';
 import { ReactComponent as InstanceHealthIcon } from 'assets/icons/instance-health.svg';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IHealthStatsProps {
     value?: string | number;
+    technicalDebt?: string | number;
     healthy: number;
     stale: number;
     potentiallyStale: number;
@@ -65,47 +67,57 @@ const StyledMainValue = styled(StyledValue)(({ theme }) => ({
 
 export const HealthStats: FC<IHealthStatsProps> = ({
     value,
+    technicalDebt,
     healthy,
     stale,
     potentiallyStale,
     title,
-}) => (
-    <StyledContainer>
-        <StyledHeader>
-            <StyledSection>{title}</StyledSection>
-            <StyledSection>{/* TODO: trend */}</StyledSection>
-        </StyledHeader>
-        <Divider />
-        <StyledSection>
-            <StyledStatsRow>
-                <StyledIcon />
-                Instance health
-                <StyledMainValue>{`${value || 0}%`}</StyledMainValue>
-            </StyledStatsRow>
-        </StyledSection>
-        <Divider />
-        <FlagsSection>
-            <StyledStatsRow>
-                Healthy flags
-                <StyledValue>{healthy || 0}</StyledValue>
-            </StyledStatsRow>
-            <StyledStatsRow>
-                Stale flags
-                <StyledValue>{stale || 0}</StyledValue>
-            </StyledStatsRow>
-            <StyledStatsRow>
-                Potentially stale flags
-                <StyledValue>{potentiallyStale || 0}</StyledValue>
-            </StyledStatsRow>
-            <ExplanationRow>
-                <Link
-                    href='https://docs.getunleash.io/reference/insights#health'
-                    target='_blank'
-                    rel='noreferrer'
-                >
-                    What affects instance health?
-                </Link>
-            </ExplanationRow>
-        </FlagsSection>
-    </StyledContainer>
-);
+}) => {
+    const healthToDebtEnabled = useUiFlag('healthToTechDebt');
+
+    return (
+        <StyledContainer>
+            <StyledHeader>
+                <StyledSection>{title}</StyledSection>
+            </StyledHeader>
+            <Divider />
+            <StyledSection>
+                <StyledStatsRow>
+                    <StyledIcon />
+                    {healthToDebtEnabled ? 'Technical debt' : 'Instance health'}
+                    {healthToDebtEnabled ? (
+                        <StyledMainValue>{`${technicalDebt}%`}</StyledMainValue>
+                    ) : (
+                        <StyledMainValue>{`${value || 0}%`}</StyledMainValue>
+                    )}
+                </StyledStatsRow>
+            </StyledSection>
+            <Divider />
+            <FlagsSection>
+                <StyledStatsRow>
+                    Healthy flags
+                    <StyledValue>{healthy || 0}</StyledValue>
+                </StyledStatsRow>
+                <StyledStatsRow>
+                    Stale flags
+                    <StyledValue>{stale || 0}</StyledValue>
+                </StyledStatsRow>
+                <StyledStatsRow>
+                    Potentially stale flags
+                    <StyledValue>{potentiallyStale || 0}</StyledValue>
+                </StyledStatsRow>
+                <ExplanationRow>
+                    <Link
+                        href='https://docs.getunleash.io/reference/insights#health'
+                        target='_blank'
+                        rel='noreferrer'
+                    >
+                        {healthToDebtEnabled
+                            ? 'What affects technical debt?'
+                            : 'What affects instance health?'}
+                    </Link>
+                </ExplanationRow>
+            </FlagsSection>
+        </StyledContainer>
+    );
+};

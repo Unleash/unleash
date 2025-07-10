@@ -26,7 +26,7 @@ export const ChangeRequestHeader: FC<{ changeRequest: ChangeRequestType }> = ({
                 title={title}
                 setTitle={setTitle}
             >
-                <StyledHeader variant='h1' sx={{ mr: 1.5 }}>
+                <StyledHeader variant='h1' component='h2' sx={{ mr: 1.5 }}>
                     {title}
                 </StyledHeader>
             </ChangeRequestTitle>

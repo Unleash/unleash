@@ -79,7 +79,6 @@ export const PROJECT_USER_ADDED = 'project-user-added' as const;
 export const PROJECT_USER_REMOVED = 'project-user-removed' as const;
 export const PROJECT_USER_ROLE_CHANGED = 'project-user-role-changed' as const;
 export const PROJECT_GROUP_ADDED = 'project-group-added' as const;
-export const PROJECT_GROUP_ROLE_CHANGED = 'project-group-role-changed' as const;
 export const DROP_PROJECTS = 'drop-projects' as const;
 export const TAG_CREATED = 'tag-created' as const;
 export const TAG_DELETED = 'tag-deleted' as const;
@@ -156,6 +155,8 @@ export const CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE =
     'change-request-scheduled-application-failure' as const;
 export const CHANGE_REQUEST_CONFIGURATION_UPDATED =
     'change-request-configuration-updated' as const;
+export const CHANGE_REQUEST_REQUESTED_APPROVERS_UPDATED =
+    'change-request-requested-approvers-updated' as const;
 
 export const API_TOKEN_CREATED = 'api-token-created' as const;
 export const API_TOKEN_UPDATED = 'api-token-updated' as const;
@@ -270,7 +271,6 @@ export const IEventTypes = [
     PROJECT_USER_ADDED,
     PROJECT_USER_REMOVED,
     PROJECT_USER_ROLE_CHANGED,
-    PROJECT_GROUP_ROLE_CHANGED,
     PROJECT_GROUP_ADDED,
     ROLE_CREATED,
     ROLE_UPDATED,
@@ -374,6 +374,7 @@ export const IEventTypes = [
     SCIM_USERS_DELETED,
     SCIM_GROUPS_DELETED,
     CDN_TOKEN_CREATED,
+    CHANGE_REQUEST_REQUESTED_APPROVERS_UPDATED,
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 
@@ -396,6 +397,8 @@ export interface IEvent extends Omit<IBaseEvent, 'ip'> {
     id: number;
     createdAt: Date;
     ip?: string;
+    groupType?: string;
+    groupId?: string;
 }
 
 export interface IEnrichedEvent extends IEvent {

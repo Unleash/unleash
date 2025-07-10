@@ -15,7 +15,7 @@ import {
 import type { EventService } from '../../services/index.js';
 import { createEventsService } from '../events/createEventsService.js';
 import { createTestConfig } from '../../../test/config/test-config.js';
-import { randomId } from '../../util/index.js';
+import { DEFAULT_ENV, randomId } from '../../util/index.js';
 import { ApiTokenType } from '../../types/model.js';
 import { FEATURE_CREATED } from '../../events/index.js';
 
@@ -160,7 +160,7 @@ test('project resources should contain the right data', async () => {
         tokenName: 'test-token',
         projects: ['default'],
         type: ApiTokenType.CLIENT,
-        environment: 'default',
+        environment: DEFAULT_ENV,
     });
 
     await app.services.segmentService.create(

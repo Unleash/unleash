@@ -16,7 +16,6 @@ import {
     type FeatureToggleDTO,
     type FeatureToggleView,
     type FeatureToggleWithEnvironment,
-    FeatureVariantEvent,
     type IAuditUser,
     type IConstraint,
     type IDependency,
@@ -1114,9 +1113,7 @@ export class FeatureToggleService {
                 this.featureCollaboratorsReadModel.getFeatureCollaborators(
                     featureName,
                 ),
-                this.flagResolver.isEnabled('featureLinks')
-                    ? this.featureLinksReadModel.getLinks(featureName)
-                    : Promise.resolve([]),
+                this.featureLinksReadModel.getLinks(featureName),
             ]);
 
         if (environmentVariants) {
@@ -1155,16 +1152,6 @@ export class FeatureToggleService {
                 collaborators: { users: collaborators },
             };
         }
-    }
-
-    /**
-     * GET /api/admin/projects/:project/features/:featureName/variants
-     * @deprecated - Variants should be fetched from FeatureEnvironmentStore (since variants are now; since 4.18, connected to environments)
-     * @param featureName
-     * @return The list of variants
-     */
-    async getVariants(featureName: string): Promise<IVariant[]> {
-        return this.featureToggleStore.getVariants(featureName);
     }
 
     async getVariantsForEnv(
@@ -2257,24 +2244,31 @@ export class FeatureToggleService {
     ): Promise<FeatureToggle> {
         await variantsArraySchema.validateAsync(newVariants);
         const fixedVariants = this.fixVariantWeights(newVariants);
-        const oldVariants =
-            await this.featureToggleStore.getVariants(featureName);
-        const featureToggle = await this.featureToggleStore.saveVariants(
-            project,
-            featureName,
-            fixedVariants,
-        );
-
-        await this.eventService.storeEvent(
-            new FeatureVariantEvent({
-                project,
+        const environments =
+            await this.featureEnvironmentStore.getEnvironmentsForFeature(
                 featureName,
-                auditUser,
-                oldVariants,
-                newVariants: featureToggle.variants as IVariant[],
-            }),
-        );
-        return featureToggle;
+            );
+        for (const env of environments) {
+            const oldVariants = env.variants || [];
+            await this.featureEnvironmentStore.setVariantsToFeatureEnvironments(
+                featureName,
+                [env.environment],
+                fixedVariants,
+            );
+            await this.eventService.storeEvent(
+                new EnvironmentVariantEvent({
+                    project,
+                    environment: env.environment,
+                    featureName,
+                    auditUser,
+                    oldVariants,
+                    newVariants: fixedVariants,
+                }),
+            );
+        }
+
+        const toggle = await this.featureToggleStore.get(featureName);
+        return toggle!;
     }
 
     private async verifyLegacyVariants(featureName: string) {
@@ -2559,10 +2553,6 @@ export class FeatureToggleService {
         featureName: string,
         auditUser: IAuditUser,
     ) {
-        if (!this.flagResolver.isEnabled('projectLinkTemplates')) {
-            return;
-        }
-
         const featureLinksFromTemplates = (
             await this.projectStore.getProjectLinkTemplates(projectId)
         ).map((template) => ({

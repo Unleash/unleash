@@ -159,7 +159,7 @@ class UserStoreMock implements IUserStore {
         return Promise.resolve(undefined);
     }
 
-    deleteScimUsers(): Promise<void> {
+    deleteScimUsers(): Promise<User[]> {
         throw new Error('Method not implemented.');
     }
 

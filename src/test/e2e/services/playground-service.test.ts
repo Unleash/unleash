@@ -27,6 +27,7 @@ import type { PlaygroundSegmentSchema } from '../../../lib/openapi/spec/playgrou
 import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker.js';
 import { createFeatureToggleService } from '../../../lib/features/index.js';
 import { SegmentReadModel } from '../../../lib/features/segment/segment-read-model.js';
+import { DEFAULT_ENV } from '../../../lib/server-impl.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -136,9 +137,9 @@ export const seedDatabaseForPlaygroundTest = async (
                 feature.enabled,
             );
 
-            await database.stores.featureToggleStore.saveVariants(
-                feature.project!,
+            await database.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
                 feature.name,
+                environment,
                 [
                     ...(feature.variants ?? []).map((variant) => ({
                         ...variant,
@@ -194,7 +195,7 @@ describe('the playground service (e2e)', () => {
     const insertAndEvaluateFeatures = async ({
         features,
         context,
-        env = 'default',
+        env = DEFAULT_ENV,
         segments,
     }: {
         features: ClientFeatureSchema[];
@@ -203,10 +204,6 @@ describe('the playground service (e2e)', () => {
         segments?: SegmentSchema[];
     }): Promise<PlaygroundFeatureEvaluationResult[]> => {
         await seedDatabaseForPlaygroundTest(db, features, env, segments);
-
-        //     const activeSegments = await db.stores.segmentStore.getAllFeatureStrategySegments()
-        // console.log("active segments db seeding", activeSegments)
-
         const projects = '*';
 
         const serviceFeatures = await service.evaluateQuery(

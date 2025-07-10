@@ -72,7 +72,6 @@ describe('Webhook integration', () => {
             .post('/')
             .matchHeader('Content-Type', 'application/json')
             .reply(200, (uri, body) => {
-                console.log(`uri: ${uri} body: ${body}`);
                 callCount++;
                 callBody = body;
                 return { ok: true, status: 200 };

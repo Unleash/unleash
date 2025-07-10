@@ -1,0 +1,26 @@
+name: AI flag cleanup
+
+on:
+  issues:
+    types: [labeled]
+  workflow_dispatch:
+    inputs:
+      issue-number:
+        description: 'Flag completed issue number'
+        required: true
+        type: number
+
+jobs:
+  flag-cleanup:
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'issues' && github.event.label.name == 'unleash-flag-completed')
+    uses: ./.github/workflows/ai-flag-cleanup-pr.yml
+    with:
+      issue-number: ${{ github.event.issue.number || fromJson(inputs['issue-number']) }}
+      model: gemini
+      api_key_env_name: GEMINI_API_KEY
+    secrets:
+      api_key_env_value:       ${{ secrets.GEMINI_API_KEY }}
+      UNLEASH_BOT_APP_ID:      ${{ secrets.UNLEASH_BOT_APP_ID }}
+      UNLEASH_BOT_PRIVATE_KEY: ${{ secrets.UNLEASH_BOT_PRIVATE_KEY }}

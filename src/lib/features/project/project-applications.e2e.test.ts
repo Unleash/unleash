@@ -6,6 +6,7 @@ import {
     setupAppWithCustomConfig,
 } from '../../../test/e2e/helpers/test-helper.js';
 import getLogger from '../../../test/fixtures/no-logger.js';
+import { DEFAULT_ENV } from '../../server-impl.js';
 
 import { ApiTokenType, type IApiToken } from '../../types/model.js';
 
@@ -49,7 +50,7 @@ beforeAll(async () => {
         await app.services.apiTokenService.createApiTokenWithProjects({
             type: ApiTokenType.CLIENT,
             projects: ['default'],
-            environment: 'default',
+            environment: DEFAULT_ENV,
             tokenName: 'tester',
         });
 });
@@ -94,7 +95,7 @@ test('should return applications', async () => {
     expect(body).toMatchObject({
         applications: [
             {
-                environments: ['default'],
+                environments: [DEFAULT_ENV],
                 instances: ['instanceId'],
                 name: 'appName',
                 sdks: [
@@ -136,7 +137,7 @@ test('should return applications if sdk was not in database', async () => {
     expect(body).toMatchObject({
         applications: [
             {
-                environments: ['default'],
+                environments: [DEFAULT_ENV],
                 instances: ['instanceId'],
                 name: 'appName',
                 sdks: [],
@@ -174,7 +175,7 @@ test('should return application without version if sdk has just name', async () 
     expect(body).toMatchObject({
         applications: [
             {
-                environments: ['default'],
+                environments: [DEFAULT_ENV],
                 instances: ['instanceId'],
                 name: 'appName',
                 sdks: [
@@ -235,7 +236,7 @@ test('should sort by appName descending', async () => {
     expect(body).toMatchObject({
         applications: [
             {
-                environments: ['default'],
+                environments: [DEFAULT_ENV],
                 instances: ['instanceId'],
                 name: 'second-app',
                 sdks: [
@@ -246,7 +247,7 @@ test('should sort by appName descending', async () => {
                 ],
             },
             {
-                environments: ['default'],
+                environments: [DEFAULT_ENV],
                 instances: ['instanceId'],
                 name: 'appName',
                 sdks: [
@@ -307,7 +308,7 @@ test('should filter by sdk', async () => {
     expect(body).toMatchObject({
         applications: [
             {
-                environments: ['default'],
+                environments: [DEFAULT_ENV],
                 instances: ['instanceId'],
                 name: 'appName',
                 sdks: [
@@ -376,7 +377,7 @@ test('should show correct number of total', async () => {
     expect(body).toMatchObject({
         applications: [
             {
-                environments: ['default'],
+                environments: [DEFAULT_ENV],
                 instances: ['instanceId'],
                 name: 'second-app',
                 sdks: [

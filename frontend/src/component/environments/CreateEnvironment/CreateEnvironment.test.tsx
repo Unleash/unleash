@@ -31,7 +31,7 @@ test('show limit reached info', async () => {
     const createButton = await screen.findByText('Create environment', {
         selector: 'button',
     });
-    expect(createButton).toBeDisabled();
+    expect(createButton).toHaveAttribute('aria-disabled', 'true');
 });
 
 test('show approaching limit info', async () => {

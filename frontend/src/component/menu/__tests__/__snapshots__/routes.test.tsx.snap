@@ -131,20 +131,26 @@ exports[`returns all baseRoutes 1`] = `
     "menu": {
       "primary": true,
     },
-    "notFlag": "sideMenuCleanup",
     "path": "/insights",
-    "title": "Insights",
+    "title": "Analytics",
     "type": "protected",
   },
   {
-    "component": [Function],
+    "component": {
+      "$$typeof": Symbol(react.lazy),
+      "_init": [Function],
+      "_payload": {
+        "_result": [Function],
+        "_status": -1,
+      },
+    },
     "enterprise": true,
-    "flag": "sideMenuCleanup",
+    "flag": "impactMetrics",
     "menu": {
       "primary": true,
     },
-    "path": "/insights",
-    "title": "Analytics",
+    "path": "/impact-metrics",
+    "title": "Impact metrics",
     "type": "protected",
   },
   {
@@ -449,6 +455,13 @@ exports[`returns all baseRoutes 1`] = `
     "menu": {},
     "path": "/archive",
     "title": "Archived flags",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "menu": {},
+    "path": "/unknown-flags",
+    "title": "Unknown flags",
     "type": "protected",
   },
   {

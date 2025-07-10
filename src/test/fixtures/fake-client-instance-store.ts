@@ -28,10 +28,6 @@ export default class FakeClientInstanceStore implements IClientInstanceStore {
         );
     }
 
-    setLastSeen(): Promise<void> {
-        return Promise.resolve();
-    }
-
     async getBySdkName(sdkName: string): Promise<IClientInstance[]> {
         return this.instances.filter((instance) =>
             instance.sdkVersion?.startsWith(sdkName),

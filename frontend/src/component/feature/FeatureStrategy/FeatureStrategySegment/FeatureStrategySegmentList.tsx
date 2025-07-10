@@ -1,10 +1,10 @@
 import type React from 'react';
-import { Fragment, useState } from 'react';
+import { Fragment, useId, useState } from 'react';
 import type { ISegment } from 'interfaces/segment';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategySegmentChip } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentChip';
-import { SegmentItem } from 'component/common/SegmentItem/LegacySegmentItem';
 import { styled } from '@mui/material';
+import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
 
 interface IFeatureStrategySegmentListProps {
     segments: ISegment[];
@@ -34,12 +34,17 @@ const StyledAnd = styled('p')(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation2,
 }));
 
+const StyledPreviewContainer = styled('div')({
+    display: 'contents',
+});
+
 export const FeatureStrategySegmentList = ({
     segments,
     setSegments,
 }: IFeatureStrategySegmentListProps) => {
     const [preview, setPreview] = useState<ISegment>();
     const lastSegmentIndex = segments.length - 1;
+    const segmentDetailsId = useId();
 
     if (segments.length === 0) {
         return null;
@@ -63,6 +68,7 @@ export const FeatureStrategySegmentList = ({
                             setSegments={setSegments}
                             preview={preview}
                             setPreview={setPreview}
+                            aria-controls={segmentDetailsId}
                         />
                         <ConditionallyRender
                             condition={i < lastSegmentIndex}
@@ -71,10 +77,12 @@ export const FeatureStrategySegmentList = ({
                     </Fragment>
                 ))}
             </StyledList>
-            <ConditionallyRender
-                condition={Boolean(preview)}
-                show={() => <SegmentItem segment={preview!} isExpanded />}
-            />
+            <StyledPreviewContainer id={segmentDetailsId}>
+                <ConditionallyRender
+                    condition={Boolean(preview)}
+                    show={<SegmentItem segment={preview!} isExpanded />}
+                />
+            </StyledPreviewContainer>
         </>
     );
 };

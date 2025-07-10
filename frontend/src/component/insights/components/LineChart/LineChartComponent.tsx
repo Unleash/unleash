@@ -117,7 +117,7 @@ const LineChartComponent: FC<{
                 ),
                 overrideOptions ?? {},
             ]),
-        [theme, locationSettings, overrideOptions, cover],
+        [theme, locationSettings, setTooltip, overrideOptions, cover],
     );
 
     return (

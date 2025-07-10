@@ -3,7 +3,7 @@ import type { Db } from '../../db/db.js';
 import { OnboardingService } from './onboarding-service.js';
 import { OnboardingStore } from './onboarding-store.js';
 import { ProjectReadModel } from '../project/project-read-model.js';
-import UserStore from '../../db/user-store.js';
+import { UserStore } from '../users/user-store.js';
 import FakeUserStore from '../../../test/fixtures/fake-user-store.js';
 import { FakeProjectReadModel } from '../project/fake-project-read-model.js';
 import { FakeOnboardingStore } from './fake-onboarding-store.js';
@@ -18,7 +18,7 @@ export const createOnboardingService =
             eventBus,
             flagResolver,
         );
-        const userStore = new UserStore(db, getLogger, flagResolver);
+        const userStore = new UserStore(db, getLogger);
         const onboardingService = new OnboardingService(
             {
                 onboardingStore,

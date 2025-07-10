@@ -4,7 +4,6 @@ import type { ApiTokenSchema } from './api-token-schema.js';
 
 const defaultData: ApiTokenSchema = {
     secret: '',
-    username: '',
     tokenName: '',
     type: ApiTokenType.CLIENT,
     environment: '',

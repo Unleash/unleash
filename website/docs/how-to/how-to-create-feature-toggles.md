@@ -127,18 +127,8 @@ In the strategy configuration screen for the strategy that you want to configure
 
 :::info
 
-This can be done at any point after you've created your flag.
+This can be done at any point, during or after the creation of your flag.
 
 :::
 
-:::tip API: add variants
-
-Use the [create variants endpoint](/reference/api/unleash/overwrite-feature-variants) to create or overwrite existing variants in all environments. The payload should be your desired variant configuration.
-
-:::
-
-[Variants](../reference/feature-toggle-variants) give you the ability to further target your users and split them into groups of your choosing, such as for A/B testing. On the flag overview page, select the variants tab. Use the "new variant" button to add the variants that you want.
-
-![](/img/create-toggle-add-variants.png)
-
-[^1]: Prior to Unleash 4.21, "create/edit variants" was a project-level permission instead of an environment-level permission.
+[Variants](../reference/strategy-variants) give you the ability to further target your users and split them into groups of your choosing, such as for A/B testing. On the flag overview page, select the variants tab. Use the "new variant" button to add the variants that you want.

@@ -10,6 +10,8 @@ import { EventSchemaType, type FeatureSearchResponseSchema } from 'openapi';
 import type { ProjectSchema } from 'openapi';
 import { useEventCreators } from 'hooks/api/getters/useEventCreators/useEventCreators';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
+import { useLocation } from 'react-router-dom';
+import { FilterItemParam } from 'utils/serializeQueryParams';
 
 export const useEventLogFilters = (
     projects: ProjectSchema[],
@@ -17,9 +19,46 @@ export const useEventLogFilters = (
 ) => {
     const { environments } = useEnvironments();
     const { eventCreators } = useEventCreators();
+    const location = useLocation();
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
 
+    const createRemovableFilterOptions = (
+        searchParams: URLSearchParams,
+        paramNames: string[],
+    ) => {
+        return paramNames.reduce(
+            (acc, paramName) => {
+                const hasParam = searchParams.has(paramName);
+                const paramValue = searchParams.get(paramName);
+
+                acc[paramName] =
+                    hasParam && paramValue
+                        ? (() => {
+                              const parsed = FilterItemParam.decode(paramValue);
+                              return parsed
+                                  ? [
+                                        {
+                                            label: parsed.values[0],
+                                            value: parsed.values[0],
+                                        },
+                                    ]
+                                  : [];
+                          })()
+                        : [];
+                return acc;
+            },
+            {} as Record<string, Array<{ label: string; value: string }>>,
+        );
+    };
+
     useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+
+        const removableOptions = createRemovableFilterOptions(searchParams, [
+            'id',
+            'groupId',
+        ]);
+
         const projectOptions =
             projects?.map((project: ProjectSchema) => ({
                 label: project.name,
@@ -87,6 +126,32 @@ export const useEventLogFilters = (
                 singularOperators: ['IS'],
                 pluralOperators: ['IS_ANY_OF'],
             },
+            ...(removableOptions.id.length > 0
+                ? ([
+                      {
+                          label: 'Event ID',
+                          icon: 'tag',
+                          options: removableOptions.id,
+                          filterKey: 'id',
+                          singularOperators: ['IS'],
+                          pluralOperators: ['IS_ANY_OF'],
+                          persistent: false,
+                      },
+                  ] as IFilterItem[])
+                : []),
+            ...(removableOptions.groupId.length > 0
+                ? ([
+                      {
+                          label: 'Group ID',
+                          icon: 'tag',
+                          options: removableOptions.groupId,
+                          filterKey: 'groupId',
+                          singularOperators: ['IS'],
+                          pluralOperators: ['IS_ANY_OF'],
+                          persistent: false,
+                      },
+                  ] as IFilterItem[])
+                : []),
             ...(projectOptions.length > 1
                 ? ([
                       {
@@ -131,6 +196,7 @@ export const useEventLogFilters = (
         JSON.stringify(projects),
         JSON.stringify(eventCreators),
         JSON.stringify(environments),
+        location.search,
     ]);
 
     return availableFilters;

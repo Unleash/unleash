@@ -138,7 +138,7 @@ const PremiumFeatures = {
 type PremiumFeatureType = keyof typeof PremiumFeatures;
 
 const PLANS_URL = 'https://www.getunleash.io/plans';
-const UPGRADE_URL = 'https://www.getunleash.io/upgrade_unleash';
+const UPGRADE_URL = 'https://www.getunleash.io/upgrade-unleash';
 
 export interface PremiumFeatureProps {
     feature: PremiumFeatureType;

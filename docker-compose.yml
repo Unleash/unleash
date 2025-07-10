@@ -11,7 +11,6 @@
 # This is intended to be used for demo, development, and learning
 # purposes only.
 
-version: "3.9"
 services:
 
   # The Unleash server contains the Unleash configuration and
@@ -33,7 +32,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: [ "node", "index.js" ]
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost:4242/health || exit 1
       interval: 1s

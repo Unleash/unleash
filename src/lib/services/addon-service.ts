@@ -28,7 +28,7 @@ import type { IAddonDefinition } from '../types/model.js';
 import { minutesToMilliseconds } from 'date-fns';
 import type EventService from '../features/events/event-service.js';
 import { omitKeys } from '../util/index.js';
-import { NotFoundError } from '../error/index.js';
+import { BadDataError, NotFoundError } from '../error/index.js';
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service.js';
 import type { IEvent } from '../events/index.js';
 
@@ -59,6 +59,8 @@ export default class AddonService {
     fetchAddonConfigs: (() => Promise<IAddon[]>) &
         memoizee.Memoized<() => Promise<IAddon[]>>;
 
+    private eventHandlers: Map<string, (event: IEvent) => void>;
+
     constructor(
         {
             addonStore,
@@ -83,6 +85,7 @@ export default class AddonService {
         this.logger = getLogger('services/addon-service.js');
         this.tagTypeService = tagTypeService;
         this.eventService = eventService;
+        this.eventHandlers = new Map();
 
         this.addonProviders =
             addons ||
@@ -124,9 +127,11 @@ export default class AddonService {
     }
 
     registerEventHandler(): void {
-        SUPPORTED_EVENTS.forEach((eventName) =>
-            this.eventService.onEvent(eventName, this.handleEvent(eventName)),
-        );
+        SUPPORTED_EVENTS.forEach((eventName) => {
+            const handler = this.handleEvent(eventName);
+            this.eventHandlers.set(eventName, handler);
+            this.eventService.onEvent(eventName, handler);
+        });
     }
 
     handleEvent(eventName: string): (event: IEvent) => void {
@@ -224,6 +229,10 @@ export default class AddonService {
         const addonConfig = await addonSchema.validateAsync(data);
         await this.validateKnownProvider(addonConfig);
         await this.validateRequiredParameters(addonConfig);
+        const addon = this.addonProviders[addonConfig.provider];
+        if (addon.definition.deprecated) {
+            throw new BadDataError(addon.definition.deprecated);
+        }
 
         const createdAddon = await this.addonStore.insert(addonConfig);
         await this.addTagTypes(createdAddon.provider);
@@ -345,6 +354,18 @@ export default class AddonService {
     }
 
     destroy(): void {
+        this.eventHandlers.forEach((handler, eventName) => {
+            try {
+                this.eventService.off(eventName, handler);
+            } catch (error) {
+                this.logger.debug(
+                    `Failed to remove event handler for ${eventName}:`,
+                    error,
+                );
+            }
+        });
+        this.eventHandlers.clear();
+
         Object.values(this.addonProviders).forEach((addon) =>
             addon.destroy?.(),
         );

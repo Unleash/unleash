@@ -19,25 +19,34 @@ interface IPrettifyLargeNumberProps {
      * @default 2
      */
     precision?: number;
+    /**
+     * Data attribute for loading state
+     */
+    'data-loading'?: string;
 }
+
+export const prettifyLargeNumber =
+    (threshold: number = 1_000_000, precision: number = 2) =>
+    (value: number) => {
+        if (value < threshold) {
+            return value.toLocaleString();
+        }
+        return millify(value, { precision });
+    };
 
 export const PrettifyLargeNumber: FC<IPrettifyLargeNumberProps> = ({
     value,
     threshold = 1_000_000,
     precision = 2,
+    'data-loading': dataLoading,
 }) => {
-    let prettyValue: string;
-    let showTooltip = false;
-
-    if (value < threshold) {
-        prettyValue = value.toLocaleString();
-    } else {
-        prettyValue = millify(value, { precision });
-        showTooltip = true;
-    }
+    const prettyValue = prettifyLargeNumber(threshold, precision)(value);
+    const showTooltip = value > threshold;
 
     const valueSpan = (
-        <span data-testid={LARGE_NUMBER_PRETTIFIED}>{prettyValue}</span>
+        <span data-loading={dataLoading} data-testid={LARGE_NUMBER_PRETTIFIED}>
+            {prettyValue}
+        </span>
     );
 
     return (

@@ -1,5 +1,6 @@
 import { Box, Paper, styled, Typography } from '@mui/material';
 import type { TooltipItem } from 'chart.js';
+import { Truncator } from 'component/common/Truncator/Truncator';
 import type React from 'react';
 import type { FC, VFC } from 'react';
 import { objectId } from 'utils/objectId';
@@ -32,12 +33,13 @@ const StyledItem = styled('li')(({ theme }) => ({
     marginBottom: theme.spacing(0.5),
     display: 'flex',
     alignItems: 'center',
+    fontSize: theme.typography.body2.fontSize,
 }));
 
 const StyledLabelIcon = styled('span')(({ theme }) => ({
     display: 'inline-block',
-    width: 8,
-    height: 8,
+    minWidth: 8,
+    minHeight: 8,
     borderRadius: '50%',
     marginRight: theme.spacing(1),
 }));
@@ -119,14 +121,7 @@ export const ChartTooltip: VFC<IChartTooltipProps> = ({ tooltip }) => (
                         >
                             {' '}
                         </StyledLabelIcon>
-                        <Typography
-                            variant='body2'
-                            sx={{
-                                display: 'inline-block',
-                            }}
-                        >
-                            {item.title}
-                        </Typography>
+                        <Truncator lines={2}>{item.title}</Truncator>
                     </StyledItem>
                 ))}
             </StyledList>

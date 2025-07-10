@@ -110,6 +110,13 @@ export default class EventService {
         return this.eventStore.on(eventName, listener);
     }
 
+    off(
+        eventName: string | symbol,
+        listener: (...args: any[]) => void,
+    ): EventEmitter {
+        return this.eventStore.off(eventName, listener);
+    }
+
     private async enhanceEventsWithTags(
         events: IBaseEvent[],
     ): Promise<IBaseEvent[]> {
@@ -222,7 +229,12 @@ export default class EventService {
             if (parsed) queryParams.push(parsed);
         }
 
-        ['project', 'type', 'environment'].forEach((field) => {
+        if (params.groupId) {
+            const parsed = parseSearchOperatorValue('group_id', params.groupId);
+            if (parsed) queryParams.push(parsed);
+        }
+
+        ['project', 'type', 'environment', 'id'].forEach((field) => {
             if (params[field]) {
                 const parsed = parseSearchOperatorValue(field, params[field]);
                 if (parsed) queryParams.push(parsed);

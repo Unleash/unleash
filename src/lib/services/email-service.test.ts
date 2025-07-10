@@ -141,14 +141,53 @@ test('Can send productivity report email', async () => {
     );
     expect(content.from).toBe('noreply@getunleash.ai');
     expect(content.subject).toBe('Unleash - productivity report');
-    expect(content.html.includes('Productivity Report')).toBe(true);
-    expect(content.html.includes('localhost/insights')).toBe(true);
-    expect(content.html.includes('localhost/profile')).toBe(true);
-    expect(content.html.includes('#68a611')).toBe(true);
-    expect(content.html.includes('10% more than previous month')).toBe(true);
-    expect(content.text.includes('localhost/insights')).toBe(true);
-    expect(content.text.includes('localhost/profile')).toBe(true);
-    expect(content.text.includes('localhost/profile')).toBe(true);
+    expect(content.html).toContain('Productivity Report');
+    expect(content.html).toContain('localhost/insights');
+    expect(content.html).toContain('localhost/profile');
+    expect(content.html).toContain('#68a611');
+    expect(content.html).toContain('1%');
+    expect(content.html).toContain('10% less than previous month');
+    expect(content.text).toContain('localhost/insights');
+    expect(content.text).toContain('localhost/profile');
+    expect(content.text).toContain('localhost/profile');
+    expect(content.text).toContain('Your instance technical debt: 1%');
+});
+
+test('Sets correct color for technical debt', async () => {
+    const emailService = new EmailService({
+        server: {
+            unleashUrl: 'http://localhost',
+        },
+        email: {
+            host: 'test',
+            port: 587,
+            secure: false,
+            smtpuser: '',
+            smtppass: '',
+            sender: 'noreply@getunleash.ai',
+        },
+        getLogger: noLoggerProvider,
+    } as unknown as IUnleashConfig);
+
+    const content = await emailService.sendProductivityReportEmail(
+        'user@user.com',
+        'customerId',
+        {
+            flagsCreated: 1,
+            productionUpdates: 2,
+            health: 20,
+            previousMonth: {
+                health: 50,
+                flagsCreated: 1,
+                productionUpdates: 3,
+            },
+        },
+    );
+    expect(content.html).not.toContain('#68a611');
+    expect(content.html).toContain('#d93644');
+    expect(content.html).toContain(
+        'Remember to archive stale flags to reduce technical debt and keep your project healthy',
+    );
 });
 
 test('Should add optional headers to productivity email', async () => {

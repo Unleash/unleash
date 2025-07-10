@@ -1,7 +1,7 @@
 import type { Express } from 'express';
 import type EventEmitter from 'events';
 import type { LogLevel, LogProvider } from '../logger.js';
-import type { ILegacyApiTokenCreate } from './models/api-token.js';
+import type { IApiTokenCreate } from './model.js';
 import type {
     IExperimentalOptions,
     IFlagContext,
@@ -85,7 +85,7 @@ export interface IAuthOption {
     customAuthHandler?: CustomAuthHandler;
     createAdminUser?: boolean;
     initialAdminUser?: UsernameAdminUser;
-    initApiTokens: ILegacyApiTokenCreate[];
+    initApiTokens: IApiTokenCreate[];
 }
 
 export interface IImportOption {
@@ -164,6 +164,7 @@ export interface IUnleashOptions {
     clientFeatureCaching?: Partial<IClientCachingOption>;
     accessControlMaxAge?: number;
     prometheusApi?: string;
+    prometheusImpactMetricsApi?: string;
     publicFolder?: string;
     disableScheduler?: boolean;
     metricsRateLimiting?: Partial<IMetricsRateLimiting>;
@@ -288,6 +289,7 @@ export interface IUnleashConfig {
     clientFeatureCaching: IClientCachingOption;
     accessControlMaxAge: number;
     prometheusApi?: string;
+    prometheusImpactMetricsApi?: string;
     publicFolder?: string;
     disableScheduler?: boolean;
     isEnterprise: boolean;

@@ -7,6 +7,20 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 
 type ProjectFlagTrends = InstanceInsightsSchema['projectFlagTrends'];
 
+export const calculateTechDebt = (item: {
+    total: number;
+    stale: number;
+    potentiallyStale: number;
+}) => {
+    if (!item.total) {
+        return '0';
+    }
+
+    return (((item.stale + item.potentiallyStale) / item.total) * 100).toFixed(
+        2,
+    );
+};
+
 export const useProjectChartData = (
     projectFlagTrends: GroupedDataByProject<ProjectFlagTrends>,
 ) => {

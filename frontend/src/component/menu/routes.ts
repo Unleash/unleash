@@ -42,6 +42,7 @@ import { ViewIntegration } from 'component/integrations/ViewIntegration/ViewInte
 import { PaginatedApplicationList } from '../application/ApplicationList/PaginatedApplicationList.jsx';
 import { AddonRedirect } from 'component/integrations/AddonRedirect/AddonRedirect';
 import { Insights } from '../insights/Insights.jsx';
+import { LazyImpactMetricsPage } from '../impact-metrics/LazyImpactMetricsPage.tsx';
 import { FeedbackList } from '../feedbackNew/FeedbackList.jsx';
 import { Application } from 'component/application/Application';
 import { Signals } from 'component/signals/Signals';
@@ -51,6 +52,7 @@ import { ReleaseManagement } from 'component/releases/ReleaseManagement/ReleaseM
 import { CreateReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/CreateReleasePlanTemplate';
 import { EditReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/EditReleasePlanTemplate';
 import { ExploreCounters } from 'component/counters/ExploreCounters/ExploreCounters.js';
+import { UnknownFlagsTable } from 'component/unknownFlags/UnknownFlagsTable';
 
 export const routes: IRoute[] = [
     // Splash
@@ -149,16 +151,7 @@ export const routes: IRoute[] = [
         menu: { primary: true },
     },
 
-    // Insights
-    {
-        path: '/insights',
-        title: 'Insights',
-        component: Insights,
-        type: 'protected',
-        menu: { primary: true },
-        enterprise: true,
-        notFlag: 'sideMenuCleanup',
-    },
+    // Analytics
     {
         path: '/insights',
         title: 'Analytics',
@@ -166,7 +159,17 @@ export const routes: IRoute[] = [
         type: 'protected',
         menu: { primary: true },
         enterprise: true,
-        flag: 'sideMenuCleanup',
+    },
+
+    // Impact Metrics
+    {
+        path: '/impact-metrics',
+        title: 'Impact metrics',
+        component: LazyImpactMetricsPage,
+        type: 'protected',
+        menu: { primary: true },
+        enterprise: true,
+        flag: 'impactMetrics',
     },
 
     // Applications
@@ -465,6 +468,15 @@ export const routes: IRoute[] = [
         path: '/archive',
         title: 'Archived flags',
         component: FeaturesArchiveTable,
+        type: 'protected',
+        menu: {},
+    },
+
+    // Unknown flags
+    {
+        path: '/unknown-flags',
+        title: 'Unknown flags',
+        component: UnknownFlagsTable,
         type: 'protected',
         menu: {},
     },

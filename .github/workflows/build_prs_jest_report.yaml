@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull_requests: write
+      pull-requests: write
     name: build # temporary solution to trick branch protection rules
 
     services:
@@ -45,7 +45,7 @@ jobs:
       - name: Install deps
         run: yarn install
       - name: Build backend
-        run: yarn backend
+        run: yarn build:backend
       - name: Tests on 22.x
         id: coverage
         run: yarn test:coverage

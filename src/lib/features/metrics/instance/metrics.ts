@@ -27,6 +27,7 @@ import { CLIENT_METRICS } from '../../../events/index.js';
 import type { CustomMetricsSchema } from '../../../openapi/spec/custom-metrics-schema.js';
 import type { StoredCustomMetric } from '../custom/custom-metrics-store.js';
 import type { CustomMetricsService } from '../custom/custom-metrics-service.js';
+import type { MetricsTranslator } from '../impact/metrics-translator.js';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;
@@ -38,6 +39,8 @@ export default class ClientMetricsController extends Controller {
     metricsV2: ClientMetricsServiceV2;
 
     customMetricsService: CustomMetricsService;
+
+    metricsTranslator: MetricsTranslator;
 
     flagResolver: IFlagResolver;
 
@@ -150,16 +153,25 @@ export default class ClientMetricsController extends Controller {
         } else {
             try {
                 const { body: data, ip: clientIp, user } = req;
-                data.environment = this.metricsV2.resolveMetricsEnvironment(
-                    user,
-                    data,
-                );
+                const { impactMetrics, ...metricsData } = data;
+                metricsData.environment =
+                    this.metricsV2.resolveMetricsEnvironment(user, metricsData);
                 await this.clientInstanceService.registerInstance(
-                    data,
+                    metricsData,
                     clientIp,
                 );
 
-                await this.metricsV2.registerClientMetrics(data, clientIp);
+                await this.metricsV2.registerClientMetrics(
+                    metricsData,
+                    clientIp,
+                );
+                if (
+                    this.flagResolver.isEnabled('impactMetrics') &&
+                    impactMetrics
+                ) {
+                    await this.metricsV2.registerImpactMetrics(impactMetrics);
+                }
+
                 res.getHeaderNames().forEach((header) =>
                     res.removeHeader(header),
                 );
@@ -218,7 +230,7 @@ export default class ClientMetricsController extends Controller {
             res.status(204).end();
         } else {
             const { body, ip: clientIp } = req;
-            const { metrics, applications } = body;
+            const { metrics, applications, impactMetrics } = body;
             try {
                 const promises: Promise<void>[] = [];
                 for (const app of applications) {
@@ -226,20 +238,14 @@ export default class ClientMetricsController extends Controller {
                         app.sdkType === 'frontend' &&
                         typeof app.sdkVersion === 'string'
                     ) {
-                        if (
-                            this.flagResolver.isEnabled(
-                                'registerFrontendClient',
-                            )
-                        ) {
-                            this.clientInstanceService.registerFrontendClient({
-                                appName: app.appName,
-                                instanceId: app.instanceId,
-                                environment: app.environment,
-                                sdkType: app.sdkType,
-                                sdkVersion: app.sdkVersion,
-                                projects: app.projects,
-                            });
-                        }
+                        this.clientInstanceService.registerFrontendClient({
+                            appName: app.appName,
+                            instanceId: app.instanceId,
+                            environment: app.environment,
+                            sdkType: app.sdkType,
+                            sdkVersion: app.sdkVersion,
+                            projects: app.projects,
+                        });
                     } else {
                         promises.push(
                             this.clientInstanceService.registerBackendClient(
@@ -263,6 +269,17 @@ export default class ClientMetricsController extends Controller {
                     );
                     this.config.eventBus.emit(CLIENT_METRICS, data);
                 }
+
+                if (
+                    this.flagResolver.isEnabled('impactMetrics') &&
+                    impactMetrics &&
+                    impactMetrics.length > 0
+                ) {
+                    promises.push(
+                        this.metricsV2.registerImpactMetrics(impactMetrics),
+                    );
+                }
+
                 await Promise.all(promises);
 
                 res.status(202).end();

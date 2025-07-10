@@ -13,13 +13,6 @@ export const userSchema = {
             type: 'integer',
             example: 123,
         },
-        isAPI: {
-            description:
-                'Deprecated in v5. Used internally to know which operations the user should be allowed to perform',
-            type: 'boolean',
-            example: true,
-            deprecated: true,
-        },
         name: {
             description: 'Name of the user',
             type: 'string',

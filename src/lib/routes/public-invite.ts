@@ -108,11 +108,12 @@ export class PublicInviteController extends Controller {
             res.status(400).end();
             return;
         }
-        const user = await this.publicSignupTokenService.addTokenUser(
-            token,
-            req.body,
-            req.audit,
-        );
+        const { isAPI, ...user } =
+            await this.publicSignupTokenService.addTokenUser(
+                token,
+                req.body,
+                req.audit,
+            );
         this.openApiService.respondWithValidation(
             201,
             res,

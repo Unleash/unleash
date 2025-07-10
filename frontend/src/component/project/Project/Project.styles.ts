@@ -59,6 +59,7 @@ export const StyledProjectTitle = styled('h1')(({ theme }) => ({
     alignItems: 'center',
     gap: theme.spacing(2),
     overflow: 'hidden',
+    lineHeight: 1.5,
 }));
 
 export const StyledSeparator = styled('div')(({ theme }) => ({

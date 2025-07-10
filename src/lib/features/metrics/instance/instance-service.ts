@@ -101,21 +101,12 @@ export default class ClientInstanceService {
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
 
-        if (this.flagResolver.isEnabled('lastSeenBulkQuery')) {
-            this.seenClients[this.clientKey(value)] = {
-                appName: value.appName,
-                instanceId: value.instanceId,
-                environment: value.environment,
-                clientIp: clientIp,
-            };
-        } else {
-            await this.clientInstanceStore.setLastSeen({
-                appName: value.appName,
-                instanceId: value.instanceId,
-                environment: value.environment,
-                clientIp: clientIp,
-            });
-        }
+        this.seenClients[this.clientKey(value)] = {
+            appName: value.appName,
+            instanceId: value.instanceId,
+            environment: value.environment,
+            clientIp: clientIp,
+        };
     }
 
     public registerFrontendClient(data: IFrontendClientApp): void {
@@ -331,10 +322,7 @@ export default class ClientInstanceService {
     }
 
     async removeInactiveApplications(): Promise<number> {
-        if (this.flagResolver.isEnabled('removeInactiveApplications')) {
-            return this.clientApplicationsStore.removeInactiveApplications();
-        }
-        return 0;
+        return this.clientApplicationsStore.removeInactiveApplications();
     }
 
     async getOutdatedSdks(): Promise<OutdatedSdksSchema['sdks']> {

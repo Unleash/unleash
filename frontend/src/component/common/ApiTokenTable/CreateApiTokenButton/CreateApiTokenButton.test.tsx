@@ -57,6 +57,6 @@ test('should not allow you to create API tokens when you have reached the limit'
 
     await waitFor(async () => {
         const button = await screen.findByRole('button');
-        expect(button).toBeDisabled();
+        expect(button).toHaveAttribute('aria-disabled', 'true');
     });
 });

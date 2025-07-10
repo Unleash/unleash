@@ -1,5 +1,5 @@
 import { ClientFeatureToggleDelta } from './client-feature-toggle-delta.js';
-import EventStore from '../../events/event-store.js';
+import { EventStore } from '../../events/event-store.js';
 import ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service.js';
 import type { IUnleashConfig } from '../../../types/index.js';
 import type { Db } from '../../../db/db.js';

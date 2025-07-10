@@ -17,7 +17,7 @@ const ModalContentContainer = styled('section')(({ theme }) => ({
     backgroundColor: theme.palette.background.default,
     display: 'flex',
     flexFlow: 'column',
-    gap: theme.spacing(2),
+    gap: theme.spacing(2.5),
     paddingInline: theme.spacing(4),
     paddingBlock: theme.spacing(3.75),
 }));
@@ -159,7 +159,6 @@ export const ProjectStatusModal = ({ open, onClose, onFollowLink }: Props) => {
                 </HeaderRow>
                 <WidgetContainer>
                     <Row>
-                        <RowHeader>Health</RowHeader>
                         <ProjectHealthGrid />
                     </Row>
                     {!isOss() && (

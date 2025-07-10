@@ -18,6 +18,11 @@ import dbInit, { type ITestDb } from '../helpers/database-init.js';
 import getLogger from '../../fixtures/no-logger.js';
 import type { IEventStore } from '../../../lib/types/stores/event-store.js';
 import type { IAuditUser, IUnleashStores } from '../../../lib/types/index.js';
+import {
+    withTransactional,
+    type TransactionUserParams,
+} from '../../../lib/db/transaction.js';
+import { EventStore } from '../../../lib/features/events/event-store.js';
 
 import { vi } from 'vitest';
 
@@ -337,4 +342,290 @@ test('getMaxRevisionId should exclude FEATURE_CREATED and FEATURE_TAGGED events'
     expect(updatedEvent!.id).toBeGreaterThan(createdEvent!.id);
     expect(updatedEvent!.id).toBeGreaterThan(taggedEvent!.id);
     expect(segmentEvent!.id).toBeGreaterThan(updatedEvent!.id);
+});
+
+test('Should filter events by ID using IS operator', async () => {
+    const event1 = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+        data: { name: 'feature1' },
+    };
+    const event2 = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+        data: { name: 'feature2' },
+    };
+    const event3 = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+        data: { name: 'feature3' },
+    };
+
+    await eventStore.store(event1);
+    await eventStore.store(event2);
+    await eventStore.store(event3);
+
+    const allEvents = await eventStore.getAll();
+    const targetEvent = allEvents.find((e) => e.data.name === 'feature2');
+
+    const filteredEvents = await eventStore.searchEvents(
+        {
+            offset: 0,
+            limit: 10,
+        },
+        [
+            {
+                field: 'id',
+                operator: 'IS',
+                values: [targetEvent!.id.toString()],
+            },
+        ],
+    );
+
+    expect(filteredEvents).toHaveLength(1);
+    expect(filteredEvents[0].id).toBe(targetEvent!.id);
+    expect(filteredEvents[0].data.name).toBe('feature2');
+});
+
+test('Should filter events by ID using IS_ANY_OF operator', async () => {
+    const event1 = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+        data: { name: 'feature1' },
+    };
+    const event2 = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+        data: { name: 'feature2' },
+    };
+    const event3 = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+        data: { name: 'feature3' },
+    };
+
+    await eventStore.store(event1);
+    await eventStore.store(event2);
+    await eventStore.store(event3);
+
+    const allEvents = await eventStore.getAll();
+    const targetEvent1 = allEvents.find((e) => e.data.name === 'feature1');
+    const targetEvent3 = allEvents.find((e) => e.data.name === 'feature3');
+
+    const filteredEvents = await eventStore.searchEvents(
+        {
+            offset: 0,
+            limit: 10,
+        },
+        [
+            {
+                field: 'id',
+                operator: 'IS_ANY_OF',
+                values: [
+                    targetEvent1!.id.toString(),
+                    targetEvent3!.id.toString(),
+                ],
+            },
+        ],
+    );
+
+    expect(filteredEvents).toHaveLength(2);
+    const eventIds = filteredEvents.map((e) => e.id);
+    expect(eventIds).toContain(targetEvent1!.id);
+    expect(eventIds).toContain(targetEvent3!.id);
+    expect(eventIds).not.toContain(
+        allEvents.find((e) => e.data.name === 'feature2')!.id,
+    );
+});
+
+test('Should return empty result when filtering by non-existent ID', async () => {
+    const event = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+        data: { name: 'feature1' },
+    };
+
+    await eventStore.store(event);
+
+    const filteredEvents = await eventStore.searchEvents(
+        {
+            offset: 0,
+            limit: 10,
+        },
+        [
+            {
+                field: 'id',
+                operator: 'IS',
+                values: ['999999'],
+            },
+        ],
+    );
+
+    expect(filteredEvents).toHaveLength(0);
+});
+
+test('Should store and retrieve transaction context fields', async () => {
+    const mockTransactionContext: TransactionUserParams = {
+        type: 'change-request',
+        id: '01HQVX5K8P9EXAMPLE123456',
+    };
+
+    const eventStoreService = withTransactional(
+        (db) => new EventStore(db, getLogger),
+        db.rawDatabase,
+    );
+
+    const event = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        featureName: 'test-feature-with-context',
+        project: 'test-project',
+        ip: '127.0.0.1',
+        data: {
+            name: 'test-feature-with-context',
+            enabled: true,
+            strategies: [{ name: 'default' }],
+        },
+    };
+
+    await eventStoreService.transactional(async (transactionalEventStore) => {
+        await transactionalEventStore.store(event);
+    }, mockTransactionContext);
+
+    const events = await eventStore.getAll();
+    const storedEvent = events.find(
+        (e) => e.featureName === 'test-feature-with-context',
+    );
+
+    expect(storedEvent).toBeTruthy();
+    expect(storedEvent!.groupType).toBe('change-request');
+    expect(storedEvent!.groupId).toBe('01HQVX5K8P9EXAMPLE123456');
+});
+
+test('Should handle missing transaction context gracefully', async () => {
+    const event = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        featureName: 'test-feature-no-context',
+        project: 'test-project',
+        ip: '127.0.0.1',
+        data: {
+            name: 'test-feature-no-context',
+            enabled: true,
+            strategies: [{ name: 'default' }],
+        },
+    };
+
+    await eventStore.store(event);
+
+    const events = await eventStore.getAll();
+    const storedEvent = events.find(
+        (e) => e.featureName === 'test-feature-no-context',
+    );
+
+    expect(storedEvent).toBeTruthy();
+    expect(storedEvent!.groupType).toBeUndefined();
+    expect(storedEvent!.groupId).toBeUndefined();
+});
+
+test('Should store transaction context in batch operations', async () => {
+    const mockTransactionContext: TransactionUserParams = {
+        type: 'transaction',
+        id: '01HQVX5K8P9BATCH123456',
+    };
+
+    const eventStoreService = withTransactional(
+        (db) => new EventStore(db, getLogger),
+        db.rawDatabase,
+    );
+
+    const events = [
+        {
+            type: FEATURE_CREATED,
+            createdBy: 'test-user',
+            createdByUserId: TEST_USER_ID,
+            featureName: 'batch-feature-1',
+            project: 'test-project',
+            ip: '127.0.0.1',
+            data: { name: 'batch-feature-1' },
+        },
+        {
+            type: FEATURE_UPDATED,
+            createdBy: 'test-user',
+            createdByUserId: TEST_USER_ID,
+            featureName: 'batch-feature-2',
+            project: 'test-project',
+            ip: '127.0.0.1',
+            data: { name: 'batch-feature-2' },
+        },
+    ];
+
+    await eventStoreService.transactional(async (transactionalEventStore) => {
+        await transactionalEventStore.batchStore(events);
+    }, mockTransactionContext);
+
+    const allEvents = await eventStore.getAll();
+    const batchEvents = allEvents.filter(
+        (e) =>
+            e.featureName === 'batch-feature-1' ||
+            e.featureName === 'batch-feature-2',
+    );
+
+    expect(batchEvents).toHaveLength(2);
+    batchEvents.forEach((event) => {
+        expect(event.groupType).toBe('transaction');
+        expect(event.groupId).toBe('01HQVX5K8P9BATCH123456');
+    });
+});
+
+test('Should auto-generate transaction context when none provided', async () => {
+    const eventStoreService = withTransactional(
+        (db) => new EventStore(db, getLogger),
+        db.rawDatabase,
+    );
+
+    const event = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        featureName: 'test-feature-auto-context',
+        project: 'test-project',
+        ip: '127.0.0.1',
+        data: {
+            name: 'test-feature-auto-context',
+            enabled: true,
+            strategies: [{ name: 'default' }],
+        },
+    };
+
+    await eventStoreService.transactional(async (transactionalEventStore) => {
+        await transactionalEventStore.store(event);
+    });
+
+    const events = await eventStore.getAll();
+    const storedEvent = events.find(
+        (e) => e.featureName === 'test-feature-auto-context',
+    );
+
+    expect(storedEvent).toBeTruthy();
+    expect(storedEvent!.groupType).toBe('transaction');
+    expect(storedEvent!.groupId).toBeTruthy();
+    expect(typeof storedEvent!.groupId).toBe('string');
+    expect(storedEvent!.groupId).toMatch(/^[0-9A-HJKMNP-TV-Z]{26}$/);
 });

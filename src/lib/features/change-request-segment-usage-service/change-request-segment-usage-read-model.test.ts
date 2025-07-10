@@ -5,10 +5,11 @@ import dbInit, {
 import getLogger from '../../../test/fixtures/no-logger.js';
 import type { IChangeRequestSegmentUsageReadModel } from './change-request-segment-usage-read-model.js';
 import { createChangeRequestSegmentUsageReadModel } from './createChangeRequestSegmentUsageReadModel.js';
-import { randomId } from '../../util/index.js';
+import { DEFAULT_ENV, randomId } from '../../util/index.js';
 
 let db: ITestDb;
 let user: IUser;
+let user2: IUser;
 
 const CR_ID = 123456;
 const CR_ID_2 = 234567;
@@ -24,6 +25,10 @@ beforeAll(async () => {
 
     user = await db.stores.userStore.insert({
         username: 'cr-creator',
+    });
+
+    user2 = await db.stores.userStore.insert({
+        username: 'cr-creator-2',
     });
 
     readModel = createChangeRequestSegmentUsageReadModel(db.rawDatabase);
@@ -56,13 +61,14 @@ const createCR = async (
     state,
     changeRequestId = CR_ID,
     changeRequestTitle: string | null = CR_TITLE,
+    userId = user.id,
 ) => {
     await db.rawDatabase.table('change_requests').insert({
         id: changeRequestId,
-        environment: 'default',
+        environment: DEFAULT_ENV,
         state,
         project: 'default',
-        created_by: user.id,
+        created_by: userId,
         created_at: '2023-01-01 00:00:00',
         min_approvals: 1,
         title: changeRequestTitle,
@@ -161,7 +167,7 @@ test.each([
                 {
                     projectId: 'default',
                     strategyName: 'flexibleRollout',
-                    environment: 'default',
+                    environment: DEFAULT_ENV,
                     featureName: FLAG_NAME,
                     changeRequest: { id: CR_ID, title: CR_TITLE },
                 },
@@ -199,7 +205,7 @@ test.each([
                     id: strategyId,
                     projectId: 'default',
                     strategyName: 'flexibleRollout',
-                    environment: 'default',
+                    environment: DEFAULT_ENV,
                     featureName: FLAG_NAME,
                     changeRequest: { id: CR_ID, title: CR_TITLE },
                 },
@@ -212,7 +218,7 @@ test.each([
 
 test(`If the same strategy appears in multiple CRs with the same segment, each segment should be listed as its own entry`, async () => {
     await createCR('In review', CR_ID, CR_TITLE);
-    await createCR('In review', CR_ID_2, null);
+    await createCR('In review', CR_ID_2, null, user2.id);
 
     const segmentId = 3;
     const strategyId = randomId();
@@ -229,7 +235,7 @@ test(`If the same strategy appears in multiple CRs with the same segment, each s
         id: strategyId,
         projectId: 'default',
         strategyName: 'flexibleRollout',
-        environment: 'default',
+        environment: DEFAULT_ENV,
         featureName: FLAG_NAME,
         changeRequest: { id: CR_ID, title: CR_TITLE },
     });
@@ -237,7 +243,7 @@ test(`If the same strategy appears in multiple CRs with the same segment, each s
         id: strategyId,
         projectId: 'default',
         strategyName: 'flexibleRollout',
-        environment: 'default',
+        environment: DEFAULT_ENV,
         featureName: FLAG_NAME,
         changeRequest: { id: CR_ID_2, title: null },
     });

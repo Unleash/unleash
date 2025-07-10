@@ -13,10 +13,10 @@ import type { IUnleashServices } from '../../services/index.js';
  * @param services
  * @param config
  */
-export const scheduleServices = async (
+export const scheduleServices = (
     services: IUnleashServices,
     config: IUnleashConfig,
-): Promise<void> => {
+): void => {
     const {
         accountService,
         schedulerService,
@@ -203,7 +203,7 @@ export const scheduleServices = async (
     );
 
     schedulerService.schedule(
-        unknownFlagsService.clear.bind(unknownFlagsService, 24),
+        unknownFlagsService.clear.bind(unknownFlagsService, 24 * 7),
         hoursToMilliseconds(24),
         'clearUnknownFlags',
     );

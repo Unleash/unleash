@@ -6,19 +6,29 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import type { ITag } from 'interfaces/tags';
 import type { CreateFeatureSchema, CreateFeatureSchemaType } from 'openapi';
 
-const useFeatureForm = (
-    initialName: string = '',
-    initialType: CreateFeatureSchemaType = 'release',
-    initialProject: string = 'default',
-    initialDescription: string = '',
-    initialImpressionData: boolean = false,
-) => {
+export type FeatureFormInitialData = Partial<{
+    name: string;
+    type: CreateFeatureSchemaType;
+    project: string;
+    description: string;
+    impressionData: boolean;
+    tags: Set<ITag>;
+}>;
+
+const useFeatureForm = ({
+    name: initialName = '',
+    type: initialType = 'release',
+    project: initialProject = 'default',
+    description: initialDescription = '',
+    impressionData: initialImpressionData = false,
+    tags: initialTags = new Set(),
+}: FeatureFormInitialData) => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
     const { validateFeatureToggleName } = useFeatureApi();
     const toggleQueryName = params.get('name');
     const [type, setType] = useState(initialType);
-    const [tags, setTags] = useState<Set<ITag>>(new Set());
+    const [tags, setTags] = useState<Set<ITag>>(initialTags);
     const [name, setName] = useState(toggleQueryName || initialName);
     const [project, setProject] = useState(projectId || initialProject);
     const [description, setDescription] = useState(initialDescription);
@@ -30,12 +40,6 @@ const useFeatureForm = (
     useEffect(() => {
         setType(initialType);
     }, [initialType]);
-
-    useEffect(() => {
-        if (!name) {
-            setName(toggleQueryName || initialName);
-        }
-    }, [name, initialName, toggleQueryName]);
 
     useEffect(() => {
         if (!projectId) setProject(initialProject);

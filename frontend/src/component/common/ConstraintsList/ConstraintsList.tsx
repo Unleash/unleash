@@ -33,7 +33,6 @@ export const ConstraintsList: FC<{ children: ReactNode }> = ({ children }) => {
             result.push(
                 <StyledListItem key={index}>
                     {index > 0 ? (
-                        // todo (addEditStrategy): change divider for edit screen (probably a new component or a prop)
                         <ConstraintSeparator key={`${index}-divider`} />
                     ) : null}
                     {child}

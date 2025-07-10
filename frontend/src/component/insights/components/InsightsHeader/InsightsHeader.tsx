@@ -49,6 +49,7 @@ const StyledActionsSmallScreen = styled('div')(({ theme }) => ({
 
 export const InsightsHeader: VFC<DashboardHeaderProps> = ({ actions }) => {
     const showInactiveUsers = useUiFlag('showInactiveUsers');
+    const pageName = 'Analytics';
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -69,7 +70,7 @@ export const InsightsHeader: VFC<DashboardHeaderProps> = ({ actions }) => {
     return (
         <>
             <PageHeader
-                title='Insights'
+                title={pageName}
                 titleElement={
                     <Typography
                         variant='h1'
@@ -80,7 +81,7 @@ export const InsightsHeader: VFC<DashboardHeaderProps> = ({ actions }) => {
                             gap: theme.spacing(1),
                         })}
                     >
-                        Insights
+                        {pageName}
                     </Typography>
                 }
                 actions={

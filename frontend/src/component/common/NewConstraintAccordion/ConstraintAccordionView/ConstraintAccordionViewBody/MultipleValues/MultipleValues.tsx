@@ -3,8 +3,6 @@ import { Chip, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ConstraintValueSearch as NewConstraintValueSearch } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/ConstraintValueSearch';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { ConstraintValueSearch } from 'component/common/NewConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 
 interface IMultipleValuesProps {
     values: string[] | undefined;
@@ -25,7 +23,6 @@ const SearchWrapper = styled('div')(({ theme }) => ({
 
 export const MultipleValues = ({ values }: IMultipleValuesProps) => {
     const [filter, setFilter] = useState('');
-    const useNewSearchComponent = useUiFlag('addEditStrategy');
 
     if (!values || values.length === 0) return null;
 
@@ -34,19 +31,12 @@ export const MultipleValues = ({ values }: IMultipleValuesProps) => {
             <ConditionallyRender
                 condition={values.length > 20}
                 show={
-                    useNewSearchComponent ? (
-                        <SearchWrapper>
-                            <NewConstraintValueSearch
-                                filter={filter}
-                                setFilter={setFilter}
-                            />
-                        </SearchWrapper>
-                    ) : (
-                        <ConstraintValueSearch
+                    <SearchWrapper>
+                        <NewConstraintValueSearch
                             filter={filter}
                             setFilter={setFilter}
                         />
-                    )
+                    </SearchWrapper>
                 }
             />
             {values

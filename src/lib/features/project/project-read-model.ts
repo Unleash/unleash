@@ -42,6 +42,7 @@ const mapProjectForInsights = (row): ProjectForInsights => {
             Number(row.potentially_stale_feature_count) || 0,
         memberCount: Number(row.number_of_users) || 0,
         avgTimeToProduction: row.avg_time_to_prod_current_window || 0,
+        technicalDebt: 100 - (row.health || 0),
     };
 };
 

@@ -28,6 +28,8 @@ import type { ProjectActivitySchema } from '../../openapi/index.js';
 import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
 import { applyGenericQueryParams } from '../feature-search/search-utils.js';
 import type { ITag } from '../../tags/index.js';
+import metricsHelper from '../../util/metrics-helper.js';
+import { DB_TIME } from '../../metric-events.js';
 
 const EVENT_COLUMNS = [
     'id',
@@ -41,6 +43,8 @@ const EVENT_COLUMNS = [
     'feature_name',
     'project',
     'environment',
+    'group_type',
+    'group_id',
 ] as const;
 
 export type IQueryOperations =
@@ -97,11 +101,13 @@ export interface IEventTable {
     environment?: string;
     tags: ITag[];
     ip?: string;
+    group_type: string | null;
+    group_id: string | null;
 }
 
 const TABLE = 'events';
 
-class EventStore implements IEventStore {
+export class EventStore implements IEventStore {
     private db: Db;
 
     // only one shared event emitter should exist across all event store instances
@@ -109,26 +115,38 @@ class EventStore implements IEventStore {
 
     private logger: Logger;
 
+    private metricTimer: Function;
+
     // a new DB has to be injected per transaction
     constructor(db: Db, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('event-store');
+        this.metricTimer = (action) =>
+            metricsHelper.wrapTimer(this.eventEmitter, DB_TIME, {
+                store: 'event',
+                action,
+            });
     }
 
     async store(event: IBaseEvent): Promise<void> {
+        const stopTimer = this.metricTimer('store');
         try {
             await this.db(TABLE)
                 .insert(this.eventToDbRow(event))
                 .returning(EVENT_COLUMNS);
         } catch (error: unknown) {
             this.logger.warn(`Failed to store "${event.type}" event: ${error}`);
+        } finally {
+            stopTimer();
         }
     }
 
     async count(): Promise<number> {
+        const stopTimer = this.metricTimer('count');
         const count = await this.db(TABLE)
             .count<Record<string, number>>()
             .first();
+        stopTimer();
         if (!count) {
             return 0;
         }
@@ -143,8 +161,10 @@ class EventStore implements IEventStore {
         queryParams: IQueryParam[],
         query?: IEventSearchParams['query'],
     ): Promise<number> {
+        const stopTimer = this.metricTimer('searchEventsCount');
         const searchQuery = this.buildSearchQuery(queryParams, query);
         const count = await searchQuery.count().first();
+        stopTimer();
         if (!count) {
             return 0;
         }
@@ -156,17 +176,23 @@ class EventStore implements IEventStore {
     }
 
     async batchStore(events: IBaseEvent[]): Promise<void> {
+        const stopTimer = this.metricTimer('batchStore');
         try {
-            await this.db(TABLE).insert(events.map(this.eventToDbRow));
+            await this.db(TABLE).insert(
+                events.map((event) => this.eventToDbRow(event)),
+            );
         } catch (error: unknown) {
             this.logger.warn(
                 `Failed to store events: ${JSON.stringify(events)}`,
                 error,
             );
+        } finally {
+            stopTimer();
         }
     }
 
     async getMaxRevisionId(largerThan: number = 0): Promise<number> {
+        const stopTimer = this.metricTimer('getMaxRevisionId');
         const row = await this.db(TABLE)
             .max('id')
             .where((builder) =>
@@ -187,10 +213,12 @@ class EventStore implements IEventStore {
             )
             .andWhere('id', '>=', largerThan)
             .first();
+        stopTimer();
         return row?.max ?? 0;
     }
 
     async getRevisionRange(start: number, end: number): Promise<IEvent[]> {
+        const stopTimer = this.metricTimer('getRevisionRange');
         const query = this.db
             .select(EVENT_COLUMNS)
             .from(TABLE)
@@ -240,6 +268,7 @@ class EventStore implements IEventStore {
     }
 
     async query(operations: IQueryOperations[]): Promise<IEvent[]> {
+        const stopTimer = this.metricTimer('query');
         try {
             let query: Knex.QueryBuilder = this.select();
 
@@ -265,10 +294,13 @@ class EventStore implements IEventStore {
             return rows.map(this.rowToEvent);
         } catch (e) {
             return [];
+        } finally {
+            stopTimer();
         }
     }
 
     async queryCount(operations: IQueryOperations[]): Promise<number> {
+        const stopTimer = this.metricTimer('queryCount');
         try {
             let query: Knex.QueryBuilder = this.db.count().from(TABLE);
 
@@ -294,6 +326,8 @@ class EventStore implements IEventStore {
             return Number.parseInt(queryResult.count || 0);
         } catch (e) {
             return 0;
+        } finally {
+            stopTimer();
         }
     }
 
@@ -349,12 +383,16 @@ class EventStore implements IEventStore {
     }
 
     async getEvents(query?: Object): Promise<IEvent[]> {
+        const stopTimer = this.metricTimer('getEvents');
         try {
             let qB = this.db
                 .select(EVENT_COLUMNS)
                 .from(TABLE)
                 .limit(100)
-                .orderBy('created_at', 'desc');
+                .orderBy([
+                    { column: 'created_at', order: 'desc' },
+                    { column: 'id', order: 'desc' },
+                ]);
             if (query) {
                 qB = qB.where(query);
             }
@@ -362,6 +400,8 @@ class EventStore implements IEventStore {
             return rows.map(this.rowToEvent);
         } catch (err) {
             return [];
+        } finally {
+            stopTimer();
         }
     }
 
@@ -370,9 +410,13 @@ class EventStore implements IEventStore {
         queryParams: IQueryParam[],
         options?: { withIp?: boolean },
     ): Promise<IEvent[]> {
+        const stopTimer = this.metricTimer('searchEvents');
         const query = this.buildSearchQuery(queryParams, params.query)
             .select(options?.withIp ? [...EVENT_COLUMNS, 'ip'] : EVENT_COLUMNS)
-            .orderBy('created_at', 'desc')
+            .orderBy([
+                { column: 'created_at', order: params.order || 'desc' },
+                { column: 'id', order: params.order || 'desc' },
+            ])
             .limit(Number(params.limit) ?? 100)
             .offset(Number(params.offset) ?? 0);
 
@@ -384,6 +428,8 @@ class EventStore implements IEventStore {
             );
         } catch (err) {
             return [];
+        } finally {
+            stopTimer();
         }
     }
 
@@ -408,6 +454,7 @@ class EventStore implements IEventStore {
     }
 
     async getEventCreators(): Promise<Array<{ id: number; name: string }>> {
+        const stopTimer = this.metricTimer('getEventCreators');
         const query = this.db('events')
             .distinctOn('events.created_by_user_id')
             .leftJoin('users', 'users.id', '=', 'events.created_by_user_id')
@@ -425,6 +472,7 @@ class EventStore implements IEventStore {
             ]);
 
         const result = await query;
+        stopTimer();
         return result
             .filter((row: any) => row.name || row.username || row.email)
             .map((row: any) => ({
@@ -436,6 +484,7 @@ class EventStore implements IEventStore {
     async getProjectRecentEventActivity(
         project: string,
     ): Promise<ProjectActivitySchema> {
+        const stopTimer = this.metricTimer('getProjectRecentEventActivity');
         const result = await this.db('events')
             .select(
                 this.db.raw("TO_CHAR(created_at::date, 'YYYY-MM-DD') AS date"),
@@ -450,6 +499,7 @@ class EventStore implements IEventStore {
             .groupBy(this.db.raw("TO_CHAR(created_at::date, 'YYYY-MM-DD')"))
             .orderBy('date', 'asc');
 
+        stopTimer();
         return result.map((row) => ({
             date: row.date,
             count: Number(row.count),
@@ -469,10 +519,14 @@ class EventStore implements IEventStore {
             featureName: row.feature_name,
             project: row.project,
             environment: row.environment,
+            groupType: row.group_type || undefined,
+            groupId: row.group_id || undefined,
         };
     }
 
     eventToDbRow(e: IBaseEvent): Omit<IEventTable, 'id' | 'created_at'> {
+        const transactionContext = this.db.userParams;
+
         return {
             type: e.type,
             created_by: e.createdBy ?? 'admin',
@@ -487,6 +541,8 @@ class EventStore implements IEventStore {
             project: e.project,
             environment: e.environment,
             ip: e.ip,
+            group_type: transactionContext?.type || null,
+            group_id: transactionContext?.id || null,
         };
     }
 
@@ -513,10 +569,12 @@ class EventStore implements IEventStore {
     }
 
     async setUnannouncedToAnnounced(): Promise<IEvent[]> {
+        const stopTimer = this.metricTimer('setUnannouncedToAnnounced');
         const rows = await this.db(TABLE)
             .update({ announced: true })
             .where('announced', false)
             .returning(EVENT_COLUMNS);
+        stopTimer();
         return rows.map(this.rowToEvent);
     }
 
@@ -527,6 +585,7 @@ class EventStore implements IEventStore {
     }
 
     async setCreatedByUserId(batchSize: number): Promise<number | undefined> {
+        const stopTimer = this.metricTimer('setCreatedByUserId');
         const API_TOKEN_TABLE = 'api_tokens';
 
         const toUpdate = await this.db(`${TABLE} as e`)
@@ -574,6 +633,7 @@ class EventStore implements IEventStore {
         });
 
         await Promise.all(updatePromises);
+        stopTimer();
         return toUpdate.length;
     }
 }

@@ -26,6 +26,7 @@ export const healthOverviewSchema = {
         'mode',
         'members',
         'health',
+        'technicalDebt',
         'environments',
         'features',
     ],
@@ -75,9 +76,17 @@ export const healthOverviewSchema = {
         },
         health: {
             type: 'integer',
-            description:
-                'The overall [health rating](https://docs.getunleash.io/reference/technical-debt#project-status) of the project.',
+            description: 'Use `technicalDebt` instead.',
             example: 95,
+            deprecated: true,
+        },
+        technicalDebt: {
+            type: 'number',
+            example: 25,
+            minimum: 0,
+            maximum: 100,
+            description:
+                "An indicator of the [project's technical debt](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100",
         },
         environments: {
             type: 'array',

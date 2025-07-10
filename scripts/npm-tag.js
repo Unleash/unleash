@@ -1,8 +1,9 @@
-const semver = require('semver');
+import semver from 'semver';
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
+const { version } = require('../package.json');
 
 const latestUnleashVersion = process.argv[2];
-
-const version = require('../package.json').version;
 
 function isPrerelease(version) {
     const arr = semver.prerelease(version);

@@ -59,7 +59,6 @@ export type UiFlags = {
     personalAccessTokensKillSwitch?: boolean;
     demo?: boolean;
     googleAuthEnabled?: boolean;
-    disableBulkToggle?: boolean;
     advancedPlayground?: boolean;
     strategyVariant?: boolean;
     doraMetrics?: boolean;
@@ -81,19 +80,20 @@ export type UiFlags = {
     enableLegacyVariants?: boolean;
     flagCreator?: boolean;
     releasePlans?: boolean;
-    'enterprise-payg'?: boolean;
     productivityReportEmail?: boolean;
     showUserDeviceCount?: boolean;
     consumptionModel?: boolean;
     edgeObservability?: boolean;
-    addEditStrategy?: boolean;
-    cleanupReminder?: boolean;
-    registerFrontendClient?: boolean;
-    featureLinks?: boolean;
-    projectLinkTemplates?: boolean;
     customMetrics?: boolean;
     lifecycleMetrics?: boolean;
-    sideMenuCleanup?: boolean;
+    createFlagDialogCache?: boolean;
+    healthToTechDebt?: boolean;
+    improvedJsonDiff?: boolean;
+    impactMetrics?: boolean;
+    crDiffView?: boolean;
+    changeRequestApproverEmails?: boolean;
+    eventGrouping?: boolean;
+    reportUnknownFlags?: boolean;
 };
 
 export interface IVersionInfo {

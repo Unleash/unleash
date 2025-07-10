@@ -210,10 +210,6 @@ export interface IApiTokenCreate {
     environment: string;
     projects: string[];
     expiresAt?: Date;
-    /**
-     * @deprecated Use tokenName instead
-     */
-    username?: string;
 }
 
 export interface IApiToken extends Omit<IApiTokenCreate, 'alias'> {
@@ -346,7 +342,7 @@ export interface IProjectHealth {
     features: IFeatureOverview[];
     members: number;
     version: number;
-    health: number;
+    technicalDebt: number;
     favorite?: boolean;
     updatedAt?: Date;
     createdAt: Date | undefined;
@@ -355,6 +351,10 @@ export interface IProjectHealth {
     featureLimit?: number;
     featureNaming?: IFeatureNaming;
     defaultStickiness: string;
+    /**
+     * @deprecated
+     */
+    health: number;
 }
 
 export type ProjectOnboardingStatus =
@@ -370,7 +370,7 @@ export interface IProjectOverview {
     featureTypeCounts: IFeatureTypeCount[];
     members: number;
     version: number;
-    health: number;
+    technicalDebt: number;
     favorite?: boolean;
     updatedAt?: Date;
     archivedAt?: Date;
@@ -382,6 +382,10 @@ export interface IProjectOverview {
     defaultStickiness: string;
     onboardingStatus: ProjectOnboardingStatus;
     linkTemplates?: IProjectLinkTemplate[];
+    /**
+     * @deprecated
+     */
+    health: number;
 }
 
 export interface IProjectHealthReport extends IProjectHealth {

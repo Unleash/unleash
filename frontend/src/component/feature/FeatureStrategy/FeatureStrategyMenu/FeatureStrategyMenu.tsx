@@ -217,28 +217,26 @@ export const FeatureStrategyMenu = ({
                 maxWidth='md'
                 PaperProps={{
                     sx: {
-                        borderRadius: (theme) => '12px',
+                        borderRadius: '12px',
                     },
                 }}
             >
-                {
-                    <FeatureStrategyMenuCards
-                        projectId={projectId}
-                        featureId={featureId}
-                        environmentId={environmentId}
-                        onlyReleasePlans={onlyReleasePlans}
-                        onAddReleasePlan={(template) => {
-                            setSelectedTemplate(template);
-                            addReleasePlan(template);
-                        }}
-                        onReviewReleasePlan={(template) => {
-                            setSelectedTemplate(template);
-                            setAddReleasePlanOpen(true);
-                            onClose();
-                        }}
-                        onClose={onClose}
-                    />
-                }
+                <FeatureStrategyMenuCards
+                    projectId={projectId}
+                    featureId={featureId}
+                    environmentId={environmentId}
+                    onlyReleasePlans={onlyReleasePlans}
+                    onAddReleasePlan={(template) => {
+                        setSelectedTemplate(template);
+                        addReleasePlan(template);
+                    }}
+                    onReviewReleasePlan={(template) => {
+                        setSelectedTemplate(template);
+                        setAddReleasePlanOpen(true);
+                        onClose();
+                    }}
+                    onClose={onClose}
+                />
             </Dialog>
             {selectedTemplate && (
                 <ReleasePlanReviewDialog

@@ -162,3 +162,7 @@ input.hide-clear[type="search"]::-webkit-search-results-decoration {
 .jse-message.jse-error {
     display: none !important;
 }
+
+.react-grid-item.react-grid-placeholder {
+    background: #6c65e5 !important;
+}

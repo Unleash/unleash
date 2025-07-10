@@ -21,6 +21,7 @@ export interface IFilterDateItemProps {
     onChipClose?: () => void;
     state: FilterItemParams | null | undefined;
     operators: [string, ...string[]];
+    initMode?: 'auto-open' | 'manual';
 }
 
 export const FilterDateItem: FC<IFilterDateItemProps> = ({
@@ -31,6 +32,7 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     onChipClose,
     state,
     operators,
+    initMode = 'auto-open',
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
@@ -41,7 +43,7 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     };
 
     useEffect(() => {
-        if (!state) {
+        if (!state && initMode === 'auto-open') {
             open();
         }
     }, []);

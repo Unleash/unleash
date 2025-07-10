@@ -1,10 +1,5 @@
 import openapi, { type IExpressOpenApi } from '@wesleytodd/openapi';
-import {
-    type Express,
-    type RequestHandler,
-    type Response,
-    static as expressStatic,
-} from 'express';
+import type { Express, RequestHandler, Response } from 'express';
 import type { IUnleashConfig } from '../types/option.js';
 import {
     createOpenApiSchema,
@@ -44,17 +39,32 @@ export class OpenApiService {
 
     validPath(op: ApiOperation): RequestHandler {
         const { beta, enterpriseOnly, ...rest } = op;
-
+        const { baseUriPath = '' } = this.config.server ?? {};
+        const openapiStaticAssets = `${baseUriPath}/openapi-static`;
         const betaBadge = beta
-            ? `![Beta](${this.docsStaticsPath()}/Beta.svg) This is a beta endpoint and it may change or be removed in the future. 
+            ? `![Beta](${openapiStaticAssets}/Beta.svg) This is a beta endpoint and it may change or be removed in the future. 
             
             `
             : '';
         const enterpriseBadge = enterpriseOnly
-            ? `![Unleash Enterprise](${this.docsStaticsPath()}/Enterprise.svg) **Enterprise feature**
+            ? `![Unleash Enterprise](${openapiStaticAssets}/Enterprise.svg) **Enterprise feature**
             
             `
             : '';
+
+        const failDeprecated =
+            (op.deprecated ?? false) && process.env.NODE_ENV === 'development';
+
+        if (failDeprecated) {
+            return (req, res, next) => {
+                this.logger.warn(
+                    `Deprecated endpoint: ${op.operationId} at ${req.path}`,
+                );
+                return res.status(410).json({
+                    message: `The endpoint ${op.operationId} at ${req.path} is deprecated and should not be used.`,
+                });
+            };
+        }
         return this.api.validPath({
             ...rest,
             description:
@@ -68,15 +78,6 @@ export class OpenApiService {
     useDocs(app: Express): void {
         app.use(this.api);
         app.use(this.docsPath(), this.api.swaggerui());
-        app.use(
-            this.docsStaticsPath(),
-            expressStatic('openapi-static', { index: false }),
-        );
-    }
-
-    docsStaticsPath(): string {
-        const { baseUriPath = '' } = this.config.server ?? {};
-        return `${baseUriPath}/docs/static`;
     }
 
     docsPath(): string {
@@ -95,7 +96,7 @@ export class OpenApiService {
     respondWithValidation<T, S = SchemaId>(
         status: number,
         res: Response<T>,
-        schema: S,
+        schema: SchemaId,
         data: T,
         headers: { [header: string]: string } = {},
     ): void {
@@ -103,8 +104,8 @@ export class OpenApiService {
 
         if (errors) {
             this.logger.debug(
-                'Invalid response:',
-                JSON.stringify(errors, null, 4),
+                `Invalid response for ${res.req?.originalUrl || ''}:`,
+                errors,
             );
             if (this.flagResolver.isEnabled('strictSchemaValidation')) {
                 throw new Error(JSON.stringify(errors, null, 4));

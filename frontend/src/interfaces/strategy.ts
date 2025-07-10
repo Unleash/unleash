@@ -1,6 +1,6 @@
 import type { Operator } from 'constants/operators';
 import type { IFeatureVariant } from './featureToggle.js';
-import { constraintId } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
+import { constraintId } from 'constants/constraintId.js';
 
 export interface IFeatureStrategy {
     id: string;
@@ -66,6 +66,10 @@ export interface IConstraint {
     operator: Operator;
     contextName: string;
     [constraintId]?: string;
+}
+
+export interface IConstraintWithId extends IConstraint {
+    [constraintId]: string;
 }
 
 export interface IFeatureStrategySortOrder {

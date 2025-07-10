@@ -32,8 +32,9 @@ import Controller from '../../controller.js';
 import type { Logger } from '../../../logger.js';
 import type { Response } from 'express';
 import { timingSafeEqual } from 'crypto';
-import { createApiToken } from '../../../schema/api-token-schema.js';
 import { OperationDeniedError } from '../../../error/index.js';
+import type { CreateProjectApiTokenSchema } from '../../../openapi/spec/create-project-api-token-schema.js';
+import { createProjectApiToken } from '../../../schema/create-project-api-token-schema.js';
 
 interface ProjectTokenParam {
     token: string;
@@ -109,7 +110,9 @@ export class ProjectApiTokenController extends Controller {
                 openApiService.validPath({
                     tags: ['Projects'],
                     operationId: 'createProjectApiToken',
-                    requestBody: createRequestSchema('createApiTokenSchema'),
+                    requestBody: createRequestSchema(
+                        'createProjectApiTokenSchema',
+                    ),
                     summary: 'Create a project API token.',
                     description:
                         'Endpoint that allows creation of [project API tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys#api-token-visibility) for the specified project.',
@@ -160,10 +163,10 @@ export class ProjectApiTokenController extends Controller {
     }
 
     async createProjectApiToken(
-        req: IAuthRequest,
+        req: IAuthRequest<{ projectId: string }, CreateProjectApiTokenSchema>,
         res: Response<ApiTokenSchema>,
     ): Promise<any> {
-        const createToken = await createApiToken.validateAsync(req.body);
+        const createToken = await createProjectApiToken.validateAsync(req.body);
         const { projectId } = req.params;
         await this.projectService.getProject(projectId); // Validates that the project exists
 
@@ -178,30 +181,17 @@ export class ProjectApiTokenController extends Controller {
                 `You don't have the necessary access [${permissionRequired}] to perform this operation]`,
             );
         }
-        if (!createToken.project) {
-            createToken.project = projectId;
-        }
-
-        if (
-            createToken.projects.length === 1 &&
-            createToken.projects[0] === projectId
-        ) {
-            const token = await this.apiTokenService.createApiToken(
-                createToken,
-                req.audit,
-            );
-            this.openApiService.respondWithValidation(
-                201,
-                res,
-                apiTokenSchema.$id,
-                serializeDates(token),
-                { location: `api-tokens` },
-            );
-        } else {
-            res.statusMessage =
-                'Project level tokens can only be created for one project';
-            res.status(400);
-        }
+        const token = await this.apiTokenService.createApiTokenWithProjects(
+            { ...createToken, projects: [projectId] },
+            req.audit,
+        );
+        this.openApiService.respondWithValidation(
+            201,
+            res,
+            apiTokenSchema.$id,
+            serializeDates(token),
+            { location: `api-tokens` },
+        );
     }
 
     async deleteProjectApiToken(

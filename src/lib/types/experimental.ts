@@ -17,7 +17,6 @@ export type IFlagKey =
     | 'migrationLock'
     | 'demo'
     | 'googleAuthEnabled'
-    | 'disableBulkToggle'
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
     | 'disableMetrics'
@@ -47,7 +46,6 @@ export type IFlagKey =
     | 'releasePlans'
     | 'productivityReportEmail'
     | 'productivityReportUnsubscribers'
-    | 'enterprise-payg'
     | 'showUserDeviceCount'
     | 'memorizeStats'
     | 'streaming'
@@ -56,18 +54,17 @@ export type IFlagKey =
     | 'uniqueSdkTracking'
     | 'consumptionModel'
     | 'edgeObservability'
-    | 'addEditStrategy'
-    | 'cleanupReminder'
-    | 'removeInactiveApplications'
-    | 'registerFrontendClient'
-    | 'featureLinks'
-    | 'projectLinkTemplates'
     | 'reportUnknownFlags'
-    | 'lastSeenBulkQuery'
-    | 'newGettingStartedEmail'
     | 'lifecycleMetrics'
+    | 'healthToTechDebt'
     | 'customMetrics'
-    | 'sideMenuCleanup';
+    | 'impactMetrics'
+    | 'createFlagDialogCache'
+    | 'improvedJsonDiff'
+    | 'crDiffView'
+    | 'changeRequestApproverEmails'
+    | 'paygTrialEvents'
+    | 'eventGrouping';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -107,10 +104,6 @@ const flags: IFlags = {
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
     googleAuthEnabled: parseEnvVarBoolean(
         process.env.GOOGLE_AUTH_ENABLED,
-        false,
-    ),
-    disableBulkToggle: parseEnvVarBoolean(
-        process.env.DISABLE_BULK_TOGGLE,
         false,
     ),
     filterInvalidClientMetrics: parseEnvVarBoolean(
@@ -239,10 +232,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_PRODUCTIVITY_REPORT_UNSUBSCRIBERS,
         false,
     ),
-    'enterprise-payg': parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ENTERPRISE_PAYG,
-        false,
-    ),
     showUserDeviceCount: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SHOW_USER_DEVICE_COUNT,
         false,
@@ -272,49 +261,44 @@ const flags: IFlags = {
         process.env.EXPERIMENTAL_EDGE_OBSERVABILITY,
         false,
     ),
-    addEditStrategy: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ADD_EDIT_STRATEGY,
-        false,
-    ),
-
-    cleanupReminder: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CLEANUP_REMINDER,
-        false,
-    ),
-    removeInactiveApplications: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_REMOVE_INACTIVE_APPLICATIONS,
-        false,
-    ),
-    registerFrontendClient: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_REGISTER_FRONTEND_CLIENT,
-        false,
-    ),
-    featureLinks: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FEATURE_LINKS,
-        false,
-    ),
-    projectLinkTemplates: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROJECT_LINK_TEMPLATES,
-        false,
-    ),
     reportUnknownFlags: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REPORT_UNKNOWN_FLAGS,
-        false,
-    ),
-    lastSeenBulkQuery: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_LAST_SEEN_BULK_QUERY,
-        false,
-    ),
-    newGettingStartedEmail: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_GETTING_STARTED_EMAIL,
         false,
     ),
     lifecycleMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_METRICS,
         false,
     ),
-    sideMenuCleanup: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SIDE_MENU_CLEANUP,
+    healthToTechDebt: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_HEALTH_TO_TECH_DEBT,
+        false,
+    ),
+    createFlagDialogCache: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CREATE_FLAG_DIALOG_CACHE,
+        false,
+    ),
+    changeRequestApproverEmails: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_APPROVER_EMAILS,
+        false,
+    ),
+    improvedJsonDiff: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_IMPROVED_JSON_DIFF,
+        false,
+    ),
+    crDiffView: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CR_DIFF_VIEW,
+        false,
+    ),
+    impactMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS,
+        false,
+    ),
+    eventGrouping: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EVENT_GROUPING,
+        false,
+    ),
+    paygTrialEvents: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PAYG_TRIAL_EVENTS,
         false,
     ),
 };
@@ -340,10 +324,19 @@ export interface IFlagResolver {
     isEnabled: (expName: IFlagKey, context?: IFlagContext) => boolean;
     getVariant: (expName: IFlagKey, context?: IFlagContext) => Variant;
     getStaticContext: () => IFlagContext;
+    impactMetrics?: IImpactMetricsResolver;
 }
 
 export interface IExternalFlagResolver {
     isEnabled: (flagName: IFlagKey, context?: IFlagContext) => boolean;
     getVariant: (flagName: IFlagKey, context?: IFlagContext) => Variant;
     getStaticContext: () => IFlagContext;
+    impactMetrics?: IImpactMetricsResolver;
+}
+
+export interface IImpactMetricsResolver {
+    defineCounter(name: string, help: string);
+    defineGauge(name: string, help: string);
+    incrementCounter(name: string, value?: number, featureName?: string): void;
+    updateGauge(name: string, value: number, featureName?: string): void;
 }

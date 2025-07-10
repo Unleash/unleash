@@ -63,11 +63,12 @@ import {
     type UserAccessOverviewSchema,
     userAccessOverviewSchema,
 } from '../../openapi/index.js';
+import type { WithTransactional } from '../../server-impl.js';
 
 export default class UserAdminController extends Controller {
     private flagResolver: IFlagResolver;
 
-    private userService: UserService;
+    private userService: WithTransactional<UserService>;
 
     private accountService: AccountService;
 
@@ -495,7 +496,7 @@ export default class UserAdminController extends Controller {
         const rootRoles = await this.accessService.getRootRoles();
         const inviteLinks = await this.resetTokenService.getActiveInvitations();
 
-        const usersWithInviteLinks = users.map((user) => {
+        const usersWithInviteLinks = users.map(({ isAPI, ...user }) => {
             const inviteLink = inviteLinks[user.id] || '';
             return { ...user, inviteLink };
         });
@@ -533,7 +534,7 @@ export default class UserAdminController extends Controller {
             200,
             res,
             usersSearchSchema.$id,
-            serializeDates(users),
+            serializeDates(users.map(({ isAPI, ...u }) => u)),
         );
     }
 
@@ -580,7 +581,7 @@ export default class UserAdminController extends Controller {
         res: Response<UserSchema>,
     ): Promise<void> {
         const { id } = req.params;
-        const user = await this.userService.getUser(id);
+        const { isAPI, ...user } = await this.userService.getUser(id);
 
         this.openApiService.respondWithValidation(
             200,
@@ -600,33 +601,42 @@ export default class UserAdminController extends Controller {
             ? Number(rootRole)
             : (rootRole as RoleName);
 
-        const createdUser = await this.userService.createUser(
-            {
-                username,
-                email,
-                name,
-                password,
-                rootRole: normalizedRootRole,
+        const responseData = await this.userService.transactional(
+            async (txUserService) => {
+                const createdUser = await txUserService.createUser(
+                    {
+                        username,
+                        email,
+                        name,
+                        password,
+                        rootRole: normalizedRootRole,
+                    },
+                    req.audit,
+                );
+
+                const inviteLink = await txUserService.newUserInviteLink(
+                    createdUser,
+                    req.audit,
+                );
+
+                // send email defaults to true
+                const emailSent = (sendEmail !== undefined ? sendEmail : true)
+                    ? await txUserService.sendWelcomeEmail(
+                          createdUser,
+                          inviteLink,
+                      )
+                    : false;
+
+                const { isAPI, ...user } = createdUser;
+                const responseData: CreateUserResponseSchema = {
+                    ...serializeDates(user),
+                    inviteLink,
+                    emailSent,
+                    rootRole: normalizedRootRole,
+                };
+                return responseData;
             },
-            req.audit,
         );
-
-        const inviteLink = await this.userService.newUserInviteLink(
-            createdUser,
-            req.audit,
-        );
-
-        // send email defaults to true
-        const emailSent = (sendEmail !== undefined ? sendEmail : true)
-            ? await this.userService.sendWelcomeEmail(createdUser, inviteLink)
-            : false;
-
-        const responseData: CreateUserResponseSchema = {
-            ...serializeDates(createdUser),
-            inviteLink,
-            emailSent,
-            rootRole: normalizedRootRole,
-        };
 
         this.openApiService.respondWithValidation(
             201,
@@ -654,7 +664,7 @@ export default class UserAdminController extends Controller {
             ? Number(rootRole)
             : (rootRole as RoleName);
 
-        const updateUser = await this.userService.updateUser(
+        const { isAPI, ...updateUser } = await this.userService.updateUser(
             {
                 id,
                 name,
@@ -733,7 +743,9 @@ export default class UserAdminController extends Controller {
         res: Response<UserAccessOverviewSchema>,
     ): Promise<void> {
         const { project, environment } = req.query;
-        const user = await this.userService.getUser(req.params.id);
+        const { isAPI, ...user } = await this.userService.getUser(
+            req.params.id,
+        );
         const rootRole = await this.accessService.getRootRoleForUser(user.id);
         let projectRoles: IRoleWithPermissions[] = [];
         if (project) {

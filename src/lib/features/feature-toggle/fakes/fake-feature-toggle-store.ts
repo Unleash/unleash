@@ -231,11 +231,6 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         }
     }
 
-    async getVariants(featureName: string): Promise<IVariant[]> {
-        const feature = await this.get(featureName);
-        return feature.variants as IVariant[];
-    }
-
     async getAllVariants(): Promise<IFeatureEnvironment[]> {
         const features = await this.getAll();
         const variants = features.flatMap((feature) => ({

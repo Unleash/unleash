@@ -34,6 +34,10 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     margin: 0,
 }));
 
+const BreakableCode = styled('code')({
+    overflowWrap: 'anywhere',
+});
+
 type Props = {
     naming: CreateFeatureNamingPatternSchema;
 };
@@ -48,14 +52,15 @@ export const NamingPatternInfo: React.FC<Props> = ({ naming }) => {
                     aria-controls={controlId}
                     expandIcon={<ExpandMoreIcon />}
                 >
-                    Name must match:&nbsp;<code>^{naming.pattern}$</code>
+                    Name must match:&nbsp;
+                    <BreakableCode>^{naming.pattern}$</BreakableCode>
                 </AccordionSummary>
                 <AccordionDetails>
                     <p>The name must match this pattern:</p>
                     <dl id='naming-pattern-info'>
                         <dt>Pattern</dt>
                         <dd>
-                            <code>^{naming.pattern}$</code>
+                            <BreakableCode>^{naming.pattern}$</BreakableCode>
                         </dd>
                         <ConditionallyRender
                             condition={Boolean(naming?.example)}

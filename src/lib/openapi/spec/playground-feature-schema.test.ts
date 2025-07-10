@@ -96,14 +96,6 @@ const playgroundStrategies = (): Arbitrary<PlaygroundStrategySchema[]> =>
             ),
 
             playgroundStrategy(
-                'userWithId',
-                fc.record({
-                    userIds: fc
-                        .uniqueArray(fc.emailAddress())
-                        .map((ids) => ids.join(',')),
-                }),
-            ),
-            playgroundStrategy(
                 'remoteAddress',
                 fc.record({
                     IPs: fc.uniqueArray(fc.ipV4()).map((ips) => ips.join(',')),

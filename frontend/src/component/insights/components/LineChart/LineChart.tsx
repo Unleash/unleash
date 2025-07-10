@@ -27,7 +27,10 @@ export const fillGradientPrimary = fillGradient(
     'rgba(129, 122, 254, 0.12)',
 );
 
-export const NotEnoughData = () => (
+export const NotEnoughData = ({
+    title = 'Not enough data',
+    description = 'Two or more weeks of data are needed to show a chart.',
+}) => (
     <>
         <Typography
             variant='body1'
@@ -36,10 +39,8 @@ export const NotEnoughData = () => (
                 paddingBottom: theme.spacing(1),
             })}
         >
-            Not enough data
+            {title}
         </Typography>
-        <Typography variant='body2'>
-            Two or more weeks of data are needed to show a chart.
-        </Typography>
+        <Typography variant='body2'>{description}</Typography>
     </>
 );

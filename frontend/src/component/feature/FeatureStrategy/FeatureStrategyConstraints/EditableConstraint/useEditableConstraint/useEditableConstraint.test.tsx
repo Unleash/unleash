@@ -40,11 +40,13 @@ test('calls onUpdate with new state', async () => {
 
     // gets called by useEffect, so we need to wait for the next render.
     await waitFor(() => {
-        expect(onUpdate).toHaveBeenCalledWith({
-            contextName: 'context-field',
-            operator: IN,
-            values: [],
-        });
+        expect(onUpdate).toHaveBeenCalledWith(
+            expect.objectContaining({
+                contextName: 'context-field',
+                operator: IN,
+                values: [],
+            }),
+        );
     });
 });
 
@@ -149,6 +151,27 @@ describe('validators', () => {
                 [['hey'], true],
                 // @ts-expect-error
                 [[5, 6], false],
+            ]);
+        },
+    );
+
+    test.each(multipleValueOperators)(
+        'multi-value operator %s should reject fully duplicate inputs and accept new values',
+        (operator) => {
+            const initial: IConstraint = {
+                contextName: 'context-field',
+                operator: operator,
+                values: ['a', 'b'],
+            };
+
+            const { result } = renderHook(() =>
+                useEditableConstraint(initial, () => {}),
+            );
+
+            checkValidator(result.current.validator, [
+                ['a', false],
+                [['a', 'c'], true],
+                [['a', 'b'], false],
             ]);
         },
     );

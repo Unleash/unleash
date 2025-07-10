@@ -34,7 +34,7 @@ const usePersistentSearchParams = <T extends QueryParamConfigMap>(
 export const usePersistentTableState = <T extends QueryParamConfigMap>(
     key: string,
     queryParamsDefinition: T,
-    excludedFromStorage: string[] = ['offset'],
+    excludedFromStorage: (keyof T)[] = ['offset'],
 ) => {
     const updateStoredParams = usePersistentSearchParams(
         key,

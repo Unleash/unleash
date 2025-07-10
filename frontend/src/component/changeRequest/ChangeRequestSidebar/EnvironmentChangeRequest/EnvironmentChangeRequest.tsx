@@ -24,6 +24,9 @@ import Input from 'component/common/Input/Input';
 import { ChangeRequestTitle } from './ChangeRequestTitle.tsx';
 import { UpdateCount } from 'component/changeRequest/UpdateCount';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { DraftChangeRequestActions } from '../DraftChangeRequestActions/DraftChangeRequestActions.tsx';
+import type { AvailableReviewerSchema } from 'hooks/api/getters/useAvailableChangeRequestReviewers/useAvailableChangeRequestReviewers.ts';
 
 const SubmitChangeRequestButton: FC<{
     onClick: () => void;
@@ -71,11 +74,22 @@ export const EnvironmentChangeRequest: FC<{
     const [commentText, setCommentText] = useState('');
     const { user } = useAuthUser();
     const [title, setTitle] = useState(environmentChangeRequest.title);
-    const { changeState } = useChangeRequestApi();
+    const { changeState, updateRequestedApprovers } = useChangeRequestApi();
+    const [reviewers, setReviewers] = useState<AvailableReviewerSchema[]>([]);
+
     const [disabled, setDisabled] = useState(false);
+    const approversEnabled = useUiFlag('changeRequestApproverEmails');
     const sendToReview = async (project: string) => {
         setDisabled(true);
         try {
+            if (reviewers && reviewers.length > 0) {
+                await updateRequestedApprovers(
+                    project,
+                    environmentChangeRequest.id,
+                    reviewers.map((reviewer) => reviewer.id),
+                );
+            }
+
             await changeState(project, environmentChangeRequest.id, 'Draft', {
                 state: 'In review',
                 comment: commentText,
@@ -153,27 +167,50 @@ export const EnvironmentChangeRequest: FC<{
                     <ConditionallyRender
                         condition={environmentChangeRequest?.state === 'Draft'}
                         show={
-                            <>
-                                <SubmitChangeRequestButton
-                                    onClick={() => onReview(sendToReview)}
-                                    count={changesCount(
-                                        environmentChangeRequest,
-                                    )}
-                                    disabled={disabled}
-                                />
+                            <ConditionallyRender
+                                condition={approversEnabled}
+                                show={
+                                    <DraftChangeRequestActions
+                                        environmentChangeRequest={
+                                            environmentChangeRequest
+                                        }
+                                        reviewers={reviewers}
+                                        setReviewers={setReviewers}
+                                        onReview={onReview}
+                                        onDiscard={onDiscard}
+                                        sendToReview={sendToReview}
+                                        disabled={disabled}
+                                        setDisabled={setDisabled}
+                                    />
+                                }
+                                elseShow={
+                                    <>
+                                        <SubmitChangeRequestButton
+                                            onClick={() =>
+                                                onReview(sendToReview)
+                                            }
+                                            count={changesCount(
+                                                environmentChangeRequest,
+                                            )}
+                                            disabled={disabled}
+                                        />
 
-                                <Button
-                                    sx={{ ml: 2 }}
-                                    variant='outlined'
-                                    disabled={disabled}
-                                    onClick={() => {
-                                        setDisabled(true);
-                                        onDiscard(environmentChangeRequest.id);
-                                    }}
-                                >
-                                    Discard changes
-                                </Button>
-                            </>
+                                        <Button
+                                            sx={{ ml: 2 }}
+                                            variant='outlined'
+                                            disabled={disabled}
+                                            onClick={() => {
+                                                setDisabled(true);
+                                                onDiscard(
+                                                    environmentChangeRequest.id,
+                                                );
+                                            }}
+                                        >
+                                            Discard changes
+                                        </Button>
+                                    </>
+                                }
+                            />
                         }
                     />
                     <ConditionallyRender

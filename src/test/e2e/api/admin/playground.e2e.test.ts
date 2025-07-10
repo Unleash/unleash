@@ -14,6 +14,7 @@ import type { PlaygroundFeatureSchema } from '../../../../lib/openapi/spec/playg
 import type { ClientFeatureSchema } from '../../../../lib/openapi/spec/client-feature-schema.js';
 import type { PlaygroundResponseSchema } from '../../../../lib/openapi/spec/playground-response-schema.js';
 import type { PlaygroundRequestSchema } from '../../../../lib/openapi/spec/playground-request-schema.js';
+import { DEFAULT_ENV } from '../../../../lib/server-impl.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -107,9 +108,9 @@ describe('Playground API E2E', () => {
                     feature.enabled,
                 );
 
-                await database.stores.featureToggleStore.saveVariants(
-                    feature.project!,
+                await database.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
                     feature.name,
+                    environment,
                     [
                         ...(feature.variants ?? []).map((variant) => ({
                             ...variant,
@@ -240,7 +241,7 @@ describe('Playground API E2E', () => {
                             token.secret,
                             {
                                 projects: ALL,
-                                environment: 'default',
+                                environment: DEFAULT_ENV,
                                 context: {
                                     appName: 'playground-test',
                                 },
@@ -287,14 +288,14 @@ describe('Playground API E2E', () => {
                     clientFeatures(),
                     fc.context(),
                     async (features, ctx) => {
-                        await seedDatabase(db, features, 'default');
+                        await seedDatabase(db, features, DEFAULT_ENV);
 
                         const body = await playgroundRequest(
                             app,
                             token.secret,
                             {
                                 projects: ALL,
-                                environment: 'default',
+                                environment: DEFAULT_ENV,
                                 context: {
                                     appName: 'playground-test',
                                 },
@@ -372,7 +373,7 @@ describe('Playground API E2E', () => {
                                 // one of the above values
                                 context: {
                                     appName: generatedAppName,
-                                    environment: 'default',
+                                    environment: DEFAULT_ENV,
                                 },
                             })),
                         constrainedFeatures(),

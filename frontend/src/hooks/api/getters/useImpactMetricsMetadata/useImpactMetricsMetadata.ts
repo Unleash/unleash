@@ -4,6 +4,7 @@ import { formatApiPath } from 'utils/formatPath';
 export type ImpactMetricsSeries = {
     type: string;
     help: string;
+    displayName: string;
 };
 
 export type ImpactMetricsMetadata = {

@@ -241,7 +241,7 @@ const sidebars: SidebarsConfig = {
                         },
                     ],
                 },
-                                {
+                {
                     label: 'Enterprise-grade security and scale',
                     type: 'category',
                     collapsed: true,
@@ -267,7 +267,7 @@ const sidebars: SidebarsConfig = {
                         },
                     ],
                 },
-                                {
+                {
                     label: 'Experimentation and analytics',
                     type: 'category',
                     collapsed: true,

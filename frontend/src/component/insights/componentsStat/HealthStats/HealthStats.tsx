@@ -3,7 +3,6 @@ import { Box, Divider, Link, styled } from '@mui/material';
 import { ReactComponent as InstanceHealthIcon } from 'assets/icons/instance-health.svg';
 
 interface IHealthStatsProps {
-    value?: string | number;
     technicalDebt?: string | number;
     healthy: number;
     stale: number;
@@ -65,7 +64,6 @@ const StyledMainValue = styled(StyledValue)(({ theme }) => ({
 }));
 
 export const HealthStats: FC<IHealthStatsProps> = ({
-    value,
     technicalDebt,
     healthy,
     stale,
@@ -101,7 +99,7 @@ export const HealthStats: FC<IHealthStatsProps> = ({
                 </StyledStatsRow>
                 <ExplanationRow>
                     <Link
-                        href='https://docs.getunleash.io/reference/insights#health'
+                        href='https://docs.getunleash.io/reference/insights#technical-debt'
                         target='_blank'
                         rel='noreferrer'
                     >

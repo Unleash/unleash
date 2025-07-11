@@ -215,7 +215,7 @@ export default class ClientMetricsServiceV2 {
 
         const invalidToggleNames =
             toggleNames.length - validatedToggleNames.length;
-        this.logger.info(
+        this.logger.debug(
             `Got ${toggleNames.length} (${invalidToggleNames > 0 ? `${invalidToggleNames} invalid ones` : 'all valid'}) metrics from ${value.appName}`,
         );
 
@@ -244,7 +244,7 @@ export default class ClientMetricsServiceV2 {
                 seenAt: value.bucket.stop,
                 environment,
             }));
-            this.logger.info(
+            this.logger.debug(
                 `Registering ${unknownFlags.length} unknown flags from ${value.appName} in the ${environment} environment. Some of the unknown flag names include: ${unknownFlags
                     .slice(0, 10)
                     .map(({ name }) => `"${name}"`)

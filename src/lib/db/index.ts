@@ -205,7 +205,7 @@ export const createStores = (
         releasePlanMilestoneStrategyStore:
             new ReleasePlanMilestoneStrategyStore(db, config),
         featureLinkStore: new FeatureLinkStore(db, config),
-        unknownFlagsStore: new UnknownFlagsStore(db),
+        unknownFlagsStore: new UnknownFlagsStore(db, getLogger),
         featureLinkReadModel: new FeatureLinksReadModel(db, eventBus),
     };
 };

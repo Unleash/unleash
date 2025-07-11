@@ -1,6 +1,8 @@
 import type { Db } from '../../../db/db.js';
+import type { Logger, LogProvider } from '../../../logger.js';
 
 const TABLE = 'unknown_flags';
+const MAX_INSERT_BATCH_SIZE = 100;
 
 export type UnknownFlag = {
     name: string;
@@ -28,22 +30,36 @@ export interface IUnknownFlagsStore {
 export class UnknownFlagsStore implements IUnknownFlagsStore {
     private db: Db;
 
-    constructor(db: Db) {
+    private logger: Logger;
+
+    constructor(db: Db, getLogger: LogProvider) {
         this.db = db;
+        this.logger = getLogger('unknown-flags-store.ts');
     }
 
     async insert(flags: UnknownFlag[]): Promise<void> {
-        if (flags.length > 0) {
-            const rows = flags.map((flag) => ({
-                name: flag.name,
-                app_name: flag.appName,
-                seen_at: flag.seenAt,
-                environment: flag.environment,
-            }));
-            await this.db(TABLE)
-                .insert(rows)
-                .onConflict(['name', 'app_name', 'environment'])
-                .merge(['seen_at']);
+        if (!flags.length) return;
+
+        const rows = flags.map(({ name, appName, seenAt, environment }) => ({
+            name,
+            app_name: appName,
+            seen_at: seenAt,
+            environment,
+        }));
+
+        for (let i = 0; i < rows.length; i += MAX_INSERT_BATCH_SIZE) {
+            const chunk = rows.slice(i, i + MAX_INSERT_BATCH_SIZE);
+            try {
+                await this.db(TABLE)
+                    .insert(chunk)
+                    .onConflict(['name', 'app_name', 'environment'])
+                    .merge(['seen_at']);
+            } catch (error) {
+                this.logger.debug(
+                    `unknown_flags: batch ${i / MAX_INSERT_BATCH_SIZE + 1} failed and was skipped.`,
+                    error,
+                );
+            }
         }
     }
 

@@ -119,7 +119,9 @@ const ProjectHealthMessage: FC<{
             <>
                 <Typography>
                     Your current project technical debt is{' '}
-                    <PercentageScore>{avgCurrentTechnicalDebt}%</PercentageScore>
+                    <PercentageScore>
+                        {avgCurrentTechnicalDebt}%
+                    </PercentageScore>
                     .
                 </Typography>
                 <Typography>{improveMessage}</Typography>

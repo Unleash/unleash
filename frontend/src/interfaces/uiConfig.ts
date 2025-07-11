@@ -87,7 +87,6 @@ export type UiFlags = {
     customMetrics?: boolean;
     lifecycleMetrics?: boolean;
     createFlagDialogCache?: boolean;
-    healthToTechDebt?: boolean;
     improvedJsonDiff?: boolean;
     impactMetrics?: boolean;
     crDiffView?: boolean;

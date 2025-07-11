@@ -1,7 +1,6 @@
 import type { FC, ReactNode } from 'react';
 import { Box, Divider, Link, styled } from '@mui/material';
 import { ReactComponent as InstanceHealthIcon } from 'assets/icons/instance-health.svg';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IHealthStatsProps {
     value?: string | number;
@@ -73,8 +72,6 @@ export const HealthStats: FC<IHealthStatsProps> = ({
     potentiallyStale,
     title,
 }) => {
-    const healthToDebtEnabled = useUiFlag('healthToTechDebt');
-
     return (
         <StyledContainer>
             <StyledHeader>
@@ -84,12 +81,8 @@ export const HealthStats: FC<IHealthStatsProps> = ({
             <StyledSection>
                 <StyledStatsRow>
                     <StyledIcon />
-                    {healthToDebtEnabled ? 'Technical debt' : 'Instance health'}
-                    {healthToDebtEnabled ? (
-                        <StyledMainValue>{`${technicalDebt}%`}</StyledMainValue>
-                    ) : (
-                        <StyledMainValue>{`${value || 0}%`}</StyledMainValue>
-                    )}
+                    Technical debt
+                    <StyledMainValue>{`${technicalDebt}%`}</StyledMainValue>
                 </StyledStatsRow>
             </StyledSection>
             <Divider />
@@ -112,9 +105,7 @@ export const HealthStats: FC<IHealthStatsProps> = ({
                         target='_blank'
                         rel='noreferrer'
                     >
-                        {healthToDebtEnabled
-                            ? 'What affects technical debt?'
-                            : 'What affects instance health?'}
+                        What affects technical debt?
                     </Link>
                 </ExplanationRow>
             </FlagsSection>

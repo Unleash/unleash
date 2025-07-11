@@ -6,7 +6,7 @@ This guide outlines several methods for enabling HTTPS in your self-hosted Unlea
 
 ## Load balancer
 
-The recommended and most robust method is to use a load balancer.
+The recommended and simplest method is to use a load balancer.
 
 A load balancer from a cloud provider renews the HTTPS certificates for you and keeps the data safe when it moves between the internet and your server.
 Also, your cloud provider's private network between your load balancer and the application is already encrypted.

@@ -1,0 +1,520 @@
+---
+title: Managing feature flags in your codebase
+toc_max_heading_level: 2
+---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+How you manage feature flags in your code directly impacts your app's performance, testability, and long-term maintainability.
+Let's be honest: without discipline, flags quickly become tech debt, making your code harder to understand and risky to change.
+
+In this guide, we explore hands-on strategies for managing flags in your code effectively. We'll give you practical recommendations and code examples to help you build a system that's reliable, scalable, and easy to maintain.
+
+## Building on a foundation of clean code
+
+Before we dive into specifics, remember that good software design practices make everything easier. Principles like modularity and a clear separation of concerns are your best friends when integrating feature flags.
+
+Here are the goals we're aiming for:
+  - **Clarity**: Your feature flag logic should be easy to find and understand. Any developer on your team should be able to quickly grasp what a flag does and how it affects the system.
+  - **Maintainability**: Adding, changing, and—most importantly—removing flags should be a simple and low-risk process.
+  - **Testability**: Your code under a flag must be easily and reliably testable, ideally without causing a combinatorial explosion of test cases.
+  - **Scalability**: Your approach needs to handle a growing number of flags and developers without turning your codebase into a tangled mess.
+
+
+## Defining and storing flag names
+
+Your first step is deciding how to represent and store flag names. These identifiers are the critical link between your code and your flag configurations in the Unleash Admin UI. A disorganized approach here can quickly lead to typos, inconsistencies, and difficulty in tracking down where a flag is used.
+
+> **Centralize your flag name definitions using constants or enums.**
+
+This approach establishes a single source of truth for all flag names in your application.
+
+**Why centralize definitions?**
+
+  * **Avoids inconsistencies or errors**: Using constants or enums prevents typos and inconsistencies that arise from scattering string literals (`"my-new-feature"`) throughout the application. Your compiler or linter can catch errors for you.
+  * **Improves discoverability**: A central file acts as a manifest of all flags used in the application, making it easy for developers to see what's available and how flags are named.
+  * **Simplifies refactoring and cleanup**: If you need to change a flag's name in your code (for example, to fix a typo), you only need to update it in one place.
+
+Here is a simple and highly effective pattern using TypeScript's as const feature. It's robust, type-safe, and easy to understand.
+
+```typescript
+// src/feature-flags.ts
+
+// A simple, effective way to centralize flags.
+export const FeatureFlags = {
+  NEW_USER_PROFILE_PAGE: 'newUserProfilePage',
+  DARK_MODE_THEME: 'darkModeTheme',
+  ADVANCED_REPORTING: 'advancedReportingEngine',
+} as const; // 'as const' makes values read-only and types specific
+
+// This automatically creates a type for all possible flag keys.
+export type AppFeatureKey = typeof FeatureFlags[keyof typeof FeatureFlags];
+```
+
+For applications that need even stricter type safety or rely heavily on flag variants, you can use a more advanced pattern. This approach, used within the Unleash codebase itself, combines union and mapped types for maximum compile-time checking.
+
+```typescript
+// src/feature-flags.ts
+
+// 1. Define all possible flag keys as a type-safe union.
+export type AppFeatureKey =
+  | 'newUserProfilePage'
+  | 'darkModeTheme'
+  | 'advancedReportingEngine';
+
+// 2. (Optional) Define a more complex structure for flags with variants.
+export interface AppFlagVariant {
+  name: string; // Corresponds to the variant name in Unleash
+  enabled: boolean;
+  payload?: {
+    type: string; // e.g., 'string', 'json'
+    value: string;
+  };
+}
+
+// 3. Define a type for the object that holds all flag states.
+//    This allows flags to be simple booleans or more complex objects.
+export type AppFeatures = Partial<{
+  [key in AppFeatureKey]: boolean | AppFlagVariant;
+}>;
+
+// 4. (Optional) Provide default values.
+export const initialAppFeatureFlags: AppFeatures = {
+  newUserProfilePage: false,
+  darkModeTheme: { name: 'disabled', enabled: false },
+};
+```
+
+Finally, no matter which pattern you choose, always follow this critical rule:
+
+> **Avoid dynamic flag names.** 
+
+Constructing flag names at runtime (such as, `{domain} + "_feature"`) prevents static analysis, making it nearly impossible to find all references to a flag automatically. It makes clean-up with automated tools more difficult.
+
+## Architecting flag evaluation
+
+How and where you check a flag's state is one of the most important architectural decisions you'll make. A well-designed evaluation strategy keeps your code clean and your system's behavior predictable.
+
+### Use an abstraction layer
+
+Directly calling the Unleash SDK (e.g., `unleash.isEnabled()`) throughout your codebase tightly couples your application to the specific SDK implementation. This can create problems down the line.
+
+> **Wrap all interactions with the Unleash SDK in your own abstraction layer or service.**
+
+This service becomes the single entry point for all feature flag checks in your application.
+
+```typescript
+// src/services/feature-service.ts
+import { Unleash, Context as UnleashContext } from 'unleash-client';
+import { AppFeatureKey } from '../feature-flags'; // Import from your central definitions
+
+// Define your application's context structure
+export interface AppUserContext {
+  userId?: string;
+  sessionId?: string;
+  remoteAddress?: string;
+  properties?: {
+    [key: string]: string;
+  };
+}
+
+class FeatureService {
+  private unleash: Unleash;
+
+  constructor(unleashInstance: Unleash) {
+    this.unleash = unleashInstance;
+  }
+
+  private buildUnleashContext(appContext?: AppUserContext): UnleashContext {
+    if (!appContext) return {};
+    return { ...appContext };
+  }
+
+  public isEnabled(flagName: AppFeatureKey, appContext?: AppUserContext): boolean {
+    // Always provide a safe, default value (usually `false`)
+    const defaultValue = false;
+    try {
+      const unleashContext = this.buildUnleashContext(appContext);
+      return this.unleash.isEnabled(flagName, unleashContext, defaultValue);
+    } catch (error) {
+      // Log the error for observability
+      console.error(`Error evaluating flag "${flagName}":`, error);
+      // Fallback to the safe default
+      return defaultValue;
+    }
+  }
+
+  // You can also create more semantic, business-language methods
+  public canUserSeeNewProfilePage(userContext?: AppUserContext): boolean {
+    return this.isEnabled('newUserProfilePage', userContext);
+  }
+}
+
+// Initialize and export a singleton instance for your app to use
+// const unleash = initializeUnleashClient(); // Your Unleash setup
+// export const featureService = new FeatureService(unleash);
+```
+
+**Why build an abstraction layer?**
+
+  - **Vendor abstraction**: If you ever switch feature flagging providers, you only need to update your wrapper instead of hunting for SDK calls across the entire codebase.
+  - **Centralized control**: It gives you a single place to manage logging, performance monitoring, and consistent error handling for all flag checks.
+  - **Simplified cleanup**: To find all usages of a flag, you just search for its name within your centralized definitions file, which is far more reliable than searching for a string literal.
+  - **Improved readability**: Methods with business-friendly names (`canUserSeeNewProfilePage()`) make the code's intent clearer than a generic `isEnabled("newUserProfilePage")`.
+
+### Evaluate flags at the right level and time
+
+A golden rule for clean, predictable code is to check a feature flag only once per user request.
+
+>**For a given user request, evaluate a feature flag once at the highest practical level of your application stack.**
+
+Then, pass the result of that check down to other components or functions.
+
+For example, when toggling a new checkout flow, evaluate the flag in the controller or top-level component that orchestrates that user experience. That component then decides whether to render the `NewCheckoutFlow` or the `OldCheckoutFlow`. The child components within the flow don't need to know the flag exists; they just receive props and do their job.
+
+[more code examples]
+
+```javascript
+// src/controllers/checkoutController.js
+// import { featureService } from '../services/featureService';
+
+export function handleCheckoutRequest(req, res) {
+  const userContext = { userId: req.user.id };
+
+  // 1. Evaluate ONCE at the highest level.
+  const useNewCheckout = featureService.isEnabled('new-checkout-process', userContext);
+
+  // 2. Propagate the DECISION, not the flag check.
+  if (useNewCheckout) {
+    renderNewCheckoutPage(req, res); // This component tree uses the new logic
+  } else {
+    renderOldCheckoutPage(req, res); // This component tree uses the old logic
+  }
+}
+```
+
+**Why evaluate once?**
+
+  - **Consistency**: It ensures a user sees the same feature state throughout their interaction. Evaluating the same flag multiple times during a single request could yield different results if the flag's configuration is changed mid-request, leading to a broken or confusing user experience.
+  - **Performance**: It minimizes redundant calls to the evaluation logic.
+  - **Simplicity**: It prevents "flag-aware" logic from spreading deep into your application's components, making them simpler and easier to test.
+
+
+## Structuring conditional logic
+
+As features become more complex than a simple on/off flag, relying on `if/else` statements can lead to code that is difficult to read, test, and clean up.
+
+While intuitive for simple cases, this pattern can become a technical debt at scale.
+
+[more code examples]
+
+```java
+// Anti-Pattern: Scattered conditional logic
+public void processPayment(PaymentDetails details, UserContext user) {
+    // This logic gets duplicated wherever a payment is processed.
+    if (featureService.isNewPaymentGatewayEnabled(user)) {
+        newPaymentService.charge(details);
+    } else {
+        legacyPaymentService.charge(details);
+    }
+}
+```
+### The Strategy pattern
+
+For managing complex behavioral changes, consider implementing the **Strategy pattern**. Instead of using a flag to select a code path inside a method, you use the flag to select a concrete implementation of a shared interface at runtime.
+
+This encapsulates the different behaviors into distinct, interchangeable classes. The core application logic remains clean and agnostic of the feature flag itself.
+
+[diagram?]
+
+This pattern simplifies cleanup. When the feature is fully rolled out, you simply delete the old strategy's file and update the factory to only provide the new one. This is a safe, atomic operation.
+
+<Tabs groupId="strategy-pattern">
+<TabItem value="strategy-java" label="Java and Spring">
+
+
+```java
+// Define the strategy interface
+public interface PaymentProcessor {
+    PaymentResult process(Payment payment);
+}
+
+// Create the concrete strategy implementation
+// Each class implements the behavior for one branch of the feature flag.
+// `@ConditionalOnProperty` tells Spring which bean to create.
+
+// Old implementation
+@Component
+@ConditionalOnProperty(name = "features.new-payment-gateway.enabled", havingValue = "false", matchIfMissing = true)
+public class LegacyPaymentProcessor implements PaymentProcessor {
+    @Override
+    public PaymentResult process(Payment payment) {
+        // ... logic for the old payment gateway
+        return new PaymentResult("SUCCESS_LEGACY");
+    }
+}
+
+// New implementation
+@Component
+@ConditionalOnProperty(name = "features.new-payment-gateway.enabled", havingValue = "true")
+public class StripePaymentProcessor implements PaymentProcessor {
+    @Override
+    public PaymentResult process(Payment payment) {
+        // ... logic for the new Stripe gateway
+        return new PaymentResult("SUCCESS_STRIPE");
+    }
+}
+
+// Inject the strategy into your service
+
+// The `CheckoutService` has no idea which implementation it will receive. It is decoupled from the flagging logic.
+
+@Service
+public class CheckoutService {
+    private final PaymentProcessor paymentProcessor;
+
+    @Autowired
+    public CheckoutService(PaymentProcessor paymentProcessor) {
+        this.paymentProcessor = paymentProcessor;
+    }
+
+    public void finalizePurchase(Order order) {
+        // The service doesn't contain any if/else logic for the flag.
+        PaymentResult result = this.paymentProcessor.process(order.getPayment());
+        // ... handle result
+    }
+}
+
+```
+
+</TabItem>
+
+<TabItem value="strategy-python" label="Python">
+
+```python
+# Define the strategies and a factory in payment_strategies.py
+from abc import ABC, abstractmethod
+
+class PaymentStrategy(ABC):
+    @abstractmethod
+    def process(self, amount: float) -> str:
+        pass
+
+class LegacyGatewayStrategy(PaymentStrategy):
+    def process(self, amount: float) -> str:
+        print(f"Processing ${amount} through LEGACY gateway.")
+        return "success_legacy"
+
+class NewGatewayStrategy(PaymentStrategy):
+    def process(self, amount: float) -> str:
+        print(f"Processing ${amount} through NEW gateway.")
+        return "success_new"
+
+# The Factory encapsulates the decision logic.
+def get_payment_strategy(feature_service, user_context) -> PaymentStrategy:
+    """Selects the appropriate payment strategy based on a feature flag."""
+    if feature_service.is_enabled("new-payment-gateway", user_context):
+        return NewGatewayStrategy()
+    else:
+        return LegacyGatewayStrategy()
+
+# Use the strategy in your service checkout_service.py
+from payment_strategies import get_payment_strategy
+
+class CheckoutService:
+    def __init__(self, feature_service):
+        self._feature_service = feature_service
+
+    def finalize_purchase(self, amount: float, user_context):
+        # The factory provides the correct strategy object.
+        strategy = get_payment_strategy(self._feature_service, user_context)
+
+        # The service is clean of conditional logic.
+        result = strategy.process(amount)
+        # ...
+```
+</TabItem>
+
+<TabItem value="strategy-js" label="TypeScript/React">
+```tsx
+// Create components for each strategy in src/components/OldUserProfile.tsx
+const OldUserProfile = () => <div>Legacy Profile View</div>;
+export default OldUserProfile;
+
+// src/components/NewUserProfile.tsx
+const NewUserProfile = () => <div>New Redesigned Profile View</div>;
+export default NewUserProfile;
+
+// Use a "selector" component, this component uses the flag to decide which strategy (component) to render.
+// src/components/UserProfile.tsx
+import { useFeature } from '../hooks/useFeature'; // Your custom hook wrapping the Feature Service
+import OldUserProfile from './OldUserProfile';
+import NewUserProfile from './NewUserProfile';
+
+const UserProfile = () => {
+    const isNewProfileEnabled = useFeature('newUserProfilePage');
+
+    // The strategy pattern selects which component to use.
+    const ProfileComponent = isNewProfileEnabled ? NewUserProfile : OldUserProfile;
+
+    return <ProfileComponent />;
+};
+
+export default UserProfile;
+```
+</TabItem>
+</Tabs>
+
+## Managing flags in microservices
+
+Microservices introduce a tough challenge for feature flags: consistency. A single click from a user can trigger a chain reaction across multiple services. If each service checks the flag state on its own, you can get into big trouble.
+
+Imagine a `new-pricing-model` flag is active:
+
+1.  The `gateway-service` receives the request, sees the flag is *on*, and calls the `product-service`.
+2.  The `product-service` also sees the flag is *on* and prepares to show a promotional banner. It calls the `pricing-service`.
+3.  In the milliseconds between these calls, someone turns off the flag due to an issue.
+4.  The `pricing-service` now evaluates the flag, sees it as *off*, and returns the standard price.
+
+The result? A confused user who sees a promotional banner but gets charged the old price.
+
+> **Evaluate a feature flag's state exactly one time at the "edge" of your system—your API Gateway or the first service to get the external request.**
+
+Then, you must propagate the result of that evaluation—the true or false decision—downstream to all other services.
+
+[diagram?]
+
+To make this work, downstream services need the initial flag decisions and the user context (ID, location, etc.) used to make them. The standard, most robust way to achieve this is with OpenTelemetry Baggage.
+
+While OpenTelemetry is known for distributed tracing, its Baggage specification is purpose-built to carry application-defined key-value pairs across process boundaries. It's the ideal mechanism for this use case.
+
+Here's how it works:
+
+1.  The `gateway-service` receives a request, authenticates the user, and evaluates all necessary flags.
+2.  It uses the OpenTelemetry SDK to add the user context and the flag decisions to the current baggage.
+3.  When the `gateway-service` makes an HTTP call to a downstream service, the OpenTelemetry instrumentation automatically serializes the baggage into the `baggage` HTTP header and sends it.
+4.  The downstream service's instrumentation automatically receives this header, deserializes it, and makes the baggage available to your application code.
+
+<Tabs groupId="microservices">
+<TabItem value="microservices-java" label="Java">
+
+```java
+// Example in Java (`gateway-service`) using OpenTelemetry SDK
+Baggage.current()
+   .toBuilder()
+   .put("user.id", "user-123")
+   .put("user.tier", "premium")
+   // Propagate the DECISION, not the flag name.
+   .put("decision.new-checkout.enabled", "true")
+   .build()
+   .makeCurrent(); // This context is now active and will be propagated.
+```
+</TabItem>
+
+<TabItem value="microservices-python" label="Python">
+```python
+
+# Example in Python (Downstream Service)
+from opentelemetry import baggage
+
+def handle_request():
+    # Retrieve the propagated context.
+    all_baggage = baggage.get_all()
+    user_id = all_baggage.get('user.id')
+    new_checkout_is_enabled = all_baggage.get('decision.new-checkout.enabled') == 'true'
+
+    # Use the consistent, propagated decision.
+    if new_checkout_is_enabled:
+        # ...
+    else:
+        # ...
+```
+</TabItem>
+</Tabs>
+
+Adopting OpenTelemetry Baggage solves the context propagation problem at a platform level, providing a consistent mechanism for flags, tracing, A/B testing, and more.
+
+## Minimizing tech debt and managing the flag lifecycle
+
+Let's face it: old flags are tech debt. Without a plan, your codebase will fill up with stale, forgotten, and risky flags. The only way to win is with a clear process for managing their entire lifecycle.
+
+
+> **Enforce a strict naming convention**.
+
+
+The first line of defense is clarity. A flag named `temp_fix_v2` is a mystery waiting to happen.
+Enforce a strict naming convention that encodes key information. A highly effective pattern is: `[team-owner]_[flag-type]_[description]`.
+
+  - `checkout_release_multistep-payment-flow`
+  - `search_experiment_new-ranking-algorithm`
+  - `platform_ops_database-failover-enabled`
+
+Also, use the tools available to you. Add comments in your code with links to the Jira ticket. Use the description and linking features in Unleash to tie the flag back to the work that created it. This context is invaluable for future you.
+
+### Flag cleanup best practices
+
+[..more info on Unleash lifecycle]
+
+All temporary flags must eventually be removed. Follow a clear, repeatable process:
+
+- **Verify lifecycle status in Unleash**: Confirm the flag is either 100% rolled out and stable or permanently disabled.
+- **Solidify the winning path**: Remove the conditional logic (`if/else`) and all code associated with the "losing" path. This is the most critical step for avoiding dead code.
+- **Delete flag definition**: Remove the flag's name from your central constants or enums file. This will cause a compile-time or linter error if any references still exist.
+- **Clean up the abstraction layer**: If you created a specific semantic method (e.g., `canUserSeeNewDashboard()`), remove it.
+- **Test and deploy**: Run your tests to ensure everything still works as expected, then deploy your changes.
+- **Archive the flag in Unleash**: Finally, archive the flag in the Unleash UI. Don't delete it! Archiving preserves its history for auditing and analysis, which can be very useful later.
+
+Hoping people remember to clean up is a strategy that always fails. You need to automate your governance.
+
+>**Automate your governance process.**
+
+Here are some practical tips:
+- **Automated ticketing**: Use webhooks or integrations to automatically create a "Remove Flag" ticket in your project management tool when a flag has been at 100% rollout for a set period (e.g., two weeks).
+- **Stale flag detection**: Use tools that can scan your codebase and the Unleash API to find "zombie flags"—flags that exist in Unleash but have no references in your code.
+- **Scheduled reviews**: Institute a regular, recurring meeting (e.g., "Flag Friday") where teams must review their active flags and justify their existence or schedule them for removal.
+- **Update "Definition of Done"**: A feature isn't "done" until its associated feature flag has been removed from the code and archived in Unleash.
+- **Use AI to speed up the cleanup**: [..more info on AI cleanup project]
+
+
+## Testing with feature flags
+
+A common fear is that flags will cause a "combinatorial explosion" of test cases. Don't worry, you don't need to test every possible combination. Instead, focus on these key scenarios:
+
+- **Production default state**: A test suite that runs with all new feature flags turned off. This is your most important suite, as it verifies that adding new, dormant code has not caused regressions in existing functionality.
+- **New feature state**: For each new feature, run a dedicated test with that one flag turned on. This isolates and validates the new feature without interference.
+- **Fallback state**: Test what happens if Unleash is unavailable. Does your abstraction layer handle it gracefully and fall back to safe defaults?
+
+The real superpower that flags give you is testing in production—safely.
+
+This doesn't mean showing bugs to your customers. It means using targeting rules to enable a feature only for your internal teams in the live production environment.
+For example, you can set a flag to be "on" only for users with an @your-company.com email address.
+
+This allows your team to interact with the new feature on real production infrastructure, with real data—a context that is impossible to perfectly replicate in a staging environment.
+If you find a bug, it has zero impact on real users. You can fix it and then release it with confidence.
+
+[...summary of key points]
+
+-----
+
+## Frequently asked questions (FAQs)
+
+**Where should I define my feature flag names in the code?**
+Centralize them in a dedicated file using constants or enums. This creates a single source of truth, prevents typos, and makes cleanup easier.
+
+**Should I call the Unleash SDK directly everywhere or build a helper service?**
+Build a wrapper (an abstraction layer). It decouples your app from the SDK, gives you a central place for error handling and logging, and makes future migrations painless.
+
+**How do I handle code for complex features controlled by flags?**
+For anything more than a simple if/else, use the Strategy pattern. Encapsulate the different behaviors in separate classes or modules. This keeps your core logic clean and makes removing the old code path trivial.
+
+**How do we avoid flag debt?**
+Have a process! Use strict naming conventions, link flags to tickets in Unleash, make flag removal part of your "Definition of Done," and automate cleanup reminders.
+
+**When and how should I remove a feature flag from the code?**
+Once the flag is stable at 100% rollout (or permanently off). The process is: remove the conditional logic and old code, delete the flag definition, and then archive the flag in the Unleash UI.
+
+**Can you use feature flags in microservices?**
+Absolutely! Evaluate the flag once in the first service that gets the request (e.g., your API gateway). Then, propagate the decision (the true/false result) to all downstream services using OpenTelemetry Baggage or custom HTTP headers. This guarantees consistency.
+
+**What's the best way to evaluate a feature flag in code?**
+Evaluate it once per request at the highest logical point in your application. Then, pass the boolean result down to the components that need it. This ensures a consistent user experience for that entire interaction.

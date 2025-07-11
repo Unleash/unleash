@@ -56,7 +56,6 @@ export type IFlagKey =
     | 'edgeObservability'
     | 'reportUnknownFlags'
     | 'lifecycleMetrics'
-    | 'healthToTechDebt'
     | 'customMetrics'
     | 'impactMetrics'
     | 'createFlagDialogCache'
@@ -267,10 +266,6 @@ const flags: IFlags = {
     ),
     lifecycleMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_METRICS,
-        false,
-    ),
-    healthToTechDebt: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_HEALTH_TO_TECH_DEBT,
         false,
     ),
     createFlagDialogCache: parseEnvVarBoolean(

@@ -39,13 +39,10 @@ import { ActionBox } from './ActionBox.tsx';
 import useLoading from 'hooks/useLoading';
 import { NoProjectsContactAdmin } from './NoProjectsContactAdmin.tsx';
 import { AskOwnerToAddYouToTheirProject } from './AskOwnerToAddYouToTheirProject.tsx';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const ActiveProjectDetails: FC<{
     project: PersonalDashboardSchemaProjectsItem;
 }> = ({ project }) => {
-    const healthToTechDebtEnabled = useUiFlag('healthToTechDebt');
-
     const techicalDebt = project.technicalDebt;
     return (
         <Box sx={{ display: 'flex', gap: 2 }}>
@@ -67,10 +64,10 @@ const ActiveProjectDetails: FC<{
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <Typography variant='subtitle2' color='primary'>
-                    {healthToTechDebtEnabled ? techicalDebt : project.health}%
+                    {techicalDebt}%
                 </Typography>
                 <Typography variant='caption' color='text.secondary'>
-                    {healthToTechDebtEnabled ? 'technical debt' : 'health'}
+                    technical debt
                 </Typography>
             </Box>
         </Box>

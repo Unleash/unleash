@@ -184,7 +184,11 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                         background: theme.palette.background.elevation1,
                     })}
                 >
-                    <Typography variant='caption' color='text.secondary'>
+                    <Typography
+                        variant='caption'
+                        color='text.secondary'
+                        sx={{ textWrap: 'break-all' }}
+                    >
                         <code>{debug.query}</code>
                     </Typography>
                 </Box>

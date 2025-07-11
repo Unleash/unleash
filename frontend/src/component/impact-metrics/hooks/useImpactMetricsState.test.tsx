@@ -1,123 +1,332 @@
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { useImpactMetricsState } from './useImpactMetricsState.ts';
-import { Route, Routes } from 'react-router-dom';
-import { createLocalStorage } from '../../../utils/createLocalStorage.ts';
 import type { FC } from 'react';
 import type { ImpactMetricsState } from '../types.ts';
 
-const TestComponent: FC = () => {
-    const { charts, layout } = useImpactMetricsState();
+const server = testServerSetup();
+
+const TestComponent: FC<{
+    enableActions?: boolean;
+}> = ({ enableActions = false }) => {
+    const {
+        charts,
+        layout,
+        loading,
+        error,
+        addChart,
+        updateChart,
+        deleteChart,
+    } = useImpactMetricsState();
 
     return (
         <div>
             <span data-testid='charts-count'>{charts.length}</span>
             <span data-testid='layout-count'>{layout.length}</span>
+            <span data-testid='loading'>{loading.toString()}</span>
+            <span data-testid='error'>{error ? 'has-error' : 'no-error'}</span>
+
+            {enableActions && (
+                <button
+                    type='button'
+                    data-testid='add-chart'
+                    onClick={() =>
+                        addChart({
+                            selectedSeries: 'test-series',
+                            selectedRange: 'day',
+                            beginAtZero: true,
+                            showRate: false,
+                            selectedLabels: {},
+                            title: 'Test Chart',
+                        })
+                    }
+                >
+                    Add Chart
+                </button>
+            )}
+
+            {enableActions && charts.length > 0 && (
+                <button
+                    type='button'
+                    data-testid='update-chart'
+                    onClick={() =>
+                        updateChart(charts[0].id, { title: 'Updated Chart' })
+                    }
+                >
+                    Update Chart
+                </button>
+            )}
+
+            {enableActions && charts.length > 0 && (
+                <button
+                    type='button'
+                    data-testid='delete-chart'
+                    onClick={() => deleteChart(charts[0].id)}
+                >
+                    Delete Chart
+                </button>
+            )}
         </div>
     );
 };
 
-const TestWrapper = () => (
-    <Routes>
-        <Route path='/impact-metrics' element={<TestComponent />} />
-    </Routes>
-);
+const mockSettings: ImpactMetricsState = {
+    charts: [
+        {
+            id: 'test-chart',
+            selectedSeries: 'test-series',
+            selectedRange: 'day' as const,
+            beginAtZero: true,
+            showRate: false,
+            selectedLabels: {},
+            title: 'Test Chart',
+        },
+    ],
+    layout: [
+        {
+            i: 'test-chart',
+            x: 0,
+            y: 0,
+            w: 6,
+            h: 4,
+            minW: 4,
+            minH: 2,
+            maxW: 12,
+            maxH: 8,
+        },
+    ],
+};
+
+const emptySettings: ImpactMetricsState = {
+    charts: [],
+    layout: [],
+};
 
 describe('useImpactMetricsState', () => {
     beforeEach(() => {
-        window.localStorage.clear();
+        testServerRoute(server, '/api/admin/ui-config', {});
     });
 
-    it('loads state from localStorage to the URL after opening page without URL state', async () => {
-        const { setValue } = createLocalStorage<ImpactMetricsState>(
-            'impact-metrics-state',
-            {
-                charts: [],
-                layout: [],
-            },
+    it('loads settings from API', async () => {
+        testServerRoute(
+            server,
+            '/api/admin/impact-metrics/settings',
+            mockSettings,
         );
 
-        setValue({
-            charts: [
-                {
-                    id: 'test-chart',
-                    selectedSeries: 'test-series',
-                    selectedRange: 'day' as const,
-                    beginAtZero: true,
-                    showRate: false,
-                    selectedLabels: {},
-                    title: 'Test Chart',
-                },
-            ],
-            layout: [
-                {
-                    i: 'test-chart',
-                    x: 0,
-                    y: 0,
-                    w: 6,
-                    h: 4,
-                    minW: 4,
-                    minH: 2,
-                    maxW: 12,
-                    maxH: 8,
-                },
-            ],
+        render(<TestComponent />);
+
+        await waitFor(() => {
+            expect(screen.getByTestId('charts-count')).toHaveTextContent('1');
+            expect(screen.getByTestId('layout-count')).toHaveTextContent('1');
+            expect(screen.getByTestId('loading')).toHaveTextContent('false');
+            expect(screen.getByTestId('error')).toHaveTextContent('no-error');
         });
-
-        render(<TestWrapper />, { route: '/impact-metrics' });
-
-        expect(window.location.href).toContain('charts=');
-        expect(window.location.href).toContain('layout=');
     });
 
-    it('does not modify URL when URL already contains data', async () => {
-        const { setValue } = createLocalStorage<ImpactMetricsState>(
-            'impact-metrics-state',
+    it('handles empty settings', async () => {
+        testServerRoute(
+            server,
+            '/api/admin/impact-metrics/settings',
+            emptySettings,
+        );
+
+        render(<TestComponent />);
+
+        await waitFor(() => {
+            expect(screen.getByTestId('charts-count')).toHaveTextContent('0');
+            expect(screen.getByTestId('layout-count')).toHaveTextContent('0');
+            expect(screen.getByTestId('loading')).toHaveTextContent('false');
+            expect(screen.getByTestId('error')).toHaveTextContent('no-error');
+        });
+    });
+
+    it('handles API errors', async () => {
+        testServerRoute(
+            server,
+            '/api/admin/impact-metrics/settings',
+            { message: 'Server error' },
+            'get',
+            500,
+        );
+
+        render(<TestComponent />);
+
+        await waitFor(() => {
+            expect(screen.getByTestId('error')).toHaveTextContent('has-error');
+        });
+    });
+
+    it('adds a chart successfully', async () => {
+        testServerRoute(
+            server,
+            '/api/admin/impact-metrics/settings',
+            emptySettings,
+        );
+
+        render(<TestComponent enableActions />);
+
+        await waitFor(() => {
+            expect(screen.getByTestId('charts-count')).toHaveTextContent('0');
+        });
+
+        testServerRoute(
+            server,
+            '/api/admin/impact-metrics/settings',
             {
-                charts: [],
-                layout: [],
+                charts: [
+                    {
+                        id: 'new-chart-id',
+                        selectedSeries: 'test-series',
+                        selectedRange: 'day',
+                        beginAtZero: true,
+                        showRate: false,
+                        selectedLabels: {},
+                        title: 'Test Chart',
+                    },
+                ],
+                layout: [
+                    {
+                        i: 'new-chart-id',
+                        x: 0,
+                        y: 0,
+                        w: 6,
+                        h: 4,
+                        minW: 4,
+                        minH: 2,
+                        maxW: 12,
+                        maxH: 8,
+                    },
+                ],
             },
+            'put',
+            200,
         );
 
-        setValue({
-            charts: [
-                {
-                    id: 'old-chart',
-                    selectedSeries: 'old-series',
-                    selectedRange: 'day' as const,
-                    beginAtZero: true,
-                    showRate: false,
-                    selectedLabels: {},
-                    title: 'Old Chart',
-                },
-            ],
-            layout: [],
-        });
-
-        const urlCharts = btoa(
-            JSON.stringify([
-                {
-                    id: 'url-chart',
-                    selectedSeries: 'url-series',
-                    selectedRange: 'day',
-                    beginAtZero: true,
-                    showRate: false,
-                    selectedLabels: {},
-                    title: 'URL Chart',
-                },
-            ]),
+        testServerRoute(
+            server,
+            '/api/admin/impact-metrics/settings',
+            {
+                charts: [
+                    {
+                        id: 'new-chart-id',
+                        selectedSeries: 'test-series',
+                        selectedRange: 'day',
+                        beginAtZero: true,
+                        showRate: false,
+                        selectedLabels: {},
+                        title: 'Test Chart',
+                    },
+                ],
+                layout: [
+                    {
+                        i: 'new-chart-id',
+                        x: 0,
+                        y: 0,
+                        w: 6,
+                        h: 4,
+                        minW: 4,
+                        minH: 2,
+                        maxW: 12,
+                        maxH: 8,
+                    },
+                ],
+            },
+            'get',
+            200,
         );
 
-        render(<TestWrapper />, {
-            route: `/impact-metrics?charts=${encodeURIComponent(urlCharts)}`,
+        const addButton = screen.getByTestId('add-chart');
+        await userEvent.click(addButton);
+
+        await waitFor(
+            () => {
+                expect(screen.getByTestId('charts-count')).toHaveTextContent(
+                    '1',
+                );
+            },
+            { timeout: 5000 },
+        );
+    });
+
+    it('updates a chart successfully', async () => {
+        testServerRoute(
+            server,
+            '/api/admin/impact-metrics/settings',
+            mockSettings,
+        );
+
+        testServerRoute(
+            server,
+            '/api/admin/impact-metrics/settings',
+            {
+                charts: [
+                    {
+                        ...mockSettings.charts[0],
+                        title: 'Updated Chart',
+                    },
+                ],
+                layout: mockSettings.layout,
+            },
+            'put',
+            200,
+        );
+
+        render(<TestComponent enableActions />);
+
+        await waitFor(() => {
+            expect(screen.getByTestId('charts-count')).toHaveTextContent('1');
         });
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const chartsParam = urlParams.get('charts');
+        const updateButton = screen.getByTestId('update-chart');
+        await userEvent.click(updateButton);
 
-        expect(chartsParam).toBeTruthy();
+        await waitFor(() => {
+            expect(screen.getByTestId('charts-count')).toHaveTextContent('1');
+        });
+    });
 
-        const decodedCharts = JSON.parse(atob(chartsParam!));
-        expect(decodedCharts[0].id).toBe('url-chart');
-        expect(decodedCharts[0].id).not.toBe('old-chart');
+    it('deletes a chart successfully', async () => {
+        testServerRoute(
+            server,
+            '/api/admin/impact-metrics/settings',
+            mockSettings,
+        );
+
+        render(<TestComponent enableActions />);
+
+        await waitFor(() => {
+            expect(screen.getByTestId('charts-count')).toHaveTextContent('1');
+        });
+
+        testServerRoute(
+            server,
+            '/api/admin/impact-metrics/settings',
+            emptySettings,
+            'put',
+            200,
+        );
+
+        testServerRoute(
+            server,
+            '/api/admin/impact-metrics/settings',
+            emptySettings,
+            'get',
+            200,
+        );
+
+        const deleteButton = screen.getByTestId('delete-chart');
+        await userEvent.click(deleteButton);
+
+        await waitFor(
+            () => {
+                expect(screen.getByTestId('charts-count')).toHaveTextContent(
+                    '0',
+                );
+            },
+            { timeout: 5000 },
+        );
     });
 });

@@ -46,6 +46,8 @@ export class UnknownFlagsService {
 
         const cached = Array.from(this.unknownFlagsCache.values());
 
+        cached.sort((a, b) => this.getKey(a).localeCompare(this.getKey(b)));
+
         await this.unknownFlagsStore.insert(cached);
         this.unknownFlagsCache.clear();
     }

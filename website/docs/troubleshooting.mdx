@@ -15,7 +15,7 @@ If a feature flag isn't being returned by the Frontend API or Edge, or if users 
 -   Ensure the feature flag has an [activation strategy](/reference/activation-strategies) associated with it that will evaluate to `true` for your given context.
 -   Confirm that the feature flag has been **enabled** in the specific environment your client application is using. (ref: [enabling a feature flag](/reference/feature-toggles))
 
-#### SDK `ready` event (frontend clients)
+#### SDK `ready` event
 -   Ensure your application, especially frontend clients, waits for the SDK to emit the `ready` event before calling `isEnabled('feature-flag')` or `getVariant('feature-flag')`. Calling these functions too early might mean the client hasn't yet received the latest flag configurations from the server.
 
 ### Token configuration

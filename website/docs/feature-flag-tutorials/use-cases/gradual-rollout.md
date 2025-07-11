@@ -1,9 +1,10 @@
 ---
-title: How to Perform a Gradual Rollout
+title: How to perform a gradual rollout
 slug: /feature-flag-tutorials/use-cases/gradual-rollout
+pagination_next: feature-flag-tutorials/use-cases/a-b-testing
 ---
 
-## What is a Gradual Rollout?
+## What is a gradual rollout?
 
 A **gradual rollout** is a controlled release strategy where a new feature is first released to a small subset of users. This allows for monitoring user behavior, identifying potential issues, and gathering feedback before a full-scale launch. It also allows us to experiment quickly and safely.
 
@@ -13,7 +14,7 @@ Developers also use gradual rollouts to gather user feedback. Early adopters pro
 
 The key benefits of gradual rollouts are that you can experiment rapidly on a controlled group and roll back quickly if the experiment goes wrong. This reduces the risk of failure, improves software quality, improves user experience, and optimizes resource utilization.
 
-## How to Perform a Gradual Rollout with Unleash
+## How to perform a gradual rollout with Unleash
 
 To follow along with this tutorial, you will need an Unleash instance. If you’d prefer to self-host Unleash, read our [Quickstart guide](/quickstart). Alternatively, if you’d like your project to be hosted by Unleash, go to [getunleash.io](https://www.getunleash.io/pricing).
 
@@ -41,7 +42,7 @@ Your new feature flag has been created and is ready to be used. Upon returning t
 
 Next, we will configure the gradual rollout strategy for your new flag.
 
-## Implementing a Gradual Rollout Activation Strategy
+## Implementing a gradual rollout activation strategy
 
 An important Unleash concept that enables developers to perform a gradual rollout is an [activation strategy](/reference/activation-strategies). An activation strategy defines who will be exposed to a particular flag or flags. Unleash comes pre-configured with multiple activation strategies that let you enable a feature only for a specified audience, depending on the parameters under which you would like to release a feature.
 
@@ -75,7 +76,7 @@ Constraints and variants are not required for a gradual rollout. These additiona
 
 For gradual rollouts, _strategy constraints_ are most applicable for more granular conditions of a feature release. In the next section, we’ll explore how to apply a strategy constraint on top of a gradual rollout for more advanced use cases.
 
-## Applying Strategy Constraints
+## Applying strategy constraints
 
 When utilizing an activation strategy such as a gradual rollout, it may be necessary to further define which subset of users get access to a feature and when the rollout takes place, depending on the complexity of your use case. Unleash provides [strategy constraints](/reference/activation-strategies#constraints) as a way to fine-tune conditions under which a feature flag is evaluated.
 
@@ -94,11 +95,11 @@ Within a gradual rollout activation strategy, you can use strategy constraints t
 Add [constraints](/reference/activation-strategies#constraints) to refine the rollout based on user attributes, segments, or conditions.
 
 
-### Define Custom Context Fields for Strategy Constraints
+### Define custom context fields for strategy constraints
 
 If you want to create new types of constraints that are not built into Unleash, you can create [custom context fields](/reference/unleash-context#custom-context-fields) to use in your gradual rollout for more advanced use cases.
 
-## Leveraging Segments
+## Using segments
 
 A [segment](/reference/segments) is a reusable collection of [strategy constraints](/reference/activation-strategies#constraints). Like with strategy constraints, you apply segments to feature flag activation strategies.
 
@@ -125,7 +126,7 @@ You must pass the relevant fields in your context in the SDK in order for gradua
 
 By following these steps and leveraging Unleash's features, you can effectively execute and refine gradual rollouts to minimize risks and optimize feature delivery.
 
-## Managing Gradual Rollouts With Enterprise Security In Mind
+## Managing gradual rollouts with enterprise security in mind
 
 For large-scale organizations, managing feature flags across many teams can be complex and challenging. Unleash was architected for your feature flag management to be scalable and traceable for enterprises, which boosts overall internal security posture while delivering software efficiently.
 
@@ -137,7 +138,7 @@ After you have implemented a gradual rollout strategy, we recommend managing the
 
 Read our documentation on how to effectively manage [feature flags at scale](/topics/feature-flags/best-practices-using-feature-flags-at-scale) while reducing security risks. Let’s walk through these recommended Unleash features in the subsequent sections.
 
-### Reviewing Application Metrics
+### Reviewing application metrics
 
 [Unleash metrics](/reference/api/unleash/metrics) are a great way to understand user traffic. With your application using feature flags, you can review:
 
@@ -149,7 +150,7 @@ Read our documentation on how to effectively manage [feature flags at scale](/to
 
 When managing a gradual rollout, leverage metrics to gain deeper insight into flag usage against your application over time. For large-scale organizations with many feature flags to manage, this can be a useful monitoring tool for individual flags you would like to keep track of.
 
-### Reviewing Audit Logs
+### Reviewing audit logs
 
 Because a feature flag service controls the way an application behaves in production, it can be highly important to have visibility into when changes have been made and by whom. This is especially true in highly regulated environments. In these cases, you might find audit logging useful for:
 
@@ -164,7 +165,7 @@ Unleash provides the data to log any change that has happened over time, at the 
 
 Learn more about [Event Log](/reference/events#event-log) in our documentation.
 
-### Managing Change Requests
+### Managing change requests
 
 You can use Unleash's [change request](/reference/change-requests) feature to propose and review modifications to feature flags. This gives developers complete control over your production environment. In large scale organizations and heavily regulated industries, we want to help developers reduce risk of errors in production or making unwanted changes by team members that have not been properly reviewed and approved.
 

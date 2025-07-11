@@ -1,11 +1,12 @@
 ---
-title: How to do A/B Testing using Feature Flags
+title: Implement A/B testing using feature flags
 slug: /feature-flag-tutorials/use-cases/a-b-testing
+pagination_next: feature-flag-tutorials/use-cases/ai
 ---
 
 Feature flags are a great way to run A/B or multivariate tests with minimal code modifications, and Unleash offers built-in features that make it easy to get started. In this tutorial, we will walk through how to do an A/B test using Unleash with your application.
 
-## How to Perform A/B Testing with Feature Flags
+## How to perform A/B testing with feature flags
 
 To follow along with this tutorial, you need access to an Unleash instance to create and manage feature flags. Head over to our [Quick Start documentation](/quickstart) for options, including running locally or using an [Unleash SaaS instance](https://www.getunleash.io/pricing?).
 
@@ -21,7 +22,7 @@ In this tutorial, you will learn how to set up and run an A/B test using feature
 
 You will also learn about how to [automate advanced A/B testing strategies](#multi-arm-bandit-tests-to-find-the-winning-variant) such as multi-arm bandit testing using feature flags.
 
-### Create a Feature Flag
+### Create a feature flag
 
 To do A/B testing, we'll create a feature flag to implement the rollout strategy. After that, we'll explore what strategies are and how they are configured in Unleash.
 
@@ -39,7 +40,7 @@ Once you have completed the form, click **Create feature flag**.
 
 Your new feature flag is now ready to be used. Next, we will configure the A/B testing strategy for your flag.
 
-### Target Users for A/B Testing
+### Target users for A/B testing
 
 With an A/B testing strategy, you’ll be able to:
 
@@ -93,13 +94,13 @@ Next, decide the percentage of users to target for each variant, known as the va
 
 ![You can configure multiple strategy variants for A/B testing within the gradual rollout form.](/img/use-case-experiment-variants.png)
 
-### Manage User Session Behavior
+### Manage user session behavior
 
 Unleash is built to give developers confidence in their ability to run A/B tests effectively. One critical component of implementing A/B testing strategies is maintaining a consistent experience for each user across multiple user sessions.
 
 For example, user `uuid1234` should be the target of `variantA` regardless of their session. The original subset of users that get `variantA` will continue to experience that variation of the feature over time. At Unleash, we call this [stickiness](/reference/stickiness). You can define the parameter of stickiness in the gradual rollout form. By default, stickiness is calculated by `sessionId` and `groupId`.
 
-### Track A/B Testing for your Key Performance Metrics
+### Track A/B testing for your key performance metrics
 
 An A/B testing strategy is most useful when you can track the results of a feature rollout to users. When your team has clearly defined the goals for your A/B tests, you can use Unleash to analyze how results tie back to key metrics, like conversion rates or time spent on a page. One way to collect this data is by enabling [impression data](/reference/impression-data) per feature flag. Impression data contains information about a specific feature flag activation check.
 
@@ -130,7 +131,7 @@ The output from the impression data in your app may look like this code snippet:
 }
 ```
 
-In order to capture impression events in your app, follow our [language and framework-specific tutorials](/languages-and-frameworks).
+In order to capture impression events in your app, follow our [language and framework-specific tutorials](/feature-flag-tutorials/react).
 
 Now that your application is capturing impression events, you can configure the correct data fields and formatting to send to any analytics tool or data warehouse you use.
 
@@ -197,7 +198,7 @@ Here is an example of a payload that is returned from Google Analytics that incl
 
 By enabling impression data for your feature flag and listening to events within your application code, you can leverage this data flowing to your integrated analytics tools to make informed decisions faster and adjust your strategies based on real user behavior.
 
-### Roll Out the Winning Variant to All Users
+### Roll out the winning variant to all users
 
 After you have implemented your A/B test and measured the performance of a feature to a subset of users, you can decide which variant is the most optimal experience to roll out to all users in production.
 
@@ -207,11 +208,11 @@ When rolling out the winning variant, your flag may already be on in your produc
 
 After the flag has been available to 100% of users over time, archive the flag and clean up your codebase.
 
-## A/B Testing with Enterprise Automation
+## A/B testing with enterprise automation
 
 With Unleash, you can automate feature flags through APIs and even rely on [actions](/reference/actions) and [signals](/reference/signals) to enable and disable flags dynamically. When running A/B tests, you can configure your projects to execute tasks in response to application metrics and thresholds you define. For example, if an experimentation feature that targets a part of your user base logs errors, your actions can automatically disable the feature so your team is given the time to triage while still providing a seamless, alternative experience to users. Similarly, you can use the APIs to modify the percentage of users targeted for variations of a feature based off users engaging with one variation more than the other.
 
-### Multi-arm Bandit Tests to Find the Winning Variant
+### Multi-arm bandit tests to find the winning variant
 
 When running complex multivariate tests with numerous combinations, automating the process of finding the best variation of a feature is the most optimal, cost-effective approach for organizations with a large user base. [Multi-arm bandit tests](https://en.wikipedia.org/wiki/Multi-armed_bandit) are a powerful technique used in A/B testing to allocate traffic to different versions of a feature or application in a way that maximizes the desired outcome, such as conversion rate or click-through rate. This approach offers several advantages over traditional A/B testing and is a viable solution for large enterprise teams.
 

@@ -17,7 +17,7 @@ See our how to guides on setting up provisioning for [Okta](../how-to/how-to-set
 
 **Deprovisioning**
 
-Deprovisioning can be setup on the provider side and allow for automatic clean up of users in a single place. This is especially useful if you're trying to manage the cost of your Unleash instance, since deprovisioned users will not count towards the seat count of your license. See our [how to guides](../how-to/provisioning) for specific provider configurations.
+Deprovisioning can be setup on the provider side and allow for automatic clean up of users in a single place. This is especially useful if you're trying to manage the cost of your Unleash instance, since deprovisioned users will not count towards the seat count of your license.
 
 **Group syncing**
 

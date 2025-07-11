@@ -471,10 +471,6 @@ class="header-github-link"
                             to: '/reference/events',
                         },
                         {
-                            from: '/advanced/api_access',
-                            to: '/how-to/how-to-use-the-admin-api',
-                        },
-                        {
                             from: '/advanced/archived_toggles',
                             to: '/reference/feature-toggles',
                         },
@@ -507,22 +503,6 @@ class="header-github-link"
                         {
                             from: '/advanced/stickiness',
                             to: '/reference/stickiness',
-                        },
-                        {
-                            from: '/advanced/sso-google',
-                            to: '/how-to/how-to-add-sso-google',
-                        },
-                        {
-                            from: '/advanced/sso-open-id-connect',
-                            to: '/how-to/how-to-add-sso-open-id-connect',
-                        },
-                        {
-                            from: '/advanced/sso-saml-keycloak',
-                            to: '/how-to/how-to-add-sso-saml-keycloak',
-                        },
-                        {
-                            from: '/advanced/sso-saml',
-                            to: '/how-to/how-to-add-sso-saml',
                         },
                         {
                             from: '/advanced/enterprise-authentication',
@@ -681,20 +661,8 @@ class="header-github-link"
                             to: '/reference/unleash-context',
                         },
                         {
-                            from: '/user_guide/user-management',
-                            to: '/how-to/how-to-add-users-to-unleash',
-                        },
-                        {
                             from: '/user_guide/v4-whats-new',
                             to: '/reference/whats-new-v4',
-                        },
-                        {
-                            from: [
-                                '/user_guide/important-concepts',
-                                '/tutorials/important-concepts',
-                                '/reference/concepts/',
-                            ],
-                            to: '/reference',
                         },
                         {
                             from: [
@@ -794,13 +762,6 @@ class="header-github-link"
                             to: '/',
                         },
                         {
-                            from: [
-                                '/topics/feature-flags/tutorials',
-                                '/tutorials',
-                            ],
-                            to: '/feature-flag-tutorials',
-                        },
-                        {
                             from: ['/tutorials/academy', '/unleash-academy'],
                             to: '/unleash-academy/introduction',
                         },
@@ -815,10 +776,6 @@ class="header-github-link"
                         {
                             from: '/tutorials/academy-managing-unleash-for-devops',
                             to: '/unleash-academy/managing-unleash-for-devops',
-                        },
-                        {
-                            from: '/developer-guide',
-                            to: '/contributing',
                         },
                         {
                             from: [
@@ -847,34 +804,6 @@ class="header-github-link"
                                 '/topics/data-collection',
                             ],
                             to: '/understanding-unleash/data-collection',
-                        },
-
-                        {
-                            from: '/how-to/how-to-troubleshoot-flag-exposure',
-                            to: '/using-unleash/troubleshooting/flag-exposure',
-                        },
-                        {
-                            from: '/how-to/how-to-troubleshoot-flag-not-returned',
-                            to: '/using-unleash/troubleshooting/flag-not-returned',
-                        },
-                        {
-                            from: '/how-to/how-to-troubleshoot-cors',
-                            to: '/using-unleash/troubleshooting/cors',
-                        },
-                        {
-                            from: '/how-to/how-to-troubleshoot-https',
-                            to: '/using-unleash/troubleshooting/https',
-                        },
-                        {
-                            from: '/how-to/how-to-troubleshoot-feature-not-available',
-                            to: '/using-unleash/troubleshooting/feature-not-available',
-                        },
-                        {
-                            from: [
-                                '/reference/deploy/import-export',
-                                '/deploy/import_export',
-                            ],
-                            to: '/how-to/how-to-import-export',
                         },
                         {
                             from: [

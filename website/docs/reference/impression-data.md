@@ -1,5 +1,5 @@
 ---
-title: Impression Data
+title: Impression data
 pagination_next: reference/events
 ---
 
@@ -82,7 +82,7 @@ This table describes all the properties on the impression events:
 
 Impression data is strictly an **opt-in** feature and must be enabled on a **per-flag basis**. You can enable and disable it both when you create a flag and when you edit a flag.
 
-You can enable impression data via the impression data flag in the admin UI's flag creation form. You can also go via the [the API, using the `impressionData` option](/reference/api/legacy/unleash/admin/features-v2#create-toggle). For more detailed instructions, see [the section on enabling impression data in the how-to guide for capturing impression data](../how-to/how-to-capture-impression-data#step-1).
+You can enable impression data via the impression data flag in the admin UI's flag creation form. You can also go via the [the API, using the `impressionData` option](/reference/api/legacy/unleash/admin/features-v2#create-toggle). For more detailed instructions, see [the section on enabling impression data in the how-to guide for capturing impression data](/feature-flag-tutorials/use-cases/how-to-capture-impression-data).
 
 ![A feature flag creation form. At the end of the form is a heading that says "Impression data", a short paragraph that describes the feature, and a flag to opt in or out of it.](/img/create_feat_impression.png)
 

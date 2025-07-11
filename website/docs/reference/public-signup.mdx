@@ -1,25 +1,15 @@
 ---
-title: Public Invite Links
+title: Public invite links
 ---
 
-Public invite links let you invite team members to your Unleash instance. Any user with an invite link can sign up to Unleash instance that created the link. The user will get the **viewer** role (refer to the [predefined roles_ section of the RBAC document](../reference/rbac.md#predefined-roles) for more information on roles).
+Public invite links allow you to invite new team members to your Unleash instance. Any user who receives an invite link can use it to sign up for the Unleash instance that generated the link. When users sign up using an invite link, they are automatically assigned the [Viewer](../reference/rbac.md#predefined-roles) role.
 
-User who follow the invite link are taken directly to the Unleash sign-up page, where they can create an account.
+A token becomes active as soon as you create it, and remains valid until it expires or is deleted. Once a token is invalid, users can no longer sign up using an invite link containing that token.
 
-Only **Unleash instance admins** can create public invite links.
+You can have only one active invite token at any given time. If an active token already exists, you must delete it before you can [create a new one](#manage-the-public-invite-token).
 
-![An Unleash signup form for new users](/img/public-invite_signup.png)
+## Manage the public invite token
 
-## Public sign-up tokens
+As an Admin, you can create, update, and delete invite tokens through the Unleash Admin UI in **Admin settings > User config > Users > Create invite link**.
 
-The most important part of a public sign-up link is the sign-up token. The token is added as the `invite` query parameter to the invite link.
-
-Each token has an **expiry date**. After this expiry date, the token will stop working and users can no longer sign up using an invite link with that token.
-
-## Creating, updating, and deleting tokens
-
-You can [create, update and delete tokens via the Unleash Admin UI](../how-to/how-to-manage-public-invite-tokens.mdx) or via the [Unleash API](../reference/api/unleash/public-signup-tokens.tag.mdx "Public sign-up tokens API documentation").
-
-A token is active as soon as it's created and stops working as soon as it's deleted or expired.
-
-You can only have one active invite token at a time. If you already have an active token, you must delete it to create a new one.
+Alternatively, you can use the [Admin API](../reference/api/unleash/public-signup-tokens.tag.mdx) to manage the public invite token.

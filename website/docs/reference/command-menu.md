@@ -1,5 +1,5 @@
 ---
-title: Command Menu
+title: Command menu
 ---
 
 :::note Availability

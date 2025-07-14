@@ -185,6 +185,7 @@ import type { RequestHandler } from 'express';
 import { UPDATE_REVISION } from './features/feature-toggle/configuration-revision-service.js';
 import type { IFeatureUsageInfo } from './services/version-service.js';
 import { defineImpactMetrics } from './features/metrics/impact/define-impact-metrics.js';
+import type { IClientInstance } from './types/stores/client-instance-store.js';
 
 export async function initialServiceSetup(
     { authentication }: Pick<IUnleashConfig, 'authentication'>,
@@ -549,6 +550,7 @@ export type {
     QueryOverride,
     IUserPermission,
     IFeatureUsageInfo,
+    IClientInstance,
 };
 export * from './openapi/index.js';
 export * from './types/index.js';

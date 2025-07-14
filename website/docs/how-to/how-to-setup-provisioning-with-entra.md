@@ -1,5 +1,5 @@
 ---
-title: How to Setup Entra Provisioning
+title: Set up Entra provisioning
 ---
 
 :::note Availability

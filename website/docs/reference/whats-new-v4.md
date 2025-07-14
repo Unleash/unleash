@@ -40,13 +40,11 @@ In version 4 we added support for [OpenID Connect](https://openid.net/connect/) 
 
 In version 4 we improved the User Management and made it available for Unleash Open-Source and Unleash Enterprise. Starting in v4 all users accessing Unleash needs to exist in Unleash in order to gain access (because they need to have the proper permission from RBAC.)
 
-[Read more](../how-to/how-to-add-users-to-unleash)
-
 ### API access {#api-access}
 
 In version 4 we improved the API Access and made it available for Unleash Open-Source and Unleash Enterprise. Starting from Unleash v4 we require all SDKs to use an access token in order to connect to Unleash.
 
-[Read more](../how-to/how-to-use-the-admin-api)
+[Read more](../api-overview#admin-api)
 
 ### Custom stickiness {#custom-stickiness}
 

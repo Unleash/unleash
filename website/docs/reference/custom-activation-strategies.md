@@ -1,5 +1,5 @@
 ---
-title: Custom Activation Strategies
+title: Custom activation strategies
 ---
 
 **Custom activation strategies** let you define your own activation strategies to use with Unleash. When the [built-in activation strategies](../reference/activation-strategies.md) aren't enough, custom activation strategies are there to provide you with the flexibility you need.

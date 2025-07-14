@@ -1,5 +1,5 @@
 ---
-title: Feature Flag Variants (deprecated)
+title: Feature flag variants (deprecated)
 ---
 :::warning
 

@@ -14,7 +14,6 @@ import {
 import { useTheme } from '@mui/material';
 import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
 import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 interface IProjectHealthChartProps {
     projectFlagTrends: GroupedDataByProject<
@@ -46,7 +45,6 @@ export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
     const projectsData = useProjectChartData(projectFlagTrends);
     const theme = useTheme();
     const placeholderData = usePlaceholderData();
-    const healthToTechDebtEnabled = useUiFlag('healthToTechDebt');
 
     const aggregateHealthData = useMemo(() => {
         const labels = Array.from(
@@ -85,18 +83,12 @@ export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
         return {
             datasets: [
                 {
-                    label: healthToTechDebtEnabled
-                        ? 'Technical debt'
-                        : 'Health',
+                    label: 'Technical debt',
                     data: weeks.map((item) => ({
                         health: item.total ? calculateHealth(item) : undefined,
-                        ...(healthToTechDebtEnabled
-                            ? {
-                                  technicalDebt: item.total
-                                      ? calculateTechDebt(item)
-                                      : undefined,
-                              }
-                            : {}),
+                        technicalDebt: item.total
+                            ? calculateTechDebt(item)
+                            : undefined,
                         date: item.date,
                         total: item.total,
                         stale: item.stale,
@@ -132,9 +124,7 @@ export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
                     ? {}
                     : {
                           parsing: {
-                              yAxisKey: healthToTechDebtEnabled
-                                  ? 'technicalDebt'
-                                  : 'health',
+                              yAxisKey: 'technicalDebt',
                               xAxisKey: 'date',
                           },
                           plugins: {

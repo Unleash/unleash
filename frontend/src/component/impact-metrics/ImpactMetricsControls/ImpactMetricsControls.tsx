@@ -15,6 +15,7 @@ export type ImpactMetricsControlsProps = {
         | 'setSelectedRange'
         | 'setBeginAtZero'
         | 'setSelectedLabels'
+        | 'setShowRate'
     >;
     metricSeries: (ImpactMetricsSeries & { name: string })[];
     loading?: boolean;
@@ -54,16 +55,29 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
             onChange={actions.setSelectedRange}
         />
 
-        <FormControlLabel
-            control={
-                <Checkbox
-                    checked={formData.beginAtZero}
-                    onChange={(e) => actions.setBeginAtZero(e.target.checked)}
-                />
-            }
-            label='Begin at zero'
-        />
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={formData.beginAtZero}
+                        onChange={(e) =>
+                            actions.setBeginAtZero(e.target.checked)
+                        }
+                    />
+                }
+                label='Begin at zero'
+            />
 
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={formData.showRate}
+                        onChange={(e) => actions.setShowRate(e.target.checked)}
+                    />
+                }
+                label='Show rate per second'
+            />
+        </Box>
         {availableLabels && (
             <LabelsFilter
                 selectedLabels={formData.selectedLabels}

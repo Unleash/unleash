@@ -1,5 +1,5 @@
 ---
-title: Feature Flag Security and Compliance for Enterprises
+title: Feature flag security and compliance for enterprises
 slug: /feature-flag-tutorials/use-cases/security-and-compliance
 ---
 
@@ -42,7 +42,7 @@ Your developers and other stakeholders need to securely access platforms used to
 
 To use single sign-on in Unleash, your users can authenticate themselves through OpenID Connect (OIDC) or SAML 2.0 protocols.
 
-We have integration guides to connect Unleash to enterprise identity providers like Okta, Microsoft Entra ID, and Keycloak, but you can use any identity provider that uses OIDC or SAML 2.0 protocol. Read our [how-to guide for single sign-on](/how-to/sso).
+We have integration guides to connect Unleash to enterprise identity providers like Okta, Microsoft Entra ID, and Keycloak, but you can use any identity provider that uses OIDC or SAML 2.0 protocol. Read our [how-to guide for single sign-on](/how-to/how-to-add-sso-open-id-connect).
 
 ![A diagram showing how Unleash integrates with authentication providers and identity providers.](/img/sso-idp-auth-provider.jpg)
 
@@ -65,7 +65,7 @@ By enabling [SCIM](/reference/scim) in Unleash, you can:
 -   Sync group membership.
 -   Ensure consistent access across multiple platforms.
 
-To unlock these benefits, set up [SCIM for automatic provisioning using our how-to guides](/how-to/provisioning).
+To unlock these benefits, set up [SCIM for automatic provisioning using our how-to guides](/how-to/how-to-setup-provisioning-with-okta).
 
 ## Configure role-based access control for administrators and developers
 
@@ -88,7 +88,7 @@ Unleash is built with many mechanisms in place to handle all of these scenarios.
 
 Let’s look at how Unleash gives you complete control over user roles and permissions. At a high level, there are multiple [predefined roles](/reference/rbac#predefined-roles) in Unleash for you to get started with. Root roles control permissions to top-level resources, spanning across all projects. Project roles, on the other hand, control permissions for a project, the feature flags, and individual configurations per environment.
 
-The three predefined root roles are: Admin, Editor, and Viewer. The predefined project roles are Owner and Member. In addition to these, you can also create [custom root](/how-to/how-to-create-and-assign-custom-root-roles) or [project roles](/how-to/how-to-create-and-assign-custom-project-roles). The following diagram provides a visual overview of how root roles and project roles compare.
+The three predefined root roles are: Admin, Editor, and Viewer. The predefined project roles are Owner and Member. In addition to these, you can also create [custom root roles](/reference/rbac#create-and-assign-a-custom-root-role) or [project roles](/reference/rbac#create-and-assign-a-custom-project-role). The following diagram provides a visual overview of how root roles and project roles compare.
 
 ![The diagram showing the relationship between root roles and project roles in Unleash.](/img/root-and-project-roles-comparison.jpg)
 
@@ -171,7 +171,7 @@ For more advanced implementations, integrate Unleash event logs directly into br
 
 ### Leverage access logs for broader auditing
 
-Let’s think back to the importance of user management that we covered earlier. Developers and other stakeholders go through onboarding to use the platform. Authentication protocols and user provisioning ensure these processes are secure, unified, and automated. During this process, access logs keep track of what users and systems accessed Unleash and what actions they performed, including [Unleash API interactions](/reference/api/unleash) from your services and applications. You can export these logs to S3 buckets for long-term data storage. This is valuable if you need to preserve data for complying with legal or regulatory compliance, storing critical backups for disaster recovery, and archiving.
+Let’s think back to the importance of user management that we covered earlier. Developers and other stakeholders go through onboarding to use the platform. Authentication protocols and user provisioning ensure these processes are secure, unified, and automated. During this process, access logs keep track of what users and systems accessed Unleash and what actions they performed, including [Unleash API interactions](/api-overview) from your services and applications. You can export these logs to S3 buckets for long-term data storage. This is valuable if you need to preserve data for complying with legal or regulatory compliance, storing critical backups for disaster recovery, and archiving.
 
 Auditing your feature flag system is made simple for traceability and reportability with Unleash’s event logs and access logs. We recommend leveraging these features as data sources for third-party services that make your data a valuable asset for security reviews, meeting compliance standards, and overall risk mitigation.
 

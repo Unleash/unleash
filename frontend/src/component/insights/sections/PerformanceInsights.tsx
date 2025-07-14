@@ -23,7 +23,6 @@ import {
     StyledWidgetContent,
     StyledWidgetStats,
 } from '../InsightsCharts.styles';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 export const PerformanceInsights: FC = () => {
     const statePrefix = 'performance-';
@@ -47,8 +46,6 @@ export const PerformanceInsights: FC = () => {
         state[`${statePrefix}from`]?.values[0],
         state[`${statePrefix}to`]?.values[0],
     );
-
-    const healthToTechDebtEnabled = useUiFlag('healthToTechDebt');
 
     const projects = state[`${statePrefix}project`]?.values ?? [allOption.id];
 
@@ -135,21 +132,12 @@ export const PerformanceInsights: FC = () => {
                             stale={summary.stale}
                             potentiallyStale={summary.potentiallyStale}
                             title={
-                                healthToTechDebtEnabled ? (
-                                    <WidgetTitle
-                                        title='Technical debt'
-                                        tooltip={
-                                            'Percentage of flags that are stale or potentially stale.'
-                                        }
-                                    />
-                                ) : (
-                                    <WidgetTitle
-                                        title='Health'
-                                        tooltip={
-                                            'Percentage of flags that are not stale or potentially stale.'
-                                        }
-                                    />
-                                )
+                                <WidgetTitle
+                                    title='Technical debt'
+                                    tooltip={
+                                        'Percentage of flags that are stale or potentially stale.'
+                                    }
+                                />
                             }
                         />
                     </StyledWidgetStats>

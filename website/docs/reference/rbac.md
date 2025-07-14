@@ -1,6 +1,6 @@
 ---
 id: rbac
-title: Role-based Access Control
+title: Role-based access control
 ---
 
 :::note Availability
@@ -40,14 +40,28 @@ own [custom root roles](#custom-root-roles) and [custom project roles](#custom-p
 
 Custom root roles let you define your own root roles with a specific set of root permissions. The roles can then be
 assigned to entities (users, service accounts, and groups) at the root level. This allows you to control access to
-resources in a more precise, fine-grained way. For a step-by-step walkthrough of how to create and assign custom root
-roles, refer to [_how to create and assign custom root roles_](../how-to/how-to-create-and-assign-custom-root-roles.md).
+resources in a more precise, fine-grained way.
 
 Each custom root role consists of:
 
 - a **name** (required)
 - a **role description** (required)
 - a set of **root permissions** (required)
+
+### Create and assign a custom root role
+
+To create a custom root role in the Admin UI, do the following:
+
+1. In **Admin settings > User config > Root roles**, click **New root role**.
+2. Give the role a name and description and select all permissions you want to assign to the role.
+3. Click **Add role** to save.
+
+Once you have the role set up, you can assign it a user:
+
+1. In **Admin settings > User config > Users**, select the user you want to assign the role to.
+2. Click **Edit user**.
+3. For **Role**, select the root role you want the user to have.
+4. Click **Save**.
 
 ### Root permissions
 
@@ -104,7 +118,7 @@ You can assign the following root permissions:
 | Change instance banners | Change instance [banners](./banners). |
 | Change maintenance mode state | Change [maintenance mode](./maintenance-mode) state. |
 | Update CORS settings | Update [CORS settings](./front-end-api#configure-cross-origin-resource-sharing-cors). |
-| Read instance logs and login history | Read instance logs and [login history](./login-history.md). |
+| Read instance logs and login history | Read instance logs and [login history](./login-history). |
 
 #### Integration permissions
 
@@ -173,9 +187,7 @@ You can assign the following root permissions:
 
 Custom project roles let you define your own project roles with a specific set of project permissions down to the
 environment level. The roles can then be assigned to users in specific projects. All users have viewer access to all
-projects and resources but must be assigned a project role to be allowed to edit a project's resources. For a
-step-by-step walkthrough of how to create and assign custom project roles, see [_how to create and assign custom project
-roles_](../how-to/how-to-create-and-assign-custom-project-roles).
+projects and resources but must be assigned a project role to be allowed to edit a project's resources.
 
 Each custom project role consists of:
 
@@ -183,10 +195,23 @@ Each custom project role consists of:
 - a **role description** (required)
 - a set of **project and environment permissions** (required)
 
+### Create and assign a custom project role
+
+To create a custom project role in the Admin UI, do the following:
+
+1. In **Admin settings > User config > Project roles**, click **New project role**.
+2. Give the role a name and description and select all permissions you want to assign to the role.
+3. Click **Add role** to save.
+
+Once you have the role set up, you can assign it to individual users inside a project:
+
+1. In **Settings > User access**, click **Edit**.
+2. For **Role**, select the custom project roles you want to apply.
+3. Click **Save**.
+
 ### Project permissions
 
-You can assign the following project permissions. These permissions are valid across all of the [project](./projects)'s
-environments.
+You can assign the following project permissions. These permissions are valid across all of the [project](./projects)'s environments.
 
 #### API tokens
 | Permission Name | Description |
@@ -278,31 +303,26 @@ To view a user’s permissions, go to **Admin settings > User config > Users**. 
 
 :::
 
-User groups allow you to assign roles to a group of users within a project, rather than to a user directly. This allows
-you to manage your user permissions more easily when there's lots of users in the system. For a guide on how to create
-and manage user groups see [_how to create and manage user groups_](../how-to/how-to-create-and-manage-user-groups.md).
+User groups allow you to manage user permissions efficiently by assigning roles to a collection of users instead of individually. This is particularly useful for projects with many users.
 
-A user group consists of the following:
+You can create and manage user groups in the Admin UI at **Admin settings > User config > Groups**.
 
-- a **name** (required)
-- a **description** (optional)
-- a **list of users** (required)
-- a list of SSO groups to sync from (optional)
-- a root role associated with the group (optional; available in v5.1+)
+When creating a user group, you can define the following:
 
-Groups do nothing on their own. They must either be given a root role directly or a role on a project to assign
-permissions.
+- **Name**: A unique identifier for the group.
+- **Description**: A brief explanation of the group's purpose.
+- **Users**: A list of users who are members of this group.
+- **SSO groups** to sync from: A list of single sign-on (SSO) groups to synchronize members from.
+- **Root role**: A role assigned to the group at the root level. (Available in v5.1+)
 
-Groups that do not have a root role need to be assigned a role on a project to be useful. You can assign both predefined
-roles and custom project roles to groups.
+Groups themselves do not grant permissions. To be functional, a group must either:
+- Be assigned a root role. Members of this group will inherit the root role's permissions globally.
+- Be assigned a role on a specific project. This grants the group's members the specified permissions within that project. You can assign both predefined and custom project roles to groups.
 
-Any user that is a member of a group with a root role will inherit that root role's permissions on the root level.
+A user can belong to multiple groups, and each group a user belongs to can have a different role assigned to it on a specific project.
+If a user gains permissions for a project through multiple groups, they will inherit the most permissive set of permissions from all their assigned group roles for that project.
 
-While a user can only have one role in a given project, a user may belong to multiple groups, and each of those groups
-may be given a role on a project. In the case where a given user is given permissions through more than one group, the
-user will inherit the most permissive permissions of all their groups in that project.
-
-## User group SSO integration
+## Set up group SSO syncing
 
 :::note Availability
 
@@ -310,23 +330,17 @@ user will inherit the most permissive permissions of all their groups in that pr
 
 :::
 
-User groups also support integration with your Single Sign-On (SSO) provider. This allows you to automatically assign
-users to groups when they log in through SSO. Check out [_how to set up group SSO
-sync_](../how-to/how-to-set-up-group-sso-sync.md) for a step-by-step walkthrough.
+You can integrate user groups with your single sign-on (SSO) provider to automatically manage user assignments.
+Note that this just-in-time process updates groups only when a user logs in, which differs from a full provisioning system like [SCIM](/how-to/how-to-setup-provisioning-with-okta) that syncs all user information proactively.
 
-Users that have been added to a group through your SSO provider will be automatically removed next time they log in if
-they've been removed from the SSO group. Users that have been manually added to the group will not be affected.
+When a user logs in through SSO, they are automatically added to or removed from a user group based on their SSO group membership. Manually added users are not affected by the SSO sync.
 
-To enable group sync, you'll need to set two fields in your SSO provider configuration options:
+To enable group syncing, you configure two settings in your SSO provider configuration:
 
-- **enable group syncing**:
+- **Enable group syncing**: Turns the feature on.
+- **Group field JSON path**: A JSON path expression that points to the field in your SSO token response that contains the user's groups.
 
-  Turns on group syncing. This is disabled by default.
-
-- **group field JSON path**
-
-  A JSON path that should point to the groups field in your token response. This should match the exact field returned
-  by the provider. For example, if your token looks like this:
+For example, if your token response looks like this, you would set the Group field JSON path to `groups`:
 
   ```json
   {
@@ -345,11 +359,25 @@ To enable group sync, you'll need to set two fields in your SSO provider configu
     "nonce": "0394852-3190485-2490358"
   }
   ```
-  You need to set the "Group Field JSON path" to "groups".
+
+After you enable syncing, you must link the SSO group names to the corresponding user group.
 
 Once you've enabled group syncing and set an appropriate path, you'll need to add the SSO group names to the Unleash
 group. This can be done by navigating to the Unleash group you want to enable sync for and adding the SSO group names to
 the "SSO group ID/name" property.
+
+### Configure SSO group sync
+
+You must be an Admin in Unleash to perform these steps.
+
+1. Go to **Admin settings > Single sign-on**. Select your integration and click **Enable Group Syncing**.
+2. in **Group Field JSON Path**, enter the JSON path for the groups field in your token response.
+3. Click **Save**.
+4. Go to **User config > Groups** and select the user group you want to sync and click **Edit**.
+5. Add the exact SSO group names or IDs you want to link to the group.
+6. Click **Save**.
+
+The next time a user who belongs to one of the linked SSO groups logs in, they are automatically added to the user group. If they have been removed from the SSO group, their access will be revoked on their next login.
 
 [^1]: The project-level permission is still required for the [**create/overwrite variants
 ** (PUT)](/reference/api/unleash/overwrite-feature-variants) and [**update variants

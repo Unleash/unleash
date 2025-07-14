@@ -5,7 +5,7 @@ title: Legacy API Documentation
 
 :::caution
 
-The docs in this category are legacy documentation. You should prefer to use the [Unleash OpenAPI docs](/reference/api/unleash) instead whenever possible.
+These APIs have been deprecared. Wse the [Unleash OpenAPI docs](/api-overview) reference instead.
 
 :::
 

@@ -265,6 +265,11 @@ const sidebars: SidebarsConfig = {
                             label: 'Scaling Unleash',
                             id: 'feature-flag-tutorials/use-cases/scaling-unleash',
                         },
+                        {
+                            type: 'doc',
+                            label: 'Managing feature flags in code',
+                            id: 'feature-flag-tutorials/use-cases/manage-feature-flags-in-code',
+                        },
                     ],
                 },
                 {

@@ -39,9 +39,11 @@ describe('MetricsTranslator', () => {
             '# TYPE unleash_counter_labeled_counter counter',
         );
         expect(result).toContain(
-            'unleash_counter_labeled_counter{foo="bar"} 5',
+            'unleash_counter_labeled_counter{unleash_foo="bar"} 5',
         );
-        expect(result).toContain('unleash_gauge_test_gauge{env="prod"} 10');
+        expect(result).toContain(
+            'unleash_gauge_test_gauge{unleash_env="prod"} 10',
+        );
     });
 
     it('should ignore unsupported metric types', async () => {
@@ -110,10 +112,10 @@ describe('MetricsTranslator', () => {
 
         const result1 = await translator.translateAndSerializeMetrics(metrics1);
         expect(result1).toContain(
-            'unleash_counter_counter_with_labels{foo="bar"} 5',
+            'unleash_counter_counter_with_labels{unleash_foo="bar"} 5',
         );
         expect(result1).toContain(
-            'unleash_gauge_gauge_with_labels{env="prod"} 10',
+            'unleash_gauge_gauge_with_labels{unleash_env="prod"} 10',
         );
 
         const metrics2 = [
@@ -144,10 +146,10 @@ describe('MetricsTranslator', () => {
         const result2 = await translator.translateAndSerializeMetrics(metrics2);
 
         expect(result2).toContain(
-            'unleash_counter_counter_with_labels{foo="bar",baz="qux"} 15',
+            'unleash_counter_counter_with_labels{unleash_foo="bar",unleash_baz="qux"} 15',
         );
         expect(result2).toContain(
-            'unleash_gauge_gauge_with_labels{env="prod",region="us-east"} 20',
+            'unleash_gauge_gauge_with_labels{unleash_env="prod",unleash_region="us-east"} 20',
         );
     });
 });

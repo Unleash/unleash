@@ -792,7 +792,11 @@ export function registerPrometheusMetrics(
                     appName,
                 })
                 .observe(time);
-            config.flagResolver.impactMetrics?.incrementCounter(REQUEST_COUNT);
+            config.flagResolver.impactMetrics?.incrementCounter(
+                REQUEST_COUNT,
+                1,
+                { flagNames: ['consumptionModel'], context: {} },
+            );
         },
     );
 

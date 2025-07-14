@@ -1,6 +1,7 @@
 import { PayloadType, type Variant } from 'unleash-client';
 import { parseEnvVarBoolean } from '../util/index.js';
 import { getDefaultVariant } from 'unleash-client/lib/variant.js';
+import type { MetricFlagContext } from 'unleash-client/lib/impact-metrics/metric-types.js';
 import type { Context } from '../features/playground/feature-evaluator/index.js';
 
 export type IFlagKey =
@@ -332,6 +333,14 @@ export interface IExternalFlagResolver {
 export interface IImpactMetricsResolver {
     defineCounter(name: string, help: string);
     defineGauge(name: string, help: string);
-    incrementCounter(name: string, value?: number, featureName?: string): void;
-    updateGauge(name: string, value: number, featureName?: string): void;
+    incrementCounter(
+        name: string,
+        value?: number,
+        metricsFlagContext?: MetricFlagContext,
+    ): void;
+    updateGauge(
+        name: string,
+        value: number,
+        metricsFlagContext?: MetricFlagContext,
+    ): void;
 }

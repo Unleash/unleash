@@ -24,7 +24,11 @@ import type { IClientMetricsStoreV2 } from '../client-metrics/client-metrics-sto
 import { clientMetricsSchema } from '../shared/schema.js';
 import type { PartialSome } from '../../../types/partial.js';
 import type { IPrivateProjectChecker } from '../../private-project/privateProjectCheckerType.js';
-import { type IFlagResolver, SYSTEM_USER } from '../../../types/index.js';
+import {
+    type ApplicationCreatedEvent,
+    type IFlagResolver,
+    SYSTEM_USER,
+} from '../../../types/index.js';
 import { ALL_PROJECTS, parseStrictSemVer } from '../../../util/index.js';
 import type { Logger } from '../../../logger.js';
 import { findOutdatedSDKs, isOutdatedSdk } from './findOutdatedSdks.js';
@@ -148,13 +152,15 @@ export default class ClientInstanceService {
             const appsToAnnounce =
                 await this.clientApplicationsStore.setUnannouncedToAnnounced();
             if (appsToAnnounce.length > 0) {
-                const events = appsToAnnounce.map((app) => ({
-                    type: APPLICATION_CREATED,
-                    createdBy: app.createdBy || SYSTEM_USER.username!,
-                    data: app,
-                    createdByUserId: app.createdByUserId || SYSTEM_USER.id,
-                    ip: '', // TODO: fix this, how do we get the ip from the client? This comes from a row in the DB
-                }));
+                const events: ApplicationCreatedEvent[] = appsToAnnounce.map(
+                    (app) => ({
+                        type: APPLICATION_CREATED,
+                        createdBy: app.createdBy || SYSTEM_USER.username!,
+                        data: app,
+                        createdByUserId: app.createdByUserId || SYSTEM_USER.id,
+                        ip: '', // TODO: fix this, how do we get the ip from the client? This comes from a row in the DB
+                    }),
+                );
                 await this.eventStore.batchStore(events);
             }
         }

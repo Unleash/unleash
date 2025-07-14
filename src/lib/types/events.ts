@@ -120,8 +120,10 @@ import {
     FEATURE_LINK_REMOVED,
     FEATURE_LINK_UPDATED,
     FEATURE_LINK_ADDED,
+    APPLICATION_CREATED,
 } from '../events/index.js';
 import type { ITag } from '../tags/index.js';
+import type { IClientApplication } from './stores/client-applications-store.js';
 
 export class BaseEvent implements IBaseEvent {
     readonly type: IEventType;
@@ -1913,6 +1915,17 @@ export class ReleasePlanMilestoneStartedEvent extends BaseEvent {
         this.featureName = eventData.featureName;
         this.environment = eventData.environment;
         this.preData = eventData.preData;
+        this.data = eventData.data;
+    }
+}
+
+export class ApplicationCreatedEvent extends BaseEvent {
+    readonly data: IClientApplication;
+    constructor(eventData: {
+        data: IClientApplication;
+        auditUser: IAuditUser;
+    }) {
+        super(APPLICATION_CREATED, eventData.auditUser);
         this.data = eventData.data;
     }
 }

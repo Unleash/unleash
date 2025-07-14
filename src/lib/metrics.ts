@@ -1145,6 +1145,7 @@ export function registerPrometheusMetrics(
                 config.flagResolver.impactMetrics?.updateGauge(
                     HEAP_MEMORY_TOTAL,
                     process.memoryUsage().heapUsed,
+                    { flagNames: ['consumptionModel'], context: {} },
                 );
                 featureTogglesArchivedTotal.reset();
                 featureTogglesArchivedTotal.set(

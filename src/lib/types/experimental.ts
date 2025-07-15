@@ -64,7 +64,8 @@ export type IFlagKey =
     | 'crDiffView'
     | 'changeRequestApproverEmails'
     | 'paygTrialEvents'
-    | 'eventGrouping';
+    | 'eventGrouping'
+    | 'paygInstanceStatsEvents';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -295,6 +296,10 @@ const flags: IFlags = {
     ),
     paygTrialEvents: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PAYG_TRIAL_EVENTS,
+        false,
+    ),
+    paygInstanceStatsEvents: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PAYG_INSTANCE_STATS_EVENTS,
         false,
     ),
 };

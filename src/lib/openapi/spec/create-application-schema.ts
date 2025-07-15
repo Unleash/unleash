@@ -5,20 +5,6 @@ export const createApplicationSchema = {
     type: 'object',
     description: 'Reported application information from Unleash SDKs',
     properties: {
-        appName: {
-            deprecated: true,
-            description:
-                'Deprecated: Name of the application. This property is ignored. The app name is taken from the URL instead.',
-            type: 'string',
-            example: 'accounting',
-        },
-        sdkVersion: {
-            deprecated: true,
-            description:
-                'Deprecated: Which SDK and version the application reporting uses. Typically represented as `<identifier>:<version>`. This is not used in the client_applications db table.',
-            type: 'string',
-            example: 'unleash-client-java:8.0.0',
-        },
         strategies: {
             description:
                 'Which [strategies](https://docs.getunleash.io/topics/the-anatomy-of-unleash#activation-strategies) the application has loaded. Useful when trying to figure out if your [custom strategy](https://docs.getunleash.io/reference/custom-activation-strategies) has been loaded in the SDK',

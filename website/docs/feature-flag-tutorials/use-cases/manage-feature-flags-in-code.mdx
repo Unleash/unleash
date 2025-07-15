@@ -100,7 +100,7 @@ How and where you check a flag's state is one of the most important architectura
 
 Directly calling the Unleash SDK's `unleash.isEnabled()` throughout your codebase tightly couples your application to the specific SDK implementation.
 
-Instead, we recommend implementing an abstraction layer, often called a "wrapper," to encapsulate all interactions with the Unleash SDK. This service becomes the single entry point for all feature flag checks in your application.
+Instead, we recommend implementing an abstraction layer, often called a "wrapper", to encapsulate all interactions with the Unleash SDK. This service becomes the single entry point for all feature flag checks in your application.
 
 ```typescript
 // src/services/feature-service.ts

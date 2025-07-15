@@ -6,13 +6,16 @@ export const createApplicationSchema = {
     description: 'Reported application information from Unleash SDKs',
     properties: {
         appName: {
-            description: 'Name of the application',
+            deprecated: true,
+            description:
+                'Deprecated: Name of the application. This property is ignored. The app name is taken from the URL instead.',
             type: 'string',
             example: 'accounting',
         },
         sdkVersion: {
+            deprecated: true,
             description:
-                'Which SDK and version the application reporting uses. Typically represented as `<identifier>:<version>`',
+                'Deprecated: Which SDK and version the application reporting uses. Typically represented as `<identifier>:<version>`. This is not used in the client_applications db table.',
             type: 'string',
             example: 'unleash-client-java:8.0.0',
         },

@@ -34,7 +34,7 @@ const mapRow = (row) => ({
 const mapToDb = (client) => ({
     app_name: client.appName,
     instance_id: client.instanceId,
-    sdk_version: client.sdkVersion || '',
+    sdk_version: client.sdkVersion,
     sdk_type: client.sdkType,
     client_ip: client.clientIp,
     last_seen: client.lastSeen || 'now()',
@@ -74,7 +74,12 @@ export default class ClientInstanceStore implements IClientInstanceStore {
     async bulkUpsert(instances: INewClientInstance[]): Promise<void> {
         const stopTimer = this.metricTimer('bulkUpsert');
 
-        const rows = instances.map(mapToDb);
+        const rows = instances.map((i) =>
+            Object.fromEntries(
+                Object.entries(mapToDb(i)).filter(([, v]) => v !== undefined),
+            ),
+        );
+
         await this.db(TABLE)
             .insert(rows)
             .onConflict(['app_name', 'instance_id', 'environment'])

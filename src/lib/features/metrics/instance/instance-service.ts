@@ -36,12 +36,14 @@ import type { OutdatedSdksSchema } from '../../../openapi/spec/outdated-sdks-sch
 import { CLIENT_REGISTERED } from '../../../metric-events.js';
 import { NotFoundError } from '../../../error/index.js';
 
+type ClientData = IClientApp & { lastSeen?: Date };
+
 export default class ClientInstanceService {
     apps = {};
 
     logger: Logger;
 
-    seenClients: Record<string, IClientApp> = {};
+    seenClients: Record<string, ClientData> = {};
 
     private clientMetricsStoreV2: IClientMetricsStoreV2;
 
@@ -99,24 +101,32 @@ export default class ClientInstanceService {
         );
     }
 
+    private updateSeenClient = (data: ClientData) => {
+        const current = this.seenClients[this.clientKey(data)];
+        this.seenClients[this.clientKey(data)] = {
+            ...current,
+            ...data,
+        };
+    };
+
     public async registerInstance(
         data: PartialSome<IClientApp, 'instanceId'>,
         clientIp: string,
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
 
-        this.seenClients[this.clientKey(value)] = {
+        this.updateSeenClient({
             appName: value.appName,
             instanceId: value.instanceId,
             environment: value.environment,
             clientIp: clientIp,
-        };
+        });
     }
 
     public registerFrontendClient(data: IFrontendClientApp): void {
         data.createdBy = SYSTEM_USER.username!;
 
-        this.seenClients[this.clientKey(data)] = data;
+        this.updateSeenClient(data);
     }
 
     public async registerBackendClient(
@@ -127,7 +137,7 @@ export default class ClientInstanceService {
         value.clientIp = clientIp;
         value.createdBy = SYSTEM_USER.username!;
         value.sdkType = 'backend';
-        this.seenClients[this.clientKey(value)] = value;
+        this.updateSeenClient(value);
         this.eventBus.emit(CLIENT_REGISTERED, value);
 
         if (value.sdkVersion && value.sdkVersion.indexOf(':') > -1) {

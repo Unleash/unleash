@@ -74,16 +74,12 @@ export default class ClientInstanceStore implements IClientInstanceStore {
     async bulkUpsert(instances: INewClientInstance[]): Promise<void> {
         const stopTimer = this.metricTimer('bulkUpsert');
 
-        const rows = instances.map((i) =>
-            Object.fromEntries(
-                Object.entries(mapToDb(i)).filter(([, v]) => v !== undefined),
-            ),
-        );
+        const rows = instances.map(mapToDb);
 
         await this.db(TABLE)
             .insert(rows)
             .onConflict(['app_name', 'instance_id', 'environment'])
-            .merge();
+            .merge(['last_seen', 'client_ip']);
 
         stopTimer();
     }

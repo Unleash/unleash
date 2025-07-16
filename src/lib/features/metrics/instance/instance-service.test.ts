@@ -263,3 +263,129 @@ test('filter out private projects from overview', async () => {
         featureCount: 0,
     });
 });
+
+test('`registerInstance` sets `instanceId` to `default` if it is not provided', async () => {
+    const instanceService = new ClientInstanceService(
+        {} as any,
+        config,
+        {} as any,
+    );
+
+    await instanceService.registerInstance(
+        {
+            appName: 'appName',
+            environment: '',
+        },
+        '::1',
+    );
+
+    expect(instanceService.seenClients.appName_default).toMatchObject({
+        appName: 'appName',
+        instanceId: 'default',
+    });
+});
+
+describe('upserting into `seenClients`', () => {
+    test('registerInstance merges its data', async () => {
+        const instanceService = new ClientInstanceService(
+            {} as any,
+            config,
+            {} as any,
+        );
+
+        const client = {
+            appName: 'appName',
+            instanceId: 'instanceId',
+        };
+
+        const key = instanceService.clientKey(client);
+
+        instanceService.seenClients = {
+            [key]: { ...client, sdkVersion: 'my-sdk' },
+        };
+
+        await instanceService.registerInstance(
+            {
+                ...client,
+                environment: 'blue',
+            },
+            '::1',
+        );
+
+        expect(instanceService.seenClients[key]).toMatchObject({
+            appName: 'appName',
+            instanceId: 'instanceId',
+            environment: 'blue',
+            sdkVersion: 'my-sdk',
+        });
+    });
+    test('registerBackendClient merges its data', async () => {
+        const instanceService = new ClientInstanceService(
+            {} as any,
+            config,
+            {} as any,
+        );
+
+        const client = {
+            appName: 'appName',
+            instanceId: 'instanceId',
+        };
+
+        const key = instanceService.clientKey(client);
+
+        instanceService.seenClients = {
+            [key]: { ...client, environment: 'blue' },
+        };
+
+        await instanceService.registerBackendClient(
+            {
+                ...client,
+                sdkVersion: 'my-sdk',
+                started: new Date(),
+                interval: 5,
+            },
+            '::1',
+        );
+
+        expect(instanceService.seenClients[key]).toMatchObject({
+            appName: 'appName',
+            instanceId: 'instanceId',
+            environment: 'blue',
+            sdkVersion: 'my-sdk',
+        });
+    });
+    test('registerFrontendClient merges its data', async () => {
+        const instanceService = new ClientInstanceService(
+            {} as any,
+            config,
+            {} as any,
+        );
+
+        const client = {
+            appName: 'appName',
+            instanceId: 'instanceId',
+        };
+
+        const key = instanceService.clientKey(client);
+
+        instanceService.seenClients = {
+            [key]: { ...client, metricsCount: 10 },
+        };
+
+        instanceService.registerFrontendClient({
+            ...client,
+            sdkVersion: 'my-sdk',
+            sdkType: 'frontend',
+            environment: 'black',
+        });
+
+        expect(instanceService.seenClients[key]).toMatchObject({
+            appName: 'appName',
+            instanceId: 'instanceId',
+            sdkVersion: 'my-sdk',
+            sdkType: 'frontend',
+            environment: 'black',
+            metricsCount: 10,
+        });
+    });
+});

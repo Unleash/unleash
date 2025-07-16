@@ -33,7 +33,7 @@ const mapRow = (row): IClientInstance => ({
 });
 
 const mapToDb = (client: INewClientInstance) => {
-    const initialMap = {
+    const mapped = {
         app_name: client.appName,
         instance_id: client.instanceId,
         sdk_version: client.sdkVersion,
@@ -43,14 +43,14 @@ const mapToDb = (client: INewClientInstance) => {
         environment: client.environment,
     };
 
-    Object.keys(initialMap).forEach((k) => {
-        if (initialMap[k] === undefined) {
+    Object.keys(mapped).forEach((k) => {
+        if (mapped[k] === undefined) {
             // not using !temp[k] to allow false and null values to get through
-            delete initialMap[k];
+            delete mapped[k];
         }
     });
 
-    return initialMap;
+    return mapped;
 };
 
 export default class ClientInstanceStore implements IClientInstanceStore {

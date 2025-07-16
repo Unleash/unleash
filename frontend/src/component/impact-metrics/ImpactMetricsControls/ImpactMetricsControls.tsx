@@ -68,15 +68,19 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
                 label='Begin at zero'
             />
 
-            <FormControlLabel
-                control={
-                    <Checkbox
-                        checked={formData.showRate}
-                        onChange={(e) => actions.setShowRate(e.target.checked)}
-                    />
-                }
-                label='Show rate per second'
-            />
+            {formData.selectedSeries.startsWith('unleash_counter_') ? (
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={formData.showRate}
+                            onChange={(e) =>
+                                actions.setShowRate(e.target.checked)
+                            }
+                        />
+                    }
+                    label='Show rate per second'
+                />
+            ) : null}
         </Box>
         {availableLabels && (
             <LabelsFilter

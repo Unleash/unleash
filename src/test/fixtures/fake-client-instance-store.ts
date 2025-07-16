@@ -109,7 +109,7 @@ export default class FakeClientInstanceStore implements IClientInstanceStore {
         return apps.length;
     }
 
-    async insert(details: INewClientInstance): Promise<void> {
+    async upsert(details: INewClientInstance): Promise<void> {
         this.instances.push({ createdAt: new Date(), ...details });
     }
 

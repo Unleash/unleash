@@ -19,7 +19,7 @@ export interface IClientInstanceStore
         Pick<INewClientInstance, 'appName' | 'instanceId'>
     > {
     bulkUpsert(instances: INewClientInstance[]): Promise<void>;
-    insert(details: INewClientInstance): Promise<void>;
+    upsert(details: INewClientInstance): Promise<void>;
     getByAppName(appName: string): Promise<IClientInstance[]>;
     getRecentByAppNameAndEnvironment(
         appName: string,

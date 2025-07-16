@@ -139,7 +139,7 @@ export default class ClientInstanceStore implements IClientInstanceStore {
         return present;
     }
 
-    async insert(details: INewClientInstance): Promise<void> {
+    async upsert(details: INewClientInstance): Promise<void> {
         const stopTimer = this.metricTimer('insert');
 
         await this.db(TABLE)

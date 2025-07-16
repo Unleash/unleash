@@ -29,7 +29,7 @@ test('Upserting an application keeps values not provided intact', async () => {
         sdkVersion: 'unleash-client-node:6.6.0',
         sdkType: 'backend',
     };
-    await clientInstanceStore.insert(clientInstance);
+    await clientInstanceStore.upsert(clientInstance);
 
     const initial = await clientInstanceStore.get(clientInstance);
 
@@ -42,7 +42,7 @@ test('Upserting an application keeps values not provided intact', async () => {
         clientIp: '::2',
     };
 
-    await clientInstanceStore.insert(update);
+    await clientInstanceStore.upsert(update);
 
     const updated = await clientInstanceStore.get(clientInstance);
 

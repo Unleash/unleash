@@ -41,11 +41,21 @@ export class MetricsTranslator {
         );
     }
 
+    private addOriginLabel(
+        sample: MetricSample,
+    ): Record<string, string | number> {
+        return {
+            ...(sample.labels || {}),
+            origin: (sample.labels && sample.labels.origin) || 'sdk',
+        };
+    }
+
     translateMetric(metric: Metric): Counter<string> | Gauge<string> | null {
         const prefixedName = `unleash_${metric.type}_${metric.name}`;
         const existingMetric = this.registry.getSingleMetric(prefixedName);
 
         const allLabelNames = new Set<string>();
+        allLabelNames.add('unleash_origin');
         for (const sample of metric.samples) {
             if (sample.labels) {
                 Object.keys(sample.labels).forEach((label) =>
@@ -81,14 +91,10 @@ export class MetricsTranslator {
             }
 
             for (const sample of metric.samples) {
-                if (sample.labels) {
-                    counter.inc(
-                        this.transformLabels(sample.labels),
-                        sample.value,
-                    );
-                } else {
-                    counter.inc(sample.value);
-                }
+                counter.inc(
+                    this.transformLabels(this.addOriginLabel(sample)),
+                    sample.value,
+                );
             }
 
             return counter;
@@ -118,14 +124,10 @@ export class MetricsTranslator {
             }
 
             for (const sample of metric.samples) {
-                if (sample.labels) {
-                    gauge.set(
-                        this.transformLabels(sample.labels),
-                        sample.value,
-                    );
-                } else {
-                    gauge.set(sample.value);
-                }
+                gauge.set(
+                    this.transformLabels(this.addOriginLabel(sample)),
+                    sample.value,
+                );
             }
 
             return gauge;

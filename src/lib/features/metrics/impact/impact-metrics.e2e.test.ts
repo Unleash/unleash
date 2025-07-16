@@ -118,7 +118,7 @@ test('should store impact metrics in memory and be able to retrieve them', async
         '# TYPE unleash_counter_labeled_counter counter',
     );
     expect(metricsText).toMatch(
-        /unleash_counter_labeled_counter{unleash_foo="bar"} 15/,
+        /unleash_counter_labeled_counter{unleash_foo="bar",unleash_origin="sdk"} 15/,
     );
 });
 
@@ -167,6 +167,6 @@ test('should store impact metrics sent via bulk metrics endpoint', async () => {
         '# TYPE unleash_counter_bulk_counter counter',
     );
     expect(metricsText).toMatch(
-        /unleash_counter_bulk_counter{unleash_source="bulk"} 15/,
+        /unleash_counter_bulk_counter{unleash_source="bulk",unleash_origin="sdk"} 15/,
     );
 });

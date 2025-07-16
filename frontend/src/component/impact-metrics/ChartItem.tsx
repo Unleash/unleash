@@ -16,7 +16,7 @@ const getConfigDescription = (config: ChartConfig): string => {
     const parts: string[] = [];
 
     if (config.selectedSeries) {
-        parts.push(`${config.selectedSeries}`);
+        parts.push(`${config.displayName}`);
     }
 
     parts.push(`last ${config.selectedRange}`);

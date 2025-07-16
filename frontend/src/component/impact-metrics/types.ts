@@ -1,6 +1,8 @@
 export type ChartConfig = {
     id: string;
-    selectedSeries: string;
+    selectedSeries: string; // e.g. unleash_counter_my_metric
+    type: 'counter' | 'gauge';
+    displayName: string; // e.g. my_metric with unleash_counter stripped
     selectedRange: 'hour' | 'day' | 'week' | 'month';
     beginAtZero: boolean;
     showRate: boolean;

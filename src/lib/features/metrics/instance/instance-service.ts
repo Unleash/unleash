@@ -21,8 +21,6 @@ import type {
 import { clientRegisterSchema } from '../shared/schema.js';
 
 import type { IClientMetricsStoreV2 } from '../client-metrics/client-metrics-store-v2-type.js';
-import { clientMetricsSchema } from '../shared/schema.js';
-import type { PartialSome } from '../../../types/partial.js';
 import type { IPrivateProjectChecker } from '../../private-project/privateProjectCheckerType.js';
 import {
     type ApplicationCreatedEvent,
@@ -35,6 +33,7 @@ import { findOutdatedSDKs, isOutdatedSdk } from './findOutdatedSdks.js';
 import type { OutdatedSdksSchema } from '../../../openapi/spec/outdated-sdks-schema.js';
 import { CLIENT_REGISTERED } from '../../../metric-events.js';
 import { NotFoundError } from '../../../error/index.js';
+import type { ClientMetricsSchema, PartialSome } from '../../../server-impl.js';
 
 type ClientData = IClientApp & { lastSeen?: Date };
 
@@ -110,15 +109,16 @@ export default class ClientInstanceService {
     };
 
     public async registerInstance(
-        data: PartialSome<IClientApp, 'instanceId'>,
+        data: Pick<
+            ClientMetricsSchema,
+            'appName' | 'instanceId' | 'environment'
+        >,
         clientIp: string,
     ): Promise<void> {
-        const value = await clientMetricsSchema.validateAsync(data);
-
         this.updateSeenClient({
-            appName: value.appName,
-            instanceId: value.instanceId,
-            environment: value.environment,
+            appName: data.appName,
+            instanceId: data.instanceId ?? 'default',
+            environment: data.environment,
             clientIp: clientIp,
         });
     }

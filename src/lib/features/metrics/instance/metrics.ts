@@ -28,6 +28,7 @@ import type { CustomMetricsSchema } from '../../../openapi/spec/custom-metrics-s
 import type { StoredCustomMetric } from '../custom/custom-metrics-store.js';
 import type { CustomMetricsService } from '../custom/custom-metrics-service.js';
 import type { MetricsTranslator } from '../impact/metrics-translator.js';
+import type { ClientMetricsSchema } from '../../../server-impl.js';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;
@@ -147,7 +148,10 @@ export default class ClientMetricsController extends Controller {
         // Note: Custom metrics GET endpoints are now handled by the admin API
     }
 
-    async registerMetrics(req: IAuthRequest, res: Response): Promise<void> {
+    async registerMetrics(
+        req: IAuthRequest<ClientMetricsSchema>,
+        res: Response,
+    ): Promise<void> {
         if (this.config.flagResolver.isEnabled('disableMetrics')) {
             res.status(204).end();
         } else {

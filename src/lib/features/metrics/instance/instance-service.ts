@@ -21,8 +21,6 @@ import type {
 import { clientRegisterSchema } from '../shared/schema.js';
 
 import type { IClientMetricsStoreV2 } from '../client-metrics/client-metrics-store-v2-type.js';
-import { clientMetricsSchema } from '../shared/schema.js';
-import type { PartialSome } from '../../../types/partial.js';
 import type { IPrivateProjectChecker } from '../../private-project/privateProjectCheckerType.js';
 import {
     type ApplicationCreatedEvent,
@@ -35,6 +33,7 @@ import { findOutdatedSDKs, isOutdatedSdk } from './findOutdatedSdks.js';
 import type { OutdatedSdksSchema } from '../../../openapi/spec/outdated-sdks-schema.js';
 import { CLIENT_REGISTERED } from '../../../metric-events.js';
 import { NotFoundError } from '../../../error/index.js';
+import type { ClientMetricsSchema, PartialSome } from '../../../server-impl.js';
 
 export default class ClientInstanceService {
     apps = {};
@@ -99,24 +98,33 @@ export default class ClientInstanceService {
         );
     }
 
+    private updateSeenClient = (data: IClientApp) => {
+        const current = this.seenClients[this.clientKey(data)];
+        this.seenClients[this.clientKey(data)] = {
+            ...current,
+            ...data,
+        };
+    };
+
     public async registerInstance(
-        data: PartialSome<IClientApp, 'instanceId'>,
+        data: Pick<
+            ClientMetricsSchema,
+            'appName' | 'instanceId' | 'environment'
+        >,
         clientIp: string,
     ): Promise<void> {
-        const value = await clientMetricsSchema.validateAsync(data);
-
-        this.seenClients[this.clientKey(value)] = {
-            appName: value.appName,
-            instanceId: value.instanceId,
-            environment: value.environment,
+        this.updateSeenClient({
+            appName: data.appName,
+            instanceId: data.instanceId ?? 'default',
+            environment: data.environment,
             clientIp: clientIp,
-        };
+        });
     }
 
     public registerFrontendClient(data: IFrontendClientApp): void {
         data.createdBy = SYSTEM_USER.username!;
 
-        this.seenClients[this.clientKey(data)] = data;
+        this.updateSeenClient(data);
     }
 
     public async registerBackendClient(
@@ -127,7 +135,7 @@ export default class ClientInstanceService {
         value.clientIp = clientIp;
         value.createdBy = SYSTEM_USER.username!;
         value.sdkType = 'backend';
-        this.seenClients[this.clientKey(value)] = value;
+        this.updateSeenClient(value);
         this.eventBus.emit(CLIENT_REGISTERED, value);
 
         if (value.sdkVersion && value.sdkVersion.indexOf(':') > -1) {

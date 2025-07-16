@@ -555,6 +555,7 @@ export interface IClientApp {
     yggdrasilVersion?: string;
     specVersion?: string;
     sdkType?: 'frontend' | 'backend' | null;
+    sdkVersion?: string;
 }
 
 export interface IAppFeature {

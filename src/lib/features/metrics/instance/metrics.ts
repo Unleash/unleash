@@ -27,7 +27,10 @@ import { CLIENT_METRICS } from '../../../events/index.js';
 import type { CustomMetricsSchema } from '../../../openapi/spec/custom-metrics-schema.js';
 import type { StoredCustomMetric } from '../custom/custom-metrics-store.js';
 import type { CustomMetricsService } from '../custom/custom-metrics-service.js';
-import type { MetricsTranslator } from '../impact/metrics-translator.js';
+import type {
+    Metric,
+    MetricsTranslator,
+} from '../impact/metrics-translator.js';
 import type { ClientMetricsSchema } from '../../../server-impl.js';
 
 export default class ClientMetricsController extends Controller {
@@ -149,7 +152,7 @@ export default class ClientMetricsController extends Controller {
     }
 
     async registerMetrics(
-        req: IAuthRequest<ClientMetricsSchema>,
+        req: IAuthRequest<void, void, ClientMetricsSchema>,
         res: Response,
     ): Promise<void> {
         if (this.config.flagResolver.isEnabled('disableMetrics')) {
@@ -173,7 +176,9 @@ export default class ClientMetricsController extends Controller {
                     this.flagResolver.isEnabled('impactMetrics') &&
                     impactMetrics
                 ) {
-                    await this.metricsV2.registerImpactMetrics(impactMetrics);
+                    await this.metricsV2.registerImpactMetrics(
+                        impactMetrics as Metric[],
+                    );
                 }
 
                 res.getHeaderNames().forEach((header) =>

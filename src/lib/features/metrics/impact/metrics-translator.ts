@@ -46,7 +46,7 @@ export class MetricsTranslator {
     ): Record<string, string | number> {
         return {
             ...(sample.labels || {}),
-            origin: (sample.labels && sample.labels.origin) || 'sdk', // Default to 'sdk' if not provided
+            origin: (sample.labels && sample.labels.origin) || 'sdk',
         };
     }
 

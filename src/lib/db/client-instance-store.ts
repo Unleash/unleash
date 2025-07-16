@@ -25,7 +25,7 @@ const mapRow = (row): IClientInstance => ({
     appName: row.app_name,
     instanceId: row.instance_id,
     sdkVersion: row.sdk_version,
-    sdkType: row.sdk_type, // should we add this?
+    sdkType: row.sdk_type,
     clientIp: row.client_ip,
     lastSeen: row.last_seen,
     createdAt: row.created_at,

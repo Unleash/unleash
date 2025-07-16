@@ -11,6 +11,7 @@ export interface INewClientInstance {
     clientIp?: string;
     lastSeen?: Date;
     environment?: string;
+    sdkType?: 'backend' | 'frontend' | null;
 }
 export interface IClientInstanceStore
     extends Store<
@@ -18,7 +19,7 @@ export interface IClientInstanceStore
         Pick<INewClientInstance, 'appName' | 'instanceId'>
     > {
     bulkUpsert(instances: INewClientInstance[]): Promise<void>;
-    insert(details: INewClientInstance): Promise<void>;
+    upsert(details: INewClientInstance): Promise<void>;
     getByAppName(appName: string): Promise<IClientInstance[]>;
     getRecentByAppNameAndEnvironment(
         appName: string,

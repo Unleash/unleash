@@ -275,7 +275,7 @@ test('should not return instances older than 24h', async () => {
     await db.stores.clientApplicationsStore.upsert({
         appName: metrics.appName,
     });
-    await db.stores.clientInstanceStore.insert({
+    await db.stores.clientInstanceStore.upsert({
         appName: metrics.appName,
         clientIp: '127.0.0.1',
         instanceId: 'old-instance',

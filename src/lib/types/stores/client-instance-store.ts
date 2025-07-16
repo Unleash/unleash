@@ -11,6 +11,7 @@ export interface INewClientInstance {
     clientIp?: string;
     lastSeen?: Date;
     environment?: string;
+    sdkType?: 'backend' | 'frontend' | null;
 }
 export interface IClientInstanceStore
     extends Store<

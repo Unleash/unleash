@@ -21,17 +21,18 @@ const COLUMNS = [
 ];
 const TABLE = 'client_instances';
 
-const mapRow = (row) => ({
+const mapRow = (row): IClientInstance => ({
     appName: row.app_name,
     instanceId: row.instance_id,
     sdkVersion: row.sdk_version,
+    sdkType: row.sdk_type, // should we add this?
     clientIp: row.client_ip,
     lastSeen: row.last_seen,
     createdAt: row.created_at,
     environment: row.environment,
 });
 
-const mapToDb = (client) => ({
+const mapToDb = (client: INewClientInstance) => ({
     app_name: client.appName,
     instance_id: client.instanceId,
     sdk_version: client.sdkVersion || '',

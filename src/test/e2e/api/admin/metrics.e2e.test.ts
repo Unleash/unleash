@@ -47,15 +47,15 @@ beforeEach(async () => {
         announced: true,
     });
 
-    await db.stores.clientInstanceStore.insert({
+    await db.stores.clientInstanceStore.upsert({
         appName: 'demo-app-1',
         instanceId: 'test-1',
     });
-    await db.stores.clientInstanceStore.insert({
+    await db.stores.clientInstanceStore.upsert({
         appName: 'demo-seed-2',
         instanceId: 'test-2',
     });
-    await db.stores.clientInstanceStore.insert({
+    await db.stores.clientInstanceStore.upsert({
         appName: 'deletable-app',
         instanceId: 'inst-1',
     });

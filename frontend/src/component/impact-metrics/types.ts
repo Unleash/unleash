@@ -1,13 +1,16 @@
 export type ChartConfig = {
     id: string;
     selectedSeries: string; // e.g. unleash_counter_my_metric
-    type: 'counter' | 'gauge';
-    displayName: string; // e.g. my_metric with unleash_counter stripped
     selectedRange: 'hour' | 'day' | 'week' | 'month';
     beginAtZero: boolean;
     showRate: boolean;
     selectedLabels: Record<string, string[]>;
     title?: string;
+};
+
+export type DisplayChartConfig = ChartConfig & {
+    type: 'counter' | 'gauge';
+    displayName: string; // e.g. my_metric with unleash_counter stripped
 };
 
 export type LayoutItem = {
@@ -24,5 +27,10 @@ export type LayoutItem = {
 
 export type ImpactMetricsState = {
     charts: ChartConfig[];
+    layout: LayoutItem[];
+};
+
+export type DisplayImpactMetricsState = {
+    charts: DisplayChartConfig[];
     layout: LayoutItem[];
 };

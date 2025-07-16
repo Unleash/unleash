@@ -85,6 +85,7 @@ beforeEach(async () => {
         db.stores.featureToggleStore.deleteAll(),
         db.stores.clientApplicationsStore.deleteAll(),
     ]);
+    app.services.clientInstanceService.seenClients = {};
 });
 
 afterAll(async () => {

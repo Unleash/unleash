@@ -35,14 +35,12 @@ import { CLIENT_REGISTERED } from '../../../metric-events.js';
 import { NotFoundError } from '../../../error/index.js';
 import type { ClientMetricsSchema, PartialSome } from '../../../server-impl.js';
 
-type ClientData = IClientApp & { lastSeen?: Date };
-
 export default class ClientInstanceService {
     apps = {};
 
     logger: Logger;
 
-    seenClients: Record<string, ClientData> = {};
+    seenClients: Record<string, IClientApp> = {};
 
     private clientMetricsStoreV2: IClientMetricsStoreV2;
 
@@ -100,7 +98,7 @@ export default class ClientInstanceService {
         );
     }
 
-    private updateSeenClient = (data: ClientData) => {
+    private updateSeenClient = (data: IClientApp) => {
         const current = this.seenClients[this.clientKey(data)];
         this.seenClients[this.clientKey(data)] = {
             ...current,

@@ -4,19 +4,19 @@ import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
 import DragHandle from '@mui/icons-material/DragHandle';
 import { ImpactMetricsChart } from './ImpactMetricsChart.tsx';
-import type { ChartConfig } from './types.ts';
+import type { ChartConfig, DisplayChartConfig } from './types.ts';
 
 export interface ChartItemProps {
-    config: ChartConfig;
+    config: DisplayChartConfig;
     onEdit: (config: ChartConfig) => void;
     onDelete: (id: string) => void;
 }
 
-const getConfigDescription = (config: ChartConfig): string => {
+const getConfigDescription = (config: DisplayChartConfig): string => {
     const parts: string[] = [];
 
-    if (config.selectedSeries) {
-        parts.push(`${config.selectedSeries}`);
+    if (config.displayName) {
+        parts.push(`${config.displayName}`);
     }
 
     parts.push(`last ${config.selectedRange}`);

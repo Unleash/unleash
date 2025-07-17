@@ -1,11 +1,10 @@
 import type { FC } from 'react';
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-
-export type MetricMode = 'rps' | 'count' | 'avg' | 'sum';
+import type { AggregationMode } from '../../types.ts';
 
 export type ModeSelectorProps = {
-    value: MetricMode;
-    onChange: (mode: MetricMode) => void;
+    value: AggregationMode;
+    onChange: (mode: AggregationMode) => void;
     seriesType: 'counter' | 'gauge' | 'unknown';
 };
 
@@ -25,7 +24,7 @@ export const ModeSelector: FC<ModeSelectorProps> = ({
             <Select
                 labelId='mode-select-label'
                 value={value}
-                onChange={(e) => onChange(e.target.value as MetricMode)}
+                onChange={(e) => onChange(e.target.value as AggregationMode)}
                 label='Mode'
             >
                 {seriesType === 'counter'

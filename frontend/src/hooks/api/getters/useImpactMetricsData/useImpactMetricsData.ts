@@ -39,7 +39,7 @@ export const useImpactMetricsData = (query?: ImpactMetricsQuery) => {
         });
 
         if (query.aggregationMode !== undefined) {
-            params.append('aggreagationMode', query.aggregationMode);
+            params.append('aggregationMode', query.aggregationMode);
         }
 
         if (query.labels && Object.keys(query.labels).length > 0) {

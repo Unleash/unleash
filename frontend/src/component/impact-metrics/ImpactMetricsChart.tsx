@@ -10,13 +10,14 @@ import { usePlaceholderData } from '../insights/hooks/usePlaceholderData.js';
 import { getDisplayFormat, getTimeUnit, formatLargeNumbers } from './utils.ts';
 import { fromUnixTime } from 'date-fns';
 import { useChartData } from './hooks/useChartData.ts';
+import type { AggregationMode } from './types.ts';
 
 type ImpactMetricsChartProps = {
     selectedSeries: string;
     selectedRange: 'hour' | 'day' | 'week' | 'month';
     selectedLabels: Record<string, string[]>;
     beginAtZero: boolean;
-    aggregationMode?: 'rps' | 'count' | 'avg' | 'sum';
+    aggregationMode?: AggregationMode;
     aspectRatio?: number;
     overrideOptions?: Record<string, unknown>;
     errorTitle?: string;

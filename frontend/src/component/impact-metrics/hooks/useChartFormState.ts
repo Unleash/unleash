@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
-import type { ChartConfig } from '../types.ts';
+import type { AggregationMode, ChartConfig } from '../types.ts';
 import type { ImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import { getMetricType } from '../utils.ts';
 
@@ -15,7 +15,7 @@ export type ChartFormState = {
         selectedSeries: string;
         selectedRange: 'hour' | 'day' | 'week' | 'month';
         beginAtZero: boolean;
-        aggregationMode: 'rps' | 'count' | 'avg' | 'sum';
+        aggregationMode: AggregationMode;
         selectedLabels: Record<string, string[]>;
     };
     actions: {
@@ -23,7 +23,7 @@ export type ChartFormState = {
         setSelectedSeries: (series: string) => void;
         setSelectedRange: (range: 'hour' | 'day' | 'week' | 'month') => void;
         setBeginAtZero: (beginAtZero: boolean) => void;
-        setAggregationMode: (mode: 'rps' | 'count' | 'avg' | 'sum') => void;
+        setAggregationMode: (mode: AggregationMode) => void;
         setSelectedLabels: (labels: Record<string, string[]>) => void;
         handleSeriesChange: (series: string) => void;
         getConfigToSave: () => Omit<ChartConfig, 'id'>;
@@ -49,9 +49,7 @@ export const useChartFormState = ({
     const [selectedLabels, setSelectedLabels] = useState<
         Record<string, string[]>
     >(initialConfig?.selectedLabels || {});
-    const [aggregationMode, setAggregationMode] = useState<
-        'rps' | 'count' | 'avg' | 'sum'
-    >(
+    const [aggregationMode, setAggregationMode] = useState<AggregationMode>(
         (initialConfig?.aggregationMode || getMetricType(selectedSeries)) ===
             'counter'
             ? 'count'

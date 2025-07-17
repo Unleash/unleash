@@ -2,13 +2,14 @@ import type { FC } from 'react';
 import { Typography } from '@mui/material';
 import { StyledChartContainer } from 'component/insights/InsightsCharts.styles';
 import { ImpactMetricsChart } from './ImpactMetricsChart.tsx';
+import type { AggregationMode } from './types.ts';
 
 type ImpactMetricsChartPreviewProps = {
     selectedSeries: string;
     selectedRange: 'hour' | 'day' | 'week' | 'month';
     selectedLabels: Record<string, string[]>;
     beginAtZero: boolean;
-    aggregationMode?: 'rps' | 'count' | 'avg' | 'sum';
+    aggregationMode?: AggregationMode;
 };
 
 export const ImpactMetricsChartPreview: FC<ImpactMetricsChartPreviewProps> = ({

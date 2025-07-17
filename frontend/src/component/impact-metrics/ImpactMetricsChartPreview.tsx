@@ -2,13 +2,14 @@ import type { FC } from 'react';
 import { Typography } from '@mui/material';
 import { StyledChartContainer } from 'component/insights/InsightsCharts.styles';
 import { ImpactMetricsChart } from './ImpactMetricsChart.tsx';
+import type { AggregationMode } from './types.ts';
 
 type ImpactMetricsChartPreviewProps = {
     selectedSeries: string;
     selectedRange: 'hour' | 'day' | 'week' | 'month';
     selectedLabels: Record<string, string[]>;
     beginAtZero: boolean;
-    showRate?: boolean;
+    aggregationMode?: AggregationMode;
 };
 
 export const ImpactMetricsChartPreview: FC<ImpactMetricsChartPreviewProps> = ({
@@ -16,7 +17,7 @@ export const ImpactMetricsChartPreview: FC<ImpactMetricsChartPreviewProps> = ({
     selectedRange,
     selectedLabels,
     beginAtZero,
-    showRate,
+    aggregationMode,
 }) => (
     <>
         <Typography variant='h6' color='text.secondary'>
@@ -35,7 +36,7 @@ export const ImpactMetricsChartPreview: FC<ImpactMetricsChartPreviewProps> = ({
                 selectedRange={selectedRange}
                 selectedLabels={selectedLabels}
                 beginAtZero={beginAtZero}
-                showRate={showRate}
+                aggregationMode={aggregationMode}
                 isPreview
             />
         </StyledChartContainer>

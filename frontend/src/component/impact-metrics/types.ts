@@ -3,10 +3,12 @@ export type ChartConfig = {
     selectedSeries: string; // e.g. unleash_counter_my_metric
     selectedRange: 'hour' | 'day' | 'week' | 'month';
     beginAtZero: boolean;
-    showRate: boolean;
+    aggregationMode: AggregationMode;
     selectedLabels: Record<string, string[]>;
     title?: string;
 };
+
+export type AggregationMode = 'rps' | 'count' | 'avg' | 'sum';
 
 export type DisplayChartConfig = ChartConfig & {
     type: 'counter' | 'gauge';

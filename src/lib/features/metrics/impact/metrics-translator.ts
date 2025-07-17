@@ -19,6 +19,16 @@ export class MetricsTranslator {
         this.registry = registry;
     }
 
+    sanitizeName(name: string): string {
+        // Replace any character that's not a letter, number, or underscore with an underscore
+        const regex = /[^a-zA-Z0-9_]/g;
+
+        // Replace any invalid characters with underscores
+        const sanitized = name.replace(regex, '_');
+
+        return sanitized;
+    }
+
     private hasNewLabels(
         existingMetric: Counter<string> | Gauge<string>,
         newLabelNames: string[],
@@ -35,7 +45,7 @@ export class MetricsTranslator {
     ): Record<string, string | number> {
         return Object.fromEntries(
             Object.entries(labels).map(([labelKey, value]) => [
-                `unleash_${labelKey}`,
+                `unleash_${this.sanitizeName(labelKey)}`,
                 value,
             ]),
         );
@@ -51,7 +61,8 @@ export class MetricsTranslator {
     }
 
     translateMetric(metric: Metric): Counter<string> | Gauge<string> | null {
-        const prefixedName = `unleash_${metric.type}_${metric.name}`;
+        const sanitizedName = this.sanitizeName(metric.name);
+        const prefixedName = `unleash_${metric.type}_${sanitizedName}`;
         const existingMetric = this.registry.getSingleMetric(prefixedName);
 
         const allLabelNames = new Set<string>();
@@ -63,7 +74,9 @@ export class MetricsTranslator {
                 );
             }
         }
-        const labelNames = Array.from(allLabelNames);
+        const labelNames = Array.from(allLabelNames).map((labelName) =>
+            this.sanitizeName(labelName),
+        );
 
         if (metric.type === 'counter') {
             let counter: Counter<string>;

@@ -37,7 +37,7 @@ const TestComponent: FC<{
                             selectedSeries: 'test-series',
                             selectedRange: 'day',
                             beginAtZero: true,
-                            mode: 'count',
+                            aggregationMode: 'count',
                             selectedLabels: {},
                             title: 'Test Chart',
                         })
@@ -79,7 +79,7 @@ const mockSettings: ImpactMetricsState = {
             selectedSeries: 'test-series',
             selectedRange: 'day' as const,
             beginAtZero: true,
-            mode: 'count',
+            aggregationMode: 'count',
             selectedLabels: {},
             title: 'Test Chart',
         },

@@ -3,7 +3,7 @@ export type ChartConfig = {
     selectedSeries: string; // e.g. unleash_counter_my_metric
     selectedRange: 'hour' | 'day' | 'week' | 'month';
     beginAtZero: boolean;
-    mode: 'rps' | 'count' | 'avg' | 'sum';
+    aggregationMode: 'rps' | 'count' | 'avg' | 'sum';
     selectedLabels: Record<string, string[]>;
     title?: string;
 };

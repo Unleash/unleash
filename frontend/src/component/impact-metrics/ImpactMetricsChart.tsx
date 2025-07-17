@@ -16,7 +16,7 @@ type ImpactMetricsChartProps = {
     selectedRange: 'hour' | 'day' | 'week' | 'month';
     selectedLabels: Record<string, string[]>;
     beginAtZero: boolean;
-    mode?: 'rps' | 'count' | 'avg' | 'sum';
+    aggregationMode?: 'rps' | 'count' | 'avg' | 'sum';
     aspectRatio?: number;
     overrideOptions?: Record<string, unknown>;
     errorTitle?: string;
@@ -30,7 +30,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
     selectedRange,
     selectedLabels,
     beginAtZero,
-    mode,
+    aggregationMode,
     aspectRatio,
     overrideOptions = {},
     errorTitle = 'Failed to load impact metrics.',
@@ -47,7 +47,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
             ? {
                   series: selectedSeries,
                   range: selectedRange,
-                  mode,
+                  aggregationMode,
                   labels:
                       Object.keys(selectedLabels).length > 0
                           ? selectedLabels
@@ -118,14 +118,17 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                   y: {
                       beginAtZero,
                       title: {
-                          display: mode === 'rps',
-                          text: mode === 'rps' ? 'Rate per second' : '',
+                          display: aggregationMode === 'rps',
+                          text:
+                              aggregationMode === 'rps'
+                                  ? 'Rate per second'
+                                  : '',
                       },
                       ticks: {
                           precision: 0,
                           callback: (value: unknown): string | number =>
                               typeof value === 'number'
-                                  ? `${formatLargeNumbers(value)}${mode === 'rps' ? '/s' : ''}`
+                                  ? `${formatLargeNumbers(value)}${aggregationMode === 'rps' ? '/s' : ''}`
                                   : (value as number),
                       },
                   },

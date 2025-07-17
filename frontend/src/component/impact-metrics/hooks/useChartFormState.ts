@@ -15,7 +15,7 @@ export type ChartFormState = {
         selectedSeries: string;
         selectedRange: 'hour' | 'day' | 'week' | 'month';
         beginAtZero: boolean;
-        mode: 'rps' | 'count' | 'avg' | 'sum';
+        aggregationMode: 'rps' | 'count' | 'avg' | 'sum';
         selectedLabels: Record<string, string[]>;
     };
     actions: {
@@ -23,7 +23,7 @@ export type ChartFormState = {
         setSelectedSeries: (series: string) => void;
         setSelectedRange: (range: 'hour' | 'day' | 'week' | 'month') => void;
         setBeginAtZero: (beginAtZero: boolean) => void;
-        setMode: (mode: 'rps' | 'count' | 'avg' | 'sum') => void;
+        setAggregationMode: (mode: 'rps' | 'count' | 'avg' | 'sum') => void;
         setSelectedLabels: (labels: Record<string, string[]>) => void;
         handleSeriesChange: (series: string) => void;
         getConfigToSave: () => Omit<ChartConfig, 'id'>;
@@ -49,8 +49,11 @@ export const useChartFormState = ({
     const [selectedLabels, setSelectedLabels] = useState<
         Record<string, string[]>
     >(initialConfig?.selectedLabels || {});
-    const [mode, setMode] = useState<'rps' | 'count' | 'avg' | 'sum'>(
-        (initialConfig?.mode || getMetricType(selectedSeries)) === 'counter'
+    const [aggregationMode, setAggregationMode] = useState<
+        'rps' | 'count' | 'avg' | 'sum'
+    >(
+        (initialConfig?.aggregationMode || getMetricType(selectedSeries)) ===
+            'counter'
             ? 'count'
             : 'avg',
     );
@@ -62,7 +65,7 @@ export const useChartFormState = ({
             ? {
                   series: selectedSeries,
                   range: selectedRange,
-                  mode,
+                  aggregationMode,
               }
             : undefined,
     );
@@ -74,8 +77,8 @@ export const useChartFormState = ({
             setSelectedRange(initialConfig.selectedRange);
             setBeginAtZero(initialConfig.beginAtZero);
             setSelectedLabels(initialConfig.selectedLabels);
-            setMode(
-                initialConfig.mode ||
+            setAggregationMode(
+                initialConfig.aggregationMode ||
                     (initialConfig.selectedSeries.startsWith('unleash_counter_')
                         ? 'count'
                         : 'avg'),
@@ -86,7 +89,7 @@ export const useChartFormState = ({
             setSelectedRange('day');
             setBeginAtZero(false);
             setSelectedLabels({});
-            setMode('count');
+            setAggregationMode('count');
         }
     }, [open, initialConfig]);
 
@@ -95,9 +98,9 @@ export const useChartFormState = ({
         setSelectedLabels({});
         // Set default mode based on series type
         if (series.startsWith('unleash_counter_')) {
-            setMode('count');
+            setAggregationMode('count');
         } else if (series.startsWith('unleash_gauge_')) {
-            setMode('avg');
+            setAggregationMode('avg');
         }
     };
 
@@ -107,7 +110,7 @@ export const useChartFormState = ({
         selectedRange,
         beginAtZero,
         selectedLabels,
-        mode,
+        aggregationMode,
     });
 
     const isValid = selectedSeries.length > 0;
@@ -118,7 +121,7 @@ export const useChartFormState = ({
             selectedSeries,
             selectedRange,
             beginAtZero,
-            mode,
+            aggregationMode,
             selectedLabels,
         },
         actions: {
@@ -126,7 +129,7 @@ export const useChartFormState = ({
             setSelectedSeries,
             setSelectedRange,
             setBeginAtZero,
-            setMode,
+            setAggregationMode,
             setSelectedLabels,
             handleSeriesChange,
             getConfigToSave,

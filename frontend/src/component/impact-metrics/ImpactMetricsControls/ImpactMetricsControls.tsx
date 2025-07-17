@@ -17,7 +17,7 @@ export type ImpactMetricsControlsProps = {
         | 'setSelectedRange'
         | 'setBeginAtZero'
         | 'setSelectedLabels'
-        | 'setMode'
+        | 'setAggregationMode'
     >;
     metricSeries: (ImpactMetricsSeries & { name: string })[];
     loading?: boolean;
@@ -72,8 +72,8 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
 
             {formData.selectedSeries ? (
                 <ModeSelector
-                    value={formData.mode}
-                    onChange={actions.setMode}
+                    value={formData.aggregationMode}
+                    onChange={actions.setAggregationMode}
                     seriesType={getMetricType(formData.selectedSeries)!}
                 />
             ) : null}

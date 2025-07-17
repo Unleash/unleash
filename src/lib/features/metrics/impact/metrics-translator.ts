@@ -20,10 +20,8 @@ export class MetricsTranslator {
     }
 
     sanitizeName(name: string): string {
-        // Replace any character that's not a letter, number, or underscore with an underscore
         const regex = /[^a-zA-Z0-9_]/g;
 
-        // Replace any invalid characters with underscores
         const sanitized = name.replace(regex, '_');
 
         return sanitized;

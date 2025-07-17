@@ -79,7 +79,7 @@ export const useChartFormState = ({
             setSelectedLabels(initialConfig.selectedLabels);
             setAggregationMode(
                 initialConfig.aggregationMode ||
-                    (initialConfig.selectedSeries.startsWith('unleash_counter_')
+                    (getMetricType(initialConfig.selectedSeries) === 'counter'
                         ? 'count'
                         : 'avg'),
             );
@@ -96,10 +96,10 @@ export const useChartFormState = ({
     const handleSeriesChange = (series: string) => {
         setSelectedSeries(series);
         setSelectedLabels({});
-        // Set default mode based on series type
-        if (series.startsWith('unleash_counter_')) {
+        const metric = getMetricType(series);
+        if (metric === 'counter') {
             setAggregationMode('count');
-        } else if (series.startsWith('unleash_gauge_')) {
+        } else if (metric === 'gauge') {
             setAggregationMode('avg');
         }
     };

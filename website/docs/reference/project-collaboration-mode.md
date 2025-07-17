@@ -2,6 +2,10 @@
 title: Project collaboration mode
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
 :::note Availability
 
 **Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.22+`

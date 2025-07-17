@@ -1,6 +1,11 @@
 ---
 title: Feature flag variants (deprecated)
 ---
+
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="noindex" />
+
 :::warning
 
 Feature Flag Variants at the environment level are deprecated in favor of the [strategy variants](./strategy-variants). 

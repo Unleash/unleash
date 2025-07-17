@@ -7,6 +7,9 @@ pagination_next: using-unleash/deploy/configuring-unleash
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
 
 Unleash offers several [hosting options](/understanding-unleash/hosting-options), including fully self-hosted setups. This guide helps you set up Unleash Open Source or Unleash Enterprise in your own environment using Docker.
 

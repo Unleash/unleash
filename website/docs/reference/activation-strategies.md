@@ -3,6 +3,9 @@ title: Activation strategies
 ---
 
 import VideoContent from '@site/src/components/VideoContent.jsx'
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
 
 ## Overview 
 

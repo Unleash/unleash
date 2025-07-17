@@ -3,6 +3,10 @@ title: Impression data
 pagination_next: reference/events
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
 :::note Availability
 
 **Version**: `4.7+`. Requires [SDK compatibility](../reference/sdks#feature-compatibility-in-server-side-sdks).

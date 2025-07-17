@@ -2,6 +2,10 @@
 title: Signals
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
 :::note Availability
 
 **Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.11+` in BETA

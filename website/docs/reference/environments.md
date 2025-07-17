@@ -3,11 +3,16 @@ id: environments
 title: Environments
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
 :::note Availability
 
 **Version**: `4.3+`
 
 :::
+
 ## Overview
 
 Environments represent different stages in your development lifecycle. They allow you to manage your product releases from local development to production. [Projects](/reference/projects) and [feature flags](/reference/feature-toggles) are accessible in all environments, but each environment has different feature flag configurations. This allows you to enable a flag in development or test without enabling it in production.

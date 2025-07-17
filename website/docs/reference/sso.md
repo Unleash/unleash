@@ -2,6 +2,9 @@
 title: Single Sign-On
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
 
 :::note Availability
 

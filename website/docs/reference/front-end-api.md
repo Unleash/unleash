@@ -2,6 +2,10 @@
 title: Frontend API
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
 :::note Availability
 
 **Version**: `4.18+`

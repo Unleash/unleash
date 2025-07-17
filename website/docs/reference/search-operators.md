@@ -2,6 +2,10 @@
 title: Search
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
 :::note Availability
 
 **Version**: `5.9+`

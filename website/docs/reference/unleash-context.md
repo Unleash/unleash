@@ -2,6 +2,10 @@
 title: Unleash context
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
 The **Unleash context** contains information related to the current feature flag request. Unleash uses this context to evaluate [activation strategies](activation-strategies) and [strategy constraints](../reference/activation-strategies#constraints) and to calculate [flag stickiness](../reference/stickiness). The Unleash Context is an important feature of all the [Unleash client SDKs](../reference/sdks).
 
 ## Overview

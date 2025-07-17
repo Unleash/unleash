@@ -3,6 +3,10 @@ title: Feature flag security and compliance for enterprises
 slug: /feature-flag-tutorials/use-cases/security-and-compliance
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
 Security and compliance are important aspects of building and managing complex software in large enterprises. For software architects, engineering leaders, and technical decision-makers, every tool in your tech stack needs to pass security reviews. The weakest link in your software bill of materials, known as the SBOM, can be the one that compromises your security, so every dependency and integration must meet strict standards. Security isn't just about individual components—it’s about the entire system working together without introducing risk.
 
 In the modern security landscape, compliance frameworks like FedRAMP, SOC 2, and ISO 27001 set strict standards for proving good security posture in your software tool implementations. Feature flag management systems are no exception.

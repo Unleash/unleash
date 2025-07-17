@@ -1,6 +1,5 @@
 import type { FC } from 'react';
-import { Typography } from '@mui/material';
-import { StyledChartContainer } from 'component/insights/InsightsCharts.styles';
+import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { ImpactMetricsChart } from './ImpactMetricsChart.tsx';
 
 type ImpactMetricsChartPreviewProps = {
@@ -17,27 +16,34 @@ export const ImpactMetricsChartPreview: FC<ImpactMetricsChartPreviewProps> = ({
     selectedLabels,
     beginAtZero,
     showRate,
-}) => (
-    <>
-        <Typography variant='h6' color='text.secondary'>
-            Preview
-        </Typography>
+}) => {
+    const theme = useTheme();
+    const screenBreakpoint = useMediaQuery(theme.breakpoints.down('lg'));
+    const key = screenBreakpoint ? 'small' : 'large';
 
-        {!selectedSeries ? (
-            <Typography variant='body2' color='text.secondary'>
-                Select a metric series to view the preview
+    return (
+        <>
+            <Typography variant='h6' color='text.secondary'>
+                Preview
             </Typography>
-        ) : null}
 
-        <StyledChartContainer>
-            <ImpactMetricsChart
-                selectedSeries={selectedSeries}
-                selectedRange={selectedRange}
-                selectedLabels={selectedLabels}
-                beginAtZero={beginAtZero}
-                showRate={showRate}
-                isPreview
-            />
-        </StyledChartContainer>
-    </>
-);
+            {!selectedSeries ? (
+                <Typography variant='body2' color='text.secondary'>
+                    Select a metric series to view the preview
+                </Typography>
+            ) : null}
+
+            <Box sx={(theme) => ({ padding: theme.spacing(1) })}>
+                <ImpactMetricsChart
+                    key={key}
+                    selectedSeries={selectedSeries}
+                    selectedRange={selectedRange}
+                    selectedLabels={selectedLabels}
+                    beginAtZero={beginAtZero}
+                    showRate={showRate}
+                    isPreview
+                />
+            </Box>
+        </>
+    );
+};

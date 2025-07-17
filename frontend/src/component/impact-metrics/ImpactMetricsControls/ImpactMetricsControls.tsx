@@ -5,7 +5,9 @@ import type { ImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData
 import { SeriesSelector } from './components/SeriesSelector.tsx';
 import { RangeSelector } from './components/RangeSelector.tsx';
 import { LabelsFilter } from './components/LabelsFilter.tsx';
+import { ModeSelector } from './components/ModeSelector.tsx';
 import type { ChartFormState } from '../hooks/useChartFormState.ts';
+import { getMetricType } from '../utils.ts';
 
 export type ImpactMetricsControlsProps = {
     formData: ChartFormState['formData'];
@@ -15,7 +17,7 @@ export type ImpactMetricsControlsProps = {
         | 'setSelectedRange'
         | 'setBeginAtZero'
         | 'setSelectedLabels'
-        | 'setShowRate'
+        | 'setMode'
     >;
     metricSeries: (ImpactMetricsSeries & { name: string })[];
     loading?: boolean;
@@ -68,17 +70,11 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
                 label='Begin at zero'
             />
 
-            {formData.selectedSeries.startsWith('unleash_counter_') ? (
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            checked={formData.showRate}
-                            onChange={(e) =>
-                                actions.setShowRate(e.target.checked)
-                            }
-                        />
-                    }
-                    label='Show rate per second'
+            {formData.selectedSeries ? (
+                <ModeSelector
+                    value={formData.mode}
+                    onChange={actions.setMode}
+                    seriesType={getMetricType(formData.selectedSeries)!}
                 />
             ) : null}
         </Box>

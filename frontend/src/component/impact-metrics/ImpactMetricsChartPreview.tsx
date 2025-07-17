@@ -8,7 +8,7 @@ type ImpactMetricsChartPreviewProps = {
     selectedRange: 'hour' | 'day' | 'week' | 'month';
     selectedLabels: Record<string, string[]>;
     beginAtZero: boolean;
-    showRate?: boolean;
+    mode?: 'rps' | 'count' | 'avg' | 'sum';
 };
 
 export const ImpactMetricsChartPreview: FC<ImpactMetricsChartPreviewProps> = ({
@@ -16,7 +16,7 @@ export const ImpactMetricsChartPreview: FC<ImpactMetricsChartPreviewProps> = ({
     selectedRange,
     selectedLabels,
     beginAtZero,
-    showRate,
+    mode,
 }) => (
     <>
         <Typography variant='h6' color='text.secondary'>
@@ -35,7 +35,7 @@ export const ImpactMetricsChartPreview: FC<ImpactMetricsChartPreviewProps> = ({
                 selectedRange={selectedRange}
                 selectedLabels={selectedLabels}
                 beginAtZero={beginAtZero}
-                showRate={showRate}
+                mode={mode}
                 isPreview
             />
         </StyledChartContainer>

@@ -16,7 +16,7 @@ type ImpactMetricsChartProps = {
     selectedRange: 'hour' | 'day' | 'week' | 'month';
     selectedLabels: Record<string, string[]>;
     beginAtZero: boolean;
-    showRate?: boolean;
+    mode?: 'rps' | 'count' | 'avg' | 'sum';
     aspectRatio?: number;
     overrideOptions?: Record<string, unknown>;
     errorTitle?: string;
@@ -30,7 +30,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
     selectedRange,
     selectedLabels,
     beginAtZero,
-    showRate,
+    mode,
     aspectRatio,
     overrideOptions = {},
     errorTitle = 'Failed to load impact metrics.',
@@ -47,7 +47,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
             ? {
                   series: selectedSeries,
                   range: selectedRange,
-                  showRate,
+                  mode,
                   labels:
                       Object.keys(selectedLabels).length > 0
                           ? selectedLabels
@@ -118,14 +118,14 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                   y: {
                       beginAtZero,
                       title: {
-                          display: !!showRate,
-                          text: showRate ? 'Rate per second' : '',
+                          display: mode === 'rps',
+                          text: mode === 'rps' ? 'Rate per second' : '',
                       },
                       ticks: {
                           precision: 0,
                           callback: (value: unknown): string | number =>
                               typeof value === 'number'
-                                  ? `${formatLargeNumbers(value)}${showRate ? '/s' : ''}`
+                                  ? `${formatLargeNumbers(value)}${mode === 'rps' ? '/s' : ''}`
                                   : (value as number),
                       },
                   },

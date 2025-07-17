@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import type { ChartConfig } from '../types.ts';
 import type { ImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
+import { getMetricType } from '../utils.ts';
 
 type UseChartConfigParams = {
     open: boolean;
@@ -14,7 +15,7 @@ export type ChartFormState = {
         selectedSeries: string;
         selectedRange: 'hour' | 'day' | 'week' | 'month';
         beginAtZero: boolean;
-        showRate: boolean;
+        mode: 'rps' | 'count' | 'avg' | 'sum';
         selectedLabels: Record<string, string[]>;
     };
     actions: {
@@ -22,7 +23,7 @@ export type ChartFormState = {
         setSelectedSeries: (series: string) => void;
         setSelectedRange: (range: 'hour' | 'day' | 'week' | 'month') => void;
         setBeginAtZero: (beginAtZero: boolean) => void;
-        setShowRate: (showRate: boolean) => void;
+        setMode: (mode: 'rps' | 'count' | 'avg' | 'sum') => void;
         setSelectedLabels: (labels: Record<string, string[]>) => void;
         handleSeriesChange: (series: string) => void;
         getConfigToSave: () => Omit<ChartConfig, 'id'>;
@@ -48,7 +49,11 @@ export const useChartFormState = ({
     const [selectedLabels, setSelectedLabels] = useState<
         Record<string, string[]>
     >(initialConfig?.selectedLabels || {});
-    const [showRate, setShowRate] = useState(initialConfig?.showRate || false);
+    const [mode, setMode] = useState<'rps' | 'count' | 'avg' | 'sum'>(
+        (initialConfig?.mode || getMetricType(selectedSeries)) === 'counter'
+            ? 'count'
+            : 'avg',
+    );
 
     const {
         data: { labels: currentAvailableLabels },
@@ -57,7 +62,7 @@ export const useChartFormState = ({
             ? {
                   series: selectedSeries,
                   range: selectedRange,
-                  showRate,
+                  mode,
               }
             : undefined,
     );
@@ -69,20 +74,31 @@ export const useChartFormState = ({
             setSelectedRange(initialConfig.selectedRange);
             setBeginAtZero(initialConfig.beginAtZero);
             setSelectedLabels(initialConfig.selectedLabels);
-            setShowRate(initialConfig.showRate || false);
+            setMode(
+                initialConfig.mode ||
+                    (initialConfig.selectedSeries.startsWith('unleash_counter_')
+                        ? 'count'
+                        : 'avg'),
+            );
         } else if (open && !initialConfig) {
             setTitle('');
             setSelectedSeries('');
             setSelectedRange('day');
             setBeginAtZero(false);
             setSelectedLabels({});
-            setShowRate(false);
+            setMode('count');
         }
     }, [open, initialConfig]);
 
     const handleSeriesChange = (series: string) => {
         setSelectedSeries(series);
         setSelectedLabels({});
+        // Set default mode based on series type
+        if (series.startsWith('unleash_counter_')) {
+            setMode('count');
+        } else if (series.startsWith('unleash_gauge_')) {
+            setMode('avg');
+        }
     };
 
     const getConfigToSave = (): Omit<ChartConfig, 'id'> => ({
@@ -91,7 +107,7 @@ export const useChartFormState = ({
         selectedRange,
         beginAtZero,
         selectedLabels,
-        showRate,
+        mode,
     });
 
     const isValid = selectedSeries.length > 0;
@@ -102,7 +118,7 @@ export const useChartFormState = ({
             selectedSeries,
             selectedRange,
             beginAtZero,
-            showRate,
+            mode,
             selectedLabels,
         },
         actions: {
@@ -110,7 +126,7 @@ export const useChartFormState = ({
             setSelectedSeries,
             setSelectedRange,
             setBeginAtZero,
-            setShowRate,
+            setMode,
             setSelectedLabels,
             handleSeriesChange,
             getConfigToSave,

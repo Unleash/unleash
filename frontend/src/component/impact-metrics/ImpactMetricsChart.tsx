@@ -90,6 +90,9 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
             description=''
         />
     );
+
+    const hasManyLabels = Object.keys(selectedLabels).length > 0;
+
     const cover = notEnoughData ? placeholder : isLoading;
 
     const chartOptions = shouldShowPlaceholder
@@ -132,7 +135,9 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
               },
               plugins: {
                   legend: {
-                      display: timeSeriesData && timeSeriesData.length > 1,
+                      display:
+                          timeSeriesData &&
+                          (hasManyLabels || timeSeriesData.length > 1),
                       position: 'bottom' as const,
                       labels: {
                           usePointStyle: true,

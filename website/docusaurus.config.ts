@@ -542,10 +542,6 @@ class="header-github-link"
                             to: '/reference/integrations/webhook',
                         },
                         {
-                            from: '/guides/feature_updates_to_slack',
-                            to: '/how-to/how-to-send-feature-updates-to-slack-deprecated',
-                        },
-                        {
                             from: [
                                 '/integrations/integrations',
                                 '/integrations',

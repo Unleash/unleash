@@ -65,7 +65,7 @@ export interface IConstraint {
     caseInsensitive?: boolean;
     operator: Operator;
     contextName: string;
-    [constraintId]?: string;
+    [constraintId]: string;
 }
 
 export interface IFeatureStrategySortOrder {

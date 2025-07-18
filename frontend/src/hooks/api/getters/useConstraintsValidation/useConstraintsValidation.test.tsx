@@ -3,6 +3,7 @@ import type { IConstraint } from 'interfaces/strategy'; // Assuming you have you
 import type { FC } from 'react';
 import { useConstraintsValidation } from './useConstraintsValidation.ts';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { constraintId } from 'constants/constraintId.ts';
 
 const server = testServerSetup();
 
@@ -26,12 +27,14 @@ test('should display Valid when constraints are valid', async () => {
             values: ['test'],
             operator: 'IN',
             contextName: 'irrelevant',
+            [constraintId]: 'constraint id',
         },
         {
             value: 'test',
             values: ['test'],
             operator: 'IN',
             contextName: 'irrelevant',
+            [constraintId]: 'constraint id 2',
         },
     ];
 
@@ -42,12 +45,19 @@ test('should display Valid when constraints are valid', async () => {
 
 test('should display Invalid when constraints are invalid', async () => {
     const emptyValueAndValues: IConstraint[] = [
-        { value: '', values: [], operator: 'IN', contextName: 'irrelevant' },
         {
             value: '',
             values: [],
             operator: 'IN',
             contextName: 'irrelevant',
+            [constraintId]: 'constraint id 3',
+        },
+        {
+            value: '',
+            values: [],
+            operator: 'IN',
+            contextName: 'irrelevant',
+            [constraintId]: 'constraint id 4',
         },
     ];
 

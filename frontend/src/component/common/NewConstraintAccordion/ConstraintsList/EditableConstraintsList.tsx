@@ -9,7 +9,6 @@ import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsLis
 import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/EditableConstraint';
 import { createEmptyConstraint } from '../../../../utils/createEmptyConstraint.ts';
 import { constraintId } from 'constants/constraintId.ts';
-import { v4 as uuidv4 } from 'uuid';
 export interface IEditableConstraintsListRef {
     addConstraint?: (contextName: string) => void;
 }
@@ -44,7 +43,6 @@ export const EditableConstraintsList = forwardRef<
         if (!constraints.every((constraint) => constraintId in constraint)) {
             setConstraints(
                 constraints.map((constraint) => ({
-                    [constraintId]: uuidv4(),
                     ...constraint,
                 })),
             );

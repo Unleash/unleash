@@ -13,6 +13,7 @@ import { vi } from 'vitest';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import type { ContextFieldSchema } from 'openapi';
 import { NUM_EQ } from '@server/util/constants';
+import { constraintId } from 'constants/constraintId.js';
 
 const server = testServerSetup();
 
@@ -25,6 +26,7 @@ test('calls onUpdate with new state', async () => {
         contextName: 'context-field',
         operator: NOT_IN,
         values: ['A', 'B'],
+        [constraintId]: 'constraint id',
     };
 
     const onUpdate = vi.fn();
@@ -71,6 +73,7 @@ describe('validators', () => {
                 contextName: 'context-field',
                 operator: operator,
                 value: '',
+                [constraintId]: 'constraint id',
             };
 
             const { result } = renderHook(() =>
@@ -94,6 +97,7 @@ describe('validators', () => {
                 contextName: 'context-field',
                 operator: operator,
                 value: '',
+                [constraintId]: 'constraint id',
             };
 
             const { result } = renderHook(() =>
@@ -117,6 +121,7 @@ describe('validators', () => {
                 contextName: 'context-field',
                 operator: operator,
                 value: '',
+                [constraintId]: 'constraint id',
             };
 
             const { result } = renderHook(() =>
@@ -140,6 +145,7 @@ describe('validators', () => {
                 contextName: 'context-field',
                 operator: operator,
                 values: [],
+                [constraintId]: 'constraint id',
             };
 
             const { result } = renderHook(() =>
@@ -162,6 +168,7 @@ describe('validators', () => {
                 contextName: 'context-field',
                 operator: operator,
                 values: ['a', 'b'],
+                [constraintId]: 'constraint id',
             };
 
             const { result } = renderHook(() =>
@@ -189,6 +196,7 @@ describe('legal values', () => {
             contextName: definition.name,
             operator: IN,
             values: [],
+            [constraintId]: 'constraint id',
         };
 
         const { result } = renderHook(() =>
@@ -206,6 +214,7 @@ describe('legal values', () => {
             contextName: definition.name,
             operator: IN,
             values: [],
+            [constraintId]: 'constraint id',
         };
 
         const { result } = renderHook(() =>
@@ -231,6 +240,7 @@ describe('legal values', () => {
             contextName: 'field-with-no-legal-values',
             operator: IN,
             values: [],
+            [constraintId]: 'constraint id',
         };
 
         const { result } = renderHook(() =>
@@ -244,6 +254,7 @@ describe('legal values', () => {
             contextName: definition.name,
             operator: IN,
             values: ['A', 'B'],
+            [constraintId]: 'constraint id',
         };
 
         const { result } = renderHook(() =>
@@ -260,6 +271,7 @@ describe('legal values', () => {
             contextName: definition.name,
             operator: NUM_EQ,
             values: [],
+            [constraintId]: 'constraint id',
         };
 
         const { result } = renderHook(() =>

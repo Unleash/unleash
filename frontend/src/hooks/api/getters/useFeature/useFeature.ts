@@ -1,9 +1,12 @@
 import useSWR, { type SWRConfiguration } from 'swr';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { emptyFeature } from './emptyFeature.ts';
 import handleErrorResponses from '../httpErrorResponseHandler.ts';
 import { formatApiPath } from 'utils/formatPath';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
+import { constraintId } from 'constants/constraintId.ts';
+import { v4 as uuidv4 } from 'uuid';
+import type { IFeatureStrategy } from 'interfaces/strategy.ts';
 
 export interface IUseFeatureOutput {
     feature: IFeatureToggle;
@@ -35,8 +38,43 @@ export const useFeature = (
         mutate().catch(console.warn);
     }, [mutate]);
 
+    const feature = useMemo(() => {
+        if (!data?.body) {
+            return emptyFeature;
+        }
+
+        const { strategies, environments, ...rest } = data.body;
+
+        const addConstraintIds = (strategy: IFeatureStrategy) => {
+            const { constraints, ...strategyRest } = strategy;
+            return {
+                ...strategyRest,
+                constraints: constraints?.map((constraint) => ({
+                    ...constraint,
+                    [constraintId]: uuidv4(),
+                })),
+            };
+        };
+
+        const strategiesWithConstraintIds = strategies?.map(addConstraintIds);
+
+        const environmentsWithStrategyIds = environments?.map((environment) => {
+            const { strategies, ...environmentRest } = environment;
+            return {
+                ...environmentRest,
+                strategies: strategies?.map(addConstraintIds),
+            };
+        });
+
+        return {
+            ...rest,
+            strategies: strategiesWithConstraintIds,
+            environments: environmentsWithStrategyIds,
+        };
+    }, [data?.body]);
+
     return {
-        feature: data?.body || emptyFeature,
+        feature,
         refetchFeature,
         loading: !error && !data,
         status: data?.status,

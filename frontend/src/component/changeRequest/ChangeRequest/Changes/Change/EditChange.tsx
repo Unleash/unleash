@@ -4,7 +4,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
-import type { IFeatureStrategy } from 'interfaces/strategy';
+import type { IEditableStrategy, IFeatureStrategy } from 'interfaces/strategy';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import type { ISegment } from 'interfaces/segment';
 import { useFormErrors } from 'hooks/useFormErrors';
@@ -63,7 +63,7 @@ export const EditChange = ({
 
     const constraintsWithId = addIdSymbolToConstraints(change.payload);
 
-    const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({
+    const [strategy, setStrategy] = useState<Partial<IEditableStrategy>>({
         ...change.payload,
         constraints: constraintsWithId,
     });

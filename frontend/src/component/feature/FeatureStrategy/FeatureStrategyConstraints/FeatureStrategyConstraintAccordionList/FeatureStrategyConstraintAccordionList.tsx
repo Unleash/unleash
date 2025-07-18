@@ -2,7 +2,7 @@ import type React from 'react';
 import { forwardRef, useImperativeHandle, type RefObject } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import Add from '@mui/icons-material/Add';
-import type { IConstraint } from 'interfaces/strategy';
+import type { IConstraint, IConstraintWithId } from 'interfaces/strategy';
 
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
@@ -15,8 +15,8 @@ import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashCon
 import { createEmptyConstraint } from 'utils/createEmptyConstraint.ts';
 
 interface IConstraintAccordionListProps {
-    constraints: IConstraint[];
-    setConstraints?: React.Dispatch<React.SetStateAction<IConstraint[]>>;
+    constraints: IConstraintWithId[];
+    setConstraints?: React.Dispatch<React.SetStateAction<IConstraintWithId[]>>;
     showCreateButton?: boolean;
 }
 
@@ -57,7 +57,7 @@ interface IConstraintAccordionListItemState {
 
 const useConstraintAccordionList = (
     setConstraints:
-        | React.Dispatch<React.SetStateAction<IConstraint[]>>
+        | React.Dispatch<React.SetStateAction<IConstraintWithId[]>>
         | undefined,
     ref: React.RefObject<IConstraintAccordionListRef>,
 ) => {
@@ -88,7 +88,7 @@ const useConstraintAccordionList = (
 export const FeatureStrategyConstraintAccordionList = forwardRef<
     IConstraintAccordionListRef | undefined,
     IConstraintAccordionListProps
->(({ constraints, setConstraints, showCreateButton }, ref) => {
+>(({ constraints, setConstraints }, ref) => {
     const { onAdd, context } = useConstraintAccordionList(
         setConstraints,
         ref as RefObject<IConstraintAccordionListRef>,
@@ -101,8 +101,9 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
 
     return (
         <StyledContainer>
+            constraints are {JSON.stringify(constraints)}
             <ConditionallyRender
-                condition={Boolean(showCreateButton && onAdd)}
+                condition={Boolean(true)}
                 show={
                     <div>
                         <StyledHelpIconBox>
@@ -128,13 +129,14 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                                 }
                             />
                         </StyledHelpIconBox>
-                        {setConstraints ? (
+
+                        <fieldset disabled>
                             <EditableConstraintsList
                                 ref={ref}
-                                setConstraints={setConstraints}
+                                setConstraints={() => {}}
                                 constraints={constraints}
                             />
-                        ) : null}
+                        </fieldset>
                         <Box
                             sx={(theme) => ({
                                 marginTop: theme.spacing(2),
@@ -156,7 +158,7 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                             variant='outlined'
                             color='primary'
                             data-testid='ADD_CONSTRAINT_BUTTON'
-                            disabled={Boolean(limitReached)}
+                            disabled={Boolean(limitReached || !onAdd)}
                         >
                             Add constraint
                         </Button>

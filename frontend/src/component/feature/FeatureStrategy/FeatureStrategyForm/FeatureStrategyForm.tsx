@@ -13,7 +13,7 @@ import {
     Link,
 } from '@mui/material';
 import type {
-    IFeatureStrategy,
+    IEditableStrategy,
     IFeatureStrategyParameters,
     IStrategyParameter,
 } from 'interfaces/strategy';
@@ -57,9 +57,9 @@ interface IFeatureStrategyFormProps {
     onCancel?: () => void;
     loading: boolean;
     isChangeRequest: boolean;
-    strategy: Partial<IFeatureStrategy>;
+    strategy: Partial<IEditableStrategy>;
     setStrategy: React.Dispatch<
-        React.SetStateAction<Partial<IFeatureStrategy>>
+        React.SetStateAction<Partial<IEditableStrategy>>
     >;
     segments: ISegment[];
     setSegments: React.Dispatch<React.SetStateAction<ISegment[]>>;

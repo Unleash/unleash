@@ -7,12 +7,12 @@ import {
     type Theme,
     styled,
 } from '@mui/material';
-import type { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordionViewBody } from './ConstraintAccordionViewBody/ConstraintAccordionViewBody.tsx';
 import { ConstraintAccordionViewHeader } from './ConstraintAccordionViewHeader/ConstraintAccordionViewHeader.tsx';
+import type { IConstraintWithId } from 'interfaces/strategy.ts';
 
 interface IConstraintAccordionViewProps {
-    constraint: IConstraint;
+    constraint: IConstraintWithId;
     onUse?: () => void;
     sx?: SxProps<Theme>;
     disabled?: boolean;

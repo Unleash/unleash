@@ -5,11 +5,11 @@ import {
     areConstraintsEqual,
     getConstraintKey,
 } from './useRecentlyUsedConstraints.ts';
-import type { IConstraint } from 'interfaces/strategy';
+import type { IConstraintWithId } from 'interfaces/strategy.ts';
 
 type IRecentlyUsedConstraintsProps = {
-    setConstraints?: React.Dispatch<React.SetStateAction<IConstraint[]>>;
-    constraints?: IConstraint[];
+    setConstraints?: React.Dispatch<React.SetStateAction<IConstraintWithId[]>>;
+    constraints?: IConstraintWithId[];
 };
 
 const StyledContainer = styled('div')(({ theme }) => ({

@@ -1,4 +1,4 @@
-import type { IConstraint, IFeatureStrategy } from 'interfaces/strategy';
+import type { IConstraintWithId, IEditableStrategy } from 'interfaces/strategy';
 import type React from 'react';
 import { useEffect } from 'react';
 import {
@@ -11,9 +11,9 @@ import { FeatureStrategyConstraintAccordionList } from './FeatureStrategyConstra
 interface IFeatureStrategyConstraintsProps {
     projectId: string;
     environmentId: string;
-    strategy: Partial<IFeatureStrategy>;
+    strategy: Partial<IEditableStrategy>;
     setStrategy: React.Dispatch<
-        React.SetStateAction<Partial<IFeatureStrategy>>
+        React.SetStateAction<Partial<IEditableStrategy>>
     >;
 }
 
@@ -53,7 +53,9 @@ export const FeatureStrategyConstraints = ({
 
     const constraints = strategy.constraints || [];
 
-    const setConstraints = (value: React.SetStateAction<IConstraint[]>) => {
+    const setConstraints = (
+        value: React.SetStateAction<IConstraintWithId[]>,
+    ) => {
         setStrategy((prev) => {
             return {
                 ...prev,

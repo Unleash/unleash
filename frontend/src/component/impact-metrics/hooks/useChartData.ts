@@ -8,6 +8,7 @@ const getColorStartingIndex = (modulo: number, series?: string): number => {
         return 0;
     }
 
+    // https://stackoverflow.com/a/7616484/1729641
     let hash = 0;
     for (let i = 0; i < series.length; i++) {
         const char = series.charCodeAt(i);

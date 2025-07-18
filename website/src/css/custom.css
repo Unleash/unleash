@@ -312,7 +312,7 @@ main .theme-doc-breadcrumbs {
 }
 
 .markdown > h2 {
-    font-size: 20px;
+    font-size: 24px;
     line-height: 28px;
     margin-top: 48px;
     margin-bottom: 16px;
@@ -323,11 +323,11 @@ main .theme-doc-breadcrumbs {
 }
 
 .markdown > h3 {
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .markdown > h4 {
-    font-size: 15px;
+    font-size: 16px;
 }
 
 .markdown > p {

@@ -1,5 +1,13 @@
 import type { FC } from 'react';
-import { Box, Autocomplete, TextField, Typography, Chip } from '@mui/material';
+import {
+    Box,
+    Autocomplete,
+    TextField,
+    Typography,
+    Chip,
+    Checkbox,
+    FormControlLabel,
+} from '@mui/material';
 import type { ImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 
 export type LabelsFilterProps = {
@@ -19,6 +27,16 @@ export const LabelsFilter: FC<LabelsFilterProps> = ({
             delete newLabels[labelKey];
         } else {
             newLabels[labelKey] = values;
+        }
+        onChange(newLabels);
+    };
+
+    const handleAllToggle = (labelKey: string, checked: boolean) => {
+        const newLabels = { ...selectedLabels };
+        if (checked) {
+            newLabels[labelKey] = ['*'];
+        } else {
+            delete newLabels[labelKey];
         }
         onChange(newLabels);
     };
@@ -45,42 +63,74 @@ export const LabelsFilter: FC<LabelsFilterProps> = ({
                 )}
             </Box>
 
-            {Object.entries(availableLabels).map(([labelKey, values]) => (
-                <Autocomplete
-                    key={labelKey}
-                    multiple
-                    options={values}
-                    value={selectedLabels[labelKey] || []}
-                    onChange={(_, newValues) =>
-                        handleLabelChange(labelKey, newValues)
-                    }
-                    renderTags={(value, getTagProps) =>
-                        value.map((option, index) => {
-                            const { key, ...chipProps } = getTagProps({
-                                index,
-                            });
-                            return (
-                                <Chip
-                                    {...chipProps}
-                                    key={key}
-                                    label={option}
+            {Object.entries(availableLabels).map(([labelKey, values]) => {
+                const currentSelection = selectedLabels[labelKey] || [];
+                const isAllSelected = currentSelection.includes('*');
+
+                return (
+                    <Box
+                        key={labelKey}
+                        sx={(theme) => ({
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: theme.spacing(3),
+                        })}
+                    >
+                        <Autocomplete
+                            multiple
+                            options={values}
+                            value={isAllSelected ? [] : currentSelection}
+                            onChange={(_, newValues) => {
+                                handleLabelChange(labelKey, newValues);
+                            }}
+                            disabled={isAllSelected}
+                            renderTags={(value, getTagProps) =>
+                                value.map((option, index) => {
+                                    const { key, ...chipProps } = getTagProps({
+                                        index,
+                                    });
+                                    return (
+                                        <Chip
+                                            {...chipProps}
+                                            key={key}
+                                            label={option}
+                                            size='small'
+                                        />
+                                    );
+                                })
+                            }
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label={labelKey}
+                                    placeholder={
+                                        isAllSelected
+                                            ? 'All values selected'
+                                            : 'Select values…'
+                                    }
+                                    variant='outlined'
                                     size='small'
                                 />
-                            );
-                        })
-                    }
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label={labelKey}
-                            placeholder='Select values...'
-                            variant='outlined'
-                            size='small'
+                            )}
+                            sx={{ minWidth: 300, flexGrow: 1 }}
                         />
-                    )}
-                    sx={{ minWidth: 300 }}
-                />
-            ))}
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={isAllSelected}
+                                    onChange={(e) =>
+                                        handleAllToggle(
+                                            labelKey,
+                                            e.target.checked,
+                                        )
+                                    }
+                                />
+                            }
+                            label='All'
+                        />
+                    </Box>
+                );
+            })}
         </Box>
     );
 };

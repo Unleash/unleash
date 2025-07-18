@@ -120,7 +120,7 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
                             selectedRange={formData.selectedRange}
                             selectedLabels={formData.selectedLabels}
                             beginAtZero={formData.beginAtZero}
-                            showRate={formData.showRate}
+                            aggregationMode={formData.aggregationMode}
                         />
                     </StyledPreviewPanel>
                 </Box>

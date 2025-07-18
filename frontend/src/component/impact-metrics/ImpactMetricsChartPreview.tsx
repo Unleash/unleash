@@ -1,13 +1,14 @@
 import type { FC } from 'react';
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { ImpactMetricsChart } from './ImpactMetricsChart.tsx';
+import type { AggregationMode } from './types.ts';
 
 type ImpactMetricsChartPreviewProps = {
     selectedSeries: string;
     selectedRange: 'hour' | 'day' | 'week' | 'month';
     selectedLabels: Record<string, string[]>;
     beginAtZero: boolean;
-    showRate?: boolean;
+    aggregationMode?: AggregationMode;
 };
 
 export const ImpactMetricsChartPreview: FC<ImpactMetricsChartPreviewProps> = ({
@@ -15,7 +16,7 @@ export const ImpactMetricsChartPreview: FC<ImpactMetricsChartPreviewProps> = ({
     selectedRange,
     selectedLabels,
     beginAtZero,
-    showRate,
+    aggregationMode,
 }) => {
     const theme = useTheme();
     const screenBreakpoint = useMediaQuery(theme.breakpoints.down('lg'));
@@ -40,7 +41,7 @@ export const ImpactMetricsChartPreview: FC<ImpactMetricsChartPreviewProps> = ({
                     selectedRange={selectedRange}
                     selectedLabels={selectedLabels}
                     beginAtZero={beginAtZero}
-                    showRate={showRate}
+                    aggregationMode={aggregationMode}
                     isPreview
                 />
             </Box>

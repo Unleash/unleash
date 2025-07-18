@@ -60,3 +60,9 @@ export const formatLargeNumbers = (value: number): string => {
     }
     return value.toString();
 };
+
+export const getMetricType = (seriesName: string) => {
+    if (seriesName.startsWith('unleash_counter_')) return 'counter';
+    if (seriesName.startsWith('unleash_gauge_')) return 'gauge';
+    return 'unknown';
+};

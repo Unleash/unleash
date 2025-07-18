@@ -62,7 +62,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
         type: 'constant',
     });
 
-    const data = useChartData(timeSeriesData);
+    const data = useChartData(timeSeriesData, debug?.query);
 
     const hasError = !!dataError;
     const isLoading = dataLoading;

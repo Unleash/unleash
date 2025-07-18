@@ -36,7 +36,6 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
             display: 'flex',
             flexDirection: 'column',
             gap: theme.spacing(3),
-            maxWidth: 400,
         })}
     >
         <Typography variant='body2' color='text.secondary'>

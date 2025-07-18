@@ -9,6 +9,7 @@ import {
     getSegmentChangesThatWouldBeOverwritten,
     getStrategyChangesThatWouldBeOverwritten,
 } from './strategy-change-diff-calculation.js';
+import { constraintId } from 'constants/constraintId.js';
 
 describe('Strategy change conflict detection', () => {
     const existingStrategy: IFeatureStrategy = {
@@ -175,6 +176,7 @@ describe('Strategy change conflict detection', () => {
                     operator: 'IN' as const,
                     contextName: 'appName',
                     caseInsensitive: false,
+                    [constraintId]: 'id1',
                 },
             ],
             variants: [
@@ -230,6 +232,7 @@ describe('Strategy change conflict detection', () => {
                     operator: 'IN' as const,
                     contextName: 'appName',
                     caseInsensitive: false,
+                    [constraintId]: 'id2',
                 },
             ],
         };
@@ -249,6 +252,7 @@ describe('Strategy change conflict detection', () => {
                             inverted: false,
                             operator: 'IN' as const,
                             values: ['blah'],
+                            [constraintId]: 'id2',
                         },
                     ],
                 },
@@ -478,6 +482,7 @@ describe('Segment change conflict detection', () => {
                     operator: 'IN' as const,
                     contextName: 'appName',
                     caseInsensitive: false,
+                    [constraintId]: 'id3',
                 },
             ],
         };
@@ -494,6 +499,7 @@ describe('Segment change conflict detection', () => {
                         operator: 'IN' as const,
                         contextName: 'appName',
                         caseInsensitive: false,
+                        [constraintId]: 'id4',
                     },
                 ],
             },

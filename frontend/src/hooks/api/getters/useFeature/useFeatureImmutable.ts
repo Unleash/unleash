@@ -1,12 +1,12 @@
 import useSWRImmutable from 'swr/immutable';
-import { useCallback } from 'react';
-import { emptyFeature } from './emptyFeature.js';
+import { useCallback, useMemo } from 'react';
 import {
     type IUseFeatureOutput,
     type IFeatureResponse,
     featureFetcher,
     formatFeatureApiPath,
     useFeature,
+    enrichConstraintsWithIds,
 } from 'hooks/api/getters/useFeature/useFeature';
 
 // useFeatureImmutable is like useFeature, except it won't refetch data on
@@ -29,8 +29,10 @@ export const useFeatureImmutable = (
         await refetchFeature();
     }, [mutate, refetchFeature]);
 
+    const feature = useMemo(enrichConstraintsWithIds(data), [data?.body]);
+
     return {
-        feature: data?.body || emptyFeature,
+        feature,
         refetchFeature: refetch,
         loading: !error && !data,
         status: data?.status,

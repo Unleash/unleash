@@ -11,6 +11,8 @@ import {
 } from '@server/types/permissions';
 import { StrategyItem } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyItem';
 import type { IFeatureStrategy } from 'interfaces/strategy';
+import { constraintId } from 'constants/constraintId';
+import { v4 as uuidv4 } from 'uuid';
 
 interface ProjectEnvironmentDefaultStrategyProps {
     environment: ProjectEnvironmentType;
@@ -55,7 +57,11 @@ export const ProjectEnvironmentDefaultStrategy = ({
         return {
             ...baseDefaultStrategy,
             disabled: false,
-            constraints: baseDefaultStrategy.constraints ?? [],
+            constraints:
+                baseDefaultStrategy.constraints?.map((constraint) => ({
+                    ...constraint,
+                    [constraintId]: uuidv4(),
+                })) ?? [],
             title: baseDefaultStrategy.title ?? '',
             parameters: baseDefaultStrategy.parameters ?? {},
         };

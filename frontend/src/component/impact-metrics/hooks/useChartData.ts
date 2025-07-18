@@ -1,14 +1,30 @@
 import { useMemo } from 'react';
 import { useTheme } from '@mui/material';
 import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
-import { useSeriesColor } from './useSeriesColor.ts';
 import { getSeriesLabel } from '../utils.ts';
+
+const getColorStartingIndex = (modulo: number, series?: string): number => {
+    if (!series || series.length === 0 || modulo <= 0) {
+        return 0;
+    }
+
+    let hash = 0;
+    for (let i = 0; i < series.length; i++) {
+        const char = series.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash = hash & hash;
+    }
+
+    return Math.abs(hash) % modulo;
+};
 
 export const useChartData = (
     timeSeriesData: ImpactMetricsSeries[] | undefined,
+    colorIndexBy?: string,
 ) => {
     const theme = useTheme();
-    const getSeriesColor = useSeriesColor();
+    const colors = theme.palette.charts.series;
+    const startColorIndex = getColorStartingIndex(colors.length, colorIndexBy);
 
     return useMemo(() => {
         if (!timeSeriesData || timeSeriesData.length === 0) {
@@ -66,9 +82,9 @@ export const useChartData = (
                 (timestamp) => new Date(timestamp * 1000),
             );
 
-            const datasets = timeSeriesData.map((series) => {
+            const datasets = timeSeriesData.map((series, index) => {
                 const seriesLabel = getSeriesLabel(series.metric);
-                const color = getSeriesColor(seriesLabel);
+                const color = colors[(index + startColorIndex) % colors.length];
 
                 const dataMap = new Map(series.data);
 
@@ -90,5 +106,5 @@ export const useChartData = (
                 datasets,
             };
         }
-    }, [timeSeriesData, theme, getSeriesColor]);
+    }, [timeSeriesData, theme]);
 };

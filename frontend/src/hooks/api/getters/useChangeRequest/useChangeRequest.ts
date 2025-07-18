@@ -3,6 +3,7 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 
+// we get constraints here
 export const useChangeRequest = (projectId: string, id: string) => {
     const { data, error, mutate } = useSWR<ChangeRequestType>(
         formatApiPath(`api/admin/projects/${projectId}/change-requests/${id}`),

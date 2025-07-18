@@ -3,6 +3,10 @@ id: state
 title: /api/admin/state
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="noindex" />
+
 :::caution Removal notice
 
 Api admin state is deprecated from version 5 and removed in version 6. We recommend using the new [Environment Import & Export](https://docs.getunleash.io/reference/deploy/environment-import-export).

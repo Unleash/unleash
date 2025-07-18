@@ -2,6 +2,10 @@
 title: Jira Server Integration - Usage
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="noindex" />
+
 :::info Deprecated
 
 The Jira Server plugin is **deprecated**, please use the [Unleash Jira Cloud plugin](https://docs.getunleash.io/reference/integrations/jira-cloud-plugin-installation) instead

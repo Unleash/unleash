@@ -3,6 +3,10 @@ title: Unleash architecture overview
 pagination_next: understanding-unleash/the-anatomy-of-unleash
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
 Unleash is designed for privacy, speed, and resilience, enabling feature flag evaluations to occur locally within your applications. The architecture provides:
 - **Fast feature flag evaluations**: Feature flags are evaluated within the [SDKs](#unleash-sdks) or [Unleash Edge](#unleash-edge), making evaluations incredibly fast (nanoseconds).
 - **Privacy and security**: No user data is shared with the Unleash server, ensuring [privacy and security](/understanding-unleash/data-collection).

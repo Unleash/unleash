@@ -3,6 +3,10 @@ title: Technical debt
 pagination_next: reference/insights
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
 ## Overview
 
 Feature flag technical debt accumulates when you don’t manage or retire feature flags after their intended use. Over time, the codebase becomes cluttered with outdated flags, making the code more complex and harder to maintain. This can slow productivity as developers spend more time understanding and navigating the code.

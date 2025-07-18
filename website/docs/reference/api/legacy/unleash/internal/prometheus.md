@@ -2,6 +2,11 @@
 title: /internal-backstage/prometheus
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="noindex" />
+
+
 # Internal Backstage API
 
 `GET http://unleash.host.com/internal-backstage/prometheus`

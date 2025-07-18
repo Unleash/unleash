@@ -2,6 +2,10 @@
 title: /api/admin/features
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="noindex" />
+
 :::caution Deprecation notice
 
 Most of this API was removed in Unleash v5 (after being deprecated since Unleash v4.3). You should use [the project-based API (/api/admin/projects/:projectId)](/reference/api/legacy/unleash/admin/features-v2.mdx) instead.

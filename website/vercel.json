@@ -312,11 +312,6 @@
       "permanent": true
     },
     {
-      "source": "/guides/feature_updates_to_slack",
-      "destination": "/how-to/how-to-send-feature-updates-to-slack-deprecated",
-      "permanent": true
-    },
-    {
       "source": "/integrations/integrations",
       "destination": "/reference/integrations",
       "permanent": true

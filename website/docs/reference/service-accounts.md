@@ -2,6 +2,10 @@
 title: Service accounts
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
 :::note Availability
 
 **Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.21+`

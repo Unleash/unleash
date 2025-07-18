@@ -3,6 +3,10 @@ id: slack
 title: Slack (deprecated)
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="noindex" />
+
 :::caution Deprecation notice
 
 This Slack integration is deprecated and will be removed in a future release. We recommend using the new [App for Slack](./slack-app) integration instead.

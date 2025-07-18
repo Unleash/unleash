@@ -2,6 +2,10 @@
 title: /health
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="noindex" />
+
 # Health API
 
 `GET http://unleash.host.com/health`

@@ -1,0 +1,213 @@
+
+---
+title: Organizing feature flags with Unleash environments and projects
+---
+
+Feature flag management in a large organization can become complex. Unleash provides environments and projects as key mechanisms to organize your feature flags, making it easier to manage flags across development, testing, and production.
+This guide outlines best practices for using environments and projects in Unleash to support diverse team needs, ensure smooth release workflows, and maintain security and compliance.
+We’ll cover how to structure feature flags to mirror your organization, manage multiple environments, update flags consistently across projects and environments, handle flag dependencies, and design an architecture that balances open collaboration with proper access control.
+
+## Understanding environments: a single feature's journey across your lifecycle
+
+In Unleash, an environment represents a distinct stage in your software development lifecycle.2 Think of them as the places your code runs, such as
+development, test, pre-production, and production. While Unleash comes with default development and production environments, Enterprise customers can create, clone, and manage a custom set of environments that precisely matches their organization's workflow, which often includes 3 to 7 stages for larger teams.2
+
+The Unleash difference: the unified flag model
+
+A core architectural principle in Unleash is the unified flag model. A feature flag is a single, logical entity that exists across all of your environments. The flag's name, description, and other core metadata are defined once. What changes from one environment to the next is its configuration—the activation strategies, rollout percentages, and variants.2
+This model offers several key advantages for enterprise teams:
+Holistic view and traceability: You get a complete, unified view of a feature's journey. From a single screen, you can see that the new-checkout-flow flag is enabled for your internal QA team in the test environment, rolled out to 10% of users in pre-production, and currently disabled in production. This eliminates the need to track separate flag instances across different systems, reducing mental overhead and making audits simpler.
+Simplified promotion workflow: Promoting a feature from one stage to the next doesn't involve creating a new flag. Instead, you simply update the configuration of the existing flag in the next environment. This workflow is more intuitive, less error-prone, and aligns with the natural progression of a feature through the development lifecycle.
+A single source of truth: Because the flag's essential metadata is defined once, you maintain a consistent source of truth. The purpose of checkout.new-payment-gateway.web is the same everywhere, preventing the configuration drift and confusion that can arise when managing separate flag definitions per environment.6
+
+### Environment types and the flag lifecycle
+
+Each environment you create is assigned one of four types: Development, Test, Pre-production, or Production.2 These types are not just labels; they directly influence a flag's automated lifecycle tracking in Unleash. As a flag receives metrics from SDKs connected to these environments, it automatically progresses through distinct stages:
+Define: The flag has been created but has not yet been detected in any environment.
+Develop: The flag is active and receiving metrics in a non-production environment (e.g., development or test).
+Production: The flag is enabled and exposed to users in a production-type environment.
+Cleanup: The feature has been marked as "completed" in Unleash, but is still receiving metrics, signaling that it's time to remove the flag's code from your application.
+Archived: The flag has been cleaned up from the codebase and archived in Unleash.
+This automated lifecycle provides valuable insights into your development process, helping you identify features that are stuck in development or flags that are creating technical debt and need to be cleaned up.6
+
+### Security and access
+
+Security is enforced at the environment level through API tokens. When you connect an application to Unleash, you use an environment-scoped API token. For instance, your production application will use a production token and can only fetch flag configurations for the production environment.2 This creates a strong security boundary, ensuring that development configurations can never be accidentally served to production users.
+
+### Strategic use cases for cloning environments
+
+Unleash Enterprise allows you to clone an entire environment, which duplicates the environment itself along with all its feature flag configurations and states.2 While useful for setting up new, similar environments quickly, this feature enables more advanced, dynamic release workflows.
+Consider a "release rehearsal" scenario. Your team is preparing for a complex launch involving ten interdependent feature flags. Instead of testing these changes directly in a shared pre-production environment, you can clone your production environment to create a temporary, high-fidelity release-rehearsal-q4 environment. Within this isolated space, the release team can practice the exact sequence of enabling flags, validating dependencies, and checking system behavior, all without any risk to live systems. This process builds confidence, validates your release runbook, and uncovers potential issues before they can impact customers.
+
+## Understanding projects: grouping flags for ownership and context
+
+While environments manage a feature's journey through your release process, projects are the primary tool for organizing related feature flags into logical groups.1 Every feature flag in Unleash must belong to a project. A new Unleash instance includes a
+default project, but creating custom projects is essential for scaling effectively.
+Projects provide several key benefits for organization and governance:
+Ownership and context: Projects establish clear ownership boundaries. By grouping flags into projects like project-checkout or project-search, you immediately know which team is responsible for them.
+Project status dashboard: Each project has its own dashboard that gives you an at-a-glance overview of its health. This includes metrics on technical debt (the number of stale and potentially stale flags), recent activity within the project, and information on project-specific resources like API tokens.1
+Project-specific settings: You can configure settings at the project level, such as a default activation strategy. For example, you can set a rule that any new flag created in the project-payments project is disabled by default in the production environment. This acts as a critical safety net to prevent features from being exposed prematurely.1
+Collaboration mode: Projects can be set to "open" (all instance members can submit changes) or "protected" (only specific users or groups can submit changes), giving you control over collaboration workflows.1
+
+### Managing projects
+
+You can manage projects through the Unleash Admin UI or the API. This includes creating new projects, moving flags between existing projects, and archiving or deleting projects. To maintain integrity, a project cannot be deleted until all of the feature flags within it have been archived first.1
+
+Architectural patterns: designing your project and environment structure
+
+Choosing how to structure your projects is a critical architectural decision that will impact your organization's ability to manage flags efficiently and securely. There is no single "best" way; the right model depends on your team structure, software architecture, and governance requirements. Below are the most common patterns and our recommendation for large enterprises.
+
+Project architecture models
+
+Model Name
+Description
+Best For
+Pros
+Cons
+Team-Centric
+Projects map directly to development teams or squads (e.g., project-checkout, project-search).
+Organizations with stable, cross-functional teams aligned to specific business domains.
+- Aligns perfectly with agile structures. - Ownership is unambiguous. - Easy to implement team-based RBAC.
+- Features spanning multiple teams can be hard to place. - Can lead to coordination overhead for cross-cutting initiatives.
+Application-Centric
+Projects map to specific applications or microservices (e.g., project-webapp-frontend, project-billing-api).
+Organizations with a service-oriented or microservices architecture.
+- The "blast radius" of a flag is clearly contained. - Easy for developers to find flags relevant to the service they are working on.
+- A single team may work across multiple projects, fragmenting their view. - Can be less intuitive for product managers who think in terms of user-facing features, not services.
+Hybrid (Product Line + Tags)
+Projects represent major product lines or business units (e.g., project-consumer-banking). Tags are used for granular ownership (team:checkout, app:ios).
+Most large, complex enterprises.
+- Provides both high-level business organization and granular, filterable metadata. - Highly flexible and scalable. - Balances the needs of technical and non-technical stakeholders.
+- Requires discipline in applying tags consistently.
+
+For most large organizations, we recommend the hybrid approach. Using projects to represent broad business domains provides a stable, high-level structure. Layering tags on top of this allows you to add flexible, multi-dimensional metadata for team ownership, affected applications, or release cohorts without being locked into a rigid project structure.6
+
+Securing your setup with role-based access control (RBAC)
+
+Once you have a logical structure for your projects and environments, you can secure it using Unleash's role-based access control (RBAC) framework. RBAC is the mechanism that enforces governance and allows you to implement the principle of least privilege, ensuring users only have the access they need to perform their jobs.8
+Unleash provides two levels of access control:
+Root roles: These roles (Admin, Editor, Viewer) grant permissions across the entire Unleash instance. They are intended for administrators who need to manage global resources like users, groups, SSO configurations, and instance-wide settings.8
+Project roles: These roles (Owner, Member) grant permissions within a specific project. This is where you will implement the most granular day-to-day access controls for your development teams.1
+
+### Environment-specific permissions
+
+A key capability for enterprise governance is the ability to define custom project roles with environment-specific permissions. This allows you to precisely control what actions a user can take in each environment.9
+For example, you can create a "Developer" role that allows a team member to freely create and modify activation strategies in the development environment but only allows them to submit a change request for the production environment. This workflow empowers developers to innovate quickly in safe environments while ensuring that all changes to production are subject to a formal review and approval process.8
+
+Recommended RBAC permissions for common roles
+
+Setting up RBAC from scratch can be challenging. This table provides a recommended starting point for configuring permissions for common roles in a typical enterprise workflow.
+Role
+development Env Permissions
+test Env Permissions
+production Env Permissions
+Rationale
+Developer
+Full access to create/update/delete strategies and flags.
+Read-only access. Can submit change requests.
+Read-only access. Can submit change requests.
+Allows developers to iterate quickly in their own environment while ensuring changes to shared and production environments are controlled and reviewed.
+QA Engineer
+Read-only access.
+Full access to enable/disable flags and update strategies.
+Read-only access.
+Empowers the QA team to fully control feature configurations in their dedicated testing environment without affecting development or production.
+Product Manager
+Read-only access.
+Read-only access.
+Can enable/disable flags and update rollout percentages via change requests.
+Allows product managers to control the business logic of a release (e.g., gradual rollouts) in production through a safe, audited approval process.
+DevOps/SRE
+Full access.
+Full access.
+Full access.
+Enables platform owners to manage all aspects of the feature flagging system, including acting as kill-switch operators in case of an incident.
+
+## Automating at scale with SSO and SCIM
+
+For large organizations, manually managing user accounts and permissions is not scalable. Unleash integrates with your existing identity provider (such as Okta, Microsoft Entra ID, or Keycloak) via SAML or OpenID Connect for single sign-on (SSO). Furthermore, Unleash supports the SCIM protocol, which automates the provisioning and de-provisioning of users and the syncing of user groups. This ensures that a user's access to Unleash is always in sync with their status in your central identity management system, significantly improving security and reducing administrative overhead.8
+
+Managing configurations across projects and environments
+
+With a secure and logical structure in place, you can focus on managing flag configurations efficiently.
+
+## Managing strategy variants
+
+Strategy variants, used for A/B testing and experimentation, are configured as part of an activation strategy within a specific environment.11 This powerful scoping means you can run a complex experiment with multiple variants in your
+production environment while the same feature flag remains completely disabled or configured with a simple on/off strategy in your development environment. This allows for safe, targeted experimentation without impacting other stages of your lifecycle.
+
+## Using segments for consistency and scale
+
+... and release templates
+Segments are reusable collections of strategy constraints.13 They are one of the most powerful tools in Unleash for managing configurations at scale.
+Imagine you have a beta program for early adopters. Instead of adding a list of 50 user IDs to every new beta feature flag, you can create a single BetaUsers segment. You then apply this one segment to all ten of your beta flags. When a new user joins the program, you add their ID to the BetaUsers segment in one place, and the change instantly propagates to all ten flags that use it. This reduces redundant configuration, minimizes the risk of human error, and makes managing large user groups effortless.13 Segments can be global (available to all projects) or project-scoped, allowing you to control their visibility and reuse.
+
+## Managing flag dependencies
+
+Unleash allows you to create parent-child dependencies between flags, ensuring a child flag can only be enabled if its parent flag is also enabled.6 This is useful for coordinating releases where one feature relies on another.
+A critical architectural constraint to understand is that dependent flags must belong to the same project.6 This is a deliberate design choice to promote loose coupling and prevent the creation of a complex, brittle web of dependencies between different teams and services. If you find you need a dependency between flags in different projects, it often signals that the features are more tightly coupled than you thought and may belong in the same project, or that your service boundaries may need to be reconsidered. This constraint encourages better architectural design.
+
+## Best practices for long-term maintenance
+
+A feature flagging system requires good hygiene to remain effective. Without it, you risk accumulating technical debt that can make your system difficult to manage and understand.
+
+### Establish naming conventions
+
+A consistent naming convention is one of the most important practices for maintaining clarity and order, especially in large teams.3 A good name should make a flag's purpose immediately obvious. We recommend a pattern that includes key contextual information, such as:
+[project-key].[feature-description].[platform]
+For example: checkout.new-payment-gateway.web
+Unleash Enterprise helps you enforce this discipline. At the project level, you can define a regular expression that all new feature flag names must match. This ensures that all flags created in that project, whether through the UI or the API, adhere to your chosen convention.6
+
+### Manage technical debt: the flag lifecycle
+
+Most feature flags are temporary. They are created to serve a specific purpose—like a release, an experiment, or an operational migration—and should be removed once that purpose is fulfilled.6 Only certain types of flags, like kill switches or long-term permission flags, are intended to be permanent.
+The process for cleaning up a temporary flag is straightforward:
+Once the feature is fully rolled out and stable, the flag's code is no longer needed. Mark the flag as stale in Unleash.
+This "stale" status signals to developers that it is safe to remove the corresponding if/else blocks from the codebase. The project status dashboard makes it easy to find all stale flags that are ready for cleanup.1
+After the code has been removed and deployed, you can archive the flag in Unleash. This removes it from the active list but preserves its history for auditing purposes.6
+
+### Use tags for discovery and automation
+
+Tags are free-form, key-value labels that you can apply to feature flags to add flexible, cross-project metadata. They are an essential tool for discovery and automation.6 You can use tags to:
+Filter and search: "Show me all flags tagged with team:payments."
+Indicate ownership: "Who is the point of contact for this flag? Check the owner:jane.doe@example.com tag."
+Drive automation: Use tags to configure integrations. For example, you can set up a rule that any updates to flags tagged with slack-channel:checkout-alerts will automatically post a notification to that specific Slack channel.6
+
+## Frequently asked questions (FAQa)
+
+**How is Unleash's environment model different from other tools like LaunchDarkly?**
+
+Unleash uses a unified flag model where a single flag is a persistent entity across all environments, with only its configuration (strategies, variants) changing per environment. This provides a holistic, end-to-end view of a feature's lifecycle from a single dashboard.2 Other tools may treat flags in each environment as more distinct, separate objects, which can sometimes make it harder to trace a single feature's entire journey.17 The key benefit of the Unleash model is simplified management, clear traceability, and a more intuitive structure for applying environment-specific RBAC.
+
+**What's the best way to handle a feature that spans multiple projects?**
+
+First, this is a good opportunity to evaluate your project boundaries. If the features are tightly coupled and must be released together, they might belong in the same project. If they are truly separate but need to be coordinated, the best practice is to create separate feature flags in each respective project and coordinate their rollout manually or through external automation scripts that use the Unleash API. This approach respects project boundaries and avoids creating hidden, complex dependencies across different teams or services.
+
+**How can we synchronize flag configurations between a staging and production environment?**
+
+For Unleash Enterprise users, the "clone environment" feature is the quickest way to create a new environment with a configuration identical to an existing one.2 When promoting changes from an existing environment (like
+staging) to another (like production), the recommended workflow is to manually re-configure the flag's activation strategies in the target environment. This intentional, manual step serves as a final safeguard before impacting users. For teams that require full automation, the Unleash API can be used to build scripts that read the configuration from a source environment and apply it to a target environment.
+
+**Can I restrict a user's access to only one environment within a project?**
+
+Yes. This is a core use case for custom project roles. You can create a new role (e.g., "QA Tester") and grant it permissions, such as UPDATE_FEATURE_STRATEGY, only for the test environment. For all other environments like development and production, you would grant no permissions or read-only permissions. This ensures the user can only make changes in their designated environment.9
+
+**What happens if I move a flag with dependencies to another project?**
+
+This action is not directly supported because Unleash requires that parent and child flags in a dependency relationship exist within the same project.6 You would need to remove the dependencies before you could move the flag. This constraint is a deliberate design choice to prevent tight, unmanageable coupling between features owned by different teams or services.
+
+**How many environments should we have?**
+
+This depends entirely on your team's release process. A typical setup for a large organization is three to five environments:
+development: For local developer machines and CI builds.
+test or qa: A shared, stable environment for dedicated testing by the QA team.
+staging or pre-prod: A production-like environment for final validation, performance testing, and release rehearsals.
+production: The live environment for your end users.
+Some organizations add more specialized environments, such as one for demo purposes or a hotfix environment for emergency patches.
+
+**What is the difference between a segment and a strategy constraint?**
+
+A strategy constraint is a single rule (e.g., userId is one of ``) that is applied to a single activation strategy. A segment is a reusable collection of one or more strategy constraints.13
+Use a simple constraint for a rule that is unique to one specific flag's strategy. Use a segment when you have a set of rules that you expect to reuse across multiple feature flags, such as targeting a group of BetaUsers or users in a specific Region. Updating the segment updates all flags that use it, saving time and ensuring consistency.13
+
+

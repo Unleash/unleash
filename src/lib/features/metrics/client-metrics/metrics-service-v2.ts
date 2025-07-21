@@ -32,6 +32,7 @@ import {
     MetricsTranslator,
 } from '../impact/metrics-translator.js';
 import { impactRegister } from '../impact/impact-register.js';
+import type { UnknownFlag } from '../unknown-flags/unknown-flags-store.js';
 
 export default class ClientMetricsServiceV2 {
     private config: IUnleashConfig;
@@ -178,12 +179,78 @@ export default class ClientMetricsServiceV2 {
         return toggleNames;
     }
 
+    private async siftMetrics(
+        metrics: IClientMetricsEnv[],
+    ): Promise<IClientMetricsEnv[]> {
+        if (!metrics.length) return [];
+
+        const metricsByToggle = new Map<string, IClientMetricsEnv[]>();
+        for (const m of metrics) {
+            if (m.yes === 0 && m.no === 0) continue;
+            let arr = metricsByToggle.get(m.featureName);
+            if (!arr) {
+                arr = [];
+                metricsByToggle.set(m.featureName, arr);
+            }
+            arr.push(m);
+        }
+        if (metricsByToggle.size === 0) return [];
+
+        const toggleNames = Array.from(metricsByToggle.keys());
+
+        const { validatedToggleNames, unknownToggleNames } =
+            await this.filterExistingToggleNames(toggleNames);
+
+        const validatedSet = new Set(validatedToggleNames);
+        const unknownSet = new Set(unknownToggleNames);
+
+        const invalidCount = toggleNames.length - validatedSet.size;
+        this.logger.debug(
+            `Got ${toggleNames.length} metrics (${invalidCount > 0 ? `${invalidCount} invalid` : 'all valid'}).`,
+        );
+
+        const unknownFlags: UnknownFlag[] = [];
+        for (const [featureName, group] of metricsByToggle) {
+            if (unknownSet.has(featureName)) {
+                for (const m of group) {
+                    unknownFlags.push({
+                        name: featureName,
+                        appName: m.appName,
+                        seenAt: m.timestamp,
+                        environment: m.environment,
+                    });
+                }
+            }
+        }
+        if (unknownFlags.length) {
+            const sample = unknownFlags
+                .slice(0, 10)
+                .map((f) => `"${f.name}"`)
+                .join(', ');
+            this.logger.debug(
+                `Registering ${unknownFlags.length} unknown flags; sample: ${sample}`,
+            );
+            this.unknownFlagsService.register(unknownFlags);
+        }
+
+        const siftedMetrics: IClientMetricsEnv[] = [];
+        for (const [featureName, group] of metricsByToggle) {
+            if (validatedSet.has(featureName)) {
+                siftedMetrics.push(...group);
+            }
+        }
+        return siftedMetrics;
+    }
+
     async registerBulkMetrics(metrics: IClientMetricsEnv[]): Promise<void> {
+        const siftedMetrics = await this.siftMetrics(metrics);
+        if (siftedMetrics.length === 0) return;
+
         this.unsavedMetrics = collapseHourlyMetrics([
             ...this.unsavedMetrics,
-            ...metrics,
+            ...siftedMetrics,
         ]);
-        this.lastSeenService.updateLastSeen(metrics);
+        this.lastSeenService.updateLastSeen(siftedMetrics);
     }
 
     async registerImpactMetrics(impactMetrics: Metric[]) {
@@ -202,22 +269,6 @@ export default class ClientMetricsServiceV2 {
         clientIp: string,
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
-        const toggleNames = Object.keys(value.bucket.toggles).filter(
-            (name) =>
-                !(
-                    value.bucket.toggles[name].yes === 0 &&
-                    value.bucket.toggles[name].no === 0
-                ),
-        );
-
-        const { validatedToggleNames, unknownToggleNames } =
-            await this.filterExistingToggleNames(toggleNames);
-
-        const invalidToggleNames =
-            toggleNames.length - validatedToggleNames.length;
-        this.logger.debug(
-            `Got ${toggleNames.length} (${invalidToggleNames > 0 ? `${invalidToggleNames} invalid ones` : 'all valid'}) metrics from ${value.appName}`,
-        );
 
         if (data.sdkVersion) {
             const [sdkName, sdkVersion] = data.sdkVersion.split(':');
@@ -235,38 +286,20 @@ export default class ClientMetricsServiceV2 {
             this.config.eventBus.emit(CLIENT_REGISTER, heartbeatEvent);
         }
 
-        const environment = value.environment ?? 'default';
+        const clientMetrics: IClientMetricsEnv[] = Object.keys(
+            value.bucket.toggles,
+        ).map((name) => ({
+            featureName: name,
+            appName: value.appName,
+            environment: value.environment ?? 'default',
+            timestamp: value.bucket.stop, //we might need to approximate between start/stop...
+            yes: value.bucket.toggles[name].yes ?? 0,
+            no: value.bucket.toggles[name].no ?? 0,
+            variants: value.bucket.toggles[name].variants,
+        }));
 
-        if (unknownToggleNames.length > 0) {
-            const unknownFlags = unknownToggleNames.map((name) => ({
-                name,
-                appName: value.appName,
-                seenAt: value.bucket.stop,
-                environment,
-            }));
-            this.logger.debug(
-                `Registering ${unknownFlags.length} unknown flags from ${value.appName} in the ${environment} environment. Some of the unknown flag names include: ${unknownFlags
-                    .slice(0, 10)
-                    .map(({ name }) => `"${name}"`)
-                    .join(', ')}`,
-            );
-            this.unknownFlagsService.register(unknownFlags);
-        }
-
-        if (validatedToggleNames.length > 0) {
-            const clientMetrics: IClientMetricsEnv[] = validatedToggleNames.map(
-                (name) => ({
-                    featureName: name,
-                    appName: value.appName,
-                    environment,
-                    timestamp: value.bucket.stop, //we might need to approximate between start/stop...
-                    yes: value.bucket.toggles[name].yes ?? 0,
-                    no: value.bucket.toggles[name].no ?? 0,
-                    variants: value.bucket.toggles[name].variants,
-                }),
-            );
+        if (clientMetrics.length) {
             await this.registerBulkMetrics(clientMetrics);
-
             this.config.eventBus.emit(CLIENT_METRICS, clientMetrics);
         }
     }

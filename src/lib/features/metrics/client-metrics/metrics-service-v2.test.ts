@@ -113,7 +113,7 @@ test('process metrics properly even when some names are not url friendly, filter
     );
 
     // only toggle with a bad name gets filtered out
-    expect(eventBus.emit).toHaveBeenCalledTimes(1);
+    expect(eventBus.emit).not.toHaveBeenCalled();
     expect(lastSeenService.updateLastSeen).not.toHaveBeenCalled();
 });
 

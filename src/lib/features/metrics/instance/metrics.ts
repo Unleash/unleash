@@ -23,7 +23,6 @@ import {
     customMetricsSchema,
 } from '../shared/schema.js';
 import type { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v2-type.js';
-import { CLIENT_METRICS } from '../../../events/index.js';
 import type { CustomMetricsSchema } from '../../../openapi/spec/custom-metrics-schema.js';
 import type { StoredCustomMetric } from '../custom/custom-metrics-store.js';
 import type { CustomMetricsService } from '../custom/custom-metrics-service.js';
@@ -276,7 +275,6 @@ export default class ClientMetricsController extends Controller {
                     promises.push(
                         this.metricsV2.registerBulkMetrics(filteredData),
                     );
-                    this.config.eventBus.emit(CLIENT_METRICS, data);
                 }
 
                 if (

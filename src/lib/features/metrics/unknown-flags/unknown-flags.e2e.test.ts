@@ -16,9 +16,12 @@ import dbInit, {
 import { startOfHour } from 'date-fns';
 import type TestAgent from 'supertest/lib/agent.d.ts';
 import type { BulkRegistrationSchema } from '../../../openapi/index.js';
+import type { EventEmitter } from 'stream';
+import { CLIENT_METRICS } from '../../../events/index.js';
 
 let db: ITestDb;
 let config: IUnleashConfig;
+let eventBus: EventEmitter;
 
 async function getSetup(opts?: IUnleashOptions) {
     config = createTestConfig(opts);
@@ -26,12 +29,16 @@ async function getSetup(opts?: IUnleashOptions) {
 
     const services = createServices(db.stores, config, db.rawDatabase);
     const app = await getApp(config, db.stores, services);
+
+    config.eventBus.emit = vi.fn();
+
     return {
         request: supertest(app),
         stores: db.stores,
         services,
         db: db.rawDatabase,
         destroy: db.destroy,
+        eventBus: config.eventBus,
     };
 }
 
@@ -52,6 +59,7 @@ beforeAll(async () => {
     stores = setup.stores;
     destroy = setup.destroy;
     services = setup.services;
+    eventBus = setup.eventBus;
 });
 
 afterAll(async () => {
@@ -101,13 +109,22 @@ describe('should register unknown flags', () => {
             appName: 'demo',
             seenAt: expect.any(Date),
         });
+        expect(eventBus.emit).toHaveBeenCalledWith(
+            CLIENT_METRICS,
+            expect.arrayContaining([
+                expect.objectContaining({
+                    featureName: 'existing_flag',
+                    yes: 200,
+                }),
+            ]),
+        );
     });
 
     test('/metrics/bulk endpoint', async () => {
         // @ts-expect-error - cachedFeatureNames is a private property in ClientMetricsServiceV2
         services.clientMetricsServiceV2.cachedFeatureNames = vi
             .fn<() => Promise<string[]>>()
-            .mockResolvedValue(['existing_flag']);
+            .mockResolvedValue(['existing_flag_bulk']);
 
         const unknownFlag: BulkRegistrationSchema = {
             appName: 'demo',
@@ -123,21 +140,21 @@ describe('should register unknown flags', () => {
                 applications: [unknownFlag],
                 metrics: [
                     {
-                        featureName: 'existing_flag',
+                        featureName: 'existing_flag_bulk',
                         environment: 'development',
                         appName: 'demo',
                         timestamp: startOfHour(new Date()),
-                        yes: 200,
+                        yes: 1337,
                         no: 0,
                         variants: {},
                     },
                     {
-                        featureName: 'unknown_flag',
+                        featureName: 'unknown_flag_bulk',
                         environment: 'development',
                         appName: 'demo',
                         timestamp: startOfHour(new Date()),
-                        yes: 100,
-                        no: 50,
+                        yes: 200,
+                        no: 100,
                         variants: {},
                     },
                 ],
@@ -149,10 +166,19 @@ describe('should register unknown flags', () => {
 
         expect(unknownFlags).toHaveLength(1);
         expect(unknownFlags[0]).toMatchObject({
-            name: 'unknown_flag',
+            name: 'unknown_flag_bulk',
             environment: 'development',
             appName: 'demo',
             seenAt: expect.any(Date),
         });
+        expect(eventBus.emit).toHaveBeenCalledWith(
+            CLIENT_METRICS,
+            expect.arrayContaining([
+                expect.objectContaining({
+                    featureName: 'existing_flag_bulk',
+                    yes: 1337,
+                }),
+            ]),
+        );
     });
 });

@@ -38,7 +38,9 @@ export const useFeature = (
         mutate().catch(console.warn);
     }, [mutate]);
 
-    const feature = useMemo(enrichConstraintsWithIds(data), [data?.body]);
+    const feature = useMemo(enrichConstraintsWithIds(data), [
+        JSON.stringify(data?.body),
+    ]);
 
     return {
         feature,
@@ -68,40 +70,41 @@ export const featureFetcher = async (
     };
 };
 
-export const enrichConstraintsWithIds = (data?: IFeatureResponse) => () => {
-    if (!data?.body) {
-        return emptyFeature;
-    }
+export const enrichConstraintsWithIds =
+    (data?: IFeatureResponse) => (): IFeatureToggle => {
+        if (!data?.body) {
+            return emptyFeature;
+        }
 
-    const { strategies, environments, ...rest } = data.body;
+        const { strategies, environments, ...rest } = data.body;
 
-    const addConstraintIds = (strategy: IFeatureStrategy) => {
-        const { constraints, ...strategyRest } = strategy;
+        const addConstraintIds = (strategy: IFeatureStrategy) => {
+            const { constraints, ...strategyRest } = strategy;
+            return {
+                ...strategyRest,
+                constraints: constraints?.map((constraint) => ({
+                    ...constraint,
+                    [constraintId]: uuidv4(),
+                })),
+            };
+        };
+
+        const strategiesWithConstraintIds = strategies?.map(addConstraintIds);
+
+        const environmentsWithStrategyIds = environments?.map((environment) => {
+            const { strategies, ...environmentRest } = environment;
+            return {
+                ...environmentRest,
+                strategies: strategies?.map(addConstraintIds),
+            };
+        });
+
         return {
-            ...strategyRest,
-            constraints: constraints?.map((constraint) => ({
-                ...constraint,
-                [constraintId]: uuidv4(),
-            })),
+            ...rest,
+            strategies: strategiesWithConstraintIds,
+            environments: environmentsWithStrategyIds,
         };
     };
-
-    const strategiesWithConstraintIds = strategies?.map(addConstraintIds);
-
-    const environmentsWithStrategyIds = environments?.map((environment) => {
-        const { strategies, ...environmentRest } = environment;
-        return {
-            ...environmentRest,
-            strategies: strategies?.map(addConstraintIds),
-        };
-    });
-
-    return {
-        ...rest,
-        strategies: strategiesWithConstraintIds,
-        environments: environmentsWithStrategyIds,
-    };
-};
 
 export const formatFeatureApiPath = (
     projectId: string,

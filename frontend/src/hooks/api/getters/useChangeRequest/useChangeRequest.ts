@@ -4,6 +4,7 @@ import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type {
     ChangeRequestType,
     IChangeRequestAddStrategy,
+    IChangeRequestFeature,
     IChangeRequestUpdateStrategy,
     IFeatureChange,
 } from 'component/changeRequest/changeRequest.types';
@@ -18,6 +19,23 @@ const isUpdateStrategyChange = (
     change: IFeatureChange,
 ): change is IChangeRequestUpdateStrategy => change.action === 'updateStrategy';
 
+const addConstraintIdsToFeatureChange = (change: IFeatureChange) => {
+    if (isAddStrategyChange(change) || isUpdateStrategyChange(change)) {
+        const { constraints, ...rest } = change.payload;
+        return {
+            ...change,
+            payload: {
+                ...rest,
+                constraints: constraints.map((constraint) => ({
+                    ...constraint,
+                    [constraintId]: uuidv4(),
+                })),
+            },
+        } as IFeatureChange;
+    }
+    return change;
+};
+
 export const useChangeRequest = (projectId: string, id: string) => {
     const { data, error, mutate } = useSWR<ChangeRequestType>(
         formatApiPath(`api/admin/projects/${projectId}/change-requests/${id}`),
@@ -25,47 +43,25 @@ export const useChangeRequest = (projectId: string, id: string) => {
         { refreshInterval: 15000 },
     );
 
-    const dataWithConstraintIds: ChangeRequestType | undefined = useMemo(() => {
-        if (!data) {
-            return data;
-        }
+    const { features, ...dataProps } = data || {};
+    const featuresWithConstraintIds: IChangeRequestFeature[] | undefined =
+        useMemo(() => {
+            return (
+                features?.map((feature) => {
+                    const changes: IFeatureChange[] = feature.changes.map(
+                        addConstraintIdsToFeatureChange,
+                    );
 
-        const features = data.features.map((feature) => {
-            const changes: IFeatureChange[] = feature.changes.map((change) => {
-                if (
-                    isAddStrategyChange(change) ||
-                    isUpdateStrategyChange(change)
-                ) {
-                    const { constraints, ...rest } = change.payload;
                     return {
-                        ...change,
-                        payload: {
-                            ...rest,
-                            constraints: constraints.map((constraint) => ({
-                                ...constraint,
-                                [constraintId]: uuidv4(),
-                            })),
-                        },
-                    } as IFeatureChange;
-                }
-                return change;
-            });
-
-            return {
-                ...feature,
-                changes,
-            };
-        });
-
-        const value: ChangeRequestType = {
-            ...data,
-            features,
-        };
-        return value;
-    }, [data]);
+                        ...feature,
+                        changes,
+                    };
+                }) ?? []
+            );
+        }, [JSON.stringify(features)]);
 
     return {
-        data: dataWithConstraintIds,
+        data: { ...dataProps, features: featuresWithConstraintIds },
         loading: !error && !data,
         refetchChangeRequest: () => mutate(),
         error,

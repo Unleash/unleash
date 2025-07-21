@@ -29,7 +29,9 @@ export const useFeatureImmutable = (
         await refetchFeature();
     }, [mutate, refetchFeature]);
 
-    const feature = useMemo(enrichConstraintsWithIds(data), [data?.body]);
+    const feature = useMemo(enrichConstraintsWithIds(data), [
+        JSON.stringify(data?.body),
+    ]);
 
     return {
         feature,

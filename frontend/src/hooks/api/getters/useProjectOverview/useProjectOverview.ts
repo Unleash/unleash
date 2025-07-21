@@ -1,5 +1,5 @@
 import useSWR, { type SWRConfiguration } from 'swr';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { getProjectOverviewFetcher } from './getProjectOverviewFetcher.js';
 import type { ProjectOverviewSchema } from 'openapi';
 
@@ -41,8 +41,26 @@ const useProjectOverview = (id: string, options: SWRConfiguration = {}) => {
         mutate();
     }, [mutate]);
 
+    const overriddenData = useMemo(() => {
+        if (!data) return undefined;
+        return {
+            ...data,
+            environments: data.environments?.map((env) => {
+                return env.defaultStrategy
+                    ? {
+                          ...env,
+                          defaultStrategy: {
+                              ...env.defaultStrategy,
+                              title: 'custom title override',
+                          },
+                      }
+                    : env;
+            }),
+        };
+    }, [data]);
+
     return {
-        project: data || fallbackProject,
+        project: overriddenData || fallbackProject,
         loading: !error && !data,
         error,
         refetch,

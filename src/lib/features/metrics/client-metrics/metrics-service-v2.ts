@@ -251,6 +251,7 @@ export default class ClientMetricsServiceV2 {
             ...siftedMetrics,
         ]);
         this.lastSeenService.updateLastSeen(siftedMetrics);
+        this.config.eventBus.emit(CLIENT_METRICS, siftedMetrics);
     }
 
     async registerImpactMetrics(impactMetrics: Metric[]) {
@@ -300,7 +301,6 @@ export default class ClientMetricsServiceV2 {
 
         if (clientMetrics.length) {
             await this.registerBulkMetrics(clientMetrics);
-            this.config.eventBus.emit(CLIENT_METRICS, clientMetrics);
         }
     }
 

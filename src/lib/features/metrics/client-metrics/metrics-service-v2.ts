@@ -294,9 +294,11 @@ export default class ClientMetricsServiceV2 {
             no: value.bucket.toggles[name].no ?? 0,
             variants: value.bucket.toggles[name].variants,
         }));
-        await this.registerBulkMetrics(clientMetrics);
 
-        this.config.eventBus.emit(CLIENT_METRICS, clientMetrics);
+        if (clientMetrics.length) {
+            await this.registerBulkMetrics(clientMetrics);
+            this.config.eventBus.emit(CLIENT_METRICS, clientMetrics);
+        }
     }
 
     async bulkAdd(): Promise<void> {

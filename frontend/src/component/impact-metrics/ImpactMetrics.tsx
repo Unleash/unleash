@@ -4,7 +4,7 @@ import { Typography, Button, Paper, styled } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { PageHeader } from 'component/common/PageHeader/PageHeader.tsx';
 import { useImpactMetricsMetadata } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
-import { ChartConfigModal } from './ChartConfigModal.tsx';
+import { ChartConfigModal } from './ChartConfigModal/ChartConfigModal.tsx';
 import { ChartItem } from './ChartItem.tsx';
 import { GridLayoutWrapper, type GridItem } from './GridLayoutWrapper.tsx';
 import { useImpactMetricsState } from './hooks/useImpactMetricsState.ts';

@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import type { AggregationMode } from '../../types.ts';
+import type { AggregationMode } from '../../../types.ts';
 
 export type ModeSelectorProps = {
     value: AggregationMode;

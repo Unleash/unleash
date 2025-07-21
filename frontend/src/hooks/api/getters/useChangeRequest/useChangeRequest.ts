@@ -3,38 +3,11 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type {
     ChangeRequestType,
-    IChangeRequestAddStrategy,
     IChangeRequestFeature,
-    IChangeRequestUpdateStrategy,
     IFeatureChange,
 } from 'component/changeRequest/changeRequest.types';
 import { useMemo } from 'react';
-import { constraintId } from 'constants/constraintId.js';
-import { v4 as uuidv4 } from 'uuid';
-
-const isAddStrategyChange = (
-    change: IFeatureChange,
-): change is IChangeRequestAddStrategy => change.action === 'addStrategy';
-const isUpdateStrategyChange = (
-    change: IFeatureChange,
-): change is IChangeRequestUpdateStrategy => change.action === 'updateStrategy';
-
-const addConstraintIdsToFeatureChange = (change: IFeatureChange) => {
-    if (isAddStrategyChange(change) || isUpdateStrategyChange(change)) {
-        const { constraints, ...rest } = change.payload;
-        return {
-            ...change,
-            payload: {
-                ...rest,
-                constraints: constraints.map((constraint) => ({
-                    ...constraint,
-                    [constraintId]: uuidv4(),
-                })),
-            },
-        } as IFeatureChange;
-    }
-    return change;
-};
+import { addConstraintIdsToFeatureChange } from 'utils/addConstraintIdsToFeatureChange.js';
 
 export const useChangeRequest = (projectId: string, id: string) => {
     const { data, error, mutate } = useSWR<ChangeRequestType>(
@@ -60,8 +33,15 @@ export const useChangeRequest = (projectId: string, id: string) => {
             );
         }, [JSON.stringify(features)]);
 
+    const mappedData = data
+        ? {
+              ...dataProps,
+              features: featuresWithConstraintIds,
+          }
+        : data;
+
     return {
-        data: { ...dataProps, features: featuresWithConstraintIds },
+        data: mappedData,
         loading: !error && !data,
         refetchChangeRequest: () => mutate(),
         error,

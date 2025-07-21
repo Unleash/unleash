@@ -187,9 +187,12 @@ export default class ClientMetricsServiceV2 {
         const metricsByToggle = new Map<string, IClientMetricsEnv[]>();
         for (const m of metrics) {
             if (m.yes === 0 && m.no === 0) continue;
-            const arr = metricsByToggle.get(m.featureName) ?? [];
+            let arr = metricsByToggle.get(m.featureName);
+            if (!arr) {
+                arr = [];
+                metricsByToggle.set(m.featureName, arr);
+            }
             arr.push(m);
-            metricsByToggle.set(m.featureName, arr);
         }
         if (metricsByToggle.size === 0) return [];
 

@@ -29,6 +29,7 @@ const ActionsBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
     alignItems: 'center',
+    flexShrink: 0,
 }));
 
 type ReminderType = 'complete' | 'removeCode' | 'archive' | null;

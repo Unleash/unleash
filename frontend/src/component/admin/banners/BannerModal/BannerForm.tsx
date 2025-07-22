@@ -10,6 +10,7 @@ import {
     type ChangeEvent,
     type Dispatch,
     type SetStateAction,
+    useEffect,
     useState,
 } from 'react';
 import Visibility from '@mui/icons-material/Visibility';
@@ -142,6 +143,15 @@ export const BannerForm = ({
     const [linkOption, setLinkOption] = useState<LinkOption>(
         link === '' ? 'None' : link === 'dialog' ? 'Dialog' : 'Link',
     );
+
+    useEffect(() => {
+        setIconOption(
+            icon === '' ? 'Default' : icon === 'none' ? 'None' : 'Custom',
+        );
+        setLinkOption(
+            link === '' ? 'None' : link === 'dialog' ? 'Dialog' : 'Link',
+        );
+    }, [icon, link]);
 
     return (
         <StyledForm>

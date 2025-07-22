@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import type { AggregationMode } from '../../types.ts';
+import type { AggregationMode } from '../../../types.ts';
 
 export type ModeSelectorProps = {
     value: AggregationMode;
@@ -15,11 +15,7 @@ export const ModeSelector: FC<ModeSelectorProps> = ({
 }) => {
     if (seriesType === 'unknown') return null;
     return (
-        <FormControl
-            variant='outlined'
-            size='small'
-            sx={{ minWidth: 200, mt: 1 }}
-        >
+        <FormControl variant='outlined' size='small' sx={{ minWidth: 200 }}>
             <InputLabel id='mode-select-label'>Mode</InputLabel>
             <Select
                 labelId='mode-select-label'

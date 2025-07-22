@@ -8,12 +8,16 @@ import {
     TextField,
     Box,
     styled,
+    useTheme,
+    useMediaQuery,
+    Divider,
 } from '@mui/material';
 import { ImpactMetricsControls } from './ImpactMetricsControls/ImpactMetricsControls.tsx';
-import { ImpactMetricsChartPreview } from './ImpactMetricsChartPreview.tsx';
-import { useChartFormState } from './hooks/useChartFormState.ts';
-import type { ChartConfig } from './types.ts';
+import { useChartFormState } from '../hooks/useChartFormState.ts';
+import type { ChartConfig } from '../types.ts';
 import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
+import { LabelsFilter } from './LabelFilter/LabelsFilter.tsx';
+import { ImpactMetricsChart } from '../ImpactMetricsChart.tsx';
 
 export const StyledConfigPanel = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -62,6 +66,8 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
             open,
             initialConfig,
         });
+    const theme = useTheme();
+    const screenBreakpoint = useMediaQuery(theme.breakpoints.down('lg'));
 
     const handleSave = () => {
         if (!isValid) return;
@@ -111,21 +117,33 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
                             actions={actions}
                             metricSeries={metricSeries}
                             loading={loading}
-                            availableLabels={currentAvailableLabels}
                         />
                     </StyledConfigPanel>
                     <StyledPreviewPanel>
-                        <ImpactMetricsChartPreview
-                            selectedSeries={formData.selectedSeries}
-                            selectedRange={formData.selectedRange}
-                            selectedLabels={formData.selectedLabels}
-                            beginAtZero={formData.beginAtZero}
-                            aggregationMode={formData.aggregationMode}
-                        />
+                        <Box sx={(theme) => ({ padding: theme.spacing(1) })}>
+                            <ImpactMetricsChart
+                                key={screenBreakpoint ? 'small' : 'large'}
+                                selectedSeries={formData.selectedSeries}
+                                selectedRange={formData.selectedRange}
+                                selectedLabels={formData.selectedLabels}
+                                beginAtZero={formData.beginAtZero}
+                                aggregationMode={formData.aggregationMode}
+                                isPreview
+                            />
+                        </Box>
                     </StyledPreviewPanel>
                 </Box>
+
+                {currentAvailableLabels ? (
+                    <LabelsFilter
+                        selectedLabels={formData.selectedLabels}
+                        onChange={actions.setSelectedLabels}
+                        availableLabels={currentAvailableLabels}
+                    />
+                ) : null}
             </DialogContent>
-            <DialogActions>
+            <Divider />
+            <DialogActions sx={(theme) => ({ margin: theme.spacing(2, 3, 3) })}>
                 <Button onClick={onClose}>Cancel</Button>
                 <Button
                     onClick={handleSave}

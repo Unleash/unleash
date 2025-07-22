@@ -114,6 +114,7 @@ test('Can delete session by sid', async () => {
 
 test('Can delete stale sessions', async () => {
     await sessionService.insertSession(newSession);
+    await new Promise((resolve) => setTimeout(resolve, 100)); // Ensure a different createdAt
     await sessionService.insertSession({ ...newSession, sid: 'new' });
 
     const sessionsToKeep = 1;

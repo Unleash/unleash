@@ -231,7 +231,7 @@ export function Dashboard() {
 ```
 
 ```javascript
-// These child components don't know about feature flags-they just render props
+// These child components don't know about feature flags—they just render props
 // The new component just focuses on rendering its UI
 export function NewAnalyticsSection({ data }) {
   return (
@@ -420,7 +420,7 @@ Managing feature flags in a microservices architecture requires guaranteeing con
 
 You might assume that if each service evaluates a flag with the same user context, the result will be consistent. In a perfectly static system, this is true. However, in a live production environment, flag configurations can change. This introduces a critical race condition: a flag can be toggled mid-request, causing different services in the same call chain to get different results.
 
-Imagine a `new-pricing-model` flag is active:
+Imagine a `NEW_PRICING_MODEL` flag is active:
 
 1.  The `gateway-service` receives the request, sees the flag is *on*, and calls the `product-service`.
 2.  The `product-service` also sees the flag is *on* and prepares to show a promotional banner. It calls the `pricing-service`.
@@ -429,12 +429,12 @@ Imagine a `new-pricing-model` flag is active:
 
 The result? A confused user who sees a promotional banner but gets charged the old price.
 
-![Evaluate flags multiple times](/img/evaluate-flags-in-many-places.jpg)
+![Evaluate flags multiple times](/img/flags-in-code-microservices-multiple.jpg)
 
 The solution is to evaluate a feature flag's state exactly one time at the "edge" of your system—typically in an API Gateway or the first service that receives the external request. 
 Then, you must propagate the result of that evaluation—the true/false or a specific variant—downstream to all other services.
 
-![Evaluate flags once](/img/evaluate-flags-only-once.jpg)
+![Evaluate flags once](/img/flags-in-code-microservices-once.jpg)
 
 To make this work, downstream services need the initial flag evaluation result and the user context (ID, location, etc.) used to make them. The standard, most robust way to achieve this is with [OpenTelemetry Baggage](https://opentelemetry.io/docs/concepts/signals/baggage/).
 
@@ -492,7 +492,7 @@ Let's face it: stale flags are [tech debt](/reference/technical-debt). Without a
 
 ### Naming conventions and flag metadata
 
-The first line of defense against flag debt is clarity. A flag named `temp_fix_v2` is a mystery waiting to happen. A [good name](/reference/feature-toggles#set-a-naming-pattern) provides immediate context about the flag's purpose and owner, both in the Unleash UI and in your code.
+The first line of defense against flag debt is clarity. A flag named `temp_fix_v2` is a mystery waiting to happen. A good name provides immediate context about the flag's purpose and owner, both in the Unleash UI and in your code.
 A highly effective pattern is: `[team]_[feature-name]`. For example: `checkout_multistep-payment-flow`.
 
 The `[team]` prefix is invaluable when multiple teams share a single Unleash project, as it clarifies ownership. However, if you organize your Unleash instance with per-team projects, this prefix may be unnecessary, though it can still be helpful for searching through code.
@@ -501,8 +501,8 @@ The `[team]` prefix is invaluable when multiple teams share a single Unleash pro
 While you can add more information directly to the name, such as an issue number or a full issue name, this is a trade-off. It can make the flag name long and complicated to work with in code.
 
 A better practice is to keep the name clean and use Unleash's built-in metadata features for richer context:
-- Use [external links](/reference/feature-toggles#external-links): Instead of putting an issue number like JIRA-376 in the name, use the links feature in Unleash to connect the flag directly to the corresponding Jira ticket, GitHub issue, or design document.
-- Write a clear description: Use the description field to explain what the flag does, what the rollout plan is, and any additional context that may be relevant.
+- **Use external links**: Instead of putting an issue number like JIRA-376 in the name, use the [external links](/reference/feature-toggles#external-links) feature in Unleash to connect the flag directly to the corresponding Jira ticket, GitHub issue, or design document.
+- **Write a clear description**: Use the description field to explain what the flag does, what the rollout plan is, and any additional context that may be relevant.
 
 This approach keeps flag names readable in your code while ensuring all the necessary context for lifecycle management is available in the Unleash UI. Once you've identified a naming convention that works, you can [enforce them at the project level](/reference/feature-toggles#set-a-naming-pattern).
 
@@ -526,7 +526,7 @@ Here are some practical tips:
 - **Automated ticketing**: Use webhooks or integrations to automatically create "Remove Flag" tickets.
 - **Scheduled reviews**: Make flag reviews a part of your process, for example your planning. Teams should justify a flag's existence or schedule them for removal.
 - **Update "Definition of Done"**: A feature isn't "done" until its associated feature flag has been removed from the code and archived in Unleash.
-- **Use AI to speed up the cleanup**: Rely on [AI coding assistants](https://www.getunleash.io/blog/ai-flag-cleanup) to automate and fixing flag removal issues.
+- **Use AI to speed up the cleanup**: Rely on [AI coding assistants](https://www.getunleash.io/blog/ai-flag-cleanup) to automate and fix flag removal issues.
 
 
 ## Testing with feature flags
@@ -536,14 +536,17 @@ There is no single "right" way to test with feature flags, as every organization
 A common fear is that flags will cause a "combinatorial explosion" of test cases. You don't need to test every possible combination. Instead, focus on a few high-value scenarios.
 
 ### Unit tests
-At the unit level, the focus is narrow: does this specific piece of code work correctly when its controlling flag is on and when it's off? For any unit of code affected by a flag, you should have tests that cover both states:
+At the unit level, the focus is narrow: does this specific piece of code work correctly when its controlling flag is on and when it's off?
+
+For any unit of code affected by a flag, you should have tests that cover both states:
 - **Flag on**: Verifies the new code path works as expected.
 - **Flag off**: Verifies the old code path still works and the new code is not executed.
 
 ### Component and E2E tests
-For broader tests that cover a single service (component) or the entire application (E2E), you need a strategy to handle the growing number of flags. Here are some common approaches:
-- **Baseline state** = all new off: This is your most important test suite. It runs with all feature flags turned off, simulating your stable production environment. It answers the question: "Has adding new, dormant flag-gated code caused regressions in existing functionality?"
-- **New features state** = all flags on: This suite runs with all (or most) feature flags enabled. Its purpose is to catch unexpected, negative interactions between multiple new features that might be developed in parallel. It helps ensure that the application is coherent in its most feature-rich state.
+
+For broader tests that cover a single service, component, or the entire application, you need a strategy to handle the growing number of flags. Here are some common states to cover:
+- **Baseline state** = all flags off: These tests run with all feature flags turned off, simulating your stable production environment. It verifies that adding new, dormant flag-protected code hasn't caused regressions in existing functionality.
+- **New features state** = all flags on: This suite runs with all (or most) feature flags enabled. Its purpose is to catch unexpected, negative interactions between multiple new features that might be developed in parallel. It helps ensure that the application is functioning as expected in its most feature-rich state.
 - **Common combinations**: For mature applications, it may be useful to test the most common combination of flags that your users experience. This pragmatic approach focuses testing effort on the configurations that have the biggest real-world impact.
 - **SDK fallback state**: What happens if Unleash is unavailable? Does your wrapper handle it gracefully and fall back to safe defaults?
 

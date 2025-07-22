@@ -65,7 +65,8 @@ export type IFlagKey =
     | 'changeRequestApproverEmails'
     | 'paygTrialEvents'
     | 'eventGrouping'
-    | 'paygInstanceStatsEvents';
+    | 'paygInstanceStatsEvents'
+    | 'lifecycleGraphs';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -300,6 +301,10 @@ const flags: IFlags = {
     ),
     paygInstanceStatsEvents: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PAYG_INSTANCE_STATS_EVENTS,
+        false,
+    ),
+    lifecycleGraphs: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_GRAPHS,
         false,
     ),
 };

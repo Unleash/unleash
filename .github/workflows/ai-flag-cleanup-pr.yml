@@ -234,7 +234,7 @@ jobs:
           set -euo pipefail
 
           mapfile -d '' FILES < <(cat "${{ steps.find_files.outputs.file_list }}")
-          aider --model "${{ inputs.model }}" \
+          aider --modelotobreak "${{ inputs.model }}" \
             --yes \
             --message-file cleanup_prompt.txt \
             --no-attribute-author \

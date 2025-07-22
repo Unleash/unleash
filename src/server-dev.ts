@@ -51,7 +51,6 @@ process.nextTick(async () => {
                         deltaApi: true,
                         uniqueSdkTracking: true,
                         strictSchemaValidation: true,
-                        reportUnknownFlags: true,
                         customMetrics: true,
                         lifecycleMetrics: true,
                         improvedJsonDiff: true,

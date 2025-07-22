@@ -87,7 +87,8 @@ jobs:
         run: |
           TITLE="${{ fromJson(steps.get_issue.outputs.result).title }}"
 
-          if [[ "$TITLE" =~ Flag[[:space:]]([[:alnum:]\-\._\!\~\*\'\(\)]+)[[:space:]]marked ]]; then
+          if [[ $TITLE =~ Flag[[:space:]]+([^[:space:]]+)[[:space:]]+marked ]]; then
+            FLAG="${BASH_REMATCH[1]}"
             echo "flag-name=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
           else
             MSG="Could not extract flag name from title: $TITLE"

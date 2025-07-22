@@ -92,7 +92,6 @@ export type UiFlags = {
     crDiffView?: boolean;
     changeRequestApproverEmails?: boolean;
     eventGrouping?: boolean;
-    reportUnknownFlags?: boolean;
 };
 
 export interface IVersionInfo {

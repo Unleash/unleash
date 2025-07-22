@@ -14,7 +14,6 @@ import theme from 'themes/theme.js';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell.js';
 import { formatDateYMDHMS } from 'utils/formatDate.js';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell.js';
-import { useUiFlag } from 'hooks/useUiFlag.js';
 import NotFound from 'component/common/NotFound/NotFound.js';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
@@ -28,7 +27,6 @@ const StyledUl = styled('ul')(({ theme }) => ({
 
 export const UnknownFlagsTable = () => {
     const { unknownFlags, loading } = useUnknownFlags();
-    const unknownFlagsEnabled = useUiFlag('reportUnknownFlags');
 
     const [searchValue, setSearchValue] = useState('');
 
@@ -90,8 +88,6 @@ export const UnknownFlagsTable = () => {
         useSortBy,
         useFlexLayout,
     );
-
-    if (!unknownFlagsEnabled) return <NotFound />;
 
     return (
         <PageContent

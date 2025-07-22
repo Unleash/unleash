@@ -137,14 +137,12 @@ export default class ClientMetricsServiceV2 {
         );
 
         let unknownToggleNames: string[] = [];
-        if (this.flagResolver.isEnabled('reportUnknownFlags')) {
-            try {
-                unknownToggleNames = toggleNames.filter(
-                    (name) => !existingFlags.includes(name),
-                );
-            } catch (e) {
-                this.logger.error(e);
-            }
+        try {
+            unknownToggleNames = toggleNames.filter(
+                (name) => !existingFlags.includes(name),
+            );
+        } catch (e) {
+            this.logger.error(e);
         }
 
         const validatedToggleNames =

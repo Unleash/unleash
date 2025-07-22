@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { Box, Paper, styled, Typography } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
-import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
+import MuiTimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineConnector from '@mui/lab/TimelineConnector';
@@ -12,13 +12,13 @@ import type {
 } from '../../changeRequest.types';
 import { HtmlTooltip } from '../../../common/HtmlTooltip/HtmlTooltip.tsx';
 import ErrorIcon from '@mui/icons-material/Error';
-import {
-    type ILocationSettings,
-    useLocationSettings,
-} from 'hooks/useLocationSettings';
-import { formatDateYMDHMS } from 'utils/formatDate';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import { formatDateYMDHM } from 'utils/formatDate';
+import type { ReactNode } from 'react-markdown/lib/react-markdown';
 
-export type ISuggestChangeTimelineProps =
+export type ISuggestChangeTimelineProps = {
+    timestamps?: Record<ChangeRequestState, string>;
+} & (
     | {
           state: Exclude<ChangeRequestState, 'Scheduled'>;
           schedule?: undefined;
@@ -26,7 +26,8 @@ export type ISuggestChangeTimelineProps =
     | {
           state: 'Scheduled';
           schedule: ChangeRequestSchedule;
-      };
+      }
+);
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     marginTop: theme.spacing(2),
@@ -89,6 +90,7 @@ export const determineColor = (
 export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
     state,
     schedule,
+    timestamps,
 }) => {
     let data: ChangeRequestState[];
     switch (state) {
@@ -109,10 +111,17 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
             <StyledBox>
                 <StyledTimeline>
                     {data.map((title, index) => {
+                        const timestampComponent = timestamps?.[title] ? (
+                            <Timestamp timestamp={timestamps?.[title]} />
+                        ) : undefined;
+
                         if (schedule && title === 'Scheduled') {
-                            return createTimelineScheduleItem(
-                                schedule,
-                                locationSettings,
+                            return (
+                                <TimelineScheduleItem
+                                    key={title}
+                                    schedule={schedule}
+                                    timestamp={timestampComponent}
+                                />
                             );
                         }
 
@@ -132,11 +141,17 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
                             timelineDotProps = { variant: 'outlined' };
                         }
 
-                        return createTimelineItem(
-                            color,
-                            title,
-                            index < data.length - 1,
-                            timelineDotProps,
+                        return (
+                            <TimelineItem
+                                key={title}
+                                color={color}
+                                title={title}
+                                shouldConnectToNextItem={
+                                    index < data.length - 1
+                                }
+                                timestamp={timestampComponent}
+                                timelineDotProps={timelineDotProps}
+                            />
                         );
                     })}
                 </StyledTimeline>
@@ -145,24 +160,53 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
     );
 };
 
-const createTimelineItem = (
-    color: 'primary' | 'success' | 'grey' | 'error' | 'warning',
-    title: string,
-    shouldConnectToNextItem: boolean,
-    timelineDotProps: { [key: string]: string | undefined } = {},
-) => (
-    <TimelineItem key={title}>
-        <TimelineSeparator>
-            <TimelineDot color={color} {...timelineDotProps} />
-            {shouldConnectToNextItem && <TimelineConnector />}
-        </TimelineSeparator>
-        <TimelineContent>{title}</TimelineContent>
-    </TimelineItem>
-);
+const Timestamp = styled(({ timestamp, ...props }: { timestamp: string }) => {
+    const { locationSettings } = useLocationSettings();
+    const displayTime = formatDateYMDHM(
+        new Date(timestamp || ''),
+        locationSettings.locale,
+    );
+    return (
+        <time {...props} dateTime={timestamp}>
+            {displayTime}
+        </time>
+    );
+})(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.body2.fontSize,
+    display: 'block',
+}));
+
+const TimelineItem = ({
+    color,
+    title,
+    shouldConnectToNextItem,
+    timestamp,
+    timelineDotProps = {},
+}: {
+    color: 'primary' | 'success' | 'grey' | 'error' | 'warning';
+    title: string;
+    shouldConnectToNextItem: boolean;
+    timestamp?: ReactNode;
+    timelineDotProps: { [key: string]: string | undefined };
+}) => {
+    return (
+        <MuiTimelineItem key={title}>
+            <TimelineSeparator>
+                <TimelineDot color={color} {...timelineDotProps} />
+                {shouldConnectToNextItem && <TimelineConnector />}
+            </TimelineSeparator>
+            <TimelineContent>
+                {title}
+                {timestamp}
+            </TimelineContent>
+        </MuiTimelineItem>
+    );
+};
 
 export const getScheduleProps = (
     schedule: ChangeRequestSchedule,
-    formattedTime: string,
+    formattedTime: string = '2025/09/22 12:27',
 ) => {
     switch (schedule.status) {
         case 'suspended':
@@ -202,25 +246,24 @@ export const getScheduleProps = (
     }
 };
 
-const createTimelineScheduleItem = (
-    schedule: ChangeRequestSchedule,
-    locationSettings: ILocationSettings,
-) => {
-    const time = formatDateYMDHMS(
-        new Date(schedule.scheduledAt),
-        locationSettings?.locale,
-    );
-
-    const { title, subtitle, color, reason } = getScheduleProps(schedule, time);
+const TimelineScheduleItem = ({
+    schedule,
+    timestamp,
+}: {
+    schedule: ChangeRequestSchedule;
+    timestamp: ReactNode;
+}) => {
+    const { title, subtitle, color, reason } = getScheduleProps(schedule);
 
     return (
-        <TimelineItem key={title}>
+        <MuiTimelineItem key={title}>
             <TimelineSeparator>
                 <TimelineDot color={color} />
                 <TimelineConnector />
             </TimelineSeparator>
             <TimelineContent>
                 {title}
+                {timestamp}
                 <StyledSubtitle>
                     <Typography
                         color={'text.secondary'}
@@ -229,6 +272,6 @@ const createTimelineScheduleItem = (
                     {reason}
                 </StyledSubtitle>
             </TimelineContent>
-        </TimelineItem>
+        </MuiTimelineItem>
     );
 };

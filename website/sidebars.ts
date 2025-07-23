@@ -270,11 +270,11 @@ const sidebars: SidebarsConfig = {
                             label: 'Managing feature flags in code',
                             id: 'feature-flag-tutorials/use-cases/manage-feature-flags-in-code',
                         },
-                                               {
+                        {
                             type: 'doc',
                             label: 'Organizing feature flags using projects and environments',
                             id: 'feature-flag-tutorials/use-cases/organize-feature-flags',
-                       },
+                        },
                     ],
                 },
                 {

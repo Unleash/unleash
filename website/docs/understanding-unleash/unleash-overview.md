@@ -3,6 +3,10 @@ title: Unleash architecture overview
 pagination_next: understanding-unleash/the-anatomy-of-unleash
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
 Unleash is designed for privacy, speed, and resilience, enabling feature flag evaluations to occur locally within your applications. The architecture provides:
 - **Fast feature flag evaluations**: Feature flags are evaluated within the [SDKs](#unleash-sdks) or [Unleash Edge](#unleash-edge), making evaluations incredibly fast (nanoseconds).
 - **Privacy and security**: No user data is shared with the Unleash server, ensuring [privacy and security](/understanding-unleash/data-collection).
@@ -69,13 +73,13 @@ Beyond scalability, Unleash Edge also offers privacy and security benefits for c
 
 #### Client API
 
-The [Client API](/api-overview#client-api) is the API used by server-side SDKs to fetch feature flag configurations and send SDK usage metrics to Unleash.
+The [Client API](/api-overview) is the API used by server-side SDKs to fetch feature flag configurations and send SDK usage metrics to Unleash.
 
 #### Frontend API
-The [Frontend API](/api-overview#frontend-api) is the API used by client-side SDKs to retrieve all enabled feature flags for a given [Unleash Context](/reference/unleash-context) and send SDK usage metrics to Unleash.
+The [Frontend API](/api-overview) is the API used by client-side SDKs to retrieve all enabled feature flags for a given [Unleash Context](/reference/unleash-context) and send SDK usage metrics to Unleash.
 
 #### Admin API
-The [Admin API](/api-overview#admin-api) is an API layer for managing all aspects of your Unleash instance, including creating, updating, and deleting resources, such as feature flags, activation strategies, and environments. This API is used by the [Unleash Admin UI](#the-unleash-admin-ui) and other tools and [integrations](/reference/integrations).
+The [Admin API](/api-overview) is an API layer for managing all aspects of your Unleash instance, including creating, updating, and deleting resources, such as feature flags, activation strategies, and environments. This API is used by the [Unleash Admin UI](#the-unleash-admin-ui) and other tools and [integrations](/reference/integrations).
 
 | API            | Used by | Available endpoints |
 |---------------|---------|---|

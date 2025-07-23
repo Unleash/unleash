@@ -10,13 +10,14 @@ import { usePlaceholderData } from '../insights/hooks/usePlaceholderData.js';
 import { getDisplayFormat, getTimeUnit, formatLargeNumbers } from './utils.ts';
 import { fromUnixTime } from 'date-fns';
 import { useChartData } from './hooks/useChartData.ts';
+import type { AggregationMode } from './types.ts';
 
 type ImpactMetricsChartProps = {
     selectedSeries: string;
     selectedRange: 'hour' | 'day' | 'week' | 'month';
     selectedLabels: Record<string, string[]>;
     beginAtZero: boolean;
-    showRate?: boolean;
+    aggregationMode?: AggregationMode;
     aspectRatio?: number;
     overrideOptions?: Record<string, unknown>;
     errorTitle?: string;
@@ -30,7 +31,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
     selectedRange,
     selectedLabels,
     beginAtZero,
-    showRate,
+    aggregationMode,
     aspectRatio,
     overrideOptions = {},
     errorTitle = 'Failed to load impact metrics.',
@@ -47,7 +48,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
             ? {
                   series: selectedSeries,
                   range: selectedRange,
-                  showRate,
+                  aggregationMode,
                   labels:
                       Object.keys(selectedLabels).length > 0
                           ? selectedLabels
@@ -61,7 +62,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
         type: 'constant',
     });
 
-    const data = useChartData(timeSeriesData);
+    const data = useChartData(timeSeriesData, debug?.query);
 
     const hasError = !!dataError;
     const isLoading = dataLoading;
@@ -121,14 +122,17 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                   y: {
                       beginAtZero,
                       title: {
-                          display: !!showRate,
-                          text: showRate ? 'Rate per second' : '',
+                          display: aggregationMode === 'rps',
+                          text:
+                              aggregationMode === 'rps'
+                                  ? 'Rate per second'
+                                  : '',
                       },
                       ticks: {
                           precision: 0,
                           callback: (value: unknown): string | number =>
                               typeof value === 'number'
-                                  ? `${formatLargeNumbers(value)}${showRate ? '/s' : ''}`
+                                  ? `${formatLargeNumbers(value)}${aggregationMode === 'rps' ? '/s' : ''}`
                                   : (value as number),
                       },
                   },

@@ -3,6 +3,10 @@ id: webhook
 title: Webhook
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
 :::note Availability
 
 **Version**: `3.11+`

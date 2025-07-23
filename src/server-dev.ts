@@ -59,6 +59,7 @@ process.nextTick(async () => {
                         crDiffView: true,
                         eventGrouping: true,
                         paygTrialEvents: true,
+                        lifecycleGraphs: true,
                     },
                 },
                 authentication: {

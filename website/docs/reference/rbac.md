@@ -3,6 +3,10 @@ id: rbac
 title: Role-based access control
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
 :::note Availability
 
 **Version**: `4.0+`

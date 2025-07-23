@@ -414,6 +414,11 @@ describe('bulk metrics', () => {
     test('without access to production environment due to no auth setup, we can only access the default env', async () => {
         const now = new Date();
 
+        // @ts-expect-error - cachedFeatureNames is a private property in ClientMetricsServiceV2
+        services.clientMetricsServiceV2.cachedFeatureNames = vi
+            .fn<() => Promise<string[]>>()
+            .mockResolvedValue(['test_feature_one', 'test_feature_two']);
+
         await request
             .post('/api/client/metrics/bulk')
             .send({

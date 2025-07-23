@@ -4,6 +4,10 @@ slug: /feature-flag-tutorials/use-cases/a-b-testing
 pagination_next: feature-flag-tutorials/use-cases/ai
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
 Feature flags are a great way to run A/B or multivariate tests with minimal code modifications, and Unleash offers built-in features that make it easy to get started. In this tutorial, we will walk through how to do an A/B test using Unleash with your application.
 
 ## How to perform A/B testing with feature flags

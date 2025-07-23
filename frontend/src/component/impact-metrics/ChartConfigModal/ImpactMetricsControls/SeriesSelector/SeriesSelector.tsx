@@ -47,6 +47,7 @@ export const SeriesSelector: FC<SeriesSelectorProps> = ({
                 placeholder='Search for a metric…'
                 variant='outlined'
                 size='small'
+                required
             />
         )}
         noOptionsText='No metrics available'

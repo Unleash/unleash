@@ -4,6 +4,10 @@ slug: /feature-flag-tutorials/use-cases/gradual-rollout
 pagination_next: feature-flag-tutorials/use-cases/a-b-testing
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
 ## What is a gradual rollout?
 
 A **gradual rollout** is a controlled release strategy where a new feature is first released to a small subset of users. This allows for monitoring user behavior, identifying potential issues, and gathering feedback before a full-scale launch. It also allows us to experiment quickly and safely.

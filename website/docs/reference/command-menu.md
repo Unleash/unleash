@@ -2,6 +2,10 @@
 title: Command menu
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
 :::note Availability
 
 **Version**: `6.2+`

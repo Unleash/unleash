@@ -3,6 +3,10 @@ id: teams
 title: Microsoft Teams
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
 :::note Availability
 
 **Version**: `4.0+`

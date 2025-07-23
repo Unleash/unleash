@@ -2,6 +2,10 @@
 title: Basic Auth
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="noindex" />
+
 # Basic auth
 
 When using the `insecure` authentication method, identifying using basic auth against the API is enough. Since the `insecure` method doesn't require a password, it is enough to define the username when making HTTP requests.

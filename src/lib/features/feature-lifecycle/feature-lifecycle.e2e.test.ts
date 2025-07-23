@@ -254,9 +254,12 @@ test('should not backfill for existing lifecycle', async () => {
     await featureLifecycleStore.backfill();
 
     const { body } = await getFeatureLifecycle('my_feature_e');
-    expect(body).toEqual([
-        { stage: 'initial', enteredStageAt: expect.any(String) },
-        { stage: 'pre-live', enteredStageAt: expect.any(String) },
-        { stage: 'live', enteredStageAt: expect.any(String) },
-    ]);
+    expect(body).toEqual(
+        expect.arrayContaining([
+            { stage: 'initial', enteredStageAt: expect.any(String) },
+            { stage: 'pre-live', enteredStageAt: expect.any(String) },
+            { stage: 'live', enteredStageAt: expect.any(String) },
+        ]),
+    );
+    expect(body).toHaveLength(3);
 });

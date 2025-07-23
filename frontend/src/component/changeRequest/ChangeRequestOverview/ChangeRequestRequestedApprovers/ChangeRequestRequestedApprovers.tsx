@@ -350,31 +350,21 @@ export const ChangeRequestRequestedApprovers: FC<{
                     saveClicked={saveClicked}
                 />
             )}
-            {reviewers.map((reviewer) => (
-                <>
-                    {reviewer.status === 'approved' && (
-                        <ChangeRequestApprover
-                            key={reviewer.name}
-                            name={reviewer.name || 'Unknown user'}
-                            imageUrl={reviewer.imageUrl}
-                        />
-                    )}
-                    {reviewer.status === 'rejected' && (
-                        <ChangeRequestRejector
-                            key={reviewer.name}
-                            name={reviewer.name || 'Unknown user'}
-                            imageUrl={reviewer.imageUrl}
-                        />
-                    )}
-                    {reviewer.status === 'pending' && (
-                        <ChangeRequestPending
-                            key={reviewer.name}
-                            name={reviewer.name || 'Unknown user'}
-                            imageUrl={reviewer.imageUrl}
-                        />
-                    )}
-                </>
-            ))}
+            {reviewers.map((reviewer) => {
+                const key = reviewer.id;
+                const props = {
+                    name: reviewer.name || 'Unknown user',
+                    imageUrl: reviewer.imageUrl,
+                };
+                switch (reviewer.status) {
+                    case 'approved':
+                        return <ChangeRequestApprover key={key} {...props} />;
+                    case 'rejected':
+                        return <ChangeRequestRejector key={key} {...props} />;
+                    case 'pending':
+                        return <ChangeRequestPending key={key} {...props} />;
+                }
+            })}
         </Paper>
     );
 };

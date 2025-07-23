@@ -9,7 +9,6 @@ export type IFlagKey =
     | 'anonymiseEventLog'
     | 'encryptEmails'
     | 'enableLicense'
-    | 'enableLicenseChecker'
     | 'responseTimeWithAppNameKillSwitch'
     | 'maintenanceMode'
     | 'messageBanner'
@@ -17,7 +16,6 @@ export type IFlagKey =
     | 'personalAccessTokensKillSwitch'
     | 'migrationLock'
     | 'demo'
-    | 'googleAuthEnabled'
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
     | 'disableMetrics'
@@ -27,7 +25,6 @@ export type IFlagKey =
     | 'feedbackPosting'
     | 'extendedUsageMetrics'
     | 'feedbackComments'
-    | 'showInactiveUsers'
     | 'killScheduledChangeRequestCache'
     | 'estimateTrafficDataCost'
     | 'useMemoizedActiveTokens'
@@ -65,14 +62,14 @@ export type IFlagKey =
     | 'changeRequestApproverEmails'
     | 'paygTrialEvents'
     | 'eventGrouping'
-    | 'paygInstanceStatsEvents';
+    | 'paygInstanceStatsEvents'
+    | 'lifecycleGraphs';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
 const flags: IFlags = {
     anonymiseEventLog: false,
     enableLicense: false,
-    enableLicenseChecker: false,
     responseTimeWithAppNameKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_RESPONSE_TIME_WITH_APP_NAME_KILL_SWITCH,
         false,
@@ -103,10 +100,6 @@ const flags: IFlags = {
     ),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, true),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
-    googleAuthEnabled: parseEnvVarBoolean(
-        process.env.GOOGLE_AUTH_ENABLED,
-        false,
-    ),
     filterInvalidClientMetrics: parseEnvVarBoolean(
         process.env.FILTER_INVALID_CLIENT_METRICS,
         false,
@@ -156,10 +149,6 @@ const flags: IFlags = {
                 '',
         },
     },
-    showInactiveUsers: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SHOW_INACTIVE_USERS,
-        false,
-    ),
     useMemoizedActiveTokens: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MEMOIZED_ACTIVE_TOKENS,
         false,
@@ -300,6 +289,10 @@ const flags: IFlags = {
     ),
     paygInstanceStatsEvents: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PAYG_INSTANCE_STATS_EVENTS,
+        false,
+    ),
+    lifecycleGraphs: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_GRAPHS,
         false,
     ),
 };

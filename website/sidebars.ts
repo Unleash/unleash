@@ -265,11 +265,16 @@ const sidebars: SidebarsConfig = {
                             label: 'Scaling Unleash',
                             id: 'feature-flag-tutorials/use-cases/scaling-unleash',
                         },
-                       {
+                        {
+                            type: 'doc',
+                            label: 'Managing feature flags in code',
+                            id: 'feature-flag-tutorials/use-cases/manage-feature-flags-in-code',
+                        },
+                                               {
                             type: 'doc',
                             label: 'Organizing feature flags using projects and environments',
                             id: 'feature-flag-tutorials/use-cases/organize-feature-flags',
-                        },
+                       },
                     ],
                 },
                 {
@@ -319,6 +324,11 @@ const sidebars: SidebarsConfig = {
                                     type: 'doc',
                                     label: 'Examples',
                                     id: 'feature-flag-tutorials/react/examples',
+                                },
+                                {
+                                    type: 'doc',
+                                    label: 'Manage feature flags in code',
+                                    id: 'feature-flag-tutorials/use-cases/manage-feature-flags-in-code',
                                 },
                             ],
                         },

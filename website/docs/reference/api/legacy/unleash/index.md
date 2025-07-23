@@ -3,6 +3,10 @@ id: index
 title: Legacy API Documentation
 ---
 
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="noindex" />
+
 :::caution
 
 These APIs have been deprecared. Wse the [Unleash OpenAPI docs](/api-overview) reference instead.

@@ -13,8 +13,7 @@ import type {
 import { HtmlTooltip } from '../../../common/HtmlTooltip/HtmlTooltip.tsx';
 import ErrorIcon from '@mui/icons-material/Error';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { formatDateYMDHM } from 'utils/formatDate';
-import type { ReactNode } from 'react-markdown/lib/react-markdown';
+import { formatDateYMDHM } from 'utils/formatDate.ts';
 
 export type ISuggestChangeTimelineProps = {
     timestamps?: Record<ChangeRequestState, string>;
@@ -111,9 +110,10 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
             <StyledBox>
                 <StyledTimeline>
                     {data.map((title, index) => {
-                        const timestampComponent = timestamps?.[title] ? (
-                            <Timestamp timestamp={timestamps?.[title]} />
-                        ) : undefined;
+                        const timestampComponent =
+                            index <= activeIndex && timestamps?.[title] ? (
+                                <Timestamp timestamp={timestamps?.[title]} />
+                            ) : undefined;
 
                         if (schedule && title === 'Scheduled') {
                             return (

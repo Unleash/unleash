@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [22.15.1-alpine3.21]
+        version: [22.17-alpine3.22]
     steps:
       - name: Checkout tag v${{ inputs.version }}
         if: ${{ inputs.version != '' }}

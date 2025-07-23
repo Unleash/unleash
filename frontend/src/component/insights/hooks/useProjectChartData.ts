@@ -6,6 +6,7 @@ import type { GroupedDataByProject } from './useGroupedProjectTrends.js';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 
 type ProjectFlagTrends = InstanceInsightsSchema['projectFlagTrends'];
+type LifecycleTrends = InstanceInsightsSchema['lifecycleTrends'];
 
 export const calculateTechDebt = (item: {
     total: number;
@@ -22,7 +23,9 @@ export const calculateTechDebt = (item: {
 };
 
 export const useProjectChartData = (
-    projectFlagTrends: GroupedDataByProject<ProjectFlagTrends>,
+    projectFlagTrends:
+        | GroupedDataByProject<ProjectFlagTrends>
+        | GroupedDataByProject<LifecycleTrends>,
 ) => {
     const theme = useTheme();
     const getProjectColor = useProjectColor();

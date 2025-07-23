@@ -23,6 +23,8 @@ import {
     StyledWidgetContent,
     StyledWidgetStats,
 } from '../InsightsCharts.styles';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { NewProductionFlagsChart } from '../componentsChart/NewProductionFlagsChart/NewProductionFlagsChart.tsx';
 
 export const PerformanceInsights: FC = () => {
     const statePrefix = 'performance-';
@@ -54,6 +56,7 @@ export const PerformanceInsights: FC = () => {
         flagTrends,
         summary,
         groupedProjectsData,
+        groupedLifecycleData,
         userTrends,
         groupedMetricsData,
         allMetricsDatapoints,
@@ -73,6 +76,8 @@ export const PerformanceInsights: FC = () => {
             : flagsPerUserCalculation.toFixed(2);
     }
 
+    const isLifecycleGraphsEnabled = useUiFlag('lifecycleGraphs');
+
     return (
         <InsightsSection
             title='Performance insights'
@@ -84,6 +89,21 @@ export const PerformanceInsights: FC = () => {
                 />
             }
         >
+            {isLifecycleGraphsEnabled && isEnterprise() ? (
+                <StyledWidget>
+                    <StyledWidgetStats width={275}>
+                        <WidgetTitle title='New flags in production' />
+                    </StyledWidgetStats>
+                    <StyledChartContainer>
+                        <NewProductionFlagsChart
+                            lifecycleTrends={groupedLifecycleData}
+                            isAggregate={showAllProjects}
+                            isLoading={loading}
+                        />
+                    </StyledChartContainer>
+                </StyledWidget>
+            ) : null}
+
             {showAllProjects ? (
                 <StyledWidget>
                     <StyledWidgetStats width={275}>

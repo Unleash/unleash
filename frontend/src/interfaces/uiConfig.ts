@@ -93,6 +93,7 @@ export type UiFlags = {
     changeRequestApproverEmails?: boolean;
     eventGrouping?: boolean;
     reportUnknownFlags?: boolean;
+    lifecycleGraphs?: boolean;
 };
 
 export interface IVersionInfo {

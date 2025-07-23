@@ -10,6 +10,14 @@ export type SearchEventsParams = {
      */
     query?: string;
     /**
+     * Filter by event ID using supported operators: IS, IS_ANY_OF.
+     */
+    id?: string;
+    /**
+     * Filter by group ID using supported operators: IS, IS_ANY_OF.
+     */
+    groupId?: string;
+    /**
      * Filter by feature name using supported operators: IS, IS_ANY_OF
      */
     feature?: string;

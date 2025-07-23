@@ -36,6 +36,10 @@ export interface EventSchema {
      * @nullable
      */
     featureName?: string | null;
+    /** The unique identifier for the transaction group this event belongs to, if applicable. */
+    groupId?: string;
+    /** The type of transaction group this event belongs to, if applicable. */
+    groupType?: string;
     /**
      * The ID of the event. An increasing natural number.
      * @minimum 1
@@ -46,10 +50,6 @@ export interface EventSchema {
      * @nullable
      */
     ip?: string | null;
-    /**
-     * The event group ID.
-     */
-    groupId?: string;
     /**
      * The concise, human-readable name of the event.
      * @nullable

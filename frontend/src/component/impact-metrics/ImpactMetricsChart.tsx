@@ -202,6 +202,19 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                     </Typography>
                 </Box>
             ) : null}
+            {isPreview && debug?.isTruncated ? (
+                <Box
+                    sx={(theme) => ({
+                        padding: theme.spacing(0, 2),
+                    })}
+                >
+                    <Alert severity='warning'>
+                        Showing only {timeSeriesData.length} series due to
+                        performance. Please change filters for more accurate
+                        results.
+                    </Alert>
+                </Box>
+            ) : null}
         </>
     );
 };

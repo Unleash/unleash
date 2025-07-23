@@ -4,6 +4,7 @@
  * See `gen:api` script in package.json
  */
 import type { BulkRegistrationSchema } from './bulkRegistrationSchema.js';
+import type { ImpactMetricsSchema } from './impactMetricsSchema.js';
 import type { ClientMetricsEnvSchema } from './clientMetricsEnvSchema.js';
 
 /**
@@ -12,6 +13,8 @@ import type { ClientMetricsEnvSchema } from './clientMetricsEnvSchema.js';
 export interface BulkMetricsSchema {
     /** A list of applications registered by an Unleash SDK */
     applications: BulkRegistrationSchema[];
+    /** a list of custom impact metrics registered by downstream providers. (Typically Unleash Edge) */
+    impactMetrics?: ImpactMetricsSchema[];
     /** a list of client usage metrics registered by downstream providers. (Typically Unleash Edge) */
     metrics: ClientMetricsEnvSchema[];
 }

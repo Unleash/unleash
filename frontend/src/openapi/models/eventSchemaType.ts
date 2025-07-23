@@ -174,4 +174,6 @@ export const EventSchemaType = {
     'scim-users-deleted': 'scim-users-deleted',
     'scim-groups-deleted': 'scim-groups-deleted',
     'cdn-token-created': 'cdn-token-created',
+    'change-request-requested-approvers-updated':
+        'change-request-requested-approvers-updated',
 } as const;

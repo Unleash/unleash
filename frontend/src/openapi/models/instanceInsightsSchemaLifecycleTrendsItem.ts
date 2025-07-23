@@ -10,7 +10,7 @@ export type InstanceInsightsSchemaLifecycleTrendsItem = {
     /** Number of flags that entered production during this week */
     newProductionFlags: number;
     /** Project id that the flags belong to */
-    project?: string;
+    project: string;
     /** Year and week in a given year for which the stats were calculated */
     week: string;
 };

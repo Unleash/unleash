@@ -9,11 +9,6 @@ on:
       - website/**
       - frontend/**
       - coverage/**
-  pull_request:
-    paths-ignore:
-      - website/**
-      - frontend/**
-      - coverage/**
 
 jobs:
   coverage:

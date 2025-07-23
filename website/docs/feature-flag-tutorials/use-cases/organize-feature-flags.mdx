@@ -296,21 +296,26 @@ Start with a structure that mirrors how your teams are organized. Avoid the extr
 A good rule of thumb is to create projects for distinct, long-lived teams, products, or applications. You can always refactor later.
 
 **Can a single feature flag exist in multiple projects?**
+
 No. A feature flag belongs to exactly one project. This is fundamental to Unleash's model, as the project defines the flag's ownership and access control.
 
 **We are a small team just starting out. What's a good initial setup?**
+
 Start simple. Use a single project named after your main application or team. Within that project, use the two default environments: `development` and `production`. This provides the essential separation and is easy to manage.
 You can add more environments or projects as you grow.
 
 **How do we handle flags that are used in multiple services or applications?**
+
 This is a strength of a centralized system. If multiple services need to check the same flag, they can all use the same Unleash project and environment API key. However, it doesn't always make sense for different services to share flags.
 - When to use a single flag: If multiple services are implementing parts of the same logical feature that must be released together, they should share a single flag from one project. This ensures consistency.
 - When to use separate flags: If the services are owned by different teams and have different release cadences, or if the functionality is related but not tightly coupled, it's better to create separate flags in their respective projects. This prevents one team from impacting another's release.
 
 **What if a team needs a new environment or project later on?**
+
 Unleash is flexible. You can add new environments at any time and decide which projects they apply to. You can also create new projects and even move flags between them if their environment setups are compatible. The system is designed to evolve with your organization, so don't be afraid to refactor your setup as your needs change.
 
 **What's the best way to handle a feature that spans multiple projects?**
+
 First, evaluate your project boundaries. If the features are tightly coupled and must be released together, they might belong in the same project. If they are separate but need coordination, the best practice is to create separate flags in each project and coordinate their rollout manually or through external automation. This respects project boundaries and avoids creating hidden, complex dependencies.
 
 **Can we manage our Unleash setup using Infrastructure as Code tools like Terraform?**

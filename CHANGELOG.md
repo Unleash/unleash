@@ -2,6 +2,193 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.0.5] - 2025-07-24
+
+### Bug Fixes
+
+- Remove console log from tests ([#10292](https://github.com/Unleash/unleash/issues/10292))
+
+- Tear down also event handlers in addon service ([#10295](https://github.com/Unleash/unleash/issues/10295))
+
+- Frontend API CORS ([#10301](https://github.com/Unleash/unleash/issues/10301))
+
+- Health-technical debt trends in emails ([#10308](https://github.com/Unleash/unleash/issues/10308))
+
+- Health to technical debt flag ([#10320](https://github.com/Unleash/unleash/issues/10320))
+
+- Coverage ([#10321](https://github.com/Unleash/unleash/issues/10321))
+
+- Audit scim user deleted events ([#10322](https://github.com/Unleash/unleash/issues/10322))
+
+- Link checker for unido.org ([#10323](https://github.com/Unleash/unleash/issues/10323))
+
+- Make user creation transactional ([#10327](https://github.com/Unleash/unleash/issues/10327))
+
+- Token parsing ([#10341](https://github.com/Unleash/unleash/issues/10341))
+
+- Don't overwrite `seenClients` in instance-service; merge if same client appears again ([#10357](https://github.com/Unleash/unleash/issues/10357))
+
+- Prevent overwriting existing values in instance store ([#10360](https://github.com/Unleash/unleash/issues/10360))
+
+- Update text wrapping style in ImpactMetricsChart ([#10363](https://github.com/Unleash/unleash/issues/10363))
+
+- Update legend display logic ([#10365](https://github.com/Unleash/unleash/issues/10365))
+
+- Improve impact metrics preview chart ([#10368](https://github.com/Unleash/unleash/issues/10368))
+
+- Flaky delete stale session ([#10387](https://github.com/Unleash/unleash/issues/10387))
+
+- Banner form state ([#10397](https://github.com/Unleash/unleash/issues/10397))
+
+- Add strategy release templates visibility for non Enterprise ([#10401](https://github.com/Unleash/unleash/issues/10401))
+
+
+### Chore
+
+- Update old/new name display + remove strategy type names ([#10305](https://github.com/Unleash/unleash/issues/10305))
+
+
+### Documentation
+
+- Update docs navigation ([#9942](https://github.com/Unleash/unleash/issues/9942))
+
+- Prioritize search results ([#10369](https://github.com/Unleash/unleash/issues/10369))
+
+- Guide for managing feature flags in code ([#10344](https://github.com/Unleash/unleash/issues/10344))
+
+
+### Feat
+
+- Impact metrics grid layout ([#10253](https://github.com/Unleash/unleash/issues/10253))
+
+
+### Features
+
+- Group id clickable in event search ([#10277](https://github.com/Unleash/unleash/issues/10277))
+
+- Now also sorting by id if in same transaction/date ([#10290](https://github.com/Unleash/unleash/issues/10290))
+
+- Add id as removable param for event list ([#10289](https://github.com/Unleash/unleash/issues/10289))
+
+- Add query timer to event store ([#10306](https://github.com/Unleash/unleash/issues/10306))
+
+- Decouple error impact metrics from logger ([#10311](https://github.com/Unleash/unleash/issues/10311))
+
+- Move apply button to a separate section ([#10324](https://github.com/Unleash/unleash/issues/10324))
+
+- Prefix impact metrics with unleash and type ([#10331](https://github.com/Unleash/unleash/issues/10331))
+
+- Impact metrics total requests ([#10334](https://github.com/Unleash/unleash/issues/10334))
+
+- User friendly impact metric name ([#10338](https://github.com/Unleash/unleash/issues/10338))
+
+- Prefix unleash impact metrics labels ([#10350](https://github.com/Unleash/unleash/issues/10350))
+
+- Using impact metrics with flags ([#10355](https://github.com/Unleash/unleash/issues/10355))
+
+- Use metric display name in impact charts ([#10359](https://github.com/Unleash/unleash/issues/10359))
+
+- Show rps only for counters ([#10361](https://github.com/Unleash/unleash/issues/10361))
+
+- Default origin for impact metrics ([#10362](https://github.com/Unleash/unleash/issues/10362))
+
+- Sanitize impact metrics ([#10364](https://github.com/Unleash/unleash/issues/10364))
+
+- Aggregation mode selection ([#10367](https://github.com/Unleash/unleash/issues/10367))
+
+- Add impact metrics wildcard label ([#10373](https://github.com/Unleash/unleash/issues/10373))
+
+- New production flags chart ([#10400](https://github.com/Unleash/unleash/issues/10400))
+
+- New flags in production explanation ([#10407](https://github.com/Unleash/unleash/issues/10407))
+
+
+### Miscellaneous Tasks
+
+- AI flag cleanup action ([#10274](https://github.com/Unleash/unleash/issues/10274))
+
+- Limit requested approver count to 10 ([#10279](https://github.com/Unleash/unleash/issues/10279))
+
+- AI flag cleanup action trigger workflows ([#10288](https://github.com/Unleash/unleash/issues/10288))
+
+- RegisterFrontendClient flag cleanup ([#10297](https://github.com/Unleash/unleash/issues/10297))
+
+- Prepend changes with "change:"  ([#10276](https://github.com/Unleash/unleash/issues/10276))
+
+- Remove impact metrics scrape endpoint guard ([#10300](https://github.com/Unleash/unleash/issues/10300))
+
+- Renames "Change" tab to "View change" to align with "View diff". ([#10314](https://github.com/Unleash/unleash/issues/10314))
+
+- Use fixed-width sidebar instead of dynamic modal. ([#10315](https://github.com/Unleash/unleash/issues/10315))
+
+- Unknown flags with environment ([#10325](https://github.com/Unleash/unleash/issues/10325))
+
+- Expose impact register ([#10329](https://github.com/Unleash/unleash/issues/10329))
+
+- Export impact register ([#10330](https://github.com/Unleash/unleash/issues/10330))
+
+- Unknown flags UI ([#10332](https://github.com/Unleash/unleash/issues/10332))
+
+- Amend user-created-missing events ([#10333](https://github.com/Unleash/unleash/issues/10333))
+
+- Add PAYG trial events flag to Unleash ([#10336](https://github.com/Unleash/unleash/issues/10336))
+
+- Remove unused method ([#10335](https://github.com/Unleash/unleash/issues/10335))
+
+- Node sdk with impact metrics env changes ([#10340](https://github.com/Unleash/unleash/issues/10340))
+
+- Reduced log level of metrics log statements ([#10343](https://github.com/Unleash/unleash/issues/10343))
+
+- HealthToTechDebt flag cleanup ([#10346](https://github.com/Unleash/unleash/issues/10346))
+
+- Bump node sdk with impact metrics flags ([#10349](https://github.com/Unleash/unleash/issues/10349))
+
+- Add application_created event type ([#10351](https://github.com/Unleash/unleash/issues/10351))
+
+- Impact metrics resolver signature update ([#10352](https://github.com/Unleash/unleash/issues/10352))
+
+- Allow bulk metrics with empty flag names ([#10353](https://github.com/Unleash/unleash/issues/10353))
+
+- Export IClientInstance from `server-impl`. ([#10354](https://github.com/Unleash/unleash/issues/10354))
+
+- Prevent unknown flag deadlocks by sorting and batching inserts ([#10348](https://github.com/Unleash/unleash/issues/10348))
+
+- Add flag paygInstanceStatsEvents ([#10356](https://github.com/Unleash/unleash/issues/10356))
+
+- Cancel CI runs that become obsolete ([#10339](https://github.com/Unleash/unleash/issues/10339))
+
+- Sift metrics on both endpoints ([#10375](https://github.com/Unleash/unleash/issues/10375))
+
+- Emit CLIENT_METRICS event after sifting ([#10376](https://github.com/Unleash/unleash/issues/10376))
+
+- Don't fail if array is not ordered properly ([#10391](https://github.com/Unleash/unleash/issues/10391))
+
+- Lifecycle graphs flag ([#10390](https://github.com/Unleash/unleash/issues/10390))
+
+- Remove unkonwn flags ([#10389](https://github.com/Unleash/unleash/issues/10389))
+
+- AI flag cleanup reports errors back to issue ([#10381](https://github.com/Unleash/unleash/issues/10381))
+
+- AI flag cleanup better support advanced flag names ([#10396](https://github.com/Unleash/unleash/issues/10396))
+
+- Orval generation ([#10398](https://github.com/Unleash/unleash/issues/10398))
+
+- Upgrade to newer node version ([#10404](https://github.com/Unleash/unleash/issues/10404))
+
+- Remove coveralls dependency ([#10405](https://github.com/Unleash/unleash/issues/10405))
+
+- Orval update creation trends ([#10409](https://github.com/Unleash/unleash/issues/10409))
+
+- Upgrade on-headers transitive dep ([#10410](https://github.com/Unleash/unleash/issues/10410))
+
+
+### Refactor
+
+- Color assignment in useChartData ([#10372](https://github.com/Unleash/unleash/issues/10372))
+
+- Impact metrics modal - label filtering and UX ([#10377](https://github.com/Unleash/unleash/issues/10377))
+
+
 ## [7.0.4] - 2025-07-02
 
 ### Bug Fixes

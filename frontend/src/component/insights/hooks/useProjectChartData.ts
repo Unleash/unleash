@@ -7,6 +7,7 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 
 type ProjectFlagTrends = InstanceInsightsSchema['projectFlagTrends'];
 type LifecycleTrends = InstanceInsightsSchema['lifecycleTrends'];
+type CreationArchiveTrends = InstanceInsightsSchema['creationArchiveTrends'];
 
 export const calculateTechDebt = (item: {
     total: number;
@@ -25,7 +26,8 @@ export const calculateTechDebt = (item: {
 export const useProjectChartData = (
     projectFlagTrends:
         | GroupedDataByProject<ProjectFlagTrends>
-        | GroupedDataByProject<LifecycleTrends>,
+        | GroupedDataByProject<LifecycleTrends>
+        | GroupedDataByProject<CreationArchiveTrends>,
 ) => {
     const theme = useTheme();
     const getProjectColor = useProjectColor();

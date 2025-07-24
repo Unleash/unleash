@@ -68,7 +68,7 @@ export const NewProductionFlagsChart: FC<IProjectHealthChartProps> = ({
         return {
             datasets: [
                 {
-                    label: 'New production flags',
+                    label: 'Number of new flags',
                     data: weeks,
                     borderColor: theme.palette.primary.light,
                     backgroundColor: fillGradientPrimary,
@@ -102,11 +102,6 @@ export const NewProductionFlagsChart: FC<IProjectHealthChartProps> = ({
                           parsing: {
                               yAxisKey: 'newProductionFlags',
                               xAxisKey: 'date',
-                          },
-                          plugins: {
-                              legend: {
-                                  display: !isAggregate,
-                              },
                           },
                       }
             }

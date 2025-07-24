@@ -44,6 +44,7 @@ const AUTH_TYPE_LABEL: { [key: string]: string } = {
     oidc: 'OIDC',
     saml: 'SAML',
     google: 'Google',
+    github: 'GitHub',
 };
 
 export const LoginHistoryTable = () => {

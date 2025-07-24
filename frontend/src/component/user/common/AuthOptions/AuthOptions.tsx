@@ -1,12 +1,12 @@
 import { Button } from '@mui/material';
 import classnames from 'classnames';
 import { useThemeStyles } from 'themes/themeStyles';
-import { ReactComponent as GoogleSvg } from 'assets/icons/google.svg';
 import LockRounded from '@mui/icons-material/LockRounded';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IAuthOptions } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 import { SSO_LOGIN_BUTTON } from 'utils/testIds';
 import useQueryParams from 'hooks/useQueryParams';
+import GoogleIcon from '@mui/icons-material/Google';
+import GitHubIcon from '@mui/icons-material/GitHub';
 
 interface IAuthOptionProps {
     options?: IAuthOptions[];
@@ -18,6 +18,37 @@ function addOrOverwriteRedirect(path: string, redirectValue: string): string {
     params.set('redirect', redirectValue);
     return `${basePath}?${params.toString()}`;
 }
+
+const renderStartIcon = ({ type }: IAuthOptions) => {
+    if (type === 'google') {
+        return (
+            <GoogleIcon
+                style={{
+                    height: '20px',
+                    width: '20px',
+                }}
+            />
+        );
+    } else if (type === 'github') {
+        return (
+            <GitHubIcon
+                style={{
+                    height: '20px',
+                    width: '20px',
+                }}
+            />
+        );
+    }
+
+    return (
+        <LockRounded
+            style={{
+                height: '20px',
+                width: '20px',
+            }}
+        />
+    );
+};
 
 const AuthOptions = ({ options }: IAuthOptionProps) => {
     const { classes: themeStyles } = useThemeStyles();
@@ -48,27 +79,7 @@ const AuthOptions = ({ options }: IAuthOptionProps) => {
                         style={{
                             height: '40px',
                         }}
-                        startIcon={
-                            <ConditionallyRender
-                                condition={o.type === 'google'}
-                                show={
-                                    <GoogleSvg
-                                        style={{
-                                            height: '35px',
-                                            width: '35px',
-                                        }}
-                                    />
-                                }
-                                elseShow={
-                                    <LockRounded
-                                        style={{
-                                            height: '25px',
-                                            width: '25px',
-                                        }}
-                                    />
-                                }
-                            />
-                        }
+                        startIcon={renderStartIcon(o)}
                     >
                         {o.message}
                     </Button>

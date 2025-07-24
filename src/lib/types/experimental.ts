@@ -64,7 +64,8 @@ export type IFlagKey =
     | 'eventGrouping'
     | 'paygInstanceStatsEvents'
     | 'timestampsInChangeRequestTimeline'
-    | 'lifecycleGraphs';
+    | 'lifecycleGraphs'
+    | 'githubAuth';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -298,6 +299,10 @@ const flags: IFlags = {
     ),
     lifecycleGraphs: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_GRAPHS,
+        false,
+    ),
+    githubAuth: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_GITHUB_AUTH,
         false,
     ),
 };

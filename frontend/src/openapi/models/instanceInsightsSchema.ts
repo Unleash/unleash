@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { InstanceInsightsSchemaCreationArchiveTrendsItem } from './instanceInsightsSchemaCreationArchiveTrendsItem.js';
 import type { InstanceInsightsSchemaEnvironmentTypeTrendsItem } from './instanceInsightsSchemaEnvironmentTypeTrendsItem.js';
 import type { InstanceInsightsSchemaFlagTrendsItem } from './instanceInsightsSchemaFlagTrendsItem.js';
 import type { InstanceInsightsSchemaLifecycleTrendsItem } from './instanceInsightsSchemaLifecycleTrendsItem.js';
@@ -14,6 +15,8 @@ import type { InstanceInsightsSchemaUserTrendsItem } from './instanceInsightsSch
  * A summary of this Unleash instance's usage statistics, including user and flag counts, and trends over time.
  */
 export interface InstanceInsightsSchema {
+    /** Weekly count of created vs archived flags by project and flag type */
+    creationArchiveTrends: InstanceInsightsSchemaCreationArchiveTrendsItem[];
     /** How updates per environment type changed over time */
     environmentTypeTrends: InstanceInsightsSchemaEnvironmentTypeTrendsItem[];
     /** How number of flags changed over time */

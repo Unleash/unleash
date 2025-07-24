@@ -27,6 +27,7 @@ import {
 import { useUiFlag } from 'hooks/useUiFlag';
 import { NewProductionFlagsChart } from '../componentsChart/NewProductionFlagsChart/NewProductionFlagsChart.tsx';
 import Lightbulb from '@mui/icons-material/LightbulbOutlined';
+import { CreationArchiveChart } from '../componentsChart/CreationArchiveChart/CreationArchiveChart.tsx';
 
 export const PerformanceInsights: FC = () => {
     const statePrefix = 'performance-';
@@ -63,6 +64,7 @@ export const PerformanceInsights: FC = () => {
         groupedMetricsData,
         allMetricsDatapoints,
         environmentTypeTrends,
+        groupedCreationArchiveData,
     } = useInsightsData(insights, projects);
 
     const { isEnterprise } = useUiConfig();
@@ -103,6 +105,21 @@ export const PerformanceInsights: FC = () => {
                     <StyledChartContainer>
                         <NewProductionFlagsChart
                             lifecycleTrends={groupedLifecycleData}
+                            isAggregate={showAllProjects}
+                            isLoading={loading}
+                        />
+                    </StyledChartContainer>
+                </StyledWidget>
+            ) : null}
+
+            {isLifecycleGraphsEnabled && isEnterprise() ? (
+                <StyledWidget>
+                    <StyledWidgetStats width={275}>
+                        <WidgetTitle title='Flags created vs archived' />
+                    </StyledWidgetStats>
+                    <StyledChartContainer>
+                        <CreationArchiveChart
+                            creationArchiveTrends={groupedCreationArchiveData}
                             isAggregate={showAllProjects}
                             isLoading={loading}
                         />

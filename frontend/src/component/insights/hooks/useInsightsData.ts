@@ -22,6 +22,11 @@ export const useInsightsData = (
         projects,
     );
 
+    const creationArchiveData = useFilteredTrends(
+        instanceInsights.creationArchiveTrends,
+        projects,
+    );
+
     const groupedProjectsData = useGroupedProjectTrends(projectsData);
 
     const metricsData = useFilteredTrends(
@@ -33,6 +38,9 @@ export const useInsightsData = (
     const summary = useFilteredFlagsSummary(projectsData);
 
     const groupedLifecycleData = useGroupedProjectTrends(lifecycleData);
+
+    const groupedCreationArchiveData =
+        useGroupedProjectTrends(creationArchiveData);
 
     return useMemo(
         () => ({
@@ -46,6 +54,7 @@ export const useInsightsData = (
             allMetricsDatapoints,
             lifecycleData,
             groupedLifecycleData,
+            groupedCreationArchiveData,
         }),
         [
             instanceInsights,
@@ -57,6 +66,7 @@ export const useInsightsData = (
             summary,
             lifecycleData,
             groupedLifecycleData,
+            groupedCreationArchiveData,
         ],
     );
 };

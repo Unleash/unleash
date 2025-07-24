@@ -19,6 +19,7 @@ type BaseChangeRequest = {
     rejections: IChangeRequestApproval[];
     comments: IChangeRequestComment[];
     conflict?: string;
+    stateTransitionTimestamps?: Partial<Record<ChangeRequestState, string>>; // todo(timestampsInChangeRequestTimeline): make sure this matches the model and what we return from the API
 };
 
 export type UnscheduledChangeRequest = BaseChangeRequest & {

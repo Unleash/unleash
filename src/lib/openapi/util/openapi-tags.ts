@@ -48,7 +48,7 @@ const OPENAPI_TAGS = [
         name: 'Dependencies',
         description: 'Manage feature dependencies.',
     },
-    { name: 'Edge', description: 'Endpoints related to Unleash on the Edge.' },
+    { name: 'Unleash Edge', description: 'Endpoints related to Unleash Edge.' },
     {
         name: 'Environments',
         description:
@@ -61,7 +61,7 @@ const OPENAPI_TAGS = [
             'Manage [feature flag types](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types).',
     },
     {
-        name: 'Features',
+        name: 'Feature flags',
         description:
             'Create, update, and delete [feature flags](https://docs.getunleash.io/reference/feature-toggles).',
     },

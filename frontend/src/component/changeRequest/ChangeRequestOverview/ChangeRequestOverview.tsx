@@ -351,10 +351,7 @@ export const ChangeRequestOverview: FC = () => {
                 <StyledAsideBox>
                     <ChangeRequestTimeline
                         {...timelineProps}
-                        timestamps={
-                            //@ts-expect-error This hasn't been put on the model yet
-                            changeRequest.stateTransitionTimestamps || {}
-                        }
+                        timestamps={changeRequest.stateTransitionTimestamps}
                     />
                     <ConditionallyRender
                         condition={approversEnabled}

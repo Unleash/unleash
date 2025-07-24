@@ -9,6 +9,7 @@ import TimelineContent from '@mui/lab/TimelineContent';
 import type {
     ChangeRequestSchedule,
     ChangeRequestState,
+    ChangeRequestType,
 } from '../../changeRequest.types';
 import { HtmlTooltip } from '../../../common/HtmlTooltip/HtmlTooltip.tsx';
 import ErrorIcon from '@mui/icons-material/Error';
@@ -16,7 +17,7 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHM } from 'utils/formatDate.ts';
 
 export type ISuggestChangeTimelineProps = {
-    timestamps?: Record<ChangeRequestState, string>;
+    timestamps?: ChangeRequestType['stateTransitionTimestamps']; // todo: update with flag `timestampsInChangeRequestTimeline`
 } & (
     | {
           state: Exclude<ChangeRequestState, 'Scheduled'>;
@@ -27,6 +28,11 @@ export type ISuggestChangeTimelineProps = {
           schedule: ChangeRequestSchedule;
       }
 );
+
+const StyledTimelineContent = styled(TimelineContent)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+}));
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     marginTop: theme.spacing(2),
@@ -103,7 +109,6 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
             data = steps;
     }
     const activeIndex = data.findIndex((item) => item === state);
-    const { locationSettings } = useLocationSettings();
 
     return (
         <StyledPaper elevation={0}>
@@ -112,7 +117,7 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
                     {data.map((title, index) => {
                         const timestampComponent =
                             index <= activeIndex && timestamps?.[title] ? (
-                                <Timestamp timestamp={timestamps?.[title]} />
+                                <Time dateTime={timestamps?.[title]} />
                             ) : undefined;
 
                         if (schedule && title === 'Scheduled') {
@@ -160,21 +165,20 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
     );
 };
 
-const Timestamp = styled(({ timestamp, ...props }: { timestamp: string }) => {
+const Time = styled(({ dateTime, ...props }: { dateTime: string }) => {
     const { locationSettings } = useLocationSettings();
     const displayTime = formatDateYMDHM(
-        new Date(timestamp || ''),
+        new Date(dateTime || ''),
         locationSettings.locale,
     );
     return (
-        <time {...props} dateTime={timestamp}>
+        <time {...props} dateTime={dateTime}>
             {displayTime}
         </time>
     );
 })(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontSize: theme.typography.body2.fontSize,
-    display: 'block',
 }));
 
 const TimelineItem = ({
@@ -196,23 +200,26 @@ const TimelineItem = ({
                 <TimelineDot color={color} {...timelineDotProps} />
                 {shouldConnectToNextItem && <TimelineConnector />}
             </TimelineSeparator>
-            <TimelineContent>
+            <StyledTimelineContent>
                 {title}
                 {timestamp}
-            </TimelineContent>
+            </StyledTimelineContent>
         </MuiTimelineItem>
     );
 };
 
-export const getScheduleProps = (
-    schedule: ChangeRequestSchedule,
-    formattedTime: string = '2025/09/22 12:27',
-) => {
+export const getScheduleProps = (schedule: ChangeRequestSchedule) => {
+    const Subtitle = ({ prefix }: { prefix: string }) => (
+        <>
+            {prefix} <Time dateTime={schedule.scheduledAt} />
+        </>
+    );
+
     switch (schedule.status) {
         case 'suspended':
             return {
                 title: 'Schedule suspended',
-                subtitle: `was ${formattedTime}`,
+                subtitle: <Subtitle prefix='was' />,
                 color: 'grey' as const,
                 reason: (
                     <HtmlTooltip title={schedule.reason} arrow>
@@ -223,7 +230,7 @@ export const getScheduleProps = (
         case 'failed':
             return {
                 title: 'Schedule failed',
-                subtitle: `at ${formattedTime}`,
+                subtitle: <Subtitle prefix='at' />,
                 color: 'error' as const,
                 reason: (
                     <HtmlTooltip
@@ -239,7 +246,7 @@ export const getScheduleProps = (
         default:
             return {
                 title: 'Scheduled',
-                subtitle: `for ${formattedTime}`,
+                subtitle: <Subtitle prefix='for' />,
                 color: 'warning' as const,
                 reason: null,
             };
@@ -261,17 +268,16 @@ const TimelineScheduleItem = ({
                 <TimelineDot color={color} />
                 <TimelineConnector />
             </TimelineSeparator>
-            <TimelineContent>
+            <StyledTimelineContent>
                 {title}
                 {timestamp}
                 <StyledSubtitle>
-                    <Typography
-                        color={'text.secondary'}
-                        sx={{ mr: 1 }}
-                    >{`(${subtitle})`}</Typography>
+                    <Typography color={'text.secondary'} sx={{ mr: 1 }}>
+                        ({subtitle})
+                    </Typography>
                     {reason}
                 </StyledSubtitle>
-            </TimelineContent>
+            </StyledTimelineContent>
         </MuiTimelineItem>
     );
 };

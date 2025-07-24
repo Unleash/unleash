@@ -111,60 +111,63 @@ test('returns success for stages other than Rejected in Rejected state', () => {
 
 describe('changeRequestScheduleProps', () => {
     test('returns correct props for a pending schedule', () => {
+        const date = new Date();
         const schedule = {
-            scheduledAt: new Date().toISOString(),
+            scheduledAt: date.toISOString(),
             status: 'pending' as const,
         };
 
-        const time = 'some time string';
-
-        const { title, subtitle, color, reason } = getScheduleProps(
-            schedule,
-            time,
-        );
+        const { title, subtitle, color, reason } = getScheduleProps(schedule);
         expect(title).toBe('Scheduled');
-        expect(subtitle).toBe(`for ${time}`);
         expect(color).toBe('warning');
         expect(reason).toBeNull();
+
+        render(subtitle);
+        screen.getByText('for');
+        const timeElement = screen.getByRole('time');
+        const datetime = timeElement.getAttribute('datetime');
+        expect(new Date(datetime || 1)).toEqual(date);
     });
 
     test('returns correct props for a failed schedule', () => {
+        const date = new Date();
         const schedule = {
-            scheduledAt: new Date().toISOString(),
+            scheduledAt: date.toISOString(),
             status: 'failed' as const,
             reason: 'reason',
             failureReason: 'failure reason',
         };
 
-        const time = 'some time string';
-
-        const { title, subtitle, color, reason } = getScheduleProps(
-            schedule,
-            time,
-        );
+        const { title, subtitle, color, reason } = getScheduleProps(schedule);
         expect(title).toBe('Schedule failed');
-        expect(subtitle).toBe(`at ${time}`);
         expect(color).toBe('error');
         expect(reason).toBeTruthy();
+
+        render(subtitle);
+        screen.getByText('at');
+        const timeElement = screen.getByRole('time');
+        const datetime = timeElement.getAttribute('datetime');
+        expect(new Date(datetime || 1)).toEqual(date);
     });
 
     test('returns correct props for a suspended schedule', () => {
+        const date = new Date();
         const schedule = {
-            scheduledAt: new Date().toISOString(),
+            scheduledAt: date.toISOString(),
             status: 'suspended' as const,
             reason: 'reason',
         };
 
-        const time = 'some time string';
-
-        const { title, subtitle, color, reason } = getScheduleProps(
-            schedule,
-            time,
-        );
+        const { title, subtitle, color, reason } = getScheduleProps(schedule);
         expect(title).toBe('Schedule suspended');
-        expect(subtitle).toBe(`was ${time}`);
         expect(color).toBe('grey');
         expect(reason).toBeTruthy();
+
+        render(subtitle);
+        screen.getByText('was');
+        const timeElement = screen.getByRole('time');
+        const datetime = timeElement.getAttribute('datetime');
+        expect(new Date(datetime || 1)).toEqual(date);
     });
 });
 

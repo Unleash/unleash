@@ -894,6 +894,8 @@ export * from './instanceAdminStatsSchemaClientAppsItemRange.js';
 export * from './instanceAdminStatsSchemaPreviousDayMetricsBucketsCount.js';
 export * from './instanceAdminStatsSchemaProductionChanges.js';
 export * from './instanceInsightsSchema.js';
+export * from './instanceInsightsSchemaCreationArchiveTrendsItem.js';
+export * from './instanceInsightsSchemaCreationArchiveTrendsItemCreatedFlags.js';
 export * from './instanceInsightsSchemaEnvironmentTypeTrendsItem.js';
 export * from './instanceInsightsSchemaFlagTrendsItem.js';
 export * from './instanceInsightsSchemaLifecycleTrendsItem.js';

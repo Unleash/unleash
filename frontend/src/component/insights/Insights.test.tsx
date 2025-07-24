@@ -16,6 +16,7 @@ const setupApi = () => {
         flagTrends: [],
         environmentTypeTrends: [],
         lifecycleTrends: [],
+        creationArchiveTrends: [],
     });
 
     testServerRoute(server, '/api/admin/projects', {

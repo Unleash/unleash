@@ -2470,18 +2470,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"compression@npm:^1.7.4":
-  version: 1.8.0
-  resolution: "compression@npm:1.8.0"
+"compression@npm:^1.8.1":
+  version: 1.8.1
+  resolution: "compression@npm:1.8.1"
   dependencies:
     bytes: "npm:3.1.2"
     compressible: "npm:~2.0.18"
     debug: "npm:2.6.9"
     negotiator: "npm:~0.6.4"
-    on-headers: "npm:~1.0.2"
+    on-headers: "npm:~1.1.0"
     safe-buffer: "npm:5.2.1"
     vary: "npm:~1.1.2"
-  checksum: 10c0/804d3c8430939f4fd88e5128333f311b4035f6425a7f2959d74cfb5c98ef3a3e3e18143208f3f9d0fcae4cd3bcf3d2fbe525e0fcb955e6e146e070936f025a24
+  checksum: 10c0/85114b0b91c16594dc8c671cd9b05ef5e465066a60e5a4ed8b4551661303559a896ed17bb72c4234c04064e078f6ca86a34b8690349499a43f6fc4b844475da4
   languageName: node
   linkType: hard
 
@@ -2545,15 +2545,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cookie-session@npm:^2.0.0-rc.1":
-  version: 2.1.0
-  resolution: "cookie-session@npm:2.1.0"
+"cookie-session@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "cookie-session@npm:2.1.1"
   dependencies:
     cookies: "npm:0.9.1"
     debug: "npm:3.2.7"
-    on-headers: "npm:~1.0.2"
+    on-headers: "npm:~1.1.0"
     safe-buffer: "npm:5.2.1"
-  checksum: 10c0/334693de61ee3cc925bfda1d02100f5564271adbc85fcce86eee00fb8b7e9b84bf10853882ab31038b7a2efccba68c7e1f03085e06190251b566fe0da0ab0c56
+  checksum: 10c0/161b7f51e540d5f5c7811a861b2cba61ba6d62d6fee7770dfc084754d910c8ed85fb1568a10a718b8f94865e1674ce35567e399afda5a22768f346e345149517
   languageName: node
   linkType: hard
 
@@ -3370,19 +3370,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express-session@npm:^1.17.3":
-  version: 1.18.1
-  resolution: "express-session@npm:1.18.1"
+"express-session@npm:^1.18.2":
+  version: 1.18.2
+  resolution: "express-session@npm:1.18.2"
   dependencies:
     cookie: "npm:0.7.2"
     cookie-signature: "npm:1.0.7"
     debug: "npm:2.6.9"
     depd: "npm:~2.0.0"
-    on-headers: "npm:~1.0.2"
+    on-headers: "npm:~1.1.0"
     parseurl: "npm:~1.3.3"
     safe-buffer: "npm:5.2.1"
     uid-safe: "npm:~2.1.5"
-  checksum: 10c0/7999f128df1528430044c97bb1aac95093afaee86c5fa54b2890c4aad9898d79745301f8c90c2df057d6dfe7af7f8ee220340bf5eb53dca5eff37e52cc2fbec7
+  checksum: 10c0/27e17c3d365e3543ba7c1315ff14916b8347a2fd28f94817c6d2e2425923e61fa97fc23e0933015981c3358ba6f11964666249f046c4f93d22015fe2a95140ac
   languageName: node
   linkType: hard
 
@@ -5533,10 +5533,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"on-headers@npm:~1.0.2":
-  version: 1.0.2
-  resolution: "on-headers@npm:1.0.2"
-  checksum: 10c0/f649e65c197bf31505a4c0444875db0258e198292f34b884d73c2f751e91792ef96bb5cf89aa0f4fecc2e4dc662461dda606b1274b0e564f539cae5d2f5fc32f
+"on-headers@npm:~1.1.0":
+  version: 1.1.0
+  resolution: "on-headers@npm:1.1.0"
+  checksum: 10c0/2c3b6b0d68ec9adbd561dc2d61c9b14da8ac03d8a2f0fd9e97bdf0600c887d5d97f664ff3be6876cf40cda6e3c587d73a4745e10b426ac50c7664fc5a0dfc0a1
   languageName: node
   linkType: hard
 
@@ -7512,11 +7512,11 @@ __metadata:
     ajv-formats: "npm:^3.0.1"
     async: "npm:^3.2.4"
     bcryptjs: "npm:^2.4.3"
-    compression: "npm:^1.7.4"
+    compression: "npm:^1.8.1"
     concurrently: "npm:^9.0.0"
     connect-session-knex: "npm:^5.0.0"
     cookie-parser: "npm:^1.4.6"
-    cookie-session: "npm:^2.0.0-rc.1"
+    cookie-session: "npm:^2.1.1"
     copyfiles: "npm:2.4.1"
     cors: "npm:^2.8.5"
     date-fns: "npm:^2.30.0"
@@ -7529,7 +7529,7 @@ __metadata:
     errorhandler: "npm:^1.5.1"
     express: "npm:^4.21.2"
     express-rate-limit: "npm:^7.3.1"
-    express-session: "npm:^1.17.3"
+    express-session: "npm:^1.18.2"
     faker: "npm:5.5.3"
     fast-check: "npm:3.23.2"
     fast-json-patch: "npm:^3.1.0"

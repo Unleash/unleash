@@ -22,9 +22,15 @@ interface ICreationArchiveChartProps {
 type WeekData = {
     archivedFlags: number;
     totalCreatedFlags: number;
-    createdFlags: Record<string, number>;
     week: string;
     date?: string;
+};
+
+type RawWeekData = {
+    archivedFlags: number;
+    createdFlags: Record<string, number>;
+    week: string;
+    date: string;
 };
 
 export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
@@ -50,7 +56,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                 return creationArchiveData.datasets
                     .map((d) => d.data.find((item) => item.week === label))
                     .reduce(
-                        (acc: WeekData, item: WeekData) => {
+                        (acc: WeekData, item: RawWeekData) => {
                             if (item) {
                                 acc.archivedFlags += item.archivedFlags || 0;
                                 const createdFlagsSum = item.createdFlags

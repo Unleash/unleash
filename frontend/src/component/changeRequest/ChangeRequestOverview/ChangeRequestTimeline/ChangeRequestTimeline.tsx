@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 import { Box, Paper, styled, Typography } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import MuiTimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';

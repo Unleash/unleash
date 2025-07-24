@@ -34,6 +34,7 @@ export const useInsights = (
                 metricsSummaryTrends: [],
                 environmentTypeTrends: [],
                 lifecycleTrends: [],
+                creationArchiveTrends: [],
             } as InstanceInsightsSchema),
         refetchInsights,
         loading: !error && !data,

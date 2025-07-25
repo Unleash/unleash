@@ -42,7 +42,7 @@ export default class EdgeController extends Controller {
             permission: NONE,
             middleware: [
                 this.openApiService.validPath({
-                    tags: ['Edge'],
+                    tags: ['Unleash Edge'],
                     security: [{}],
                     summary: 'Check which tokens are valid',
                     description:

@@ -6,6 +6,7 @@ import { renderHook, act } from '@testing-library/react';
 import type { IConstraint } from 'interfaces/strategy';
 import { IN, STR_CONTAINS } from 'constants/operators';
 import type { Operator } from 'constants/operators';
+import { constraintId } from 'constants/constraintId.ts';
 
 const createTestConstraint = (
     contextName: string,
@@ -15,6 +16,7 @@ const createTestConstraint = (
     contextName,
     operator,
     values,
+    [constraintId]: 'constraint id',
 });
 
 describe('areConstraintsEqual', () => {
@@ -24,6 +26,7 @@ describe('areConstraintsEqual', () => {
             operator: IN,
             values: ['user1', 'user2'],
             inverted: false,
+            [constraintId]: 'constraint id',
         };
 
         const constraint2: IConstraint = {
@@ -31,6 +34,7 @@ describe('areConstraintsEqual', () => {
             operator: IN,
             values: ['user1', 'user2'],
             inverted: false,
+            [constraintId]: 'constraint id',
         };
 
         expect(areConstraintsEqual(constraint1, constraint2)).toBe(true);
@@ -41,12 +45,14 @@ describe('areConstraintsEqual', () => {
             contextName: 'userId',
             operator: IN,
             values: ['user1', 'user2', 'user3'],
+            [constraintId]: 'constraint id',
         };
 
         const constraint2: IConstraint = {
             contextName: 'userId',
             operator: IN,
             values: ['user2', 'user3', 'user1'],
+            [constraintId]: 'constraint id',
         };
 
         expect(areConstraintsEqual(constraint1, constraint2)).toBe(true);
@@ -57,12 +63,14 @@ describe('areConstraintsEqual', () => {
             contextName: 'userId',
             operator: IN,
             values: ['user1', 'user2'],
+            [constraintId]: 'constraint id',
         };
 
         const constraint2: IConstraint = {
             contextName: 'userId',
             operator: IN,
             values: ['user1', 'user3'],
+            [constraintId]: 'constraint id',
         };
 
         expect(areConstraintsEqual(constraint1, constraint2)).toBe(false);
@@ -73,12 +81,14 @@ describe('areConstraintsEqual', () => {
             contextName: 'userId',
             operator: IN,
             values: ['user1'],
+            [constraintId]: 'constraint id',
         };
 
         const constraint2: IConstraint = {
             contextName: 'userId',
             operator: STR_CONTAINS,
             values: ['user1'],
+            [constraintId]: 'constraint id',
         };
 
         expect(areConstraintsEqual(constraint1, constraint2)).toBe(false);

@@ -65,10 +65,6 @@ export interface IConstraint {
     caseInsensitive?: boolean;
     operator: Operator;
     contextName: string;
-    [constraintId]?: string;
-}
-
-export interface IConstraintWithId extends IConstraint {
     [constraintId]: string;
 }
 

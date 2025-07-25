@@ -37,6 +37,7 @@ yarn build
 
 This command generates static content into the `build` directory and can be served using any static contents hosting service.
 
+
 ## Cleaning dependencies and caches
 
 If you're upgrading many dependencies, it's always good to delete the `node_modules` directory, refresh `yarn.lock` and clean the various caches.

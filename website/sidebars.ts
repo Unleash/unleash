@@ -79,7 +79,7 @@ const sidebars: SidebarsConfig = {
                         'reference/projects',
                         'reference/project-collaboration-mode',
                         'reference/environments',
-                        'reference/environment-import-export',
+                        'how-to/how-to-environment-import-export',
                     ],
                 },
                 {

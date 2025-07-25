@@ -31,6 +31,7 @@ export interface IChartsProps {
     >;
     userTrends: InstanceInsightsSchema['userTrends'];
     environmentTypeTrends: InstanceInsightsSchema['environmentTypeTrends'];
+    lifecycleTrends: InstanceInsightsSchema['lifecycleTrends'];
     summary: {
         total: number;
         active: number;

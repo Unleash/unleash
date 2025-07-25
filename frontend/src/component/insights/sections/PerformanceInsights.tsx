@@ -22,7 +22,12 @@ import {
     StyledWidget,
     StyledWidgetContent,
     StyledWidgetStats,
+    StatsExplanation,
 } from '../InsightsCharts.styles';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { NewProductionFlagsChart } from '../componentsChart/NewProductionFlagsChart/NewProductionFlagsChart.tsx';
+import Lightbulb from '@mui/icons-material/LightbulbOutlined';
+import { CreationArchiveChart } from '../componentsChart/CreationArchiveChart/CreationArchiveChart.tsx';
 
 export const PerformanceInsights: FC = () => {
     const statePrefix = 'performance-';
@@ -54,10 +59,12 @@ export const PerformanceInsights: FC = () => {
         flagTrends,
         summary,
         groupedProjectsData,
+        groupedLifecycleData,
         userTrends,
         groupedMetricsData,
         allMetricsDatapoints,
         environmentTypeTrends,
+        groupedCreationArchiveData,
     } = useInsightsData(insights, projects);
 
     const { isEnterprise } = useUiConfig();
@@ -73,6 +80,8 @@ export const PerformanceInsights: FC = () => {
             : flagsPerUserCalculation.toFixed(2);
     }
 
+    const isLifecycleGraphsEnabled = useUiFlag('lifecycleGraphs');
+
     return (
         <InsightsSection
             title='Performance insights'
@@ -84,6 +93,40 @@ export const PerformanceInsights: FC = () => {
                 />
             }
         >
+            {isLifecycleGraphsEnabled && isEnterprise() ? (
+                <StyledWidget>
+                    <StyledWidgetStats width={275}>
+                        <WidgetTitle title='New flags in production' />
+                        <StatsExplanation>
+                            <Lightbulb color='primary' />
+                            How often do flags go live in production?
+                        </StatsExplanation>
+                    </StyledWidgetStats>
+                    <StyledChartContainer>
+                        <NewProductionFlagsChart
+                            lifecycleTrends={groupedLifecycleData}
+                            isAggregate={showAllProjects}
+                            isLoading={loading}
+                        />
+                    </StyledChartContainer>
+                </StyledWidget>
+            ) : null}
+
+            {isLifecycleGraphsEnabled && isEnterprise() ? (
+                <StyledWidget>
+                    <StyledWidgetStats width={275}>
+                        <WidgetTitle title='Flags created vs archived' />
+                    </StyledWidgetStats>
+                    <StyledChartContainer>
+                        <CreationArchiveChart
+                            creationArchiveTrends={groupedCreationArchiveData}
+                            isAggregate={showAllProjects}
+                            isLoading={loading}
+                        />
+                    </StyledChartContainer>
+                </StyledWidget>
+            ) : null}
+
             {showAllProjects ? (
                 <StyledWidget>
                     <StyledWidgetStats width={275}>

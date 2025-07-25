@@ -17,6 +17,16 @@ export const useInsightsData = (
         projects,
     );
 
+    const lifecycleData = useFilteredTrends(
+        instanceInsights.lifecycleTrends,
+        projects,
+    );
+
+    const creationArchiveData = useFilteredTrends(
+        instanceInsights.creationArchiveTrends,
+        projects,
+    );
+
     const groupedProjectsData = useGroupedProjectTrends(projectsData);
 
     const metricsData = useFilteredTrends(
@@ -26,6 +36,11 @@ export const useInsightsData = (
     const groupedMetricsData = useGroupedProjectTrends(metricsData);
 
     const summary = useFilteredFlagsSummary(projectsData);
+
+    const groupedLifecycleData = useGroupedProjectTrends(lifecycleData);
+
+    const groupedCreationArchiveData =
+        useGroupedProjectTrends(creationArchiveData);
 
     return useMemo(
         () => ({
@@ -37,6 +52,9 @@ export const useInsightsData = (
             environmentTypeTrends: instanceInsights.environmentTypeTrends,
             summary,
             allMetricsDatapoints,
+            lifecycleData,
+            groupedLifecycleData,
+            groupedCreationArchiveData,
         }),
         [
             instanceInsights,
@@ -46,6 +64,9 @@ export const useInsightsData = (
             metricsData,
             groupedMetricsData,
             summary,
+            lifecycleData,
+            groupedLifecycleData,
+            groupedCreationArchiveData,
         ],
     );
 };

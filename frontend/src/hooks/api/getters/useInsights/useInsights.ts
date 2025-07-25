@@ -33,6 +33,8 @@ export const useInsights = (
                 projectFlagTrends: [],
                 metricsSummaryTrends: [],
                 environmentTypeTrends: [],
+                lifecycleTrends: [],
+                creationArchiveTrends: [],
             } as InstanceInsightsSchema),
         refetchInsights,
         loading: !error && !data,

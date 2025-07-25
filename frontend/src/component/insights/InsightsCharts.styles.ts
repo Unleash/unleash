@@ -1,4 +1,4 @@
-import { Box, Paper, styled } from '@mui/material';
+import { Box, Paper, styled, Typography } from '@mui/material';
 
 export const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -43,4 +43,13 @@ export const StyledChartContainer = styled(Box)(({ theme }) => ({
     flexGrow: 1,
     margin: 'auto 0',
     padding: theme.spacing(3),
+}));
+
+export const StatsExplanation = styled(Typography)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    gap: theme.spacing(0.5),
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.body2.fontSize,
+    fontWeight: theme.typography.body2.fontWeight,
 }));

@@ -92,7 +92,9 @@ export type UiFlags = {
     crDiffView?: boolean;
     changeRequestApproverEmails?: boolean;
     eventGrouping?: boolean;
+    timestampsInChangeRequestTimeline?: boolean;
     reportUnknownFlags?: boolean;
+    lifecycleGraphs?: boolean;
 };
 
 export interface IVersionInfo {

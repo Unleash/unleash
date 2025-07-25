@@ -349,7 +349,10 @@ export const ChangeRequestOverview: FC = () => {
             <ChangeRequestHeader changeRequest={changeRequest} />
             <ChangeRequestBody>
                 <StyledAsideBox>
-                    <ChangeRequestTimeline {...timelineProps} />
+                    <ChangeRequestTimeline
+                        {...timelineProps}
+                        timestamps={changeRequest.stateTransitionTimestamps}
+                    />
                     <ConditionallyRender
                         condition={approversEnabled}
                         show={

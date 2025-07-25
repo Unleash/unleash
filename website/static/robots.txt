@@ -1,6 +1,6 @@
 # *
 User-agent: *
-Allow: /
+Disallow: /
 
 # Host
 Host: https://docs.getunleash.io

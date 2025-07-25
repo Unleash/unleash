@@ -51,7 +51,7 @@ To use a custom icon:
 
 ### Configure a link action
 
-This action displays a link on the banner that directs users to a specified URL.
+This action displays a link on the banner that directs users to the specified URL.
 
 - **Absolute URLs** (for example, `https://docs.getunleash.io/`) open in a new browser tab.
 - **Relative URLs** (for example, `/admin/network`) open in the same tab.

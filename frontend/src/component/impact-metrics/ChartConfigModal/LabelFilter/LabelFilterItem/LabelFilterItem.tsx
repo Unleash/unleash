@@ -1,12 +1,18 @@
 import {
+    Alert,
     Autocomplete,
-    Box,
     Checkbox,
     Chip,
     FormControlLabel,
+    styled,
     TextField,
+    Typography,
 } from '@mui/material';
 import type { FC } from 'react';
+
+const StyledSelectAllLabel = styled('span')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+}));
 
 type LabelFilterItemProps = {
     labelKey: string;
@@ -25,6 +31,7 @@ export const LabelFilterItem: FC<LabelFilterItemProps> = ({
     const isAllSelected = value.includes('*');
     const autocompleteId = `autocomplete-${labelKey}`;
     const selectAllId = `select-all-${labelKey}`;
+    const isTruncated = options.length >= 1_000;
 
     return (
         <>
@@ -46,16 +53,7 @@ export const LabelFilterItem: FC<LabelFilterItemProps> = ({
                         }}
                     />
                 }
-                label={
-                    <Box
-                        component='span'
-                        sx={(theme) => ({
-                            fontSize: theme.fontSizes.smallBody,
-                        })}
-                    >
-                        Select all
-                    </Box>
-                }
+                label={<StyledSelectAllLabel>Select all</StyledSelectAllLabel>}
             />
             <Autocomplete
                 multiple
@@ -66,37 +64,68 @@ export const LabelFilterItem: FC<LabelFilterItemProps> = ({
                     onChange(newValues);
                 }}
                 disabled={isAllSelected}
-                renderTags={(value, getTagProps) =>
-                    value.map((option, index) => {
-                        const { key, ...chipProps } = getTagProps({
-                            index,
-                        });
-                        return (
-                            <Chip
-                                {...chipProps}
-                                key={key}
-                                label={option}
-                                size='small'
-                            />
-                        );
-                    })
-                }
+                renderTags={(value, getTagProps) => {
+                    const overflowCount = 5;
+                    const displayedValues = value.slice(-overflowCount);
+                    const remainingCount = value.length - overflowCount;
+
+                    return (
+                        <>
+                            {displayedValues.map((option, index) => {
+                                const { key, ...chipProps } = getTagProps({
+                                    index,
+                                });
+                                return (
+                                    <Chip
+                                        {...chipProps}
+                                        key={key}
+                                        label={option}
+                                        size='small'
+                                    />
+                                );
+                            })}
+                            {remainingCount > 0 ? (
+                                <Typography
+                                    component='span'
+                                    sx={{ color: 'text.secondary' }}
+                                >
+                                    {' '}
+                                    (+{remainingCount})
+                                </Typography>
+                            ) : null}
+                        </>
+                    );
+                }}
                 renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label={labelKey}
-                        placeholder={
-                            isAllSelected ? undefined : 'Select values…'
-                        }
-                        variant='outlined'
-                        size='small'
-                        inputProps={{
-                            ...params.inputProps,
-                            'aria-describedby': isAllSelected
-                                ? `${selectAllId}-description`
-                                : undefined,
-                        }}
-                    />
+                    <>
+                        <TextField
+                            {...params}
+                            label={labelKey}
+                            placeholder={
+                                isAllSelected ? undefined : 'Select values…'
+                            }
+                            variant='outlined'
+                            size='small'
+                            inputProps={{
+                                ...params.inputProps,
+                                'aria-describedby': isAllSelected
+                                    ? `${selectAllId}-description`
+                                    : undefined,
+                            }}
+                        />
+                        {isTruncated && (
+                            <Alert
+                                severity='warning'
+                                sx={(theme) => ({
+                                    padding: theme.spacing(1, 2),
+                                    marginTop: theme.spacing(1),
+                                })}
+                            >
+                                Maximum of 1000 values loaded due to
+                                performance.
+                            </Alert>
+                        )}
+                    </>
                 )}
             />
         </>

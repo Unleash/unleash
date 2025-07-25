@@ -10,6 +10,7 @@ export type ImpactMetricsSeries = {
     data: TimeSeriesData;
 };
 
+// TODO: use OpenAPI types
 export type ImpactMetricsResponse = {
     start?: string;
     end?: string;
@@ -18,6 +19,7 @@ export type ImpactMetricsResponse = {
     labels?: ImpactMetricsLabels;
     debug?: {
         query?: string;
+        isTruncated?: string;
     };
 };
 

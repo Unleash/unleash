@@ -72,30 +72,32 @@ export const LabelsFilter: FC<LabelsFilterProps> = ({
                     flexGrow: 1,
                 }}
             >
-                {Object.entries(availableLabels).map(([labelKey, values]) => {
-                    const currentSelection = selectedLabels[labelKey] || [];
+                {Object.entries(availableLabels)
+                    .sort()
+                    .map(([labelKey, values]) => {
+                        const currentSelection = selectedLabels[labelKey] || [];
 
-                    return (
-                        <Box
-                            key={labelKey}
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                flexGrow: 1,
-                            }}
-                        >
-                            <LabelFilterItem
-                                labelKey={labelKey}
-                                options={values}
-                                value={currentSelection}
-                                onChange={(newValues) =>
-                                    handleLabelChange(labelKey, newValues)
-                                }
-                                handleAllToggle={handleAllToggle}
-                            />
-                        </Box>
-                    );
-                })}
+                        return (
+                            <Box
+                                key={labelKey}
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    flexGrow: 1,
+                                }}
+                            >
+                                <LabelFilterItem
+                                    labelKey={labelKey}
+                                    options={values}
+                                    value={currentSelection}
+                                    onChange={(newValues) =>
+                                        handleLabelChange(labelKey, newValues)
+                                    }
+                                    handleAllToggle={handleAllToggle}
+                                />
+                            </Box>
+                        );
+                    })}
             </Box>
         </Box>
     );

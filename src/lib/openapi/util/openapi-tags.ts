@@ -49,11 +49,6 @@ const OPENAPI_TAGS = [
         description: 'Manage feature dependencies.',
     },
     {
-        name: 'Unleash Edge',
-        description:
-            'Endpoints related to [Unleash Edge](https://docs.getunleash.io/reference/api/unleash/edge).',
-    },
-    {
         name: 'Environments',
         description:
             'Create, update, delete, enable or disable [environments](https://docs.getunleash.io/reference/environments) for this Unleash instance.',
@@ -145,6 +140,11 @@ const OPENAPI_TAGS = [
     {
         name: 'Telemetry',
         description: 'API for information about telemetry collection',
+    },
+    {
+        name: 'Unleash Edge',
+        description:
+            'Endpoints related to [Unleash Edge](https://docs.getunleash.io/reference/api/unleash/edge).',
     },
     {
         name: 'Unstable',

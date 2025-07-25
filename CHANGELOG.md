@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.0.6] - 2025-07-25
+
+### Documentation
+
+- Update OpenAPI Edge name ([#10415](https://github.com/Unleash/unleash/issues/10415))
+
+
+### Features
+
+- Basic flag creation chart ([#10411](https://github.com/Unleash/unleash/issues/10411))
+
+- GitHub auth ([#10406](https://github.com/Unleash/unleash/issues/10406))
+
+
 ## [7.0.5] - 2025-07-24
 
 ### Bug Fixes

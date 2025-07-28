@@ -144,7 +144,7 @@ const OPENAPI_TAGS = [
     {
         name: 'Unleash Edge',
         description:
-            'Endpoints related to [Unleash Edge](https://docs.getunleash.io/reference/api/unleash/edge).',
+            'Endpoints related to [Unleash Edge](https://docs.getunleash.io/reference/unleash-edge).',
     },
     {
         name: 'Unstable',

@@ -38,4 +38,4 @@ While a flag's state does not affect its behavior in applications, using states 
 
 Each project has a **Project status** dashboard, where you can view its technical debt rating—the percentage of healthy flags compared to stale or potentially stale flags. To keep your project's technical debt low, [archive stale feature flags](/reference/feature-toggles#archive-a-feature-flag) and remove them from your codebase. To view your project's technical debt rating over time, go to [Analytics](/reference/insights).
 
-![Project status dashboard](/img/project-status-dashboard.png)
+![Project status dashboard](/img/project-status.png)

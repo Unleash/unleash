@@ -48,6 +48,7 @@ const StyledSubtitle = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-end',
+    columnGap: '1ch',
 }));
 
 const StyledTimeline = styled(Timeline)(() => ({
@@ -117,7 +118,12 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
                     {data.map((title, index) => {
                         const timestampComponent =
                             index <= activeIndex && timestamps?.[title] ? (
-                                <Time dateTime={timestamps?.[title]} />
+                                <Typography
+                                    component='span'
+                                    color='textSecondary'
+                                >
+                                    <Time dateTime={timestamps?.[title]} />
+                                </Typography>
                             ) : undefined;
 
                         if (schedule && title === 'Scheduled') {
@@ -165,7 +171,7 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
     );
 };
 
-const Time = styled(({ dateTime, ...props }: { dateTime: string }) => {
+const Time = ({ dateTime, ...props }: { dateTime: string }) => {
     const { locationSettings } = useLocationSettings();
     const displayTime = formatDateYMDHM(
         new Date(dateTime || ''),
@@ -176,10 +182,7 @@ const Time = styled(({ dateTime, ...props }: { dateTime: string }) => {
             {displayTime}
         </time>
     );
-})(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    fontSize: theme.typography.body2.fontSize,
-}));
+};
 
 const TimelineItem = ({
     color,
@@ -209,17 +212,17 @@ const TimelineItem = ({
 };
 
 export const getScheduleProps = (schedule: ChangeRequestSchedule) => {
-    const Subtitle = ({ prefix }: { prefix: string }) => (
-        <>
+    const TimeInfo = ({ prefix }: { prefix: string }) => (
+        <Typography component='span'>
             {prefix} <Time dateTime={schedule.scheduledAt} />
-        </>
+        </Typography>
     );
 
     switch (schedule.status) {
         case 'suspended':
             return {
                 title: 'Schedule suspended',
-                subtitle: <Subtitle prefix='was' />,
+                timeInfo: <TimeInfo prefix='was' />,
                 color: 'grey' as const,
                 reason: (
                     <HtmlTooltip title={schedule.reason} arrow>
@@ -230,7 +233,7 @@ export const getScheduleProps = (schedule: ChangeRequestSchedule) => {
         case 'failed':
             return {
                 title: 'Schedule failed',
-                subtitle: <Subtitle prefix='at' />,
+                timeInfo: <TimeInfo prefix='at' />,
                 color: 'error' as const,
                 reason: (
                     <HtmlTooltip
@@ -246,7 +249,7 @@ export const getScheduleProps = (schedule: ChangeRequestSchedule) => {
         default:
             return {
                 title: 'Scheduled',
-                subtitle: <Subtitle prefix='for' />,
+                timeInfo: <TimeInfo prefix='for' />,
                 color: 'warning' as const,
                 reason: null,
             };
@@ -260,7 +263,7 @@ const TimelineScheduleItem = ({
     schedule: ChangeRequestSchedule;
     timestamp: ReactNode;
 }) => {
-    const { title, subtitle, color, reason } = getScheduleProps(schedule);
+    const { title, timeInfo, color, reason } = getScheduleProps(schedule);
 
     return (
         <MuiTimelineItem key={title}>
@@ -270,13 +273,11 @@ const TimelineScheduleItem = ({
             </TimelineSeparator>
             <StyledTimelineContent>
                 {title}
-                {timestamp}
                 <StyledSubtitle>
-                    <Typography color={'text.secondary'} sx={{ mr: 1 }}>
-                        ({subtitle})
-                    </Typography>
+                    {timeInfo}
                     {reason}
                 </StyledSubtitle>
+                {timestamp}
             </StyledTimelineContent>
         </MuiTimelineItem>
     );

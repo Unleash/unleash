@@ -2,14 +2,12 @@ import {
     StyledProjectCard,
     StyledCardTitle,
     StyledProjectCardBody,
-    StyledIconBox,
 } from './ProjectCard.styles';
 import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter.tsx';
 import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge.tsx';
-import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import { FavoriteAction } from './FavoriteAction/FavoriteAction.tsx';
 import { Box, styled } from '@mui/material';
-import { flexColumn } from 'themes/themeStyles';
+import { flexColumn, flexRow } from 'themes/themeStyles';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { ProjectLastSeen } from './ProjectLastSeen/ProjectLastSeen.tsx';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
@@ -29,14 +27,14 @@ const StyledCount = styled('strong')(({ theme }) => ({
 }));
 
 const StyledInfo = styled('div')(({ theme }) => ({
-    display: 'grid',
-    gridTemplate: '1rem 1rem / 1fr 1fr',
-    gridAutoFlow: 'column',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: theme.spacing(1),
+    ...flexColumn,
     fontSize: theme.fontSizes.smallerBody,
 }));
+
+const StyledContent = styled('div')({
+    ...flexRow,
+    justifyContent: 'space-between',
+});
 
 const StyledHeader = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
@@ -67,9 +65,6 @@ export const ProjectCard = ({
         <StyledProjectCard onMouseEnter={onHover}>
             <StyledProjectCardBody>
                 <StyledHeader>
-                    <StyledIconBox>
-                        <ProjectIcon />
-                    </StyledIconBox>
                     <Box
                         data-loading
                         sx={(theme) => ({
@@ -95,13 +90,14 @@ export const ProjectCard = ({
                         <StyledCount>{featureCount}</StyledCount> flag
                         {featureCount === 1 ? '' : 's'}
                     </div>
-                    <div data-loading>
-                        <StyledCount>{health}%</StyledCount> health
-                    </div>
-                    <div />
-                    <div data-loading>
-                        <ProjectLastSeen date={lastReportedFlagUsage} />
-                    </div>
+                    <StyledContent>
+                        <div data-loading>
+                            <StyledCount>{health}%</StyledCount> health
+                        </div>
+                        <div data-loading>
+                            <ProjectLastSeen date={lastReportedFlagUsage} />
+                        </div>
+                    </StyledContent>
                 </StyledInfo>
             </StyledProjectCardBody>
             <ProjectCardFooter id={id} owners={owners}>

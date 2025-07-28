@@ -4,13 +4,11 @@ import {
     StyledBox,
     StyledCardTitle,
     StyledProjectCardBody,
-    StyledIconBox,
     StyledActions,
 } from './ProjectCard.styles';
 import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter.tsx';
 import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge.tsx';
 import type { ProjectSchemaOwners } from 'openapi';
-import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import { formatDateYMDHM } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { parseISO } from 'date-fns';
@@ -72,9 +70,6 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
         <StyledProjectCard disabled data-testid={id}>
             <StyledProjectCardBody>
                 <StyledDivHeader>
-                    <StyledIconBox>
-                        <ProjectIcon color='action' />
-                    </StyledIconBox>
                     <StyledBox data-loading>
                         <Tooltip title={`id: ${id}`} arrow>
                             <StyledTitle>

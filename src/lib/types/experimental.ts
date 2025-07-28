@@ -65,7 +65,8 @@ export type IFlagKey =
     | 'paygInstanceStatsEvents'
     | 'timestampsInChangeRequestTimeline'
     | 'lifecycleGraphs'
-    | 'githubAuth';
+    | 'githubAuth'
+    | 'addConfiguration';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -303,6 +304,10 @@ const flags: IFlags = {
     ),
     githubAuth: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_GITHUB_AUTH,
+        false,
+    ),
+    addConfiguration: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ADD_CONFIGURATION,
         false,
     ),
 };

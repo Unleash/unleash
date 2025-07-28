@@ -61,6 +61,7 @@ process.nextTick(async () => {
                         paygTrialEvents: true,
                         timestampsInChangeRequestTimeline: true,
                         lifecycleGraphs: true,
+                        addConfiguration: true,
                     },
                 },
                 authentication: {

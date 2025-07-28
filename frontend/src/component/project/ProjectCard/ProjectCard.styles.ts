@@ -89,16 +89,6 @@ export const StyledParagraphInfo = styled('p')<{ disabled?: boolean }>(
     }),
 );
 
-export const StyledIconBox = styled(Box)(({ theme }) => ({
-    display: 'grid',
-    placeItems: 'center',
-    padding: theme.spacing(0, 0.5, 0, 1),
-    marginRight: theme.spacing(1),
-    alignSelf: 'baseline',
-    color: theme.palette.primary.main,
-    height: '100%',
-}));
-
 export const StyledActions = styled(Box)(({ theme }) => ({
     display: 'flex',
     margin: theme.spacing(0.5),

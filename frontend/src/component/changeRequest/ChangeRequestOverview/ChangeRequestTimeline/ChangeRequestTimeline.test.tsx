@@ -117,12 +117,12 @@ describe('changeRequestScheduleProps', () => {
             status: 'pending' as const,
         };
 
-        const { title, subtitle, color, reason } = getScheduleProps(schedule);
+        const { title, timeInfo, color, reason } = getScheduleProps(schedule);
         expect(title).toBe('Scheduled');
         expect(color).toBe('warning');
         expect(reason).toBeNull();
 
-        render(subtitle);
+        render(timeInfo);
         screen.getByText('for');
         const timeElement = screen.getByRole('time');
         const datetime = timeElement.getAttribute('datetime');
@@ -138,12 +138,12 @@ describe('changeRequestScheduleProps', () => {
             failureReason: 'failure reason',
         };
 
-        const { title, subtitle, color, reason } = getScheduleProps(schedule);
+        const { title, timeInfo, color, reason } = getScheduleProps(schedule);
         expect(title).toBe('Schedule failed');
         expect(color).toBe('error');
         expect(reason).toBeTruthy();
 
-        render(subtitle);
+        render(timeInfo);
         screen.getByText('at');
         const timeElement = screen.getByRole('time');
         const datetime = timeElement.getAttribute('datetime');
@@ -158,12 +158,12 @@ describe('changeRequestScheduleProps', () => {
             reason: 'reason',
         };
 
-        const { title, subtitle, color, reason } = getScheduleProps(schedule);
+        const { title, timeInfo, color, reason } = getScheduleProps(schedule);
         expect(title).toBe('Schedule suspended');
         expect(color).toBe('grey');
         expect(reason).toBeTruthy();
 
-        render(subtitle);
+        render(timeInfo);
         screen.getByText('was');
         const timeElement = screen.getByRole('time');
         const datetime = timeElement.getAttribute('datetime');

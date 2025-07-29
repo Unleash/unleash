@@ -4,7 +4,7 @@ description: "How to use Unleash feature flags with .NET."
 slug: /feature-flag-tutorials/dotnet
 ---
 
-Hello! In this tutorial we’ll show you how to add feature flags to your .NET app, using [Unleash](https://www.getunleash.io/) and the official [Unleash .NET SDK](https://docs.getunleash.io/reference/sdks/dotnet). With Unleash, an open-source feature management service, you can use our tooling to add feature flags to your application and release new features faster.
+Hello! In this tutorial we’ll show you how to add feature flags to your .NET app, using [Unleash](https://www.getunleash.io/) and the official [Unleash .NET SDK](/reference/sdks/dotnet). With Unleash, an open-source feature management service, you can use our tooling to add feature flags to your application and release new features faster.
 
 We’ll keep with the sci-fi theme of our previous tutorials and use the [Rick and Morty API](https://rickandmortyapi.com/documentation/#introduction), with a .NET web API project. We’ll use feature flags to decide whether to call the REST or the GraphQL version of the API.
 
@@ -65,7 +65,7 @@ Select the ‘New API token’ button.
 
 ![Image of the API token button in API Access view](/img/tutorial-create-api-token.png)
 
-Name the API token and select the “Server-side SDK (Client)” token type. You can read more about [Unleash API tokens in our documentation](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens).
+Name the API token and select the “Server-side SDK (Client)” token type. You can read more about [Unleash API tokens in our documentation](/reference/api-tokens-and-client-keys#client-tokens).
 
 ![Selecting the API token type](/img/tutorial-api-token-type.png).
 
@@ -258,7 +258,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 ```
 
-You can check our [API token and client keys documentation](https://docs.getunleash.io/reference/api-tokens-and-client-keys) for more specifics.
+You can check our [API token and client keys documentation](/reference/api-tokens-and-client-keys) for more specifics.
 
 Now, let’s add our client to our project, grab the feature flag from Unleash, and update our conditional statement. Don't forget to also update the config with your API key.
 
@@ -273,7 +273,7 @@ Now, let’s add our client to our project, grab the feature flag from Unleash, 
 
 ```
 
-See additional use cases in our [.NET SDK](https://docs.getunleash.io/reference/sdks/dotnet) documentation.
+See additional use cases in our [.NET SDK](/reference/sdks/dotnet) documentation.
 
 ## 5. Verify the toggle experience
 

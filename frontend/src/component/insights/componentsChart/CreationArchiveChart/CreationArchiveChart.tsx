@@ -47,7 +47,7 @@ interface ICreationArchiveChartProps {
     isLoading?: boolean;
 }
 
-type WeekData = {
+export type WeekData = {
     archivedFlags: number;
     totalCreatedFlags: number;
     createdFlagsByType: Record<string, number>;

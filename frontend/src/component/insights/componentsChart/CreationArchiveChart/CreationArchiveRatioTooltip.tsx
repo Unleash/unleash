@@ -2,7 +2,8 @@ import type { FC } from 'react';
 import { Box, Paper, Typography, styled, useTheme } from '@mui/material';
 import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
 import { ChartTooltipContainer } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
-
+import type { Theme } from '@mui/material/styles/createTheme';
+import type { WeekData } from './CreationArchiveChart.tsx';
 const getRatioTooltipColors = (theme: Theme) => ({
     CREATED: theme.palette.success.main,
     ARCHIVED: theme.palette.background.application,
@@ -42,7 +43,7 @@ export const CreationArchiveRatioTooltip: FC<
         return null;
     }
 
-    const rawData = ratioDataPoint.raw as RatioDataPointRaw;
+    const rawData = ratioDataPoint.raw as WeekData;
 
     if (!rawData) {
         return null;

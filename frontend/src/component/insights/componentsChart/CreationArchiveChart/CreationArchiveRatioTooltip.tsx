@@ -34,7 +34,6 @@ export const CreationArchiveRatioTooltip: FC<
         return null;
     }
 
-    // Filter for the percentage line dataset
     const ratioDataPoint = tooltip.dataPoints.find(
         (point) => point.dataset.label === 'Flags archived / Flags created',
     );
@@ -43,7 +42,6 @@ export const CreationArchiveRatioTooltip: FC<
         return null;
     }
 
-    // Get the raw data to extract counts
     const rawData = ratioDataPoint.raw as any;
 
     if (!rawData) {

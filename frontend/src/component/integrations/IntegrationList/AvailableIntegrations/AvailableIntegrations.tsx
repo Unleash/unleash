@@ -208,10 +208,10 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                     <StyledSdksGroup>
                         <Box>
                             <Typography component='h4' variant='h4'>
-                                Client-side SDKs
+                                Frontend SDKs
                             </Typography>
                             <Typography variant='body2' color='text.secondary'>
-                                Client-side SDKs can connect to the{' '}
+                                Frontend SDKs can connect to the{' '}
                                 <a
                                     href='https://docs.getunleash.io/reference/unleash-edge'
                                     target='_blank'
@@ -225,7 +225,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                                     target='_blank'
                                     rel='noopener noreferrer'
                                 >
-                                    Unleash front-end API
+                                    Unleash frontend API
                                 </a>
                                 , but not to the regular Unleash client API.
                             </Typography>

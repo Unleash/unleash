@@ -58,10 +58,10 @@ Find your preferred SDK in [our list of official SDKs](#unleash-sdks) and import
 
 If you use the docker compose file from the previous step, here's the configuration details you'll need to get going:
 
-- For front-end SDKs, use:
+- For frontend SDKs, use:
   - URL: `http://localhost:4242/api/frontend/`
   - `clientKey`: `default:development.unleash-insecure-frontend-api-token`
-- For Backend SDKs, use:
+- For backend SDKs, use:
   - Unleash API URL: `http://localhost:4242/api/`
   - API token: `default:development.unleash-insecure-api-token`
 
@@ -145,7 +145,7 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 - Out-of-the-box integrations with popular tools ([Slack](https://docs.getunleash.io/addons/slack), [Microsoft Teams](https://docs.getunleash.io/addons/teams), [Datadog](https://docs.getunleash.io/addons/datadog)) + integrate with anything with [webhooks](https://docs.getunleash.io/addons/webhook)
 - [Insights for managing technical debt](https://docs.getunleash.io/reference/technical-debt) and [stale flags](https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-flags)
 - API-first: _everything_ can be automated. No exceptions.
-- [12 official client SDKs](https://docs.getunleash.io/reference/sdks#official-sdks), and 10 [community-contributed client SDKs](https://docs.getunleash.io/reference/sdks#community-sdks)
+- [12 official SDKs](https://docs.getunleash.io/reference/sdks#official-sdks), and 10 [community-contributed SDKs](https://docs.getunleash.io/reference/sdks#community-sdks)
 - Run it via Docker with the [official Docker image](https://hub.docker.com/r/unleashorg/unleash-server) or as a pure Node.js application
 
 ### Security and performance
@@ -154,7 +154,7 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 - [Audit logs](https://docs.getunleash.io/advanced/audit_log)
 - Enforce [OWASP's secure headers](https://owasp.org/www-project-secure-headers/) via the strict HTTPS-only mode
 - Flexible hosting options: host it on premise or in the cloud (_any_ cloud)
-- Scale with [Unleash Edge](https://docs.getunleash.io/reference/unleash-edge) independently of the Unleash server to support any number of front-end clients without overloading your Unleash instance
+- Scale with [Unleash Edge](https://docs.getunleash.io/reference/unleash-edge) independently of the Unleash server to support any number of frontend clients without overloading your Unleash instance
 
 ### Looking for more features?
 
@@ -183,7 +183,7 @@ Read more in the [_system overview_ section of the Unleash documentation](https:
 
 To connect your application to Unleash you'll need to use a client SDK for your programming language.
 
-**Official Backend SDKs:**
+**Official backend SDKs:**
 
 - [Go SDK](https://docs.getunleash.io/reference/sdks/go)
 - [Java SDK](https://docs.getunleash.io/reference/sdks/java)
@@ -194,9 +194,9 @@ To connect your application to Unleash you'll need to use a client SDK for your 
 - [Rust SDK](https://github.com/unleash/unleash-client-rust)
 - [.NET SDK](https://docs.getunleash.io/reference/sdks/dotnet)
 
-**Official front-end SDKs:**
+**Official frontend SDKs:**
 
-The front-end SDKs connect via [Unleash Edge](https://docs.getunleash.io/reference/unleash-edge) in order to ensure privacy, scalability and security.
+The frontend SDKs connect via [Unleash Edge](https://docs.getunleash.io/reference/unleash-edge) in order to ensure privacy, scalability and security.
 
 - [Android Proxy SDK](https://docs.getunleash.io/reference/sdks/android-proxy)
 - [Flutter Proxy SDK](https://docs.getunleash.io/reference/sdks/flutter)

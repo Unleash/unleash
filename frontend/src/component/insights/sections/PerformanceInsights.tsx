@@ -68,8 +68,6 @@ export const PerformanceInsights: FC = () => {
         groupedCreationArchiveData,
     } = useInsightsData(insights, projects);
 
-    console.log(groupedCreationArchiveData);
-
     const { isEnterprise } = useUiConfig();
     const lastUserTrend = userTrends[userTrends.length - 1];
     const usersTotal = lastUserTrend?.total ?? 0;
@@ -82,39 +80,6 @@ export const PerformanceInsights: FC = () => {
             ? 'N/A'
             : flagsPerUserCalculation.toFixed(2);
     }
-
-    // Calculate current archive ratio from latest data
-    function getCurrentArchiveRatio() {
-        if (
-            !groupedCreationArchiveData ||
-            Object.keys(groupedCreationArchiveData).length === 0
-        ) {
-            return 0;
-        }
-
-        let totalArchived = 0;
-        let totalCreated = 0;
-
-        Object.values(groupedCreationArchiveData).forEach((projectData) => {
-            const latestData = projectData[projectData.length - 1];
-            if (latestData) {
-                totalArchived += latestData.archivedFlags || 0;
-                const createdSum = latestData.createdFlags
-                    ? Object.values(latestData.createdFlags).reduce(
-                          (sum: number, count: number) => sum + count,
-                          0,
-                      )
-                    : 0;
-                totalCreated += createdSum;
-            }
-        });
-
-        return totalCreated > 0
-            ? Math.round((totalArchived / totalCreated) * 100)
-            : 0;
-    }
-
-    const currentRatio = getCurrentArchiveRatio();
 
     const isLifecycleGraphsEnabled = useUiFlag('lifecycleGraphs');
 
@@ -153,7 +118,9 @@ export const PerformanceInsights: FC = () => {
                     <StyledWidgetStats width={275}>
                         <WidgetTitle title='Flags created vs archived' />
                         <CreationArchiveStats
-                            currentRatio={currentRatio}
+                            groupedCreationArchiveData={
+                                groupedCreationArchiveData
+                            }
                             isLoading={loading}
                         />
                     </StyledWidgetStats>

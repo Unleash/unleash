@@ -4,6 +4,42 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import Lightbulb from '@mui/icons-material/LightbulbOutlined';
 import { StatsExplanation } from 'component/insights/InsightsCharts.styles';
+import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
+import type { InstanceInsightsSchema } from 'openapi';
+
+function getCurrentArchiveRatio(
+    groupedCreationArchiveData: GroupedDataByProject<
+        InstanceInsightsSchema['creationArchiveTrends']
+    >,
+) {
+    if (
+        !groupedCreationArchiveData ||
+        Object.keys(groupedCreationArchiveData).length === 0
+    ) {
+        return 0;
+    }
+
+    let totalArchived = 0;
+    let totalCreated = 0;
+
+    Object.values(groupedCreationArchiveData).forEach((projectData) => {
+        const latestData = projectData[projectData.length - 1];
+        if (latestData) {
+            totalArchived += latestData.archivedFlags || 0;
+            const createdSum = latestData.createdFlags
+                ? Object.values(latestData.createdFlags).reduce(
+                      (sum: number, count: number) => sum + count,
+                      0,
+                  )
+                : 0;
+            totalCreated += createdSum;
+        }
+    });
+
+    return totalCreated > 0
+        ? Math.round((totalArchived / totalCreated) * 100)
+        : 0;
+}
 
 const StyledRatioContainer = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation1,
@@ -42,14 +78,18 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 interface CreationArchiveStatsProps {
-    currentRatio: number;
+    groupedCreationArchiveData: GroupedDataByProject<
+        InstanceInsightsSchema['creationArchiveTrends']
+    >;
     isLoading?: boolean;
 }
 
 export const CreationArchiveStats: FC<CreationArchiveStatsProps> = ({
-    currentRatio,
+    groupedCreationArchiveData,
     isLoading,
 }) => {
+    const currentRatio = getCurrentArchiveRatio(groupedCreationArchiveData);
+
     return (
         <>
             <StyledRatioContainer>

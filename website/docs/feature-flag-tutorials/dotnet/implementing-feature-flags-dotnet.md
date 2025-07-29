@@ -65,7 +65,7 @@ Select the ‘New API token’ button.
 
 ![Image of the API token button in API Access view](/img/tutorial-create-api-token.png)
 
-Name the API token and select the “Server-side SDK (Client)” token type. You can read more about [Unleash API tokens in our documentation](/reference/api-tokens-and-client-keys#client-tokens).
+Name the API token and select the “Backend SDK” token type. You can read more about [Unleash API tokens in our documentation](/reference/api-tokens-and-client-keys#backend-tokens).
 
 ![Selecting the API token type](/img/tutorial-api-token-type.png).
 

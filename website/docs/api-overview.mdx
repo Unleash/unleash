@@ -14,8 +14,8 @@ Unleash provides a set of APIs to give you full programmatic control over your f
 
 | API            | Used by | Primary use case |
 |---------------|---------|---|
-| **Client API** | Server-side SDKs | Fetch feature flag configurations. |
-| **Frontend API** | Client-side SDKs | Fetch enabled feature flags for a specific [Unleash Context](/reference/unleash-context). |
+| **Client API** | Backend SDKs | Fetch feature flag configurations. |
+| **Frontend API** | Frontend SDKs | Fetch enabled feature flags for a specific [Unleash Context](/reference/unleash-context). |
 | **Admin API** | [Admin UI](/understanding-unleash/unleash-overview#the-unleash-admin-ui), internal tooling, and third-party [integrations](/reference/integrations) | Access and manage all resources within Unleash, such as context, environments, events, metrics, and users. |
 
 ## API authentication and tokens
@@ -25,24 +25,24 @@ All Unleash APIs require authentication using an [API token](/reference/api-toke
 ### Token types
 
 Unleash supports four types of API tokens:
-- **Client tokens**: Used to connect server-side SDKs, Unleash Edge, and the Unleash Proxy to the Client API. Can be scoped to a specific project and environment.
-- **Frontend tokens**: Used to connect client-side SDKs to the Frontend API or Unleash Edge. These tokens are designed to be publicly accessible and have limited permissions. Can be scoped to a specific project and environment.
+- **Backend tokens**: Used to connect backend SDKs, Unleash Edge, and the Unleash Proxy to the Client API. Can be scoped to a specific project and environment.
+- **Frontend tokens**: Used to connect frontend SDKs to the Frontend API or Unleash Edge. These tokens are designed to be publicly accessible and have limited permissions. Can be scoped to a specific project and environment.
 - **Personal access tokens**: Tied to a specific user account. They are useful for testing, debugging, or providing temporary access to tools and scripts that need to interact with the Admin API.
 - **Service account tokens**: The recommended method for providing API access to integrations, automation tools, and other non-human users. Service accounts provide a more secure and manageable way to grant Admin API access.
 
-For an end-to-end Unleash integration, you might need to use multiple token types. For example, when connecting a client-side SDK to Unleash using Unleash Edge, you'll need the following tokens:
-- A frontend token for the client-side SDK to securely communicate with Unleash Edge.
-- A client token for Unleash Edge to communicate with the main Unleash server.
+For an end-to-end Unleash integration, you might need to use multiple token types. For example, when connecting a frontend SDK to Unleash using Unleash Edge, you'll need the following tokens:
+- A frontend token for the frontend SDK to securely communicate with Unleash Edge.
+- A backend token for Unleash Edge to communicate with the main Unleash server.
 
-![Diagram showing the types of tokens needed to connect a client-side SDK with Edge, and Edge with Unleash](/img/token-types-example.png)
+![Diagram showing the types of tokens needed to connect a frontend SDK with Edge, and Edge with Unleash](/img/token-types-example.png)
 
-Ensure that the client token has access to the same project and environment (or a broader scope) as the frontend token.
+Ensure that the backend token has access to the same project and environment (or a broader scope) as the frontend token.
 
 ### Create an API token
 
 Depending on your permissions, you can create API tokens in the Unleash Admin UI in four ways:
 
-- **Admin settings > Access control > API access**: for client or frontend tokens; requires the Admin root role, or a custom root role with API token permissions.
+- **Admin settings > Access control > API access**: for backend or frontend tokens; requires the Admin root role, or a custom root role with API token permissions.
 - **Admin settings > Service accounts > New service account**: for creating a service account and assigning a token.
 - **Settings > API access** [inside a project]: for project-specific client or frontend tokens; permitted for project Members or users with a corresponding root role.
 - **Profile > View profile settings > Personal API tokens**: for personal access tokens.

@@ -54,7 +54,7 @@ An important Unleash concept that enables developers to perform a gradual rollou
 
 Different strategies use different parameters. Predefined strategies are bundled with Unleash. The default strategy is the gradual rollout strategy with 100% rollout, which basically means that the feature is enabled for all users. In this case, we have only enabled the flag in the development environment for all users in the previous section.
 
-Activation strategies are defined on the server. For server-side SDKs, activation strategy implementation is done on the client side. For frontend SDKs, the feature is calculated on the server side.
+Activation strategies are defined on the server. For backend SDKs, activation strategy implementation is done on the client side. For frontend SDKs, the feature is calculated on the server side.
 
 You can configure your gradual rollout strategy using the following parameters in Unleash:
 

@@ -58,7 +58,7 @@ To target users accordingly, let's create an [activation strategy](/reference/ac
 Different strategies use different parameters. Predefined strategies are bundled with Unleash. The default strategy is a gradual rollout to 100%, which means that the feature is enabled for all users. In this tutorial, we'll adjust the percentage of users who have access to the feature.
 
 :::note
-Activation strategies are defined on the server. For server-side SDKs, activation strategy implementation is done on the client side. For frontend SDKs, the feature is calculated on the server side.
+Activation strategies are defined on the server. For backend SDKs, activation strategy implementation is done on the client side. For frontend SDKs, the feature is calculated on the server side.
 :::
 
 Open your feature flag and click **Add strategy**.

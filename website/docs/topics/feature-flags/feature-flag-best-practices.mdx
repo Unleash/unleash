@@ -166,13 +166,13 @@ Instead of performing client-side evaluation, a more secure and maintainable app
 
 ### Server-side components
 
-In [Principle 1](#1-enable-runtime-control), we proposed a set of architectural components for building a feature flag system. The same principles apply here, with additional suggestions for achieving local evaluation. For client-side setups, use a dedicated evaluation server that can evaluate feature flags and pass evaluated results to the client SDK.
+In [Principle 1](#1-enable-runtime-control), we proposed a set of architectural components for building a feature flag system. The same principles apply here, with additional suggestions for achieving local evaluation. For client-side setups, use a dedicated evaluation server that can evaluate feature flags and pass evaluated results to the frontend SDK.
 
 ### SDKs
 
-[SDKs](/reference/sdks) make it more convenient to work with feature flags. Depending on the context of your infrastructure, you need different types of SDKs to talk to your feature flagging service. Server-side SDKs should fetch configurations from the _Feature Flag Control Service_ and evaluate flags locally using the application's context, reducing the need for frequent network calls.
+[SDKs](/reference/sdks) make it more convenient to work with feature flags. Depending on the context of your infrastructure, you need different types of SDKs to talk to your feature flagging service. Backend SDKs should fetch configurations from the _Feature Flag Control Service_ and evaluate flags locally using the application's context, reducing the need for frequent network calls.
 
-For client-side feature flags, SDKs should send the context to an evaluation server and receive the evaluated results. The evaluated results are then cached in memory in the client-side application, allowing quick lookups without additional network overhead. This provides the performance benefits of local evaluation while minimizing the exposure of sensitive data.
+For frontend applications, SDKs should send the context to an evaluation server and receive the evaluated results. The evaluated results are then cached in memory in the client-side application, allowing quick lookups without additional network overhead. This provides the performance benefits of local evaluation while minimizing the exposure of sensitive data.
 
 <VideoContent videoUrls={["https://www.youtube.com/embed/mCXSAWzdn3I"]}/>
 

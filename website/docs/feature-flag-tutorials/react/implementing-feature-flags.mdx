@@ -109,7 +109,7 @@ Click on the ‘New API token’ button.
 
 ![Create new API token](/img/react-tutorial-create-api-token.png)
 
-Name the API token and connect to the Client-side SDK.
+Name the API token and connect to the Frontend SDK.
 
 The token should have access to the “development” environment, as shown in the platform screenshot below.
 
@@ -174,7 +174,7 @@ Paste in a configuration object:
 ```js
 const config = {
     url: "http://localhost:4242/api/frontend", // Your local instance Unleash API URL
-    clientKey: "<client_key>", // Your client-side API token
+    clientKey: "<client_key>", // Your frontend token
     refreshInterval: 15, // How often (in seconds) the client should poll the proxy for updates
     appName: "cypress-realworld-app", // The name of your application. It's only used for identifying your application
 };
@@ -192,7 +192,7 @@ Next, replace the `<client_key>` string in the config object with the API token 
 
 This configuration object is used to populate the `FlagProvider` component that comes from Unleash and wraps around the application, using the credentials to target the specific feature flag you created for the project.
 
-You can check our documentation on [API tokens and client keys](/reference/api-tokens-and-client-keys) for more specifics and see additional use-cases in our [Client-Side SDK with React](/reference/sdks/react) documentation.
+You can check our documentation on [API tokens and client keys](/reference/api-tokens-and-client-keys) for more specifics and see additional use-cases in our [Frontend SDK with React](/reference/sdks/react) documentation.
 
 ## 5. Use the feature flag to rollout a notifications badge
 

@@ -14,49 +14,49 @@ Unleash provides official SDKs for a number of programming languages. Our commun
 
 ## Official SDKs
 
-### Server-side SDKs
+### Backend SDKs
 
-Server‑side SDKs run in backend services. They communicate with Unleash or [Unleash Edge](./unleash-edge) using the [Client API](../understanding-unleash/unleash-overview#client-api) and require a [client token](./api-tokens-and-client-keys#client-tokens).
-Server-side SDKs perform the flag evaluation locally, meaning all user data is retained within the SDK.
+Backend SDKs run in backend services. They communicate with Unleash or [Unleash Edge](./unleash-edge) using the [Client API](../understanding-unleash/unleash-overview#client-api) and require a [client token](./api-tokens-and-client-keys#client-tokens).
+Backend SDKs perform the flag evaluation locally, meaning all user data is retained within the SDK.
 
-Unleash offers the following server-side SDKs:
+Unleash offers the following backend SDKs:
 
--   [Go SDK](/docs/generated/sdks/server-side/go.md)
--   [Java SDK](/docs/generated/sdks/server-side/java.md)
--   [Node.js SDK](/docs/generated/sdks/server-side/node.md)
--   [PHP SDK](/docs/generated/sdks/server-side/php.md)
--   [Python SDK](/docs/generated/sdks/server-side/python.md)
--   [Ruby SDK](/docs/generated/sdks/server-side/ruby.md)
--   [Rust SDK](/docs/generated/sdks/server-side/rust.md)
--   [.NET SDK](/docs/generated/sdks/server-side/dotnet.md)
+-   [Go SDK](/docs/generated/sdks/backend/go.md)
+-   [Java SDK](/docs/generated/sdks/backend/java.md)
+-   [Node.js SDK](/docs/generated/sdks/backend/node.md)
+-   [PHP SDK](/docs/generated/sdks/backend/php.md)
+-   [Python SDK](/docs/generated/sdks/backend/python.md)
+-   [Ruby SDK](/docs/generated/sdks/backend/ruby.md)
+-   [Rust SDK](/docs/generated/sdks/backend/rust.md)
+-   [.NET SDK](/docs/generated/sdks/backend/dotnet.md)
 
-### Client-side SDKs
+### Frontend SDKs
 
-Client-side SDKs are used in frontend and mobile applications. They communicate with Unleash or [Unleash Edge](./unleash-edge) through the [Frontend API](./front-end-api) and require a [frontend token](./api-tokens-and-client-keys#frontend-tokens). Unlike server-side SDKs, client-side SDKs do not perform the flag evaluation locally. Instead, they fetch all enabled feature flags for a given [Unleash Context](./unleash-context). The flag evaluation happens either in [Unleash Edge](./unleash-edge), or in the Unleash server, when using the [Frontend API](./front-end-api) directly.
+Frontend SDKs are used in frontend and mobile applications. They communicate with Unleash or [Unleash Edge](./unleash-edge) through the [Frontend API](./front-end-api) and require a [frontend token](./api-tokens-and-client-keys#frontend-tokens). Unlike backend SDKs, frontend SDKs do not perform the flag evaluation locally. Instead, they fetch all enabled feature flags for a given [Unleash Context](./unleash-context). The flag evaluation happens either in [Unleash Edge](./unleash-edge), or in the Unleash server, when using the [Frontend API](./front-end-api) directly.
 
 When the SDK initializes, it sets up an in-memory repository and retrieves a list of all enabled flags and their variants in a single request. Once fetched, the SDK serves flag values from memory, without making additional requests. It periodically refreshes the list of enabled flags to keep the data up to date.
 
-Unleash offers the following client-side SDKs:
+Unleash offers the following frontend SDKs:
 
--   [Android SDK](/docs/generated/sdks/client-side/android-proxy.md)
--   [Flutter SDK](/docs/generated/sdks/client-side/flutter.md)
--   [iOS SDK](/docs/generated/sdks/client-side/ios-proxy.md)
--   [JavaScript SDK](/docs/generated/sdks/client-side/javascript-browser.md)
--   [Next.js](/docs/generated/sdks/client-side/next-js.md)
--   [React SDK](/docs/generated/sdks/client-side/react.md)
--   [Svelte SDK](/docs/generated/sdks/client-side/svelte.md)
--   [Vue SDK](/docs/generated/sdks/client-side/vue.md)
+-   [Android SDK](/docs/generated/sdks/frontend/android-proxy.md)
+-   [Flutter SDK](/docs/generated/sdks/frontend/flutter.md)
+-   [iOS SDK](/docs/generated/sdks/frontend/ios-proxy.md)
+-   [JavaScript SDK](/docs/generated/sdks/frontend/javascript-browser.md)
+-   [Next.js](/docs/generated/sdks/frontend/next-js.md)
+-   [React SDK](/docs/generated/sdks/frontend/react.md)
+-   [Svelte SDK](/docs/generated/sdks/frontend/svelte.md)
+-   [Vue SDK](/docs/generated/sdks/frontend/vue.md)
 
-### Feature compatibility in server-side SDKs
+### Feature compatibility in backend SDKs
 
-The following tables show which features are supported by each server-side SDK. Some features are only applicable to specific SDKs, depending on the programming language or how the client is implemented.
+The following tables show which features are supported by each backend SDK. Some features are only applicable to specific SDKs, depending on the programming language or how the client is implemented.
 
 **Symbol reference**
 
 ✅ Implemented | ❌ Not supported | ⭕ Not implemented, but under consideration | **N/A** Not applicable to this SDK
 
 #### Initialization
-| Capability | [Java](/docs/generated/sdks/server-side/java.md) | [Node.js](/docs/generated/sdks/server-side/node.md) | [Go](/docs/generated/sdks/server-side/go.md) | [Python](/docs/generated/sdks/server-side/python.md) | [Ruby](/docs/generated/sdks/server-side/ruby.md) | [.NET](/docs/generated/sdks/server-side/dotnet.md) | [PHP](/docs/generated/sdks/server-side/php.md) | [Rust](/docs/generated/sdks/server-side/rust.md) |
+| Capability | [Java](/docs/generated/sdks/backend/java.md) | [Node.js](/docs/generated/sdks/backend/node.md) | [Go](/docs/generated/sdks/backend/go.md) | [Python](/docs/generated/sdks/backend/python.md) | [Ruby](/docs/generated/sdks/backend/ruby.md) | [.NET](/docs/generated/sdks/backend/dotnet.md) | [PHP](/docs/generated/sdks/backend/php.md) | [Rust](/docs/generated/sdks/backend/rust.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | Async initialization | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
 | Block until synchronized | ✅ | ✅ | ✅ | ⭕ | ⭕ | ✅ | ✅ | ⭕ |
@@ -66,13 +66,13 @@ The following tables show which features are supported by each server-side SDK. 
 | Flag Query: `project_name` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | N/A | ⭕ |
 
 #### Custom headers
-| Capability | [Java](/docs/generated/sdks/server-side/java.md) | [Node.js](/docs/generated/sdks/server-side/node.md) | [Go](/docs/generated/sdks/server-side/go.md) | [Python](/docs/generated/sdks/server-side/python.md) | [Ruby](/docs/generated/sdks/server-side/ruby.md) | [.NET](/docs/generated/sdks/server-side/dotnet.md) | [PHP](/docs/generated/sdks/server-side/php.md) | [Rust](/docs/generated/sdks/server-side/rust.md) |
+| Capability | [Java](/docs/generated/sdks/backend/java.md) | [Node.js](/docs/generated/sdks/backend/node.md) | [Go](/docs/generated/sdks/backend/go.md) | [Python](/docs/generated/sdks/backend/python.md) | [Ruby](/docs/generated/sdks/backend/ruby.md) | [.NET](/docs/generated/sdks/backend/dotnet.md) | [PHP](/docs/generated/sdks/backend/php.md) | [Rust](/docs/generated/sdks/backend/rust.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | static | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 | function | ✅ | ✅ | ⭕ | ✅ | ✅ (4.3) | ✅ | ✅ | ⭕ |
 
 #### Built-in strategies
-| Capability | [Java](/docs/generated/sdks/server-side/java.md) | [Node.js](/docs/generated/sdks/server-side/node.md) | [Go](/docs/generated/sdks/server-side/go.md) | [Python](/docs/generated/sdks/server-side/python.md) | [Ruby](/docs/generated/sdks/server-side/ruby.md) | [.NET](/docs/generated/sdks/server-side/dotnet.md) | [PHP](/docs/generated/sdks/server-side/php.md) | [Rust](/docs/generated/sdks/server-side/rust.md) |
+| Capability | [Java](/docs/generated/sdks/backend/java.md) | [Node.js](/docs/generated/sdks/backend/node.md) | [Go](/docs/generated/sdks/backend/go.md) | [Python](/docs/generated/sdks/backend/python.md) | [Ruby](/docs/generated/sdks/backend/ruby.md) | [.NET](/docs/generated/sdks/backend/dotnet.md) | [PHP](/docs/generated/sdks/backend/php.md) | [Rust](/docs/generated/sdks/backend/rust.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | [Gradual rollout](./activation-strategies) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [Gradual rollout with custom stickiness](./stickiness#custom-stickiness) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
@@ -80,60 +80,60 @@ The following tables show which features are supported by each server-side SDK. 
 | [IP](./predefined-strategy-types#ips) with CIDR syntax | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ |
 
 #### Custom strategies
-All server-side SDKs have basic support.
+All backend SDKs have basic support.
 
 #### Strategy constraints
-All server-side SDKs have support for the basic operators (`IN`, `NOT_IN`).
+All backend SDKs have support for the basic operators (`IN`, `NOT_IN`).
 
-| Capability | [Java](/docs/generated/sdks/server-side/java.md) | [Node.js](/docs/generated/sdks/server-side/node.md) | [Go](/docs/generated/sdks/server-side/go.md) | [Python](/docs/generated/sdks/server-side/python.md) | [Ruby](/docs/generated/sdks/server-side/ruby.md) | [.NET](/docs/generated/sdks/server-side/dotnet.md) | [PHP](/docs/generated/sdks/server-side/php.md) | [Rust](/docs/generated/sdks/server-side/rust.md) |
+| Capability | [Java](/docs/generated/sdks/backend/java.md) | [Node.js](/docs/generated/sdks/backend/node.md) | [Go](/docs/generated/sdks/backend/go.md) | [Python](/docs/generated/sdks/backend/python.md) | [Ruby](/docs/generated/sdks/backend/ruby.md) | [.NET](/docs/generated/sdks/backend/dotnet.md) | [PHP](/docs/generated/sdks/backend/php.md) | [Rust](/docs/generated/sdks/backend/rust.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | [Advanced operators](./activation-strategies#advanced-operators) | ✅ (5.1) | ✅ (3.12) | ✅ (3.3) | ✅ (5.1) | ✅ (4.2) | ✅ (2.1) | ✅ (1.3.1) | ⭕ |
 
 
 #### Unleash Context
 
-Static fields (`environment`, `appName`), defined fields, and custom properties are supported in all server-side SDKs.
+Static fields (`environment`, `appName`), defined fields, and custom properties are supported in all backend SDKs.
 
 #### `isEnabled` implementation
-| Capability | [Java](/docs/generated/sdks/server-side/java.md) | [Node.js](/docs/generated/sdks/server-side/node.md) | [Go](/docs/generated/sdks/server-side/go.md) | [Python](/docs/generated/sdks/server-side/python.md) | [Ruby](/docs/generated/sdks/server-side/ruby.md) | [.NET](/docs/generated/sdks/server-side/dotnet.md) | [PHP](/docs/generated/sdks/server-side/php.md) | [Rust](/docs/generated/sdks/server-side/rust.md) |
+| Capability | [Java](/docs/generated/sdks/backend/java.md) | [Node.js](/docs/generated/sdks/backend/node.md) | [Go](/docs/generated/sdks/backend/go.md) | [Python](/docs/generated/sdks/backend/python.md) | [Ruby](/docs/generated/sdks/backend/ruby.md) | [.NET](/docs/generated/sdks/backend/dotnet.md) | [PHP](/docs/generated/sdks/backend/php.md) | [Rust](/docs/generated/sdks/backend/rust.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | Can take context and override fallback value | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Fallback function | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ⭕ | ⭕ |
 
 #### Strategy variants
 
-| Capability | [Java](/docs/generated/sdks/server-side/java.md) | [Node.js](/docs/generated/sdks/server-side/node.md) | [Go](/docs/generated/sdks/server-side/go.md) | [Python](/docs/generated/sdks/server-side/python.md) | [Ruby](/docs/generated/sdks/server-side/ruby.md) | [.NET](/docs/generated/sdks/server-side/dotnet.md) | [PHP](/docs/generated/sdks/server-side/php.md) | [Rust](/docs/generated/sdks/server-side/rust.md) |
+| Capability | [Java](/docs/generated/sdks/backend/java.md) | [Node.js](/docs/generated/sdks/backend/node.md) | [Go](/docs/generated/sdks/backend/go.md) | [Python](/docs/generated/sdks/backend/python.md) | [Ruby](/docs/generated/sdks/backend/ruby.md) | [.NET](/docs/generated/sdks/backend/dotnet.md) | [PHP](/docs/generated/sdks/backend/php.md) | [Rust](/docs/generated/sdks/backend/rust.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | [Strategy variants](./strategy-variants) and [custom stickiness](./stickiness#custom-stickiness) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 
 
 #### Local backup
-| Capability | [Java](/docs/generated/sdks/server-side/java.md) | [Node.js](/docs/generated/sdks/server-side/node.md) | [Go](/docs/generated/sdks/server-side/go.md) | [Python](/docs/generated/sdks/server-side/python.md) | [Ruby](/docs/generated/sdks/server-side/ruby.md) | [.NET](/docs/generated/sdks/server-side/dotnet.md) | [PHP](/docs/generated/sdks/server-side/php.md) | [Rust](/docs/generated/sdks/server-side/rust.md) |
+| Capability | [Java](/docs/generated/sdks/backend/java.md) | [Node.js](/docs/generated/sdks/backend/node.md) | [Go](/docs/generated/sdks/backend/go.md) | [Python](/docs/generated/sdks/backend/python.md) | [Ruby](/docs/generated/sdks/backend/ruby.md) | [.NET](/docs/generated/sdks/backend/dotnet.md) | [PHP](/docs/generated/sdks/backend/php.md) | [Rust](/docs/generated/sdks/backend/rust.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | File-based local backup | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 
 #### Metrics and impression data
-| Capability | [Java](/docs/generated/sdks/server-side/java.md) | [Node.js](/docs/generated/sdks/server-side/node.md) | [Go](/docs/generated/sdks/server-side/go.md) | [Python](/docs/generated/sdks/server-side/python.md) | [Ruby](/docs/generated/sdks/server-side/ruby.md) | [.NET](/docs/generated/sdks/server-side/dotnet.md) | [PHP](/docs/generated/sdks/server-side/php.md) | [Rust](/docs/generated/sdks/server-side/rust.md) |
+| Capability | [Java](/docs/generated/sdks/backend/java.md) | [Node.js](/docs/generated/sdks/backend/node.md) | [Go](/docs/generated/sdks/backend/go.md) | [Python](/docs/generated/sdks/backend/python.md) | [Ruby](/docs/generated/sdks/backend/ruby.md) | [.NET](/docs/generated/sdks/backend/dotnet.md) | [PHP](/docs/generated/sdks/backend/php.md) | [Rust](/docs/generated/sdks/backend/rust.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | Usage metrics | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |    
 | [Impression data](./impression-data) | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅  | ✅ | ⭕ |
 
 #### Bootstrap
-| Capability | [Java](/docs/generated/sdks/server-side/java.md) | [Node.js](/docs/generated/sdks/server-side/node.md) | [Go](/docs/generated/sdks/server-side/go.md) | [Python](/docs/generated/sdks/server-side/python.md) | [Ruby](/docs/generated/sdks/server-side/ruby.md) | [.NET](/docs/generated/sdks/server-side/dotnet.md) | [PHP](/docs/generated/sdks/server-side/php.md) | [Rust](/docs/generated/sdks/server-side/rust.md) |
+| Capability | [Java](/docs/generated/sdks/backend/java.md) | [Node.js](/docs/generated/sdks/backend/node.md) | [Go](/docs/generated/sdks/backend/go.md) | [Python](/docs/generated/sdks/backend/python.md) | [Ruby](/docs/generated/sdks/backend/ruby.md) | [.NET](/docs/generated/sdks/backend/dotnet.md) | [PHP](/docs/generated/sdks/backend/php.md) | [Rust](/docs/generated/sdks/backend/rust.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | Bootstrap from file or custom implementation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 
 ### Default refresh and metrics intervals
 
-#### Server-side SDKs
+#### Backend SDKs
 
-| Interval | [Java](/docs/generated/sdks/server-side/java.md) | [Node.js](/docs/generated/sdks/server-side/node.md) | [Go](/docs/generated/sdks/server-side/go.md) | [Python](/docs/generated/sdks/server-side/python.md) | [Ruby](/docs/generated/sdks/server-side/ruby.md) | [.NET](/docs/generated/sdks/server-side/dotnet.md) | [PHP](/docs/generated/sdks/server-side/php.md) | [Rust](/docs/generated/sdks/server-side/rust.md) |
+| Interval | [Java](/docs/generated/sdks/backend/java.md) | [Node.js](/docs/generated/sdks/backend/node.md) | [Go](/docs/generated/sdks/backend/go.md) | [Python](/docs/generated/sdks/backend/python.md) | [Ruby](/docs/generated/sdks/backend/ruby.md) | [.NET](/docs/generated/sdks/backend/dotnet.md) | [PHP](/docs/generated/sdks/backend/php.md) | [Rust](/docs/generated/sdks/backend/rust.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | Default refresh interval | 15s | 15s | 15s | 15s | 15s | 15s | 15s | 15s |
 | Default metrics interval | 60s | 60s | 60s | 60s | 60s | 60s | 60s | 15s |
 
-#### Client-side SDKs
-| Interval | [Android](/docs/generated/sdks/client-side/android-proxy.md) | [Flutter](/docs/generated/sdks/client-side/flutter.md) | [iOS](/docs/generated/sdks/client-side/ios-proxy.md) | [JavaScript](/docs/generated/sdks/client-side/javascript-browser.md) | [Next.js](/docs/generated/sdks/client-side/next-js.md) | [React](/docs/generated/sdks/client-side/react.md) | [Svelte](/docs/generated/sdks/client-side/svelte.md) | [Vue](/docs/generated/sdks/client-side/vue.md) |
+#### Frontend SDKs
+| Interval | [Android](/docs/generated/sdks/frontend/android-proxy.md) | [Flutter](/docs/generated/sdks/frontend/flutter.md) | [iOS](/docs/generated/sdks/frontend/ios-proxy.md) | [JavaScript](/docs/generated/sdks/frontend/javascript-browser.md) | [Next.js](/docs/generated/sdks/frontend/next-js.md) | [React](/docs/generated/sdks/frontend/react.md) | [Svelte](/docs/generated/sdks/frontend/svelte.md) | [Vue](/docs/generated/sdks/frontend/vue.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | Default refresh interval | 60s | 30s | 15s | 30s | 30s | 30s | 30s | 30s |
 | Default metrics interval | 60s | 30s | 30s | 60s | 60s | 60s | 60s | 60s |
@@ -162,7 +162,7 @@ If you need a language or framework not covered officially, explore our communit
 If you can't find an SDK that fits your requirements, you can also develop your own SDK. To make implementation easier, check out these resources:
 
 -   [Unleash Client Specifications](https://github.com/Unleash/client-specification) - Used by all official SDKs to make sure they behave correctly across different language implementations. This lets us verify that a gradual rollout to 10% of the users would affect the same users regardless of which SDK you're using.
--   [Client SDK overview](/client-specification) - A brief guide of the _Unleash Architecture_ and important aspects of the SDK role in it all.
+-   [Backend SDK overview](/client-specification) - A brief guide of the _Unleash Architecture_ and important aspects of the SDK role in it all.
 
 ## Offline behavior
 
@@ -174,15 +174,15 @@ Unless the SDK supports [bootstrapping](#bootstrapping), it needs to connect to 
 
 ### Bootstrapping
 
-By default, all SDKs reach out to the Unleash server at startup to fetch their flag configuration. Additionally, most of the [server-side SDKs](#server-side-sdks) and Unleash Edge support bootstrapping, which allows them to get their flag configuration from a file, the environment, or other local resources. These SDKs can function without any network connection.
+By default, all SDKs reach out to the Unleash server at startup to fetch their flag configuration. Additionally, most of the [backend SDKs](#backend-sdks) and Unleash Edge support bootstrapping, which allows them to get their flag configuration from a file, the environment, or other local resources. These SDKs can function without any network connection.
 
 Bootstrapping is also supported by the following frontend SDKs:
 
--   [Android SDK](/docs/generated/sdks/client-side/android-proxy.md)
--   [JavaScript SDK](/docs/generated/sdks/client-side/javascript-browser.md)
--   [React SDK](/docs/generated/sdks/client-side/react.md)
--   [Svelte SDK](/docs/generated/sdks/client-side/svelte.md)
--   [Vue SDK](/docs/generated/sdks/client-side/vue.md)
+-   [Android SDK](/docs/generated/sdks/frontend/android-proxy.md)
+-   [JavaScript SDK](/docs/generated/sdks/frontend/javascript-browser.md)
+-   [React SDK](/docs/generated/sdks/frontend/react.md)
+-   [Svelte SDK](/docs/generated/sdks/frontend/svelte.md)
+-   [Vue SDK](/docs/generated/sdks/frontend/vue.md)
 
 
 ### SDK identification headers

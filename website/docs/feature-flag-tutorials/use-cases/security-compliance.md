@@ -195,7 +195,7 @@ Protecting data is critical within any software tool. It’s a security best pra
 
 This is a potential attack surface area that you wouldn’t want to be the root of data breaches or unauthorized access in your system. That’s why Unleash was built in a way where integrating feature flags into your services won’t be a weak link in your organization’s ability to ship software safely.
 
-With Unleash, you can architect your feature flagging solution in a way that all user data stays within your applications. When using server-side SDKs, user data remains within your application and is never shared with the Unleash server regardless of your setup. For client-side SDKs, you can retain all user data within your applications by either [self-hosting Unleash](/understanding-unleash/hosting-options#), or [self-hosting Unleash Edge](/understanding-unleash/hosting-options#unleash-edge-options). Read more on the [Unleash architecture here](/understanding-unleash/unleash-overview).
+With Unleash, you can architect your feature flagging solution in a way that all user data stays within your applications. When using backend SDKs, user data remains within your application and is never shared with the Unleash server regardless of your setup. For frontend SDKs, you can retain all user data within your applications by either [self-hosting Unleash](/understanding-unleash/hosting-options#), or [self-hosting Unleash Edge](/understanding-unleash/hosting-options#unleash-edge-options). Read more on the [Unleash architecture here](/understanding-unleash/unleash-overview).
 
 ### Use Unleash Edge for enterprise-grade data privacy
 

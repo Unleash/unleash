@@ -68,6 +68,8 @@ export const PerformanceInsights: FC = () => {
         groupedCreationArchiveData,
     } = useInsightsData(insights, projects);
 
+    console.log(groupedCreationArchiveData);
+
     const { isEnterprise } = useUiConfig();
     const lastUserTrend = userTrends[userTrends.length - 1];
     const usersTotal = lastUserTrend?.total ?? 0;
@@ -158,7 +160,6 @@ export const PerformanceInsights: FC = () => {
                     <StyledChartContainer>
                         <CreationArchiveChart
                             creationArchiveTrends={groupedCreationArchiveData}
-                            isAggregate={showAllProjects}
                             isLoading={loading}
                         />
                     </StyledChartContainer>

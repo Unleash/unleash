@@ -44,7 +44,6 @@ interface ICreationArchiveChartProps {
     creationArchiveTrends: GroupedDataByProject<
         InstanceInsightsSchema['creationArchiveTrends']
     >;
-    isAggregate?: boolean;
     isLoading?: boolean;
 }
 
@@ -66,7 +65,6 @@ type RawWeekData = {
 
 export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     creationArchiveTrends,
-    isAggregate,
     isLoading,
 }) => {
     const creationArchiveData = useProjectChartData(creationArchiveTrends);
@@ -188,9 +186,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
         };
     }, [creationArchiveData, theme]);
 
-    const aggregateOrProjectData = isAggregate
-        ? aggregateHealthData
-        : creationArchiveData;
+    const aggregateOrProjectData = aggregateHealthData;
     const notEnoughData = useMemo(
         () =>
             !isLoading &&
@@ -200,14 +196,11 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     const data =
         notEnoughData || isLoading ? placeholderData : aggregateOrProjectData;
 
-    const flagTypeNames = isAggregate
-        ? (aggregateHealthData as any).flagTypeNames || []
-        : [];
+    const flagTypeNames = (aggregateHealthData as any).flagTypeNames || [];
 
     return (
         <>
             <Chart
-                key={isAggregate ? 'aggregate' : 'project'}
                 type='bar'
                 data={data as any}
                 options={{

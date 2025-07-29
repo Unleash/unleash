@@ -1,11 +1,4 @@
-import {
-    Link,
-    styled,
-    Typography,
-    Box,
-    IconButton,
-    Tooltip,
-} from '@mui/material';
+import { Link, styled, Typography, Box, IconButton } from '@mui/material';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
@@ -13,10 +6,10 @@ import { FeatureReleasePlanCard } from '../FeatureReleasePlanCard/FeatureRelease
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.tsx';
 
 interface IFeatureStrategyMenuCardsProps {
     projectId: string;
@@ -76,11 +69,6 @@ const SectionTitle = styled(Box)(({ theme }) => ({
     gap: theme.spacing(0.5),
     marginBottom: theme.spacing(1),
     width: '100%',
-}));
-
-const StyledInfoIcon = styled(InfoOutlinedIcon)(({ theme }) => ({
-    fontSize: theme.typography.body2.fontSize,
-    color: theme.palette.text.secondary,
 }));
 
 const StyledIcon = styled('span')(({ theme }) => ({
@@ -162,55 +150,51 @@ export const FeatureStrategyMenuCards = ({
             return null;
         }
 
-        if (!templates.length) {
-            return (
-                <EmptyStateContainer>
-                    <EmptyStateTitle>
-                        <StyledIcon>
-                            <FactCheckOutlinedIcon />
-                        </StyledIcon>
-                        Create your own release templates
-                    </EmptyStateTitle>
-                    <EmptyStateDescription>
-                        Standardize your rollouts and save time by reusing
-                        predefined strategies. Find release templates in the
-                        side menu under{' '}
-                        <ClickableBoldText
-                            onClick={() => navigate('/release-templates')}
-                        >
-                            Configure &gt; Release templates
-                        </ClickableBoldText>
-                    </EmptyStateDescription>
-                </EmptyStateContainer>
-            );
-        }
-
         return (
             <Box>
                 <SectionTitle>
                     <Typography color='inherit' variant='body2'>
-                        Apply a release template
+                        Release templates
                     </Typography>
-                    <Tooltip
-                        title='Use a predefined template to roll out features to users'
-                        arrow
-                    >
-                        <StyledInfoIcon />
-                    </Tooltip>
+                    <HelpIcon
+                        tooltip='Use a predefined template to roll out features to users'
+                        size='16px'
+                    />
                 </SectionTitle>
-                <GridSection>
-                    {templates.map((template) => (
-                        <CardWrapper key={template.id}>
-                            <FeatureReleasePlanCard
-                                template={template}
-                                onClick={() => onAddReleasePlan(template)}
-                                onPreviewClick={() =>
-                                    onReviewReleasePlan(template)
-                                }
-                            />
-                        </CardWrapper>
-                    ))}
-                </GridSection>
+                {!templates.length ? (
+                    <EmptyStateContainer>
+                        <EmptyStateTitle>
+                            <StyledIcon>
+                                <FactCheckOutlinedIcon />
+                            </StyledIcon>
+                            Create your own release templates
+                        </EmptyStateTitle>
+                        <EmptyStateDescription>
+                            Standardize your rollouts and save time by reusing
+                            predefined strategies. Find release templates in the
+                            side menu under{' '}
+                            <ClickableBoldText
+                                onClick={() => navigate('/release-templates')}
+                            >
+                                Configure &gt; Release templates
+                            </ClickableBoldText>
+                        </EmptyStateDescription>
+                    </EmptyStateContainer>
+                ) : (
+                    <GridSection>
+                        {templates.map((template) => (
+                            <CardWrapper key={template.id}>
+                                <FeatureReleasePlanCard
+                                    template={template}
+                                    onClick={() => onAddReleasePlan(template)}
+                                    onPreviewClick={() =>
+                                        onReviewReleasePlan(template)
+                                    }
+                                />
+                            </CardWrapper>
+                        ))}
+                    </GridSection>
+                )}
             </Box>
         );
     };
@@ -219,7 +203,7 @@ export const FeatureStrategyMenuCards = ({
         <GridContainer>
             <TitleRow>
                 <TitleText variant='h2'>
-                    {onlyReleasePlans ? 'Select template' : 'Select strategy'}
+                    {onlyReleasePlans ? 'Select template' : 'Add configuration'}
                 </TitleText>
                 <IconButton
                     size='small'
@@ -238,14 +222,12 @@ export const FeatureStrategyMenuCards = ({
                         <Box>
                             <SectionTitle>
                                 <Typography color='inherit' variant='body2'>
-                                    Pre-defined strategy types
+                                    Standard strategies
                                 </Typography>
-                                <Tooltip
-                                    title='Select a starting setup, and customize the strategy to your need with targeting and variants'
-                                    arrow
-                                >
-                                    <StyledInfoIcon />
-                                </Tooltip>
+                                <HelpIcon
+                                    tooltip='Select a starting setup, then customize your strategy with targeting and variants'
+                                    size='16px'
+                                />
                             </SectionTitle>
                             <GridSection>
                                 <CardWrapper key={defaultStrategy.name}>
@@ -278,12 +260,10 @@ export const FeatureStrategyMenuCards = ({
                                     <Typography color='inherit' variant='body2'>
                                         Custom strategies
                                     </Typography>
-                                    <Tooltip
-                                        title='Custom strategies you have defined in Unleash'
-                                        arrow
-                                    >
-                                        <StyledInfoIcon />
-                                    </Tooltip>
+                                    <HelpIcon
+                                        tooltip='Custom strategies you have defined in Unleash'
+                                        size='16px'
+                                    />
                                 </SectionTitle>
                                 <GridSection>
                                     {customStrategies.map((strategy) => (

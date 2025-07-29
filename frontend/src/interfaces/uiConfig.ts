@@ -95,6 +95,7 @@ export type UiFlags = {
     timestampsInChangeRequestTimeline?: boolean;
     reportUnknownFlags?: boolean;
     lifecycleGraphs?: boolean;
+    addConfiguration?: boolean;
 };
 
 export interface IVersionInfo {

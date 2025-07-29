@@ -27,7 +27,10 @@ const CardContent = styled('div')(({ theme }) => ({
 
 const HoverButtonsContainer = styled('div')(({ theme }) => ({
     position: 'absolute',
-    right: theme.spacing(2),
+    background: theme.palette.background.paper,
+    padding: theme.spacing(1),
+    top: theme.spacing(1),
+    right: theme.spacing(1),
     display: 'flex',
     gap: theme.spacing(1),
     opacity: 0,

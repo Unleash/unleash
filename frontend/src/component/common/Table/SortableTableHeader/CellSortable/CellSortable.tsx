@@ -52,7 +52,7 @@ export const CellSortable: FC<ICellSortableProps> = ({
     styles,
 }) => {
     const { setAnnouncement } = useContext(AnnouncerContext);
-    const [title, setTitle] = useState('');
+    const [tooltipTitle, setTooltipTitle] = useState('');
     const ref = useRef<HTMLSpanElement>(null);
 
     const ariaSort = isSorted
@@ -93,17 +93,17 @@ export const CellSortable: FC<ICellSortableProps> = ({
     }, [align]);
 
     useEffect(() => {
-        const newTitle =
+        const newTooltipTitle =
             ariaTitle &&
             ref.current &&
             ref?.current?.offsetWidth < ref?.current?.scrollWidth
                 ? `${children}`
                 : '';
 
-        if (newTitle !== title) {
-            setTitle(newTitle);
+        if (newTooltipTitle !== tooltipTitle) {
+            setTooltipTitle(newTooltipTitle);
         }
-    }, [setTitle, ariaTitle]);
+    }, [setTooltipTitle, ariaTitle]);
 
     return (
         <StyledTableCell
@@ -117,7 +117,7 @@ export const CellSortable: FC<ICellSortableProps> = ({
             <ConditionallyRender
                 condition={isSortable}
                 show={
-                    <Tooltip title={title} arrow>
+                    <Tooltip title={tooltipTitle} arrow>
                         <StyledButton
                             isSorted={isSorted}
                             type='button'

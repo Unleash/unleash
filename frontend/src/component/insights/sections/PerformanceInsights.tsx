@@ -28,6 +28,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { NewProductionFlagsChart } from '../componentsChart/NewProductionFlagsChart/NewProductionFlagsChart.tsx';
 import Lightbulb from '@mui/icons-material/LightbulbOutlined';
 import { CreationArchiveChart } from '../componentsChart/CreationArchiveChart/CreationArchiveChart.tsx';
+import { CreationArchiveStats } from '../componentsStat/CreationArchiveStats/CreationArchiveStats.tsx';
 
 export const PerformanceInsights: FC = () => {
     const statePrefix = 'performance-';
@@ -80,6 +81,39 @@ export const PerformanceInsights: FC = () => {
             : flagsPerUserCalculation.toFixed(2);
     }
 
+    // Calculate current archive ratio from latest data
+    function getCurrentArchiveRatio() {
+        if (
+            !groupedCreationArchiveData ||
+            Object.keys(groupedCreationArchiveData).length === 0
+        ) {
+            return 0;
+        }
+
+        let totalArchived = 0;
+        let totalCreated = 0;
+
+        Object.values(groupedCreationArchiveData).forEach((projectData) => {
+            const latestData = projectData[projectData.length - 1];
+            if (latestData) {
+                totalArchived += latestData.archivedFlags || 0;
+                const createdSum = latestData.createdFlags
+                    ? Object.values(latestData.createdFlags).reduce(
+                          (sum: number, count: number) => sum + count,
+                          0,
+                      )
+                    : 0;
+                totalCreated += createdSum;
+            }
+        });
+
+        return totalCreated > 0
+            ? Math.round((totalArchived / totalCreated) * 100)
+            : 0;
+    }
+
+    const currentRatio = getCurrentArchiveRatio();
+
     const isLifecycleGraphsEnabled = useUiFlag('lifecycleGraphs');
 
     return (
@@ -116,6 +150,10 @@ export const PerformanceInsights: FC = () => {
                 <StyledWidget>
                     <StyledWidgetStats width={275}>
                         <WidgetTitle title='Flags created vs archived' />
+                        <CreationArchiveStats
+                            currentRatio={currentRatio}
+                            isLoading={loading}
+                        />
                     </StyledWidgetStats>
                     <StyledChartContainer>
                         <CreationArchiveChart

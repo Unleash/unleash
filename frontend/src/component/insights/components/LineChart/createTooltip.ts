@@ -12,7 +12,6 @@ export const createTooltip =
             setTooltip(null);
             return;
         }
-
         setTooltip({
             caretX: tooltip?.caretX,
             caretY: tooltip?.caretY,

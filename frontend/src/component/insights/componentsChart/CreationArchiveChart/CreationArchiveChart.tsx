@@ -26,7 +26,7 @@ import {
 import { createTooltip } from 'component/insights/components/LineChart/createTooltip';
 import { CreationArchiveTooltip } from './CreationArchiveTooltip.tsx';
 import { CreationArchiveRatioTooltip } from './CreationArchiveRatioTooltip.tsx';
-import { getFlagTypeColors } from './flagTypeColors.js';
+import { getFlagTypeColors } from './flagTypeColors.ts';
 
 ChartJS.register(
     CategoryScale,

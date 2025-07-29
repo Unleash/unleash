@@ -5,7 +5,6 @@ import { formatDateYMDHMS } from 'utils/formatDate';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material';
 import type { EventSchema } from 'openapi';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useLocation } from 'react-router-dom';
 
 interface IEventCardProps {
@@ -74,7 +73,6 @@ export const StyledCodeSection = styled('div')(({ theme }) => ({
 
 const EventCard = ({ entry }: IEventCardProps) => {
     const { locationSettings } = useLocationSettings();
-    const eventGroupingEnabled = useUiFlag('eventGrouping');
     const location = useLocation();
 
     const createdAtFormatted = formatDateYMDHMS(
@@ -94,9 +92,7 @@ const EventCard = ({ entry }: IEventCardProps) => {
                 <StyledDefinitionTerm>Event id:</StyledDefinitionTerm>
                 <dd>{entry.id}</dd>
                 <ConditionallyRender
-                    condition={
-                        eventGroupingEnabled && entry.groupId !== undefined
-                    }
+                    condition={entry.groupId !== undefined}
                     show={
                         <>
                             <StyledDefinitionTerm>
@@ -166,10 +162,7 @@ const EventCard = ({ entry }: IEventCardProps) => {
                     }
                 />
                 <ConditionallyRender
-                    condition={
-                        eventGroupingEnabled &&
-                        Boolean(entry.data?.changeRequestId)
-                    }
+                    condition={Boolean(entry.data?.changeRequestId)}
                     show={
                         <>
                             <StyledDefinitionTerm>

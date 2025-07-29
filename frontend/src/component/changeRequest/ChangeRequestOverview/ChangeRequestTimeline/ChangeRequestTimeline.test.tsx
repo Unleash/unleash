@@ -7,13 +7,13 @@ import {
 } from './ChangeRequestTimeline.tsx';
 import type { ChangeRequestState } from '../../changeRequest.types';
 
-test('cancelled timeline shows all states', () => {
+test('cancelled timeline shows expected states', () => {
     render(<ChangeRequestTimeline state={'Cancelled'} />);
 
     expect(screen.getByText('Draft')).toBeInTheDocument();
     expect(screen.getByText('In review')).toBeInTheDocument();
     expect(screen.getByText('Approved')).toBeInTheDocument();
-    expect(screen.getByText('Applied')).toBeInTheDocument();
+    expect(screen.getByText('Cancelled')).toBeInTheDocument();
 });
 
 test('approved timeline shows all states', () => {

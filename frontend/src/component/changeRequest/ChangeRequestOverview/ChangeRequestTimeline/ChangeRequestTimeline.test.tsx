@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import {
     ChangeRequestTimeline,
@@ -183,4 +183,80 @@ test('returns primary for stages right after activeIndex', () => {
 test('returns grey for stages two or more steps after activeIndex', () => {
     expect(determineColor('Draft', 0, 'Approved', 2)).toBe('grey');
     expect(determineColor('Draft', 0, 'Applied', 3)).toBe('grey');
+});
+
+describe('Timestamps', () => {
+    test('Displays timestamps for stages if available', () => {
+        const timestamps = {
+            Draft: '2023-01-01T00:00:00Z',
+            'In review': '2023-01-02T00:00:00Z',
+            Approved: '2023-01-03T00:00:00Z',
+        };
+        render(
+            <ChangeRequestTimeline
+                state={'Approved'}
+                timestamps={timestamps}
+            />,
+        );
+
+        const timeElements = screen.getAllByRole('time');
+        expect(timeElements.length).toBe(3);
+        for (const time of Object.values(timestamps)) {
+            expect(
+                timeElements.some(
+                    (element) => element.getAttribute('datetime') === time,
+                ),
+            ).toBe(true);
+        }
+    });
+
+    test('Shows stages without timestamps if they are not available', () => {
+        const timestamps = {
+            Draft: '2023-01-01T00:00:00Z',
+            Approved: '2023-01-03T00:00:00Z',
+        };
+        render(
+            <ChangeRequestTimeline
+                state={'Approved'}
+                timestamps={timestamps}
+            />,
+        );
+
+        const inReview = screen.getByText('In review');
+        const inReviewTimestamp = within(inReview).queryByRole('time');
+        expect(inReviewTimestamp).toBeNull();
+
+        const timeElements = screen.getAllByRole('time');
+        expect(timeElements.length).toBe(2);
+        for (const time of Object.values(timestamps)) {
+            expect(
+                timeElements.some(
+                    (element) => element.getAttribute('datetime') === time,
+                ),
+            ).toBe(true);
+        }
+    });
+
+    test('Existing timestamps in upcoming stages are not shown', () => {
+        const timestamps = {
+            Draft: '2023-01-01T00:00:00Z',
+            'In review': '2023-01-03T00:00:00Z',
+            Approved: '2023-01-02T00:00:00Z',
+        };
+        render(
+            <ChangeRequestTimeline
+                state={'In review'}
+                timestamps={timestamps}
+            />,
+        );
+
+        const timeElements = screen.getAllByRole('time');
+        expect(timeElements.length).toBe(2);
+        expect(
+            timeElements.some(
+                (element) =>
+                    element.getAttribute('datetime') === timestamps.Approved,
+            ),
+        ).toBe(false);
+    });
 });

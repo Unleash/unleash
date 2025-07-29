@@ -32,7 +32,7 @@ export const useApiTokenForm = (project?: string) => {
         {
             key: TokenType.FRONTEND,
             label: 'Frontend SDK',
-            title: 'Creates a frontend token to connect from a frontend SDK',
+            title: 'Creates a frontend token to connect a frontend SDK',
             enabled:
                 useHasRootAccess(CREATE_FRONTEND_API_TOKEN) ||
                 hasCreateProjectTokenPermission,

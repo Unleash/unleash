@@ -2068,14 +2068,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.8.2":
-  version: 1.8.3
-  resolution: "axios@npm:1.8.3"
+"axios@npm:^1.11.0":
+  version: 1.11.0
+  resolution: "axios@npm:1.11.0"
   dependencies:
     follow-redirects: "npm:^1.15.6"
-    form-data: "npm:^4.0.0"
+    form-data: "npm:^4.0.4"
     proxy-from-env: "npm:^1.1.0"
-  checksum: 10c0/de75da9859adf0a6481d4af2b687db357a054d20f0d69b99d502b71dae3578326b1fdc0951dabaef769827484941cda93d3f89150bf9e04f05f6615fb8316780
+  checksum: 10c0/5de273d33d43058610e4d252f0963cc4f10714da0bfe872e8ef2cbc23c2c999acc300fd357b6bce0fc84a2ca9bd45740fa6bb28199ce2c1266c8b1a393f2b36e
   languageName: node
   linkType: hard
 
@@ -7889,17 +7889,17 @@ __metadata:
   linkType: hard
 
 "wait-on@npm:^8.0.0":
-  version: 8.0.3
-  resolution: "wait-on@npm:8.0.3"
+  version: 8.0.4
+  resolution: "wait-on@npm:8.0.4"
   dependencies:
-    axios: "npm:^1.8.2"
+    axios: "npm:^1.11.0"
     joi: "npm:^17.13.3"
     lodash: "npm:^4.17.21"
     minimist: "npm:^1.2.8"
     rxjs: "npm:^7.8.2"
   bin:
     wait-on: bin/wait-on
-  checksum: 10c0/7f14086c3bb6fc055207ab591d2faefc045f718aa7c959353a54af05cf08c53c25d9af80d4d5f6934a169cc0d97ebd1dcf024b13583d09b9a935c36bd745bd7b
+  checksum: 10c0/e77d843a03efc12699c965c34338fe0b95c9e80d1e39d946dc172e11a2b9613688b48b61135b269390025a255204a4e3e2ff8e5774f99f0069d149b4b48fd02d
   languageName: node
   linkType: hard
 

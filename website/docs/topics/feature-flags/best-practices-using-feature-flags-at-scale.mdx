@@ -162,7 +162,7 @@ A good rule of thumb is that if the data is static (you don't expect it to chang
 
 Feature flag names need to be [globally unique](https://docs.getunleash.io/topics/feature-flags/unique-names). In an ideal world, all flag references would be removed from the codebase as soon as a flag is archived—but in reality, that rarely happens. Using unique names helps protect new features from accidentally linking to old, unused flags that could unintentionally re-enable outdated behavior.
 
-To avoid this risk, enforce a [naming pattern](https://docs.getunleash.io/reference/feature-toggles#set-a-naming-pattern) at flag creation.
+To avoid this risk, enforce a [naming pattern](/reference/feature-toggles#set-a-naming-pattern) at flag creation.
 
 ### Using large targeting lists
 
@@ -228,7 +228,7 @@ Avoid putting all flags into one large group. While it might seem simpler, it qu
 
 Modern applications are composed of multiple services with many complex dependencies. While organizing flags by applications, teams, or business units is a good starting point, real-world services often exist across these organizational boundaries.
 
-Just because a user doesn't normally work with a flag doesn't mean they won't need to find it. However, you don't need to show every flag by default—especially those outside a user's main scope. What matters is that all flags are [searchable](https://docs.getunleash.io/reference/api/unleash/search-features). When someone searches for a flag, they should be able to view its configuration and ownership, so they can request access or submit a [change request](../../reference/change-requests) if needed.
+Just because a user doesn't normally work with a flag doesn't mean they won't need to find it. However, you don't need to show every flag by default—especially those outside a user's main scope. What matters is that all flags are [searchable](/reference/api/unleash/search-features). When someone searches for a flag, they should be able to view its configuration and ownership, so they can request access or submit a [change request](../../reference/change-requests) if needed.
 
 This is why feature flag systems should be [open by default](./feature-flag-best-practices#5-choose-open-by-default).
 

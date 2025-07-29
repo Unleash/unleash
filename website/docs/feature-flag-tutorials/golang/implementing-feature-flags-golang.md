@@ -260,7 +260,7 @@ func main() {
 }
 ```
 
-See additional use cases in our [Server-Side SDK with Go](https://docs.getunleash.io/reference/sdks/go) documentation.
+See additional use cases in our [Server-Side SDK with Go](/reference/sdks/go) documentation.
 
 ## 6. Verify the toggle experience
 

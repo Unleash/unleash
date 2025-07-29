@@ -3,7 +3,7 @@ title: How to Implement Feature Flags in iOS
 slug: /feature-flag-tutorials/ios
 ---
 
-iOS is a mobile operating system developed by Apple for their mostly used mobile device: the iPhone. [Swift](https://www.swift.org/) is a programming language designed for Apple iOS devices. Unleash offers an [iOS SDK](https://docs.getunleash.io/reference/sdks/ios-proxy) for connecting SwiftUI with your iOS application to use feature flags. We will be using the open-source iOS Swift project called [Open Meteo](https://github.com/ighiba/open-meteo)!
+iOS is a mobile operating system developed by Apple for their mostly used mobile device: the iPhone. [Swift](https://www.swift.org/) is a programming language designed for Apple iOS devices. Unleash offers an [iOS SDK](/reference/sdks/ios-proxy) for connecting SwiftUI with your iOS application to use feature flags. We will be using the open-source iOS Swift project called [Open Meteo](https://github.com/ighiba/open-meteo)!
 
 Leveraging feature flags allows developers to toggle new features on and off, whether you’re experimenting in your local environment, testing for QA purposes, or rolling out changes to users in production. With Unleash, an open-source feature flag service, you can use our tooling to implement feature flags into your application and release new features faster, strategically, and safely. But how can you do this in iOS with Swift?
 
@@ -97,7 +97,7 @@ Select the ‘New API token’ button.
 
 ![Image of the API token button in API Access view](/img/tutorial-create-api-token.png)
 
-Name the API token and select the “Client-side SDK” token type, since we’ll be doing our flag evaluation on the client using the iOS SDK. You can read more about [Unleash API tokens in our documentation](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens).
+Name the API token and select the “Client-side SDK” token type, since we’ll be doing our flag evaluation on the client using the iOS SDK. You can read more about [Unleash API tokens in our documentation](/reference/api-tokens-and-client-keys#client-tokens).
 
 The token should have access to the “development” environment, as shown in the platform screenshot below.
 

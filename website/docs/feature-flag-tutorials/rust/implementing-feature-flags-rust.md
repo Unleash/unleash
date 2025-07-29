@@ -4,9 +4,9 @@ description: "How to use Unleash feature flags with Rust."
 slug: /feature-flag-tutorials/rust
 ---
 
-Hello! In this tutorial we’ll show you how to add feature flags to your Rust app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Rust SDK](https://docs.getunleash.io/reference/sdks/rust). With Unleash, an open-source feature management service, you can add feature flags to your applications and release new features faster.
+Hello! In this tutorial we’ll show you how to add feature flags to your Rust app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Rust SDK](/reference/sdks/rust). With Unleash, an open-source feature management service, you can add feature flags to your applications and release new features faster.
 
-We love Rust here at Unleash, our own [Unleash Edge](https://docs.getunleash.io/reference/unleash-edge) is built with Rust and it's a core part of our product.
+We love Rust here at Unleash, our own [Unleash Edge](/reference/unleash-edge) is built with Rust and it's a core part of our product.
 
 -   [Prerequisites](#prerequisites)
 -   [1. Install a local feature flag provider](#1-install-a-local-feature-flag-provider)
@@ -69,7 +69,7 @@ Select the ‘New API token’ button or copy an existing token.
 
 ![The API token button in API Access view](/img/tutorial-create-api-token.png)
 
-Name the API token and select the “Server-side SDK (Client)” token type. You can read more about [Unleash API tokens in our documentation](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens).
+Name the API token and select the “Server-side SDK (Client)” token type. You can read more about [Unleash API tokens in our documentation](/reference/api-tokens-and-client-keys#client-tokens).
 
 ![Selecting the API token type](/img/tutorial-api-token-type.png)
 

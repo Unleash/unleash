@@ -28,7 +28,7 @@ Backend tokens are intended for use in [backend SDKs](../reference/sdks#backend-
 -   Registering applications with the Unleash server
 -   Sending usage metrics
 
-Backend tokens are scoped to one or more projects and a single environment. When creating a frontend token, you can give it access to a specific list of projects or to all current or future projects. Frontend tokens are secrets and must not be exposed to end users.
+Backend tokens are scoped to one or more projects and a single environment. When creating a backend token, you can give it access to a specific list of projects or to all current or future projects. Backend tokens are secrets and must not be exposed to end users.
 
 Backend tokens cannot be used in frontend SDKs; use [frontend tokens](#frontend-tokens) instead.
 
@@ -52,7 +52,7 @@ When you use a personal access token to modify resources, the events record the 
 
 Personal access tokens with a lifetime expire and stop working after their expiration date. Although you can set the token to not expire, we recommend using tokens with expiration dates to follow security best practices.
 
-Personal access tokens are not suitable for backend or frontend SDKs, as they are not bound to an environment, they may expire, or their permissions may change.
+Personal access tokens are not suitable for use in SDKs, as they are not bound to an environment, they may expire, or their permissions may change.
 
 ### Service account tokens
 

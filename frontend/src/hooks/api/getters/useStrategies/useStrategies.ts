@@ -11,6 +11,13 @@ interface IUseStrategiesOutput {
     error?: Error;
 }
 
+const STANDARD_STRATEGIES = ['flexibleRollout', 'default'];
+const mapAdvancedStrategies = (strategies: IStrategy[]): IStrategy[] =>
+    strategies.map((strategy) => ({
+        ...strategy,
+        advanced: !STANDARD_STRATEGIES.includes(strategy.name),
+    }));
+
 export const useStrategies = (): IUseStrategiesOutput => {
     const { data, error } = useSWR(STRATEGIES_PATH, fetcher);
 
@@ -19,7 +26,9 @@ export const useStrategies = (): IUseStrategiesOutput => {
     }, []);
 
     return {
-        strategies: data?.strategies || defaultStrategies,
+        strategies: mapAdvancedStrategies(
+            data?.strategies || defaultStrategies,
+        ),
         refetchStrategies,
         loading: !error && !data,
         error,

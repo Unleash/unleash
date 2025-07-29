@@ -142,7 +142,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
 
         const flagTypeDatasets = Array.from(allFlagTypes).map(
             (flagType, index) => ({
-                label: `Created: ${flagType}`,
+                label: flagType,
                 data: weeks,
                 backgroundColor: flagTypeColors[index % flagTypeColors.length],
                 borderColor: flagTypeColors[index % flagTypeColors.length],
@@ -157,6 +157,8 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
             }),
         );
 
+        const flagTypeNames = Array.from(allFlagTypes);
+
         return {
             datasets: [
                 {
@@ -164,10 +166,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     data: weeks,
                     backgroundColor: theme.palette.background.application,
                     borderColor: theme.palette.background.application,
-                    type: 'bar' as const,
                     parsing: { yAxisKey: 'archivedFlags', xAxisKey: 'date' },
-                    yAxisID: 'y',
-                    stack: 'archived',
                     order: 2,
                 },
                 ...flagTypeDatasets,
@@ -176,7 +175,6 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     data: weeks,
                     borderColor: theme.palette.primary.light,
                     backgroundColor: theme.palette.primary.light,
-                    fill: false,
                     type: 'line' as const,
                     parsing: {
                         yAxisKey: 'archivePercentage',
@@ -186,6 +184,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     order: 1,
                 },
             ],
+            flagTypeNames, // Add this to the return object
         };
     }, [creationArchiveData, theme]);
 
@@ -201,6 +200,11 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     const data =
         notEnoughData || isLoading ? placeholderData : aggregateOrProjectData;
 
+    // Get flag type names for legend filtering
+    const flagTypeNames = isAggregate
+        ? (aggregateHealthData as any).flagTypeNames || []
+        : [];
+
     return (
         <>
             <Chart
@@ -214,9 +218,8 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                             position: 'bottom' as const,
                             labels: {
                                 filter: (legendItem) => {
-                                    // Hide individual created flag type labels
-                                    return !legendItem.text?.startsWith(
-                                        'Created:',
+                                    return !flagTypeNames.includes(
+                                        legendItem.text || '',
                                     );
                                 },
                                 generateLabels: (chart) => {
@@ -226,7 +229,9 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                                         );
                                     const filtered = original.filter(
                                         (item) =>
-                                            !item.text?.startsWith('Created:'),
+                                            !flagTypeNames.includes(
+                                                item.text || '',
+                                            ),
                                     );
 
                                     // Add custom "Created Flags" legend item
@@ -294,8 +299,10 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                 height={100}
                 width={250}
             />
-            {tooltip?.dataPoints?.some((point) =>
-                point.dataset.label?.startsWith('Created:'),
+            {tooltip?.dataPoints?.some(
+                (point) =>
+                    point.dataset.label !== 'Archived flags' &&
+                    point.dataset.label !== 'Flags archived / Flags created',
             ) ? (
                 <CreationArchiveTooltip tooltip={tooltip} />
             ) : tooltip?.dataPoints?.some(

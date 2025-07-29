@@ -28,30 +28,29 @@ export const CreationArchiveTooltip: FC<CreationArchiveTooltipProps> = ({
         return null;
     }
 
-    // Filter for created flag type datasets only
-    const createdFlagDataPoints = tooltip.dataPoints.filter((point) =>
-        point.dataset.label?.startsWith('Created:'),
+    // Filter for flag type datasets (exclude archived flags and percentage line)
+    const createdFlagDataPoints = tooltip.dataPoints.filter(
+        (point) =>
+            point.dataset.label !== 'Archived flags' &&
+            point.dataset.label !== 'Flags archived / Flags created',
     );
 
     if (createdFlagDataPoints.length === 0) {
         return null;
     }
 
-    // Get the data from the first point (they all have the same raw data)
     const rawData = createdFlagDataPoints[0]?.raw as any;
 
     if (!rawData?.createdFlagsByType) {
         return null;
     }
 
-    // Get flag type names from the chart datasets
     const flagTypeNames = createdFlagDataPoints.map(
-        (point) => point.dataset.label?.replace('Created: ', '') || '',
+        (point) => point.dataset.label || '',
     );
 
     const flagTypeColors = getFlagTypeColors(theme);
 
-    // Create entries for each flag type with count > 0
     const flagTypeEntries = Object.entries(rawData.createdFlagsByType)
         .filter(([, count]) => (count as number) > 0)
         .map(([flagType, count], index) => ({

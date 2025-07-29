@@ -171,9 +171,10 @@ export class ApiTokenService {
                 stopCacheTimer();
             } else {
                 this.logger.info(
-                    `Token ${secret.replace(/(.*\.....).*/, '$1...')} rate limited until: ${this.queryAfter.get(
-                        secret,
-                    )}`,
+                    `Token ${secret.replace(
+                        /^([^.]*)\.(.{8}).*$/,
+                        '$1.$2...',
+                    )} rate limited until: ${this.queryAfter.get(secret)}`,
                 );
             }
         }

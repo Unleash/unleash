@@ -98,16 +98,21 @@ const StrategyDeprecationWarning = () => (
         version. We recommend not using custom strategies going forward and
         instead using the gradual rollout strategy with{' '}
         <Link
-            href={
-                'https://docs.getunleash.io/reference/activation-strategies#constraints'
-            }
+            href='https://docs.getunleash.io/reference/activation-strategies#constraints'
             target='_blank'
             rel='noopener noreferrer'
         >
             constraints
+        </Link>{' '}
+        and{' '}
+        <Link
+            href='https://docs.getunleash.io/reference/activation-strategies#variants'
+            target='_blank'
+            rel='noopener noreferrer'
+        >
+            variants
         </Link>
-        . If you have a need for custom strategies that you cannot support with
-        constraints, please reach out to us.
+        .
     </Alert>
 );
 

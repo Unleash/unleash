@@ -15,6 +15,13 @@ import { HtmlTooltip } from '../../../common/HtmlTooltip/HtmlTooltip.tsx';
 import ErrorIcon from '@mui/icons-material/Error';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHM } from 'utils/formatDate.ts';
+import {
+    stepsFromTimestamps,
+    rejectedSteps,
+    scheduledSteps,
+    cancelledSteps,
+    steps,
+} from './change-request-timeline-steps.ts';
 
 export type ISuggestChangeTimelineProps = {
     timestamps?: ChangeRequestType['stateTransitionTimestamps']; // todo: update with flag `timestampsInChangeRequestTimeline`
@@ -58,21 +65,6 @@ const StyledTimeline = styled(Timeline)(() => ({
     },
 }));
 
-const steps: ChangeRequestState[] = [
-    'Draft',
-    'In review',
-    'Approved',
-    'Applied',
-];
-const rejectedSteps: ChangeRequestState[] = ['Draft', 'In review', 'Rejected'];
-const scheduledSteps: ChangeRequestState[] = [
-    'Draft',
-    'In review',
-    'Approved',
-    'Scheduled',
-    'Applied',
-];
-
 export const determineColor = (
     changeRequestState: ChangeRequestState,
     changeRequestStateIndex: number,
@@ -101,10 +93,21 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
     let data: ChangeRequestState[];
     switch (state) {
         case 'Rejected':
-            data = rejectedSteps;
+            if (timestamps) {
+                data = stepsFromTimestamps(timestamps, 'Rejected');
+            } else {
+                data = rejectedSteps;
+            }
             break;
         case 'Scheduled':
             data = scheduledSteps;
+            break;
+        case 'Cancelled':
+            if (timestamps) {
+                data = stepsFromTimestamps(timestamps, 'Cancelled');
+            } else {
+                data = cancelledSteps;
+            }
             break;
         default:
             data = steps;

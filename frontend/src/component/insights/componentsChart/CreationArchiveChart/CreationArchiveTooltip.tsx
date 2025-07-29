@@ -28,7 +28,6 @@ export const CreationArchiveTooltip: FC<CreationArchiveTooltipProps> = ({
         return null;
     }
 
-    // Filter for flag type datasets (exclude archived flags and percentage line)
     const createdFlagDataPoints = tooltip.dataPoints.filter(
         (point) =>
             point.dataset.label !== 'Archived flags' &&

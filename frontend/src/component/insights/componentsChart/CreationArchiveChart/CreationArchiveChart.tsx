@@ -67,7 +67,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     creationArchiveTrends,
     isLoading,
 }) => {
-    const creationArchiveData = useProjectChartData(creationArchiveTrends);
+    const creationVsArchivedChart = useProjectChartData(creationArchiveTrends);
     const theme = useTheme();
     const placeholderData = usePlaceholderData();
     const { locationSettings } = useLocationSettings();
@@ -76,14 +76,14 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     const aggregateHealthData = useMemo(() => {
         const labels: string[] = Array.from(
             new Set(
-                creationArchiveData.datasets.flatMap((d) =>
+                creationVsArchivedChart.datasets.flatMap((d) =>
                     d.data.map((item) => item.week),
                 ),
             ),
         );
 
         const allFlagTypes = new Set<string>();
-        creationArchiveData.datasets.forEach((d) =>
+        creationVsArchivedChart.datasets.forEach((d) =>
             d.data.forEach((item: any) => {
                 if (item.createdFlags) {
                     Object.keys(item.createdFlags).forEach((type) =>
@@ -93,39 +93,39 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
             }),
         );
 
+        const aggregateWeekData = (acc: WeekData, item: RawWeekData) => {
+            if (item) {
+                acc.archivedFlags += item.archivedFlags || 0;
+
+                if (item.createdFlags) {
+                    Object.entries(item.createdFlags).forEach(
+                        ([type, count]) => {
+                            acc.createdFlagsByType[type] =
+                                (acc.createdFlagsByType[type] || 0) + count;
+                            acc.totalCreatedFlags += count;
+                        },
+                    );
+                }
+            }
+            if (!acc.date) {
+                acc.date = item?.date;
+            }
+            return acc;
+        };
+
+        const createInitialWeekData = (label: string): WeekData => ({
+            archivedFlags: 0,
+            totalCreatedFlags: 0,
+            createdFlagsByType: {},
+            archivePercentage: 0,
+            week: label,
+        });
+
         const weeks: WeekData[] = labels
             .map((label) => {
-                return creationArchiveData.datasets
+                return creationVsArchivedChart.datasets
                     .map((d) => d.data.find((item) => item.week === label))
-                    .reduce(
-                        (acc: WeekData, item: RawWeekData) => {
-                            if (item) {
-                                acc.archivedFlags += item.archivedFlags || 0;
-
-                                if (item.createdFlags) {
-                                    Object.entries(item.createdFlags).forEach(
-                                        ([type, count]) => {
-                                            acc.createdFlagsByType[type] =
-                                                (acc.createdFlagsByType[type] ||
-                                                    0) + count;
-                                            acc.totalCreatedFlags += count;
-                                        },
-                                    );
-                                }
-                            }
-                            if (!acc.date) {
-                                acc.date = item?.date;
-                            }
-                            return acc;
-                        },
-                        {
-                            archivedFlags: 0,
-                            totalCreatedFlags: 0,
-                            createdFlagsByType: {},
-                            archivePercentage: 0,
-                            week: label,
-                        } as WeekData,
-                    );
+                    .reduce(aggregateWeekData, createInitialWeekData(label));
             })
             .map((week) => ({
                 ...week,
@@ -184,14 +184,14 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
             ],
             flagTypeNames,
         };
-    }, [creationArchiveData, theme]);
+    }, [creationVsArchivedChart, theme]);
 
     const aggregateOrProjectData = aggregateHealthData;
     const notEnoughData = useMemo(
         () =>
             !isLoading &&
-            !creationArchiveData.datasets.some((d) => d.data.length > 1),
-        [creationArchiveData, isLoading],
+            !creationVsArchivedChart.datasets.some((d) => d.data.length > 1),
+        [creationVsArchivedChart, isLoading],
     );
     const data =
         notEnoughData || isLoading ? placeholderData : aggregateOrProjectData;

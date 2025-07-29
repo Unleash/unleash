@@ -175,10 +175,10 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                     <StyledSdksGroup>
                         <Box>
                             <Typography component='h4' variant='h4'>
-                                Server-side SDKs
+                                Backend SDKs
                             </Typography>
                             <Typography variant='body2' color='text.secondary'>
-                                Server-side clients run on your server and
+                                Backend clients run on your server and
                                 communicate directly with your Unleash instance.
                             </Typography>
                         </Box>

@@ -142,12 +142,12 @@ const tokenDescriptions: {
     [index: string]: { label: string; title: string };
 } = {
     client: {
-        label: 'CLIENT',
-        title: 'Connect server-side SDK or Unleash Proxy/Edge',
+        label: 'BACKEND',
+        title: 'Connect backend SDK or Unleash Edge',
     },
     frontend: {
         label: 'FRONTEND',
-        title: 'Connect web and mobile SDK',
+        title: 'Connect frontend SDK',
     },
     admin: {
         label: 'ADMIN',

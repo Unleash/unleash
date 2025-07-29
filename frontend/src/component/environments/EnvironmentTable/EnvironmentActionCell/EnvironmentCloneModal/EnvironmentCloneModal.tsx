@@ -334,10 +334,9 @@ export const EnvironmentCloneModal = ({
                             </FormControl>
                             <StyledInlineContainer>
                                 <StyledInputSecondaryDescription>
-                                    A new Server-side SDK (CLIENT) API token
-                                    will be generated for the cloned
-                                    environment, so you can get started right
-                                    away.
+                                    A new backend SDK API token will be
+                                    generated for the cloned environment, so you
+                                    can get started right away.
                                 </StyledInputSecondaryDescription>
                                 <ConditionallyRender
                                     condition={

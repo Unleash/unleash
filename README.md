@@ -61,7 +61,7 @@ If you use the docker compose file from the previous step, here's the configurat
 - For front-end SDKs, use:
   - URL: `http://localhost:4242/api/frontend/`
   - `clientKey`: `default:development.unleash-insecure-frontend-api-token`
-- For server-side SDKs, use:
+- For Backend SDKs, use:
   - Unleash API URL: `http://localhost:4242/api/`
   - API token: `default:development.unleash-insecure-api-token`
 
@@ -183,7 +183,7 @@ Read more in the [_system overview_ section of the Unleash documentation](https:
 
 To connect your application to Unleash you'll need to use a client SDK for your programming language.
 
-**Official server-side SDKs:**
+**Official Backend SDKs:**
 
 - [Go SDK](https://docs.getunleash.io/reference/sdks/go)
 - [Java SDK](https://docs.getunleash.io/reference/sdks/java)

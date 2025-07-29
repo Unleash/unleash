@@ -23,16 +23,16 @@ export const useApiTokenForm = (project?: string) => {
     const apiTokenTypes: SelectOption[] = [
         {
             key: TokenType.CLIENT,
-            label: `Server-side SDK (${TokenType.CLIENT})`,
-            title: 'Connect server-side SDK or Unleash Proxy/Edge',
+            label: 'Backend SDK',
+            title: 'Creates a backend token to connect a backend SDK or Unleash Edge',
             enabled:
                 useHasRootAccess(CREATE_CLIENT_API_TOKEN) ||
                 hasCreateProjectTokenPermission,
         },
         {
             key: TokenType.FRONTEND,
-            label: `Client-side SDK (${TokenType.FRONTEND})`,
-            title: 'Connect web and mobile SDK directly to Unleash',
+            label: 'Frontend SDK',
+            title: 'Creates a frontend token to connect from a frontend SDK',
             enabled:
                 useHasRootAccess(CREATE_FRONTEND_API_TOKEN) ||
                 hasCreateProjectTokenPermission,

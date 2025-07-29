@@ -16,7 +16,7 @@ export const clientFeaturesSchema = {
     type: 'object',
     required: ['version', 'features'],
     description:
-        'Configuration data for server-side SDKs for evaluating feature flags.',
+        'Configuration data for Backend SDKs for evaluating feature flags.',
     properties: {
         version: {
             type: 'number',

@@ -1,7 +1,8 @@
 import type { FC } from 'react';
-import { Box, Paper, Typography, styled } from '@mui/material';
-import type { TooltipState } from '../../components/LineChart/ChartTooltip/ChartTooltip.tsx';
-import { ChartTooltipContainer } from '../../components/LineChart/ChartTooltip/ChartTooltip.tsx';
+import { Box, Paper, Typography, styled, useTheme } from '@mui/material';
+import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
+import { ChartTooltipContainer } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
+import { getFlagTypeColors } from './flagTypeColors.ts';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -21,6 +22,8 @@ interface CreationArchiveTooltipProps {
 export const CreationArchiveTooltip: FC<CreationArchiveTooltipProps> = ({
     tooltip,
 }) => {
+    const theme = useTheme();
+
     if (!tooltip?.dataPoints) {
         return null;
     }
@@ -41,19 +44,12 @@ export const CreationArchiveTooltip: FC<CreationArchiveTooltipProps> = ({
         return null;
     }
 
-    // Flag type colors matching the chart
-    const flagTypeColors = [
-        '#66bb6a', // theme.palette.success.border
-        '#4caf50', // theme.palette.success.main
-        '#388e3c', // theme.palette.success.dark
-        '#4D8007',
-        '#7D935E',
-    ];
-
     // Get flag type names from the chart datasets
     const flagTypeNames = createdFlagDataPoints.map(
         (point) => point.dataset.label?.replace('Created: ', '') || '',
     );
+
+    const flagTypeColors = getFlagTypeColors(theme);
 
     // Create entries for each flag type with count > 0
     const flagTypeEntries = Object.entries(rawData.createdFlagsByType)

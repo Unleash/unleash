@@ -1,7 +1,12 @@
 import type { FC } from 'react';
-import { Box, Paper, Typography, styled } from '@mui/material';
+import { Box, Paper, Typography, styled, useTheme } from '@mui/material';
 import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
 import { ChartTooltipContainer } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
+
+const getRatioTooltipColors = (theme: any) => ({
+    CREATED: theme.palette.success.main,
+    ARCHIVED: theme.palette.background.application,
+});
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -22,6 +27,9 @@ interface CreationArchiveRatioTooltipProps {
 export const CreationArchiveRatioTooltip: FC<
     CreationArchiveRatioTooltipProps
 > = ({ tooltip }) => {
+    const theme = useTheme();
+    const colors = getRatioTooltipColors(theme);
+
     if (!tooltip?.dataPoints) {
         return null;
     }
@@ -60,7 +68,10 @@ export const CreationArchiveRatioTooltip: FC<
 
                 <StyledFlagItem>
                     <Typography variant='body2' component='span'>
-                        <Typography sx={{ color: '#4caf50' }} component='span'>
+                        <Typography
+                            sx={{ color: colors.CREATED }}
+                            component='span'
+                        >
                             {'● '}
                         </Typography>
                         Flags created
@@ -72,7 +83,10 @@ export const CreationArchiveRatioTooltip: FC<
 
                 <StyledFlagItem>
                     <Typography variant='body2' component='span'>
-                        <Typography sx={{ color: '#9e9e9e' }} component='span'>
+                        <Typography
+                            sx={{ color: colors.ARCHIVED }}
+                            component='span'
+                        >
                             {'● '}
                         </Typography>
                         Flags archived

@@ -26,6 +26,7 @@ import {
 import { createTooltip } from 'component/insights/components/LineChart/createTooltip';
 import { CreationArchiveTooltip } from './CreationArchiveTooltip.tsx';
 import { CreationArchiveRatioTooltip } from './CreationArchiveRatioTooltip.tsx';
+import { getFlagTypeColors } from './flagTypeColors.ts';
 
 ChartJS.register(
     CategoryScale,
@@ -83,7 +84,6 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
             ),
         );
 
-        // Get all unique flag types
         const allFlagTypes = new Set<string>();
         creationArchiveData.datasets.forEach((d) =>
             d.data.forEach((item: any) => {
@@ -138,14 +138,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
             }))
             .sort((a, b) => (a.week > b.week ? 1 : -1));
 
-        // Create datasets for each flag type
-        const flagTypeColors = [
-            theme.palette.success.border,
-            theme.palette.success.main,
-            theme.palette.success.dark,
-            '#4D8007',
-            '#7D935E',
-        ];
+        const flagTypeColors = getFlagTypeColors(theme);
 
         const flagTypeDatasets = Array.from(allFlagTypes).map(
             (flagType, index) => ({

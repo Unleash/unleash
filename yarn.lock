@@ -7065,9 +7065,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"superagent@npm:10.2.1":
-  version: 10.2.1
-  resolution: "superagent@npm:10.2.1"
+"superagent@npm:10.2.2":
+  version: 10.2.2
+  resolution: "superagent@npm:10.2.2"
   dependencies:
     component-emitter: "npm:^1.3.0"
     cookiejar: "npm:^2.1.4"
@@ -7078,7 +7078,7 @@ __metadata:
     methods: "npm:^1.1.2"
     mime: "npm:2.6.0"
     qs: "npm:^6.11.0"
-  checksum: 10c0/526e3716f765873fc2f98a00fe0c8cbfe57976c501a30486307eefe54a6a5e379a0adf2ca8b29d40bc33a34d6baf7814972b0398b6002445ca3b4af07487f090
+  checksum: 10c0/7a5203616a421591d20eeefc1ae39b68270d4ed05eb920f53cc5ee4682370e5190d01bde933158dbe0e217d889b145239f2115b8b14dcc1744f26486a0bf3699
   languageName: node
   linkType: hard
 
@@ -7668,7 +7668,7 @@ __metadata:
     slug: "npm:^9.0.0"
     source-map-support: "npm:0.5.21"
     stoppable: "npm:^1.1.0"
-    superagent: "npm:10.2.1"
+    superagent: "npm:10.2.2"
     supertest: "npm:7.1.3"
     tldts: "npm:7.0.6"
     ts-node: "npm:10.9.2"

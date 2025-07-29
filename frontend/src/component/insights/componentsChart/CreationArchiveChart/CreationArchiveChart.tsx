@@ -196,13 +196,13 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     const data =
         notEnoughData || isLoading ? placeholderData : aggregateOrProjectData;
 
-    const flagTypeNames = (aggregateHealthData as any).flagTypeNames || [];
+    const flagTypeNames = aggregateHealthData.flagTypeNames || [];
 
     return (
         <>
             <Chart
                 type='bar'
-                data={data as any}
+                data={data}
                 options={{
                     responsive: true,
                     plugins: {

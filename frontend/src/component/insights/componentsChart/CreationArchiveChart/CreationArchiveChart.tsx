@@ -184,7 +184,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     order: 1,
                 },
             ],
-            flagTypeNames, // Add this to the return object
+            flagTypeNames,
         };
     }, [creationArchiveData, theme]);
 
@@ -200,7 +200,6 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     const data =
         notEnoughData || isLoading ? placeholderData : aggregateOrProjectData;
 
-    // Get flag type names for legend filtering
     const flagTypeNames = isAggregate
         ? (aggregateHealthData as any).flagTypeNames || []
         : [];
@@ -234,7 +233,6 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                                             ),
                                     );
 
-                                    // Add custom "Created Flags" legend item
                                     filtered.push({
                                         text: 'Created Flags',
                                         fillStyle: theme.palette.success.main,
@@ -256,11 +254,6 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                         },
                     },
                     locale: locationSettings.locale,
-                    interaction: {
-                        intersect: false,
-                        axis: 'xy',
-                        mode: 'nearest',
-                    },
                     scales: {
                         x: {
                             type: 'time',
@@ -268,17 +261,14 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                                 unit: 'week',
                                 tooltipFormat: 'PPP',
                             },
-                            stacked: true,
                         },
                         y: {
                             type: 'linear',
-                            display: true,
                             position: 'left',
                             beginAtZero: true,
-                            stacked: true,
                             title: {
                                 display: true,
-                                text: 'Number of Flags',
+                                text: 'Number of flags',
                             },
                         },
                         y1: {
@@ -288,10 +278,13 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Archive Percentage (%)',
+                                text: 'Ratio',
                             },
                             grid: {
                                 drawOnChartArea: false,
+                            },
+                            ticks: {
+                                callback: (value) => `${value}%`,
                             },
                         },
                     },

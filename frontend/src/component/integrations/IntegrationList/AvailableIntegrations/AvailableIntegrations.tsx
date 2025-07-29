@@ -225,9 +225,9 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                                     target='_blank'
                                     rel='noopener noreferrer'
                                 >
-                                    Unleash frontend API
+                                    Unleash Frontend API
                                 </a>
-                                , but not to the regular Unleash client API.
+                                , but not to the regular Unleash Client API.
                             </Typography>
                         </Box>
                         <StyledCardsGrid small>

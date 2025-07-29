@@ -91,7 +91,6 @@ export type UiFlags = {
     impactMetrics?: boolean;
     crDiffView?: boolean;
     changeRequestApproverEmails?: boolean;
-    eventGrouping?: boolean;
     timestampsInChangeRequestTimeline?: boolean;
     reportUnknownFlags?: boolean;
     lifecycleGraphs?: boolean;

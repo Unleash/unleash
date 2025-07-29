@@ -61,7 +61,6 @@ export type IFlagKey =
     | 'crDiffView'
     | 'changeRequestApproverEmails'
     | 'paygTrialEvents'
-    | 'eventGrouping'
     | 'paygInstanceStatsEvents'
     | 'timestampsInChangeRequestTimeline'
     | 'lifecycleGraphs'
@@ -280,10 +279,6 @@ const flags: IFlags = {
     ),
     impactMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS,
-        false,
-    ),
-    eventGrouping: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EVENT_GROUPING,
         false,
     ),
     paygTrialEvents: parseEnvVarBoolean(

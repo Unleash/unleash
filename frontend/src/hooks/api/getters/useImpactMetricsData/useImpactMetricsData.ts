@@ -10,7 +10,7 @@ export type ImpactMetricsSeries = {
     data: TimeSeriesData;
 };
 
-// TODO: use OpenAPI types
+// TODO(impactMetrics): use OpenAPI types
 export type ImpactMetricsResponse = {
     start?: string;
     end?: string;

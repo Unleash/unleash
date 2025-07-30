@@ -7,7 +7,7 @@
 /**
  * The user who created this change request.
  */
-export type ChangeRequestSchemaOneOfFourCreatedBy = {
+export type ChangeRequestsSchemaItemOneOfFiveCreatedBy = {
     /**
      * The URL of the user's profile image.
      * @nullable

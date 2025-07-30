@@ -4,11 +4,11 @@
  * See `gen:api` script in package.json
  */
 import type { ChangeRequestsSchemaItemOneOf } from './changeRequestsSchemaItemOneOf.js';
-import type { ChangeRequestsSchemaItemOneOfFour } from './changeRequestsSchemaItemOneOfFour.js';
+import type { ChangeRequestsSchemaItemOneOfFive } from './changeRequestsSchemaItemOneOfFive.js';
 
 /**
  * A simplified change request overview
  */
 export type ChangeRequestsSchemaItem =
     | ChangeRequestsSchemaItemOneOf
-    | ChangeRequestsSchemaItemOneOfFour;
+    | ChangeRequestsSchemaItemOneOfFive;

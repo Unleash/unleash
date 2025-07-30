@@ -9,6 +9,7 @@ import type { ChangeRequestsSchemaItemOneOfCreatedBy } from './changeRequestsSch
 import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema.js';
 import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema.js';
 import type { ChangeRequestsSchemaItemOneOfState } from './changeRequestsSchemaItemOneOfState.js';
+import type { ChangeRequestsSchemaItemOneOfStateTimestamps } from './changeRequestsSchemaItemOneOfStateTimestamps.js';
 
 export type ChangeRequestsSchemaItemOneOf = {
     /**
@@ -47,6 +48,8 @@ export type ChangeRequestsSchemaItemOneOf = {
     segments: ChangeRequestSegmentChangeSchema[];
     /** The current state of the change request. */
     state: ChangeRequestsSchemaItemOneOfState;
+    /** A mapping of each state this change request has entered to the most recent time when it entered that state. If a change request has entered the same state multiple times, only the most recent timestamp will be included. */
+    stateTimestamps?: ChangeRequestsSchemaItemOneOfStateTimestamps;
     /** A title describing the change request's content. */
     title?: string;
 };

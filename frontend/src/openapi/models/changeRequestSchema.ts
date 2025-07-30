@@ -4,11 +4,11 @@
  * See `gen:api` script in package.json
  */
 import type { ChangeRequestSchemaOneOf } from './changeRequestSchemaOneOf.js';
-import type { ChangeRequestSchemaOneOfFour } from './changeRequestSchemaOneOfFour.js';
+import type { ChangeRequestSchemaOneOfFive } from './changeRequestSchemaOneOfFive.js';
 
 /**
  * A [change request](https://docs.getunleash.io/reference/change-requests)
  */
 export type ChangeRequestSchema =
     | ChangeRequestSchemaOneOf
-    | ChangeRequestSchemaOneOfFour;
+    | ChangeRequestSchemaOneOfFive;

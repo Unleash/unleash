@@ -7,10 +7,10 @@
 /**
  * The current state of the change request.
  */
-export type ChangeRequestSchemaOneOfFourState =
-    (typeof ChangeRequestSchemaOneOfFourState)[keyof typeof ChangeRequestSchemaOneOfFourState];
+export type ChangeRequestSchemaOneOfFiveState =
+    (typeof ChangeRequestSchemaOneOfFiveState)[keyof typeof ChangeRequestSchemaOneOfFiveState];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const ChangeRequestSchemaOneOfFourState = {
+export const ChangeRequestSchemaOneOfFiveState = {
     Scheduled: 'Scheduled',
 } as const;

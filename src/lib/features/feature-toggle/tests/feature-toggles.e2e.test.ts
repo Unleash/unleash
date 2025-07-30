@@ -980,6 +980,7 @@ test('Can update strategy on feature flag', async () => {
     expect(defaultEnv.strategies).toHaveLength(1);
     expect(defaultEnv.strategies[0].parameters).toStrictEqual({
         userIds: '1234',
+        stickiness: 'default',
     });
 });
 
@@ -1004,6 +1005,7 @@ test('should coerce all strategy parameter values to strings', async () => {
     expect(defaultEnv.strategies).toHaveLength(1);
     expect(defaultEnv.strategies[0].parameters).toStrictEqual({
         foo: '1234',
+        stickiness: 'default',
     });
 });
 

@@ -75,14 +75,14 @@ You can assign the following root permissions:
 
 | Permission Name            | Description                               |
 |----------------------------|-------------------------------------------|
-| Read frontend API tokens   | View [frontend API tokens](./api-tokens-and-client-keys#frontend-tokens).   |
-| Create frontend API tokens | Create frontend API tokens. |
-| Update frontend API tokens | Update frontend API tokens. |
-| Delete frontend API tokens | Delete frontend API tokens. |
-| Read client API tokens     | View [client API tokens](./api-tokens-and-client-keys#backend-tokens).     |
-| Create client API tokens   | Create client API tokens.   |
-| Update client API tokens   | Update client API tokens.   |
-| Delete client API tokens   | Delete client API tokens.   |
+| Read Frontend tokens   | View [Frontend tokens](./api-tokens-and-client-keys#frontend-tokens).   |
+| Create Frontend tokens | Create Frontend tokens. |
+| Update Frontend tokens | Update Frontend tokens. |
+| Delete Frontend tokens | Delete Frontend tokens. |
+| Read Backend tokens     | View [Backend tokens](./api-tokens-and-client-keys#backend-tokens).     |
+| Create Backend tokens   | Create Backend tokens.   |
+| Update Backend tokens   | Update Backend tokens.   |
+| Delete Backend tokens   | Delete Backend tokens.   |
 
 #### Application permissions
 

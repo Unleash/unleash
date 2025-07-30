@@ -54,6 +54,7 @@ export const StyledButton = styled('button', {
     ...(isSorted && {
         fontWeight: theme.typography.fontWeightBold,
     }),
+    contain: 'paint',
 }));
 
 export const StyledLabel = styled('span')(({ theme }) => ({

@@ -79,7 +79,11 @@ test('can calculate resource size', async () => {
 
     await createFeature({
         featureName: 'featureB',
-        parameters: {},
+        parameters: {
+            groupId: 'featureB',
+            rollout: '100',
+            stickiness: 'default',
+        },
         constraints: [],
         variants: [],
     });

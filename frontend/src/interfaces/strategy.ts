@@ -41,6 +41,7 @@ export interface IStrategy {
     displayName: string;
     editable: boolean;
     deprecated: boolean;
+    advanced?: boolean;
     description: string;
     parameters: IStrategyParameter[];
 }

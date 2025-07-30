@@ -40,7 +40,7 @@ For more details on creating feature flags, see [How to create a feature flag](/
 
 ## Connect your application to Unleash
 
-Next, use one of the client or server-side [SDKs](/reference/sdks) to connect Unleash with your application. 
+Next, use one of the client or backend [SDKs](/reference/sdks) to connect Unleash with your application. 
 
 <details>
   <summary>Need an example application to test with?</summary>
@@ -50,7 +50,7 @@ Next, use one of the client or server-side [SDKs](/reference/sdks) to connect Un
 
 <Tabs groupId="connect-sdk-quickstart">
 
-<TabItem value="sdk-client-side" label="Connect a client-side SDK">
+<TabItem value="frontend-sdk" label="Connect a frontend SDK">
 
 1. **Create an API token**
 
@@ -84,11 +84,11 @@ unleash.on("synchronized", () => {
 ```
 
 </TabItem>
-<TabItem value="sdk-server-side" label="Connect a server-side SDK">
+<TabItem value="backend-sdk" label="Connect a backend SDK">
 
 1. **Create an API token**
 
-    In the Unleash Admin UI, create a [client API token](/reference/api-tokens-and-client-keys#client-tokens) in **Admin settings > Access control > API access**. 
+    In the Unleash Admin UI, create a [backend token](/reference/api-tokens-and-client-keys#backend-tokens) in **Admin settings > Access control > API access**. 
 2. **Get your Unleash API URL**
 
     Find the base URL of your Unleash Cloud instance (for example, `https://us.app.unleash-hosted.com/some-instance-id`). Your API URL is this base URL with `/api` appended to it.

@@ -21,8 +21,8 @@ import {
 //
 // type ReadmeData = Readme & { repoUrl: string };
 
-const CLIENT_SIDE_SDK = 'client-side';
-const SERVER_SIDE_SDK = 'server-side';
+const CLIENT_SIDE_SDK = 'frontend';
+const SERVER_SIDE_SDK = 'backend';
 
 const serverSideSdks = {
     'unleash-client-go': {
@@ -101,8 +101,8 @@ const SDKS = (() => {
 
 const getAdmonitions = (sdk) => {
     const admonitions = {
-        [CLIENT_SIDE_SDK]: `To connect to Unleash from a client-side context, you'll need to use the [Unleash front-end API](/reference/front-end-api) ([how do I create an API token?](/how-to/how-to-create-api-tokens.mdx)) or the [Unleash proxy](/reference/unleash-proxy) ([how do I create client keys?](/reference/api-tokens-and-client-keys#proxy-client-keys)).`,
-        [SERVER_SIDE_SDK]: `To connect to Unleash, you'll need your Unleash API url (e.g. \`https://<your-unleash>/api\`) and a [server-side API token](/reference/api-tokens-and-client-keys.mdx#client-tokens) ([how do I create an API token?](/how-to/how-to-create-api-tokens.mdx)).`,
+        [CLIENT_SIDE_SDK]: `To connect to Unleash from a frontend application, you'll need to use the [Unleash front-end API](/reference/front-end-api) ([how do I create an API token?](/how-to/how-to-create-api-tokens.mdx)) or the [Unleash proxy](/reference/unleash-proxy) ([how do I create client keys?](/reference/api-tokens-and-client-keys#proxy-client-keys)).`,
+        [SERVER_SIDE_SDK]: `To connect to Unleash, you'll need your Unleash API url (e.g. \`https://<your-unleash>/api\`) and a [backend API token](/reference/api-tokens-and-client-keys.mdx#backend-tokens) ([how do I create an API token?](/how-to/how-to-create-api-tokens.mdx)).`,
     };
 
     const wrap = (text) => `:::tip\n${text}\n:::`;

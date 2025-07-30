@@ -54,12 +54,12 @@ All values have an **empty string (`""`) as the default value**. As such, if you
 
 :::note
 
-If you have not implemented the strategy in your client SDK, the check will always return `false` because the client doesn't recognize the strategy.
+If you have not implemented the strategy in your backend SDK, the check will always return `false` because the client doesn't recognize the strategy.
 
 :::
 
-While custom strategies are _defined_ on the Unleash server, they must be _implemented_ on the client. All official Unleash client SDKs provide a way for you to implement custom strategies.
+While custom strategies are _defined_ on the Unleash server, they must be _implemented_ on the client. All official Unleash backend SDKs provide a way for you to implement custom strategies.
 
-The exact method for implementing custom strategies will vary between SDKs, but the server SDKs follow the same patterns. For front-end client SDKs ([Android](/docs/generated/sdks/client-side/android-proxy.md), [JavaScript](/docs/generated/sdks/client-side/javascript-browser.md), [React](/docs/generated/sdks/client-side/react.md), [iOS](/docs/generated/sdks/client-side/ios-proxy.md), [Flutter](/docs/generated/sdks/client-side/flutter.md)), the custom activation strategy must be implemented in the [Unleash Proxy](../generated/unleash-proxy.md).
+The exact method for implementing custom strategies will vary between SDKs, but the backend SDKs follow the same patterns. For frontend SDKs ([Android](/docs/generated/sdks/frontend/android-proxy.md), [JavaScript](/docs/generated/sdks/frontend/javascript-browser.md), [React](/docs/generated/sdks/frontend/react.md), [iOS](/docs/generated/sdks/frontend/ios-proxy.md), [Flutter](/docs/generated/sdks/frontend/flutter.md)), the custom activation strategy must be implemented in the [Unleash Proxy](../generated/unleash-proxy.md).
 
 When implementing a strategy in your client, you will get access to the strategy's parameters and the Unleash Context. Again, refer to your specific SDK's documentation for more details.

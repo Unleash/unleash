@@ -9,7 +9,7 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 :::note Availability
 
-**Version**: `4.7+`. Requires [SDK compatibility](../reference/sdks#feature-compatibility-in-server-side-sdks).
+**Version**: `4.7+`. Requires [SDK compatibility](../reference/sdks#feature-compatibility-in-backend-sdks).
 
 :::
 

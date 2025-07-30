@@ -16,7 +16,7 @@ Unleash Proxy is deprecated. Use [Unleash Edge](/reference/unleash-edge) instead
 
 :::
 
-The [Unleash Proxy](../reference/unleash-proxy) provides a way for you to consume feature flags in [front-end clients](../reference/sdks#client-side-sdks), such as the [JavaScript Proxy client](../reference/sdks/javascript-browser) and [React Proxy client](../reference/sdks/react).
+The [Unleash Proxy](../reference/unleash-proxy) provides a way for you to consume feature flags in [front-end clients](../reference/sdks#frontend-sdks), such as the [JavaScript Proxy client](../reference/sdks/javascript-browser) and [React Proxy client](../reference/sdks/react).
 
 Depending on your setup, the Proxy is most easily run in one of two ways, depending on your situation:
 
@@ -30,7 +30,7 @@ If you're using a hosted version of Unleash, we can also run the proxy for you.
 This is what you need before you can run the proxy:
 
 -   A running Unleash server to connect to. You'll need its API path (e.g. `https://app.unleash-hosted.com/demo/api`) to connect the proxy to it.
--   A [client API token](../reference/api-tokens-and-client-keys#client-tokens) for the proxy to use.
+-   A [backend token](../reference/api-tokens-and-client-keys#backend-tokens) for the proxy to use.
 -   If you're running the Proxy via Docker: [the `docker` command line tool](https://www.docker.com/).
 -   If you're running the Proxy as a Node.js app: [Node.js and its command line tools](https://nodejs.org/).
 -   A [Proxy client key](../reference/api-tokens-and-client-keys#proxy-client-keys). This can be any arbitrary string (for instance: `proxy-client-key`). Use this key when connecting a client SDK to the Proxy.

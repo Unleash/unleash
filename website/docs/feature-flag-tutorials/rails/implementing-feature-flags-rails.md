@@ -197,7 +197,7 @@ class PostsController < ApplicationController
 
 Reload your browser and check that you see three blog posts displayed. Turn off the flag in your Unleash instance and reload the page. You should see all the blog posts again.
 
-See additional use cases in our [Server-Side SDK with Ruby](/reference/sdks/ruby) documentation.
+See additional use cases in our [Backend SDK with Ruby](/reference/sdks/ruby) documentation.
 
 > **Note:** An update to a feature flag may take 30 seconds to propagate.
 

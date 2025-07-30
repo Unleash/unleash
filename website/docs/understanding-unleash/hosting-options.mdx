@@ -66,25 +66,25 @@ In this setup, you need to configure Edge and the SDKs.
 ### Configure Edge
 
 Set the `UPSTREAM_URL` environment variable to your Unleash instance URL (e.g., `https://<your-instance>.app.unleash-hosted.com/api`):
-    - Provide the Client API tokens using the `TOKENS` environment variable. This allows Edge to fetch the correct flag configurations on startup.
+    - Provide the Backend API tokens using the `TOKENS` environment variable. This allows Edge to fetch the correct flag configurations on startup.
     - Run the Edge container. Example using Docker:
         ```bash
         docker run -p 3063:3063 \
         -e UPSTREAM_URL='<UPSTREAM_URL>' \
-        -e TOKENS='<CLIENT_API_TOKEN>' \
+        -e TOKENS='<BACKEND_API_TOKEN>' \
         unleashorg/unleash-edge:latest edge
         ```
-    - To add configurations for other projects/environments dynamically after startup, you can send an authorized request to Edge using a different Client API token:
+    - To add configurations for other projects/environments dynamically after startup, you can send an authorized request to Edge using a different Backend API token:
         ```bash
         curl --location --request GET 'http://<your-edge-host>:3063/api/client/features' \
-        --header 'Authorization: <NEW_CLIENT_API_TOKEN>'
+        --header 'Authorization: <NEW_BACKEND_API_TOKEN>'
         ```
 
 ### Configure the SDKs
 
 Point your SDKs to your self-hosted Edge instance's URL.
-    - **Server-side SDKs:** Use the `/api/client` endpoint and a Client token. Edge returns the full flag configuration for the token's scope.
-    - **Client-side SDKs:** Use the `/api/frontend` endpoint and a Frontend token. Edge evaluates flags based on the context provided by the SDK and returns only the evaluated feature flags.
+    - **Backend SDKs:** Use the `/api/client` endpoint and a Backend token. Edge returns the full flag configuration for the token's scope.
+    - **Frontend SDKs:** Use the `/api/frontend` endpoint and a Frontend token. Edge evaluates flags based on the context provided by the SDK and returns only the evaluated feature flags.
 
 
 ## Self-hosted

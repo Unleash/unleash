@@ -117,7 +117,6 @@ import { sortStrategies } from '../../util/sortStrategies.js';
 import type { ResourceLimitsSchema } from '../../openapi/index.js';
 import type FeatureLinkService from '../feature-links/feature-link-service.js';
 import type { IFeatureLink } from '../feature-links/feature-links-read-model-type.js';
-import merge from 'deepmerge';
 interface IFeatureContext {
     featureName: string;
     projectId: string;
@@ -126,10 +125,6 @@ interface IFeatureContext {
 interface IFeatureStrategyContext extends IFeatureContext {
     environment: string;
 }
-function mergeAll<T>(objects: Partial<T>[]): T {
-    return merge.all<T>(objects.filter((i) => i));
-}
-
 export interface IGetFeatureParams {
     featureName: string;
     archived?: boolean;
@@ -673,46 +668,32 @@ export class FeatureToggleService {
         );
     }
 
-    private async defaultParameters(
-        projectId: string,
-        strategyName: string,
-        featureName: string,
-        params: IFeatureStrategy['parameters'] | undefined,
-    ) {
-        if (strategyName === 'flexibleRollout') {
-            if (params?.stickiness === '') {
-                // If stickiness is an empty string, we remove it to use the default stickiness.
-                delete params?.stickiness;
-            }
-            return {
-                rollout: params?.rollout ?? '100',
-                stickiness:
-                    params?.stickiness ??
-                    (await this.featureStrategiesStore.getDefaultStickiness(
-                        projectId,
-                    )),
-                groupId: params?.groupId ?? featureName,
-            };
-        } else {
-            /// We don't really have good defaults for the other kinds of known strategies, so return an empty map.
-            return {};
-        }
-    }
     private async parametersWithDefaults(
         projectId: string,
         featureName: string,
         strategyName: string,
         params: IFeatureStrategy['parameters'] | undefined,
     ) {
-        return mergeAll([
-            await this.defaultParameters(
-                projectId,
-                strategyName,
-                featureName,
-                params,
-            ),
-            params ?? {},
-        ]);
+        if (strategyName === 'flexibleRollout') {
+            const stickiness =
+                params?.stickiness === undefined || params?.stickiness === ''
+                    ? await this.featureStrategiesStore.getDefaultStickiness(
+                          projectId,
+                      )
+                    : params?.stickiness;
+            console.log(
+                `stickiness: ${stickiness} from params: ${JSON.stringify(params)}`,
+            );
+            return {
+                ...params,
+                rollout: params?.rollout ?? '100',
+                stickiness,
+                groupId: params?.groupId ?? featureName,
+            };
+        } else {
+            // We don't really have good defaults for the other kinds of known strategies, so return an empty map.
+            return params ?? {};
+        }
     }
     private async standardizeStrategyConfig(
         projectId: string,

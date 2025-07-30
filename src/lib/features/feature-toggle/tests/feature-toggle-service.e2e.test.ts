@@ -770,6 +770,7 @@ test.each([
     ],
     ['different rollout', { rollout: '25' }],
     ['empty parameters', {}],
+    ['extra parameters are preserved', { extra: 'value', rollout: '100' }],
 ])(
     'Should use default parameters when creating a flexibleRollout strategy with %s',
     async (description, parameters: { [key: string]: any }) => {
@@ -787,15 +788,12 @@ test.each([
             parameters?.stickiness === ''
                 ? defaultStickiness
                 : (parameters?.stickiness ?? defaultStickiness);
-        const expectedStrategies = [
-            {
-                parameters: {
-                    groupId: parameters?.groupId ?? feature.name,
-                    stickiness: expectedStickiness,
-                    rollout: parameters?.rollout ?? '100', // default rollout
-                },
-            },
-        ];
+        const expectedParameters = {
+            ...parameters, // expect extra parameters to be preserved
+            groupId: parameters?.groupId ?? feature.name,
+            stickiness: expectedStickiness,
+            rollout: parameters?.rollout ?? '100', // default rollout
+        };
         await stores.projectStore.update({
             id: projectId,
             name: 'stickiness-project-test',
@@ -818,9 +816,9 @@ test.each([
             featureName: feature.name,
         });
 
-        expect(featureDB.environments[0]).toMatchObject({
-            strategies: expectedStrategies,
-        });
+        expect(
+            featureDB.environments[0].strategies[0].parameters,
+        ).toStrictEqual(expectedParameters);
 
         // Verify that updating the strategy with same data is idempotent
         await service.updateStrategy(
@@ -833,9 +831,9 @@ test.each([
             featureName: feature.name,
         });
 
-        expect(featureDBAfterUpdate.environments[0]).toMatchObject({
-            strategies: expectedStrategies,
-        });
+        expect(
+            featureDBAfterUpdate.environments[0].strategies[0].parameters,
+        ).toStrictEqual(expectedParameters);
     },
 );
 

@@ -681,9 +681,6 @@ export class FeatureToggleService {
                           projectId,
                       )
                     : params?.stickiness;
-            console.log(
-                `stickiness: ${stickiness} from params: ${JSON.stringify(params)}`,
-            );
             return {
                 ...params,
                 rollout: params?.rollout ?? '100',

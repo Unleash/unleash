@@ -5,13 +5,14 @@
  */
 import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema.js';
 import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema.js';
-import type { ChangeRequestSchemaOneOfFourCreatedBy } from './changeRequestSchemaOneOfFourCreatedBy.js';
+import type { ChangeRequestSchemaOneOfFiveCreatedBy } from './changeRequestSchemaOneOfFiveCreatedBy.js';
 import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema.js';
 import type { ChangeRequestScheduleSchema } from './changeRequestScheduleSchema.js';
 import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema.js';
-import type { ChangeRequestSchemaOneOfFourState } from './changeRequestSchemaOneOfFourState.js';
+import type { ChangeRequestSchemaOneOfFiveState } from './changeRequestSchemaOneOfFiveState.js';
+import type { ChangeRequestSchemaOneOfFiveStateTimestamps } from './changeRequestSchemaOneOfFiveStateTimestamps.js';
 
-export type ChangeRequestSchemaOneOfFour = {
+export type ChangeRequestSchemaOneOfFive = {
     /** A list of approvals that this change request has received. */
     approvals?: ChangeRequestApprovalSchema[];
     /** All comments that have been made on this change request. */
@@ -19,7 +20,7 @@ export type ChangeRequestSchemaOneOfFour = {
     /** When this change request was created. */
     createdAt: string;
     /** The user who created this change request. */
-    createdBy: ChangeRequestSchemaOneOfFourCreatedBy;
+    createdBy: ChangeRequestSchemaOneOfFiveCreatedBy;
     /** The environment in which the changes should be applied. */
     environment: string;
     /** The list of features and their changes that relate to this change request. */
@@ -36,7 +37,9 @@ export type ChangeRequestSchemaOneOfFour = {
     /** The list of segments and their changes that relate to this change request. */
     segments: ChangeRequestSegmentChangeSchema[];
     /** The current state of the change request. */
-    state: ChangeRequestSchemaOneOfFourState;
+    state: ChangeRequestSchemaOneOfFiveState;
+    /** A mapping of each state this change request has entered to the most recent time when it entered that state. If a change request has entered the same state multiple times, only the most recent timestamp will be included. */
+    stateTimestamps?: ChangeRequestSchemaOneOfFiveStateTimestamps;
     /** A title describing the change request's content. */
     title?: string;
 };

@@ -676,7 +676,7 @@ export class FeatureToggleService {
     ) {
         if (strategyName === 'flexibleRollout') {
             const stickiness =
-                params?.stickiness === undefined || params?.stickiness === ''
+                !params?.stickiness || params?.stickiness === ''
                     ? await this.featureStrategiesStore.getDefaultStickiness(
                           projectId,
                       )

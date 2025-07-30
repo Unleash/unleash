@@ -130,12 +130,16 @@ export const FeatureStrategyMenuCards = ({
     const { templates } = useReleasePlanTemplates();
     const navigate = useNavigate();
 
-    const preDefinedStrategies = strategies.filter(
-        (strategy) => !strategy.deprecated && !strategy.editable,
+    const activeStrategies = strategies.filter(
+        (strategy) => !strategy.deprecated,
     );
 
-    const customStrategies = strategies.filter(
-        (strategy) => !strategy.deprecated && strategy.editable,
+    const standardStrategies = activeStrategies.filter(
+        (strategy) => !strategy.advanced && !strategy.editable,
+    );
+
+    const advancedAndCustomStrategies = activeStrategies.filter(
+        (strategy) => strategy.editable || strategy.advanced,
     );
 
     const defaultStrategy = {
@@ -225,7 +229,7 @@ export const FeatureStrategyMenuCards = ({
                                     Standard strategies
                                 </Typography>
                                 <HelpIcon
-                                    tooltip='Select a starting setup, then customize your strategy with targeting and variants'
+                                    tooltip='Standard strategies let you enable a feature only for a specified audience. Select a starting setup, then customize your strategy with targeting and variants.'
                                     size='16px'
                                 />
                             </SectionTitle>
@@ -240,7 +244,7 @@ export const FeatureStrategyMenuCards = ({
                                         onClose={onClose}
                                     />
                                 </CardWrapper>
-                                {preDefinedStrategies.map((strategy) => (
+                                {standardStrategies.map((strategy) => (
                                     <CardWrapper key={strategy.name}>
                                         <FeatureStrategyMenuCard
                                             projectId={projectId}
@@ -254,29 +258,33 @@ export const FeatureStrategyMenuCards = ({
                             </GridSection>
                         </Box>
                         {renderReleasePlanTemplates()}
-                        {customStrategies.length > 0 && (
+                        {advancedAndCustomStrategies.length > 0 && (
                             <Box>
                                 <SectionTitle>
                                     <Typography color='inherit' variant='body2'>
-                                        Custom strategies
+                                        Custom and advanced strategies
                                     </Typography>
                                     <HelpIcon
-                                        tooltip='Custom strategies you have defined in Unleash'
+                                        tooltip='Advanced strategies let you target based on specific properties. Custom activation strategies let you define your own activation strategies to use with Unleash.'
                                         size='16px'
                                     />
                                 </SectionTitle>
                                 <GridSection>
-                                    {customStrategies.map((strategy) => (
-                                        <CardWrapper key={strategy.name}>
-                                            <FeatureStrategyMenuCard
-                                                projectId={projectId}
-                                                featureId={featureId}
-                                                environmentId={environmentId}
-                                                strategy={strategy}
-                                                onClose={onClose}
-                                            />
-                                        </CardWrapper>
-                                    ))}
+                                    {advancedAndCustomStrategies.map(
+                                        (strategy) => (
+                                            <CardWrapper key={strategy.name}>
+                                                <FeatureStrategyMenuCard
+                                                    projectId={projectId}
+                                                    featureId={featureId}
+                                                    environmentId={
+                                                        environmentId
+                                                    }
+                                                    strategy={strategy}
+                                                    onClose={onClose}
+                                                />
+                                            </CardWrapper>
+                                        ),
+                                    )}
                                 </GridSection>
                             </Box>
                         )}

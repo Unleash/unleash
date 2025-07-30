@@ -70,9 +70,7 @@ const getApiClientResponse = (project = 'default') => [
                         values: ['123'],
                     },
                 ],
-                parameters: {
-                    stickiness: 'default',
-                },
+                parameters: {},
                 variants: [],
             },
         ],

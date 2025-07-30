@@ -28,7 +28,6 @@ import {
 import type { IFeatureProjectUserParams } from './feature-toggle-controller.js';
 import type { Db } from '../../db/db.js';
 import { isAfter } from 'date-fns';
-import merge from 'deepmerge';
 import Raw = Knex.Raw;
 import type { ITag } from '../../tags/index.js';
 
@@ -157,32 +156,6 @@ function mapStrategyUpdate(
     return update;
 }
 
-function mergeAll<T>(objects: Partial<T>[]): T {
-    return merge.all<T>(objects.filter((i) => i));
-}
-
-const defaultParameters = (
-    params: PartialSome<IFeatureStrategy, 'id' | 'createdAt'>,
-    stickiness: string,
-) => {
-    if (params.strategyName === 'flexibleRollout') {
-        return {
-            rollout: '100',
-            stickiness,
-            groupId: params.featureName,
-        };
-    } else {
-        /// We don't really have good defaults for the other kinds of known strategies, so return an empty map.
-        return {};
-    }
-};
-
-const parametersWithDefaults = (
-    params: PartialSome<IFeatureStrategy, 'id' | 'createdAt'>,
-    stickiness: string,
-) => {
-    return mergeAll([defaultParameters(params, stickiness), params.parameters]);
-};
 class FeatureStrategiesStore implements IFeatureStrategiesStore {
     private db: Db;
 
@@ -264,13 +237,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 strategyConfig.featureName,
                 strategyConfig.environment,
             ));
-        const stickiness =
-            strategyConfig.parameters?.stickiness ??
-            (await this.getDefaultStickiness(strategyConfig.projectId));
-        strategyConfig.parameters = parametersWithDefaults(
-            strategyConfig,
-            stickiness,
-        );
         const strategyRow = mapInput({
             id: uuidv4(),
             ...strategyConfig,

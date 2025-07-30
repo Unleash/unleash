@@ -54,9 +54,7 @@ exports[`should match snapshot from /api/client/features 1`] = `
             },
           ],
           "name": "default",
-          "parameters": {
-            "stickiness": "default",
-          },
+          "parameters": {},
           "variants": [],
         },
       ],

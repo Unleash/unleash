@@ -343,4 +343,8 @@ export default class FakeFeatureStrategiesStore
     getCustomStrategiesInUseCount(): Promise<number> {
         return Promise.resolve(3);
     }
+
+    getDefaultStickiness(_projectId: string): Promise<string> {
+        return Promise.resolve('default');
+    }
 }

@@ -698,8 +698,8 @@ export class FeatureToggleService {
         strategyConfig: Unsaved<IStrategyConfig>,
         existing?: IFeatureStrategy,
     ): Promise<
-        { strategyName: string } & Pick<
-            Partial<IFeatureStrategy>,
+        { name: string } & Pick<
+            Partial<IStrategyConfig>,
             | 'title'
             | 'disabled'
             | 'variants'
@@ -731,7 +731,7 @@ export class FeatureToggleService {
         }
 
         return {
-            strategyName: name,
+            name,
             title,
             disabled,
             sortOrder,
@@ -770,6 +770,7 @@ export class FeatureToggleService {
             const newFeatureStrategy =
                 await this.featureStrategiesStore.createStrategyFeatureEnv({
                     ...standardizedConfig,
+                    strategyName: standardizedConfig.name,
                     constraints: standardizedConfig.constraints || [],
                     variants: standardizedConfig.variants || [],
                     parameters: standardizedConfig.parameters || {},
@@ -898,11 +899,17 @@ export class FeatureToggleService {
         const existingSegments = await this.segmentService.getByStrategy(id);
 
         if (existingStrategy.id === id) {
+            console.log(
+                `Updating strategy ${id} for feature ${featureName} in environment ${environment}: ${JSON.stringify(updates)}`,
+            );
             const standardizedUpdates = await this.standardizeStrategyConfig(
                 projectId,
                 featureName,
                 { ...updates, name: updates.name! },
                 existingStrategy,
+            );
+            console.log(
+                `Standardized updates: ${JSON.stringify(standardizedUpdates)}`,
             );
             const strategy = await this.featureStrategiesStore.updateStrategy(
                 id,

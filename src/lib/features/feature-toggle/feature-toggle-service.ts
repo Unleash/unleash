@@ -899,17 +899,11 @@ export class FeatureToggleService {
         const existingSegments = await this.segmentService.getByStrategy(id);
 
         if (existingStrategy.id === id) {
-            console.log(
-                `Updating strategy ${id} for feature ${featureName} in environment ${environment}: ${JSON.stringify(updates)}`,
-            );
             const standardizedUpdates = await this.standardizeStrategyConfig(
                 projectId,
                 featureName,
                 { ...updates, name: updates.name! },
                 existingStrategy,
-            );
-            console.log(
-                `Standardized updates: ${JSON.stringify(standardizedUpdates)}`,
             );
             const strategy = await this.featureStrategiesStore.updateStrategy(
                 id,

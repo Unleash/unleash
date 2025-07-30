@@ -136,13 +136,18 @@ test('Should be able to update existing strategy configuration', async () => {
     expect(createdConfig.name).toEqual('default');
     const updatedConfig = await service.updateStrategy(
         createdConfig.id,
-        { parameters: { b2b: 'true' } },
+        { name: 'flexibleRollout', parameters: { b2b: 'true' } },
         { projectId, featureName, environment: DEFAULT_ENV },
         TEST_AUDIT_USER,
     );
     expect(createdConfig.id).toEqual(updatedConfig.id);
+    expect(updatedConfig.name).toEqual('flexibleRollout');
     expect(updatedConfig.parameters).toEqual({
         b2b: 'true',
+        // flexible rollout default parameters
+        rollout: '100',
+        groupId: featureName,
+        stickiness: 'default',
     });
 });
 

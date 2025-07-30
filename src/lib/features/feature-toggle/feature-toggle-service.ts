@@ -698,8 +698,8 @@ export class FeatureToggleService {
         strategyConfig: Unsaved<IStrategyConfig>,
         existing?: IFeatureStrategy,
     ): Promise<
-        { strategyName: string } & Pick<
-            Partial<IFeatureStrategy>,
+        { name: string } & Pick<
+            Partial<IStrategyConfig>,
             | 'title'
             | 'disabled'
             | 'variants'
@@ -731,7 +731,7 @@ export class FeatureToggleService {
         }
 
         return {
-            strategyName: name,
+            name,
             title,
             disabled,
             sortOrder,
@@ -770,6 +770,7 @@ export class FeatureToggleService {
             const newFeatureStrategy =
                 await this.featureStrategiesStore.createStrategyFeatureEnv({
                     ...standardizedConfig,
+                    strategyName: standardizedConfig.name,
                     constraints: standardizedConfig.constraints || [],
                     variants: standardizedConfig.variants || [],
                     parameters: standardizedConfig.parameters || {},

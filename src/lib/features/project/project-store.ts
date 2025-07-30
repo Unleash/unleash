@@ -16,7 +16,6 @@ import type {
     IProjectHealthUpdate,
     IProjectInsert,
     IProjectQuery,
-    IProjectSettings,
     IProjectEnterpriseSettingsUpdate,
     IProjectStore,
     ProjectEnvironment,
@@ -199,9 +198,7 @@ class ProjectStore implements IProjectStore {
         });
     }
 
-    async create(
-        project: IProjectInsert & IProjectSettings,
-    ): Promise<IProject> {
+    async create(project: IProjectInsert): Promise<IProject> {
         const row = await this.db(TABLE)
             .insert({ ...this.fieldToRow(project), created_at: new Date() })
             .returning('*');

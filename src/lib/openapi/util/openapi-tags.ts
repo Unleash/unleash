@@ -37,7 +37,7 @@ const OPENAPI_TAGS = [
     {
         name: 'Client',
         description:
-            'Endpoints for [Unleash server-side clients](https://docs.getunleash.io/reference/sdks).',
+            'Endpoints for [Unleash backend clients](https://docs.getunleash.io/reference/sdks).',
     },
     {
         name: 'Context',

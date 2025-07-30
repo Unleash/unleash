@@ -143,8 +143,6 @@ test('Should be able to update existing strategy configuration', async () => {
     expect(createdConfig.id).toEqual(updatedConfig.id);
     expect(updatedConfig.parameters).toEqual({
         b2b: 'true',
-        // make sure stickiness is preserved
-        stickiness: createdConfig.parameters?.stickiness,
     });
 });
 
@@ -766,9 +764,15 @@ test.each([
     ['empty stickiness', { rollout: '100', stickiness: '' }],
     ['undefined stickiness', { rollout: '100' }],
     ['undefined parameters', undefined],
+    [
+        'different group id and stickiness',
+        { rollout: '100', groupId: 'test-group', stickiness: 'userId' },
+    ],
+    ['different rollout', { rollout: '25' }],
+    ['empty parameters', {}],
 ])(
-    'Should set project default stickiness when creating a flexibleRollout strategy with %s',
-    async (description, parameters) => {
+    'Should use default parameters when creating a flexibleRollout strategy with %s',
+    async (description, parameters: { [key: string]: any }) => {
         const strategy = {
             name: 'flexibleRollout',
             parameters,
@@ -779,7 +783,20 @@ test.each([
         };
         const projectId = 'default';
         const defaultStickiness = `not-default-${description.replaceAll(' ', '-')}`;
-        const project = await stores.projectStore.update({
+        const expectedStickiness =
+            parameters?.stickiness === ''
+                ? defaultStickiness
+                : (parameters?.stickiness ?? defaultStickiness);
+        const expectedStrategies = [
+            {
+                parameters: {
+                    groupId: parameters?.groupId ?? feature.name,
+                    stickiness: expectedStickiness,
+                    rollout: parameters?.rollout ?? '100', // default rollout
+                },
+            },
+        ];
+        await stores.projectStore.update({
             id: projectId,
             name: 'stickiness-project-test',
             defaultStickiness,
@@ -802,14 +819,7 @@ test.each([
         });
 
         expect(featureDB.environments[0]).toMatchObject({
-            strategies: [
-                {
-                    parameters: {
-                        ...parameters,
-                        stickiness: defaultStickiness,
-                    },
-                },
-            ],
+            strategies: expectedStrategies,
         });
 
         // Verify that updating the strategy with same data is idempotent
@@ -824,14 +834,7 @@ test.each([
         });
 
         expect(featureDBAfterUpdate.environments[0]).toMatchObject({
-            strategies: [
-                {
-                    parameters: {
-                        ...parameters,
-                        stickiness: defaultStickiness,
-                    },
-                },
-            ],
+            strategies: expectedStrategies,
         });
     },
 );

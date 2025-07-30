@@ -685,13 +685,13 @@ export class FeatureToggleService {
                 delete params?.stickiness;
             }
             return {
-                rollout: '100',
+                rollout: params?.rollout ?? '100',
                 stickiness:
                     params?.stickiness ??
                     (await this.featureStrategiesStore.getDefaultStickiness(
                         projectId,
                     )),
-                groupId: featureName,
+                groupId: params?.groupId ?? featureName,
             };
         } else {
             /// We don't really have good defaults for the other kinds of known strategies, so return an empty map.
@@ -700,8 +700,8 @@ export class FeatureToggleService {
     }
     private async parametersWithDefaults(
         projectId: string,
-        strategyName: string,
         featureName: string,
+        strategyName: string,
         params: IFeatureStrategy['parameters'] | undefined,
     ) {
         return mergeAll([
@@ -716,6 +716,7 @@ export class FeatureToggleService {
     }
     private async standardizeStrategyConfig(
         projectId: string,
+        featureName: string,
         strategyConfig: Unsaved<IStrategyConfig>,
         existing?: IFeatureStrategy,
     ): Promise<
@@ -741,8 +742,8 @@ export class FeatureToggleService {
 
         parameters = await this.parametersWithDefaults(
             projectId,
+            featureName,
             name,
-            strategyConfig.featureName!,
             strategyConfig.parameters,
         );
         if (variants && variants.length > 0) {
@@ -777,6 +778,7 @@ export class FeatureToggleService {
 
         const standardizedConfig = await this.standardizeStrategyConfig(
             projectId,
+            featureName,
             strategyConfig,
         );
 
@@ -920,6 +922,7 @@ export class FeatureToggleService {
         if (existingStrategy.id === id) {
             const standardizedUpdates = await this.standardizeStrategyConfig(
                 projectId,
+                featureName,
                 { ...updates, name: updates.name! },
                 existingStrategy,
             );

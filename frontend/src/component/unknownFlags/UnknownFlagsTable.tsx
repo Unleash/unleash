@@ -9,13 +9,14 @@ import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { Search } from 'component/common/Search/Search';
 import { useSearch } from 'hooks/useSearch';
-import { useUnknownFlags } from './hooks/useUnknownFlags.js';
+import { type UnknownFlag, useUnknownFlags } from './hooks/useUnknownFlags.js';
 import theme from 'themes/theme.js';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell.js';
 import { formatDateYMDHMS } from 'utils/formatDate.js';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell.js';
 import { useUiFlag } from 'hooks/useUiFlag.js';
 import NotFound from 'component/common/NotFound/NotFound.js';
+import { UnknownFlagsActionsCell } from './UnknownFlagsActionsCell.js';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),
@@ -58,6 +59,18 @@ export const UnknownFlagsTable = () => {
                 Cell: ({ value }: { value: Date }) => (
                     <TimeAgoCell value={value} dateFormat={formatDateYMDHMS} />
                 ),
+            },
+            {
+                Header: 'Actions',
+                id: 'Actions',
+                align: 'center',
+                Cell: ({
+                    row: { original: unknownFlag },
+                }: { row: { original: UnknownFlag } }) => (
+                    <UnknownFlagsActionsCell unknownFlag={unknownFlag} />
+                ),
+                width: 100,
+                disableSortBy: true,
             },
         ],
         [],

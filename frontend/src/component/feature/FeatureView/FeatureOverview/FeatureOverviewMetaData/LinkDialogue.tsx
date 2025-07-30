@@ -101,6 +101,7 @@ const LinkDialogue: FC<ILinkDialogueProps> = ({
             <Box>
                 <StyledTextField
                     label='Link'
+                    placeholder='https://'
                     variant='outlined'
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}

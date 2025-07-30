@@ -13,25 +13,6 @@ import type {
 import type { Store } from '../../types/stores/store.js';
 import type { CreateFeatureStrategySchema } from '../../openapi/index.js';
 
-export interface IProjectInsert {
-    id: string;
-    name: string;
-    description?: string;
-    updatedAt?: Date;
-    changeRequestsEnabled?: boolean;
-    mode?: ProjectMode;
-    featureLimit?: number;
-    featureNaming?: IFeatureNaming;
-    linkTemplates?: IProjectLinkTemplate[];
-}
-
-export interface IProjectEnterpriseSettingsUpdate {
-    id: string;
-    mode?: ProjectMode;
-    featureNaming?: IFeatureNaming;
-    linkTemplates?: IProjectLinkTemplate[];
-}
-
 export interface IProjectSettings {
     mode: ProjectMode;
     defaultStickiness: string;
@@ -39,6 +20,22 @@ export interface IProjectSettings {
     featureNamingPattern?: string;
     featureNamingExample?: string;
     featureNamingDescription?: string;
+    linkTemplates?: IProjectLinkTemplate[];
+}
+
+export interface IProjectInsert extends Partial<IProjectSettings> {
+    id: string;
+    name: string;
+    description?: string;
+    updatedAt?: Date;
+    changeRequestsEnabled?: boolean;
+    featureNaming?: IFeatureNaming;
+}
+
+export interface IProjectEnterpriseSettingsUpdate {
+    id: string;
+    mode?: ProjectMode;
+    featureNaming?: IFeatureNaming;
     linkTemplates?: IProjectLinkTemplate[];
 }
 

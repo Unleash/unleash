@@ -370,16 +370,6 @@ export class FeatureToggleService {
                 'You can not change the featureName for an activation strategy.',
             );
         }
-
-        if (
-            existingStrategy.parameters &&
-            'stickiness' in existingStrategy.parameters &&
-            existingStrategy.parameters.stickiness === ''
-        ) {
-            throw new InvalidOperationError(
-                'You can not have an empty string for stickiness.',
-            );
-        }
     }
 
     async validateProjectCanAccessSegments(
@@ -680,6 +670,59 @@ export class FeatureToggleService {
         );
     }
 
+    async standardizeStrategyConfig(
+        projectId: string,
+        strategyConfig: Unsaved<IStrategyConfig>,
+        existing?: IFeatureStrategy,
+    ): Promise<
+        { strategyName: string } & Pick<
+            Partial<IFeatureStrategy>,
+            | 'title'
+            | 'disabled'
+            | 'variants'
+            | 'sortOrder'
+            | 'constraints'
+            | 'parameters'
+        >
+    > {
+        const { name, title, disabled, sortOrder } = strategyConfig;
+        let { constraints, parameters, variants } = strategyConfig;
+        if (constraints && constraints.length > 0) {
+            this.validateConstraintsLimit({
+                updated: constraints,
+                existing: existing?.constraints ?? [],
+            });
+            constraints = await this.validateConstraints(constraints);
+        }
+
+        if (
+            parameters &&
+            (!('stickiness' in parameters) ||
+                ('stickiness' in parameters && parameters.stickiness === ''))
+        ) {
+            parameters.stickiness =
+                existing?.parameters?.stickiness ||
+                (await this.featureStrategiesStore.getDefaultStickiness(
+                    projectId,
+                ));
+        }
+
+        if (variants && variants.length > 0) {
+            await variantsArraySchema.validateAsync(variants);
+            const fixedVariants = this.fixVariantWeights(variants);
+            variants = fixedVariants;
+        }
+
+        return {
+            strategyName: name,
+            title,
+            disabled,
+            sortOrder,
+            constraints,
+            variants,
+            parameters,
+        };
+    }
     async unprotectedCreateStrategy(
         strategyConfig: Unsaved<IStrategyConfig>,
         context: IFeatureStrategyContext,
@@ -694,34 +737,10 @@ export class FeatureToggleService {
             strategyConfig.segments,
         );
 
-        if (
-            strategyConfig.constraints &&
-            strategyConfig.constraints.length > 0
-        ) {
-            this.validateConstraintsLimit({
-                updated: strategyConfig.constraints,
-                existing: [],
-            });
-            strategyConfig.constraints = await this.validateConstraints(
-                strategyConfig.constraints,
-            );
-        }
-
-        if (
-            strategyConfig.parameters &&
-            'stickiness' in strategyConfig.parameters &&
-            strategyConfig.parameters.stickiness === ''
-        ) {
-            strategyConfig.parameters.stickiness = 'default';
-        }
-
-        if (strategyConfig.variants && strategyConfig.variants.length > 0) {
-            await variantsArraySchema.validateAsync(strategyConfig.variants);
-            const fixedVariants = this.fixVariantWeights(
-                strategyConfig.variants,
-            );
-            strategyConfig.variants = fixedVariants;
-        }
+        const standardizedConfig = await this.standardizeStrategyConfig(
+            projectId,
+            strategyConfig,
+        );
 
         await this.validateStrategyLimit({
             featureName,
@@ -732,13 +751,10 @@ export class FeatureToggleService {
         try {
             const newFeatureStrategy =
                 await this.featureStrategiesStore.createStrategyFeatureEnv({
-                    strategyName: strategyConfig.name,
-                    title: strategyConfig.title,
-                    disabled: strategyConfig.disabled,
-                    constraints: strategyConfig.constraints || [],
-                    variants: strategyConfig.variants || [],
-                    parameters: strategyConfig.parameters || {},
-                    sortOrder: strategyConfig.sortOrder,
+                    ...standardizedConfig,
+                    constraints: standardizedConfig.constraints || [],
+                    variants: standardizedConfig.variants || [],
+                    parameters: standardizedConfig.parameters || {},
                     projectId,
                     featureName,
                     environment,
@@ -864,25 +880,14 @@ export class FeatureToggleService {
         const existingSegments = await this.segmentService.getByStrategy(id);
 
         if (existingStrategy.id === id) {
-            if (updates.constraints && updates.constraints.length > 0) {
-                this.validateConstraintsLimit({
-                    updated: updates.constraints,
-                    existing: existingStrategy.constraints,
-                });
-                updates.constraints = await this.validateConstraints(
-                    updates.constraints,
-                );
-            }
-
-            if (updates.variants && updates.variants.length > 0) {
-                await variantsArraySchema.validateAsync(updates.variants);
-                const fixedVariants = this.fixVariantWeights(updates.variants);
-                updates.variants = fixedVariants;
-            }
-
+            const standardizedUpdates = await this.standardizeStrategyConfig(
+                projectId,
+                { ...updates, name: updates.name! },
+                existingStrategy,
+            );
             const strategy = await this.featureStrategiesStore.updateStrategy(
                 id,
-                updates,
+                standardizedUpdates,
             );
 
             if (updates.segments && Array.isArray(updates.segments)) {

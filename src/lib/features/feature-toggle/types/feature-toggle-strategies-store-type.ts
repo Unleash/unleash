@@ -124,4 +124,6 @@ export interface IFeatureStrategiesStore
     ): Promise<IFeatureStrategy[]>;
 
     getCustomStrategiesInUseCount(): Promise<number>;
+
+    getDefaultStickiness(projectId: string): Promise<string>;
 }

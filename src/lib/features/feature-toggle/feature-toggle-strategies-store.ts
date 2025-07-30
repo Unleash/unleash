@@ -248,7 +248,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             });
         return Number.isInteger(max) ? max + 1 : 0;
     }
-    private async getDefaultStickiness(projectName: string): Promise<string> {
+    async getDefaultStickiness(projectName: string): Promise<string> {
         const defaultFromDb = await this.db(T.projectSettings)
             .select('default_stickiness')
             .where('project', projectName)
@@ -264,9 +264,9 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 strategyConfig.featureName,
                 strategyConfig.environment,
             ));
-        const stickiness = await this.getDefaultStickiness(
-            strategyConfig.projectId,
-        );
+        const stickiness =
+            strategyConfig.parameters?.stickiness ??
+            (await this.getDefaultStickiness(strategyConfig.projectId));
         strategyConfig.parameters = parametersWithDefaults(
             strategyConfig,
             stickiness,

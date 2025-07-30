@@ -24,7 +24,7 @@ import {
 } from './change-request-timeline-steps.ts';
 
 export type ISuggestChangeTimelineProps = {
-    timestamps?: ChangeRequestType['stateTransitionTimestamps']; // todo: update with flag `timestampsInChangeRequestTimeline`
+    timestamps?: ChangeRequestType['stateTimestamps'];
 } & (
     | {
           state: Exclude<ChangeRequestState, 'Scheduled'>;

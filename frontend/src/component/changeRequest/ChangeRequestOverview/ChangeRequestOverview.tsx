@@ -351,7 +351,7 @@ export const ChangeRequestOverview: FC = () => {
                 <StyledAsideBox>
                     <ChangeRequestTimeline
                         {...timelineProps}
-                        timestamps={changeRequest.stateTransitionTimestamps}
+                        timestamps={changeRequest.stateTimestamps}
                     />
                     <ConditionallyRender
                         condition={approversEnabled}

@@ -5,7 +5,7 @@ export const unknownFlagSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['name', 'appName', 'seenAt', 'environment'],
-    description: 'An unknown flag that has been reported by the system',
+    description: 'An unknown flag report',
     properties: {
         name: {
             type: 'string',

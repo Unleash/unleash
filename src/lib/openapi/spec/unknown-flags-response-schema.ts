@@ -6,8 +6,7 @@ export const unknownFlagsResponseSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['unknownFlags'],
-    description:
-        'A list of unknown flags that have been reported by the system',
+    description: 'A list of unknown flag reports',
     properties: {
         unknownFlags: {
             description: 'The list of recently reported unknown flags.',

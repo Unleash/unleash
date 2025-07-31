@@ -761,7 +761,7 @@ export function registerPrometheusMetrics(
 
     const unknownFlagsGauge = createGauge({
         name: 'unknown_flags',
-        help: 'Number of unknown flags reported in the last 24 hours, if any. Maximum of 10.',
+        help: 'Number of unknown flags reported in the last 24 hours, if any. Maximum of 1000.',
     });
 
     // register event listeners

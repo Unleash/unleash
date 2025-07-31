@@ -117,7 +117,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     'features.description as description',
                     'features.type as type',
                     'features.archived_at as archived_at',
-                    'features.project as project',
+                    'feature_project.project_id as project',
                     'features.created_at as created_at',
                     'features.stale as stale',
                     'features.last_seen_at as last_seen_at',
@@ -143,6 +143,12 @@ class FeatureSearchStore implements IFeatureSearchStore {
 
                 const lastSeenQuery = 'last_seen_at_metrics.last_seen_at';
                 selectColumns.push(`${lastSeenQuery} as env_last_seen_at`);
+
+                query.innerJoin(
+                    'feature_project',
+                    'features.name',
+                    'feature_project.feature_name',
+                );
 
                 if (userId) {
                     query.leftJoin(`favorite_features`, function () {
@@ -528,7 +534,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
             name: 'features.name',
             type: 'features.type',
             stale: 'features.stale',
-            project: 'features.project',
+            project: 'feature_project.project_id',
         };
 
         let rankingSql = 'order by ';
@@ -782,9 +788,14 @@ const applyQueryParams = (
     const segmentConditions = queryParams.filter(
         (param) => param.field === 'segment',
     );
-    const genericConditions = queryParams.filter(
-        (param) => !['tag', 'stale'].includes(param.field),
-    );
+    const genericConditions = queryParams
+        .filter((param) => !['tag', 'stale'].includes(param.field))
+        .map((params) =>
+            params.field === 'project'
+                ? { ...params, field: 'feature_project.project_id' }
+                : params,
+        );
+
     applyGenericQueryParams(query, genericConditions);
 
     applyStaleConditions(query, staleConditions);

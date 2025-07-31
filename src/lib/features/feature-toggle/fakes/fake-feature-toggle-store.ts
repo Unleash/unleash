@@ -87,11 +87,11 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return this.features.filter((f) => names.includes(f.name));
     }
 
-    async getProjectId(name: string | undefined): Promise<string | undefined> {
+    async getProjectIds(name: string | undefined): Promise<string[]> {
         if (name === undefined) {
-            return Promise.resolve(undefined);
+            return Promise.resolve([]);
         }
-        return Promise.resolve(this.get(name).then((f) => f.project));
+        return Promise.resolve(this.get(name).then((f) => [f.project]));
     }
 
     private getFilterQuery(query: Partial<IFeatureToggleStoreQuery>) {

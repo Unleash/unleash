@@ -20,10 +20,13 @@ export class FeaturesReadModel implements IFeaturesReadModel {
     async featuresInTheSameProject(
         featureA: string,
         featureB: string,
+        project: string,
     ): Promise<boolean> {
-        const rows = await this.db('features')
-            .countDistinct('project as count')
-            .whereIn('name', [featureA, featureB]);
-        return Number(rows[0].count) === 1;
+        const rows = await this.db('feature_project')
+            .whereIn('feature_name', [featureA, featureB])
+            .andWhere('project_id', project)
+            .countDistinct('feature_name as count');
+
+        return Number(rows[0].count) === 2;
     }
 }

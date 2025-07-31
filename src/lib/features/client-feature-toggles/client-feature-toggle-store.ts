@@ -74,7 +74,7 @@ export default class FeatureToggleClientStore
             'features.name as name',
             'features.description as description',
             'features.type as type',
-            'features.project as project',
+            'feature_project.project_id as project',
             'features.stale as stale',
             'features.impression_data as impression_data',
             'features.last_seen_at as last_seen_at',
@@ -100,6 +100,11 @@ export default class FeatureToggleClientStore
         ] as (string | Raw<any>)[];
 
         let query = this.db('features')
+            .join(
+                'feature_project',
+                'feature_project.feature_name',
+                'features.name',
+            )
             .modify(FeatureToggleStore.filterByArchived, archived)
             .leftJoin(
                 this.db('feature_strategies')
@@ -173,7 +178,10 @@ export default class FeatureToggleClientStore
                 featureQuery.project &&
                 !featureQuery.project.includes(ALL_PROJECTS)
             ) {
-                query = query.whereIn('project', featureQuery.project);
+                query = query.whereIn(
+                    'feature_project.project_id',
+                    featureQuery.project,
+                );
             }
             if (featureQuery.namePrefix) {
                 query = query.where(

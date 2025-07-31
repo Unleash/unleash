@@ -251,9 +251,9 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                             })}
                         </Select>
                     </StyledFormControl>
-                    <span id={exampleDateId}>
+                    <Typography id={exampleDateId}>
                         Example: {formatDateYMDHM(exampleDate, currentLocale)}
-                    </span>
+                    </Typography>
                 </LocaleSelector>
                 {productivityReportEmailEnabled ? (
                     <>

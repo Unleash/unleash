@@ -9,7 +9,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
 }));
 
 const StyledContainer = styled('div')(() => ({
-    maxWidth: '220px',
+    maxWidth: '200px',
     width: '100%',
 }));
 

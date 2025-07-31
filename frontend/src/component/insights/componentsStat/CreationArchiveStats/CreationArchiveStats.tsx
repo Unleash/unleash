@@ -58,11 +58,8 @@ const StyledPercentageRow = styled(Box)(({ theme }) => ({
 
 const StyledRatioTypography = styled(Typography)(({ theme }) => ({
     color: theme.palette.primary.main,
-    fontFamily: 'inherit',
-    fontSize: '20px',
-    fontStyle: 'normal',
-    fontWeight: 700,
-    lineHeight: '28px',
+    fontSize: theme.spacing(2.5),
+    fontWeight: 'bold',
 }));
 
 const StyledInfoIcon = styled(InfoOutlined)(({ theme }) => ({

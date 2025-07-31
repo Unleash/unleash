@@ -3,6 +3,7 @@ import { Box, Paper, Typography, styled, useTheme } from '@mui/material';
 import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
 import { ChartTooltipContainer } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
 import { getFlagTypeColors } from './flagTypeColors.ts';
+import type { WeekData } from './types.ts';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -38,7 +39,7 @@ export const CreationArchiveTooltip: FC<CreationArchiveTooltipProps> = ({
         return null;
     }
 
-    const rawData = createdFlagDataPoints[0]?.raw as any;
+    const rawData = createdFlagDataPoints[0]?.raw as WeekData;
 
     if (!rawData?.createdFlagsByType) {
         return null;

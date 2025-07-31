@@ -27,6 +27,7 @@ import { createTooltip } from 'component/insights/components/LineChart/createToo
 import { CreationArchiveTooltip } from './CreationArchiveTooltip.tsx';
 import { CreationArchiveRatioTooltip } from './CreationArchiveRatioTooltip.tsx';
 import { getFlagTypeColors } from './flagTypeColors.ts';
+import type { WeekData, RawWeekData } from './types.ts';
 
 ChartJS.register(
     CategoryScale,
@@ -47,22 +48,6 @@ interface ICreationArchiveChartProps {
     isLoading?: boolean;
 }
 
-export type WeekData = {
-    archivedFlags: number;
-    totalCreatedFlags: number;
-    createdFlagsByType: Record<string, number>;
-    archivePercentage: number;
-    week: string;
-    date?: string;
-};
-
-type RawWeekData = {
-    archivedFlags: number;
-    createdFlags: Record<string, number>;
-    week: string;
-    date: string;
-};
-
 export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     creationArchiveTrends,
     isLoading,
@@ -73,7 +58,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     const { locationSettings } = useLocationSettings();
     const [tooltip, setTooltip] = useState<null | TooltipState>(null);
 
-    const aggregateHealthData = useMemo(() => {
+    const aggregateOrProjectData = useMemo(() => {
         const labels: string[] = Array.from(
             new Set(
                 creationVsArchivedChart.datasets.flatMap((d) =>
@@ -186,7 +171,6 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
         };
     }, [creationVsArchivedChart, theme]);
 
-    const aggregateOrProjectData = aggregateHealthData;
     const notEnoughData = useMemo(
         () =>
             !isLoading &&
@@ -196,7 +180,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     const data =
         notEnoughData || isLoading ? placeholderData : aggregateOrProjectData;
 
-    const flagTypeNames = aggregateHealthData.flagTypeNames || [];
+    const flagTypeNames = aggregateOrProjectData.flagTypeNames || [];
 
     return (
         <>

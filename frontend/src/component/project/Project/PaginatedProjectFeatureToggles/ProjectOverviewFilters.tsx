@@ -82,6 +82,13 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
                 dateOperators: ['IS_ON_OR_AFTER', 'IS_BEFORE'],
             },
             {
+                label: 'Last seen',
+                icon: 'visibility',
+                options: [],
+                filterKey: 'lastSeenAt',
+                dateOperators: ['IS_ON_OR_AFTER', 'IS_BEFORE'],
+            },
+            {
                 label: 'Flag type',
                 icon: 'flag',
                 options: [

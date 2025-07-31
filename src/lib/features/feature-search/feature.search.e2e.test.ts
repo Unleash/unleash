@@ -1085,6 +1085,56 @@ test('should filter features by combined operators', async () => {
     });
 });
 
+test('should filter features by lastSeenAt', async () => {
+    await app.createFeature({
+        name: 'recently_seen_feature',
+    });
+    await app.createFeature({
+        name: 'old_seen_feature',
+    });
+
+    // Insert lastSeenAt data for both features
+    const recentDate = new Date();
+    const oldDate = new Date();
+    oldDate.setDate(oldDate.getDate() - 10); // 10 days ago
+
+    await insertLastSeenAt(
+        'recently_seen_feature',
+        db.rawDatabase,
+        DEFAULT_ENV,
+        recentDate.toISOString(),
+    );
+    await insertLastSeenAt(
+        'old_seen_feature',
+        db.rawDatabase,
+        DEFAULT_ENV,
+        oldDate.toISOString(),
+    );
+
+    // Filter for features seen in the last 7 days
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const { body: recentFeatures } = await app.request
+        .get(
+            `/api/admin/search/features?lastSeenAt=IS_ON_OR_AFTER:${sevenDaysAgo.toISOString()}`,
+        )
+        .expect(200);
+
+    expect(recentFeatures.features).toHaveLength(1);
+    expect(recentFeatures.features[0].name).toBe('recently_seen_feature');
+
+    // Filter for features seen before 7 days ago
+    const { body: oldFeatures } = await app.request
+        .get(
+            `/api/admin/search/features?lastSeenAt=IS_BEFORE:${sevenDaysAgo.toISOString()}`,
+        )
+        .expect(200);
+
+    expect(oldFeatures.features).toHaveLength(1);
+    expect(oldFeatures.features[0].name).toBe('old_seen_feature');
+});
+
 test('should return environment usage metrics and lifecycle', async () => {
     await app.createFeature({
         name: 'my_feature_b',

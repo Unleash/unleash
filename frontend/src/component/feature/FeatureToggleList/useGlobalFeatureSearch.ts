@@ -31,6 +31,7 @@ export const useGlobalFeatureSearch = (pageLimit = DEFAULT_PAGE_LIMIT) => {
         state: FilterItemParam,
         segment: FilterItemParam,
         createdAt: FilterItemParam,
+        lastSeenAt: FilterItemParam,
         type: FilterItemParam,
         lifecycle: FilterItemParam,
         createdBy: FilterItemParam,

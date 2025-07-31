@@ -43,9 +43,9 @@ export default class UnknownFlagsController extends Controller {
                 openApiService.validPath({
                     operationId: 'getUnknownFlags',
                     tags: ['Unstable'],
-                    summary: 'Get latest reported unknown flag names',
+                    summary: 'Get unknown flag reports',
                     description:
-                        'Returns a list of unknown flag reports from the last 7 days, if any. Maximum of 1000.',
+                        'Returns a list of unknown flag reports from the last 24 hours, if any. Maximum of 1000.',
                     responses: {
                         200: createResponseSchema('unknownFlagsResponseSchema'),
                     },

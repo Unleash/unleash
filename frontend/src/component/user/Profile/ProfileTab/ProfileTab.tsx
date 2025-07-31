@@ -99,7 +99,8 @@ const ProjectList = styled('ul')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const exampleDate = new Date('2014-09-29T14:50:46');
+const exampleDateString = '2014-09-29T14:50:46';
+const exampleDate = new Date(exampleDateString);
 
 const LocaleSelector = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(1.5),
@@ -252,7 +253,10 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                         </Select>
                     </StyledFormControl>
                     <Typography id={exampleDateId}>
-                        Example: {formatDateYMDHM(exampleDate, currentLocale)}
+                        Example:{' '}
+                        <time dateTime={exampleDateString}>
+                            {formatDateYMDHM(exampleDate, currentLocale)}
+                        </time>
                     </Typography>
                 </LocaleSelector>
                 {productivityReportEmailEnabled ? (

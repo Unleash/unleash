@@ -113,6 +113,7 @@ export const ProjectFeatureToggles = ({
         state: tableState.state,
         createdBy: tableState.createdBy,
         archived: tableState.archived,
+        lifecycle: tableState.lifecycle,
     };
 
     const { favorite, unfavorite } = useFavoriteFeaturesApi();

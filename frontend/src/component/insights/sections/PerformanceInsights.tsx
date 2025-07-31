@@ -28,6 +28,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { NewProductionFlagsChart } from '../componentsChart/NewProductionFlagsChart/NewProductionFlagsChart.tsx';
 import Lightbulb from '@mui/icons-material/LightbulbOutlined';
 import { CreationArchiveChart } from '../componentsChart/CreationArchiveChart/CreationArchiveChart.tsx';
+import { CreationArchiveStats } from '../componentsStat/CreationArchiveStats/CreationArchiveStats.tsx';
 
 export const PerformanceInsights: FC = () => {
     const statePrefix = 'performance-';
@@ -116,11 +117,16 @@ export const PerformanceInsights: FC = () => {
                 <StyledWidget>
                     <StyledWidgetStats width={275}>
                         <WidgetTitle title='Flags created vs archived' />
+                        <CreationArchiveStats
+                            groupedCreationArchiveData={
+                                groupedCreationArchiveData
+                            }
+                            isLoading={loading}
+                        />
                     </StyledWidgetStats>
                     <StyledChartContainer>
                         <CreationArchiveChart
                             creationArchiveTrends={groupedCreationArchiveData}
-                            isAggregate={showAllProjects}
                             isLoading={loading}
                         />
                     </StyledChartContainer>

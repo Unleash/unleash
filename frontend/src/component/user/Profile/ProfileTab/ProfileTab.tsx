@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import {
     Box,
     FormControl,
@@ -15,12 +15,13 @@ import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import type { IUser } from 'interfaces/user';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { RoleBadge } from 'component/common/RoleBadge/RoleBadge';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ProductivityEmailSubscription } from './ProductivityEmailSubscription.tsx';
+import { formatDateYMDHM } from 'utils/formatDate.ts';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -79,7 +80,6 @@ const StyledDivider = styled('div')(({ theme }) => ({
 }));
 
 const StyledFormControl = styled(FormControl)(({ theme }) => ({
-    marginTop: theme.spacing(1.5),
     width: theme.spacing(30),
 }));
 
@@ -99,11 +99,22 @@ const ProjectList = styled('ul')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
+const exampleDateString = '2014-09-29T14:50:46';
+const exampleDate = new Date(exampleDateString);
+
+const LocaleSelector = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(1.5),
+    display: 'flex',
+    flexFlow: 'row wrap',
+    gap: theme.spacing(1),
+    alignItems: 'center',
+}));
+
 export const ProfileTab = ({ user }: IProfileTabProps) => {
     const { profile, refetchProfile } = useProfile();
-    const navigate = useNavigate();
     const { locationSettings, setLocationSettings } = useLocationSettings();
     const [currentLocale, setCurrentLocale] = useState<string>();
+    const exampleDateId = useId();
 
     const [possibleLocales, setPossibleLocales] = useState([
         'en-US',
@@ -215,30 +226,39 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                 <Typography variant='body2'>
                     This is the format used across the system for time and date
                 </Typography>
-                <StyledFormControl variant='outlined' size='small'>
-                    <StyledInputLabel htmlFor='locale-select'>
-                        Date/Time formatting
-                    </StyledInputLabel>
-                    <Select
-                        id='locale-select'
-                        value={currentLocale || ''}
-                        native
-                        onChange={changeLocale}
-                        MenuProps={{
-                            style: {
-                                zIndex: 9999,
-                            },
-                        }}
-                    >
-                        {possibleLocales.map((locale) => {
-                            return (
-                                <option key={locale} value={locale}>
-                                    {locale}
-                                </option>
-                            );
-                        })}
-                    </Select>
-                </StyledFormControl>
+                <LocaleSelector>
+                    <StyledFormControl variant='outlined' size='small'>
+                        <StyledInputLabel htmlFor='locale-select'>
+                            Date/Time formatting
+                        </StyledInputLabel>
+                        <Select
+                            aria-details={exampleDateId}
+                            id='locale-select'
+                            value={currentLocale || ''}
+                            native
+                            onChange={changeLocale}
+                            MenuProps={{
+                                style: {
+                                    zIndex: 9999,
+                                },
+                            }}
+                        >
+                            {possibleLocales.map((locale) => {
+                                return (
+                                    <option key={locale} value={locale}>
+                                        {locale}
+                                    </option>
+                                );
+                            })}
+                        </Select>
+                    </StyledFormControl>
+                    <Typography id={exampleDateId}>
+                        Example:{' '}
+                        <time dateTime={exampleDateString}>
+                            {formatDateYMDHM(exampleDate, currentLocale)}
+                        </time>
+                    </Typography>
+                </LocaleSelector>
                 {productivityReportEmailEnabled ? (
                     <>
                         <StyledDivider />

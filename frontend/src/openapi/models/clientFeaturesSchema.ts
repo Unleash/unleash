@@ -8,7 +8,7 @@ import type { ClientFeaturesQuerySchema } from './clientFeaturesQuerySchema.js';
 import type { ClientSegmentSchema } from './clientSegmentSchema.js';
 
 /**
- * Configuration data for server-side SDKs for evaluating feature flags.
+ * Configuration data for backend SDKs for evaluating feature flags.
  */
 export interface ClientFeaturesSchema {
     /** A list of feature flags with their configuration */

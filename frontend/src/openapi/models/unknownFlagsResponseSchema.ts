@@ -6,7 +6,7 @@
 import type { UnknownFlagSchema } from './unknownFlagSchema.js';
 
 /**
- * A list of unknown flags that have been reported by the system
+ * A list of unknown flag reports
  */
 export interface UnknownFlagsResponseSchema {
     /** The list of recently reported unknown flags. */

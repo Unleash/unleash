@@ -96,7 +96,7 @@ test('Filter table by project', async () => {
 
     await screen.findByPlaceholderText(/Search/);
     await screen.getByRole('button', {
-        name: /Filter/i,
+        name: 'Filter',
     });
 
     await Promise.all(

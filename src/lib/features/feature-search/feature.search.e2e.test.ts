@@ -1113,7 +1113,7 @@ test('should filter features by lastSeenAt', async () => {
 
     const { body: recentFeatures } = await app.request
         .get(
-            `/api/admin/search/features?lastSeenAt=IS_ON_OR_AFTER:${sevenDaysAgo.toISOString()}`,
+            `/api/admin/search/features?lastSeenAt=IS_ON_OR_AFTER:${sevenDaysAgo.toISOString().split('T')[0]}`,
         )
         .expect(200);
 
@@ -1122,7 +1122,7 @@ test('should filter features by lastSeenAt', async () => {
 
     const { body: oldFeatures } = await app.request
         .get(
-            `/api/admin/search/features?lastSeenAt=IS_BEFORE:${sevenDaysAgo.toISOString()}`,
+            `/api/admin/search/features?lastSeenAt=IS_BEFORE:${sevenDaysAgo.toISOString().split('T')[0]}`,
         )
         .expect(200);
 

@@ -61,6 +61,7 @@ process.nextTick(async () => {
                         timestampsInChangeRequestTimeline: true,
                         lifecycleGraphs: true,
                         addConfiguration: true,
+                        projectListViewToggle: true,
                     },
                 },
                 authentication: {

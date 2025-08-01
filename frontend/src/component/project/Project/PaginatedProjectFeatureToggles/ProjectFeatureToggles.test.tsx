@@ -207,3 +207,34 @@ test('Project is not onboarded', async () => {
     );
     await screen.findByText('Welcome to your project');
 });
+
+test('renders lifecycle filters', async () => {
+    setupApi();
+
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={
+                    <ProjectFeatureToggles
+                        environments={['development', 'production']}
+                    />
+                }
+            />
+        </Routes>,
+        {
+            route: '/projects/default',
+        },
+    );
+
+    const addFilter = await screen.findByText('Filter');
+    fireEvent.click(addFilter);
+
+    const lifecycleFilter = await screen.findByText('Lifecycle stage');
+    fireEvent.click(lifecycleFilter);
+
+    await screen.findByText('Define');
+    await screen.findByText('Develop');
+    await screen.findByText('Rollout production');
+    await screen.findByText('Cleanup');
+});

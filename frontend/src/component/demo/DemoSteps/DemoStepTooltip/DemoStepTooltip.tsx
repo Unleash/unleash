@@ -105,7 +105,12 @@ export const DemoStepTooltip = ({
 
     if (step.target === 'body') {
         return (
-            <div {...tooltipProps}>
+            <div
+                onClick={(e) => {
+                    e.stopPropagation();
+                }}
+                {...tooltipProps}
+            >
                 <StyledDialog
                     open
                     onClose={(_, r) => {
@@ -160,7 +165,12 @@ export const DemoStepTooltip = ({
     }
 
     return (
-        <StyledTooltip {...tooltipProps}>
+        <StyledTooltip
+            onClick={(e) => {
+                e.stopPropagation();
+            }}
+            {...tooltipProps}
+        >
             <StyledCloseButton aria-label='close' onClick={onClose}>
                 <CloseIcon />
             </StyledCloseButton>

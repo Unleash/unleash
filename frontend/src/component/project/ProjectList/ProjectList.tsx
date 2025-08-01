@@ -18,6 +18,7 @@ import { useProjectsSearchAndSort } from './hooks/useProjectsSearchAndSort.ts';
 import { ProjectArchiveLink } from './ProjectArchiveLink/ProjectArchiveLink.tsx';
 import { ProjectsListHeader } from './ProjectsListHeader/ProjectsListHeader.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { TablePlaceholder } from 'component/common/Table/index.ts';
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
     maxWidth: '500px',
@@ -38,7 +39,7 @@ export const ProjectList = () => {
 
     const [state, setState] = useProjectsListState();
 
-    const myProjects = new Set(useProfile().profile?.projects || []);
+    const myProfileProjects = new Set(useProfile().profile?.projects || []);
 
     const setSearchValue = useCallback(
         (value: string) => setState({ query: value || undefined }),
@@ -50,12 +51,19 @@ export const ProjectList = () => {
         state.query,
         state.sortBy,
     );
-    const groupedProjects = useGroupedProjects(sortedProjects, myProjects);
+    const groupedProjects = useGroupedProjects(
+        sortedProjects,
+        myProfileProjects,
+    );
 
     const projectCount =
         sortedProjects.length < projects.length
             ? `${sortedProjects.length} of ${projects.length}`
             : projects.length;
+
+    const myProjects = isOss() ? sortedProjects : groupedProjects.myProjects;
+
+    const otherProjects = isOss() ? [] : groupedProjects.otherProjects;
 
     return (
         <PageContent
@@ -66,7 +74,7 @@ export const ProjectList = () => {
                     actions={
                         <>
                             <ConditionallyRender
-                                condition={!isOss && !isSmallScreen}
+                                condition={!isOss() && !isSmallScreen}
                                 show={
                                     <>
                                         <Search
@@ -113,42 +121,61 @@ export const ProjectList = () => {
                     )}
                 />
                 <SearchHighlightProvider value={state.query || ''}>
-                    <div>
-                        <ProjectsListHeader
-                            subtitle='Favorite projects, projects you own, and projects you are a member of'
-                            actions={
-                                <ProjectsListSort
-                                    sortBy={state.sortBy}
-                                    setSortBy={(sortBy) =>
-                                        setState({
-                                            sortBy: sortBy as typeof state.sortBy,
-                                        })
-                                    }
-                                />
-                            }
-                        >
-                            My projects
-                        </ProjectsListHeader>
-                        <ProjectGroup
-                            loading={loading}
-                            projects={
-                                isOss()
-                                    ? sortedProjects
-                                    : groupedProjects.myProjects
-                            }
-                        />
-                    </div>
-                    {!isOss() ? (
+                    {myProjects.length > 0 && (
                         <div>
-                            <ProjectsListHeader subtitle='Projects in Unleash that you have access to.'>
+                            <ProjectsListHeader
+                                helpText='Favorite projects, projects you own, and projects you are a member of'
+                                actions={
+                                    <ProjectsListSort
+                                        sortBy={state.sortBy}
+                                        setSortBy={(sortBy) =>
+                                            setState({
+                                                sortBy: sortBy as typeof state.sortBy,
+                                            })
+                                        }
+                                    />
+                                }
+                            >
+                                My projects
+                            </ProjectsListHeader>
+                            <ProjectGroup
+                                loading={loading}
+                                projects={
+                                    isOss()
+                                        ? sortedProjects
+                                        : groupedProjects.myProjects
+                                }
+                            />
+                        </div>
+                    )}
+                    {otherProjects.length > 0 && (
+                        <div>
+                            <ProjectsListHeader helpText='Projects in Unleash that you have access to.'>
                                 Other projects
                             </ProjectsListHeader>
                             <ProjectGroup
                                 loading={loading}
-                                projects={groupedProjects.otherProjects}
+                                projects={otherProjects}
                             />
                         </div>
-                    ) : null}
+                    )}
+                    {!loading &&
+                        !myProjects.length &&
+                        !otherProjects.length && (
+                            <>
+                                {state.query?.length ? (
+                                    <TablePlaceholder>
+                                        No projects found matching &ldquo;
+                                        {state.query}
+                                        &rdquo;
+                                    </TablePlaceholder>
+                                ) : (
+                                    <TablePlaceholder>
+                                        No projects available.
+                                    </TablePlaceholder>
+                                )}
+                            </>
+                        )}
                 </SearchHighlightProvider>
             </StyledContainer>
         </PageContent>

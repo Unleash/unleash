@@ -1,9 +1,10 @@
-import { styled, Typography } from '@mui/material';
+import { styled } from '@mui/material';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import type { FC, ReactNode } from 'react';
 
 type ProjectsListHeaderProps = {
-    children?: ReactNode;
-    subtitle?: string;
+    children: ReactNode;
+    helpText: string;
     actions?: ReactNode;
 };
 
@@ -18,28 +19,22 @@ const StyledHeaderContainer = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-const StyledHeaderTitle = styled('div')(() => ({
+const StyledHeaderTitle = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
     flexGrow: 0,
 }));
 
 export const ProjectsListHeader: FC<ProjectsListHeaderProps> = ({
     children,
-    subtitle,
+    helpText,
     actions,
 }) => {
     return (
         <StyledHeaderContainer>
             <StyledHeaderTitle>
-                {children ? (
-                    <Typography component='h2' variant='h2'>
-                        {children}
-                    </Typography>
-                ) : null}
-                {subtitle ? (
-                    <Typography variant='body2' color='text.secondary'>
-                        {subtitle}
-                    </Typography>
-                ) : null}
+                {children}
+                <HelpIcon tooltip={helpText} />
             </StyledHeaderTitle>
             {actions}
         </StyledHeaderContainer>

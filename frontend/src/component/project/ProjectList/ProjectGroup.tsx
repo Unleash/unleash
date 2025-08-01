@@ -4,9 +4,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { ProjectCard as DefaultProjectCard } from '../ProjectCard/ProjectCard.tsx';
 import type { ProjectSchema } from 'openapi';
 import loadingData from './loadingData.ts';
-import { TablePlaceholder } from 'component/common/Table';
 import { styled } from '@mui/material';
-import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { UpgradeProjectCard } from '../ProjectCard/UpgradeProjectCard.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
@@ -40,86 +38,57 @@ type ProjectGroupProps = {
 export const ProjectGroup = ({
     projects,
     loading,
-    placeholder = 'No projects available.',
     ProjectCardComponent,
     link = true,
 }: ProjectGroupProps) => {
     const ProjectCard = ProjectCardComponent ?? DefaultProjectCard;
     const { isOss } = useUiConfig();
-    const { searchQuery } = useSearchHighlightContext();
 
     return (
-        <>
+        <StyledGridContainer>
             <ConditionallyRender
-                condition={projects.length < 1 && !loading}
-                show={
-                    <ConditionallyRender
-                        condition={searchQuery?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No projects found matching &ldquo;
-                                {searchQuery}
-                                &rdquo;
-                            </TablePlaceholder>
-                        }
-                        elseShow={
-                            <TablePlaceholder>{placeholder}</TablePlaceholder>
-                        }
-                    />
-                }
-                elseShow={
-                    <StyledGridContainer>
-                        <ConditionallyRender
-                            condition={loading}
-                            show={() => (
-                                <>
-                                    {loadingData.map(
-                                        (project: ProjectSchema) => (
-                                            <ProjectCard
-                                                data-loading
-                                                createdAt={project.createdAt}
-                                                key={project.id}
-                                                name={project.name}
-                                                id={project.id}
-                                                mode={project.mode}
-                                                memberCount={2}
-                                                health={95}
-                                                featureCount={4}
-                                                owners={[
-                                                    {
-                                                        ownerType: 'user',
-                                                        name: 'Loading data',
-                                                    },
-                                                ]}
-                                            />
-                                        ),
-                                    )}
-                                </>
-                            )}
-                            elseShow={() => (
-                                <>
-                                    {projects.map((project) =>
-                                        link ? (
-                                            <StyledCardLink
-                                                key={project.id}
-                                                to={`/projects/${project.id}`}
-                                            >
-                                                <ProjectCard {...project} />
-                                            </StyledCardLink>
-                                        ) : (
-                                            <ProjectCard
-                                                key={project.id}
-                                                {...project}
-                                            />
-                                        ),
-                                    )}
-                                </>
-                            )}
-                        />
-                        {isOss() ? <UpgradeProjectCard /> : null}
-                    </StyledGridContainer>
-                }
+                condition={loading}
+                show={() => (
+                    <>
+                        {loadingData.map((project: ProjectSchema) => (
+                            <ProjectCard
+                                data-loading
+                                createdAt={project.createdAt}
+                                key={project.id}
+                                name={project.name}
+                                id={project.id}
+                                mode={project.mode}
+                                memberCount={2}
+                                health={95}
+                                featureCount={4}
+                                owners={[
+                                    {
+                                        ownerType: 'user',
+                                        name: 'Loading data',
+                                    },
+                                ]}
+                            />
+                        ))}
+                    </>
+                )}
+                elseShow={() => (
+                    <>
+                        {projects.map((project) =>
+                            link ? (
+                                <StyledCardLink
+                                    key={project.id}
+                                    to={`/projects/${project.id}`}
+                                >
+                                    <ProjectCard {...project} />
+                                </StyledCardLink>
+                            ) : (
+                                <ProjectCard key={project.id} {...project} />
+                            ),
+                        )}
+                    </>
+                )}
             />
-        </>
+            {isOss() ? <UpgradeProjectCard /> : null}
+        </StyledGridContainer>
     );
 };

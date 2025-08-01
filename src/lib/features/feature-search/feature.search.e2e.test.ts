@@ -1,3 +1,4 @@
+import { subDays } from 'date-fns';
 import dbInit, {
     type ITestDb,
 } from '../../../test/e2e/helpers/database-init.js';
@@ -1093,27 +1094,22 @@ test('should filter features by lastSeenAt', async () => {
         name: 'old_seen_feature',
     });
 
-    // Insert lastSeenAt data for both features
-    const recentDate = new Date();
-    const oldDate = new Date();
-    oldDate.setDate(oldDate.getDate() - 10); // 10 days ago
+    const currentDate = new Date();
 
     await insertLastSeenAt(
         'recently_seen_feature',
         db.rawDatabase,
         DEFAULT_ENV,
-        recentDate.toISOString(),
+        currentDate.toISOString(),
     );
     await insertLastSeenAt(
         'old_seen_feature',
         db.rawDatabase,
         DEFAULT_ENV,
-        oldDate.toISOString(),
+        subDays(currentDate, 10).toISOString(),
     );
 
-    // Filter for features seen in the last 7 days
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const sevenDaysAgo = subDays(currentDate, 7);
 
     const { body: recentFeatures } = await app.request
         .get(
@@ -1124,7 +1120,6 @@ test('should filter features by lastSeenAt', async () => {
     expect(recentFeatures.features).toHaveLength(1);
     expect(recentFeatures.features[0].name).toBe('recently_seen_feature');
 
-    // Filter for features seen before 7 days ago
     const { body: oldFeatures } = await app.request
         .get(
             `/api/admin/search/features?lastSeenAt=IS_BEFORE:${sevenDaysAgo.toISOString()}`,

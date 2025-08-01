@@ -83,7 +83,7 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
             },
             {
                 label: 'Last seen',
-                icon: 'visibility',
+                icon: 'monitor_heart',
                 options: [],
                 filterKey: 'lastSeenAt',
                 dateOperators: ['IS_ON_OR_AFTER', 'IS_BEFORE'],

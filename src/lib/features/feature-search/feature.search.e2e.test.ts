@@ -1128,6 +1128,11 @@ test('should filter features by lastSeenAt', async () => {
 
     expect(oldFeatures.features).toHaveLength(1);
     expect(oldFeatures.features[0].name).toBe('old_seen_feature');
+
+    const { body: allFeatures } = await app.request
+        .get('/api/admin/search/features?lastSeenAt=IS_ON_OR_AFTER:2000-01-01')
+        .expect(200);
+    expect(allFeatures.features).toHaveLength(2);
 });
 
 test('should return environment usage metrics and lifecycle', async () => {

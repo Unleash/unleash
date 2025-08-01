@@ -108,6 +108,7 @@ export default class FeatureSearchController extends Controller {
             favoritesFirst,
             archived,
             sortBy,
+            lastSeenAt,
         } = req.query;
         const userId = req.user.id;
         const {
@@ -149,6 +150,7 @@ export default class FeatureSearchController extends Controller {
             createdBy,
             sortBy,
             lifecycle,
+            lastSeenAt,
             status: normalizedStatus,
             offset: normalizedOffset,
             limit: normalizedLimit,

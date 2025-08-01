@@ -38,17 +38,15 @@ const StyledIcon = styled(Icon)(({ theme }) => ({
 
 interface IAddFilterButtonProps {
     visibleOptions: string[];
-    setVisibleOptions: (filters: string[]) => void;
     hiddenOptions: string[];
-    setHiddenOptions: (filters: string[]) => void;
+    onSelectedOptionsChange: (filters: string[]) => void;
     availableFilters: IFilterItem[];
 }
 
 export const AddFilterButton = ({
     visibleOptions,
-    setVisibleOptions,
     hiddenOptions,
-    setHiddenOptions,
+    onSelectedOptionsChange,
     availableFilters,
 }: IAddFilterButtonProps) => {
     const projectId = useOptionalPathParam('projectId');
@@ -69,11 +67,7 @@ export const AddFilterButton = ({
     };
 
     const onSelect = (label: string) => {
-        const newVisibleOptions = visibleOptions.filter((f) => f !== label);
-        const newHiddenOptions = [...hiddenOptions, label];
-
-        setHiddenOptions(newHiddenOptions);
-        setVisibleOptions(newVisibleOptions);
+        onSelectedOptionsChange([...hiddenOptions, label]);
         handleClose();
     };
 

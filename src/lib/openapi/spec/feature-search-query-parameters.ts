@@ -179,6 +179,17 @@ export const featureSearchQueryParameters = [
             'The date the feature was created. The date can be specified with an operator. The supported operators are IS_BEFORE, IS_ON_OR_AFTER.',
         in: 'query',
     },
+    {
+        name: 'lastSeenAt',
+        schema: {
+            type: 'string',
+            example: 'IS_ON_OR_AFTER:2023-01-28',
+            pattern: '^(IS_BEFORE|IS_ON_OR_AFTER):\\d{4}-\\d{2}-\\d{2}$',
+        },
+        description:
+            'The date the feature was last seen from metrics. The date can be specified with an operator. The supported operators are IS_BEFORE, IS_ON_OR_AFTER.',
+        in: 'query',
+    },
 ] as const;
 
 export type FeatureSearchQueryParameters = Partial<

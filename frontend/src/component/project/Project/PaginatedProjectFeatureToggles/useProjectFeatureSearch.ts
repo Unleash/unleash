@@ -38,6 +38,7 @@ export const useProjectFeatureSearch = (
         tag: FilterItemParam,
         state: FilterItemParam,
         createdAt: FilterItemParam,
+        lastSeenAt: FilterItemParam,
         type: FilterItemParam,
         createdBy: FilterItemParam,
         archived: FilterItemParam,

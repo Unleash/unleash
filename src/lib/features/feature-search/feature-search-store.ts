@@ -771,6 +771,26 @@ const applyStaleConditions = (
         }
     }
 };
+const applyLastSeenAtConditions = (
+    query: Knex.QueryBuilder,
+    lastSeenAtConditions: IQueryParam[],
+): void => {
+    lastSeenAtConditions.forEach((param) => {
+        const lastSeenAtExpression = query.client.raw(
+            'coalesce(last_seen_at_metrics.last_seen_at, features.last_seen_at)',
+        );
+
+        switch (param.operator) {
+            case 'IS_BEFORE':
+                query.where(lastSeenAtExpression, '<', param.values[0]);
+                break;
+            case 'IS_ON_OR_AFTER':
+                query.where(lastSeenAtExpression, '>=', param.values[0]);
+                break;
+        }
+    });
+};
+
 const applyQueryParams = (
     query: Knex.QueryBuilder,
     queryParams: IQueryParam[],
@@ -782,12 +802,17 @@ const applyQueryParams = (
     const segmentConditions = queryParams.filter(
         (param) => param.field === 'segment',
     );
+    const lastSeenAtConditions = queryParams.filter(
+        (param) => param.field === 'lastSeenAt',
+    );
     const genericConditions = queryParams.filter(
-        (param) => !['tag', 'stale'].includes(param.field),
+        (param) =>
+            !['tag', 'stale', 'segment', 'lastSeenAt'].includes(param.field),
     );
     applyGenericQueryParams(query, genericConditions);
 
     applyStaleConditions(query, staleConditions);
+    applyLastSeenAtConditions(query, lastSeenAtConditions);
 
     applyMultiQueryParams(
         query,

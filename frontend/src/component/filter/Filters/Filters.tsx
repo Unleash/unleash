@@ -1,6 +1,5 @@
-import { type FC, useEffect, useState } from 'react';
+import { type FC, useEffect, useMemo, useState } from 'react';
 import { Box, Icon, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { AddFilterButton } from '../AddFilterButton.tsx';
 import { FilterDateItem } from 'component/common/FilterDateItem/FilterDateItem';
 import {
@@ -165,6 +164,22 @@ const SingleFilter: FC<SingleFilterProps> = ({
     );
 };
 
+const mergeArraysKeepingOrder = (
+    firstArray: string[],
+    secondArray: string[],
+): string[] => {
+    const resultArray: string[] = [...firstArray];
+    const elementsSet = new Set(firstArray);
+
+    secondArray.forEach((element) => {
+        if (!elementsSet.has(element)) {
+            resultArray.push(element);
+        }
+    });
+
+    return resultArray;
+};
+
 type MultiFilterProps = IFilterProps & {
     rangeChangeHandler: RangeChangeHandler;
 };
@@ -176,31 +191,12 @@ const MultiFilter: FC<MultiFilterProps> = ({
     rangeChangeHandler,
     className,
 }) => {
-    const [unselectedFilters, setUnselectedFilters] = useState<string[]>([]);
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
     const deselectFilter = (label: string) => {
         const newSelectedFilters = selectedFilters.filter((f) => f !== label);
-        const newUnselectedFilters = [...unselectedFilters, label].sort();
 
         setSelectedFilters(newSelectedFilters);
-        setUnselectedFilters(newUnselectedFilters);
-    };
-
-    const mergeArraysKeepingOrder = (
-        firstArray: string[],
-        secondArray: string[],
-    ): string[] => {
-        const resultArray: string[] = [...firstArray];
-        const elementsSet = new Set(firstArray);
-
-        secondArray.forEach((element) => {
-            if (!elementsSet.has(element)) {
-                resultArray.push(element);
-            }
-        });
-
-        return resultArray;
     };
 
     useEffect(() => {
@@ -219,15 +215,16 @@ const MultiFilter: FC<MultiFilterProps> = ({
             newSelectedFilters,
         );
         setSelectedFilters(allSelectedFilters);
-
-        const newUnselectedFilters = availableFilters
-            .filter((item) => !allSelectedFilters.includes(item.label))
-            .map((field) => field.label)
-            .sort();
-        setUnselectedFilters(newUnselectedFilters);
     }, [JSON.stringify(state), JSON.stringify(availableFilters)]);
 
-    const hasAvailableFilters = unselectedFilters.length > 0;
+    const unselectedFilters = useMemo(
+        () =>
+            availableFilters
+                .filter((item) => !selectedFilters.includes(item.label))
+                .map((field) => field.label)
+                .sort(),
+        [availableFilters, selectedFilters],
+    );
 
     return (
         <StyledBox className={className}>
@@ -251,19 +248,14 @@ const MultiFilter: FC<MultiFilterProps> = ({
                     />
                 );
             })}
-
-            <ConditionallyRender
-                condition={hasAvailableFilters}
-                show={
-                    <AddFilterButton
-                        availableFilters={availableFilters}
-                        visibleOptions={unselectedFilters}
-                        setVisibleOptions={setUnselectedFilters}
-                        hiddenOptions={selectedFilters}
-                        setHiddenOptions={setSelectedFilters}
-                    />
-                }
-            />
+            {unselectedFilters.length > 0 ? (
+                <AddFilterButton
+                    availableFilters={availableFilters}
+                    visibleOptions={unselectedFilters}
+                    hiddenOptions={selectedFilters}
+                    onSelectedOptionsChange={setSelectedFilters}
+                />
+            ) : null}
         </StyledBox>
     );
 };

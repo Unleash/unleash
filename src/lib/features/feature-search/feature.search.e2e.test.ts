@@ -1135,6 +1135,100 @@ test('should filter features by lastSeenAt', async () => {
     expect(allFeatures.features).toHaveLength(2);
 });
 
+test('should filter by last seen even if in different environment', async () => {
+    await app.createFeature({
+        name: 'feature_in_production',
+    });
+    await app.createFeature({
+        name: 'feature_in_development',
+    });
+
+    const currentDate = new Date();
+
+    await insertLastSeenAt(
+        'feature_in_production',
+        db.rawDatabase,
+        'production',
+        subDays(currentDate, 2).toISOString(),
+    );
+
+    await insertLastSeenAt(
+        'feature_in_development',
+        db.rawDatabase,
+        DEFAULT_ENV,
+        subDays(currentDate, 5).toISOString(),
+    );
+
+    const threeDaysAgo = subDays(currentDate, 3);
+
+    const { body: recentFeatures } = await app.request
+        .get(
+            `/api/admin/search/features?lastSeenAt=IS_ON_OR_AFTER:${threeDaysAgo.toISOString().split('T')[0]}`,
+        )
+        .expect(200);
+
+    expect(recentFeatures.features).toHaveLength(1);
+    expect(recentFeatures.features[0].name).toBe('feature_in_production');
+
+    const sixDaysAgo = subDays(currentDate, 6);
+
+    const { body: olderFeatures } = await app.request
+        .get(
+            `/api/admin/search/features?lastSeenAt=IS_ON_OR_AFTER:${sixDaysAgo.toISOString().split('T')[0]}`,
+        )
+        .expect(200);
+
+    expect(olderFeatures.features).toHaveLength(2);
+    expect(olderFeatures.features.map((f) => f.name)).toContain(
+        'feature_in_production',
+    );
+    expect(olderFeatures.features.map((f) => f.name)).toContain(
+        'feature_in_development',
+    );
+});
+
+test('should not return features with no last seen when filtering by lastSeenAt', async () => {
+    await app.createFeature({
+        name: 'feature_with_last_seen',
+    });
+    await app.createFeature({
+        name: 'feature_without_last_seen',
+    });
+
+    const currentDate = new Date();
+
+    await insertLastSeenAt(
+        'feature_with_last_seen',
+        db.rawDatabase,
+        DEFAULT_ENV,
+        subDays(currentDate, 1).toISOString(),
+    );
+
+    const twoDaysAgo = subDays(currentDate, 2);
+
+    const { body: featuresWithLastSeen } = await app.request
+        .get(
+            `/api/admin/search/features?lastSeenAt=IS_ON_OR_AFTER:${twoDaysAgo.toISOString().split('T')[0]}`,
+        )
+        .expect(200);
+
+    expect(featuresWithLastSeen.features).toHaveLength(1);
+    expect(featuresWithLastSeen.features[0].name).toBe(
+        'feature_with_last_seen',
+    );
+
+    const currentDateFormatted = currentDate.toISOString().split('T')[0];
+
+    const { body: featuresBeforeToday } = await app.request
+        .get(
+            `/api/admin/search/features?lastSeenAt=IS_BEFORE:${currentDateFormatted}`,
+        )
+        .expect(200);
+
+    expect(featuresBeforeToday.features).toHaveLength(1);
+    expect(featuresBeforeToday.features[0].name).toBe('feature_with_last_seen');
+});
+
 test('should return environment usage metrics and lifecycle', async () => {
     await app.createFeature({
         name: 'my_feature_b',

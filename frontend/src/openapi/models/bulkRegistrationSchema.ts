@@ -8,7 +8,7 @@ import type { BulkRegistrationSchemaSdkType } from './bulkRegistrationSchemaSdkT
 import type { DateSchema } from './dateSchema.js';
 
 /**
- * An application registration. Defines the format POSTed by our server-side SDKs when they're starting up
+ * An application registration. Defines the format POSTed by our backend SDKs when they're starting up
  */
 export interface BulkRegistrationSchema {
     /** The name of the application that is evaluating toggles */

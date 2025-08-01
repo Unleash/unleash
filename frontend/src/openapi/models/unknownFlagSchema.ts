@@ -5,7 +5,7 @@
  */
 
 /**
- * An unknown flag that has been reported by the system
+ * An unknown flag report
  */
 export interface UnknownFlagSchema {
     /** The name of the application that reported the unknown flag. */

@@ -95,6 +95,7 @@ export type UiFlags = {
     reportUnknownFlags?: boolean;
     lifecycleGraphs?: boolean;
     addConfiguration?: boolean;
+    projectListViewToggle?: boolean;
 };
 
 export interface IVersionInfo {

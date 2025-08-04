@@ -182,6 +182,8 @@ jobs:
 
           **Safety constraint**: Only modify or remove code, tests, and config related to the specified feature flag ($FLAG), and do not touch any other flags or their associated code.
 
+          You may **find no conditional logic** or actual usage of \`$FLAG\`. You may only find its **definition** or **configuration**. In that case, clean up any definitions or configurations for that flag and add a short **warning** to your summary saying no logic was found here (as the actual logic for the feature flag may live in another repo).
+
           After making the changes, provide a **Markdown summary** of what was changed, written for a developer reviewing the PR. Keep it clear, focused, and readable. Use the exact following format (including start & end separator lines, headings, bullets, emojis):
 
           \`\`\`md

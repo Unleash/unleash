@@ -65,7 +65,8 @@ export type IFlagKey =
     | 'timestampsInChangeRequestTimeline'
     | 'lifecycleGraphs'
     | 'githubAuth'
-    | 'addConfiguration';
+    | 'addConfiguration'
+    | 'filterFlagsToArchive';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -303,6 +304,10 @@ const flags: IFlags = {
     ),
     addConfiguration: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ADD_CONFIGURATION,
+        false,
+    ),
+    filterFlagsToArchive: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FILTER_FLAGS_TO_ARCHIVE,
         false,
     ),
 };

@@ -256,11 +256,14 @@ jobs:
               exit 1
           }
 
-          SUMMARY=$(sed -n '/=== AI Flag Cleanup Summary Start ===/,/=== AI Flag Cleanup Summary End ===/{
-            /=== AI Flag Cleanup Summary Start ===/d
-            /=== AI Flag Cleanup Summary End ===/d
-            p
-          }' flag_cleanup.txt)
+          SUMMARY=$(
+            awk '
+              /^=== AI Flag Cleanup Summary Start ===/ { in=1; buf=""; next }
+              /^=== AI Flag Cleanup Summary End ===/   { in=0; last=buf; next }
+              in { buf = buf $0 "\n" }
+              END { printf "%s", last }
+            ' flag_cleanup.txt
+          )
 
           echo "summary<<EOF" >> $GITHUB_OUTPUT
           echo "$SUMMARY"       >> $GITHUB_OUTPUT

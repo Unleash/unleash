@@ -64,7 +64,6 @@ export type IFlagKey =
     | 'paygInstanceStatsEvents'
     | 'timestampsInChangeRequestTimeline'
     | 'lifecycleGraphs'
-    | 'githubAuth'
     | 'addConfiguration'
     | 'filterFlagsToArchive'
     | 'projectListViewToggle';
@@ -297,10 +296,6 @@ const flags: IFlags = {
     ),
     lifecycleGraphs: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_GRAPHS,
-        false,
-    ),
-    githubAuth: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_GITHUB_AUTH,
         false,
     ),
     addConfiguration: parseEnvVarBoolean(

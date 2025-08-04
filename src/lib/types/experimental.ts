@@ -64,8 +64,7 @@ export type IFlagKey =
     | 'timestampsInChangeRequestTimeline'
     | 'lifecycleGraphs'
     | 'githubAuth'
-    | 'addConfiguration'
-    | 'projectListViewToggle';
+    | 'addConfiguration';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -298,10 +297,6 @@ const flags: IFlags = {
     ),
     addConfiguration: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ADD_CONFIGURATION,
-        false,
-    ),
-    projectListViewToggle: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROJECT_LIST_VIEW_TOGGLE,
         false,
     ),
 };

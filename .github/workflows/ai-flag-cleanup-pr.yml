@@ -176,7 +176,7 @@ jobs:
           FLAG="${{ steps.extract_flag.outputs.flag-name }}"
           ISSUE_BODY="${{ fromJson(steps.get_issue.outputs.result).body }}"
 
-          cat <<'EOF' > cleanup_prompt.txt
+          cat <<-EOF > cleanup_prompt.txt
           **Flag to clean up:** \`$FLAG\`
           Based on the issue description below, refactor the codebase to permanently apply the desired outcome for this feature flag (e.g. enable, keep variant, or discard), by removing all conditional checks and dead branches, preserving only the correct code path.
 

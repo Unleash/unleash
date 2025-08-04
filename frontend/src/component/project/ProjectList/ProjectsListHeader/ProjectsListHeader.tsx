@@ -25,6 +25,13 @@ const StyledHeaderTitle = styled('div')(({ theme }) => ({
     flexGrow: 0,
 }));
 
+const StyledHeaderActions = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: 'auto',
+    gap: theme.spacing(2),
+}));
+
 export const ProjectsListHeader: FC<ProjectsListHeaderProps> = ({
     children,
     helpText,
@@ -36,7 +43,7 @@ export const ProjectsListHeader: FC<ProjectsListHeaderProps> = ({
                 {children}
                 <HelpIcon tooltip={helpText} />
             </StyledHeaderTitle>
-            {actions}
+            <StyledHeaderActions>{actions}</StyledHeaderActions>
         </StyledHeaderContainer>
     );
 };

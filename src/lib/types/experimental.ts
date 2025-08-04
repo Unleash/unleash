@@ -309,6 +309,7 @@ const flags: IFlags = {
     ),
     filterFlagsToArchive: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FILTER_FLAGS_TO_ARCHIVE,
+        false,
     ),
     projectListViewToggle: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_LIST_VIEW_TOGGLE,

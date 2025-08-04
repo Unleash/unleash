@@ -173,9 +173,14 @@ jobs:
       - name: Create prompt
         id: create_prompt
         run: |
+          FLAG="${{ steps.extract_flag.outputs.flag-name }}"
           ISSUE_BODY="${{ fromJson(steps.get_issue.outputs.result).body }}"
+
           cat <<'EOF' > cleanup_prompt.txt
+          **Flag to clean up:** \`$FLAG\`
           Based on the issue description below, refactor the codebase to permanently apply the desired outcome for this feature flag (e.g. enable, keep variant, or discard), by removing all conditional checks and dead branches, preserving only the correct code path.
+
+          **Safety constraint**: Only modify or remove code, tests, and config related to the specified feature flag ($FLAG), and do not touch any other flags or their associated code.
 
           After making the changes, provide a **Markdown summary** of what was changed, written for a developer reviewing the PR. Keep it clear, focused, and readable. Use the exact following format (including start & end separator lines, headings, bullets, emojis):
 

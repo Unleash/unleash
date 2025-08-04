@@ -213,6 +213,8 @@ jobs:
           $ISSUE_BODY
           EOF
 
+          echo "Cleanup prompt created:"
+          cat cleanup_prompt.txt
           echo "prompt-file=cleanup_prompt.txt" >> $GITHUB_OUTPUT
 
       - name: Set up Python

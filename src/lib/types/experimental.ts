@@ -66,7 +66,8 @@ export type IFlagKey =
     | 'lifecycleGraphs'
     | 'githubAuth'
     | 'addConfiguration'
-    | 'filterFlagsToArchive';
+    | 'filterFlagsToArchive'
+    | 'projectListViewToggle';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -308,6 +309,9 @@ const flags: IFlags = {
     ),
     filterFlagsToArchive: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FILTER_FLAGS_TO_ARCHIVE,
+    ),
+    projectListViewToggle: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PROJECT_LIST_VIEW_TOGGLE,
         false,
     ),
 };

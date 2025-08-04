@@ -173,9 +173,16 @@ jobs:
       - name: Create prompt
         id: create_prompt
         run: |
+          FLAG="${{ steps.extract_flag.outputs.flag-name }}"
           ISSUE_BODY="${{ fromJson(steps.get_issue.outputs.result).body }}"
-          cat <<'EOF' > cleanup_prompt.txt
+
+          cat <<-EOF > cleanup_prompt.txt
+          **Flag to clean up:** \`$FLAG\`
           Based on the issue description below, refactor the codebase to permanently apply the desired outcome for this feature flag (e.g. enable, keep variant, or discard), by removing all conditional checks and dead branches, preserving only the correct code path.
+
+          **Safety constraint**: Only modify or remove code, tests, and config related to the specified feature flag ($FLAG), and do not touch any other flags or their associated code.
+
+          You may **find no conditional logic** or actual usage of \`$FLAG\`. You may only find its **definition** or **configuration**. In that case, clean up any definitions or configurations for that flag and add a short **warning** to your summary saying no logic was found here (as the actual logic for the feature flag may live in another repo).
 
           After making the changes, provide a **Markdown summary** of what was changed, written for a developer reviewing the PR. Keep it clear, focused, and readable. Use the exact following format (including start & end separator lines, headings, bullets, emojis):
 
@@ -208,6 +215,8 @@ jobs:
           $ISSUE_BODY
           EOF
 
+          echo "Cleanup prompt created:"
+          cat cleanup_prompt.txt
           echo "prompt-file=cleanup_prompt.txt" >> $GITHUB_OUTPUT
 
       - name: Set up Python
@@ -247,11 +256,14 @@ jobs:
               exit 1
           }
 
-          SUMMARY=$(sed -n '/=== AI Flag Cleanup Summary Start ===/,/=== AI Flag Cleanup Summary End ===/{
-            /=== AI Flag Cleanup Summary Start ===/d
-            /=== AI Flag Cleanup Summary End ===/d
-            p
-          }' flag_cleanup.txt)
+          SUMMARY=$(
+            awk '
+              /^=== AI Flag Cleanup Summary Start ===/ { inside=1; buf=""; next }
+              /^=== AI Flag Cleanup Summary End ===/   { inside=0; last=buf; next }
+              inside { buf = buf $0 "\n" }
+              END { printf "%s", last }
+            ' flag_cleanup.txt
+          )
 
           echo "summary<<EOF" >> $GITHUB_OUTPUT
           echo "$SUMMARY"       >> $GITHUB_OUTPUT

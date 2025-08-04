@@ -258,9 +258,9 @@ jobs:
 
           SUMMARY=$(
             awk '
-              /^=== AI Flag Cleanup Summary Start ===/ { in=1; buf=""; next }
-              /^=== AI Flag Cleanup Summary End ===/   { in=0; last=buf; next }
-              in { buf = buf $0 "\n" }
+              /^=== AI Flag Cleanup Summary Start ===/ { inside=1; buf=""; next }
+              /^=== AI Flag Cleanup Summary End ===/   { inside=0; last=buf; next }
+              inside { buf = buf $0 "\n" }
               END { printf "%s", last }
             ' flag_cleanup.txt
           )

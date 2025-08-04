@@ -114,6 +114,7 @@ export const ProjectFeatureToggles = ({
         createdBy: tableState.createdBy,
         archived: tableState.archived,
         lifecycle: tableState.lifecycle,
+        lastSeenAt: tableState.lastSeenAt,
     };
 
     const { favorite, unfavorite } = useFavoriteFeaturesApi();

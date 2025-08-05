@@ -398,12 +398,12 @@
     },
     {
       "source": "/sdks/android_proxy_sdk",
-      "destination": "/reference/sdks/android-proxy",
+      "destination": "/reference/sdks/android",
       "permanent": true
     },
     {
       "source": "/sdks/proxy-ios",
-      "destination": "/reference/sdks/ios-proxy",
+      "destination": "/reference/sdks/ios",
       "permanent": true
     },
     {

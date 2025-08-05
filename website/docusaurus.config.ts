@@ -284,11 +284,11 @@ class="header-github-link"
                             },
                             {
                                 label: 'iOS',
-                                to: '/reference/sdks/ios-proxy',
+                                to: '/reference/sdks/ios',
                             },
                             {
                                 label: 'Android',
-                                to: '/reference/sdks/android-proxy',
+                                to: '/reference/sdks/android',
                             },
                             {
                                 label: 'Flutter',
@@ -595,12 +595,18 @@ class="header-github-link"
                             to: '/reference/sdks/ruby',
                         },
                         {
-                            from: '/sdks/android_proxy_sdk',
-                            to: '/reference/sdks/android-proxy',
+                            from: [
+                                '/sdks/android_proxy_sdk',
+                                '/reference/sdks/android-proxy',
+                            ],
+                            to: '/reference/sdks/android',
                         },
                         {
-                            from: '/sdks/proxy-ios',
-                            to: '/reference/sdks/ios-proxy',
+                            from: [
+                                '/sdks/proxy-ios',
+                                '/reference/sdks/ios-proxy',
+                            ],
+                            to: '/reference/sdks/ios',
                         },
                         {
                             from: [

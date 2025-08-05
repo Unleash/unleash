@@ -126,7 +126,7 @@ Open your XCode workspace, build and run the app on a simulator or device.
 > :triangular_flag_on_post: **Note:**
 > Make sure you have CocoaPods installed on your system.
 
-Next, follow the steps below in order to install the unleash-proxy-client-swift:
+Next, follow the steps below in order to install the unleash-ios-sdk:
 
 1. In your Xcode project go to File -> Swift Packages -> Add Package Dependency
 2. Supply the link to this repository

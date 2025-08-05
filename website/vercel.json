@@ -32,6 +32,11 @@
       "permanent": true
     },
     {
+      "source": "/unleash-python-sdk(/?)/:path",
+      "destination": "https://gh.getunleash.io/unleash-python-sdk/:path",
+      "permanent": true
+    },
+    {
       "source": "/user_guide/api-token",
       "destination": "/reference/api-tokens-and-client-keys",
       "permanent": true

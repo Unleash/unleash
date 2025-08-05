@@ -469,6 +469,11 @@ export const ProjectFeatureToggles = ({
 
     const selectedData = useSelectedData(features, rowSelection);
 
+    const showCleanupReminder =
+        isFilterFlagsToArchiveEnabled &&
+        !tableState.lastSeenAt &&
+        !tableState.lifecycle;
+
     return (
         <Container>
             <ConditionallyRender
@@ -490,9 +495,7 @@ export const ProjectFeatureToggles = ({
                     }}
                 />
             ) : null}
-            {isFilterFlagsToArchiveEnabled &&
-            !tableState.lastSeenAt &&
-            !tableState.lifecycle ? (
+            {showCleanupReminder ? (
                 <ProjectCleanupReminder projectId={projectId} />
             ) : null}
             <PageContent

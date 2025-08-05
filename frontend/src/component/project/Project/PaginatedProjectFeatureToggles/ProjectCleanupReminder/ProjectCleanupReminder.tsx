@@ -16,8 +16,8 @@ const ActionsBox = styled(Box)(({ theme }) => ({
     alignItems: 'center',
 }));
 
-const lastSeenAtDays = 3;
-const refreshInterval = 15 * 1_000;
+const lastSeenAtDays = 7;
+const refreshInterval = 60 * 1_000;
 const snoozeReminderDays = 7;
 
 const getQuery = (projectId: string) => {

@@ -5,6 +5,8 @@ import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureS
 import { useNavigate } from 'react-router-dom';
 import { subDays, formatISO } from 'date-fns';
 import { useReminders } from 'component/feature/FeatureView/CleanupReminder/useReminders';
+import { useHasRootAccess } from 'hooks/useHasAccess';
+import { DELETE_FEATURE } from 'component/providers/AccessProvider/permissions';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -35,6 +37,7 @@ export const ProjectCleanupReminder: FC<{
 }> = ({ projectId }) => {
     const navigate = useNavigate();
     const { shouldShowReminder, snoozeReminder } = useReminders();
+    const hasAccess = useHasRootAccess(DELETE_FEATURE, projectId);
 
     const reminderKey = `project-cleanup-${projectId}`;
     const query = getQuery(projectId);
@@ -43,7 +46,7 @@ export const ProjectCleanupReminder: FC<{
         refreshInterval,
     });
 
-    if (!shouldShowReminder(reminderKey) || loading || !total) {
+    if (!hasAccess || !shouldShowReminder(reminderKey) || loading || !total) {
         return null;
     }
 

@@ -74,7 +74,8 @@ export type CustomEvents =
     | 'project-navigation'
     | 'productivity-report'
     | 'release-management'
-    | 'feature-links';
+    | 'feature-links'
+    | 'project-list-view-toggle';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

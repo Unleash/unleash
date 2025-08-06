@@ -26,6 +26,7 @@ const StyledWrapper = styled(Box, {
 
 const StyledSpan = styled('span')(() => ({
     display: 'inline-flex',
+    flexDirection: 'column',
     maxWidth: '100%',
 }));
 

@@ -213,7 +213,7 @@ export const CleanupReminder: FC<{
                                 disabled={loading}
                                 projectId={feature.project}
                             >
-                                Revert to production
+                                Revert to previous stage
                             </PermissionButton>
                         </ActionsBox>
                     }

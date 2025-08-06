@@ -221,7 +221,7 @@ const SafeToArchive: FC<{
                     disabled={loading}
                     projectId={project}
                 >
-                    Revert to production
+                    Revert to previous stage
                 </PermissionButton>
                 <PermissionButton
                     variant='outlined'
@@ -250,7 +250,7 @@ const ActivelyUsed: FC<{
         </InfoText>
         <InfoText>
             If you think this feature was completed too early you can revert to
-            the live stage.
+            the previous stage.
         </InfoText>
         <PermissionButton
             variant='outlined'
@@ -260,7 +260,7 @@ const ActivelyUsed: FC<{
             onClick={onUncomplete}
             disabled={loading}
         >
-            Revert to production
+            Revert to previous stage
         </PermissionButton>
     </StyledStageAction>
 );

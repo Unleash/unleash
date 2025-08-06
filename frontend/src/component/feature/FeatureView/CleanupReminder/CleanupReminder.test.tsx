@@ -59,7 +59,7 @@ test('render remove flag from code reminder', async () => {
     });
 
     await screen.findByText('Time to remove flag from code?');
-    await screen.findByText('Revert to production');
+    await screen.findByText('Revert to previous stage');
 
     const reminder = await screen.findByText('Remind me later');
     reminder.click();

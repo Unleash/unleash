@@ -12,11 +12,11 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 Unleash provides a set of APIs to give you full programmatic control over your feature flags and to connect your applications and services to Unleash. There are three main APIs, each designed for a specific purpose.
 
-| API            | Used by | Primary use case |
-|---------------|---------|---|
-| **Client API** | Backend SDKs | Fetch feature flag configurations. |
-| **Frontend API** | Frontend SDKs | Fetch enabled feature flags for a specific [Unleash Context](/reference/unleash-context). |
-| **Admin API** | [Admin UI](/understanding-unleash/unleash-overview#the-unleash-admin-ui), internal tooling, and third-party [integrations](/reference/integrations) | Access and manage all resources within Unleash, such as context, environments, events, metrics, and users. |
+| API            | Path | Used by | Primary use case |
+|---------------|----|-----|---|
+| [Client API](/reference/api/unleash/client) | `<your-unleash-url>/api/client` | Backend SDKs | Fetch feature flag configurations. |
+| [Frontend API](/reference/api/unleash/frontend-api) | `<your-unleash-url>/api/frontend` | Frontend SDKs | Fetch enabled feature flags for a specific [Unleash Context](/reference/unleash-context). |
+| Admin API | `<your-unleash-url>/api/admin` | [Admin UI](/understanding-unleash/unleash-overview#the-unleash-admin-ui), internal tooling, and third-party [integrations](/reference/integrations) | Access and manage all resources within Unleash, such as context, environments, events, metrics, and users. |
 
 ## API authentication and tokens
 
@@ -34,7 +34,7 @@ For an end-to-end Unleash integration, you might need to use multiple token type
 - A frontend token for the frontend SDK to securely communicate with Unleash Edge.
 - A backend token for Unleash Edge to communicate with the main Unleash server.
 
-![Diagram showing the types of tokens needed to connect a frontend SDK with Edge, and Edge with Unleash](/img/token-types-example.png)
+![Diagram showing the types of tokens needed to connect a frontend SDK with Edge, and Edge with Unleash](/img/sdk-token-example.jpg)
 
 Ensure that the backend token has access to the same project and environment (or a broader scope) as the frontend token.
 

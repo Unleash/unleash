@@ -8,6 +8,7 @@ import { UpgradeProjectCard } from '../ProjectCard/UpgradeProjectCard.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type { ProjectsListView } from './hooks/useProjectsListState.ts';
 import { ProjectsListTable } from './ProjectsListTable/ProjectsListTable.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledGridContainer = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -46,10 +47,11 @@ export const ProjectGroup = ({
 }: ProjectGroupProps) => {
     const ProjectCard = ProjectCardComponent ?? DefaultProjectCard;
     const { isOss } = useUiConfig();
+    const projectListViewToggleEnabled = useUiFlag('projectListViewToggle');
 
     const projectsToRender = loading ? loadingData : projects;
 
-    if (!isOss() && view === 'list') {
+    if (!isOss() && projectListViewToggleEnabled && view === 'list') {
         return <ProjectsListTable projects={projectsToRender} />;
     }
 

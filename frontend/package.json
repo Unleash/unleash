@@ -138,7 +138,8 @@
     "vite": "5.4.19",
     "semver": "7.7.2",
     "ws": "^8.18.0",
-    "@types/react": "18.3.23"
+    "@types/react": "18.3.23",
+    "brace-expansion": "2.0.2"
   },
   "jest": {
     "moduleNameMapper": {

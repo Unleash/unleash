@@ -82,7 +82,7 @@ go mod init unleash-demo
 Install dependencies:
 
 ```sh
-go get github.com/Unleash/unleash-client-go/v4
+go get github.com/Unleash/unleash-go-sdk/v5
 ```
 
 Next, let's make sure our setup is working. Make a call to the REST API to retrieve information about a country using its country code. Create a file named `main.go`:
@@ -237,7 +237,7 @@ import (
     "log"
     "net/http"
 
-+	"github.com/Unleash/unleash-client-go/v4"
++	"github.com/Unleash/unleash-go-sdk/v5"
 )
 
 // ... rest of the types ...

@@ -25,29 +25,29 @@ const CLIENT_SIDE_SDK = 'frontend';
 const SERVER_SIDE_SDK = 'backend';
 
 const serverSideSdks = {
-    'unleash-client-go': {
+    'unleash-go-sdk': {
         sidebarName: 'Go',
-        branch: 'v4',
+        branch: 'v5',
     },
-    'unleash-client-java': {
+    'unleash-java-sdk': {
         sidebarName: 'Java',
     },
-    'unleash-client-node': {
+    'unleash-node-sdk': {
         sidebarName: 'Node',
     },
-    'unleash-client-php': {
+    'unleash-php-sdk': {
         sidebarName: 'PHP',
     },
-    'unleash-client-python': {
+    'unleash-python-sdk': {
         sidebarName: 'Python',
     },
-    'unleash-client-ruby': {
+    'unleash-ruby-sdk': {
         sidebarName: 'Ruby',
     },
-    'unleash-client-rust': {
+    'unleash-rust-sdk': {
         sidebarName: 'Rust',
     },
-    'unleash-client-dotnet': {
+    'unleash-dotnet-sdk': {
         sidebarName: '.NET',
         slugName: 'dotnet',
     },
@@ -58,18 +58,18 @@ const clientSideSdks = {
         sidebarName: 'Android (legacy)',
         slugName: 'android-proxy-legacy',
     },
-    'unleash-android': {
+    'unleash-android-sdk': {
         sidebarName: 'Android',
-        slugName: 'android-proxy',
+        slugName: 'android',
     },
-    unleash_proxy_client_flutter: {
+    'unleash-flutter-sdk': {
         sidebarName: 'Flutter',
     },
-    'unleash-proxy-client-swift': {
+    'unleash-ios-sdk': {
         sidebarName: 'iOS',
-        slugName: 'ios-proxy',
+        slugName: 'ios',
     },
-    'unleash-proxy-client-js': {
+    'unleash-js-sdk': {
         sidebarName: 'JavaScript browser',
         slugName: 'javascript-browser',
     },
@@ -82,7 +82,7 @@ const clientSideSdks = {
     'proxy-client-vue': {
         sidebarName: 'Vue',
     },
-    'unleash-client-nextjs': {
+    'unleash-nextjs-sdk': {
         sidebarName: 'Next.js',
         slugName: 'next-js',
     },

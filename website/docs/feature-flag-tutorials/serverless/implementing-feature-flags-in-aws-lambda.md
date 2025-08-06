@@ -6,7 +6,7 @@ slug: /feature-flag-tutorials/serverless/lambda
 
 Developers can add feature flagging capabilities to serverless functions and validate new parts of them. Leveraging feature flags gives you complete control over feature exposure and simplifies serverless function versioning management.
 
-For developers new to feature flags in serverless environments, this guide will walk you through practical examples using the [Unleash Node.js SDK](https://github.com/Unleash/unleash-client-node) in [AWS Lambda](https://aws.amazon.com/lambda/). Developers can easily adapt these concepts to other serverless solutions like [Google Cloud Functions](https://cloud.google.com/functions).
+For developers new to feature flags in serverless environments, this guide will walk you through practical examples using the [Unleash Node.js SDK](https://github.com/Unleash/unleash-node-sdk) in [AWS Lambda](https://aws.amazon.com/lambda/). Developers can easily adapt these concepts to other serverless solutions like [Google Cloud Functions](https://cloud.google.com/functions).
 
 ## Scenarios for AWS Lambda feature flags
 

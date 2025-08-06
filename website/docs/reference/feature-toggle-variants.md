@@ -129,17 +129,17 @@ This is a fallback variant that Unleash uses to represent the lack of a variant.
 
 Note: The actual representation of the built-in fallback variant in the client SDK will vary slightly, to honor best practices in various languages.
 
-## Client SDK Support {#client-sdk-support}
+## Backend SDK Support {#client-sdk-support}
 
 To make use of flag variants, you need to use a compatible client. Client SDK with variant support:
 
-- [unleash-client-node](https://github.com/Unleash/unleash-client-node) (from v3.2.0)
-- [unleash-client-java](https://github.com/Unleash/unleash-client-java) (from v3.2.0)
-- [unleash-client-ruby](https://github.com/Unleash/unleash-client-ruby) (from v0.1.6)
-- [unleash-client-python](https://github.com/Unleash/unleash-client-python) (from v3.3.0)
-- [unleash-client-dotnet](https://github.com/Unleash/unleash-client-dotnet) (from v1.3.6)
-- [unleash-client-go](https://github.com/Unleash/unleash-client-go) (from v3 branch)
-- [unleash-client-php](https://github.com/Unleash/unleash-client-php) (from v1.0.0)
-- [unleash-client-cpp](https://github.com/aruizs/unleash-client-cpp) (from v1.3.0)
+- [unleash-node-sdk](https://github.com/Unleash/unleash-node-sdk) (from v3.2.0)
+- [unleash-java-sdk](https://github.com/Unleash/unleash-java-sdk) (from v3.2.0)
+- [unleash-ruby-sdk](https://github.com/Unleash/unleash-ruby-sdk) (from v0.1.6)
+- [unleash-python-sdk](https://github.com/Unleash/unleash-python-sdk) (from v3.3.0)
+- [unleash-dotnet-sdk](https://github.com/Unleash/unleash-dotnet-sdk) (from v1.3.6)
+- [unleash-go-sdk](https://github.com/Unleash/unleash-go-sdk) (from v3 branch)
+- [unleash-php-sdk](https://github.com/Unleash/unleash-php-sdk) (from v1.0.0)
+- [unleash-cpp-sdk](https://github.com/aruizs/unleash-cpp-sdk) (from v1.3.0)
 
 If you would like to give feedback on this feature, experience issues or have questions, please feel free to open an issue on [GitHub](https://github.com/Unleash/unleash/).

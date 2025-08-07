@@ -134,3 +134,34 @@ If a documented Unleash feature isn't showing up in your Admin UI, check the fol
 
 - Is the feature included in your [Unleash plan and version](/availability)?
 - Is the feature in beta? If so, reach out to us to get early access.
+
+## Got locked out of an Admin account after configuring SCIM
+
+When you integrate Unleash with an identity provider (IdP) like Okta or Entra ID via SCIM, your IdP becomes the source of truth for user information.
+This can have an unintended side effect: users, including the one who set up the integration, might lose their admin permissions.
+
+When your IdP syncs a user with Unleash, it sends over the user's attributes. However, the standard SCIM protocol does not have a field for user roles. If role information isn't specified, Unleash defaults the user to the Viewer role for security reasons.
+This means that even if you manually reassign the Admin role to a user in the Unleash UI, the change will be reset during the next SCIM sync.
+
+### Recommended approaches
+
+#### Manage roles with user groups
+
+By creating a group in Unleash and assigning it an admin role, and then configuring your IdP to push that group and its membership via SCIM, you get fully automated permission management:
+
+1. In the Unleash Admin UI, go to **Admin settins > User config > Groups** and create a new group, for example `Unleash Admins`.
+2. Assign the Admin role or your desired custom-root role to this group.
+3. In your IdP, ensure you have a corresponding group and configure your SCIM integration.
+4. Once configured, any user you add to the `Unleash Admins` group in your IdP will automatically gain admin privileges in Unleash.
+
+#### Create a recovery admin account
+
+You can create a dedicated admin account that is not managed by SCIM. This account can be used for initial setup or as an emergency backup if you get locked out:
+1. In Unleash, create a new user with email address outside of your IdP.
+2. Assign an admin role. 
+
+This ensures that the user's permissions are managed solely within Unleash and will not be affected by SCIM syncs.
+
+### What if I'm already locked out?
+
+If you've already enabled SCIM and lost all admin access, please contact our support team. We can create a temporary admin user for you while you correct your SCIM configuration.

@@ -86,12 +86,7 @@ export const useApiTokenTable = (
             {
                 Header: 'Last seen',
                 accessor: 'seenAt',
-                Cell: ({ value, column }) => (
-                    <TimeAgoCell
-                        value={value}
-                        title={(date) => `${column.Header}: ${date}`}
-                    />
-                ),
+                Cell: TimeAgoCell,
                 width: 140,
                 disableGlobalFilter: true,
             },

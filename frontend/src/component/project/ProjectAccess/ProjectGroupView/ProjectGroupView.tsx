@@ -89,12 +89,7 @@ const columns = [
         id: 'lastLogin',
         Header: 'Last login',
         accessor: 'seenAt',
-        Cell: ({ value, column }) => (
-            <TimeAgoCell
-                value={value}
-                title={(date) => `${column.Header}: ${date}`}
-            />
-        ),
+        Cell: TimeAgoCell,
         maxWidth: 150,
     },
     // Always hidden -- for search

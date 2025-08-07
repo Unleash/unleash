@@ -177,12 +177,7 @@ export const ChangeRequestsTabs = ({
                 Header: 'Submitted',
                 accessor: 'createdAt',
                 maxWidth: 100,
-                Cell: ({ value, column }) => (
-                    <TimeAgoCell
-                        value={value}
-                        title={(date) => `${column.Header}: ${date}`}
-                    />
-                ),
+                Cell: TimeAgoCell,
             },
             {
                 Header: 'Environment',

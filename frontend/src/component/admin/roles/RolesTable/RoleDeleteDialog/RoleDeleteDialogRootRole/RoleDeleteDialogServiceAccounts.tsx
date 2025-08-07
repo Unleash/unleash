@@ -75,12 +75,7 @@ export const RoleDeleteDialogServiceAccounts = ({
                             const bSeenAt = new Date(b.seenAt || 0);
                             return bSeenAt?.getTime() - aSeenAt?.getTime();
                         })[0]?.seenAt,
-                    Cell: ({ value, column }) => (
-                        <TimeAgoCell
-                            value={value}
-                            title={(date) => `${column.Header}: ${date}`}
-                        />
-                    ),
+                    Cell: TimeAgoCell,
                     maxWidth: 150,
                 },
             ] as Column<IServiceAccount>[],

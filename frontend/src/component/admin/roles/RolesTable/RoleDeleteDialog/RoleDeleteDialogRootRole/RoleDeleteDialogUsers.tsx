@@ -48,12 +48,7 @@ export const RoleDeleteDialogUsers = ({
                     id: 'last-login',
                     Header: 'Last login',
                     accessor: 'seenAt',
-                    Cell: ({ value, column }) => (
-                        <TimeAgoCell
-                            value={value}
-                            title={(date) => `${column.Header}: ${date}`}
-                        />
-                    ),
+                    Cell: TimeAgoCell,
                     maxWidth: 150,
                 },
             ] as Column<IUser>[],

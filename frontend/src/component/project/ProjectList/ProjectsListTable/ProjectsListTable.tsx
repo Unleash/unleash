@@ -60,8 +60,8 @@ export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
                 Cell: ({ value, column }) => (
                     <TimeAgoCell
                         value={value}
+                        column={column}
                         dateFormat={formatDateYMDHMS}
-                        title={(date) => `${column.Header}: ${date}`}
                     />
                 ),
             },

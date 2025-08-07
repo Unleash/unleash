@@ -65,8 +65,8 @@ export const UnknownFlagsTable = () => {
                 Cell: ({ value, column }) => (
                     <TimeAgoCell
                         value={value}
+                        column={column}
                         dateFormat={formatDateYMDHMS}
-                        title={(date) => `${column.Header}: ${date}`}
                     />
                 ),
             },

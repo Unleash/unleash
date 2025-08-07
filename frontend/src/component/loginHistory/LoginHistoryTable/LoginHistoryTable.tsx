@@ -78,8 +78,8 @@ export const LoginHistoryTable = () => {
                 Cell: ({ value, column }) => (
                     <TimeAgoCell
                         value={value}
+                        column={column}
                         dateFormat={formatDateYMDHMS}
-                        title={(date) => `${column.Header}: ${date}`}
                     />
                 ),
                 maxWidth: 150,

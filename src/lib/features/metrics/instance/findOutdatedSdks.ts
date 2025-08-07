@@ -12,6 +12,14 @@ const config: SDKConfig = {
     'unleash-client-ruby': '5.0.0',
     'unleash-client-dotnet': '4.1.3',
     'unleash-client-php': '2.3.0',
+    // new values after sdk registration rename:
+    'unleash-node-sdk': '6.6.0',
+    'unleash-java-sdk': '11.0.2',
+    'unleash-go-sdk': '5.0.3',
+    'unleash-python-sdk': '6.3.0',
+    'unleash-ruby-sdk': '6.3.1',
+    'unleash-dotnet-sdk': '5.3.0',
+    'unleash-php-sdk': '2.9.1',
 };
 
 export const isOutdatedSdk = (sdkVersion: string | null): boolean => {

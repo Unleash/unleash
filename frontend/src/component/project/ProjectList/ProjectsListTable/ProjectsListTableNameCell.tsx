@@ -20,15 +20,15 @@ const StyledFeatureLink = styled(Link)({
     },
 });
 
-type ProjectsListTableProjectNameProps = {
+type ProjectsListTableNameCellProps = {
     row: {
         original: ProjectSchema;
     };
 };
 
-export const ProjectsListTableProjectName = ({
+export const ProjectsListTableNameCell = ({
     row,
-}: ProjectsListTableProjectNameProps) => {
+}: ProjectsListTableNameCellProps) => {
     const { searchQuery } = useSearchHighlightContext();
 
     return (

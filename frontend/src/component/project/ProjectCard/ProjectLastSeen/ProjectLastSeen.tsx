@@ -10,15 +10,21 @@ import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 
 type ProjectLastSeenProps = {
     date?: Date | number | string | null;
+    hideLabel?: boolean;
 };
 
-const StyledContainer = styled(Box)(({ theme }) => ({
+const StyledContainer = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'secondary',
+})<{ secondary?: boolean }>(({ theme, secondary }) => ({
     ...flexRow,
     justifyContent: 'flex-start',
     textWrap: 'nowrap',
     width: '50%',
     gap: theme.spacing(1),
     cursor: 'default',
+    color: secondary
+        ? theme.palette.text.secondary
+        : theme.palette.text.primary,
 }));
 
 const StyledIcon = styled(StyledIconWrapper)<{ background: string }>(
@@ -28,13 +34,18 @@ const StyledIcon = styled(StyledIconWrapper)<{ background: string }>(
     }),
 );
 
-const Title = () => (
+const Title = ({ date }: Pick<ProjectLastSeenProps, 'date'>) => (
     <>
         <Typography
             component='span'
             sx={(theme) => ({ fontSize: theme.fontSizes.smallBody })}
         >
-            Last usage reported
+            Last usage reported:{' '}
+            {date ? (
+                <TimeAgo date={date} refresh={false} />
+            ) : (
+                <span>No activity</span>
+            )}
         </Typography>
         <Typography
             sx={(theme) => ({
@@ -48,32 +59,29 @@ const Title = () => (
     </>
 );
 
-export const ProjectLastSeen: FC<ProjectLastSeenProps> = ({ date }) => {
+export const ProjectLastSeen: FC<ProjectLastSeenProps> = ({
+    date,
+    hideLabel,
+}) => {
     const getColor = useLastSeenColors();
     const { text, background } = getColor(date);
 
-    if (!date) {
-        return (
-            <HtmlTooltip title={<Title />} arrow>
-                <StyledContainer
-                    sx={(theme) => ({ color: theme.palette.text.secondary })}
-                >
-                    <StyledIcon background={background}>
-                        <UsageLine stroke={text} />
-                    </StyledIcon>{' '}
-                    <div>No activity</div>
-                </StyledContainer>
-            </HtmlTooltip>
-        );
-    }
-
     return (
-        <HtmlTooltip title={<Title />} arrow>
-            <StyledContainer>
+        <HtmlTooltip title={<Title date={date} />} arrow>
+            <StyledContainer secondary={!date}>
                 <StyledIcon background={background}>
-                    <UsageRate stroke={text} />
+                    {date ? (
+                        <UsageRate stroke={text} />
+                    ) : (
+                        <UsageLine stroke={text} />
+                    )}
                 </StyledIcon>{' '}
-                <TimeAgo date={date} refresh={false} />
+                {!hideLabel &&
+                    (date ? (
+                        <TimeAgo date={date} refresh={false} />
+                    ) : (
+                        <div>No activity</div>
+                    ))}
             </StyledContainer>
         </HtmlTooltip>
     );

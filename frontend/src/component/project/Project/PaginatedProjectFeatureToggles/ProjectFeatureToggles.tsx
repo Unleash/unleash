@@ -54,6 +54,8 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import { UPDATE_FEATURE } from '@server/types/permissions';
 import { ImportModal } from '../Import/ImportModal.tsx';
 import { IMPORT_BUTTON } from 'utils/testIds';
+import { ProjectCleanupReminder } from './ProjectCleanupReminder/ProjectCleanupReminder.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];
@@ -92,6 +94,7 @@ export const ProjectFeatureToggles = ({
     const { project } = useProjectOverview(projectId);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
+    const isFilterFlagsToArchiveEnabled = useUiFlag('filterFlagsToArchive');
 
     const {
         features,
@@ -466,6 +469,11 @@ export const ProjectFeatureToggles = ({
 
     const selectedData = useSelectedData(features, rowSelection);
 
+    const showCleanupReminder =
+        isFilterFlagsToArchiveEnabled &&
+        !tableState.lastSeenAt &&
+        !tableState.lifecycle;
+
     return (
         <Container>
             <ConditionallyRender
@@ -479,19 +487,17 @@ export const ProjectFeatureToggles = ({
                     />
                 }
             />
-            <ConditionallyRender
-                condition={
-                    setupCompletedState === 'show-setup' && !isOnboarding
-                }
-                show={
-                    <ProjectOnboarded
-                        projectId={projectId}
-                        onClose={() => {
-                            setSetupCompletedState('hide-setup');
-                        }}
-                    />
-                }
-            />
+            {setupCompletedState === 'show-setup' && !isOnboarding ? (
+                <ProjectOnboarded
+                    projectId={projectId}
+                    onClose={() => {
+                        setSetupCompletedState('hide-setup');
+                    }}
+                />
+            ) : null}
+            {showCleanupReminder ? (
+                <ProjectCleanupReminder projectId={projectId} />
+            ) : null}
             <PageContent
                 disableLoading
                 disablePadding
@@ -598,7 +604,6 @@ export const ProjectFeatureToggles = ({
                     {featureToggleModals}
                 </div>
             </PageContent>
-
             <ConnectSdkDialog
                 open={connectSdkOpen}
                 onClose={() => {
@@ -637,7 +642,6 @@ export const ProjectFeatureToggles = ({
                     />
                 )}
             </BatchSelectionActionsBar>
-
             <ImportModal
                 open={modalOpen}
                 setOpen={setModalOpen}

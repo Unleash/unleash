@@ -55,12 +55,12 @@ export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
             },
             {
                 Header: 'Last updated',
-                id: 'lastUpdatedAt',
-                Cell: ({ row }: { row: { original: ProjectSchema } }) => (
+                accessor: (row: ProjectSchema) =>
+                    row.lastUpdatedAt || row.createdAt,
+                Cell: ({ value, column }) => (
                     <TimeAgoCell
-                        value={
-                            row.original.lastUpdatedAt || row.original.createdAt
-                        }
+                        value={value}
+                        column={column}
                         dateFormat={formatDateYMDHMS}
                     />
                 ),

@@ -75,8 +75,12 @@ export const LoginHistoryTable = () => {
             {
                 Header: 'Created',
                 accessor: 'created_at',
-                Cell: ({ value }: { value: Date }) => (
-                    <TimeAgoCell value={value} dateFormat={formatDateYMDHMS} />
+                Cell: ({ value, column }) => (
+                    <TimeAgoCell
+                        value={value}
+                        column={column}
+                        dateFormat={formatDateYMDHMS}
+                    />
                 ),
                 maxWidth: 150,
             },

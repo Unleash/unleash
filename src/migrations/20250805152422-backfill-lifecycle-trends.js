@@ -8,14 +8,14 @@ exports.up = function (db, cb) {
                     to_char(week_start, 'YYYY') || '-' || lpad(extract(week from week_start)::int::text, 2, '0') AS id,
                     week_start,
                     week_start + INTERVAL '7 days' AS week_end,
-                week_start + INTERVAL '7 days' + INTERVAL '1 hour' AS created_at
+                    week_start + INTERVAL '7 days' + INTERVAL '1 hour' AS created_at
                 FROM (
-                    SELECT date_trunc('day', now() AT TIME ZONE 'UTC') - INTERVAL '1 day' AS current_day
+                    SELECT date_trunc('day', now() AT TIME ZONE 'UTC') AS today
                 ) AS t
                 CROSS JOIN LATERAL (
                     SELECT generate_series(
-                    t.current_day - ((extract(dow from t.current_day)::int + 7) % 7) * INTERVAL '1 day' - INTERVAL '51 weeks',
-                    t.current_day - ((extract(dow from t.current_day)::int + 7) % 7) * INTERVAL '1 day',
+                    t.today - ((extract(dow from t.today)::int + 7) % 7) * INTERVAL '1 day' - INTERVAL '52 weeks',
+                    t.today - ((extract(dow from t.today)::int + 7) % 7) * INTERVAL '1 day' - INTERVAL '1 week',
                     INTERVAL '1 week'
                     ) AS week_start
                 ) AS weeks

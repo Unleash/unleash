@@ -183,9 +183,7 @@ export const ProjectAccessTable: VFC = () => {
                     const userRow = row.entity as IUser | IGroup;
                     return userRow.addedAt || '';
                 },
-                Cell: ({ value }: { value: Date }) => (
-                    <TimeAgoCell value={value} emptyText='Never' />
-                ),
+                Cell: TimeAgoCell,
                 maxWidth: 130,
             },
             {
@@ -202,9 +200,7 @@ export const ProjectAccessTable: VFC = () => {
                         .sort()
                         .reverse()[0];
                 },
-                Cell: ({ value }: { value: Date }) => (
-                    <TimeAgoCell value={value} emptyText='Never' />
-                ),
+                Cell: TimeAgoCell,
                 maxWidth: 130,
             },
             {

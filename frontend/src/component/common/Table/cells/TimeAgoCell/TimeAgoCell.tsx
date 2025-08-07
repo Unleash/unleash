@@ -16,7 +16,7 @@ interface ITimeAgoCellProps {
 export const TimeAgoCell: FC<ITimeAgoCellProps> = ({
     value,
     live = false,
-    emptyText,
+    emptyText = 'Never',
     title,
     dateFormat = formatDateYMD,
 }) => {

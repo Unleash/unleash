@@ -187,13 +187,7 @@ const UsersList = () => {
                 id: 'last-login',
                 Header: 'Last login',
                 accessor: (row: any) => row.seenAt || '',
-                Cell: ({ row: { original: user } }: any) => (
-                    <TimeAgoCell
-                        value={user.seenAt}
-                        emptyText='Never'
-                        title={(date) => `Last login: ${date}`}
-                    />
-                ),
+                Cell: TimeAgoCell,
                 maxWidth: 150,
             },
             {

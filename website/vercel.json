@@ -32,6 +32,11 @@
       "permanent": true
     },
     {
+      "source": "/unleash-python-sdk(/?)/:path",
+      "destination": "https://gh.getunleash.io/unleash-python-sdk/:path",
+      "permanent": true
+    },
+    {
       "source": "/user_guide/api-token",
       "destination": "/reference/api-tokens-and-client-keys",
       "permanent": true
@@ -393,12 +398,12 @@
     },
     {
       "source": "/sdks/android_proxy_sdk",
-      "destination": "/reference/sdks/android-proxy",
+      "destination": "/reference/sdks/android",
       "permanent": true
     },
     {
       "source": "/sdks/proxy-ios",
-      "destination": "/reference/sdks/ios-proxy",
+      "destination": "/reference/sdks/ios",
       "permanent": true
     },
     {

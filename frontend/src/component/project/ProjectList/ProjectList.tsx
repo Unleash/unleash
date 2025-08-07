@@ -30,7 +30,7 @@ const StyledApiError = styled(ApiError)(({ theme }) => ({
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(6),
+    gap: theme.spacing(4),
 }));
 
 export const ProjectList = () => {
@@ -154,6 +154,7 @@ export const ProjectList = () => {
                             </ProjectsListHeader>
                             <ProjectGroup
                                 loading={loading}
+                                view={state.view}
                                 projects={
                                     isOss()
                                         ? sortedProjects
@@ -169,6 +170,7 @@ export const ProjectList = () => {
                             </ProjectsListHeader>
                             <ProjectGroup
                                 loading={loading}
+                                view={state.view}
                                 projects={otherProjects}
                             />
                         </div>

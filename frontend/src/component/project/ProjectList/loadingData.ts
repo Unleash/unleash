@@ -1,4 +1,6 @@
-const loadingData = [
+import type { ProjectSchema } from 'openapi';
+
+export const loadingData: ProjectSchema[] = [
     {
         id: 'loading1',
         name: 'loading1',
@@ -8,6 +10,7 @@ const loadingData = [
         createdAt: '',
         description: '',
         mode: 'open' as const,
+        owners: [{ ownerType: 'user', name: 'Loading data' }],
     },
     {
         id: 'loading2',
@@ -18,6 +21,7 @@ const loadingData = [
         createdAt: '',
         description: '',
         mode: 'open' as const,
+        owners: [{ ownerType: 'user', name: 'Loading data' }],
     },
     {
         id: 'loading3',
@@ -28,6 +32,7 @@ const loadingData = [
         createdAt: '',
         description: '',
         mode: 'open' as const,
+        owners: [{ ownerType: 'user', name: 'Loading data' }],
     },
     {
         id: 'loading4',
@@ -38,7 +43,6 @@ const loadingData = [
         createdAt: '',
         description: '',
         mode: 'open' as const,
+        owners: [{ ownerType: 'user', name: 'Loading data' }],
     },
 ];
-
-export default loadingData;

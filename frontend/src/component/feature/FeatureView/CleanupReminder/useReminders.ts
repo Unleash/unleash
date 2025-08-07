@@ -7,7 +7,7 @@ const REMINDER_KEY = 'flag-reminders:v1';
 const MAX_REMINDERS = 50;
 const DAYS = 7;
 
-export const useFlagReminders = ({
+export const useReminders = ({
     days = DAYS,
     maxReminders = MAX_REMINDERS,
 }: {
@@ -19,16 +19,16 @@ export const useFlagReminders = ({
         {},
     );
 
-    const shouldShowReminder = (flagName: string): boolean => {
-        const snoozedUntil = reminders[flagName];
+    const shouldShowReminder = (key: string): boolean => {
+        const snoozedUntil = reminders[key];
         return !snoozedUntil || isAfter(new Date(), new Date(snoozedUntil));
     };
 
-    const snoozeReminder = (flagName: string, snoozeDays: number = days) => {
+    const snoozeReminder = (key: string, snoozeDays: number = days) => {
         const snoozedUntil = addDays(new Date(), snoozeDays).getTime();
 
         setReminders((prev) => {
-            const updated = { ...prev, [flagName]: snoozedUntil };
+            const updated = { ...prev, [key]: snoozedUntil };
 
             const entries = Object.entries(updated);
 

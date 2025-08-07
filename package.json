@@ -119,7 +119,7 @@
     "pg": "^8.12.0",
     "pg-connection-string": "^2.5.0",
     "pkginfo": "^0.4.1",
-    "prom-client": "^14.0.0",
+    "prom-client": "^15.0.0",
     "sanitize-filename": "^1.6.3",
     "semver": "^7.6.3",
     "serve-favicon": "^2.5.0",

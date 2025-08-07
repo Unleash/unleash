@@ -1,12 +1,14 @@
 import type { ComponentType, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ProjectCard as DefaultProjectCard } from '../ProjectCard/ProjectCard.tsx';
 import type { ProjectSchema } from 'openapi';
-import loadingData from './loadingData.ts';
+import { loadingData } from './loadingData.ts';
 import { styled } from '@mui/material';
 import { UpgradeProjectCard } from '../ProjectCard/UpgradeProjectCard.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import type { ProjectsListView } from './hooks/useProjectsListState.ts';
+import { ProjectsListTable } from './ProjectsListTable/ProjectsListTable.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledGridContainer = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -33,6 +35,7 @@ type ProjectGroupProps = {
     placeholder?: string;
     ProjectCardComponent?: ComponentType<ProjectSchema & any>;
     link?: boolean;
+    view?: ProjectsListView;
 };
 
 export const ProjectGroup = ({
@@ -40,54 +43,32 @@ export const ProjectGroup = ({
     loading,
     ProjectCardComponent,
     link = true,
+    view = 'cards',
 }: ProjectGroupProps) => {
     const ProjectCard = ProjectCardComponent ?? DefaultProjectCard;
     const { isOss } = useUiConfig();
+    const projectListViewToggleEnabled = useUiFlag('projectListViewToggle');
+
+    const projectsToRender = loading ? loadingData : projects;
+
+    if (!isOss() && projectListViewToggleEnabled && view === 'list') {
+        return <ProjectsListTable projects={projectsToRender} />;
+    }
 
     return (
         <StyledGridContainer>
-            <ConditionallyRender
-                condition={loading}
-                show={() => (
-                    <>
-                        {loadingData.map((project: ProjectSchema) => (
-                            <ProjectCard
-                                data-loading
-                                createdAt={project.createdAt}
-                                key={project.id}
-                                name={project.name}
-                                id={project.id}
-                                mode={project.mode}
-                                memberCount={2}
-                                health={95}
-                                featureCount={4}
-                                owners={[
-                                    {
-                                        ownerType: 'user',
-                                        name: 'Loading data',
-                                    },
-                                ]}
-                            />
-                        ))}
-                    </>
-                )}
-                elseShow={() => (
-                    <>
-                        {projects.map((project) =>
-                            link ? (
-                                <StyledCardLink
-                                    key={project.id}
-                                    to={`/projects/${project.id}`}
-                                >
-                                    <ProjectCard {...project} />
-                                </StyledCardLink>
-                            ) : (
-                                <ProjectCard key={project.id} {...project} />
-                            ),
-                        )}
-                    </>
-                )}
-            />
+            {projectsToRender.map((project) =>
+                link ? (
+                    <StyledCardLink
+                        key={project.id}
+                        to={`/projects/${project.id}`}
+                    >
+                        <ProjectCard data-loading {...project} />
+                    </StyledCardLink>
+                ) : (
+                    <ProjectCard data-loading key={project.id} {...project} />
+                ),
+            )}
             {isOss() ? <UpgradeProjectCard /> : null}
         </StyledGridContainer>
     );

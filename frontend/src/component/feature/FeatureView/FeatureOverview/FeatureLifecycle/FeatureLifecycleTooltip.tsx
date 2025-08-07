@@ -164,6 +164,33 @@ const LiveStageAction: FC<{
     );
 };
 
+const ReadyForCleanupAction: FC<{
+    onComplete: () => void;
+    loading: boolean;
+    project: string;
+}> = ({ onComplete, loading, project }) => {
+    return (
+        <StyledStageAction>
+            <StyledStageActionTitle>Ready for cleanup?</StyledStageActionTitle>
+            <InfoText sx={{ mb: 1 }}>
+                If this flag is no longer needed and ready to be removed from
+                the code, you can mark it as ready for cleanup. This helps
+                reduce technical debt.
+            </InfoText>
+            <PermissionButton
+                variant='outlined'
+                permission={UPDATE_FEATURE}
+                size='small'
+                onClick={onComplete}
+                disabled={loading}
+                projectId={project}
+            >
+                Mark ready for cleanup
+            </PermissionButton>
+        </StyledStageAction>
+    );
+};
+
 const SafeToArchive: FC<{
     onArchive: () => void;
     onUncomplete: () => void;
@@ -194,7 +221,7 @@ const SafeToArchive: FC<{
                     disabled={loading}
                     projectId={project}
                 >
-                    Revert to production
+                    Revert to previous stage
                 </PermissionButton>
                 <PermissionButton
                     variant='outlined'
@@ -223,7 +250,7 @@ const ActivelyUsed: FC<{
         </InfoText>
         <InfoText>
             If you think this feature was completed too early you can revert to
-            the live stage.
+            the previous stage.
         </InfoText>
         <PermissionButton
             variant='outlined'
@@ -233,7 +260,7 @@ const ActivelyUsed: FC<{
             onClick={onUncomplete}
             disabled={loading}
         >
-            Revert to production
+            Revert to previous stage
         </PermissionButton>
     </StyledStageAction>
 );
@@ -417,6 +444,15 @@ export const FeatureLifecycleTooltip: FC<{
                                 environments={stage.environments!}
                                 onArchive={onArchive}
                                 onUncomplete={onUncomplete}
+                                loading={loading}
+                                project={project}
+                            />
+                        ) : null}
+                        {(stage.name === 'initial' ||
+                            stage.name === 'pre-live') &&
+                        onComplete ? (
+                            <ReadyForCleanupAction
+                                onComplete={onComplete}
                                 loading={loading}
                                 project={project}
                             />

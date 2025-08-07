@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { useFlagReminders } from './useFlagReminders.ts';
+import { useReminders } from './useReminders.ts';
 
 const TestComponent = ({
     days = 7,
@@ -9,7 +9,7 @@ const TestComponent = ({
     days?: number;
     maxReminders?: number;
 }) => {
-    const { shouldShowReminder, snoozeReminder } = useFlagReminders({
+    const { shouldShowReminder, snoozeReminder } = useReminders({
         days,
         maxReminders,
     });

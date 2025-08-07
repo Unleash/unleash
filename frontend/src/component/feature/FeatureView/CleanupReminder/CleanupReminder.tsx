@@ -17,7 +17,7 @@ import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useNavigate } from 'react-router-dom';
-import { useFlagReminders } from './useFlagReminders.ts';
+import { useReminders } from './useReminders.ts';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUncomplete } from '../FeatureOverview/FeatureLifecycle/useUncomplete.ts';
 
@@ -59,7 +59,7 @@ export const CleanupReminder: FC<{
     const daysInStage = enteredStageAt
         ? differenceInDays(new Date(), parseISO(enteredStageAt))
         : 0;
-    const { shouldShowReminder, snoozeReminder } = useFlagReminders();
+    const { shouldShowReminder, snoozeReminder } = useReminders();
 
     const determineReminder = (): ReminderType => {
         if (!currentStage || !isRelevantType) return null;
@@ -213,7 +213,7 @@ export const CleanupReminder: FC<{
                                 disabled={loading}
                                 projectId={feature.project}
                             >
-                                Revert to production
+                                Revert to previous stage
                             </PermissionButton>
                         </ActionsBox>
                     }

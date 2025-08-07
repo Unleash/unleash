@@ -40,7 +40,12 @@ export const useConnectedInstancesTable = (
             {
                 Header: 'Last seen',
                 accessor: 'lastSeen',
-                Cell: TimeAgoCell,
+                Cell: ({ value, column }) => (
+                    <TimeAgoCell
+                        value={value}
+                        title={(date) => `${column.Header}: ${date}`}
+                    />
+                ),
                 styles: {
                     width: '20%',
                 },

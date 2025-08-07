@@ -6,7 +6,7 @@ import { TextCell } from '../TextCell/TextCell.tsx';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 
 interface ITimeAgoCellProps {
-    value?: string | number | Date;
+    value?: string | number | Date | null;
     live?: boolean;
     emptyText?: string;
     title?: (date: string) => string;

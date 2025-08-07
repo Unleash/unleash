@@ -185,7 +185,12 @@ export const ServiceAccountTokens = ({
             {
                 Header: 'Last seen',
                 accessor: 'seenAt',
-                Cell: TimeAgoCell,
+                Cell: ({ value, column }) => (
+                    <TimeAgoCell
+                        value={value}
+                        title={(date) => `${column.Header}: ${date}`}
+                    />
+                ),
                 maxWidth: 150,
             },
             {

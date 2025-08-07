@@ -117,8 +117,13 @@ export const Group: VFC = () => {
             },
             {
                 Header: 'Last login',
-                accessor: (row: IGroupUser) => row.seenAt || '',
-                Cell: TimeAgoCell,
+                accessor: 'seenAt',
+                Cell: ({ value, column }) => (
+                    <TimeAgoCell
+                        value={value}
+                        title={(date) => `${column.Header}: ${date}`}
+                    />
+                ),
                 maxWidth: 150,
             },
             {

@@ -179,11 +179,13 @@ export const ProjectAccessTable: VFC = () => {
             {
                 id: 'added',
                 Header: 'Added',
-                accessor: (row: IProjectAccess) => {
-                    const userRow = row.entity as IUser | IGroup;
-                    return userRow.addedAt || '';
-                },
-                Cell: TimeAgoCell,
+                accessor: 'entity.addedAt',
+                Cell: ({ value, column }) => (
+                    <TimeAgoCell
+                        value={value}
+                        title={(date) => `${column.Header}: ${date}`}
+                    />
+                ),
                 maxWidth: 130,
             },
             {
@@ -200,7 +202,12 @@ export const ProjectAccessTable: VFC = () => {
                         .sort()
                         .reverse()[0];
                 },
-                Cell: TimeAgoCell,
+                Cell: ({ value, column }) => (
+                    <TimeAgoCell
+                        value={value}
+                        title={(date) => `${column.Header}: ${date}`}
+                    />
+                ),
                 maxWidth: 130,
             },
             {

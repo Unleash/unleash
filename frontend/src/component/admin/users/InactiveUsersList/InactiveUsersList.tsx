@@ -147,15 +147,25 @@ export const InactiveUsersList = () => {
             {
                 id: 'last-login',
                 Header: 'Last login',
-                accessor: (row: any) => row.seenAt || '',
-                Cell: TimeAgoCell,
+                accessor: 'seenAt',
+                Cell: ({ value, column }) => (
+                    <TimeAgoCell
+                        value={value}
+                        title={(date) => `${column.Header}: ${date}`}
+                    />
+                ),
                 maxWidth: 150,
             },
             {
                 id: 'pat-last-login',
                 Header: 'PAT last used',
-                accessor: (row: any) => row.patSeenAt || '',
-                Cell: TimeAgoCell,
+                accessor: 'patSeenAt',
+                Cell: ({ value, column }) => (
+                    <TimeAgoCell
+                        value={value}
+                        title={(date) => `${column.Header}: ${date}`}
+                    />
+                ),
                 maxWidth: 150,
             },
             {

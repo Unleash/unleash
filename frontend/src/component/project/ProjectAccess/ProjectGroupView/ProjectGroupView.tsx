@@ -88,8 +88,13 @@ const columns = [
     {
         id: 'lastLogin',
         Header: 'Last login',
-        accessor: (row: IGroupUser) => row.seenAt || '',
-        Cell: TimeAgoCell,
+        accessor: 'seenAt',
+        Cell: ({ value, column }) => (
+            <TimeAgoCell
+                value={value}
+                title={(date) => `${column.Header}: ${date}`}
+            />
+        ),
         maxWidth: 150,
     },
     // Always hidden -- for search

@@ -6,6 +6,7 @@ type SDKConfig = {
 
 const config: SDKConfig = {
     'unleash-client-node': '5.3.2',
+    'unleash-client-nextjs': '1.6.2',
     'unleash-client-java': '9.2.0',
     'unleash-client-go': '4.1.0',
     'unleash-client-python': '5.11.0',
@@ -14,6 +15,7 @@ const config: SDKConfig = {
     'unleash-client-php': '2.3.0',
     // new values after sdk registration rename:
     'unleash-node-sdk': '6.6.0',
+    'unleash-nextjs-sdk': '1.6.2',
     'unleash-java-sdk': '11.0.2',
     'unleash-go-sdk': '5.0.3',
     'unleash-python-sdk': '6.3.0',

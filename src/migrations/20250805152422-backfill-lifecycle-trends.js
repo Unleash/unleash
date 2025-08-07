@@ -30,7 +30,17 @@ exports.up = function (db, cb) {
                 FROM feature_lifecycles fl
                     JOIN features f ON f.name = fl.feature
                     JOIN projects p ON f.project = p.id
-                    ),
+            ),
+            latest_stage_on_week AS (
+                SELECT DISTINCT ON (fl.feature, wr.id)
+                    wr.id AS week_id,
+                    fl.feature,
+                    fl.stage AS stage_on_week,
+                    fl.created_at
+                FROM week_ranges wr
+                    JOIN feature_lifecycles fl ON fl.created_at <= wr.week_end
+                ORDER BY wr.id, fl.feature, fl.created_at DESC
+            ),
             weekly_counts AS (
                 SELECT
                     wr.id,
@@ -39,9 +49,14 @@ exports.up = function (db, cb) {
                     fd.flag_type,
                     fd.project,
                     COUNT(DISTINCT CASE WHEN fd.lifecycle_time >= wr.week_start AND fd.lifecycle_time < wr.week_end THEN fd.feature END) AS new_flags_this_week,
-                    COUNT(DISTINCT CASE WHEN fd.lifecycle_time < wr.week_start THEN fd.feature END) AS flags_older_than_week
+                    COUNT(DISTINCT CASE WHEN fd.lifecycle_time < wr.week_start
+                        AND lsbw.feature IS NOT NULL
+                        AND lsbw.stage_on_week = fd.stage
+                            THEN fd.feature
+                        END) AS flags_older_than_week
                 FROM week_ranges wr
                     JOIN feature_data fd ON fd.lifecycle_time < wr.week_end
+                    LEFT JOIN latest_stage_on_week lsbw ON lsbw.feature = fd.feature AND lsbw.week_id = wr.id
                 GROUP BY wr.id, wr.created_at, fd.stage, fd.flag_type, fd.project
             )
             INSERT INTO lifecycle_trends (

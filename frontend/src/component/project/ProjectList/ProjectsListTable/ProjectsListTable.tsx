@@ -4,14 +4,16 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { ProjectOwners } from 'component/project/ProjectCard/ProjectCardFooter/ProjectOwners/ProjectOwners';
-import { ProjectLastSeen } from 'component/project/ProjectCard/ProjectLastSeen/ProjectLastSeen';
 import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import type { ProjectSchema, ProjectSchemaOwners } from 'openapi';
 import { useCallback, useMemo } from 'react';
 import { useFlexLayout, useTable } from 'react-table';
 import { formatDateYMDHMS } from 'utils/formatDate';
-import { ProjectsListTableProjectName } from './ProjectsListTableProjectName.tsx';
+import { ProjectsListTableNameCell } from './ProjectsListTableNameCell.tsx';
+import { useMediaQuery } from '@mui/material';
+import theme from 'themes/theme.ts';
+import { ProjectListTableLastSeenCell } from './ProjectListTableLastSeenCell.tsx';
 
 type ProjectsListTableProps = {
     projects: ProjectSchema[];
@@ -20,6 +22,7 @@ type ProjectsListTableProps = {
 export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
     const { refetch } = useProjects();
     const { favorite, unfavorite } = useFavoriteProjectsApi();
+    const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
     const onFavorite = useCallback(
         async (project: ProjectSchema) => {
@@ -51,7 +54,7 @@ export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
                 accessor: 'name',
                 minWidth: 200,
                 searchable: true,
-                Cell: ProjectsListTableProjectName,
+                Cell: ProjectsListTableNameCell,
             },
             {
                 Header: 'Last updated',
@@ -64,15 +67,17 @@ export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
                         dateFormat={formatDateYMDHMS}
                     />
                 ),
+                width: 150,
             },
             {
-                Header: 'Number of flags',
+                Header: 'Flags',
                 accessor: 'featureCount',
                 Cell: ({ value }: { value: number }) => (
                     <TextCell>
                         {value} flag{value === 1 ? '' : 's'}
                     </TextCell>
                 ),
+                width: 90,
             },
             {
                 Header: 'Health',
@@ -80,24 +85,30 @@ export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
                 Cell: ({ value }: { value: number }) => (
                     <TextCell>{value}%</TextCell>
                 ),
-                width: 100,
+                width: 70,
             },
             {
                 Header: 'Last seen',
                 accessor: 'lastReportedFlagUsage',
                 Cell: ({ value }: { value: Date }) => (
-                    <ProjectLastSeen date={value} />
+                    <ProjectListTableLastSeenCell
+                        value={value}
+                        hideLabel={isMediumScreen}
+                    />
                 ),
+                width: isMediumScreen ? 100 : 140,
             },
             {
                 Header: 'Owner',
                 accessor: 'owners',
                 Cell: ({ value }: { value: ProjectSchemaOwners }) => (
-                    <ProjectOwners
-                        owners={value?.filter(
-                            (owner) => owner.ownerType !== 'system',
-                        )}
-                    />
+                    <TextCell>
+                        <ProjectOwners
+                            owners={value?.filter(
+                                (owner) => owner.ownerType !== 'system',
+                            )}
+                        />
+                    </TextCell>
                 ),
             },
             {
@@ -106,6 +117,7 @@ export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
                 Cell: ({ value }: { value: number }) => (
                     <TextCell>{value} members</TextCell>
                 ),
+                width: 120,
             },
         ],
         [onFavorite],

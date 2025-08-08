@@ -137,7 +137,7 @@ If a documented Unleash feature isn't showing up in your Admin UI, check the fol
 
 ## Got locked out of an Admin account after configuring SCIM
 
-When you integrate Unleash with an identity provider (IdP) like Okta or Entra ID via SCIM, your IdP becomes the source of truth for user information.
+When you integrate Unleash with an identity provider (IdP) like [Okta](../how-to/how-to-setup-provisioning-with-okta) or [Entra ID](../how-to/how-to-setup-provisioning-with-entra) via [SCIM](/reference/scim), your IdP becomes the source of truth for user information.
 This can have an unintended side effect: users, including the one who set up the integration, might lose their admin permissions.
 
 When your IdP syncs a user with Unleash, it sends over the user's attributes. However, the standard SCIM protocol does not have a field for user roles. If role information isn't specified, Unleash defaults the user to the Viewer role for security reasons.
@@ -147,10 +147,10 @@ This means that even if you manually reassign the Admin role to a user in the Un
 
 #### Manage roles with user groups
 
-By creating a group in Unleash and assigning it an admin role, and then configuring your IdP to push that group and its membership via SCIM, you get fully automated permission management:
+By creating a [group](/reference/rbac#user-groups) in Unleash and assigning it an admin role, and then configuring your IdP to push that group and its membership via SCIM, you get fully automated permission management:
 
 1. In the Unleash Admin UI, go to **Admin settins > User config > Groups** and create a new group, for example `Unleash Admins`.
-2. Assign the Admin role or your desired custom-root role to this group.
+2. Assign the Admin role or your desired [custom-root role](/reference/rbac#custom-root-roles) to this group.
 3. In your IdP, ensure you have a corresponding group and configure your SCIM integration.
 4. Once configured, any user you add to the `Unleash Admins` group in your IdP will automatically gain admin privileges in Unleash.
 

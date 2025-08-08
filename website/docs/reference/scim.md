@@ -13,23 +13,16 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 :::
 
-Unleash supports provisioning through the [SCIM Protocol](https://scim.cloud/), making it easy to manage users and groups directly through your SSO provider. Users and groups that are assigned or unassigned in your Unleash SSO application will automatically be synced to Unleash. Our provisioning implementation only supports soft deletes so your audit log will be preserved when users are deprovisioned.
+[SCIM](https://scim.cloud/) automates user and group provisioning between an identity provider (IdP) and an application like Unleash. This makes it easy to manage users and groups directly through your [SSO](/reference/sso) provider. This automation offers several key benefits:
 
-See our how to guides on setting up provisioning for [Okta](../how-to/how-to-setup-provisioning-with-okta.md) or [Entra](../how-to/how-to-setup-provisioning-with-entra.md) (formerly known as Azure).
+- **Improved security**: When an employee leaves, their account is instantly deprovisioned, reducing security risks.
+- **Reduced administrative overhead**: New team members are automatically given the correct permissions, eliminating the need for manual setup.
+- **Consistency**: SCIM ensures that user access and group memberships are consistent and up-to-date across all connected applications. With SCIM, your IdP can sync groups lazily in the background, circumventing limitations on the number of users that can be synced with some SSO providers.
 
-## Advantages
+Our implementation supports user and group provisioning, but not password syncing or role mapping. It uses soft-deletes to preserve audit logs when you deprovision users.
 
-**Deprovisioning**
+See our how-to guides on setting up provisioning for [Okta](../how-to/how-to-setup-provisioning-with-okta.md) or [Entra](../how-to/how-to-setup-provisioning-with-entra.md).
 
-Deprovisioning can be setup on the provider side and allow for automatic clean up of users in a single place. This is especially useful if you're trying to manage the cost of your Unleash instance, since deprovisioned users will not count towards the seat count of your license.
+## Retain admin access
 
-**Group syncing**
-
-Some SSO providers, for example Entra, have limitations on the number of users that can be synced using the [group syncing](../how-to/how-to-set-up-group-sso-sync) flow. Provisioning allows your provider to sync groups lazily in the background and side step this limitation.
-
-## Not supported
-
-- User password syncing
-- User/group role mapping
-
-If you have a need for these features, please reach out to us.
+When setting up a SCIM integration with Unleash, you must configure a method for role management to avoid being locked out of admin accounts. To do this, either assign the admin role to an IdP group that is synced with Unleash or create a dedicated, non-SCIM managed recovery admin account for emergency use. For full instructions, including what to do if you're already locked out, see our complete [troubleshooting guide](/troubleshooting#got-locked-out-of-an-admin-account-after-configuring-scim).

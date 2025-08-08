@@ -30,6 +30,7 @@ exports.up = function (db, cb) {
                 FROM feature_lifecycles fl
                     JOIN features f ON f.name = fl.feature
                     JOIN projects p ON f.project = p.id
+                    JOIN feature_types ft ON ft.id = f.type
             ),
             latest_stage_on_week AS (
                 SELECT DISTINCT ON (fl.feature, wr.id)

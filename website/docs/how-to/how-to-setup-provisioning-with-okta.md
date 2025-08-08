@@ -11,6 +11,12 @@ pagination_next: how-to/how-to-setup-provisioning-with-entra
 
 ## Unleash Configuration {#unleash-setup}
 
+:::info
+
+Before you begin, ensure that you have a strategy in place to prevent [being locked out of all admin accounts](/troubleshooting#got-locked-out-of-an-admin-account-after-configuring-scim).
+
+:::
+
 ### Step 1: Navigate to Provisioning configuration {#unleash-setup-step-1}
 
 First you'll need to log in to Unleash as an admin user. Navigate to the Single Sign-On section and select the "SCIM" tab. The SCIM API URL will be shown in this section, you'll need this to configure Okta later.

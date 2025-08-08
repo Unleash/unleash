@@ -8,7 +8,7 @@ import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvi
 import { v4 as uuidv4 } from 'uuid';
 import { WeightType } from '../../../constants/variantTypes.ts';
 import { Box, styled, Typography, useTheme, Alert } from '@mui/material';
-import type { IFeatureStrategy } from 'interfaces/strategy';
+import type { IEditableStrategy, IFeatureStrategy } from 'interfaces/strategy';
 import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { StrategyVariantsUpgradeAlert } from 'component/common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
@@ -30,7 +30,7 @@ const StyledHelpIconBox = styled(Box)(({ theme }) => ({
 
 export const NewStrategyVariants: FC<{
     setStrategy: React.Dispatch<
-        React.SetStateAction<Partial<IFeatureStrategy>>
+        React.SetStateAction<Partial<IEditableStrategy>>
     >;
     strategy: Partial<IFeatureStrategy>;
     projectId: string;

@@ -69,6 +69,10 @@ export interface IConstraint {
     [constraintId]?: string;
 }
 
+export interface IEditableStrategy extends IFeatureStrategy {
+    constraints: IConstraintWithId[];
+}
+
 export interface IConstraintWithId extends IConstraint {
     [constraintId]: string;
 }

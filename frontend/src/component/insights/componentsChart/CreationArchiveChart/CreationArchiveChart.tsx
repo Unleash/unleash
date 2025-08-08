@@ -193,6 +193,10 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                         legend: {
                             position: 'bottom' as const,
                             labels: {
+                                color: theme.palette.text.secondary,
+                                usePointStyle: true,
+                                padding: 21,
+                                boxHeight: 8,
                                 filter: (legendItem) => {
                                     return !flagTypeNames.includes(
                                         legendItem.text || '',
@@ -234,6 +238,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     scales: {
                         x: {
                             type: 'time',
+                            display: false,
                             time: {
                                 unit: 'week',
                                 tooltipFormat: 'PPP',

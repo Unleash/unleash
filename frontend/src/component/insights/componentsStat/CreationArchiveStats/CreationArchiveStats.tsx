@@ -1,11 +1,12 @@
 import type { FC } from 'react';
-import { Box, Typography, Link, styled } from '@mui/material';
+import { Box, Typography, styled } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import Lightbulb from '@mui/icons-material/LightbulbOutlined';
 import { StatsExplanation } from 'component/insights/InsightsCharts.styles';
 import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
 import type { InstanceInsightsSchema } from 'openapi';
+import { Link } from 'react-router-dom';
 
 function getCurrentArchiveRatio(
     groupedCreationArchiveData: GroupedDataByProject<
@@ -72,6 +73,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
     '&:hover': {
         textDecoration: 'underline',
     },
+    fontSize: theme.spacing(1.75),
 }));
 
 interface CreationArchiveStatsProps {
@@ -105,7 +107,7 @@ export const CreationArchiveStats: FC<CreationArchiveStatsProps> = ({
                 Do you create more flags than you archive? Or do you have good
                 process for cleaning up?
             </StatsExplanation>
-            <StyledLink href='/search?lifecycle=IS:completed' variant='body2'>
+            <StyledLink to='/search?lifecycle=IS:completed'>
                 View flags in cleanup stage
             </StyledLink>
         </>

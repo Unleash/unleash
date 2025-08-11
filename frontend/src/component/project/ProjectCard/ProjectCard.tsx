@@ -29,6 +29,7 @@ export const ProjectCard = ({
     name,
     featureCount,
     health,
+    technicalDebt,
     memberCount = 0,
     id,
     mode,
@@ -71,7 +72,7 @@ export const ProjectCard = ({
                     </StyledProjectCardContent>
                     <StyledProjectCardContent>
                         <div data-loading>
-                            <strong>{health}%</strong> health
+                            <strong>{technicalDebt}%</strong> technical debt
                         </div>
                         <div data-loading>
                             <ProjectLastSeen date={lastReportedFlagUsage} />

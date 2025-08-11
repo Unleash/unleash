@@ -21,6 +21,7 @@ const mapProjectForUi = (row): ProjectForUi => {
         id: row.id,
         description: row.description,
         health: row.health,
+        technicalDebt: 100 - (row.health || 0),
         favorite: row.favorite,
         featureCount: Number(row.number_of_features) || 0,
         memberCount: Number(row.number_of_users) || 0,

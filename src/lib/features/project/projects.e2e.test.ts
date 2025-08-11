@@ -91,3 +91,16 @@ test('response for project overview should include feature type counts', async (
         ],
     });
 });
+
+test('response should include technical debt field', async () => {
+    const { body } = await app.request
+        .get('/api/admin/projects')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body.projects).toHaveLength(1);
+    expect(body.projects[0]).toHaveProperty('technicalDebt');
+    expect(typeof body.projects[0].technicalDebt).toBe('number');
+    expect(body.projects[0].technicalDebt).toBeGreaterThanOrEqual(0);
+    expect(body.projects[0].technicalDebt).toBeLessThanOrEqual(100);
+});

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
+import LCPOptimizer from './LCPOptimizer';
 // import OptimizedStyles from './OptimizedStyles';
 // import FontLoader from './FontLoader';
 // import LayoutStabilizer from './LayoutStabilizer';
@@ -97,7 +98,10 @@ export default function Root({ children }: { children: React.ReactNode }) {
                 data-critical='true'
             />
 
-            {/* Performance optimization components disabled to prevent style conflicts */}
+            {/* LCP-focused performance optimization */}
+            <LCPOptimizer />
+            
+            {/* Other performance optimization components disabled to prevent style conflicts */}
             {/* <OptimizedStyles /> */}
             {/* <FontLoader /> */}
             {/* <LayoutStabilizer /> */}

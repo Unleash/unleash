@@ -6,6 +6,7 @@ export type ProjectForUi = {
     name: string;
     description?: string;
     health: number;
+    technicalDebt: number;
     createdAt: Date;
     mode: ProjectMode;
     memberCount: number;

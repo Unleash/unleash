@@ -80,12 +80,12 @@ export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
                 width: 90,
             },
             {
-                Header: 'Health',
-                accessor: 'health',
+                Header: 'Technical debt',
+                accessor: 'technicalDebt',
                 Cell: ({ value }: { value: number }) => (
                     <TextCell>{value}%</TextCell>
                 ),
-                width: 70,
+                width: 130,
             },
             {
                 Header: 'Last seen',

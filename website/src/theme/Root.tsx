@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
-import OptimizedStyles from './OptimizedStyles';
-import FontLoader from './FontLoader';
-import LayoutStabilizer from './LayoutStabilizer';
+// import OptimizedStyles from './OptimizedStyles';
+// import FontLoader from './FontLoader';
+// import LayoutStabilizer from './LayoutStabilizer';
 
 // Import critical CSS directly for immediate availability
 import criticalCSS from '!raw-loader!../css/critical.css';
@@ -97,10 +97,10 @@ export default function Root({ children }: { children: React.ReactNode }) {
                 data-critical='true'
             />
 
-            {/* Performance optimization components */}
-            <OptimizedStyles />
-            <FontLoader />
-            <LayoutStabilizer />
+            {/* Performance optimization components disabled to prevent style conflicts */}
+            {/* <OptimizedStyles /> */}
+            {/* <FontLoader /> */}
+            {/* <LayoutStabilizer /> */}
 
             {/* Main app content */}
             {children}

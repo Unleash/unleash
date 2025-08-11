@@ -88,10 +88,15 @@ export default function OptimizedStyles() {
             const allStylesheets = document.querySelectorAll('link[rel="stylesheet"]');
             allStylesheets.forEach((stylesheet) => {
                 const link = stylesheet as HTMLLinkElement;
-                // Skip critical styles
-                if (link.href.includes('critical') || link.getAttribute('data-critical') === 'true') {
+                // Skip critical styles and any styles that are already optimized
+                if (link.href.includes('critical') || 
+                    link.getAttribute('data-critical') === 'true' ||
+                    link.getAttribute('data-optimized') === 'true') {
                     return;
                 }
+                
+                // Mark as optimized to avoid re-processing
+                link.setAttribute('data-optimized', 'true');
                 
                 // Convert blocking stylesheets to non-blocking
                 if (!link.media || link.media === 'all') {
@@ -115,16 +120,17 @@ export default function OptimizedStyles() {
                     mutation.addedNodes.forEach((node) => {
                         if (node.nodeName === 'LINK') {
                             const link = node as HTMLLinkElement;
-                            if (link.rel === 'stylesheet' && !link.getAttribute('data-optimized')) {
+                            if (link.rel === 'stylesheet' && 
+                                !link.getAttribute('data-optimized') &&
+                                !link.getAttribute('data-critical') &&
+                                !link.href.includes('critical')) {
                                 link.setAttribute('data-optimized', 'true');
-                                // Make it non-blocking if it's not critical
-                                if (!link.href.includes('critical')) {
-                                    const originalMedia = link.media || 'all';
-                                    link.media = 'print';
-                                    link.onload = function() {
-                                        (this as HTMLLinkElement).media = originalMedia;
-                                    };
-                                }
+                                // Make it non-blocking
+                                const originalMedia = link.media || 'all';
+                                link.media = 'print';
+                                link.onload = function() {
+                                    (this as HTMLLinkElement).media = originalMedia;
+                                };
                             }
                         }
                     });
@@ -144,17 +150,7 @@ export default function OptimizedStyles() {
         };
     }, []);
 
-    // Inline critical CSS for immediate rendering
-    return (
-        <style
-            dangerouslySetInnerHTML={{
-                __html: `
-                    /* Inline critical styles for immediate paint */
-                    /* This prevents render-blocking */
-                    @import url('/src/css/critical.css');
-                `
-            }}
-            data-critical="true"
-        />
-    );
+    // This component handles non-critical CSS optimization only
+    // Critical CSS is handled in Root.tsx
+    return null;
 }

@@ -56,7 +56,6 @@ process.nextTick(async () => {
                         lifecycleMetrics: true,
                         improvedJsonDiff: true,
                         impactMetrics: true,
-                        crDiffView: true,
                         paygTrialEvents: true,
                         timestampsInChangeRequestTimeline: true,
                         lifecycleGraphs: true,

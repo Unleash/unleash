@@ -53,8 +53,6 @@ export default function Root({ children }: { children: React.ReactNode }) {
             document.head.appendChild(script);
         };
 
-        const timeoutId = setTimeout(loadKapaWidget, 3000);
-
         const handleUserInteraction = () => {
             loadKapaWidget();
             window.removeEventListener('scroll', handleUserInteraction);
@@ -78,7 +76,6 @@ export default function Root({ children }: { children: React.ReactNode }) {
         });
 
         return () => {
-            clearTimeout(timeoutId);
             window.removeEventListener('scroll', handleUserInteraction);
             window.removeEventListener('click', handleUserInteraction);
             window.removeEventListener('touchstart', handleUserInteraction);

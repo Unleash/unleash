@@ -54,7 +54,6 @@ process.nextTick(async () => {
                         reportUnknownFlags: true,
                         customMetrics: true,
                         lifecycleMetrics: true,
-                        improvedJsonDiff: true,
                         impactMetrics: true,
                         crDiffView: true,
                         paygTrialEvents: true,

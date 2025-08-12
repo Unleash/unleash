@@ -1,11 +1,5 @@
 import React, { useEffect } from 'react';
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
-import LCPOptimizer from './LCPOptimizer';
-// import OptimizedStyles from './OptimizedStyles';
-// import FontLoader from './FontLoader';
-// import LayoutStabilizer from './LayoutStabilizer';
-
-// Import critical CSS directly for immediate availability
 import criticalCSS from '!raw-loader!../css/critical.css';
 
 export default function Root({ children }: { children: React.ReactNode }) {
@@ -13,6 +7,56 @@ export default function Root({ children }: { children: React.ReactNode }) {
         if (!ExecutionEnvironment.canUseDOM) {
             return;
         }
+
+        const loadGoogleAnalytics = () => {
+            if (
+                window.gtag ||
+                document.querySelector('script[src*="googletagmanager"]')
+            ) {
+                return;
+            }
+
+            // Load Google Analytics
+            const gaScript = document.createElement('script');
+            gaScript.async = true;
+            gaScript.src =
+                'https://www.googletagmanager.com/gtag/js?id=UA-134882379-1';
+            document.head.appendChild(gaScript);
+
+            // Initialize gtag
+            window.dataLayer = window.dataLayer || [];
+            function gtag(...args: any[]) {
+                window.dataLayer.push(args);
+            }
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('config', 'UA-134882379-1');
+        };
+
+        const loadGoogleTagManager = () => {
+            if (
+                window.google_tag_manager ||
+                document.querySelector(
+                    'script[src*="googletagmanager.com/gtm.js"]',
+                )
+            ) {
+                return;
+            }
+
+            // Load GTM script
+            const gtmScript = document.createElement('script');
+            gtmScript.async = true;
+            gtmScript.src =
+                'https://www.googletagmanager.com/gtm.js?id=GTM-KV5PRR2';
+            document.head.appendChild(gtmScript);
+
+            // Initialize dataLayer
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                'gtm.start': new Date().getTime(),
+                event: 'gtm.js',
+            });
+        };
 
         const loadKapaWidget = () => {
             if (
@@ -61,13 +105,19 @@ export default function Root({ children }: { children: React.ReactNode }) {
         };
 
         const handleUserInteraction = () => {
+            // Load all third-party scripts on user interaction
+            loadGoogleAnalytics();
+            loadGoogleTagManager();
             loadKapaWidget();
+
+            // Remove event listeners
             window.removeEventListener('scroll', handleUserInteraction);
             window.removeEventListener('click', handleUserInteraction);
             window.removeEventListener('touchstart', handleUserInteraction);
             window.removeEventListener('mousemove', handleUserInteraction);
         };
 
+        // Set up event listeners for user interaction
         window.addEventListener('scroll', handleUserInteraction, {
             once: true,
             passive: true,
@@ -82,7 +132,14 @@ export default function Root({ children }: { children: React.ReactNode }) {
             passive: true,
         });
 
+        // Fallback: load analytics after 10 seconds if no interaction
+        const fallbackTimer = setTimeout(() => {
+            loadGoogleAnalytics();
+            loadGoogleTagManager();
+        }, 10000);
+
         return () => {
+            clearTimeout(fallbackTimer);
             window.removeEventListener('scroll', handleUserInteraction);
             window.removeEventListener('click', handleUserInteraction);
             window.removeEventListener('touchstart', handleUserInteraction);
@@ -92,21 +149,10 @@ export default function Root({ children }: { children: React.ReactNode }) {
 
     return (
         <>
-            {/* Inline critical CSS for instant rendering */}
             <style
                 dangerouslySetInnerHTML={{ __html: criticalCSS }}
                 data-critical='true'
             />
-
-            {/* LCP-focused performance optimization */}
-            <LCPOptimizer />
-            
-            {/* Other performance optimization components disabled to prevent style conflicts */}
-            {/* <OptimizedStyles /> */}
-            {/* <FontLoader /> */}
-            {/* <LayoutStabilizer /> */}
-
-            {/* Main app content */}
             {children}
         </>
     );

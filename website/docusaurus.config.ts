@@ -122,6 +122,11 @@ export default async function createConfigAsync(): Promise<Config> {
                         type: 'image/svg+xml',
                     },
                 },
+                // GTM noscript fallback
+                {
+                    tagName: 'noscript',
+                    innerHTML: '<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KV5PRR2" height="0" width="0" style="display:none;visibility:hidden"></iframe>',
+                },
             ],
             navbar: {
                 logo: {
@@ -454,12 +459,7 @@ class="header-github-link"
                     theme: {
                         customCss: './src/css/custom.css',
                     },
-                    googleAnalytics: {
-                        trackingID: 'UA-134882379-1',
-                    },
-                    googleTagManager: {
-                        containerId: 'GTM-KV5PRR2',
-                    },
+                    // Analytics/GTM moved to lazy loading in Root.tsx
                     sitemap: {
                         changefreq: 'weekly',
                         lastmod: 'date',

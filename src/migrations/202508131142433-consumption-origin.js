@@ -21,17 +21,7 @@ exports.up = function (db, cb) {
 
 exports.down = function (db, cb) {
     db.runSql(
-        `
-            ALTER TABLE request_count_consumption
-                DROP CONSTRAINT request_count_consumption_pkey,
-                DROP COLUMN origin,
-                ADD PRIMARY KEY(day, metered_group);
-
-            ALTER TABLE connection_count_consumption
-                DROP CONSTRAINT connection_count_consumption_pkey,
-                DROP COLUMN origin,
-                ADD PRIMARY KEY(day, metered_group);
-        `,
+        ``,
         cb
     );
 };

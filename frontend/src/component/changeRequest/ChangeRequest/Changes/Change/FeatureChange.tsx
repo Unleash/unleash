@@ -7,26 +7,14 @@ import type {
 import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert, Box, styled } from '@mui/material';
-import {
-    LegacyToggleStatusChange,
-    ToggleStatusChange,
-} from './ToggleStatusChange.tsx';
-import { LegacyStrategyChange } from './LegacyStrategyChange.tsx';
+import { ToggleStatusChange } from './ToggleStatusChange.tsx';
 import { VariantPatch } from './VariantPatch/VariantPatch.tsx';
 import { EnvironmentStrategyExecutionOrder } from './EnvironmentStrategyExecutionOrder/EnvironmentStrategyExecutionOrder.tsx';
-import {
-    ArchiveFeatureChange,
-    LegacyArchiveFeatureChange,
-} from './ArchiveFeatureChange.tsx';
-import {
-    DependencyChange,
-    LegacyDependencyChange,
-} from './DependencyChange.tsx';
+import { ArchiveFeatureChange } from './ArchiveFeatureChange.tsx';
+import { DependencyChange } from './DependencyChange.tsx';
 import { Link } from 'react-router-dom';
-import { LegacyReleasePlanChange } from './LegacyReleasePlanChange.tsx';
 import { ReleasePlanChange } from './ReleasePlanChange.tsx';
 import { StrategyChange } from './StrategyChange.tsx';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledSingleChangeBox = styled(Box, {
     shouldForwardProp: (prop: string) => !prop.startsWith('$'),
@@ -82,10 +70,6 @@ const InlineList = styled('ul')(({ theme }) => ({
 
 const ChangeInnerBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(3),
-    // todo: remove with flag crDiffView
-    '&:has(.delete-strategy-information-wrapper)': {
-        backgroundColor: theme.palette.error.light,
-    },
 }));
 
 export const FeatureChange: FC<{
@@ -108,27 +92,6 @@ export const FeatureChange: FC<{
     const lastIndex = feature.defaultChange
         ? feature.changes.length + 1
         : feature.changes.length;
-
-    const useDiffableChangeComponent = useUiFlag('crDiffView');
-    const StrategyChangeComponent = useDiffableChangeComponent
-        ? StrategyChange
-        : LegacyStrategyChange;
-
-    const ReleasePlanChangeComponent = useDiffableChangeComponent
-        ? ReleasePlanChange
-        : LegacyReleasePlanChange;
-
-    const ArchiveFlagComponent = useDiffableChangeComponent
-        ? ArchiveFeatureChange
-        : LegacyArchiveFeatureChange;
-
-    const DependencyChangeComponent = useDiffableChangeComponent
-        ? DependencyChange
-        : LegacyDependencyChange;
-
-    const StatusChangeComponent = useDiffableChangeComponent
-        ? ToggleStatusChange
-        : LegacyToggleStatusChange;
 
     return (
         <StyledSingleChangeBox
@@ -189,7 +152,7 @@ export const FeatureChange: FC<{
             <ChangeInnerBox>
                 {(change.action === 'addDependency' ||
                     change.action === 'deleteDependency') && (
-                    <DependencyChangeComponent
+                    <DependencyChange
                         actions={actions}
                         change={change}
                         projectId={changeRequest.project}
@@ -197,20 +160,20 @@ export const FeatureChange: FC<{
                     />
                 )}
                 {change.action === 'updateEnabled' && (
-                    <StatusChangeComponent
+                    <ToggleStatusChange
                         isDefaultChange={isDefaultChange}
                         enabled={change.payload.enabled}
                         actions={actions}
                     />
                 )}
                 {change.action === 'archiveFeature' && (
-                    <ArchiveFlagComponent actions={actions} />
+                    <ArchiveFeatureChange actions={actions} />
                 )}
 
                 {change.action === 'addStrategy' ||
                 change.action === 'deleteStrategy' ||
                 change.action === 'updateStrategy' ? (
-                    <StrategyChangeComponent
+                    <StrategyChange
                         actions={actions}
                         isDefaultChange={isDefaultChange}
                         change={change}
@@ -242,7 +205,7 @@ export const FeatureChange: FC<{
                 {(change.action === 'addReleasePlan' ||
                     change.action === 'deleteReleasePlan' ||
                     change.action === 'startMilestone') && (
-                    <ReleasePlanChangeComponent
+                    <ReleasePlanChange
                         actions={actions}
                         change={change}
                         featureName={feature.name}

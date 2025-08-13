@@ -5,11 +5,9 @@ import type {
     ChangeRequestState,
     ISegmentChange,
 } from '../../../changeRequest.types';
-import { LegacySegmentChangeDetails } from './LegacySegmentChangeDetails.tsx';
 import { SegmentChangeDetails } from './SegmentChangeDetails.tsx';
 import { ConflictWarning } from './ConflictWarning.tsx';
 import { useSegment } from 'hooks/api/getters/useSegment/useSegment.ts';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 interface ISegmentChangeProps {
     segmentChange: ISegmentChange;
@@ -25,10 +23,6 @@ export const SegmentChange: FC<ISegmentChangeProps> = ({
     changeRequestState,
 }) => {
     const { segment } = useSegment(segmentChange.payload.id);
-
-    const ChangeDetails = useUiFlag('crDiffView')
-        ? SegmentChangeDetails
-        : LegacySegmentChangeDetails;
 
     return (
         <Card
@@ -81,7 +75,7 @@ export const SegmentChange: FC<ISegmentChangeProps> = ({
                     </Link>
                 </Box>
             </Box>
-            <ChangeDetails
+            <SegmentChangeDetails
                 change={segmentChange}
                 actions={actions}
                 changeRequestState={changeRequestState}

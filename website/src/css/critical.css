@@ -2,11 +2,9 @@
 /* Only includes above-the-fold styles needed for initial paint */
 /* This CSS should not conflict with main styles - only prevent layout shift */
 
-/* Import Google Fonts with optimal loading */
-@import url('https://fonts.googleapis.com/css2?family=Sen:wght@400;600;700&display=swap');
-
 /* Prevent layout shift - reserve space */
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
@@ -30,7 +28,7 @@ html, body {
     .navbar .navbar__brand {
         display: none;
     }
-    
+
     /* Reserve space for GitHub star button to prevent shift */
     .header-github-link.navbar-link-outlined {
         min-width: 120px; /* Reserve space for "Star 12.5k" */
@@ -38,7 +36,7 @@ html, body {
         align-items: center;
         justify-content: center;
     }
-    
+
     /* Ensure navbar items don't shift */
     .navbar__items--right {
         min-width: 450px; /* Stabilize right navbar width */
@@ -85,7 +83,7 @@ main {
     aside[class*="docSidebarContainer"] {
         display: none;
     }
-    
+
     main {
         width: 100%;
         padding: 0 0.5rem;

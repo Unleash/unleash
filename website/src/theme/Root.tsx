@@ -133,7 +133,6 @@ export default function Root({ children }: { children: React.ReactNode }) {
         });
 
         return () => {
-            clearTimeout(fallbackTimer);
             window.removeEventListener('scroll', handleUserInteraction);
             window.removeEventListener('click', handleUserInteraction);
             window.removeEventListener('touchstart', handleUserInteraction);

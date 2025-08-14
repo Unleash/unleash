@@ -34,12 +34,14 @@ const LazyVideo = ({ url, title = 'YouTube video player' }) => {
                 onKeyDown={(e) => e.key === 'Enter' && handleLoad()}
                 role='button'
                 tabIndex={0}
-                style={{
-                    backgroundImage: `url(https://img.youtube.com/vi/${videoId}/maxresdefault.jpg)`,
-                }}
                 aria-label={`Load ${title}`}
+                style={{ width: '414px', height: '232px' }}
             >
                 {/* Play button overlay */}
+                <img
+                    src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
+                    fetchPriority='high'
+                />
                 <div className={styles.playButton}>
                     <svg
                         width='32'

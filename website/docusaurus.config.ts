@@ -95,7 +95,11 @@ export default async function createConfigAsync(): Promise<Config> {
                 { name: 'og:image:height', content: '630' },
                 // Resource hints for LCP optimization
                 { name: 'preconnect', href: 'https://fonts.googleapis.com' },
-                { name: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
+                {
+                    name: 'preconnect',
+                    href: 'https://fonts.gstatic.com',
+                    crossOrigin: 'anonymous',
+                },
             ],
             headTags: [
                 {
@@ -121,11 +125,6 @@ export default async function createConfigAsync(): Promise<Config> {
                         as: 'image',
                         type: 'image/svg+xml',
                     },
-                },
-                // GTM noscript fallback
-                {
-                    tagName: 'noscript',
-                    innerHTML: '<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KV5PRR2" height="0" width="0" style="display:none;visibility:hidden"></iframe>',
                 },
             ],
             navbar: {

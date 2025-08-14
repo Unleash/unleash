@@ -132,12 +132,6 @@ export default function Root({ children }: { children: React.ReactNode }) {
             passive: true,
         });
 
-        // Fallback: load analytics after 10 seconds if no interaction
-        const fallbackTimer = setTimeout(() => {
-            loadGoogleAnalytics();
-            loadGoogleTagManager();
-        }, 10000);
-
         return () => {
             clearTimeout(fallbackTimer);
             window.removeEventListener('scroll', handleUserInteraction);

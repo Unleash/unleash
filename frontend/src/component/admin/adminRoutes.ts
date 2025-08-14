@@ -142,21 +142,21 @@ export const adminRoutes: INavigationMenuItem[] = [
         title: 'Backend connections',
         menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
         group: 'network',
-        flag: 'consumptionModel',
+        flag: 'consumptionModelUI',
     },
     {
         path: '/admin/network/frontend-data-usage',
         title: 'Frontend data usage',
         menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
         group: 'network',
-        flag: 'consumptionModel',
+        flag: 'consumptionModelUI',
     },
     {
         path: '/admin/network/data-usage',
         title: 'Data usage',
         menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
         group: 'network',
-        notFlag: 'consumptionModel',
+        notFlag: 'consumptionModelUI',
     },
 
     // Instance configuration

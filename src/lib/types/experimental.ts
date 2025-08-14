@@ -51,6 +51,7 @@ export type IFlagKey =
     | 'deltaApi'
     | 'uniqueSdkTracking'
     | 'consumptionModel'
+    | 'consumptionModelUI'
     | 'edgeObservability'
     | 'reportUnknownFlags'
     | 'lifecycleMetrics'
@@ -248,6 +249,10 @@ const flags: IFlags = {
     ),
     consumptionModel: parseEnvVarBoolean(
         process.env.EXPERIMENTAL_CONSUMPTION_MODEL,
+        false,
+    ),
+    consumptionModelUI: parseEnvVarBoolean(
+        process.env.EXPERIMENTAL_CONSUMPTION_MODEL_UI,
         false,
     ),
     edgeObservability: parseEnvVarBoolean(

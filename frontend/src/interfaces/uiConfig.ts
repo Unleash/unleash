@@ -83,6 +83,7 @@ export type UiFlags = {
     productivityReportEmail?: boolean;
     showUserDeviceCount?: boolean;
     consumptionModel?: boolean;
+    consumptionModelUI?: boolean;
     edgeObservability?: boolean;
     customMetrics?: boolean;
     lifecycleMetrics?: boolean;

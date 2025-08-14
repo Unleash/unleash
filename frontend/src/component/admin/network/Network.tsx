@@ -61,7 +61,7 @@ const consumptionModelTabs = [
 export const Network = () => {
     const { pathname } = useLocation();
     const edgeObservabilityEnabled = useUiFlag('edgeObservability');
-    const consumptionModelEnabled = useUiFlag('consumptionModel');
+    const consumptionModelEnabled = useUiFlag('consumptionModelUI');
     const allTabs = consumptionModelEnabled
         ? [...tabs, ...consumptionModelTabs]
         : [...tabs, ...seatModelTabs];

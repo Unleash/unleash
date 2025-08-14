@@ -35,11 +35,12 @@ const LazyVideo = ({ url, title = 'YouTube video player' }) => {
                 role='button'
                 tabIndex={0}
                 aria-label={`Load ${title}`}
-                style={{ width: '414px', height: '232px' }}
             >
                 {/* Play button overlay */}
                 <img
+                    className={styles.thumbnailImage}
                     src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
+                    alt={`${title} thumbnail`}
                     fetchPriority='high'
                 />
                 <div className={styles.playButton}>
@@ -61,16 +62,16 @@ const LazyVideo = ({ url, title = 'YouTube video player' }) => {
     }
 
     return (
-        <iframe
-            className={styles.loadedVideo}
-            width='100%'
-            height='315'
-            src={`${url}${url.includes('?') ? '&' : '?'}autoplay=1`}
-            title={title}
-            allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
-            allowFullScreen
-            loading='lazy'
-        />
+        <div className={styles.videoWrapper}>
+            <iframe
+                className={styles.loadedVideo}
+                src={`${url}${url.includes('?') ? '&' : '?'}autoplay=1`}
+                title={title}
+                allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+                allowFullScreen
+                loading='lazy'
+            />
+        </div>
     );
 };
 

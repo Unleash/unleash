@@ -73,7 +73,7 @@ main {
     display: flex;
     justify-content: center;
     position: relative;
-    background-color: #eaeaed;
+    background-color: #eaeaed !important;
 }
 
 main .container {
@@ -129,7 +129,7 @@ main .container {
         width: 100%;
         padding: 0 0.5rem;
     }
-    
+
     main .container {
         border-radius: 0;
     }
@@ -137,9 +137,9 @@ main .container {
 
 /* Welcome page specific styles */
 .docs-doc-id-welcome main .container {
-    background-color: transparent;
+    background-color: transparent !important;
 }
 
 .docs-doc-id-welcome main .theme-doc-breadcrumbs {
-    display: none;
+    display: none !important;
 }

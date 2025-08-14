@@ -142,11 +142,11 @@ export default function Root({ children }: { children: React.ReactNode }) {
 
     return (
         <>
+            {children}
             <style
                 dangerouslySetInnerHTML={{ __html: criticalCSS }}
                 data-critical='true'
             />
-            {children}
         </>
     );
 }

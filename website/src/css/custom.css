@@ -144,6 +144,18 @@ html[data-theme="dark"] {
     padding-right: 6px;
     border: 1px solid var(--ifm-navbar-link-color);
     border-radius: 4px;
+    /* Prevent layout shift by reserving space */
+    min-width: 120px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+/* Ensure the star count doesn't cause reflow */
+.navbar-link-outlined strong {
+    min-width: 45px;
+    text-align: left;
 }
 
 .header-github-link.navbar-link-outlined:hover {

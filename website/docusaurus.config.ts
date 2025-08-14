@@ -454,6 +454,7 @@ class="header-github-link"
                         remarkPlugins: [[pluginNpm2Yarn, { sync: true }]],
                         docItemComponent: '@theme/ApiItem',
                         sidebarPath: './sidebars.ts',
+                        breadcrumbs: false,
                     },
                     theme: {
                         customCss: require.resolve('./src/css/custom.css'),

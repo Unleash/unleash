@@ -52,6 +52,8 @@ export type IFlagKey =
     | 'uniqueSdkTracking'
     | 'consumptionModel'
     | 'consumptionModelUI'
+    | 'consumptionModelTrafficSdk'
+    | 'consumptionModelTrafficEdge'
     | 'edgeObservability'
     | 'reportUnknownFlags'
     | 'lifecycleMetrics'
@@ -253,6 +255,14 @@ const flags: IFlags = {
     ),
     consumptionModelUI: parseEnvVarBoolean(
         process.env.EXPERIMENTAL_CONSUMPTION_MODEL_UI,
+        false,
+    ),
+    consumptionModelTrafficSdk: parseEnvVarBoolean(
+        process.env.EXPERIMENTAL_CONSUMPTION_MODEL_TRAFFIC_SDK,
+        false,
+    ),
+    consumptionModelTrafficEdge: parseEnvVarBoolean(
+        process.env.EXPERIMENTAL_CONSUMPTION_MODEL_TRAFFIC_EDGE,
         false,
     ),
     edgeObservability: parseEnvVarBoolean(

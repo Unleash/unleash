@@ -795,7 +795,7 @@ export function registerPrometheusMetrics(
             config.flagResolver.impactMetrics?.incrementCounter(
                 REQUEST_COUNT,
                 1,
-                { flagNames: ['consumptionModel'], context: {} },
+                { flagNames: ['consumptionModelTrafficSdk'], context: {} },
             );
         },
     );

@@ -250,7 +250,6 @@ main .container {
 }
 
 main:after {
-    background-image: url("/img/mountain-texture.png");
     position: fixed;
     display: block;
     z-index: 0;

@@ -58,7 +58,6 @@ process.nextTick(async () => {
                         impactMetrics: true,
                         crDiffView: true,
                         paygTrialEvents: true,
-                        timestampsInChangeRequestTimeline: true,
                         lifecycleGraphs: true,
                         addConfiguration: true,
                         projectListViewToggle: true,

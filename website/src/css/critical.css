@@ -7,8 +7,8 @@
     --unleash-color-green: #1a4049;
     --unleash-color-gray: #ecebeb;
     --unleash-color-sub-background: #eaeaed;
-    --ifm-navbar-background-color: #1a4049;
-    --ifm-navbar-link-color: #fff;
+    --ifm-navbar-background-color: #eaeaed;
+    --ifm-navbar-link-color: #202021;
     --ifm-background-color: #fff;
     --ifm-font-color-base: #202021;
 }
@@ -38,13 +38,8 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
-    background-color: #1a4049;
-    color: #fff;
-}
-
-.navbar a,
-.navbar button {
-    color: #fff;
+    background-color: #eaeaed;
+    box-shadow: none;
 }
 
 /* Navbar positioning for desktop with sidebar */

@@ -138,6 +138,7 @@ main .container {
 /* Welcome page specific styles */
 .docs-doc-id-welcome main .container {
     background-color: transparent !important;
+    max-width: 100% !important;
 }
 
 .docs-doc-id-welcome main .theme-doc-breadcrumbs {

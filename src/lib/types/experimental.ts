@@ -251,6 +251,10 @@ const flags: IFlags = {
         process.env.EXPERIMENTAL_CONSUMPTION_MODEL,
         false,
     ),
+    consumptionModelUI: parseEnvVarBoolean(
+        process.env.EXPERIMENTAL_CONSUMPTION_MODEL_UI,
+        false,
+    ),
     edgeObservability: parseEnvVarBoolean(
         process.env.EXPERIMENTAL_EDGE_OBSERVABILITY,
         false,

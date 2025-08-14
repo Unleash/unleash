@@ -2,20 +2,49 @@
 /* Only includes above-the-fold styles needed for initial paint */
 /* This CSS should not conflict with main styles - only prevent layout shift */
 
+/* Essential CSS variables for immediate use */
+:root {
+    --unleash-color-green: #1a4049;
+    --unleash-color-gray: #ecebeb;
+    --unleash-color-sub-background: #eaeaed;
+    --ifm-navbar-background-color: #1a4049;
+    --ifm-navbar-link-color: #fff;
+    --ifm-background-color: #fff;
+    --ifm-font-color-base: #202021;
+}
+
 /* Prevent layout shift - reserve space */
 html,
 body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    background-color: #fff;
 }
 
-/* Minimal navbar space reservation - matches custom.css */
+/* Hide default Docusaurus elements that might flash */
+.hero,
+.heroBanner,
+.hero__title,
+.hero__subtitle,
+.buttons_src-pages-,
+.features_src-pages- {
+    display: none !important;
+}
+
+/* Navbar - Apply correct styles immediately */
 .navbar {
     height: 3.75rem;
     position: sticky;
     top: 0;
     z-index: 100;
+    background-color: #1a4049;
+    color: #fff;
+}
+
+.navbar a,
+.navbar button {
+    color: #fff;
 }
 
 /* Navbar positioning for desktop with sidebar */
@@ -43,11 +72,27 @@ body {
     }
 }
 
-/* Minimal layout structure to prevent major shifts */
+/* Main area - Apply backgrounds immediately */
 main {
     min-height: calc(100vh - 3.75rem);
     display: flex;
     justify-content: center;
+    position: relative;
+    background-color: #eaeaed;
+}
+
+main .container {
+    background-color: #fff;
+    margin: 0;
+    border-radius: 8px;
+    padding: 3rem;
+    z-index: 1;
+}
+
+@media (min-width: 997px) {
+    main .container {
+        margin: 3rem;
+    }
 }
 
 /* Sidebar styling to match original design */
@@ -73,6 +118,7 @@ main {
         height: 36px;
         margin-top: 10px;
         margin-left: 10px;
+        background-image: url("/img/unleash_logo_dark.svg");
         background-size: contain;
         background-repeat: no-repeat;
     }
@@ -88,4 +134,17 @@ main {
         width: 100%;
         padding: 0 0.5rem;
     }
+    
+    main .container {
+        border-radius: 0;
+    }
+}
+
+/* Welcome page specific styles */
+.docs-doc-id-welcome main .container {
+    background-color: transparent;
+}
+
+.docs-doc-id-welcome main .theme-doc-breadcrumbs {
+    display: none;
 }

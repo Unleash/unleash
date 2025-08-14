@@ -51,6 +51,7 @@ export type IFlagKey =
     | 'deltaApi'
     | 'uniqueSdkTracking'
     | 'consumptionModel'
+    | 'consumptionModelUI'
     | 'edgeObservability'
     | 'reportUnknownFlags'
     | 'lifecycleMetrics'

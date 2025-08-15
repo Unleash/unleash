@@ -6,29 +6,18 @@ import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import type { FC } from 'react';
 import { withDefault } from 'use-query-params';
 import { FilterItemParam } from 'utils/serializeQueryParams';
-import { WidgetTitle } from 'component/insights/components/WidgetTitle/WidgetTitle';
 import { FlagsChart } from 'component/insights/componentsChart/FlagsChart/FlagsChart';
 import { FlagsProjectChart } from 'component/insights/componentsChart/FlagsProjectChart/FlagsProjectChart';
 import { MetricsSummaryChart } from 'component/insights/componentsChart/MetricsSummaryChart/MetricsSummaryChart';
 import { ProjectHealthChart } from 'component/insights/componentsChart/ProjectHealthChart/ProjectHealthChart';
 import { UpdatesPerEnvironmentTypeChart } from 'component/insights/componentsChart/UpdatesPerEnvironmentTypeChart/UpdatesPerEnvironmentTypeChart';
-import { FlagStats } from 'component/insights/componentsStat/FlagStats/FlagStats';
-import { HealthStats } from 'component/insights/componentsStat/HealthStats/HealthStats';
 import { useInsightsData } from 'component/insights/hooks/useInsightsData';
 import { InsightsSection } from 'component/insights/sections/InsightsSection';
 import { InsightsFilters } from 'component/insights/InsightsFilters';
-import {
-    StyledChartContainer,
-    StyledWidget,
-    StyledWidgetContent,
-    StyledWidgetStats,
-    StatsExplanation,
-} from '../InsightsCharts.styles';
+import { Box, Typography, GlobalStyles, Tooltip, Link } from '@mui/material';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { NewProductionFlagsChart } from '../componentsChart/NewProductionFlagsChart/NewProductionFlagsChart.tsx';
-import Lightbulb from '@mui/icons-material/LightbulbOutlined';
 import { CreationArchiveChart } from '../componentsChart/CreationArchiveChart/CreationArchiveChart.tsx';
-import { CreationArchiveStats } from '../componentsStat/CreationArchiveStats/CreationArchiveStats.tsx';
 
 export const PerformanceInsights: FC = () => {
     const statePrefix = 'performance-';
@@ -83,7 +72,50 @@ export const PerformanceInsights: FC = () => {
 
     const isLifecycleGraphsEnabled = useUiFlag('lifecycleGraphs');
 
+    function getCurrentArchiveRatio() {
+        if (!groupedCreationArchiveData || Object.keys(groupedCreationArchiveData).length === 0) {
+            return 0;
+        }
+
+        let totalArchived = 0;
+        let totalCreated = 0;
+
+        Object.values(groupedCreationArchiveData).forEach((projectData) => {
+            const latestData = projectData[projectData.length - 1];
+            if (latestData) {
+                totalArchived += latestData.archivedFlags || 0;
+                const createdSum = latestData.createdFlags
+                    ? Object.values(latestData.createdFlags).reduce(
+                          (sum: number, count: number) => sum + count,
+                          0,
+                      )
+                    : 0;
+                totalCreated += createdSum;
+            }
+        });
+
+        return totalCreated > 0
+            ? Math.round((totalArchived / totalCreated) * 100)
+            : 0;
+    }
+
+    const currentRatio = getCurrentArchiveRatio();
+
     return (
+        <>
+        <GlobalStyles styles={{
+            '@keyframes pulse': {
+                '0%': {
+                    boxShadow: '0 0 0 0 rgba(16, 185, 129, 0.7)',
+                },
+                '70%': {
+                    boxShadow: '0 0 0 6px rgba(16, 185, 129, 0)',
+                },
+                '100%': {
+                    boxShadow: '0 0 0 0 rgba(16, 185, 129, 0)',
+                },
+            }
+        }} />
         <InsightsSection
             title='Performance insights'
             filters={
@@ -94,143 +126,435 @@ export const PerformanceInsights: FC = () => {
                 />
             }
         >
+            <Box sx={{ 
+                display: 'grid', 
+                gridTemplateColumns: { 
+                    xs: '1fr', 
+                    md: 'repeat(2, 1fr)' 
+                }, 
+                gap: 2,
+                '& > *': {
+                    minWidth: 0,
+                }
+            }}>
             {isLifecycleGraphsEnabled && isEnterprise() ? (
-                <StyledWidget>
-                    <StyledWidgetStats width={275}>
-                        <WidgetTitle title='New flags in production' />
-                        <StatsExplanation>
-                            <Lightbulb color='primary' />
-                            How often do flags go live in production?
-                        </StatsExplanation>
-                    </StyledWidgetStats>
-                    <StyledChartContainer>
+                <Box sx={{ 
+                    borderRadius: 3,
+                    overflow: 'hidden',
+                    backgroundColor: 'background.paper',
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    '&:hover': {
+                        boxShadow: '0 10px 40px rgba(0,0,0,0.08)',
+                        transform: 'translateY(-4px)',
+                    }
+                }}>
+                    <Box sx={{ 
+                        p: 2, 
+                        borderBottom: '1px solid',
+                        borderColor: 'divider',
+                        background: (theme) => theme.palette.mode === 'light' 
+                            ? 'linear-gradient(to right, #f8f9fa, #ffffff)'
+                            : theme.palette.background.default
+                    }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Box sx={{
+                                width: 8,
+                                height: 8,
+                                borderRadius: '50%',
+                                backgroundColor: '#10b981',
+                                animation: 'pulse 2s infinite'
+                            }} />
+                            <Typography variant='body1' sx={{ fontWeight: 600, letterSpacing: '-0.01em' }}>
+                                Production Deployments
+                            </Typography>
+                        </Box>
+                    </Box>
+                    <Box sx={{ p: 3 }}>
                         <NewProductionFlagsChart
                             lifecycleTrends={groupedLifecycleData}
                             isAggregate={showAllProjects}
                             isLoading={loading}
                         />
-                    </StyledChartContainer>
-                </StyledWidget>
+                    </Box>
+                </Box>
             ) : null}
 
             {isLifecycleGraphsEnabled && isEnterprise() ? (
-                <StyledWidget>
-                    <StyledWidgetStats width={275}>
-                        <WidgetTitle title='Flags created vs archived' />
-                        <CreationArchiveStats
-                            groupedCreationArchiveData={
-                                groupedCreationArchiveData
-                            }
-                            isLoading={loading}
-                        />
-                    </StyledWidgetStats>
-                    <StyledChartContainer>
+                <Box sx={{ 
+                    borderRadius: 3,
+                    overflow: 'hidden',
+                    backgroundColor: 'background.paper',
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    '&:hover': {
+                        boxShadow: '0 10px 40px rgba(0,0,0,0.08)',
+                        transform: 'translateY(-4px)',
+                    }
+                }}>
+                    <Box sx={{ 
+                        p: 2, 
+                        borderBottom: '1px solid',
+                        borderColor: 'divider',
+                        background: (theme) => theme.palette.mode === 'light' 
+                            ? 'linear-gradient(to right, #f8f9fa, #ffffff)'
+                            : theme.palette.background.default
+                    }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Box sx={{
+                                    width: 8,
+                                    height: 8,
+                                    borderRadius: '50%',
+                                    backgroundColor: '#8b5cf6',
+                                }}/>
+                                <Typography variant='body1' sx={{ fontWeight: 600, letterSpacing: '-0.01em' }}>
+                                    Lifecycle Balance
+                                </Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                <Tooltip title="Current ratio of archived flags to created flags" placement="top">
+                                    <Typography 
+                                        variant='body2' 
+                                        sx={{ 
+                                            color: 'primary.main',
+                                            fontWeight: 600,
+                                            cursor: 'help'
+                                        }}
+                                    >
+                                        {loading ? '...' : `${currentRatio}%`}
+                                    </Typography>
+                                </Tooltip>
+                                <Link 
+                                    href='/search?lifecycle=IS:completed' 
+                                    sx={{ 
+                                        color: 'primary.main',
+                                        textDecoration: 'none',
+                                        fontSize: '0.875rem',
+                                        '&:hover': {
+                                            textDecoration: 'underline'
+                                        }
+                                    }}
+                                >
+                                    View cleanup
+                                </Link>
+                            </Box>
+                        </Box>
+                    </Box>
+                    <Box sx={{ p: 3 }}>
                         <CreationArchiveChart
                             creationArchiveTrends={groupedCreationArchiveData}
                             isLoading={loading}
                         />
-                    </StyledChartContainer>
-                </StyledWidget>
+                    </Box>
+                </Box>
             ) : null}
 
             {showAllProjects ? (
-                <StyledWidget>
-                    <StyledWidgetStats width={275}>
-                        <WidgetTitle title='Flags' />
-                        <FlagStats
-                            count={flagsTotal}
-                            flagsPerUser={getFlagsPerUser(
-                                flagsTotal,
-                                usersTotal,
-                            )}
-                            isLoading={loading}
-                        />
-                    </StyledWidgetStats>
-                    <StyledChartContainer>
+                <Box sx={{ 
+                    borderRadius: 3,
+                    overflow: 'hidden',
+                    backgroundColor: 'background.paper',
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    '&:hover': {
+                        boxShadow: '0 10px 40px rgba(0,0,0,0.08)',
+                        transform: 'translateY(-4px)',
+                    }
+                }}>
+                    <Box sx={{ 
+                        p: 2, 
+                        borderBottom: '1px solid',
+                        borderColor: 'divider',
+                        background: (theme) => theme.palette.mode === 'light' 
+                            ? 'linear-gradient(to right, #f8f9fa, #ffffff)'
+                            : theme.palette.background.default
+                    }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Box sx={{
+                                    width: 8,
+                                    height: 8,
+                                    borderRadius: '50%',
+                                    backgroundColor: '#3b82f6',
+                                }}/>
+                                <Typography variant='body1' sx={{ fontWeight: 600, letterSpacing: '-0.01em' }}>
+                                    Flags
+                                </Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                <Tooltip title={`Total: ${flagsTotal} flags, ${getFlagsPerUser(flagsTotal, usersTotal)} per user`} placement="top">
+                                    <Typography 
+                                        variant='body2' 
+                                        sx={{ 
+                                            color: 'primary.main',
+                                            fontWeight: 600,
+                                            cursor: 'help'
+                                        }}
+                                    >
+                                        {loading ? '...' : flagsTotal}
+                                    </Typography>
+                                </Tooltip>
+                            </Box>
+                        </Box>
+                    </Box>
+                    <Box sx={{ p: 3 }}>
                         <FlagsChart
                             flagTrends={flagTrends}
                             isLoading={loading}
                         />
-                    </StyledChartContainer>
-                </StyledWidget>
+                    </Box>
+                </Box>
             ) : (
-                <StyledWidget>
-                    <StyledWidgetStats width={275}>
-                        <WidgetTitle title='Flags' />
-                        <FlagStats
-                            count={summary.total}
-                            flagsPerUser={''}
-                            isLoading={loading}
-                        />
-                    </StyledWidgetStats>
-                    <StyledChartContainer>
+                <Box sx={{ 
+                    borderRadius: 3,
+                    overflow: 'hidden',
+                    backgroundColor: 'background.paper',
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    '&:hover': {
+                        boxShadow: '0 10px 40px rgba(0,0,0,0.08)',
+                        transform: 'translateY(-4px)',
+                    }
+                }}>
+                    <Box sx={{ 
+                        p: 2, 
+                        borderBottom: '1px solid',
+                        borderColor: 'divider',
+                        background: (theme) => theme.palette.mode === 'light' 
+                            ? 'linear-gradient(to right, #f8f9fa, #ffffff)'
+                            : theme.palette.background.default
+                    }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Box sx={{
+                                    width: 8,
+                                    height: 8,
+                                    borderRadius: '50%',
+                                    backgroundColor: '#3b82f6',
+                                }}/>
+                                <Typography variant='body1' sx={{ fontWeight: 600, letterSpacing: '-0.01em' }}>
+                                    Flags
+                                </Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                <Tooltip title={`Total: ${summary.total} flags in selected projects`} placement="top">
+                                    <Typography 
+                                        variant='body2' 
+                                        sx={{ 
+                                            color: 'primary.main',
+                                            fontWeight: 600,
+                                            cursor: 'help'
+                                        }}
+                                    >
+                                        {loading ? '...' : summary.total}
+                                    </Typography>
+                                </Tooltip>
+                            </Box>
+                        </Box>
+                    </Box>
+                    <Box sx={{ p: 3 }}>
                         <FlagsProjectChart
                             projectFlagTrends={groupedProjectsData}
                             isLoading={loading}
                         />
-                    </StyledChartContainer>
-                </StyledWidget>
+                    </Box>
+                </Box>
             )}
             {isEnterprise() ? (
-                <StyledWidget>
-                    <StyledWidgetStats width={350} padding={0}>
-                        <HealthStats
-                            value={summary.averageHealth}
-                            technicalDebt={summary.technicalDebt}
-                            healthy={summary.active}
-                            stale={summary.stale}
-                            potentiallyStale={summary.potentiallyStale}
-                            title={
-                                <WidgetTitle
-                                    title='Technical debt'
-                                    tooltip={
-                                        'Percentage of flags that are stale or potentially stale.'
-                                    }
-                                />
-                            }
-                        />
-                    </StyledWidgetStats>
-                    <StyledChartContainer>
+                <Box sx={{ 
+                    borderRadius: 3,
+                    overflow: 'hidden',
+                    backgroundColor: 'background.paper',
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    '&:hover': {
+                        boxShadow: '0 10px 40px rgba(0,0,0,0.08)',
+                        transform: 'translateY(-4px)',
+                    }
+                }}>
+                    <Box sx={{ 
+                        p: 2, 
+                        borderBottom: '1px solid',
+                        borderColor: 'divider',
+                        background: (theme) => theme.palette.mode === 'light' 
+                            ? 'linear-gradient(to right, #f8f9fa, #ffffff)'
+                            : theme.palette.background.default
+                    }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Box sx={{
+                                    width: 8,
+                                    height: 8,
+                                    borderRadius: '50%',
+                                    backgroundColor: '#ef4444',
+                                }}/>
+                                <Typography variant='body1' sx={{ fontWeight: 600, letterSpacing: '-0.01em' }}>
+                                    Technical Debt
+                                </Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                <Tooltip title={`${summary.technicalDebt}% of flags are stale or potentially stale. Healthy: ${summary.active}, Stale: ${summary.stale}, Potentially stale: ${summary.potentiallyStale}`} placement="top">
+                                    <Typography 
+                                        variant='body2' 
+                                        sx={{ 
+                                            color: summary.technicalDebt > 50 ? 'error.main' : 'primary.main',
+                                            fontWeight: 600,
+                                            cursor: 'help'
+                                        }}
+                                    >
+                                        {loading ? '...' : `${summary.technicalDebt}%`}
+                                    </Typography>
+                                </Tooltip>
+                                <Link 
+                                    href='https://docs.getunleash.io/reference/insights#health' 
+                                    target="_blank"
+                                    sx={{ 
+                                        color: 'primary.main',
+                                        textDecoration: 'none',
+                                        fontSize: '0.875rem',
+                                        '&:hover': {
+                                            textDecoration: 'underline'
+                                        }
+                                    }}
+                                >
+                                    Learn more
+                                </Link>
+                            </Box>
+                        </Box>
+                    </Box>
+                    <Box sx={{ p: 3 }}>
                         <ProjectHealthChart
                             projectFlagTrends={groupedProjectsData}
                             isAggregate={showAllProjects}
                             isLoading={loading}
                         />
-                    </StyledChartContainer>
-                </StyledWidget>
+                    </Box>
+                </Box>
             ) : null}
             {isEnterprise() ? (
-                <>
-                    <StyledWidget>
-                        <StyledWidgetContent>
-                            <WidgetTitle
-                                title='Flag evaluation metrics'
-                                tooltip='Summary of all flag evaluations reported by SDKs.'
-                            />
-                            <StyledChartContainer>
-                                <MetricsSummaryChart
-                                    metricsSummaryTrends={groupedMetricsData}
-                                    allDatapointsSorted={allMetricsDatapoints}
-                                    isAggregate={showAllProjects}
-                                    isLoading={loading}
-                                />
-                            </StyledChartContainer>
-                        </StyledWidgetContent>
-                    </StyledWidget>
-                    <StyledWidget>
-                        <StyledWidgetContent>
-                            <WidgetTitle
-                                title='Updates per environment type'
-                                tooltip='Summary of all configuration updates per environment type.'
-                            />
-                            <UpdatesPerEnvironmentTypeChart
-                                environmentTypeTrends={environmentTypeTrends}
-                                isLoading={loading}
-                            />
-                        </StyledWidgetContent>
-                    </StyledWidget>
-                </>
+                <Box sx={{ 
+                    borderRadius: 3,
+                    overflow: 'hidden',
+                    backgroundColor: 'background.paper',
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    '&:hover': {
+                        boxShadow: '0 10px 40px rgba(0,0,0,0.08)',
+                        transform: 'translateY(-4px)',
+                    }
+                }}>
+                    <Box sx={{ 
+                        p: 2, 
+                        borderBottom: '1px solid',
+                        borderColor: 'divider',
+                        background: (theme) => theme.palette.mode === 'light' 
+                            ? 'linear-gradient(to right, #f8f9fa, #ffffff)'
+                            : theme.palette.background.default
+                    }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Box sx={{
+                                    width: 8,
+                                    height: 8,
+                                    borderRadius: '50%',
+                                    backgroundColor: '#f59e0b',
+                                }}/>
+                                <Typography variant='body1' sx={{ fontWeight: 600, letterSpacing: '-0.01em' }}>
+                                    Flag Evaluation Metrics
+                                </Typography>
+                            </Box>
+                            <Tooltip title="Summary of all flag evaluations reported by SDKs" placement="top">
+                                <Box sx={{
+                                    width: 20,
+                                    height: 20,
+                                    borderRadius: '50%',
+                                    backgroundColor: 'action.hover',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'help'
+                                }}>
+                                    <Typography variant='caption' sx={{ fontWeight: 600 }}>?</Typography>
+                                </Box>
+                            </Tooltip>
+                        </Box>
+                    </Box>
+                    <Box sx={{ p: 3 }}>
+                        <MetricsSummaryChart
+                            metricsSummaryTrends={groupedMetricsData}
+                            allDatapointsSorted={allMetricsDatapoints}
+                            isAggregate={showAllProjects}
+                            isLoading={loading}
+                        />
+                    </Box>
+                </Box>
             ) : null}
+            {isEnterprise() ? (
+                <Box sx={{ 
+                    borderRadius: 3,
+                    overflow: 'hidden',
+                    backgroundColor: 'background.paper',
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    '&:hover': {
+                        boxShadow: '0 10px 40px rgba(0,0,0,0.08)',
+                        transform: 'translateY(-4px)',
+                    }
+                }}>
+                    <Box sx={{ 
+                        p: 2, 
+                        borderBottom: '1px solid',
+                        borderColor: 'divider',
+                        background: (theme) => theme.palette.mode === 'light' 
+                            ? 'linear-gradient(to right, #f8f9fa, #ffffff)'
+                            : theme.palette.background.default
+                    }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Box sx={{
+                                    width: 8,
+                                    height: 8,
+                                    borderRadius: '50%',
+                                    backgroundColor: '#06b6d4',
+                                }}/>
+                                <Typography variant='body1' sx={{ fontWeight: 600, letterSpacing: '-0.01em' }}>
+                                    Updates per Environment Type
+                                </Typography>
+                            </Box>
+                            <Tooltip title="Summary of all configuration updates per environment type" placement="top">
+                                <Box sx={{
+                                    width: 20,
+                                    height: 20,
+                                    borderRadius: '50%',
+                                    backgroundColor: 'action.hover',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'help'
+                                }}>
+                                    <Typography variant='caption' sx={{ fontWeight: 600 }}>?</Typography>
+                                </Box>
+                            </Tooltip>
+                        </Box>
+                    </Box>
+                    <Box sx={{ p: 3 }}>
+                        <UpdatesPerEnvironmentTypeChart
+                            environmentTypeTrends={environmentTypeTrends}
+                            isLoading={loading}
+                        />
+                    </Box>
+                </Box>
+            ) : null}
+            </Box>
         </InsightsSection>
+        </>
     );
 };

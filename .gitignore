@@ -4,6 +4,8 @@ npm-debug
 .DS_Store
 /dist
 .vscode
+CLAUDE.md
+DESIGN_GUIDELINES.md
 
 # Logs
 logs

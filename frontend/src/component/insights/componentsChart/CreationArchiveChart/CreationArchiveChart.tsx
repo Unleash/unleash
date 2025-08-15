@@ -147,8 +147,8 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                 {
                     label: 'Archived flags',
                     data: weeks,
-                    backgroundColor: theme.palette.background.application,
-                    borderColor: theme.palette.background.application,
+                    backgroundColor: theme.palette.neutral.border,
+                    borderColor: theme.palette.neutral.border,
                     parsing: { yAxisKey: 'archivedFlags', xAxisKey: 'date' },
                     order: 2,
                 },
@@ -238,10 +238,13 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     scales: {
                         x: {
                             type: 'time',
-                            display: false,
+                            display: true,
                             time: {
                                 unit: 'week',
                                 tooltipFormat: 'PPP',
+                            },
+                            grid: {
+                                display: false,
                             },
                         },
                         y: {

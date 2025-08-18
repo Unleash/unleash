@@ -13,7 +13,7 @@ const tokenNameSchema = {
     },
 } as const;
 
-export const clientFrontendSchema = {
+const clientFrontendSchema = {
     required: ['type'],
     type: 'object',
     properties: {

@@ -77,7 +77,7 @@ test('api tokens are serialized correctly', async () => {
     });
     await app.services.apiTokenService.createApiTokenWithProjects({
         tokenName: 'client',
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         environment: DEFAULT_ENV,
         projects: ['*'],
     });

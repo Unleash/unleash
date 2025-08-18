@@ -509,7 +509,7 @@ describe('bulk metrics', () => {
         const clientToken =
             await authed.services.apiTokenService.createApiTokenWithProjects({
                 tokenName: 'bulk-metrics-test',
-                type: ApiTokenType.CLIENT,
+                type: ApiTokenType.BACKEND,
                 environment: 'development',
                 projects: ['*'],
             });

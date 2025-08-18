@@ -152,7 +152,7 @@ test('should not give api-user ADMIN permission', async () => {
             permissions: [perms.CLIENT],
             project: '*',
             environment: '*',
-            type: ApiTokenType.CLIENT,
+            type: ApiTokenType.BACKEND,
             secret: 'a',
         }),
     };

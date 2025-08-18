@@ -5,7 +5,7 @@ import type { ApiTokenSchema } from './api-token-schema.js';
 const defaultData: ApiTokenSchema = {
     secret: '',
     tokenName: '',
-    type: ApiTokenType.CLIENT,
+    type: ApiTokenType.BACKEND,
     environment: '',
     projects: [],
     expiresAt: '2022-01-01T00:00:00.000Z',

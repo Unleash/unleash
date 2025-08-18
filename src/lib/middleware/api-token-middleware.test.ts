@@ -90,7 +90,7 @@ test('should add user if known token', async () => {
         permissions: [CLIENT],
         project: ALL,
         environment: ALL,
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         secret: 'a',
     });
     const apiTokenService = {
@@ -122,7 +122,7 @@ test('should not add user if not /api/client', async () => {
         permissions: [CLIENT],
         project: ALL,
         environment: ALL,
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         secret: 'a',
     });
 
@@ -161,7 +161,7 @@ test('should not add user if disabled', async () => {
         permissions: [CLIENT],
         project: ALL,
         environment: ALL,
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         secret: 'a',
     });
     const apiTokenService = {
@@ -252,7 +252,7 @@ test('should add user if client token and /edge/metrics', async () => {
         permissions: [CLIENT],
         project: ALL,
         environment: ALL,
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         secret: 'a',
     });
     const apiTokenService = {

@@ -159,7 +159,7 @@ test('project resources should contain the right data', async () => {
     await app.services.apiTokenService.createApiTokenWithProjects({
         tokenName: 'test-token',
         projects: ['default'],
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         environment: DEFAULT_ENV,
     });
 

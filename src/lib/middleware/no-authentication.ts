@@ -40,7 +40,7 @@ export function noApiToken(baseUriPath: string, app: Application) {
                 permissions: [permissions.CLIENT],
                 projects: ['*'],
                 environment: DEFAULT_ENV,
-                type: ApiTokenType.CLIENT,
+                type: ApiTokenType.BACKEND,
                 secret: 'unknown',
             });
         }

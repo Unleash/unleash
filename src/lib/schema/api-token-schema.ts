@@ -10,7 +10,7 @@ export const createApiToken = joi
             .string()
             .lowercase()
             .required()
-            .valid(ApiTokenType.CLIENT, ApiTokenType.FRONTEND),
+            .valid(ApiTokenType.BACKEND, ApiTokenType.FRONTEND),
         expiresAt: joi.date().optional(),
         projects: joi.array().min(1).optional().default([ALL]),
         environment: joi.string().optional().default('development'),

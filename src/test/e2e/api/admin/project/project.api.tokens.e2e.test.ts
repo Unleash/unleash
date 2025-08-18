@@ -50,7 +50,7 @@ test('Returns list of tokens', async () => {
     await db.stores.apiTokenStore.insert({
         tokenName: 'test',
         secret: tokenSecret,
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         environment: DEFAULT_ENV,
         projects: ['default'],
     });
@@ -109,7 +109,7 @@ test('Deletes existing tokens', async () => {
     await db.stores.apiTokenStore.insert({
         tokenName: 'test',
         secret: tokenSecret,
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         environment: DEFAULT_ENV,
         projects: ['default'],
     });
@@ -142,7 +142,7 @@ test('Returns Bad Request when deleting tokens with more than one project', asyn
     await db.stores.apiTokenStore.insert({
         tokenName: 'test',
         secret: tokenSecret,
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         environment: DEFAULT_ENV,
         projects: ['default', 'other'],
     });

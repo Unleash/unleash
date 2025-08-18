@@ -72,7 +72,7 @@ test('update client token with expiry', async () => {
         projects: ['*'],
         tokenName: 'test_token',
         secret: tokenSecret,
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         environment: 'development',
     });
 
@@ -137,7 +137,7 @@ test('removes api token', async () => {
         projects: ['*'],
         tokenName: 'testtoken',
         secret: tokenSecret,
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
     });
 
     await app.request

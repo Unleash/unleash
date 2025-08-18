@@ -32,7 +32,7 @@ test('Should allow you to create tokens up to and including the limit', async ()
         await service.createApiTokenWithProjects(
             {
                 tokenName: `token-${i}`,
-                type: ApiTokenType.CLIENT,
+                type: ApiTokenType.BACKEND,
                 environment: 'production',
                 projects: ['*'],
             },
@@ -45,7 +45,7 @@ test('Should allow you to create tokens up to and including the limit', async ()
     }
 });
 
-test.each([ApiTokenType.ADMIN, ApiTokenType.CLIENT, ApiTokenType.FRONTEND])(
+test.each([ApiTokenType.ADMIN, ApiTokenType.BACKEND, ApiTokenType.FRONTEND])(
     "Should prevent you from creating %s tokens when you're already at the limit",
     async (tokenType) => {
         const limit = 1;
@@ -59,7 +59,7 @@ test.each([ApiTokenType.ADMIN, ApiTokenType.CLIENT, ApiTokenType.FRONTEND])(
         await service.createApiTokenWithProjects(
             {
                 tokenName: 'token-1',
-                type: ApiTokenType.CLIENT,
+                type: ApiTokenType.BACKEND,
                 environment: 'production',
                 projects: ['*'],
             },

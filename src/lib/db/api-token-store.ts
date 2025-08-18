@@ -284,7 +284,7 @@ export class ApiTokenStore implements IApiTokenStore {
             .andWhere('tokens.secret', 'LIKE', '%:%') // Exclude legacy tokens
             .andWhere((builder) => {
                 builder
-                    .where('tokens.type', ApiTokenType.CLIENT)
+                    .where('tokens.type', ApiTokenType.BACKEND)
                     .orWhere('tokens.type', ApiTokenType.FRONTEND);
             });
 

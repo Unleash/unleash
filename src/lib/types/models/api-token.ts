@@ -33,7 +33,7 @@ export const validateApiToken = ({
         );
     }
 
-    if (type === ApiTokenType.CLIENT && environment === ALL) {
+    if (type === ApiTokenType.BACKEND && environment === ALL) {
         throw new BadDataError(
             'Client token cannot be scoped to all environments',
         );

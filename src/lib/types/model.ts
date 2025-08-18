@@ -197,9 +197,11 @@ export interface IFeatureDependency {
 export type IStrategyVariant = Omit<IVariant, 'overrides'>;
 
 export enum ApiTokenType {
+    /** @deprecated: Use BACKEND instead */
     CLIENT = 'client',
     ADMIN = 'admin',
     FRONTEND = 'frontend',
+    BACKEND = 'backend',
 }
 
 export interface IApiTokenCreate {

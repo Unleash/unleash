@@ -153,7 +153,7 @@ describe('API token getTokenWithCache', () => {
         environment: DEFAULT_ENV,
         projects: ['*'],
         secret: '*:*:some-random-string',
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         tokenName: 'new-token-by-another-instance',
         expiresAt: undefined,
     };

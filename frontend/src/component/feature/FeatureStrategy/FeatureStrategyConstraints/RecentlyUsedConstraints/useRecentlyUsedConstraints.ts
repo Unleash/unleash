@@ -1,5 +1,5 @@
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
-import type { IConstraint } from 'interfaces/strategy';
+import type { IConstraint, IConstraintWithId } from 'interfaces/strategy';
 
 const hashString = (str: string): number => {
     let hash = 0;
@@ -41,14 +41,14 @@ export const areConstraintsEqual = (
 };
 
 export const useRecentlyUsedConstraints = (
-    initialItems: IConstraint[] = [],
+    initialItems: IConstraintWithId[] = [],
 ) => {
-    const [items, setItems] = useLocalStorageState<IConstraint[]>(
+    const [items, setItems] = useLocalStorageState<IConstraintWithId[]>(
         'recently-used-constraints',
         initialItems,
     );
 
-    const addItem = (newItem: IConstraint | IConstraint[]) => {
+    const addItem = (newItem: IConstraintWithId | IConstraintWithId[]) => {
         setItems((prevItems) => {
             const itemsToAdd = Array.isArray(newItem) ? newItem : [newItem];
 

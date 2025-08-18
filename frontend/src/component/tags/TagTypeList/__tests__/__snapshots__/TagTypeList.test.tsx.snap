@@ -275,16 +275,21 @@ exports[`renders an empty list correctly 1`] = `
                       className="css-u8cmsa"
                     >
                       <span
-                        className="css-697v50"
+                        aria-label=""
+                        aria-labelledby={null}
+                        className=" MuiBox-root css-gzore8"
                         data-loading={true}
-                        style={
-                          {
-                            "WebkitLineClamp": 1,
-                            "lineClamp": 1,
-                          }
-                        }
+                        data-mui-internal-clone-element={true}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseOver={[Function]}
+                        onTouchEnd={[Function]}
+                        onTouchStart={[Function]}
                       >
-                        Tag type name
+                        <span>
+                          Tag type name
+                        </span>
                       </span>
                       <span
                         className="css-1121jr7"
@@ -449,16 +454,21 @@ exports[`renders an empty list correctly 1`] = `
                       className="css-u8cmsa"
                     >
                       <span
-                        className="css-697v50"
+                        aria-label=""
+                        aria-labelledby={null}
+                        className=" MuiBox-root css-gzore8"
                         data-loading={true}
-                        style={
-                          {
-                            "WebkitLineClamp": 1,
-                            "lineClamp": 1,
-                          }
-                        }
+                        data-mui-internal-clone-element={true}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseOver={[Function]}
+                        onTouchEnd={[Function]}
+                        onTouchStart={[Function]}
                       >
-                        Tag type name
+                        <span>
+                          Tag type name
+                        </span>
                       </span>
                       <span
                         className="css-1121jr7"
@@ -623,16 +633,21 @@ exports[`renders an empty list correctly 1`] = `
                       className="css-u8cmsa"
                     >
                       <span
-                        className="css-697v50"
+                        aria-label=""
+                        aria-labelledby={null}
+                        className=" MuiBox-root css-gzore8"
                         data-loading={true}
-                        style={
-                          {
-                            "WebkitLineClamp": 1,
-                            "lineClamp": 1,
-                          }
-                        }
+                        data-mui-internal-clone-element={true}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseOver={[Function]}
+                        onTouchEnd={[Function]}
+                        onTouchStart={[Function]}
                       >
-                        Tag type name
+                        <span>
+                          Tag type name
+                        </span>
                       </span>
                       <span
                         className="css-1121jr7"
@@ -797,16 +812,21 @@ exports[`renders an empty list correctly 1`] = `
                       className="css-u8cmsa"
                     >
                       <span
-                        className="css-697v50"
+                        aria-label=""
+                        aria-labelledby={null}
+                        className=" MuiBox-root css-gzore8"
                         data-loading={true}
-                        style={
-                          {
-                            "WebkitLineClamp": 1,
-                            "lineClamp": 1,
-                          }
-                        }
+                        data-mui-internal-clone-element={true}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseOver={[Function]}
+                        onTouchEnd={[Function]}
+                        onTouchStart={[Function]}
                       >
-                        Tag type name
+                        <span>
+                          Tag type name
+                        </span>
                       </span>
                       <span
                         className="css-1121jr7"
@@ -971,16 +991,21 @@ exports[`renders an empty list correctly 1`] = `
                       className="css-u8cmsa"
                     >
                       <span
-                        className="css-697v50"
+                        aria-label=""
+                        aria-labelledby={null}
+                        className=" MuiBox-root css-gzore8"
                         data-loading={true}
-                        style={
-                          {
-                            "WebkitLineClamp": 1,
-                            "lineClamp": 1,
-                          }
-                        }
+                        data-mui-internal-clone-element={true}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseOver={[Function]}
+                        onTouchEnd={[Function]}
+                        onTouchStart={[Function]}
                       >
-                        Tag type name
+                        <span>
+                          Tag type name
+                        </span>
                       </span>
                       <span
                         className="css-1121jr7"

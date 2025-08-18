@@ -456,9 +456,6 @@ class="header-github-link"
                         sidebarPath: './sidebars.ts',
                         breadcrumbs: false,
                     },
-                    theme: {
-                        customCss: require.resolve('./src/css/custom.css'),
-                    },
                     // Analytics/GTM moved to lazy loading in Root.tsx
                     sitemap: {
                         changefreq: 'weekly',

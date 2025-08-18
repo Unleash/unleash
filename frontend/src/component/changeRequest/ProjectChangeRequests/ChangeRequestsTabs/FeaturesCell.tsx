@@ -53,11 +53,7 @@ export const FeaturesCell: VFC<FeaturesCellProps> = ({ value, project }) => {
                         key={featureName}
                         to={`/projects/${project}/features/${featureName}`}
                     >
-                        <Truncator
-                            lines={1}
-                            title={featureName}
-                            arrow
-                        >
+                        <Truncator lines={1} title={featureName} arrow>
                             <Highlighter search={searchQuery}>
                                 {featureName}
                             </Highlighter>

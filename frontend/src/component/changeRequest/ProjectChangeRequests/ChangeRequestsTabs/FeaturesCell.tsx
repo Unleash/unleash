@@ -5,6 +5,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
+import { Truncator } from 'component/common/Truncator/Truncator';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -13,10 +14,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1, 0, 1, 2),
 }));
 
-const StyledLink = styled(Link)(({ theme }) => ({
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
+const StyledLink = styled(Link)(() => ({
     textDecoration: 'none',
     '&:hover, &:focus': {
         textDecoration: 'underline',
@@ -53,12 +51,17 @@ export const FeaturesCell: VFC<FeaturesCellProps> = ({ value, project }) => {
                 show={featureNames?.map((featureName: string) => (
                     <StyledLink
                         key={featureName}
-                        title={featureName}
                         to={`/projects/${project}/features/${featureName}`}
                     >
-                        <Highlighter search={searchQuery}>
-                            {featureName}
-                        </Highlighter>
+                        <Truncator
+                            lines={1}
+                            title={featureName}
+                            arrow
+                        >
+                            <Highlighter search={searchQuery}>
+                                {featureName}
+                            </Highlighter>
+                        </Truncator>
                     </StyledLink>
                 ))}
                 elseShow={
@@ -69,12 +72,17 @@ export const FeaturesCell: VFC<FeaturesCellProps> = ({ value, project }) => {
                                 {featureNames?.map((featureName: string) => (
                                     <StyledTooltipLink
                                         key={featureName}
-                                        title={featureName}
                                         to={`/projects/${project}/features/${featureName}`}
                                     >
-                                        <Highlighter search={searchQuery}>
-                                            {featureName}
-                                        </Highlighter>
+                                        <Truncator
+                                            lines={1}
+                                            title={featureName}
+                                            arrow
+                                        >
+                                            <Highlighter search={searchQuery}>
+                                                {featureName}
+                                            </Highlighter>
+                                        </Truncator>
                                     </StyledTooltipLink>
                                 ))}
                             </StyledTooltipContainer>

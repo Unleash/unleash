@@ -33,13 +33,6 @@ export const StyledContainer = styled('div')(({ theme }) => ({
     wordBreak: 'break-all',
 }));
 
-export const StyledTitle = styled('span')(({ theme }) => ({
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    display: '-webkit-box',
-    WebkitBoxOrient: 'vertical',
-}));
-
 export const StyledDescription = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
     textDecoration: 'none',

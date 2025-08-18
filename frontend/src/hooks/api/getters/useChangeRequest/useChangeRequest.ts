@@ -1,7 +1,13 @@
 import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
-import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
+import type {
+    ChangeRequestType,
+    IChangeRequestFeature,
+    IFeatureChange,
+} from 'component/changeRequest/changeRequest.types';
+import { useMemo } from 'react';
+import { addConstraintIdsToFeatureChange } from 'utils/addConstraintIdsToFeatureChange.js';
 
 export const useChangeRequest = (projectId: string, id: string) => {
     const { data, error, mutate } = useSWR<ChangeRequestType>(
@@ -10,8 +16,32 @@ export const useChangeRequest = (projectId: string, id: string) => {
         { refreshInterval: 15000 },
     );
 
+    const { features, ...dataProps } = data || {};
+    const featuresWithConstraintIds: IChangeRequestFeature[] | undefined =
+        useMemo(() => {
+            return (
+                features?.map((feature) => {
+                    const changes: IFeatureChange[] = feature.changes.map(
+                        addConstraintIdsToFeatureChange,
+                    );
+
+                    return {
+                        ...feature,
+                        changes,
+                    };
+                }) ?? []
+            );
+        }, [JSON.stringify(features)]);
+
+    const mappedData = data
+        ? {
+              ...dataProps,
+              features: featuresWithConstraintIds,
+          }
+        : data;
+
     return {
-        data,
+        data: mappedData,
         loading: !error && !data,
         refetchChangeRequest: () => mutate(),
         error,

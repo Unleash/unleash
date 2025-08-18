@@ -59,7 +59,7 @@ test('creates new client token', async () => {
         .expect(201)
         .expect((res) => {
             expect(res.body.tokenName).toBe('default-client');
-            expect(res.body.type).toBe('client');
+            expect(res.body.type).toBe('backend');
             expect(res.body.createdAt).toBeTruthy();
             expect(res.body.secret.length > 16).toBe(true);
         });
@@ -94,40 +94,43 @@ test('update client token with expiry', async () => {
         });
 });
 
-test('creates a lot of client tokens', async () => {
-    const requests: any[] = [];
+test.each(['client', 'backend'])(
+    'creates a lot of backend tokens from type %s',
+    async (type) => {
+        const requests: any[] = [];
 
-    for (let i = 0; i < 10; i++) {
-        requests.push(
-            app.request
-                .post('/api/admin/api-tokens')
-                .send({
-                    tokenName: 'default-client',
-                    type: 'client',
-                })
-                .set('Content-Type', 'application/json')
-                .expect(201),
-        );
-    }
-    await Promise.all(requests);
-    expect.assertions(4);
-    await app.request
-        .get('/api/admin/api-tokens')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.tokens.length).toBe(10);
-            expect(res.body.tokens[2].type).toBe('client');
-        });
-    await app.request
-        .get('/api/admin/api-tokens/default-client')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.tokens.length).toBe(10);
-            expect(res.body.tokens[2].type).toBe('client');
-        });
-});
+        for (let i = 0; i < 10; i++) {
+            requests.push(
+                app.request
+                    .post('/api/admin/api-tokens')
+                    .send({
+                        tokenName: 'default-client',
+                        type,
+                    })
+                    .set('Content-Type', 'application/json')
+                    .expect(201),
+            );
+        }
+        await Promise.all(requests);
+        expect.assertions(4);
+        await app.request
+            .get('/api/admin/api-tokens')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.tokens.length).toBe(10);
+                expect(res.body.tokens[2].type).toBe('backend');
+            });
+        await app.request
+            .get('/api/admin/api-tokens/default-client')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.tokens.length).toBe(10);
+                expect(res.body.tokens[2].type).toBe('backend');
+            });
+    },
+);
 
 test('removes api token', async () => {
     const tokenSecret = '*:environment.random-secret';
@@ -164,14 +167,14 @@ test('creates new client token: project & environment defaults to "*"', async ()
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect((res) => {
-            expect(res.body.type).toBe('client');
+            expect(res.body.type).toBe('backend');
             expect(res.body.secret.length > 16).toBe(true);
             expect(res.body.environment).toBe(DEFAULT_ENV);
             expect(res.body.projects[0]).toBe(ALL);
         });
 });
 
-test('creates new client token with project & environment set', async () => {
+test('creates new backend token with project & environment set', async () => {
     return app.request
         .post('/api/admin/api-tokens')
         .send({
@@ -183,7 +186,7 @@ test('creates new client token with project & environment set', async () => {
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect((res) => {
-            expect(res.body.type).toBe('client');
+            expect(res.body.type).toBe('backend');
             expect(res.body.secret.length > 16).toBe(true);
             expect(res.body.environment).toBe(DEFAULT_ENV);
             expect(res.body.projects[0]).toBe('default');

@@ -1,4 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
+import { clientFrontendSchema } from './create-api-token-schema.js';
 
 export const createProjectApiTokenSchema = {
     type: 'object',
@@ -7,13 +8,7 @@ export const createProjectApiTokenSchema = {
     description:
         'The schema for creating a project API token. This schema is used to create a new project API token.',
     properties: {
-        type: {
-            type: 'string',
-            pattern:
-                '^([Cc][Ll][Ii][Ee][Nn][Tt]|[Ff][Rr][Oo][Nn][Tt][Ee][Nn][Dd])$',
-            description: `A client or frontend token. Must be one of the strings "client" or "frontend" (not case sensitive).`,
-            example: 'frontend',
-        },
+        type: clientFrontendSchema.properties.type,
         environment: {
             type: 'string',
             description:

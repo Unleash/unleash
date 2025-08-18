@@ -13,15 +13,15 @@ const tokenNameSchema = {
     },
 } as const;
 
-const clientFrontendSchema = {
+export const clientFrontendSchema = {
     required: ['type'],
     type: 'object',
     properties: {
         type: {
             type: 'string',
             pattern:
-                '^([Cc][Ll][Ii][Ee][Nn][Tt]|[Ff][Rr][Oo][Nn][Tt][Ee][Nn][Dd])$',
-            description: `A client or frontend token. Must be one of the strings "client" or "frontend" (not case sensitive).`,
+                '^([Cc][Ll][Ii][Ee][Nn][Tt]|[Bb][Aa][Cc][Kk][Ee][Nn][Dd]|[Ff][Rr][Oo][Nn][Tt][Ee][Nn][Dd])$',
+            description: `A client or frontend token. Must be one of the strings "client" (deprecated), "backend" (preferred over "client") or "frontend" (not case sensitive).`,
             example: 'frontend',
         },
         environment: {

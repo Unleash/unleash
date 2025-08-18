@@ -40,16 +40,6 @@ afterEach(async () => {
     await stores.apiTokenStore.deleteAll();
 });
 
-const getLastEvent = async () => {
-    const events = await db.stores.eventStore.getEvents();
-    return events.reduce((last, current) => {
-        if (current.id > last.id) {
-            return current;
-        }
-        return last;
-    });
-};
-
 test('editor users should only get client or frontend tokens', async () => {
     expect.assertions(3);
 

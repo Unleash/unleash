@@ -40,7 +40,10 @@ const resolveTokenPermissions = (tokenType: string) => {
         return [ADMIN];
     }
 
-    if (tokenType === ApiTokenType.BACKEND) {
+    if (
+        tokenType === ApiTokenType.BACKEND ||
+        tokenType === ApiTokenType.CLIENT
+    ) {
         return [CLIENT];
     }
 

@@ -191,21 +191,26 @@ export class EventStore implements IEventStore {
         }
     }
 
-    private typeIsInteresting = (builder: Knex.QueryBuilder) =>
-        builder
-            .andWhere((inner) =>
-                inner
-                    .whereNotNull('feature_name')
-                    .whereNotIn('type', [FEATURE_CREATED, FEATURE_TAGGED])
-                    .whereNot('type', 'LIKE', 'change-%'),
-            )
-            .orWhereIn('type', [
-                SEGMENT_UPDATED,
-                FEATURE_IMPORT,
-                FEATURES_IMPORTED,
-                SEGMENT_CREATED,
-                SEGMENT_DELETED,
-            ]);
+    private typeIsInteresting =
+        (environment?: string) => (builder: Knex.QueryBuilder) =>
+            builder
+                .andWhere((inner) => {
+                    inner
+                        .whereNotNull('feature_name')
+                        .whereNotIn('type', [FEATURE_CREATED, FEATURE_TAGGED])
+                        .whereNot('type', 'LIKE', 'change-%');
+                    if (environment) {
+                        inner.where('environment', environment);
+                    }
+                    return inner;
+                })
+                .orWhereIn('type', [
+                    SEGMENT_UPDATED,
+                    FEATURE_IMPORT,
+                    FEATURES_IMPORTED,
+                    SEGMENT_CREATED,
+                    SEGMENT_DELETED,
+                ]);
 
     async getMaxRevisionId(
         largerThan: number = 0,
@@ -214,12 +219,8 @@ export class EventStore implements IEventStore {
         const stopTimer = this.metricTimer('getMaxRevisionId');
         const query = this.db(TABLE)
             .max('id')
-            .where(this.typeIsInteresting)
+            .where(this.typeIsInteresting(environment))
             .andWhere('id', '>=', largerThan);
-
-        if (environment) {
-            query.where('environment', environment);
-        }
 
         const row = await query.first();
         stopTimer();
@@ -233,7 +234,7 @@ export class EventStore implements IEventStore {
             .from(TABLE)
             .where('id', '>', start)
             .andWhere('id', '<=', end)
-            .andWhere(this.typeIsInteresting)
+            .andWhere(this.typeIsInteresting())
             .orderBy('id', 'asc');
 
         const rows = await query;

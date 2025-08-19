@@ -18,7 +18,7 @@ export default class ConfigurationRevisionService extends EventEmitter {
 
     private revisionId: number;
 
-    private maxRevisionId: Record<string, number> = {};
+    private maxRevisionId: Map<string, number> = new Map();
 
     private flagResolver: IFlagResolver;
 
@@ -73,10 +73,10 @@ export default class ConfigurationRevisionService extends EventEmitter {
 
     async updateMaxEnvironmentRevisionId(environment: string): Promise<number> {
         const envRevisionId = await this.eventStore.getMaxRevisionId(
-            this.revisionId,
+            this.maxRevisionId[environment],
             environment,
         );
-        if (this.maxRevisionId[environment] < envRevisionId) {
+        if (this.maxRevisionId[environment] ?? 0 < envRevisionId) {
             this.maxRevisionId[environment] = envRevisionId;
         }
 
@@ -93,8 +93,12 @@ export default class ConfigurationRevisionService extends EventEmitter {
         );
         if (this.revisionId !== revisionId) {
             this.logger.debug(
-                'Updating feature configuration with new revision Id',
-                revisionId,
+                `Updating feature configuration with new revision Id ${revisionId} and all envs: ${Object.keys(this.maxRevisionId).join(', ')}`,
+            );
+            await Promise.allSettled(
+                Object.keys(this.maxRevisionId).map((environment) =>
+                    this.updateMaxEnvironmentRevisionId(environment),
+                ),
             );
             this.revisionId = revisionId;
             if (emit) {

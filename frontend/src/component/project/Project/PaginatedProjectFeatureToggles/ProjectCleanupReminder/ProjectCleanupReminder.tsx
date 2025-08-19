@@ -7,10 +7,7 @@ import { subDays, formatISO } from 'date-fns';
 import { useReminders } from 'component/feature/FeatureView/CleanupReminder/useReminders';
 import { useHasRootAccess } from 'hooks/useHasAccess';
 import { DELETE_FEATURE } from 'component/providers/AccessProvider/permissions';
-
-const StyledBox = styled(Box)(({ theme }) => ({
-    marginBottom: theme.spacing(2),
-}));
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const ActionsBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -38,6 +35,7 @@ export const ProjectCleanupReminder: FC<{
     const navigate = useNavigate();
     const { shouldShowReminder, snoozeReminder } = useReminders();
     const hasAccess = useHasRootAccess(DELETE_FEATURE, projectId);
+    const { trackEvent } = usePlausibleTracker();
 
     const reminderKey = `project-cleanup-${projectId}`;
     const query = getQuery(projectId);
@@ -51,12 +49,22 @@ export const ProjectCleanupReminder: FC<{
     }
 
     const handleViewFlags = () => {
+        trackEvent('project-cleanup', {
+            props: {
+                eventType: 'view flags clicked',
+            },
+        });
         navigate(
             `/projects/${projectId}/features?${new URLSearchParams(query).toString()}`,
         );
     };
 
     const handleDismiss = () => {
+        trackEvent('project-cleanup', {
+            props: {
+                eventType: 'remind me later',
+            },
+        });
         snoozeReminder(reminderKey, snoozeReminderDays);
     };
 

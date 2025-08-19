@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Miscellaneous Tasks
+
+- paygInstanceStatsEvents flag cleanup
+
 ## [7.1.0] - 2025-08-13
 
 ### Bug Fixes

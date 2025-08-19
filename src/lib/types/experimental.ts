@@ -62,7 +62,6 @@ export type IFlagKey =
     | 'crDiffView'
     | 'changeRequestApproverEmails'
     | 'paygTrialEvents'
-    | 'paygInstanceStatsEvents'
     | 'timestampsInChangeRequestTimeline'
     | 'lifecycleGraphs'
     | 'addConfiguration'
@@ -289,10 +288,6 @@ const flags: IFlags = {
     ),
     paygTrialEvents: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PAYG_TRIAL_EVENTS,
-        false,
-    ),
-    paygInstanceStatsEvents: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PAYG_INSTANCE_STATS_EVENTS,
         false,
     ),
     timestampsInChangeRequestTimeline: parseEnvVarBoolean(

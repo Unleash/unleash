@@ -357,13 +357,11 @@ export default class FeatureController extends Controller {
     }
 
     async calculateMeta(query: IFeatureToggleQuery): Promise<IMeta> {
-        // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
         const revisionId =
             await this.configurationRevisionService.getMaxRevisionId(
-                environment,
+                query.environment,
             );
 
-        // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
         const queryHash = hashSum(query);
         const etagVariant = this.flagResolver.getVariant('etagVariant');
         if (etagVariant.feature_enabled && etagVariant.enabled) {

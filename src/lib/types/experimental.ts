@@ -57,7 +57,6 @@ export type IFlagKey =
     | 'lifecycleMetrics'
     | 'customMetrics'
     | 'impactMetrics'
-    | 'createFlagDialogCache'
     | 'improvedJsonDiff'
     | 'crDiffView'
     | 'changeRequestApproverEmails'
@@ -265,10 +264,6 @@ const flags: IFlags = {
     ),
     lifecycleMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_METRICS,
-        false,
-    ),
-    createFlagDialogCache: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CREATE_FLAG_DIALOG_CACHE,
         false,
     ),
     changeRequestApproverEmails: parseEnvVarBoolean(

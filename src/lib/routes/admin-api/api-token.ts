@@ -3,7 +3,7 @@ import type { Response } from 'express';
 import Controller from '../controller.js';
 import {
     ADMIN,
-    CREATE_CLIENT_API_TOKEN as CREATE_BACKEND_API_TOKEN,
+    CREATE_CLIENT_API_TOKEN,
     CREATE_FRONTEND_API_TOKEN,
     DELETE_CLIENT_API_TOKEN,
     DELETE_FRONTEND_API_TOKEN,
@@ -58,7 +58,7 @@ export const tokenTypeToCreatePermission: (tokenType: ApiTokenType) => string =
                 return ADMIN;
             case ApiTokenType.CLIENT:
             case ApiTokenType.BACKEND:
-                return CREATE_BACKEND_API_TOKEN;
+                return CREATE_CLIENT_API_TOKEN;
             case ApiTokenType.FRONTEND:
                 return CREATE_FRONTEND_API_TOKEN;
         }
@@ -77,7 +77,7 @@ const permissionToTokenType: (permission: string) => ApiTokenType | undefined =
             return ApiTokenType.FRONTEND;
         } else if (
             [
-                CREATE_BACKEND_API_TOKEN,
+                CREATE_CLIENT_API_TOKEN,
                 READ_CLIENT_API_TOKEN,
                 DELETE_CLIENT_API_TOKEN,
                 UPDATE_CLIENT_API_TOKEN,
@@ -201,7 +201,7 @@ export class ApiTokenController extends Controller {
             handler: this.createApiToken,
             permission: [
                 ADMIN,
-                CREATE_BACKEND_API_TOKEN,
+                CREATE_CLIENT_API_TOKEN,
                 CREATE_FRONTEND_API_TOKEN,
             ],
             middleware: [

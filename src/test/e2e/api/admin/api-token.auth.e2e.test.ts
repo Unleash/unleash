@@ -485,7 +485,7 @@ describe('Fine grained API token permissions', () => {
                 .expect(200)
                 .expect((res) => {
                     expect(res.body.tokens).toHaveLength(1);
-                    expect(res.body.tokens[0].type).toBe(ApiTokenType.CLIENT);
+                    expect(res.body.tokens[0].type).toBe(ApiTokenType.BACKEND);
                 });
             await destroy();
         });

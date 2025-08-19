@@ -133,6 +133,7 @@ export const ProjectFeatureToggles = ({
         [projectId, refetch],
     );
 
+    // TODO: remove tracking after `filterFlagsToArchive` flag
     const trackArchiveAction = (eventType = 'archived flag') => {
         trackEvent('project-cleanup', {
             props: { eventType, showCleanupReminder },

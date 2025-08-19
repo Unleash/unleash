@@ -217,12 +217,12 @@ export class EventStore implements IEventStore {
         environment?: string,
     ): Promise<number> {
         const stopTimer = this.metricTimer('getMaxRevisionId');
-        const query = this.db(TABLE)
+        const row = await this.db(TABLE)
             .max('id')
             .where(this.typeIsInteresting(environment))
-            .andWhere('id', '>=', largerThan);
+            .andWhere('id', '>=', largerThan)
+            .first();
 
-        const row = await query.first();
         stopTimer();
         return row?.max ?? 0;
     }

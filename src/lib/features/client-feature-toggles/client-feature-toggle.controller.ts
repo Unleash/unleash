@@ -359,7 +359,9 @@ export default class FeatureController extends Controller {
     async calculateMeta(query: IFeatureToggleQuery): Promise<IMeta> {
         // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
         const revisionId =
-            await this.configurationRevisionService.getMaxRevisionId();
+            await this.configurationRevisionService.getMaxRevisionId(
+                environment,
+            );
 
         // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
         const queryHash = hashSum(query);

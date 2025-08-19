@@ -191,29 +191,37 @@ export class EventStore implements IEventStore {
         }
     }
 
-    async getMaxRevisionId(largerThan: number = 0): Promise<number> {
-        const stopTimer = this.metricTimer('getMaxRevisionId');
-        const row = await this.db(TABLE)
-            .max('id')
-            .where((builder) =>
-                builder
-                    .andWhere((inner) =>
-                        inner
-                            .whereNotNull('feature_name')
-                            .whereNotIn('type', [
-                                FEATURE_CREATED,
-                                FEATURE_TAGGED,
-                            ])
-                            .whereNot('type', 'LIKE', 'change-%'),
-                    )
-                    .orWhereIn('type', [
-                        SEGMENT_UPDATED,
-                        FEATURE_IMPORT,
-                        FEATURES_IMPORTED,
-                    ]),
+    private typeIsInteresting = (builder: Knex.QueryBuilder) =>
+        builder
+            .andWhere((inner) =>
+                inner
+                    .whereNotNull('feature_name')
+                    .whereNotIn('type', [FEATURE_CREATED, FEATURE_TAGGED])
+                    .whereNot('type', 'LIKE', 'change-%'),
             )
-            .andWhere('id', '>=', largerThan)
-            .first();
+            .orWhereIn('type', [
+                SEGMENT_UPDATED,
+                FEATURE_IMPORT,
+                FEATURES_IMPORTED,
+                SEGMENT_CREATED,
+                SEGMENT_DELETED,
+            ]);
+
+    async getMaxRevisionId(
+        largerThan: number = 0,
+        environment?: string,
+    ): Promise<number> {
+        const stopTimer = this.metricTimer('getMaxRevisionId');
+        const query = this.db(TABLE)
+            .max('id')
+            .where(this.typeIsInteresting)
+            .andWhere('id', '>=', largerThan);
+
+        if (environment) {
+            query.where('environment', environment);
+        }
+
+        const row = await query.first();
         stopTimer();
         return row?.max ?? 0;
     }
@@ -225,27 +233,11 @@ export class EventStore implements IEventStore {
             .from(TABLE)
             .where('id', '>', start)
             .andWhere('id', '<=', end)
-            .andWhere((builder) =>
-                builder
-                    .andWhere((inner) =>
-                        inner
-                            .whereNotNull('feature_name')
-                            .whereNotIn('type', [
-                                FEATURE_CREATED,
-                                FEATURE_TAGGED,
-                            ]),
-                    )
-                    .orWhereIn('type', [
-                        SEGMENT_UPDATED,
-                        FEATURE_IMPORT,
-                        FEATURES_IMPORTED,
-                        SEGMENT_CREATED,
-                        SEGMENT_DELETED,
-                    ]),
-            )
+            .andWhere(this.typeIsInteresting)
             .orderBy('id', 'asc');
 
         const rows = await query;
+        stopTimer();
         return rows.map(this.rowToEvent);
     }
 

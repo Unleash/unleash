@@ -18,6 +18,8 @@ export default class ConfigurationRevisionService extends EventEmitter {
 
     private revisionId: number;
 
+    private maxRevisionId: Record<string, number> = {};
+
     private flagResolver: IFlagResolver;
 
     private constructor(
@@ -51,12 +53,34 @@ export default class ConfigurationRevisionService extends EventEmitter {
         return ConfigurationRevisionService.instance;
     }
 
-    async getMaxRevisionId(): Promise<number> {
+    async getMaxRevisionId(environment?: string): Promise<number> {
+        if (environment && !this.maxRevisionId[environment]) {
+            await this.updateMaxEnvironmentRevisionId(environment);
+        }
+        if (
+            environment &&
+            this.maxRevisionId[environment] &&
+            this.maxRevisionId[environment] > 0
+        ) {
+            return this.maxRevisionId[environment];
+        }
         if (this.revisionId > 0) {
             return this.revisionId;
         } else {
             return this.updateMaxRevisionId();
         }
+    }
+
+    async updateMaxEnvironmentRevisionId(environment: string): Promise<number> {
+        const envRevisionId = await this.eventStore.getMaxRevisionId(
+            this.revisionId,
+            environment,
+        );
+        if (this.maxRevisionId[environment] < envRevisionId) {
+            this.maxRevisionId[environment] = envRevisionId;
+        }
+
+        return this.maxRevisionId[environment];
     }
 
     async updateMaxRevisionId(emit: boolean = true): Promise<number> {

@@ -38,7 +38,10 @@ export interface IEventStore
         queryParams: IQueryParam[],
         options?: { withIp?: boolean },
     ): Promise<IEvent[]>;
-    getMaxRevisionId(currentMax?: number): Promise<number>;
+    getMaxRevisionId(
+        currentMax?: number,
+        environment?: string,
+    ): Promise<number>;
     getRevisionRange(start: number, end: number): Promise<IEvent[]>;
     query(operations: IQueryOperations[]): Promise<IEvent[]>;
     queryCount(operations: IQueryOperations[]): Promise<number>;

@@ -75,6 +75,7 @@ export type CustomEvents =
     | 'productivity-report'
     | 'release-management'
     | 'feature-links'
+    | 'project-cleanup'
     | 'project-list-view-toggle';
 
 export const usePlausibleTracker = () => {

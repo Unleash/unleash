@@ -212,7 +212,7 @@ test('sdk register also onboards a project', async () => {
 
     const defaultProjectToken =
         await app.services.apiTokenService.createApiTokenWithProjects({
-            type: ApiTokenType.BACKEND,
+            type: ApiTokenType.CLIENT,
             projects: ['default'],
             environment: DEFAULT_ENV,
             tokenName: 'tester',

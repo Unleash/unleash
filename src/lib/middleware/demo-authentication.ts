@@ -54,7 +54,7 @@ function demoAuthentication(
                 tokenName: 'unauthed-default-client',
                 permissions: [],
                 environment: 'default',
-                type: ApiTokenType.BACKEND,
+                type: ApiTokenType.CLIENT,
                 project: '*',
                 secret: 'a',
             });

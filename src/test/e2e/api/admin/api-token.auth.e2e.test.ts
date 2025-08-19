@@ -381,7 +381,7 @@ describe('Fine grained API token permissions', () => {
 
                 tokenName: 'client',
                 secret: '*:environment.client_secret',
-                type: ApiTokenType.BACKEND,
+                type: ApiTokenType.CLIENT,
             });
 
             await stores.apiTokenStore.insert({
@@ -485,7 +485,7 @@ describe('Fine grained API token permissions', () => {
                 .expect(200)
                 .expect((res) => {
                     expect(res.body.tokens).toHaveLength(1);
-                    expect(res.body.tokens[0].type).toBe(ApiTokenType.BACKEND);
+                    expect(res.body.tokens[0].type).toBe(ApiTokenType.CLIENT);
                 });
             await destroy();
         });
@@ -664,7 +664,7 @@ describe('Fine grained API token permissions', () => {
                     projects: [],
                     tokenName: 'cilent',
                     secret: '*:environment.update_client_token',
-                    type: ApiTokenType.BACKEND,
+                    type: ApiTokenType.CLIENT,
                 });
                 await request
                     .put(`/api/admin/api-tokens/${token.secret}`)
@@ -851,7 +851,7 @@ describe('Fine grained API token permissions', () => {
                     projects: [],
                     tokenName: 'cilent',
                     secret: '*:environment.delete_client_token',
-                    type: ApiTokenType.BACKEND,
+                    type: ApiTokenType.CLIENT,
                 });
                 await request
                     .delete(`/api/admin/api-tokens/${token.secret}`)

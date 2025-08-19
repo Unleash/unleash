@@ -48,7 +48,7 @@ beforeAll(async () => {
     );
     defaultToken =
         await app.services.apiTokenService.createApiTokenWithProjects({
-            type: ApiTokenType.BACKEND,
+            type: ApiTokenType.CLIENT,
             projects: ['default'],
             environment: DEFAULT_ENV,
             tokenName: 'tester',

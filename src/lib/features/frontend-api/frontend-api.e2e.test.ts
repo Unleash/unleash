@@ -127,7 +127,7 @@ test('should require a frontend token or an admin token', async () => {
 });
 
 test('should not allow requests with a client token', async () => {
-    const clientToken = await createApiToken(ApiTokenType.BACKEND);
+    const clientToken = await createApiToken(ApiTokenType.CLIENT);
     await app.request
         .get('/api/frontend')
         .set('Authorization', clientToken.secret)

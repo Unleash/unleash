@@ -5,7 +5,7 @@ import type { ApiTokenSchema } from './api-token-schema.js';
 const defaultData: ApiTokenSchema = {
     secret: '',
     tokenName: '',
-    type: ApiTokenType.BACKEND,
+    type: ApiTokenType.CLIENT,
     environment: '',
     projects: [],
     expiresAt: '2022-01-01T00:00:00.000Z',
@@ -14,13 +14,16 @@ const defaultData: ApiTokenSchema = {
     project: '',
 };
 
-test('apiTokenSchema', () => {
-    const data: ApiTokenSchema = { ...defaultData };
+test.each([ApiTokenType.CLIENT, ApiTokenType.BACKEND, ApiTokenType.FRONTEND])(
+    'apiTokenSchema %s',
+    (tokenType) => {
+        const data: ApiTokenSchema = { ...defaultData, type: tokenType };
 
-    expect(
-        validateSchema('#/components/schemas/apiTokenSchema', data),
-    ).toBeUndefined();
-});
+        expect(
+            validateSchema('#/components/schemas/apiTokenSchema', data),
+        ).toBeUndefined();
+    },
+);
 
 test('apiTokenSchema empty', () => {
     expect(

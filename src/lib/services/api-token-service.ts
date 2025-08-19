@@ -5,9 +5,9 @@ import type { IUnleashStores } from '../types/stores.js';
 import type { IUnleashConfig } from '../types/option.js';
 import ApiUser, { type IApiUser } from '../types/api-user.js';
 import {
+    ALL,
     resolveValidProjects,
     validateApiToken,
-    validateApiTokenEnvironment,
 } from '../types/models/api-token.js';
 import type { IApiTokenStore } from '../types/stores/api-token-store.js';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error.js';
@@ -298,14 +298,25 @@ export class ApiTokenService {
         auditUser: IAuditUser,
     ): Promise<IApiToken> {
         validateApiToken(newToken);
-        const environments = await this.environmentStore.getAll();
-        validateApiTokenEnvironment(newToken, environments);
-
+        await this.validateApiTokenEnvironment(newToken);
         await this.validateApiTokenLimit();
 
         const secret = this.generateSecretKey(newToken);
         const createNewToken = { ...newToken, secret };
         return this.insertNewApiToken(createNewToken, auditUser);
+    }
+
+    private async validateApiTokenEnvironment({
+        environment,
+    }: Pick<IApiTokenCreate, 'environment'>): Promise<void> {
+        if (environment === ALL) {
+            return;
+        }
+
+        const exists = await this.environmentStore.exists(environment);
+        if (!exists) {
+            throw new BadDataError(`Environment=${environment} does not exist`);
+        }
     }
 
     private async validateApiTokenLimit() {

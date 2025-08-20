@@ -241,6 +241,7 @@ main .container {
     border-radius: 8px;
     padding: 3rem;
     z-index: 1;
+    width: 1250px;
 }
 
 @media (min-width: 997px) {

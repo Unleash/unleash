@@ -81,6 +81,32 @@ export default async function createConfigAsync(): Promise<Config> {
             // expose env vars etc here
             environment: process.env.NODE_ENV,
         },
+        headTags: [
+            {
+                tagName: 'link',
+                attributes: {
+                    rel: 'preconnect',
+                    href: 'https://fonts.googleapis.com',
+                },
+            },
+            {
+                tagName: 'link',
+                attributes: {
+                    rel: 'preconnect',
+                    href: 'https://fonts.gstatic.com',
+                    crossorigin: 'anonymous',
+                },
+            },
+            {
+                tagName: 'link',
+                attributes: {
+                    rel: 'preload',
+                    href: '/img/unleash_logo_dark.svg',
+                    as: 'image',
+                    type: 'image/svg+xml',
+                },
+            },
+        ],
         themeConfig: {
             defaultMode: 'light',
             disableSwitch: true,
@@ -99,32 +125,6 @@ export default async function createConfigAsync(): Promise<Config> {
                     name: 'preconnect',
                     href: 'https://fonts.gstatic.com',
                     crossOrigin: 'anonymous',
-                },
-            ],
-            headTags: [
-                {
-                    tagName: 'link',
-                    attributes: {
-                        rel: 'preconnect',
-                        href: 'https://fonts.googleapis.com',
-                    },
-                },
-                {
-                    tagName: 'link',
-                    attributes: {
-                        rel: 'preconnect',
-                        href: 'https://fonts.gstatic.com',
-                        crossorigin: 'anonymous',
-                    },
-                },
-                {
-                    tagName: 'link',
-                    attributes: {
-                        rel: 'preload',
-                        href: '/img/unleash_logo_dark.svg',
-                        as: 'image',
-                        type: 'image/svg+xml',
-                    },
                 },
             ],
             navbar: {

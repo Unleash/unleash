@@ -104,7 +104,18 @@ export default function Root({ children }: { children: React.ReactNode }) {
             document.head.appendChild(script);
         };
 
+        let hasInteracted = false;
+        let fallbackTimer: NodeJS.Timeout;
+
         const handleUserInteraction = () => {
+            if (hasInteracted) return;
+            hasInteracted = true;
+
+            // Clear the fallback timer
+            if (fallbackTimer) {
+                clearTimeout(fallbackTimer);
+            }
+
             // Load all third-party scripts on user interaction
             loadGoogleAnalytics();
             loadGoogleTagManager();
@@ -132,11 +143,25 @@ export default function Root({ children }: { children: React.ReactNode }) {
             passive: true,
         });
 
+        // Fallback: Load Google Analytics after 3 seconds if no interaction
+        fallbackTimer = setTimeout(() => {
+            if (!hasInteracted) {
+                hasInteracted = true;
+                loadGoogleAnalytics();
+                // Optionally load other scripts as well
+                // loadGoogleTagManager();
+                // loadKapaWidget();
+            }
+        }, 3000);
+
         return () => {
             window.removeEventListener('scroll', handleUserInteraction);
             window.removeEventListener('click', handleUserInteraction);
             window.removeEventListener('touchstart', handleUserInteraction);
             window.removeEventListener('mousemove', handleUserInteraction);
+            if (fallbackTimer) {
+                clearTimeout(fallbackTimer);
+            }
         };
     }, []);
 

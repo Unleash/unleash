@@ -931,6 +931,5 @@ class="header-github-link"
         scripts: [
             // Kapa AI widget is now lazy-loaded via src/theme/Root.tsx
         ],
-        clientModules: ['./global.js'],
     };
 }

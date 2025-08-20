@@ -758,6 +758,13 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
                 options?.resourceLimits?.featureFlags ?? 5000,
             ),
         ),
+        releaseTemplates: Math.max(
+            0,
+            parseEnvVarNumber(
+                process.env.UNLEASH_RELEASE_TEMPLATES_LIMIT,
+                options?.resourceLimits?.releaseTemplates ?? 5,
+            ),
+        ),
     };
 
     const openAIAPIKey = process.env.OPENAI_API_KEY;

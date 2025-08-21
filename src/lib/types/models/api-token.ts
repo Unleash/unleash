@@ -1,5 +1,5 @@
 import BadDataError from '../../error/bad-data-error.js';
-import type { IApiTokenCreate, IEnvironment } from '../model.js';
+import type { IApiTokenCreate } from '../model.js';
 import { ApiTokenType } from '../model.js';
 
 export const ALL = '*';
@@ -33,7 +33,10 @@ export const validateApiToken = ({
         );
     }
 
-    if (type === ApiTokenType.CLIENT && environment === ALL) {
+    if (
+        (type === ApiTokenType.BACKEND || type === ApiTokenType.CLIENT) &&
+        environment === ALL
+    ) {
         throw new BadDataError(
             'Client token cannot be scoped to all environments',
         );
@@ -43,22 +46,5 @@ export const validateApiToken = ({
         throw new BadDataError(
             'Frontend token cannot be scoped to all environments',
         );
-    }
-};
-
-export const validateApiTokenEnvironment = (
-    { environment }: Pick<IApiTokenCreate, 'environment'>,
-    environments: IEnvironment[],
-): void => {
-    if (environment === ALL) {
-        return;
-    }
-
-    const selectedEnvironment = environments.find(
-        (env) => env.name === environment,
-    );
-
-    if (!selectedEnvironment) {
-        throw new BadDataError(`Environment=${environment} does not exist`);
     }
 };

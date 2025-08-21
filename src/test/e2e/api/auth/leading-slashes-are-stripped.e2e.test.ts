@@ -67,7 +67,7 @@ test('Access with API token is granted', async () => {
             environment: DEFAULT_ENV,
             projects: ['default'],
             tokenName: 'test',
-            type: ApiTokenType.CLIENT,
+            type: ApiTokenType.BACKEND,
         },
     );
     await app.request

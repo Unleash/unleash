@@ -32,7 +32,7 @@ test('should enrich metrics with environment from api-token', async () => {
     });
 
     const token = await apiTokenService.createApiTokenWithProjects({
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         tokenName: 'test',
         environment: 'some',
         projects: ['*'],

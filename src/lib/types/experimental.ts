@@ -54,19 +54,16 @@ export type IFlagKey =
     | 'consumptionModelUI'
     | 'edgeObservability'
     | 'reportUnknownFlags'
-    | 'lifecycleMetrics'
     | 'customMetrics'
     | 'impactMetrics'
     | 'createFlagDialogCache'
-    | 'improvedJsonDiff'
-    | 'crDiffView'
     | 'changeRequestApproverEmails'
     | 'paygInstanceStatsEvents'
-    | 'timestampsInChangeRequestTimeline'
     | 'lifecycleGraphs'
     | 'addConfiguration'
     | 'filterFlagsToArchive'
-    | 'projectListViewToggle';
+    | 'projectListViewToggle'
+    | 'fetchMode';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -262,10 +259,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_REPORT_UNKNOWN_FLAGS,
         false,
     ),
-    lifecycleMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_METRICS,
-        false,
-    ),
     createFlagDialogCache: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CREATE_FLAG_DIALOG_CACHE,
         false,
@@ -274,24 +267,12 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_APPROVER_EMAILS,
         false,
     ),
-    improvedJsonDiff: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_IMPROVED_JSON_DIFF,
-        false,
-    ),
-    crDiffView: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CR_DIFF_VIEW,
-        false,
-    ),
     impactMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS,
         false,
     ),
     paygInstanceStatsEvents: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PAYG_INSTANCE_STATS_EVENTS,
-        false,
-    ),
-    timestampsInChangeRequestTimeline: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_TIMESTAMPS_IN_CHANGE_REQUEST_TIMELINE,
         false,
     ),
     lifecycleGraphs: parseEnvVarBoolean(
@@ -310,6 +291,11 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_LIST_VIEW_TOGGLE,
         false,
     ),
+    fetchMode: {
+        name: 'disabled',
+        feature_enabled: false,
+        enabled: false,
+    },
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

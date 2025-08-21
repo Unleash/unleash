@@ -1,7 +1,5 @@
 import Icon from '@mui/material/Icon';
 import { Box, Typography, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useId } from 'hooks/useId';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
@@ -79,27 +77,19 @@ const LabelContainer = styled('div')({
 
 interface IFlagStatsProps {
     count: number;
-    flagsPerUser?: string; // todo: remove this prop with the lifecycleMetrics flag
     isLoading?: boolean;
 }
 
-export const FlagStats: React.FC<IFlagStatsProps> = ({
-    count,
-    flagsPerUser,
-    isLoading,
-}) => {
-    const hideFlagsPerUser = useUiFlag('lifecycleMetrics');
-    const labelId = hideFlagsPerUser ? useId() : '';
-    const descriptionId = hideFlagsPerUser ? useId() : '';
+export const FlagStats: React.FC<IFlagStatsProps> = ({ count, isLoading }) => {
+    const labelId = useId();
+    const descriptionId = useId();
     return (
         <>
             <StyledRingContainer>
                 <StyledRing>
                     <StyledRingContent
-                        {...(hideFlagsPerUser && {
-                            'aria-labelledby': labelId,
-                            'aria-describedby': descriptionId,
-                        })}
+                        aria-labelledby={labelId}
+                        aria-describedby={descriptionId}
                     >
                         {isLoading ? (
                             <ScreenReaderOnly>
@@ -112,50 +102,20 @@ export const FlagStats: React.FC<IFlagStatsProps> = ({
                 </StyledRing>
             </StyledRingContainer>
 
-            {hideFlagsPerUser ? (
-                <LabelContainer>
-                    <Typography id={labelId} variant='body2'>
-                        Total number of flags
-                    </Typography>
-                    <HelpIcon
-                        htmlTooltip
-                        tooltipId={descriptionId}
-                        tooltip={
-                            'This includes the four lifecycle stages define, develop, production, and cleanup'
-                        }
-                    >
-                        <InfoOutlined />
-                    </HelpIcon>
-                </LabelContainer>
-            ) : (
-                <ConditionallyRender
-                    condition={
-                        flagsPerUser !== undefined && flagsPerUser !== ''
+            <LabelContainer>
+                <Typography id={labelId} variant='body2'>
+                    Total number of flags
+                </Typography>
+                <HelpIcon
+                    htmlTooltip
+                    tooltipId={descriptionId}
+                    tooltip={
+                        'This includes the four lifecycle stages define, develop, production, and cleanup'
                     }
-                    show={
-                        <StyledInsightsContainer>
-                            <StyledTextContainer>
-                                <StyledHeaderContainer>
-                                    <StyledIcon>award_star</StyledIcon>
-                                    <Typography
-                                        fontWeight='bold'
-                                        variant='body2'
-                                        color='primary'
-                                    >
-                                        Insights
-                                    </Typography>
-                                </StyledHeaderContainer>
-                                <Typography variant='body2'>
-                                    Flags per user
-                                </Typography>
-                            </StyledTextContainer>
-                            <StyledFlagCountPerUser>
-                                {flagsPerUser}
-                            </StyledFlagCountPerUser>
-                        </StyledInsightsContainer>
-                    }
-                />
-            )}
+                >
+                    <InfoOutlined />
+                </HelpIcon>
+            </LabelContainer>
         </>
     );
 };

@@ -82,7 +82,7 @@ export const Limit: FC<{
 
     const footerContent = isOss() ? (
         <>
-            Need help with resource limits? Try the the{' '}
+            Need help with resource limits? Try the{' '}
             <a href='https://slack.unleash.run'>Unleash community Slack</a>.
         </>
     ) : (

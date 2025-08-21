@@ -6,6 +6,7 @@ import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import getLogger from '../../../fixtures/no-logger.js';
 import type User from '../../../../lib/types/user.js';
 import { TEST_AUDIT_USER } from '../../../../lib/types/index.js';
+import { CHANGE_REQUEST_CREATED } from '../../../../lib/events/index.js';
 // import { DEFAULT_ENV } from '../../../../lib/util/constants';
 
 const testUser = { name: 'test', id: -9999 } as User;
@@ -138,6 +139,14 @@ describe.each([
             ],
             TEST_AUDIT_USER,
         );
+
+        await app.services.eventService.storeEvent({
+            type: CHANGE_REQUEST_CREATED,
+            createdBy: testUser.email,
+            createdByUserId: testUser.id,
+            ip: '127.0.0.1',
+            featureName: `ch-on-feature-${apendix}`,
+        });
 
         shutdownHooks.push(async () => {
             await app.destroy();

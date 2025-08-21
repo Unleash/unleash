@@ -57,7 +57,6 @@ export type IFlagKey =
     | 'customMetrics'
     | 'impactMetrics'
     | 'changeRequestApproverEmails'
-    | 'paygTrialEvents'
     | 'paygInstanceStatsEvents'
     | 'lifecycleGraphs'
     | 'addConfiguration'
@@ -265,10 +264,6 @@ const flags: IFlags = {
     ),
     impactMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS,
-        false,
-    ),
-    paygTrialEvents: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PAYG_TRIAL_EVENTS,
         false,
     ),
     paygInstanceStatsEvents: parseEnvVarBoolean(

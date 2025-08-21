@@ -54,7 +54,6 @@ export type IFlagKey =
     | 'consumptionModelUI'
     | 'edgeObservability'
     | 'reportUnknownFlags'
-    | 'lifecycleMetrics'
     | 'customMetrics'
     | 'impactMetrics'
     | 'createFlagDialogCache'
@@ -259,10 +258,6 @@ const flags: IFlags = {
     ),
     reportUnknownFlags: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REPORT_UNKNOWN_FLAGS,
-        false,
-    ),
-    lifecycleMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_METRICS,
         false,
     ),
     createFlagDialogCache: parseEnvVarBoolean(

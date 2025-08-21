@@ -53,7 +53,6 @@ process.nextTick(async () => {
                         strictSchemaValidation: true,
                         reportUnknownFlags: true,
                         customMetrics: true,
-                        lifecycleMetrics: true,
                         impactMetrics: true,
                         paygTrialEvents: true,
                         lifecycleGraphs: true,

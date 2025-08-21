@@ -63,7 +63,6 @@ export type IFlagKey =
     | 'changeRequestApproverEmails'
     | 'paygTrialEvents'
     | 'paygInstanceStatsEvents'
-    | 'timestampsInChangeRequestTimeline'
     | 'lifecycleGraphs'
     | 'addConfiguration'
     | 'filterFlagsToArchive'
@@ -293,10 +292,6 @@ const flags: IFlags = {
     ),
     paygInstanceStatsEvents: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PAYG_INSTANCE_STATS_EVENTS,
-        false,
-    ),
-    timestampsInChangeRequestTimeline: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_TIMESTAMPS_IN_CHANGE_REQUEST_TIMELINE,
         false,
     ),
     lifecycleGraphs: parseEnvVarBoolean(

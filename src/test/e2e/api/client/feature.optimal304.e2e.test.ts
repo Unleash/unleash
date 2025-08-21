@@ -90,7 +90,12 @@ async function initialize({ app, db }: { app: IUnleashTest; db: ITestDb }) {
         ip: '127.0.0.1',
         featureName: `X`,
     });
+}
 
+async function validateInitialState({
+    app,
+    db,
+}: { app: IUnleashTest; db: ITestDb }) {
     /**
      * This helps reason about the etag, which is formed by <query-hash>:<event-id>
      * To see the output you need to run this test with --silent=false
@@ -187,6 +192,7 @@ describe.each([
             enabled,
         }));
         await initialize({ app, db });
+        await validateInitialState({ app, db });
     });
 
     afterAll(async () => {

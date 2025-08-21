@@ -10,19 +10,13 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(2),
 }));
 
-const NewInsights: FC = () => {
-    return (
-        <StyledWrapper>
-            <InsightsHeader />
-            <StyledContainer>
-                <LifecycleInsights />
-                <PerformanceInsights />
-                <UserInsights />
-            </StyledContainer>
-        </StyledWrapper>
-    );
-};
-
-export const Insights: FC = () => {
-    return <NewInsights />;
-};
+export const Insights: FC = () => (
+    <StyledWrapper>
+        <InsightsHeader />
+        <StyledContainer>
+            <LifecycleInsights />
+            <PerformanceInsights />
+            <UserInsights />
+        </StyledContainer>
+    </StyledWrapper>
+);

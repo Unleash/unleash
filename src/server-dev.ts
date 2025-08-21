@@ -54,7 +54,6 @@ process.nextTick(async () => {
                         reportUnknownFlags: true,
                         customMetrics: true,
                         impactMetrics: true,
-                        paygTrialEvents: true,
                         lifecycleGraphs: true,
                         addConfiguration: true,
                         projectListViewToggle: true,

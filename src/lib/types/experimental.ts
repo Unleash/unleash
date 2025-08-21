@@ -57,16 +57,14 @@ export type IFlagKey =
     | 'customMetrics'
     | 'impactMetrics'
     | 'createFlagDialogCache'
-    | 'improvedJsonDiff'
-    | 'crDiffView'
     | 'changeRequestApproverEmails'
     | 'paygTrialEvents'
     | 'paygInstanceStatsEvents'
-    | 'timestampsInChangeRequestTimeline'
     | 'lifecycleGraphs'
     | 'addConfiguration'
     | 'filterFlagsToArchive'
-    | 'projectListViewToggle';
+    | 'projectListViewToggle'
+    | 'fetchMode';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -270,14 +268,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_APPROVER_EMAILS,
         false,
     ),
-    improvedJsonDiff: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_IMPROVED_JSON_DIFF,
-        false,
-    ),
-    crDiffView: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CR_DIFF_VIEW,
-        false,
-    ),
     impactMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS,
         false,
@@ -288,10 +278,6 @@ const flags: IFlags = {
     ),
     paygInstanceStatsEvents: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PAYG_INSTANCE_STATS_EVENTS,
-        false,
-    ),
-    timestampsInChangeRequestTimeline: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_TIMESTAMPS_IN_CHANGE_REQUEST_TIMELINE,
         false,
     ),
     lifecycleGraphs: parseEnvVarBoolean(
@@ -310,6 +296,11 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_LIST_VIEW_TOGGLE,
         false,
     ),
+    fetchMode: {
+        name: 'disabled',
+        feature_enabled: false,
+        enabled: false,
+    },
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

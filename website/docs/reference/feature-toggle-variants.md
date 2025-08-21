@@ -140,6 +140,6 @@ To make use of flag variants, you need to use a compatible client. Client SDK wi
 - [unleash-dotnet-sdk](https://github.com/Unleash/unleash-dotnet-sdk) (from v1.3.6)
 - [unleash-go-sdk](https://github.com/Unleash/unleash-go-sdk) (from v3 branch)
 - [unleash-php-sdk](https://github.com/Unleash/unleash-php-sdk) (from v1.0.0)
-- [unleash-cpp-sdk](https://github.com/aruizs/unleash-cpp-sdk) (from v1.3.0)
+- [unleash-client-cpp](https://github.com/aruizs/unleash-client-cpp) (from v1.3.0)
 
 If you would like to give feedback on this feature, experience issues or have questions, please feel free to open an issue on [GitHub](https://github.com/Unleash/unleash/).

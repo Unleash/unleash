@@ -4,6 +4,7 @@ npm-debug
 .DS_Store
 /dist
 .vscode
+.claude
 
 # Logs
 logs

@@ -82,6 +82,11 @@ export const EnvironmentChangeRequest: FC<{
     const sendToReview = async (project: string) => {
         setDisabled(true);
         try {
+            await changeState(project, environmentChangeRequest.id, 'Draft', {
+                state: 'In review',
+                comment: commentText,
+            });
+
             if (reviewers && reviewers.length > 0) {
                 await updateRequestedApprovers(
                     project,
@@ -89,11 +94,6 @@ export const EnvironmentChangeRequest: FC<{
                     reviewers.map((reviewer) => reviewer.id),
                 );
             }
-
-            await changeState(project, environmentChangeRequest.id, 'Draft', {
-                state: 'In review',
-                comment: commentText,
-            });
         } catch (e) {
             setDisabled(false);
         }

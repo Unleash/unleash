@@ -2,6 +2,125 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.1.0] - 2025-08-13
+
+### Bug Fixes
+
+- Segment row id for modals ([#10437](https://github.com/Unleash/unleash/issues/10437))
+
+- Stickiness should be preserved on strategy updates ([#10439](https://github.com/Unleash/unleash/issues/10439))
+
+- Should be allowed to change strategy ([#10441](https://github.com/Unleash/unleash/issues/10441))
+
+- Environment name cell ([#10474](https://github.com/Unleash/unleash/issues/10474))
+
+- Update dependency prom-client to v15 ([#10257](https://github.com/Unleash/unleash/issues/10257))
+
+- Backfilling lifecycle trends based on new logic ([#10476](https://github.com/Unleash/unleash/issues/10476))
+
+- Now lifecycle trends will be added for flags that have official flag type ([#10482](https://github.com/Unleash/unleash/issues/10482))
+
+- Health to technical debt on projects list ([#10485](https://github.com/Unleash/unleash/issues/10485))
+
+- Move update approvers after cr change state ([#10490](https://github.com/Unleash/unleash/issues/10490))
+
+
+### Documentation
+
+- Organize feature flags using projects and environments guide ([#10402](https://github.com/Unleash/unleash/issues/10402))
+
+- Change absolute url to relative ([#10432](https://github.com/Unleash/unleash/issues/10432))
+
+- Update references and names to new SDK nomenclature ([#10431](https://github.com/Unleash/unleash/issues/10431))
+
+- Update diagrams affected by SDK and token renaming ([#10463](https://github.com/Unleash/unleash/issues/10463))
+
+- Update what-is-a-feature-flag.mdx ([#10412](https://github.com/Unleash/unleash/issues/10412))
+
+
+### Feat
+
+- Filter flags by "last seen at" ([#10449](https://github.com/Unleash/unleash/issues/10449))
+
+
+### Features
+
+- Series query warning ([#10413](https://github.com/Unleash/unleash/issues/10413))
+
+- Timeline for cancelled CRs ([#10421](https://github.com/Unleash/unleash/issues/10421))
+
+- Rebrand sdk tokens and sdk types ([#10430](https://github.com/Unleash/unleash/issues/10430))
+
+- Create flags created vs archived chart ([#10429](https://github.com/Unleash/unleash/issues/10429))
+
+- Display example date for date formatting reasons ([#10444](https://github.com/Unleash/unleash/issues/10444))
+
+- Add lifecycle stage filter to project feature toggles ([#10448](https://github.com/Unleash/unleash/issues/10448))
+
+- Project-level cleanup reminders ([#10464](https://github.com/Unleash/unleash/issues/10464))
+
+- Add "cleanup" action to other flag lifecycle stages ([#10471](https://github.com/Unleash/unleash/issues/10471))
+
+
+### Fix
+
+- Horizontal hyperscroll on project flag list ([#10436](https://github.com/Unleash/unleash/issues/10436))
+
+
+### Miscellaneous Tasks
+
+- Improve project card design ([#10418](https://github.com/Unleash/unleash/issues/10418))
+
+- Add feature configuration based on addConfiguration flag ([#10420](https://github.com/Unleash/unleash/issues/10420))
+
+- Better logging of failed tokens ([#10425](https://github.com/Unleash/unleash/issues/10425))
+
+- EventGrouping flag cleanup ([#10428](https://github.com/Unleash/unleash/issues/10428))
+
+- Split standard and advanced strategy types ([#10433](https://github.com/Unleash/unleash/issues/10433))
+
+- Adapt configuration modal to standard and advanced strategies ([#10434](https://github.com/Unleash/unleash/issues/10434))
+
+- Link to events for that flag name ([#10442](https://github.com/Unleash/unleash/issues/10442))
+
+- Clear unknown flags every 24h instead of every 7d ([#10446](https://github.com/Unleash/unleash/issues/10446))
+
+- Overhaul project list pages ([#10447](https://github.com/Unleash/unleash/issues/10447))
+
+- Re-generate openapi ([#10450](https://github.com/Unleash/unleash/issues/10450))
+
+- Fix interactive demo steps around constraint values ([#10451](https://github.com/Unleash/unleash/issues/10451))
+
+- Add project list view toggle with respective flag ([#10452](https://github.com/Unleash/unleash/issues/10452))
+
+- AI flag cleanup should focus on relevant flag ([#10462](https://github.com/Unleash/unleash/issues/10462))
+
+- Project list table view ([#10466](https://github.com/Unleash/unleash/issues/10466))
+
+- If flag is disabled automatically revert to showing cards ([#10467](https://github.com/Unleash/unleash/issues/10467))
+
+- Add project-list-view-toggle Plausible event ([#10468](https://github.com/Unleash/unleash/issues/10468))
+
+- Update references to repositories ([#10465](https://github.com/Unleash/unleash/issues/10465))
+
+- Set min version for new SDK names ([#10477](https://github.com/Unleash/unleash/issues/10477))
+
+- Timeagocell default fallback ([#10475](https://github.com/Unleash/unleash/issues/10475))
+
+- Add next.js to findOutdatedSdks ([#10479](https://github.com/Unleash/unleash/issues/10479))
+
+- Make project list table take less horizontal space ([#10480](https://github.com/Unleash/unleash/issues/10480))
+
+- Update ux styling for lifecycle charts ([#10481](https://github.com/Unleash/unleash/issues/10481))
+
+- Remove flag githubAuth ([#10457](https://github.com/Unleash/unleash/issues/10457))
+
+
+### Testing
+
+- Ensure that timestamps in future states aren't shown ([#10426](https://github.com/Unleash/unleash/issues/10426))
+
+
 ## [7.0.6] - 2025-07-25
 
 ### Documentation

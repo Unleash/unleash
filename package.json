@@ -2,7 +2,7 @@
   "name": "unleash-server",
   "type": "module",
   "description": "Unleash is an enterprise ready feature flag service. It provides different strategies for handling feature flags.",
-  "version": "7.0.6",
+  "version": "7.1.0",
   "keywords": [
     "unleash",
     "feature flag",
@@ -129,7 +129,7 @@
     "ts-toolbelt": "^9.6.0",
     "type-is": "^2.0.0",
     "ulidx": "^2.4.1",
-    "unleash-client": "^6.7.0-beta.3",
+    "unleash-client": "^6.7.0-beta.5",
     "uuid": "^11.0.0"
   },
   "devDependencies": {

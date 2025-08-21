@@ -5,7 +5,7 @@ import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import { useSearchHighlightContext } from '../../SearchHighlightContext/SearchHighlightContext.tsx';
 import { Highlighter } from '../../../Highlighter/Highlighter.tsx';
-import { StyledDescription, StyledTitle } from '../LinkCell/LinkCell.styles';
+import { StyledDescription } from '../LinkCell/LinkCell.styles';
 import { Link } from 'react-router-dom';
 import { Badge } from '../../../Badge/Badge.tsx';
 import { HtmlTooltip } from '../../../HtmlTooltip/HtmlTooltip.tsx';
@@ -15,6 +15,7 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { getLocalizedDateString } from '../../../util.ts';
 import { Tag } from 'component/common/Tag/Tag';
 import { formatTag } from 'utils/format-tag';
+import { Truncator } from 'component/common/Truncator/Truncator';
 
 interface IFeatureNameCellProps {
     row: {
@@ -135,15 +136,20 @@ const FeatureName: FC<{
     return (
         <Box sx={(theme) => ({ fontWeight: theme.typography.fontWeightBold })}>
             <StyledFeatureLink to={`/projects/${project}/features/${feature}`}>
-                <StyledTitle
-                    style={{
-                        WebkitLineClamp: 1,
-                        lineClamp: 1,
+                <Truncator
+                    lines={1}
+                    title={feature}
+                    arrow
+                    sx={{
                         overflowWrap: 'anywhere',
                     }}
                 >
-                    <Highlighter search={searchQuery}>{feature}</Highlighter>
-                </StyledTitle>
+                    <span>
+                        <Highlighter search={searchQuery}>
+                            {feature}
+                        </Highlighter>
+                    </span>
+                </Truncator>
             </StyledFeatureLink>
         </Box>
     );
@@ -154,14 +160,18 @@ const ArchivedFeatureName: FC<{
     searchQuery: string;
 }> = ({ feature, searchQuery }) => {
     return (
-        <Box
+        <Truncator
+            lines={1}
+            title={feature}
+            arrow
             sx={(theme) => ({
                 fontWeight: theme.typography.fontWeightBold,
                 color: theme.palette.neutral.main,
+                overflowWrap: 'anywhere',
             })}
         >
             <Highlighter search={searchQuery}>{feature}</Highlighter>
-        </Box>
+        </Truncator>
     );
 };
 

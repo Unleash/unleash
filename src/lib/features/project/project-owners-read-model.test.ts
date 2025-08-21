@@ -14,6 +14,7 @@ const mockProjectData = (name: string): ProjectForUi => ({
     memberCount: 0,
     mode: 'open' as const,
     health: 100,
+    technicalDebt: 0,
     createdAt: new Date(),
     favorite: false,
     lastReportedFlagUsage: null,

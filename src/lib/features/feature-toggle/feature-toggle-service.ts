@@ -2538,7 +2538,10 @@ export class FeatureToggleService {
                         environment,
                     ));
                 if (!canAddStrategies) {
-                    throw new PermissionError(CREATE_FEATURE_STRATEGY);
+                    throw new PermissionError(
+                        CREATE_FEATURE_STRATEGY,
+                        environment,
+                    );
                 }
             }
         }

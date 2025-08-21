@@ -10,7 +10,7 @@ import EventEmitter from 'events';
 export const UPDATE_REVISION = 'UPDATE_REVISION';
 
 export default class ConfigurationRevisionService extends EventEmitter {
-    private static instance: ConfigurationRevisionService;
+    private static instance: ConfigurationRevisionService | undefined;
 
     private logger: Logger;
 
@@ -111,5 +111,6 @@ export default class ConfigurationRevisionService extends EventEmitter {
 
     destroy(): void {
         ConfigurationRevisionService.instance?.removeAllListeners();
+        ConfigurationRevisionService.instance = undefined;
     }
 }

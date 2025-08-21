@@ -9,7 +9,7 @@ import {
     corsOriginMiddleware,
 } from './middleware/index.js';
 import rbacMiddleware from './middleware/rbac-middleware.js';
-import apiTokenMiddleware from './middleware/api-token-middleware.js';
+import { apiAccessMiddleware } from './middleware/api-token-middleware.js';
 import type { IUnleashServices } from './services/index.js';
 import { IAuthType, type IUnleashConfig } from './types/option.js';
 import type { IUnleashStores } from './types/index.js';
@@ -116,26 +116,26 @@ export default async function getApp(
 
     switch (config.authentication.type) {
         case IAuthType.OPEN_SOURCE: {
-            app.use(baseUriPath, apiTokenMiddleware(config, services));
+            app.use(baseUriPath, apiAccessMiddleware(config, services));
             ossAuthentication(app, config.getLogger, config.server.baseUriPath);
             break;
         }
         case IAuthType.ENTERPRISE: {
-            app.use(baseUriPath, apiTokenMiddleware(config, services));
+            app.use(baseUriPath, apiAccessMiddleware(config, services));
             if (config.authentication.customAuthHandler) {
                 config.authentication.customAuthHandler(app, config, services);
             }
             break;
         }
         case IAuthType.HOSTED: {
-            app.use(baseUriPath, apiTokenMiddleware(config, services));
+            app.use(baseUriPath, apiAccessMiddleware(config, services));
             if (config.authentication.customAuthHandler) {
                 config.authentication.customAuthHandler(app, config, services);
             }
             break;
         }
         case IAuthType.DEMO: {
-            app.use(baseUriPath, apiTokenMiddleware(config, services));
+            app.use(baseUriPath, apiAccessMiddleware(config, services));
             demoAuthentication(
                 app,
                 config.server.baseUriPath,
@@ -145,7 +145,7 @@ export default async function getApp(
             break;
         }
         case IAuthType.CUSTOM: {
-            app.use(baseUriPath, apiTokenMiddleware(config, services));
+            app.use(baseUriPath, apiAccessMiddleware(config, services));
             if (config.authentication.customAuthHandler) {
                 config.authentication.customAuthHandler(app, config, services);
             }
@@ -156,12 +156,12 @@ export default async function getApp(
                 'The AuthType=none option for Unleash is no longer recommended and will be removed in version 6.',
             );
             noApiToken(baseUriPath, app);
-            app.use(baseUriPath, apiTokenMiddleware(config, services));
+            app.use(baseUriPath, apiAccessMiddleware(config, services));
             noAuthentication(baseUriPath, app);
             break;
         }
         default: {
-            app.use(baseUriPath, apiTokenMiddleware(config, services));
+            app.use(baseUriPath, apiAccessMiddleware(config, services));
             demoAuthentication(
                 app,
                 config.server.baseUriPath,

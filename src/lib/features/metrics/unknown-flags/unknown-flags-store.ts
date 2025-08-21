@@ -2,6 +2,7 @@ import type { Db } from '../../../db/db.js';
 import type { Logger, LogProvider } from '../../../logger.js';
 
 const TABLE = 'unknown_flags';
+const TABLE_EVENTS = 'events';
 const MAX_INSERT_BATCH_SIZE = 100;
 
 export type UnknownFlag = {
@@ -9,6 +10,7 @@ export type UnknownFlag = {
     appName: string;
     seenAt: Date;
     environment: string;
+    lastEventAt?: Date;
 };
 
 export type QueryParams = {
@@ -64,11 +66,17 @@ export class UnknownFlagsStore implements IUnknownFlagsStore {
     }
 
     async getAll({ limit, orderBy }: QueryParams = {}): Promise<UnknownFlag[]> {
-        let query = this.db(TABLE).select(
-            'name',
-            'app_name',
-            'seen_at',
-            'environment',
+        let query = this.db(`${TABLE} AS uf`).select(
+            'uf.name',
+            'uf.app_name',
+            'uf.seen_at',
+            'uf.environment',
+            this.db.raw(
+                `(SELECT MAX(e.created_at)
+                FROM ${TABLE_EVENTS} AS e
+                WHERE e.feature_name = uf.name)
+                AS last_event_at`,
+            ),
         );
 
         if (orderBy) {
@@ -84,8 +92,9 @@ export class UnknownFlagsStore implements IUnknownFlagsStore {
         return rows.map((row) => ({
             name: row.name,
             appName: row.app_name,
-            seenAt: new Date(row.seen_at),
+            seenAt: row.seen_at,
             environment: row.environment,
+            lastEventAt: row.last_event_at,
         }));
     }
 

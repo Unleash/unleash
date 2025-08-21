@@ -6,7 +6,7 @@ import { TextCell } from '../TextCell/TextCell.tsx';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import type { ColumnInstance } from 'react-table';
 
-interface ITimeAgoCellProps {
+export interface ITimeAgoCellProps {
     value?: string | number | Date | null;
     column?: ColumnInstance;
     live?: boolean;

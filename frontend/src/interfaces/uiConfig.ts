@@ -86,7 +86,6 @@ export type UiFlags = {
     consumptionModelUI?: boolean;
     edgeObservability?: boolean;
     customMetrics?: boolean;
-    createFlagDialogCache?: boolean;
     impactMetrics?: boolean;
     changeRequestApproverEmails?: boolean;
     reportUnknownFlags?: boolean;

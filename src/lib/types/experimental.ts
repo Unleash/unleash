@@ -56,7 +56,6 @@ export type IFlagKey =
     | 'reportUnknownFlags'
     | 'customMetrics'
     | 'impactMetrics'
-    | 'createFlagDialogCache'
     | 'changeRequestApproverEmails'
     | 'paygTrialEvents'
     | 'paygInstanceStatsEvents'
@@ -258,10 +257,6 @@ const flags: IFlags = {
     ),
     reportUnknownFlags: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REPORT_UNKNOWN_FLAGS,
-        false,
-    ),
-    createFlagDialogCache: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CREATE_FLAG_DIALOG_CACHE,
         false,
     ),
     changeRequestApproverEmails: parseEnvVarBoolean(

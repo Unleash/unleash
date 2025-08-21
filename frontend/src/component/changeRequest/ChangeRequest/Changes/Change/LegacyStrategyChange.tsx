@@ -14,7 +14,6 @@ import type {
     IChangeRequestDeleteStrategy,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
-import { useCurrentStrategy } from './hooks/useCurrentStrategy.ts';
 import { Badge } from 'component/common/Badge/Badge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flexRow } from 'themes/themeStyles';
@@ -309,63 +308,3 @@ const AddStrategy: FC<{
         ) : null}
     </>
 );
-
-/**
- * Deprecated: use StrategyChange instead. Remove file with flag crDiffView
- * @deprecated
- */
-export const LegacyStrategyChange: FC<{
-    actions?: ReactNode;
-    change:
-        | IChangeRequestAddStrategy
-        | IChangeRequestDeleteStrategy
-        | IChangeRequestUpdateStrategy;
-    environmentName: string;
-    featureName: string;
-    projectId: string;
-    changeRequestState: ChangeRequestState;
-    isDefaultChange?: boolean;
-}> = ({
-    actions,
-    change,
-    featureName,
-    environmentName,
-    projectId,
-    changeRequestState,
-    isDefaultChange,
-}) => {
-    const currentStrategy = useCurrentStrategy(
-        change,
-        projectId,
-        featureName,
-        environmentName,
-    );
-
-    return (
-        <>
-            {change.action === 'addStrategy' && (
-                <AddStrategy
-                    change={change}
-                    actions={actions}
-                    isDefaultChange={isDefaultChange}
-                />
-            )}
-            {change.action === 'deleteStrategy' && (
-                <DeleteStrategy
-                    change={change}
-                    changeRequestState={changeRequestState}
-                    currentStrategy={currentStrategy}
-                    actions={actions}
-                />
-            )}
-            {change.action === 'updateStrategy' && (
-                <UpdateStrategy
-                    change={change}
-                    changeRequestState={changeRequestState}
-                    currentStrategy={currentStrategy}
-                    actions={actions}
-                />
-            )}
-        </>
-    );
-};

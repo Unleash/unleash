@@ -1,17 +1,6 @@
 import type React from 'react';
-import type { FC, ReactNode } from 'react';
-import { Box, styled, Typography } from '@mui/material';
-import type {
-    ChangeRequestState,
-    IChangeRequestDeleteSegment,
-    IChangeRequestUpdateSegment,
-} from 'component/changeRequest/changeRequest.types';
-import { useSegment } from 'hooks/api/getters/useSegment/useSegment';
-import { SegmentDiff, SegmentTooltipLink } from '../../SegmentTooltipLink.tsx';
-
-import { ViewableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/ViewableConstraintsList';
-
-import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning.tsx';
+import type { FC } from 'react';
+import { Box, styled } from '@mui/material';
 
 const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -53,77 +42,3 @@ const SegmentContainer = styled(Box, {
     padding: theme.spacing(3),
     borderRadius: `0 0 ${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px`,
 }));
-
-/**
- * Deprecated: use SegmentChangeDetails instead. Remove file with flag crDiffView
- * @deprecated
- */
-export const LegacySegmentChangeDetails: FC<{
-    actions?: ReactNode;
-    change: IChangeRequestUpdateSegment | IChangeRequestDeleteSegment;
-    changeRequestState: ChangeRequestState;
-}> = ({ actions, change, changeRequestState }) => {
-    const { segment: currentSegment } = useSegment(change.payload.id);
-    const snapshotSegment = change.payload.snapshot;
-    const previousName =
-        changeRequestState === 'Applied'
-            ? change.payload?.snapshot?.name
-            : currentSegment?.name;
-    const referenceSegment =
-        changeRequestState === 'Applied' ? snapshotSegment : currentSegment;
-
-    return (
-        <SegmentContainer conflict={change.conflict}>
-            {change.action === 'deleteSegment' && (
-                <ChangeItemWrapper>
-                    <ChangeItemInfo>
-                        <Typography
-                            sx={(theme) => ({
-                                color: theme.palette.error.main,
-                            })}
-                        >
-                            - Deleting segment
-                        </Typography>
-                        <SegmentTooltipLink
-                            name={change.payload.name}
-                            previousName={previousName}
-                        >
-                            <SegmentDiff
-                                change={change}
-                                currentSegment={referenceSegment}
-                            />
-                        </SegmentTooltipLink>
-                    </ChangeItemInfo>
-                    <div>{actions}</div>
-                </ChangeItemWrapper>
-            )}
-            {change.action === 'updateSegment' && (
-                <>
-                    <ChangeOverwriteWarning
-                        data={{
-                            current: currentSegment,
-                            change,
-                            changeType: 'segment',
-                        }}
-                        changeRequestState={changeRequestState}
-                    />
-                    <ChangeItemCreateEditWrapper>
-                        <ChangeItemInfo>
-                            <Typography>Editing segment</Typography>
-                            <SegmentTooltipLink name={change.payload.name}>
-                                <SegmentDiff
-                                    change={change}
-                                    currentSegment={referenceSegment}
-                                />
-                            </SegmentTooltipLink>
-                        </ChangeItemInfo>
-                        <div>{actions}</div>
-                    </ChangeItemCreateEditWrapper>
-                    <ViewableConstraintsList
-                        constraints={change.payload.constraints}
-                    />
-                </>
-            )}
-        </SegmentContainer>
-    );
-};

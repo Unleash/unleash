@@ -8,7 +8,6 @@ import type {
     IChangeRequestStartMilestone,
 } from 'component/changeRequest/changeRequest.types';
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
-import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
 import { ReleasePlan } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlan';
@@ -251,66 +250,6 @@ const AddReleasePlan: FC<{
                 <div>{actions}</div>
             </ChangeItemCreateEditDeleteWrapper>
             <ReleasePlan plan={planPreview} readonly />
-        </>
-    );
-};
-
-/**
- * Deprecated: use ReleasePlanChange instead. Remove file with flag crDiffView
- * @deprecated
- */
-export const LegacyReleasePlanChange: FC<{
-    actions?: ReactNode;
-    change:
-        | IChangeRequestAddReleasePlan
-        | IChangeRequestDeleteReleasePlan
-        | IChangeRequestStartMilestone;
-    environmentName: string;
-    featureName: string;
-    projectId: string;
-    changeRequestState: ChangeRequestState;
-}> = ({
-    actions,
-    change,
-    featureName,
-    environmentName,
-    projectId,
-    changeRequestState,
-}) => {
-    const { releasePlans } = useReleasePlans(
-        projectId,
-        featureName,
-        environmentName,
-    );
-    const currentReleasePlan = releasePlans[0];
-
-    return (
-        <>
-            {change.action === 'addReleasePlan' && (
-                <AddReleasePlan
-                    change={change}
-                    currentReleasePlan={currentReleasePlan}
-                    environmentName={environmentName}
-                    featureName={featureName}
-                    actions={actions}
-                />
-            )}
-            {change.action === 'deleteReleasePlan' && (
-                <DeleteReleasePlan
-                    change={change}
-                    currentReleasePlan={currentReleasePlan}
-                    changeRequestState={changeRequestState}
-                    actions={actions}
-                />
-            )}
-            {change.action === 'startMilestone' && (
-                <StartMilestone
-                    change={change}
-                    currentReleasePlan={currentReleasePlan}
-                    changeRequestState={changeRequestState}
-                    actions={actions}
-                />
-            )}
         </>
     );
 };

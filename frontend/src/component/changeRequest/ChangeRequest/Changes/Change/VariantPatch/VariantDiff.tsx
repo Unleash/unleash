@@ -31,7 +31,6 @@ export const VariantDiff = ({ preData, data }: IDiffProps) => (
                 preData: variantsArrayToObject(preData),
                 data: variantsArrayToObject(data),
             }}
-            sort={(a, b) => a.index - b.index}
         />
     </StyledCodeSection>
 );

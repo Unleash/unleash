@@ -21,6 +21,7 @@ export const resourceLimitsSchema = {
         'segments',
         'featureFlags',
         'constraints',
+        'releaseTemplates',
     ],
     additionalProperties: false,
     properties: {
@@ -117,6 +118,11 @@ export const resourceLimitsSchema = {
             example: 5000,
             description:
                 'The maximum number of feature flags you can have at the same time. Archived flags do not count towards this limit.',
+        },
+        releaseTemplates: {
+            type: 'integer',
+            example: 5,
+            description: 'The maximum number of release templates allowed.',
         },
     },
     components: {},

@@ -8,7 +8,6 @@ import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview
 import { formatStrategyName } from '../../../../../../utils/strategyNames.tsx';
 import type { IFeatureStrategy } from 'interfaces/strategy.ts';
 import { Tab, TabList, TabPanel, Tabs } from '../ChangeTabComponents.tsx';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 import {
     ChangeItemInfo as NewChangeItemInfo,
     ChangeItemWrapper,
@@ -63,7 +62,6 @@ export const EnvironmentStrategyExecutionOrder = ({
     actions,
 }: IEnvironmentStrategyExecutionOrderProps) => {
     const { feature: featureData, loading } = useFeature(project, feature);
-    const useDiffableComponent = useUiFlag('crDiffView');
 
     if (loading) return null;
 
@@ -97,76 +95,40 @@ export const EnvironmentStrategyExecutionOrder = ({
         strategyIds: updatedStrategies.map((strategy) => strategy.id),
     };
 
-    if (useDiffableComponent) {
-        return (
-            <Tabs>
-                <ChangeContent>
-                    <ChangeItemWrapper>
-                        <NewChangeItemInfo>
-                            <Action>
-                                Updating strategy execution order to
-                            </Action>
-                        </NewChangeItemInfo>
-                        <div>
-                            <TabList>
-                                <Tab>View change</Tab>
-                                <Tab>View diff</Tab>
-                            </TabList>
-                            {actions}
-                        </div>
-                    </ChangeItemWrapper>
-                    <TabPanel>
-                        <StyledStrategyExecutionWrapper>
-                            {updatedStrategies.map((strategy, index) => (
-                                <StyledStrategyContainer key={strategy.id}>
-                                    {`${index + 1}: `}
-                                    {formatStrategyName(strategy?.name || '')}
-                                    {strategy?.title && ` - ${strategy.title}`}
-                                    <StrategyExecution strategy={strategy!} />
-                                </StyledStrategyContainer>
-                            ))}
-                        </StyledStrategyExecutionWrapper>
-                    </TabPanel>
-                    <TabPanel variant='diff'>
-                        <EnvironmentStrategyOrderDiff
-                            preData={preData}
-                            data={data}
-                        />
-                    </TabPanel>
-                </ChangeContent>
-            </Tabs>
-        );
-    }
-
     return (
-        <ChangeItemInfo>
-            <StyledChangeHeader>
-                <TooltipLink
-                    tooltip={
-                        <EnvironmentStrategyOrderDiff
-                            preData={preData}
-                            data={data}
-                        />
-                    }
-                    tooltipProps={{
-                        maxWidth: 500,
-                        maxHeight: 600,
-                    }}
-                >
-                    Updating strategy execution order to
-                </TooltipLink>
-                {actions}
-            </StyledChangeHeader>
-            <StyledStrategyExecutionWrapper>
-                {updatedStrategies.map((strategy, index) => (
-                    <StyledStrategyContainer key={strategy.id}>
-                        {`${index + 1}: `}
-                        {formatStrategyName(strategy?.name || '')}
-                        {strategy?.title && ` - ${strategy.title}`}
-                        <StrategyExecution strategy={strategy!} />
-                    </StyledStrategyContainer>
-                ))}
-            </StyledStrategyExecutionWrapper>
-        </ChangeItemInfo>
+        <Tabs>
+            <ChangeContent>
+                <ChangeItemWrapper>
+                    <NewChangeItemInfo>
+                        <Action>Updating strategy execution order to</Action>
+                    </NewChangeItemInfo>
+                    <div>
+                        <TabList>
+                            <Tab>View change</Tab>
+                            <Tab>View diff</Tab>
+                        </TabList>
+                        {actions}
+                    </div>
+                </ChangeItemWrapper>
+                <TabPanel>
+                    <StyledStrategyExecutionWrapper>
+                        {updatedStrategies.map((strategy, index) => (
+                            <StyledStrategyContainer key={strategy.id}>
+                                {`${index + 1}: `}
+                                {formatStrategyName(strategy?.name || '')}
+                                {strategy?.title && ` - ${strategy.title}`}
+                                <StrategyExecution strategy={strategy!} />
+                            </StyledStrategyContainer>
+                        ))}
+                    </StyledStrategyExecutionWrapper>
+                </TabPanel>
+                <TabPanel variant='diff'>
+                    <EnvironmentStrategyOrderDiff
+                        preData={preData}
+                        data={data}
+                    />
+                </TabPanel>
+            </ChangeContent>
+        </Tabs>
     );
 };

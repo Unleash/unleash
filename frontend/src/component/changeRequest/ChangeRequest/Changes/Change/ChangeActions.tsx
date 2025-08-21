@@ -28,7 +28,6 @@ import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
 import MoreVert from '@mui/icons-material/MoreVert';
 import { EditChange } from './EditChange.tsx';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const useShowActions = (changeRequest: ChangeRequestType, change: IChange) => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(
@@ -74,9 +73,6 @@ export const ChangeActions: FC<{
     const { showDiscard, showEdit } = useShowActions(changeRequest, change);
     const { discardChange } = useChangeRequestApi();
     const { setToastData, setToastApiError } = useToast();
-    const useNewCrView = useUiFlag('crDiffView');
-
-    const ButtonComponent = useNewCrView ? StyledIconButton : IconButton;
 
     const [editOpen, setEditOpen] = useState(false);
 
@@ -121,7 +117,7 @@ export const ChangeActions: FC<{
             show={
                 <>
                     <Tooltip title='Change request actions' arrow describeChild>
-                        <ButtonComponent
+                        <StyledIconButton
                             id={id}
                             aria-controls={open ? menuId : undefined}
                             aria-haspopup='true'
@@ -130,7 +126,7 @@ export const ChangeActions: FC<{
                             type='button'
                         >
                             <MoreVert />
-                        </ButtonComponent>
+                        </StyledIconButton>
                     </Tooltip>
                     <StyledPopover
                         id={menuId}

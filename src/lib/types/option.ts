@@ -135,6 +135,7 @@ export interface ResourceLimits {
     actionSetFilterValues: number;
     signalEndpoints: number;
     signalTokensPerEndpoint: number;
+    releaseTemplates: number;
 }
 
 export interface IUnleashOptions {

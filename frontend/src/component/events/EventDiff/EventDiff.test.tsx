@@ -3,7 +3,9 @@ import { screen } from '@testing-library/react';
 import { EventDiff } from './EventDiff.tsx';
 
 test('Show no changes', async () => {
-    const { container } = render(<EventDiff entry={{ preData: [{a: 'b'}], data: [{a: 'b'}] }} />);
+    const { container } = render(
+        <EventDiff entry={{ preData: [{ a: 'b' }], data: [{ a: 'b' }] }} />,
+    );
     const diff = container.querySelector('.diff');
     expect(diff).toBeEmptyDOMElement();
 });
@@ -21,7 +23,6 @@ test('Show new data removed diff', async () => {
     const element = await screen.findByText(/segments:.*/);
     expect(element).toHaveClass('deletion');
 });
-
 
 test('Show new data changes diff', async () => {
     render(

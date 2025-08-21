@@ -61,7 +61,7 @@ beforeAll(async () => {
     const token = await app.services.apiTokenService.createApiTokenWithProjects(
         {
             tokenName: 'test',
-            type: ApiTokenType.CLIENT,
+            type: ApiTokenType.BACKEND,
             environment: DEFAULT_ENV,
             projects: ['default'],
         },

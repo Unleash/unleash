@@ -132,6 +132,13 @@ export const ProjectFeatureToggles = ({
         },
         [projectId, refetch],
     );
+
+    // TODO: remove tracking after `filterFlagsToArchive` flag
+    const trackArchiveAction = (eventType = 'archived flag') => {
+        trackEvent('project-cleanup', {
+            props: { eventType, showCleanupReminder },
+        });
+    };
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { onToggle: onFeatureToggle, modals: featureToggleModals } =
         useFeatureToggleSwitch(projectId);
@@ -142,7 +149,7 @@ export const ProjectFeatureToggles = ({
         setShowMarkCompletedDialogue,
         setShowFeatureReviveDialogue,
         setShowFeatureDeleteDialogue,
-    } = useRowActions(refetch, projectId);
+    } = useRowActions(refetch, projectId, trackArchiveAction);
 
     const isPlaceholder = Boolean(initialLoad || (loading && total));
 
@@ -630,6 +637,7 @@ export const ProjectFeatureToggles = ({
                         onConfirm={() => {
                             refetch();
                             table.resetRowSelection();
+                            trackArchiveAction('bulk archived');
                         }}
                     />
                 ) : (

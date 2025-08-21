@@ -20,7 +20,7 @@ beforeAll(async () => {
     app = await setupAppWithAuth(db.stores, {}, db.rawDatabase);
     defaultToken =
         await app.services.apiTokenService.createApiTokenWithProjects({
-            type: ApiTokenType.CLIENT,
+            type: ApiTokenType.BACKEND,
             projects: ['default'],
             environment: DEFAULT_ENV,
             tokenName: 'tester',
@@ -75,7 +75,7 @@ test('should pick up environment from token', async () => {
     await db.stores.environmentStore.create({ name: 'test', type: 'test' });
     const token = await app.services.apiTokenService.createApiTokenWithProjects(
         {
-            type: ApiTokenType.CLIENT,
+            type: ApiTokenType.BACKEND,
             projects: ['default'],
             environment,
             tokenName: 'tester',
@@ -132,7 +132,7 @@ test('should set lastSeen for toggles with metrics both for toggle and toggle en
 
     const token = await app.services.apiTokenService.createApiTokenWithProjects(
         {
-            type: ApiTokenType.CLIENT,
+            type: ApiTokenType.BACKEND,
             projects: ['default'],
             environment: DEFAULT_ENV,
             tokenName: 'tester',

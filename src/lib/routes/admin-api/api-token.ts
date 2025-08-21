@@ -57,6 +57,7 @@ export const tokenTypeToCreatePermission: (tokenType: ApiTokenType) => string =
             case ApiTokenType.ADMIN:
                 return ADMIN;
             case ApiTokenType.CLIENT:
+            case ApiTokenType.BACKEND:
                 return CREATE_CLIENT_API_TOKEN;
             case ApiTokenType.FRONTEND:
                 return CREATE_FRONTEND_API_TOKEN;
@@ -82,7 +83,7 @@ const permissionToTokenType: (permission: string) => ApiTokenType | undefined =
                 UPDATE_CLIENT_API_TOKEN,
             ].includes(permission)
         ) {
-            return ApiTokenType.CLIENT;
+            return ApiTokenType.BACKEND;
         } else if (ADMIN === permission) {
             return ApiTokenType.ADMIN;
         } else {
@@ -97,6 +98,7 @@ const tokenTypeToUpdatePermission: (tokenType: ApiTokenType) => string = (
         case ApiTokenType.ADMIN:
             return ADMIN;
         case ApiTokenType.CLIENT:
+        case ApiTokenType.BACKEND:
             return UPDATE_CLIENT_API_TOKEN;
         case ApiTokenType.FRONTEND:
             return UPDATE_FRONTEND_API_TOKEN;
@@ -110,6 +112,7 @@ const tokenTypeToDeletePermission: (tokenType: ApiTokenType) => string = (
         case ApiTokenType.ADMIN:
             return ADMIN;
         case ApiTokenType.CLIENT:
+        case ApiTokenType.BACKEND:
             return DELETE_CLIENT_API_TOKEN;
         case ApiTokenType.FRONTEND:
             return DELETE_FRONTEND_API_TOKEN;

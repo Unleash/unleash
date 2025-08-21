@@ -77,7 +77,7 @@ test('api tokens are serialized correctly', async () => {
     });
     await app.services.apiTokenService.createApiTokenWithProjects({
         tokenName: 'client',
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         environment: DEFAULT_ENV,
         projects: ['*'],
     });
@@ -88,7 +88,7 @@ test('api tokens are serialized correctly', async () => {
         .expect(200);
 
     expect(body).toMatchObject({
-        apiTokens: { client: 1, admin: 1, frontend: 1 },
+        apiTokens: { backend: 1, admin: 1, frontend: 1 },
     });
 
     const { text: csv } = await app.request
@@ -96,7 +96,7 @@ test('api tokens are serialized correctly', async () => {
         .expect('Content-Type', /text\/csv/)
         .expect(200);
 
-    expect(csv).toMatch(/{""client"":1,""admin"":1,""frontend"":1}/);
+    expect(csv).toMatch(/{""admin"":1,""frontend"":1,""backend"":1}/);
 });
 
 test('should return instance statistics with correct number of projects', async () => {

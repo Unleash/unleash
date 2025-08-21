@@ -57,14 +57,14 @@ describe('count deprecated tokens', () => {
         await stores.apiTokenStore.insert({
             secret: 'default:development.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178',
             environment: DEFAULT_ENV,
-            type: ApiTokenType.CLIENT,
+            type: ApiTokenType.BACKEND,
             projects: ['default'],
             tokenName: 'client-token',
         });
         await stores.apiTokenStore.insert({
             secret: '*:development.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178',
             environment: DEFAULT_ENV,
-            type: ApiTokenType.CLIENT,
+            type: ApiTokenType.BACKEND,
             projects: [],
             tokenName: 'client-wildcard-token',
         });
@@ -111,7 +111,7 @@ describe('count deprecated tokens', () => {
         await stores.apiTokenStore.insert({
             secret: 'deleted-project:development.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178',
             environment: DEFAULT_ENV,
-            type: ApiTokenType.CLIENT,
+            type: ApiTokenType.BACKEND,
             projects: [],
             tokenName: 'admin-test-token',
         });
@@ -131,7 +131,7 @@ describe('count deprecated tokens', () => {
         await stores.apiTokenStore.insert({
             secret: '*:*.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178',
             environment: DEFAULT_ENV,
-            type: ApiTokenType.CLIENT,
+            type: ApiTokenType.BACKEND,
             projects: [],
             tokenName: 'client-test-token',
         });
@@ -195,14 +195,14 @@ describe('count project tokens', () => {
         await store.insert({
             secret: `default:default.${randomId()}`,
             environment: DEFAULT_ENV,
-            type: ApiTokenType.CLIENT,
+            type: ApiTokenType.BACKEND,
             projects: ['default'],
             tokenName: 'token1',
         });
         await store.insert({
             secret: `*:*.${randomId()}`,
             environment: DEFAULT_ENV,
-            type: ApiTokenType.CLIENT,
+            type: ApiTokenType.BACKEND,
             projects: ['*'],
             tokenName: 'token2',
         });
@@ -210,7 +210,7 @@ describe('count project tokens', () => {
         await store.insert({
             secret: `${project.id}:default.${randomId()}`,
             environment: DEFAULT_ENV,
-            type: ApiTokenType.CLIENT,
+            type: ApiTokenType.BACKEND,
             projects: [project.id],
             tokenName: 'token3',
         });
@@ -218,7 +218,7 @@ describe('count project tokens', () => {
         await store.insert({
             secret: `[]:default.${randomId()}`,
             environment: DEFAULT_ENV,
-            type: ApiTokenType.CLIENT,
+            type: ApiTokenType.BACKEND,
             projects: [project.id, 'default'],
             tokenName: 'token4',
         });

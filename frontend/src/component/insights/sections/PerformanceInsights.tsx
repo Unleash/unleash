@@ -61,7 +61,6 @@ export const PerformanceInsights: FC = () => {
         summary,
         groupedProjectsData,
         groupedLifecycleData,
-        userTrends,
         groupedMetricsData,
         allMetricsDatapoints,
         environmentTypeTrends,
@@ -69,8 +68,6 @@ export const PerformanceInsights: FC = () => {
     } = useInsightsData(insights, projects);
 
     const { isEnterprise } = useUiConfig();
-    const lastUserTrend = userTrends[userTrends.length - 1];
-    const usersTotal = lastUserTrend?.total ?? 0;
     const lastFlagTrend = flagTrends[flagTrends.length - 1];
     const flagsTotal = lastFlagTrend?.total ?? 0;
 
@@ -137,14 +134,7 @@ export const PerformanceInsights: FC = () => {
                 <StyledWidget>
                     <StyledWidgetStats width={275}>
                         <WidgetTitle title='Flags' />
-                        <FlagStats
-                            count={flagsTotal}
-                            flagsPerUser={getFlagsPerUser(
-                                flagsTotal,
-                                usersTotal,
-                            )}
-                            isLoading={loading}
-                        />
+                        <FlagStats count={flagsTotal} isLoading={loading} />
                     </StyledWidgetStats>
                     <StyledChartContainer>
                         <FlagsChart
@@ -157,11 +147,7 @@ export const PerformanceInsights: FC = () => {
                 <StyledWidget>
                     <StyledWidgetStats width={275}>
                         <WidgetTitle title='Flags' />
-                        <FlagStats
-                            count={summary.total}
-                            flagsPerUser={''}
-                            isLoading={loading}
-                        />
+                        <FlagStats count={summary.total} isLoading={loading} />
                     </StyledWidgetStats>
                     <StyledChartContainer>
                         <FlagsProjectChart

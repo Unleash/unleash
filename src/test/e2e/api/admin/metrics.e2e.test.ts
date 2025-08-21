@@ -153,7 +153,7 @@ test('should save multiple projects from token', async () => {
 
     const multiProjectToken =
         await app.services.apiTokenService.createApiTokenWithProjects({
-            type: ApiTokenType.CLIENT,
+            type: ApiTokenType.BACKEND,
             projects: ['default', 'mainProject'],
             environment: DEFAULT_ENV,
             tokenName: 'tester',

@@ -57,11 +57,12 @@ const apiAccessMiddleware = (
                 const apiUser = apiToken
                     ? await apiTokenService.getUserForToken(apiToken)
                     : undefined;
-                const { CLIENT, FRONTEND } = ApiTokenType;
+                const { CLIENT, BACKEND, FRONTEND } = ApiTokenType;
 
                 if (apiUser) {
                     if (
-                        (apiUser.type === CLIENT &&
+                        ((apiUser.type === CLIENT ||
+                            apiUser.type === BACKEND) &&
                             !isClientApi(req) &&
                             !isEdgeMetricsApi(req)) ||
                         (apiUser.type === FRONTEND && !isProxyApi(req))

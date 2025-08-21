@@ -203,7 +203,8 @@ export class EventStore implements IEventStore {
                             .whereNotIn('type', [
                                 FEATURE_CREATED,
                                 FEATURE_TAGGED,
-                            ]),
+                            ])
+                            .whereNot('type', 'LIKE', 'change-%'),
                     )
                     .orWhereIn('type', [
                         SEGMENT_UPDATED,

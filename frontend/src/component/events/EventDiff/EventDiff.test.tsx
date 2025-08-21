@@ -1,6 +1,6 @@
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import EventDiff from './EventDiff.tsx';
+import { EventDiff } from './EventDiff.tsx';
 
 test('Show no changes', async () => {
     render(<EventDiff entry={{ preData: [], data: [] }} />);

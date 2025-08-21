@@ -66,7 +66,8 @@ export type IFlagKey =
     | 'lifecycleGraphs'
     | 'addConfiguration'
     | 'filterFlagsToArchive'
-    | 'projectListViewToggle';
+    | 'projectListViewToggle'
+    | 'fetchMode';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -310,6 +311,11 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_LIST_VIEW_TOGGLE,
         false,
     ),
+    fetchMode: {
+        name: 'disabled',
+        feature_enabled: false,
+        enabled: false,
+    },
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

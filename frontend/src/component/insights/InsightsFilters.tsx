@@ -7,7 +7,6 @@ import {
     type IFilterItem,
 } from 'component/filter/Filters/Filters';
 import { styled } from '@mui/material';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IFeatureToggleFiltersProps {
     state: FilterItemParamHolder;
@@ -26,9 +25,6 @@ export const InsightsFilters: FC<IFeatureToggleFiltersProps> = ({
     ...filterProps
 }) => {
     const { projects } = useProjects();
-    const FilterComponent = useUiFlag('lifecycleMetrics')
-        ? FiltersNoPadding
-        : Filters;
 
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
 
@@ -81,7 +77,7 @@ export const InsightsFilters: FC<IFeatureToggleFiltersProps> = ({
     }, [JSON.stringify(projects)]);
 
     return (
-        <FilterComponent
+        <FiltersNoPadding
             {...filterProps}
             state={state}
             availableFilters={availableFilters}

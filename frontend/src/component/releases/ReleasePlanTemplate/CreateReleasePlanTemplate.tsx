@@ -13,6 +13,8 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { Limit } from 'component/common/Limit/Limit.tsx';
+import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates.ts';
 
 const StyledButtonContainer = styled('div')(() => ({
     marginTop: 'auto',
@@ -31,7 +33,12 @@ export const CreateReleasePlanTemplate = () => {
     const navigate = useNavigate();
     const { createReleasePlanTemplate } = useReleasePlanTemplatesApi();
     const { trackEvent } = usePlausibleTracker();
+    const { templates } = useReleasePlanTemplates();
+    const releaseTemplateLimit = uiConfig.resourceLimits.releaseTemplates;
+    const canCreateMore = templates.length < releaseTemplateLimit;
+
     usePageTitle('Create release template');
+
     const {
         name,
         setName,
@@ -102,11 +109,19 @@ export const CreateReleasePlanTemplate = () => {
             formTitle='Create release template'
             formatApiCode={formatApiCode}
             handleSubmit={handleSubmit}
+            Limit={
+                <Limit
+                    name='release templates'
+                    limit={releaseTemplateLimit}
+                    currentValue={templates.length}
+                />
+            }
         >
             <StyledButtonContainer>
                 <CreateButton
                     name='template'
                     permission={RELEASE_PLAN_TEMPLATE_CREATE}
+                    disabled={!canCreateMore}
                 >
                     Save template
                 </CreateButton>

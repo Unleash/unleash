@@ -137,14 +137,7 @@ export const PerformanceInsights: FC = () => {
                 <StyledWidget>
                     <StyledWidgetStats width={275}>
                         <WidgetTitle title='Flags' />
-                        <FlagStats
-                            count={flagsTotal}
-                            flagsPerUser={getFlagsPerUser(
-                                flagsTotal,
-                                usersTotal,
-                            )}
-                            isLoading={loading}
-                        />
+                        <FlagStats count={flagsTotal} isLoading={loading} />
                     </StyledWidgetStats>
                     <StyledChartContainer>
                         <FlagsChart
@@ -157,11 +150,7 @@ export const PerformanceInsights: FC = () => {
                 <StyledWidget>
                     <StyledWidgetStats width={275}>
                         <WidgetTitle title='Flags' />
-                        <FlagStats
-                            count={summary.total}
-                            flagsPerUser={''}
-                            isLoading={loading}
-                        />
+                        <FlagStats count={summary.total} isLoading={loading} />
                     </StyledWidgetStats>
                     <StyledChartContainer>
                         <FlagsProjectChart

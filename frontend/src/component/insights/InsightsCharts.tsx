@@ -240,10 +240,6 @@ export const InsightsCharts: FC<IChartsProps> = ({
                                 <WidgetTitle title='Flags' />
                                 <FlagStats
                                     count={flagsTotal}
-                                    flagsPerUser={getFlagsPerUser(
-                                        flagsTotal,
-                                        usersTotal,
-                                    )}
                                     isLoading={loading}
                                 />
                             </StyledWidgetStats>
@@ -263,7 +259,6 @@ export const InsightsCharts: FC<IChartsProps> = ({
                                 <WidgetTitle title='Flags' />
                                 <FlagStats
                                     count={summary.total}
-                                    flagsPerUser={''}
                                     isLoading={loading}
                                 />
                             </StyledWidgetStats>

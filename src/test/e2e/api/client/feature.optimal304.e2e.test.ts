@@ -25,9 +25,19 @@ const validTokens = [
         type: ApiTokenType.CLIENT,
         secret: '*:production.client',
     },
+    {
+        tokenName: 'all-envs-client',
+        permissions: [CLIENT],
+        projects: ['*'],
+        environment: '*',
+        type: ApiTokenType.CLIENT,
+        secret: '*:*.hungry-client',
+    },
 ];
 const devTokenSecret = validTokens[0].secret;
 const prodTokenSecret = validTokens[1].secret;
+const allEnvsTokenSecret = validTokens[2].secret;
+
 async function setup({
     etagVariantName,
     enabled,
@@ -96,53 +106,54 @@ async function initialize({ app, db }: { app: IUnleashTest; db: ITestDb }) {
             featureName,
             type,
         }));
+    let nextId = 8; // this is the first id after the token creation events
     const expectedEvents = [
         {
-            id: 7,
+            id: nextId++,
             featureName: 'X',
             type: 'feature-created',
         },
         {
-            id: 8,
+            id: nextId++,
             featureName: 'Y',
             type: 'feature-created',
         },
         {
-            id: 9,
+            id: nextId++,
             featureName: 'Y',
             type: 'feature-archived',
         },
         {
-            id: 10,
+            id: nextId++,
             featureName: 'Z',
             type: 'feature-created',
         },
         {
-            id: 11,
+            id: nextId++,
             environment: 'development',
             featureName: 'Z',
             type: 'feature-strategy-add',
         },
         {
-            id: 12,
+            id: nextId++,
             environment: 'development',
             featureName: 'Z',
             type: 'feature-environment-enabled',
         },
         {
-            id: 13,
+            id: nextId++,
             environment: 'production',
             featureName: 'Z',
             type: 'feature-strategy-add',
         },
         {
-            id: 14,
+            id: nextId++,
             environment: 'production',
             featureName: 'Z',
             type: 'feature-environment-enabled',
         },
         {
-            id: 15,
+            id: nextId++,
             featureName: 'X',
             type: 'change-request-created',
         },
@@ -191,11 +202,11 @@ describe.each([
             .expect(200);
 
         if (enabled) {
-            expect(res.headers.etag).toBe(`"76d8bb0e:12:${name}"`);
-            expect(res.body.meta.etag).toBe(`"76d8bb0e:12:${name}"`);
+            expect(res.headers.etag).toBe(`"76d8bb0e:13:${name}"`);
+            expect(res.body.meta.etag).toBe(`"76d8bb0e:13:${name}"`);
         } else {
-            expect(res.headers.etag).toBe('"76d8bb0e:12"');
-            expect(res.body.meta.etag).toBe('"76d8bb0e:12"');
+            expect(res.headers.etag).toBe('"76d8bb0e:13"');
+            expect(res.body.meta.etag).toBe('"76d8bb0e:13"');
         }
     });
 
@@ -203,12 +214,12 @@ describe.each([
         const res = await app.request
             .get('/api/client/features')
             .set('Authorization', devTokenSecret)
-            .set('if-none-match', '"76d8bb0e:12"')
+            .set('if-none-match', '"76d8bb0e:13"')
             .expect(enabled ? 200 : 304);
 
         if (enabled) {
-            expect(res.headers.etag).toBe(`"76d8bb0e:12:${name}"`);
-            expect(res.body.meta.etag).toBe(`"76d8bb0e:12:${name}"`);
+            expect(res.headers.etag).toBe(`"76d8bb0e:13:${name}"`);
+            expect(res.body.meta.etag).toBe(`"76d8bb0e:13:${name}"`);
         }
     });
 
@@ -219,8 +230,22 @@ describe.each([
         await app.request
             .get('/api/client/features')
             .set('Authorization', devTokenSecret)
-            .set('if-none-match', `"76d8bb0e:12${enabled ? `:${name}` : ''}"`)
+            .set('if-none-match', `"76d8bb0e:13${enabled ? `:${name}` : ''}"`)
             .expect(304);
+    });
+
+    test('a token with all envs should get the max id regardless of the environment', async () => {
+        const currentProdEtag = `"67e24428:15${enabled ? `:${name}` : ''}"`;
+        const { headers } = await app.request
+            .get('/api/client/features')
+            .set('if-none-match', currentProdEtag)
+            .set('Authorization', allEnvsTokenSecret)
+            .expect(200);
+
+        // it's a different hash than prod, but gets the max id
+        expect(headers.etag).toEqual(
+            `"ae443048:15${enabled ? `:${name}` : ''}"`,
+        );
     });
 
     test('production environment gets a different etag than development', async () => {
@@ -228,26 +253,24 @@ describe.each([
             .get('/api/client/features?bla=1')
             .set('Authorization', prodTokenSecret)
             .expect(200);
-        if (enabled) {
-            expect(prodHeaders.etag).toEqual('"67e24428:14:v2"');
-        } else {
-            expect(prodHeaders.etag).toEqual('"67e24428:14"');
-        }
+
+        expect(prodHeaders.etag).toEqual(
+            `"67e24428:15${enabled ? `:${name}` : ''}"`,
+        );
 
         const { headers: devHeaders } = await app.request
             .get('/api/client/features')
             .set('Authorization', devTokenSecret)
             .expect(200);
-        if (enabled) {
-            expect(devHeaders.etag).toEqual('"76d8bb0e:12:v2"');
-        } else {
-            expect(devHeaders.etag).toEqual('"76d8bb0e:12"');
-        }
+
+        expect(devHeaders.etag).toEqual(
+            `"76d8bb0e:13${enabled ? `:${name}` : ''}"`,
+        );
     });
 
     test('modifying dev environment should only invalidate dev tokens', async () => {
-        const currentDevEtag = `"76d8bb0e:12${enabled ? `:${name}` : ''}"`;
-        const currentProdEtag = `"67e24428:14${enabled ? `:${name}` : ''}"`;
+        const currentDevEtag = `"76d8bb0e:13${enabled ? `:${name}` : ''}"`;
+        const currentProdEtag = `"67e24428:15${enabled ? `:${name}` : ''}"`;
         await app.request
             .get('/api/client/features')
             .set('if-none-match', currentProdEtag)
@@ -276,10 +299,10 @@ describe.each([
             .expect(200);
 
         // Note: this test yields a different result if run in isolation
-        // this is because the id 18 depends on a previous test adding a feature
-        // otherwise the id will be 17
+        // this is because the id 19 depends on a previous test adding a feature
+        // otherwise the id will be 18
         expect(devHeaders.etag).toEqual(
-            `"76d8bb0e:18${enabled ? `:${name}` : ''}"`,
+            `"76d8bb0e:19${enabled ? `:${name}` : ''}"`,
         );
     });
 });

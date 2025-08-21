@@ -15,7 +15,7 @@ import type {
     IEventSearchParams,
     IEventStore,
 } from '../../types/stores/event-store.js';
-import { sharedEventEmitter } from '../../util/index.js';
+import { ALL_ENVS, sharedEventEmitter } from '../../util/index.js';
 import type { Db } from '../../db/db.js';
 import type { Knex } from 'knex';
 import type EventEmitter from 'node:events';
@@ -199,7 +199,7 @@ export class EventStore implements IEventStore {
                         .whereNotNull('feature_name')
                         .whereNotIn('type', [FEATURE_CREATED, FEATURE_TAGGED])
                         .whereNot('type', 'LIKE', 'change-%');
-                    if (environment) {
+                    if (environment && environment !== ALL_ENVS) {
                         inner.where('environment', environment);
                     }
                     return inner;

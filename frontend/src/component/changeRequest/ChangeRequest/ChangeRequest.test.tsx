@@ -203,9 +203,7 @@ test('Display default add strategy', async () => {
 
     expect(screen.getByText('feature1')).toBeInTheDocument();
     expect(screen.getByText('Enabled')).toBeInTheDocument();
-    expect(
-        screen.getByText('Default strategy will be added'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Adding default strategy')).toBeInTheDocument();
 });
 
 test('Display default disable feature', async () => {

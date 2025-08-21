@@ -58,7 +58,6 @@ export type IFlagKey =
     | 'customMetrics'
     | 'impactMetrics'
     | 'createFlagDialogCache'
-    | 'crDiffView'
     | 'changeRequestApproverEmails'
     | 'paygTrialEvents'
     | 'paygInstanceStatsEvents'
@@ -272,10 +271,6 @@ const flags: IFlags = {
     ),
     changeRequestApproverEmails: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_APPROVER_EMAILS,
-        false,
-    ),
-    crDiffView: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CR_DIFF_VIEW,
         false,
     ),
     impactMetrics: parseEnvVarBoolean(

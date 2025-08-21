@@ -55,7 +55,6 @@ process.nextTick(async () => {
                         customMetrics: true,
                         lifecycleMetrics: true,
                         impactMetrics: true,
-                        crDiffView: true,
                         paygTrialEvents: true,
                         lifecycleGraphs: true,
                         addConfiguration: true,

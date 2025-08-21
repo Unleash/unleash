@@ -93,4 +93,3 @@ export const EventDiff: FC<IEventDiffProps> = ({ entry, excludeKeys }) => {
         </>
     );
 };
-

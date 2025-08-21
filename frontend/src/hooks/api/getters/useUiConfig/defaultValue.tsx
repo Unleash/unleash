@@ -45,5 +45,6 @@ export const defaultValue: IUiConfig = {
         segments: 300,
         apiTokens: 2000,
         featureFlags: 5000,
+        releaseTemplates: 5,
     },
 };

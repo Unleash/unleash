@@ -272,7 +272,10 @@ const theme = {
         },
         variants: colors.lightVariants,
 
-        chart: {
+        /**
+         * Dashboard and charts
+         */
+        charts: {
             A1: '#6C65E5',
             A2: '#8C87EB',
             A3: '#ADA9F1',
@@ -282,12 +285,6 @@ const theme = {
             C: '#DF416E',
             D: '#D76500',
             E: '#68A611',
-        },
-
-        /**
-         * Dashboard and charts
-         */
-        charts: {
             series: colors.chartSeries,
         },
     },

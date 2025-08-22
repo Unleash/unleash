@@ -700,13 +700,13 @@ __metadata:
   linkType: hard
 
 "@fast-check/vitest@npm:^0.2.1":
-  version: 0.2.1
-  resolution: "@fast-check/vitest@npm:0.2.1"
+  version: 0.2.2
+  resolution: "@fast-check/vitest@npm:0.2.2"
   dependencies:
     fast-check: "npm:^3.0.0 || ^4.0.0"
   peerDependencies:
     vitest: ^1 || ^2 || ^3
-  checksum: 10c0/673be2203ee3656fe335de09edd59b81a9c12fcb3b189c997c34dda5218face38701f11ada3fdb848f5b80fa3a74feb6123f94a69ea83e06a25a6ecb2a665eb9
+  checksum: 10c0/bdc53048d4bd6d3a7aefd3c7ddeda9a7c0f4f2bff31edc33df0e2b39fe5c7f98f528ac6741f8acf4d9ad1de894fba7976c64d7239cac4124581578cef371d30e
   languageName: node
   linkType: hard
 

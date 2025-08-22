@@ -1,6 +1,6 @@
 // Special
 export const ADMIN = 'ADMIN';
-export const CLIENT = 'CLIENT';
+export const CLIENT = 'CLIENT'; // TODO data migration needed to change to BACKEND
 export const FRONTEND = 'FRONTEND';
 export const NONE = 'NONE';
 

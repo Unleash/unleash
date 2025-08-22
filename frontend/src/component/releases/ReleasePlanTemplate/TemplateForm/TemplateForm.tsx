@@ -1,5 +1,5 @@
 import Input from 'component/common/Input/Input';
-import { Alert, styled, useTheme } from '@mui/material';
+import { Alert, Box, styled, useTheme } from '@mui/material';
 import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { TemplateFormDescription } from './TemplateFormDescription.tsx';
@@ -33,6 +33,14 @@ const StyledForm = styled('form')(({ theme }) => ({
     paddingTop: theme.spacing(5),
 }));
 
+const StyledLimitContainer = styled(Box)(({ theme }) => ({
+    flex: 1,
+    display: 'flex',
+    alignItems: 'flex-end',
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
+}));
+
 interface ITemplateFormProps {
     name: string;
     setName: React.Dispatch<React.SetStateAction<string>>;
@@ -49,6 +57,7 @@ interface ITemplateFormProps {
     formatApiCode: () => string;
     handleSubmit: (e: React.FormEvent) => void;
     loading?: boolean;
+    Limit?: React.ReactNode;
     children?: React.ReactNode;
 }
 
@@ -65,6 +74,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
     archived,
     formatApiCode,
     handleSubmit,
+    Limit,
     children,
 }) => {
     const theme = useTheme();
@@ -134,6 +144,8 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                     clearErrors={clearErrors}
                     milestoneChanged={milestoneChanged}
                 />
+
+                <StyledLimitContainer>{Limit}</StyledLimitContainer>
 
                 {children}
             </StyledForm>

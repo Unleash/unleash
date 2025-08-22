@@ -27,12 +27,6 @@ const strategy = {
 };
 
 const setupApi = () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            improvedJsonDiff: true,
-        },
-    });
-
     testServerRoute(
         server,
         `/api/admin/projects/${projectId}/features/${feature}`,

@@ -436,8 +436,10 @@ const loadInitApiTokens = () => {
             ApiTokenType.ADMIN,
         ),
         ...loadTokensFromString(
-            process.env.INIT_CLIENT_API_TOKENS,
-            ApiTokenType.CLIENT,
+            process.env.INIT_BACKEND_API_TOKENS ??
+                // INIT_CLIENT_API_TOKENS is deprecated in favor of INIT_BACKEND_API_TOKENS
+                process.env.INIT_CLIENT_API_TOKENS,
+            ApiTokenType.BACKEND,
         ),
         ...loadTokensFromString(
             process.env.INIT_FRONTEND_API_TOKENS,
@@ -756,6 +758,13 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             parseEnvVarNumber(
                 process.env.UNLEASH_FEATURE_FLAGS_LIMIT,
                 options?.resourceLimits?.featureFlags ?? 5000,
+            ),
+        ),
+        releaseTemplates: Math.max(
+            0,
+            parseEnvVarNumber(
+                process.env.UNLEASH_RELEASE_TEMPLATES_LIMIT,
+                options?.resourceLimits?.releaseTemplates ?? 5,
             ),
         ),
     };

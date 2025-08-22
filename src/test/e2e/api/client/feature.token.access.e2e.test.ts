@@ -126,7 +126,7 @@ afterAll(async () => {
 
 test('returns feature flag with "default" config', async () => {
     const token = await apiTokenService.createApiTokenWithProjects({
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         tokenName,
         environment: DEFAULT_ENV,
         projects: [project],
@@ -148,7 +148,7 @@ test('returns feature flag with "default" config', async () => {
 
 test('returns feature flag with testing environment config', async () => {
     const token = await apiTokenService.createApiTokenWithProjects({
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         tokenName: tokenName,
         environment,
         projects: [project],
@@ -174,7 +174,7 @@ test('returns feature flag with testing environment config', async () => {
 
 test('returns feature flag for project2', async () => {
     const token = await apiTokenService.createApiTokenWithProjects({
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         tokenName: tokenName,
         environment,
         projects: [project2],
@@ -194,7 +194,7 @@ test('returns feature flag for project2', async () => {
 
 test('returns feature flag for all projects', async () => {
     const token = await apiTokenService.createApiTokenWithProjects({
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         tokenName: tokenName,
         environment,
         projects: ['*'],

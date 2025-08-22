@@ -26,6 +26,7 @@ test('uiConfigSchema', () => {
             segments: 0,
             featureFlags: 1,
             constraints: 0,
+            releaseTemplates: 0,
         },
         versionInfo: {
             current: {},

@@ -513,6 +513,13 @@ describe('bulk metrics', () => {
                 environment: 'development',
                 projects: ['*'],
             });
+        const backendToken =
+            await authed.services.apiTokenService.createApiTokenWithProjects({
+                tokenName: 'backend-bulk-metrics-test',
+                type: ApiTokenType.BACKEND,
+                environment: 'development',
+                projects: ['*'],
+            });
         const frontendToken =
             await authed.services.apiTokenService.createApiTokenWithProjects({
                 tokenName: 'frontend-bulk-metrics-test',
@@ -530,6 +537,11 @@ describe('bulk metrics', () => {
             .set('Authorization', frontendToken.secret)
             .send({ applications: [], metrics: [] })
             .expect(403);
+        await authed.request
+            .post('/api/client/metrics/bulk')
+            .set('Authorization', backendToken.secret)
+            .send({ applications: [], metrics: [] })
+            .expect(202);
         await authed.request
             .post('/api/client/metrics/bulk')
             .set('Authorization', clientToken.secret)

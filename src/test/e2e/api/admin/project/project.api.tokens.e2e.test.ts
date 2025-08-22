@@ -50,7 +50,7 @@ test('Returns list of tokens', async () => {
     await db.stores.apiTokenStore.insert({
         tokenName: 'test',
         secret: tokenSecret,
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         environment: DEFAULT_ENV,
         projects: ['default'],
     });
@@ -87,21 +87,23 @@ test('fails to create new client token when given wrong project', async () => {
         .expect(404);
 });
 
-test('creates new client token', async () => {
-    return app.request
-        .post('/api/admin/projects/default/api-tokens')
-        .send({
-            tokenName: 'default-client',
-            type: 'client',
-            projects: ['default'],
-            environment: DEFAULT_ENV,
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201)
-        .expect((res) => {
-            expect(res.body.tokenName).toBe('default-client');
-        });
-});
+test.each(['client', 'frontend', 'backend'])(
+    'creates new %s token',
+    async (type) => {
+        const { body, status } = await app.request
+            .post('/api/admin/projects/default/api-tokens')
+            .send({
+                tokenName: `default-${type}`,
+                type,
+                projects: ['default'],
+                environment: DEFAULT_ENV,
+            })
+            .set('Content-Type', 'application/json');
+        console.log(body);
+        expect(status).toBe(201);
+        expect(body.tokenName).toBe(`default-${type}`);
+    },
+);
 
 test('Deletes existing tokens', async () => {
     const tokenSecret = 'random-secret';
@@ -109,7 +111,7 @@ test('Deletes existing tokens', async () => {
     await db.stores.apiTokenStore.insert({
         tokenName: 'test',
         secret: tokenSecret,
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         environment: DEFAULT_ENV,
         projects: ['default'],
     });
@@ -142,7 +144,7 @@ test('Returns Bad Request when deleting tokens with more than one project', asyn
     await db.stores.apiTokenStore.insert({
         tokenName: 'test',
         secret: tokenSecret,
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         environment: DEFAULT_ENV,
         projects: ['default', 'other'],
     });

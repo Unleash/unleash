@@ -121,13 +121,6 @@ export default async function createConfigAsync(): Promise<Config> {
             metadata: [
                 { name: 'og:image:width', content: '1200' },
                 { name: 'og:image:height', content: '630' },
-                // Resource hints for LCP optimization
-                { name: 'preconnect', href: 'https://fonts.googleapis.com' },
-                {
-                    name: 'preconnect',
-                    href: 'https://fonts.gstatic.com',
-                    crossOrigin: 'anonymous',
-                },
             ],
             navbar: {
                 logo: {

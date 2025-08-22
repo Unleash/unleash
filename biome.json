@@ -77,7 +77,8 @@
       "coverage",
       "CHANGELOG.md",
       "./package.json",
-      "./frontend/package.json"
+      "./frontend/package.json",
+      ".vite"
     ]
   },
   "organizeImports": {
@@ -101,7 +102,8 @@
       "website/global.js",
       ".docusaurus",
       "./package.json",
-      "./frontend/package.json"
+      "./frontend/package.json",
+      ".vite"
     ],
     "indentWidth": 4
   },

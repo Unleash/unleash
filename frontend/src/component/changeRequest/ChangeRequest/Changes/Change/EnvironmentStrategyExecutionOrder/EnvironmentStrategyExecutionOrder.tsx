@@ -1,7 +1,6 @@
 import type { IChangeRequestReorderStrategy } from '../../../../changeRequest.types';
 import type { ReactNode } from 'react';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { Box, styled } from '@mui/material';
 import { EnvironmentStrategyOrderDiff } from './EnvironmentStrategyOrderDiff.tsx';
 import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';

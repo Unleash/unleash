@@ -19,15 +19,9 @@ import { InsightsFilters } from '../InsightsFilters.tsx';
 
 const useChartColors = () => {
     const theme = useTheme();
-    if (theme.mode === 'dark') {
-        return {
-            olderThanWeek: '#5A5CAC',
-            newThisWeek: '#698745',
-        };
-    }
     return {
-        olderThanWeek: theme.palette.primary.light,
-        newThisWeek: theme.palette.success.border,
+        olderThanWeek: theme.palette.charts.A2,
+        newThisWeek: theme.palette.charts.A1,
     };
 };
 

@@ -64,6 +64,9 @@ const getUnleashRepoStars = async () => {
 export default async function createConfigAsync(): Promise<Config> {
     const stars = await getUnleashRepoStars();
     return {
+        future: {
+            experimental_faster: true, // turns Docusaurus Faster on globally
+        },
         title: 'Unleash Documentation',
         tagline: 'The enterprise ready feature flag service',
         url: 'https://docs.getunleash.io',
@@ -115,6 +118,9 @@ export default async function createConfigAsync(): Promise<Config> {
                 appId: '5U05JI5NE1',
                 apiKey: 'dc9c4491fcf9143ee34015f22d1dd9d6',
                 indexName: 'getunleash',
+            },
+            theme: {
+                customCss: './src/css/custom.css',
             },
             metadata: [
                 { name: 'og:image:width', content: '1200' },
@@ -448,6 +454,9 @@ class="header-github-link"
                         docItemComponent: '@theme/ApiItem',
                         sidebarPath: './sidebars.ts',
                         breadcrumbs: true,
+                    },
+                    theme: {
+                        customCss: './src/css/custom.css',
                     },
                     // Analytics/GTM moved to lazy loading in Root.tsx
                     sitemap: {

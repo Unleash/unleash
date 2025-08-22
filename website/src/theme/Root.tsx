@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
-import criticalCSS from '!raw-loader!../css/critical.css';
 
 export default function Root({ children }: { children: React.ReactNode }) {
     useEffect(() => {
@@ -165,13 +164,5 @@ export default function Root({ children }: { children: React.ReactNode }) {
         };
     }, []);
 
-    return (
-        <>
-            <style
-                dangerouslySetInnerHTML={{ __html: criticalCSS }}
-                data-critical='true'
-            />
-            {children}
-        </>
-    );
+    return <>{children}</>;
 }

@@ -37,11 +37,11 @@ The permissions of the API token you use with Terraform and your Unleash [plan](
 
 Example usage:
 ```hcl
-resource "unleash_api_token" "client_token" {
-  token_name  = "client_token"
+resource "unleash_api_token" "backend_token" {
+  token_name  = "backend_token"
   type        = "client"
   expires_at  = "2024-12-31T23:59:59Z"
-  project     = "default"
+  projects    = ["default"]
   environment = "development"
 }
 ```

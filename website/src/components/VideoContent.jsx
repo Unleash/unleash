@@ -39,7 +39,7 @@ const LazyVideo = ({ url, title = 'YouTube video player' }) => {
                 {/* Play button overlay */}
                 <img
                     className={styles.thumbnailImage}
-                    src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
+                    src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
                     alt={`${title} thumbnail`}
                     fetchPriority='high'
                 />

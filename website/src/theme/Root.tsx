@@ -147,9 +147,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
             if (!hasInteracted) {
                 hasInteracted = true;
                 loadGoogleAnalytics();
-                // Optionally load other scripts as well
-                // loadGoogleTagManager();
-                // loadKapaWidget();
+                loadGoogleTagManager();
             }
         }, 3000);
 

@@ -138,25 +138,6 @@ declare module '@mui/material/styles' {
          * Dashboard and charts
          */
         charts: {
-            gauge: {
-                gradientStart: string;
-                gradientEnd: string;
-                background: string;
-                sectionLine: string;
-                text: string;
-            };
-            health: {
-                mainCircleBackground: string;
-                orbit: string;
-                circles: string;
-                text: string;
-                title: string;
-                healthy: string;
-                stale: string;
-                potentiallyStale: string;
-                gradientStale: string;
-                gradientPotentiallyStale: string;
-            };
             series: string[];
         };
     }

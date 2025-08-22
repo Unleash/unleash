@@ -276,25 +276,6 @@ const theme = {
          * Dashboard and charts
          */
         charts: {
-            gauge: {
-                gradientStart: colors.purple[100],
-                gradientEnd: colors.purple[700],
-                background: colors.purple[50],
-                sectionLine: colors.purple[500],
-                text: colors.grey[600],
-            },
-            health: {
-                mainCircleBackground: colors.purple[800],
-                orbit: colors.grey[300],
-                circles: colors.grey[50],
-                text: colors.grey[900],
-                title: colors.grey[50],
-                healthy: colors.purple[800],
-                stale: colors.red[800],
-                potentiallyStale: colors.orange[900],
-                gradientStale: colors.red[300],
-                gradientPotentiallyStale: colors.orange[500],
-            },
             series: colors.chartSeries,
         },
     },

@@ -20,7 +20,8 @@ export const TimeAgoCell: FC<ITimeAgoCellProps> = ({
     column,
     live = false,
     emptyText = 'Never',
-    title = (date) => (column ? `${column.Header}: ${date}` : date),
+    title = (date) =>
+        date ? (column ? `${column.Header}: ${date}` : date) : '',
     dateFormat = formatDateYMD,
 }) => {
     const { locationSettings } = useLocationSettings();

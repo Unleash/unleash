@@ -138,6 +138,15 @@ declare module '@mui/material/styles' {
          * Dashboard and charts
          */
         charts: {
+            A1: string;
+            A2: string;
+            A3: string;
+            A4: string;
+            A5: string;
+            B: string;
+            C: string;
+            D: string;
+            E: string;
             series: string[];
         };
     }

@@ -216,6 +216,18 @@ const theme = {
         },
         variants: colors.darkVariants,
 
+        chart: {
+            A1: '#6C65E5',
+            A2: '#8C87EB',
+            A3: '#ADA9F1',
+            A4: '#CECCF6',
+            A5: '#F1F0FC',
+            B: '#1791AE',
+            C: '#DF416E',
+            D: '#D76500',
+            E: '#68A611',
+        },
+
         /**
          * Dashboard and charts
          */

@@ -61,7 +61,8 @@ export type IFlagKey =
     | 'addConfiguration'
     | 'filterFlagsToArchive'
     | 'projectListViewToggle'
-    | 'fetchMode';
+    | 'fetchMode'
+    | 'etagByEnv';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 

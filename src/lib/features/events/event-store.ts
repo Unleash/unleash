@@ -15,7 +15,7 @@ import type {
     IEventSearchParams,
     IEventStore,
 } from '../../types/stores/event-store.js';
-import { sharedEventEmitter } from '../../util/index.js';
+import { ALL_ENVS, sharedEventEmitter } from '../../util/index.js';
 import type { Db } from '../../db/db.js';
 import type { Knex } from 'knex';
 import type EventEmitter from 'node:events';
@@ -191,33 +191,44 @@ export class EventStore implements IEventStore {
         }
     }
 
-    async getMaxRevisionId(largerThan: number = 0): Promise<number> {
+    private eventTypeIsInteresting =
+        (opts?: { additionalTypes?: string[]; environment?: string }) =>
+        (builder: Knex.QueryBuilder) =>
+            builder
+                .andWhere((inner) => {
+                    inner
+                        .whereNotNull('feature_name')
+                        .whereNotIn('type', [FEATURE_CREATED, FEATURE_TAGGED])
+                        .whereNot('type', 'LIKE', 'change-%');
+                    if (opts?.environment && opts.environment !== ALL_ENVS) {
+                        inner.where('environment', opts.environment);
+                    }
+                    return inner;
+                })
+                .orWhereIn('type', [
+                    SEGMENT_UPDATED,
+                    FEATURE_IMPORT,
+                    FEATURES_IMPORTED,
+                    ...(opts?.additionalTypes ?? []),
+                ]);
+
+    /** This method is used for polling */
+    async getMaxRevisionId(
+        largerThan: number = 0,
+        environment?: string,
+    ): Promise<number> {
         const stopTimer = this.metricTimer('getMaxRevisionId');
         const row = await this.db(TABLE)
             .max('id')
-            .where((builder) =>
-                builder
-                    .andWhere((inner) =>
-                        inner
-                            .whereNotNull('feature_name')
-                            .whereNotIn('type', [
-                                FEATURE_CREATED,
-                                FEATURE_TAGGED,
-                            ])
-                            .whereNot('type', 'LIKE', 'change-%'),
-                    )
-                    .orWhereIn('type', [
-                        SEGMENT_UPDATED,
-                        FEATURE_IMPORT,
-                        FEATURES_IMPORTED,
-                    ]),
-            )
+            .where(this.eventTypeIsInteresting({ environment }))
             .andWhere('id', '>=', largerThan)
             .first();
+
         stopTimer();
         return row?.max ?? 0;
     }
 
+    /** This method is used for delta/streaming */
     async getRevisionRange(start: number, end: number): Promise<IEvent[]> {
         const stopTimer = this.metricTimer('getRevisionRange');
         const query = this.db
@@ -225,27 +236,15 @@ export class EventStore implements IEventStore {
             .from(TABLE)
             .where('id', '>', start)
             .andWhere('id', '<=', end)
-            .andWhere((builder) =>
-                builder
-                    .andWhere((inner) =>
-                        inner
-                            .whereNotNull('feature_name')
-                            .whereNotIn('type', [
-                                FEATURE_CREATED,
-                                FEATURE_TAGGED,
-                            ]),
-                    )
-                    .orWhereIn('type', [
-                        SEGMENT_UPDATED,
-                        FEATURE_IMPORT,
-                        FEATURES_IMPORTED,
-                        SEGMENT_CREATED,
-                        SEGMENT_DELETED,
-                    ]),
+            .andWhere(
+                this.eventTypeIsInteresting({
+                    additionalTypes: [SEGMENT_CREATED, SEGMENT_DELETED],
+                }),
             )
             .orderBy('id', 'asc');
 
         const rows = await query;
+        stopTimer();
         return rows.map(this.rowToEvent);
     }
 

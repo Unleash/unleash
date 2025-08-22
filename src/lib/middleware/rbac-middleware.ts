@@ -87,6 +87,7 @@ const rbacMiddleware = (
                 )
             ) {
                 const { featureName } = params;
+                // TODO track if this deprecated path is still in use
                 projectId = await featureToggleStore.getProjectId(featureName);
             } else if (
                 projectId === undefined &&

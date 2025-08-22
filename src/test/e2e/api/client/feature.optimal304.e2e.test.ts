@@ -39,11 +39,11 @@ const prodTokenSecret = validTokens[1].secret;
 const allEnvsTokenSecret = validTokens[2].secret;
 
 async function setup({
-    etagVariantName,
-    enabled,
+    etagVariant,
+    etagByEnvEnabled,
 }: {
-    etagVariantName: string;
-    enabled: boolean;
+    etagVariant: string | undefined;
+    etagByEnvEnabled: boolean;
 }): Promise<{ app: IUnleashTest; db: ITestDb }> {
     const db = await dbInit(`ignored`, getLogger);
 
@@ -59,10 +59,11 @@ async function setup({
                 flags: {
                     strictSchemaValidation: true,
                     etagVariant: {
-                        name: etagVariantName,
-                        enabled,
-                        feature_enabled: enabled,
+                        name: etagVariant,
+                        enabled: etagVariant !== undefined,
+                        feature_enabled: etagVariant !== undefined,
                     },
+                    etagByEnv: etagByEnvEnabled,
                 },
             },
         },
@@ -176,139 +177,234 @@ async function validateInitialState({
 
 describe.each([
     {
-        name: 'disabled',
-        enabled: false,
+        etagVariant: undefined,
+        etagByEnvEnabled: false,
     },
     {
-        name: 'v2',
-        enabled: true,
+        etagVariant: 'v2',
+        etagByEnvEnabled: false,
     },
-])('feature 304 api client (etag variant = $name)', ({ name, enabled }) => {
-    let app: IUnleashTest;
-    let db: ITestDb;
-    beforeAll(async () => {
-        ({ app, db } = await setup({
-            etagVariantName: name,
-            enabled,
-        }));
-        await initialize({ app, db });
-        await validateInitialState({ app, db });
-    });
+    {
+        etagVariant: 'v2',
+        etagByEnvEnabled: true,
+    },
+])(
+    'feature 304 api client (etag variant = $etagVariant)',
+    ({ etagVariant, etagByEnvEnabled }) => {
+        let app: IUnleashTest;
+        let db: ITestDb;
+        const etagVariantEnabled = etagVariant !== undefined;
+        const etagVariantName = etagVariant ?? 'disabled';
+        const expectedDevEventId = etagByEnvEnabled ? 13 : 15;
+        beforeAll(async () => {
+            ({ app, db } = await setup({
+                etagVariant,
+                etagByEnvEnabled,
+            }));
+            await initialize({ app, db });
+            await validateInitialState({ app, db });
+        });
 
-    afterAll(async () => {
-        await app.destroy();
-        await db.destroy();
-    });
+        afterAll(async () => {
+            await app.destroy();
+            await db.destroy();
+        });
 
-    test('returns calculated hash without if-none-match header (dev env token)', async () => {
-        const res = await app.request
-            .get('/api/client/features')
-            .set('Authorization', devTokenSecret)
-            .expect('Content-Type', /json/)
-            .expect(200);
+        test('returns calculated hash without if-none-match header (dev env token)', async () => {
+            const res = await app.request
+                .get('/api/client/features')
+                .set('Authorization', devTokenSecret)
+                .expect('Content-Type', /json/)
+                .expect(200);
 
-        if (enabled) {
-            expect(res.headers.etag).toBe(`"76d8bb0e:13:${name}"`);
-            expect(res.body.meta.etag).toBe(`"76d8bb0e:13:${name}"`);
-        } else {
-            expect(res.headers.etag).toBe('"76d8bb0e:13"');
-            expect(res.body.meta.etag).toBe('"76d8bb0e:13"');
-        }
-    });
+            if (etagVariantEnabled) {
+                expect(res.headers.etag).toBe(
+                    `"76d8bb0e:${expectedDevEventId}:${etagVariantName}"`,
+                );
+                expect(res.body.meta.etag).toBe(
+                    `"76d8bb0e:${expectedDevEventId}:${etagVariantName}"`,
+                );
+            } else {
+                expect(res.headers.etag).toBe(
+                    `"76d8bb0e:${expectedDevEventId}"`,
+                );
+                expect(res.body.meta.etag).toBe(
+                    `"76d8bb0e:${expectedDevEventId}"`,
+                );
+            }
+        });
 
-    test(`returns ${enabled ? 200 : 304} for pre-calculated hash${enabled ? ' because hash changed' : ''} (dev env token)`, async () => {
-        const res = await app.request
-            .get('/api/client/features')
-            .set('Authorization', devTokenSecret)
-            .set('if-none-match', '"76d8bb0e:13"')
-            .expect(enabled ? 200 : 304);
+        test(`returns ${etagVariantEnabled ? 200 : 304} for pre-calculated hash${etagVariantEnabled ? ' because hash changed' : ''} (dev env token)`, async () => {
+            const res = await app.request
+                .get('/api/client/features')
+                .set('Authorization', devTokenSecret)
+                .set('if-none-match', `"76d8bb0e:${expectedDevEventId}"`)
+                .expect(etagVariantEnabled ? 200 : 304);
 
-        if (enabled) {
-            expect(res.headers.etag).toBe(`"76d8bb0e:13:${name}"`);
-            expect(res.body.meta.etag).toBe(`"76d8bb0e:13:${name}"`);
-        }
-    });
+            if (etagVariantEnabled) {
+                expect(res.headers.etag).toBe(
+                    `"76d8bb0e:${expectedDevEventId}:${etagVariantName}"`,
+                );
+                expect(res.body.meta.etag).toBe(
+                    `"76d8bb0e:${expectedDevEventId}:${etagVariantName}"`,
+                );
+            }
+        });
 
-    test('creating a new feature does not modify etag', async () => {
-        await app.createFeature('new');
-        await app.services.configurationRevisionService.updateMaxRevisionId();
+        test('creating a new feature does not modify etag', async () => {
+            await app.createFeature('new');
+            await app.services.configurationRevisionService.updateMaxRevisionId();
 
-        await app.request
-            .get('/api/client/features')
-            .set('Authorization', devTokenSecret)
-            .set('if-none-match', `"76d8bb0e:13${enabled ? `:${name}` : ''}"`)
-            .expect(304);
-    });
+            await app.request
+                .get('/api/client/features')
+                .set('Authorization', devTokenSecret)
+                .set(
+                    'if-none-match',
+                    `"76d8bb0e:${expectedDevEventId}${etagVariantEnabled ? `:${etagVariantName}` : ''}"`,
+                )
+                .expect(304);
+        });
 
-    test('a token with all envs should get the max id regardless of the environment', async () => {
-        const currentProdEtag = `"67e24428:15${enabled ? `:${name}` : ''}"`;
-        const { headers } = await app.request
-            .get('/api/client/features')
-            .set('if-none-match', currentProdEtag)
-            .set('Authorization', allEnvsTokenSecret)
-            .expect(200);
+        test('a token with all envs should get the max id regardless of the environment', async () => {
+            const currentProdEtag = `"67e24428:15${etagVariantEnabled ? `:${etagVariantName}` : ''}"`;
+            const { headers } = await app.request
+                .get('/api/client/features')
+                .set('if-none-match', currentProdEtag)
+                .set('Authorization', allEnvsTokenSecret)
+                .expect(200);
 
-        // it's a different hash than prod, but gets the max id
-        expect(headers.etag).toEqual(
-            `"ae443048:15${enabled ? `:${name}` : ''}"`,
+            // it's a different hash than prod, but gets the max id
+            expect(headers.etag).toEqual(
+                `"ae443048:15${etagVariantEnabled ? `:${etagVariantName}` : ''}"`,
+            );
+        });
+
+        test.runIf(!etagByEnvEnabled)(
+            'production environment gets same event id in etag than development',
+            async () => {
+                const { headers: prodHeaders } = await app.request
+                    .get('/api/client/features?bla=1')
+                    .set('Authorization', prodTokenSecret)
+                    .expect(200);
+
+                expect(prodHeaders.etag).toEqual(
+                    `"67e24428:15${etagVariantEnabled ? `:${etagVariantName}` : ''}"`,
+                );
+
+                const { headers: devHeaders } = await app.request
+                    .get('/api/client/features')
+                    .set('Authorization', devTokenSecret)
+                    .expect(200);
+
+                expect(devHeaders.etag).toEqual(
+                    `"76d8bb0e:15${etagVariantEnabled ? `:${etagVariantName}` : ''}"`,
+                );
+            },
         );
-    });
 
-    test('production environment gets a different etag than development', async () => {
-        const { headers: prodHeaders } = await app.request
-            .get('/api/client/features?bla=1')
-            .set('Authorization', prodTokenSecret)
-            .expect(200);
+        test.runIf(!etagByEnvEnabled)(
+            'modifying dev environment also invalidates prod tokens',
+            async () => {
+                const currentDevEtag = `"76d8bb0e:${expectedDevEventId}${etagVariantEnabled ? `:${etagVariantName}` : ''}"`;
+                const currentProdEtag = `"67e24428:15${etagVariantEnabled ? `:${etagVariantName}` : ''}"`;
+                await app.request
+                    .get('/api/client/features')
+                    .set('if-none-match', currentProdEtag)
+                    .set('Authorization', prodTokenSecret)
+                    .expect(304);
 
-        expect(prodHeaders.etag).toEqual(
-            `"67e24428:15${enabled ? `:${name}` : ''}"`,
+                await app.request
+                    .get('/api/client/features')
+                    .set('Authorization', devTokenSecret)
+                    .set('if-none-match', currentDevEtag)
+                    .expect(304);
+
+                await app.enableFeature('X', DEFAULT_ENV);
+                await app.services.configurationRevisionService.updateMaxRevisionId();
+
+                await app.request
+                    .get('/api/client/features')
+                    .set('Authorization', prodTokenSecret)
+                    .set('if-none-match', currentProdEtag)
+                    .expect(200);
+
+                const { headers: devHeaders } = await app.request
+                    .get('/api/client/features')
+                    .set('Authorization', devTokenSecret)
+                    .set('if-none-match', currentDevEtag)
+                    .expect(200);
+
+                // Note: this test yields a different result if run in isolation
+                // this is because the id 19 depends on a previous test adding a feature
+                // otherwise the id will be 18
+                expect(devHeaders.etag).toEqual(
+                    `"76d8bb0e:19${etagVariantEnabled ? `:${etagVariantName}` : ''}"`,
+                );
+            },
         );
 
-        const { headers: devHeaders } = await app.request
-            .get('/api/client/features')
-            .set('Authorization', devTokenSecret)
-            .expect(200);
+        test.runIf(etagByEnvEnabled)(
+            'production environment gets a different etag than development',
+            async () => {
+                const { headers: prodHeaders } = await app.request
+                    .get('/api/client/features?bla=1')
+                    .set('Authorization', prodTokenSecret)
+                    .expect(200);
 
-        expect(devHeaders.etag).toEqual(
-            `"76d8bb0e:13${enabled ? `:${name}` : ''}"`,
+                expect(prodHeaders.etag).toEqual(
+                    `"67e24428:15${etagVariantEnabled ? `:${etagVariantName}` : ''}"`,
+                );
+
+                const { headers: devHeaders } = await app.request
+                    .get('/api/client/features')
+                    .set('Authorization', devTokenSecret)
+                    .expect(200);
+
+                expect(devHeaders.etag).toEqual(
+                    `"76d8bb0e:13${etagVariantEnabled ? `:${etagVariantName}` : ''}"`,
+                );
+            },
         );
-    });
 
-    test('modifying dev environment should only invalidate dev tokens', async () => {
-        const currentDevEtag = `"76d8bb0e:13${enabled ? `:${name}` : ''}"`;
-        const currentProdEtag = `"67e24428:15${enabled ? `:${name}` : ''}"`;
-        await app.request
-            .get('/api/client/features')
-            .set('if-none-match', currentProdEtag)
-            .set('Authorization', prodTokenSecret)
-            .expect(304);
+        test.runIf(etagByEnvEnabled)(
+            'modifying dev environment should only invalidate dev tokens',
+            async () => {
+                const currentDevEtag = `"76d8bb0e:13${etagVariantEnabled ? `:${etagVariantName}` : ''}"`;
+                const currentProdEtag = `"67e24428:15${etagVariantEnabled ? `:${etagVariantName}` : ''}"`;
+                await app.request
+                    .get('/api/client/features')
+                    .set('if-none-match', currentProdEtag)
+                    .set('Authorization', prodTokenSecret)
+                    .expect(304);
 
-        await app.request
-            .get('/api/client/features')
-            .set('Authorization', devTokenSecret)
-            .set('if-none-match', currentDevEtag)
-            .expect(304);
+                await app.request
+                    .get('/api/client/features')
+                    .set('Authorization', devTokenSecret)
+                    .set('if-none-match', currentDevEtag)
+                    .expect(304);
 
-        await app.enableFeature('X', DEFAULT_ENV);
-        await app.services.configurationRevisionService.updateMaxRevisionId();
+                await app.enableFeature('X', DEFAULT_ENV);
+                await app.services.configurationRevisionService.updateMaxRevisionId();
 
-        await app.request
-            .get('/api/client/features')
-            .set('Authorization', prodTokenSecret)
-            .set('if-none-match', currentProdEtag)
-            .expect(304);
+                await app.request
+                    .get('/api/client/features')
+                    .set('Authorization', prodTokenSecret)
+                    .set('if-none-match', currentProdEtag)
+                    .expect(304);
 
-        const { headers: devHeaders } = await app.request
-            .get('/api/client/features')
-            .set('Authorization', devTokenSecret)
-            .set('if-none-match', currentDevEtag)
-            .expect(200);
+                const { headers: devHeaders } = await app.request
+                    .get('/api/client/features')
+                    .set('Authorization', devTokenSecret)
+                    .set('if-none-match', currentDevEtag)
+                    .expect(200);
 
-        // Note: this test yields a different result if run in isolation
-        // this is because the id 19 depends on a previous test adding a feature
-        // otherwise the id will be 18
-        expect(devHeaders.etag).toEqual(
-            `"76d8bb0e:19${enabled ? `:${name}` : ''}"`,
+                // Note: this test yields a different result if run in isolation
+                // this is because the id 19 depends on a previous test adding a feature
+                // otherwise the id will be 18
+                expect(devHeaders.etag).toEqual(
+                    `"76d8bb0e:19${etagVariantEnabled ? `:${etagVariantName}` : ''}"`,
+                );
+            },
         );
-    });
-});
+    },
+);

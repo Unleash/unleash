@@ -67,7 +67,8 @@ export type IFlagKey =
     | 'lifecycleGraphs'
     | 'addConfiguration'
     | 'filterFlagsToArchive'
-    | 'projectListViewToggle';
+    | 'projectListViewToggle'
+    | 'etagByEnv';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 

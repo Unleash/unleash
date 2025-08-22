@@ -1,17 +1,17 @@
 import { Tooltip, Typography } from '@mui/material';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 import { formatDateYMD } from 'utils/formatDate';
 import { TextCell } from '../TextCell/TextCell.tsx';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import type { ColumnInstance } from 'react-table';
 
-interface ITimeAgoCellProps {
+export interface ITimeAgoCellProps {
     value?: string | number | Date | null;
     column?: ColumnInstance;
     live?: boolean;
     emptyText?: string;
-    title?: (date: string) => string;
+    title?: (date?: string) => ReactNode;
     dateFormat?: (value: string | number | Date, locale: string) => string;
 }
 
@@ -20,18 +20,19 @@ export const TimeAgoCell: FC<ITimeAgoCellProps> = ({
     column,
     live = false,
     emptyText = 'Never',
-    title = (date) => (column ? `${column.Header}: ${date}` : date),
+    title = (date) =>
+        date ? (column ? `${column.Header}: ${date}` : date) : '',
     dateFormat = formatDateYMD,
 }) => {
     const { locationSettings } = useLocationSettings();
 
-    if (!value) return <TextCell>{emptyText}</TextCell>;
-
-    const date = dateFormat(value, locationSettings.locale);
+    const tooltip = value
+        ? title(dateFormat(value, locationSettings.locale))
+        : title();
 
     return (
         <TextCell>
-            <Tooltip title={title(date)} arrow>
+            <Tooltip title={tooltip} arrow>
                 <Typography
                     noWrap
                     sx={{
@@ -42,7 +43,11 @@ export const TimeAgoCell: FC<ITimeAgoCellProps> = ({
                     variant='body2'
                     data-loading
                 >
-                    <TimeAgo date={value} refresh={live} />
+                    {value ? (
+                        <TimeAgo date={value} refresh={live} />
+                    ) : (
+                        emptyText
+                    )}
                 </Typography>
             </Tooltip>
         </TextCell>

@@ -16,7 +16,8 @@ import { formatDateYMDHMS } from 'utils/formatDate.js';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell.js';
 import { useUiFlag } from 'hooks/useUiFlag.js';
 import NotFound from 'component/common/NotFound/NotFound.js';
-import { UnknownFlagsActionsCell } from './UnknownFlagsActionsCell.js';
+import { UnknownFlagsSeenInUnleashCell } from './UnknownFlagsSeenInUnleashCell.js';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.js';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),
@@ -25,13 +26,12 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
 const StyledAlertContent = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(1),
+    gap: theme.spacing(2),
 }));
 
-const StyledUl = styled('ul')(({ theme }) => ({
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-}));
+const StyledHeader = styled('div')({
+    display: 'flex',
+});
 
 export const UnknownFlagsTable = () => {
     const { unknownFlags, loading } = useUnknownFlags();
@@ -46,13 +46,14 @@ export const UnknownFlagsTable = () => {
             {
                 Header: 'Flag name',
                 accessor: 'name',
-                minWidth: 200,
+                minWidth: 100,
                 searchable: true,
             },
             {
                 Header: 'Application',
                 accessor: 'appName',
                 searchable: true,
+                minWidth: 100,
             },
             {
                 Header: 'Environment',
@@ -60,27 +61,47 @@ export const UnknownFlagsTable = () => {
                 searchable: true,
             },
             {
-                Header: 'Last seen',
+                Header: (
+                    <StyledHeader>
+                        Reported
+                        <HelpIcon
+                            tooltip={`Flags reported when your SDK evaluates them but they don't exist in Unleash`}
+                            size='16px'
+                        />
+                    </StyledHeader>
+                ),
                 accessor: 'seenAt',
-                Cell: ({ value, column }) => (
+                Cell: ({ value }) => (
                     <TimeAgoCell
                         value={value}
-                        column={column}
+                        title={(date) => `Reported: ${date}`}
                         dateFormat={formatDateYMDHMS}
                     />
                 ),
+                width: 150,
             },
             {
-                Header: 'Actions',
-                id: 'Actions',
-                align: 'center',
+                Header: (
+                    <StyledHeader>
+                        Last event
+                        <HelpIcon
+                            tooltip='Events are only logged for feature flags that have been set up in Unleash first'
+                            size='16px'
+                        />
+                    </StyledHeader>
+                ),
+                accessor: 'lastEventAt',
                 Cell: ({
                     row: { original: unknownFlag },
-                }: { row: { original: UnknownFlag } }) => (
-                    <UnknownFlagsActionsCell unknownFlag={unknownFlag} />
+                }: {
+                    row: { original: UnknownFlag };
+                }) => (
+                    <UnknownFlagsSeenInUnleashCell
+                        unknownFlag={unknownFlag}
+                        dateFormat={formatDateYMDHMS}
+                    />
                 ),
-                width: 100,
-                disableSortBy: true,
+                width: 150,
             },
         ],
         [],
@@ -121,7 +142,7 @@ export const UnknownFlagsTable = () => {
             isLoading={loading}
             header={
                 <PageHeader
-                    title={`Unknown flags (${rows.length})`}
+                    title={`Unknown flag report (${rows.length})`}
                     actions={
                         <>
                             <ConditionallyRender
@@ -154,36 +175,34 @@ export const UnknownFlagsTable = () => {
             <StyledAlert severity='info'>
                 <StyledAlertContent>
                     <p>
-                        <strong>Unknown flags</strong> are feature flags that
-                        your SDKs tried to evaluate but which Unleash doesn't
-                        recognize. Tracking them helps you catch typos, remove
-                        outdated flags, and keep your code and configuration in
-                        sync. These can include:
-                    </p>
-
-                    <StyledUl>
-                        <li>
-                            <b>Missing flags</b>: typos or flags referenced in
-                            code that don't exist in Unleash.
-                        </li>
-                        <li>
-                            <b>Invalid flags</b>: flags with malformed or
-                            unexpected names, unsupported by Unleash.
-                        </li>
-                    </StyledUl>
-
-                    <p>
-                        Each row in the table represents an{' '}
-                        <strong>unknown flag report</strong>, which is a unique
-                        combination of <em>flag name</em>, <em>application</em>,
-                        and <em>environment</em>. The same flag name may appear
-                        multiple times if it's been seen in different
-                        applications or environments.
+                        <b>
+                            Clean up unknown flags to keep your code and
+                            configuration in sync
+                        </b>
+                        <br />
+                        Unknown flags are feature flags that your SDKs tried to
+                        evaluate but which Unleash doesn't recognize.
                     </p>
 
                     <p>
-                        We display up to 1,000 unknown flag reports from the
-                        last 24 hours. Older reports are automatically pruned.
+                        <b>Unknown flags can include:</b>
+                        <ul>
+                            <li>
+                                Missing flags: typos or flags referenced in code
+                                that don't exist in Unleash.
+                            </li>
+                            <li>
+                                Invalid flags: flags with malformed or
+                                unexpected names, unsupported by Unleash.
+                            </li>
+                        </ul>
+                    </p>
+
+                    <p>
+                        <b>Why do I see the same flag name multiple times?</b>
+                        <br />
+                        The same flag name will appear multiple times if it's
+                        been seen in different applications or environments.
                     </p>
                 </StyledAlertContent>
             </StyledAlert>

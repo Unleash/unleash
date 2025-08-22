@@ -31,6 +31,14 @@ export const unknownFlagSchema = {
                 'The environment in which the unknown flag was reported.',
             example: 'production',
         },
+        lastEventAt: {
+            type: 'string',
+            format: 'date-time',
+            description:
+                'The date and time when the last event for the unknown flag name occurred, if any.',
+            example: '2023-10-01T12:00:00Z',
+            nullable: true,
+        },
     },
     components: {},
 } as const;

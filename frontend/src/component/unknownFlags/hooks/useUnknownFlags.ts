@@ -10,6 +10,7 @@ export type UnknownFlag = {
     appName: string;
     seenAt: Date;
     environment: string;
+    lastEventAt: Date;
 };
 
 type UnknownFlagsResponse = {

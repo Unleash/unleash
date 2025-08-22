@@ -8,38 +8,6 @@ export default function Root({ children }: { children: React.ReactNode }) {
             return;
         }
 
-        // Add mountain texture styles after render
-        const addMountainTextureStyles = () => {
-            const styleId = 'mountain-texture-styles';
-            if (document.getElementById(styleId)) {
-                return;
-            }
-
-            const style = document.createElement('style');
-            style.id = styleId;
-            style.textContent = `
-                main:after {
-                    background-image: url("/img/mountain-texture.png");
-                    position: fixed;
-                    display: block;
-                    z-index: 0;
-                    bottom: 0px;
-                    right: 0px;
-                    width: 350px;
-                    aspect-ratio: 652 / 905;
-                    background-size: cover;
-                    pointer-events: none;
-                    user-select: none;
-                    background-repeat: no-repeat;
-                    content: "";
-                }
-            `;
-            document.head.appendChild(style);
-        };
-
-        // Add styles immediately after render
-        addMountainTextureStyles();
-
         const loadGoogleAnalytics = () => {
             if (
                 window.gtag ||
@@ -199,11 +167,11 @@ export default function Root({ children }: { children: React.ReactNode }) {
 
     return (
         <>
-            {children}
             <style
                 dangerouslySetInnerHTML={{ __html: criticalCSS }}
                 data-critical='true'
             />
+            {children}
         </>
     );
 }

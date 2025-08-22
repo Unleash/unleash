@@ -9,6 +9,7 @@
     "docusaurus": "docusaurus",
     "start": "yarn fetch-remote-content && docusaurus start",
     "build": "yarn generate && yarn fetch-remote-content && docusaurus build",
+    "build:analyze": "ANALYZE=true yarn build",
     "swizzle": "docusaurus swizzle",
     "fetch-remote-content": "docusaurus download-remote-content-external && docusaurus download-remote-content-sdks",
     "generate": "node prepare-generated-docs.mjs && docusaurus gen-api-docs all",
@@ -17,7 +18,8 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "test": "NODE_ENV=test node --trace-warnings ../node_modules/.bin/jest remote-content"
+    "test": "NODE_ENV=test node --trace-warnings ../node_modules/.bin/jest remote-content",
+    "optimize:images": "node optimize-images.js"
   },
   "dependencies": {
     "@docusaurus/core": "^3.7.0",
@@ -60,8 +62,11 @@
     "@docusaurus/types": "^3.7.0",
     "@tsconfig/docusaurus": "2.0.3",
     "@types/react": "^18.3.12",
+    "@types/webpack-bundle-analyzer": "^4",
     "raw-loader": "^4.0.2",
-    "typescript": "5.8.3"
+    "sharp": "^0.34.3",
+    "typescript": "5.8.3",
+    "webpack-bundle-analyzer": "^4.10.2"
   },
   "resolutions": {
     "http-proxy-middleware": "3.0.5",

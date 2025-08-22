@@ -1,4 +1,6 @@
 import type { Config } from '@docusaurus/types';
+import type { Configuration } from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 import { sdks } from './remote-content/sdks';
 import { docs as edgeAndProxy } from './remote-content/edge-proxy';
@@ -454,7 +456,7 @@ class="header-github-link"
                         remarkPlugins: [[pluginNpm2Yarn, { sync: true }]],
                         docItemComponent: '@theme/ApiItem',
                         sidebarPath: './sidebars.ts',
-                        breadcrumbs: false,
+                        breadcrumbs: true,
                     },
                     // Analytics/GTM moved to lazy loading in Root.tsx
                     sitemap: {
@@ -923,6 +925,73 @@ class="header-github-link"
                 },
             ],
             'plugin-image-zoom',
+            // Custom webpack configuration plugin
+            function webpackPlugin(context: any, options: any) {
+                return {
+                    name: 'custom-webpack-plugin',
+                    configureWebpack(config: Configuration, isServer: boolean) {
+                        return {
+                            plugins: [
+                                // Only analyze client-side bundles in production
+                                ...(process.env.ANALYZE === 'true' && !isServer
+                                    ? [
+                                          new BundleAnalyzerPlugin({
+                                              analyzerMode: 'static',
+                                              reportFilename:
+                                                  'bundle-report.html',
+                                              openAnalyzer: false,
+                                          }),
+                                      ]
+                                    : []),
+                            ],
+                            optimization: {
+                                splitChunks: isServer
+                                    ? undefined
+                                    : {
+                                          chunks: 'all',
+                                          maxInitialRequests: 25,
+                                          minSize: 20000,
+                                          cacheGroups: {
+                                              // Split vendor libraries
+                                              vendor: {
+                                                  test: /[\\/]node_modules[\\/]/,
+                                                  name: 'vendors',
+                                                  priority: 20,
+                                              },
+                                              // Split documentation by major sections
+                                              docs: {
+                                                  test: /[\\/]docs[\\/]/,
+                                                  name: 'docs',
+                                                  priority: 10,
+                                                  enforce: true,
+                                              },
+                                              // Split API documentation
+                                              openapi: {
+                                                  test: /docusaurus-theme-openapi-docs/,
+                                                  name: 'openapi',
+                                                  priority: 15,
+                                                  enforce: true,
+                                              },
+                                              // Split SDK documentation
+                                              sdks: {
+                                                  test: /[\\/]docs[\\/]generated[\\/].*sdk/,
+                                                  name: 'sdks',
+                                                  priority: 12,
+                                                  enforce: true,
+                                              },
+                                              // Common components
+                                              common: {
+                                                  minChunks: 2,
+                                                  priority: 5,
+                                                  reuseExistingChunk: true,
+                                              },
+                                          },
+                                      },
+                            },
+                        };
+                    },
+                };
+            },
         ],
         themes: [
             'docusaurus-theme-openapi-docs', // Allows use of @theme/ApiItem and other components

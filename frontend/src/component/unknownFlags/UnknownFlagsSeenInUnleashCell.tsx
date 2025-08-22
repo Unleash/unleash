@@ -17,8 +17,11 @@ export const UnknownFlagsSeenInUnleashCell = ({
 }: IUnknownFlagsSeenInUnleashCellProps) => {
     const { isAdmin } = useContext(AccessContext);
     const value = unknownFlag.lastEventAt;
+    const title = value
+        ? (date) => `Last event: ${date}`
+        : () => 'This flag has never existed in Unleash';
 
-    const TimeAgo = <TimeAgoCell value={value} {...props} />;
+    const TimeAgo = <TimeAgoCell value={value} title={title} {...props} />;
 
     if (value && isAdmin) {
         return (

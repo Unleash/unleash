@@ -5,12 +5,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Alert, styled, useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import {
-    type ColumnInstance,
-    useFlexLayout,
-    useSortBy,
-    useTable,
-} from 'react-table';
+import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { Search } from 'component/common/Search/Search';
 import { useSearch } from 'hooks/useSearch';
@@ -22,6 +17,7 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { useUiFlag } from 'hooks/useUiFlag.js';
 import NotFound from 'component/common/NotFound/NotFound.js';
 import { UnknownFlagsSeenInUnleashCell } from './UnknownFlagsSeenInUnleashCell.js';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.js';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),
@@ -32,6 +28,10 @@ const StyledAlertContent = styled('div')(({ theme }) => ({
     flexDirection: 'column',
     gap: theme.spacing(2),
 }));
+
+const StyledHeader = styled('div')({
+    display: 'flex',
+});
 
 export const UnknownFlagsTable = () => {
     const { unknownFlags, loading } = useUnknownFlags();
@@ -61,30 +61,43 @@ export const UnknownFlagsTable = () => {
                 searchable: true,
             },
             {
-                Header: 'Last seen',
+                Header: (
+                    <StyledHeader>
+                        Reported
+                        <HelpIcon
+                            tooltip={`Flags reported when your SDK evaluates them but they don't exist in Unleash`}
+                            size='16px'
+                        />
+                    </StyledHeader>
+                ),
                 accessor: 'seenAt',
-                Cell: ({ value, column }) => (
+                Cell: ({ value }) => (
                     <TimeAgoCell
                         value={value}
-                        column={column}
+                        title={(date) => `Reported: ${date}`}
                         dateFormat={formatDateYMDHMS}
                     />
                 ),
                 width: 150,
             },
             {
-                Header: 'Seen in Unleash',
+                Header: (
+                    <StyledHeader>
+                        Last event
+                        <HelpIcon
+                            tooltip='Events are only logged for feature flags that have been set up in Unleash first'
+                            size='16px'
+                        />
+                    </StyledHeader>
+                ),
                 accessor: 'lastEventAt',
                 Cell: ({
                     row: { original: unknownFlag },
-                    column,
                 }: {
                     row: { original: UnknownFlag };
-                    column: ColumnInstance;
                 }) => (
                     <UnknownFlagsSeenInUnleashCell
                         unknownFlag={unknownFlag}
-                        column={column}
                         dateFormat={formatDateYMDHMS}
                     />
                 ),

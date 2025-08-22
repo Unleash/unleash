@@ -24,6 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import { formatAssetPath } from 'utils/formatPath';
 import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
 import ReleaseTemplatePreviewImage from 'assets/img/releaseTemplatePreview.png';
+import TrendingUpOutlinedIcon from '@mui/icons-material/TrendingUpOutlined';
 
 const StyledNewInUnleash = styled('div')(({ theme }) => ({
     margin: theme.spacing(2, 0, 1, 0),
@@ -81,6 +82,10 @@ const StyledReleaseManagementIcon = styled(FactCheckOutlinedIcon)(
     }),
 );
 
+const StyledImpactMetricsIcon = styled(TrendingUpOutlinedIcon)(({ theme }) => ({
+    color: theme.palette.primary.main,
+}));
+
 const StyledImg = styled('img')(() => ({
     maxWidth: '100%',
 }));
@@ -103,6 +108,7 @@ export const NewInUnleash = ({
     const { isEnterprise } = useUiConfig();
     const signalsEnabled = useUiFlag('signals');
     const releasePlansEnabled = useUiFlag('releasePlans');
+    const impactMetricsEnabled = useUiFlag('impactMetrics');
 
     const items: NewInUnleashItemDetails[] = [
         {
@@ -178,6 +184,23 @@ export const NewInUnleash = ({
             show: isEnterprise() && releasePlansEnabled,
             beta: false,
             popout: true,
+        },
+        {
+            label: 'Impact metrics',
+            summary: 'Lightweight telemetry for your application',
+            icon: <StyledImpactMetricsIcon />,
+            onCheckItOut: () => navigate('/impact-metrics'),
+            docsLink: 'https://docs.getunleash.io/reference/impact-metrics',
+            show: isEnterprise() && impactMetricsEnabled,
+            beta: false,
+            longDescription: (
+                <p>
+                    Track and visualize key performance indicators and
+                    application metrics in a customizable dashboard. Monitor how
+                    your feature flags impact system performance, user behavior,
+                    and business metrics in real-time.
+                </p>
+            ),
         },
     ];
 

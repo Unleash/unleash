@@ -25,7 +25,6 @@ import {
 } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
 import { createTooltip } from 'component/insights/components/LineChart/createTooltip';
 import { CreationArchiveTooltip } from './CreationArchiveTooltip.tsx';
-import { CreationArchiveRatioTooltip } from './CreationArchiveRatioTooltip.tsx';
 import { getFlagTypeColors } from './flagTypeColors.ts';
 import type { WeekData, RawWeekData } from './types.ts';
 
@@ -153,19 +152,6 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     order: 2,
                 },
                 ...flagTypeDatasets,
-                {
-                    label: 'Flags archived / Flags created',
-                    data: weeks,
-                    borderColor: theme.palette.primary.light,
-                    backgroundColor: theme.palette.primary.light,
-                    type: 'line' as const,
-                    parsing: {
-                        yAxisKey: 'archivePercentage',
-                        xAxisKey: 'date',
-                    },
-                    yAxisID: 'y1',
-                    order: 1,
-                },
             ],
             flagTypeNames,
         };
@@ -256,38 +242,15 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                                 text: 'Number of flags',
                             },
                         },
-                        y1: {
-                            type: 'linear',
-                            display: true,
-                            position: 'right',
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Ratio',
-                            },
-                            grid: {
-                                drawOnChartArea: false,
-                            },
-                            ticks: {
-                                callback: (value) => `${value}%`,
-                            },
-                        },
                     },
                 }}
                 height={100}
                 width={250}
             />
             {tooltip?.dataPoints?.some(
-                (point) =>
-                    point.dataset.label !== 'Archived flags' &&
-                    point.dataset.label !== 'Flags archived / Flags created',
+                (point) => point.dataset.label !== 'Archived flags',
             ) ? (
                 <CreationArchiveTooltip tooltip={tooltip} />
-            ) : tooltip?.dataPoints?.some(
-                  (point) =>
-                      point.dataset.label === 'Flags archived / Flags created',
-              ) ? (
-                <CreationArchiveRatioTooltip tooltip={tooltip} />
             ) : (
                 <ChartTooltip tooltip={tooltip} />
             )}

@@ -1,7 +1,6 @@
 export type WeekData = {
     archivedFlags: number;
     totalCreatedFlags: number;
-    createdFlagsByType: Record<string, number>;
     archivePercentage: number;
     week: string;
     date?: string;

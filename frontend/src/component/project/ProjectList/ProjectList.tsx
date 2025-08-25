@@ -19,7 +19,6 @@ import { ProjectArchiveLink } from './ProjectArchiveLink/ProjectArchiveLink.tsx'
 import { ProjectsListHeader } from './ProjectsListHeader/ProjectsListHeader.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { TablePlaceholder } from 'component/common/Table/index.ts';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { ProjectsListViewToggle } from './ProjectsListViewToggle/ProjectsListViewToggle.tsx';
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
@@ -36,7 +35,6 @@ const StyledContainer = styled('div')(({ theme }) => ({
 export const ProjectList = () => {
     const { projects, loading, error, refetch } = useProjects();
     const { isOss } = useUiConfig();
-    const projectListViewToggleEnabled = useUiFlag('projectListViewToggle');
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -130,15 +128,14 @@ export const ProjectList = () => {
                                 helpText='Favorite projects, projects you own, and projects you are a member of'
                                 actions={
                                     <>
-                                        {projectListViewToggleEnabled &&
-                                            !isOss() && (
-                                                <ProjectsListViewToggle
-                                                    view={state.view}
-                                                    setView={(view) =>
-                                                        setState({ view })
-                                                    }
-                                                />
-                                            )}
+                                        {!isOss() && (
+                                            <ProjectsListViewToggle
+                                                view={state.view}
+                                                setView={(view) =>
+                                                    setState({ view })
+                                                }
+                                            />
+                                        )}
                                         <ProjectsListSort
                                             sortBy={state.sortBy}
                                             setSortBy={(sortBy) =>

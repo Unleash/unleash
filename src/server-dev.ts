@@ -56,7 +56,6 @@ process.nextTick(async () => {
                         impactMetrics: true,
                         lifecycleGraphs: true,
                         addConfiguration: true,
-                        projectListViewToggle: true,
                     },
                 },
                 authentication: {

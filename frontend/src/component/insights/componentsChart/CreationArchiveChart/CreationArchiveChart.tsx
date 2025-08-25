@@ -23,9 +23,8 @@ import {
     ChartTooltip,
     type TooltipState,
 } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
-import { createTooltip } from 'component/insights/components/LineChart/createTooltip';
-import { CreationArchiveTooltip } from './CreationArchiveTooltip.tsx';
 import type { WeekData, RawWeekData } from './types.ts';
+import { CreationArchiveTooltip } from './CreationArchiveTooltip.tsx';
 
 ChartJS.register(
     CategoryScale,
@@ -144,6 +143,10 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                 data={data}
                 options={{
                     responsive: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
                     plugins: {
                         legend: {
                             position: 'bottom' as const,
@@ -155,9 +158,16 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                             },
                         },
                         tooltip: {
-                            enabled: false,
-                            position: 'nearest',
-                            external: createTooltip(setTooltip),
+                            // enabled: false,
+                            backgroundColor: theme.palette.background.paper,
+                            padding: 10,
+                            boxPadding: 5,
+                            usePointStyle: true,
+                            titleColor: theme.palette.text.primary,
+                            bodyColor: theme.palette.text.primary,
+                            xAlign: 'center',
+                            position: 'average',
+                            // external: createTooltip(setTooltip),
                         },
                     },
                     locale: locationSettings.locale,

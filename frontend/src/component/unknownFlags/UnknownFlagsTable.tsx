@@ -29,9 +29,10 @@ const StyledAlertContent = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const StyledHeader = styled('div')({
+const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
-});
+    paddingRight: theme.spacing(0.2),
+}));
 
 export const UnknownFlagsTable = () => {
     const { unknownFlags, loading } = useUnknownFlags();
@@ -65,7 +66,7 @@ export const UnknownFlagsTable = () => {
                     <StyledHeader>
                         Reported
                         <HelpIcon
-                            tooltip={`Flags reported when your SDK evaluates them but they don't exist in Unleash`}
+                            tooltip='Last time an SDK reported trying to evaluate this unknown flag'
                             size='16px'
                         />
                     </StyledHeader>
@@ -85,7 +86,7 @@ export const UnknownFlagsTable = () => {
                     <StyledHeader>
                         Last event
                         <HelpIcon
-                            tooltip='Events are only logged for feature flags that have been set up in Unleash first'
+                            tooltip='Last event logged for this flag name, if it has ever existed in Unleash'
                             size='16px'
                         />
                     </StyledHeader>

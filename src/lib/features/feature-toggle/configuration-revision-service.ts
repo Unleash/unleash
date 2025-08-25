@@ -80,6 +80,12 @@ export default class ConfigurationRevisionService extends EventEmitter {
             this.maxRevisionId[environment] = envRevisionId;
         }
 
+        if (this.flagResolver.isEnabled('debugEtag')) {
+            this.logger.info(
+                `[etag] Computed ETag for environment ${environment}: ${envRevisionId} stored as "${this.maxRevisionId[environment]}"`,
+            );
+        }
+
         return this.maxRevisionId[environment];
     }
 
@@ -92,9 +98,15 @@ export default class ConfigurationRevisionService extends EventEmitter {
             this.revisionId,
         );
         if (this.revisionId !== revisionId) {
-            this.logger.debug(
-                `Updating feature configuration with new revision Id ${revisionId} and all envs: ${Object.keys(this.maxRevisionId).join(', ')}`,
-            );
+            if (this.flagResolver.isEnabled('debugEtag')) {
+                this.logger.info(
+                    `[etag] Updating feature configuration with new revision Id ${revisionId} and all envs: ${Object.keys(this.maxRevisionId).join(', ')}`,
+                );
+            } else {
+                this.logger.debug(
+                    `Updating feature configuration with new revision Id ${revisionId} and all envs: ${Object.keys(this.maxRevisionId).join(', ')}`,
+                );
+            }
             await Promise.allSettled(
                 Object.keys(this.maxRevisionId).map((environment) =>
                     this.updateMaxEnvironmentRevisionId(environment),

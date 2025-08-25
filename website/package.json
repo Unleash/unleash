@@ -9,7 +9,6 @@
     "docusaurus": "docusaurus",
     "start": "yarn fetch-remote-content && docusaurus start",
     "build": "yarn generate && yarn fetch-remote-content && docusaurus build",
-    "build:analyze": "ANALYZE=true yarn build",
     "swizzle": "docusaurus swizzle",
     "fetch-remote-content": "docusaurus download-remote-content-external && docusaurus download-remote-content-sdks",
     "generate": "node prepare-generated-docs.mjs && docusaurus gen-api-docs all",

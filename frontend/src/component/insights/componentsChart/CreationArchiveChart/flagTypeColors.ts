@@ -1,3 +1,4 @@
+// todo (lifecycleGraphs): delete this file
 import type { Theme } from '@mui/material';
 
 export const getFlagTypeColors = (theme: Theme) => [

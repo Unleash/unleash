@@ -25,7 +25,6 @@ import {
 } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
 import { createTooltip } from 'component/insights/components/LineChart/createTooltip';
 import { CreationArchiveTooltip } from './CreationArchiveTooltip.tsx';
-import { getFlagTypeColors } from './flagTypeColors.ts';
 import type { WeekData, RawWeekData } from './types.ts';
 
 ChartJS.register(
@@ -66,29 +65,14 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
             ),
         );
 
-        const allFlagTypes = new Set<string>();
-        creationVsArchivedChart.datasets.forEach((d) =>
-            d.data.forEach((item: any) => {
-                if (item.createdFlags) {
-                    Object.keys(item.createdFlags).forEach((type) =>
-                        allFlagTypes.add(type),
-                    );
-                }
-            }),
-        );
-
         const aggregateWeekData = (acc: WeekData, item: RawWeekData) => {
             if (item) {
                 acc.archivedFlags += item.archivedFlags || 0;
 
                 if (item.createdFlags) {
-                    Object.entries(item.createdFlags).forEach(
-                        ([type, count]) => {
-                            acc.createdFlagsByType[type] =
-                                (acc.createdFlagsByType[type] || 0) + count;
-                            acc.totalCreatedFlags += count;
-                        },
-                    );
+                    Object.entries(item.createdFlags).forEach(([_, count]) => {
+                        acc.totalCreatedFlags += count;
+                    });
                 }
             }
             if (!acc.date) {
@@ -100,7 +84,6 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
         const createInitialWeekData = (label: string): WeekData => ({
             archivedFlags: 0,
             totalCreatedFlags: 0,
-            createdFlagsByType: {},
             archivePercentage: 0,
             week: label,
         });
@@ -120,40 +103,28 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
             }))
             .sort((a, b) => (a.week > b.week ? 1 : -1));
 
-        const flagTypeColors = getFlagTypeColors(theme);
-
-        const flagTypeDatasets = Array.from(allFlagTypes).map(
-            (flagType, index) => ({
-                label: flagType,
-                data: weeks,
-                backgroundColor: flagTypeColors[index % flagTypeColors.length],
-                borderColor: flagTypeColors[index % flagTypeColors.length],
-                type: 'bar' as const,
-                parsing: {
-                    yAxisKey: `createdFlagsByType.${flagType}`,
-                    xAxisKey: 'date',
-                },
-                yAxisID: 'y',
-                stack: 'created',
-                order: 2,
-            }),
-        );
-
-        const flagTypeNames = Array.from(allFlagTypes);
-
         return {
             datasets: [
                 {
-                    label: 'Archived flags',
+                    label: 'Flags archived',
                     data: weeks,
-                    backgroundColor: theme.palette.neutral.border,
-                    borderColor: theme.palette.neutral.border,
+                    backgroundColor: theme.palette.charts.A2,
+                    borderColor: theme.palette.charts.A2,
                     parsing: { yAxisKey: 'archivedFlags', xAxisKey: 'date' },
+                    order: 1,
+                },
+                {
+                    label: 'Flags created',
+                    data: weeks,
+                    backgroundColor: theme.palette.charts.A1,
+                    borderColor: theme.palette.charts.A1,
+                    parsing: {
+                        yAxisKey: 'totalCreatedFlags',
+                        xAxisKey: 'date',
+                    },
                     order: 2,
                 },
-                ...flagTypeDatasets,
             ],
-            flagTypeNames,
         };
     }, [creationVsArchivedChart, theme]);
 
@@ -165,8 +136,6 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     );
     const data =
         notEnoughData || isLoading ? placeholderData : aggregateOrProjectData;
-
-    const flagTypeNames = aggregateOrProjectData.flagTypeNames || [];
 
     return (
         <>
@@ -183,35 +152,6 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                                 usePointStyle: true,
                                 padding: 21,
                                 boxHeight: 8,
-                                filter: (legendItem) => {
-                                    return !flagTypeNames.includes(
-                                        legendItem.text || '',
-                                    );
-                                },
-                                generateLabels: (chart) => {
-                                    const original =
-                                        ChartJS.defaults.plugins.legend.labels.generateLabels(
-                                            chart,
-                                        );
-                                    const filtered = original.filter(
-                                        (item) =>
-                                            !flagTypeNames.includes(
-                                                item.text || '',
-                                            ),
-                                    );
-
-                                    filtered.push({
-                                        text: 'Created Flags',
-                                        fillStyle: theme.palette.success.main,
-                                        strokeStyle: theme.palette.success.main,
-                                        lineWidth: 0,
-                                        hidden: false,
-                                        index: filtered.length,
-                                        datasetIndex: -1,
-                                    });
-
-                                    return filtered;
-                                },
                             },
                         },
                         tooltip: {
@@ -248,7 +188,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                 width={250}
             />
             {tooltip?.dataPoints?.some(
-                (point) => point.dataset.label !== 'Archived flags',
+                (point) => point.dataset.label !== 'Flags archived',
             ) ? (
                 <CreationArchiveTooltip tooltip={tooltip} />
             ) : (

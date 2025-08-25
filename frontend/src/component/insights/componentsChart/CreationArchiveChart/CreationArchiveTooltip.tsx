@@ -41,29 +41,11 @@ export const CreationArchiveTooltip: FC<CreationArchiveTooltipProps> = ({
 
     const rawData = createdFlagDataPoints[0]?.raw as WeekData;
 
-    if (!rawData?.createdFlagsByType) {
-        return null;
-    }
-
     const flagTypeNames = createdFlagDataPoints.map(
         (point) => point.dataset.label || '',
     );
 
     const flagTypeColors = getFlagTypeColors(theme);
-
-    const flagTypeEntries = Object.entries(rawData.createdFlagsByType)
-        .filter(([, count]) => (count as number) > 0)
-        .map(([flagType, count], index) => ({
-            type: flagType,
-            count: count as number,
-            color:
-                flagTypeColors[flagTypeNames.indexOf(flagType)] ||
-                flagTypeColors[index % flagTypeColors.length],
-        }));
-
-    if (flagTypeEntries.length === 0) {
-        return null;
-    }
 
     return (
         <ChartTooltipContainer tooltip={tooltip}>
@@ -77,19 +59,18 @@ export const CreationArchiveTooltip: FC<CreationArchiveTooltipProps> = ({
                     Flag type
                 </Typography>
 
-                {flagTypeEntries.map(({ type, count, color }) => (
-                    <StyledFlagTypeItem key={type}>
-                        <Typography variant='body2' component='span'>
-                            <Typography sx={{ color }} component='span'>
-                                {'● '}
-                            </Typography>
-                            {type.charAt(0).toUpperCase() + type.slice(1)}
-                        </Typography>
-                        <Typography variant='body2' component='span'>
-                            {count}
-                        </Typography>
-                    </StyledFlagTypeItem>
-                ))}
+                <Typography variant='body2' component='span'>
+                    <Typography
+                        sx={{ color: flagTypeColors[0] }}
+                        component='span'
+                    >
+                        {'● '}
+                    </Typography>
+                    Total created:
+                </Typography>
+                <Typography variant='body2' component='span'>
+                    {rawData.totalCreatedFlags}
+                </Typography>
             </StyledTooltipItemContainer>
         </ChartTooltipContainer>
     );

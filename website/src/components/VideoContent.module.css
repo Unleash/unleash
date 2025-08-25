@@ -86,11 +86,11 @@
 }
 
 /* Dark mode adjustments */
-[data-theme='dark'] .videoThumbnail {
+[data-theme="dark"] .videoThumbnail {
     border-color: var(--ifm-color-emphasis-300);
 }
 
-[data-theme='dark'] .videoThumbnail:hover {
+[data-theme="dark"] .videoThumbnail:hover {
     box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
 }
 
@@ -100,7 +100,7 @@
         width: 60px;
         height: 60px;
     }
-    
+
     .videoContainer {
         gap: 1rem;
     }

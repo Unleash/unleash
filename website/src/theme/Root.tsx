@@ -110,24 +110,20 @@ export default function Root({ children }: { children: React.ReactNode }) {
             if (hasInteracted) return;
             hasInteracted = true;
 
-            // Clear the fallback timer
             if (fallbackTimer) {
                 clearTimeout(fallbackTimer);
             }
 
-            // Load all third-party scripts on user interaction
             loadGoogleAnalytics();
             loadGoogleTagManager();
             loadKapaWidget();
 
-            // Remove event listeners
             window.removeEventListener('scroll', handleUserInteraction);
             window.removeEventListener('click', handleUserInteraction);
             window.removeEventListener('touchstart', handleUserInteraction);
             window.removeEventListener('mousemove', handleUserInteraction);
         };
 
-        // Set up event listeners for user interaction
         window.addEventListener('scroll', handleUserInteraction, {
             once: true,
             passive: true,
@@ -142,7 +138,6 @@ export default function Root({ children }: { children: React.ReactNode }) {
             passive: true,
         });
 
-        // Fallback: Load Google Analytics after 3 seconds if no interaction
         fallbackTimer = setTimeout(() => {
             if (!hasInteracted) {
                 hasInteracted = true;

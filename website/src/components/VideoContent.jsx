@@ -11,7 +11,6 @@ const extractVideoId = (url) => {
     return match ? match[1] : null;
 };
 
-// Lazy video component that shows thumbnail until clicked
 const LazyVideo = ({ url, title = 'YouTube video player' }) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const videoId = extractVideoId(url);
@@ -36,7 +35,6 @@ const LazyVideo = ({ url, title = 'YouTube video player' }) => {
                 tabIndex={0}
                 aria-label={`Load ${title}`}
             >
-                {/* Play button overlay */}
                 <img
                     className={styles.thumbnailImage}
                     src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
@@ -55,7 +53,6 @@ const LazyVideo = ({ url, title = 'YouTube video player' }) => {
                     </svg>
                 </div>
 
-                {/* Loading hint */}
                 <div className={styles.loadingHint}>Click to load video</div>
             </div>
         );

@@ -143,10 +143,10 @@ declare module '@mui/material/styles' {
             A3: string;
             A4: string;
             A5: string;
-            B: string;
-            C: string;
-            D: string;
-            E: string;
+            B1: string;
+            C1: string;
+            D1: string;
+            E1: string;
             series: string[];
         };
     }

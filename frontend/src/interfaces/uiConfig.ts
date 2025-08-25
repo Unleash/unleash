@@ -92,7 +92,6 @@ export type UiFlags = {
     lifecycleGraphs?: boolean;
     addConfiguration?: boolean;
     filterFlagsToArchive?: boolean;
-    projectListViewToggle?: boolean;
 };
 
 export interface IVersionInfo {

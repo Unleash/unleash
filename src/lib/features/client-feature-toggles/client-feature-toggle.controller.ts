@@ -147,15 +147,13 @@ export default class FeatureController extends Controller {
 
         if (clientFeatureCaching.enabled) {
             this.featuresAndSegments = memoizee(
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                (query: IFeatureToggleQuery, etag: string) =>
+                (query: IFeatureToggleQuery, _etag: string) =>
                     this.resolveFeaturesAndSegments(query),
                 {
                     promise: true,
                     maxAge: clientFeatureCaching.maxAge,
-                    normalizer(args) {
-                        // args is arguments object as accessible in memoized function
-                        return args[1];
+                    normalizer([_query, etag]) {
+                        return etag;
                     },
                 },
             );
@@ -167,6 +165,11 @@ export default class FeatureController extends Controller {
     private async resolveFeaturesAndSegments(
         query?: IFeatureToggleQuery,
     ): Promise<[FeatureConfigurationClient[], IClientSegment[]]> {
+        if (this.flagResolver.isEnabled('debugEtag')) {
+            this.logger.info(
+                `[etag] Flags and segments cache miss for ${JSON.stringify(query)}`,
+            );
+        }
         if (this.flagResolver.isEnabled('deltaApi')) {
             const features =
                 await this.clientFeatureToggleService.getClientFeatures(query);
@@ -324,9 +327,11 @@ export default class FeatureController extends Controller {
             res.end();
             return;
         } else {
-            this.logger.debug(
-                `Provided revision: ${userVersion}, calculated revision: ${etag}`,
-            );
+            if (this.flagResolver.isEnabled('debugEtag')) {
+                this.logger.info(
+                    `[etag] Provided revision: ${userVersion}, calculated revision: ${etag}`,
+                );
+            }
         }
 
         const [features, segments] = await this.featuresAndSegments(
@@ -364,6 +369,13 @@ export default class FeatureController extends Controller {
             );
 
         const queryHash = hashSum(query);
+        if (this.flagResolver.isEnabled('debugEtag')) {
+            this.logger.info(
+                `[etag] for query ${JSON.stringify(
+                    query,
+                )} is "${queryHash}:${revisionId}" (revision id query with env ${etagByEnvEnabled ? query.environment : undefined})`,
+            );
+        }
         const etagVariant = this.flagResolver.getVariant('etagVariant');
         if (etagVariant.feature_enabled && etagVariant.enabled) {
             const etag = `"${queryHash}:${revisionId}:${etagVariant.name}"`;

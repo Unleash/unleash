@@ -61,7 +61,8 @@ export type IFlagKey =
     | 'addConfiguration'
     | 'filterFlagsToArchive'
     | 'fetchMode'
-    | 'etagByEnv';
+    | 'etagByEnv'
+    | 'debugEtag';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 

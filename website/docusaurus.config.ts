@@ -88,21 +88,6 @@ export default async function createConfigAsync(): Promise<Config> {
             {
                 tagName: 'link',
                 attributes: {
-                    rel: 'preconnect',
-                    href: 'https://fonts.googleapis.com',
-                },
-            },
-            {
-                tagName: 'link',
-                attributes: {
-                    rel: 'preconnect',
-                    href: 'https://fonts.gstatic.com',
-                    crossorigin: 'anonymous',
-                },
-            },
-            {
-                tagName: 'link',
-                attributes: {
                     rel: 'preload',
                     href: '/img/unleash_logo_dark.svg',
                     as: 'image',

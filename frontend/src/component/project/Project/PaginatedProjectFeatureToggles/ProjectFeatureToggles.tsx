@@ -151,7 +151,7 @@ export const ProjectFeatureToggles = ({
         setShowFeatureDeleteDialogue,
     } = useRowActions(refetch, projectId, trackArchiveAction);
 
-    const isPlaceholder = Boolean(initialLoad || (loading && total));
+    const isPlaceholder = Boolean(initialLoad || loading);
 
     const [onboardingFlow, setOnboardingFlow] = useLocalStorageState<
         'visible' | 'closed'

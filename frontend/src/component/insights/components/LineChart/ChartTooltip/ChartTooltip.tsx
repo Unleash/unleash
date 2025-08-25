@@ -2,7 +2,7 @@ import { Box, Paper, styled, Typography } from '@mui/material';
 import type { TooltipItem } from 'chart.js';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import type React from 'react';
-import type { FC, VFC } from 'react';
+import { useEffect, useState, type FC, type VFC } from 'react';
 import { objectId } from 'utils/objectId';
 
 export type TooltipState = {
@@ -73,23 +73,35 @@ const getLeftOffset = (caretX = 0, align?: 'left' | 'right' | 'center') => {
 export const ChartTooltipContainer: FC<IChartTooltipProps> = ({
     tooltip,
     children,
-}) => (
-    <Box
-        sx={(theme) => ({
-            top: (tooltip?.caretY || 0) + offset,
-            left: getLeftOffset(tooltip?.caretX, tooltip?.align),
-            width: '1px',
-            position: 'absolute',
-            display: tooltip ? 'flex' : 'none',
-            pointerEvents: 'none',
-            zIndex: theme.zIndex.tooltip,
-            flexDirection: 'column',
-            alignItems: getAlign(tooltip?.align),
-        })}
-    >
-        {children}
-    </Box>
-);
+}) => {
+    const [top, setTop] = useState(0);
+    const [left, setLeft] = useState(0);
+    useEffect(() => {
+        if (tooltip) {
+            setTop(tooltip.caretY + offset);
+            setLeft(getLeftOffset(tooltip.caretX, tooltip.align));
+        }
+    }, [tooltip]);
+    return (
+        <Box
+            sx={(theme) => ({
+                top: 0,
+                left: 0,
+                transform: `translate(${left}px, ${top}px)`,
+                transition: 'transform 0.3s ease-in-out',
+                width: '1px',
+                position: 'absolute',
+                display: tooltip ? 'flex' : 'none',
+                pointerEvents: 'none',
+                zIndex: theme.zIndex.tooltip,
+                flexDirection: 'column',
+                alignItems: getAlign(tooltip?.align),
+            })}
+        >
+            {children}
+        </Box>
+    );
+};
 
 export const ChartTooltip: VFC<IChartTooltipProps> = ({ tooltip }) => (
     <ChartTooltipContainer tooltip={tooltip}>

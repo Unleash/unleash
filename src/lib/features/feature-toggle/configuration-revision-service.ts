@@ -99,15 +99,14 @@ export default class ConfigurationRevisionService extends EventEmitter {
             this.revisionId,
         );
         if (this.revisionId !== revisionId) {
+            const knownEnvironments = [...this.maxRevisionId.keys()];
             this.logger.debug(
-                `Updating feature configuration with new revision Id ${revisionId} and all envs: ${Object.keys(this.maxRevisionId).join(', ')}`,
+                `Updating feature configuration with new revision Id ${revisionId} and all envs: ${knownEnvironments.join(', ')}`,
             );
             await Promise.allSettled(
-                this.maxRevisionId
-                    .keys()
-                    .map((environment) =>
-                        this.updateMaxEnvironmentRevisionId(environment),
-                    ),
+                knownEnvironments.map((environment) =>
+                    this.updateMaxEnvironmentRevisionId(environment),
+                ),
             );
             this.revisionId = revisionId;
             if (emit) {

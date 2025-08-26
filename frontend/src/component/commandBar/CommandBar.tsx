@@ -317,6 +317,7 @@ export const CommandBar = () => {
                     inputProps={{
                         'data-testid': SEARCH_INPUT,
                     }}
+                    autoComplete='off'
                     value={value}
                     onChange={(e) => onSearchChange(e.target.value)}
                     onFocus={() => {

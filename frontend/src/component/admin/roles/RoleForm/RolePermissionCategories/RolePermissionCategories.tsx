@@ -79,44 +79,41 @@ export const RolePermissionCategories = ({
         () => (
             <>
                 {categories.map(({ label, type, permissions }) => (
-                        <RolePermissionCategoryAccordion
-                            key={label}
-                            title={label}
-                            context={label.toLowerCase()}
-                            Icon={
-                                type === PROJECT_PERMISSION_TYPE ? (
-                                    <TopicIcon
-                                        color='disabled'
-                                        sx={{ mr: 1 }}
-                                    />
-                                ) : type === ENVIRONMENT_PERMISSION_TYPE ? (
-                                    <CloudCircleIcon
-                                        color='disabled'
-                                        sx={{ mr: 1 }}
-                                    />
-                                ) : (
-                                    <UserIcon color='disabled' sx={{ mr: 1 }} />
-                                )
-                            }
-                            permissions={permissions}
-                            checkedPermissions={checkedPermissions}
-                            onCheckAll={() => onCheckAll(permissions)}
-                        >
-                            {type === 'project' ? (
-                                <RolePermissionProject
-                                    permissions={permissions}
-                                    checkedPermissions={checkedPermissions}
-                                    onPermissionChange={onPermissionChange}
+                    <RolePermissionCategoryAccordion
+                        key={label}
+                        title={label}
+                        context={label.toLowerCase()}
+                        Icon={
+                            type === PROJECT_PERMISSION_TYPE ? (
+                                <TopicIcon color='disabled' sx={{ mr: 1 }} />
+                            ) : type === ENVIRONMENT_PERMISSION_TYPE ? (
+                                <CloudCircleIcon
+                                    color='disabled'
+                                    sx={{ mr: 1 }}
                                 />
                             ) : (
-                                <RolePermissionEnvironment
-                                    permissions={permissions}
-                                    checkedPermissions={checkedPermissions}
-                                    onPermissionChange={onPermissionChange}
-                                />
-                            )}
-                        </RolePermissionCategoryAccordion>
-                    ))}
+                                <UserIcon color='disabled' sx={{ mr: 1 }} />
+                            )
+                        }
+                        permissions={permissions}
+                        checkedPermissions={checkedPermissions}
+                        onCheckAll={() => onCheckAll(permissions)}
+                    >
+                        {type === 'project' ? (
+                            <RolePermissionProject
+                                permissions={permissions}
+                                checkedPermissions={checkedPermissions}
+                                onPermissionChange={onPermissionChange}
+                            />
+                        ) : (
+                            <RolePermissionEnvironment
+                                permissions={permissions}
+                                checkedPermissions={checkedPermissions}
+                                onPermissionChange={onPermissionChange}
+                            />
+                        )}
+                    </RolePermissionCategoryAccordion>
+                ))}
             </>
         ),
         [categories, checkedPermissions],

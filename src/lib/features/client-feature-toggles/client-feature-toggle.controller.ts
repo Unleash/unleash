@@ -373,7 +373,7 @@ export default class FeatureController extends Controller {
             this.logger.info(
                 `[etag] for query ${JSON.stringify(
                     query,
-                )} is "${queryHash}:${revisionId}" (revision id query with env ${etagByEnvEnabled ? query.environment : undefined})`,
+                )} is "${queryHash}:${revisionId}" query by env enabled? ${etagByEnvEnabled ? 'yes' : 'no'}. Querying with env ${etagByEnvEnabled ? query.environment : undefined})`,
             );
         }
         const etagVariant = this.flagResolver.getVariant('etagVariant');

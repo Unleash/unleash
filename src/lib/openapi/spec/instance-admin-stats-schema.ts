@@ -272,6 +272,18 @@ export const instanceAdminStatsSchema = {
             description:
                 'The highest number of constraint values used on a single constraint.',
         },
+        releaseTemplates: {
+            type: 'integer',
+            minimum: 0,
+            example: 2,
+            description: 'The number of release templates in this instance',
+        },
+        releasePlans: {
+            type: 'integer',
+            minimum: 0,
+            example: 1,
+            description: 'The number of release plans in this instance',
+        },
         sum: {
             type: 'string',
             description:

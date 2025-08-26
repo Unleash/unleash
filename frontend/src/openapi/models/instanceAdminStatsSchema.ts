@@ -83,6 +83,16 @@ export interface InstanceAdminStatsSchema {
      */
     projects?: number;
     /**
+     * The number of release plans in this instance
+     * @minimum 0
+     */
+    releasePlans?: number;
+    /**
+     * The number of release templates in this instance
+     * @minimum 0
+     */
+    releaseTemplates?: number;
+    /**
      * The number of roles defined in this instance
      * @minimum 0
      */

@@ -48,6 +48,8 @@ import {
     createFakeGetLicensedUsers,
     createGetLicensedUsers,
 } from './getLicensedUsers.js';
+import { ReleasePlanStore } from '../release-plans/release-plan-store.js';
+import { ReleasePlanTemplateStore } from '../release-plans/release-plan-template-store.js';
 
 export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
     const { eventBus, getLogger, flagResolver } = config;
@@ -104,6 +106,9 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         getLogger,
         flagResolver,
     );
+
+    const releasePlanTemplateStore = new ReleasePlanTemplateStore(db, config);
+    const releasePlanStore = new ReleasePlanStore(db, config);
     const instanceStatsServiceStores = {
         featureToggleStore,
         userStore,
@@ -122,6 +127,8 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         featureStrategiesReadModel,
         featureStrategiesStore,
         trafficDataUsageStore,
+        releasePlanTemplateStore,
+        releasePlanStore,
     };
     const versionServiceStores = { settingStore };
     const getActiveUsers = createGetActiveUsers(db);
@@ -160,6 +167,12 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
     const featureStrategiesReadModel = new FakeFeatureStrategiesReadModel();
     const trafficDataUsageStore = new FakeTrafficDataUsageStore();
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
+    const releasePlanTemplateStore = {
+        count: () => Promise.resolve(0),
+    } as ReleasePlanTemplateStore;
+    const releasePlanStore = {
+        count: () => Promise.resolve(0),
+    } as ReleasePlanStore;
     const instanceStatsServiceStores = {
         featureToggleStore,
         userStore,
@@ -178,6 +191,8 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
         featureStrategiesReadModel,
         featureStrategiesStore,
         trafficDataUsageStore,
+        releasePlanTemplateStore,
+        releasePlanStore,
     };
 
     const versionServiceStores = { settingStore };

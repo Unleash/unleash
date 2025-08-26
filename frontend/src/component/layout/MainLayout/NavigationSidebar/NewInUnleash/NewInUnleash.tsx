@@ -1,3 +1,4 @@
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import {

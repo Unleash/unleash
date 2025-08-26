@@ -4736,10 +4736,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"launchdarkly-eventsource@npm:2.0.3":
-  version: 2.0.3
-  resolution: "launchdarkly-eventsource@npm:2.0.3"
-  checksum: 10c0/8a7274e26231e43970a4d8ed52d572d1278bb0f1e90ada0dc86117cf0925e5a579c6b7e8b958eb4bada2aa471c6880ac12ef1c5d00cb513de5852cb04b104794
+"launchdarkly-eventsource@npm:2.2.0":
+  version: 2.2.0
+  resolution: "launchdarkly-eventsource@npm:2.2.0"
+  checksum: 10c0/fce94e58ef5eb560349b2f5405276c01b86d83afc3f7149c6e58ce4fcdf69f1ef8c97c9800bedf0986b41fa7a1f14740aee804d8c74f9fc81b6cf22f4bd5a7f1
   languageName: node
   linkType: hard
 
@@ -7556,19 +7556,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"unleash-client@npm:^6.7.0-beta.6":
-  version: 6.7.0-beta.6
-  resolution: "unleash-client@npm:6.7.0-beta.6"
+"unleash-client@npm:^6.7.0-beta.7":
+  version: 6.7.0-beta.7
+  resolution: "unleash-client@npm:6.7.0-beta.7"
   dependencies:
     http-proxy-agent: "npm:^7.0.2"
     https-proxy-agent: "npm:^7.0.5"
     ip-address: "npm:^9.0.5"
-    launchdarkly-eventsource: "npm:2.0.3"
+    launchdarkly-eventsource: "npm:2.2.0"
     make-fetch-happen: "npm:^13.0.1"
     murmurhash3js: "npm:^3.0.1"
     proxy-from-env: "npm:^1.1.0"
     semver: "npm:^7.6.2"
-  checksum: 10c0/0ed40ac77414eae24dd91d1bf487e2536fea51fadada861ab43f9096591f10c3cf9e5977b5d7cfbf131c50e8c1b39b4268a76473933eb8e0d2b6fa5e7ab76d33
+  checksum: 10c0/624b76add507cdd36ccfb5ef30adc1c2ebc18859962f2238129392ac8bc927e838bb6cfb52785d889e85e57de5f649eced8416c1ecd5bdad566f1880bd06bd51
   languageName: node
   linkType: hard
 
@@ -7685,7 +7685,7 @@ __metadata:
     type-is: "npm:^2.0.0"
     typescript: "npm:5.8.3"
     ulidx: "npm:^2.4.1"
-    unleash-client: "npm:^6.7.0-beta.6"
+    unleash-client: "npm:^6.7.0-beta.7"
     uuid: "npm:^11.0.0"
     vite-node: "npm:^3.1.3"
     vitest: "npm:^3.1.3"

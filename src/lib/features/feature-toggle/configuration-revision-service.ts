@@ -54,15 +54,15 @@ export default class ConfigurationRevisionService extends EventEmitter {
     }
 
     async getMaxRevisionId(environment?: string): Promise<number> {
-        if (environment && !this.maxRevisionId[environment]) {
-            await this.updateMaxEnvironmentRevisionId(environment);
-        }
-        if (
-            environment &&
-            this.maxRevisionId[environment] &&
-            this.maxRevisionId[environment] > 0
-        ) {
-            return this.maxRevisionId[environment];
+        if (environment) {
+            let maxEnvRevisionId = this.maxRevisionId.get(environment) ?? 0;
+            if (maxEnvRevisionId === 0) {
+                maxEnvRevisionId =
+                    await this.updateMaxEnvironmentRevisionId(environment);
+            }
+            if (maxEnvRevisionId > 0) {
+                return maxEnvRevisionId;
+            }
         }
         if (this.revisionId > 0) {
             return this.revisionId;
@@ -72,21 +72,23 @@ export default class ConfigurationRevisionService extends EventEmitter {
     }
 
     async updateMaxEnvironmentRevisionId(environment: string): Promise<number> {
-        const envRevisionId = await this.eventStore.getMaxRevisionId(
-            this.maxRevisionId[environment],
+        let maxRevId = this.maxRevisionId.get(environment) ?? 0;
+        const actualMax = await this.eventStore.getMaxRevisionId(
+            maxRevId,
             environment,
         );
-        if (this.maxRevisionId[environment] ?? 0 < envRevisionId) {
-            this.maxRevisionId[environment] = envRevisionId;
+        if (maxRevId < actualMax) {
+            this.maxRevisionId.set(environment, actualMax);
+            maxRevId = actualMax;
         }
 
         if (this.flagResolver.isEnabled('debugEtag')) {
             this.logger.info(
-                `[etag] Computed ETag for environment ${environment}: ${envRevisionId} stored as "${this.maxRevisionId[environment]}"`,
+                `[etag] Computed ETag for environment ${environment}: ${actualMax} stored as "${this.maxRevisionId.get(environment)}"`,
             );
         }
 
-        return this.maxRevisionId[environment];
+        return maxRevId;
     }
 
     async updateMaxRevisionId(emit: boolean = true): Promise<number> {
@@ -108,9 +110,11 @@ export default class ConfigurationRevisionService extends EventEmitter {
                 );
             }
             await Promise.allSettled(
-                Object.keys(this.maxRevisionId).map((environment) =>
-                    this.updateMaxEnvironmentRevisionId(environment),
-                ),
+                this.maxRevisionId
+                    .keys()
+                    .map((environment) =>
+                        this.updateMaxEnvironmentRevisionId(environment),
+                    ),
             );
             this.revisionId = revisionId;
             if (emit) {

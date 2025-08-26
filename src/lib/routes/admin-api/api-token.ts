@@ -83,7 +83,7 @@ const permissionToTokenType: (permission: string) => ApiTokenType | undefined =
                 UPDATE_CLIENT_API_TOKEN,
             ].includes(permission)
         ) {
-            return ApiTokenType.BACKEND;
+            return ApiTokenType.CLIENT;
         } else if (ADMIN === permission) {
             return ApiTokenType.ADMIN;
         } else {

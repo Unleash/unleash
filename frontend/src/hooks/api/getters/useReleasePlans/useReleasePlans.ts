@@ -3,7 +3,6 @@ import useUiConfig from '../useUiConfig/useUiConfig.js';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
-import { useUiFlag } from 'hooks/useUiFlag';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 
 const DEFAULT_DATA: IReleasePlan[] = [];
@@ -14,10 +13,9 @@ export const useReleasePlans = (
     environment?: string,
 ) => {
     const { isEnterprise } = useUiConfig();
-    const releasePlansEnabled = useUiFlag('releasePlans');
 
     const { data, error, mutate } = useConditionalSWR<IReleasePlan[]>(
-        isEnterprise() && releasePlansEnabled && Boolean(environment),
+        isEnterprise() && Boolean(environment),
         DEFAULT_DATA,
         formatApiPath(
             `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/release_plans`,

@@ -10,7 +10,6 @@ import useReleasePlanTemplatesApi from 'hooks/api/actions/useReleasePlanTemplate
 import { scrollToTop } from 'component/common/util';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Limit } from 'component/common/Limit/Limit.tsx';
@@ -28,7 +27,6 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
 
 export const CreateReleasePlanTemplate = () => {
     const { uiConfig, isEnterprise } = useUiConfig();
-    const releasePlansEnabled = useUiFlag('releasePlans');
     const { setToastApiError, setToastData } = useToast();
     const navigate = useNavigate();
     const { createReleasePlanTemplate } = useReleasePlanTemplatesApi();
@@ -92,7 +90,7 @@ export const CreateReleasePlanTemplate = () => {
     --header 'Content-Type: application/json' \\
     --data-raw '${JSON.stringify(getTemplatePayload(), undefined, 2)}'`;
 
-    if (!releasePlansEnabled || !isEnterprise()) {
+    if (!isEnterprise()) {
         return null;
     }
 

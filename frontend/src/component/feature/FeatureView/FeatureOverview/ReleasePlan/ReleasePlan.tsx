@@ -16,7 +16,6 @@ import { ReleasePlanRemoveDialog } from './ReleasePlanRemoveDialog.tsx';
 import { ReleasePlanMilestone } from './ReleasePlanMilestone/ReleasePlanMilestone.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { RemoveReleasePlanChangeRequestDialog } from './ChangeRequest/RemoveReleasePlanChangeRequestDialog.tsx';
@@ -120,8 +119,6 @@ export const ReleasePlan = ({
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
 
-    const releasePlansEnabled = useUiFlag('releasePlans');
-
     const onAddRemovePlanChangesConfirm = async () => {
         await addChange(projectId, environment, {
             feature: featureName,
@@ -162,7 +159,7 @@ export const ReleasePlan = ({
     };
 
     const confirmRemoveReleasePlan = () => {
-        if (releasePlansEnabled && isChangeRequestConfigured(environment)) {
+        if (isChangeRequestConfigured(environment)) {
             setChangeRequestDialogRemoveOpen(true);
         } else {
             setRemoveOpen(true);
@@ -197,7 +194,7 @@ export const ReleasePlan = ({
     };
 
     const onStartMilestone = async (milestone: IReleasePlanMilestone) => {
-        if (releasePlansEnabled && isChangeRequestConfigured(environment)) {
+        if (isChangeRequestConfigured(environment)) {
             setMilestoneForChangeRequestDialog(milestone);
             setChangeRequestDialogStartMilestoneOpen(true);
         } else {

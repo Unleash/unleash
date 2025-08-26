@@ -18,7 +18,6 @@ import {
 } from 'utils/permissions';
 import { RolePermissionEnvironment } from './RolePermissionEnvironment.tsx';
 import { useMemo } from 'react';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { RolePermissionProject } from './RolePermissionProject.tsx';
 import { RolePermissionCategoryAccordion } from './RolePermissionCategoryAccordion.tsx';
 
@@ -42,8 +41,6 @@ export const RolePermissionCategories = ({
         revalidateOnReconnect: false,
         revalidateOnFocus: false,
     });
-
-    const releasePlansEnabled = useUiFlag('releasePlans');
 
     const isProjectRole = PROJECT_ROLE_TYPES.includes(type);
 
@@ -81,13 +78,7 @@ export const RolePermissionCategories = ({
     return useMemo(
         () => (
             <>
-                {categories
-                    .filter(
-                        ({ label }) =>
-                            releasePlansEnabled ||
-                            label !== 'Release plan templates',
-                    )
-                    .map(({ label, type, permissions }) => (
+                {categories.map(({ label, type, permissions }) => (
                         <RolePermissionCategoryAccordion
                             key={label}
                             title={label}

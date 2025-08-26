@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import { EmptyTemplatesListMessage } from './EmptyTemplatesListMessage.tsx';
 import { ReleasePlanTemplateList } from './ReleasePlanTemplateList.tsx';
-import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
@@ -57,11 +56,6 @@ export const ReleaseManagement = () => {
     const data = useReleasePlanTemplates();
 
     const { isEnterprise } = useUiConfig();
-    const releasePlansEnabled = useUiFlag('releasePlans');
-    if (!releasePlansEnabled) {
-        return null;
-    }
-
     if (!isEnterprise()) {
         return <PremiumFeature feature='releaseManagement' page />;
     }

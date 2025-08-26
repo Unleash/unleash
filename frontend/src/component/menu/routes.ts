@@ -304,7 +304,6 @@ export const routes: IRoute[] = [
         component: ReleaseManagement,
         type: 'protected',
         menu: { main: true, mode: ['enterprise'] },
-        flag: 'releasePlans',
     },
     {
         path: '/release-templates/create-template',
@@ -313,7 +312,6 @@ export const routes: IRoute[] = [
         component: CreateReleasePlanTemplate,
         type: 'protected',
         menu: { mode: ['enterprise'] },
-        flag: 'releasePlans',
         enterprise: true,
     },
     {
@@ -323,7 +321,6 @@ export const routes: IRoute[] = [
         component: EditReleasePlanTemplate,
         type: 'protected',
         menu: { mode: ['enterprise'] },
-        flag: 'releasePlans',
         enterprise: true,
     },
 

@@ -66,7 +66,7 @@ export const UnknownFlagsTable = () => {
                     <StyledHeader>
                         Reported
                         <HelpIcon
-                            tooltip='Last time an SDK reported trying to evaluate this unknown flag'
+                            tooltip={`Feature flags are reported when your SDK evaluates them and they don't exist in Unleash`}
                             size='16px'
                         />
                     </StyledHeader>

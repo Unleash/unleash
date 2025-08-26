@@ -1,4 +1,4 @@
-import { useUiFlag } from 'hooks/useUiFlag';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import {
@@ -102,7 +102,6 @@ export const NewInUnleash = ({
     );
     const { isEnterprise } = useUiConfig();
     const signalsEnabled = useUiFlag('signals');
-    const releasePlansEnabled = useUiFlag('releasePlans');
 
     const items: NewInUnleashItemDetails[] = [
         {
@@ -175,7 +174,7 @@ export const NewInUnleash = ({
             ),
             onCheckItOut: () => navigate('/release-templates'),
             docsLink: 'https://docs.getunleash.io/reference/release-templates',
-            show: isEnterprise() && releasePlansEnabled,
+            show: isEnterprise(),
             beta: false,
             popout: true,
         },

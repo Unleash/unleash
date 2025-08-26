@@ -77,10 +77,8 @@ export const FeatureStrategyMenu = ({
     const { addReleasePlanToFeature } = useReleasePlansApi();
     const { isEnterprise } = useUiConfig();
     const addConfigurationEnabled = useUiFlag('addConfiguration');
-    const releasePlansEnabled = useUiFlag('releasePlans');
-    const displayReleasePlanButton = isEnterprise() && releasePlansEnabled;
-    const crProtected =
-        releasePlansEnabled && isChangeRequestConfigured(environmentId);
+    const displayReleasePlanButton = isEnterprise();
+    const crProtected = isChangeRequestConfigured(environmentId);
 
     const onClose = () => {
         setIsStrategyMenuDialogOpen(false);

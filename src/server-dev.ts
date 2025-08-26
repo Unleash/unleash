@@ -46,7 +46,6 @@ process.nextTick(async () => {
                         extendedMetrics: true,
                         originMiddlewareRequestLogging: true,
                         webhookDomainLogging: true,
-                        releasePlans: false,
                         showUserDeviceCount: true,
                         deltaApi: true,
                         uniqueSdkTracking: true,

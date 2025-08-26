@@ -1,4 +1,3 @@
-import { useUiFlag } from 'hooks/useUiFlag';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useReleasePlanTemplate } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplate';
@@ -26,7 +25,6 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
 
 export const EditReleasePlanTemplate = () => {
     const { uiConfig, isEnterprise } = useUiConfig();
-    const releasePlansEnabled = useUiFlag('releasePlans');
     const templateId = useRequiredPathParam('templateId');
     const { template, loading, error, refetch } =
         useReleasePlanTemplate(templateId);
@@ -92,7 +90,7 @@ export const EditReleasePlanTemplate = () => {
     --header 'Content-Type: application/json' \\
     --data-raw '${JSON.stringify(getTemplatePayload(), undefined, 2)}'`;
 
-    if (!releasePlansEnabled || !isEnterprise()) {
+    if (!isEnterprise()) {
         return null;
     }
 

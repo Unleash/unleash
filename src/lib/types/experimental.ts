@@ -41,7 +41,6 @@ export type IFlagKey =
     | 'projectRoleAssignment'
     | 'originMiddlewareRequestLogging'
     | 'webhookDomainLogging'
-    | 'releasePlans'
     | 'productivityReportEmail'
     | 'productivityReportUnsubscribers'
     | 'showUserDeviceCount'
@@ -207,10 +206,6 @@ const flags: IFlags = {
     ),
     webhookDomainLogging: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENT_WEBHOOK_DOMAIN_LOGGING,
-        false,
-    ),
-    releasePlans: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_RELEASE_PLANS,
         false,
     ),
     productivityReportEmail: parseEnvVarBoolean(

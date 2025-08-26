@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.tsx';
 
 interface IFeatureStrategyMenuCardsProps {
@@ -124,7 +123,6 @@ export const FeatureStrategyMenuCards = ({
     onClose,
 }: IFeatureStrategyMenuCardsProps) => {
     const { isEnterprise } = useUiConfig();
-    const releasePlansEnabled = useUiFlag('releasePlans');
 
     const { strategies } = useStrategies();
     const { templates } = useReleasePlanTemplates();
@@ -150,7 +148,7 @@ export const FeatureStrategyMenuCards = ({
     };
 
     const renderReleasePlanTemplates = () => {
-        if (!isEnterprise() || !releasePlansEnabled) {
+        if (!isEnterprise()) {
             return null;
         }
 

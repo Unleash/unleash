@@ -2,6 +2,84 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.1.1] - 2025-08-26
+
+### Bug Fixes
+
+- Week range for lifecycle backfill ([#10493](https://github.com/Unleash/unleash/issues/10493))
+
+- Lychee action after upgrade ([#10499](https://github.com/Unleash/unleash/issues/10499))
+
+- Wrong link ([#10501](https://github.com/Unleash/unleash/issues/10501))
+
+- Pagination limit and placeholder ([#10533](https://github.com/Unleash/unleash/issues/10533))
+
+- Permissions should allow to access client token types ([#10543](https://github.com/Unleash/unleash/issues/10543))
+
+
+### Documentation
+
+- Some details spotted to align with new token types ([#10523](https://github.com/Unleash/unleash/issues/10523))
+
+
+### Features
+
+- Add origin column for consumption based tables ([#10494](https://github.com/Unleash/unleash/issues/10494))
+
+- Add truncation and tooltips ([#10498](https://github.com/Unleash/unleash/issues/10498))
+
+- Incorporate backend as a valid api token type replacing client ([#10500](https://github.com/Unleash/unleash/issues/10500))
+
+- Support different etags per environment ([#10512](https://github.com/Unleash/unleash/issues/10512))
+
+
+### Miscellaneous Tasks
+
+- Move consumption UI behind separate flag ([#10495](https://github.com/Unleash/unleash/issues/10495))
+
+- Update ux styling for lifecycle charts ([#10497](https://github.com/Unleash/unleash/issues/10497))
+
+- Ignore CR events with feature name ([#10503](https://github.com/Unleash/unleash/issues/10503))
+
+- TimestampsInChangeRequestTimeline flag cleanup ([#10492](https://github.com/Unleash/unleash/issues/10492))
+
+- Bump node sdk with fetch control ([#10515](https://github.com/Unleash/unleash/issues/10515))
+
+- FeatchMode flag ([#10516](https://github.com/Unleash/unleash/issues/10516))
+
+- ImprovedJsonDiff flag cleanup ([#10486](https://github.com/Unleash/unleash/issues/10486))
+
+- CrDiffView flag cleanup ([#10487](https://github.com/Unleash/unleash/issues/10487))
+
+- Release template resource limits ([#10514](https://github.com/Unleash/unleash/issues/10514))
+
+- Bump sdk with runtime setExperimentalMode ([#10517](https://github.com/Unleash/unleash/issues/10517))
+
+- LifecycleMetrics flag cleanup ([#10511](https://github.com/Unleash/unleash/issues/10511))
+
+- CreateFlagDialogCache flag cleanup ([#10509](https://github.com/Unleash/unleash/issues/10509))
+
+- PaygTrialEvents flag cleanup ([#10508](https://github.com/Unleash/unleash/issues/10508))
+
+- PaygInstanceStatsEvents flag cleanup ([#10510](https://github.com/Unleash/unleash/issues/10510))
+
+- Implement unknown flags UX feedback ([#10519](https://github.com/Unleash/unleash/issues/10519))
+
+- ProjectListViewToggle flag cleanup ([#10527](https://github.com/Unleash/unleash/issues/10527))
+
+- Add some debug statements controlled by a flag ([#10532](https://github.com/Unleash/unleash/issues/10532))
+
+- ReleasePlans flag cleanup ([#10537](https://github.com/Unleash/unleash/issues/10537))
+
+- Bump node sdk with sse end event ([#10541](https://github.com/Unleash/unleash/issues/10541))
+
+- UX adjustments in new unknown flag table headers ([#10535](https://github.com/Unleash/unleash/issues/10535))
+
+- Etag log and code improvements ([#10542](https://github.com/Unleash/unleash/issues/10542))
+
+- Disable browser autocomplete on commandbar ([#10544](https://github.com/Unleash/unleash/issues/10544))
+
+
 ## [7.1.0] - 2025-08-13
 
 ### Bug Fixes

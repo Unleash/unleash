@@ -49,7 +49,7 @@ export const useApiTokenTable = (
                 Cell: ({
                     value,
                 }: {
-                    value: 'client' | 'admin' | 'frontend';
+                    value: 'client' | 'backend' | 'admin' | 'frontend';
                 }) => (
                     <HighlightCell
                         value={tokenDescriptions[value.toLowerCase()].label}
@@ -142,6 +142,10 @@ const tokenDescriptions: {
     [index: string]: { label: string; title: string };
 } = {
     client: {
+        label: 'BACKEND',
+        title: 'Connect backend SDK or Unleash Edge',
+    },
+    backend: {
         label: 'BACKEND',
         title: 'Connect backend SDK or Unleash Edge',
     },

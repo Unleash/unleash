@@ -523,7 +523,13 @@ describe('Fine grained API token permissions', () => {
                 secret: '*:environment.client_secret_4321',
                 type: ApiTokenType.CLIENT,
             });
-
+            await stores.apiTokenStore.insert({
+                environment: '',
+                projects: [],
+                tokenName: 'backend',
+                secret: '*:environment.backend_secret_4321',
+                type: ApiTokenType.BACKEND,
+            });
             await stores.apiTokenStore.insert({
                 environment: '',
                 projects: [],
@@ -543,7 +549,19 @@ describe('Fine grained API token permissions', () => {
                 .set('Content-Type', 'application/json')
                 .expect(200)
                 .expect((res) => {
-                    expect(res.body.tokens).toHaveLength(3);
+                    expect(res.body.tokens).toHaveLength(4);
+                    [
+                        ApiTokenType.ADMIN,
+                        ApiTokenType.CLIENT,
+                        ApiTokenType.BACKEND,
+                        ApiTokenType.FRONTEND,
+                    ].forEach((tokenType) => {
+                        expect(
+                            res.body.tokens.filter(
+                                (t: { type: string }) => t.type === tokenType,
+                            ),
+                        ).toHaveLength(1);
+                    });
                 });
             await destroy();
         });

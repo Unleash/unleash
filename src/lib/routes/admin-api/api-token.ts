@@ -64,33 +64,6 @@ export const tokenTypeToCreatePermission: (tokenType: ApiTokenType) => string =
         }
     };
 
-const permissionToTokenType: (permission: string) => ApiTokenType | undefined =
-    (permission) => {
-        if (
-            [
-                CREATE_FRONTEND_API_TOKEN,
-                READ_FRONTEND_API_TOKEN,
-                DELETE_FRONTEND_API_TOKEN,
-                UPDATE_FRONTEND_API_TOKEN,
-            ].includes(permission)
-        ) {
-            return ApiTokenType.FRONTEND;
-        } else if (
-            [
-                CREATE_CLIENT_API_TOKEN,
-                READ_CLIENT_API_TOKEN,
-                DELETE_CLIENT_API_TOKEN,
-                UPDATE_CLIENT_API_TOKEN,
-            ].includes(permission)
-        ) {
-            return ApiTokenType.CLIENT;
-        } else if (ADMIN === permission) {
-            return ApiTokenType.ADMIN;
-        } else {
-            return undefined;
-        }
-    };
-
 const tokenTypeToUpdatePermission: (tokenType: ApiTokenType) => string = (
     tokenType,
 ) => {
@@ -419,23 +392,33 @@ export class ApiTokenController extends Controller {
         if (user.isAPI && user.permissions.includes(ADMIN)) {
             return allTokens;
         }
+
         const userPermissions =
             await this.accessService.getPermissionsForUser(user);
 
-        const allowedTokenTypes = [
-            ADMIN,
-            READ_CLIENT_API_TOKEN,
-            READ_FRONTEND_API_TOKEN,
-        ]
-            .filter((readPerm) =>
-                userPermissions.some(
-                    (p) => p.permission === readPerm || p.permission === ADMIN,
-                ),
+        const readTokenFns = userPermissions
+            .filter((p) =>
+                [
+                    ADMIN,
+                    READ_CLIENT_API_TOKEN,
+                    READ_FRONTEND_API_TOKEN,
+                ].includes(p.permission),
             )
-            .map(permissionToTokenType)
-            .filter((t) => t);
-        return allTokens.filter((token) =>
-            allowedTokenTypes.includes(token.type),
+            .map(
+                ({ permission }) =>
+                    (type: ApiTokenType) =>
+                        permission === ADMIN ||
+                        (type === ApiTokenType.FRONTEND &&
+                            permission === READ_FRONTEND_API_TOKEN) ||
+                        ([ApiTokenType.CLIENT, ApiTokenType.BACKEND].includes(
+                            type,
+                        ) &&
+                            permission === READ_CLIENT_API_TOKEN),
+            );
+
+        const accessibleTokens = allTokens.filter((token) =>
+            readTokenFns.some((canRead) => canRead(token.type)),
         );
+        return accessibleTokens;
     }
 }

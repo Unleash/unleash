@@ -79,7 +79,7 @@ const GitHubContributors = ({ owner, repo, filePath }) => {
                                 title={`@${name}`}
                             >
                                 <img
-                                    src={contributor.avatar_url}
+                                    src={`${contributor.avatar_url}&s=66`}
                                     alt={contributor.login}
                                     width={70}
                                 />

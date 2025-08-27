@@ -64,6 +64,9 @@ const getUnleashRepoStars = async () => {
 export default async function createConfigAsync(): Promise<Config> {
     const stars = await getUnleashRepoStars();
     return {
+        future: {
+            experimental_faster: true, // turns Docusaurus Faster on globally
+        },
         title: 'Unleash Documentation',
         tagline: 'The enterprise ready feature flag service',
         url: 'https://docs.getunleash.io',
@@ -81,6 +84,17 @@ export default async function createConfigAsync(): Promise<Config> {
             // expose env vars etc here
             environment: process.env.NODE_ENV,
         },
+        headTags: [
+            {
+                tagName: 'link',
+                attributes: {
+                    rel: 'preload',
+                    href: '/img/unleash_logo_dark.svg',
+                    as: 'image',
+                    type: 'image/svg+xml',
+                },
+            },
+        ],
         themeConfig: {
             defaultMode: 'light',
             disableSwitch: true,
@@ -89,6 +103,9 @@ export default async function createConfigAsync(): Promise<Config> {
                 appId: '5U05JI5NE1',
                 apiKey: 'dc9c4491fcf9143ee34015f22d1dd9d6',
                 indexName: 'getunleash',
+            },
+            theme: {
+                customCss: './src/css/custom.css',
             },
             metadata: [
                 { name: 'og:image:width', content: '1200' },
@@ -421,15 +438,10 @@ class="header-github-link"
                         remarkPlugins: [[pluginNpm2Yarn, { sync: true }]],
                         docItemComponent: '@theme/ApiItem',
                         sidebarPath: './sidebars.ts',
+                        breadcrumbs: true,
                     },
                     theme: {
                         customCss: './src/css/custom.css',
-                    },
-                    googleAnalytics: {
-                        trackingID: 'UA-134882379-1',
-                    },
-                    googleTagManager: {
-                        containerId: 'GTM-KV5PRR2',
                     },
                     sitemap: {
                         changefreq: 'weekly',
@@ -902,29 +914,5 @@ class="header-github-link"
             'docusaurus-theme-openapi-docs', // Allows use of @theme/ApiItem and other components
             '@docusaurus/theme-mermaid',
         ],
-        scripts: [
-            {
-                src: 'https://widget.kapa.ai/kapa-widget.bundle.js', // See configuration: https://docs.kapa.ai/integrations/website-widget/configuration
-                'data-website-id': '1d187510-1726-4011-b0f7-62742ae064ee',
-                'data-project-name': 'Unleash',
-                'data-project-color': '#1A4049',
-                'data-project-logo':
-                    'https://cdn.getunleash.io/uploads/2024/05/logo-unleash-white.svg',
-                'data-modal-image':
-                    'https://cdn.getunleash.io/uploads/2022/05/logo.png',
-                'data-button-position-right': '0',
-                'data-button-border-radius': '10px 0px 0px 10px',
-                'data-button-width': '80px',
-                'data-button-height': '100px',
-                'data-button-image-height': '55px',
-                'data-button-image-width': '55px',
-                'data-button-text-font-weight': '400',
-                'data-button-text-font-size': '16px',
-                'data-button-text-font-family': '"Sen", sans-serif',
-                'data-button-text': 'ASK AI',
-                defer: true,
-            },
-        ],
-        clientModules: ['./global.js'],
     };
 }

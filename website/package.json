@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@docusaurus/core": "^3.7.0",
+    "@docusaurus/faster": "^3.8.1",
     "@docusaurus/plugin-client-redirects": "^3.7.0",
     "@docusaurus/plugin-content-docs": "^3.7.0",
     "@docusaurus/plugin-google-analytics": "^3.7.0",

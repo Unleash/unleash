@@ -3,13 +3,13 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import FeatureLog from './FeatureLog/FeatureLog.tsx';
 import { FeatureOverview } from './FeatureOverview/FeatureOverview.tsx';
 import { FeatureEnvironmentVariants } from './FeatureVariants/FeatureEnvironmentVariants/FeatureEnvironmentVariants.tsx';
-import { FeatureMetrics } from './FeatureMetrics/FeatureMetrics.tsx';
 import { FeatureSettings } from './FeatureSettings/FeatureSettings.tsx';
 import useLoading from 'hooks/useLoading';
 import { FeatureNotFound } from 'component/feature/FeatureView/FeatureNotFound/FeatureNotFound';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureViewHeader } from './FeatureViewHeader.tsx';
 import { styled } from '@mui/material';
+import { FeatureMetricsOverview } from './FeatureMetrics/FeatureMetricsOverview.tsx';
 
 export const StyledLink = styled(Link)(() => ({
     maxWidth: '100%',
@@ -42,7 +42,7 @@ export const FeatureView = () => {
         <div ref={ref}>
             <FeatureViewHeader feature={feature} />
             <Routes>
-                <Route path='metrics' element={<FeatureMetrics />} />
+                <Route path='metrics' element={<FeatureMetricsOverview />} />
                 <Route path='logs' element={<FeatureLog />} />
                 <Route
                     path='variants'

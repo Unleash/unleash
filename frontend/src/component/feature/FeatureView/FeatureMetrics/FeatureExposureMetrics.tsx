@@ -23,7 +23,7 @@ import {
 import { aggregateFeatureMetrics } from './aggregateFeatureMetrics.ts';
 import { PageHeader } from 'component/common/PageHeader/PageHeader.tsx';
 
-export const FeatureMetrics = () => {
+export const FeatureExposureMetrics = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const environments = useFeatureMetricsEnvironments(projectId, featureId);

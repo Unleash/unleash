@@ -5,7 +5,6 @@ import { useProjectChartData } from 'component/insights/hooks/useProjectChartDat
 import { useTheme } from '@mui/material';
 import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
 import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
-import { Chart } from 'react-chartjs-2';
 import {
     CategoryScale,
     LinearScale,
@@ -19,12 +18,11 @@ import {
     Filler,
 } from 'chart.js';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import {
-    ChartTooltip,
-    type TooltipState,
-} from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
+import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
 import type { WeekData, RawWeekData } from './types.ts';
-import { CreationArchiveTooltip } from './CreationArchiveTooltip.tsx';
+import { createTooltip } from 'component/insights/components/LineChart/createTooltip.ts';
+import { CreationArchiveRatioTooltip } from './CreationArchiveRatioTooltip.tsx';
+import { Chart } from 'react-chartjs-2';
 
 ChartJS.register(
     CategoryScale,
@@ -158,16 +156,9 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                             },
                         },
                         tooltip: {
-                            // enabled: false,
-                            backgroundColor: theme.palette.background.paper,
-                            padding: 10,
-                            boxPadding: 5,
-                            usePointStyle: true,
-                            titleColor: theme.palette.text.primary,
-                            bodyColor: theme.palette.text.primary,
-                            xAlign: 'center',
+                            enabled: false,
                             position: 'average',
-                            // external: createTooltip(setTooltip),
+                            external: createTooltip(setTooltip),
                         },
                     },
                     locale: locationSettings.locale,
@@ -197,13 +188,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                 height={100}
                 width={250}
             />
-            {tooltip?.dataPoints?.some(
-                (point) => point.dataset.label !== 'Flags archived',
-            ) ? (
-                <CreationArchiveTooltip tooltip={tooltip} />
-            ) : (
-                <ChartTooltip tooltip={tooltip} />
-            )}
+            <CreationArchiveRatioTooltip tooltip={tooltip} />
         </>
     );
 };

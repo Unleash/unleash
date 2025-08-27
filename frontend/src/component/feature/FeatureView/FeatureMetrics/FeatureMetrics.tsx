@@ -21,6 +21,7 @@ import {
     withDefault,
 } from 'use-query-params';
 import { aggregateFeatureMetrics } from './aggregateFeatureMetrics.ts';
+import { PageHeader } from 'component/common/PageHeader/PageHeader.tsx';
 
 export const FeatureMetrics = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -96,7 +97,7 @@ export const FeatureMetrics = () => {
     }
 
     return (
-        <PageContent>
+        <PageContent header={<PageHeader title='Exposure metrics' />}>
             <Grid container component='header' spacing={2}>
                 <Grid item xs={12} md={4}>
                     <ConditionallyRender

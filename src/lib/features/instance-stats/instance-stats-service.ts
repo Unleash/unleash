@@ -469,6 +469,8 @@ export class InstanceStatsService {
             postgresVersion,
             licenseType,
             hostedBy,
+            releaseTemplates,
+            releasePlans,
         ] = await Promise.all([
             this.getToggleCount(),
             this.getRegisteredUsers(),
@@ -492,6 +494,8 @@ export class InstanceStatsService {
             this.postgresVersion(),
             this.getLicenseType(),
             this.getHostedBy(),
+            this.getReleaseTemplates(),
+            this.getReleasePlans(),
         ]);
         const versionInfo = await this.versionService.getVersionInfo();
 
@@ -527,6 +531,8 @@ export class InstanceStatsService {
             postgresVersion,
             licenseType,
             hostedBy,
+            releaseTemplates,
+            releasePlans,
         };
         return featureInfo;
     }

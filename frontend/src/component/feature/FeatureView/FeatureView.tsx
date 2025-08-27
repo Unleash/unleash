@@ -9,7 +9,7 @@ import { FeatureNotFound } from 'component/feature/FeatureView/FeatureNotFound/F
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureViewHeader } from './FeatureViewHeader.tsx';
 import { styled } from '@mui/material';
-import { FeatureMetrics } from './FeatureMetrics/FeatureMetrics.tsx';
+import { FeatureMetricsOverview } from './FeatureMetrics/FeatureMetricsOverview.tsx';
 
 export const StyledLink = styled(Link)(() => ({
     maxWidth: '100%',
@@ -42,7 +42,7 @@ export const FeatureView = () => {
         <div ref={ref}>
             <FeatureViewHeader feature={feature} />
             <Routes>
-                <Route path='metrics' element={<FeatureMetrics />} />
+                <Route path='metrics' element={<FeatureMetricsOverview />} />
                 <Route path='logs' element={<FeatureLog />} />
                 <Route
                     path='variants'

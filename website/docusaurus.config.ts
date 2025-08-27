@@ -443,7 +443,6 @@ class="header-github-link"
                     theme: {
                         customCss: './src/css/custom.css',
                     },
-                    // Analytics/GTM moved to lazy loading in Root.tsx
                     sitemap: {
                         changefreq: 'weekly',
                         lastmod: 'date',
@@ -914,9 +913,6 @@ class="header-github-link"
         themes: [
             'docusaurus-theme-openapi-docs', // Allows use of @theme/ApiItem and other components
             '@docusaurus/theme-mermaid',
-        ],
-        scripts: [
-            // Kapa AI widget is now lazy-loaded via src/theme/Root.tsx
         ],
     };
 }

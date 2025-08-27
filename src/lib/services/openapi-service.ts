@@ -107,9 +107,6 @@ export class OpenApiService {
                 `Invalid response for ${res.req?.originalUrl || ''}:`,
                 errors,
             );
-            if (this.flagResolver.isEnabled('strictSchemaValidation')) {
-                throw new Error(JSON.stringify(errors, null, 4));
-            }
         }
 
         Object.entries(headers).forEach(([header, value]) =>

@@ -12,7 +12,6 @@ export type IFlagKey =
     | 'responseTimeWithAppNameKillSwitch'
     | 'maintenanceMode'
     | 'messageBanner'
-    | 'strictSchemaValidation'
     | 'personalAccessTokensKillSwitch'
     | 'migrationLock'
     | 'demo'
@@ -89,10 +88,6 @@ const flags: IFlags = {
                 process.env.UNLEASH_EXPERIMENTAL_MESSAGE_BANNER_PAYLOAD ?? '',
         },
     },
-    strictSchemaValidation: parseEnvVarBoolean(
-        process.env.UNLEASH_STRICT_SCHEMA_VALIDTION,
-        false,
-    ),
     personalAccessTokensKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_PAT_KILL_SWITCH,
         false,

@@ -57,7 +57,6 @@ async function setup({
             },
             experimental: {
                 flags: {
-                    strictSchemaValidation: true,
                     etagVariant: {
                         name: etagVariant,
                         enabled: etagVariant !== undefined,

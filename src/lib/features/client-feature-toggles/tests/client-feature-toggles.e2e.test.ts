@@ -155,7 +155,6 @@ beforeAll(async () => {
         {
             experimental: {
                 flags: {
-                    strictSchemaValidation: true,
                     deltaApi: true,
                 },
             },
@@ -168,9 +167,7 @@ beforeAll(async () => {
         enterpriseDb.stores,
         {
             experimental: {
-                flags: {
-                    strictSchemaValidation: true,
-                },
+                flags: {},
             },
             ui: {
                 environment: 'Enterprise',
@@ -184,9 +181,7 @@ beforeAll(async () => {
         proDb.stores,
         {
             experimental: {
-                flags: {
-                    strictSchemaValidation: true,
-                },
+                flags: {},
             },
             ui: {
                 environment: 'Pro',

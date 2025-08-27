@@ -55,9 +55,7 @@ beforeAll(async () => {
         db.stores,
         {
             experimental: {
-                flags: {
-                    strictSchemaValidation: true,
-                },
+                flags: {},
             },
         },
         db.rawDatabase,

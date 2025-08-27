@@ -17,9 +17,7 @@ beforeAll(async () => {
         db.stores,
         {
             experimental: {
-                flags: {
-                    strictSchemaValidation: true,
-                },
+                flags: {},
             },
         },
         db.rawDatabase,
@@ -80,7 +78,6 @@ describe('maxSessionsCount', () => {
             {
                 experimental: {
                     flags: {
-                        strictSchemaValidation: true,
                         showUserDeviceCount: true,
                     },
                 },

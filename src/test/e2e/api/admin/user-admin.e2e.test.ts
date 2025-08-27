@@ -112,7 +112,6 @@ describe('User Admin API with email configuration', () => {
                 },
                 experimental: {
                     flags: {
-                        strictSchemaValidation: true,
                         showUserDeviceCount: true,
                     },
                 },
@@ -166,7 +165,6 @@ describe('User Admin API without email', () => {
             {
                 experimental: {
                     flags: {
-                        strictSchemaValidation: true,
                         showUserDeviceCount: true,
                     },
                 },

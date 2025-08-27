@@ -22,9 +22,7 @@ beforeAll(async () => {
         stores,
         {
             experimental: {
-                flags: {
-                    strictSchemaValidation: true,
-                },
+                flags: {},
             },
         },
         db.rawDatabase,

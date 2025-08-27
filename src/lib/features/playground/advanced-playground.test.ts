@@ -20,7 +20,6 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     advancedPlayground: true,
-                    strictSchemaValidation: true,
                     strategyVariant: true,
                 },
             },

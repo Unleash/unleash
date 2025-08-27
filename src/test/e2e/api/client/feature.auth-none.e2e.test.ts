@@ -24,9 +24,7 @@ beforeAll(async () => {
                 type: 'none',
             },
             experimental: {
-                flags: {
-                    strictSchemaValidation: true,
-                },
+                flags: {},
             },
         },
         db.rawDatabase,

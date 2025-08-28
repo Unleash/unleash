@@ -1,4 +1,8 @@
-import type { IFeatureStrategy, IStrategy } from 'interfaces/strategy';
+import type {
+    IEditableStrategy,
+    IFeatureStrategy,
+    IStrategy,
+} from 'interfaces/strategy';
 import DefaultStrategy from 'component/feature/StrategyTypes/DefaultStrategy/DefaultStrategy';
 import FlexibleStrategy from 'component/feature/StrategyTypes/FlexibleStrategy/FlexibleStrategy';
 import GeneralStrategy from 'component/feature/StrategyTypes/GeneralStrategy/GeneralStrategy';
@@ -12,7 +16,7 @@ interface IFeatureStrategyTypeProps {
     strategy: Partial<IFeatureStrategy>;
     strategyDefinition: IStrategy;
     setStrategy: React.Dispatch<
-        React.SetStateAction<Partial<IFeatureStrategy>>
+        React.SetStateAction<Partial<IEditableStrategy>>
     >;
     validateParameter: (name: string, value: string) => boolean;
     errors: IFormErrors;

@@ -362,10 +362,9 @@ export default class FeatureController extends Controller {
     }
 
     async calculateMeta(query: IFeatureToggleQuery): Promise<IMeta> {
-        const etagByEnvEnabled = this.flagResolver.isEnabled('etagByEnv');
         const revisionId =
             await this.configurationRevisionService.getMaxRevisionId(
-                etagByEnvEnabled ? query.environment : undefined,
+                query.environment,
             );
 
         const queryHash = hashSum(query);
@@ -373,7 +372,7 @@ export default class FeatureController extends Controller {
             this.logger.info(
                 `[etag] for query ${JSON.stringify(
                     query,
-                )} is "${queryHash}:${revisionId}" query by env enabled? ${etagByEnvEnabled ? 'yes' : 'no'}. Querying with env ${etagByEnvEnabled ? query.environment : undefined})`,
+                )} is "${queryHash}:${revisionId}" query by env enabled? yes. Querying with env ${query.environment})`,
             );
         }
         const etagVariant = this.flagResolver.getVariant('etagVariant');

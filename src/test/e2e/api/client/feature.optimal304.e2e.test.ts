@@ -40,10 +40,8 @@ const allEnvsTokenSecret = validTokens[2].secret;
 
 async function setup({
     etagVariant,
-    etagByEnvEnabled,
 }: {
     etagVariant: string | undefined;
-    etagByEnvEnabled: boolean;
 }): Promise<{ app: IUnleashTest; db: ITestDb }> {
     const db = await dbInit(`ignored`, getLogger);
 
@@ -63,7 +61,7 @@ async function setup({
                         enabled: etagVariant !== undefined,
                         feature_enabled: etagVariant !== undefined,
                     },
-                    etagByEnv: etagByEnvEnabled,
+                    etagByEnv: true,
                 },
             },
         },
@@ -178,28 +176,21 @@ async function validateInitialState({
 describe.each([
     {
         etagVariant: undefined,
-        etagByEnvEnabled: false,
     },
     {
         etagVariant: 'v2',
-        etagByEnvEnabled: false,
-    },
-    {
-        etagVariant: 'v2',
-        etagByEnvEnabled: true,
     },
 ])(
     'feature 304 api client (etag variant = $etagVariant)',
-    ({ etagVariant, etagByEnvEnabled }) => {
+    ({ etagVariant }) => {
         let app: IUnleashTest;
         let db: ITestDb;
         const etagVariantEnabled = etagVariant !== undefined;
         const etagVariantName = etagVariant ?? 'disabled';
-        const expectedDevEventId = etagByEnvEnabled ? 13 : 15;
+        const expectedDevEventId = 13;
         beforeAll(async () => {
             ({ app, db } = await setup({
                 etagVariant,
-                etagByEnvEnabled,
             }));
             await initialize({ app, db });
             await validateInitialState({ app, db });
@@ -279,72 +270,8 @@ describe.each([
             );
         });
 
-        test.runIf(!etagByEnvEnabled)(
-            'production environment gets same event id in etag than development',
-            async () => {
-                const { headers: prodHeaders } = await app.request
-                    .get('/api/client/features?bla=1')
-                    .set('Authorization', prodTokenSecret)
-                    .expect(200);
 
-                expect(prodHeaders.etag).toEqual(
-                    `"67e24428:15${etagVariantEnabled ? `:${etagVariantName}` : ''}"`,
-                );
-
-                const { headers: devHeaders } = await app.request
-                    .get('/api/client/features')
-                    .set('Authorization', devTokenSecret)
-                    .expect(200);
-
-                expect(devHeaders.etag).toEqual(
-                    `"76d8bb0e:15${etagVariantEnabled ? `:${etagVariantName}` : ''}"`,
-                );
-            },
-        );
-
-        test.runIf(!etagByEnvEnabled)(
-            'modifying dev environment also invalidates prod tokens',
-            async () => {
-                const currentDevEtag = `"76d8bb0e:${expectedDevEventId}${etagVariantEnabled ? `:${etagVariantName}` : ''}"`;
-                const currentProdEtag = `"67e24428:15${etagVariantEnabled ? `:${etagVariantName}` : ''}"`;
-                await app.request
-                    .get('/api/client/features')
-                    .set('if-none-match', currentProdEtag)
-                    .set('Authorization', prodTokenSecret)
-                    .expect(304);
-
-                await app.request
-                    .get('/api/client/features')
-                    .set('Authorization', devTokenSecret)
-                    .set('if-none-match', currentDevEtag)
-                    .expect(304);
-
-                await app.enableFeature('X', DEFAULT_ENV);
-                await app.services.configurationRevisionService.updateMaxRevisionId();
-
-                await app.request
-                    .get('/api/client/features')
-                    .set('Authorization', prodTokenSecret)
-                    .set('if-none-match', currentProdEtag)
-                    .expect(200);
-
-                const { headers: devHeaders } = await app.request
-                    .get('/api/client/features')
-                    .set('Authorization', devTokenSecret)
-                    .set('if-none-match', currentDevEtag)
-                    .expect(200);
-
-                // Note: this test yields a different result if run in isolation
-                // this is because the id 19 depends on a previous test adding a feature
-                // otherwise the id will be 18
-                expect(devHeaders.etag).toEqual(
-                    `"76d8bb0e:19${etagVariantEnabled ? `:${etagVariantName}` : ''}"`,
-                );
-            },
-        );
-
-        test.runIf(etagByEnvEnabled)(
-            'production environment gets a different etag than development',
+        test('production environment gets a different etag than development',
             async () => {
                 const { headers: prodHeaders } = await app.request
                     .get('/api/client/features?bla=1')
@@ -366,8 +293,7 @@ describe.each([
             },
         );
 
-        test.runIf(etagByEnvEnabled)(
-            'modifying dev environment should only invalidate dev tokens',
+        test('modifying dev environment should only invalidate dev tokens',
             async () => {
                 const currentDevEtag = `"76d8bb0e:13${etagVariantEnabled ? `:${etagVariantName}` : ''}"`;
                 const currentProdEtag = `"67e24428:15${etagVariantEnabled ? `:${etagVariantName}` : ''}"`;

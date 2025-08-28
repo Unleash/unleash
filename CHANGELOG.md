@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.1.2] - 2025-08-28
+
+### Bug Fixes
+
+- Consider both client and backend token types from the DB ([#10552](https://github.com/Unleash/unleash/issues/10552))
+
+- Feature link should return same id as it sends to db ([#10553](https://github.com/Unleash/unleash/issues/10553))
+
+- Backend tokens mapped to client tokens ([#10561](https://github.com/Unleash/unleash/issues/10561))
+
+
+### Features
+
+- Exposure metrics header ([#10545](https://github.com/Unleash/unleash/issues/10545))
+
+- Add feature impact metrics initial area ([#10548](https://github.com/Unleash/unleash/issues/10548))
+
+- Add impact metrics flag modal ([#10550](https://github.com/Unleash/unleash/issues/10550))
+
+
+### Miscellaneous Tasks
+
+- DebugEtag flag cleanup ([#10558](https://github.com/Unleash/unleash/issues/10558))
+
+
 ## [7.1.1] - 2025-08-26
 
 ### Bug Fixes

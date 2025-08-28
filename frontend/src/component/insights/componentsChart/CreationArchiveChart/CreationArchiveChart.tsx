@@ -5,7 +5,6 @@ import { useProjectChartData } from 'component/insights/hooks/useProjectChartDat
 import { useTheme } from '@mui/material';
 import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
 import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
-import { Chart } from 'react-chartjs-2';
 import {
     CategoryScale,
     LinearScale,
@@ -19,13 +18,11 @@ import {
     Filler,
 } from 'chart.js';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import {
-    ChartTooltip,
-    type TooltipState,
-} from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
-import { createTooltip } from 'component/insights/components/LineChart/createTooltip';
-import { CreationArchiveTooltip } from './CreationArchiveTooltip.tsx';
+import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
 import type { WeekData, RawWeekData } from './types.ts';
+import { createTooltip } from 'component/insights/components/LineChart/createTooltip.ts';
+import { CreationArchiveRatioTooltip } from './CreationArchiveRatioTooltip.tsx';
+import { Chart } from 'react-chartjs-2';
 
 ChartJS.register(
     CategoryScale,
@@ -144,6 +141,10 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                 data={data}
                 options={{
                     responsive: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
                     plugins: {
                         legend: {
                             position: 'bottom' as const,
@@ -156,7 +157,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                         },
                         tooltip: {
                             enabled: false,
-                            position: 'nearest',
+                            position: 'average',
                             external: createTooltip(setTooltip),
                         },
                     },
@@ -187,13 +188,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                 height={100}
                 width={250}
             />
-            {tooltip?.dataPoints?.some(
-                (point) => point.dataset.label !== 'Flags archived',
-            ) ? (
-                <CreationArchiveTooltip tooltip={tooltip} />
-            ) : (
-                <ChartTooltip tooltip={tooltip} />
-            )}
+            <CreationArchiveRatioTooltip tooltip={tooltip} />
         </>
     );
 };

@@ -132,6 +132,13 @@ It is highly recommended to back up your Unleash database, especially before [up
     docker exec -i <your_postgres_container_name> psql -U <your_db_user> -d <your_db_name> < <your_backup_file.dump>
     ```
 
+### Migrate an instance
+
+If you are moving an instance (for example, to a new cloud provider or cluster) and need full fidelity, use a database [dump and restore](#back-up-and-restore-the-database) instead of API export/import.
+
+This is the safest way to keep data parity. Use export/import primarily for ongoing synchronization of feature flags, not full migrations.
+
+
 ### Enable self-signed certificates
 
 To connect to a PostgreSQL database using a self-signed certificate, you need to:

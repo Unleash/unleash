@@ -4,13 +4,15 @@ title: 'How to synchronize Unleash instances'
 
 :::note 
 
-This is an experimental feature
+This is an experimental feature.
 
 :::
 
-# Unleash Instance Synchronization Script 
+# Unleash instance synchronization script 
 
 This script allows you to synchronize feature flags between two Unleash instances using the export and import APIs provided by Unleash. The script exports feature flags from the source instance and imports them into the target instance.
+
+For one-off full instance migrations, we recommend a [database dump/restore](/using-unleash/deploy/configuring-unleash#back-up-and-restore-the-database) (`pg_dump` / `pg_restore`) instead.
 
 You can find this script in the following location within the project:
 
@@ -18,11 +20,26 @@ You can find this script in the following location within the project:
 
 This script can also be integrated into a continuous deployment pipeline, allowing you to automatically synchronize feature flags between instances at a frequency determined by your pipeline configuration.
 
+:::warning
+If you have any segments or custom strategies defined, you must first manually create these in the target instance.
+:::
+
+Feature flags are imported with full configuration, including:
+- [Activation strategies](/reference/activation-strategies)
+- [Context fields](/reference/unleash-context)
+- [Strategy variants](/reference/strategy-variants)
+- [Tags](/reference/feature-toggles#tags)
+- [Feature flag state](/reference/feature-toggles#feature-flag-state)
+- [Feature dependencies](/reference/feature-toggles#feature-flag-dependencies)
+- [Feature flag links](/reference/feature-toggles#external-links)
+
+If a feature flag already exists in your target instance, it will be overwritten.
+
 ## Configuration
 
 To synchronize two Unleash instances, you need to configure each instance with the required settings. The script requires the following configuration:
 
-### Source Unleash Instance
+### Source Unleash instance
 
 - `SOURCE_URL`: The URL of the source Unleash API.
   Example: `SOURCE_URL="http://localhost:4242/api/admin/features-batch/export"`
@@ -31,7 +48,7 @@ To synchronize two Unleash instances, you need to configure each instance with t
 - `SOURCE_ENV`: The environment name for the source instance. Only feature flags matching this environment will be exported.
 - `SOURCE_TAG`: The tag to filter feature flags for export.
 
-### Target Unleash Instance
+### Target Unleash instance
 
 - `TARGET_URL`: The URL of the target Unleash API.
   Example: `TARGET_URL="http://localhost:4242/api/admin/features-batch/import"`
@@ -55,16 +72,9 @@ The script prints each step of the export and import process, providing feedback
 
 Here are some common issues you might encounter and how to resolve them:
 
-1. Make sure you use the correct URLs for the source and target instances.
-2. Ensure that the API tokens have the necessary permissions to perform export and import operations.
-3. Verify that the specified source and target environments exist.
-4. Check that the target project exists.
-5. If you have change requests enabled in the target project, ensure that there are no pending change requests for the same API token.
-
-:::info Feedback wanted
-
-If you would like to give feedback on this feature, experience issues or have questions, please feel free to open an issue on [GitHub](https://github.com/Unleash/unleash/).
-
-:::
-
-
+- Check that you use the correct URLs for the source and target instances.
+- Ensure that the API tokens have the necessary permissions to perform export and import operations.
+- Verify that the specified source and target environments exist.
+- Check that the target project exists.
+- If you have change requests enabled in the target project, ensure that there are no pending change requests for the same API token.
+-  Check that any custom strategies or segments have been migrated manually.

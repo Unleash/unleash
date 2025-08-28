@@ -722,6 +722,11 @@ const sidebars: SidebarsConfig = {
                     label: 'Troubleshooting',
                 },
                 {
+                    type: 'doc',
+                    id: 'availability',
+                    label: 'Feature availability and versioning',
+                },
+                {
                     label: 'Contribute to Unleash',
                     type: 'category',
                     collapsed: true,

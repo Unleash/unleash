@@ -164,4 +164,12 @@ This ensures that the user's permissions are managed solely within Unleash and w
 
 ### What if I'm already locked out?
 
-If you've already enabled SCIM and lost all admin access, please contact our support team. We can create a temporary admin user for you while you correct your SCIM configuration.
+If you've already enabled SCIM and lost all admin access, and you are self-hosted, you can enable login with user and password by setting the environment variable `UNLEASH_ALLOW_PASSWORD_LOGIN=true`. If you are on a hosted plan, please contact our support team. We can create a temporary admin user for you while you correct your SCIM configuration.
+
+## My Network Tab is empty, and I don't see any data.
+
+If you run into an issue when [configuring your Network dashboards](/reference/network-view#configure-a-data-source), verify that you've set up the `PROMETHEUS_API` URL correctly:
+
+- Check the `PROMETHEUS_API` environment variable: Ensure it points to your Prometheus server and not to your Unleash URL. Pointing it back to Unleash (e.g., https://unleash.example.com/internal-backstage/prometheus) is incorrect and will result in an empty dashboard.
+
+- Check network connectivity: Confirm that your Unleash instance can reach the Prometheus server URL you provided. You can test this by running a curl command from within the Unleash container or a pod on the same network.

@@ -25,6 +25,7 @@ Each [event type](#event-types) contains different data, but all events follow t
 | Field              | Type   | Description                                                       |
 |--------------------|--------|-------------------------------------------------------------------|
 | `id`*              | number | Unique identifier for the event; incremental whole number.        |
+| `groupId`*         | string | Identifier that links related events created by a single action, such as through a [change request](/reference/change-requests). Added in Unleash 7.1.    |
 | `type`*            | string | Describes the type of event (e.g., `feature-strategy-update`).    |
 | `createdAt`*       | string | Timestamp when the event was created; ISO 8601 format.            |
 | `createdBy`*       | string | Email of the user who triggered the event.                        |

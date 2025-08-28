@@ -54,19 +54,32 @@ You can also compare your usage in previous months with the current month.
 
 ## Configure a data source
 
-To populate the **Network** dashboard with data, you can integrate with [Prometheus](https://prometheus.io/), or similar tools.
+To populate the Network dashboards, Unleash needs to read metrics from a Prometheus-compatible HTTP API (for example, Prometheus or VictoriaMetrics).
 
-The network view relies on an external Prometheus-compatible API for generating diagrams. You must set the `PROMETHEUS_API` environment variable to the base path of the Prometheus installation.
+For this, you need to set up a two-way flow between Unleash and a Prometheus-compatible monitoring system:
+	- Prometheus scrapes Unleash at /internal-backstage/prometheus.
+	- Unleash queries Prometheus (via `PROMETHEUS_API`) to render the dashboards.
+
+### Configure Prometheus to scrape metrics from Unleash
+
+First, you must configure your Prometheus instance to pull metrics from Unleash's backstage API endpoint.
+
+Add the following scrape job to your Prometheus configuration file (for example, `prometheus.yml`). Replace 'your-unleash-url' with the base URL of your Unleash instance.
 
 ```yaml
-  - job_name: unleash_internal_metrics
-    metrics_path: /internal-backstage/prometheus
-    static_configs:
-      - targets: ['unleash-url']
+- job_name: unleash_internal_metrics
+  metrics_path: /internal-backstage/prometheus
+  static_configs:
+    - targets: ['your-unleash-url']
 ```
 
-You can configure Prometheus to retrieve data from the Unleash [internal backstage API](api/legacy/unleash/internal/prometheus), such as through a scraping job.
-
-This setup creates a mutual dependency where Prometheus fetches data from Unleash's backstage API, and Unleash retrieves the data from Prometheus and displays it in the **Network** dashboards.
+This job tells Prometheus to periodically fetch metrics from the `/internal-backstage/prometheus` path on your Unleash server.
 
 
+### Configure Unleash to query data from Prometheus
+  
+Set the `PROMETHEUS_API` environment variable in your Unleash instance to the base URL of your Prometheus-compatible query API. This URL must be network-accessible from your Unleash instance. It can be an internal service name (such as `http://prometheus.monitoring.svc.cluster.local`) or a public URL.
+
+```bash
+PROMETHEUS_API=http://vmselect-unleash-vm.victoriametrics:8481/select/0:0/prometheus
+```

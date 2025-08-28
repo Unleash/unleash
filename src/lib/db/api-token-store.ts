@@ -42,7 +42,11 @@ const tokenRowReducer = (acc, tokenRow) => {
         acc[tokenRow.secret] = {
             secret: token.secret,
             tokenName: token.token_name ? token.token_name : token.username,
-            type: token.type.toLowerCase(),
+            // backend token type needs to be supported in Edge before being able to return them in the API
+            type: (token.type === ApiTokenType.BACKEND
+                ? ApiTokenType.CLIENT
+                : token.type
+            ).toLowerCase(),
             project: ALL,
             projects: [ALL],
             environment: token.environment ? token.environment : ALL,

@@ -121,7 +121,7 @@ test('editor users should only get client, backend or frontend tokens', async ()
             expect(res.body.tokens.length).toBe(3);
             expect(res.body.tokens[0].type).toBe(ApiTokenType.CLIENT);
             expect(res.body.tokens[1].type).toBe(ApiTokenType.FRONTEND);
-            expect(res.body.tokens[2].type).toBe(ApiTokenType.BACKEND);
+            expect(res.body.tokens[2].type).toBe(ApiTokenType.CLIENT);
         });
 });
 
@@ -229,7 +229,7 @@ describe('Fine grained API token permissions', () => {
                 .expect((res) => {
                     expect(res.body.tokens).toHaveLength(2);
                     expect(res.body.tokens[0].type).toBe(ApiTokenType.CLIENT);
-                    expect(res.body.tokens[1].type).toBe(ApiTokenType.BACKEND);
+                    expect(res.body.tokens[1].type).toBe(ApiTokenType.CLIENT);
                 });
         });
         test('Admin users should be able to see all tokens', async () => {
@@ -243,7 +243,7 @@ describe('Fine grained API token permissions', () => {
             [
                 ApiTokenType.ADMIN,
                 ApiTokenType.CLIENT,
-                ApiTokenType.BACKEND,
+                ApiTokenType.CLIENT,
                 ApiTokenType.FRONTEND,
             ].forEach((tokenType) => {
                 expect(

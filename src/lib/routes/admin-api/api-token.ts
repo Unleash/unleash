@@ -44,6 +44,7 @@ import {
 import type { FrontendApiService } from '../../features/frontend-api/frontend-api-service.js';
 import { OperationDeniedError } from '../../error/index.js';
 import type { CreateApiTokenSchema } from '../../internals.js';
+import type { IUserPermission } from '../../server-impl.js';
 
 interface TokenParam {
     token: string;
@@ -64,32 +65,28 @@ export const tokenTypeToCreatePermission: (tokenType: ApiTokenType) => string =
         }
     };
 
-const permissionToTokenType: (permission: string) => ApiTokenType | undefined =
-    (permission) => {
-        if (
-            [
-                CREATE_FRONTEND_API_TOKEN,
-                READ_FRONTEND_API_TOKEN,
-                DELETE_FRONTEND_API_TOKEN,
-                UPDATE_FRONTEND_API_TOKEN,
-            ].includes(permission)
-        ) {
-            return ApiTokenType.FRONTEND;
-        } else if (
-            [
-                CREATE_CLIENT_API_TOKEN,
-                READ_CLIENT_API_TOKEN,
-                DELETE_CLIENT_API_TOKEN,
-                UPDATE_CLIENT_API_TOKEN,
-            ].includes(permission)
-        ) {
-            return ApiTokenType.CLIENT;
-        } else if (ADMIN === permission) {
-            return ApiTokenType.ADMIN;
-        } else {
-            return undefined;
-        }
-    };
+const canReadToken = ({ permission }: IUserPermission, type: ApiTokenType) => {
+    if (permission === ADMIN) {
+        return true;
+    }
+    if (type === ApiTokenType.FRONTEND) {
+        return [
+            CREATE_FRONTEND_API_TOKEN,
+            READ_FRONTEND_API_TOKEN,
+            DELETE_FRONTEND_API_TOKEN,
+            UPDATE_FRONTEND_API_TOKEN,
+        ].includes(permission);
+    }
+    if (type === ApiTokenType.CLIENT || type === ApiTokenType.BACKEND) {
+        return [
+            CREATE_CLIENT_API_TOKEN,
+            READ_CLIENT_API_TOKEN,
+            DELETE_CLIENT_API_TOKEN,
+            UPDATE_CLIENT_API_TOKEN,
+        ].includes(permission);
+    }
+    return false;
+};
 
 const tokenTypeToUpdatePermission: (tokenType: ApiTokenType) => string = (
     tokenType,
@@ -419,23 +416,15 @@ export class ApiTokenController extends Controller {
         if (user.isAPI && user.permissions.includes(ADMIN)) {
             return allTokens;
         }
+
         const userPermissions =
             await this.accessService.getPermissionsForUser(user);
 
-        const allowedTokenTypes = [
-            ADMIN,
-            READ_CLIENT_API_TOKEN,
-            READ_FRONTEND_API_TOKEN,
-        ]
-            .filter((readPerm) =>
-                userPermissions.some(
-                    (p) => p.permission === readPerm || p.permission === ADMIN,
-                ),
-            )
-            .map(permissionToTokenType)
-            .filter((t) => t);
-        return allTokens.filter((token) =>
-            allowedTokenTypes.includes(token.type),
+        const accessibleTokens = allTokens.filter((token) =>
+            userPermissions.some((permission) =>
+                canReadToken(permission, token.type),
+            ),
         );
+        return accessibleTokens;
     }
 }

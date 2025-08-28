@@ -351,10 +351,9 @@ export default class FeatureController extends Controller {
     }
 
     async calculateMeta(query: IFeatureToggleQuery): Promise<IMeta> {
-        const etagByEnvEnabled = this.flagResolver.isEnabled('etagByEnv');
         const revisionId =
             await this.configurationRevisionService.getMaxRevisionId(
-                etagByEnvEnabled ? query.environment : undefined,
+                query.environment,
             );
 
         const queryHash = hashSum(query);

@@ -178,6 +178,9 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                         display: true,
                         text: 'Number of flags',
                     },
+                    ticks: {
+                        stepSize: 1,
+                    },
                 },
             },
         }),

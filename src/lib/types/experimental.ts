@@ -60,6 +60,7 @@ export type IFlagKey =
     | 'addConfiguration'
     | 'fetchMode'
     | 'etagByEnv';
+    | 'fetchMode';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 

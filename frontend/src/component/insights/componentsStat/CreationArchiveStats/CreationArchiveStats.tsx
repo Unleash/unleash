@@ -13,10 +13,7 @@ function getCurrentArchiveRatio(
         InstanceInsightsSchema['creationArchiveTrends']
     >,
 ) {
-    if (
-        !groupedCreationArchiveData ||
-        Object.keys(groupedCreationArchiveData).length === 0
-    ) {
+    if (!groupedCreationArchiveData) {
         return 0;
     }
 
@@ -24,7 +21,7 @@ function getCurrentArchiveRatio(
     let totalCreated = 0;
 
     Object.values(groupedCreationArchiveData).forEach((projectData) => {
-        const latestData = projectData[projectData.length - 1];
+        const latestData = projectData[0];
         if (latestData) {
             totalArchived += latestData.archivedFlags || 0;
             const createdSum = latestData.createdFlags

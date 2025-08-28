@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { Paper, Typography, styled } from '@mui/material';
 import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
+import { ChartTooltipContainer } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
 import type { WeekData } from './types.ts';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
@@ -51,26 +52,28 @@ export const CreationArchiveRatioTooltip: FC<
     const ratio = Math.round((archivedCount / createdCount) * 100);
 
     return (
-        <StyledTooltipItemContainer elevation={3}>
-            <Typography
-                variant='body2'
-                component='div'
-                fontWeight='bold'
-                sx={{ marginBottom: 1 }}
-            >
-                Ratio {ratio}%
-            </Typography>
+        <ChartTooltipContainer tooltip={tooltip}>
+            <StyledTooltipItemContainer elevation={3}>
+                <Typography
+                    variant='body2'
+                    component='div'
+                    fontWeight='bold'
+                    sx={{ marginBottom: 1 }}
+                >
+                    Ratio {ratio}%
+                </Typography>
 
-            <DataList>
-                <DataRow dataType='archived'>
-                    <dt>Flags archived</dt>
-                    <dd>{archivedCount}</dd>
-                </DataRow>
-                <DataRow dataType='created'>
-                    <dt>Flags created</dt>
-                    <dd>{createdCount}</dd>
-                </DataRow>
-            </DataList>
-        </StyledTooltipItemContainer>
+                <DataList>
+                    <DataRow dataType='archived'>
+                        <dt>Flags archived</dt>
+                        <dd>{archivedCount}</dd>
+                    </DataRow>
+                    <DataRow dataType='created'>
+                        <dt>Flags created</dt>
+                        <dd>{createdCount}</dd>
+                    </DataRow>
+                </DataList>
+            </StyledTooltipItemContainer>
+        </ChartTooltipContainer>
     );
 };

@@ -1,14 +1,40 @@
 import 'chartjs-adapter-date-fns';
-import { type FC, useMemo } from 'react';
+import { type FC, useMemo, useState } from 'react';
 import type { InstanceInsightsSchema } from 'openapi';
 import { useProjectChartData } from 'component/insights/hooks/useProjectChartData';
 import { useTheme } from '@mui/material';
 import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
 import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
-import type { ChartData } from 'chart.js';
+import {
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    BarElement,
+    Tooltip,
+    Legend,
+    TimeScale,
+    Chart as ChartJS,
+    Filler,
+} from 'chart.js';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
 import type { WeekData, RawWeekData } from './types.ts';
+import { createTooltip } from 'component/insights/components/LineChart/createTooltip.ts';
 import { CreationArchiveRatioTooltip } from './CreationArchiveRatioTooltip.tsx';
-import { BarChart } from 'component/insights/components/LineChart/BarChart.tsx';
+import { Chart } from 'react-chartjs-2';
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    BarElement,
+    TimeScale,
+    Tooltip,
+    Legend,
+    Filler,
+);
 
 interface ICreationArchiveChartProps {
     creationArchiveTrends: GroupedDataByProject<
@@ -23,7 +49,9 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
 }) => {
     const creationVsArchivedChart = useProjectChartData(creationArchiveTrends);
     const theme = useTheme();
-    const placeholderData = usePlaceholderData() as ChartData<'bar', unknown>;
+    const placeholderData = usePlaceholderData();
+    const { locationSettings } = useLocationSettings();
+    const [tooltip, setTooltip] = useState<null | TooltipState>(null);
 
     const aggregateOrProjectData = useMemo(() => {
         const labels: string[] = Array.from(
@@ -106,7 +134,66 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     const data =
         notEnoughData || isLoading ? placeholderData : aggregateOrProjectData;
 
+    const options = useMemo(
+        () => ({
+            responsive: true,
+            interaction: {
+                mode: 'index' as const,
+                intersect: false,
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom' as const,
+                    labels: {
+                        color: theme.palette.text.secondary,
+                        usePointStyle: true,
+                        padding: 21,
+                        boxHeight: 8,
+                    },
+                },
+                tooltip: {
+                    enabled: false,
+                    position: 'average' as const,
+                    external: createTooltip(setTooltip),
+                },
+            },
+            locale: locationSettings.locale,
+            scales: {
+                x: {
+                    type: 'time' as const,
+                    display: true,
+                    time: {
+                        unit: 'week' as const,
+                        tooltipFormat: 'PPP',
+                    },
+                    grid: {
+                        display: false,
+                    },
+                },
+                y: {
+                    type: 'linear' as const,
+                    position: 'left' as const,
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Number of flags',
+                    },
+                },
+            },
+        }),
+        [theme, locationSettings, setTooltip],
+    );
+
     return (
-        <BarChart TooltipComponent={CreationArchiveRatioTooltip} data={data} />
+        <>
+            <Chart
+                type='bar'
+                data={data}
+                options={options}
+                height={100}
+                width={250}
+            />
+            <CreationArchiveRatioTooltip tooltip={tooltip} />
+        </>
     );
 };

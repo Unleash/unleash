@@ -58,8 +58,7 @@ export type IFlagKey =
     | 'changeRequestApproverEmails'
     | 'lifecycleGraphs'
     | 'addConfiguration'
-    | 'fetchMode'
-    | 'etagByEnv';
+    | 'etagByEnv'
     | 'fetchMode';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;

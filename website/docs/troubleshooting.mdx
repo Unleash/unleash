@@ -168,8 +168,8 @@ If you've already enabled SCIM and lost all admin access, please contact our sup
 
 ## My Network Tab is empty, and I don't see any data.
 
-[This issue](/reference/network-view/configure-a-data-source) is most commonly caused by an incorrect `PROMETHEUS_API` URL:
+If you run into an issue when [configuring your Network dashboards](/reference/network-view#configure-a-data-source), verify that you've set up the `PROMETHEUS_API` URL correctly:
 
-- Verify the `PROMETHEUS_API` environment variable: Ensure it points to your Prometheus server and not to your Unleash URL. Pointing it back to Unleash (e.g., https://unleash.example.com/internal-backstage/prometheus) is incorrect and will result in an empty dashboard.
+- Check the `PROMETHEUS_API` environment variable: Ensure it points to your Prometheus server and not to your Unleash URL. Pointing it back to Unleash (e.g., https://unleash.example.com/internal-backstage/prometheus) is incorrect and will result in an empty dashboard.
 
 - Check network connectivity: Confirm that your Unleash instance can reach the Prometheus server URL you provided. You can test this by running a curl command from within the Unleash container or a pod on the same network.

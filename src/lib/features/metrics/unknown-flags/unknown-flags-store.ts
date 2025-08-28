@@ -66,18 +66,24 @@ export class UnknownFlagsStore implements IUnknownFlagsStore {
     }
 
     async getAll({ limit, orderBy }: QueryParams = {}): Promise<UnknownFlag[]> {
-        let query = this.db(`${TABLE} AS uf`).select(
-            'uf.name',
-            'uf.app_name',
-            'uf.seen_at',
-            'uf.environment',
-            this.db.raw(
-                `(SELECT MAX(e.created_at)
+        let query = this.db(`${TABLE} AS uf`)
+            .select(
+                'uf.name',
+                'uf.app_name',
+                'uf.seen_at',
+                'uf.environment',
+                this.db.raw(
+                    `(SELECT MAX(e.created_at)
                 FROM ${TABLE_EVENTS} AS e
                 WHERE e.feature_name = uf.name)
                 AS last_event_at`,
-            ),
-        );
+                ),
+            )
+            .whereNotExists(
+                this.db('features as f')
+                    .select(this.db.raw('1'))
+                    .whereRaw('f.name = uf.name'),
+            );
 
         if (orderBy) {
             query = query.orderBy(orderBy);

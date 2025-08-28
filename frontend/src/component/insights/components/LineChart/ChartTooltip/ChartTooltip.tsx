@@ -2,7 +2,7 @@ import { Box, Paper, styled, Typography } from '@mui/material';
 import type { TooltipItem } from 'chart.js';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import type React from 'react';
-import { useEffect, useState, type FC, type VFC } from 'react';
+import type { FC, VFC } from 'react';
 import { objectId } from 'utils/objectId';
 
 export type TooltipState = {
@@ -46,18 +46,6 @@ const StyledLabelIcon = styled('span')(({ theme }) => ({
 
 const offset = 16;
 
-const getAlign = (align?: 'left' | 'right' | 'center') => {
-    if (align === 'left') {
-        return 'flex-start';
-    }
-
-    if (align === 'right') {
-        return 'flex-end';
-    }
-
-    return 'center';
-};
-
 const getLeftOffset = (caretX = 0, align?: 'left' | 'right' | 'center') => {
     if (align === 'left') {
         return caretX + offset;
@@ -74,28 +62,22 @@ export const ChartTooltipContainer: FC<IChartTooltipProps> = ({
     tooltip,
     children,
 }) => {
-    const [top, setTop] = useState(0);
-    const [left, setLeft] = useState(0);
-    useEffect(() => {
-        if (tooltip) {
-            setTop(tooltip.caretY + offset);
-            setLeft(getLeftOffset(tooltip.caretX, tooltip.align));
-        }
-    }, [tooltip]);
+    const top = tooltip?.caretY ?? 0 + offset;
+    const left = getLeftOffset(tooltip?.caretX, tooltip?.align);
     return (
         <Box
             sx={(theme) => ({
                 top: 0,
                 left: 0,
                 transform: `translate(${left}px, ${top}px)`,
-                transition: 'transform 0.3s ease-in-out',
+                transition: 'transform 0.2s ease-in-out',
                 width: '1px',
                 position: 'absolute',
                 display: tooltip ? 'flex' : 'none',
                 pointerEvents: 'none',
                 zIndex: theme.zIndex.tooltip,
                 flexDirection: 'column',
-                alignItems: getAlign(tooltip?.align),
+                alignItems: 'center',
             })}
         >
             {children}

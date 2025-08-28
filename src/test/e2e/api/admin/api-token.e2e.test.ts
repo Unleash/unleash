@@ -119,7 +119,7 @@ test.each(['client', 'backend'])(
             .expect(200)
             .expect((res) => {
                 expect(res.body.tokens.length).toBe(10);
-                expect(res.body.tokens[2].type).toBe(type);
+                expect(res.body.tokens[2].type).toBe(ApiTokenType.CLIENT);
             });
         await app.request
             .get('/api/admin/api-tokens/default-client')
@@ -127,7 +127,7 @@ test.each(['client', 'backend'])(
             .expect(200)
             .expect((res) => {
                 expect(res.body.tokens.length).toBe(10);
-                expect(res.body.tokens[2].type).toBe(type);
+                expect(res.body.tokens[2].type).toBe(ApiTokenType.CLIENT);
             });
     },
 );

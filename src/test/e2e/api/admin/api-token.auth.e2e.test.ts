@@ -121,7 +121,7 @@ test('editor users should only get client, backend or frontend tokens', async ()
             expect(res.body.tokens.length).toBe(3);
             expect(res.body.tokens[0].type).toBe(ApiTokenType.CLIENT);
             expect(res.body.tokens[1].type).toBe(ApiTokenType.FRONTEND);
-            expect(res.body.tokens[2].type).toBe(ApiTokenType.BACKEND);
+            expect(res.body.tokens[2].type).toBe(ApiTokenType.CLIENT);
         });
 });
 
@@ -229,7 +229,7 @@ describe('Fine grained API token permissions', () => {
                 .expect((res) => {
                     expect(res.body.tokens).toHaveLength(2);
                     expect(res.body.tokens[0].type).toBe(ApiTokenType.CLIENT);
-                    expect(res.body.tokens[1].type).toBe(ApiTokenType.BACKEND);
+                    expect(res.body.tokens[1].type).toBe(ApiTokenType.CLIENT);
                 });
         });
         test('Admin users should be able to see all tokens', async () => {
@@ -241,16 +241,15 @@ describe('Fine grained API token permissions', () => {
             expect(status).toBe(200);
             expect(body.tokens).toHaveLength(4);
             [
-                ApiTokenType.ADMIN,
-                ApiTokenType.CLIENT,
-                ApiTokenType.BACKEND,
-                ApiTokenType.FRONTEND,
-            ].forEach((tokenType) => {
+                { tokenType: ApiTokenType.ADMIN, expectedCount: 1 },
+                { tokenType: ApiTokenType.CLIENT, expectedCount: 2 },
+                { tokenType: ApiTokenType.FRONTEND, expectedCount: 1 },
+            ].forEach(({ tokenType, expectedCount }) => {
                 expect(
                     body.tokens.filter(
                         (t: { type: string }) => t.type === tokenType,
                     ),
-                ).toHaveLength(1);
+                ).toHaveLength(expectedCount);
             });
         });
         test('Editor users should be able to see all tokens except ADMIN tokens', async () => {

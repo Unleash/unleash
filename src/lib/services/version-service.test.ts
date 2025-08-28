@@ -43,6 +43,8 @@ const fakeTelemetryData = {
     postgresVersion: '17.1 (Debian 17.1-1.pgdg120+1)',
     licenseType: 'test',
     hostedBy: 'self-hosted',
+    releaseTemplates: 2,
+    releasePlans: 4,
 };
 
 test('yields current versions', async () => {

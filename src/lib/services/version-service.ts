@@ -52,6 +52,8 @@ export interface IFeatureUsageInfo {
     postgresVersion: string;
     licenseType: string;
     hostedBy: string;
+    releaseTemplates: number;
+    releasePlans: number;
 }
 
 export default class VersionService {

@@ -131,6 +131,8 @@ class InstanceAdminController extends Controller {
             maxEnvironmentStrategies: 20,
             maxConstraints: 17,
             maxConstraintValues: 123,
+            releaseTemplates: 3,
+            releasePlans: 5,
         };
     }
 

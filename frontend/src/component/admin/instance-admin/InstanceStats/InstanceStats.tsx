@@ -63,6 +63,8 @@ export const InstanceStats: FC = () => {
             title: 'Highest number of values used for a single constraint',
             value: stats?.maxConstraintValues,
         },
+        { title: 'Release templates', value: stats?.releaseTemplates },
+        { title: 'Release plans', value: stats?.releasePlans },
     ];
 
     if (stats?.versionEnterprise) {

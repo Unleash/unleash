@@ -31,6 +31,8 @@ import { format, minutesToMilliseconds } from 'date-fns';
 import memoizee from 'memoizee';
 import type { GetLicensedUsers } from './getLicensedUsers.js';
 import type { IFeatureUsageInfo } from '../../services/version-service.js';
+import type { ReleasePlanTemplateStore } from '../release-plans/release-plan-template-store.js';
+import type { ReleasePlanStore } from '../release-plans/release-plan-store.js';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -70,6 +72,8 @@ export interface InstanceStats {
     maxEnvironmentStrategies: number;
     maxConstraints: number;
     maxConstraintValues: number;
+    releaseTemplates?: number;
+    releasePlans?: number;
 }
 
 export type InstanceStatsSigned = Omit<InstanceStats, 'projects'> & {
@@ -126,6 +130,10 @@ export class InstanceStatsService {
 
     private trafficDataUsageStore: ITrafficDataUsageStore;
 
+    private releasePlanTemplateStore: ReleasePlanTemplateStore;
+
+    private releasePlanStore: ReleasePlanStore;
+
     constructor(
         {
             featureToggleStore,
@@ -145,6 +153,8 @@ export class InstanceStatsService {
             featureStrategiesReadModel,
             featureStrategiesStore,
             trafficDataUsageStore,
+            releasePlanTemplateStore,
+            releasePlanStore,
         }: Pick<
             IUnleashStores,
             | 'featureToggleStore'
@@ -164,6 +174,8 @@ export class InstanceStatsService {
             | 'featureStrategiesReadModel'
             | 'featureStrategiesStore'
             | 'trafficDataUsageStore'
+            | 'releasePlanTemplateStore'
+            | 'releasePlanStore'
         >,
         {
             getLogger,
@@ -203,6 +215,8 @@ export class InstanceStatsService {
         this.featureStrategiesReadModel = featureStrategiesReadModel;
         this.featureStrategiesStore = featureStrategiesStore;
         this.trafficDataUsageStore = trafficDataUsageStore;
+        this.releasePlanTemplateStore = releasePlanTemplateStore;
+        this.releasePlanStore = releasePlanStore;
     }
 
     memory = new Map<string, () => Promise<any>>();
@@ -295,6 +309,20 @@ export class InstanceStatsService {
         });
     }
 
+    async getReleaseTemplates(): Promise<number> {
+        return this.memorize('getReleaseTemplates', async () => {
+            const count = await this.releasePlanTemplateStore.count();
+            return count;
+        });
+    }
+
+    async getReleasePlans(): Promise<number> {
+        return this.memorize('getReleasePlans', async () => {
+            const count = await this.releasePlanStore.count();
+            return count;
+        });
+    }
+
     async getStats(): Promise<InstanceStats> {
         const versionInfo = await this.versionService.getVersionInfo();
         const [
@@ -326,6 +354,8 @@ export class InstanceStatsService {
             maxEnvironmentStrategies,
             maxConstraintValues,
             maxConstraints,
+            releaseTemplates,
+            releasePlans,
         ] = await Promise.all([
             this.getToggleCount(),
             this.getArchivedToggleCount(),
@@ -370,6 +400,8 @@ export class InstanceStatsService {
                     this.featureStrategiesReadModel,
                 ),
             ),
+            this.getReleaseTemplates(),
+            this.getReleasePlans(),
         ]);
 
         return {
@@ -408,6 +440,8 @@ export class InstanceStatsService {
             maxEnvironmentStrategies: maxEnvironmentStrategies?.count ?? 0,
             maxConstraintValues: maxConstraintValues?.count ?? 0,
             maxConstraints: maxConstraints?.count ?? 0,
+            releaseTemplates,
+            releasePlans,
         };
     }
 
@@ -435,6 +469,8 @@ export class InstanceStatsService {
             postgresVersion,
             licenseType,
             hostedBy,
+            releaseTemplates,
+            releasePlans,
         ] = await Promise.all([
             this.getToggleCount(),
             this.getRegisteredUsers(),
@@ -458,6 +494,8 @@ export class InstanceStatsService {
             this.postgresVersion(),
             this.getLicenseType(),
             this.getHostedBy(),
+            this.getReleaseTemplates(),
+            this.getReleasePlans(),
         ]);
         const versionInfo = await this.versionService.getVersionInfo();
 
@@ -493,6 +531,8 @@ export class InstanceStatsService {
             postgresVersion,
             licenseType,
             hostedBy,
+            releaseTemplates,
+            releasePlans,
         };
         return featureInfo;
     }
@@ -663,7 +703,7 @@ export class InstanceStatsService {
             .reduce((a, b) => a + b, 0);
 
         const sum = sha256(
-            `${instanceStats.instanceId}${instanceStats.users}${instanceStats.featureToggles}${totalProjects}${instanceStats.roles}${instanceStats.groups}${instanceStats.environments}${instanceStats.segments}`,
+            `${instanceStats.instanceId}${instanceStats.users}${instanceStats.featureToggles}${totalProjects}${instanceStats.roles}${instanceStats.groups}${instanceStats.environments}${instanceStats.segments}${instanceStats.releaseTemplates}${instanceStats.releasePlans}`,
         );
         return { ...instanceStats, sum, projects: totalProjects };
     }

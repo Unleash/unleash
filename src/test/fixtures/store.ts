@@ -137,9 +137,15 @@ const createStores: () => IUnleashStores = () => {
         uniqueConnectionReadModel: new UniqueConnectionReadModel(
             uniqueConnectionStore,
         ),
-        releasePlanStore: {} as ReleasePlanStore,
-        releasePlanMilestoneStore: {} as ReleasePlanMilestoneStore,
-        releasePlanTemplateStore: {} as ReleasePlanTemplateStore,
+        releasePlanStore: {
+            count: () => Promise.resolve(0),
+        } as ReleasePlanStore,
+        releasePlanMilestoneStore: {
+            count: () => Promise.resolve(0),
+        } as ReleasePlanMilestoneStore,
+        releasePlanTemplateStore: {
+            count: () => Promise.resolve(0),
+        } as ReleasePlanTemplateStore,
         releasePlanMilestoneStrategyStore:
             {} as ReleasePlanMilestoneStrategyStore,
         featureLinkStore: new FakeFeatureLinkStore(),

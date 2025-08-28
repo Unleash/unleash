@@ -241,16 +241,15 @@ describe('Fine grained API token permissions', () => {
             expect(status).toBe(200);
             expect(body.tokens).toHaveLength(4);
             [
-                ApiTokenType.ADMIN,
-                ApiTokenType.CLIENT,
-                ApiTokenType.CLIENT,
-                ApiTokenType.FRONTEND,
-            ].forEach((tokenType) => {
+                { tokenType: ApiTokenType.ADMIN, expectedCount: 1 },
+                { tokenType: ApiTokenType.CLIENT, expectedCount: 2 },
+                { tokenType: ApiTokenType.FRONTEND, expectedCount: 1 },
+            ].forEach(({ tokenType, expectedCount }) => {
                 expect(
                     body.tokens.filter(
                         (t: { type: string }) => t.type === tokenType,
                     ),
-                ).toHaveLength(1);
+                ).toHaveLength(expectedCount);
             });
         });
         test('Editor users should be able to see all tokens except ADMIN tokens', async () => {

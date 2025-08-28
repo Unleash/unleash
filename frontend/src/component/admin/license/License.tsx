@@ -105,6 +105,14 @@ export const License = () => {
                             </StyledDataCollectionPropertyRow>
                             <StyledDataCollectionPropertyRow>
                                 <StyledPropertyName>
+                                    Release templates
+                                </StyledPropertyName>
+                                <StyledPropertyDetails>
+                                    {license.releaseTemplates}
+                                </StyledPropertyDetails>
+                            </StyledDataCollectionPropertyRow>
+                            <StyledDataCollectionPropertyRow>
+                                <StyledPropertyName>
                                     Expire at
                                 </StyledPropertyName>
                                 <StyledPropertyDetails>

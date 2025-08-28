@@ -25,6 +25,7 @@ export interface License {
         instanceName: string;
         plan: string;
         seats: number;
+        releaseTemplates: number;
         expireAt: Date;
     };
     loading: boolean;

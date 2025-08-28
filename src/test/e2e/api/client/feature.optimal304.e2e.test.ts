@@ -298,8 +298,6 @@ describe('feature 304 api client (etag variant = v2)', () => {
         // Note: this test yields a different result if run in isolation
         // this is because the id 19 depends on a previous test adding a feature
         // otherwise the id will be 18
-        expect(devHeaders.etag).toEqual(
-            `"76d8bb0e:19:${etagVariantName}"`,
-        );
+        expect(devHeaders.etag).toEqual(`"76d8bb0e:19:${etagVariantName}"`);
     });
 });

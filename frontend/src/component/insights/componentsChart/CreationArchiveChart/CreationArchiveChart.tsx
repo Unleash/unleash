@@ -145,6 +145,13 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                         mode: 'index',
                         intersect: false,
                     },
+                    datasets: {
+                        bar: {
+                            // maxBarThickness: 26,
+                            borderRadius: 4,
+                            categoryPercentage: 0.7,
+                        },
+                    },
                     plugins: {
                         legend: {
                             position: 'bottom' as const,

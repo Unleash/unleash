@@ -134,57 +134,62 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     const data =
         notEnoughData || isLoading ? placeholderData : aggregateOrProjectData;
 
+    const options = useMemo(
+        () => ({
+            responsive: true,
+            interaction: {
+                mode: 'index' as const,
+                intersect: false,
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom' as const,
+                    labels: {
+                        color: theme.palette.text.secondary,
+                        usePointStyle: true,
+                        padding: 21,
+                        boxHeight: 8,
+                    },
+                },
+                tooltip: {
+                    enabled: false,
+                    position: 'average' as const,
+                    external: createTooltip(setTooltip),
+                },
+            },
+            locale: locationSettings.locale,
+            scales: {
+                x: {
+                    type: 'time' as const,
+                    display: true,
+                    time: {
+                        unit: 'week' as const,
+                        tooltipFormat: 'PPP',
+                    },
+                    grid: {
+                        display: false,
+                    },
+                },
+                y: {
+                    type: 'linear' as const,
+                    position: 'left' as const,
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Number of flags',
+                    },
+                },
+            },
+        }),
+        [theme, locationSettings, setTooltip],
+    );
+
     return (
         <>
             <Chart
                 type='bar'
                 data={data}
-                options={{
-                    responsive: true,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'bottom' as const,
-                            labels: {
-                                color: theme.palette.text.secondary,
-                                usePointStyle: true,
-                                padding: 21,
-                                boxHeight: 8,
-                            },
-                        },
-                        tooltip: {
-                            enabled: false,
-                            position: 'average',
-                            external: createTooltip(setTooltip),
-                        },
-                    },
-                    locale: locationSettings.locale,
-                    scales: {
-                        x: {
-                            type: 'time',
-                            display: true,
-                            time: {
-                                unit: 'week',
-                                tooltipFormat: 'PPP',
-                            },
-                            grid: {
-                                display: false,
-                            },
-                        },
-                        y: {
-                            type: 'linear',
-                            position: 'left',
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Number of flags',
-                            },
-                        },
-                    },
-                }}
+                options={options}
                 height={100}
                 width={250}
             />

@@ -18,6 +18,11 @@ You can find this script in the following location within the project:
 
 This script can also be integrated into a continuous deployment pipeline, allowing you to automatically synchronize feature flags between instances at a frequency determined by your pipeline configuration.
 
+## Prerequisites
+
+- _Context fields_ have to be migrated manually
+- _Segments_ have to be migrated manually
+
 ## Configuration
 
 To synchronize two Unleash instances, you need to configure each instance with the required settings. The script requires the following configuration:

@@ -77,11 +77,6 @@ export default class ConfigurationRevisionService extends EventEmitter {
             maxRevId,
             environment,
         );
-        if (this.flagResolver.isEnabled('debugEtag')) {
-            this.logger.info(
-                `[etag] Computed ETag for environment ${environment}: ${actualMax} previous was ${maxRevId}`,
-            );
-        }
         if (maxRevId < actualMax) {
             this.maxRevisionId.set(environment, actualMax);
             maxRevId = actualMax;

@@ -165,11 +165,6 @@ export default class FeatureController extends Controller {
     private async resolveFeaturesAndSegments(
         query?: IFeatureToggleQuery,
     ): Promise<[FeatureConfigurationClient[], IClientSegment[]]> {
-        if (this.flagResolver.isEnabled('debugEtag')) {
-            this.logger.info(
-                `[etag] Flags and segments cache miss for ${JSON.stringify(query)}`,
-            );
-        }
         if (this.flagResolver.isEnabled('deltaApi')) {
             const features =
                 await this.clientFeatureToggleService.getClientFeatures(query);
@@ -326,12 +321,6 @@ export default class FeatureController extends Controller {
             res.getHeaderNames().forEach((header) => res.removeHeader(header));
             res.end();
             return;
-        } else {
-            if (this.flagResolver.isEnabled('debugEtag')) {
-                this.logger.info(
-                    `[etag] Provided revision: ${userVersion}, calculated revision: ${etag}`,
-                );
-            }
         }
 
         const [features, segments] = await this.featuresAndSegments(
@@ -369,13 +358,6 @@ export default class FeatureController extends Controller {
             );
 
         const queryHash = hashSum(query);
-        if (this.flagResolver.isEnabled('debugEtag')) {
-            this.logger.info(
-                `[etag] for query ${JSON.stringify(
-                    query,
-                )} is "${queryHash}:${revisionId}" query by env enabled? ${etagByEnvEnabled ? 'yes' : 'no'}. Querying with env ${etagByEnvEnabled ? query.environment : undefined})`,
-            );
-        }
         const etagVariant = this.flagResolver.getVariant('etagVariant');
         if (etagVariant.feature_enabled && etagVariant.enabled) {
             const etag = `"${queryHash}:${revisionId}:${etagVariant.name}"`;

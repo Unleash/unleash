@@ -474,8 +474,7 @@ export const ProjectFeatureToggles = ({
 
     const selectedData = useSelectedData(features, rowSelection);
 
-    const showCleanupReminder =
-        !tableState.lastSeenAt && !tableState.lifecycle;
+    const showCleanupReminder = !tableState.lastSeenAt && !tableState.lifecycle;
 
     return (
         <Container>

@@ -121,7 +121,7 @@ jobs:
         id: diff
         run: |
           docker run --rm -t -v $(pwd):/specs:ro tufin/oasdiff changelog --format markdown /specs/openapi-stable.json /specs/openapi-current.json > openapi-diff.txt || true
-          # then output in a format that can be used in GitHub Actions
+          # then output in a format that is useful when you go inside the job output
           docker run --rm -t -v $(pwd):/specs:ro tufin/oasdiff changelog --format githubactions /specs/openapi-stable.json /specs/openapi-current.json
       - name: Comment on PR with OpenAPI diff
         uses: actions/github-script@v7
@@ -130,7 +130,7 @@ jobs:
             const fs = require('fs');
             const diff = fs.readFileSync('openapi-diff.txt', 'utf8');
             const diffLines = diff.split('\n').filter(line => line.trim() !== '' && !line.startsWith('#')).length;
-            const marker = '### OpenAPI Diff';
+            const marker = '[//]: # (OpenAPI diff - used to identify the comment)';
             // Get all comments on the PR
             const { data: comments } = await github.rest.issues.listComments({
               issue_number: context.issue.number,
@@ -144,7 +144,7 @@ jobs:
               body = `${marker} too long, check the this task output for details.`;
               console.log(diff);
             } else if (diffLines > 0) {
-              body = `${marker}\n\n\`\`\`diff\n${diff}\n\`\`\``;
+              body = `${marker}\n${diff}`;
             } else {
               body = null;
             }

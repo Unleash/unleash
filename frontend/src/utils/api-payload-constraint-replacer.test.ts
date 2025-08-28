@@ -9,6 +9,7 @@ test('keys are ordered in the expected order', () => {
         operator: 'STR_CONTAINS',
         contextName: 'context',
         caseInsensitive: true,
+        [constraintId]: 'constraint-id',
     };
 
     const output = serializeConstraint(input);
@@ -30,6 +31,7 @@ test('only value OR values is present, not both', () => {
         operator: 'IN',
         contextName: 'context',
         caseInsensitive: true,
+        [constraintId]: 'constraint-id',
     };
 
     const noValue = serializeConstraint(input);

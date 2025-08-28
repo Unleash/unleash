@@ -1,40 +1,14 @@
 import 'chartjs-adapter-date-fns';
-import { type FC, useMemo, useState } from 'react';
+import { type FC, useMemo } from 'react';
 import type { InstanceInsightsSchema } from 'openapi';
 import { useProjectChartData } from 'component/insights/hooks/useProjectChartData';
 import { useTheme } from '@mui/material';
 import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
 import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
-import {
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    BarElement,
-    Tooltip,
-    Legend,
-    TimeScale,
-    Chart as ChartJS,
-    Filler,
-} from 'chart.js';
-import { useLocationSettings } from 'hooks/useLocationSettings';
-import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
+import type { ChartData } from 'chart.js';
 import type { WeekData, RawWeekData } from './types.ts';
-import { createTooltip } from 'component/insights/components/LineChart/createTooltip.ts';
 import { CreationArchiveRatioTooltip } from './CreationArchiveRatioTooltip.tsx';
-import { Chart } from 'react-chartjs-2';
-
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    BarElement,
-    TimeScale,
-    Tooltip,
-    Legend,
-    Filler,
-);
+import { BarChart } from 'component/insights/components/LineChart/BarChart.tsx';
 
 interface ICreationArchiveChartProps {
     creationArchiveTrends: GroupedDataByProject<
@@ -49,9 +23,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
 }) => {
     const creationVsArchivedChart = useProjectChartData(creationArchiveTrends);
     const theme = useTheme();
-    const placeholderData = usePlaceholderData();
-    const { locationSettings } = useLocationSettings();
-    const [tooltip, setTooltip] = useState<null | TooltipState>(null);
+    const placeholderData = usePlaceholderData() as ChartData<'bar', unknown>;
 
     const aggregateOrProjectData = useMemo(() => {
         const labels: string[] = Array.from(
@@ -135,60 +107,6 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
         notEnoughData || isLoading ? placeholderData : aggregateOrProjectData;
 
     return (
-        <>
-            <Chart
-                type='bar'
-                data={data}
-                options={{
-                    responsive: true,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'bottom' as const,
-                            labels: {
-                                color: theme.palette.text.secondary,
-                                usePointStyle: true,
-                                padding: 21,
-                                boxHeight: 8,
-                            },
-                        },
-                        tooltip: {
-                            enabled: false,
-                            position: 'average',
-                            external: createTooltip(setTooltip),
-                        },
-                    },
-                    locale: locationSettings.locale,
-                    scales: {
-                        x: {
-                            type: 'time',
-                            display: true,
-                            time: {
-                                unit: 'week',
-                                tooltipFormat: 'PPP',
-                            },
-                            grid: {
-                                display: false,
-                            },
-                        },
-                        y: {
-                            type: 'linear',
-                            position: 'left',
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Number of flags',
-                            },
-                        },
-                    },
-                }}
-                height={100}
-                width={250}
-            />
-            <CreationArchiveRatioTooltip tooltip={tooltip} />
-        </>
+        <BarChart TooltipComponent={CreationArchiveRatioTooltip} data={data} />
     );
 };

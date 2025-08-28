@@ -22,7 +22,7 @@ export class FeatureLinkStore
     async insert(item: Omit<IFeatureLink, 'id'>): Promise<IFeatureLink> {
         const id = ulid();
         const featureLink = {
-            id: ulid(),
+            id: id,
             feature_name: item.featureName,
             url: item.url,
             title: item.title,

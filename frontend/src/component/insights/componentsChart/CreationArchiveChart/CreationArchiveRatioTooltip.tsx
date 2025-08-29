@@ -49,7 +49,11 @@ export const CreationArchiveRatioTooltip: FC<
     const rawData = tooltip.dataPoints[0].raw as WeekData;
     const archivedCount = rawData.archivedFlags || 0;
     const createdCount = rawData.totalCreatedFlags || 0;
-    const ratio = Math.round((archivedCount / createdCount) * 100);
+
+    const ratio = Math.min(
+        Math.round((archivedCount / createdCount) * 100),
+        100,
+    );
 
     return (
         <ChartTooltipContainer tooltip={tooltip}>

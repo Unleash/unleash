@@ -24,7 +24,6 @@ import Input from 'component/common/Input/Input';
 import { ChangeRequestTitle } from './ChangeRequestTitle.tsx';
 import { UpdateCount } from 'component/changeRequest/UpdateCount';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { DraftChangeRequestActions } from '../DraftChangeRequestActions/DraftChangeRequestActions.tsx';
 import type { AvailableReviewerSchema } from 'hooks/api/getters/useAvailableChangeRequestReviewers/useAvailableChangeRequestReviewers.ts';
 
@@ -78,7 +77,6 @@ export const EnvironmentChangeRequest: FC<{
     const [reviewers, setReviewers] = useState<AvailableReviewerSchema[]>([]);
 
     const [disabled, setDisabled] = useState(false);
-    const approversEnabled = useUiFlag('changeRequestApproverEmails');
     const sendToReview = async (project: string) => {
         setDisabled(true);
         try {
@@ -167,49 +165,17 @@ export const EnvironmentChangeRequest: FC<{
                     <ConditionallyRender
                         condition={environmentChangeRequest?.state === 'Draft'}
                         show={
-                            <ConditionallyRender
-                                condition={approversEnabled}
-                                show={
-                                    <DraftChangeRequestActions
-                                        environmentChangeRequest={
-                                            environmentChangeRequest
-                                        }
-                                        reviewers={reviewers}
-                                        setReviewers={setReviewers}
-                                        onReview={onReview}
-                                        onDiscard={onDiscard}
-                                        sendToReview={sendToReview}
-                                        disabled={disabled}
-                                        setDisabled={setDisabled}
-                                    />
+                            <DraftChangeRequestActions
+                                environmentChangeRequest={
+                                    environmentChangeRequest
                                 }
-                                elseShow={
-                                    <>
-                                        <SubmitChangeRequestButton
-                                            onClick={() =>
-                                                onReview(sendToReview)
-                                            }
-                                            count={changesCount(
-                                                environmentChangeRequest,
-                                            )}
-                                            disabled={disabled}
-                                        />
-
-                                        <Button
-                                            sx={{ ml: 2 }}
-                                            variant='outlined'
-                                            disabled={disabled}
-                                            onClick={() => {
-                                                setDisabled(true);
-                                                onDiscard(
-                                                    environmentChangeRequest.id,
-                                                );
-                                            }}
-                                        >
-                                            Discard changes
-                                        </Button>
-                                    </>
-                                }
+                                reviewers={reviewers}
+                                setReviewers={setReviewers}
+                                onReview={onReview}
+                                onDiscard={onDiscard}
+                                sendToReview={sendToReview}
+                                disabled={disabled}
+                                setDisabled={setDisabled}
                             />
                         }
                     />

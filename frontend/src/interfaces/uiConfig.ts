@@ -86,7 +86,6 @@ export type UiFlags = {
     edgeObservability?: boolean;
     customMetrics?: boolean;
     impactMetrics?: boolean;
-    changeRequestApproverEmails?: boolean;
     reportUnknownFlags?: boolean;
     lifecycleGraphs?: boolean;
     addConfiguration?: boolean;

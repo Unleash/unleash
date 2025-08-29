@@ -3,8 +3,10 @@ import { PageHeader } from '../../../common/PageHeader/PageHeader.tsx';
 import { Button, styled, Typography } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { useImpactMetricsMetadata } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata.ts';
-import { useMemo, useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 import { ChartConfigModal } from '../../../impact-metrics/ChartConfigModal/ChartConfigModal.tsx';
+import { useImpactMetricsApi } from 'hooks/api/actions/useImpactMetricsSettingsApi/useImpactMetricsApi.ts';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
 
 const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
@@ -12,8 +14,10 @@ const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
     lineHeight: theme.spacing(5),
 }));
 
-export const FeatureImpactMetrics = () => {
+export const FeatureImpactMetrics: FC = () => {
+    const feature = useRequiredPathParam('featureId');
     const [modalOpen, setModalOpen] = useState(false);
+    const { updateImpactMetric } = useImpactMetricsApi();
 
     const {
         metadata,
@@ -56,7 +60,7 @@ export const FeatureImpactMetrics = () => {
             <ChartConfigModal
                 open={modalOpen}
                 onClose={() => setModalOpen(false)}
-                onSave={() => {}}
+                onSave={(data) => updateImpactMetric({ ...data, feature })}
                 initialConfig={undefined}
                 metricSeries={metricSeries}
                 loading={metadataLoading}

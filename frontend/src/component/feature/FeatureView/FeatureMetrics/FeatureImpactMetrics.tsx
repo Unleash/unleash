@@ -17,7 +17,7 @@ const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
 export const FeatureImpactMetrics: FC = () => {
     const feature = useRequiredPathParam('featureId');
     const [modalOpen, setModalOpen] = useState(false);
-    const { updateImpactMetric } = useImpactMetricsApi();
+    const { createImpactMetric } = useImpactMetricsApi();
 
     const {
         metadata,
@@ -60,7 +60,7 @@ export const FeatureImpactMetrics: FC = () => {
             <ChartConfigModal
                 open={modalOpen}
                 onClose={() => setModalOpen(false)}
-                onSave={(data) => updateImpactMetric({ ...data, feature })}
+                onSave={(data) => createImpactMetric({ ...data, feature })}
                 initialConfig={undefined}
                 metricSeries={metricSeries}
                 loading={metadataLoading}

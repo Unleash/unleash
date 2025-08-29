@@ -7,7 +7,7 @@ export const useImpactMetricsApi = () => {
         propagateErrors: true,
     });
 
-    const updateImpactMetric = useCallback(
+    const createImpactMetric = useCallback(
         async (config: ImpactMetricsConfigSchema) => {
             const path = `api/admin/impact-metrics/config`;
             const req = createRequest(
@@ -25,7 +25,7 @@ export const useImpactMetricsApi = () => {
     );
 
     return {
-        updateImpactMetric,
+        createImpactMetric,
         errors,
         loading,
     };

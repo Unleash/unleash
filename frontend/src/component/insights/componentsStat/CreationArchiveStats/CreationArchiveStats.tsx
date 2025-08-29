@@ -7,6 +7,7 @@ import { StatsExplanation } from 'component/insights/InsightsCharts.styles';
 import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
 import type { InstanceInsightsSchema } from 'openapi';
 import { Link } from 'react-router-dom';
+import { calculateRatio } from 'component/insights/calculate-ratio/calculate-ratio';
 
 function getCurrentArchiveRatio(
     groupedCreationArchiveData: GroupedDataByProject<
@@ -34,8 +35,7 @@ function getCurrentArchiveRatio(
         }
     });
 
-    const rawRatio = Math.round((totalArchived / totalCreated) * 100);
-    return Number.isNaN(rawRatio) ? 100 : Math.min(rawRatio, 100);
+    return calculateRatio(totalArchived, totalCreated);
 }
 
 const StyledRatioContainer = styled(Box)(({ theme }) => ({

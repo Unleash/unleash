@@ -34,9 +34,8 @@ function getCurrentArchiveRatio(
         }
     });
 
-    return totalCreated > 0
-        ? Math.round((totalArchived / totalCreated) * 100)
-        : 0;
+    const rawRatio = Math.round((totalArchived / totalCreated) * 100);
+    return Number.isNaN(rawRatio) ? 100 : Math.min(rawRatio, 100);
 }
 
 const StyledRatioContainer = styled(Box)(({ theme }) => ({

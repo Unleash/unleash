@@ -50,10 +50,8 @@ export const CreationArchiveRatioTooltip: FC<
     const archivedCount = rawData.archivedFlags || 0;
     const createdCount = rawData.totalCreatedFlags || 0;
 
-    const ratio = Math.min(
-        Math.round((archivedCount / createdCount) * 100),
-        100,
-    );
+    const rawRatio = Math.round((archivedCount / createdCount) * 100);
+    const ratio = Number.isNaN(rawRatio) ? 100 : Math.min(rawRatio, 100);
 
     return (
         <ChartTooltipContainer tooltip={tooltip}>

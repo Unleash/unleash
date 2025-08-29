@@ -703,7 +703,7 @@ export class InstanceStatsService {
             .reduce((a, b) => a + b, 0);
 
         const sum = sha256(
-            `${instanceStats.instanceId}${instanceStats.users}${instanceStats.featureToggles}${totalProjects}${instanceStats.roles}${instanceStats.groups}${instanceStats.environments}${instanceStats.segments}${instanceStats.releaseTemplates}${instanceStats.releasePlans}`,
+            `${instanceStats.instanceId}${instanceStats.users}${instanceStats.featureToggles}${totalProjects}${instanceStats.roles}${instanceStats.groups}${instanceStats.environments}${instanceStats.segments}`,
         );
         return { ...instanceStats, sum, projects: totalProjects };
     }

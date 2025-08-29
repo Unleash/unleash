@@ -221,10 +221,9 @@ const theme = {
          */
         charts: {
             A1: '#6C65E5',
-            A2: '#8C87EB',
-            A3: '#ADA9F1',
-            A4: '#CECCF6',
-            A5: '#F1F0FC',
+            A2: '#9D98EE',
+            A3: '#CECCF6',
+            A4: '#F1F0FC',
             B1: '#1791AE',
             C1: '#DF416E',
             D1: '#D76500',

@@ -5,14 +5,13 @@
  */
 import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema.js';
 import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema.js';
-import type { ChangeRequestsSchemaItemOneOfFiveCreatedBy } from './changeRequestsSchemaItemOneOfFiveCreatedBy.js';
+import type { ChangeRequestsSchemaItemOneOfFourCreatedBy } from './changeRequestsSchemaItemOneOfFourCreatedBy.js';
 import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema.js';
 import type { ChangeRequestScheduleSchema } from './changeRequestScheduleSchema.js';
 import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema.js';
-import type { ChangeRequestsSchemaItemOneOfFiveState } from './changeRequestsSchemaItemOneOfFiveState.js';
-import type { ChangeRequestsSchemaItemOneOfFiveStateTimestamps } from './changeRequestsSchemaItemOneOfFiveStateTimestamps.js';
+import type { ChangeRequestsSchemaItemOneOfFourState } from './changeRequestsSchemaItemOneOfFourState.js';
 
-export type ChangeRequestsSchemaItemOneOfFive = {
+export type ChangeRequestsSchemaItemOneOfFour = {
     /**
      * A list of approvals that this change request has received.
      * @deprecated
@@ -26,7 +25,7 @@ export type ChangeRequestsSchemaItemOneOfFive = {
     /** When this change request was created. */
     createdAt: string;
     /** The user who created this change request. */
-    createdBy: ChangeRequestsSchemaItemOneOfFiveCreatedBy;
+    createdBy: ChangeRequestsSchemaItemOneOfFourCreatedBy;
     /** The environment in which the changes should be applied. */
     environment: string;
     /** The list of features and their changes that relate to this change request. */
@@ -37,7 +36,7 @@ export type ChangeRequestsSchemaItemOneOfFive = {
      * The minimum number of approvals required before this change request can be applied.
      * @deprecated
      */
-    minApprovals: number;
+    minApprovals?: number;
     /** The project this change request belongs to. */
     project: string;
     /**
@@ -49,9 +48,7 @@ export type ChangeRequestsSchemaItemOneOfFive = {
     /** The list of segments and their changes that relate to this change request. */
     segments: ChangeRequestSegmentChangeSchema[];
     /** The current state of the change request. */
-    state: ChangeRequestsSchemaItemOneOfFiveState;
-    /** A mapping of each state this change request has entered to the most recent time when it entered that state. If a change request has entered the same state multiple times, only the most recent timestamp will be included. */
-    stateTimestamps?: ChangeRequestsSchemaItemOneOfFiveStateTimestamps;
+    state: ChangeRequestsSchemaItemOneOfFourState;
     /** A title describing the change request's content. */
     title?: string;
 };

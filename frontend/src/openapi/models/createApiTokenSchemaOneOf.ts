@@ -16,8 +16,8 @@ export type CreateApiTokenSchemaOneOf = {
     /** The name of the token. */
     tokenName: string;
     /**
-     * A client or frontend token. Must be one of the strings "client" or "frontend" (not case sensitive).
-     * @pattern ^([Cc][Ll][Ii][Ee][Nn][Tt]|[Ff][Rr][Oo][Nn][Tt][Ee][Nn][Dd])$
+     * A client or frontend token. Must be one of the strings "client" (deprecated), "backend" (preferred over "client") or "frontend" (not case sensitive).
+     * @pattern ^([Cc][Ll][Ii][Ee][Nn][Tt]|[Bb][Aa][Cc][Kk][Ee][Nn][Dd]|[Ff][Rr][Oo][Nn][Tt][Ee][Nn][Dd])$
      */
     type: string;
 };

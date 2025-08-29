@@ -55,7 +55,6 @@ export type IFlagKey =
     | 'reportUnknownFlags'
     | 'customMetrics'
     | 'impactMetrics'
-    | 'changeRequestApproverEmails'
     | 'lifecycleGraphs'
     | 'addConfiguration'
     | 'filterFlagsToArchive'
@@ -249,10 +248,6 @@ const flags: IFlags = {
     ),
     reportUnknownFlags: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REPORT_UNKNOWN_FLAGS,
-        false,
-    ),
-    changeRequestApproverEmails: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_APPROVER_EMAILS,
         false,
     ),
     impactMetrics: parseEnvVarBoolean(

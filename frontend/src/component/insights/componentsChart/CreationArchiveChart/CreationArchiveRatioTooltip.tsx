@@ -3,6 +3,7 @@ import { Paper, Typography, styled } from '@mui/material';
 import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
 import { ChartTooltipContainer } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
 import type { WeekData } from './types.ts';
+import { calculateRatio } from 'component/insights/calculate-ratio/calculate-ratio.ts';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -49,7 +50,8 @@ export const CreationArchiveRatioTooltip: FC<
     const rawData = tooltip.dataPoints[0].raw as WeekData;
     const archivedCount = rawData.archivedFlags || 0;
     const createdCount = rawData.totalCreatedFlags || 0;
-    const ratio = Math.round((archivedCount / createdCount) * 100);
+
+    const ratio = calculateRatio(archivedCount, createdCount);
 
     return (
         <ChartTooltipContainer tooltip={tooltip}>

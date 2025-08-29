@@ -55,7 +55,6 @@ import { UPDATE_FEATURE } from '@server/types/permissions';
 import { ImportModal } from '../Import/ImportModal.tsx';
 import { IMPORT_BUTTON } from 'utils/testIds';
 import { ProjectCleanupReminder } from './ProjectCleanupReminder/ProjectCleanupReminder.tsx';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];
@@ -94,7 +93,6 @@ export const ProjectFeatureToggles = ({
     const { project } = useProjectOverview(projectId);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
-    const isFilterFlagsToArchiveEnabled = useUiFlag('filterFlagsToArchive');
 
     const {
         features,
@@ -476,10 +474,7 @@ export const ProjectFeatureToggles = ({
 
     const selectedData = useSelectedData(features, rowSelection);
 
-    const showCleanupReminder =
-        isFilterFlagsToArchiveEnabled &&
-        !tableState.lastSeenAt &&
-        !tableState.lifecycle;
+    const showCleanupReminder = !tableState.lastSeenAt && !tableState.lifecycle;
 
     return (
         <Container>

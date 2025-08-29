@@ -7,7 +7,6 @@ import {
 } from 'component/filter/Filters/Filters';
 import { useProjectFlagCreators } from 'hooks/api/getters/useProjectFlagCreators/useProjectFlagCreators';
 import { formatTag } from 'utils/format-tag';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IProjectOverviewFilters {
     state: FilterItemParamHolder;
@@ -22,7 +21,6 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
 }) => {
     const { tags } = useAllTags();
     const { flagCreators } = useProjectFlagCreators(project);
-    const filterFlagsToArchiveEnabled = useUiFlag('filterFlagsToArchive');
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
 
     useEffect(() => {
@@ -83,17 +81,13 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
                 filterKey: 'createdAt',
                 dateOperators: ['IS_ON_OR_AFTER', 'IS_BEFORE'],
             },
-            ...(filterFlagsToArchiveEnabled
-                ? [
-                      {
-                          label: 'Last seen',
-                          icon: 'monitor_heart',
-                          options: [],
-                          filterKey: 'lastSeenAt',
-                          dateOperators: ['IS_ON_OR_AFTER', 'IS_BEFORE'],
-                      } as IFilterItem,
-                  ]
-                : []),
+            {
+                label: 'Last seen',
+                icon: 'monitor_heart',
+                options: [],
+                filterKey: 'lastSeenAt',
+                dateOperators: ['IS_ON_OR_AFTER', 'IS_BEFORE'],
+            },
             {
                 label: 'Flag type',
                 icon: 'flag',
@@ -140,11 +134,7 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
         ];
 
         setAvailableFilters(availableFilters);
-    }, [
-        JSON.stringify(tags),
-        JSON.stringify(flagCreators),
-        filterFlagsToArchiveEnabled,
-    ]);
+    }, [JSON.stringify(tags), JSON.stringify(flagCreators)]);
 
     return (
         <Filters

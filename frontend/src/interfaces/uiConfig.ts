@@ -90,7 +90,6 @@ export type UiFlags = {
     reportUnknownFlags?: boolean;
     lifecycleGraphs?: boolean;
     addConfiguration?: boolean;
-    filterFlagsToArchive?: boolean;
 };
 
 export interface IVersionInfo {

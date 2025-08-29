@@ -58,7 +58,7 @@ export type IFlagKey =
     | 'changeRequestApproverEmails'
     | 'lifecycleGraphs'
     | 'addConfiguration'
-    | 'filterFlagsToArchive'
+    | 'etagByEnv'
     | 'fetchMode';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -265,10 +265,6 @@ const flags: IFlags = {
     ),
     addConfiguration: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ADD_CONFIGURATION,
-        false,
-    ),
-    filterFlagsToArchive: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FILTER_FLAGS_TO_ARCHIVE,
         false,
     ),
     fetchMode: {

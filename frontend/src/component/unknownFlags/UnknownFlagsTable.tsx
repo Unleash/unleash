@@ -18,6 +18,7 @@ import { useUiFlag } from 'hooks/useUiFlag.js';
 import NotFound from 'component/common/NotFound/NotFound.js';
 import { UnknownFlagsSeenInUnleashCell } from './UnknownFlagsSeenInUnleashCell.js';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.js';
+import { UnknownFlagsActionsCell } from './UnknownFlagsActionsCell.js';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),
@@ -103,6 +104,17 @@ export const UnknownFlagsTable = () => {
                     />
                 ),
                 width: 150,
+            },
+            {
+                Header: 'Actions',
+                align: 'center',
+                Cell: ({
+                    row: { original: unknownFlag },
+                }: {
+                    row: { original: UnknownFlag };
+                }) => <UnknownFlagsActionsCell unknownFlag={unknownFlag} />,
+                width: 100,
+                disableSortBy: true,
             },
         ],
         [],

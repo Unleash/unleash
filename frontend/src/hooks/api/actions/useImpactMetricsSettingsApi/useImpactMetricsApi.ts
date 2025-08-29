@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import useAPI from '../useApi/useApi.js';
-import type { ImpactMetricsConfigSchema } from '../../../../openapi.js';
+import type { ImpactMetricsConfigSchema } from 'openapi/models/impactMetricsConfigSchema.js';
 
 export const useImpactMetricsApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({

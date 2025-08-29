@@ -15,4 +15,5 @@ export const ApiTokenSchemaType = {
     client: 'client',
     admin: 'admin',
     frontend: 'frontend',
+    backend: 'backend',
 } as const;

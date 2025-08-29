@@ -12,6 +12,11 @@ export interface UnknownFlagSchema {
     appName: string;
     /** The environment in which the unknown flag was reported. */
     environment: string;
+    /**
+     * The date and time when the last event for the unknown flag name occurred, if any.
+     * @nullable
+     */
+    lastEventAt?: string | null;
     /** The name of the unknown flag. */
     name: string;
     /** The date and time when the unknown flag was reported. */

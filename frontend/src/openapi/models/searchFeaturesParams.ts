@@ -71,7 +71,7 @@ export type SearchFeaturesParams = {
      */
     createdAt?: string;
     /**
-     * The date the feature was last seen (either from metrics or manual report). The date can be specified with an operator. The supported operators are IS_BEFORE, IS_ON_OR_AFTER.
+     * The date the feature was last seen from metrics. The date can be specified with an operator. The supported operators are IS_BEFORE, IS_ON_OR_AFTER.
      */
     lastSeenAt?: string;
 };

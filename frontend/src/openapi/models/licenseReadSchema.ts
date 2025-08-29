@@ -22,6 +22,8 @@ export interface LicenseReadSchema {
     isValid: boolean;
     /** Name of plan that the license is for. */
     plan?: string;
+    /** Number of release templates in the license. */
+    releaseTemplates?: number;
     /** Number of seats in the license. */
     seats?: number;
     /** The actual license token. */

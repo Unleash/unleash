@@ -4,6 +4,7 @@
  * See `gen:api` script in package.json
  */
 import type { ConnectionConsumptionSchema } from './connectionConsumptionSchema.js';
+import type { EdgeInstanceDataSchemaHosting } from './edgeInstanceDataSchemaHosting.js';
 import type { EdgeUpstreamLatencySchema } from './edgeUpstreamLatencySchema.js';
 import type { EdgeProcessMetricsSchema } from './edgeProcessMetricsSchema.js';
 import type { RequestConsumptionSchema } from './requestConsumptionSchema.js';
@@ -27,6 +28,8 @@ export interface EdgeInstanceDataSchema {
     connectionConsumptionSinceLastReport?: ConnectionConsumptionSchema;
     /** Which version (semver) of Edge is the Edge instance running. */
     edgeVersion: string;
+    /** A marker that tells Unleash whether this Edge instance is self-hosted or hosted by Unleash. */
+    hosting?: EdgeInstanceDataSchemaHosting;
     /** The ID of the Edge process, typically a ULID. Newly generated for each restart of the instance. */
     identifier: string;
     latencyUpstream: EdgeUpstreamLatencySchema;
@@ -37,7 +40,7 @@ export interface EdgeInstanceDataSchema {
      * @nullable
      */
     region?: string | null;
-    /** Request consumption data since last report, grouped by metered group. User for frontend SDKs with unpredictable and potentially large number of user devices running those SDKs. */
+    /** Request consumption data since last report, grouped by metered group. Used for frontend SDKs with unpredictable and potentially large number of user devices running those SDKs. */
     requestConsumptionSinceLastReport?: RequestConsumptionSchema;
     /** Requests made to edge's endpoints since last report. Meant to be used for billing purposes. */
     requestsSinceLastReport?: EdgeRequestStatsSchema;

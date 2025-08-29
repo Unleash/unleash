@@ -182,3 +182,140 @@ describe('should register unknown flags', () => {
         );
     });
 });
+
+describe('should fetch unknown flags', () => {
+    test('returns empty list by default', async () => {
+        const res = await request
+            .get('/api/admin/metrics/unknown-flags')
+            .expect(200)
+            .expect('Content-Type', /json/);
+
+        expect(res.body).toMatchObject({
+            unknownFlags: [],
+        });
+    });
+
+    test('returns list of unknown flags', async () => {
+        const unknownFlag: BulkRegistrationSchema = {
+            appName: 'demo',
+            instanceId: '1',
+            environment: 'development',
+            sdkVersion: 'unleash-client-js:1.0.0',
+            sdkType: 'frontend',
+        };
+
+        await request
+            .post('/api/client/metrics/bulk')
+            .send({
+                applications: [unknownFlag],
+                metrics: [
+                    {
+                        featureName: 'unknown_flag_1',
+                        environment: 'development',
+                        appName: 'demo',
+                        timestamp: startOfHour(new Date()),
+                        yes: 1337,
+                        no: 0,
+                        variants: {},
+                    },
+                    {
+                        featureName: 'unknown_flag_2',
+                        environment: 'development',
+                        appName: 'demo',
+                        timestamp: startOfHour(new Date()),
+                        yes: 200,
+                        no: 100,
+                        variants: {},
+                    },
+                ],
+            })
+            .expect(202);
+
+        await services.unknownFlagsService.flush();
+
+        const res = await request
+            .get('/api/admin/metrics/unknown-flags')
+            .expect(200)
+            .expect('Content-Type', /json/);
+
+        expect(res.body.unknownFlags).toHaveLength(2);
+        expect(res.body.unknownFlags).toEqual([
+            expect.objectContaining({
+                name: 'unknown_flag_1',
+                environment: 'development',
+                appName: 'demo',
+                lastEventAt: null,
+            }),
+            expect.objectContaining({
+                name: 'unknown_flag_2',
+                environment: 'development',
+                appName: 'demo',
+                lastEventAt: null,
+            }),
+        ]);
+    });
+
+    test('does not include flags that have since been created in Unleash', async () => {
+        const unknownFlag: BulkRegistrationSchema = {
+            appName: 'demo',
+            instanceId: '1',
+            environment: 'development',
+            sdkVersion: 'unleash-client-js:1.0.0',
+            sdkType: 'frontend',
+        };
+
+        await request
+            .post('/api/client/metrics/bulk')
+            .send({
+                applications: [unknownFlag],
+                metrics: [
+                    {
+                        featureName: 'flag_that_will_be_created',
+                        environment: 'development',
+                        appName: 'demo',
+                        timestamp: startOfHour(new Date()),
+                        yes: 1337,
+                        no: 0,
+                        variants: {},
+                    },
+                    {
+                        featureName: 'unknown_flag_2',
+                        environment: 'development',
+                        appName: 'demo',
+                        timestamp: startOfHour(new Date()),
+                        yes: 200,
+                        no: 100,
+                        variants: {},
+                    },
+                ],
+            })
+            .expect(202);
+
+        await services.unknownFlagsService.flush();
+
+        await request
+            .post('/api/admin/projects/default/features')
+            .send({
+                name: 'flag_that_will_be_created',
+                description: '',
+                type: 'release',
+                impressionData: false,
+            })
+            .expect(201);
+
+        const res = await request
+            .get('/api/admin/metrics/unknown-flags')
+            .expect(200)
+            .expect('Content-Type', /json/);
+
+        expect(res.body.unknownFlags).toHaveLength(1);
+        expect(res.body.unknownFlags).toEqual([
+            expect.objectContaining({
+                name: 'unknown_flag_2',
+                environment: 'development',
+                appName: 'demo',
+                lastEventAt: null,
+            }),
+        ]);
+    });
+});

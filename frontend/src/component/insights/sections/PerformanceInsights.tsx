@@ -113,7 +113,7 @@ export const PerformanceInsights: FC = () => {
             {isLifecycleGraphsEnabled && isEnterprise() ? (
                 <StyledWidget>
                     <StyledWidgetStats width={275}>
-                        <WidgetTitle title='Flags created vs archived' />
+                        <WidgetTitle title='Flags archived vs flags created' />
                         <CreationArchiveStats
                             groupedCreationArchiveData={
                                 groupedCreationArchiveData

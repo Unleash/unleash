@@ -9,7 +9,7 @@
 
 [![Build and Tests](https://img.shields.io/github/actions/workflow/status/Unleash/unleash/build.yaml?branch=main)](https://github.com/Unleash/unleash/actions/workflows/build.yaml) [![Coverage Report](https://img.shields.io/badge/coverage-vitest-green)](https://github.com/Unleash/unleash/actions/workflows/build_coverage.yaml) [![Docker Pulls](https://img.shields.io/docker/pulls/unleashorg/unleash-server)](https://hub.docker.com/r/unleashorg/unleash-server) [![Apache-2.0 license](https://img.shields.io/github/license/unleash/unleash)](https://github.com/Unleash/unleash/blob/main/LICENSE) [![Join Unleash on Slack](https://img.shields.io/badge/slack-join-635dc5?logo=slack)](https://slack.unleash.run)
 
-[Experience Unleash Live Demo →](https://www.getunleash.io/interactive-demo)
+[Try Unleash Cloud for free →](https://www.getunleash.io/plans/enterprise-payg?utm_source=readme&utm_medium=oss&utm_content=top-cta)
 
 </div>
 
@@ -93,9 +93,9 @@ The above sections show you how to get up and running quickly and easily. When y
 
 ## Online demo
 
-Try out [the Unleash online demo](https://www.getunleash.io/interactive-demo).
+Try out [the Unleash online demo](https://www.getunleash.io/interactive-demo?utm_source=readme&utm_medium=oss&utm_content=demo-section-cta).
 
-[![The Unleash online demo](./.github/github_online_demo.svg)](https://www.getunleash.io/interactive-demo)
+[![The Unleash online demo](./.github/github_online_demo.svg)](https://www.getunleash.io/interactive-demo?utm_source=readme&utm_medium=oss&utm_content=demo-section-cta)
 
 <br/>
 

@@ -65,7 +65,7 @@ export const CreationArchiveRatioTooltip: FC<
         <ChartTooltipContainer tooltip={tooltip}>
             <StyledTooltipItemContainer elevation={3}>
                 <Typography variant='body2' component='span' fontWeight='bold'>
-                    Ratio {ratio}%
+                    Ratio {ratio}
                 </Typography>
 
                 <DataList>

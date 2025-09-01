@@ -261,6 +261,14 @@ export const FeatureToggleListTable: FC = () => {
                         <>
                             <Link
                                 component={RouterLink}
+                                to='/unknown-flags'
+                                underline='always'
+                                sx={{ marginRight: 2, ...focusable(theme) }}
+                            >
+                                Unknown flags
+                            </Link>
+                            <Link
+                                component={RouterLink}
                                 to='/archive'
                                 underline='always'
                                 sx={{ marginRight: 2, ...focusable(theme) }}
@@ -272,7 +280,7 @@ export const FeatureToggleListTable: FC = () => {
                                     });
                                 }}
                             >
-                                View archive
+                                Archived flags
                             </Link>
                             <ExportFlags
                                 onClick={() => setShowExportDialog(true)}

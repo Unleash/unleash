@@ -14,7 +14,11 @@ import EventEmitter from 'events';
 import noLoggerProvider from '../../../test/fixtures/no-logger.js';
 import { STAGE_ENTERED } from '../../metric-events.js';
 
-function emitMetricsEvent(eventBus: EventEmitter, featureName: string, environment: string) {
+function emitMetricsEvent(
+    eventBus: EventEmitter,
+    featureName: string,
+    environment: string,
+) {
     eventBus.emit(CLIENT_METRICS_ADDED, [
         {
             featureName,
@@ -23,7 +27,11 @@ function emitMetricsEvent(eventBus: EventEmitter, featureName: string, environme
     ]);
 }
 
-function reachedStage(eventBus: EventEmitter, feature: string, name: StageName) {
+function reachedStage(
+    eventBus: EventEmitter,
+    feature: string,
+    name: StageName,
+) {
     return new Promise((resolve) =>
         eventBus.on(STAGE_ENTERED, (event) => {
             if (event.stage === name && event.feature === feature)
@@ -50,8 +58,6 @@ test('can insert and read lifecycle stages', async () => {
         'my-prod-environment',
         true,
     );
-
-
 
     await environmentStore.create({
         name: 'my-dev-environment',
@@ -138,18 +144,53 @@ test('handles bulk metrics efficiently with multiple environments and features',
     const feature2 = 'feature-2';
     const feature3 = 'feature-3';
 
-    await featureEnvironmentStore.addEnvironmentToFeature(feature1, 'dev-env', false);
-    await featureEnvironmentStore.addEnvironmentToFeature(feature1, 'staging-env', false);
-    await featureEnvironmentStore.addEnvironmentToFeature(feature1, 'prod-env', true);
+    await featureEnvironmentStore.addEnvironmentToFeature(
+        feature1,
+        'dev-env',
+        false,
+    );
+    await featureEnvironmentStore.addEnvironmentToFeature(
+        feature1,
+        'staging-env',
+        false,
+    );
+    await featureEnvironmentStore.addEnvironmentToFeature(
+        feature1,
+        'prod-env',
+        true,
+    );
 
-    await featureEnvironmentStore.addEnvironmentToFeature(feature2, 'dev-env', true);
-    await featureEnvironmentStore.addEnvironmentToFeature(feature2, 'staging-env', false);
-    await featureEnvironmentStore.addEnvironmentToFeature(feature2, 'prod-env', false);
+    await featureEnvironmentStore.addEnvironmentToFeature(
+        feature2,
+        'dev-env',
+        true,
+    );
+    await featureEnvironmentStore.addEnvironmentToFeature(
+        feature2,
+        'staging-env',
+        false,
+    );
+    await featureEnvironmentStore.addEnvironmentToFeature(
+        feature2,
+        'prod-env',
+        false,
+    );
 
-    await featureEnvironmentStore.addEnvironmentToFeature(feature3, 'dev-env', false);
-    await featureEnvironmentStore.addEnvironmentToFeature(feature3, 'staging-env', true);
-    await featureEnvironmentStore.addEnvironmentToFeature(feature3, 'prod-env', true);
-
+    await featureEnvironmentStore.addEnvironmentToFeature(
+        feature3,
+        'dev-env',
+        false,
+    );
+    await featureEnvironmentStore.addEnvironmentToFeature(
+        feature3,
+        'staging-env',
+        true,
+    );
+    await featureEnvironmentStore.addEnvironmentToFeature(
+        feature3,
+        'prod-env',
+        true,
+    );
 
     featureLifecycleService.listen();
 
@@ -234,15 +275,18 @@ test('handles bulk metrics efficiently with multiple environments and features',
 
     eventBus.emit(CLIENT_METRICS_ADDED, bulkMetricsEvent);
 
-    await new Promise(resolve => setTimeout(resolve, 50));
+    await new Promise((resolve) => setTimeout(resolve, 50));
 
-    const lifecycle1 = await featureLifecycleService.getFeatureLifecycle(feature1);
-    const lifecycle2 = await featureLifecycleService.getFeatureLifecycle(feature2);
-    const lifecycle3 = await featureLifecycleService.getFeatureLifecycle(feature3);
+    const lifecycle1 =
+        await featureLifecycleService.getFeatureLifecycle(feature1);
+    const lifecycle2 =
+        await featureLifecycleService.getFeatureLifecycle(feature2);
+    const lifecycle3 =
+        await featureLifecycleService.getFeatureLifecycle(feature3);
 
-    expect(lifecycle1.some(stage => stage.stage === 'initial')).toBe(true);
-    expect(lifecycle2.some(stage => stage.stage === 'initial')).toBe(true);
-    expect(lifecycle3.some(stage => stage.stage === 'initial')).toBe(true);
+    expect(lifecycle1.some((stage) => stage.stage === 'initial')).toBe(true);
+    expect(lifecycle2.some((stage) => stage.stage === 'initial')).toBe(true);
+    expect(lifecycle3.some((stage) => stage.stage === 'initial')).toBe(true);
 
     expect(lifecycle1.length).toBeGreaterThan(1);
     expect(lifecycle2.length).toBeGreaterThan(1);
@@ -262,15 +306,17 @@ test('handles bulk metrics with unknown environments gracefully', async () => {
         getLogger: noLoggerProvider,
     } as unknown as IUnleashConfig);
 
-
-
     await environmentStore.create({
         name: 'known-env',
         type: 'development',
     } as IEnvironment);
 
     const feature = 'test-feature';
-    await featureEnvironmentStore.addEnvironmentToFeature(feature, 'known-env', false);
+    await featureEnvironmentStore.addEnvironmentToFeature(
+        feature,
+        'known-env',
+        false,
+    );
 
     featureLifecycleService.listen();
     eventStore.emit(FEATURE_CREATED, { featureName: feature });
@@ -299,7 +345,8 @@ test('handles bulk metrics with unknown environments gracefully', async () => {
 
     await reachedStage(eventBus, feature, 'pre-live');
 
-    const lifecycle = await featureLifecycleService.getFeatureLifecycle(feature);
+    const lifecycle =
+        await featureLifecycleService.getFeatureLifecycle(feature);
     expect(lifecycle).toEqual([
         { stage: 'initial', enteredStageAt: expect.any(Date) },
         { stage: 'pre-live', enteredStageAt: expect.any(Date) },

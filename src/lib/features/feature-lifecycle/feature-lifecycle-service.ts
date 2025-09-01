@@ -299,7 +299,7 @@ export class FeatureLifecycleService {
         environment: string,
         featureEnvMap: Map<string, Map<string, IFeatureEnvironment>>,
     ): string[] {
-        const envFeatureEnvs = featureEnvMap.get(environment) || new Map();
+        const envFeatureEnvs = featureEnvMap.get(environment) ?? new Map();
         return features.filter((feature) => {
             const fe = envFeatureEnvs.get(feature);
             return fe?.enabled;

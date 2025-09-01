@@ -90,7 +90,7 @@ export const CreationArchiveStats: FC<CreationArchiveStatsProps> = ({
             <StyledRatioContainer>
                 <StyledPercentageRow>
                     <StyledRatioTypography>
-                        {isLoading ? '...' : `${currentRatio}%`}
+                        {isLoading ? '...' : currentRatio}
                     </StyledRatioTypography>
                     <HelpIcon tooltip='Ratio of archived flags to created flags'>
                         <StyledInfoIcon />

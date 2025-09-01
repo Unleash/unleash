@@ -62,7 +62,7 @@ export const CreationArchiveRatioTooltip: FC<
                     fontWeight='bold'
                     sx={{ marginBottom: 1 }}
                 >
-                    Ratio {ratio}%
+                    Ratio {ratio}
                 </Typography>
 
                 <DataList>

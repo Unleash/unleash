@@ -23,7 +23,7 @@ import type { WeekData, RawWeekData } from './types.ts';
 import { createTooltip } from 'component/insights/components/LineChart/createTooltip.ts';
 import { CreationArchiveRatioTooltip } from './CreationArchiveRatioTooltip.tsx';
 import { Chart } from 'react-chartjs-2';
-import { getDateFnsLocale } from './getDateFnsLocale.ts';
+import { getDateFnsLocale } from '../../getDateFnsLocale.ts';
 
 ChartJS.register(
     CategoryScale,

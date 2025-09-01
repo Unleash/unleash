@@ -88,19 +88,7 @@ export class FeatureLifecycleService {
             CLIENT_METRICS_ADDED,
             async (events: IClientMetricsEnv[]) => {
                 if (events.length > 0) {
-                    const groupedByEnvironment = groupBy(events, 'environment');
-
-                    for (const [environment, metrics] of Object.entries(
-                        groupedByEnvironment,
-                    )) {
-                        const features = metrics.map(
-                            (metric) => metric.featureName,
-                        );
-                        await this.featuresReceivedMetrics(
-                            features,
-                            environment,
-                        );
-                    }
+                    await this.handleBulkMetrics(events);
                 }
             },
         );
@@ -123,50 +111,104 @@ export class FeatureLifecycleService {
         this.recordStagesEntered(result);
     }
 
-    private async stageReceivedMetrics(
-        features: string[],
-        stage: 'live' | 'pre-live',
-    ) {
-        const newlyEnteredStages = await this.featureLifecycleStore.insert(
-            features.map((feature) => ({ feature, stage })),
-        );
-        this.recordStagesEntered(newlyEnteredStages);
-    }
-
     private recordStagesEntered(newlyEnteredStages: NewStage[]) {
         newlyEnteredStages.forEach(({ stage, feature }) => {
             this.eventBus.emit(STAGE_ENTERED, { stage, feature });
         });
     }
 
-    private async featuresReceivedMetrics(
-        features: string[],
-        environment: string,
-    ) {
+    private async handleBulkMetrics(events: IClientMetricsEnv[]) {
         try {
-            const env = await this.environmentStore.get(environment);
+            const { environments, allFeatures } = this.extractUniqueEnvironmentsAndFeatures(events);
+            const envMap = await this.buildEnvironmentMap();
+            const featureEnvMap = await this.buildFeatureEnvironmentMap(allFeatures);
+            const allStagesToInsert = this.determineLifecycleStages(events, environments, envMap, featureEnvMap);
 
-            if (!env) {
-                return;
-            }
-            await this.stageReceivedMetrics(features, 'pre-live');
-            if (env.type === 'production') {
-                const featureEnv =
-                    await this.featureEnvironmentStore.getAllByFeatures(
-                        features,
-                        env.name,
-                    );
-                const enabledFeatures = featureEnv
-                    .filter((feature) => feature.enabled)
-                    .map((feature) => feature.featureName);
-                await this.stageReceivedMetrics(enabledFeatures, 'live');
+            if (allStagesToInsert.length > 0) {
+                const newlyEnteredStages = await this.featureLifecycleStore.insert(allStagesToInsert);
+                this.recordStagesEntered(newlyEnteredStages);
             }
         } catch (e) {
             this.logger.warn(
-                `Error handling ${features.length} metrics in ${environment}`,
+                `Error handling bulk metrics for ${events.length} events`,
                 e,
             );
         }
+    }
+
+    private extractUniqueEnvironmentsAndFeatures(events: IClientMetricsEnv[]) {
+        const environments = [...new Set(events.map(e => e.environment))];
+        const allFeatures = [...new Set(events.map(e => e.featureName))];
+        return { environments, allFeatures };
+    }
+
+    private async buildEnvironmentMap() {
+        const allEnvs = await this.environmentStore.getAll();
+        return new Map(allEnvs.map(env => [env.name, env]));
+    }
+
+    private async buildFeatureEnvironmentMap(allFeatures: string[]) {
+        const allFeatureEnvs = await this.featureEnvironmentStore.getAllByFeatures(allFeatures);
+        const featureEnvMap = new Map<string, Map<string, any>>();
+
+        allFeatureEnvs.forEach(fe => {
+            if (!featureEnvMap.has(fe.environment)) {
+                featureEnvMap.set(fe.environment, new Map());
+            }
+            featureEnvMap.get(fe.environment)!.set(fe.featureName, fe);
+        });
+
+        return featureEnvMap;
+    }
+
+    private determineLifecycleStages(
+        events: IClientMetricsEnv[],
+        environments: string[],
+        envMap: Map<string, any>,
+        featureEnvMap: Map<string, Map<string, any>>
+    ): Array<{ feature: string; stage: 'pre-live' | 'live' }> {
+        const allStagesToInsert: Array<{ feature: string; stage: 'pre-live' | 'live' }> = [];
+
+        for (const environment of environments) {
+            const env = envMap.get(environment);
+            if (!env) continue;
+
+            const envFeatures = this.getFeaturesForEnvironment(events, environment);
+            allStagesToInsert.push(...this.createPreLiveStages(envFeatures));
+
+            if (env.type === 'production') {
+                const enabledFeatures = this.getEnabledFeaturesForEnvironment(envFeatures, environment, featureEnvMap);
+                allStagesToInsert.push(...this.createLiveStages(enabledFeatures));
+            }
+        }
+
+        return allStagesToInsert;
+    }
+
+    private getFeaturesForEnvironment(events: IClientMetricsEnv[], environment: string): string[] {
+        return events
+            .filter(e => e.environment === environment)
+            .map(e => e.featureName);
+    }
+
+    private createPreLiveStages(features: string[]): Array<{ feature: string; stage: 'pre-live' }> {
+        return features.map(feature => ({ feature, stage: 'pre-live' as const }));
+    }
+
+    private createLiveStages(features: string[]): Array<{ feature: string; stage: 'live' }> {
+        return features.map(feature => ({ feature, stage: 'live' as const }));
+    }
+
+    private getEnabledFeaturesForEnvironment(
+        features: string[],
+        environment: string,
+        featureEnvMap: Map<string, Map<string, any>>
+    ): string[] {
+        const envFeatureEnvs = featureEnvMap.get(environment) || new Map();
+        return features.filter(feature => {
+            const fe = envFeatureEnvs.get(feature);
+            return fe && fe.enabled;
+        });
     }
 
     public async featureCompleted(

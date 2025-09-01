@@ -4,7 +4,7 @@
  * See `gen:api` script in package.json
  */
 
-export type RemoveReleasePlanMilestone403 = {
+export type UpdateReleaseTemplateMilestone403 = {
     /** The ID of the error instance */
     id?: string;
     /** A description of what went wrong. */

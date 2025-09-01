@@ -44,6 +44,40 @@ interface ICreationArchiveChartProps {
     isLoading?: boolean;
 }
 
+// Vertical line on the hovered chart, filled with gradient. Highlights a section of a chart when you hover over datapoints
+const customHighlightPlugin = {
+    id: 'customLine',
+    afterDraw: (chart: ChartJS) => {
+        const defaultCategoryPercentage = 0.8;
+        const width =
+            (chart.width / chart.scales.x.ticks.length) *
+            (chart.options.datasets?.bar?.categoryPercentage ??
+                defaultCategoryPercentage);
+        if (chart.tooltip?.opacity && chart.tooltip.x) {
+            const x = chart.tooltip.caretX;
+            const yAxis = chart.scales.y;
+            const ctx = chart.ctx;
+            ctx.save();
+            const gradient = ctx.createLinearGradient(
+                x,
+                yAxis.top,
+                x,
+                yAxis.bottom,
+            );
+            gradient.addColorStop(0, 'rgba(129, 122, 254, 0)');
+            gradient.addColorStop(1, 'rgba(129, 122, 254, 0.12)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(
+                x - width / 2,
+                yAxis.top,
+                width,
+                yAxis.bottom - yAxis.top,
+            );
+            ctx.restore();
+        }
+    },
+};
+
 export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     creationArchiveTrends,
     isLoading,
@@ -108,6 +142,8 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     data: weeks,
                     backgroundColor: theme.palette.charts.A2,
                     borderColor: theme.palette.charts.A2,
+                    hoverBackgroundColor: theme.palette.charts.A2,
+                    hoverBorderColor: theme.palette.charts.A2,
                     parsing: { yAxisKey: 'archivedFlags', xAxisKey: 'date' },
                     order: 1,
                 },
@@ -116,6 +152,8 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     data: weeks,
                     backgroundColor: theme.palette.charts.A1,
                     borderColor: theme.palette.charts.A1,
+                    hoverBackgroundColor: theme.palette.charts.A1,
+                    hoverBorderColor: theme.palette.charts.A1,
                     parsing: {
                         yAxisKey: 'totalCreatedFlags',
                         xAxisKey: 'date',
@@ -203,6 +241,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                 options={options}
                 height={100}
                 width={250}
+                plugins={[customHighlightPlugin]}
             />
             <CreationArchiveRatioTooltip tooltip={tooltip} />
         </>

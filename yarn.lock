@@ -7556,9 +7556,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"unleash-client@npm:^6.7.0-beta.7":
-  version: 6.7.0-beta.7
-  resolution: "unleash-client@npm:6.7.0-beta.7"
+"unleash-client@npm:^6.7.0-beta.9":
+  version: 6.7.0-beta.9
+  resolution: "unleash-client@npm:6.7.0-beta.9"
   dependencies:
     http-proxy-agent: "npm:^7.0.2"
     https-proxy-agent: "npm:^7.0.5"
@@ -7568,7 +7568,7 @@ __metadata:
     murmurhash3js: "npm:^3.0.1"
     proxy-from-env: "npm:^1.1.0"
     semver: "npm:^7.6.2"
-  checksum: 10c0/624b76add507cdd36ccfb5ef30adc1c2ebc18859962f2238129392ac8bc927e838bb6cfb52785d889e85e57de5f649eced8416c1ecd5bdad566f1880bd06bd51
+  checksum: 10c0/50dafa1ac02b2c55f7a72f102724f9ba14099fb0bde87355f845817f5d6c130dd049f3c7fa30b11b0d082507cdd593ba085aee078a903e714abb029740ca01e4
   languageName: node
   linkType: hard
 
@@ -7685,7 +7685,7 @@ __metadata:
     type-is: "npm:^2.0.0"
     typescript: "npm:5.8.3"
     ulidx: "npm:^2.4.1"
-    unleash-client: "npm:^6.7.0-beta.7"
+    unleash-client: "npm:^6.7.0-beta.9"
     uuid: "npm:^11.0.0"
     vite-node: "npm:^3.1.3"
     vitest: "npm:^3.1.3"

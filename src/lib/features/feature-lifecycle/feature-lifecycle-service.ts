@@ -8,8 +8,10 @@ import {
     FeatureCompletedEvent,
     FeatureUncompletedEvent,
     type IAuditUser,
+    type IEnvironment,
     type IEnvironmentStore,
     type IEventStore,
+    type IFeatureEnvironment,
     type IFeatureEnvironmentStore,
     type IFlagResolver,
     type IUnleashConfig,
@@ -20,12 +22,12 @@ import type {
     NewStage,
 } from './feature-lifecycle-store-type.js';
 import type EventEmitter from 'events';
-import type { Logger } from '../../logger.js';
+import type {Logger} from '../../logger.js';
 import type EventService from '../events/event-service.js';
-import type { FeatureLifecycleCompletedSchema } from '../../openapi/index.js';
-import type { IClientMetricsEnv } from '../metrics/client-metrics/client-metrics-store-v2-type.js';
+import type {FeatureLifecycleCompletedSchema} from '../../openapi/index.js';
+import type {IClientMetricsEnv} from '../metrics/client-metrics/client-metrics-store-v2-type.js';
 import groupBy from 'lodash.groupby';
-import { STAGE_ENTERED } from '../../metric-events.js';
+import {STAGE_ENTERED} from '../../metric-events.js';
 
 export class FeatureLifecycleService {
     private eventStore: IEventStore;
@@ -125,7 +127,7 @@ export class FeatureLifecycleService {
 
     private async featureInitialized(feature: string) {
         const result = await this.featureLifecycleStore.insert([
-            { feature, stage: 'initial' },
+            {feature, stage: 'initial'},
         ]);
         this.recordStagesEntered(result);
     }
@@ -135,14 +137,14 @@ export class FeatureLifecycleService {
         stage: 'live' | 'pre-live',
     ) {
         const newlyEnteredStages = await this.featureLifecycleStore.insert(
-            features.map((feature) => ({ feature, stage })),
+            features.map((feature) => ({feature, stage})),
         );
         this.recordStagesEntered(newlyEnteredStages);
     }
 
     private recordStagesEntered(newlyEnteredStages: NewStage[]) {
-        newlyEnteredStages.forEach(({ stage, feature }) => {
-            this.eventBus.emit(STAGE_ENTERED, { stage, feature });
+        newlyEnteredStages.forEach(({stage, feature}) => {
+            this.eventBus.emit(STAGE_ENTERED, {stage, feature});
         });
     }
 
@@ -178,7 +180,7 @@ export class FeatureLifecycleService {
 
     private async handleBulkMetrics(events: IClientMetricsEnv[]) {
         try {
-            const { environments, allFeatures } =
+            const {environments, allFeatures} =
                 this.extractUniqueEnvironmentsAndFeatures(events);
             const envMap = await this.buildEnvironmentMap();
             const featureEnvMap =
@@ -206,10 +208,10 @@ export class FeatureLifecycleService {
     private extractUniqueEnvironmentsAndFeatures(events: IClientMetricsEnv[]) {
         const environments = [...new Set(events.map((e) => e.environment))];
         const allFeatures = [...new Set(events.map((e) => e.featureName))];
-        return { environments, allFeatures };
+        return {environments, allFeatures};
     }
 
-    private async buildEnvironmentMap() {
+    private async buildEnvironmentMap(): Promise<Map<string, IEnvironment>> {
         const allEnvs = await this.environmentStore.getAll();
         return new Map(allEnvs.map((env) => [env.name, env]));
     }
@@ -217,7 +219,10 @@ export class FeatureLifecycleService {
     private async buildFeatureEnvironmentMap(allFeatures: string[]) {
         const allFeatureEnvs =
             await this.featureEnvironmentStore.getAllByFeatures(allFeatures);
-        const featureEnvMap = new Map<string, Map<string, any>>();
+        const featureEnvMap = new Map<
+            string,
+            Map<string, IFeatureEnvironment>
+        >();
 
         allFeatureEnvs.forEach((fe) => {
             if (!featureEnvMap.has(fe.environment)) {
@@ -232,8 +237,8 @@ export class FeatureLifecycleService {
     private determineLifecycleStages(
         events: IClientMetricsEnv[],
         environments: string[],
-        envMap: Map<string, any>,
-        featureEnvMap: Map<string, Map<string, any>>,
+        envMap: Map<string, IEnvironment>,
+        featureEnvMap: Map<string, Map<string, IFeatureEnvironment>>,
     ): Array<{ feature: string; stage: 'pre-live' | 'live' }> {
         const allStagesToInsert: Array<{
             feature: string;
@@ -286,13 +291,13 @@ export class FeatureLifecycleService {
     private createLiveStages(
         features: string[],
     ): Array<{ feature: string; stage: 'live' }> {
-        return features.map((feature) => ({ feature, stage: 'live' as const }));
+        return features.map((feature) => ({feature, stage: 'live' as const}));
     }
 
     private getEnabledFeaturesForEnvironment(
         features: string[],
         environment: string,
-        featureEnvMap: Map<string, Map<string, any>>,
+        featureEnvMap: Map<string, Map<string, IFeatureEnvironment>>,
     ): string[] {
         const envFeatureEnvs = featureEnvMap.get(environment) || new Map();
         return features.filter((feature) => {
@@ -320,7 +325,7 @@ export class FeatureLifecycleService {
             new FeatureCompletedEvent({
                 project: projectId,
                 featureName: feature,
-                data: { ...status, kept: status.status === 'kept' },
+                data: {...status, kept: status.status === 'kept'},
                 auditUser,
             }),
         );
@@ -346,7 +351,7 @@ export class FeatureLifecycleService {
 
     private async featureArchived(feature: string) {
         const result = await this.featureLifecycleStore.insert([
-            { feature, stage: 'archived' },
+            {feature, stage: 'archived'},
         ]);
         this.recordStagesEntered(result);
     }

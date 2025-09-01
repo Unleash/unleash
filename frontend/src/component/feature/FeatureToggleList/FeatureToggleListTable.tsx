@@ -34,6 +34,7 @@ import { ExportFlags } from './ExportFlags.tsx';
 import { createFeatureOverviewCell } from 'component/common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 import { AvatarCell } from 'component/project/Project/PaginatedProjectFeatureToggles/AvatarCell';
 import { StatusCell } from './StatusCell/StatusCell.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -69,6 +70,7 @@ export const FeatureToggleListTable: FC = () => {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const [showExportDialog, setShowExportDialog] = useState(false);
+    const reportUnknownFlagsEnabled = useUiFlag('reportUnknownFlags');
 
     const { setToastApiError } = useToast();
 
@@ -259,6 +261,16 @@ export const FeatureToggleListTable: FC = () => {
                     title='Flags overview'
                     actions={
                         <>
+                            {reportUnknownFlagsEnabled && (
+                                <Link
+                                    component={RouterLink}
+                                    to='/unknown-flags'
+                                    underline='always'
+                                    sx={{ marginRight: 2, ...focusable(theme) }}
+                                >
+                                    Unknown flags
+                                </Link>
+                            )}
                             <Link
                                 component={RouterLink}
                                 to='/archive'
@@ -272,7 +284,7 @@ export const FeatureToggleListTable: FC = () => {
                                     });
                                 }}
                             >
-                                View archive
+                                Archived flags
                             </Link>
                             <ExportFlags
                                 onClick={() => setShowExportDialog(true)}

@@ -11,14 +11,14 @@ import { Search } from 'component/common/Search/Search';
 import { useSearch } from 'hooks/useSearch';
 import { type UnknownFlag, useUnknownFlags } from './hooks/useUnknownFlags.js';
 import theme from 'themes/theme.js';
-import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell.js';
 import { formatDateYMDHMS } from 'utils/formatDate.js';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell.js';
 import { useUiFlag } from 'hooks/useUiFlag.js';
 import NotFound from 'component/common/NotFound/NotFound.js';
-import { UnknownFlagsSeenInUnleashCell } from './UnknownFlagsSeenInUnleashCell.js';
+import { UnknownFlagsLastEventCell } from './UnknownFlagsLastEventCell.js';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.js';
 import { UnknownFlagsActionsCell } from './UnknownFlagsActionsCell.js';
+import { UnknownFlagsLastReportedCell } from './UnknownFlagsLastReportedCell.js';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),
@@ -52,35 +52,18 @@ export const UnknownFlagsTable = () => {
                 searchable: true,
             },
             {
-                Header: 'Application',
-                accessor: 'appName',
-                searchable: true,
-                minWidth: 100,
-            },
-            {
-                Header: 'Environment',
-                accessor: 'environment',
-                searchable: true,
-            },
-            {
                 Header: (
                     <StyledHeader>
-                        Reported
+                        Last reported
                         <HelpIcon
                             tooltip={`Feature flags are reported when your SDK evaluates them and they don't exist in Unleash`}
                             size='16px'
                         />
                     </StyledHeader>
                 ),
-                accessor: 'seenAt',
-                Cell: ({ value }) => (
-                    <TimeAgoCell
-                        value={value}
-                        title={(date) => `Reported: ${date}`}
-                        dateFormat={formatDateYMDHMS}
-                    />
-                ),
-                width: 150,
+                accessor: 'lastSeenAt',
+                Cell: UnknownFlagsLastReportedCell,
+                width: 170,
             },
             {
                 Header: (
@@ -98,7 +81,7 @@ export const UnknownFlagsTable = () => {
                 }: {
                     row: { original: UnknownFlag };
                 }) => (
-                    <UnknownFlagsSeenInUnleashCell
+                    <UnknownFlagsLastEventCell
                         unknownFlag={unknownFlag}
                         dateFormat={formatDateYMDHMS}
                     />
@@ -116,12 +99,34 @@ export const UnknownFlagsTable = () => {
                 width: 100,
                 disableSortBy: true,
             },
+            // Always hidden -- for search
+            {
+                accessor: (row: UnknownFlag) =>
+                    row.reports.map(({ appName }) => appName).join('\n'),
+                id: 'appNames',
+                searchable: true,
+            },
+            {
+                accessor: (row: UnknownFlag) =>
+                    Array.from(
+                        new Set(
+                            row.reports.flatMap(({ environments }) =>
+                                environments.map(
+                                    ({ environment }) => environment,
+                                ),
+                            ),
+                        ),
+                    ).join('\n'),
+                id: 'environments',
+                searchable: true,
+            },
         ],
         [],
     );
 
     const [initialState] = useState({
         sortBy: [{ id: 'name', desc: false }],
+        hiddenColumns: ['appNames', 'environments'],
     });
 
     const { data, getSearchText } = useSearch(
@@ -155,7 +160,7 @@ export const UnknownFlagsTable = () => {
             isLoading={loading}
             header={
                 <PageHeader
-                    title={`Unknown flag report (${rows.length})`}
+                    title={`Unknown flags (${rows.length})`}
                     actions={
                         <>
                             <ConditionallyRender
@@ -187,7 +192,7 @@ export const UnknownFlagsTable = () => {
         >
             <StyledAlert severity='info'>
                 <StyledAlertContent>
-                    <p>
+                    <div>
                         <b>
                             Clean up unknown flags to keep your code and
                             configuration in sync
@@ -195,9 +200,9 @@ export const UnknownFlagsTable = () => {
                         <br />
                         Unknown flags are feature flags that your SDKs tried to
                         evaluate but which Unleash doesn't recognize.
-                    </p>
+                    </div>
 
-                    <p>
+                    <div>
                         <b>Unknown flags can include:</b>
                         <ul>
                             <li>
@@ -209,14 +214,7 @@ export const UnknownFlagsTable = () => {
                                 unexpected names, unsupported by Unleash.
                             </li>
                         </ul>
-                    </p>
-
-                    <p>
-                        <b>Why do I see the same flag name multiple times?</b>
-                        <br />
-                        The same flag name will appear multiple times if it's
-                        been seen in different applications or environments.
-                    </p>
+                    </div>
                 </StyledAlertContent>
             </StyledAlert>
 

@@ -11,7 +11,7 @@ interface IUnknownFlagsSeenInUnleashCellProps extends ITimeAgoCellProps {
     unknownFlag: UnknownFlag;
 }
 
-export const UnknownFlagsSeenInUnleashCell = ({
+export const UnknownFlagsLastEventCell = ({
     unknownFlag,
     ...props
 }: IUnknownFlagsSeenInUnleashCellProps) => {

@@ -5,7 +5,11 @@ import type {
     IUnleashConfig,
 } from '../../../types/index.js';
 import type { IUnleashStores } from '../../../types/index.js';
-import type { QueryParams, UnknownFlag } from './unknown-flags-store.js';
+import type {
+    QueryParams,
+    UnknownFlag,
+    UnknownFlagReport,
+} from './unknown-flags-store.js';
 
 export class UnknownFlagsService {
     private logger: Logger;
@@ -14,7 +18,7 @@ export class UnknownFlagsService {
 
     private unknownFlagsStore: IUnknownFlagsStore;
 
-    private unknownFlagsCache: Map<string, UnknownFlag>;
+    private unknownFlagsCache: Map<string, UnknownFlagReport>;
 
     constructor(
         { unknownFlagsStore }: Pick<IUnleashStores, 'unknownFlagsStore'>,
@@ -25,14 +29,14 @@ export class UnknownFlagsService {
         this.logger = config.getLogger(
             '/features/metrics/unknown-flags/unknown-flags-service.ts',
         );
-        this.unknownFlagsCache = new Map<string, UnknownFlag>();
+        this.unknownFlagsCache = new Map<string, UnknownFlagReport>();
     }
 
-    private getKey(flag: UnknownFlag) {
+    private getKey(flag: UnknownFlagReport) {
         return `${flag.name}:${flag.appName}:${flag.environment}`;
     }
 
-    register(unknownFlags: UnknownFlag[]) {
+    register(unknownFlags: UnknownFlagReport[]) {
         if (!this.flagResolver.isEnabled('reportUnknownFlags')) return;
         for (const flag of unknownFlags) {
             const key = this.getKey(flag);

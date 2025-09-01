@@ -32,7 +32,7 @@ import {
     MetricsTranslator,
 } from '../impact/metrics-translator.js';
 import { impactRegister } from '../impact/impact-register.js';
-import type { UnknownFlag } from '../unknown-flags/unknown-flags-store.js';
+import type { UnknownFlagReport } from '../unknown-flags/unknown-flags-store.js';
 
 export default class ClientMetricsServiceV2 {
     private config: IUnleashConfig;
@@ -209,14 +209,14 @@ export default class ClientMetricsServiceV2 {
             `Got ${toggleNames.length} metrics (${invalidCount > 0 ? `${invalidCount} invalid` : 'all valid'}).`,
         );
 
-        const unknownFlags: UnknownFlag[] = [];
+        const unknownFlags: UnknownFlagReport[] = [];
         for (const [featureName, group] of metricsByToggle) {
             if (unknownSet.has(featureName)) {
                 for (const m of group) {
                     unknownFlags.push({
                         name: featureName,
                         appName: m.appName,
-                        seenAt: m.timestamp,
+                        lastSeenAt: m.timestamp,
                         environment: m.environment,
                     });
                 }

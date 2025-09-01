@@ -105,9 +105,18 @@ describe('should register unknown flags', () => {
         expect(unknownFlags).toHaveLength(1);
         expect(unknownFlags[0]).toMatchObject({
             name: 'unknown_flag',
-            environment: 'development',
-            appName: 'demo',
-            seenAt: expect.any(Date),
+            lastSeenAt: expect.any(Date),
+            reports: [
+                {
+                    appName: 'demo',
+                    environments: [
+                        {
+                            environment: 'development',
+                            seenAt: expect.any(Date),
+                        },
+                    ],
+                },
+            ],
         });
         expect(eventBus.emit).toHaveBeenCalledWith(
             CLIENT_METRICS,
@@ -167,9 +176,18 @@ describe('should register unknown flags', () => {
         expect(unknownFlags).toHaveLength(1);
         expect(unknownFlags[0]).toMatchObject({
             name: 'unknown_flag_bulk',
-            environment: 'development',
-            appName: 'demo',
-            seenAt: expect.any(Date),
+            lastSeenAt: expect.any(Date),
+            reports: [
+                {
+                    appName: 'demo',
+                    environments: [
+                        {
+                            environment: 'development',
+                            seenAt: expect.any(Date),
+                        },
+                    ],
+                },
+            ],
         });
         expect(eventBus.emit).toHaveBeenCalledWith(
             CLIENT_METRICS,
@@ -242,15 +260,35 @@ describe('should fetch unknown flags', () => {
         expect(res.body.unknownFlags).toEqual([
             expect.objectContaining({
                 name: 'unknown_flag_1',
-                environment: 'development',
-                appName: 'demo',
+                lastSeenAt: expect.any(String),
                 lastEventAt: null,
+                reports: [
+                    {
+                        appName: 'demo',
+                        environments: [
+                            {
+                                environment: 'development',
+                                seenAt: expect.any(String),
+                            },
+                        ],
+                    },
+                ],
             }),
             expect.objectContaining({
                 name: 'unknown_flag_2',
-                environment: 'development',
-                appName: 'demo',
+                lastSeenAt: expect.any(String),
                 lastEventAt: null,
+                reports: [
+                    {
+                        appName: 'demo',
+                        environments: [
+                            {
+                                environment: 'development',
+                                seenAt: expect.any(String),
+                            },
+                        ],
+                    },
+                ],
             }),
         ]);
     });
@@ -312,9 +350,18 @@ describe('should fetch unknown flags', () => {
         expect(res.body.unknownFlags).toEqual([
             expect.objectContaining({
                 name: 'unknown_flag_2',
-                environment: 'development',
-                appName: 'demo',
-                lastEventAt: null,
+                lastSeenAt: expect.any(String),
+                reports: [
+                    {
+                        appName: 'demo',
+                        environments: [
+                            {
+                                environment: 'development',
+                                seenAt: expect.any(String),
+                            },
+                        ],
+                    },
+                ],
             }),
         ]);
     });

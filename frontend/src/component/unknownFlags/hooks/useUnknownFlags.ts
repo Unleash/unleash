@@ -5,12 +5,21 @@ import { useConditionalSWR } from 'hooks/api/getters/useConditionalSWR/useCondit
 import handleErrorResponses from 'hooks/api/getters/httpErrorResponseHandler';
 import type { SWRConfiguration } from 'swr';
 
+type UnknownFlagEnvReport = {
+    environment: string;
+    seenAt: Date;
+};
+
+type UnknownFlagAppReport = {
+    appName: string;
+    environments: UnknownFlagEnvReport[];
+};
+
 export type UnknownFlag = {
     name: string;
-    appName: string;
-    seenAt: Date;
-    environment: string;
-    lastEventAt: Date;
+    lastSeenAt: Date;
+    lastEventAt?: Date;
+    reports: UnknownFlagAppReport[];
 };
 
 type UnknownFlagsResponse = {

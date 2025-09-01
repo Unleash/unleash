@@ -228,7 +228,10 @@ export class FeatureLifecycleService {
             if (!featureEnvMap.has(fe.environment)) {
                 featureEnvMap.set(fe.environment, new Map());
             }
-            featureEnvMap.get(fe.environment)!.set(fe.featureName, fe);
+            const envMap = featureEnvMap.get(fe.environment);
+            if (envMap) {
+                envMap.set(fe.featureName, fe);
+            }
         });
 
         return featureEnvMap;

@@ -6,8 +6,10 @@ import type { WeekData } from './types.ts';
 import { calculateRatio } from 'component/insights/calculate-ratio/calculate-ratio.ts';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
-    padding: theme.spacing(2),
-    width: 200,
+    padding: theme.spacing(1.5),
+    display: 'flex',
+    flexFlow: 'column',
+    gap: theme.spacing(0.5),
 }));
 
 const DataList = styled('dl')(({ theme }) => ({
@@ -22,12 +24,13 @@ const DataRow = styled('div', {
     alignItems: 'center',
     whiteSpace: 'nowrap',
     fontSize: theme.typography.body2.fontSize,
-    '::before': {
+    'dt::before': {
         content: '" "',
         display: 'inline-block',
         height: '.65rem',
         aspectRatio: '1/1',
         borderRadius: '50%',
+        marginInlineEnd: theme.spacing(0.5),
 
         backgroundColor:
             dataType === 'archived'
@@ -39,6 +42,11 @@ const DataRow = styled('div', {
 interface CreationArchiveRatioTooltipProps {
     tooltip: TooltipState | null;
 }
+
+const Timestamp = styled('span')(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
+    color: theme.palette.text.secondary,
+}));
 
 export const CreationArchiveRatioTooltip: FC<
     CreationArchiveRatioTooltipProps
@@ -56,12 +64,7 @@ export const CreationArchiveRatioTooltip: FC<
     return (
         <ChartTooltipContainer tooltip={tooltip}>
             <StyledTooltipItemContainer elevation={3}>
-                <Typography
-                    variant='body2'
-                    component='div'
-                    fontWeight='bold'
-                    sx={{ marginBottom: 1 }}
-                >
+                <Typography variant='body2' component='span' fontWeight='bold'>
                     Ratio {ratio}
                 </Typography>
 
@@ -75,6 +78,7 @@ export const CreationArchiveRatioTooltip: FC<
                         <dd>{createdCount}</dd>
                     </DataRow>
                 </DataList>
+                <Timestamp>{tooltip.title}</Timestamp>
             </StyledTooltipItemContainer>
         </ChartTooltipContainer>
     );

@@ -164,7 +164,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     display: true,
                     time: {
                         unit: 'week' as const,
-                        tooltipFormat: 'PPP',
+                        tooltipFormat: 'P',
                     },
                     grid: {
                         display: false,

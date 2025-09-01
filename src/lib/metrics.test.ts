@@ -69,7 +69,7 @@ beforeAll(async () => {
 
     featureLifeCycleReadModel = new FeatureLifecycleReadModel(db.rawDatabase);
     stores.featureLifecycleReadModel = featureLifeCycleReadModel;
-    featureLifeCycleStore = new FeatureLifecycleStore(db.rawDatabase);
+    featureLifeCycleStore = new FeatureLifecycleStore(db.rawDatabase, eventBus);
     stores.featureLifecycleStore = featureLifeCycleStore;
 
     statsService = new InstanceStatsService(

@@ -180,7 +180,7 @@ export const createStores = (
         segmentReadModel: new SegmentReadModel(db),
         projectOwnersReadModel: new ProjectOwnersReadModel(db),
         projectFlagCreatorsReadModel: new ProjectFlagCreatorsReadModel(db),
-        featureLifecycleStore: new FeatureLifecycleStore(db),
+        featureLifecycleStore: new FeatureLifecycleStore(db, eventBus),
         featureStrategiesReadModel: new FeatureStrategiesReadModel(db),
         onboardingReadModel: createOnboardingReadModel(db),
         onboardingStore: new OnboardingStore(db),

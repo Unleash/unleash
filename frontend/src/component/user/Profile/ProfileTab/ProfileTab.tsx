@@ -22,6 +22,7 @@ import { RoleBadge } from 'component/common/RoleBadge/RoleBadge';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ProductivityEmailSubscription } from './ProductivityEmailSubscription.tsx';
 import { formatDateYMDHM } from 'utils/formatDate.ts';
+import { defaultLocales } from '../../../../constants/defaultLocales.ts';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -116,17 +117,8 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
     const [currentLocale, setCurrentLocale] = useState<string>();
     const exampleDateId = useId();
 
-    const [possibleLocales, setPossibleLocales] = useState([
-        'en-US',
-        'en-GB',
-        'nb-NO',
-        'sv-SE',
-        'da-DK',
-        'en-IN',
-        'de',
-        'cs',
-        'pt-BR',
-        'fr-FR',
+    const [possibleLocales, setPossibleLocales] = useState<string[]>([
+        ...defaultLocales,
     ]);
 
     useEffect(() => {

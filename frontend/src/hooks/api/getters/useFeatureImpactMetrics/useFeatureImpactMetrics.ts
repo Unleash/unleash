@@ -6,7 +6,7 @@ export const useFeatureImpactMetrics = (feature: string) => {
     const PATH = `api/admin/impact-metrics/config/${feature}`;
     const { data, refetch, loading, error } =
         useApiGetter<ImpactMetricsConfigListSchema>(formatApiPath(PATH), () =>
-            fetcher(formatApiPath(PATH), 'Feature Impact Metrics Config'),
+            fetcher(formatApiPath(PATH), 'Feature Impact Metrics'),
         );
 
     return {

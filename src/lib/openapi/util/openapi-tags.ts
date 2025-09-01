@@ -116,6 +116,11 @@ const OPENAPI_TAGS = [
         description:
             'Create, update, and delete [Unleash Public Signup tokens](https://docs.getunleash.io/reference/public-signup-tokens).',
     },
+    {
+        name: 'Release Templates',
+        description:
+            'API for managing [release templates](https://docs.getunleash.io/reference/release-templates).',
+    },
     { name: 'Search', description: 'Search for features.' },
     {
         name: 'Segments',

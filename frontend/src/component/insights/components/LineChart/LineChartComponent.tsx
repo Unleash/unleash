@@ -69,7 +69,7 @@ const customHighlightPlugin = {
                 yAxis.bottom,
             );
             gradient.addColorStop(0, 'rgba(129, 122, 254, 0)');
-            gradient.addColorStop(1, 'rgba(129, 122, 254, 0.12)');
+            gradient.addColorStop(1, 'rgba(129, 122, 254, 0.20)');
             ctx.fillStyle = gradient;
             ctx.fillRect(
                 x - width / 2,

@@ -7,6 +7,7 @@ import { type FC, useMemo, useState } from 'react';
 import { ChartConfigModal } from '../../../impact-metrics/ChartConfigModal/ChartConfigModal.tsx';
 import { useImpactMetricsApi } from 'hooks/api/actions/useImpactMetricsSettingsApi/useImpactMetricsApi.ts';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
+import { useFeatureImpactMetrics } from 'hooks/api/getters/useFeatureImpactMetrics/useFeatureImpactMetrics.ts';
 
 const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
@@ -18,6 +19,7 @@ export const FeatureImpactMetrics: FC = () => {
     const feature = useRequiredPathParam('featureId');
     const [modalOpen, setModalOpen] = useState(false);
     const { createImpactMetric } = useImpactMetricsApi();
+    useFeatureImpactMetrics(feature);
 
     const {
         metadata,

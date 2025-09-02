@@ -122,7 +122,7 @@ export const UnknownFlagsTable = () => {
                         suggestedProject={suggestedProject}
                     />
                 ),
-                width: 160,
+                width: 120,
                 disableSortBy: true,
             },
             // Always hidden -- for search

@@ -36,7 +36,7 @@ export const UnknownFlagsActionsCell = ({
                     )
                 }
             >
-                Create feature flag
+                Create flag
             </PermissionButton>
         </StyledBox>
     );

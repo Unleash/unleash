@@ -40,7 +40,7 @@
     "build:frontend:if-needed": "./scripts/build-frontend-if-needed.sh",
     "build": "yarn run clean && concurrently \"yarn:copy-templates\" \"yarn:build:frontend\" \"yarn:build:backend\"",
     "dev:vite": "TZ=UTC NODE_ENV=development vite-node src/server-dev.ts",
-    "dev:backend": "TZ=UTC NODE_ENV=${NODE_ENV:-development} tsc-watch --onEmit \"copyfiles -u 2 src/migrations/package.json dist/migrations\" --onSuccess \"node dist/server-dev.js\"",
+    "dev:backend": "TZ=UTC NODE_ENV=${NODE_ENV:-development} NODE_OPTIONS=\"--enable-source-maps --import file:///${PWD}/dist/startup-profiler.js\" tsc-watch --onEmit \"copyfiles -u 2 src/migrations/package.json dist/migrations\" --onSuccess \"node dist/server-dev.js\"",
     "dev:frontend": "wait-on tcp:4242 && yarn --cwd ./frontend run dev",
     "dev:frontend:cloud": "UNLEASH_BASE_PATH=/demo/ yarn run dev:frontend",
     "dev": "concurrently \"yarn:dev:backend\" \"yarn:dev:frontend\"",

@@ -178,6 +178,9 @@ export class FeatureLifecycleService {
         }
     }
 
+    /**
+     * Optimized bulk processing: reduces DB calls from O(4 * environments) to O(3) by batching all data fetches and processing in-memory
+     */
     private async handleBulkMetrics(events: IClientMetricsEnv[]) {
         try {
             const { environments, allFeatures } =

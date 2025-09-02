@@ -5,12 +5,28 @@ const TABLE = 'unknown_flags';
 const TABLE_EVENTS = 'events';
 const MAX_INSERT_BATCH_SIZE = 100;
 
+type UnknownFlagEnvReport = {
+    environment: string;
+    seenAt: Date;
+};
+
+type UnknownFlagAppReport = {
+    appName: string;
+    environments: UnknownFlagEnvReport[];
+};
+
 export type UnknownFlag = {
     name: string;
-    appName: string;
-    seenAt: Date;
-    environment: string;
+    lastSeenAt: Date;
     lastEventAt?: Date;
+    reports: UnknownFlagAppReport[];
+};
+
+export type UnknownFlagReport = {
+    name: string;
+    appName: string;
+    lastSeenAt: Date;
+    environment: string;
 };
 
 export type QueryParams = {
@@ -22,7 +38,7 @@ export type QueryParams = {
 };
 
 export interface IUnknownFlagsStore {
-    insert(flags: UnknownFlag[]): Promise<void>;
+    insert(flags: UnknownFlagReport[]): Promise<void>;
     getAll(params?: QueryParams): Promise<UnknownFlag[]>;
     clear(hoursAgo: number): Promise<void>;
     deleteAll(): Promise<void>;
@@ -39,15 +55,17 @@ export class UnknownFlagsStore implements IUnknownFlagsStore {
         this.logger = getLogger('unknown-flags-store.ts');
     }
 
-    async insert(flags: UnknownFlag[]): Promise<void> {
+    async insert(flags: UnknownFlagReport[]): Promise<void> {
         if (!flags.length) return;
 
-        const rows = flags.map(({ name, appName, seenAt, environment }) => ({
-            name,
-            app_name: appName,
-            seen_at: seenAt,
-            environment,
-        }));
+        const rows = flags.map(
+            ({ name, appName, lastSeenAt, environment }) => ({
+                name,
+                app_name: appName,
+                seen_at: lastSeenAt,
+                environment,
+            }),
+        );
 
         for (let i = 0; i < rows.length; i += MAX_INSERT_BATCH_SIZE) {
             const chunk = rows.slice(i, i + MAX_INSERT_BATCH_SIZE);
@@ -66,42 +84,67 @@ export class UnknownFlagsStore implements IUnknownFlagsStore {
     }
 
     async getAll({ limit, orderBy }: QueryParams = {}): Promise<UnknownFlag[]> {
-        let query = this.db(`${TABLE} AS uf`)
-            .select(
-                'uf.name',
-                'uf.app_name',
-                'uf.seen_at',
-                'uf.environment',
-                this.db.raw(
-                    `(SELECT MAX(e.created_at)
-                FROM ${TABLE_EVENTS} AS e
-                WHERE e.feature_name = uf.name)
-                AS last_event_at`,
-                ),
+        const base = this.db
+            .with('base', (qb) =>
+                qb
+                    .from(`${TABLE} as uf`)
+                    .leftJoin('features as f', 'f.name', 'uf.name')
+                    .whereNull('f.name')
+                    .select('uf.name', 'uf.app_name', 'uf.environment')
+                    .max({ seen_at: 'uf.seen_at' })
+                    .groupBy('uf.name', 'uf.app_name', 'uf.environment'),
             )
-            .whereNotExists(
-                this.db('features as f')
-                    .select(this.db.raw('1'))
-                    .whereRaw('f.name = uf.name'),
+            .select(
+                'b.name',
+                this.db.raw('MAX(b.seen_at) as last_seen_at'),
+                this.db.raw(
+                    `(SELECT MAX(e.created_at) FROM ${TABLE_EVENTS} e WHERE e.feature_name = b.name) as last_event_at`,
+                ),
+                this.db.raw(`
+        jsonb_object_agg(
+          b.app_name,
+          (
+            SELECT jsonb_object_agg(env_row.environment, env_row.seen_at)
+            FROM (
+              SELECT environment, MAX(seen_at) AS seen_at
+              FROM base
+              WHERE name = b.name AND app_name = b.app_name
+              GROUP BY environment
+            ) env_row
+          )
+        ) as reports
+      `),
+            )
+            .from('base as b')
+            .groupBy('b.name');
+
+        let q = base;
+        if (orderBy) q = q.orderBy(orderBy);
+        if (limit) q = q.limit(limit);
+
+        const rows = await q;
+
+        return rows.map((r) => {
+            const reportsObj = r.reports ?? {};
+            const reports = Object.entries(reportsObj).map(
+                ([appName, envs]) => ({
+                    appName,
+                    environments: Object.entries(
+                        envs as Record<string, Date>,
+                    ).map(([environment, seenAt]) => ({
+                        environment,
+                        seenAt: new Date(seenAt),
+                    })),
+                }),
             );
 
-        if (orderBy) {
-            query = query.orderBy(orderBy);
-        }
-
-        if (limit) {
-            query = query.limit(limit);
-        }
-
-        const rows = await query;
-
-        return rows.map((row) => ({
-            name: row.name,
-            appName: row.app_name,
-            seenAt: row.seen_at,
-            environment: row.environment,
-            lastEventAt: row.last_event_at,
-        }));
+            return {
+                name: r.name,
+                lastSeenAt: r.last_seen_at,
+                lastEventAt: r.last_event_at,
+                reports,
+            };
+        });
     }
 
     async clear(hoursAgo: number): Promise<void> {

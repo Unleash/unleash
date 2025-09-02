@@ -240,11 +240,7 @@ export const ArchiveTable = ({
                 isLoading={loading}
                 header={
                     <PageHeader
-                        titleElement={`${title} (${
-                            rows.length < data.length
-                                ? `${rows.length} of ${data.length}`
-                                : data.length
-                        })`}
+                        titleElement={`${title} (${rows.length})`}
                         actions={
                             <Search
                                 initialValue={searchValue}

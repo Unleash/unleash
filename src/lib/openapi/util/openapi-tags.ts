@@ -147,6 +147,10 @@ const OPENAPI_TAGS = [
         description: 'API for information about telemetry collection',
     },
     {
+        name: 'Unknown Flags',
+        description: 'Endpoints related to unknown flags.',
+    },
+    {
         name: 'Unleash Edge',
         description:
             'Endpoints related to [Unleash Edge](https://docs.getunleash.io/reference/unleash-edge).',

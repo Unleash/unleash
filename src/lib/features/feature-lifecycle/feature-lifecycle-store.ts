@@ -37,26 +37,6 @@ export class FeatureLifecycleStore implements IFeatureLifecycleStore {
             });
     }
 
-    async backfill(): Promise<void> {
-        const stopTimer = this.timer('backfill');
-        await this.db.raw(`
-            INSERT INTO feature_lifecycles (feature, stage, created_at)
-            SELECT features.name, 'initial', features.created_at
-            FROM features
-                LEFT JOIN feature_lifecycles ON features.name = feature_lifecycles.feature
-            WHERE feature_lifecycles.feature IS NULL
-        `);
-        await this.db.raw(`
-            INSERT INTO feature_lifecycles (feature, stage, created_at)
-            SELECT features.name, 'archived', features.archived_at
-            FROM features
-                LEFT JOIN feature_lifecycles ON features.name = feature_lifecycles.feature AND feature_lifecycles.stage = 'archived'
-            WHERE features.archived_at IS NOT NULL
-              AND feature_lifecycles.feature IS NULL
-        `);
-        stopTimer();
-    }
-
     async insert(
         featureLifecycleStages: FeatureLifecycleStage[],
     ): Promise<NewStage[]> {

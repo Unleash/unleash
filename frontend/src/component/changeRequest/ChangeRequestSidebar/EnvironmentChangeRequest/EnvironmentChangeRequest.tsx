@@ -12,7 +12,6 @@ import type { ChangeRequestType } from '../../changeRequest.types';
 import { Link } from 'react-router-dom';
 import { ChangeRequestStatusBadge } from '../../ChangeRequestStatusBadge/ChangeRequestStatusBadge.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { changesCount } from '../../changesCount.js';
 import {
     Separator,
     StyledFlexAlignCenterBox,

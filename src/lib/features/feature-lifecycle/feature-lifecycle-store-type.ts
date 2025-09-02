@@ -25,5 +25,4 @@ export interface IFeatureLifecycleStore {
     delete(feature: string): Promise<void>;
     deleteAll(): Promise<void>;
     deleteStage(stage: FeatureLifecycleStage): Promise<void>;
-    backfill(): Promise<void>;
 }

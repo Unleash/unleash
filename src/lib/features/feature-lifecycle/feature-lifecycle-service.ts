@@ -82,7 +82,6 @@ export class FeatureLifecycleService {
     }
 
     listen() {
-        this.featureLifecycleStore.backfill();
         this.eventStore.on(FEATURE_CREATED, async (event) => {
             await this.featureInitialized(event.featureName);
         });

@@ -58,7 +58,8 @@ export type IFlagKey =
     | 'lifecycleGraphs'
     | 'addConfiguration'
     | 'etagByEnv'
-    | 'fetchMode';
+    | 'fetchMode'
+    | 'optimizeLifecycle';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 

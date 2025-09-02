@@ -10,7 +10,7 @@ export const useFeatureImpactMetrics = (feature: string) => {
         );
 
     return {
-        settings: data || { configs: [] },
+        impactMetrics: data || { configs: [] },
         refetch,
         loading,
         error,

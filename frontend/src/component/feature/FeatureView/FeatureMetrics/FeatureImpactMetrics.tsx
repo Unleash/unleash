@@ -8,6 +8,7 @@ import { ChartConfigModal } from '../../../impact-metrics/ChartConfigModal/Chart
 import { useImpactMetricsApi } from 'hooks/api/actions/useImpactMetricsSettingsApi/useImpactMetricsApi.ts';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
 import { useFeatureImpactMetrics } from 'hooks/api/getters/useFeatureImpactMetrics/useFeatureImpactMetrics.ts';
+import { ChartItem } from '../../../impact-metrics/ChartItem.tsx';
 
 const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
@@ -19,7 +20,7 @@ export const FeatureImpactMetrics: FC = () => {
     const feature = useRequiredPathParam('featureId');
     const [modalOpen, setModalOpen] = useState(false);
     const { createImpactMetric } = useImpactMetricsApi();
-    useFeatureImpactMetrics(feature);
+    const { impactMetrics } = useFeatureImpactMetrics(feature);
 
     const {
         metadata,
@@ -58,6 +59,16 @@ export const FeatureImpactMetrics: FC = () => {
                     </Button>
                 }
             />
+
+            <>
+                {impactMetrics.configs.map((config) => (
+                    <ChartItem
+                        config={config}
+                        onEdit={() => {}}
+                        onDelete={() => {}}
+                    />
+                ))}
+            </>
 
             <ChartConfigModal
                 open={modalOpen}

@@ -42,8 +42,8 @@ export default class UnknownFlagsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     operationId: 'getUnknownFlags',
-                    tags: ['Unstable'],
-                    summary: 'Get unknown flag reports',
+                    tags: ['Unknown Flags'],
+                    summary: 'Get unknown flags',
                     description:
                         'Returns a list of unknown flag reports from the last 24 hours, if any. Maximum of 1000.',
                     responses: {

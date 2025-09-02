@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import { PeriodSelector } from './PeriodSelector.tsx';
 import { Bar } from 'react-chartjs-2';
-import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin';
 import { getChartLabel } from './chart-functions.ts';
 import { useConsumptionStats } from './hooks/useStats.ts';
 import { StyledBox, TopRow } from './SharedComponents.tsx';
@@ -27,6 +26,7 @@ import {
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { useChartDataSelection } from './hooks/useChartDataSelection.ts';
 import HelpOutline from '@mui/icons-material/HelpOutline';
+import { networkTrafficUsageHighlightPlugin } from './networkTrafficUsageHighlightPlugin.ts';
 
 const ConnectionExplanationBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -73,7 +73,7 @@ export const BackendConnections: FC = () => {
                         </TopRow>
                         <Bar
                             data={chartData}
-                            plugins={[customHighlightPlugin()]}
+                            plugins={[networkTrafficUsageHighlightPlugin]}
                             options={options}
                             aria-label={getChartLabel(chartDataSelection)}
                         />

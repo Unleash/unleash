@@ -15,12 +15,12 @@ import {
 
 import { Bar } from 'react-chartjs-2';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin';
 import { PeriodSelector } from './PeriodSelector.tsx';
 import { getChartLabel } from './chart-functions.ts';
 import { useRequestsStats } from './hooks/useStats.ts';
 import { StyledBox, TopRow } from './SharedComponents.tsx';
 import { useChartDataSelection } from './hooks/useChartDataSelection.ts';
+import { networkTrafficUsageHighlightPlugin } from './networkTrafficUsageHighlightPlugin.ts';
 
 const FrontendNetworkTrafficUsage: FC = () => {
     usePageTitle('Network - Frontend Traffic Usage');
@@ -53,7 +53,7 @@ const FrontendNetworkTrafficUsage: FC = () => {
                         </TopRow>
                         <Bar
                             data={chartData}
-                            plugins={[customHighlightPlugin()]}
+                            plugins={[networkTrafficUsageHighlightPlugin]}
                             options={options}
                             aria-label={getChartLabel(chartDataSelection)}
                         />

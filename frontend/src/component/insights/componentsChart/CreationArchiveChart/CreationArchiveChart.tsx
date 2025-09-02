@@ -24,6 +24,7 @@ import { createTooltip } from 'component/insights/components/LineChart/createToo
 import { CreationArchiveRatioTooltip } from './CreationArchiveRatioTooltip.tsx';
 import { Chart } from 'react-chartjs-2';
 import { getDateFnsLocale } from '../../getDateFnsLocale.ts';
+import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin.ts';
 
 ChartJS.register(
     CategoryScale,
@@ -43,40 +44,6 @@ interface ICreationArchiveChartProps {
     >;
     isLoading?: boolean;
 }
-
-// Vertical line on the hovered chart, filled with gradient. Highlights a section of a chart when you hover over datapoints
-const customHighlightPlugin = {
-    id: 'customLine',
-    afterDraw: (chart: ChartJS) => {
-        const defaultCategoryPercentage = 0.8;
-        const width =
-            (chart.width / chart.scales.x.ticks.length) *
-            (chart.options.datasets?.bar?.categoryPercentage ??
-                defaultCategoryPercentage);
-        if (chart.tooltip?.opacity && chart.tooltip.x) {
-            const x = chart.tooltip.caretX;
-            const yAxis = chart.scales.y;
-            const ctx = chart.ctx;
-            ctx.save();
-            const gradient = ctx.createLinearGradient(
-                x,
-                yAxis.top,
-                x,
-                yAxis.bottom,
-            );
-            gradient.addColorStop(0, 'rgba(129, 122, 254, 0)');
-            gradient.addColorStop(1, 'rgba(129, 122, 254, 0.20)');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(
-                x - width / 2,
-                yAxis.top,
-                width,
-                yAxis.bottom - yAxis.top,
-            );
-            ctx.restore();
-        }
-    },
-};
 
 export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     creationArchiveTrends,
@@ -241,7 +208,11 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                 options={options}
                 height={100}
                 width={250}
-                plugins={[customHighlightPlugin]}
+                plugins={[
+                    customHighlightPlugin({
+                        maxHighlightOpacity: 0.24,
+                    }),
+                ]}
             />
             <CreationArchiveRatioTooltip tooltip={tooltip} />
         </>

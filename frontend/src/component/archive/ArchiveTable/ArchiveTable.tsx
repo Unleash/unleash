@@ -9,7 +9,7 @@ import {
     useTable,
 } from 'react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { useMediaQuery } from '@mui/material';
+import { Alert, useMediaQuery } from '@mui/material';
 import { sortTypes } from 'utils/sortTypes';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
@@ -240,11 +240,7 @@ export const ArchiveTable = ({
                 isLoading={loading}
                 header={
                     <PageHeader
-                        titleElement={`${title} (${
-                            rows.length < data.length
-                                ? `${rows.length} of ${data.length}`
-                                : data.length
-                        })`}
+                        titleElement={`${title} (${rows.length})`}
                         actions={
                             <Search
                                 initialValue={searchValue}
@@ -256,6 +252,12 @@ export const ArchiveTable = ({
                     />
                 }
             >
+                {rows.length >= 50 && (
+                    <Alert color='info' sx={{ mb: 2 }}>
+                        A maximum of 50 archived flags are displayed. If you
+                        don't see the one you're looking for, try using search.
+                    </Alert>
+                )}
                 <SearchHighlightProvider value={getSearchText(searchValue)}>
                     <VirtualizedTable
                         rows={rows}

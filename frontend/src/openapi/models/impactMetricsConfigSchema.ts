@@ -3,33 +3,38 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { ImpactMetricsConfigSchemaAggregationMode } from './impactMetricsConfigSchemaAggregationMode.js';
 import type { ImpactMetricsConfigSchemaSelectedLabels } from './impactMetricsConfigSchemaSelectedLabels.js';
 import type { ImpactMetricsConfigSchemaSelectedRange } from './impactMetricsConfigSchemaSelectedRange.js';
+import type { ImpactMetricsConfigSchemaType } from './impactMetricsConfigSchemaType.js';
 
 /**
  * Describes the configuration for a single impact metric chart.
  */
 export interface ImpactMetricsConfigSchema {
     /** The aggregation mode for the metric data. */
-    aggregationMode: string;
+    aggregationMode: ImpactMetricsConfigSchemaAggregationMode;
     /** Whether the chart should begin at zero on the y-axis. */
     beginAtZero: boolean;
+    /** The human readable display name of the impact metric */
+    displayName: string;
     /**
      * Optional feature name that this impact metric is associated with.
      * @nullable
      */
     feature?: string | null;
     /** The unique ULID identifier for this impact metric configuration. Generated automatically if not provided. */
-    id?: string;
+    id: string;
     /** The selected labels and their values for filtering the metric data. */
     selectedLabels: ImpactMetricsConfigSchemaSelectedLabels;
     /** The time range for the metric data. */
     selectedRange: ImpactMetricsConfigSchemaSelectedRange;
-    /** The Prometheus metric series to display. */
+    /** The Prometheus metric series to display. It includes both unleash prefix and metric type and display name */
     selectedSeries: string;
     /**
      * Optional title for the impact metric chart.
-     * @nullable
      */
-    title?: string | null;
+    title?: string;
+    /** The type of metric */
+    type: ImpactMetricsConfigSchemaType;
 }

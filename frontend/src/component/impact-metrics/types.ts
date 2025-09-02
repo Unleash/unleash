@@ -11,7 +11,7 @@ export type ChartConfig = {
 export type AggregationMode = 'rps' | 'count' | 'avg' | 'sum';
 
 export type DisplayChartConfig = ChartConfig & {
-    type: 'counter' | 'gauge';
+    type: 'counter' | 'gauge' | 'unknown';
     displayName: string; // e.g. my_metric with unleash_counter stripped
 };
 

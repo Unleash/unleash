@@ -2,7 +2,7 @@ import 'chartjs-adapter-date-fns';
 import { type FC, useMemo, useState } from 'react';
 import type { InstanceInsightsSchema } from 'openapi';
 import { useProjectChartData } from 'component/insights/hooks/useProjectChartData';
-import { styled, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
 import {
     CategoryScale,
@@ -26,6 +26,7 @@ import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlu
 import { NotEnoughData } from 'component/insights/components/LineChart/LineChart.tsx';
 import { placeholderData } from './placeholderData.ts';
 import { Bar } from 'react-chartjs-2';
+import { GraphCover } from 'component/insights/GraphCover.tsx';
 
 ChartJS.register(
     CategoryScale,
@@ -45,28 +46,6 @@ interface ICreationArchiveChartProps {
     >;
     isLoading?: boolean;
 }
-
-const StyledCover = styled('div')(({ theme }) => ({
-    position: 'absolute',
-    inset: 0,
-    display: 'flex',
-    zIndex: theme.zIndex.appBar,
-    '&::before': {
-        zIndex: theme.zIndex.fab,
-        content: '""',
-        position: 'absolute',
-        inset: 0,
-        backgroundColor: theme.palette.background.paper,
-        opacity: 0.8,
-    },
-}));
-
-const StyledCoverContent = styled('div')(({ theme }) => ({
-    zIndex: theme.zIndex.modal,
-    margin: 'auto',
-    color: theme.palette.text.secondary,
-    textAlign: 'center',
-}));
 
 export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     creationArchiveTrends,
@@ -231,7 +210,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                 },
             },
         }),
-        [theme, locationSettings, setTooltip],
+        [theme, locationSettings, setTooltip, useGraphCover],
     );
 
     return (
@@ -249,11 +228,9 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
             />
             <CreationArchiveRatioTooltip tooltip={tooltip} />
             {useGraphCover ? (
-                <StyledCover>
-                    <StyledCoverContent>
-                        {notEnoughData ? <NotEnoughData /> : isLoading}
-                    </StyledCoverContent>
-                </StyledCover>
+                <GraphCover>
+                    {notEnoughData ? <NotEnoughData /> : isLoading}
+                </GraphCover>
             ) : null}
         </>
     );

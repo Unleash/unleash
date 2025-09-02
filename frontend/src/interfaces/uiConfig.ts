@@ -86,7 +86,6 @@ export type UiFlags = {
     edgeObservability?: boolean;
     customMetrics?: boolean;
     impactMetrics?: boolean;
-    reportUnknownFlags?: boolean;
     lifecycleGraphs?: boolean;
     addConfiguration?: boolean;
 };

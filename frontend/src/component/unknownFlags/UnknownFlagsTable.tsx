@@ -13,8 +13,6 @@ import { type UnknownFlag, useUnknownFlags } from './hooks/useUnknownFlags.js';
 import theme from 'themes/theme.js';
 import { formatDateYMDHMS } from 'utils/formatDate.js';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell.js';
-import { useUiFlag } from 'hooks/useUiFlag.js';
-import NotFound from 'component/common/NotFound/NotFound.js';
 import { UnknownFlagsLastEventCell } from './UnknownFlagsLastEventCell.js';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.js';
 import { UnknownFlagsActionsCell } from './UnknownFlagsActionsCell.js';
@@ -41,7 +39,6 @@ const StyledHeader = styled('div')(({ theme }) => ({
 
 export const UnknownFlagsTable = () => {
     const { unknownFlags, loading } = useUnknownFlags();
-    const unknownFlagsEnabled = useUiFlag('reportUnknownFlags');
 
     const [searchValue, setSearchValue] = useState('');
 
@@ -178,8 +175,6 @@ export const UnknownFlagsTable = () => {
         useSortBy,
         useFlexLayout,
     );
-
-    if (!unknownFlagsEnabled) return <NotFound />;
 
     return (
         <PageContent

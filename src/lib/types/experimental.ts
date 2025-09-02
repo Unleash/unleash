@@ -52,7 +52,6 @@ export type IFlagKey =
     | 'consumptionModel'
     | 'consumptionModelUI'
     | 'edgeObservability'
-    | 'reportUnknownFlags'
     | 'customMetrics'
     | 'impactMetrics'
     | 'lifecycleGraphs'
@@ -245,10 +244,6 @@ const flags: IFlags = {
     ),
     edgeObservability: parseEnvVarBoolean(
         process.env.EXPERIMENTAL_EDGE_OBSERVABILITY,
-        false,
-    ),
-    reportUnknownFlags: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_REPORT_UNKNOWN_FLAGS,
         false,
     ),
     impactMetrics: parseEnvVarBoolean(

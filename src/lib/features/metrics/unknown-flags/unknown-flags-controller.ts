@@ -7,18 +7,14 @@ import { createResponseSchema } from '../../../openapi/util/create-response-sche
 import Controller from '../../../routes/controller.js';
 import type { IAuthRequest } from '../../../routes/unleash-types.js';
 import type { OpenApiService } from '../../../services/openapi-service.js';
-import type { IFlagResolver } from '../../../types/experimental.js';
 import type { IUnleashConfig } from '../../../types/option.js';
 import { NONE } from '../../../types/permissions.js';
 import { serializeDates } from '../../../types/serialize-dates.js';
 import type { IUnleashServices } from '../../../services/index.js';
 import type { UnknownFlagsService } from './unknown-flags-service.js';
-import { NotFoundError } from '../../../error/index.js';
 
 export default class UnknownFlagsController extends Controller {
     private unknownFlagsService: UnknownFlagsService;
-
-    private flagResolver: IFlagResolver;
 
     private openApiService: OpenApiService;
 
@@ -31,7 +27,6 @@ export default class UnknownFlagsController extends Controller {
     ) {
         super(config);
         this.unknownFlagsService = unknownFlagsService;
-        this.flagResolver = config.flagResolver;
         this.openApiService = openApiService;
 
         this.route({
@@ -58,9 +53,6 @@ export default class UnknownFlagsController extends Controller {
         _: IAuthRequest,
         res: Response<UnknownFlagsResponseSchema>,
     ): Promise<void> {
-        if (!this.flagResolver.isEnabled('reportUnknownFlags')) {
-            throw new NotFoundError();
-        }
         const unknownFlags = await this.unknownFlagsService.getAll({
             limit: 1000,
             orderBy: [

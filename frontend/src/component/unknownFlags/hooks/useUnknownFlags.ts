@@ -1,9 +1,8 @@
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import { useUiFlag } from 'hooks/useUiFlag.js';
-import { useConditionalSWR } from 'hooks/api/getters/useConditionalSWR/useConditionalSWR.js';
 import handleErrorResponses from 'hooks/api/getters/httpErrorResponseHandler';
 import type { SWRConfiguration } from 'swr';
+import useSWR from 'swr';
 
 type UnknownFlagEnvReport = {
     environment: string;
@@ -32,11 +31,7 @@ const DEFAULT_DATA: UnknownFlagsResponse = {
 };
 
 export const useUnknownFlags = (options?: SWRConfiguration) => {
-    const reportUnknownFlagsEnabled = useUiFlag('reportUnknownFlags');
-
-    const { data, error, mutate } = useConditionalSWR<UnknownFlagsResponse>(
-        reportUnknownFlagsEnabled,
-        DEFAULT_DATA,
+    const { data, error, mutate } = useSWR<UnknownFlagsResponse>(
         formatApiPath(ENDPOINT),
         fetcher,
         options,

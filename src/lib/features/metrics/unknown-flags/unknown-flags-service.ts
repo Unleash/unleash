@@ -1,6 +1,5 @@
 import type { Logger } from '../../../logger.js';
 import type {
-    IFlagResolver,
     IUnknownFlagsStore,
     IUnleashConfig,
 } from '../../../types/index.js';
@@ -14,8 +13,6 @@ import type {
 export class UnknownFlagsService {
     private logger: Logger;
 
-    private flagResolver: IFlagResolver;
-
     private unknownFlagsStore: IUnknownFlagsStore;
 
     private unknownFlagsCache: Map<string, UnknownFlagReport>;
@@ -25,7 +22,6 @@ export class UnknownFlagsService {
         config: IUnleashConfig,
     ) {
         this.unknownFlagsStore = unknownFlagsStore;
-        this.flagResolver = config.flagResolver;
         this.logger = config.getLogger(
             '/features/metrics/unknown-flags/unknown-flags-service.ts',
         );
@@ -37,7 +33,6 @@ export class UnknownFlagsService {
     }
 
     register(unknownFlags: UnknownFlagReport[]) {
-        if (!this.flagResolver.isEnabled('reportUnknownFlags')) return;
         for (const flag of unknownFlags) {
             const key = this.getKey(flag);
             this.unknownFlagsCache.set(key, flag);
@@ -45,7 +40,6 @@ export class UnknownFlagsService {
     }
 
     async flush(): Promise<void> {
-        if (!this.flagResolver.isEnabled('reportUnknownFlags')) return;
         if (this.unknownFlagsCache.size === 0) return;
 
         const cached = Array.from(this.unknownFlagsCache.values());
@@ -57,12 +51,10 @@ export class UnknownFlagsService {
     }
 
     async getAll(queryParams?: QueryParams): Promise<UnknownFlag[]> {
-        if (!this.flagResolver.isEnabled('reportUnknownFlags')) return [];
         return this.unknownFlagsStore.getAll(queryParams);
     }
 
     async clear(hoursAgo: number) {
-        if (!this.flagResolver.isEnabled('reportUnknownFlags')) return;
         return this.unknownFlagsStore.clear(hoursAgo);
     }
 }

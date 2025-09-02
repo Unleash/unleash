@@ -21,11 +21,11 @@ import type { TooltipState } from 'component/insights/components/LineChart/Chart
 import type { WeekData, RawWeekData } from './types.ts';
 import { createTooltip } from 'component/insights/components/LineChart/createTooltip.ts';
 import { CreationArchiveRatioTooltip } from './CreationArchiveRatioTooltip.tsx';
-import { Chart } from 'react-chartjs-2';
 import { getDateFnsLocale } from '../../getDateFnsLocale.ts';
 import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin.ts';
 import { NotEnoughData } from 'component/insights/components/LineChart/LineChart.tsx';
-import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData.ts';
+import { placeholderData } from './placeholderData.ts';
+import { Bar } from 'react-chartjs-2';
 
 ChartJS.register(
     CategoryScale,
@@ -74,7 +74,6 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
 }) => {
     const creationVsArchivedChart = useProjectChartData(creationArchiveTrends);
     const theme = useTheme();
-    const placeholderData = usePlaceholderData();
     const { locationSettings } = useLocationSettings();
     const [tooltip, setTooltip] = useState<null | TooltipState>(null);
 
@@ -213,7 +212,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                         display: false,
                     },
                     ticks: {
-                        source: 'data',
+                        source: 'data' as const,
                         display: !useGraphCover,
                     },
                 },
@@ -237,8 +236,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
 
     return (
         <>
-            <Chart
-                type='bar'
+            <Bar
                 data={data}
                 options={options}
                 height={100}

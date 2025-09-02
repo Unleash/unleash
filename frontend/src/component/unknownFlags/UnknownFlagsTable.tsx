@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -19,6 +19,10 @@ import { UnknownFlagsLastEventCell } from './UnknownFlagsLastEventCell.js';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.js';
 import { UnknownFlagsActionsCell } from './UnknownFlagsActionsCell.js';
 import { UnknownFlagsLastReportedCell } from './UnknownFlagsLastReportedCell.js';
+import useProjects from 'hooks/api/getters/useProjects/useProjects.js';
+import AccessContext from 'contexts/AccessContext.js';
+import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId.js';
+import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions.js';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),
@@ -42,6 +46,23 @@ export const UnknownFlagsTable = () => {
     const [searchValue, setSearchValue] = useState('');
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+    const { projects } = useProjects();
+    const { hasAccess } = useContext(AccessContext);
+
+    const suggestedProject = useMemo(() => {
+        let project =
+            projects.find(({ id }) => id === DEFAULT_PROJECT_ID) || projects[0];
+        if (!hasAccess(CREATE_FEATURE, project?.id)) {
+            for (const proj of projects) {
+                if (hasAccess(CREATE_FEATURE, proj.id)) {
+                    project = proj;
+                    break;
+                }
+            }
+        }
+        return project;
+    }, [projects, hasAccess]);
 
     const columns = useMemo(
         () => [
@@ -95,8 +116,13 @@ export const UnknownFlagsTable = () => {
                     row: { original: unknownFlag },
                 }: {
                     row: { original: UnknownFlag };
-                }) => <UnknownFlagsActionsCell unknownFlag={unknownFlag} />,
-                width: 100,
+                }) => (
+                    <UnknownFlagsActionsCell
+                        unknownFlag={unknownFlag}
+                        suggestedProject={suggestedProject}
+                    />
+                ),
+                width: 120,
                 disableSortBy: true,
             },
             // Always hidden -- for search
@@ -121,7 +147,7 @@ export const UnknownFlagsTable = () => {
                 searchable: true,
             },
         ],
-        [],
+        [suggestedProject],
     );
 
     const [initialState] = useState({

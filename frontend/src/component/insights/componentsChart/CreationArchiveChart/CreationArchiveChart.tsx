@@ -176,6 +176,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     grid: {
                         display: false,
                     },
+                    ticks: { source: 'data' },
                 },
                 y: {
                     type: 'linear' as const,

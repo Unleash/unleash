@@ -31,7 +31,6 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { changesCount } from '../changesCount.ts';
-import { ChangeRequestReviewers } from './ChangeRequestReviewers/ChangeRequestReviewers.tsx';
 import { ChangeRequestRejectDialogue } from './ChangeRequestRejectDialog/ChangeRequestRejectDialog.tsx';
 import { ApplyButton } from './ApplyButton/ApplyButton.tsx';
 import {
@@ -42,7 +41,6 @@ import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/Sch
 import type { PlausibleChangeRequestState } from '../changeRequest.types';
 import { useNavigate } from 'react-router-dom';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { ChangeRequestRequestedApprovers } from './ChangeRequestRequestedApprovers/ChangeRequestRequestedApprovers.tsx';
 
 const breakpoint = 'md';
@@ -166,7 +164,6 @@ export const ChangeRequestOverview: FC = () => {
         useChangeRequestsEnabled(projectId);
     const [disabled, setDisabled] = useState(false);
     const navigate = useNavigate();
-    const approversEnabled = useUiFlag('changeRequestApproverEmails');
     const theme = useTheme();
 
     if (!changeRequest) {
@@ -353,18 +350,8 @@ export const ChangeRequestOverview: FC = () => {
                         {...timelineProps}
                         timestamps={changeRequest.stateTimestamps}
                     />
-                    <ConditionallyRender
-                        condition={approversEnabled}
-                        show={
-                            <ChangeRequestRequestedApprovers
-                                changeRequest={changeRequest}
-                            />
-                        }
-                        elseShow={
-                            <ChangeRequestReviewers
-                                changeRequest={changeRequest}
-                            />
-                        }
+                    <ChangeRequestRequestedApprovers
+                        changeRequest={changeRequest}
                     />
                 </StyledAsideBox>
                 <StyledDiv>
@@ -441,28 +428,6 @@ export const ChangeRequestOverview: FC = () => {
                                     }
                                 />
 
-                                <ConditionallyRender
-                                    condition={
-                                        changeRequest.state === 'Approved' &&
-                                        !approversEnabled
-                                    }
-                                    show={
-                                        <ApplyButton
-                                            onApply={onApplyChanges}
-                                            disabled={
-                                                !allowChangeRequestActions ||
-                                                disabled
-                                            }
-                                            onSchedule={() =>
-                                                setShowScheduleChangeDialog(
-                                                    true,
-                                                )
-                                            }
-                                        >
-                                            Apply or schedule changes
-                                        </ApplyButton>
-                                    }
-                                />
                                 <ConditionallyRender
                                     condition={
                                         changeRequest.state === 'Scheduled'
@@ -551,10 +516,7 @@ export const ChangeRequestOverview: FC = () => {
                         </StyledInnerContainer>
                     </StyledPaper>
                     <ConditionallyRender
-                        condition={
-                            changeRequest.state === 'Approved' &&
-                            approversEnabled
-                        }
+                        condition={changeRequest.state === 'Approved'}
                         show={
                             <StyledApplyPaper elevation={0}>
                                 <StyledApplyInnerContainer>

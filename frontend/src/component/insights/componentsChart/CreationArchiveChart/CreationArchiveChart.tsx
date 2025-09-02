@@ -24,6 +24,7 @@ import { createTooltip } from 'component/insights/components/LineChart/createToo
 import { CreationArchiveRatioTooltip } from './CreationArchiveRatioTooltip.tsx';
 import { Chart } from 'react-chartjs-2';
 import { getDateFnsLocale } from '../../getDateFnsLocale.ts';
+import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin.ts';
 
 ChartJS.register(
     CategoryScale,
@@ -108,6 +109,8 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     data: weeks,
                     backgroundColor: theme.palette.charts.A2,
                     borderColor: theme.palette.charts.A2,
+                    hoverBackgroundColor: theme.palette.charts.A2,
+                    hoverBorderColor: theme.palette.charts.A2,
                     parsing: { yAxisKey: 'archivedFlags', xAxisKey: 'date' },
                     order: 1,
                 },
@@ -116,6 +119,8 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     data: weeks,
                     backgroundColor: theme.palette.charts.A1,
                     borderColor: theme.palette.charts.A1,
+                    hoverBackgroundColor: theme.palette.charts.A1,
+                    hoverBorderColor: theme.palette.charts.A1,
                     parsing: {
                         yAxisKey: 'totalCreatedFlags',
                         xAxisKey: 'date',
@@ -203,6 +208,11 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                 options={options}
                 height={100}
                 width={250}
+                plugins={[
+                    customHighlightPlugin({
+                        maxHighlightOpacity: 0.24,
+                    }),
+                ]}
             />
             <CreationArchiveRatioTooltip tooltip={tooltip} />
         </>

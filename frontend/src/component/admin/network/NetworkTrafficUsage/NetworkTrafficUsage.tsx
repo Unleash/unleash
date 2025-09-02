@@ -17,7 +17,6 @@ import {
 
 import { Bar } from 'react-chartjs-2';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin';
 import { PeriodSelector } from './PeriodSelector.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { OverageInfo, RequestSummary } from './RequestSummary.tsx';
@@ -27,6 +26,7 @@ import { useTrafficStats } from './hooks/useStats.ts';
 import { BoldText, StyledBox, TopRow } from './SharedComponents.tsx';
 import { useChartDataSelection } from './hooks/useChartDataSelection.ts';
 import { useTrafficBundles } from '../../../../hooks/api/getters/useTrafficBundles/useTrafficBundles.ts';
+import { networkTrafficUsageHighlightPlugin } from './networkTrafficUsageHighlightPlugin.ts';
 
 const TrafficInfoBoxes = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -131,7 +131,7 @@ const NetworkTrafficUsage: FC = () => {
                         </TopRow>
                         <Bar
                             data={chartData}
-                            plugins={[customHighlightPlugin()]}
+                            plugins={[networkTrafficUsageHighlightPlugin]}
                             options={options}
                             aria-label={getChartLabel(chartDataSelection)}
                         />

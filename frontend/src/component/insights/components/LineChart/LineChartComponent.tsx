@@ -25,6 +25,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { styled } from '@mui/material';
 import { createOptions } from './createChartOptions.ts';
 import merge from 'deepmerge';
+import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin.ts';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -51,36 +52,6 @@ const StyledCoverContent = styled('div')(({ theme }) => ({
     color: theme.palette.text.secondary,
     textAlign: 'center',
 }));
-
-// Vertical line on the hovered chart, filled with gradient. Highlights a section of a chart when you hover over datapoints
-const customHighlightPlugin = {
-    id: 'customLine',
-    afterDraw: (chart: Chart) => {
-        const width = 26;
-        if (chart.tooltip?.opacity && chart.tooltip.x) {
-            const x = chart.tooltip.caretX;
-            const yAxis = chart.scales.y;
-            const ctx = chart.ctx;
-            ctx.save();
-            const gradient = ctx.createLinearGradient(
-                x,
-                yAxis.top,
-                x,
-                yAxis.bottom,
-            );
-            gradient.addColorStop(0, 'rgba(129, 122, 254, 0)');
-            gradient.addColorStop(1, 'rgba(129, 122, 254, 0.12)');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(
-                x - width / 2,
-                yAxis.top,
-                width,
-                yAxis.bottom - yAxis.top,
-            );
-            ctx.restore();
-        }
-    },
-};
 
 function mergeAll<T>(objects: Partial<T>[]): T {
     return merge.all<T>(objects.filter((i) => i));
@@ -126,7 +97,7 @@ const LineChartComponent: FC<{
                 key={cover ? 'cover' : 'chart'}
                 options={options}
                 data={data}
-                plugins={[customHighlightPlugin]}
+                plugins={[customHighlightPlugin({ width: 26 })]}
                 height={100}
                 width={100 * aspectRatio}
             />

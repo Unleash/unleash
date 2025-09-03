@@ -183,11 +183,14 @@ For example, you could set a pattern like `^(red|blue|green)\.[a-z-]+\.[0-9]+$`.
 
 ## Archive a feature flag
 
-You can archive a feature flag once you no longer need it. To do so, go to the feature flag's page and click **Archive feature flag**.
+Archiving feature flags that you no longer need is an important part of keeping your instance healthy and technical debt low. To archive a flag, go to the feature flag's page and click **Archive feature flag**.
 
 Once archived, the flag is no longer available to client SDKs.
 
 ![Archive a feature flag](/img/archive-feature-flag.png)
+
+Unleash also helps you identify flags that are safe to archive. Flags in the cleanup stage that haven't been used for seven days automatically appear with an archive suggestion.
+You can review the list and archive flags in bulk with confidence, keeping your setup clean and manageable.
 
 ### View archived flags
 
@@ -237,3 +240,15 @@ You can add external links to your feature flags, allowing you to connect them t
 In addition, you can define link templates at the project level in **Settings > Project settings > Enterprise settings > Project link templates**. These templates automatically populate links for all new feature flags within that project. For example, you can create templates to find all usages of 
 a feature flag in your repository or automatically link to a Jira issue when a flag is created from Jira.
 
+### Unknown flag checker
+
+:::note Availability
+
+**Version**: `7.2+`
+
+:::
+
+Unleash automatically checks for feature flags that your SDKs try to evaluate but that don't exist in your instance. You can view these under **Unknown flags** in **Flags overview**.
+This list helps you quickly spot typos, misconfigurations, or stale references in your code. 
+
+Reviewing unknown flags regularly keeps your configuration in sync with your applications and helps prevent errors caused by missing or misnamed flags.

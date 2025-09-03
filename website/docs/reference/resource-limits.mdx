@@ -36,14 +36,11 @@ The resources and their respective limits and environment variables are:
 | [Action](./actions) sets per project                                                 | N/A                                                    | N/A                              | 5                                                     | `UNLEASH_ACTION_SETS_PER_PROJECT_LIMIT`        |
 | [Action](./actions) set filters                                                      | N/A                                                    | N/A                              | 5                                                     | `UNLEASH_ACTION_SET_FILTERS_LIMIT`             |
 | [Action](./actions) set filter values                                                | N/A                                                    | N/A                              | 25                                                    | `UNLEASH_ACTION_SET_FILTER_VALUES_LIMIT`       |
+| [Release templates](./release-templates)                                             | N/A                                                    | N/A                              | 5                                                     | `UNLEASH_RELEASE_TEMPLATES_LIMIT`       |
 
 
 
 ## Overriding the limits
-
-:::info Existing customers above the limits
-Existing hosted customers who are already above the limits will have their limits adjusted to 110% of their maximum values when the limits were introduced.
-:::
 
 With a few exceptions, all the limits can be overridden through the use of their respective environment variables. However, while it is possible to override these limits, we advise against it in most cases. If you feel that you're unable to do what you need to do because of the limits, we'd love to hear from you.
 

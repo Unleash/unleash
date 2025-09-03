@@ -218,11 +218,9 @@ const flags: IFlags = {
         false,
     ),
     streaming: {
-        name: 'streaming',
-        enabled: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_STREAMING,
-            false,
-        ),
+        name: 'disabled',
+        feature_enabled: false,
+        enabled: false,
     },
     etagVariant: {
         name: 'disabled',

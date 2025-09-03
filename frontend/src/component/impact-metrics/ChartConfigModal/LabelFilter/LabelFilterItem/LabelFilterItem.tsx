@@ -37,7 +37,7 @@ export const LabelFilterItem: FC<LabelFilterItemProps> = ({
             options={optionsWithSelectAll}
             value={isAllSelected ? options : value}
             getOptionLabel={(option) =>
-                option === SELECT_ALL ? 'Select all' : option
+                option === SELECT_ALL ? '(Select all)' : option
             }
             onChange={(_, newValues, reason, details) => {
                 if (details?.option === SELECT_ALL) {
@@ -55,7 +55,16 @@ export const LabelFilterItem: FC<LabelFilterItemProps> = ({
                         }
                         style={{ marginRight: 8 }}
                     />
-                    {option === SELECT_ALL ? 'Select all' : option}
+                    {option === SELECT_ALL ? (
+                        <Typography
+                            component='span'
+                            sx={{ color: 'text.secondary' }}
+                        >
+                            Select all
+                        </Typography>
+                    ) : (
+                        option
+                    )}
                 </li>
             )}
             renderTags={(value, getTagProps) => {

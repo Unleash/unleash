@@ -22,5 +22,5 @@ jobs:
         uses: actions/dependency-review-action@v4
         with:
           fail-on-severity: moderate
-          allow-licenses: Apache-2.0, MIT, BSD-2-Clause, BSD-3-Clause, ISC, 0BSD, CC0-1.0, Unlicense, BlueOak-1.0.0, CC-BY-4.0, Artistic-2.0, PSF-2.0, MPL-2.0, MIT AND MITNFA
+          allow-licenses: Apache-2.0, MIT, BSD-2-Clause, BSD-3-Clause, ISC, 0BSD, CC0-1.0, Unlicense, BlueOak-1.0.0, CC-BY-4.0, Artistic-2.0, PSF-2.0, MPL-2.0, MITNFA
           comment-summary-in-pr: always

@@ -1,6 +1,6 @@
 import { PageContent } from 'component/common/PageContent/PageContent.tsx';
 import { PageHeader } from '../../../common/PageHeader/PageHeader.tsx';
-import { Button, styled, Typography } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { useImpactMetricsMetadata } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata.ts';
 import { type FC, useMemo, useState } from 'react';
@@ -9,6 +9,10 @@ import { useImpactMetricsApi } from 'hooks/api/actions/useImpactMetricsSettingsA
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
 import { useFeatureImpactMetrics } from 'hooks/api/getters/useFeatureImpactMetrics/useFeatureImpactMetrics.ts';
 import { ChartItem } from '../../../impact-metrics/ChartItem.tsx';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
+import { ADMIN } from 'component/providers/AccessProvider/permissions.ts';
+import useToast from 'hooks/useToast.tsx';
+import { formatUnknownError } from 'utils/formatUnknownError.ts';
 
 const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
@@ -19,8 +23,9 @@ const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
 export const FeatureImpactMetrics: FC = () => {
     const feature = useRequiredPathParam('featureId');
     const [modalOpen, setModalOpen] = useState(false);
-    const { createImpactMetric } = useImpactMetricsApi();
-    const { impactMetrics } = useFeatureImpactMetrics(feature);
+    const { createImpactMetric, deleteImpactMetric } = useImpactMetricsApi();
+    const { impactMetrics, refetch } = useFeatureImpactMetrics(feature);
+    const { setToastApiError } = useToast();
 
     const {
         metadata,
@@ -49,14 +54,15 @@ export const FeatureImpactMetrics: FC = () => {
                     <StyledHeaderTitle>Impact Metrics</StyledHeaderTitle>
                 }
                 actions={
-                    <Button
+                    <PermissionButton
                         variant='contained'
                         startIcon={<Add />}
                         onClick={handleAddChart}
                         disabled={metadataLoading || !!metadataError}
+                        permission={ADMIN}
                     >
                         Add Chart
-                    </Button>
+                    </PermissionButton>
                 }
             />
 
@@ -65,7 +71,14 @@ export const FeatureImpactMetrics: FC = () => {
                     <ChartItem
                         config={config}
                         onEdit={() => {}}
-                        onDelete={() => {}}
+                        onDelete={async () => {
+                            try {
+                                await deleteImpactMetric(config.id);
+                                refetch();
+                            } catch (error: unknown) {
+                                setToastApiError(formatUnknownError(error));
+                            }
+                        }}
                     />
                 ))}
             </>
@@ -73,7 +86,14 @@ export const FeatureImpactMetrics: FC = () => {
             <ChartConfigModal
                 open={modalOpen}
                 onClose={() => setModalOpen(false)}
-                onSave={(data) => createImpactMetric({ ...data, feature })}
+                onSave={async (data) => {
+                    try {
+                        await createImpactMetric({ ...data, feature });
+                        refetch();
+                    } catch (error: unknown) {
+                        setToastApiError(formatUnknownError(error));
+                    }
+                }}
                 initialConfig={undefined}
                 metricSeries={metricSeries}
                 loading={metadataLoading}

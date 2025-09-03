@@ -1,10 +1,12 @@
 import type { FC } from 'react';
-import { Box, Typography, IconButton, styled, Paper } from '@mui/material';
+import { Box, Typography, styled, Paper } from '@mui/material';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
 import DragHandle from '@mui/icons-material/DragHandle';
 import { ImpactMetricsChart } from './ImpactMetricsChart.tsx';
 import type { ChartConfig, DisplayChartConfig } from './types.ts';
+import PermissionIconButton from '../common/PermissionIconButton/PermissionIconButton.tsx';
+import { ADMIN } from '../providers/AccessProvider/permissions.ts';
 
 export interface ChartItemProps {
     config: DisplayChartConfig;
@@ -117,12 +119,18 @@ export const ChartItem: FC<ChartItemProps> = ({ config, onEdit, onDelete }) => (
                 </Typography>
             </StyledChartTitle>
             <StyledChartActions>
-                <IconButton onClick={() => onEdit(config)}>
+                <PermissionIconButton
+                    onClick={() => onEdit(config)}
+                    permission={ADMIN}
+                >
                     <Edit />
-                </IconButton>
-                <IconButton onClick={() => onDelete(config.id)}>
+                </PermissionIconButton>
+                <PermissionIconButton
+                    onClick={() => onDelete(config.id)}
+                    permission={ADMIN}
+                >
                     <Delete />
-                </IconButton>
+                </PermissionIconButton>
             </StyledChartActions>
         </StyledHeader>
 

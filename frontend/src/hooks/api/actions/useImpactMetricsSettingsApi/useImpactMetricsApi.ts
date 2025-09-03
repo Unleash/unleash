@@ -24,8 +24,25 @@ export const useImpactMetricsApi = () => {
         [makeRequest, createRequest],
     );
 
+    const deleteImpactMetric = useCallback(
+        async (metricId: string) => {
+            const path = `api/admin/impact-metrics/config/${metricId}`;
+            const req = createRequest(
+                path,
+                {
+                    method: 'DELETE',
+                },
+                'deleteImpactMetric',
+            );
+
+            return makeRequest(req.caller, req.id);
+        },
+        [makeRequest, createRequest],
+    );
+
     return {
         createImpactMetric,
+        deleteImpactMetric,
         errors,
         loading,
     };

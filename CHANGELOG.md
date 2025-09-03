@@ -2,6 +2,120 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.2.0] - 2025-09-03
+
+### Bug Fixes
+
+- Incorrect current calculation of ratio ([#10567](https://github.com/Unleash/unleash/issues/10567))
+
+- Show 100% instead of Infinity% if you've not created any flags ([#10575](https://github.com/Unleash/unleash/issues/10575))
+
+- Date localizations for chart ([#10581](https://github.com/Unleash/unleash/issues/10581))
+
+- Lifecycle metrics will now be posted across all environments ([#10586](https://github.com/Unleash/unleash/issues/10586))
+
+- Remove lifecycle backfill on every startup
+
+- Show first date in archived to created chart ([#10598](https://github.com/Unleash/unleash/issues/10598))
+
+- Only show "not enough data" text when there isn't enough data. ([#10604](https://github.com/Unleash/unleash/issues/10604))
+
+- Flag resolver isEnabled for variant configs ([#10607](https://github.com/Unleash/unleash/issues/10607))
+
+
+### Chore
+
+- Use step size of 1 for created vs archived. ([#10566](https://github.com/Unleash/unleash/issues/10566))
+
+
+### Documentation
+
+- Add feature and versioning info ([#10547](https://github.com/Unleash/unleash/issues/10547))
+
+- Update links in main readme ([#10577](https://github.com/Unleash/unleash/issues/10577))
+
+
+### Features
+
+- Make impact metrics config save call ([#10576](https://github.com/Unleash/unleash/issues/10576))
+
+- Start tracking database calls for lifecycle ([#10582](https://github.com/Unleash/unleash/issues/10582))
+
+- Start trackign db calls for feature environments ([#10585](https://github.com/Unleash/unleash/issues/10585))
+
+- Read feature impact metrics ([#10597](https://github.com/Unleash/unleash/issues/10597))
+
+- Impact metrics migration ([#10551](https://github.com/Unleash/unleash/issues/10551))
+
+
+### Fix
+
+- Created vs archived rendering errors; memoize options ([#10562](https://github.com/Unleash/unleash/issues/10562))
+
+
+### Miscellaneous Tasks
+
+- Add release plans/templates count to instance stats ([#10540](https://github.com/Unleash/unleash/issues/10540))
+
+- EtagByEnv flag cleanup ([#10560](https://github.com/Unleash/unleash/issues/10560))
+
+- Show release templates in license info in the UI ([#10563](https://github.com/Unleash/unleash/issues/10563))
+
+- Improve openapi diff output ([#10570](https://github.com/Unleash/unleash/issues/10570))
+
+- FilterFlagsToArchive flag cleanup ([#10565](https://github.com/Unleash/unleash/issues/10565))
+
+- Orval with impact metrics ([#10573](https://github.com/Unleash/unleash/issues/10573))
+
+- Rollback hashing of release-plans and templates ([#10574](https://github.com/Unleash/unleash/issues/10574))
+
+- Unknown flags should not include flags that exist in Unleash ([#10568](https://github.com/Unleash/unleash/issues/10568))
+
+- Allows you to add a flag from the unknown flags list ([#10569](https://github.com/Unleash/unleash/issues/10569))
+
+- Show N/A for ratio if we can't calculate it ([#10580](https://github.com/Unleash/unleash/issues/10580))
+
+- Add date to archive vs creation tooltip ([#10578](https://github.com/Unleash/unleash/issues/10578))
+
+- Chart bar adjustments ([#10555](https://github.com/Unleash/unleash/issues/10555))
+
+- Node sdk bump with poll mode switch fix ([#10583](https://github.com/Unleash/unleash/issues/10583))
+
+- Add Release Templates OpenAPI tag ([#10584](https://github.com/Unleash/unleash/issues/10584))
+
+- Orval feature impact metrics ([#10588](https://github.com/Unleash/unleash/issues/10588))
+
+- Add unknown flags link in flags overview ([#10591](https://github.com/Unleash/unleash/issues/10591))
+
+- ChangeRequestApproverEmails flag cleanup ([#10572](https://github.com/Unleash/unleash/issues/10572))
+
+- One unknown flag per row ([#10590](https://github.com/Unleash/unleash/issues/10590))
+
+- Promote unknown flags to a stable OpenAPI tag ([#10594](https://github.com/Unleash/unleash/issues/10594))
+
+- Make create feature flag button in unknown flags a text button ([#10592](https://github.com/Unleash/unleash/issues/10592))
+
+- ReportUnknownFlags flag cleanup ([#10596](https://github.com/Unleash/unleash/issues/10596))
+
+- Use custom highlighter for archive:creation chart ([#10589](https://github.com/Unleash/unleash/issues/10589))
+
+- Add server-side search to archived flags ([#10600](https://github.com/Unleash/unleash/issues/10600))
+
+- Add a cover for when we don't have enough data to show the chart ([#10599](https://github.com/Unleash/unleash/issues/10599))
+
+- Add unknown flag metric for unique flag names ([#10601](https://github.com/Unleash/unleash/issues/10601))
+
+- Allow streaming variant override ([#10603](https://github.com/Unleash/unleash/issues/10603))
+
+- Slight update to unknown flags alert text ([#10602](https://github.com/Unleash/unleash/issues/10602))
+
+- Control streaming only with external resolver ([#10605](https://github.com/Unleash/unleash/issues/10605))
+
+- Revert original streaming config ([#10606](https://github.com/Unleash/unleash/issues/10606))
+
+- Bring back variant config ([#10608](https://github.com/Unleash/unleash/issues/10608))
+
+
 ## [7.1.2] - 2025-08-28
 
 ### Bug Fixes

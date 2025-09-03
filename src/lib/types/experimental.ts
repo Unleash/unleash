@@ -254,6 +254,20 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_ADD_CONFIGURATION,
         false,
     ),
+    streaming: {
+        name: 'disabled',
+        enabled: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_STREAMING,
+            false,
+        ),
+    },
+    fetchMode: {
+        name: 'disabled',
+        enabled: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_FETCH_MODE,
+            false,
+        ),
+    },
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

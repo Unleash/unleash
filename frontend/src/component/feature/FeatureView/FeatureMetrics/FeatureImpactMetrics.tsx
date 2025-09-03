@@ -55,7 +55,7 @@ export const FeatureImpactMetrics: FC = () => {
         setModalState({ type: 'closed' });
     };
 
-    const handleSaveChart = async (data: any) => {
+    const handleSaveChart = async (data: Omit<ChartConfig, 'id'>) => {
         try {
             let configId: string | undefined = undefined;
             if (modalState.type === 'editing') {

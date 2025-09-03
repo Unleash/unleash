@@ -217,11 +217,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_SHOW_USER_DEVICE_COUNT,
         false,
     ),
-    streaming: {
-        name: 'disabled',
-        feature_enabled: false,
-        enabled: false,
-    },
     etagVariant: {
         name: 'disabled',
         feature_enabled: false,
@@ -259,11 +254,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_ADD_CONFIGURATION,
         false,
     ),
-    fetchMode: {
-        name: 'disabled',
-        feature_enabled: false,
-        enabled: false,
-    },
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

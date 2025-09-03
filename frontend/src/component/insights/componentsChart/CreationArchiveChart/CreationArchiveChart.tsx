@@ -139,6 +139,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     }, [creationVsArchivedChart, theme]);
 
     const useGraphCover = notEnoughData || isLoading;
+    const showNotEnoughDataText = notEnoughData && !isLoading;
     const data = useGraphCover ? placeholderData : aggregateOrProjectData;
 
     const options = useMemo(
@@ -229,7 +230,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
             <CreationArchiveRatioTooltip tooltip={tooltip} />
             {useGraphCover ? (
                 <GraphCover>
-                    {notEnoughData ? <NotEnoughData /> : isLoading}
+                    {showNotEnoughDataText ? <NotEnoughData /> : isLoading}
                 </GraphCover>
             ) : null}
         </>

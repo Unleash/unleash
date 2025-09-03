@@ -37,12 +37,16 @@ export type QueryParams = {
     }[];
 };
 
+type CountParams = {
+    unique?: boolean;
+};
+
 export interface IUnknownFlagsStore {
     insert(flags: UnknownFlagReport[]): Promise<void>;
     getAll(params?: QueryParams): Promise<UnknownFlag[]>;
     clear(hoursAgo: number): Promise<void>;
     deleteAll(): Promise<void>;
-    count(): Promise<number>;
+    count(params?: CountParams): Promise<number>;
 }
 
 export class UnknownFlagsStore implements IUnknownFlagsStore {
@@ -157,8 +161,12 @@ export class UnknownFlagsStore implements IUnknownFlagsStore {
         await this.db(TABLE).delete();
     }
 
-    async count(): Promise<number> {
-        const row = await this.db(TABLE).count('* as count').first();
+    async count({ unique }: CountParams = {}): Promise<number> {
+        const countQuery = unique
+            ? this.db(TABLE).countDistinct({ count: 'name' }).first()
+            : this.db(TABLE).count('* as count').first();
+
+        const row = await countQuery;
         return Number(row?.count ?? 0);
     }
 }

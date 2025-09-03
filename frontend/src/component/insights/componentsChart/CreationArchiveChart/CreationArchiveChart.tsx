@@ -4,7 +4,6 @@ import type { InstanceInsightsSchema } from 'openapi';
 import { useProjectChartData } from 'component/insights/hooks/useProjectChartData';
 import { useTheme } from '@mui/material';
 import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
-import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
 import {
     CategoryScale,
     LinearScale,
@@ -22,9 +21,12 @@ import type { TooltipState } from 'component/insights/components/LineChart/Chart
 import type { WeekData, RawWeekData } from './types.ts';
 import { createTooltip } from 'component/insights/components/LineChart/createTooltip.ts';
 import { CreationArchiveRatioTooltip } from './CreationArchiveRatioTooltip.tsx';
-import { Chart } from 'react-chartjs-2';
 import { getDateFnsLocale } from '../../getDateFnsLocale.ts';
 import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin.ts';
+import { NotEnoughData } from 'component/insights/components/LineChart/LineChart.tsx';
+import { placeholderData } from './placeholderData.ts';
+import { Bar } from 'react-chartjs-2';
+import { GraphCover } from 'component/insights/GraphCover.tsx';
 
 ChartJS.register(
     CategoryScale,
@@ -51,11 +53,10 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
 }) => {
     const creationVsArchivedChart = useProjectChartData(creationArchiveTrends);
     const theme = useTheme();
-    const placeholderData = usePlaceholderData();
     const { locationSettings } = useLocationSettings();
     const [tooltip, setTooltip] = useState<null | TooltipState>(null);
 
-    const aggregateOrProjectData = useMemo(() => {
+    const { notEnoughData, aggregateOrProjectData } = useMemo(() => {
         const labels: string[] = Array.from(
             new Set(
                 creationVsArchivedChart.datasets.flatMap((d) =>
@@ -103,46 +104,53 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
             .sort((a, b) => (a.week > b.week ? 1 : -1));
 
         return {
-            datasets: [
-                {
-                    label: 'Flags archived',
-                    data: weeks,
-                    backgroundColor: theme.palette.charts.A2,
-                    borderColor: theme.palette.charts.A2,
-                    hoverBackgroundColor: theme.palette.charts.A2,
-                    hoverBorderColor: theme.palette.charts.A2,
-                    parsing: { yAxisKey: 'archivedFlags', xAxisKey: 'date' },
-                    order: 1,
-                },
-                {
-                    label: 'Flags created',
-                    data: weeks,
-                    backgroundColor: theme.palette.charts.A1,
-                    borderColor: theme.palette.charts.A1,
-                    hoverBackgroundColor: theme.palette.charts.A1,
-                    hoverBorderColor: theme.palette.charts.A1,
-                    parsing: {
-                        yAxisKey: 'totalCreatedFlags',
-                        xAxisKey: 'date',
+            notEnoughData: weeks.length < 2,
+            aggregateOrProjectData: {
+                datasets: [
+                    {
+                        label: 'Flags archived',
+                        data: weeks,
+                        backgroundColor: theme.palette.charts.A2,
+                        borderColor: theme.palette.charts.A2,
+                        hoverBackgroundColor: theme.palette.charts.A2,
+                        hoverBorderColor: theme.palette.charts.A2,
+                        parsing: {
+                            yAxisKey: 'archivedFlags',
+                            xAxisKey: 'date',
+                        },
+                        order: 1,
                     },
-                    order: 2,
-                },
-            ],
+                    {
+                        label: 'Flags created',
+                        data: weeks,
+                        backgroundColor: theme.palette.charts.A1,
+                        borderColor: theme.palette.charts.A1,
+                        hoverBackgroundColor: theme.palette.charts.A1,
+                        hoverBorderColor: theme.palette.charts.A1,
+                        parsing: {
+                            yAxisKey: 'totalCreatedFlags',
+                            xAxisKey: 'date',
+                        },
+                        order: 2,
+                    },
+                ],
+            },
         };
     }, [creationVsArchivedChart, theme]);
 
-    const notEnoughData = useMemo(
-        () =>
-            !isLoading &&
-            !creationVsArchivedChart.datasets.some((d) => d.data.length > 1),
-        [creationVsArchivedChart, isLoading],
-    );
-    const data =
-        notEnoughData || isLoading ? placeholderData : aggregateOrProjectData;
+    const useGraphCover = notEnoughData || isLoading;
+    const data = useGraphCover ? placeholderData : aggregateOrProjectData;
 
     const options = useMemo(
         () => ({
             responsive: true,
+            ...(useGraphCover
+                ? {
+                      animation: {
+                          duration: 0,
+                      },
+                  }
+                : {}),
             interaction: {
                 mode: 'index' as const,
                 intersect: false,
@@ -157,6 +165,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                         padding: 21,
                         boxHeight: 8,
                     },
+                    display: !useGraphCover,
                 },
                 tooltip: {
                     enabled: false,
@@ -181,7 +190,10 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     grid: {
                         display: false,
                     },
-                    ticks: { source: 'data' },
+                    ticks: {
+                        source: 'data' as const,
+                        display: !useGraphCover,
+                    },
                 },
                 y: {
                     type: 'linear' as const,
@@ -193,17 +205,17 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     },
                     ticks: {
                         stepSize: 1,
+                        display: !useGraphCover,
                     },
                 },
             },
         }),
-        [theme, locationSettings, setTooltip],
+        [theme, locationSettings, setTooltip, useGraphCover],
     );
 
     return (
         <>
-            <Chart
-                type='bar'
+            <Bar
                 data={data}
                 options={options}
                 height={100}
@@ -215,6 +227,11 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                 ]}
             />
             <CreationArchiveRatioTooltip tooltip={tooltip} />
+            {useGraphCover ? (
+                <GraphCover>
+                    {notEnoughData ? <NotEnoughData /> : isLoading}
+                </GraphCover>
+            ) : null}
         </>
     );
 };

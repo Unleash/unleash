@@ -26,31 +26,10 @@ import { styled } from '@mui/material';
 import { createOptions } from './createChartOptions.ts';
 import merge from 'deepmerge';
 import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin.ts';
+import { GraphCover } from 'component/insights/GraphCover.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     position: 'relative',
-}));
-
-const StyledCover = styled('div')(({ theme }) => ({
-    position: 'absolute',
-    inset: 0,
-    display: 'flex',
-    zIndex: theme.zIndex.appBar,
-    '&::before': {
-        zIndex: theme.zIndex.fab,
-        content: '""',
-        position: 'absolute',
-        inset: 0,
-        backgroundColor: theme.palette.background.paper,
-        opacity: 0.8,
-    },
-}));
-
-const StyledCoverContent = styled('div')(({ theme }) => ({
-    zIndex: theme.zIndex.modal,
-    margin: 'auto',
-    color: theme.palette.text.secondary,
-    textAlign: 'center',
 }));
 
 function mergeAll<T>(objects: Partial<T>[]): T {
@@ -113,11 +92,7 @@ const LineChartComponent: FC<{
                     )
                 }
                 elseShow={
-                    <StyledCover>
-                        <StyledCoverContent>
-                            {cover !== true ? cover : ' '}
-                        </StyledCoverContent>
-                    </StyledCover>
+                    <GraphCover>{cover !== true ? cover : ' '}</GraphCover>
                 }
             />
         </StyledContainer>

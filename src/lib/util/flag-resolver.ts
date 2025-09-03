@@ -49,7 +49,7 @@ export default class FlagResolver implements IFlagResolver {
         const exp = this.experiments[expName];
         if (exp) {
             if (typeof exp === 'boolean') return exp;
-            else return exp.enabled;
+            else if (exp.enabled) return exp.enabled;
         }
         return this.externalResolver.isEnabled(expName, context);
     }

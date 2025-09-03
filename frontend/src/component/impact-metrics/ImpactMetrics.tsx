@@ -11,6 +11,8 @@ import { useImpactMetricsState } from './hooks/useImpactMetricsState.ts';
 import type { ChartConfig, LayoutItem } from './types.ts';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
+import { ADMIN } from '../providers/AccessProvider/permissions.ts';
 
 const StyledEmptyState = styled(Paper)(({ theme }) => ({
     textAlign: 'center',
@@ -138,14 +140,15 @@ export const ImpactMetrics: FC = () => {
                     </Typography>
                 }
                 actions={
-                    <Button
+                    <PermissionButton
                         variant='contained'
                         startIcon={<Add />}
                         onClick={handleAddChart}
                         disabled={isLoading || !!hasError}
+                        permission={ADMIN}
                     >
                         Add Chart
-                    </Button>
+                    </PermissionButton>
                 }
             />
 

@@ -266,6 +266,8 @@ const defaultDbOptions: WithOptional<IDBOption, 'user' | 'password' | 'host'> =
             false,
         ),
         applicationName: process.env.DATABASE_APPLICATION_NAME || 'unleash',
+        awsIamAuth: parseEnvVarBoolean(process.env.DATABASE_AWS_IAM, false),
+        awsRegion: process.env.AWS_REGION,
     };
 
 const defaultSessionOption = (isEnterprise: boolean): ISessionOption => ({

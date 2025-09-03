@@ -20,7 +20,7 @@ export interface ISSLOption {
 
 export interface IDBOption {
     user: string;
-    password: string;
+    password?: string;
     host: string;
     port: number;
     database: string;
@@ -38,6 +38,8 @@ export interface IDBOption {
     schema: string;
     disableMigration: boolean;
     applicationName?: string;
+    awsIamAuth?: boolean;
+    awsRegion?: string;
 }
 
 export interface ISessionOption {

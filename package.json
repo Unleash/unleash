@@ -68,6 +68,7 @@
     "schema:update": "node ./.husky/update-openapi-spec-list.js"
   },
   "dependencies": {
+    "@aws-sdk/rds-signer": "^3.880.0",
     "@slack/web-api": "^7.9.1",
     "@wesleytodd/openapi": "^1.1.0",
     "ajv": "^8.17.1",

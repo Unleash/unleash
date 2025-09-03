@@ -220,7 +220,7 @@ export const UnknownFlagsTable = () => {
                         </b>
                         <br />
                         Unknown flags are feature flags that your SDKs tried to
-                        evaluate but which Unleash doesn't recognize.
+                        evaluate but Unleash doesn't recognize.
                     </div>
 
                     <div>

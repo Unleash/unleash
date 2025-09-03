@@ -13,17 +13,29 @@ import SearchPriority from '@site/src/components/SearchPriority';
 :::
 
 
-Analytics is a feature designed to help you better understand and gain insights into what is happening in your Unleash instance. You can view analytics across all projects or by selecting single or multiple projects using the filter.
+Analytics gives you visibility into how flags are created, used, and cleaned up in your Unleash instance. These dashboards connect engineering activity to business outcomes by showing how quickly features move to production, how well teams manage technical debt, and how your user base evolves over time.
+You can view analytics across all projects or by selecting single or multiple projects using the filter.
 
-In total, there are 6 different charts available that show information over time:
-
-- Total users
-- Flags
+The dashboard shows:
+- Feature flag lifecycle data
+- Total users and flags
 - Technical debt
 - Median time to production
 - Flag evaluation metrics
 - Updates per environment type
 
+### Flags lifecycle
+
+
+:::note Availability
+
+**Plan**: [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) | **Version**: `7.2+`
+
+:::
+
+Shows how many flags are currently in each major lifecycle stage: Develop, Production, and Cleanup. Each stage shows how many flags are new this week, how many have been there for more than a week, and the median time flags spend in that stage. You can also compare this to the historical median to spot outliers.
+
+![Total users chart](/img/flag-lifecycle-analytics.png)
 
 ### Total users
 

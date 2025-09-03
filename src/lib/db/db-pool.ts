@@ -36,7 +36,7 @@ export function createDb({
         const signer = new Signer({
             region: awsRegion,
             hostname: host,
-            port: Number(port ?? 5432),
+            port,
             username: user,
         });
 

@@ -13,6 +13,7 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { ADMIN } from 'component/providers/AccessProvider/permissions.ts';
 import useToast from 'hooks/useToast.tsx';
 import { formatUnknownError } from 'utils/formatUnknownError.ts';
+import type { ChartConfig } from '../../../impact-metrics/types.ts';
 
 const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
@@ -20,9 +21,18 @@ const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
     lineHeight: theme.spacing(5),
 }));
 
+type ModalState =
+    | { type: 'closed' }
+    | { type: 'creating' }
+    | { type: 'editing'; config: ChartConfig };
+
 export const FeatureImpactMetrics: FC = () => {
     const feature = useRequiredPathParam('featureId');
-    const [modalOpen, setModalOpen] = useState(false);
+
+    const [modalState, setModalState] = useState<ModalState>({
+        type: 'closed',
+    });
+
     const { createImpactMetric, deleteImpactMetric } = useImpactMetricsApi();
     const { impactMetrics, refetch } = useFeatureImpactMetrics(feature);
     const { setToastApiError } = useToast();
@@ -34,7 +44,43 @@ export const FeatureImpactMetrics: FC = () => {
     } = useImpactMetricsMetadata();
 
     const handleAddChart = () => {
-        setModalOpen(true);
+        setModalState({ type: 'creating' });
+    };
+
+    const handleEditChart = (config: ChartConfig) => {
+        setModalState({ type: 'editing', config });
+    };
+
+    const handleCloseModal = () => {
+        setModalState({ type: 'closed' });
+    };
+
+    const handleSaveChart = async (data: any) => {
+        try {
+            let configId: string | undefined = undefined;
+            if (modalState.type === 'editing') {
+                configId = modalState.config.id;
+            }
+
+            await createImpactMetric({
+                ...data,
+                feature,
+                id: configId,
+            });
+            refetch();
+            handleCloseModal();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    const handleDeleteChart = async (configId: string) => {
+        try {
+            await deleteImpactMetric(configId);
+            refetch();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
     };
 
     const metricSeries = useMemo(() => {
@@ -46,6 +92,10 @@ export const FeatureImpactMetrics: FC = () => {
             ...rest,
         }));
     }, [metadata]);
+
+    const isModalOpen = modalState.type !== 'closed';
+    const editingChart =
+        modalState.type === 'editing' ? modalState.config : undefined;
 
     return (
         <PageContent>
@@ -69,32 +119,19 @@ export const FeatureImpactMetrics: FC = () => {
             <>
                 {impactMetrics.configs.map((config) => (
                     <ChartItem
+                        key={config.id}
                         config={config}
-                        onEdit={() => {}}
-                        onDelete={async () => {
-                            try {
-                                await deleteImpactMetric(config.id);
-                                refetch();
-                            } catch (error: unknown) {
-                                setToastApiError(formatUnknownError(error));
-                            }
-                        }}
+                        onEdit={() => handleEditChart(config)}
+                        onDelete={() => handleDeleteChart(config.id)}
                     />
                 ))}
             </>
 
             <ChartConfigModal
-                open={modalOpen}
-                onClose={() => setModalOpen(false)}
-                onSave={async (data) => {
-                    try {
-                        await createImpactMetric({ ...data, feature });
-                        refetch();
-                    } catch (error: unknown) {
-                        setToastApiError(formatUnknownError(error));
-                    }
-                }}
-                initialConfig={undefined}
+                open={isModalOpen}
+                onClose={handleCloseModal}
+                onSave={handleSaveChart}
+                initialConfig={editingChart}
                 metricSeries={metricSeries}
                 loading={metadataLoading}
             />

@@ -3,6 +3,12 @@ import { useImpactMetricsSettings } from 'hooks/api/getters/useImpactMetricsSett
 import { useImpactMetricsSettingsApi } from 'hooks/api/actions/useImpactMetricsSettingsApi/useImpactMetricsSettingsApi.js';
 import type { ChartConfig, ImpactMetricsState, LayoutItem } from '../types.ts';
 
+/**
+ * "Select all" represents all current and future labels.
+ * Asterisk (*) is sent to the backend. This will create a different query then sending every current label.
+ */
+export const METRIC_LABELS_SELECT_ALL = '*';
+
 export const useImpactMetricsState = () => {
     const {
         settings,

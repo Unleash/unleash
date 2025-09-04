@@ -6,6 +6,7 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
+import { METRIC_LABELS_SELECT_ALL } from 'component/impact-metrics/hooks/useImpactMetricsState';
 import type { FC } from 'react';
 
 type LabelFilterItemProps = {
@@ -22,12 +23,11 @@ export const LabelFilterItem: FC<LabelFilterItemProps> = ({
     value,
     onChange,
 }) => {
-    const SELECT_ALL = '*';
-    const isAllSelected = value.includes(SELECT_ALL);
+    const isAllSelected = value.includes(METRIC_LABELS_SELECT_ALL);
     const autocompleteId = `autocomplete-${labelKey}`;
     const isTruncated = options.length >= 1_000;
 
-    const optionsWithSelectAll = [SELECT_ALL, ...options];
+    const optionsWithSelectAll = [METRIC_LABELS_SELECT_ALL, ...options];
 
     return (
         <Autocomplete
@@ -37,25 +37,29 @@ export const LabelFilterItem: FC<LabelFilterItemProps> = ({
             options={optionsWithSelectAll}
             value={isAllSelected ? options : value}
             getOptionLabel={(option) =>
-                option === SELECT_ALL ? '(Select all)' : option
+                option === METRIC_LABELS_SELECT_ALL ? '(Select all)' : option
             }
             onChange={(_, newValues, reason, details) => {
-                if (details?.option === SELECT_ALL) {
-                    onChange(isAllSelected ? [] : [SELECT_ALL]);
+                if (details?.option === METRIC_LABELS_SELECT_ALL) {
+                    onChange(isAllSelected ? [] : [METRIC_LABELS_SELECT_ALL]);
                     return;
                 }
-                onChange(newValues.filter((v) => v !== SELECT_ALL));
+                onChange(
+                    newValues.filter((v) => v !== METRIC_LABELS_SELECT_ALL),
+                );
             }}
             renderOption={(props, option, { selected }) => (
                 <li {...props}>
                     <Checkbox
                         size='small'
                         checked={
-                            option === SELECT_ALL ? isAllSelected : selected
+                            option === METRIC_LABELS_SELECT_ALL
+                                ? isAllSelected
+                                : selected
                         }
                         style={{ marginRight: 8 }}
                     />
-                    {option === SELECT_ALL ? (
+                    {option === METRIC_LABELS_SELECT_ALL ? (
                         <Typography
                             component='span'
                             sx={{ color: 'text.secondary' }}

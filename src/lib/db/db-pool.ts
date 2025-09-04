@@ -19,6 +19,7 @@ export function createDb({
         version: db.version,
         connection: {
             ...db,
+            user: process.env.DATABASE_USERNAME || db.user,
             application_name: db.applicationName,
             password: getDBPasswordResolver(db),
         },

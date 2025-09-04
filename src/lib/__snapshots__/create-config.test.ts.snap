@@ -32,6 +32,8 @@ exports[`should create default config 1`] = `
   "db": {
     "acquireConnectionTimeout": 30000,
     "applicationName": "unleash",
+    "awsIamAuth": false,
+    "awsRegion": undefined,
     "database": "unleash_db",
     "disableMigration": false,
     "driver": "postgres",

@@ -68,7 +68,7 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
                 sx={(theme) => ({ margin: theme.spacing(1.5, 0) })}
                 control={
                     <Checkbox
-                        checked={formData.yAxisMin}
+                        checked={formData.yAxisMin === 'zero'}
                         onChange={(e) =>
                             actions.setYAxisMin(
                                 e.target.checked ? 'zero' : 'auto',

@@ -7,6 +7,6 @@
 /**
  * The selected labels and their values for filtering the metric data.
  */
-export type ImpactMetricsConfigSchemaSelectedLabels = {
+export type CreateImpactMetricsConfigSchemaLabelSelectors = {
     [key: string]: string[];
 };

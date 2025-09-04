@@ -13,10 +13,10 @@ import { useChartData } from './hooks/useChartData.ts';
 import type { AggregationMode } from './types.ts';
 
 type ImpactMetricsChartProps = {
-    selectedSeries: string;
-    selectedRange: 'hour' | 'day' | 'week' | 'month';
-    selectedLabels: Record<string, string[]>;
-    beginAtZero: boolean;
+    metricName: string;
+    timeRange: 'hour' | 'day' | 'week' | 'month';
+    labelSelectors: Record<string, string[]>;
+    yAxisMin: 'auto' | 'zero';
     aggregationMode?: AggregationMode;
     aspectRatio?: number;
     overrideOptions?: Record<string, unknown>;
@@ -27,10 +27,10 @@ type ImpactMetricsChartProps = {
 };
 
 export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
-    selectedSeries,
-    selectedRange,
-    selectedLabels,
-    beginAtZero,
+    metricName,
+    timeRange,
+    labelSelectors,
+    yAxisMin,
     aggregationMode,
     aspectRatio,
     overrideOptions = {},
@@ -44,14 +44,14 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
         loading: dataLoading,
         error: dataError,
     } = useImpactMetricsData(
-        selectedSeries
+        metricName
             ? {
-                  series: selectedSeries,
-                  range: selectedRange,
+                  series: metricName,
+                  range: timeRange,
                   aggregationMode,
                   labels:
-                      Object.keys(selectedLabels).length > 0
-                          ? selectedLabels
+                      Object.keys(labelSelectors).length > 0
+                          ? labelSelectors
                           : undefined,
               }
             : undefined,
@@ -66,7 +66,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
 
     const hasError = !!dataError;
     const isLoading = dataLoading;
-    const shouldShowPlaceholder = !selectedSeries || isLoading || hasError;
+    const shouldShowPlaceholder = !metricName || isLoading || hasError;
     const notEnoughData = useMemo(
         () =>
             !isLoading &&
@@ -81,7 +81,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
         : undefined;
     const maxTime = end ? fromUnixTime(Number.parseInt(end, 10)) : undefined;
 
-    const placeholder = selectedSeries ? (
+    const placeholder = metricName ? (
         <NotEnoughData description={emptyDataDescription} />
     ) : noSeriesPlaceholder ? (
         noSeriesPlaceholder
@@ -92,7 +92,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
         />
     );
 
-    const hasManyLabels = Object.keys(selectedLabels).length > 0;
+    const hasManyLabels = Object.keys(labelSelectors).length > 0;
 
     const cover = notEnoughData ? placeholder : isLoading;
 
@@ -106,10 +106,10 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                       min: minTime?.getTime(),
                       max: maxTime?.getTime(),
                       time: {
-                          unit: getTimeUnit(selectedRange),
+                          unit: getTimeUnit(timeRange),
                           displayFormats: {
-                              [getTimeUnit(selectedRange)]:
-                                  getDisplayFormat(selectedRange),
+                              [getTimeUnit(timeRange)]:
+                                  getDisplayFormat(timeRange),
                           },
                           tooltipFormat: 'PPpp',
                       },
@@ -120,7 +120,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                       },
                   },
                   y: {
-                      beginAtZero,
+                      beginAtZero: yAxisMin === 'zero',
                       title: {
                           display: aggregationMode === 'rps',
                           text:

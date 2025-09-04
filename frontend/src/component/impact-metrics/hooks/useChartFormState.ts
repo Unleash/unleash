@@ -12,19 +12,19 @@ type UseChartConfigParams = {
 export type ChartFormState = {
     formData: {
         title: string;
-        selectedSeries: string;
-        selectedRange: 'hour' | 'day' | 'week' | 'month';
-        beginAtZero: boolean;
+        metricName: string;
+        timeRange: 'hour' | 'day' | 'week' | 'month';
+        yAxisMin: 'auto' | 'zero';
         aggregationMode: AggregationMode;
-        selectedLabels: Record<string, string[]>;
+        labelSelectors: Record<string, string[]>;
     };
     actions: {
         setTitle: (title: string) => void;
-        setSelectedSeries: (series: string) => void;
-        setSelectedRange: (range: 'hour' | 'day' | 'week' | 'month') => void;
-        setBeginAtZero: (beginAtZero: boolean) => void;
+        setMetricName: (series: string) => void;
+        setTimeRange: (range: 'hour' | 'day' | 'week' | 'month') => void;
+        setYAxisMin: (yAxisMin: 'auto' | 'zero') => void;
         setAggregationMode: (mode: AggregationMode) => void;
-        setSelectedLabels: (labels: Record<string, string[]>) => void;
+        setLabelSelectors: (labels: Record<string, string[]>) => void;
         handleSeriesChange: (series: string) => void;
         getConfigToSave: () => Omit<ChartConfig, 'id'>;
     };
@@ -37,20 +37,18 @@ export const useChartFormState = ({
     initialConfig,
 }: UseChartConfigParams): ChartFormState => {
     const [title, setTitle] = useState(initialConfig?.title || '');
-    const [selectedSeries, setSelectedSeries] = useState(
-        initialConfig?.selectedSeries || '',
+    const [metricName, setMetricName] = useState(
+        initialConfig?.metricName || '',
     );
-    const [selectedRange, setSelectedRange] = useState<
+    const [timeRange, setTimeRange] = useState<
         'hour' | 'day' | 'week' | 'month'
-    >(initialConfig?.selectedRange || 'day');
-    const [beginAtZero, setBeginAtZero] = useState(
-        initialConfig?.beginAtZero || false,
-    );
-    const [selectedLabels, setSelectedLabels] = useState<
+    >(initialConfig?.timeRange || 'day');
+    const [yAxisMin, setYAxisMin] = useState(initialConfig?.yAxisMin || 'auto');
+    const [labelSelectors, setLabelSelectors] = useState<
         Record<string, string[]>
-    >(initialConfig?.selectedLabels || {});
+    >(initialConfig?.labelSelectors || {});
     const [aggregationMode, setAggregationMode] = useState<AggregationMode>(
-        (initialConfig?.aggregationMode || getMetricType(selectedSeries)) ===
+        (initialConfig?.aggregationMode || getMetricType(metricName)) ===
             'counter'
             ? 'count'
             : 'avg',
@@ -59,10 +57,10 @@ export const useChartFormState = ({
     const {
         data: { labels: currentAvailableLabels },
     } = useImpactMetricsData(
-        selectedSeries
+        metricName
             ? {
-                  series: selectedSeries,
-                  range: selectedRange,
+                  series: metricName,
+                  range: timeRange,
                   aggregationMode,
               }
             : undefined,
@@ -71,29 +69,29 @@ export const useChartFormState = ({
     useEffect(() => {
         if (open && initialConfig) {
             setTitle(initialConfig.title || '');
-            setSelectedSeries(initialConfig.selectedSeries);
-            setSelectedRange(initialConfig.selectedRange);
-            setBeginAtZero(initialConfig.beginAtZero);
-            setSelectedLabels(initialConfig.selectedLabels);
+            setMetricName(initialConfig.metricName);
+            setTimeRange(initialConfig.timeRange);
+            setYAxisMin(initialConfig.yAxisMin);
+            setLabelSelectors(initialConfig.labelSelectors);
             setAggregationMode(
                 initialConfig.aggregationMode ||
-                    (getMetricType(initialConfig.selectedSeries) === 'counter'
+                    (getMetricType(initialConfig.metricName) === 'counter'
                         ? 'count'
                         : 'avg'),
             );
         } else if (open && !initialConfig) {
             setTitle('');
-            setSelectedSeries('');
-            setSelectedRange('day');
-            setBeginAtZero(false);
-            setSelectedLabels({});
+            setMetricName('');
+            setTimeRange('day');
+            setYAxisMin('auto');
+            setLabelSelectors({});
             setAggregationMode('count');
         }
     }, [open, initialConfig]);
 
     const handleSeriesChange = (series: string) => {
-        setSelectedSeries(series);
-        setSelectedLabels({});
+        setMetricName(series);
+        setLabelSelectors({});
         const metric = getMetricType(series);
         if (metric === 'counter') {
             setAggregationMode('count');
@@ -104,31 +102,31 @@ export const useChartFormState = ({
 
     const getConfigToSave = (): Omit<ChartConfig, 'id'> => ({
         title: title || undefined,
-        selectedSeries,
-        selectedRange,
-        beginAtZero,
-        selectedLabels,
+        metricName,
+        timeRange,
+        yAxisMin,
+        labelSelectors,
         aggregationMode,
     });
 
-    const isValid = selectedSeries.length > 0;
+    const isValid = metricName.length > 0;
 
     return {
         formData: {
             title,
-            selectedSeries,
-            selectedRange,
-            beginAtZero,
+            metricName,
+            timeRange,
+            yAxisMin,
             aggregationMode,
-            selectedLabels,
+            labelSelectors,
         },
         actions: {
             setTitle,
-            setSelectedSeries,
-            setSelectedRange,
-            setBeginAtZero,
+            setMetricName,
+            setTimeRange,
+            setYAxisMin,
             setAggregationMode,
-            setSelectedLabels,
+            setLabelSelectors,
             handleSeriesChange,
             getConfigToSave,
         },

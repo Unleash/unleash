@@ -34,11 +34,11 @@ const TestComponent: FC<{
                     data-testid='add-chart'
                     onClick={() =>
                         addChart({
-                            selectedSeries: 'test-series',
-                            selectedRange: 'day',
-                            beginAtZero: true,
+                            metricName: 'test-series',
+                            timeRange: 'day',
+                            yAxisMin: 'zero',
                             aggregationMode: 'count',
-                            selectedLabels: {},
+                            labelSelectors: {},
                             title: 'Test Chart',
                         })
                     }
@@ -76,11 +76,11 @@ const mockSettings: ImpactMetricsState = {
     charts: [
         {
             id: 'test-chart',
-            selectedSeries: 'test-series',
-            selectedRange: 'day' as const,
-            beginAtZero: true,
+            metricName: 'test-series',
+            timeRange: 'day' as const,
+            yAxisMin: 'zero',
             aggregationMode: 'count',
-            selectedLabels: {},
+            labelSelectors: {},
             title: 'Test Chart',
         },
     ],
@@ -179,11 +179,11 @@ describe('useImpactMetricsState', () => {
                 charts: [
                     {
                         id: 'new-chart-id',
-                        selectedSeries: 'test-series',
-                        selectedRange: 'day',
-                        beginAtZero: true,
+                        metricName: 'test-series',
+                        timeRange: 'day',
+                        yAxisMin: 'zero',
                         mode: 'count',
-                        selectedLabels: {},
+                        labelSelectors: {},
                         title: 'Test Chart',
                     },
                 ],
@@ -212,11 +212,11 @@ describe('useImpactMetricsState', () => {
                 charts: [
                     {
                         id: 'new-chart-id',
-                        selectedSeries: 'test-series',
-                        selectedRange: 'day',
-                        beginAtZero: true,
+                        metricName: 'test-series',
+                        timeRange: 'day',
+                        yAxisMin: 'zero',
                         mode: 'count',
-                        selectedLabels: {},
+                        labelSelectors: {},
                         title: 'Test Chart',
                     },
                 ],

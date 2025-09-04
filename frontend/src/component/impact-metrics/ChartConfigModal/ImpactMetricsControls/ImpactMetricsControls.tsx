@@ -12,9 +12,9 @@ export type ImpactMetricsControlsProps = {
     actions: Pick<
         ChartFormState['actions'],
         | 'handleSeriesChange'
-        | 'setSelectedRange'
-        | 'setBeginAtZero'
-        | 'setSelectedLabels'
+        | 'setTimeRange'
+        | 'setYAxisMin'
+        | 'setLabelSelectors'
         | 'setAggregationMode'
     >;
     metricSeries: (ImpactMetricsSeries & { name: string })[];
@@ -43,34 +43,36 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
             </Typography>
 
             <SeriesSelector
-                value={formData.selectedSeries}
+                value={formData.metricName}
                 onChange={actions.handleSeriesChange}
                 options={metricSeries}
                 loading={loading}
             />
 
-            {formData.selectedSeries ? (
+            {formData.metricName ? (
                 <>
                     <RangeSelector
-                        value={formData.selectedRange}
-                        onChange={actions.setSelectedRange}
+                        value={formData.timeRange}
+                        onChange={actions.setTimeRange}
                     />
                     <ModeSelector
                         value={formData.aggregationMode}
                         onChange={actions.setAggregationMode}
-                        seriesType={getMetricType(formData.selectedSeries)!}
+                        seriesType={getMetricType(formData.metricName)!}
                     />
                 </>
             ) : null}
         </Box>
-        {formData.selectedSeries ? (
+        {formData.metricName ? (
             <FormControlLabel
                 sx={(theme) => ({ margin: theme.spacing(1.5, 0) })}
                 control={
                     <Checkbox
-                        checked={formData.beginAtZero}
+                        checked={formData.yAxisMin === 'zero'}
                         onChange={(e) =>
-                            actions.setBeginAtZero(e.target.checked)
+                            actions.setYAxisMin(
+                                e.target.checked ? 'zero' : 'auto',
+                            )
                         }
                     />
                 }

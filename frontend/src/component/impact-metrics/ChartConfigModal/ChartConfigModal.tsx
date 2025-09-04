@@ -123,10 +123,10 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
                         <Box sx={(theme) => ({ padding: theme.spacing(1) })}>
                             <ImpactMetricsChart
                                 key={screenBreakpoint ? 'small' : 'large'}
-                                selectedSeries={formData.selectedSeries}
-                                selectedRange={formData.selectedRange}
-                                selectedLabels={formData.selectedLabels}
-                                beginAtZero={formData.beginAtZero}
+                                metricName={formData.metricName}
+                                timeRange={formData.timeRange}
+                                labelSelectors={formData.labelSelectors}
+                                yAxisMin={formData.yAxisMin}
                                 aggregationMode={formData.aggregationMode}
                                 isPreview
                             />
@@ -136,8 +136,8 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
 
                 {currentAvailableLabels ? (
                     <LabelsFilter
-                        selectedLabels={formData.selectedLabels}
-                        onChange={actions.setSelectedLabels}
+                        labelSelectors={formData.labelSelectors}
+                        onChange={actions.setLabelSelectors}
                         availableLabels={currentAvailableLabels}
                     />
                 ) : null}

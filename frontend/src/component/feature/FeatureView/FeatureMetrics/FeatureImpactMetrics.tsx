@@ -10,7 +10,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
 import { useFeatureImpactMetrics } from 'hooks/api/getters/useFeatureImpactMetrics/useFeatureImpactMetrics.ts';
 import { ChartItem } from '../../../impact-metrics/ChartItem.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
-import { ADMIN } from 'component/providers/AccessProvider/permissions.ts';
+import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions.ts';
 import useToast from 'hooks/useToast.tsx';
 import { formatUnknownError } from 'utils/formatUnknownError.ts';
 import type { ChartConfig } from '../../../impact-metrics/types.ts';
@@ -28,6 +28,7 @@ type ModalState =
 
 export const FeatureImpactMetrics: FC = () => {
     const feature = useRequiredPathParam('featureId');
+    const project = useRequiredPathParam('projectId');
 
     const [modalState, setModalState] = useState<ModalState>({
         type: 'closed',
@@ -109,7 +110,8 @@ export const FeatureImpactMetrics: FC = () => {
                         startIcon={<Add />}
                         onClick={handleAddChart}
                         disabled={metadataLoading || !!metadataError}
-                        permission={ADMIN}
+                        permission={UPDATE_FEATURE}
+                        projectId={project}
                     >
                         Add Chart
                     </PermissionButton>
@@ -123,6 +125,8 @@ export const FeatureImpactMetrics: FC = () => {
                         config={config}
                         onEdit={() => handleEditChart(config)}
                         onDelete={() => handleDeleteChart(config.id)}
+                        permission={UPDATE_FEATURE}
+                        projectId={project}
                     />
                 ))}
             </>

@@ -12,6 +12,8 @@ export interface ChartItemProps {
     config: DisplayChartConfig;
     onEdit: (config: ChartConfig) => void;
     onDelete: (id: string) => void;
+    permission?: string;
+    projectId?: string;
 }
 
 const getConfigDescription = (config: DisplayChartConfig): string => {
@@ -104,7 +106,13 @@ const StyledChartActions = styled(Box)(({ theme }) => ({
     gap: theme.spacing(0.5),
 }));
 
-export const ChartItem: FC<ChartItemProps> = ({ config, onEdit, onDelete }) => (
+export const ChartItem: FC<ChartItemProps> = ({
+    config,
+    onEdit,
+    onDelete,
+    permission = ADMIN,
+    projectId,
+}) => (
     <StyledWidget>
         <StyledHeader>
             <StyledDragHandle className='grid-item-drag-handle'>
@@ -121,13 +129,15 @@ export const ChartItem: FC<ChartItemProps> = ({ config, onEdit, onDelete }) => (
             <StyledChartActions>
                 <PermissionIconButton
                     onClick={() => onEdit(config)}
-                    permission={ADMIN}
+                    permission={permission}
+                    projectId={projectId}
                 >
                     <Edit />
                 </PermissionIconButton>
                 <PermissionIconButton
                     onClick={() => onDelete(config.id)}
-                    permission={ADMIN}
+                    permission={permission}
+                    projectId={projectId}
                 >
                     <Delete />
                 </PermissionIconButton>

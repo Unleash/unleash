@@ -7,11 +7,11 @@
 /**
  * The time range for the metric data.
  */
-export type CreateImpactMetricsConfigSchemaSelectedRange =
-    (typeof CreateImpactMetricsConfigSchemaSelectedRange)[keyof typeof CreateImpactMetricsConfigSchemaSelectedRange];
+export type CreateImpactMetricsConfigSchemaTimeRange =
+    (typeof CreateImpactMetricsConfigSchemaTimeRange)[keyof typeof CreateImpactMetricsConfigSchemaTimeRange];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const CreateImpactMetricsConfigSchemaSelectedRange = {
+export const CreateImpactMetricsConfigSchemaTimeRange = {
     hour: 'hour',
     day: 'day',
     week: 'week',

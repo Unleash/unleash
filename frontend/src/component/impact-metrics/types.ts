@@ -1,10 +1,10 @@
 export type ChartConfig = {
     id: string;
-    selectedSeries: string; // e.g. unleash_counter_my_metric
-    selectedRange: 'hour' | 'day' | 'week' | 'month';
-    beginAtZero: boolean;
+    metricName: string; // e.g. unleash_counter_my_metric
+    timeRange: 'hour' | 'day' | 'week' | 'month';
+    yAxisMin: 'auto' | 'zero';
     aggregationMode: AggregationMode;
-    selectedLabels: Record<string, string[]>;
+    labelSelectors: Record<string, string[]>;
     title?: string;
 };
 

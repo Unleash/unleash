@@ -4,18 +4,18 @@ import type { ImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData
 import { LabelFilterItem } from './LabelFilterItem/LabelFilterItem.tsx';
 
 export type LabelsFilterProps = {
-    selectedLabels: Record<string, string[]>;
+    labelSelectors: Record<string, string[]>;
     onChange: (labels: Record<string, string[]>) => void;
     availableLabels: ImpactMetricsLabels;
 };
 
 export const LabelsFilter: FC<LabelsFilterProps> = ({
-    selectedLabels,
+    labelSelectors,
     onChange,
     availableLabels,
 }) => {
     const handleLabelChange = (labelKey: string, values: string[]) => {
-        const newLabels = { ...selectedLabels };
+        const newLabels = { ...labelSelectors };
         if (values.length === 0) {
             delete newLabels[labelKey];
         } else {
@@ -25,7 +25,7 @@ export const LabelsFilter: FC<LabelsFilterProps> = ({
     };
 
     const handleAllToggle = (labelKey: string, checked: boolean) => {
-        const newLabels = { ...selectedLabels };
+        const newLabels = { ...labelSelectors };
         if (checked) {
             newLabels[labelKey] = ['*'];
         } else {
@@ -53,7 +53,7 @@ export const LabelsFilter: FC<LabelsFilterProps> = ({
                 }}
             >
                 <Typography variant='subtitle2'>Filter by labels</Typography>
-                {Object.keys(selectedLabels).length > 0 && (
+                {Object.keys(labelSelectors).length > 0 && (
                     <Chip
                         label='Clear all'
                         size='small'
@@ -75,7 +75,7 @@ export const LabelsFilter: FC<LabelsFilterProps> = ({
                 {Object.entries(availableLabels)
                     .sort()
                     .map(([labelKey, values]) => {
-                        const currentSelection = selectedLabels[labelKey] || [];
+                        const currentSelection = labelSelectors[labelKey] || [];
 
                         return (
                             <Box

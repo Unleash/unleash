@@ -23,7 +23,7 @@ const getConfigDescription = (config: DisplayChartConfig): string => {
         parts.push(`${config.displayName}`);
     }
 
-    parts.push(`last ${config.selectedRange}`);
+    parts.push(`last ${config.timeRange}`);
 
     if (config.aggregationMode === 'rps') {
         parts.push('rate per second');
@@ -35,7 +35,7 @@ const getConfigDescription = (config: DisplayChartConfig): string => {
         parts.push('sum');
     }
 
-    const labelCount = Object.keys(config.selectedLabels).length;
+    const labelCount = Object.keys(config.labelSelectors).length;
     if (labelCount > 0) {
         parts.push(`${labelCount} filter${labelCount > 1 ? 's' : ''}`);
     }
@@ -147,10 +147,10 @@ export const ChartItem: FC<ChartItemProps> = ({
         <StyledChartContent>
             <StyledImpactChartContainer>
                 <ImpactMetricsChart
-                    selectedSeries={config.selectedSeries}
-                    selectedRange={config.selectedRange}
-                    selectedLabels={config.selectedLabels}
-                    beginAtZero={config.beginAtZero}
+                    metricName={config.metricName}
+                    timeRange={config.timeRange}
+                    labelSelectors={config.labelSelectors}
+                    yAxisMin={config.yAxisMin}
                     aggregationMode={config.aggregationMode}
                     aspectRatio={1.5}
                     overrideOptions={{ maintainAspectRatio: false }}

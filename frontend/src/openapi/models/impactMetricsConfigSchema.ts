@@ -4,9 +4,10 @@
  * See `gen:api` script in package.json
  */
 import type { ImpactMetricsConfigSchemaAggregationMode } from './impactMetricsConfigSchemaAggregationMode.js';
-import type { ImpactMetricsConfigSchemaSelectedLabels } from './impactMetricsConfigSchemaSelectedLabels.js';
-import type { ImpactMetricsConfigSchemaSelectedRange } from './impactMetricsConfigSchemaSelectedRange.js';
+import type { ImpactMetricsConfigSchemaLabelSelectors } from './impactMetricsConfigSchemaLabelSelectors.js';
+import type { ImpactMetricsConfigSchemaTimeRange } from './impactMetricsConfigSchemaTimeRange.js';
 import type { ImpactMetricsConfigSchemaType } from './impactMetricsConfigSchemaType.js';
+import type { ImpactMetricsConfigSchemaYAxisMin } from './impactMetricsConfigSchemaYAxisMin.js';
 
 /**
  * Describes the configuration for a single impact metric chart.
@@ -14,8 +15,6 @@ import type { ImpactMetricsConfigSchemaType } from './impactMetricsConfigSchemaT
 export interface ImpactMetricsConfigSchema {
     /** The aggregation mode for the metric data. */
     aggregationMode: ImpactMetricsConfigSchemaAggregationMode;
-    /** Whether the chart should begin at zero on the y-axis. */
-    beginAtZero: boolean;
     /** The human readable display name of the impact metric */
     displayName: string;
     /**
@@ -26,15 +25,17 @@ export interface ImpactMetricsConfigSchema {
     /** The unique ULID identifier for this impact metric configuration. Generated automatically if not provided. */
     id: string;
     /** The selected labels and their values for filtering the metric data. */
-    selectedLabels: ImpactMetricsConfigSchemaSelectedLabels;
-    /** The time range for the metric data. */
-    selectedRange: ImpactMetricsConfigSchemaSelectedRange;
+    labelSelectors: ImpactMetricsConfigSchemaLabelSelectors;
     /** The Prometheus metric series to display. It includes both unleash prefix and metric type and display name */
-    selectedSeries: string;
+    metricName: string;
+    /** The time range for the metric data. */
+    timeRange: ImpactMetricsConfigSchemaTimeRange;
     /**
      * Optional title for the impact metric chart.
      */
     title?: string;
     /** The type of metric */
     type: ImpactMetricsConfigSchemaType;
+    /** Whether the chart should begin at zero on the y-axis. */
+    yAxisMin: ImpactMetricsConfigSchemaYAxisMin;
 }

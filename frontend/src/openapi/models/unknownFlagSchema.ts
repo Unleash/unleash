@@ -3,22 +3,21 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { UnknownFlagSchemaReportsItem } from './unknownFlagSchemaReportsItem.js';
 
 /**
  * An unknown flag report
  */
 export interface UnknownFlagSchema {
-    /** The name of the application that reported the unknown flag. */
-    appName: string;
-    /** The environment in which the unknown flag was reported. */
-    environment: string;
     /**
      * The date and time when the last event for the unknown flag name occurred, if any.
      * @nullable
      */
     lastEventAt?: string | null;
+    /** The date and time when the unknown flag was last reported. */
+    lastSeenAt: string;
     /** The name of the unknown flag. */
     name: string;
-    /** The date and time when the unknown flag was reported. */
-    seenAt: string;
+    /** The list of reports for this unknown flag. */
+    reports?: UnknownFlagSchemaReportsItem[];
 }

@@ -1,5 +1,5 @@
-export const getTimeUnit = (selectedRange: string) => {
-    switch (selectedRange) {
+export const getTimeUnit = (timeRange: string) => {
+    switch (timeRange) {
         case 'hour':
             return 'minute';
         case 'day':
@@ -13,8 +13,8 @@ export const getTimeUnit = (selectedRange: string) => {
     }
 };
 
-export const getDisplayFormat = (selectedRange: string) => {
-    switch (selectedRange) {
+export const getDisplayFormat = (timeRange: string) => {
+    switch (timeRange) {
         case 'hour':
             return 'HH:mm';
         case 'day':

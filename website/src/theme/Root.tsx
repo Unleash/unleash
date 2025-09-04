@@ -8,6 +8,11 @@ export default function Root({ children }: { children: React.ReactNode }) {
         }
 
         const loadGoogleAnalytics = () => {
+            // Skip Google Analytics in development
+            if (process.env.NODE_ENV === 'development') {
+                return;
+            }
+
             if (
                 window.gtag ||
                 document.querySelector('script[src*="googletagmanager"]')
@@ -33,6 +38,11 @@ export default function Root({ children }: { children: React.ReactNode }) {
         };
 
         const loadGoogleTagManager = () => {
+            // Skip GTM in development
+            if (process.env.NODE_ENV === 'development') {
+                return;
+            }
+
             if (
                 window.google_tag_manager ||
                 document.querySelector(

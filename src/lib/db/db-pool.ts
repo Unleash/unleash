@@ -11,8 +11,11 @@ export function createDb({
     const logger = getLogger('db-pool.js');
 
     logger.info(
-        `createDb: iam=${Boolean(db.awsIamAuth)} host=${db.host} port=${db.port} db=${db.database} user=${db.user} ssl=${Boolean(db.ssl)}`,
+        `createDb: iam=${Boolean(db.awsIamAuth)} host=${db.host} port=${db.port} db=${db.database} user=${process.env.DATABASE_USERNAME || db.user} ssl=${Boolean(db.ssl)}`,
     );
+
+    const { password, ...logDb } = db;
+    logger.info(`createDb (DB): ${JSON.stringify(logDb, undefined, 2)}`);
 
     return knex({
         client: 'pg',

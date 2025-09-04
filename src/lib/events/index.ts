@@ -209,6 +209,10 @@ export const RELEASE_PLAN_REMOVED = 'release-plan-removed' as const;
 export const RELEASE_PLAN_MILESTONE_STARTED =
     'release-plan-milestone-started' as const;
 
+export const IMPACT_METRIC_CREATED = 'impact-metric-created' as const;
+export const IMPACT_METRIC_UPDATED = 'impact-metric-updated' as const;
+export const IMPACT_METRIC_DELETED = 'impact-metric-deleted' as const;
+
 export const USER_PREFERENCE_UPDATED = 'user-preference-updated' as const;
 export const SCIM_USERS_DELETED = 'scim-users-deleted' as const;
 export const SCIM_GROUPS_DELETED = 'scim-groups-deleted' as const;
@@ -375,6 +379,9 @@ export const IEventTypes = [
     SCIM_GROUPS_DELETED,
     CDN_TOKEN_CREATED,
     CHANGE_REQUEST_REQUESTED_APPROVERS_UPDATED,
+    IMPACT_METRIC_CREATED,
+    IMPACT_METRIC_UPDATED,
+    IMPACT_METRIC_DELETED,
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 

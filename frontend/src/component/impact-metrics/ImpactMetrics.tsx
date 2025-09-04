@@ -1,7 +1,8 @@
 import type { FC } from 'react';
 import { useMemo, useState, useCallback } from 'react';
-import { Typography, Button, Paper, styled } from '@mui/material';
+import { Typography, Button, Paper, styled, Box } from '@mui/material';
 import Add from '@mui/icons-material/Add';
+import DragHandle from '@mui/icons-material/DragHandle';
 import { PageHeader } from 'component/common/PageHeader/PageHeader.tsx';
 import { useImpactMetricsMetadata } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { ChartConfigModal } from './ChartConfigModal/ChartConfigModal.tsx';
@@ -20,6 +21,19 @@ const StyledEmptyState = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.background.default,
     borderRadius: `${theme.shape.borderRadiusMedium}px`,
     boxShadow: 'none',
+}));
+
+const StyledDragHandle = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'move',
+    padding: theme.spacing(0.5),
+    borderRadius: theme.shape.borderRadius,
+    color: theme.palette.text.secondary,
+    '&:hover': {
+        backgroundColor: theme.palette.action.hover,
+        color: theme.palette.text.primary,
+    },
 }));
 
 export const ImpactMetrics: FC = () => {
@@ -112,6 +126,11 @@ export const ImpactMetrics: FC = () => {
                             config={config}
                             onEdit={handleEditChart}
                             onDelete={handleDeleteChart}
+                            dragHandle={
+                                <StyledDragHandle className='grid-item-drag-handle'>
+                                    <DragHandle fontSize='small' />
+                                </StyledDragHandle>
+                            }
                         />
                     ),
                     w: existingLayout?.w ?? 6,

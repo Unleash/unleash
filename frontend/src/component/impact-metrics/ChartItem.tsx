@@ -2,7 +2,6 @@ import type { FC } from 'react';
 import { Box, Typography, styled, Paper } from '@mui/material';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
-import DragHandle from '@mui/icons-material/DragHandle';
 import { ImpactMetricsChart } from './ImpactMetricsChart.tsx';
 import type { ChartConfig, DisplayChartConfig } from './types.ts';
 import PermissionIconButton from '../common/PermissionIconButton/PermissionIconButton.tsx';
@@ -14,6 +13,7 @@ export interface ChartItemProps {
     onDelete: (id: string) => void;
     permission?: string;
     projectId?: string;
+    dragHandle?: React.ReactNode;
 }
 
 const getConfigDescription = (config: DisplayChartConfig): string => {
@@ -77,19 +77,6 @@ const StyledHeader = styled(Box)(({ theme }) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
-const StyledDragHandle = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    cursor: 'move',
-    padding: theme.spacing(0.5),
-    borderRadius: theme.shape.borderRadius,
-    color: theme.palette.text.secondary,
-    '&:hover': {
-        backgroundColor: theme.palette.action.hover,
-        color: theme.palette.text.primary,
-    },
-}));
-
 const StyledChartTitle = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -112,12 +99,11 @@ export const ChartItem: FC<ChartItemProps> = ({
     onDelete,
     permission = ADMIN,
     projectId,
+    dragHandle,
 }) => (
     <StyledWidget>
         <StyledHeader>
-            <StyledDragHandle className='grid-item-drag-handle'>
-                <DragHandle fontSize='small' />
-            </StyledDragHandle>
+            {dragHandle}
             <StyledChartTitle>
                 {config.title && (
                     <Typography variant='h6'>{config.title}</Typography>

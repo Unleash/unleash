@@ -3,16 +3,11 @@ import {
     Autocomplete,
     Checkbox,
     Chip,
-    FormControlLabel,
-    styled,
     TextField,
     Typography,
 } from '@mui/material';
+import { METRIC_LABELS_SELECT_ALL } from 'component/impact-metrics/hooks/useImpactMetricsState';
 import type { FC } from 'react';
-
-const StyledSelectAllLabel = styled('span')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-}));
 
 type LabelFilterItemProps = {
     labelKey: string;
@@ -28,106 +23,111 @@ export const LabelFilterItem: FC<LabelFilterItemProps> = ({
     value,
     onChange,
 }) => {
-    const isAllSelected = value.includes('*');
+    const isAllSelected = value.includes(METRIC_LABELS_SELECT_ALL);
     const autocompleteId = `autocomplete-${labelKey}`;
-    const selectAllId = `select-all-${labelKey}`;
     const isTruncated = options.length >= 1_000;
 
-    return (
-        <>
-            <FormControlLabel
-                sx={(theme) => ({
-                    marginLeft: theme.spacing(0),
-                })}
-                control={
-                    <Checkbox
-                        id={selectAllId}
-                        size='small'
-                        checked={isAllSelected}
-                        onChange={(e) =>
-                            onChange(e.target.checked ? ['*'] : [])
-                        }
-                        inputProps={{
-                            'aria-describedby': autocompleteId,
-                            'aria-label': `Select all ${labelKey} options`,
-                        }}
-                    />
-                }
-                label={<StyledSelectAllLabel>Select all</StyledSelectAllLabel>}
-            />
-            <Autocomplete
-                multiple
-                id={autocompleteId}
-                options={options}
-                value={isAllSelected ? options : value}
-                onChange={(_, newValues) => {
-                    onChange(newValues);
-                }}
-                disabled={isAllSelected}
-                renderTags={(value, getTagProps) => {
-                    const overflowCount = 5;
-                    const displayedValues = value.slice(-overflowCount);
-                    const remainingCount = value.length - overflowCount;
+    const optionsWithSelectAll = [METRIC_LABELS_SELECT_ALL, ...options];
 
-                    return (
-                        <>
-                            {displayedValues.map((option, index) => {
-                                const { key, ...chipProps } = getTagProps({
-                                    index,
-                                });
-                                return (
-                                    <Chip
-                                        {...chipProps}
-                                        key={key}
-                                        label={option}
-                                        size='small'
-                                    />
-                                );
-                            })}
-                            {remainingCount > 0 ? (
-                                <Typography
-                                    component='span'
-                                    sx={{ color: 'text.secondary' }}
-                                >
-                                    {' '}
-                                    (+{remainingCount})
-                                </Typography>
-                            ) : null}
-                        </>
-                    );
-                }}
-                renderInput={(params) => (
+    return (
+        <Autocomplete
+            multiple
+            disableCloseOnSelect
+            id={autocompleteId}
+            options={optionsWithSelectAll}
+            value={isAllSelected ? options : value}
+            getOptionLabel={(option) =>
+                option === METRIC_LABELS_SELECT_ALL ? '(Select all)' : option
+            }
+            onChange={(_, newValues, reason, details) => {
+                if (details?.option === METRIC_LABELS_SELECT_ALL) {
+                    onChange(isAllSelected ? [] : [METRIC_LABELS_SELECT_ALL]);
+                    return;
+                }
+                onChange(
+                    newValues.filter((v) => v !== METRIC_LABELS_SELECT_ALL),
+                );
+            }}
+            renderOption={(props, option, { selected }) => (
+                <li {...props}>
+                    <Checkbox
+                        size='small'
+                        checked={
+                            option === METRIC_LABELS_SELECT_ALL
+                                ? isAllSelected
+                                : selected
+                        }
+                        style={{ marginRight: 8 }}
+                    />
+                    {option === METRIC_LABELS_SELECT_ALL ? (
+                        <Typography
+                            component='span'
+                            sx={{ color: 'text.secondary' }}
+                        >
+                            Select all
+                        </Typography>
+                    ) : (
+                        option
+                    )}
+                </li>
+            )}
+            renderTags={(value, getTagProps) => {
+                const overflowCount = 5;
+                const displayedValues = value.slice(-overflowCount);
+                const remainingCount = value.length - overflowCount;
+
+                return (
                     <>
-                        <TextField
-                            {...params}
-                            label={labelKey}
-                            placeholder={
-                                isAllSelected ? undefined : 'Select values…'
-                            }
-                            variant='outlined'
-                            size='small'
-                            inputProps={{
-                                ...params.inputProps,
-                                'aria-describedby': isAllSelected
-                                    ? `${selectAllId}-description`
-                                    : undefined,
-                            }}
-                        />
-                        {isTruncated && (
-                            <Alert
-                                severity='warning'
-                                sx={(theme) => ({
-                                    padding: theme.spacing(1, 2),
-                                    marginTop: theme.spacing(1),
-                                })}
+                        {displayedValues.map((option, index) => {
+                            const { key, ...chipProps } = getTagProps({
+                                index,
+                            });
+                            return (
+                                <Chip
+                                    {...chipProps}
+                                    key={key}
+                                    label={option}
+                                    size='small'
+                                />
+                            );
+                        })}
+                        {remainingCount > 0 ? (
+                            <Typography
+                                component='span'
+                                sx={{ color: 'text.secondary' }}
                             >
-                                Maximum of 1000 values loaded due to
-                                performance.
-                            </Alert>
-                        )}
+                                {' '}
+                                (+{remainingCount})
+                            </Typography>
+                        ) : null}
                     </>
-                )}
-            />
-        </>
+                );
+            }}
+            renderInput={(params) => (
+                <>
+                    <TextField
+                        {...params}
+                        label={labelKey}
+                        placeholder={
+                            isAllSelected ? undefined : 'Select values…'
+                        }
+                        variant='outlined'
+                        size='small'
+                        inputProps={{ ...params.inputProps }}
+                    />
+                    {isTruncated && (
+                        <Alert
+                            severity='warning'
+                            sx={(theme) => ({
+                                padding: theme.spacing(1, 2),
+                                marginTop: theme.spacing(1),
+                            })}
+                        >
+                            Maximum of 1000 values loaded due to performance.
+                        </Alert>
+                    )}
+                </>
+            )}
+        />
     );
 };

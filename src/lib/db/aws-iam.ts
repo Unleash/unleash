@@ -14,7 +14,7 @@ export const getDBPasswordResolver = (db: IDBOption): PasswordResolver => {
             region: db.awsRegion,
             hostname: db.host,
             port: db.port,
-            username: db.user,
+            username: process.env.DATABASE_USERNAME || db.user,
         });
         return async () => {
             console.log('[AWS RDS SIGNER] Getting token...');

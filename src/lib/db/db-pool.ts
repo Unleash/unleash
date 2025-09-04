@@ -2,8 +2,7 @@ import type { Knex } from 'knex';
 import knexpkg from 'knex';
 const { knex } = knexpkg;
 import type { IUnleashConfig } from '../types/option.js';
-
-import { Signer } from '@aws-sdk/rds-signer';
+import { getDBPasswordResolver } from './aws-iam.js';
 
 export function createDb({
     db,
@@ -11,53 +10,19 @@ export function createDb({
 }: Pick<IUnleashConfig, 'db' | 'getLogger'>): Knex {
     const logger = getLogger('db-pool.js');
 
-    const {
-        host,
-        port,
-        user,
-        database,
-        ssl,
-        applicationName,
-        password,
-        awsIamAuth,
-        awsRegion,
-        pool,
-    } = db;
-
-    let resolvedPassword: string | (() => Promise<string>) | undefined =
-        password;
-
-    if (awsIamAuth) {
-        if (!awsRegion) {
-            throw new Error(
-                'AWS_REGION is required when DATABASE_AWS_IAM=true',
-            );
-        }
-        const signer = new Signer({
-            region: awsRegion,
-            hostname: host,
-            port,
-            username: user,
-        });
-
-        resolvedPassword = async () => signer.getAuthToken();
-    }
-
-    const connection = {
-        host,
-        port,
-        user,
-        database,
-        ssl,
-        application_name: applicationName,
-        password: resolvedPassword,
-    };
+    logger.info(
+        `createDb: iam=${Boolean(db.awsIamAuth)} host=${db.host} port=${db.port} db=${db.database} user=${db.user} ssl=${Boolean(db.ssl)}`,
+    );
 
     return knex({
         client: 'pg',
         version: db.version,
-        connection,
-        pool,
+        connection: {
+            ...db,
+            application_name: db.applicationName,
+            password: getDBPasswordResolver(db),
+        },
+        pool: db.pool,
         searchPath: db.schema,
         asyncStackTraces: true,
         log: {

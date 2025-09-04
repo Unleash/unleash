@@ -69,7 +69,11 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
                 control={
                     <Checkbox
                         checked={formData.yAxisMin}
-                        onChange={(e) => actions.setYAxisMin(e.target.checked)}
+                        onChange={(e) =>
+                            actions.setYAxisMin(
+                                e.target.checked ? 'zero' : 'auto',
+                            )
+                        }
                     />
                 }
                 label='Begin at zero'

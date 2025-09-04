@@ -6,6 +6,7 @@ import type { IUnleashConfig } from './lib/types/option.js';
 import { secondsToMilliseconds } from 'date-fns';
 import path from 'path';
 import { fileURLToPath } from 'node:url';
+import { getDBPasswordResolver } from './lib/db/aws-iam.js';
 
 log.setLogLevel('error');
 const __filename = fileURLToPath(import.meta.url);
@@ -25,6 +26,7 @@ export async function migrateDb(
     return noDatabaseUrl(async () => {
         const custom = {
             ...db,
+            password: getDBPasswordResolver(db),
             connectionTimeoutMillis: secondsToMilliseconds(10),
         };
 
@@ -46,6 +48,7 @@ export async function requiresMigration({
     return noDatabaseUrl(async () => {
         const custom = {
             ...db,
+            password: getDBPasswordResolver(db),
             connectionTimeoutMillis: secondsToMilliseconds(10),
         };
 
@@ -67,6 +70,7 @@ export async function resetDb({ db }: IUnleashConfig): Promise<void> {
     return noDatabaseUrl(async () => {
         const custom = {
             ...db,
+            password: getDBPasswordResolver(db),
             connectionTimeoutMillis: secondsToMilliseconds(10),
         };
 

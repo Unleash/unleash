@@ -20,7 +20,7 @@ export interface ISSLOption {
 
 export interface IDBOption {
     user: string;
-    password?: string;
+    password: string;
     host: string;
     port: number;
     database: string;

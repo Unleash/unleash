@@ -9,6 +9,10 @@ import { useImpactMetricsApi } from 'hooks/api/actions/useImpactMetricsSettingsA
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
 import { useFeatureImpactMetrics } from 'hooks/api/getters/useFeatureImpactMetrics/useFeatureImpactMetrics.ts';
 import { ChartItem } from '../../../impact-metrics/ChartItem.tsx';
+import {
+    GridLayoutWrapper,
+    type GridItem,
+} from '../../../impact-metrics/GridLayoutWrapper.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions.ts';
 import useToast from 'hooks/useToast.tsx';
@@ -98,6 +102,28 @@ export const FeatureImpactMetrics: FC = () => {
     const editingChart =
         modalState.type === 'editing' ? modalState.config : undefined;
 
+    const gridItems: GridItem[] = useMemo(
+        () =>
+            impactMetrics.configs.map((config, index) => ({
+                id: config.id,
+                component: (
+                    <ChartItem
+                        config={config}
+                        onEdit={() => handleEditChart(config)}
+                        onDelete={() => handleDeleteChart(config.id)}
+                        permission={UPDATE_FEATURE}
+                        projectId={project}
+                    />
+                ),
+                w: 6,
+                h: 2,
+                x: (index % 2) * 6,
+                y: Math.floor(index / 2) * 2,
+                static: true,
+            })),
+        [impactMetrics.configs, project],
+    );
+
     return (
         <PageContent>
             <PageHeader
@@ -118,18 +144,9 @@ export const FeatureImpactMetrics: FC = () => {
                 }
             />
 
-            <>
-                {impactMetrics.configs.map((config) => (
-                    <ChartItem
-                        key={config.id}
-                        config={config}
-                        onEdit={() => handleEditChart(config)}
-                        onDelete={() => handleDeleteChart(config.id)}
-                        permission={UPDATE_FEATURE}
-                        projectId={project}
-                    />
-                ))}
-            </>
+            {impactMetrics.configs.length > 0 && (
+                <GridLayoutWrapper items={gridItems} />
+            )}
 
             <ChartConfigModal
                 open={isModalOpen}

@@ -31,15 +31,21 @@ type ModalState =
     | { type: 'editing'; config: ChartConfig };
 
 export const FeatureImpactMetrics: FC = () => {
-    const feature = useRequiredPathParam('featureId');
-    const project = useRequiredPathParam('projectId');
+    const featureName = useRequiredPathParam('featureId');
+    const projectId = useRequiredPathParam('projectId');
 
     const [modalState, setModalState] = useState<ModalState>({
         type: 'closed',
     });
 
-    const { createImpactMetric, deleteImpactMetric } = useImpactMetricsApi();
-    const { impactMetrics, refetch } = useFeatureImpactMetrics(feature);
+    const { createImpactMetric, deleteImpactMetric } = useImpactMetricsApi({
+        projectId,
+        featureName,
+    });
+    const { impactMetrics, refetch } = useFeatureImpactMetrics({
+        projectId,
+        featureName,
+    });
     const { setToastApiError } = useToast();
 
     const {
@@ -69,7 +75,7 @@ export const FeatureImpactMetrics: FC = () => {
 
             await createImpactMetric({
                 ...data,
-                feature,
+                feature: featureName,
                 id: configId,
             });
             refetch();
@@ -112,7 +118,7 @@ export const FeatureImpactMetrics: FC = () => {
                         onEdit={() => handleEditChart(config)}
                         onDelete={() => handleDeleteChart(config.id)}
                         permission={UPDATE_FEATURE}
-                        projectId={project}
+                        projectId={projectId}
                     />
                 ),
                 w: 6,
@@ -121,7 +127,7 @@ export const FeatureImpactMetrics: FC = () => {
                 y: Math.floor(index / 2) * 2,
                 static: true,
             })),
-        [impactMetrics.configs, project],
+        [impactMetrics.configs, projectId],
     );
 
     return (
@@ -137,7 +143,7 @@ export const FeatureImpactMetrics: FC = () => {
                         onClick={handleAddChart}
                         disabled={metadataLoading || !!metadataError}
                         permission={UPDATE_FEATURE}
-                        projectId={project}
+                        projectId={projectId}
                     >
                         Add Chart
                     </PermissionButton>

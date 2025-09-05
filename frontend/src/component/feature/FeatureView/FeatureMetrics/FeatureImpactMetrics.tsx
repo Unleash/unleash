@@ -1,6 +1,6 @@
 import { PageContent } from 'component/common/PageContent/PageContent.tsx';
 import { PageHeader } from '../../../common/PageHeader/PageHeader.tsx';
-import { styled, Typography } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { useImpactMetricsMetadata } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata.ts';
 import { type FC, useMemo, useState } from 'react';
@@ -151,7 +151,9 @@ export const FeatureImpactMetrics: FC = () => {
             />
 
             {impactMetrics.configs.length > 0 && (
-                <GridLayoutWrapper items={gridItems} />
+                <Box sx={(theme) => ({ marginTop: theme.spacing(3) })}>
+                    <GridLayoutWrapper items={gridItems} />
+                </Box>
             )}
 
             <ChartConfigModal

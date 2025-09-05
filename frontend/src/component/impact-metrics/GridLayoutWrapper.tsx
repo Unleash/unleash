@@ -52,6 +52,10 @@ type GridLayoutWrapperProps = {
     rowHeight?: number;
 };
 
+const ItemContainer = styled('div')(({ theme }) => ({
+    border: `1px solid ${theme.palette.divider}`,
+}));
+
 export const GridLayoutWrapper: FC<GridLayoutWrapperProps> = ({
     items,
     onLayoutChange,
@@ -102,7 +106,10 @@ export const GridLayoutWrapper: FC<GridLayoutWrapperProps> = ({
     }, [items, cols, isMobileBreakpoint]);
 
     const children = useMemo(
-        () => items.map((item) => <div key={item.id}>{item.component}</div>),
+        () =>
+            items.map((item) => (
+                <ItemContainer key={item.id}>{item.component}</ItemContainer>
+            )),
         [items],
     );
 

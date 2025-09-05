@@ -50,13 +50,21 @@ type GridLayoutWrapperProps = {
     onLayoutChange?: (layout: LayoutItem[]) => void;
     cols?: { lg: number; md: number; sm: number; xs: number; xxs: number };
     rowHeight?: number;
+    borders?: boolean;
 };
+
+const ItemContainer = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'borders',
+})<{ borders: boolean }>(({ theme, borders }) => ({
+    ...(borders && { border: `1px solid ${theme.palette.divider}` }),
+}));
 
 export const GridLayoutWrapper: FC<GridLayoutWrapperProps> = ({
     items,
     onLayoutChange,
     cols = { lg: 12, md: 12, sm: 6, xs: 4, xxs: 2 },
     rowHeight = 180,
+    borders = false,
 }) => {
     const theme = useTheme();
     const isMobileBreakpoint = useMediaQuery(theme.breakpoints.down('md'));
@@ -102,8 +110,13 @@ export const GridLayoutWrapper: FC<GridLayoutWrapperProps> = ({
     }, [items, cols, isMobileBreakpoint]);
 
     const children = useMemo(
-        () => items.map((item) => <div key={item.id}>{item.component}</div>),
-        [items],
+        () =>
+            items.map((item) => (
+                <ItemContainer key={item.id} borders={borders}>
+                    {item.component}
+                </ItemContainer>
+            )),
+        [items, borders],
     );
 
     const handleLayoutChange = useCallback(

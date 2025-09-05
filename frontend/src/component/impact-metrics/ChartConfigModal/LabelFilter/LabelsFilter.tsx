@@ -1,13 +1,15 @@
 import type { FC } from 'react';
-import { Box, Typography, Chip } from '@mui/material';
+import { Box } from '@mui/material';
 import type { ImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
-import { LabelFilterItem } from './LabelFilterItem/LabelFilterItem.tsx';
+import { LabelFilterSection } from './LabelFilterSection/LabelFilterSection.tsx';
 
 export type LabelsFilterProps = {
     labelSelectors: Record<string, string[]>;
     onChange: (labels: Record<string, string[]>) => void;
     availableLabels: ImpactMetricsLabels;
 };
+
+const STATIC_LABELS = ['environment', 'appName', 'origin'];
 
 export const LabelsFilter: FC<LabelsFilterProps> = ({
     labelSelectors,
@@ -34,71 +36,40 @@ export const LabelsFilter: FC<LabelsFilterProps> = ({
         onChange(newLabels);
     };
 
-    const clearAllLabels = () => {
-        onChange({});
-    };
-
     if (!availableLabels || Object.keys(availableLabels).length === 0) {
         return null;
     }
 
+    const staticLabels = Object.entries(availableLabels)
+        .filter(([key]) => STATIC_LABELS.includes(key))
+        .sort();
+    const dynamicLabels = Object.entries(availableLabels)
+        .filter(([key]) => !STATIC_LABELS.includes(key))
+        .sort();
+
     return (
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-            <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1,
-                    width: '100%',
-                }}
-            >
-                <Typography variant='subtitle2'>Filter by labels</Typography>
-                {Object.keys(labelSelectors).length > 0 && (
-                    <Chip
-                        label='Clear all'
-                        size='small'
-                        variant='outlined'
-                        onClick={clearAllLabels}
-                    />
-                )}
-            </Box>
+            {staticLabels.length > 0 && (
+                <LabelFilterSection
+                    title='Filter by labels'
+                    labels={staticLabels}
+                    labelSelectors={labelSelectors}
+                    onLabelChange={handleLabelChange}
+                    onAllToggle={handleAllToggle}
+                    onChange={onChange}
+                />
+            )}
 
-            <Box
-                sx={{
-                    display: 'grid',
-                    gridTemplateColumns:
-                        'repeat(auto-fill, minmax(300px, 1fr))',
-                    gap: 2,
-                    flexGrow: 1,
-                }}
-            >
-                {Object.entries(availableLabels)
-                    .sort()
-                    .map(([labelKey, values]) => {
-                        const currentSelection = labelSelectors[labelKey] || [];
-
-                        return (
-                            <Box
-                                key={labelKey}
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    flexGrow: 1,
-                                }}
-                            >
-                                <LabelFilterItem
-                                    labelKey={labelKey}
-                                    options={values}
-                                    value={currentSelection}
-                                    onChange={(newValues) =>
-                                        handleLabelChange(labelKey, newValues)
-                                    }
-                                    handleAllToggle={handleAllToggle}
-                                />
-                            </Box>
-                        );
-                    })}
-            </Box>
+            {dynamicLabels.length > 0 && (
+                <LabelFilterSection
+                    title='Flag specific filters'
+                    labels={dynamicLabels}
+                    labelSelectors={labelSelectors}
+                    onLabelChange={handleLabelChange}
+                    onAllToggle={handleAllToggle}
+                    onChange={onChange}
+                />
+            )}
         </Box>
     );
 };

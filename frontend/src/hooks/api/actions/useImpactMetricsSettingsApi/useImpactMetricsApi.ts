@@ -2,19 +2,26 @@ import { useCallback } from 'react';
 import useAPI from '../useApi/useApi.js';
 import type { CreateImpactMetricsConfigSchema } from 'openapi';
 
-export const useImpactMetricsApi = ({
-    projectId,
-    featureName,
-}: { projectId: string; featureName: string }) => {
+type UseImpactMetricsApiParams =
+    | {
+          projectId: string;
+          featureName: string;
+      }
+    | undefined;
+
+export const useImpactMetricsApi = (params: UseImpactMetricsApiParams) => {
+    const basePath = params
+        ? `api/admin/projects/${params.projectId}/features/${params.featureName}/impact-metrics/config`
+        : `api/admin/impact-metrics/config`;
+
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
 
     const createImpactMetric = useCallback(
         async (config: CreateImpactMetricsConfigSchema) => {
-            const path = `api/admin/projects/${projectId}/features/${featureName}/impact-metrics/config`;
             const req = createRequest(
-                path,
+                basePath,
                 {
                     method: 'POST',
                     body: JSON.stringify(config),
@@ -29,9 +36,8 @@ export const useImpactMetricsApi = ({
 
     const deleteImpactMetric = useCallback(
         async (metricId: string) => {
-            const path = `api/admin/projects/${projectId}/features/${featureName}/impact-metrics/config/${metricId}`;
             const req = createRequest(
-                path,
+                `${basePath}/${metricId}`,
                 {
                     method: 'DELETE',
                 },

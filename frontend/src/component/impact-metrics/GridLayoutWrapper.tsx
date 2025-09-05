@@ -50,7 +50,6 @@ type GridLayoutWrapperProps = {
     onLayoutChange?: (layout: LayoutItem[]) => void;
     cols?: { lg: number; md: number; sm: number; xs: number; xxs: number };
     rowHeight?: number;
-    borders?: boolean;
 };
 
 const ItemContainer = styled('div')(({ theme }) => ({

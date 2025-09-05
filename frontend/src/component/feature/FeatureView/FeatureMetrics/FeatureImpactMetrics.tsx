@@ -152,7 +152,7 @@ export const FeatureImpactMetrics: FC = () => {
 
             {impactMetrics.configs.length > 0 && (
                 <Box sx={(theme) => ({ marginTop: theme.spacing(3) })}>
-                    <GridLayoutWrapper items={gridItems} borders />
+                    <GridLayoutWrapper items={gridItems} />
                 </Box>
             )}
 

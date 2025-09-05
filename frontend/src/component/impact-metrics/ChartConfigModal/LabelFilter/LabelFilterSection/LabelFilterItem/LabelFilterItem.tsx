@@ -48,29 +48,33 @@ export const LabelFilterItem: FC<LabelFilterItemProps> = ({
                     newValues.filter((v) => v !== METRIC_LABELS_SELECT_ALL),
                 );
             }}
-            renderOption={(props, option, { selected }) => (
-                <li {...props}>
-                    <Checkbox
-                        size='small'
-                        checked={
-                            option === METRIC_LABELS_SELECT_ALL
-                                ? isAllSelected
-                                : selected
-                        }
-                        style={{ marginRight: 8 }}
-                    />
-                    {option === METRIC_LABELS_SELECT_ALL ? (
-                        <Typography
-                            component='span'
-                            sx={{ color: 'text.secondary' }}
-                        >
-                            Select all
-                        </Typography>
-                    ) : (
-                        option
-                    )}
-                </li>
-            )}
+            renderOption={(props, option, { selected }) => {
+                const { key, ...listItemProps } = props as any;
+
+                return (
+                    <li key={key || option} {...listItemProps}>
+                        <Checkbox
+                            size='small'
+                            checked={
+                                option === METRIC_LABELS_SELECT_ALL
+                                    ? isAllSelected
+                                    : selected
+                            }
+                            style={{ marginRight: 8 }}
+                        />
+                        {option === METRIC_LABELS_SELECT_ALL ? (
+                            <Typography
+                                component='span'
+                                sx={{ color: 'text.secondary' }}
+                            >
+                                Select all
+                            </Typography>
+                        ) : (
+                            option
+                        )}
+                    </li>
+                );
+            }}
             renderTags={(value, getTagProps) => {
                 const overflowCount = 5;
                 const displayedValues = value.slice(-overflowCount);

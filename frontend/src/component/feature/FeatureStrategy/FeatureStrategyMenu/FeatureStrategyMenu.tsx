@@ -171,9 +171,7 @@ export const FeatureStrategyMenu = ({
                         sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
                         disabled={Boolean(disableReason)}
                         tooltipProps={{
-                            title: disableReason
-                                ? disableReason
-                                : undefined,
+                            title: disableReason ? disableReason : undefined,
                         }}
                     >
                         Use template

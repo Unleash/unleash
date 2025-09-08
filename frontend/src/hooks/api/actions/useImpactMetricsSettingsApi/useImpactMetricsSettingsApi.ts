@@ -2,6 +2,9 @@ import { useCallback } from 'react';
 import useAPI from '../useApi/useApi.js';
 import type { ImpactMetricsState } from 'component/impact-metrics/types.ts';
 
+/**
+ * @deprecated use `useImpactMetricsApi()` instead
+ */
 export const useImpactMetricsSettingsApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,

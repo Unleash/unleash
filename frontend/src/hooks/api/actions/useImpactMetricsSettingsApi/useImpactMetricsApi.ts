@@ -9,7 +9,7 @@ type UseImpactMetricsApiParams =
       }
     | undefined;
 
-export const useImpactMetricsApi = (params: UseImpactMetricsApiParams) => {
+export const useImpactMetricsApi = (params?: UseImpactMetricsApiParams) => {
     const basePath = params
         ? `api/admin/projects/${params.projectId}/features/${params.featureName}/impact-metrics/config`
         : `api/admin/impact-metrics/config`;
@@ -46,7 +46,7 @@ export const useImpactMetricsApi = (params: UseImpactMetricsApiParams) => {
 
             return makeRequest(req.caller, req.id);
         },
-        [makeRequest, createRequest],
+        [makeRequest, createRequest, basePath],
     );
 
     return {

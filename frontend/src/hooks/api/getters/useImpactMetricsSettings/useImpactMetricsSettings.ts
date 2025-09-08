@@ -2,6 +2,9 @@ import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter.js';
 import { formatApiPath } from 'utils/formatPath';
 import type { DisplayImpactMetricsState } from 'component/impact-metrics/types.ts';
 
+/**
+ * @deprecated use `useImpactMetricsConfig()` instead
+ */
 export const useImpactMetricsSettings = () => {
     const PATH = `api/admin/impact-metrics/settings`;
     const { data, refetch, loading, error } =

@@ -2,14 +2,13 @@ import type { FC } from 'react';
 import { useMemo, useState, useCallback } from 'react';
 import { Typography, Button, Paper, styled, Box } from '@mui/material';
 import Add from '@mui/icons-material/Add';
-import DragHandle from '@mui/icons-material/DragHandle';
 import { PageHeader } from 'component/common/PageHeader/PageHeader.tsx';
 import { useImpactMetricsMetadata } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { ChartConfigModal } from './ChartConfigModal/ChartConfigModal.tsx';
 import { ChartItem } from './ChartItem.tsx';
 import { GridLayoutWrapper, type GridItem } from './GridLayoutWrapper.tsx';
 import { useImpactMetricsState } from './hooks/useImpactMetricsState.ts';
-import type { ChartConfig, LayoutItem } from './types.ts';
+import type { ChartConfig } from './types.ts';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
@@ -49,7 +48,7 @@ export const ImpactMetrics: FC = () => {
         addChart,
         updateChart,
         deleteChart,
-        updateLayout,
+        // updateLayout,
     } = useImpactMetricsState();
 
     const {
@@ -91,16 +90,16 @@ export const ImpactMetrics: FC = () => {
         }
     };
 
-    const handleLayoutChange = useCallback(
-        async (layout: any[]) => {
-            try {
-                await updateLayout(layout as LayoutItem[]);
-            } catch (error) {
-                setToastApiError(formatUnknownError(error));
-            }
-        },
-        [updateLayout, setToastApiError],
-    );
+    // const handleLayoutChange = useCallback(
+    //     async (layout: any[]) => {
+    //         try {
+    //             await updateLayout(layout as LayoutItem[]);
+    //         } catch (error) {
+    //             setToastApiError(formatUnknownError(error));
+    //         }
+    //     },
+    //     [updateLayout, setToastApiError],
+    // );
 
     const handleDeleteChart = useCallback(
         async (id: string) => {
@@ -127,9 +126,10 @@ export const ImpactMetrics: FC = () => {
                             onEdit={handleEditChart}
                             onDelete={handleDeleteChart}
                             dragHandle={
-                                <StyledDragHandle className='grid-item-drag-handle'>
-                                    <DragHandle fontSize='small' />
-                                </StyledDragHandle>
+                                null
+                                // <StyledDragHandle className='grid-item-drag-handle'>
+                                //     <DragHandle fontSize='small' />
+                                // </StyledDragHandle>
                             }
                         />
                     ),
@@ -196,7 +196,7 @@ export const ImpactMetrics: FC = () => {
             ) : charts.length > 0 ? (
                 <GridLayoutWrapper
                     items={gridItems}
-                    onLayoutChange={handleLayoutChange}
+                    // onLayoutChange={handleLayoutChange}
                 />
             ) : null}
 

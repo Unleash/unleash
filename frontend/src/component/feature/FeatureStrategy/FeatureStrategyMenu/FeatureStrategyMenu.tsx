@@ -6,7 +6,7 @@ import PermissionButton, {
 } from 'component/common/PermissionButton/PermissionButton';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { Dialog, styled } from '@mui/material';
-import { FeatureStrategyMenuCards } from './FeatureStrategyMenuCards/FeatureStrategyMenuCards.tsx';
+import { LegacyFeatureStrategyMenuCards } from './LegacyFeatureStrategyMenuCards/LegacyFeatureStrategyMenuCards.tsx';
 import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrategyCreate.tsx';
 import MoreVert from '@mui/icons-material/MoreVert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -20,6 +20,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ReleasePlanReviewDialog } from '../../FeatureView/FeatureOverview/ReleasePlan/ReleasePlanReviewDialog.tsx';
+import { FeatureStrategyMenuCards } from './FeatureStrategyMenuCards/FeatureStrategyMenuCards.tsx';
 
 interface IFeatureStrategyMenuProps {
     label: string;
@@ -77,6 +78,7 @@ export const FeatureStrategyMenu = ({
     const { isEnterprise } = useUiConfig();
     const displayReleasePlanButton = isEnterprise();
     const crProtected = isChangeRequestConfigured(environmentId);
+    const newStrategyModalEnabled = useUiFlag('newStrategyModal');
 
     const onClose = () => {
         setIsStrategyMenuDialogOpen(false);
@@ -222,22 +224,41 @@ export const FeatureStrategyMenu = ({
                     },
                 }}
             >
-                <FeatureStrategyMenuCards
-                    projectId={projectId}
-                    featureId={featureId}
-                    environmentId={environmentId}
-                    onlyReleasePlans={onlyReleasePlans}
-                    onAddReleasePlan={(template) => {
-                        setSelectedTemplate(template);
-                        addReleasePlan(template);
-                    }}
-                    onReviewReleasePlan={(template) => {
-                        setSelectedTemplate(template);
-                        setAddReleasePlanOpen(true);
-                        onClose();
-                    }}
-                    onClose={onClose}
-                />
+                {newStrategyModalEnabled ? (
+                    <FeatureStrategyMenuCards
+                        projectId={projectId}
+                        featureId={featureId}
+                        environmentId={environmentId}
+                        onlyReleasePlans={onlyReleasePlans}
+                        onAddReleasePlan={(template) => {
+                            setSelectedTemplate(template);
+                            addReleasePlan(template);
+                        }}
+                        onReviewReleasePlan={(template) => {
+                            setSelectedTemplate(template);
+                            setAddReleasePlanOpen(true);
+                            onClose();
+                        }}
+                        onClose={onClose}
+                    />
+                ) : (
+                    <LegacyFeatureStrategyMenuCards
+                        projectId={projectId}
+                        featureId={featureId}
+                        environmentId={environmentId}
+                        onlyReleasePlans={onlyReleasePlans}
+                        onAddReleasePlan={(template) => {
+                            setSelectedTemplate(template);
+                            addReleasePlan(template);
+                        }}
+                        onReviewReleasePlan={(template) => {
+                            setSelectedTemplate(template);
+                            setAddReleasePlanOpen(true);
+                            onClose();
+                        }}
+                        onClose={onClose}
+                    />
+                )}
             </Dialog>
             {selectedTemplate && (
                 <ReleasePlanReviewDialog

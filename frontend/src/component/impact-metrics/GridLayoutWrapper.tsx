@@ -134,8 +134,6 @@ export const GridLayoutWrapper: FC<GridLayoutWrapperProps> = ({
                     Number.parseInt(theme.spacing(2)),
                 ]}
                 containerPadding={[0, 0]}
-                // isDraggable={!isMobileBreakpoint}
-                // isResizable={!isMobileBreakpoint}
                 isDraggable={false}
                 isResizable={false}
                 onLayoutChange={handleLayoutChange}

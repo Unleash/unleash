@@ -90,17 +90,6 @@ export const ImpactMetrics: FC = () => {
         }
     };
 
-    // const handleLayoutChange = useCallback(
-    //     async (layout: any[]) => {
-    //         try {
-    //             await updateLayout(layout as LayoutItem[]);
-    //         } catch (error) {
-    //             setToastApiError(formatUnknownError(error));
-    //         }
-    //     },
-    //     [updateLayout, setToastApiError],
-    // );
-
     const handleDeleteChart = useCallback(
         async (id: string) => {
             try {
@@ -125,12 +114,6 @@ export const ImpactMetrics: FC = () => {
                             config={config}
                             onEdit={handleEditChart}
                             onDelete={handleDeleteChart}
-                            dragHandle={
-                                null
-                                // <StyledDragHandle className='grid-item-drag-handle'>
-                                //     <DragHandle fontSize='small' />
-                                // </StyledDragHandle>
-                            }
                         />
                     ),
                     w: existingLayout?.w ?? 6,
@@ -194,10 +177,7 @@ export const ImpactMetrics: FC = () => {
                     </Button>
                 </StyledEmptyState>
             ) : charts.length > 0 ? (
-                <GridLayoutWrapper
-                    items={gridItems}
-                    // onLayoutChange={handleLayoutChange}
-                />
+                <GridLayoutWrapper items={gridItems} />
             ) : null}
 
             <ChartConfigModal

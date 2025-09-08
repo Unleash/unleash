@@ -55,7 +55,6 @@ export type IFlagKey =
     | 'customMetrics'
     | 'impactMetrics'
     | 'lifecycleGraphs'
-    | 'addConfiguration'
     | 'etagByEnv'
     | 'fetchMode'
     | 'optimizeLifecycle';
@@ -248,10 +247,6 @@ const flags: IFlags = {
     ),
     lifecycleGraphs: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_GRAPHS,
-        false,
-    ),
-    addConfiguration: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ADD_CONFIGURATION,
         false,
     ),
     streaming: {

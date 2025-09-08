@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import type { ChartConfig } from '../types.ts';
 import { useImpactMetricsConfig } from 'hooks/api/getters/useImpactMetricsConfig/useImpactMetricsConfig.ts';
-import { useImpactMetricsApi } from 'hooks/api/actions/useImpactMetricsSettingsApi/useImpactMetricsApi.ts';
+import { useImpactMetricsApi } from 'hooks/api/actions/useImpactMetricsApi/useImpactMetricsApi.ts';
 
 /**
  * "Select all" represents all current and future labels.
@@ -19,17 +19,22 @@ export const useImpactMetricsState = () => {
 
     const { layout, charts } = useMemo(
         () => ({
-            layout: configs.map((config, index) => ({
-                i: config.id,
-                x: 0,
-                y: index * 4,
-                w: 6,
-                h: 4,
-                minW: 4,
-                minH: 2,
-                maxW: 12,
-                maxH: 8,
-            })),
+            layout: configs.map((config, index) => {
+                const column = index % 2;
+                const row = Math.floor(index / 2);
+
+                return {
+                    i: config.id,
+                    x: column * 6,
+                    y: row * 2,
+                    w: 6,
+                    h: 2,
+                    minW: 4,
+                    minH: 2,
+                    maxW: 12,
+                    maxH: 8,
+                };
+            }),
             charts: configs,
         }),
         [configs],

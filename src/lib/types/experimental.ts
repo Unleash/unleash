@@ -57,7 +57,8 @@ export type IFlagKey =
     | 'lifecycleGraphs'
     | 'etagByEnv'
     | 'fetchMode'
-    | 'optimizeLifecycle';
+    | 'optimizeLifecycle'
+    | 'newStrategyModal';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -263,6 +264,10 @@ const flags: IFlags = {
             false,
         ),
     },
+    newStrategyModal: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_STRATEGY_MODAL,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

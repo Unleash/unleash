@@ -113,7 +113,7 @@ const ClickableBoldText = styled(Link)(({ theme }) => ({
     },
 }));
 
-export const FeatureStrategyMenuCards = ({
+export const LegacyFeatureStrategyMenuCards = ({
     projectId,
     featureId,
     environmentId,
@@ -204,7 +204,9 @@ export const FeatureStrategyMenuCards = ({
     return (
         <GridContainer>
             <TitleRow>
-                <TitleText variant='h2'>Add strategy</TitleText>
+                <TitleText variant='h2'>
+                    {onlyReleasePlans ? 'Select template' : 'Add configuration'}
+                </TitleText>
                 <IconButton
                     size='small'
                     onClick={onClose}

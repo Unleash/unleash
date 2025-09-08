@@ -6,7 +6,7 @@ import PermissionButton, {
 } from 'component/common/PermissionButton/PermissionButton';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { Dialog, styled } from '@mui/material';
-import { FeatureStrategyMenuCards } from './FeatureStrategyMenuCards/FeatureStrategyMenuCards.tsx';
+import { LegacyFeatureStrategyMenuCards } from './LegacyFeatureStrategyMenuCards/LegacyFeatureStrategyMenuCards.tsx';
 import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrategyCreate.tsx';
 import MoreVert from '@mui/icons-material/MoreVert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -20,6 +20,8 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ReleasePlanReviewDialog } from '../../FeatureView/FeatureOverview/ReleasePlan/ReleasePlanReviewDialog.tsx';
+import { FeatureStrategyMenuCards } from './FeatureStrategyMenuCards/FeatureStrategyMenuCards.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 interface IFeatureStrategyMenuProps {
     label: string;
@@ -77,6 +79,7 @@ export const FeatureStrategyMenu = ({
     const { isEnterprise } = useUiConfig();
     const displayReleasePlanButton = isEnterprise();
     const crProtected = isChangeRequestConfigured(environmentId);
+    const newStrategyModalEnabled = useUiFlag('newStrategyModal');
 
     const onClose = () => {
         setIsStrategyMenuDialogOpen(false);
@@ -158,32 +161,13 @@ export const FeatureStrategyMenu = ({
 
     return (
         <StyledStrategyMenu onClick={(event) => event.stopPropagation()}>
-            <>
-                {displayReleasePlanButton ? (
-                    <PermissionButton
-                        data-testid='ADD_TEMPLATE_BUTTON'
-                        permission={CREATE_FEATURE_STRATEGY}
-                        projectId={projectId}
-                        environmentId={environmentId}
-                        onClick={openReleasePlans}
-                        aria-labelledby={dialogId}
-                        variant='outlined'
-                        sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
-                        disabled={Boolean(disableReason)}
-                        tooltipProps={{
-                            title: disableReason ? disableReason : undefined,
-                        }}
-                    >
-                        Use template
-                    </PermissionButton>
-                ) : null}
-
+            {newStrategyModalEnabled ? (
                 <PermissionButton
                     data-testid='ADD_STRATEGY_BUTTON'
                     permission={CREATE_FEATURE_STRATEGY}
                     projectId={projectId}
                     environmentId={environmentId}
-                    onClick={openDefaultStrategyCreationModal}
+                    onClick={openMoreStrategies}
                     aria-labelledby={dialogId}
                     variant={variant}
                     sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
@@ -192,26 +176,66 @@ export const FeatureStrategyMenu = ({
                         title: disableReason ? disableReason : undefined,
                     }}
                 >
-                    {label}
+                    Add strategy
                 </PermissionButton>
+            ) : (
+                <>
+                    {displayReleasePlanButton ? (
+                        <PermissionButton
+                            data-testid='ADD_TEMPLATE_BUTTON'
+                            permission={CREATE_FEATURE_STRATEGY}
+                            projectId={projectId}
+                            environmentId={environmentId}
+                            onClick={openReleasePlans}
+                            aria-labelledby={dialogId}
+                            variant='outlined'
+                            sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
+                            disabled={Boolean(disableReason)}
+                            tooltipProps={{
+                                title: disableReason
+                                    ? disableReason
+                                    : undefined,
+                            }}
+                        >
+                            Use template
+                        </PermissionButton>
+                    ) : null}
 
-                <StyledAdditionalMenuButton
-                    permission={CREATE_FEATURE_STRATEGY}
-                    projectId={projectId}
-                    environmentId={environmentId}
-                    onClick={openMoreStrategies}
-                    variant='outlined'
-                    hideLockIcon
-                    disabled={Boolean(disableReason)}
-                    tooltipProps={{
-                        title: disableReason
-                            ? disableReason
-                            : 'More strategies',
-                    }}
-                >
-                    <MoreVert />
-                </StyledAdditionalMenuButton>
-            </>
+                    <PermissionButton
+                        data-testid='ADD_STRATEGY_BUTTON'
+                        permission={CREATE_FEATURE_STRATEGY}
+                        projectId={projectId}
+                        environmentId={environmentId}
+                        onClick={openDefaultStrategyCreationModal}
+                        aria-labelledby={dialogId}
+                        variant={variant}
+                        sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
+                        disabled={Boolean(disableReason)}
+                        tooltipProps={{
+                            title: disableReason ? disableReason : undefined,
+                        }}
+                    >
+                        {label}
+                    </PermissionButton>
+
+                    <StyledAdditionalMenuButton
+                        permission={CREATE_FEATURE_STRATEGY}
+                        projectId={projectId}
+                        environmentId={environmentId}
+                        onClick={openMoreStrategies}
+                        variant='outlined'
+                        hideLockIcon
+                        disabled={Boolean(disableReason)}
+                        tooltipProps={{
+                            title: disableReason
+                                ? disableReason
+                                : 'More strategies',
+                        }}
+                    >
+                        <MoreVert />
+                    </StyledAdditionalMenuButton>
+                </>
+            )}
             <Dialog
                 open={isStrategyMenuDialogOpen}
                 onClose={onClose}
@@ -222,22 +246,41 @@ export const FeatureStrategyMenu = ({
                     },
                 }}
             >
-                <FeatureStrategyMenuCards
-                    projectId={projectId}
-                    featureId={featureId}
-                    environmentId={environmentId}
-                    onlyReleasePlans={onlyReleasePlans}
-                    onAddReleasePlan={(template) => {
-                        setSelectedTemplate(template);
-                        addReleasePlan(template);
-                    }}
-                    onReviewReleasePlan={(template) => {
-                        setSelectedTemplate(template);
-                        setAddReleasePlanOpen(true);
-                        onClose();
-                    }}
-                    onClose={onClose}
-                />
+                {newStrategyModalEnabled ? (
+                    <FeatureStrategyMenuCards
+                        projectId={projectId}
+                        featureId={featureId}
+                        environmentId={environmentId}
+                        onlyReleasePlans={onlyReleasePlans}
+                        onAddReleasePlan={(template) => {
+                            setSelectedTemplate(template);
+                            addReleasePlan(template);
+                        }}
+                        onReviewReleasePlan={(template) => {
+                            setSelectedTemplate(template);
+                            setAddReleasePlanOpen(true);
+                            onClose();
+                        }}
+                        onClose={onClose}
+                    />
+                ) : (
+                    <LegacyFeatureStrategyMenuCards
+                        projectId={projectId}
+                        featureId={featureId}
+                        environmentId={environmentId}
+                        onlyReleasePlans={onlyReleasePlans}
+                        onAddReleasePlan={(template) => {
+                            setSelectedTemplate(template);
+                            addReleasePlan(template);
+                        }}
+                        onReviewReleasePlan={(template) => {
+                            setSelectedTemplate(template);
+                            setAddReleasePlanOpen(true);
+                            onClose();
+                        }}
+                        onClose={onClose}
+                    />
+                )}
             </Dialog>
             {selectedTemplate && (
                 <ReleasePlanReviewDialog

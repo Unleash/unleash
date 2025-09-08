@@ -49,7 +49,7 @@ const StyledSectionHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(0.5),
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(0.5),
     width: '100%',
 }));
 

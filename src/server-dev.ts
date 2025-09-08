@@ -53,6 +53,7 @@ process.nextTick(async () => {
                         customMetrics: true,
                         impactMetrics: true,
                         lifecycleGraphs: true,
+                        newStrategyModal: true,
                     },
                 },
                 authentication: {

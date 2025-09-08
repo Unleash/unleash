@@ -87,6 +87,7 @@ export type UiFlags = {
     customMetrics?: boolean;
     impactMetrics?: boolean;
     lifecycleGraphs?: boolean;
+    newStrategyModal?: boolean;
 };
 
 export interface IVersionInfo {

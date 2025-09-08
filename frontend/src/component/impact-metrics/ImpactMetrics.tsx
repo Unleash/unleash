@@ -48,7 +48,6 @@ export const ImpactMetrics: FC = () => {
         addChart,
         updateChart,
         deleteChart,
-        // updateLayout,
     } = useImpactMetricsState();
 
     const {

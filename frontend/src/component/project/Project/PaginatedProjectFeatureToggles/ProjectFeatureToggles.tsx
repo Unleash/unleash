@@ -31,6 +31,7 @@ import {
     PlaceholderFeatureToggleCell,
 } from './FeatureToggleCell/FeatureToggleCell.tsx';
 import { ProjectOverviewFilters } from './ProjectOverviewFilters.tsx';
+import { ProjectLifecycleFilters } from './ProjectLifecycleFilters.tsx';
 import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility.ts';
 import { TableEmptyState } from './TableEmptyState/TableEmptyState.tsx';
 import { useRowActions } from './hooks/useRowActions.tsx';
@@ -41,7 +42,7 @@ import {
     useProjectFeatureSearchActions,
 } from './useProjectFeatureSearch.ts';
 import { AvatarCell } from './AvatarCell.tsx';
-import { styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog.tsx';
 import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding.tsx';
@@ -577,6 +578,14 @@ export const ProjectFeatureToggles = ({
                             onChange={setTableState}
                             state={filterState}
                         />
+                        <Box sx={{ marginRight: 'auto' }} data-test>
+                            <ProjectLifecycleFilters
+                                projectId={projectId}
+                                state={filterState}
+                                onChange={setTableState}
+                                total={loading ? undefined : total}
+                            />
+                        </Box>
                         <ButtonGroup>
                             <PermissionIconButton
                                 permission={UPDATE_FEATURE}

@@ -118,19 +118,6 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
                 singularOperators: ['IS'],
                 pluralOperators: ['IS_ANY_OF'],
             },
-            {
-                label: 'Lifecycle stage',
-                icon: 'model_training',
-                options: [
-                    { label: 'Define', value: 'initial' },
-                    { label: 'Develop', value: 'pre-live' },
-                    { label: 'Rollout production', value: 'live' },
-                    { label: 'Cleanup', value: 'completed' },
-                ],
-                filterKey: 'lifecycle',
-                singularOperators: ['IS', 'IS_NOT'],
-                pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
-            },
         ];
 
         setAvailableFilters(availableFilters);

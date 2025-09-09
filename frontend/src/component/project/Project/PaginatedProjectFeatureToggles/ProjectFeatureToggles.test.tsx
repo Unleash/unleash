@@ -37,6 +37,30 @@ const setupApi = () => {
         { id: 1, name: 'AuthorA' },
         { id: 2, name: 'AuthorB' },
     ]);
+    testServerRoute(server, '/api/admin/projects/default/status', {
+        activityCountByDate: [],
+        resources: {
+            members: 0,
+            apiTokens: 0,
+            segments: 0,
+        },
+        health: {
+            current: 0,
+        },
+        technicalDebt: {
+            current: 0,
+        },
+        lifecycleSummary: {
+            initial: { currentFlags: 1, averageDays: null },
+            preLive: { currentFlags: 2, averageDays: null },
+            live: { currentFlags: 3, averageDays: null },
+            completed: { currentFlags: 1, averageDays: null },
+            archived: { currentFlags: 0, last30Days: 0 },
+        },
+        staleFlags: {
+            total: 0,
+        },
+    });
 };
 
 test('filters by flag type', async () => {
@@ -208,7 +232,7 @@ test('Project is not onboarded', async () => {
     await screen.findByText('Welcome to your project');
 });
 
-test('renders lifecycle filters', async () => {
+test('renders lifecycle quick filters', async () => {
     setupApi();
 
     render(
@@ -227,14 +251,8 @@ test('renders lifecycle filters', async () => {
         },
     );
 
-    const addFilter = await screen.findByText('Filter');
-    fireEvent.click(addFilter);
-
-    const lifecycleFilter = await screen.findByText('Lifecycle stage');
-    fireEvent.click(lifecycleFilter);
-
-    await screen.findByText('Define');
-    await screen.findByText('Develop');
-    await screen.findByText('Rollout production');
-    await screen.findByText('Cleanup');
+    await screen.findByText(/All flags/);
+    await screen.findByText(/Develop/);
+    await screen.findByText(/Rollout production/);
+    await screen.findByText(/Cleanup/);
 });

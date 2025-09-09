@@ -1,10 +1,5 @@
 import { useCallback } from 'react';
-import {
-    encodeQueryParams,
-    NumberParam,
-    StringParam,
-    withDefault,
-} from 'use-query-params';
+import { encodeQueryParams, StringParam, withDefault } from 'use-query-params';
 import {
     DEFAULT_PAGE_LIMIT,
     useFeatureSearch,
@@ -16,12 +11,13 @@ import {
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
 import type { SearchFeaturesParams } from 'openapi';
+import { SafeNumberParam } from 'utils/safeNumberParam';
 
 export const useGlobalFeatureSearch = (pageLimit = DEFAULT_PAGE_LIMIT) => {
     const storageKey = 'features-list-table';
     const stateConfig = {
-        offset: withDefault(NumberParam, 0),
-        limit: withDefault(NumberParam, pageLimit),
+        offset: withDefault(SafeNumberParam, 0),
+        limit: withDefault(SafeNumberParam, pageLimit),
         query: StringParam,
         favoritesFirst: withDefault(BooleansStringParam, true),
         sortBy: withDefault(StringParam, 'createdAt'),

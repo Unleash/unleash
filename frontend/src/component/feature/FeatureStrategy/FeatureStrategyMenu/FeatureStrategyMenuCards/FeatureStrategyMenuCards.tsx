@@ -1,18 +1,30 @@
-import { styled, Typography, Box, IconButton, Button } from '@mui/material';
+import { styled, Typography, Box, IconButton } from '@mui/material';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
-import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
-import { FeatureReleasePlanCard } from '../FeatureReleasePlanCard/FeatureReleasePlanCard.tsx';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { Link as RouterLink } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
-import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview.ts';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import {
+    FeatureStrategyMenuCardsSection,
+    StyledStrategyModalSectionHeader,
+} from './FeatureStrategyMenuCardsSection.tsx';
+import { FeatureStrategyMenuCardsReleaseTemplates } from './FeatureStrategyMenuCardsReleaseTemplates.tsx';
+import { QuickFilters } from 'component/common/QuickFilters/QuickFilters.tsx';
 
-const RELEASE_TEMPLATE_DISPLAY_LIMIT = 5;
+const FILTERS = [
+    { label: 'All', value: null },
+    { label: 'Project default', value: 'default' },
+    { label: 'Standard strategies', value: 'standard' },
+    { label: 'Release templates', value: 'releaseTemplates' },
+    { label: 'Advanced strategies', value: 'advanced' },
+    { label: 'Custom strategies', value: 'custom' },
+] as const;
+
+export type StrategyFilterValue = (typeof FILTERS)[number]['value'];
 
 const StyledContainer = styled(Box)(() => ({
     width: '100%',
@@ -31,13 +43,6 @@ const StyledScrollableContent = styled(Box)(({ theme }) => ({
     gap: theme.spacing(5),
 }));
 
-const StyledGrid = styled(Box)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
-    gap: theme.spacing(2),
-    width: '100%',
-}));
-
 const StyledHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
@@ -45,47 +50,9 @@ const StyledHeader = styled(Box)(({ theme }) => ({
     padding: theme.spacing(4, 4, 2, 4),
 }));
 
-const StyledSectionHeader = styled(Box)(({ theme }) => ({
+const StyledFiltersContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(0.5),
-    marginBottom: theme.spacing(0.5),
-    width: '100%',
-}));
-
-const StyledIcon = styled('span')(({ theme }) => ({
-    width: theme.spacing(3),
-    '& > svg': {
-        fill: theme.palette.primary.main,
-        width: theme.spacing(2.25),
-        height: theme.spacing(2.25),
-    },
-    display: 'flex',
-    alignItems: 'center',
-}));
-
-const StyledNoTemplatesContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    backgroundColor: theme.palette.neutral.light,
-    borderRadius: theme.shape.borderRadiusMedium,
-    padding: theme.spacing(3),
-    width: 'auto',
-}));
-
-const StyledNoTemplatesTitle = styled(Typography)(({ theme }) => ({
-    fontSize: theme.typography.caption.fontSize,
-    fontWeight: theme.typography.fontWeightBold,
-    marginBottom: theme.spacing(1),
-    display: 'flex',
-    alignItems: 'center',
-}));
-
-const StyledNoTemplatesDescription = styled(Typography)(({ theme }) => ({
-    fontSize: theme.typography.caption.fontSize,
-    color: theme.palette.text.secondary,
+    padding: theme.spacing(0, 4, 5, 4),
 }));
 
 const StyledLink = styled(RouterLink)({
@@ -95,18 +62,10 @@ const StyledLink = styled(RouterLink)({
     },
 });
 
-const StyledViewAllTemplates = styled(Box)({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-});
-
 interface IFeatureStrategyMenuCardsProps {
     projectId: string;
     featureId: string;
     environmentId: string;
-    onlyReleasePlans: boolean;
     onAddReleasePlan: (template: IReleasePlanTemplate) => void;
     onReviewReleasePlan: (template: IReleasePlanTemplate) => void;
     onClose: () => void;
@@ -123,10 +82,9 @@ export const FeatureStrategyMenuCards = ({
     const { isEnterprise } = useUiConfig();
 
     const { strategies } = useStrategies();
-    const { templates } = useReleasePlanTemplates();
     const { project } = useProjectOverview(projectId);
 
-    const [seeAllReleaseTemplates, setSeeAllReleaseTemplates] = useState(false);
+    const [filter, setFilter] = useState<StrategyFilterValue>(null);
 
     const activeStrategies = strategies.filter(
         (strategy) => !strategy.deprecated,
@@ -159,70 +117,19 @@ export const FeatureStrategyMenuCards = ({
             'This is the default strategy defined for this environment in the project',
     };
 
-    const renderReleasePlanTemplates = () => {
-        if (!isEnterprise()) {
-            return null;
-        }
+    const availableFilters = useMemo(
+        () =>
+            FILTERS.filter(({ value }) => {
+                if (value === 'releaseTemplates') return isEnterprise();
+                if (value === 'advanced') return advancedStrategies.length > 0;
+                if (value === 'custom') return customStrategies.length > 0;
+                return true;
+            }),
+        [isEnterprise, advancedStrategies.length, customStrategies.length],
+    );
 
-        const slicedTemplates = seeAllReleaseTemplates
-            ? templates
-            : templates.slice(0, RELEASE_TEMPLATE_DISPLAY_LIMIT);
-
-        return (
-            <Box>
-                <StyledSectionHeader>
-                    <Typography color='inherit' variant='body2'>
-                        Release templates
-                    </Typography>
-                </StyledSectionHeader>
-                {!templates.length ? (
-                    <StyledNoTemplatesContainer>
-                        <StyledNoTemplatesTitle>
-                            <StyledIcon>
-                                <FactCheckOutlinedIcon />
-                            </StyledIcon>
-                            Create your own release templates
-                        </StyledNoTemplatesTitle>
-                        <StyledNoTemplatesDescription>
-                            Standardize your rollouts and save time by reusing
-                            predefined strategies. Find release templates in the
-                            side menu under{' '}
-                            <StyledLink to='/release-templates'>
-                                Configure &gt; Release templates
-                            </StyledLink>
-                        </StyledNoTemplatesDescription>
-                    </StyledNoTemplatesContainer>
-                ) : (
-                    <StyledGrid>
-                        {slicedTemplates.map((template) => (
-                            <FeatureReleasePlanCard
-                                key={template.id}
-                                template={template}
-                                onClick={() => onAddReleasePlan(template)}
-                                onPreviewClick={() =>
-                                    onReviewReleasePlan(template)
-                                }
-                            />
-                        ))}
-                        {slicedTemplates.length < templates.length &&
-                            templates.length >
-                                RELEASE_TEMPLATE_DISPLAY_LIMIT && (
-                                <StyledViewAllTemplates>
-                                    <Button
-                                        variant='text'
-                                        size='small'
-                                        onClick={() =>
-                                            setSeeAllReleaseTemplates(true)
-                                        }
-                                    >
-                                        View all available templates
-                                    </Button>
-                                </StyledViewAllTemplates>
-                            )}
-                    </StyledGrid>
-                )}
-            </Box>
-        );
+    const shouldRender = (key: StrategyFilterValue) => {
+        return filter === null || filter === key;
     };
 
     return (
@@ -238,45 +145,87 @@ export const FeatureStrategyMenuCards = ({
                     <CloseIcon fontSize='small' />
                 </IconButton>
             </StyledHeader>
+            <StyledFiltersContainer>
+                <QuickFilters
+                    filters={availableFilters}
+                    value={filter}
+                    onChange={setFilter}
+                />
+            </StyledFiltersContainer>
             <StyledScrollableContent>
-                <Box>
-                    <StyledGrid>
-                        <StyledSectionHeader>
-                            <Typography color='inherit' variant='body2'>
-                                Project default
-                            </Typography>
-                            <HelpIcon
-                                htmlTooltip
-                                tooltip={
-                                    <>
-                                        This is set per project, per
-                                        environment, and can be configured{' '}
-                                        <StyledLink
-                                            to={`/projects/${projectId}/settings/default-strategy`}
-                                        >
-                                            here
-                                        </StyledLink>
-                                    </>
-                                }
-                                size='16px'
-                            />
-                        </StyledSectionHeader>
-                        <StyledSectionHeader>
-                            <Typography color='inherit' variant='body2'>
-                                Standard strategies
-                            </Typography>
-                        </StyledSectionHeader>
-                    </StyledGrid>
-                    <StyledGrid>
-                        <FeatureStrategyMenuCard
-                            projectId={projectId}
-                            featureId={featureId}
-                            environmentId={environmentId}
-                            strategy={defaultStrategy}
-                            defaultStrategy
-                            onClose={onClose}
-                        />
-                        {standardStrategies.map((strategy) => (
+                {(shouldRender('default') || shouldRender('standard')) && (
+                    <Box>
+                        <FeatureStrategyMenuCardsSection>
+                            {shouldRender('default') && (
+                                <StyledStrategyModalSectionHeader>
+                                    <Typography color='inherit' variant='body2'>
+                                        Project default
+                                    </Typography>
+                                    <HelpIcon
+                                        htmlTooltip
+                                        tooltip={
+                                            <>
+                                                This is set per project, per
+                                                environment, and can be
+                                                configured{' '}
+                                                <StyledLink
+                                                    to={`/projects/${projectId}/settings/default-strategy`}
+                                                >
+                                                    here
+                                                </StyledLink>
+                                            </>
+                                        }
+                                        size='16px'
+                                    />
+                                </StyledStrategyModalSectionHeader>
+                            )}
+                            {shouldRender('standard') && (
+                                <StyledStrategyModalSectionHeader>
+                                    <Typography color='inherit' variant='body2'>
+                                        Standard strategies
+                                    </Typography>
+                                </StyledStrategyModalSectionHeader>
+                            )}
+                        </FeatureStrategyMenuCardsSection>
+                        <FeatureStrategyMenuCardsSection>
+                            {shouldRender('default') && (
+                                <FeatureStrategyMenuCard
+                                    projectId={projectId}
+                                    featureId={featureId}
+                                    environmentId={environmentId}
+                                    strategy={defaultStrategy}
+                                    defaultStrategy
+                                    onClose={onClose}
+                                />
+                            )}
+                            {shouldRender('standard') && (
+                                <>
+                                    {standardStrategies.map((strategy) => (
+                                        <FeatureStrategyMenuCard
+                                            key={strategy.name}
+                                            projectId={projectId}
+                                            featureId={featureId}
+                                            environmentId={environmentId}
+                                            strategy={strategy}
+                                            onClose={onClose}
+                                        />
+                                    ))}
+                                </>
+                            )}
+                        </FeatureStrategyMenuCardsSection>
+                    </Box>
+                )}
+                {shouldRender('releaseTemplates') && (
+                    <FeatureStrategyMenuCardsReleaseTemplates
+                        onAddReleasePlan={onAddReleasePlan}
+                        onReviewReleasePlan={onReviewReleasePlan}
+                        filter={filter}
+                        setFilter={setFilter}
+                    />
+                )}
+                {advancedStrategies.length > 0 && shouldRender('advanced') && (
+                    <FeatureStrategyMenuCardsSection title='Advanced strategies'>
+                        {advancedStrategies.map((strategy) => (
                             <FeatureStrategyMenuCard
                                 key={strategy.name}
                                 projectId={projectId}
@@ -286,50 +235,21 @@ export const FeatureStrategyMenuCards = ({
                                 onClose={onClose}
                             />
                         ))}
-                    </StyledGrid>
-                </Box>
-                {renderReleasePlanTemplates()}
-                {advancedStrategies.length > 0 && (
-                    <Box>
-                        <StyledSectionHeader>
-                            <Typography color='inherit' variant='body2'>
-                                Advanced strategies
-                            </Typography>
-                        </StyledSectionHeader>
-                        <StyledGrid>
-                            {advancedStrategies.map((strategy) => (
-                                <FeatureStrategyMenuCard
-                                    key={strategy.name}
-                                    projectId={projectId}
-                                    featureId={featureId}
-                                    environmentId={environmentId}
-                                    strategy={strategy}
-                                    onClose={onClose}
-                                />
-                            ))}
-                        </StyledGrid>
-                    </Box>
+                    </FeatureStrategyMenuCardsSection>
                 )}
-                {customStrategies.length > 0 && (
-                    <Box>
-                        <StyledSectionHeader>
-                            <Typography color='inherit' variant='body2'>
-                                Custom strategies
-                            </Typography>
-                        </StyledSectionHeader>
-                        <StyledGrid>
-                            {customStrategies.map((strategy) => (
-                                <FeatureStrategyMenuCard
-                                    key={strategy.name}
-                                    projectId={projectId}
-                                    featureId={featureId}
-                                    environmentId={environmentId}
-                                    strategy={strategy}
-                                    onClose={onClose}
-                                />
-                            ))}
-                        </StyledGrid>
-                    </Box>
+                {customStrategies.length > 0 && shouldRender('custom') && (
+                    <FeatureStrategyMenuCardsSection title='Custom strategies'>
+                        {customStrategies.map((strategy) => (
+                            <FeatureStrategyMenuCard
+                                key={strategy.name}
+                                projectId={projectId}
+                                featureId={featureId}
+                                environmentId={environmentId}
+                                strategy={strategy}
+                                onClose={onClose}
+                            />
+                        ))}
+                    </FeatureStrategyMenuCardsSection>
                 )}
             </StyledScrollableContent>
         </StyledContainer>

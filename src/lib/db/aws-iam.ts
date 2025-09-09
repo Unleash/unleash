@@ -19,7 +19,7 @@ export const getDBPasswordResolver = (db: IDBOption): PasswordResolver => {
         return async () => {
             console.log('[AWS RDS SIGNER] Getting token...');
             const token = await signer.getAuthToken();
-            console.log(`[AWS RDS SIGNER] Got token: ${token}`);
+            console.log(`[AWS RDS SIGNER] Got token!`);
             return token;
         };
     }

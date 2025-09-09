@@ -9,13 +9,6 @@ export function createDb({
     getLogger,
 }: Pick<IUnleashConfig, 'db' | 'getLogger'>): Knex {
     const logger = getLogger('db-pool.js');
-
-    if (db.awsIamAuth) {
-        logger.info(
-            `createDb: iam=${Boolean(db.awsIamAuth)} host=${db.host} port=${db.port} db=${db.database} user=${db.user} ssl=${Boolean(db.ssl)}`,
-        );
-    }
-
     return knex({
         client: 'pg',
         version: db.version,

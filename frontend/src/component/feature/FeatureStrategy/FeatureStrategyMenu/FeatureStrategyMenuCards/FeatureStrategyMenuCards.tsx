@@ -12,7 +12,7 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview.ts';
 import { useState } from 'react';
 
-const RELEASE_TEMPLATE_LIMIT = 5;
+const RELEASE_TEMPLATE_DISPLAY_LIMIT = 5;
 
 const StyledContainer = styled(Box)(() => ({
     width: '100%',
@@ -166,7 +166,7 @@ export const FeatureStrategyMenuCards = ({
 
         const slicedTemplates = seeAllReleaseTemplates
             ? templates
-            : templates.slice(0, RELEASE_TEMPLATE_LIMIT);
+            : templates.slice(0, RELEASE_TEMPLATE_DISPLAY_LIMIT);
 
         return (
             <Box>
@@ -205,7 +205,8 @@ export const FeatureStrategyMenuCards = ({
                             />
                         ))}
                         {slicedTemplates.length < templates.length &&
-                            templates.length > RELEASE_TEMPLATE_LIMIT && (
+                            templates.length >
+                                RELEASE_TEMPLATE_DISPLAY_LIMIT && (
                                 <StyledViewAllTemplates>
                                     <Button
                                         variant='text'

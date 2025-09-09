@@ -1,9 +1,4 @@
-import {
-    encodeQueryParams,
-    NumberParam,
-    StringParam,
-    withDefault,
-} from 'use-query-params';
+import { encodeQueryParams, StringParam, withDefault } from 'use-query-params';
 import { FilterItemParam } from 'utils/serializeQueryParams';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
@@ -11,6 +6,7 @@ import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch'
 import type { SearchEventsParams } from 'openapi';
 import type { FilterItemParamHolder } from 'component/filter/Filters/Filters';
 import { format, subYears } from 'date-fns';
+import { SafeNumberParam } from 'utils/safeNumberParam';
 
 type Log =
     | { type: 'global' }
@@ -58,8 +54,8 @@ export const useEventLogSearch = (
     refreshInterval = 15 * 1000,
 ) => {
     const stateConfig = {
-        offset: withDefault(NumberParam, 0),
-        limit: withDefault(NumberParam, DEFAULT_PAGE_SIZE),
+        offset: withDefault(SafeNumberParam, 0),
+        limit: withDefault(SafeNumberParam, DEFAULT_PAGE_SIZE),
         query: StringParam,
         from: withDefault(FilterItemParam, {
             values: [format(subYears(new Date(), 1), 'yyyy-MM-dd')],

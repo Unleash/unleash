@@ -1,7 +1,6 @@
 import {
     ArrayParam,
     encodeQueryParams,
-    NumberParam,
     StringParam,
     withDefault,
 } from 'use-query-params';
@@ -16,6 +15,7 @@ import {
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
 import type { SearchFeaturesParams } from 'openapi';
+import { SafeNumberParam } from 'utils/safeNumberParam';
 
 type Attribute =
     | { key: 'tag'; operator: 'INCLUDE' }
@@ -28,8 +28,8 @@ export const useProjectFeatureSearch = (
     refreshInterval = 15 * 1000,
 ) => {
     const stateConfig = {
-        offset: withDefault(NumberParam, 0),
-        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
+        offset: withDefault(SafeNumberParam, 0),
+        limit: withDefault(SafeNumberParam, DEFAULT_PAGE_LIMIT),
         query: StringParam,
         favoritesFirst: withDefault(BooleansStringParam, true),
         sortBy: withDefault(StringParam, 'createdAt'),

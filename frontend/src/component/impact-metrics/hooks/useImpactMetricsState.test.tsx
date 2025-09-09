@@ -52,7 +52,14 @@ const TestComponent: FC<{
                     type='button'
                     data-testid='update-chart'
                     onClick={() =>
-                        updateChart(charts[0].id, { title: 'Updated Chart' })
+                        updateChart(charts[0].id, {
+                            metricName: charts[0].metricName,
+                            timeRange: charts[0].timeRange,
+                            yAxisMin: charts[0].yAxisMin,
+                            aggregationMode: charts[0].aggregationMode,
+                            labelSelectors: charts[0].labelSelectors,
+                            title: 'Updated Chart',
+                        })
                     }
                 >
                     Update Chart
@@ -110,11 +117,9 @@ describe('useImpactMetricsState', () => {
     });
 
     it('loads settings from API', async () => {
-        testServerRoute(
-            server,
-            '/api/admin/impact-metrics/settings',
-            mockSettings,
-        );
+        testServerRoute(server, '/api/admin/impact-metrics/config', {
+            configs: mockSettings.charts,
+        });
 
         render(<TestComponent />);
 
@@ -127,11 +132,9 @@ describe('useImpactMetricsState', () => {
     });
 
     it('handles empty settings', async () => {
-        testServerRoute(
-            server,
-            '/api/admin/impact-metrics/settings',
-            emptySettings,
-        );
+        testServerRoute(server, '/api/admin/impact-metrics/config', {
+            configs: emptySettings.charts,
+        });
 
         render(<TestComponent />);
 
@@ -146,7 +149,7 @@ describe('useImpactMetricsState', () => {
     it('handles API errors', async () => {
         testServerRoute(
             server,
-            '/api/admin/impact-metrics/settings',
+            '/api/admin/impact-metrics/config',
             { message: 'Server error' },
             'get',
             500,
@@ -160,11 +163,9 @@ describe('useImpactMetricsState', () => {
     });
 
     it('adds a chart successfully', async () => {
-        testServerRoute(
-            server,
-            '/api/admin/impact-metrics/settings',
-            emptySettings,
-        );
+        testServerRoute(server, '/api/admin/impact-metrics/config', {
+            configs: emptySettings.charts,
+        });
 
         render(<TestComponent enableActions />);
 
@@ -174,63 +175,25 @@ describe('useImpactMetricsState', () => {
 
         testServerRoute(
             server,
-            '/api/admin/impact-metrics/settings',
-            {
-                charts: [
-                    {
-                        id: 'new-chart-id',
-                        metricName: 'test-series',
-                        timeRange: 'day',
-                        yAxisMin: 'zero',
-                        mode: 'count',
-                        labelSelectors: {},
-                        title: 'Test Chart',
-                    },
-                ],
-                layout: [
-                    {
-                        i: 'new-chart-id',
-                        x: 0,
-                        y: 0,
-                        w: 6,
-                        h: 4,
-                        minW: 4,
-                        minH: 2,
-                        maxW: 12,
-                        maxH: 8,
-                    },
-                ],
-            },
-            'put',
-            200,
+            '/api/admin/impact-metrics/config',
+            'Created',
+            'post',
+            201,
         );
 
         testServerRoute(
             server,
-            '/api/admin/impact-metrics/settings',
+            '/api/admin/impact-metrics/config',
             {
-                charts: [
+                configs: [
                     {
                         id: 'new-chart-id',
                         metricName: 'test-series',
                         timeRange: 'day',
                         yAxisMin: 'zero',
-                        mode: 'count',
+                        aggregationMode: 'count',
                         labelSelectors: {},
                         title: 'Test Chart',
-                    },
-                ],
-                layout: [
-                    {
-                        i: 'new-chart-id',
-                        x: 0,
-                        y: 0,
-                        w: 6,
-                        h: 4,
-                        minW: 4,
-                        minH: 2,
-                        maxW: 12,
-                        maxH: 8,
                     },
                 ],
             },
@@ -252,25 +215,15 @@ describe('useImpactMetricsState', () => {
     });
 
     it('updates a chart successfully', async () => {
-        testServerRoute(
-            server,
-            '/api/admin/impact-metrics/settings',
-            mockSettings,
-        );
+        testServerRoute(server, '/api/admin/impact-metrics/config', {
+            configs: mockSettings.charts,
+        });
 
         testServerRoute(
             server,
-            '/api/admin/impact-metrics/settings',
-            {
-                charts: [
-                    {
-                        ...mockSettings.charts[0],
-                        title: 'Updated Chart',
-                    },
-                ],
-                layout: mockSettings.layout,
-            },
-            'put',
+            '/api/admin/impact-metrics/config',
+            'Updated',
+            'post',
             200,
         );
 
@@ -289,11 +242,9 @@ describe('useImpactMetricsState', () => {
     });
 
     it('deletes a chart successfully', async () => {
-        testServerRoute(
-            server,
-            '/api/admin/impact-metrics/settings',
-            mockSettings,
-        );
+        testServerRoute(server, '/api/admin/impact-metrics/config', {
+            configs: mockSettings.charts,
+        });
 
         render(<TestComponent enableActions />);
 
@@ -303,16 +254,16 @@ describe('useImpactMetricsState', () => {
 
         testServerRoute(
             server,
-            '/api/admin/impact-metrics/settings',
-            emptySettings,
-            'put',
+            '/api/admin/impact-metrics/config/test-chart',
+            'Deleted',
+            'delete',
             200,
         );
 
         testServerRoute(
             server,
-            '/api/admin/impact-metrics/settings',
-            emptySettings,
+            '/api/admin/impact-metrics/config',
+            { configs: emptySettings.charts },
             'get',
             200,
         );

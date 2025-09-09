@@ -4,6 +4,10 @@ import { createLocalStorage } from 'utils/createLocalStorage';
 import { encodeQueryParams, useQueryParams } from 'use-query-params';
 import type { QueryParamConfigMap } from 'serialize-query-params/src/types';
 import { reorderObject } from '../utils/reorderObject.js';
+import {
+    isValidPaginationOption,
+    DEFAULT_PAGE_LIMIT,
+} from 'utils/paginationConfig';
 
 const usePersistentSearchParams = <T extends QueryParamConfigMap>(
     key: string,
@@ -52,13 +56,10 @@ export const usePersistentTableState = <T extends QueryParamConfigMap>(
     }, [searchParams, tableState, reorderObject]);
 
     useEffect(() => {
-        if (
-            tableState.limit &&
-            ![25, 50, 75, 100].includes(tableState.limit as number)
-        ) {
+        if (tableState.limit && !isValidPaginationOption(tableState.limit)) {
             setTableStateInternal((prevState) => ({
                 ...prevState,
-                limit: 25,
+                limit: DEFAULT_PAGE_LIMIT,
                 offset: 0, // Reset offset when changing limit
             }));
         }

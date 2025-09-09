@@ -4,10 +4,7 @@ import {
     StringParam,
     withDefault,
 } from 'use-query-params';
-import {
-    DEFAULT_PAGE_LIMIT,
-    useFeatureSearch,
-} from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import {
     BooleansStringParam,
     FilterItemParam,
@@ -16,6 +13,7 @@ import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
 import type { SearchFeaturesParams } from 'openapi';
 import { SafeNumberParam } from 'utils/safeNumberParam';
+import { DEFAULT_PAGE_LIMIT } from 'utils/paginationConfig';
 
 type Attribute =
     | { key: 'tag'; operator: 'INCLUDE' }

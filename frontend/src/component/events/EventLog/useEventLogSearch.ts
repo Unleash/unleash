@@ -7,6 +7,7 @@ import type { SearchEventsParams } from 'openapi';
 import type { FilterItemParamHolder } from 'component/filter/Filters/Filters';
 import { format, subYears } from 'date-fns';
 import { SafeNumberParam } from 'utils/safeNumberParam';
+import { DEFAULT_PAGE_LIMIT } from 'utils/paginationConfig';
 
 type Log =
     | { type: 'global' }
@@ -29,8 +30,6 @@ const extraParameters = (logType: Log) => {
             };
     }
 };
-
-const DEFAULT_PAGE_SIZE = 25;
 
 export const calculatePaginationInfo = ({
     offset,
@@ -55,7 +54,7 @@ export const useEventLogSearch = (
 ) => {
     const stateConfig = {
         offset: withDefault(SafeNumberParam, 0),
-        limit: withDefault(SafeNumberParam, DEFAULT_PAGE_SIZE),
+        limit: withDefault(SafeNumberParam, DEFAULT_PAGE_LIMIT),
         query: StringParam,
         from: withDefault(FilterItemParam, {
             values: [format(subYears(new Date(), 1), 'yyyy-MM-dd')],

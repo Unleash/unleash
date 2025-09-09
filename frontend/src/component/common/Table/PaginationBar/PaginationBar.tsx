@@ -1,5 +1,4 @@
 import type React from 'react';
-import { useEffect } from 'react';
 import { Box, Typography, Button, styled } from '@mui/material';
 import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender.tsx';
 import { ReactComponent as ArrowRight } from 'assets/icons/arrowRight.svg';
@@ -61,12 +60,6 @@ export const PaginationBar: React.FC<PaginationBarProps> = ({
     fetchNextPage,
     setPageLimit,
 }) => {
-    useEffect(() => {
-        if (![25, 50, 75, 100].includes(pageSize)) {
-            setPageLimit(25);
-        }
-    }, [pageSize]);
-
     const itemRange =
         totalItems !== undefined && pageSize && totalItems > 1
             ? `${pageIndex * pageSize + 1}-${Math.min(

@@ -51,6 +51,19 @@ export const usePersistentTableState = <T extends QueryParamConfigMap>(
         return reorderObject(tableState, [...searchParams.keys()]);
     }, [searchParams, tableState, reorderObject]);
 
+    useEffect(() => {
+        if (
+            tableState.limit &&
+            ![25, 50, 75, 100].includes(tableState.limit as number)
+        ) {
+            setTableStateInternal((prevState) => ({
+                ...prevState,
+                limit: 25,
+                offset: 0, // Reset offset when changing limit
+            }));
+        }
+    }, [tableState.limit, setTableStateInternal]);
+
     type SetTableStateInternalParam = Parameters<
         typeof setTableStateInternal
     >[0];

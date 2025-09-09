@@ -186,6 +186,7 @@ import { UPDATE_REVISION } from './features/feature-toggle/configuration-revisio
 import type { IFeatureUsageInfo } from './services/version-service.js';
 import { defineImpactMetrics } from './features/metrics/impact/define-impact-metrics.js';
 import type { IClientInstance } from './types/stores/client-instance-store.js';
+import { dbAccessChecker } from './db/db-access-checker.js';
 
 export async function initialServiceSetup(
     { authentication }: Pick<IUnleashConfig, 'authentication'>,
@@ -335,6 +336,10 @@ async function start(
 ): Promise<IUnleash> {
     const config = createConfig(opts);
     const logger = config.getLogger('server-impl.js');
+
+    if (config.db.awsIamAuth) {
+        await dbAccessChecker(config.db, logger);
+    }
 
     try {
         if (config.db.disableMigration) {

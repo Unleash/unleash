@@ -1,4 +1,5 @@
-import { Client } from 'pg';
+import postgresPkg from 'pg';
+const { Client } = postgresPkg;
 import type { IDBOption, Logger } from '../server-impl.js';
 import { getDBPassword } from './aws-iam.js';
 

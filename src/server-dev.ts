@@ -54,6 +54,7 @@ process.nextTick(async () => {
                         impactMetrics: true,
                         lifecycleGraphs: true,
                         newStrategyModal: true,
+                        globalChangeRequestList: true,
                     },
                 },
                 authentication: {

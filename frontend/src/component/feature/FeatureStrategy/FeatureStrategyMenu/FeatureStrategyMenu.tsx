@@ -251,7 +251,6 @@ export const FeatureStrategyMenu = ({
                         projectId={projectId}
                         featureId={featureId}
                         environmentId={environmentId}
-                        onlyReleasePlans={onlyReleasePlans}
                         onAddReleasePlan={(template) => {
                             setSelectedTemplate(template);
                             addReleasePlan(template);

@@ -87,7 +87,7 @@ Open a running Unleash environment in your browser with no signup or setup requi
 
 **→ [Launch the live demo](https://www.getunleash.io/interactive-demo?utm_source=readme&utm_medium=oss&utm_content=demo-section-cta)**
 
-[![Start your free trial](./.github/github_online_demo.svg)](https://www.getunleash.io/interactive-demo?utm_source=readme&utm_medium=oss&utm_content=demo-section-cta)
+[![Launch the live demo](./.github/github_online_demo.svg)](https://www.getunleash.io/interactive-demo?utm_source=readme&utm_medium=oss&utm_content=demo-section-cta)
 
 ### Free Enterprise trial
 Get your own dedicated instance with a free 14-day cloud trial. This includes the full Unleash Enterprise feature set; ideal when evaluating Unleash for production use.  
@@ -96,13 +96,17 @@ Get your own dedicated instance with a free 14-day cloud trial. This includes th
 
 <br/>
 
-### Deploying Unleash
+### Deploying to a production server
 
-If you don't want to run Unleash locally, we also provide easy deployment setups for Heroku and Digital Ocean:
+To self-host Unleash in a production environment, you need to deploy it to a persistent server. 
+
+We provide guides for deploying to services like Heroku and DigitalOcean:
 
 [![Deploy to Heroku](./.github/deploy-heroku-20.png)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash) [![Deploy to DigitalOcean](./.github/deploy-digital.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/main&refcode=0e1d75187044)
 
-The above sections show you how to get up and running quickly and easily. When you're ready to start configuring and customizing Unleash for your own environment, check out the documentation for [getting started with self-managed deployments](https://docs.getunleash.io/reference/deploy/getting-started), [Unleash configuration options](https://docs.getunleash.io/reference/deploy/configuring-unleash), or [running Unleash locally via docker](https://docs.getunleash.io/tutorials/quickstart).
+For more advanced configurations options, check out our documentation on:
+- [Getting started with self-hosting](https://docs.getunleash.io/reference/deploy/getting-started)
+- [Unleash configuration options](https://docs.getunleash.io/reference/deploy/configuring-unleash)
 
 <br/>
 

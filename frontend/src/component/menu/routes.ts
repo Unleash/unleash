@@ -53,6 +53,7 @@ import { CreateReleasePlanTemplate } from 'component/releases/ReleasePlanTemplat
 import { EditReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/EditReleasePlanTemplate';
 import { ExploreCounters } from 'component/counters/ExploreCounters/ExploreCounters.js';
 import { UnknownFlagsTable } from 'component/unknownFlags/UnknownFlagsTable';
+import { ChangeRequests } from 'component/changeRequest/ChangeRequests/ChangeRequests';
 
 export const routes: IRoute[] = [
     // Splash
@@ -474,6 +475,15 @@ export const routes: IRoute[] = [
         path: '/unknown-flags',
         title: 'Unknown flags',
         component: UnknownFlagsTable,
+        type: 'protected',
+        menu: {},
+    },
+
+    // Change Requests
+    {
+        path: '/change-requests',
+        title: 'Change Requests',
+        component: ChangeRequests,
         type: 'protected',
         menu: {},
     },

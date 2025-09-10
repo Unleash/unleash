@@ -285,7 +285,7 @@ const ChangeRequestsInner = () => {
 };
 
 export const ChangeRequests = () => {
-    if (useUiFlag('globalChangeRequestList')) {
+    if (!useUiFlag('globalChangeRequestList')) {
         return (
             <PageContent header={<PageHeader title='Change requests' />}>
                 <p>Nothing to see here. Move along.</p>

@@ -7,13 +7,19 @@ import CloseIcon from '@mui/icons-material/Close';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview.ts';
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import {
     FeatureStrategyMenuCardsSection,
     StyledStrategyModalSectionHeader,
 } from './FeatureStrategyMenuCardsSection.tsx';
 import { FeatureStrategyMenuCardsReleaseTemplates } from './FeatureStrategyMenuCardsReleaseTemplates.tsx';
 import { QuickFilters } from 'component/common/QuickFilters/QuickFilters.tsx';
+import {
+    PROJECT_DEFAULT_STRATEGY_READ,
+    PROJECT_DEFAULT_STRATEGY_WRITE,
+    UPDATE_PROJECT,
+} from 'component/providers/AccessProvider/permissions.ts';
+import AccessContext from 'contexts/AccessContext.ts';
 
 const FILTERS = [
     { label: 'All', value: null },
@@ -21,7 +27,6 @@ const FILTERS = [
     { label: 'Standard strategies', value: 'standard' },
     { label: 'Release templates', value: 'releaseTemplates' },
     { label: 'Advanced strategies', value: 'advanced' },
-    { label: 'Custom strategies', value: 'custom' },
 ] as const;
 
 export type StrategyFilterValue = (typeof FILTERS)[number]['value'];
@@ -80,6 +85,7 @@ export const FeatureStrategyMenuCards = ({
     onClose,
 }: IFeatureStrategyMenuCardsProps) => {
     const { isEnterprise } = useUiConfig();
+    const { hasAccess } = useContext(AccessContext);
 
     const { strategies } = useStrategies();
     const { project } = useProjectOverview(projectId);
@@ -121,8 +127,11 @@ export const FeatureStrategyMenuCards = ({
         () =>
             FILTERS.filter(({ value }) => {
                 if (value === 'releaseTemplates') return isEnterprise();
-                if (value === 'advanced') return advancedStrategies.length > 0;
-                if (value === 'custom') return customStrategies.length > 0;
+                if (value === 'advanced')
+                    return (
+                        advancedStrategies.length > 0 ||
+                        customStrategies.length > 0
+                    );
                 return true;
             }),
         [isEnterprise, advancedStrategies.length, customStrategies.length],
@@ -131,6 +140,15 @@ export const FeatureStrategyMenuCards = ({
     const shouldRender = (key: StrategyFilterValue) => {
         return filter === null || filter === key;
     };
+
+    const hasAccessToDefaultStrategyConfig = hasAccess(
+        [
+            UPDATE_PROJECT,
+            PROJECT_DEFAULT_STRATEGY_READ,
+            PROJECT_DEFAULT_STRATEGY_WRITE,
+        ],
+        projectId,
+    );
 
     return (
         <StyledContainer>
@@ -164,16 +182,24 @@ export const FeatureStrategyMenuCards = ({
                                     <HelpIcon
                                         htmlTooltip
                                         tooltip={
-                                            <>
-                                                This is set per project, per
-                                                environment, and can be
-                                                configured{' '}
-                                                <StyledLink
-                                                    to={`/projects/${projectId}/settings/default-strategy`}
-                                                >
-                                                    here
-                                                </StyledLink>
-                                            </>
+                                            hasAccessToDefaultStrategyConfig ? (
+                                                <>
+                                                    This is set per project, per
+                                                    environment, and can be
+                                                    configured{' '}
+                                                    <StyledLink
+                                                        to={`/projects/${projectId}/settings/default-strategy`}
+                                                    >
+                                                        here
+                                                    </StyledLink>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    This is set per project, per
+                                                    environment. Contact project
+                                                    owner to change it.
+                                                </>
+                                            )
                                         }
                                         size='16px'
                                     />
@@ -223,33 +249,37 @@ export const FeatureStrategyMenuCards = ({
                         setFilter={setFilter}
                     />
                 )}
-                {advancedStrategies.length > 0 && shouldRender('advanced') && (
-                    <FeatureStrategyMenuCardsSection title='Advanced strategies'>
-                        {advancedStrategies.map((strategy) => (
-                            <FeatureStrategyMenuCard
-                                key={strategy.name}
-                                projectId={projectId}
-                                featureId={featureId}
-                                environmentId={environmentId}
-                                strategy={strategy}
-                                onClose={onClose}
-                            />
-                        ))}
-                    </FeatureStrategyMenuCardsSection>
-                )}
-                {customStrategies.length > 0 && shouldRender('custom') && (
-                    <FeatureStrategyMenuCardsSection title='Custom strategies'>
-                        {customStrategies.map((strategy) => (
-                            <FeatureStrategyMenuCard
-                                key={strategy.name}
-                                projectId={projectId}
-                                featureId={featureId}
-                                environmentId={environmentId}
-                                strategy={strategy}
-                                onClose={onClose}
-                            />
-                        ))}
-                    </FeatureStrategyMenuCardsSection>
+                {shouldRender('advanced') && (
+                    <>
+                        {advancedStrategies.length > 0 && (
+                            <FeatureStrategyMenuCardsSection title='Advanced strategies'>
+                                {advancedStrategies.map((strategy) => (
+                                    <FeatureStrategyMenuCard
+                                        key={strategy.name}
+                                        projectId={projectId}
+                                        featureId={featureId}
+                                        environmentId={environmentId}
+                                        strategy={strategy}
+                                        onClose={onClose}
+                                    />
+                                ))}
+                            </FeatureStrategyMenuCardsSection>
+                        )}
+                        {customStrategies.length > 0 && (
+                            <FeatureStrategyMenuCardsSection title='Custom strategies'>
+                                {customStrategies.map((strategy) => (
+                                    <FeatureStrategyMenuCard
+                                        key={strategy.name}
+                                        projectId={projectId}
+                                        featureId={featureId}
+                                        environmentId={environmentId}
+                                        strategy={strategy}
+                                        onClose={onClose}
+                                    />
+                                ))}
+                            </FeatureStrategyMenuCardsSection>
+                        )}
+                    </>
                 )}
             </StyledScrollableContent>
         </StyledContainer>

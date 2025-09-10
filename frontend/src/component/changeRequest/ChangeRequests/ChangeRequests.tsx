@@ -140,7 +140,12 @@ const mockChangeRequests = [
         createdBy: { username: 'alice', name: 'Alice Johnson', imageUrl: null },
         createdAt: '2024-01-07T13:10:00Z',
         environment: 'Production',
-        state: 'Rejected',
+        state: 'Scheduled',
+        schedule: {
+            scheduledAt: '2024-01-12T09:46:51+05:30',
+            status: 'failed',
+            reason: 'Mr Freeze',
+        },
     },
 ];
 
@@ -280,7 +285,7 @@ const ChangeRequestsInner = () => {
 };
 
 export const ChangeRequests = () => {
-    if (!useUiFlag('globalChangeRequestList')) {
+    if (useUiFlag('globalChangeRequestList')) {
         return (
             <PageContent header={<PageHeader title='Change requests' />}>
                 <p>Nothing to see here. Move along.</p>

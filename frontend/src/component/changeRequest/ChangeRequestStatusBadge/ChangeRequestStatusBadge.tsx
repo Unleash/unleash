@@ -8,6 +8,7 @@ import Close from '@mui/icons-material/Close';
 import ErrorIcon from '@mui/icons-material/Error';
 import PauseCircle from '@mui/icons-material/PauseCircle';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 
 interface IChangeRequestStatusBadgeProps {
     changeRequest: ChangeRequestType | undefined;
@@ -59,7 +60,10 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
             );
         case 'Scheduled': {
             const { schedule } = changeRequest;
-            const scheduledAt = new Date(schedule.scheduledAt).toLocaleString();
+            const { locationSettings } = useLocationSettings();
+            const scheduledAt = new Date(schedule.scheduledAt).toLocaleString(
+                locationSettings.locale,
+            );
 
             const { color, icon, tooltipTitle } = (() => {
                 switch (schedule.status) {

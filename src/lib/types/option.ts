@@ -40,6 +40,7 @@ export interface IDBOption {
     applicationName?: string;
     awsIamAuth?: boolean;
     awsRegion?: string;
+    awsRoleArn?: string;
 }
 
 export interface ISessionOption {

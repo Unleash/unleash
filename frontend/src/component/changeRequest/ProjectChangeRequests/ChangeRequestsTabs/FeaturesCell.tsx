@@ -84,7 +84,7 @@ export const FeaturesCell: VFC<FeaturesCellProps> = ({ value, project }) => {
                             </StyledTooltipContainer>
                         }
                     >
-                        {featureNames?.length} toggles
+                        {featureNames?.length} flags
                     </TooltipLink>
                 }
             />

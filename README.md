@@ -96,7 +96,7 @@ Get your own dedicated instance with a free 14-day cloud trial. This includes th
 
 <br/>
 
-### Deploying to a production server
+## Deploying to a production server
 
 To self-host Unleash in a production environment, you need to deploy it to a persistent server. 
 

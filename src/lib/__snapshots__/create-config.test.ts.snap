@@ -34,6 +34,7 @@ exports[`should create default config 1`] = `
     "applicationName": "unleash",
     "awsIamAuth": false,
     "awsRegion": undefined,
+    "awsRoleArn": undefined,
     "database": "unleash_db",
     "disableMigration": false,
     "driver": "postgres",

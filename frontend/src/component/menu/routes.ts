@@ -479,13 +479,16 @@ export const routes: IRoute[] = [
         menu: {},
     },
 
-    // Change Requests
+    // My change requests
     {
         path: '/change-requests',
         title: 'Change Requests',
         component: ChangeRequests,
         type: 'protected',
         menu: {},
+        flag: 'globalChangeRequestList',
+        hidden: true,
+        enterprise: true,
     },
 
     // Admin

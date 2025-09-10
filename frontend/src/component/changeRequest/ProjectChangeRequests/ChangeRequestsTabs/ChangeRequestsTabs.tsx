@@ -104,7 +104,7 @@ export const ChangeRequestsTabs = ({
 
     const tabs = [
         {
-            title: 'Change requests',
+            title: 'Open',
             data: openChangeRequests,
             type: 'open' as const,
         },

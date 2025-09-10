@@ -9,7 +9,7 @@
 
 [![Build and Tests](https://img.shields.io/github/actions/workflow/status/Unleash/unleash/build.yaml?branch=main)](https://github.com/Unleash/unleash/actions/workflows/build.yaml) [![Coverage Report](https://img.shields.io/badge/coverage-vitest-green)](https://github.com/Unleash/unleash/actions/workflows/build_coverage.yaml) [![Docker Pulls](https://img.shields.io/docker/pulls/unleashorg/unleash-server)](https://hub.docker.com/r/unleashorg/unleash-server) [![Apache-2.0 license](https://img.shields.io/github/license/unleash/unleash)](https://github.com/Unleash/unleash/blob/main/LICENSE) [![Join Unleash on Slack](https://img.shields.io/badge/slack-join-635dc5?logo=slack)](https://slack.unleash.run)
 
-[Try Unleash Cloud for free →](https://www.getunleash.io/plans/enterprise-payg?utm_source=readme&utm_medium=oss&utm_content=top-cta)
+[Launch the live demo](https://www.getunleash.io/interactive-demo?utm_source=readme&utm_medium=oss&utm_content=top-cta) | [Try Unleash Enterprise for free](https://www.getunleash.io/plans/enterprise-payg?utm_source=readme&utm_medium=oss&utm_content=top-cta)
 
 </div>
 
@@ -78,28 +78,39 @@ if (unleash.isEnabled("AwesomeFeature")) {
   // do old, boring stuff
 }
 ```
+## Try Unleash in the cloud
 
-### Run Unleash on a service?
+Want to explore Unleash without setting it up locally? Here are two easy ways to see it in action.
 
-If you don't want to run Unleash locally, we also provide easy deployment setups for Heroku and Digital Ocean:
+### Live demo
+Open a running Unleash environment in your browser with no signup or setup required. This shared demo instance includes the core functionality so you can quickly get a feel for how Unleash works.
+
+**→ [Launch the live demo](https://www.getunleash.io/interactive-demo?utm_source=readme&utm_medium=oss&utm_content=demo-section-cta)**
+
+[![Launch the live demo](./.github/github_online_demo.svg)](https://www.getunleash.io/interactive-demo?utm_source=readme&utm_medium=oss&utm_content=demo-section-cta)
+
+### Free Enterprise trial
+Get your own dedicated instance with a free 14-day cloud trial. This includes the full Unleash Enterprise feature set; ideal when evaluating Unleash for production use.  
+
+**→ [Start your free trial](https://www.getunleash.io/plans/enterprise-payg?utm_source=readme&utm_medium=oss&utm_content=demo-section-cta)**
+
+<br/>
+
+## Deploying to a production server
+
+To self-host Unleash in a production environment, you need to deploy it to a persistent server. 
+
+We provide guides for deploying to services like Heroku and DigitalOcean:
 
 [![Deploy to Heroku](./.github/deploy-heroku-20.png)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash) [![Deploy to DigitalOcean](./.github/deploy-digital.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/main&refcode=0e1d75187044)
 
-### Configure and run Unleash anywhere
-
-The above sections show you how to get up and running quickly and easily. When you're ready to start configuring and customizing Unleash for your own environment, check out the documentation for [getting started with self-managed deployments](https://docs.getunleash.io/reference/deploy/getting-started), [Unleash configuration options](https://docs.getunleash.io/reference/deploy/configuring-unleash), or [running Unleash locally via docker](https://docs.getunleash.io/tutorials/quickstart).
-
-<br/>
-
-## Online demo
-
-Try out [the Unleash online demo](https://www.getunleash.io/interactive-demo?utm_source=readme&utm_medium=oss&utm_content=demo-section-cta).
-
-[![The Unleash online demo](./.github/github_online_demo.svg)](https://www.getunleash.io/interactive-demo?utm_source=readme&utm_medium=oss&utm_content=demo-section-cta)
+For more advanced configurations options, check out our documentation on:
+- [Getting started with self-hosting](https://docs.getunleash.io/reference/deploy/getting-started)
+- [Unleash configuration options](https://docs.getunleash.io/reference/deploy/configuring-unleash)
 
 <br/>
 
-## Community and help — sharing is caring
+## Community and help
 
 We know that learning a new tool can be hard and time-consuming. We have a growing community that loves to help out. Please don't hesitate to reach out for help.
 

@@ -58,7 +58,8 @@ export type IFlagKey =
     | 'etagByEnv'
     | 'fetchMode'
     | 'optimizeLifecycle'
-    | 'newStrategyModal';
+    | 'newStrategyModal'
+    | 'globalChangeRequestList';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -266,6 +267,10 @@ const flags: IFlags = {
     },
     newStrategyModal: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_STRATEGY_MODAL,
+        false,
+    ),
+    globalChangeRequestList: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_GLOBAL_CHANGE_REQUEST_LIST,
         false,
     ),
 };

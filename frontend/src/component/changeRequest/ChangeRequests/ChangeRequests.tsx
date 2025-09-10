@@ -17,6 +17,7 @@ import { AvatarCell } from 'component/changeRequest/ProjectChangeRequests/Change
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { GlobalChangeRequestTitleCell } from './GlobalChangeRequestTitleCell.js';
 import { FeaturesCell } from '../ProjectChangeRequests/ChangeRequestsTabs/FeaturesCell.js';
+import { useUiFlag } from 'hooks/useUiFlag.js';
 
 // Mock data with varied projects and change requests
 const mockChangeRequests = [
@@ -143,7 +144,7 @@ const mockChangeRequests = [
     },
 ];
 
-export const ChangeRequests = () => {
+const ChangeRequestsInner = () => {
     const loading = false;
     const columns = useMemo(
         () => [
@@ -276,4 +277,16 @@ export const ChangeRequests = () => {
             </Table>
         </PageContent>
     );
+};
+
+export const ChangeRequests = () => {
+    if (!useUiFlag('globalChangeRequestList')) {
+        return (
+            <PageContent header={<PageHeader title='Change requests' />}>
+                <p>Nothing to see here. Move along.</p>
+            </PageContent>
+        );
+    }
+
+    return <ChangeRequestsInner />;
 };

@@ -57,9 +57,9 @@ import { ImportModal } from '../Import/ImportModal.tsx';
 import { IMPORT_BUTTON } from 'utils/testIds';
 import { ProjectCleanupReminder } from './ProjectCleanupReminder/ProjectCleanupReminder.tsx';
 
-interface IPaginatedProjectFeatureTogglesProps {
+type ProjectFeatureTogglesProps = {
     environments: string[];
-}
+};
 
 const formatEnvironmentColumnId = (environment: string) =>
     `environment:${environment}`;
@@ -87,7 +87,7 @@ const ButtonGroup = styled('div')(({ theme }) => ({
 
 export const ProjectFeatureToggles = ({
     environments,
-}: IPaginatedProjectFeatureTogglesProps) => {
+}: ProjectFeatureTogglesProps) => {
     const { trackEvent } = usePlausibleTracker();
     const projectId = useRequiredPathParam('projectId');
     const { project } = useProjectOverview(projectId);

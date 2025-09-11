@@ -1,4 +1,4 @@
-import { useEffect, useState, type VFC } from 'react';
+import { useEffect, useState, type FC } from 'react';
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
 import {
     type FilterItemParamHolder,
@@ -8,13 +8,13 @@ import {
 import { useProjectFlagCreators } from 'hooks/api/getters/useProjectFlagCreators/useProjectFlagCreators';
 import { formatTag } from 'utils/format-tag';
 
-interface IProjectOverviewFilters {
+type ProjectOverviewFiltersProps = {
     state: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
     project: string;
-}
+};
 
-export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
+export const ProjectOverviewFilters: FC<ProjectOverviewFiltersProps> = ({
     state,
     onChange,
     project,

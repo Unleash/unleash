@@ -4,19 +4,16 @@ import type { FilterItemParamHolder } from '../../../filter/Filters/Filters.tsx'
 import { useLifecycleCount } from 'hooks/api/getters/useLifecycleCount/useLifecycleCount';
 import { LifecycleFilters } from '../../../common/LifecycleFilters/LifecycleFilters.tsx';
 
-interface ILifecycleFiltersProps {
+type FeaturesOverviewLifecycleFiltersProps = {
     state: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
     total?: number;
     children?: ReactNode;
-}
+};
 
-export const FeaturesOverviewLifecycleFilters: FC<ILifecycleFiltersProps> = ({
-    state,
-    onChange,
-    total,
-    children,
-}) => {
+export const FeaturesOverviewLifecycleFilters: FC<
+    FeaturesOverviewLifecycleFiltersProps
+> = ({ state, onChange, total, children }) => {
     const { lifecycleCount } = useLifecycleCount();
     const countData = Object.entries(lifecycleCount || {}).reduce(
         (acc, [key, value]) => {

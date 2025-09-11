@@ -5,15 +5,15 @@ import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectS
 import { LifecycleFilters } from '../../../common/LifecycleFilters/LifecycleFilters.tsx';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 
-interface IProjectLifecycleFiltersProps {
+type ProjectLifecycleFiltersProps = {
     projectId: string;
     state: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
     total?: number;
     children?: ReactNode;
-}
+};
 
-export const ProjectLifecycleFilters: FC<IProjectLifecycleFiltersProps> = ({
+export const ProjectLifecycleFilters: FC<ProjectLifecycleFiltersProps> = ({
     projectId,
     state,
     onChange,

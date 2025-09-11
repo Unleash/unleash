@@ -10,7 +10,9 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { GlobalChangeRequestTitleCell } from './GlobalChangeRequestTitleCell.js';
 import { FeaturesCell } from '../ProjectChangeRequests/ChangeRequestsTabs/FeaturesCell.js';
 import { useUiFlag } from 'hooks/useUiFlag.js';
+import { ChangeRequestFilters } from './ChangeRequestFilters.tsx';
 import { withTableState } from 'utils/withTableState';
+import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { 
     useChangeRequestsWithMockData as useChangeRequests, 
     type ChangeRequestItem 
@@ -25,22 +27,47 @@ import {
 import mapValues from 'lodash.mapvalues';
 import useLoading from 'hooks/useLoading';
 import { styles as themeStyles } from 'component/common';
+import { FilterItemParam } from 'utils/serializeQueryParams';
 
 const DEFAULT_PAGE_LIMIT = 25;
 const columnHelper = createColumnHelper<ChangeRequestItem>();
 
 const ChangeRequestsInner = () => {
+    const { user } = useAuthUser();
+    
+    // Check URL parameters directly to avoid double fetching
+    const shouldApplyDefaults = useMemo(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        return !urlParams.has('createdBy') && !urlParams.has('requestedApprovalBy') && user;
+    }, [user]);
+
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
         limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
         sortBy: withDefault(StringParam, 'createdAt'),
         sortOrder: withDefault(StringParam, 'desc'),
+        createdBy: FilterItemParam,
+        requestedApprovalBy: FilterItemParam,
     };
+
+    // Apply initial defaults if needed
+    const initialState = shouldApplyDefaults ? {
+        createdBy: {
+            operator: 'IS' as const,
+            values: [user.id.toString()],
+        }
+    } : {};
     
     const [tableState, setTableState] = useQueryParams(
         stateConfig,
         { updateType: 'replaceIn' },
     );
+
+    // Merge with initial state on first load only
+    const effectiveTableState = useMemo(() => ({
+        ...initialState,
+        ...tableState
+    }), [initialState, tableState]);
 
     const {
         changeRequests: data,
@@ -48,7 +75,7 @@ const ChangeRequestsInner = () => {
         loading,
         initialLoad,
     } = useChangeRequests(
-        mapValues(encodeQueryParams(stateConfig, tableState), (value) =>
+        mapValues(encodeQueryParams(stateConfig, effectiveTableState), (value) =>
             value ? `${value}` : undefined,
         ),
     );
@@ -126,7 +153,7 @@ const ChangeRequestsInner = () => {
     );
 
     const table = useReactTable(
-        withTableState(tableState, setTableState, {
+        withTableState(effectiveTableState, setTableState, {
             columns,
             data,
         }),
@@ -139,6 +166,10 @@ const ChangeRequestsInner = () => {
             bodyClass='no-padding'
             header={<PageHeader title='Change requests' />}
         >
+            <ChangeRequestFilters 
+                tableState={effectiveTableState} 
+                setTableState={setTableState} 
+            />
             <div className={themeStyles.fullwidth}>
                 <div ref={bodyLoadingRef}>
                     <PaginatedTable tableInstance={table} totalItems={total} />

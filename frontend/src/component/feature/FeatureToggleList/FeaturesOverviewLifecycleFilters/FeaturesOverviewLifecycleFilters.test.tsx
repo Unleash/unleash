@@ -47,7 +47,7 @@ describe('LifecycleFilters', () => {
             <FeaturesOverviewLifecycleFilters state={{}} onChange={vi.fn()} />,
         );
 
-        expect(getByText('All flags')).toBeInTheDocument();
+        expect(getByText('All flags (10)')).toBeInTheDocument();
         expect(getByText('Develop (2)')).toBeInTheDocument();
         expect(getByText('Rollout production (3)')).toBeInTheDocument();
         expect(getByText('Cleanup (4)')).toBeInTheDocument();
@@ -98,7 +98,7 @@ describe('LifecycleFilters', () => {
             lifecycle: { operator: 'IS', values: ['completed'] },
         });
 
-        await userEvent.click(getByText('All flags'));
+        await userEvent.click(getByText('All flags (10)'));
         expect(onChange).toHaveBeenCalledWith({ lifecycle: null });
     });
 });

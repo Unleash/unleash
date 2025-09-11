@@ -14,7 +14,7 @@ interface IFeatureToggleFiltersProps {
     onChange: (value: FilterItemParamHolder) => void;
 }
 
-export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
+export const FeaturesOverviewToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
     state,
     onChange,
 }) => {

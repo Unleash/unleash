@@ -11,7 +11,7 @@ interface ILifecycleFiltersProps {
     children?: ReactNode;
 }
 
-export const FeatureLifecycleFilters: FC<ILifecycleFiltersProps> = ({
+export const FeaturesOverviewLifecycleFilters: FC<ILifecycleFiltersProps> = ({
     state,
     onChange,
     total,

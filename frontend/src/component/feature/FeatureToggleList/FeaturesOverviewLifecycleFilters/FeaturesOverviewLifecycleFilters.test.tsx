@@ -1,7 +1,7 @@
 import { type MockedFunction, vi } from 'vitest';
 import { render } from 'utils/testRenderer';
 import userEvent from '@testing-library/user-event';
-import { FeatureLifecycleFilters } from './FeatureLifecycleFilters.tsx';
+import { FeaturesOverviewLifecycleFilters } from './FeaturesOverviewLifecycleFilters.tsx';
 import { useLifecycleCount } from 'hooks/api/getters/useLifecycleCount/useLifecycleCount';
 
 vi.mock('hooks/api/getters/useLifecycleCount/useLifecycleCount');
@@ -33,7 +33,7 @@ describe('LifecycleFilters', () => {
         });
 
         const { getByText } = render(
-            <FeatureLifecycleFilters state={{}} onChange={vi.fn()} />,
+            <FeaturesOverviewLifecycleFilters state={{}} onChange={vi.fn()} />,
         );
 
         expect(getByText('All flags')).toBeInTheDocument();
@@ -44,7 +44,7 @@ describe('LifecycleFilters', () => {
 
     it('renders all stages with correct counts when no total provided', () => {
         const { getByText } = render(
-            <FeatureLifecycleFilters state={{}} onChange={vi.fn()} />,
+            <FeaturesOverviewLifecycleFilters state={{}} onChange={vi.fn()} />,
         );
 
         expect(getByText('All flags')).toBeInTheDocument();
@@ -56,7 +56,7 @@ describe('LifecycleFilters', () => {
     it('renders dynamic label when total matches count', () => {
         const total = 3;
         const { getByText } = render(
-            <FeatureLifecycleFilters
+            <FeaturesOverviewLifecycleFilters
                 state={{ lifecycle: { operator: 'IS', values: ['live'] } }}
                 onChange={vi.fn()}
                 total={total}
@@ -68,7 +68,7 @@ describe('LifecycleFilters', () => {
     it('renders dynamic label when total does not match count', () => {
         const total = 2;
         const { getByText } = render(
-            <FeatureLifecycleFilters
+            <FeaturesOverviewLifecycleFilters
                 state={{ lifecycle: { operator: 'IS', values: ['live'] } }}
                 onChange={vi.fn()}
                 total={total}
@@ -80,7 +80,7 @@ describe('LifecycleFilters', () => {
     it('will apply a correct filter for each stage', async () => {
         const onChange = vi.fn();
         const { getByText } = render(
-            <FeatureLifecycleFilters state={{}} onChange={onChange} />,
+            <FeaturesOverviewLifecycleFilters state={{}} onChange={onChange} />,
         );
 
         await userEvent.click(getByText('Develop (2)'));

@@ -66,6 +66,10 @@ export const LifecycleFilters = ({
     countData,
 }: ILifecycleFiltersBaseProps) => {
     const current = state.lifecycle?.values ?? [];
+    const allFlagsCount = Object.entries(countData ?? {}).reduce(
+        (acc, [key, count]) => (key !== 'archived' ? acc + count : acc),
+        0,
+    );
 
     return (
         <Wrapper>
@@ -75,7 +79,9 @@ export const LifecycleFilters = ({
                         value === null
                             ? !state.lifecycle
                             : current.includes(value);
-                    const count = value ? countData?.[value] : total;
+                    const count = value
+                        ? countData?.[value]
+                        : allFlagsCount || undefined;
                     const dynamicLabel =
                         isActive && Number.isInteger(total)
                             ? `${label} (${total === count ? total : `${total} of ${count}`})`

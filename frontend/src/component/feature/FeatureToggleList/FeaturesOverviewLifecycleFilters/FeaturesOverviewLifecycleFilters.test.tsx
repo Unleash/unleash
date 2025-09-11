@@ -1,7 +1,7 @@
 import { type MockedFunction, vi } from 'vitest';
 import { render } from 'utils/testRenderer';
 import userEvent from '@testing-library/user-event';
-import { LifecycleFilters } from './LifecycleFilters.tsx';
+import { FeaturesOverviewLifecycleFilters } from './FeaturesOverviewLifecycleFilters.tsx';
 import { useLifecycleCount } from 'hooks/api/getters/useLifecycleCount/useLifecycleCount';
 
 vi.mock('hooks/api/getters/useLifecycleCount/useLifecycleCount');
@@ -33,7 +33,7 @@ describe('LifecycleFilters', () => {
         });
 
         const { getByText } = render(
-            <LifecycleFilters state={{}} onChange={vi.fn()} />,
+            <FeaturesOverviewLifecycleFilters state={{}} onChange={vi.fn()} />,
         );
 
         expect(getByText('All flags')).toBeInTheDocument();
@@ -44,10 +44,10 @@ describe('LifecycleFilters', () => {
 
     it('renders all stages with correct counts when no total provided', () => {
         const { getByText } = render(
-            <LifecycleFilters state={{}} onChange={vi.fn()} />,
+            <FeaturesOverviewLifecycleFilters state={{}} onChange={vi.fn()} />,
         );
 
-        expect(getByText('All flags (10)')).toBeInTheDocument();
+        expect(getByText('All flags')).toBeInTheDocument();
         expect(getByText('Develop (2)')).toBeInTheDocument();
         expect(getByText('Rollout production (3)')).toBeInTheDocument();
         expect(getByText('Cleanup (4)')).toBeInTheDocument();
@@ -56,7 +56,7 @@ describe('LifecycleFilters', () => {
     it('renders dynamic label when total matches count', () => {
         const total = 3;
         const { getByText } = render(
-            <LifecycleFilters
+            <FeaturesOverviewLifecycleFilters
                 state={{ lifecycle: { operator: 'IS', values: ['live'] } }}
                 onChange={vi.fn()}
                 total={total}
@@ -68,7 +68,7 @@ describe('LifecycleFilters', () => {
     it('renders dynamic label when total does not match count', () => {
         const total = 2;
         const { getByText } = render(
-            <LifecycleFilters
+            <FeaturesOverviewLifecycleFilters
                 state={{ lifecycle: { operator: 'IS', values: ['live'] } }}
                 onChange={vi.fn()}
                 total={total}
@@ -80,7 +80,7 @@ describe('LifecycleFilters', () => {
     it('will apply a correct filter for each stage', async () => {
         const onChange = vi.fn();
         const { getByText } = render(
-            <LifecycleFilters state={{}} onChange={onChange} />,
+            <FeaturesOverviewLifecycleFilters state={{}} onChange={onChange} />,
         );
 
         await userEvent.click(getByText('Develop (2)'));
@@ -98,7 +98,7 @@ describe('LifecycleFilters', () => {
             lifecycle: { operator: 'IS', values: ['completed'] },
         });
 
-        await userEvent.click(getByText('All flags (10)'));
+        await userEvent.click(getByText('All flags'));
         expect(onChange).toHaveBeenCalledWith({ lifecycle: null });
     });
 });

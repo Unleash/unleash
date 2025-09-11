@@ -31,6 +31,7 @@ import {
     PlaceholderFeatureToggleCell,
 } from './FeatureToggleCell/FeatureToggleCell.tsx';
 import { ProjectOverviewFilters } from './ProjectOverviewFilters.tsx';
+import { ProjectLifecycleFilters } from './ProjectLifecycleFilters.tsx';
 import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility.ts';
 import { TableEmptyState } from './TableEmptyState/TableEmptyState.tsx';
 import { useRowActions } from './hooks/useRowActions.tsx';
@@ -56,9 +57,9 @@ import { ImportModal } from '../Import/ImportModal.tsx';
 import { IMPORT_BUTTON } from 'utils/testIds';
 import { ProjectCleanupReminder } from './ProjectCleanupReminder/ProjectCleanupReminder.tsx';
 
-interface IPaginatedProjectFeatureTogglesProps {
+type ProjectFeatureTogglesProps = {
     environments: string[];
-}
+};
 
 const formatEnvironmentColumnId = (environment: string) =>
     `environment:${environment}`;
@@ -75,7 +76,6 @@ const Container = styled('div')(({ theme }) => ({
 const FilterRow = styled('div')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'row wrap',
-    gap: theme.spacing(2),
     justifyContent: 'space-between',
 }));
 
@@ -87,7 +87,7 @@ const ButtonGroup = styled('div')(({ theme }) => ({
 
 export const ProjectFeatureToggles = ({
     environments,
-}: IPaginatedProjectFeatureTogglesProps) => {
+}: ProjectFeatureTogglesProps) => {
     const { trackEvent } = usePlausibleTracker();
     const projectId = useRequiredPathParam('projectId');
     const { project } = useProjectOverview(projectId);
@@ -576,6 +576,12 @@ export const ProjectFeatureToggles = ({
                             project={projectId}
                             onChange={setTableState}
                             state={filterState}
+                        />
+                        <ProjectLifecycleFilters
+                            projectId={projectId}
+                            state={filterState}
+                            onChange={setTableState}
+                            total={loading ? undefined : total}
                         />
                         <ButtonGroup>
                             <PermissionIconButton

@@ -1,4 +1,4 @@
-import { useEffect, useState, type VFC } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
@@ -9,15 +9,14 @@ import {
 } from 'component/filter/Filters/Filters';
 import { formatTag } from 'utils/format-tag';
 
-interface IFeatureToggleFiltersProps {
+type FeaturesOverviewToggleFiltersProps = {
     state: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
-}
+};
 
-export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
-    state,
-    onChange,
-}) => {
+export const FeaturesOverviewToggleFilters: FC<
+    FeaturesOverviewToggleFiltersProps
+> = ({ state, onChange }) => {
     const { projects } = useProjects();
     const { segments } = useSegments();
     const { tags } = useAllTags();

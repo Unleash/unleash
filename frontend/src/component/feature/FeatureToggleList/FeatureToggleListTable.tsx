@@ -20,7 +20,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { focusable } from 'themes/themeStyles';
 import { FeatureLifecycleCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
-import { FeatureToggleFilters } from './FeatureToggleFilters/FeatureToggleFilters.tsx';
+import { FeaturesOverviewToggleFilters } from './FeaturesOverviewLifecycleFilters/FeaturesOverviewToggleFilters.tsx';
 import { withTableState } from 'utils/withTableState';
 import useLoading from 'hooks/useLoading';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -29,7 +29,7 @@ import {
     useTableStateFilter,
 } from './useGlobalFeatureSearch.ts';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { LifecycleFilters } from './FeatureToggleFilters/LifecycleFilters.tsx';
+import { FeaturesOverviewLifecycleFilters } from './FeaturesOverviewLifecycleFilters/FeaturesOverviewLifecycleFilters.tsx';
 import { ExportFlags } from './ExportFlags.tsx';
 import { createFeatureOverviewCell } from 'component/common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 import { AvatarCell } from 'component/project/Project/PaginatedProjectFeatureToggles/AvatarCell';
@@ -290,7 +290,7 @@ export const FeatureToggleListTable: FC = () => {
                 />
             }
         >
-            <LifecycleFilters
+            <FeaturesOverviewLifecycleFilters
                 state={filterState}
                 onChange={setTableState}
                 total={loading ? undefined : total}
@@ -303,8 +303,8 @@ export const FeatureToggleListTable: FC = () => {
                         id='globalFeatureFlags'
                     />
                 ) : null}
-            </LifecycleFilters>
-            <FeatureToggleFilters
+            </FeaturesOverviewLifecycleFilters>
+            <FeaturesOverviewToggleFilters
                 onChange={setTableState}
                 state={filterState}
             />

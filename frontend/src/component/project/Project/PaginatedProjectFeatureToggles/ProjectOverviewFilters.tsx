@@ -1,4 +1,4 @@
-import { useEffect, useState, type VFC } from 'react';
+import { useEffect, useState, type FC } from 'react';
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
 import {
     type FilterItemParamHolder,
@@ -8,13 +8,13 @@ import {
 import { useProjectFlagCreators } from 'hooks/api/getters/useProjectFlagCreators/useProjectFlagCreators';
 import { formatTag } from 'utils/format-tag';
 
-interface IProjectOverviewFilters {
+type ProjectOverviewFiltersProps = {
     state: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
     project: string;
-}
+};
 
-export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
+export const ProjectOverviewFilters: FC<ProjectOverviewFiltersProps> = ({
     state,
     onChange,
     project,
@@ -117,19 +117,6 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
                 filterKey: 'archived',
                 singularOperators: ['IS'],
                 pluralOperators: ['IS_ANY_OF'],
-            },
-            {
-                label: 'Lifecycle stage',
-                icon: 'model_training',
-                options: [
-                    { label: 'Define', value: 'initial' },
-                    { label: 'Develop', value: 'pre-live' },
-                    { label: 'Rollout production', value: 'live' },
-                    { label: 'Cleanup', value: 'completed' },
-                ],
-                filterKey: 'lifecycle',
-                singularOperators: ['IS', 'IS_NOT'],
-                pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
             },
         ];
 

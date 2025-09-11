@@ -64,12 +64,11 @@ export const LifecycleFilters = ({
     total,
     children,
     countData,
-    sx,
 }: ILifecycleFiltersBaseProps) => {
     const current = state.lifecycle?.values ?? [];
 
     return (
-        <Wrapper sx={sx}>
+        <Wrapper>
             <StyledContainer>
                 {lifecycleOptions.map(({ label, value }) => {
                     const isActive =

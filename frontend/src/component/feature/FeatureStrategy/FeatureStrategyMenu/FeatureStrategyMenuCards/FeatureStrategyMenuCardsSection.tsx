@@ -1,4 +1,4 @@
-import { Box, styled, Typography } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import type { ReactNode } from 'react';
 
 export const StyledStrategyModalSectionHeader = styled(Box)(({ theme }) => ({
@@ -7,6 +7,7 @@ export const StyledStrategyModalSectionHeader = styled(Box)(({ theme }) => ({
     gap: theme.spacing(0.5),
     marginBottom: theme.spacing(0.5),
     width: '100%',
+    fontSize: theme.typography.body2.fontSize,
 }));
 
 const StyledStrategyModalSectionGrid = styled(Box)(({ theme }) => ({
@@ -28,9 +29,7 @@ export const FeatureStrategyMenuCardsSection = ({
     <Box>
         {title && (
             <StyledStrategyModalSectionHeader>
-                <Typography color='inherit' variant='body2'>
-                    {title}
-                </Typography>
+                {title}
             </StyledStrategyModalSectionHeader>
         )}
         <StyledStrategyModalSectionGrid>

@@ -38,8 +38,8 @@ const StyledContainer = styled(Box)(() => ({
 }));
 
 const StyledScrollableContent = styled(Box)(({ theme }) => ({
-    width: '100%',
-    maxHeight: theme.spacing(62),
+    width: theme.breakpoints.values.md,
+    height: theme.spacing(52),
     overflowY: 'auto',
     padding: theme.spacing(4),
     paddingTop: theme.spacing(1),

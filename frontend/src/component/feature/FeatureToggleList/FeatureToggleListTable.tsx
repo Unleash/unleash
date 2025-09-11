@@ -29,7 +29,7 @@ import {
     useTableStateFilter,
 } from './useGlobalFeatureSearch.ts';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { LifecycleFilters } from './FeatureToggleFilters/LifecycleFilters.tsx';
+import { FeatureLifecycleFilters } from './FeatureToggleFilters/FeatureLifecycleFilters.tsx';
 import { ExportFlags } from './ExportFlags.tsx';
 import { createFeatureOverviewCell } from 'component/common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 import { AvatarCell } from 'component/project/Project/PaginatedProjectFeatureToggles/AvatarCell';
@@ -290,7 +290,7 @@ export const FeatureToggleListTable: FC = () => {
                 />
             }
         >
-            <LifecycleFilters
+            <FeatureLifecycleFilters
                 state={filterState}
                 onChange={setTableState}
                 total={loading ? undefined : total}
@@ -303,7 +303,7 @@ export const FeatureToggleListTable: FC = () => {
                         id='globalFeatureFlags'
                     />
                 ) : null}
-            </LifecycleFilters>
+            </FeatureLifecycleFilters>
             <FeatureToggleFilters
                 onChange={setTableState}
                 state={filterState}

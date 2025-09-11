@@ -1,55 +1,57 @@
 import type { FC, ReactNode } from 'react';
 import type { FilterItemParamHolder } from '../../../filter/Filters/Filters.tsx';
-import type { LifecycleStage } from '../../../feature/FeatureView/FeatureOverview/FeatureLifecycle/LifecycleStage.tsx';
-import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
+import type { LifecycleStage } from '../../FeatureView/FeatureOverview/FeatureLifecycle/LifecycleStage.tsx';
+import { useLifecycleCount } from 'hooks/api/getters/useLifecycleCount/useLifecycleCount';
+import type { FeatureLifecycleCountSchema } from 'openapi';
 import { LifecycleFilters } from '../../../common/LifecycleFilters/LifecycleFilters.tsx';
 
 const getStageCount = (
     lifecycle: LifecycleStage['name'] | null,
-    lifecycleSummary?: { [key: string]: { currentFlags: number } },
+    lifecycleCount?: FeatureLifecycleCountSchema,
 ) => {
-    if (!lifecycleSummary) {
+    if (!lifecycleCount) {
         return undefined;
     }
 
     if (lifecycle === null) {
         return (
-            (lifecycleSummary.initial?.currentFlags || 0) +
-            (lifecycleSummary.preLive?.currentFlags || 0) +
-            (lifecycleSummary.live?.currentFlags || 0) +
-            (lifecycleSummary.completed?.currentFlags || 0)
+            (lifecycleCount.initial || 0) +
+            (lifecycleCount.preLive || 0) +
+            (lifecycleCount.live || 0) +
+            (lifecycleCount.completed || 0)
         );
     }
 
     const key = lifecycle === 'pre-live' ? 'preLive' : lifecycle;
-    return lifecycleSummary[key]?.currentFlags;
+    return lifecycleCount[key];
 };
 
-interface IProjectLifecycleFiltersProps {
-    projectId: string;
+interface ILifecycleFiltersProps {
     state: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
     total?: number;
     children?: ReactNode;
 }
 
-export const ProjectLifecycleFilters: FC<IProjectLifecycleFiltersProps> = ({
-    projectId,
+export const FeatureLifecycleFilters: FC<ILifecycleFiltersProps> = ({
     state,
     onChange,
     total,
     children,
 }) => {
-    const { data } = useProjectStatus(projectId);
-    const lifecycleSummary = data?.lifecycleSummary;
+    const { lifecycleCount } = useLifecycleCount();
 
     return (
         <LifecycleFilters
             state={state}
             onChange={onChange}
             total={total}
-            countData={lifecycleSummary}
+            countData={lifecycleCount}
             getStageCount={getStageCount}
+            sx={{
+                padding: (theme) =>
+                    `${theme.spacing(1.5)} ${theme.spacing(3)} 0 ${theme.spacing(3)}`,
+            }}
         >
             {children}
         </LifecycleFilters>

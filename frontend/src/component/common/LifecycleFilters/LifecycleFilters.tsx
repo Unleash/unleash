@@ -1,9 +1,8 @@
 import { Box, Chip, styled } from '@mui/material';
-import type { FC, ReactNode } from 'react';
-import type { FilterItemParamHolder } from '../../../filter/Filters/Filters.tsx';
-import type { LifecycleStage } from '../../FeatureView/FeatureOverview/FeatureLifecycle/LifecycleStage.tsx';
-import { useLifecycleCount } from 'hooks/api/getters/useLifecycleCount/useLifecycleCount';
-import type { FeatureLifecycleCountSchema } from 'openapi';
+import type { SxProps, Theme } from '@mui/material';
+import type { ReactNode } from 'react';
+import type { FilterItemParamHolder } from '../../filter/Filters/Filters.tsx';
+import type { LifecycleStage } from '../../feature/FeatureView/FeatureOverview/FeatureLifecycle/LifecycleStage.tsx';
 
 const StyledChip = styled(Chip, {
     shouldForwardProp: (prop) => prop !== 'isActive',
@@ -26,17 +25,22 @@ const StyledChip = styled(Chip, {
     },
 }));
 
-interface ILifecycleFiltersProps {
+interface ILifecycleFiltersBaseProps<T> {
     state: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
     total?: number;
     children?: ReactNode;
+    countData?: T;
+    getStageCount: (
+        lifecycle: LifecycleStage['name'] | null,
+        data?: T,
+    ) => number | undefined;
+    sx?: SxProps<Theme>;
 }
 
 const Wrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
-    padding: theme.spacing(1.5, 3, 0, 3),
     minHeight: theme.spacing(7),
     gap: theme.spacing(2),
 }));
@@ -58,45 +62,26 @@ const lifecycleOptions: {
     { label: 'Cleanup', value: 'completed' },
 ];
 
-const getStageCount = (
-    lifecycle: LifecycleStage['name'] | null,
-    lifecycleCount?: FeatureLifecycleCountSchema,
-) => {
-    if (!lifecycleCount) {
-        return undefined;
-    }
-
-    if (lifecycle === null) {
-        return (
-            (lifecycleCount.initial || 0) +
-            (lifecycleCount.preLive || 0) +
-            (lifecycleCount.live || 0) +
-            (lifecycleCount.completed || 0)
-        );
-    }
-
-    const key = lifecycle === 'pre-live' ? 'preLive' : lifecycle;
-    return lifecycleCount[key];
-};
-
-export const LifecycleFilters: FC<ILifecycleFiltersProps> = ({
+export const LifecycleFilters = <T,>({
     state,
     onChange,
     total,
     children,
-}) => {
-    const { lifecycleCount } = useLifecycleCount();
+    countData,
+    getStageCount,
+    sx,
+}: ILifecycleFiltersBaseProps<T>) => {
     const current = state.lifecycle?.values ?? [];
 
     return (
-        <Wrapper>
+        <Wrapper sx={sx}>
             <StyledContainer>
                 {lifecycleOptions.map(({ label, value }) => {
                     const isActive =
                         value === null
                             ? !state.lifecycle
                             : current.includes(value);
-                    const count = getStageCount(value, lifecycleCount);
+                    const count = getStageCount(value, countData);
                     const dynamicLabel =
                         isActive && Number.isInteger(total)
                             ? `${label} (${total === count ? total : `${total} of ${count}`})`

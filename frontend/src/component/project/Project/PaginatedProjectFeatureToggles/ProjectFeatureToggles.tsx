@@ -42,7 +42,7 @@ import {
     useProjectFeatureSearchActions,
 } from './useProjectFeatureSearch.ts';
 import { AvatarCell } from './AvatarCell.tsx';
-import { Box, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog.tsx';
 import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding.tsx';
@@ -76,7 +76,6 @@ const Container = styled('div')(({ theme }) => ({
 const FilterRow = styled('div')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'row wrap',
-    gap: theme.spacing(2),
     justifyContent: 'space-between',
 }));
 
@@ -578,14 +577,12 @@ export const ProjectFeatureToggles = ({
                             onChange={setTableState}
                             state={filterState}
                         />
-                        <Box sx={{ marginRight: 'auto' }} data-test>
-                            <ProjectLifecycleFilters
-                                projectId={projectId}
-                                state={filterState}
-                                onChange={setTableState}
-                                total={loading ? undefined : total}
-                            />
-                        </Box>
+                        <ProjectLifecycleFilters
+                            projectId={projectId}
+                            state={filterState}
+                            onChange={setTableState}
+                            total={loading ? undefined : total}
+                        />
                         <ButtonGroup>
                             <PermissionIconButton
                                 permission={UPDATE_FEATURE}

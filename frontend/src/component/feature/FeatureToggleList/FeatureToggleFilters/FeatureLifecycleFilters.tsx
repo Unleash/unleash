@@ -40,14 +40,20 @@ export const FeatureLifecycleFilters: FC<ILifecycleFiltersProps> = ({
     children,
 }) => {
     const { lifecycleCount } = useLifecycleCount();
+    const countData = Object.entries(lifecycleCount || {}).reduce(
+        (acc, [key, value]) => {
+            acc[key === 'preLive' ? 'pre-live' : key] = value;
+            return acc;
+        },
+        {} as Record<string, number>,
+    );
 
     return (
         <LifecycleFilters
             state={state}
             onChange={onChange}
             total={total}
-            countData={lifecycleCount}
-            getStageCount={getStageCount}
+            countData={countData}
             sx={{
                 padding: (theme) =>
                     `${theme.spacing(1.5)} ${theme.spacing(3)} 0 ${theme.spacing(3)}`,

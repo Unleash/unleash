@@ -25,16 +25,12 @@ const StyledChip = styled(Chip, {
     },
 }));
 
-interface ILifecycleFiltersBaseProps<T> {
+interface ILifecycleFiltersBaseProps {
     state: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
     total?: number;
     children?: ReactNode;
-    countData?: T;
-    getStageCount: (
-        lifecycle: LifecycleStage['name'] | null,
-        data?: T,
-    ) => number | undefined;
+    countData?: Record<LifecycleStage['name'], number>;
     sx?: SxProps<Theme>;
 }
 
@@ -62,15 +58,14 @@ const lifecycleOptions: {
     { label: 'Cleanup', value: 'completed' },
 ];
 
-export const LifecycleFilters = <T,>({
+export const LifecycleFilters = ({
     state,
     onChange,
     total,
     children,
     countData,
-    getStageCount,
     sx,
-}: ILifecycleFiltersBaseProps<T>) => {
+}: ILifecycleFiltersBaseProps) => {
     const current = state.lifecycle?.values ?? [];
 
     return (
@@ -81,7 +76,7 @@ export const LifecycleFilters = <T,>({
                         value === null
                             ? !state.lifecycle
                             : current.includes(value);
-                    const count = getStageCount(value, countData);
+                    const count = value ? countData?.[value] : total;
                     const dynamicLabel =
                         isActive && Number.isInteger(total)
                             ? `${label} (${total === count ? total : `${total} of ${count}`})`

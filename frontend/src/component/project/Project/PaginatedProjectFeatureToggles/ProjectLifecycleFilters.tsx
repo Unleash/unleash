@@ -1,29 +1,8 @@
 import type { FC, ReactNode } from 'react';
+import { useEffect } from 'react';
 import type { FilterItemParamHolder } from '../../../filter/Filters/Filters.tsx';
-import type { LifecycleStage } from '../../../feature/FeatureView/FeatureOverview/FeatureLifecycle/LifecycleStage.tsx';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import { LifecycleFilters } from '../../../common/LifecycleFilters/LifecycleFilters.tsx';
-
-const getStageCount = (
-    lifecycle: LifecycleStage['name'] | null,
-    lifecycleSummary?: { [key: string]: { currentFlags: number } },
-) => {
-    if (!lifecycleSummary) {
-        return undefined;
-    }
-
-    if (lifecycle === null) {
-        return (
-            (lifecycleSummary.initial?.currentFlags || 0) +
-            (lifecycleSummary.preLive?.currentFlags || 0) +
-            (lifecycleSummary.live?.currentFlags || 0) +
-            (lifecycleSummary.completed?.currentFlags || 0)
-        );
-    }
-
-    const key = lifecycle === 'pre-live' ? 'preLive' : lifecycle;
-    return lifecycleSummary[key]?.currentFlags;
-};
 
 interface IProjectLifecycleFiltersProps {
     projectId: string;
@@ -41,7 +20,26 @@ export const ProjectLifecycleFilters: FC<IProjectLifecycleFiltersProps> = ({
     children,
 }) => {
     const { data } = useProjectStatus(projectId);
-    const lifecycleSummary = data?.lifecycleSummary;
+    const lifecycleSummary = Object.entries(
+        data?.lifecycleSummary || {},
+    ).reduce(
+        (acc, [key, value]) => {
+            acc[key === 'preLive' ? 'pre-live' : key] = value.currentFlags || 0;
+            return acc;
+        },
+        {} as Record<string, number>,
+    );
+
+    const isArchivedFilterActive = state.archived?.values?.includes('true');
+    useEffect(() => {
+        if (isArchivedFilterActive && state.lifecycle) {
+            onChange({ ...state, lifecycle: null });
+        }
+    }, [isArchivedFilterActive, state, onChange]);
+
+    if (isArchivedFilterActive) {
+        return null;
+    }
 
     return (
         <LifecycleFilters
@@ -49,7 +47,6 @@ export const ProjectLifecycleFilters: FC<IProjectLifecycleFiltersProps> = ({
             onChange={onChange}
             total={total}
             countData={lifecycleSummary}
-            getStageCount={getStageCount}
         >
             {children}
         </LifecycleFilters>

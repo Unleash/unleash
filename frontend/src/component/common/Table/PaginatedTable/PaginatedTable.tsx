@@ -1,4 +1,5 @@
 import { TableBody, TableRow, TableHead } from '@mui/material';
+import { useRef } from 'react';
 import { Table } from 'component/common/Table/Table/Table';
 import {
     type Header,
@@ -59,10 +60,22 @@ export const PaginatedTable = <T extends object>({
     totalItems?: number;
 }) => {
     const { pagination } = tableInstance.getState();
+    const tableRef = useRef<HTMLDivElement>(null);
+
+    const scrollToTopIfNeeded = () => {
+        if (!tableRef.current) return;
+
+        const rect = tableRef.current.getBoundingClientRect();
+        const isTableTopVisible = rect.top >= 0;
+
+        if (!isTableTopVisible) {
+            tableRef.current.scrollIntoView({ block: 'start' });
+        }
+    };
 
     return (
         <>
-            <TableContainer>
+            <TableContainer ref={tableRef}>
                 <Table>
                     <TableHead>
                         {tableInstance.getHeaderGroups().map((headerGroup) => (
@@ -110,24 +123,35 @@ export const PaginatedTable = <T extends object>({
                         totalItems={totalItems}
                         pageIndex={pagination.pageIndex}
                         pageSize={pagination.pageSize}
-                        fetchNextPage={() =>
+                        fetchNextPage={() => {
                             tableInstance.setPagination({
                                 pageIndex: pagination.pageIndex + 1,
                                 pageSize: pagination.pageSize,
-                            })
-                        }
-                        fetchPrevPage={() =>
+                            });
+                            scrollToTopIfNeeded();
+                        }}
+                        fetchPrevPage={() => {
                             tableInstance.setPagination({
                                 pageIndex: pagination.pageIndex - 1,
                                 pageSize: pagination.pageSize,
-                            })
-                        }
-                        setPageLimit={(pageSize) =>
+                            });
+                            scrollToTopIfNeeded();
+                        }}
+                        setPageLimit={(pageSize) => {
                             tableInstance.setPagination({
                                 pageIndex: 0,
                                 pageSize,
-                            })
-                        }
+                            });
+
+                            if (
+                                pagination.pageIndex > 0 ||
+                                pagination.pageSize > pageSize
+                            ) {
+                                // scroll to table top unless you are on the
+                                // first page and increasing the page size.
+                                scrollToTopIfNeeded();
+                            }
+                        }}
                     />
                 }
             />

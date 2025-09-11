@@ -1,7 +1,6 @@
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ReactComponent as ReleaseTemplateIcon } from 'assets/img/releaseTemplates.svg';
-import { FeatureReleasePlanCard } from '../FeatureReleasePlanCard/FeatureReleasePlanCard.tsx';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans.ts';
 import { Box, Button, styled } from '@mui/material';
 import type { StrategyFilterValue } from './FeatureStrategyMenuCards.tsx';
@@ -11,6 +10,9 @@ import {
     FeatureStrategyMenuCardsSection,
     StyledStrategyModalSectionHeader,
 } from './FeatureStrategyMenuCardsSection.tsx';
+import { getFeatureStrategyIcon } from 'utils/strategyNames.tsx';
+import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
+import { FeatureStrategyMenuCardAction } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardAction.tsx';
 
 const RELEASE_TEMPLATE_DISPLAY_LIMIT = 5;
 
@@ -113,6 +115,8 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
         ? templates
         : templates.slice(0, RELEASE_TEMPLATE_DISPLAY_LIMIT);
 
+    const Icon = getFeatureStrategyIcon('releasePlanTemplate');
+
     return (
         <Box>
             {shouldShowHeader && (
@@ -150,12 +154,23 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
             ) : (
                 <FeatureStrategyMenuCardsSection>
                     {slicedTemplates.map((template) => (
-                        <FeatureReleasePlanCard
+                        <FeatureStrategyMenuCard
                             key={template.id}
-                            template={template}
-                            onClick={() => onAddReleasePlan(template)}
-                            onPreviewClick={() => onReviewReleasePlan(template)}
-                        />
+                            name={template.name}
+                            description={template.description}
+                            icon={<Icon />}
+                        >
+                            <FeatureStrategyMenuCardAction
+                                onClick={() => onReviewReleasePlan(template)}
+                            >
+                                Preview
+                            </FeatureStrategyMenuCardAction>
+                            <FeatureStrategyMenuCardAction
+                                onClick={() => onAddReleasePlan(template)}
+                            >
+                                Apply
+                            </FeatureStrategyMenuCardAction>
+                        </FeatureStrategyMenuCard>
                     ))}
                     {slicedTemplates.length < templates.length &&
                         templates.length > RELEASE_TEMPLATE_DISPLAY_LIMIT && (

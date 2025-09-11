@@ -2,11 +2,10 @@ import { styled, Typography, Box, IconButton } from '@mui/material';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.tsx';
-import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview.ts';
 import { useContext, useMemo, useState } from 'react';
 import {
     FeatureStrategyMenuCardsSection,
@@ -20,6 +19,15 @@ import {
     UPDATE_PROJECT,
 } from 'component/providers/AccessProvider/permissions.ts';
 import AccessContext from 'contexts/AccessContext.ts';
+import {
+    formatStrategyName,
+    getFeatureStrategyIcon,
+} from 'utils/strategyNames.tsx';
+import { FeatureStrategyMenuCardAction } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardAction.tsx';
+import { formatCreateStrategyPath } from '../../FeatureStrategyCreate/FeatureStrategyCreate.tsx';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import { FeatureStrategyMenuCardsDefaultStrategy } from './FeatureStrategyMenuCardsDefaultStrategy.tsx';
+import type { IStrategy } from 'interfaces/strategy.ts';
 
 const FILTERS = [
     { label: 'All', value: null },
@@ -42,7 +50,7 @@ const StyledScrollableContent = styled(Box)(({ theme }) => ({
     height: theme.spacing(52),
     overflowY: 'auto',
     padding: theme.spacing(4),
-    paddingTop: theme.spacing(1),
+    paddingTop: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(5),
@@ -57,7 +65,7 @@ const StyledHeader = styled(Box)(({ theme }) => ({
 
 const StyledFiltersContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
-    padding: theme.spacing(0, 4, 5, 4),
+    padding: theme.spacing(0, 4, 3, 4),
 }));
 
 const StyledLink = styled(RouterLink)({
@@ -86,9 +94,10 @@ export const FeatureStrategyMenuCards = ({
 }: IFeatureStrategyMenuCardsProps) => {
     const { isEnterprise } = useUiConfig();
     const { hasAccess } = useContext(AccessContext);
+    const { trackEvent } = usePlausibleTracker();
+    const navigate = useNavigate();
 
     const { strategies } = useStrategies();
-    const { project } = useProjectOverview(projectId);
 
     const [filter, setFilter] = useState<StrategyFilterValue>(null);
 
@@ -107,21 +116,6 @@ export const FeatureStrategyMenuCards = ({
     const customStrategies = activeStrategies.filter(
         (strategy) => strategy.editable,
     );
-
-    const projectDefaultStrategy = project?.environments?.find(
-        (env) => env.environment === environmentId,
-    )?.defaultStrategy || {
-        name: 'flexibleRollout',
-        title: '100% of all users',
-    };
-
-    const defaultStrategy = {
-        name: projectDefaultStrategy.name || 'flexibleRollout',
-        displayName: 'Default strategy',
-        description:
-            projectDefaultStrategy.title ||
-            'This is the default strategy defined for this environment in the project',
-    };
 
     const availableFilters = useMemo(
         () =>
@@ -149,6 +143,72 @@ export const FeatureStrategyMenuCards = ({
         ],
         projectId,
     );
+
+    const projectDefaultTooltip = hasAccessToDefaultStrategyConfig ? (
+        <>
+            This is set per project, per environment, and can be configured{' '}
+            <StyledLink to={`/projects/${projectId}/settings/default-strategy`}>
+                here
+            </StyledLink>
+        </>
+    ) : (
+        <>
+            This is set per project, per environment. Contact project owner to
+            change it.
+        </>
+    );
+
+    const renderStrategy = (strategy: IStrategy) => {
+        const name = strategy.displayName || formatStrategyName(strategy.name);
+        const Icon = getFeatureStrategyIcon(strategy.name);
+
+        return (
+            <FeatureStrategyMenuCard
+                key={strategy.name}
+                name={name}
+                description={strategy.description}
+                icon={<Icon />}
+            >
+                <FeatureStrategyMenuCardAction
+                    onClick={() =>
+                        onConfigure({
+                            strategyName: strategy.name,
+                            strategyDisplayName: name,
+                        })
+                    }
+                >
+                    Configure
+                </FeatureStrategyMenuCardAction>
+            </FeatureStrategyMenuCard>
+        );
+    };
+
+    const onConfigure = ({
+        strategyName,
+        strategyDisplayName,
+        isDefault,
+    }: {
+        strategyName: string;
+        strategyDisplayName?: string;
+        isDefault?: boolean;
+    }) => {
+        const createStrategyPath = formatCreateStrategyPath(
+            projectId,
+            featureId,
+            environmentId,
+            strategyName,
+            isDefault,
+        );
+
+        trackEvent('strategy-add', {
+            props: {
+                buttonTitle: strategyDisplayName || strategyName,
+            },
+        });
+
+        navigate(createStrategyPath);
+        onClose();
+    };
 
     return (
         <StyledContainer>
@@ -181,26 +241,7 @@ export const FeatureStrategyMenuCards = ({
                                     </Typography>
                                     <HelpIcon
                                         htmlTooltip
-                                        tooltip={
-                                            hasAccessToDefaultStrategyConfig ? (
-                                                <>
-                                                    This is set per project, per
-                                                    environment, and can be
-                                                    configured{' '}
-                                                    <StyledLink
-                                                        to={`/projects/${projectId}/settings/default-strategy`}
-                                                    >
-                                                        here
-                                                    </StyledLink>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    This is set per project, per
-                                                    environment. Contact project
-                                                    owner to change it.
-                                                </>
-                                            )
-                                        }
+                                        tooltip={projectDefaultTooltip}
                                         size='16px'
                                     />
                                 </StyledStrategyModalSectionHeader>
@@ -215,28 +256,16 @@ export const FeatureStrategyMenuCards = ({
                         </FeatureStrategyMenuCardsSection>
                         <FeatureStrategyMenuCardsSection>
                             {shouldRender('default') && (
-                                <FeatureStrategyMenuCard
+                                <FeatureStrategyMenuCardsDefaultStrategy
                                     projectId={projectId}
-                                    featureId={featureId}
                                     environmentId={environmentId}
-                                    strategy={defaultStrategy}
-                                    defaultStrategy
+                                    featureId={featureId}
+                                    onConfigure={onConfigure}
                                     onClose={onClose}
                                 />
                             )}
                             {shouldRender('standard') && (
-                                <>
-                                    {standardStrategies.map((strategy) => (
-                                        <FeatureStrategyMenuCard
-                                            key={strategy.name}
-                                            projectId={projectId}
-                                            featureId={featureId}
-                                            environmentId={environmentId}
-                                            strategy={strategy}
-                                            onClose={onClose}
-                                        />
-                                    ))}
-                                </>
+                                <>{standardStrategies.map(renderStrategy)}</>
                             )}
                         </FeatureStrategyMenuCardsSection>
                     </Box>
@@ -253,30 +282,12 @@ export const FeatureStrategyMenuCards = ({
                     <>
                         {advancedStrategies.length > 0 && (
                             <FeatureStrategyMenuCardsSection title='Advanced strategies'>
-                                {advancedStrategies.map((strategy) => (
-                                    <FeatureStrategyMenuCard
-                                        key={strategy.name}
-                                        projectId={projectId}
-                                        featureId={featureId}
-                                        environmentId={environmentId}
-                                        strategy={strategy}
-                                        onClose={onClose}
-                                    />
-                                ))}
+                                {advancedStrategies.map(renderStrategy)}
                             </FeatureStrategyMenuCardsSection>
                         )}
                         {customStrategies.length > 0 && (
                             <FeatureStrategyMenuCardsSection title='Custom strategies'>
-                                {customStrategies.map((strategy) => (
-                                    <FeatureStrategyMenuCard
-                                        key={strategy.name}
-                                        projectId={projectId}
-                                        featureId={featureId}
-                                        environmentId={environmentId}
-                                        strategy={strategy}
-                                        onClose={onClose}
-                                    />
-                                ))}
+                                {customStrategies.map(renderStrategy)}
                             </FeatureStrategyMenuCardsSection>
                         )}
                     </>

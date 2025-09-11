@@ -46,6 +46,7 @@ const StyledCard = styled('div', {
         backgroundColor: theme.palette.secondary.light,
         borderColor: theme.palette.secondary.border,
     }),
+    userSelect: 'none',
 }));
 
 const StyledCardContent = styled('div')(({ theme }) => ({

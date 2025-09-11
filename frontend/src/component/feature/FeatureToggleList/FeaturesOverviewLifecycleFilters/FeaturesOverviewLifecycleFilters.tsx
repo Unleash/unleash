@@ -2,7 +2,7 @@ import type { FC, ReactNode } from 'react';
 import { Box } from '@mui/material';
 import type { FilterItemParamHolder } from '../../../filter/Filters/Filters.tsx';
 import { useLifecycleCount } from 'hooks/api/getters/useLifecycleCount/useLifecycleCount';
-import { LifecycleFilters } from '../../../common/LifecycleFilters/LifecycleFilters.tsx';
+import { LifecycleFilters } from 'component/common/LifecycleFilters/LifecycleFilters.tsx';
 
 type FeaturesOverviewLifecycleFiltersProps = {
     state: FilterItemParamHolder;

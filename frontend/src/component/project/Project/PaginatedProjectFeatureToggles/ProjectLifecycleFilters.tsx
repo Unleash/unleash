@@ -2,7 +2,7 @@ import type { FC, ReactNode } from 'react';
 import { useEffect } from 'react';
 import type { FilterItemParamHolder } from '../../../filter/Filters/Filters.tsx';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
-import { LifecycleFilters } from '../../../common/LifecycleFilters/LifecycleFilters.tsx';
+import { LifecycleFilters } from 'component/common/LifecycleFilters/LifecycleFilters.tsx';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 
 type ProjectLifecycleFiltersProps = {

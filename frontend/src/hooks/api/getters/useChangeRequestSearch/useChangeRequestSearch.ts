@@ -2,15 +2,18 @@ import useSWR, { type SWRConfiguration } from 'swr';
 import { useCallback, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
-import type { SearchFeaturesParams, SearchFeaturesSchema } from 'openapi';
+import type {
+    SearchChangeRequestsParams,
+    ChangeRequestSearchResponseSchema,
+} from 'openapi';
 import { useClearSWRCache } from 'hooks/useClearSWRCache';
 
-type UseFeatureSearchOutput = {
+type UseChangeRequestSearchOutput = {
     loading: boolean;
     initialLoad: boolean;
     error: string;
     refetch: () => void;
-} & SearchFeaturesSchema;
+} & ChangeRequestSearchResponseSchema;
 
 type CacheValue = {
     total: number;
@@ -20,15 +23,15 @@ type CacheValue = {
 
 type InternalCache = Record<string, CacheValue>;
 
-const fallbackData: SearchFeaturesSchema = {
-    features: [],
+const fallbackData: ChangeRequestSearchResponseSchema = {
+    changeRequests: [],
     total: 0,
 };
 
 const SWR_CACHE_SIZE = 10;
-const PATH = 'api/admin/search/features?';
+const PATH = 'api/admin/search/change-requests?';
 
-const createFeatureSearch = () => {
+const createChangeRequestSearch = () => {
     const internalCache: InternalCache = {};
 
     const initCache = (id: string) => {
@@ -53,24 +56,21 @@ const createFeatureSearch = () => {
     };
 
     return (
-        params: SearchFeaturesParams,
+        params: SearchChangeRequestsParams,
         options: SWRConfiguration = {},
         cachePrefix: string = '',
-    ): UseFeatureSearchOutput => {
-        const { KEY, fetcher } = getFeatureSearchFetcher(params);
+    ): UseChangeRequestSearchOutput => {
+        const { KEY, fetcher } = getChangeRequestSearchFetcher(params);
         const swrKey = `${cachePrefix}${KEY}`;
-        const cacheId = params.project || '';
+        const cacheId = 'global';
         useClearSWRCache(swrKey, PATH, SWR_CACHE_SIZE);
 
         useEffect(() => {
             initCache(cacheId);
         }, []);
 
-        const { data, error, mutate, isLoading } = useSWR<SearchFeaturesSchema>(
-            swrKey,
-            fetcher,
-            options,
-        );
+        const { data, error, mutate, isLoading } =
+            useSWR<ChangeRequestSearchResponseSchema>(swrKey, fetcher, options);
 
         const refetch = useCallback(() => {
             mutate();
@@ -100,12 +100,12 @@ const createFeatureSearch = () => {
 
 export const DEFAULT_PAGE_LIMIT = 25;
 
-const getFeatureSearchFetcher = (params: SearchFeaturesParams) => {
+const getChangeRequestSearchFetcher = (params: SearchChangeRequestsParams) => {
     const urlSearchParams = new URLSearchParams(
         Array.from(
             Object.entries(params)
                 .filter(([_, value]) => !!value)
-                .map(([key, value]) => [key, value.toString()]), // TODO: parsing non-string parameters
+                .map(([key, value]) => [key, value.toString()]),
         ),
     ).toString();
     const KEY = `${PATH}${urlSearchParams}`;
@@ -114,7 +114,7 @@ const getFeatureSearchFetcher = (params: SearchFeaturesParams) => {
         return fetch(path, {
             method: 'GET',
         })
-            .then(handleErrorResponses('Feature search'))
+            .then(handleErrorResponses('Change request search'))
             .then((res) => res.json());
     };
 
@@ -124,4 +124,4 @@ const getFeatureSearchFetcher = (params: SearchFeaturesParams) => {
     };
 };
 
-export const useFeatureSearch = createFeatureSearch();
+export const useChangeRequestSearch = createChangeRequestSearch();

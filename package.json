@@ -68,7 +68,6 @@
     "schema:update": "node ./.husky/update-openapi-spec-list.js"
   },
   "dependencies": {
-    "@aws-sdk/rds-signer": "^3.880.0",
     "@slack/web-api": "^7.9.1",
     "@wesleytodd/openapi": "^1.1.0",
     "ajv": "^8.17.1",
@@ -121,7 +120,6 @@
     "pg-connection-string": "^2.5.0",
     "pkginfo": "^0.4.1",
     "prom-client": "^15.0.0",
-    "proxy-agent": "^6.5.0",
     "sanitize-filename": "^1.6.3",
     "semver": "^7.6.3",
     "serve-favicon": "^2.5.0",

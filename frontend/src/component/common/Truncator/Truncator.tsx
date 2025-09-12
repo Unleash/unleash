@@ -32,6 +32,7 @@ export type TruncatorProps = {
     tooltipProps?: OverridableTooltipProps;
     children: React.ReactNode;
     onSetTruncated?: (isTruncated: boolean) => void;
+    wordBreak?: CSSProperties['wordBreak'];
 } & BoxProps;
 
 export const Truncator = ({
@@ -42,6 +43,7 @@ export const Truncator = ({
     children,
     component = 'span',
     onSetTruncated,
+    wordBreak,
     ...props
 }: TruncatorProps) => {
     const [isTruncated, setIsTruncated] = useState(false);
@@ -73,12 +75,15 @@ export const Truncator = ({
     const { title: tooltipTitle, ...otherTooltipProps } =
         overridableTooltipProps;
 
+    const defaultWordBreak = lines === 1 ? 'break-all' : 'break-word';
+
     return (
         <Tooltip title={isTruncated ? tooltipTitle : ''} {...otherTooltipProps}>
             <StyledTruncatorContainer
                 ref={ref}
                 lines={lines}
                 component={component}
+                wordBreak={wordBreak || defaultWordBreak}
                 {...props}
             >
                 {children}

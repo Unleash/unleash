@@ -1,6 +1,6 @@
 import { Link, styled, Typography, Box, IconButton } from '@mui/material';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
-import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
+import { LegacyFeatureStrategyMenuCard } from '../LegacyFeatureStrategyMenuCard/LegacyFeatureStrategyMenuCard.tsx';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import { FeatureReleasePlanCard } from '../FeatureReleasePlanCard/FeatureReleasePlanCard.tsx';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
@@ -233,7 +233,7 @@ export const LegacyFeatureStrategyMenuCards = ({
                             </SectionTitle>
                             <GridSection>
                                 <CardWrapper key={defaultStrategy.name}>
-                                    <FeatureStrategyMenuCard
+                                    <LegacyFeatureStrategyMenuCard
                                         projectId={projectId}
                                         featureId={featureId}
                                         environmentId={environmentId}
@@ -244,7 +244,7 @@ export const LegacyFeatureStrategyMenuCards = ({
                                 </CardWrapper>
                                 {standardStrategies.map((strategy) => (
                                     <CardWrapper key={strategy.name}>
-                                        <FeatureStrategyMenuCard
+                                        <LegacyFeatureStrategyMenuCard
                                             projectId={projectId}
                                             featureId={featureId}
                                             environmentId={environmentId}
@@ -271,7 +271,7 @@ export const LegacyFeatureStrategyMenuCards = ({
                                     {advancedAndCustomStrategies.map(
                                         (strategy) => (
                                             <CardWrapper key={strategy.name}>
-                                                <FeatureStrategyMenuCard
+                                                <LegacyFeatureStrategyMenuCard
                                                     projectId={projectId}
                                                     featureId={featureId}
                                                     environmentId={

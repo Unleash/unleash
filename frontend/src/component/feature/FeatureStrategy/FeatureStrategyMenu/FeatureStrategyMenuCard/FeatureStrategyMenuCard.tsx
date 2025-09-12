@@ -1,47 +1,30 @@
-import type { IStrategy } from 'interfaces/strategy';
-import { Link } from 'react-router-dom';
-import {
-    getFeatureStrategyIcon,
-    formatStrategyName,
-} from 'utils/strategyNames';
-import { formatCreateStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
-import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { styled } from '@mui/material';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Truncator } from 'component/common/Truncator/Truncator';
-
-interface IFeatureStrategyMenuCardProps {
-    projectId: string;
-    featureId: string;
-    environmentId: string;
-    strategy: Pick<IStrategy, 'name' | 'displayName' | 'description'> &
-        Partial<IStrategy>;
-    defaultStrategy?: boolean;
-    onClose: () => void;
-}
+import type { ReactNode } from 'react';
 
 const StyledIcon = styled('div')(({ theme }) => ({
-    width: theme.spacing(3),
+    display: 'flex',
+    alignItems: 'center',
     '& > svg': {
-        width: theme.spacing(2.25),
-        height: theme.spacing(2.25),
+        width: theme.spacing(3.5),
+        height: theme.spacing(3.5),
         fill: theme.palette.primary.main,
     },
 }));
 
-const StyledName = styled(StringTruncator)(({ theme }) => ({
+const StyledName = styled(Truncator)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
-    fontSize: theme.typography.caption.fontSize,
-    display: 'block',
-    marginBottom: theme.spacing(0.5),
 }));
 
-const StyledCard = styled(Link)(({ theme }) => ({
+const StyledCard = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'isDefault',
+})<{ isDefault?: boolean }>(({ theme, isDefault }) => ({
     display: 'flex',
-    flexDirection: 'column',
+    alignItems: 'center',
     width: '100%',
+    height: '100%',
     maxWidth: '30rem',
-    padding: theme.spacing(1.5, 2),
+    padding: theme.spacing(2),
     color: 'inherit',
     textDecoration: 'inherit',
     lineHeight: 1.25,
@@ -49,71 +32,79 @@ const StyledCard = styled(Link)(({ theme }) => ({
     borderStyle: 'solid',
     borderColor: theme.palette.divider,
     borderRadius: theme.spacing(1),
+    textAlign: 'left',
     overflow: 'hidden',
-    '&:hover, &:focus': {
-        borderColor: theme.palette.primary.main,
+    position: 'relative',
+    fontSize: theme.typography.caption.fontSize,
+    '&:hover .cardContent, &:focus-within .cardContent': {
+        opacity: 0.4,
     },
+    '&:hover .cardActions, &:focus-within .cardActions': {
+        opacity: 1,
+    },
+    ...(isDefault && {
+        backgroundColor: theme.palette.secondary.light,
+        borderColor: theme.palette.secondary.border,
+    }),
+    userSelect: 'none',
 }));
 
-const StyledTopRow = styled('div')(({ theme }) => ({
+const StyledCardContent = styled('div')(({ theme }) => ({
     display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
+    transition: 'opacity 0.2s ease-in-out',
+    gap: theme.spacing(2),
 }));
+
+const StyledCardDescription = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    gap: theme.spacing(0.5),
+}));
+
+const StyledCardActions = styled('div')(({ theme }) => ({
+    position: 'absolute',
+    display: 'flex',
+    alignItems: 'center',
+    top: theme.spacing(0),
+    bottom: theme.spacing(0),
+    right: theme.spacing(2),
+    gap: theme.spacing(1),
+    opacity: 0,
+    transition: 'opacity 0.1s ease-in-out',
+}));
+
+interface IFeatureStrategyMenuCardProps {
+    name: string;
+    description: string;
+    icon: ReactNode;
+    isDefault?: boolean;
+    children: ReactNode;
+}
 
 export const FeatureStrategyMenuCard = ({
-    projectId,
-    featureId,
-    environmentId,
-    strategy,
-    defaultStrategy,
-    onClose,
-}: IFeatureStrategyMenuCardProps) => {
-    const StrategyIcon = getFeatureStrategyIcon(strategy.name);
-    const strategyName = formatStrategyName(strategy.name);
-    const { trackEvent } = usePlausibleTracker();
-
-    const createStrategyPath = formatCreateStrategyPath(
-        projectId,
-        featureId,
-        environmentId,
-        strategy.name,
-        defaultStrategy,
-    );
-
-    const openStrategyCreationModal = () => {
-        trackEvent('strategy-add', {
-            props: {
-                buttonTitle: strategy.displayName || strategyName,
-            },
-        });
-        onClose();
-    };
-
-    return (
-        <StyledCard to={createStrategyPath} onClick={openStrategyCreationModal}>
-            <StyledTopRow>
-                <StyledIcon>
-                    <StrategyIcon />
-                </StyledIcon>
-                <StyledName
-                    text={strategy.displayName || strategyName}
-                    maxWidth='200'
-                    maxLength={25}
-                />
-            </StyledTopRow>
-            <Truncator
-                lines={1}
-                title={strategy.description}
-                arrow
-                sx={{
-                    fontSize: (theme) => theme.typography.caption.fontSize,
-                    width: '100%',
-                }}
-            >
-                {strategy.description}
-            </Truncator>
-        </StyledCard>
-    );
-};
+    name,
+    description,
+    icon,
+    isDefault,
+    children,
+}: IFeatureStrategyMenuCardProps) => (
+    <StyledCard isDefault={isDefault}>
+        <StyledCardContent className='cardContent'>
+            <StyledIcon>{icon}</StyledIcon>
+            <StyledCardDescription>
+                <StyledName lines={1} title={name} arrow>
+                    {name}
+                </StyledName>
+                {description && (
+                    <Truncator lines={2} title={description} arrow>
+                        {description}
+                    </Truncator>
+                )}
+            </StyledCardDescription>
+        </StyledCardContent>
+        <StyledCardActions className='cardActions'>
+            {children}
+        </StyledCardActions>
+    </StyledCard>
+);

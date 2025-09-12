@@ -20,7 +20,10 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ReleasePlanReviewDialog } from '../../FeatureView/FeatureOverview/ReleasePlan/ReleasePlanReviewDialog.tsx';
-import { FeatureStrategyMenuCards } from './FeatureStrategyMenuCards/FeatureStrategyMenuCards.tsx';
+import {
+    FeatureStrategyMenuCards,
+    type StrategyFilterValue,
+} from './FeatureStrategyMenuCards/FeatureStrategyMenuCards.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 interface IFeatureStrategyMenuProps {
@@ -61,6 +64,7 @@ export const FeatureStrategyMenu = ({
     const [isStrategyMenuDialogOpen, setIsStrategyMenuDialogOpen] =
         useState<boolean>(false);
     const [onlyReleasePlans, setOnlyReleasePlans] = useState<boolean>(false);
+    const [filter, setFilter] = useState<StrategyFilterValue>(null);
     const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
     const [selectedTemplate, setSelectedTemplate] =
@@ -251,6 +255,8 @@ export const FeatureStrategyMenu = ({
                         projectId={projectId}
                         featureId={featureId}
                         environmentId={environmentId}
+                        filter={filter}
+                        setFilter={setFilter}
                         onAddReleasePlan={(template) => {
                             setSelectedTemplate(template);
                             addReleasePlan(template);

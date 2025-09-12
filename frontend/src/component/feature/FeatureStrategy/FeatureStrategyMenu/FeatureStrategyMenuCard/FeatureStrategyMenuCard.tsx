@@ -6,8 +6,8 @@ const StyledIcon = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     '& > svg': {
-        width: theme.spacing(3.5),
-        height: theme.spacing(3.5),
+        width: theme.spacing(6),
+        height: theme.spacing(6),
         fill: theme.palette.primary.main,
     },
 }));

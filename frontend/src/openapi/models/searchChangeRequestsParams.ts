@@ -16,9 +16,9 @@ export type SearchChangeRequestsParams = {
     /**
      * The number of change requests to skip when returning a page. By default it is set to 0.
      */
-    offset?: string;
+    offset?: number;
     /**
      * The number of change requests to return in a page. By default it is set to 50. The maximum is 1000.
      */
-    limit?: string;
+    limit?: number;
 };

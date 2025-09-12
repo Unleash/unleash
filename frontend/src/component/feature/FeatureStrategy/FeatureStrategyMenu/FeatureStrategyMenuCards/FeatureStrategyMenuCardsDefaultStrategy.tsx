@@ -7,7 +7,7 @@ import useToast from 'hooks/useToast.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
 import { FeatureStrategyMenuCardAction } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardAction.tsx';
-import { getFeatureStrategyIcon } from 'utils/strategyNames.tsx';
+import { FeatureStrategyMenuCardIcon } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardIcon.tsx';
 
 interface IFeatureStrategyMenuCardsDefaultStrategyProps {
     projectId: string;
@@ -95,13 +95,11 @@ export const FeatureStrategyMenuCardsDefaultStrategy = ({
         projectDefaultStrategy.title ||
         'This is the default strategy defined for this environment in the project';
 
-    const Icon = getFeatureStrategyIcon(strategyName);
-
     return (
         <FeatureStrategyMenuCard
             name={strategyDisplayName}
             description={description}
-            icon={<Icon />}
+            icon={<FeatureStrategyMenuCardIcon name='defaultStrategy' />}
             isDefault
         >
             <FeatureStrategyMenuCardAction

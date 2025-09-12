@@ -2,7 +2,6 @@ import type { Knex } from 'knex';
 import knexpkg from 'knex';
 const { knex } = knexpkg;
 import type { IUnleashConfig } from '../types/option.js';
-import { getDBPasswordResolver } from './aws-iam.js';
 
 export function createDb({
     db,
@@ -15,7 +14,6 @@ export function createDb({
         connection: {
             ...db,
             application_name: db.applicationName,
-            password: getDBPasswordResolver(db),
         },
         pool: db.pool,
         searchPath: db.schema,

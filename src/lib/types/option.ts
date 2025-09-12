@@ -38,9 +38,6 @@ export interface IDBOption {
     schema: string;
     disableMigration: boolean;
     applicationName?: string;
-    awsIamAuth?: boolean;
-    awsRegion?: string;
-    awsRoleArn?: string;
 }
 
 export interface ISessionOption {

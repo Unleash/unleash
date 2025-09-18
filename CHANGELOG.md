@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.2.1] - 2025-09-18
+
+### Bug Fixes
+
+- Cherry-pick OSS export-fixes from main ([#10668](https://github.com/Unleash/unleash/issues/10668))
+
+
 ## [7.2.0] - 2025-09-03
 
 ### Bug Fixes

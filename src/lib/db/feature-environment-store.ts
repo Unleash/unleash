@@ -124,6 +124,13 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
                     'default',
                     'development',
                     'production',
+                ])
+                .select([
+                    'feature_name',
+                    'environment',
+                    'variants',
+                    'last_seen_at',
+                    `${T.featureEnvs}.enabled`,
                 ]);
         }
         return queryBuilder;

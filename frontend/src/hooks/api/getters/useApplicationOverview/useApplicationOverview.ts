@@ -15,8 +15,9 @@ export const useApplicationOverview = (
     application: string,
     options: SWRConfiguration = {},
 ) => {
+    const encodedApplication = encodeURIComponent(application);
     const path = formatApiPath(
-        `api/admin/metrics/applications/${application}/overview`,
+        `api/admin/metrics/applications/${encodedApplication}/overview`,
     );
     const { data, error } = useSWR<ApplicationOverviewSchema>(
         path,

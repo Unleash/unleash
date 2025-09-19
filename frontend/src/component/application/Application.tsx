@@ -78,7 +78,7 @@ export const Application = () => {
     const { setToastData, setToastApiError } = useToast();
     const { pathname } = useLocation();
 
-    const basePath = `/applications/${name}`;
+    const basePath = `/applications/${encodeURIComponent(name)}`;
 
     const [showDialog, setShowDialog] = useState(false);
 

@@ -109,7 +109,7 @@ export const PaginatedApplicationList = () => {
                 }: any) => (
                     <LinkCell
                         title={appName}
-                        to={`/applications/${appName}`}
+                        to={`/applications/${encodeURIComponent(appName)}`}
                         subtitle={description}
                     />
                 ),

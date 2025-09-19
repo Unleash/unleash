@@ -99,7 +99,9 @@ export const ProjectApplications = () => {
                         title={row.original.name}
                         onClick={() => {
                             trackProjectApplicationClick();
-                            navigate(`/applications/${row.original.name}`);
+                            navigate(
+                                `/applications/${encodeURIComponent(row.original.name)}`,
+                            );
                         }}
                     />
                 ),

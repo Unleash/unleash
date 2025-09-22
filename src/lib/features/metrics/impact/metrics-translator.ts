@@ -174,6 +174,7 @@ export class MetricsTranslator {
                         name: prefixedName,
                         help: metric.help,
                         registry: this.registry,
+                        labelNames,
                     });
                 } else {
                     histogram = existingMetric as BatchHistogram;
@@ -183,6 +184,7 @@ export class MetricsTranslator {
                     name: prefixedName,
                     help: metric.help,
                     registry: this.registry,
+                    labelNames,
                 });
             }
 

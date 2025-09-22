@@ -31,10 +31,12 @@ export class BatchHistogram {
         name: string;
         help: string;
         registry: Registry;
+        labelNames?: string[];
     }) {
         this.name = config.name;
         this.help = config.help;
         this.registry = config.registry;
+        this.labelNames = config.labelNames || [];
 
         this.registry.registerMetric(this as any);
     }

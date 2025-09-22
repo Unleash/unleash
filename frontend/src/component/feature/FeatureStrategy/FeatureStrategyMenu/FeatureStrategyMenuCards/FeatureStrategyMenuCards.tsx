@@ -6,7 +6,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.tsx';
-import { useContext, useMemo, useState } from 'react';
+import { type Dispatch, type SetStateAction, useContext, useMemo } from 'react';
 import {
     FeatureStrategyMenuCardsSection,
     StyledStrategyModalSectionHeader,
@@ -79,6 +79,8 @@ interface IFeatureStrategyMenuCardsProps {
     projectId: string;
     featureId: string;
     environmentId: string;
+    filter: StrategyFilterValue;
+    setFilter: Dispatch<SetStateAction<StrategyFilterValue>>;
     onAddReleasePlan: (template: IReleasePlanTemplate) => void;
     onReviewReleasePlan: (template: IReleasePlanTemplate) => void;
     onClose: () => void;
@@ -88,6 +90,8 @@ export const FeatureStrategyMenuCards = ({
     projectId,
     featureId,
     environmentId,
+    filter,
+    setFilter,
     onAddReleasePlan,
     onReviewReleasePlan,
     onClose,
@@ -98,8 +102,6 @@ export const FeatureStrategyMenuCards = ({
     const navigate = useNavigate();
 
     const { strategies } = useStrategies();
-
-    const [filter, setFilter] = useState<StrategyFilterValue>(null);
 
     const activeStrategies = strategies.filter(
         (strategy) => !strategy.deprecated,

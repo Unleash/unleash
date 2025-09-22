@@ -16,6 +16,7 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloseIcon from '@mui/icons-material/Close';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -81,6 +82,7 @@ export const ReleasePlanReviewDialog = ({
         featureName,
         environment,
     );
+    const newStrategyModalEnabled = useUiFlag('newStrategyModal');
 
     const activeReleasePlan = releasePlans[0];
 
@@ -140,7 +142,11 @@ export const ReleasePlanReviewDialog = ({
             </DialogContent>
             <StyledDialogActions>
                 <Button variant='contained' color='primary' onClick={onConfirm}>
-                    {crProtected ? 'Add suggestion to draft' : 'Use template'}
+                    {crProtected
+                        ? 'Add suggestion to draft'
+                        : newStrategyModalEnabled
+                          ? 'Apply template'
+                          : 'Use template'}
                 </Button>
             </StyledDialogActions>
         </StyledDialog>

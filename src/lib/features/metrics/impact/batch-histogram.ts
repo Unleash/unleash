@@ -15,6 +15,7 @@ export class BatchHistogram {
     private name: string;
     private help: string;
     private registry: Registry;
+    public labelNames: string[] = [];
 
     // Store accumulated data for each label combination
     private store: Map<
@@ -30,10 +31,12 @@ export class BatchHistogram {
         name: string;
         help: string;
         registry: Registry;
+        labelNames?: string[];
     }) {
         this.name = config.name;
         this.help = config.help;
         this.registry = config.registry;
+        this.labelNames = config.labelNames || [];
 
         this.registry.registerMetric(this as any);
     }
@@ -65,7 +68,7 @@ export class BatchHistogram {
 
     private createLabelKey(labels: Record<string, string | number>): string {
         const sortedKeys = Object.keys(labels).sort();
-        return sortedKeys.map((key) => `${key}:${labels[key]}`).join(',');
+        return JSON.stringify(sortedKeys.map((key) => [key, labels[key]]));
     }
 
     reset(): void {
@@ -78,10 +81,12 @@ export class BatchHistogram {
         for (const [labelKey, data] of this.store) {
             const labels: Record<string, string | number> = {};
             if (labelKey) {
-                labelKey.split(',').forEach((pair) => {
-                    const [key, value] = pair.split(':');
-                    labels[key] = value;
-                });
+                const parsedLabels = JSON.parse(labelKey);
+                parsedLabels.forEach(
+                    ([key, value]: [string, string | number]) => {
+                        labels[key] = value;
+                    },
+                );
             }
 
             for (const [le, cumulativeCount] of Array.from(

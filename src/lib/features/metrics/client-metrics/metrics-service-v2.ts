@@ -259,7 +259,7 @@ export default class ClientMetricsServiceV2 {
             this.impactMetricsTranslator.translateMetrics(value);
         } catch (e) {
             // impact metrics should not affect other metrics on failure
-            this.logger.warn(e);
+            this.logger.warn('Impact metrics registration failed:', e);
         }
     }
 

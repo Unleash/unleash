@@ -193,6 +193,22 @@ describe('MetricsTranslator', () => {
                     },
                 ],
             },
+            {
+                name: 'histogram_with_labels',
+                help: 'histogram with labels',
+                type: 'histogram' as const,
+                samples: [
+                    {
+                        labels: { service: 'api' },
+                        count: 5,
+                        sum: 2.5,
+                        buckets: [
+                            { le: 1, count: 3 },
+                            { le: '+Inf' as const, count: 5 },
+                        ],
+                    },
+                ],
+            },
         ];
 
         const result1 = await translator.translateAndSerializeMetrics(metrics1);
@@ -201,6 +217,9 @@ describe('MetricsTranslator', () => {
         );
         expect(result1).toContain(
             'unleash_gauge_gauge_with_labels{unleash_env="prod",unleash_origin="sdk"} 10',
+        );
+        expect(result1).toContain(
+            'unleash_histogram_histogram_with_labels_count{unleash_origin="sdk",unleash_service="api"} 5',
         );
 
         const metrics2 = [
@@ -226,6 +245,23 @@ describe('MetricsTranslator', () => {
                     },
                 ],
             },
+            {
+                name: 'histogram_with_labels',
+                help: 'histogram with labels',
+                type: 'histogram' as const,
+                buckets: [1],
+                samples: [
+                    {
+                        labels: { service: 'api', region: 'us-east' }, // Added a new label
+                        count: 3,
+                        sum: 1.8,
+                        buckets: [
+                            { le: 1, count: 2 },
+                            { le: '+Inf' as const, count: 3 },
+                        ],
+                    },
+                ],
+            },
         ];
 
         const result2 = await translator.translateAndSerializeMetrics(metrics2);
@@ -235,6 +271,12 @@ describe('MetricsTranslator', () => {
         );
         expect(result2).toContain(
             'unleash_gauge_gauge_with_labels{unleash_env="prod",unleash_region="us-east",unleash_origin="sdk"} 20',
+        );
+        expect(result2).toContain(
+            'unleash_histogram_histogram_with_labels_count{unleash_origin="sdk",unleash_region="us-east",unleash_service="api"} 3',
+        );
+        expect(result2).not.toContain(
+            'unleash_histogram_histogram_with_labels_count{unleash_origin="sdk",unleash_service="api"} 5',
         );
     });
 });

@@ -435,141 +435,177 @@ test('updating a user without an email should not strip the email', async () => 
     expect(updatedUser.email).toBe(email);
 });
 
-test('should login and create user via SSO', async () => {
-    const recordedEvents: Array<{ loginOrder: number }> = [];
-    eventBus.on(USER_LOGIN, (data) => {
-        recordedEvents.push(data);
-    });
-    const email = 'some@test.com';
-    const user = await userService.loginUserSSO({
-        email,
-        rootRole: RoleName.VIEWER,
-        name: 'some',
-        autoCreate: true,
-    });
-
-    const userWithRole = await userService.getUser(user.id);
-    expect(user.email).toBe(email);
-    expect(user.name).toBe('some');
-    expect(userWithRole.name).toBe('some');
-    expect(userWithRole.rootRole).toBe(viewerRole.id);
-    expect(recordedEvents).toEqual([{ loginOrder: 0 }]);
-});
-
-test('should throw if rootRole is wrong via SSO', async () => {
-    expect.assertions(1);
-
-    await expect(
-        userService.loginUserSSO({
-            email: 'some@test.com',
-            rootRole: RoleName.MEMBER,
+describe('loginUserSSO', () => {
+    test('should login and create user via SSO', async () => {
+        const recordedEvents: Array<{ loginOrder: number }> = [];
+        eventBus.on(USER_LOGIN, (data) => {
+            recordedEvents.push(data);
+        });
+        const email = 'some@test.com';
+        const user = await userService.loginUserSSO({
+            email,
+            rootRole: RoleName.VIEWER,
             name: 'some',
             autoCreate: true,
-        }),
-    ).rejects.errorWithMessage(
-        new BadDataError('Could not find rootRole=Member'),
-    );
-});
+        });
 
-test('should update user name when signing in via SSO', async () => {
-    const email = 'some@test.com';
-    const originalUser = await userService.createUser(
-        {
-            email,
-            rootRole: RoleName.VIEWER,
-            name: 'some',
-        },
-        TEST_AUDIT_USER,
-    );
-
-    await userService.loginUserSSO({
-        email,
-        rootRole: RoleName.ADMIN,
-        name: 'New name!',
-        autoCreate: true,
+        const userWithRole = await userService.getUser(user.id);
+        expect(user.email).toBe(email);
+        expect(user.name).toBe('some');
+        expect(userWithRole.name).toBe('some');
+        expect(userWithRole.rootRole).toBe(viewerRole.id);
+        expect(recordedEvents).toEqual([{ loginOrder: 0 }]);
     });
 
-    const actualUser = await userService.getUser(originalUser.id);
+    test('should throw if rootRole is wrong via SSO', async () => {
+        expect.assertions(1);
 
-    expect(actualUser.email).toBe(email);
-    expect(actualUser.name).toBe('New name!');
-    expect(actualUser.rootRole).toBe(viewerRole.id);
-});
-
-test('should update name if it is different via SSO', async () => {
-    const email = 'some@test.com';
-    const originalUser = await userService.createUser(
-        {
-            email,
-            rootRole: RoleName.VIEWER,
-            name: 'some',
-        },
-        TEST_AUDIT_USER,
-    );
-
-    await userService.loginUserSSO({
-        email,
-        rootRole: RoleName.ADMIN,
-        name: 'New name!',
-        autoCreate: false,
+        await expect(
+            userService.loginUserSSO({
+                email: 'some@test.com',
+                rootRole: RoleName.MEMBER,
+                name: 'some',
+                autoCreate: true,
+            }),
+        ).rejects.errorWithMessage(
+            new BadDataError('Could not find rootRole=Member'),
+        );
     });
 
-    const actualUser = await userService.getUser(originalUser.id);
+    test('should update user name when signing in via SSO', async () => {
+        const email = 'some@test.com';
+        const originalUser = await userService.createUser(
+            {
+                email,
+                rootRole: RoleName.VIEWER,
+                name: 'some',
+            },
+            TEST_AUDIT_USER,
+        );
 
-    expect(actualUser.email).toBe(email);
-    expect(actualUser.name).toBe('New name!');
-    expect(actualUser.rootRole).toBe(viewerRole.id);
-});
+        await userService.loginUserSSO({
+            email,
+            rootRole: RoleName.ADMIN,
+            name: 'New name!',
+            autoCreate: true,
+        });
 
-test('should throw if autoCreate is false via SSO', async () => {
-    expect.assertions(1);
+        const actualUser = await userService.getUser(originalUser.id);
 
-    await expect(
-        userService.loginUserSSO({
-            email: 'some@test.com',
-            rootRole: RoleName.MEMBER,
-            name: 'some',
+        expect(actualUser.email).toBe(email);
+        expect(actualUser.name).toBe('New name!');
+        expect(actualUser.rootRole).toBe(viewerRole.id);
+        const { events } = await eventService.getEvents();
+        const updateEvent = events.find(
+            (e) => e.data.id === originalUser.id && e.data.name === 'New name!',
+        );
+        expect(updateEvent).toBeDefined();
+    });
+
+    test('should update name if it is different via SSO', async () => {
+        const email = 'some@test.com';
+        const originalUser = await userService.createUser(
+            {
+                email,
+                rootRole: RoleName.VIEWER,
+                name: 'some',
+            },
+            TEST_AUDIT_USER,
+        );
+
+        await userService.loginUserSSO({
+            email,
+            rootRole: RoleName.ADMIN,
+            name: 'New name!',
             autoCreate: false,
-        }),
-    ).rejects.errorWithMessage(new NotFoundError('No user found'));
-});
+        });
 
-test('should support a root role id when logging in and creating user via SSO', async () => {
-    const name = 'root-role-id';
-    const email = `${name}@test.com`;
-    const user = await userService.loginUserSSO({
-        email,
-        rootRole: viewerRole.id,
-        name,
-        autoCreate: true,
+        const actualUser = await userService.getUser(originalUser.id);
+
+        expect(actualUser.email).toBe(email);
+        expect(actualUser.name).toBe('New name!');
+        expect(actualUser.rootRole).toBe(viewerRole.id);
     });
 
-    const userWithRole = await userService.getUser(user.id);
-    expect(user.email).toBe(email);
-    expect(user.name).toBe(name);
-    expect(userWithRole.name).toBe(name);
-    expect(userWithRole.rootRole).toBe(viewerRole.id);
-});
+    test('should throw if autoCreate is false via SSO', async () => {
+        expect.assertions(1);
 
-test('should support a custom root role id when logging in and creating user via SSO', async () => {
-    const name = 'custom-root-role-id';
-    const email = `${name}@test.com`;
-    const user = await userService.loginUserSSO({
-        email,
-        rootRole: customRole.id,
-        name,
-        autoCreate: true,
+        await expect(
+            userService.loginUserSSO({
+                email: 'some@test.com',
+                rootRole: RoleName.MEMBER,
+                name: 'some',
+                autoCreate: false,
+            }),
+        ).rejects.errorWithMessage(new NotFoundError('No user found'));
     });
 
-    const userWithRole = await userService.getUser(user.id);
-    expect(user.email).toBe(email);
-    expect(user.name).toBe(name);
-    expect(userWithRole.name).toBe(name);
-    expect(userWithRole.rootRole).toBe(customRole.id);
+    test('should support a root role id when logging in and creating user via SSO', async () => {
+        const name = 'root-role-id';
+        const email = `${name}@test.com`;
+        const user = await userService.loginUserSSO({
+            email,
+            rootRole: viewerRole.id,
+            name,
+            autoCreate: true,
+        });
 
-    const permissions = await accessService.getPermissionsForUser(user);
-    expect(permissions).toHaveLength(1);
-    expect(permissions[0].permission).toBe(CREATE_ADDON);
+        const userWithRole = await userService.getUser(user.id);
+        expect(user.email).toBe(email);
+        expect(user.name).toBe(name);
+        expect(userWithRole.name).toBe(name);
+        expect(userWithRole.rootRole).toBe(viewerRole.id);
+    });
+
+    test('should support a custom root role id when logging in and creating user via SSO', async () => {
+        const name = 'custom-root-role-id';
+        const email = `${name}@test.com`;
+        const user = await userService.loginUserSSO({
+            email,
+            rootRole: customRole.id,
+            name,
+            autoCreate: true,
+        });
+
+        const userWithRole = await userService.getUser(user.id);
+        expect(user.email).toBe(email);
+        expect(user.name).toBe(name);
+        expect(userWithRole.name).toBe(name);
+        expect(userWithRole.rootRole).toBe(customRole.id);
+
+        const permissions = await accessService.getPermissionsForUser(user);
+        expect(permissions).toHaveLength(1);
+        expect(permissions[0].permission).toBe(CREATE_ADDON);
+    });
+
+    test(`should not update the username if managed by SCIM`, async () => {
+        const email = 'test-1@getunleash.io';
+        const originalName = 'Original Name';
+        const name = 'Updated Name';
+        const createdUser = await userStore.insert({
+            name: originalName,
+            username: 'random-1234',
+            email,
+        });
+        await db
+            .rawDatabase('users')
+            .update({
+                scim_id: '123',
+            })
+            .where({ id: createdUser.id });
+
+        const user = await userService.loginUserSSO({
+            email,
+            autoCreate: true,
+            name,
+        });
+
+        expect(user.name).toBe(originalName);
+
+        // Fetch the user directly from the store to verify
+        const storedUser = await userStore.get(user.id);
+        expect(storedUser!.name).toBe(originalName);
+    });
 });
 
 describe('Should not be able to use any of previous 5 passwords', () => {

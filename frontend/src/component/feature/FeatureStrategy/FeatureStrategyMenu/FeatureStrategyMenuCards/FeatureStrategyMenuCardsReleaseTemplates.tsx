@@ -10,9 +10,9 @@ import {
     FeatureStrategyMenuCardsSection,
     StyledStrategyModalSectionHeader,
 } from './FeatureStrategyMenuCardsSection.tsx';
-import { getFeatureStrategyIcon } from 'utils/strategyNames.tsx';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
 import { FeatureStrategyMenuCardAction } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardAction.tsx';
+import { FeatureStrategyMenuCardIcon } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardIcon.tsx';
 
 const RELEASE_TEMPLATE_DISPLAY_LIMIT = 5;
 
@@ -115,8 +115,6 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
         ? templates
         : templates.slice(0, RELEASE_TEMPLATE_DISPLAY_LIMIT);
 
-    const Icon = getFeatureStrategyIcon('releasePlanTemplate');
-
     return (
         <Box>
             {shouldShowHeader && (
@@ -158,7 +156,9 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                             key={template.id}
                             name={template.name}
                             description={template.description}
-                            icon={<Icon />}
+                            icon={
+                                <FeatureStrategyMenuCardIcon name='releasePlanTemplate' />
+                            }
                         >
                             <FeatureStrategyMenuCardAction
                                 onClick={() => onReviewReleasePlan(template)}

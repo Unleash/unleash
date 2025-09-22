@@ -19,15 +19,13 @@ import {
     UPDATE_PROJECT,
 } from 'component/providers/AccessProvider/permissions.ts';
 import AccessContext from 'contexts/AccessContext.ts';
-import {
-    formatStrategyName,
-    getFeatureStrategyIcon,
-} from 'utils/strategyNames.tsx';
+import { formatStrategyName } from 'utils/strategyNames.tsx';
 import { FeatureStrategyMenuCardAction } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardAction.tsx';
 import { formatCreateStrategyPath } from '../../FeatureStrategyCreate/FeatureStrategyCreate.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
 import { FeatureStrategyMenuCardsDefaultStrategy } from './FeatureStrategyMenuCardsDefaultStrategy.tsx';
 import type { IStrategy } from 'interfaces/strategy.ts';
+import { FeatureStrategyMenuCardIcon } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardIcon.tsx';
 
 const FILTERS = [
     { label: 'All', value: null },
@@ -162,14 +160,13 @@ export const FeatureStrategyMenuCards = ({
 
     const renderStrategy = (strategy: IStrategy) => {
         const name = strategy.displayName || formatStrategyName(strategy.name);
-        const Icon = getFeatureStrategyIcon(strategy.name);
 
         return (
             <FeatureStrategyMenuCard
                 key={strategy.name}
                 name={name}
                 description={strategy.description}
-                icon={<Icon />}
+                icon={<FeatureStrategyMenuCardIcon name={strategy.name} />}
             >
                 <FeatureStrategyMenuCardAction
                     onClick={() =>

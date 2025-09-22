@@ -13,32 +13,34 @@ import { useUiFlag } from 'hooks/useUiFlag.js';
 import { ChangeRequestFilters } from './ChangeRequestFilters.tsx';
 import { withTableState } from 'utils/withTableState';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
-import { 
-    useChangeRequestsWithMockData as useChangeRequests, 
-    type ChangeRequestItem 
-} from 'hooks/api/getters/useChangeRequests/useChangeRequests';
 import {
-    encodeQueryParams,
+    useChangeRequestSearch,
+    DEFAULT_PAGE_LIMIT,
+} from 'hooks/api/getters/useChangeRequestSearch/useChangeRequestSearch';
+import type { ChangeRequestSearchItemSchema } from 'openapi';
+import {
     NumberParam,
     StringParam,
     withDefault,
     useQueryParams,
 } from 'use-query-params';
-import mapValues from 'lodash.mapvalues';
 import useLoading from 'hooks/useLoading';
 import { styles as themeStyles } from 'component/common';
 import { FilterItemParam } from 'utils/serializeQueryParams';
 
-const DEFAULT_PAGE_LIMIT = 25;
-const columnHelper = createColumnHelper<ChangeRequestItem>();
+const columnHelper = createColumnHelper<ChangeRequestSearchItemSchema>();
 
 const ChangeRequestsInner = () => {
     const { user } = useAuthUser();
-    
+
     // Check URL parameters directly to avoid double fetching
     const shouldApplyDefaults = useMemo(() => {
         const urlParams = new URLSearchParams(window.location.search);
-        return !urlParams.has('createdBy') && !urlParams.has('requestedApprovalBy') && user;
+        return (
+            !urlParams.has('createdBy') &&
+            !urlParams.has('requestedApproverId') &&
+            user
+        );
     }, [user]);
 
     const stateConfig = {
@@ -47,38 +49,37 @@ const ChangeRequestsInner = () => {
         sortBy: withDefault(StringParam, 'createdAt'),
         sortOrder: withDefault(StringParam, 'desc'),
         createdBy: FilterItemParam,
-        requestedApprovalBy: FilterItemParam,
+        requestedApproverId: FilterItemParam,
     };
 
     // Apply initial defaults if needed
-    const initialState = shouldApplyDefaults ? {
-        createdBy: {
-            operator: 'IS' as const,
-            values: [user.id.toString()],
-        }
-    } : {};
-    
-    const [tableState, setTableState] = useQueryParams(
-        stateConfig,
-        { updateType: 'replaceIn' },
-    );
+    const initialState = shouldApplyDefaults
+        ? {
+              createdBy: {
+                  operator: 'IS' as const,
+                  values: user ? [user.id.toString()] : [],
+              },
+          }
+        : {};
+
+    const [tableState, setTableState] = useQueryParams(stateConfig, {
+        updateType: 'replaceIn',
+    });
 
     // Merge with initial state on first load only
-    const effectiveTableState = useMemo(() => ({
-        ...initialState,
-        ...tableState
-    }), [initialState, tableState]);
+    const effectiveTableState = useMemo(
+        () => ({
+            ...initialState,
+            ...tableState,
+        }),
+        [initialState, tableState],
+    );
 
     const {
         changeRequests: data,
         total,
         loading,
-        initialLoad,
-    } = useChangeRequests(
-        mapValues(encodeQueryParams(stateConfig, effectiveTableState), (value) =>
-            value ? `${value}` : undefined,
-        ),
-    );
+    } = useChangeRequestSearch(effectiveTableState);
 
     const columns = useMemo(
         () => [
@@ -87,8 +88,8 @@ const ChangeRequestsInner = () => {
                 header: 'Title',
                 meta: { width: '300px' },
                 cell: ({ getValue, row }) => (
-                    <GlobalChangeRequestTitleCell 
-                        value={getValue()} 
+                    <GlobalChangeRequestTitleCell
+                        value={getValue()}
                         row={row}
                     />
                 ),
@@ -105,12 +106,14 @@ const ChangeRequestsInner = () => {
                 }) => {
                     const features = getValue();
                     // Convert string array to object array for FeaturesCell compatibility
-                    const featureObjects = features.map((name: string) => ({ name }));
+                    const featureObjects = features.map((name: string) => ({
+                        name,
+                    }));
                     return (
-                        <FeaturesCell 
-                            project={project} 
-                            value={featureObjects} 
-                            key={title} 
+                        <FeaturesCell
+                            project={project}
+                            value={featureObjects}
+                            key={title}
                         />
                     );
                 },
@@ -120,31 +123,26 @@ const ChangeRequestsInner = () => {
                 header: 'By',
                 meta: { width: '180px', align: 'left' },
                 enableSorting: false,
-                cell: ({ getValue }) => (
-                    <AvatarCell value={getValue()} />
-                ),
+                cell: ({ getValue }) => <AvatarCell value={getValue()} />,
             }),
             columnHelper.accessor('createdAt', {
                 id: 'Submitted',
                 header: 'Submitted',
                 meta: { width: '100px' },
-                cell: ({ getValue }) => (
-                    <TimeAgoCell value={getValue()} />
-                ),
+                cell: ({ getValue }) => <TimeAgoCell value={getValue()} />,
             }),
             columnHelper.accessor('environment', {
                 id: 'Environment',
                 header: 'Environment',
                 meta: { width: '100px' },
-                cell: ({ getValue }) => (
-                    <HighlightCell value={getValue()} />
-                ),
+                cell: ({ getValue }) => <HighlightCell value={getValue()} />,
             }),
             columnHelper.accessor('state', {
                 id: 'Status',
                 header: 'Status',
                 meta: { width: '170px' },
                 cell: ({ getValue, row }) => (
+                    // @ts-expect-error (`globalChangeRequestList`) The schema (and query) needs to be updated
                     <ChangeRequestStatusCell value={getValue()} row={row} />
                 ),
             }),
@@ -166,9 +164,9 @@ const ChangeRequestsInner = () => {
             bodyClass='no-padding'
             header={<PageHeader title='Change requests' />}
         >
-            <ChangeRequestFilters 
-                tableState={effectiveTableState} 
-                setTableState={setTableState} 
+            <ChangeRequestFilters
+                tableState={effectiveTableState}
+                setTableState={setTableState}
             />
             <div className={themeStyles.fullwidth}>
                 <div ref={bodyLoadingRef}>

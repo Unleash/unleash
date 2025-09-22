@@ -31,6 +31,12 @@ const fallbackData: ChangeRequestSearchResponseSchema = {
 const SWR_CACHE_SIZE = 10;
 const PATH = 'api/admin/search/change-requests?';
 
+export type SearchChangeRequestsInput = {
+    [K in keyof SearchChangeRequestsParams]?:
+        | SearchChangeRequestsParams[K]
+        | null;
+};
+
 const createChangeRequestSearch = () => {
     const internalCache: InternalCache = {};
 
@@ -56,7 +62,7 @@ const createChangeRequestSearch = () => {
     };
 
     return (
-        params: SearchChangeRequestsParams,
+        params: SearchChangeRequestsInput,
         options: SWRConfiguration = {},
         cachePrefix: string = '',
     ): UseChangeRequestSearchOutput => {
@@ -100,11 +106,13 @@ const createChangeRequestSearch = () => {
 
 export const DEFAULT_PAGE_LIMIT = 25;
 
-const getChangeRequestSearchFetcher = (params: SearchChangeRequestsParams) => {
+const getChangeRequestSearchFetcher = (params: SearchChangeRequestsInput) => {
     const urlSearchParams = new URLSearchParams(
         Array.from(
             Object.entries(params)
-                .filter(([_, value]) => !!value)
+                .filter(
+                    (param): param is [string, string | number] => !!param[1],
+                )
                 .map(([key, value]) => [key, value.toString()]),
         ),
     ).toString();

@@ -1,19 +1,38 @@
 import { Counter, Gauge, type Registry } from 'prom-client';
+import { BatchHistogram } from './batch-histogram.js';
 
-export interface MetricSample {
+export interface NumericMetricSample {
     labels?: Record<string, string | number>;
     value: number;
 }
 
-export interface Metric {
+export interface BucketMetricSample {
+    labels?: Record<string, string | number>;
+    count: number;
+    sum: number;
+    buckets: Array<{ le: number | '+Inf'; count: number }>;
+}
+
+export interface NumericMetric {
     name: string;
     help: string;
     type: 'counter' | 'gauge';
-    samples: MetricSample[];
+    samples: NumericMetricSample[];
 }
+
+export interface BucketMetric {
+    name: string;
+    help: string;
+    type: 'histogram';
+    buckets: number[];
+    samples: BucketMetricSample[];
+}
+
+export type Metric = NumericMetric | BucketMetric;
 
 export class MetricsTranslator {
     private registry: Registry;
+    private histograms: Map<string, BatchHistogram> = new Map();
 
     constructor(registry: Registry) {
         this.registry = registry;
@@ -22,13 +41,11 @@ export class MetricsTranslator {
     sanitizeName(name: string): string {
         const regex = /[^a-zA-Z0-9_]/g;
 
-        const sanitized = name.replace(regex, '_');
-
-        return sanitized;
+        return name.replace(regex, '_');
     }
 
     private hasNewLabels(
-        existingMetric: Counter<string> | Gauge<string>,
+        existingMetric: Counter<string> | Gauge<string> | BatchHistogram,
         newLabelNames: string[],
     ): boolean {
         const existingLabelNames = (existingMetric as any).labelNames || [];
@@ -50,7 +67,7 @@ export class MetricsTranslator {
     }
 
     private addOriginLabel(
-        sample: MetricSample,
+        sample: NumericMetricSample,
     ): Record<string, string | number> {
         return {
             ...(sample.labels || {}),
@@ -58,7 +75,9 @@ export class MetricsTranslator {
         };
     }
 
-    translateMetric(metric: Metric): Counter<string> | Gauge<string> | null {
+    translateMetric(
+        metric: Metric,
+    ): Counter<string> | Gauge<string> | BatchHistogram | null {
         const sanitizedName = this.sanitizeName(metric.name);
         const prefixedName = `unleash_${metric.type}_${sanitizedName}`;
         const existingMetric = this.registry.getSingleMetric(prefixedName);
@@ -142,6 +161,35 @@ export class MetricsTranslator {
             }
 
             return gauge;
+        } else if (metric.type === 'histogram') {
+            if (!metric.samples || metric.samples.length === 0) {
+                return null;
+            }
+
+            let histogram = this.histograms.get(prefixedName);
+            if (!histogram) {
+                histogram = new BatchHistogram({
+                    name: prefixedName,
+                    help: metric.help,
+                    registry: this.registry,
+                });
+                this.histograms.set(prefixedName, histogram);
+            }
+
+            for (const sample of metric.samples) {
+                const transformedLabels = this.transformLabels({
+                    ...sample.labels,
+                    origin: sample.labels?.origin || 'sdk',
+                });
+
+                histogram.recordBatch(transformedLabels, {
+                    count: sample.count,
+                    sum: sample.sum,
+                    buckets: sample.buckets,
+                });
+            }
+
+            return histogram;
         }
 
         return null;

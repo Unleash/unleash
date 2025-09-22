@@ -99,6 +99,33 @@ export const metricSampleSchema = joi
             .optional(),
     });
 
+export const histogramSampleSchema = joi
+    .object()
+    .options({ stripUnknown: true })
+    .keys({
+        count: joi.number().required(),
+        sum: joi.number().required(),
+        buckets: joi
+            .array()
+            .items(
+                joi.object({
+                    le: joi
+                        .alternatives()
+                        .try(joi.number(), joi.string().valid('+Inf'))
+                        .required(),
+                    count: joi.number().required(),
+                }),
+            )
+            .required(),
+        labels: joi
+            .object()
+            .pattern(
+                joi.string(),
+                joi.alternatives().try(joi.string(), joi.number()),
+            )
+            .optional(),
+    });
+
 export const impactMetricSchema = joi
     .object()
     .options({ stripUnknown: true })
@@ -106,7 +133,12 @@ export const impactMetricSchema = joi
         name: joi.string().required(),
         help: joi.string().required(),
         type: joi.string().required(),
-        samples: joi.array().items(metricSampleSchema).required(),
+        buckets: joi.array().items(joi.number()).optional(),
+        samples: joi.when('type', {
+            is: 'histogram',
+            then: joi.array().items(histogramSampleSchema).required(),
+            otherwise: joi.array().items(metricSampleSchema).required(),
+        }),
     });
 
 export const impactMetricsSchema = joi

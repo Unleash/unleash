@@ -6,12 +6,15 @@ import dbInit, {
     type ITestDb,
 } from '../../../../test/e2e/helpers/database-init.js';
 import getLogger from '../../../../test/fixtures/no-logger.js';
-import type { Metric } from './metrics-translator.js';
+import type { NumericMetric, BucketMetric } from './metrics-translator.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
 
-const sendImpactMetrics = async (impactMetrics: Metric[], status = 202) =>
+const sendImpactMetrics = async (
+    impactMetrics: (NumericMetric | BucketMetric)[],
+    status = 202,
+) =>
     app.request
         .post('/api/client/metrics')
         .send({
@@ -27,7 +30,7 @@ const sendImpactMetrics = async (impactMetrics: Metric[], status = 202) =>
         .expect(status);
 
 const sendBulkMetricsWithImpact = async (
-    impactMetrics: Metric[],
+    impactMetrics: (NumericMetric | BucketMetric)[],
     status = 202,
 ) => {
     return app.request
@@ -168,5 +171,73 @@ test('should store impact metrics sent via bulk metrics endpoint', async () => {
     );
     expect(metricsText).toMatch(
         /unleash_counter_bulk_counter{unleash_source="bulk",unleash_origin="sdk"} 15/,
+    );
+});
+
+test('should store histogram metrics with batch data', async () => {
+    await sendImpactMetrics([
+        {
+            name: 'response_time',
+            help: 'Response time histogram',
+            type: 'histogram',
+            buckets: [1],
+            samples: [
+                {
+                    labels: { foo: 'bar' },
+                    count: 10,
+                    sum: 8.5,
+                    buckets: [
+                        { le: 1, count: 7 },
+                        { le: '+Inf', count: 10 },
+                    ],
+                },
+            ],
+        },
+    ]);
+
+    await sendImpactMetrics([
+        {
+            name: 'response_time',
+            help: 'Response time histogram',
+            type: 'histogram',
+            buckets: [1],
+            samples: [
+                {
+                    labels: { foo: 'bar' },
+                    count: 5,
+                    sum: 3.2,
+                    buckets: [
+                        { le: 1, count: 3 },
+                        { le: '+Inf', count: 5 },
+                    ],
+                },
+            ],
+        },
+    ]);
+
+    const response = await app.request
+        .get('/internal-backstage/impact/metrics')
+        .expect('Content-Type', /text/)
+        .expect(200);
+
+    const metricsText = response.text;
+
+    expect(metricsText).toContain(
+        '# HELP unleash_histogram_response_time Response time histogram',
+    );
+    expect(metricsText).toContain(
+        '# TYPE unleash_histogram_response_time histogram',
+    );
+    expect(metricsText).toContain(
+        'unleash_histogram_response_time_bucket{unleash_foo="bar",unleash_origin="sdk",le="1"} 10',
+    );
+    expect(metricsText).toContain(
+        'unleash_histogram_response_time_bucket{unleash_foo="bar",unleash_origin="sdk",le="+Inf"} 15',
+    );
+    expect(metricsText).toContain(
+        'unleash_histogram_response_time_sum{unleash_foo="bar",unleash_origin="sdk"} 11.7',
+    );
+    expect(metricsText).toContain(
+        'unleash_histogram_response_time_count{unleash_foo="bar",unleash_origin="sdk"} 15',
     );
 });

@@ -1,7 +1,7 @@
 import type { Registry } from 'prom-client';
 
 interface BucketData {
-    le: number;
+    le: number | '+Inf';
     count: number;
 }
 
@@ -22,7 +22,7 @@ export class BatchHistogram {
         {
             count: number;
             sum: number;
-            buckets: Map<number, number>;
+            buckets: Map<number | '+Inf', number>;
         }
     > = new Map();
 
@@ -86,15 +86,17 @@ export class BatchHistogram {
 
             for (const [le, cumulativeCount] of Array.from(
                 data.buckets.entries(),
-            ).sort((a, b) => a[0] - b[0])) {
+            ).sort((a, b) => {
+                // Sort buckets: numbers first (ascending), then '+Inf' last
+                if (a[0] === '+Inf') return 1;
+                if (b[0] === '+Inf') return -1;
+                return (a[0] as number) - (b[0] as number);
+            })) {
                 values.push({
                     value: cumulativeCount,
                     labels: {
                         ...labels,
-                        le:
-                            le === Number.POSITIVE_INFINITY
-                                ? '+Inf'
-                                : le.toString(),
+                        le: le.toString(),
                     },
                     metricName: `${this.name}_bucket`,
                 });

@@ -26,7 +26,7 @@ describe('BatchHistogram', () => {
                     { le: 1, count: 7 },
                     { le: 2.5, count: 9 },
                     { le: 5, count: 10 },
-                    { le: Number.POSITIVE_INFINITY, count: 10 },
+                    { le: '+Inf', count: 10 },
                 ],
             },
         );
@@ -71,7 +71,7 @@ describe('BatchHistogram', () => {
                     { le: 1, count: 4 },
                     { le: 2.5, count: 5 },
                     { le: 5, count: 5 },
-                    { le: Number.POSITIVE_INFINITY, count: 5 },
+                    { le: '+Inf', count: 5 },
                 ],
             },
         );
@@ -87,7 +87,7 @@ describe('BatchHistogram', () => {
                     { le: 1, count: 2 },
                     { le: 2.5, count: 3 },
                     { le: 5, count: 3 },
-                    { le: Number.POSITIVE_INFINITY, count: 3 },
+                    { le: '+Inf', count: 3 },
                 ],
             },
         );
@@ -125,7 +125,7 @@ describe('BatchHistogram', () => {
                 sum: 1.5,
                 buckets: [
                     { le: 1, count: 2 },
-                    { le: Number.POSITIVE_INFINITY, count: 3 },
+                    { le: '+Inf', count: 3 },
                 ],
             },
         );
@@ -137,7 +137,7 @@ describe('BatchHistogram', () => {
                 sum: 3.0,
                 buckets: [
                     { le: 1, count: 1 },
-                    { le: Number.POSITIVE_INFINITY, count: 2 },
+                    { le: '+Inf', count: 2 },
                 ],
             },
         );
@@ -169,5 +169,28 @@ describe('BatchHistogram', () => {
         expect(metrics).toMatch(
             /test_histogram_count{app="my_app",service="web"} 2/,
         );
+    });
+
+    test('should handle "+Inf" string from SDK serialization', async () => {
+        histogram.recordBatch(
+            { client: 'sdk' },
+            {
+                count: 5,
+                sum: 12.3,
+                buckets: [
+                    { le: 1, count: 3 },
+                    { le: '+Inf', count: 5 }, // String instead of Infinity
+                ],
+            },
+        );
+
+        const metrics = await registry.metrics();
+
+        expect(metrics).toMatch(/test_histogram_bucket{client="sdk",le="1"} 3/);
+        expect(metrics).toMatch(
+            /test_histogram_bucket{client="sdk",le="\+Inf"} 5/,
+        );
+        expect(metrics).toMatch(/test_histogram_sum{client="sdk"} 12\.3/);
+        expect(metrics).toMatch(/test_histogram_count{client="sdk"} 5/);
     });
 });

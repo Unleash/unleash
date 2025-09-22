@@ -22,7 +22,7 @@ const StyledCard = styled('div', {
     display: 'flex',
     alignItems: 'center',
     width: '100%',
-    height: '100%',
+    height: theme.spacing(10),
     maxWidth: '30rem',
     padding: theme.spacing(2),
     color: 'inherit',

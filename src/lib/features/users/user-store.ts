@@ -344,12 +344,21 @@ export class UserStore implements IUserStore {
     }
 
     async getFirstUserDate(): Promise<Date | null> {
-        const firstInstanceUser = await this.db('users')
+        const firstInstanceUser = await this.db(TABLE)
             .select('created_at')
             .where('is_system', '=', false)
             .orderBy('created_at', 'asc')
             .first();
 
         return firstInstanceUser ? firstInstanceUser.created_at : null;
+    }
+
+    // this is temporary to find out how many cases we have
+    async findDeletedUsersWithEmail(): Promise<User[]> {
+        return this.db(TABLE)
+            .select('*')
+            .whereNotNull('deleted_at')
+            .andWhereRaw('length(email) > 0')
+            .then((rows) => rows.map(rowToUser));
     }
 }

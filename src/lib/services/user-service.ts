@@ -506,9 +506,30 @@ export class UserService {
 
         try {
             user = await this.store.getByQuery({ email });
-            // Update user if autCreate is enabled.
-            if (name && user.name !== name) {
-                user = await this.store.update(user.id, { name, email });
+            // Update user if not managed by scim
+            if (name && user.name !== name && !user.scimId) {
+                const currentRole = await this.accessService.getRootRoleForUser(
+                    user.id,
+                );
+                const updatedUser = await this.store.update(user.id, {
+                    name,
+                    email,
+                });
+
+                await this.eventService.storeEvent(
+                    new UserUpdatedEvent({
+                        auditUser: SYSTEM_USER_AUDIT,
+                        preUser: {
+                            ...user,
+                            rootRole: currentRole.id,
+                        },
+                        postUser: {
+                            ...updatedUser,
+                            rootRole: currentRole.id,
+                        },
+                    }),
+                );
+                user = { ...user, ...updatedUser };
             }
         } catch (e) {
             // User does not exists. Create if 'autoCreate' is enabled

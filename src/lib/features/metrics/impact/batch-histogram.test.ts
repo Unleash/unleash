@@ -117,9 +117,9 @@ describe('BatchHistogram', () => {
         expect(metrics).toMatch(/test_histogram_count{label1="value1"} 8/);
     });
 
-    test('should record different labels separately', async () => {
+    test('should record different labels separately and handle special characters', async () => {
         histogram.recordBatch(
-            { service: 'api', app: 'my_app' },
+            { service: 'api', url: 'http://example.com:8080/api' },
             {
                 count: 3,
                 sum: 1.5,
@@ -131,7 +131,7 @@ describe('BatchHistogram', () => {
         );
 
         histogram.recordBatch(
-            { service: 'web', app: 'my_app' },
+            { service: 'web', url: 'https://app.example.com/dashboard' },
             {
                 count: 2,
                 sum: 3.0,
@@ -145,29 +145,30 @@ describe('BatchHistogram', () => {
         const metrics = await registry.metrics();
 
         expect(metrics).toMatch(
-            /test_histogram_bucket{app="my_app",service="api",le="1"} 2/,
+            /test_histogram_bucket{service="api",url="http:\/\/example\.com:8080\/api",le="1"} 2/,
         );
         expect(metrics).toMatch(
-            /test_histogram_bucket{app="my_app",service="api",le="\+Inf"} 3/,
+            /test_histogram_bucket{service="api",url="http:\/\/example\.com:8080\/api",le="\+Inf"} 3/,
         );
         expect(metrics).toMatch(
-            /test_histogram_sum{app="my_app",service="api"} 1\.5/,
+            /test_histogram_sum{service="api",url="http:\/\/example\.com:8080\/api"} 1\.5/,
         );
         expect(metrics).toMatch(
-            /test_histogram_count{app="my_app",service="api"} 3/,
+            /test_histogram_count{service="api",url="http:\/\/example\.com:8080\/api"} 3/,
         );
 
+        // Web service metrics (with HTTPS URL)
         expect(metrics).toMatch(
-            /test_histogram_bucket{app="my_app",service="web",le="1"} 1/,
+            /test_histogram_bucket{service="web",url="https:\/\/app\.example\.com\/dashboard",le="1"} 1/,
         );
         expect(metrics).toMatch(
-            /test_histogram_bucket{app="my_app",service="web",le="\+Inf"} 2/,
+            /test_histogram_bucket{service="web",url="https:\/\/app\.example\.com\/dashboard",le="\+Inf"} 2/,
         );
         expect(metrics).toMatch(
-            /test_histogram_sum{app="my_app",service="web"} 3/,
+            /test_histogram_sum{service="web",url="https:\/\/app\.example\.com\/dashboard"} 3/,
         );
         expect(metrics).toMatch(
-            /test_histogram_count{app="my_app",service="web"} 2/,
+            /test_histogram_count{service="web",url="https:\/\/app\.example\.com\/dashboard"} 2/,
         );
     });
 
@@ -192,5 +193,38 @@ describe('BatchHistogram', () => {
         );
         expect(metrics).toMatch(/test_histogram_sum{client="sdk"} 12\.3/);
         expect(metrics).toMatch(/test_histogram_count{client="sdk"} 5/);
+    });
+
+    test('should handle unsorted bucket input', async () => {
+        histogram.recordBatch(
+            { service: 'test' },
+            {
+                count: 5,
+                sum: 7.5,
+                buckets: [
+                    { le: '+Inf', count: 5 }, // Infinity first (unsorted)
+                    { le: 2.5, count: 4 }, // Out of order
+                    { le: 0.5, count: 2 }, // Out of order
+                    { le: 1, count: 3 }, // Out of order
+                ],
+            },
+        );
+
+        const metrics = await registry.metrics();
+
+        expect(metrics).toMatch(
+            /test_histogram_bucket{service="test",le="0.5"} 2/,
+        );
+        expect(metrics).toMatch(
+            /test_histogram_bucket{service="test",le="1"} 3/,
+        );
+        expect(metrics).toMatch(
+            /test_histogram_bucket{service="test",le="2.5"} 4/,
+        );
+        expect(metrics).toMatch(
+            /test_histogram_bucket{service="test",le="\+Inf"} 5/,
+        );
+        expect(metrics).toMatch(/test_histogram_sum{service="test"} 7\.5/);
+        expect(metrics).toMatch(/test_histogram_count{service="test"} 5/);
     });
 });

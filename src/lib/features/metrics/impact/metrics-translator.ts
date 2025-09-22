@@ -24,7 +24,6 @@ export interface BucketMetric {
     name: string;
     help: string;
     type: 'histogram';
-    buckets: number[];
     samples: BucketMetricSample[];
 }
 
@@ -32,7 +31,6 @@ export type Metric = NumericMetric | BucketMetric;
 
 export class MetricsTranslator {
     private registry: Registry;
-    private histograms: Map<string, BatchHistogram> = new Map();
 
     constructor(registry: Registry) {
         this.registry = registry;
@@ -166,14 +164,26 @@ export class MetricsTranslator {
                 return null;
             }
 
-            let histogram = this.histograms.get(prefixedName);
-            if (!histogram) {
+            let histogram: BatchHistogram;
+
+            if (existingMetric && existingMetric instanceof BatchHistogram) {
+                if (this.hasNewLabels(existingMetric, labelNames)) {
+                    this.registry.removeSingleMetric(prefixedName);
+
+                    histogram = new BatchHistogram({
+                        name: prefixedName,
+                        help: metric.help,
+                        registry: this.registry,
+                    });
+                } else {
+                    histogram = existingMetric as BatchHistogram;
+                }
+            } else {
                 histogram = new BatchHistogram({
                     name: prefixedName,
                     help: metric.help,
                     registry: this.registry,
                 });
-                this.histograms.set(prefixedName, histogram);
             }
 
             for (const sample of metric.samples) {

@@ -180,7 +180,6 @@ test('should store histogram metrics with batch data', async () => {
             name: 'response_time',
             help: 'Response time histogram',
             type: 'histogram',
-            buckets: [1],
             samples: [
                 {
                     labels: { foo: 'bar' },
@@ -200,7 +199,6 @@ test('should store histogram metrics with batch data', async () => {
             name: 'response_time',
             help: 'Response time histogram',
             type: 'histogram',
-            buckets: [1],
             samples: [
                 {
                     labels: { foo: 'bar' },

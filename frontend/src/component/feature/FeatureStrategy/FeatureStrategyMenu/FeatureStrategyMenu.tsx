@@ -248,6 +248,7 @@ export const FeatureStrategyMenu = ({
                 PaperProps={{
                     sx: {
                         borderRadius: '12px',
+                        height: newStrategyModalEnabled ? '100%' : 'auto',
                     },
                 }}
             >

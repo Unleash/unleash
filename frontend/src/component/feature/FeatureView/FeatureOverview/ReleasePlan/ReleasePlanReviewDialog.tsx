@@ -19,12 +19,13 @@ import CloseIcon from '@mui/icons-material/Close';
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
         borderRadius: theme.shape.borderRadiusLarge,
+        height: '100%',
     },
 }));
 
 const StyledScrollableContent = styled(Box)(({ theme }) => ({
     width: theme.breakpoints.values.md,
-    minHeight: '318px',
+    height: '100%',
     overflowY: 'auto',
     display: 'flex',
     flexDirection: 'column',

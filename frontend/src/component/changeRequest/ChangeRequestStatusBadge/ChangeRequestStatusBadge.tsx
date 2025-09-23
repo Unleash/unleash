@@ -25,6 +25,7 @@ const DraftBadge: VFC = () => <Badge color='warning'>Draft</Badge>;
 export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
     changeRequest,
 }) => {
+    const { locationSettings } = useLocationSettings();
     if (!changeRequest) {
         return null;
     }
@@ -60,7 +61,6 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
             );
         case 'Scheduled': {
             const { schedule } = changeRequest;
-            const { locationSettings } = useLocationSettings();
             const scheduledAt = new Date(schedule.scheduledAt).toLocaleString(
                 locationSettings.locale,
             );

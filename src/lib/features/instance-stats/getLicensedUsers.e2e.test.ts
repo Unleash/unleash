@@ -16,7 +16,7 @@ const mockUser = (deletedDaysAgo: number | null, uniqueId: number) => {
             ? new Date(Date.now() - deletedDaysAgo * 24 * 60 * 60 * 1000)
             : null;
     return {
-        email: `${uniqueId}.user@example.com`,
+        email: deletedAt === null ? `${uniqueId}.user@example.com` : null,
         email_hash: `${uniqueId}.user@example.com`,
         deleted_at: deletedAt,
     };

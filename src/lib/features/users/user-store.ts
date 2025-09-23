@@ -352,13 +352,4 @@ export class UserStore implements IUserStore {
 
         return firstInstanceUser ? firstInstanceUser.created_at : null;
     }
-
-    // this is temporary to find out how many cases we have
-    async findDeletedUsersWithEmail(): Promise<User[]> {
-        return this.db(TABLE)
-            .select('*')
-            .whereNotNull('deleted_at')
-            .andWhereRaw('length(email) > 0')
-            .then((rows) => rows.map(rowToUser));
-    }
 }

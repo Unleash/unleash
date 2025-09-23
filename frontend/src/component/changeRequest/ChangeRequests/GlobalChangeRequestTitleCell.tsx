@@ -1,6 +1,7 @@
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { Link, styled, Typography } from '@mui/material';
 import { Link as RouterLink, type LinkProps } from 'react-router-dom';
+import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 type IGlobalChangeRequestTitleCellProps = {
     value?: any;
@@ -41,12 +42,12 @@ export const GlobalChangeRequestTitleCell = ({
         id,
         title,
         project,
-        projectName,
         features: featureChanges,
         segments: segmentChanges,
     } = original;
+    const projectName = useProjectOverviewNameOrId(project);
     const totalChanges =
-        (featureChanges || []).length + (segmentChanges || []).length;
+        featureChanges?.length ?? 0 + segmentChanges?.length ?? 0;
     const projectPath = `/projects/${project}`;
     const crPath = `${projectPath}/change-requests/${id}`;
 

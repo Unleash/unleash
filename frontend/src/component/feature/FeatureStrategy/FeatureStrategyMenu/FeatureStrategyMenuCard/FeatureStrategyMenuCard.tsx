@@ -25,6 +25,7 @@ const StyledCard = styled('div', {
     height: theme.spacing(10),
     maxWidth: '30rem',
     padding: theme.spacing(2),
+    backgroundColor: theme.palette.background.elevation1,
     color: 'inherit',
     textDecoration: 'inherit',
     lineHeight: 1.25,

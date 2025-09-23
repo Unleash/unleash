@@ -34,7 +34,6 @@ const columnHelper = createColumnHelper<ChangeRequestSearchItemSchema>();
 const ChangeRequestsInner = () => {
     const { user } = useAuthUser();
 
-    // Check URL parameters directly to avoid double fetching
     const shouldApplyDefaults = useMemo(() => {
         const urlParams = new URLSearchParams(window.location.search);
         return (
@@ -53,7 +52,6 @@ const ChangeRequestsInner = () => {
         requestedApproverId: FilterItemParam,
     };
 
-    // Apply initial defaults if needed
     const initialState = shouldApplyDefaults
         ? {
               createdBy: {
@@ -67,7 +65,6 @@ const ChangeRequestsInner = () => {
         updateType: 'replaceIn',
     });
 
-    // Merge with initial state on first load only
     const effectiveTableState = useMemo(
         () => ({
             ...initialState,
@@ -111,7 +108,6 @@ const ChangeRequestsInner = () => {
                     },
                 }) => {
                     const features = getValue();
-                    // Convert string array to object array for FeaturesCell compatibility
                     const featureObjects = features.map((name: string) => ({
                         name,
                     }));

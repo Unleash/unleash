@@ -16,6 +16,7 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import {
     useChangeRequestSearch,
     DEFAULT_PAGE_LIMIT,
+    type SearchChangeRequestsInput,
 } from 'hooks/api/getters/useChangeRequestSearch/useChangeRequestSearch';
 import type { ChangeRequestSearchItemSchema } from 'openapi';
 import {
@@ -23,6 +24,7 @@ import {
     StringParam,
     withDefault,
     useQueryParams,
+    encodeQueryParams,
 } from 'use-query-params';
 import useLoading from 'hooks/useLoading';
 import { styles as themeStyles } from 'component/common';
@@ -79,7 +81,12 @@ const ChangeRequestsInner = () => {
         changeRequests: data,
         total,
         loading,
-    } = useChangeRequestSearch(effectiveTableState);
+    } = useChangeRequestSearch(
+        encodeQueryParams(
+            stateConfig,
+            effectiveTableState,
+        ) as SearchChangeRequestsInput,
+    );
 
     const columns = useMemo(
         () => [

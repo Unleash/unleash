@@ -10,7 +10,6 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { GlobalChangeRequestTitleCell } from './GlobalChangeRequestTitleCell.js';
 import { FeaturesCell } from '../ProjectChangeRequests/ChangeRequestsTabs/FeaturesCell.js';
 import { useUiFlag } from 'hooks/useUiFlag.js';
-import { ChangeRequestFilters } from './ChangeRequestFilters.tsx';
 import { withTableState } from 'utils/withTableState';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import {
@@ -171,14 +170,8 @@ const ChangeRequestsInner = () => {
             bodyClass='no-padding'
             header={<PageHeader title='Change requests' />}
         >
-            <ChangeRequestFilters
-                tableState={effectiveTableState}
-                setTableState={setTableState}
-            />
-            <div className={themeStyles.fullwidth}>
-                <div ref={bodyLoadingRef}>
-                    <PaginatedTable tableInstance={table} totalItems={total} />
-                </div>
+            <div className={themeStyles.fullwidth} ref={bodyLoadingRef}>
+                <PaginatedTable tableInstance={table} totalItems={total} />
             </div>
         </PageContent>
     );

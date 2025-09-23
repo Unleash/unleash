@@ -68,7 +68,7 @@
     "schema:update": "node ./.husky/update-openapi-spec-list.js"
   },
   "dependencies": {
-    "@slack/web-api": "^7.9.1",
+    "@slack/web-api": "^7.10.0",
     "@wesleytodd/openapi": "^1.1.0",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",

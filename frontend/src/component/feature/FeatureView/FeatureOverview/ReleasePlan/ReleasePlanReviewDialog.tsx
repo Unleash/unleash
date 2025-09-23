@@ -19,8 +19,15 @@ import CloseIcon from '@mui/icons-material/Close';
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
         borderRadius: theme.shape.borderRadiusLarge,
-        width: theme.breakpoints.values.md,
     },
+}));
+
+const StyledScrollableContent = styled(Box)(({ theme }) => ({
+    width: theme.breakpoints.values.md,
+    minHeight: '318px',
+    overflowY: 'auto',
+    display: 'flex',
+    flexDirection: 'column',
 }));
 
 const StyledHeader = styled(Box)(({ theme }) => ({
@@ -104,30 +111,35 @@ export const ReleasePlanReviewDialog = ({
                     Go back
                 </Button>
             </StyledSubHeader>
-            {activeReleasePlan && (
-                <Box sx={{ px: 4, pb: 2 }}>
-                    <Alert severity='error'>
-                        This feature environment currently has{' '}
-                        <strong>{activeReleasePlan.name}</strong> -{' '}
-                        <strong>{activeReleasePlan.milestones[0].name}</strong>
-                        {environmentEnabled ? ' running' : ' paused'}. Adding a
-                        new release plan will replace the existing release plan.
-                    </Alert>
+            <StyledScrollableContent>
+                {activeReleasePlan && (
+                    <Box sx={{ px: 4, pb: 2 }}>
+                        <Alert severity='error'>
+                            This feature environment currently has{' '}
+                            <strong>{activeReleasePlan.name}</strong> -{' '}
+                            <strong>
+                                {activeReleasePlan.milestones[0].name}
+                            </strong>
+                            {environmentEnabled ? ' running' : ' paused'}.
+                            Adding a new release plan will replace the existing
+                            release plan.
+                        </Alert>
+                    </Box>
+                )}
+                <Box sx={{ px: 2 }}>
+                    <ReleasePlan plan={planPreview} readonly />
                 </Box>
-            )}
-            <Box sx={{ px: 2 }}>
-                <ReleasePlan plan={planPreview} readonly />
-            </Box>
-            {crProtected && (
-                <Box sx={{ px: 4, pt: 1 }}>
-                    <Typography>
-                        <strong>Adding</strong> release template{' '}
-                        <strong>{template?.name}</strong> to{' '}
-                        <strong>{featureName}</strong> in{' '}
-                        <strong>{environment}</strong>.
-                    </Typography>
-                </Box>
-            )}
+                {crProtected && (
+                    <Box sx={{ px: 4, pt: 1 }}>
+                        <Typography>
+                            <strong>Adding</strong> release template{' '}
+                            <strong>{template?.name}</strong> to{' '}
+                            <strong>{featureName}</strong> in{' '}
+                            <strong>{environment}</strong>.
+                        </Typography>
+                    </Box>
+                )}
+            </StyledScrollableContent>
             <StyledDialogActions>
                 <Button variant='contained' color='primary' onClick={onConfirm}>
                     {crProtected ? 'Add suggestion to draft' : 'Apply template'}

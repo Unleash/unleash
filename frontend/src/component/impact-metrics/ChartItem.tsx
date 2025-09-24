@@ -25,15 +25,7 @@ const getConfigDescription = (config: DisplayChartConfig): string => {
 
     parts.push(`last ${config.timeRange}`);
 
-    if (config.aggregationMode === 'rps') {
-        parts.push('rate per second');
-    } else if (config.aggregationMode === 'count') {
-        parts.push('count');
-    } else if (config.aggregationMode === 'avg') {
-        parts.push('average');
-    } else if (config.aggregationMode === 'sum') {
-        parts.push('sum');
-    }
+    parts.push(config.aggregationMode);
 
     const labelCount = Object.keys(config.labelSelectors).length;
     if (labelCount > 0) {

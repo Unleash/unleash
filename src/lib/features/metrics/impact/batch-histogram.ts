@@ -75,6 +75,7 @@ export class BatchHistogram {
 
     reset(): void {
         this.store.clear();
+        this.bucketBoundaries.clear();
     }
 
     get() {

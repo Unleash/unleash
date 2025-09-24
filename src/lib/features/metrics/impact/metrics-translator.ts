@@ -59,6 +59,10 @@ export class MetricsTranslator {
     ): boolean {
         const existingBoundaries = existingHistogram.bucketBoundaries;
 
+        if (existingBoundaries.size !== newBuckets.length) {
+            return true;
+        }
+
         for (const bucket of newBuckets) {
             if (!existingBoundaries.has(bucket.le)) {
                 return true;
@@ -184,6 +188,7 @@ export class MetricsTranslator {
             if (existingMetric && existingMetric instanceof BatchHistogram) {
                 const firstSample = metric.samples[0]; // all samples should have same buckets
                 const needsRecreation =
+                    !firstSample?.buckets ||
                     this.hasNewLabels(existingMetric, labelNames) ||
                     this.hasNewBuckets(existingMetric, firstSample.buckets);
 

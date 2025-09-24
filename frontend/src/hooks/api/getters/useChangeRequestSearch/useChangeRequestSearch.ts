@@ -69,7 +69,11 @@ const createChangeRequestSearch = () => {
         const { KEY, fetcher } = getChangeRequestSearchFetcher(params);
         const swrKey = `${cachePrefix}${KEY}`;
         const cacheId = 'global';
-        useClearSWRCache(swrKey, PATH, SWR_CACHE_SIZE);
+        useClearSWRCache({
+            currentKey: swrKey,
+            clearPrefix: PATH,
+            cacheSize: SWR_CACHE_SIZE,
+        });
 
         useEffect(() => {
             initCache(cacheId);

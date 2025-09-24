@@ -1,4 +1,4 @@
-import type { IConstraint, IConstraintWithId } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 import { SegmentFormStepOne } from './SegmentFormStepOne.tsx';
 import { SegmentFormStepTwo } from './SegmentFormStepTwo.tsx';
 import type React from 'react';
@@ -14,7 +14,7 @@ interface ISegmentProps {
     name: string;
     description: string;
     project?: string;
-    constraints: IConstraintWithId[];
+    constraints: IConstraint[];
     setName: React.Dispatch<React.SetStateAction<string>>;
     setDescription: React.Dispatch<React.SetStateAction<string>>;
     setProject: React.Dispatch<React.SetStateAction<string | undefined>>;

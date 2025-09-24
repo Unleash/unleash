@@ -1,5 +1,8 @@
+import type { constraintId } from 'constants/constraintId';
 import { isSingleValueOperator } from 'constants/operators';
 import type { IConstraint } from 'interfaces/strategy';
+
+type SerializedConstraint = Omit<IConstraint, typeof constraintId>;
 
 export const serializeConstraint = ({
     value,
@@ -8,10 +11,10 @@ export const serializeConstraint = ({
     operator,
     contextName,
     caseInsensitive,
-}: IConstraint): IConstraint => {
+}: IConstraint): SerializedConstraint => {
     const makeConstraint = (
         valueProp: { value: string } | { values: string[] },
-    ): IConstraint => {
+    ): SerializedConstraint => {
         return {
             contextName,
             operator,

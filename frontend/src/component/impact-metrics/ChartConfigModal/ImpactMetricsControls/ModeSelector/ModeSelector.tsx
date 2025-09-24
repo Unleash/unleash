@@ -5,7 +5,7 @@ import type { AggregationMode } from '../../../types.ts';
 export type ModeSelectorProps = {
     value: AggregationMode;
     onChange: (mode: AggregationMode) => void;
-    seriesType: 'counter' | 'gauge' | 'unknown';
+    seriesType: 'counter' | 'gauge' | 'histogram' | 'unknown';
 };
 
 export const ModeSelector: FC<ModeSelectorProps> = ({
@@ -32,14 +32,28 @@ export const ModeSelector: FC<ModeSelectorProps> = ({
                               Count
                           </MenuItem>,
                       ]
-                    : [
-                          <MenuItem key='avg' value='avg'>
-                              Average
-                          </MenuItem>,
-                          <MenuItem key='sum' value='sum'>
-                              Sum
-                          </MenuItem>,
-                      ]}
+                    : seriesType === 'gauge'
+                      ? [
+                            <MenuItem key='avg' value='avg'>
+                                Average
+                            </MenuItem>,
+                            <MenuItem key='sum' value='sum'>
+                                Sum
+                            </MenuItem>,
+                        ]
+                      : seriesType === 'histogram'
+                        ? [
+                              <MenuItem key='p50' value='p50'>
+                                  50th percentile
+                              </MenuItem>,
+                              <MenuItem key='p95' value='p95'>
+                                  95th percentile
+                              </MenuItem>,
+                              <MenuItem key='p99' value='p99'>
+                                  99th percentile
+                              </MenuItem>,
+                          ]
+                        : []}
             </Select>
         </FormControl>
     );

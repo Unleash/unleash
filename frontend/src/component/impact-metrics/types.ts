@@ -8,10 +8,17 @@ export type ChartConfig = {
     title?: string;
 };
 
-export type AggregationMode = 'rps' | 'count' | 'avg' | 'sum';
+export type AggregationMode =
+    | 'rps'
+    | 'count'
+    | 'avg'
+    | 'sum'
+    | 'p50'
+    | 'p95'
+    | 'p99';
 
 export type DisplayChartConfig = ChartConfig & {
-    type: 'counter' | 'gauge' | 'unknown';
+    type: 'counter' | 'gauge' | 'histogram' | 'unknown';
     displayName: string; // e.g. my_metric with unleash_counter stripped
 };
 

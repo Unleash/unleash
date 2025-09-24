@@ -27,7 +27,7 @@ export type ImpactMetricsQuery = {
     series: string;
     range: 'hour' | 'day' | 'week' | 'month';
     labels?: Record<string, string[]>;
-    aggregationMode?: 'rps' | 'count' | 'avg' | 'sum';
+    aggregationMode?: 'rps' | 'count' | 'avg' | 'sum' | 'p50' | 'p95' | 'p99';
 };
 
 export const useImpactMetricsData = (query?: ImpactMetricsQuery) => {

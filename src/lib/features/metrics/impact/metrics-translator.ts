@@ -53,6 +53,21 @@ export class MetricsTranslator {
         );
     }
 
+    private hasNewBuckets(
+        existingHistogram: BatchHistogram,
+        newBuckets: Array<{ le: number | '+Inf'; count: number }>,
+    ): boolean {
+        const existingBoundaries = existingHistogram.bucketBoundaries;
+
+        for (const bucket of newBuckets) {
+            if (!existingBoundaries.has(bucket.le)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private transformLabels(
         labels: Record<string, string | number>,
     ): Record<string, string | number> {
@@ -167,7 +182,12 @@ export class MetricsTranslator {
             let histogram: BatchHistogram;
 
             if (existingMetric && existingMetric instanceof BatchHistogram) {
-                if (this.hasNewLabels(existingMetric, labelNames)) {
+                const firstSample = metric.samples[0]; // all samples should have same buckets
+                const needsRecreation =
+                    this.hasNewLabels(existingMetric, labelNames) ||
+                    this.hasNewBuckets(existingMetric, firstSample.buckets);
+
+                if (needsRecreation) {
                     this.registry.removeSingleMetric(prefixedName);
 
                     histogram = new BatchHistogram({

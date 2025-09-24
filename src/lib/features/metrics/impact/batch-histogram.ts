@@ -16,6 +16,7 @@ export class BatchHistogram {
     private help: string;
     private registry: Registry;
     public labelNames: string[] = [];
+    public bucketBoundaries: Set<number | '+Inf'> = new Set();
 
     // Store accumulated data for each label combination
     private store: Map<
@@ -63,6 +64,7 @@ export class BatchHistogram {
         for (const bucket of data.buckets) {
             const current = entry.buckets.get(bucket.le) || 0;
             entry.buckets.set(bucket.le, current + bucket.count);
+            this.bucketBoundaries.add(bucket.le);
         }
     }
 

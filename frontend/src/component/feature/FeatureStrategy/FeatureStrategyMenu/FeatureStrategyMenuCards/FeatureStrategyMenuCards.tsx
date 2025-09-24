@@ -33,6 +33,7 @@ const FILTERS = [
     { label: 'Standard strategies', value: 'standard' },
     { label: 'Release templates', value: 'releaseTemplates' },
     { label: 'Advanced strategies', value: 'advanced' },
+    { label: 'Custom strategies', value: 'custom' },
 ] as const;
 
 export type StrategyFilterValue = (typeof FILTERS)[number]['value'];
@@ -121,11 +122,8 @@ export const FeatureStrategyMenuCards = ({
         () =>
             FILTERS.filter(({ value }) => {
                 if (value === 'releaseTemplates') return isEnterprise();
-                if (value === 'advanced')
-                    return (
-                        advancedStrategies.length > 0 ||
-                        customStrategies.length > 0
-                    );
+                if (value === 'advanced') return advancedStrategies.length > 0;
+                if (value === 'custom') return customStrategies.length > 0;
                 return true;
             }),
         [isEnterprise, advancedStrategies.length, customStrategies.length],
@@ -277,19 +275,15 @@ export const FeatureStrategyMenuCards = ({
                         setFilter={setFilter}
                     />
                 )}
-                {shouldRender('advanced') && (
-                    <>
-                        {advancedStrategies.length > 0 && (
-                            <FeatureStrategyMenuCardsSection title='Advanced strategies'>
-                                {advancedStrategies.map(renderStrategy)}
-                            </FeatureStrategyMenuCardsSection>
-                        )}
-                        {customStrategies.length > 0 && (
-                            <FeatureStrategyMenuCardsSection title='Custom strategies'>
-                                {customStrategies.map(renderStrategy)}
-                            </FeatureStrategyMenuCardsSection>
-                        )}
-                    </>
+                {shouldRender('advanced') && advancedStrategies.length > 0 && (
+                    <FeatureStrategyMenuCardsSection title='Advanced strategies'>
+                        {advancedStrategies.map(renderStrategy)}
+                    </FeatureStrategyMenuCardsSection>
+                )}
+                {shouldRender('custom') && customStrategies.length > 0 && (
+                    <FeatureStrategyMenuCardsSection title='Custom strategies'>
+                        {customStrategies.map(renderStrategy)}
+                    </FeatureStrategyMenuCardsSection>
                 )}
             </StyledScrollableContent>
         </StyledContainer>

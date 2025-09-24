@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.2.2] - 2025-09-24
+
+### Bug Fixes
+
+- Cache eviction bug and the eternal loading screen ([#10689](https://github.com/Unleash/unleash/issues/10689))
+
+
 ## [7.2.1] - 2025-09-18
 
 ### Bug Fixes

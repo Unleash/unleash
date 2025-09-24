@@ -14,11 +14,11 @@ export const clearCacheEntries = (
         (key) => key.startsWith(clearPrefix) && key !== currentKey,
     );
 
-    const entriesToLeave = SWR_CACHE_SIZE - 1;
+    const entriesToKeep = SWR_CACHE_SIZE - 1;
     const keysToDelete =
-        entriesToLeave <= 0
+        entriesToKeep <= 0
             ? filteredKeys
-            : filteredKeys.slice(0, -entriesToLeave);
+            : filteredKeys.slice(0, -entriesToKeep);
 
     keysToDelete.forEach((key) => cache.delete(key));
 };

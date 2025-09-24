@@ -59,8 +59,8 @@ export class UserUpdatesReadModel {
                 // also consider deleted users (different than activeUsers query)
                 is_system: false,
                 is_service: false,
-                updated_at: { $gt: date },
             })
+            .where('updated_at', '>', date)
             .orderBy('updated_at', 'asc')
             .select([...USER_COLUMNS_PUBLIC, 'updated_at', 'deleted_at'])
             .limit(limit);

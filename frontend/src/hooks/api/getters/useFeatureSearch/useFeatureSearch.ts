@@ -100,12 +100,13 @@ const createFeatureSearch = () => {
 
 export const DEFAULT_PAGE_LIMIT = 25;
 
-const getFeatureSearchFetcher = (params: SearchFeaturesParams) => {
+export const getFeatureSearchFetcher = (params: SearchFeaturesParams) => {
     const urlSearchParams = new URLSearchParams(
         Array.from(
             Object.entries(params)
                 .filter(([_, value]) => !!value)
-                .map(([key, value]) => [key, value.toString()]), // TODO: parsing non-string parameters
+                .map(([key, value]) => [key, value.toString()]) // TODO: parsing non-string parameters
+                .toSorted(),
         ),
     ).toString();
     const KEY = `${PATH}${urlSearchParams}`;

@@ -38,6 +38,8 @@ const FILTERS = [
 
 export type StrategyFilterValue = (typeof FILTERS)[number]['value'];
 
+const CUSTOM_STRATEGY_DISPLAY_LIMIT = 5;
+
 const StyledContainer = styled(Box)(() => ({
     width: '100%',
     display: 'flex',
@@ -117,6 +119,9 @@ export const FeatureStrategyMenuCards = ({
     const customStrategies = activeStrategies.filter(
         (strategy) => strategy.editable,
     );
+
+    const customStrategyDisplayLimit =
+        filter === 'custom' ? 0 : CUSTOM_STRATEGY_DISPLAY_LIMIT;
 
     const availableFilters = useMemo(
         () =>
@@ -281,7 +286,11 @@ export const FeatureStrategyMenuCards = ({
                     </FeatureStrategyMenuCardsSection>
                 )}
                 {shouldRender('custom') && customStrategies.length > 0 && (
-                    <FeatureStrategyMenuCardsSection title='Custom strategies'>
+                    <FeatureStrategyMenuCardsSection
+                        title='Custom strategies'
+                        limit={customStrategyDisplayLimit}
+                        viewMore={() => setFilter('custom')}
+                    >
                         {customStrategies.map(renderStrategy)}
                     </FeatureStrategyMenuCardsSection>
                 )}

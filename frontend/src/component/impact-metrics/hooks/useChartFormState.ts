@@ -48,12 +48,7 @@ export const useChartFormState = ({
         Record<string, string[]>
     >(initialConfig?.labelSelectors || {});
     const [aggregationMode, setAggregationMode] = useState<AggregationMode>(
-        initialConfig?.aggregationMode ||
-            (getMetricType(metricName) === 'counter'
-                ? 'count'
-                : getMetricType(metricName) === 'histogram'
-                  ? 'p50'
-                  : 'avg'),
+        initialConfig?.aggregationMode || getDefaultAggregation(metricName),
     );
 
     const {

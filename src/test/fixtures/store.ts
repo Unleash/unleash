@@ -65,6 +65,7 @@ import { UniqueConnectionReadModel } from '../../lib/features/unique-connection/
 import FakeFeatureLinkStore from '../../lib/features/feature-links/fake-feature-link-store.js';
 import { FakeFeatureLinksReadModel } from '../../lib/features/feature-links/fake-feature-links-read-model.js';
 import { FakeUnknownFlagsStore } from '../../lib/features/metrics/unknown-flags/fake-unknown-flags-store.js';
+import type { UserUpdatesReadModel } from '../../lib/features/users/user-updates-read-model.js';
 
 const db = {
     select: () => ({
@@ -92,6 +93,7 @@ const createStores: () => IUnleashStores = () => {
         addonStore: new FakeAddonStore(),
         projectStore: new FakeProjectStore(),
         userStore: new FakeUserStore(),
+        userUpdatesReadModel: {} as UserUpdatesReadModel,
         accessStore: new FakeAccessStore(),
         accountStore: new FakeAccountStore(),
         userFeedbackStore: new FakeUserFeedbackStore(),

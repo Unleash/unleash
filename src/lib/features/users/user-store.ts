@@ -12,9 +12,10 @@ import type { Db } from '../../db/db.js';
 import type { Knex } from 'knex';
 
 const TABLE = 'users';
+export const USERS_TABLE = TABLE;
 const PASSWORD_HASH_TABLE = 'used_passwords';
 
-const USER_COLUMNS_PUBLIC = [
+export const USER_COLUMNS_PUBLIC = [
     'id',
     'name',
     'username',

@@ -68,6 +68,7 @@ import { UniqueConnectionReadModel } from '../features/unique-connection/unique-
 import { FeatureLinkStore } from '../features/feature-links/feature-link-store.js';
 import { UnknownFlagsStore } from '../features/metrics/unknown-flags/unknown-flags-store.js';
 import { FeatureLinksReadModel } from '../features/feature-links/feature-links-read-model.js';
+import { UserUpdatesReadModel } from '../features/users/user-updates-read-model.js';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -106,6 +107,7 @@ export const createStores = (
         ),
         settingStore: new SettingStore(db, getLogger),
         userStore: new UserStore(db, getLogger),
+        userUpdatesReadModel: new UserUpdatesReadModel(db, getLogger),
         accountStore: new AccountStore(db, getLogger),
         projectStore: new ProjectStore(db, eventBus, config),
         tagStore: new TagStore(db, eventBus, getLogger),

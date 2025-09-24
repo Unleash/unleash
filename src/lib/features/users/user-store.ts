@@ -44,7 +44,7 @@ const mapUserToColumns = (user: ICreateUser) => ({
     image_url: user.imageUrl,
 });
 
-export const rowToUser = (row) => {
+const rowToUser = (row) => {
     if (!row) {
         throw new NotFoundError('No user found');
     }

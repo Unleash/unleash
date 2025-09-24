@@ -1,9 +1,33 @@
 import type { Logger, LogProvider } from '../../logger.js';
 
 import type { Db } from '../../db/db.js';
-import { rowToUser, USER_COLUMNS_PUBLIC, USERS_TABLE } from './user-store.js';
-import type { User } from '../../internals.js';
+import { USER_COLUMNS_PUBLIC, USERS_TABLE } from './user-store.js';
+import type { Row } from '../../db/crud/row-type.js';
 
+type Response = {
+    id: number;
+    name?: string;
+    username?: string;
+    email?: string;
+    imageUrl?: string;
+    seenAt?: Date;
+    createdAt?: Date;
+    updatedAt?: Date | null;
+    deletedAt?: Date | null;
+};
+const toResponse = (row: Row<Response>): Response => {
+    return {
+        id: row.id,
+        name: row.name,
+        username: row.username,
+        email: row.email,
+        imageUrl: row.image_url,
+        seenAt: row.seen_at,
+        createdAt: row.created_at,
+        updatedAt: row.updated_at,
+        deletedAt: row.deleted_at,
+    };
+};
 export class UserUpdatesReadModel {
     private db: Db;
 
@@ -29,7 +53,7 @@ export class UserUpdatesReadModel {
     async getUsersUpdatedAfter(
         date: Date,
         limit: number = 100,
-    ): Promise<User[]> {
+    ): Promise<Response[]> {
         const result = await this.db(USERS_TABLE)
             .where({
                 // also consider deleted users (different than activeUsers query)
@@ -38,8 +62,8 @@ export class UserUpdatesReadModel {
                 updated_at: { $gt: date },
             })
             .orderBy('updated_at', 'asc')
-            .select(USER_COLUMNS_PUBLIC)
+            .select([...USER_COLUMNS_PUBLIC, 'updated_at', 'deleted_at'])
             .limit(limit);
-        return result.map(rowToUser);
+        return result.map(toResponse);
     }
 }

@@ -41,10 +41,7 @@ import {
 import type { SchedulerService } from './services/index.js';
 import type { IClientMetricsEnv } from './features/metrics/client-metrics/client-metrics-store-v2-type.js';
 import { DbMetricsMonitor } from './metrics-gauge.js';
-import {
-    HEAP_MEMORY_TOTAL,
-    REQUEST_COUNT,
-} from './features/metrics/impact/define-impact-metrics.js';
+import * as impactMetrics from './features/metrics/impact/define-impact-metrics.js';
 
 export function registerPrometheusPostgresMetrics(
     db: Knex,
@@ -798,15 +795,23 @@ export function registerPrometheusMetrics(
                 })
                 .observe(time);
             config.flagResolver.impactMetrics?.incrementCounter(
-                REQUEST_COUNT,
+                impactMetrics.REQUEST_COUNT,
                 1,
                 { flagNames: ['consumptionModel'], context: {} },
+            );
+            config.flagResolver.impactMetrics?.observeHistogram(
+                impactMetrics.REQUEST_TIME_MS,
+                time,
             );
         },
     );
 
     eventBus.on(events.SCHEDULER_JOB_TIME, ({ jobId, time }) => {
         schedulerDuration.labels(jobId).observe(time);
+        config.flagResolver.impactMetrics?.observeHistogram(
+            impactMetrics.SCHEDULER_JOB_TIME_SECONDS,
+            time,
+        );
     });
 
     eventBus.on(events.FUNCTION_TIME, ({ functionName, className, time }) => {
@@ -1152,7 +1157,7 @@ export function registerPrometheusMetrics(
         collectStaticCounters: async () => {
             try {
                 config.flagResolver.impactMetrics?.updateGauge(
-                    HEAP_MEMORY_TOTAL,
+                    impactMetrics.HEAP_MEMORY_TOTAL,
                     process.memoryUsage().heapUsed,
                     { flagNames: ['consumptionModel'], context: {} },
                 );

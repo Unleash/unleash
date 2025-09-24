@@ -279,4 +279,68 @@ describe('MetricsTranslator', () => {
             'unleash_histogram_histogram_with_labels_count{unleash_origin="sdk",unleash_service="api"} 5',
         );
     });
+
+    it('should handle histogram bucket changes', async () => {
+        const registry = new Registry();
+        const translator = new MetricsTranslator(registry);
+
+        // Initial histogram with 2 buckets
+        const metrics1 = [
+            {
+                name: 'test_histogram',
+                help: 'test histogram',
+                type: 'histogram' as const,
+                samples: [
+                    {
+                        count: 5,
+                        sum: 2.5,
+                        buckets: [
+                            { le: 1, count: 3 },
+                            { le: '+Inf' as const, count: 5 },
+                        ],
+                    },
+                ],
+            },
+        ];
+
+        const result1 = await translator.translateAndSerializeMetrics(metrics1);
+        expect(result1).toContain(
+            'unleash_histogram_test_histogram_bucket{unleash_origin="sdk",le="1"} 3',
+        );
+        expect(result1).toContain(
+            'unleash_histogram_test_histogram_count{unleash_origin="sdk"} 5',
+        );
+
+        // Same histogram with different bucket (0.5 instead of 1)
+        const metrics2 = [
+            {
+                name: 'test_histogram',
+                help: 'test histogram',
+                type: 'histogram' as const,
+                samples: [
+                    {
+                        count: 7,
+                        sum: 3.5,
+                        buckets: [
+                            { le: 0.5, count: 4 }, // Different bucket boundary
+                            { le: '+Inf' as const, count: 7 },
+                        ],
+                    },
+                ],
+            },
+        ];
+
+        const result2 = await translator.translateAndSerializeMetrics(metrics2);
+
+        expect(result2).toContain(
+            'unleash_histogram_test_histogram_bucket{unleash_origin="sdk",le="0.5"} 4',
+        );
+        expect(result2).toContain(
+            'unleash_histogram_test_histogram_count{unleash_origin="sdk"} 7',
+        );
+
+        expect(result2).not.toContain(
+            'unleash_histogram_test_histogram_count{unleash_origin="sdk"} 5',
+        );
+    });
 });

@@ -60,7 +60,11 @@ const createFeatureSearch = () => {
         const { KEY, fetcher } = getFeatureSearchFetcher(params);
         const swrKey = `${cachePrefix}${KEY}`;
         const cacheId = params.project || '';
-        useClearSWRCache(swrKey, PATH, SWR_CACHE_SIZE);
+        useClearSWRCache({
+            currentKey: swrKey,
+            clearPrefix: PATH,
+            cacheSize: SWR_CACHE_SIZE,
+        });
 
         useEffect(() => {
             initCache(cacheId);

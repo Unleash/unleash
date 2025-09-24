@@ -30,7 +30,7 @@ export const clearCacheEntries = ({
     keysToDelete.forEach((key) => cache.delete(key));
 };
 
-type useClearSWRCacheProps = {
+type UseClearSWRCacheProps = {
     currentKey: string;
     clearPrefix: string;
     cacheSize?: number;
@@ -45,7 +45,7 @@ export const useClearSWRCache = ({
     currentKey,
     clearPrefix,
     cacheSize = 1,
-}: useClearSWRCacheProps) => {
+}: UseClearSWRCacheProps) => {
     const { cache } = useSWRConfig();
     clearCacheEntries({
         cache,

@@ -74,12 +74,15 @@ const StyledNoTemplatesDescription = styled('p')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const StyledViewAllTemplates = styled(Box)({
+const StyledViewMoreButton = styled(Button)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '100%',
-});
+    height: theme.spacing(10),
+    padding: theme.spacing(2),
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.spacing(1),
+}));
 
 const StyledLink = styled(RouterLink)({
     textDecoration: 'none',
@@ -174,17 +177,13 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                     ))}
                     {slicedTemplates.length < templates.length &&
                         templates.length > RELEASE_TEMPLATE_DISPLAY_LIMIT && (
-                            <StyledViewAllTemplates>
-                                <Button
-                                    variant='text'
-                                    size='small'
-                                    onClick={() =>
-                                        setFilter('releaseTemplates')
-                                    }
-                                >
-                                    View all available templates
-                                </Button>
-                            </StyledViewAllTemplates>
+                            <StyledViewMoreButton
+                                variant='text'
+                                size='small'
+                                onClick={() => setFilter('releaseTemplates')}
+                            >
+                                View more templates
+                            </StyledViewMoreButton>
                         )}
                 </FeatureStrategyMenuCardsSection>
             )}

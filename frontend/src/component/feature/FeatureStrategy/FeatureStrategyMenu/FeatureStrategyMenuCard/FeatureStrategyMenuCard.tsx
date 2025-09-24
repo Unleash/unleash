@@ -21,9 +21,7 @@ const StyledCard = styled('div', {
 })<{ isDefault?: boolean }>(({ theme, isDefault }) => ({
     display: 'flex',
     alignItems: 'center',
-    width: '100%',
     height: theme.spacing(10),
-    maxWidth: '30rem',
     padding: theme.spacing(2),
     backgroundColor: theme.palette.background.elevation1,
     color: 'inherit',

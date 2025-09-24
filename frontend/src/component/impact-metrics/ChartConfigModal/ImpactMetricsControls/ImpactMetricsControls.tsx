@@ -58,7 +58,7 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
                     <ModeSelector
                         value={formData.aggregationMode}
                         onChange={actions.setAggregationMode}
-                        seriesType={getMetricType(formData.metricName)!}
+                        metricType={getMetricType(formData.metricName)!}
                     />
                 </>
             ) : null}

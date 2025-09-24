@@ -1,14 +1,11 @@
 import dbInit, { type ITestDb } from '../helpers/database-init.js';
-import getLogger from '../../fixtures/no-logger.js';
 import type { IUnleashStores } from '../../../lib/types/index.js';
 import { beforeAll, test, expect } from 'vitest';
 let stores: IUnleashStores;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('user_store_serial', getLogger, {
-        experimental: { flags: {} },
-    });
+    db = await dbInit();
     stores = db.stores;
 });
 

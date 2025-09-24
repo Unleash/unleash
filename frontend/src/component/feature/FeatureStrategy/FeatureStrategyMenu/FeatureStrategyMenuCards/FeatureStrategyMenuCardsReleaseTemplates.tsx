@@ -2,7 +2,7 @@ import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplat
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ReactComponent as ReleaseTemplateIcon } from 'assets/img/releaseTemplates.svg';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans.ts';
-import { Box, Button, styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import type { StrategyFilterValue } from './FeatureStrategyMenuCards.tsx';
 import type { Dispatch, SetStateAction } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
@@ -74,16 +74,6 @@ const StyledNoTemplatesDescription = styled('p')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const StyledViewMoreButton = styled(Button)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: theme.spacing(10),
-    padding: theme.spacing(2),
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: theme.spacing(1),
-}));
-
 const StyledLink = styled(RouterLink)({
     textDecoration: 'none',
     '&:hover': {
@@ -113,10 +103,9 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
 
     const isFiltered = filter === 'releaseTemplates';
     const shouldShowHeader = !isFiltered || templates.length > 0;
-
-    const slicedTemplates = isFiltered
-        ? templates
-        : templates.slice(0, RELEASE_TEMPLATE_DISPLAY_LIMIT);
+    const releaseTemplatesDisplayLimit = isFiltered
+        ? 0
+        : RELEASE_TEMPLATE_DISPLAY_LIMIT;
 
     return (
         <Box>
@@ -153,8 +142,12 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                     </StyledNoTemplatesBody>
                 </StyledNoTemplatesContainer>
             ) : (
-                <FeatureStrategyMenuCardsSection>
-                    {slicedTemplates.map((template) => (
+                <FeatureStrategyMenuCardsSection
+                    limit={releaseTemplatesDisplayLimit}
+                    viewMore={() => setFilter('releaseTemplates')}
+                    viewMoreLabel='View more templates'
+                >
+                    {templates.map((template) => (
                         <FeatureStrategyMenuCard
                             key={template.id}
                             name={template.name}
@@ -175,16 +168,6 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                             </FeatureStrategyMenuCardAction>
                         </FeatureStrategyMenuCard>
                     ))}
-                    {slicedTemplates.length < templates.length &&
-                        templates.length > RELEASE_TEMPLATE_DISPLAY_LIMIT && (
-                            <StyledViewMoreButton
-                                variant='text'
-                                size='small'
-                                onClick={() => setFilter('releaseTemplates')}
-                            >
-                                View more templates
-                            </StyledViewMoreButton>
-                        )}
                 </FeatureStrategyMenuCardsSection>
             )}
         </Box>

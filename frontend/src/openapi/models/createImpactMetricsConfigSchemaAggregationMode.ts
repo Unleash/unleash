@@ -16,4 +16,7 @@ export const CreateImpactMetricsConfigSchemaAggregationMode = {
     count: 'count',
     avg: 'avg',
     sum: 'sum',
+    p50: 'p50',
+    p95: 'p95',
+    p99: 'p99',
 } as const;

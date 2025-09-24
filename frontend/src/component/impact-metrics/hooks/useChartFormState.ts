@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import type { AggregationMode, ChartConfig } from '../types.ts';
 import type { ImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
-import { getMetricType } from '../utils.ts';
+import { getDefaultAggregation, getMetricType } from '../utils.ts';
 
 type UseChartConfigParams = {
     open: boolean;
@@ -48,10 +48,7 @@ export const useChartFormState = ({
         Record<string, string[]>
     >(initialConfig?.labelSelectors || {});
     const [aggregationMode, setAggregationMode] = useState<AggregationMode>(
-        (initialConfig?.aggregationMode || getMetricType(metricName)) ===
-            'counter'
-            ? 'count'
-            : 'avg',
+        initialConfig?.aggregationMode || getDefaultAggregation(metricName),
     );
 
     const {
@@ -75,9 +72,7 @@ export const useChartFormState = ({
             setLabelSelectors(initialConfig.labelSelectors);
             setAggregationMode(
                 initialConfig.aggregationMode ||
-                    (getMetricType(initialConfig.metricName) === 'counter'
-                        ? 'count'
-                        : 'avg'),
+                    getDefaultAggregation(initialConfig.metricName),
             );
         } else if (open && !initialConfig) {
             setTitle('');
@@ -97,6 +92,8 @@ export const useChartFormState = ({
             setAggregationMode('count');
         } else if (metric === 'gauge') {
             setAggregationMode('avg');
+        } else if (metric === 'histogram') {
+            setAggregationMode('p50');
         }
     };
 

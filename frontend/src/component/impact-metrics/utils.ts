@@ -64,5 +64,18 @@ export const formatLargeNumbers = (value: number): string => {
 export const getMetricType = (seriesName: string) => {
     if (seriesName.startsWith('unleash_counter_')) return 'counter';
     if (seriesName.startsWith('unleash_gauge_')) return 'gauge';
+    if (seriesName.startsWith('unleash_histogram_')) return 'histogram';
     return 'unknown';
+};
+
+export const getDefaultAggregation = (seriesName: string) => {
+    const metricType = getMetricType(seriesName);
+
+    if (metricType === 'counter') {
+        return 'count';
+    }
+    if (metricType === 'histogram') {
+        return 'p50';
+    }
+    return 'avg';
 };

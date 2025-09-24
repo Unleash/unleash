@@ -4,7 +4,7 @@ import type { Db } from '../../db/db.js';
 import { USER_COLUMNS_PUBLIC, USERS_TABLE } from './user-store.js';
 import type { Row } from '../../db/crud/row-type.js';
 
-type UpdatedUsers = {
+type UpdatedUser = {
     id: number;
     name?: string;
     username?: string;
@@ -15,7 +15,7 @@ type UpdatedUsers = {
     updatedAt?: Date | null;
     deletedAt?: Date | null;
 };
-const toResponse = (row: Row<UpdatedUsers>): UpdatedUsers => {
+const toResponse = (row: Row<UpdatedUser>): UpdatedUser => {
     return {
         id: row.id,
         name: row.name,
@@ -53,7 +53,7 @@ export class UserUpdatesReadModel {
     async getUsersUpdatedAfter(
         date: Date,
         limit: number = 100,
-    ): Promise<UpdatedUsers[]> {
+    ): Promise<UpdatedUser[]> {
         const result = await this.db(USERS_TABLE)
             .where({
                 // also consider deleted users (different than activeUsers query)

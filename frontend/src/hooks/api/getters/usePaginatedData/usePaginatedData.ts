@@ -29,7 +29,10 @@ export function createPaginatedHook<T extends { total?: number }>(
 
         const prefix = dynamicPrefixKey || defaultPrefixKey;
         const KEY = `${prefix}${urlSearchParams}`;
-        useClearSWRCache(KEY, prefix);
+        useClearSWRCache({
+            currentKey: KEY,
+            clearPrefix: prefix,
+        });
 
         const fetcher = async () => {
             return fetch(formatApiPath(KEY), {

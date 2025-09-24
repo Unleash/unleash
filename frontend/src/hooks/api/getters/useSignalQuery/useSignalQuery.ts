@@ -61,7 +61,11 @@ const createSignalQuery = () => {
 
         const { KEY, fetcher } = getSignalQueryFetcher(params);
         const swrKey = `${cachePrefix}${KEY}`;
-        useClearSWRCache(swrKey, PATH, SWR_CACHE_SIZE);
+        useClearSWRCache({
+            currentKey: swrKey,
+            clearPrefix: PATH,
+            cacheSize: SWR_CACHE_SIZE,
+        });
 
         const { data, error, mutate, isLoading } =
             useConditionalSWR<SignalQueryResponse>(

@@ -309,12 +309,18 @@ export interface IExternalFlagResolver {
 export interface IImpactMetricsResolver {
     defineCounter(name: string, help: string);
     defineGauge(name: string, help: string);
+    defineHistogram(name: string, help: string, buckets?: number[]);
     incrementCounter(
         name: string,
         value?: number,
         metricsFlagContext?: MetricFlagContext,
     ): void;
     updateGauge(
+        name: string,
+        value: number,
+        metricsFlagContext?: MetricFlagContext,
+    ): void;
+    observeHistogram(
         name: string,
         value: number,
         metricsFlagContext?: MetricFlagContext,

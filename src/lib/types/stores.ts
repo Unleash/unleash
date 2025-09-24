@@ -62,6 +62,7 @@ import { ReleasePlanMilestoneStrategyStore } from '../features/release-plans/rel
 import type { IFeatureLinkStore } from '../features/feature-links/feature-link-store-type.js';
 import type { IUnknownFlagsStore } from '../features/metrics/unknown-flags/unknown-flags-store.js';
 import type { IFeatureLinksReadModel } from '../features/feature-links/feature-links-read-model-type.js';
+import type { UserUpdatesReadModel } from '../features/users/user-updates-read-model.js';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -90,6 +91,7 @@ export interface IUnleashStores {
     tagTypeStore: ITagTypeStore;
     userFeedbackStore: IUserFeedbackStore;
     userStore: IUserStore;
+    userUpdatesReadModel: UserUpdatesReadModel;
     userSplashStore: IUserSplashStore;
     roleStore: IRoleStore;
     segmentStore: ISegmentStore;

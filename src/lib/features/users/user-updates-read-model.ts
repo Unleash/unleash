@@ -62,7 +62,12 @@ export class UserUpdatesReadModel {
             })
             .where('updated_at', '>', date)
             .orderBy('updated_at', 'asc')
-            .select([...USER_COLUMNS_PUBLIC, 'updated_at', 'deleted_at'])
+            .select([
+                ...USER_COLUMNS_PUBLIC,
+                'created_at',
+                'updated_at',
+                'deleted_at',
+            ])
             .limit(limit);
         return result.map(toResponse);
     }

@@ -84,7 +84,7 @@ export const LifecycleFilters = ({
                         : allFlagsCount || undefined;
                     const dynamicLabel =
                         isActive && Number.isInteger(total)
-                            ? `${label} (${total === count ? total : `${total} of ${count}`})`
+                            ? `${label} (${total === (count ?? 0) ? total : `${total} of ${count}`})`
                             : `${label}${count !== undefined ? ` (${count})` : ''}`;
 
                     const handleClick = () =>

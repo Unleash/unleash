@@ -7,10 +7,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.tsx';
 import { type Dispatch, type SetStateAction, useContext, useMemo } from 'react';
-import {
-    FeatureStrategyMenuCardsSection,
-    StyledStrategyModalSectionHeader,
-} from './FeatureStrategyMenuCardsSection.tsx';
+import { FeatureStrategyMenuCardsSection } from './FeatureStrategyMenuCardsSection.tsx';
 import { FeatureStrategyMenuCardsReleaseTemplates } from './FeatureStrategyMenuCardsReleaseTemplates.tsx';
 import { QuickFilters } from 'component/common/QuickFilters/QuickFilters.tsx';
 import {
@@ -41,13 +38,12 @@ export type StrategyFilterValue = (typeof FILTERS)[number]['value'];
 const CUSTOM_STRATEGY_DISPLAY_LIMIT = 5;
 
 const StyledContainer = styled(Box)(() => ({
-    width: '100%',
     display: 'flex',
     flexDirection: 'column',
 }));
 
 const StyledScrollableContent = styled(Box)(({ theme }) => ({
-    width: theme.breakpoints.values.md,
+    width: '100%',
     height: '100%',
     overflowY: 'auto',
     padding: theme.spacing(4),
@@ -233,44 +229,32 @@ export const FeatureStrategyMenuCards = ({
                 />
             </StyledFiltersContainer>
             <StyledScrollableContent>
-                {(shouldRender('default') || shouldRender('standard')) && (
-                    <Box>
-                        <FeatureStrategyMenuCardsSection>
-                            {shouldRender('default') && (
-                                <StyledStrategyModalSectionHeader>
-                                    <Typography color='inherit' variant='body2'>
-                                        Project default
-                                    </Typography>
-                                    <HelpIcon
-                                        htmlTooltip
-                                        tooltip={projectDefaultTooltip}
-                                        size='16px'
-                                    />
-                                </StyledStrategyModalSectionHeader>
-                            )}
-                            {shouldRender('standard') && (
-                                <StyledStrategyModalSectionHeader>
-                                    <Typography color='inherit' variant='body2'>
-                                        Standard strategies
-                                    </Typography>
-                                </StyledStrategyModalSectionHeader>
-                            )}
-                        </FeatureStrategyMenuCardsSection>
-                        <FeatureStrategyMenuCardsSection>
-                            {shouldRender('default') && (
-                                <FeatureStrategyMenuCardsDefaultStrategy
-                                    projectId={projectId}
-                                    environmentId={environmentId}
-                                    featureId={featureId}
-                                    onConfigure={onConfigure}
-                                    onClose={onClose}
+                {shouldRender('default') && (
+                    <FeatureStrategyMenuCardsSection
+                        title={
+                            <>
+                                Project default
+                                <HelpIcon
+                                    htmlTooltip
+                                    tooltip={projectDefaultTooltip}
+                                    size='16px'
                                 />
-                            )}
-                            {shouldRender('standard') && (
-                                <>{standardStrategies.map(renderStrategy)}</>
-                            )}
-                        </FeatureStrategyMenuCardsSection>
-                    </Box>
+                            </>
+                        }
+                    >
+                        <FeatureStrategyMenuCardsDefaultStrategy
+                            projectId={projectId}
+                            environmentId={environmentId}
+                            featureId={featureId}
+                            onConfigure={onConfigure}
+                            onClose={onClose}
+                        />
+                    </FeatureStrategyMenuCardsSection>
+                )}
+                {shouldRender('standard') && (
+                    <FeatureStrategyMenuCardsSection title='Standard strategies'>
+                        {standardStrategies.map(renderStrategy)}
+                    </FeatureStrategyMenuCardsSection>
                 )}
                 {shouldRender('releaseTemplates') && (
                     <FeatureStrategyMenuCardsReleaseTemplates

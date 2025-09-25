@@ -249,6 +249,7 @@ export const FeatureStrategyMenu = ({
                     sx: {
                         borderRadius: '12px',
                         height: newStrategyModalEnabled ? '100%' : 'auto',
+                        width: '100%',
                     },
                 }}
             >

@@ -73,10 +73,17 @@ const Container = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const FilterRow = styled('div')(({ theme }) => ({
+const FiltersWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
-    flexFlow: 'row wrap',
+    flexDirection: 'column',
+}));
+
+const LifecycleFiltersContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    paddingLeft: theme.spacing(3),
 }));
 
 const ButtonGroup = styled('div')(({ theme }) => ({
@@ -571,31 +578,33 @@ export const ProjectFeatureToggles = ({
                     aria-busy={isPlaceholder}
                     aria-live='polite'
                 >
-                    <FilterRow>
+                    <FiltersWrapper>
+                        <LifecycleFiltersContainer>
+                            <ProjectLifecycleFilters
+                                projectId={projectId}
+                                state={filterState}
+                                onChange={setTableState}
+                                total={loading ? undefined : total}
+                            />
+                            <ButtonGroup>
+                                <PermissionIconButton
+                                    permission={UPDATE_FEATURE}
+                                    projectId={projectId}
+                                    onClick={() => setModalOpen(true)}
+                                    tooltipProps={{ title: 'Import' }}
+                                    data-testid={IMPORT_BUTTON}
+                                    data-loading-project
+                                >
+                                    <ImportSvg />
+                                </PermissionIconButton>
+                            </ButtonGroup>
+                        </LifecycleFiltersContainer>
                         <ProjectOverviewFilters
                             project={projectId}
                             onChange={setTableState}
                             state={filterState}
                         />
-                        <ProjectLifecycleFilters
-                            projectId={projectId}
-                            state={filterState}
-                            onChange={setTableState}
-                            total={loading ? undefined : total}
-                        />
-                        <ButtonGroup>
-                            <PermissionIconButton
-                                permission={UPDATE_FEATURE}
-                                projectId={projectId}
-                                onClick={() => setModalOpen(true)}
-                                tooltipProps={{ title: 'Import' }}
-                                data-testid={IMPORT_BUTTON}
-                                data-loading-project
-                            >
-                                <ImportSvg />
-                            </PermissionIconButton>
-                        </ButtonGroup>
-                    </FilterRow>
+                    </FiltersWrapper>
                     <SearchHighlightProvider value={tableState.query || ''}>
                         <PaginatedTable
                             tableInstance={table}

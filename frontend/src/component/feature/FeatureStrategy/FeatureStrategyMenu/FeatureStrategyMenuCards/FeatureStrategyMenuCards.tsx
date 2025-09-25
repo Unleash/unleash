@@ -1,9 +1,8 @@
-import { styled, Typography, Box, IconButton } from '@mui/material';
+import { styled, Box } from '@mui/material';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import CloseIcon from '@mui/icons-material/Close';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.tsx';
 import { type Dispatch, type SetStateAction, useContext, useMemo } from 'react';
@@ -51,13 +50,6 @@ const StyledScrollableContent = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(5),
-}));
-
-const StyledHeader = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: theme.spacing(4, 4, 2, 4),
 }));
 
 const StyledFiltersContainer = styled(Box)(({ theme }) => ({
@@ -210,17 +202,6 @@ export const FeatureStrategyMenuCards = ({
 
     return (
         <StyledContainer>
-            <StyledHeader>
-                <Typography variant='h2'>Add strategy</Typography>
-                <IconButton
-                    size='small'
-                    onClick={onClose}
-                    edge='end'
-                    aria-label='close'
-                >
-                    <CloseIcon fontSize='small' />
-                </IconButton>
-            </StyledHeader>
             <StyledFiltersContainer>
                 <QuickFilters
                     filters={availableFilters}

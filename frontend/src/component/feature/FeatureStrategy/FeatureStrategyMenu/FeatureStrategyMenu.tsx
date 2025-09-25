@@ -1,14 +1,15 @@
 import type React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PermissionButton, {
     type IPermissionButtonProps,
 } from 'component/common/PermissionButton/PermissionButton';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import { Dialog, styled } from '@mui/material';
+import { Box, Dialog, IconButton, styled, Typography } from '@mui/material';
 import { LegacyFeatureStrategyMenuCards } from './LegacyFeatureStrategyMenuCards/LegacyFeatureStrategyMenuCards.tsx';
 import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrategyCreate.tsx';
 import MoreVert from '@mui/icons-material/MoreVert';
+import CloseIcon from '@mui/icons-material/Close';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
@@ -20,7 +21,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { LegacyReleasePlanReviewDialog } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/LegacyReleasePlanReviewDialog.tsx';
-import { ReleasePlanReviewDialog } from '../../FeatureView/FeatureOverview/ReleasePlan/ReleasePlanReviewDialog.tsx';
+import { ReleasePlanPreview } from '../../FeatureView/FeatureOverview/ReleasePlan/ReleasePlanPreview.tsx';
 import {
     FeatureStrategyMenuCards,
     type StrategyFilterValue,
@@ -34,7 +35,6 @@ interface IFeatureStrategyMenuProps {
     environmentId: string;
     variant?: IPermissionButtonProps['variant'];
     matchWidth?: boolean;
-    size?: IPermissionButtonProps['size'];
     disableReason?: string;
 }
 
@@ -52,13 +52,19 @@ const StyledAdditionalMenuButton = styled(PermissionButton)(({ theme }) => ({
     paddingBlock: 0,
 }));
 
+const StyledHeader = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: theme.spacing(4, 4, 2, 4),
+}));
+
 export const FeatureStrategyMenu = ({
     label,
     projectId,
     featureId,
     environmentId,
     variant,
-    size,
     matchWidth,
     disableReason,
 }: IFeatureStrategyMenuProps) => {
@@ -71,6 +77,7 @@ export const FeatureStrategyMenu = ({
     const [selectedTemplate, setSelectedTemplate] =
         useState<IReleasePlanTemplate>();
     const [addReleasePlanOpen, setAddReleasePlanOpen] = useState(false);
+    const [releasePlanPreview, setReleasePlanPreview] = useState(false);
     const dialogId = isStrategyMenuDialogOpen
         ? 'FeatureStrategyMenuDialog'
         : undefined;
@@ -89,6 +96,11 @@ export const FeatureStrategyMenu = ({
     const onClose = () => {
         setIsStrategyMenuDialogOpen(false);
     };
+
+    useEffect(() => {
+        if (!isStrategyMenuDialogOpen) return;
+        setReleasePlanPreview(false);
+    }, [isStrategyMenuDialogOpen]);
 
     const openDefaultStrategyCreationModal = (event: React.SyntheticEvent) => {
         trackEvent('strategy-add', {
@@ -254,23 +266,49 @@ export const FeatureStrategyMenu = ({
                 }}
             >
                 {newStrategyModalEnabled ? (
-                    <FeatureStrategyMenuCards
-                        projectId={projectId}
-                        featureId={featureId}
-                        environmentId={environmentId}
-                        filter={filter}
-                        setFilter={setFilter}
-                        onAddReleasePlan={(template) => {
-                            setSelectedTemplate(template);
-                            addReleasePlan(template);
-                        }}
-                        onReviewReleasePlan={(template) => {
-                            setSelectedTemplate(template);
-                            setAddReleasePlanOpen(true);
-                            onClose();
-                        }}
-                        onClose={onClose}
-                    />
+                    <>
+                        <StyledHeader>
+                            <Typography variant='h2'>Add strategy</Typography>
+                            <IconButton
+                                size='small'
+                                onClick={onClose}
+                                edge='end'
+                                aria-label='close'
+                            >
+                                <CloseIcon fontSize='small' />
+                            </IconButton>
+                        </StyledHeader>
+                        {releasePlanPreview && selectedTemplate ? (
+                            <ReleasePlanPreview
+                                template={selectedTemplate}
+                                projectId={projectId}
+                                featureName={featureId}
+                                environment={environmentId}
+                                crProtected={crProtected}
+                                onBack={() => setReleasePlanPreview(false)}
+                                onConfirm={() => {
+                                    addReleasePlan(selectedTemplate);
+                                }}
+                            />
+                        ) : (
+                            <FeatureStrategyMenuCards
+                                projectId={projectId}
+                                featureId={featureId}
+                                environmentId={environmentId}
+                                filter={filter}
+                                setFilter={setFilter}
+                                onAddReleasePlan={(template) => {
+                                    setSelectedTemplate(template);
+                                    addReleasePlan(template);
+                                }}
+                                onReviewReleasePlan={(template) => {
+                                    setSelectedTemplate(template);
+                                    setReleasePlanPreview(true);
+                                }}
+                                onClose={onClose}
+                            />
+                        )}
+                    </>
                 ) : (
                     <LegacyFeatureStrategyMenuCards
                         projectId={projectId}
@@ -291,45 +329,23 @@ export const FeatureStrategyMenu = ({
                 )}
             </Dialog>
             {selectedTemplate && (
-                <>
-                    {newStrategyModalEnabled ? (
-                        <ReleasePlanReviewDialog
-                            open={addReleasePlanOpen}
-                            setOpen={(open) => {
-                                setAddReleasePlanOpen(open);
-                                if (!open) {
-                                    setIsStrategyMenuDialogOpen(true);
-                                }
-                            }}
-                            onConfirm={() => {
-                                addReleasePlan(selectedTemplate);
-                            }}
-                            template={selectedTemplate}
-                            projectId={projectId}
-                            featureName={featureId}
-                            environment={environmentId}
-                            crProtected={crProtected}
-                        />
-                    ) : (
-                        <LegacyReleasePlanReviewDialog
-                            open={addReleasePlanOpen}
-                            setOpen={(open) => {
-                                setAddReleasePlanOpen(open);
-                                if (!open) {
-                                    setIsStrategyMenuDialogOpen(true);
-                                }
-                            }}
-                            onConfirm={() => {
-                                addReleasePlan(selectedTemplate);
-                            }}
-                            template={selectedTemplate}
-                            projectId={projectId}
-                            featureName={featureId}
-                            environment={environmentId}
-                            crProtected={crProtected}
-                        />
-                    )}
-                </>
+                <LegacyReleasePlanReviewDialog
+                    open={addReleasePlanOpen}
+                    setOpen={(open) => {
+                        setAddReleasePlanOpen(open);
+                        if (!open) {
+                            setIsStrategyMenuDialogOpen(true);
+                        }
+                    }}
+                    onConfirm={() => {
+                        addReleasePlan(selectedTemplate);
+                    }}
+                    template={selectedTemplate}
+                    projectId={projectId}
+                    featureName={featureId}
+                    environment={environmentId}
+                    crProtected={crProtected}
+                />
             )}
         </StyledStrategyMenu>
     );

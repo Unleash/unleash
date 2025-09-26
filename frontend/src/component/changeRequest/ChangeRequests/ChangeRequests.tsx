@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useId, useMemo } from 'react';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PaginatedTable } from 'component/common/Table';
@@ -11,7 +11,6 @@ import { GlobalChangeRequestTitleCell } from './GlobalChangeRequestTitleCell.js'
 import { FeaturesCell } from '../ProjectChangeRequests/ChangeRequestsTabs/FeaturesCell.js';
 import { useUiFlag } from 'hooks/useUiFlag.js';
 import { withTableState } from 'utils/withTableState';
-import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import {
     useChangeRequestSearch,
     DEFAULT_PAGE_LIMIT,
@@ -28,20 +27,24 @@ import {
 import useLoading from 'hooks/useLoading';
 import { styles as themeStyles } from 'component/common';
 import { FilterItemParam } from 'utils/serializeQueryParams';
+import {
+    ChangeRequestFilters,
+    type ChangeRequestQuickFilter,
+} from './ChangeRequestFilters.js';
+import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser.js';
 
 const columnHelper = createColumnHelper<ChangeRequestSearchItemSchema>();
 
 const ChangeRequestsInner = () => {
     const { user } = useAuthUser();
-
-    const shouldApplyDefaults = useMemo(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        return (
-            !urlParams.has('createdBy') &&
-            !urlParams.has('requestedApproverId') &&
-            user
-        );
-    }, [user]);
+    const urlParams = new URLSearchParams(window.location.search);
+    const shouldApplyDefaults =
+        user &&
+        !urlParams.has('createdBy') &&
+        !urlParams.has('requestedApproverId');
+    const initialFilter = urlParams.has('requestedApproverId')
+        ? 'Approval Requested'
+        : 'Created';
 
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
@@ -56,7 +59,7 @@ const ChangeRequestsInner = () => {
         ? {
               createdBy: {
                   operator: 'IS' as const,
-                  values: user ? [user.id.toString()] : [],
+                  values: [user.id.toString()],
               },
           }
         : {};
@@ -67,8 +70,8 @@ const ChangeRequestsInner = () => {
 
     const effectiveTableState = useMemo(
         () => ({
-            ...initialState,
             ...tableState,
+            ...initialState,
         }),
         [initialState, tableState],
     );
@@ -158,6 +161,30 @@ const ChangeRequestsInner = () => {
             data,
         }),
     );
+    const tableId = useId();
+    const handleQuickFilterChange = (filter: ChangeRequestQuickFilter) => {
+        if (!user) {
+            // todo (globalChangeRequestList): handle this somehow? Or just ignore.
+            return;
+        }
+        const [targetProperty, otherProperty] =
+            filter === 'Created'
+                ? ['createdBy', 'requestedApproverId']
+                : ['requestedApproverId', 'createdBy'];
+
+        // todo (globalChangeRequestList): extract and test the logic for wiping out createdby/requestedapproverid
+        setTableState((state) => ({
+            [targetProperty]: {
+                operator: 'IS',
+                values: [user.id.toString()],
+            },
+            [otherProperty]:
+                state[otherProperty]?.values.length === 1 &&
+                state[otherProperty].values[0] === user.id.toString()
+                    ? null
+                    : state[otherProperty],
+        }));
+    };
 
     const bodyLoadingRef = useLoading(loading);
 
@@ -166,7 +193,17 @@ const ChangeRequestsInner = () => {
             bodyClass='no-padding'
             header={<PageHeader title='Change requests' />}
         >
-            <div className={themeStyles.fullwidth} ref={bodyLoadingRef}>
+            <ChangeRequestFilters
+                ariaControlTarget={tableId}
+                initialSelection={initialFilter}
+                onSelectionChange={handleQuickFilterChange}
+            />
+
+            <div
+                id={tableId}
+                className={themeStyles.fullwidth}
+                ref={bodyLoadingRef}
+            >
                 <PaginatedTable tableInstance={table} totalItems={total} />
             </div>
         </PageContent>

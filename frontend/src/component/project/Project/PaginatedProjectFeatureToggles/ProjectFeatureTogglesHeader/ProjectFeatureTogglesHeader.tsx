@@ -1,4 +1,4 @@
-import { type ReactNode, type FC, useState } from 'react';
+import { type FC, useState } from 'react';
 import {
     Box,
     Button,
@@ -10,7 +10,6 @@ import {
 import useLoading from 'hooks/useLoading';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Search } from 'component/common/Search/Search';
 import { useUiFlag } from 'hooks/useUiFlag';
 import Add from '@mui/icons-material/Add';
 import { styled } from '@mui/material';
@@ -20,24 +19,21 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import type { FeatureSchema } from 'openapi';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { CreateFeatureDialog } from './CreateFeatureDialog.tsx';
-import IosShare from '@mui/icons-material/IosShare';
+import ExportIcon from '@mui/icons-material/IosShare';
 import type { OverridableStringUnion } from '@mui/types';
 import type { ButtonPropsVariantOverrides } from '@mui/material/Button/Button';
 import { NAVIGATE_TO_CREATE_FEATURE } from 'utils/testIds';
+import { ImportButton } from './ImportButton/ImportButton.tsx';
 
 interface IProjectFeatureTogglesHeaderProps {
     isLoading?: boolean;
     totalItems?: number;
-    searchQuery?: string;
-    onChangeSearchQuery?: (query: string) => void;
     dataToExport?: Pick<FeatureSchema, 'name'>[];
     environmentsToExport?: string[];
-    actions?: ReactNode;
 }
 
 interface IFlagCreationButtonProps {
@@ -96,34 +92,16 @@ export const FlagCreationButton = ({
 
 export const ProjectFeatureTogglesHeader: FC<
     IProjectFeatureTogglesHeaderProps
-> = ({
-    isLoading,
-    totalItems,
-    searchQuery,
-    onChangeSearchQuery,
-    environmentsToExport,
-    actions,
-}) => {
+> = ({ isLoading, totalItems, environmentsToExport }) => {
     const projectId = useRequiredPathParam('projectId');
     const headerLoadingRef = useLoading(isLoading || false);
-    const [showTitle, setShowTitle] = useState(true);
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [showExportDialog, setShowExportDialog] = useState(false);
-    const { trackEvent } = usePlausibleTracker();
     const projectOverviewRefactorFeedback = useUiFlag(
         'projectOverviewRefactorFeedback',
     );
     const { openFeedback } = useFeedback('newProjectOverview', 'automatic');
-    const handleSearch = (query: string) => {
-        onChangeSearchQuery?.(query);
-        trackEvent('search-bar', {
-            props: {
-                screen: 'project',
-                length: query.length,
-            },
-        });
-    };
 
     const createFeedbackContext = () => {
         openFeedback({
@@ -145,44 +123,20 @@ export const ProjectFeatureTogglesHeader: FC<
             })}
         >
             <PageHeader
-                titleElement={
-                    showTitle
-                        ? `Feature flags ${
-                              totalItems !== undefined ? `(${totalItems})` : ''
-                          }`
-                        : null
-                }
+                titleElement={`Feature flags ${
+                    totalItems !== undefined ? `(${totalItems})` : ''
+                }`}
                 actions={
                     <>
-                        <ConditionallyRender
-                            condition={!isSmallScreen}
-                            show={
-                                <Search
-                                    data-loading
-                                    placeholder='Search and Filter'
-                                    expandable
-                                    initialValue={searchQuery || ''}
-                                    onChange={handleSearch}
-                                    onFocus={() => setShowTitle(false)}
-                                    onBlur={() => setShowTitle(true)}
-                                    hasFilters
-                                    id='projectFeatureFlags'
-                                />
-                            }
-                        />
-                        {actions}
-                        <PageHeader.Divider sx={{ marginLeft: 0 }} />
                         <Tooltip title='Export all project flags' arrow>
                             <IconButton
                                 data-loading
                                 onClick={() => setShowExportDialog(true)}
-                                sx={(theme) => ({
-                                    marginRight: theme.spacing(2),
-                                })}
                             >
-                                <IosShare />
+                                <ExportIcon />
                             </IconButton>
                         </Tooltip>
+                        <ImportButton />
 
                         <ConditionallyRender
                             condition={!isLoading}
@@ -196,7 +150,9 @@ export const ProjectFeatureTogglesHeader: FC<
                                 />
                             }
                         />
+
                         <ConditionallyRender
+                            // FIXME: remove - flag has been archived
                             condition={
                                 projectOverviewRefactorFeedback &&
                                 !isSmallScreen
@@ -215,19 +171,7 @@ export const ProjectFeatureTogglesHeader: FC<
                         <FlagCreationButton isLoading={isLoading} />
                     </>
                 }
-            >
-                <ConditionallyRender
-                    condition={isSmallScreen}
-                    show={
-                        <Search
-                            initialValue={searchQuery || ''}
-                            onChange={handleSearch}
-                            hasFilters
-                            id='projectFeatureFlags'
-                        />
-                    }
-                />
-            </PageHeader>
+            />
         </Box>
     );
 };

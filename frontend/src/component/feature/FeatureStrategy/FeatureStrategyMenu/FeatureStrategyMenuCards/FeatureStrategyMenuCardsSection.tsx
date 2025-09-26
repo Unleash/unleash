@@ -13,6 +13,12 @@ export const StyledStrategyModalSectionHeader = styled(Box)(({ theme }) => ({
 const StyledStrategyModalSectionGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
+    [theme.breakpoints.down('md')]: {
+        gridTemplateColumns: 'repeat(2, 1fr)',
+    },
+    [theme.breakpoints.down('sm')]: {
+        gridTemplateColumns: 'repeat(1, 1fr)',
+    },
     gap: theme.spacing(2),
     width: '100%',
 }));
@@ -28,21 +34,22 @@ const StyledViewMoreButton = styled(Button)(({ theme }) => ({
 }));
 
 interface IFeatureStrategyMenuCardsSectionProps {
-    title?: string;
+    title?: ReactNode;
     limit?: number;
     viewMore?: () => void;
     viewMoreLabel?: string;
-    children: ReactNode[];
+    children: ReactNode;
 }
 
 export const FeatureStrategyMenuCardsSection = ({
     title,
     limit,
     viewMore,
-    viewMoreLabel = 'View more',
+    viewMoreLabel = 'View more strategies',
     children,
 }: IFeatureStrategyMenuCardsSectionProps) => {
-    const limitedChildren = limit ? children.slice(0, limit) : children;
+    const allChildren = Array.isArray(children) ? children : [children];
+    const limitedChildren = limit ? allChildren.slice(0, limit) : allChildren;
 
     return (
         <Box>
@@ -53,7 +60,7 @@ export const FeatureStrategyMenuCardsSection = ({
             )}
             <StyledStrategyModalSectionGrid>
                 {limitedChildren}
-                {viewMore && limitedChildren.length < children.length && (
+                {viewMore && limitedChildren.length < allChildren.length && (
                     <StyledViewMoreButton
                         variant='text'
                         size='small'

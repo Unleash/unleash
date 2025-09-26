@@ -6,22 +6,12 @@ import {
     Typography,
     Alert,
     Box,
-    IconButton,
-    Dialog,
     DialogActions,
     Button,
 } from '@mui/material';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import CloseIcon from '@mui/icons-material/Close';
-
-const StyledDialog = styled(Dialog)(({ theme }) => ({
-    '& .MuiDialog-paper': {
-        borderRadius: theme.shape.borderRadiusLarge,
-        height: '100%',
-    },
-}));
 
 const StyledScrollableContent = styled(Box)(({ theme }) => ({
     width: theme.breakpoints.values.md,
@@ -29,13 +19,6 @@ const StyledScrollableContent = styled(Box)(({ theme }) => ({
     overflowY: 'auto',
     display: 'flex',
     flexDirection: 'column',
-}));
-
-const StyledHeader = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: theme.spacing(4, 4, 2, 4),
 }));
 
 const StyledSubHeader = styled(Box)(({ theme }) => ({
@@ -50,29 +33,27 @@ const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
     padding: theme.spacing(2, 4, 4),
 }));
 
-interface IReleasePlanAddDialogProps {
-    open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    onConfirm: () => void;
+interface IReleasePlanPreviewProps {
     template: IReleasePlanTemplate;
     projectId: string;
     featureName: string;
     environment: string;
     crProtected?: boolean;
+    onConfirm: () => void;
+    onBack: () => void;
 }
 
-export const ReleasePlanReviewDialog = ({
-    open,
-    setOpen,
-    onConfirm,
+export const ReleasePlanPreview = ({
     template,
     projectId,
     featureName,
     environment,
     crProtected,
-}: IReleasePlanAddDialogProps) => {
+    onConfirm,
+    onBack,
+}: IReleasePlanPreviewProps) => {
     const { feature } = useFeature(projectId, featureName);
-    const { releasePlans } = useReleasePlans(
+    const { releasePlans, loading } = useReleasePlans(
         projectId,
         featureName,
         environment,
@@ -91,23 +72,12 @@ export const ReleasePlanReviewDialog = ({
         environment,
     );
 
-    const handleClose = () => setOpen(false);
+    if (loading) return null;
 
     return (
-        <StyledDialog open={open} onClose={handleClose} fullWidth maxWidth='md'>
-            <StyledHeader>
-                <Typography variant='h2'>Add strategy</Typography>
-                <IconButton
-                    size='small'
-                    onClick={handleClose}
-                    edge='end'
-                    aria-label='close'
-                >
-                    <CloseIcon fontSize='small' />
-                </IconButton>
-            </StyledHeader>
+        <>
             <StyledSubHeader>
-                <Button variant='text' onClick={handleClose}>
+                <Button variant='text' onClick={onBack}>
                     <StyledBackIcon />
                     Go back
                 </Button>
@@ -146,6 +116,6 @@ export const ReleasePlanReviewDialog = ({
                     {crProtected ? 'Add suggestion to draft' : 'Apply template'}
                 </Button>
             </StyledDialogActions>
-        </StyledDialog>
+        </>
     );
 };

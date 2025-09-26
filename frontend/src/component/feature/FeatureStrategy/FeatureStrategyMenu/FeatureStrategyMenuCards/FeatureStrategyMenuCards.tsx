@@ -1,16 +1,12 @@
-import { styled, Typography, Box, IconButton } from '@mui/material';
+import { styled, Box } from '@mui/material';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import CloseIcon from '@mui/icons-material/Close';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.tsx';
 import { type Dispatch, type SetStateAction, useContext, useMemo } from 'react';
-import {
-    FeatureStrategyMenuCardsSection,
-    StyledStrategyModalSectionHeader,
-} from './FeatureStrategyMenuCardsSection.tsx';
+import { FeatureStrategyMenuCardsSection } from './FeatureStrategyMenuCardsSection.tsx';
 import { FeatureStrategyMenuCardsReleaseTemplates } from './FeatureStrategyMenuCardsReleaseTemplates.tsx';
 import { QuickFilters } from 'component/common/QuickFilters/QuickFilters.tsx';
 import {
@@ -41,13 +37,12 @@ export type StrategyFilterValue = (typeof FILTERS)[number]['value'];
 const CUSTOM_STRATEGY_DISPLAY_LIMIT = 5;
 
 const StyledContainer = styled(Box)(() => ({
-    width: '100%',
     display: 'flex',
     flexDirection: 'column',
 }));
 
 const StyledScrollableContent = styled(Box)(({ theme }) => ({
-    width: theme.breakpoints.values.md,
+    width: '100%',
     height: '100%',
     overflowY: 'auto',
     padding: theme.spacing(4),
@@ -55,13 +50,6 @@ const StyledScrollableContent = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(5),
-}));
-
-const StyledHeader = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: theme.spacing(4, 4, 2, 4),
 }));
 
 const StyledFiltersContainer = styled(Box)(({ theme }) => ({
@@ -214,17 +202,6 @@ export const FeatureStrategyMenuCards = ({
 
     return (
         <StyledContainer>
-            <StyledHeader>
-                <Typography variant='h2'>Add strategy</Typography>
-                <IconButton
-                    size='small'
-                    onClick={onClose}
-                    edge='end'
-                    aria-label='close'
-                >
-                    <CloseIcon fontSize='small' />
-                </IconButton>
-            </StyledHeader>
             <StyledFiltersContainer>
                 <QuickFilters
                     filters={availableFilters}
@@ -233,44 +210,32 @@ export const FeatureStrategyMenuCards = ({
                 />
             </StyledFiltersContainer>
             <StyledScrollableContent>
-                {(shouldRender('default') || shouldRender('standard')) && (
-                    <Box>
-                        <FeatureStrategyMenuCardsSection>
-                            {shouldRender('default') && (
-                                <StyledStrategyModalSectionHeader>
-                                    <Typography color='inherit' variant='body2'>
-                                        Project default
-                                    </Typography>
-                                    <HelpIcon
-                                        htmlTooltip
-                                        tooltip={projectDefaultTooltip}
-                                        size='16px'
-                                    />
-                                </StyledStrategyModalSectionHeader>
-                            )}
-                            {shouldRender('standard') && (
-                                <StyledStrategyModalSectionHeader>
-                                    <Typography color='inherit' variant='body2'>
-                                        Standard strategies
-                                    </Typography>
-                                </StyledStrategyModalSectionHeader>
-                            )}
-                        </FeatureStrategyMenuCardsSection>
-                        <FeatureStrategyMenuCardsSection>
-                            {shouldRender('default') && (
-                                <FeatureStrategyMenuCardsDefaultStrategy
-                                    projectId={projectId}
-                                    environmentId={environmentId}
-                                    featureId={featureId}
-                                    onConfigure={onConfigure}
-                                    onClose={onClose}
+                {shouldRender('default') && (
+                    <FeatureStrategyMenuCardsSection
+                        title={
+                            <>
+                                Project default
+                                <HelpIcon
+                                    htmlTooltip
+                                    tooltip={projectDefaultTooltip}
+                                    size='16px'
                                 />
-                            )}
-                            {shouldRender('standard') && (
-                                <>{standardStrategies.map(renderStrategy)}</>
-                            )}
-                        </FeatureStrategyMenuCardsSection>
-                    </Box>
+                            </>
+                        }
+                    >
+                        <FeatureStrategyMenuCardsDefaultStrategy
+                            projectId={projectId}
+                            environmentId={environmentId}
+                            featureId={featureId}
+                            onConfigure={onConfigure}
+                            onClose={onClose}
+                        />
+                    </FeatureStrategyMenuCardsSection>
+                )}
+                {shouldRender('standard') && (
+                    <FeatureStrategyMenuCardsSection title='Standard strategies'>
+                        {standardStrategies.map(renderStrategy)}
+                    </FeatureStrategyMenuCardsSection>
                 )}
                 {shouldRender('releaseTemplates') && (
                     <FeatureStrategyMenuCardsReleaseTemplates

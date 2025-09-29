@@ -9,8 +9,6 @@ export const Table: FC<
     <MUITable
         sx={{
             position: 'relative',
-            tableLayout: 'fixed', // Required for column resizing to work
-            width: '100%',
             '& tbody tr': {
                 height: (theme) =>
                     ({

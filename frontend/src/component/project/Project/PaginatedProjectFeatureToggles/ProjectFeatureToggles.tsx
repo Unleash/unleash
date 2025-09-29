@@ -4,8 +4,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
-import { PaginatedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import { ResizablePaginatedTable } from './ResizablePaginatedTable/ResizablePaginatedTable.tsx';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { ActionsCell } from '../ProjectFeatureToggles/ActionsCell/ActionsCell.tsx';
@@ -615,7 +615,7 @@ export const ProjectFeatureToggles = ({
                         </ButtonGroup>
                     </FilterRow>
                     <SearchHighlightProvider value={tableState.query || ''}>
-                        <PaginatedTable
+                        <ResizablePaginatedTable
                             tableInstance={table}
                             totalItems={total}
                         />

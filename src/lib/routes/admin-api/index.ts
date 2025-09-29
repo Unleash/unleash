@@ -8,7 +8,7 @@ import EventController from './event.js';
 import PlaygroundController from '../../features/playground/playground.js';
 import MetricsController from './metrics.js';
 import UserController from './user/user.js';
-import ConfigController from './config.js';
+import UiConfigController from '../../ui-config/ui-config-controller.js';
 import { ContextController } from '../../features/context/context.js';
 import ClientMetricsController from '../../features/metrics/client-metrics/client-metrics.js';
 import TagController from './tag.js';
@@ -90,7 +90,7 @@ export class AdminApi extends Controller {
 
         this.app.use(
             '/ui-config',
-            new ConfigController(config, services).router,
+            new UiConfigController(config, services).router,
         );
         this.app.use(
             '/context',

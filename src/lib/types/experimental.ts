@@ -59,7 +59,8 @@ export type IFlagKey =
     | 'fetchMode'
     | 'optimizeLifecycle'
     | 'newStrategyModal'
-    | 'globalChangeRequestList';
+    | 'globalChangeRequestList'
+    | 'newUiConfigService';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -271,6 +272,10 @@ const flags: IFlags = {
     ),
     globalChangeRequestList: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_GLOBAL_CHANGE_REQUEST_LIST,
+        false,
+    ),
+    newUiConfigService: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_UI_CONFIG_SERVICE,
         false,
     ),
 };

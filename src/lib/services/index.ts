@@ -170,6 +170,7 @@ import type { IPrivateProjectChecker } from '../features/private-project/private
 import { UnknownFlagsService } from '../features/metrics/unknown-flags/unknown-flags-service.js';
 import type FeatureLinkService from '../features/feature-links/feature-link-service.js';
 import { createUserService } from '../features/users/createUserService.js';
+import { UiConfigService } from '../ui-config/ui-config-service.js';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -441,6 +442,15 @@ export const createServices = (
         ? withTransactional(createUserSubscriptionsService(config), db)
         : withFakeTransactional(createFakeUserSubscriptionsService(config));
 
+    const uiConfigService = new UiConfigService(config, {
+        versionService,
+        settingService,
+        emailService,
+        frontendApiService,
+        maintenanceService,
+        sessionService,
+    });
+
     return {
         transactionalAccessService,
         accessService,
@@ -514,6 +524,7 @@ export const createServices = (
         transactionalFeatureLinkService,
         featureLinkService,
         unknownFlagsService,
+        uiConfigService,
     };
 };
 
@@ -645,4 +656,5 @@ export interface IUnleashServices {
     transactionalFeatureLinkService: WithTransactional<FeatureLinkService>;
     featureLinkService: FeatureLinkService;
     unknownFlagsService: UnknownFlagsService;
+    uiConfigService: UiConfigService;
 }

@@ -59,7 +59,8 @@ export type IFlagKey =
     | 'fetchMode'
     | 'optimizeLifecycle'
     | 'newStrategyModal'
-    | 'globalChangeRequestList';
+    | 'globalChangeRequestList'
+    | 'envAddStrategySuggestion';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -249,6 +250,10 @@ const flags: IFlags = {
     ),
     lifecycleGraphs: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_GRAPHS,
+        false,
+    ),
+    envAddStrategySuggestion: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ADD_STRATEGY_SUGGESTION,
         false,
     ),
     streaming: {

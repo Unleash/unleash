@@ -19,6 +19,8 @@ import type { IReleasePlan } from 'interfaces/releasePlans';
 import { EnvironmentAccordionBody } from './EnvironmentAccordionBody/EnvironmentAccordionBody.tsx';
 import { Box } from '@mui/material';
 import { ReleaseTemplatesFeedback } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/ReleaseTemplatesFeedback/ReleaseTemplatesFeedback';
+import { EmptyEnvironmentSection } from './EmptyEnvironmentSection/EmptyEnvironmentSection.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -73,11 +75,38 @@ export const FeatureOverviewEnvironment = ({
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { isOss } = useUiConfig();
+    const envAddStrategySuggestionEnabled = useUiFlag(
+        'envAddStrategySuggestion',
+    );
     const hasActivations = Boolean(
         environment?.enabled ||
             (environment?.strategies && environment?.strategies.length > 0) ||
             (environment?.releasePlans && environment?.releasePlans.length > 0),
     );
+
+    if (!hasActivations && envAddStrategySuggestionEnabled) {
+        return (
+            <StyledFeatureOverviewEnvironment>
+                <EmptyEnvironmentSection
+                    environmentId={environment.name}
+                    projectId={projectId}
+                    featureId={featureId}
+                >
+                    <FeatureOverviewEnvironmentToggle
+                        environment={environment}
+                    />
+                    <FeatureStrategyMenu
+                        label='Add strategy'
+                        projectId={projectId}
+                        featureId={featureId}
+                        environmentId={environment.name}
+                        variant='outlined'
+                        size='small'
+                    />
+                </EmptyEnvironmentSection>
+            </StyledFeatureOverviewEnvironment>
+        );
+    }
 
     return (
         <StyledFeatureOverviewEnvironment>

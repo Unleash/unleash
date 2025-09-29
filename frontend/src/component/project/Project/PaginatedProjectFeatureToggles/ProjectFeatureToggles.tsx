@@ -72,13 +72,20 @@ const Container = styled('div')(({ theme }) => ({
 const StyledFiltersWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
+    padding: theme.spacing(2, 2, 2, 3),
+    gap: theme.spacing(1),
 }));
 
 const StyledFiltersTopRow = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: theme.spacing(0.5, 2, 0, 0),
+    [theme.breakpoints.down('md')]: {
+        flexDirection: 'column-reverse',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        gap: theme.spacing(1),
+    },
 }));
 
 const StyledFiltersAside = styled('div')(({ theme }) => ({
@@ -92,13 +99,6 @@ const LifecycleFiltersContainer = styled('div')(({ theme }) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: theme.spacing(1),
-    paddingLeft: theme.spacing(3),
-}));
-
-const ButtonGroup = styled('div')(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(1),
-    paddingInline: theme.spacing(1.5),
 }));
 
 export const ProjectFeatureToggles = ({
@@ -108,7 +108,6 @@ export const ProjectFeatureToggles = ({
     const projectId = useRequiredPathParam('projectId');
     const { project } = useProjectOverview(projectId);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
-    const [modalOpen, setModalOpen] = useState(false);
 
     const {
         features,

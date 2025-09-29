@@ -64,10 +64,10 @@ const StyledContainer = styled('div', {
     position: 'relative',
     backgroundColor: theme.palette.background.paper,
     maxWidth: active ? '100%' : '400px',
-    [theme.breakpoints.down('md')]: {
-        marginTop: theme.spacing(1),
-        maxWidth: '100%',
-    },
+    // [theme.breakpoints.down('md')]: {
+    //     marginTop: theme.spacing(1),
+    //     maxWidth: '100%',
+    // },
 }));
 
 const StyledSearch = styled('div')(({ theme }) => ({

@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import type { FilterItemParamHolder } from '../../../filter/Filters/Filters.tsx';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import { LifecycleFilters } from 'component/common/LifecycleFilters/LifecycleFilters.tsx';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { useMediaQuery, useTheme } from '@mui/material';
 
 type ProjectLifecycleFiltersProps = {
     projectId: string;
@@ -45,20 +45,13 @@ export const ProjectLifecycleFilters: FC<ProjectLifecycleFiltersProps> = ({
     }
 
     return (
-        <Box
-            sx={{
-                marginRight: 'auto',
-                margin: isSmallScreen ? theme.spacing(0, 2) : '0 auto 0 0',
-            }}
+        <LifecycleFilters
+            state={state}
+            onChange={onChange}
+            total={total}
+            countData={lifecycleSummary}
         >
-            <LifecycleFilters
-                state={state}
-                onChange={onChange}
-                total={total}
-                countData={lifecycleSummary}
-            >
-                {children}
-            </LifecycleFilters>
-        </Box>
+            {children}
+        </LifecycleFilters>
     );
 };

@@ -304,10 +304,12 @@ export const FeatureToggleListTable: FC = () => {
                     />
                 ) : null}
             </FeaturesOverviewLifecycleFilters>
-            <FeaturesOverviewToggleFilters
-                onChange={setTableState}
-                state={filterState}
-            />
+            <Box sx={(theme) => ({ padding: theme.spacing(0.5, 3, 1) })}>
+                <FeaturesOverviewToggleFilters
+                    onChange={setTableState}
+                    state={filterState}
+                />
+            </Box>
             {isSmallScreen ? (
                 <Box sx={(theme) => ({ padding: theme.spacing(0, 3, 3) })}>
                     <Search

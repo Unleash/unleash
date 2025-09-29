@@ -101,7 +101,6 @@ export const FeatureOverviewEnvironment = ({
                         featureId={featureId}
                         environmentId={environment.name}
                         variant='outlined'
-                        size='small'
                     />
                 </EmptyEnvironmentSection>
             </StyledFeatureOverviewEnvironment>

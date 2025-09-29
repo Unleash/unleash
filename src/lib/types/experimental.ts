@@ -59,7 +59,8 @@ export type IFlagKey =
     | 'fetchMode'
     | 'optimizeLifecycle'
     | 'newStrategyModal'
-    | 'globalChangeRequestList';
+    | 'globalChangeRequestList'
+    | 'resizableColumns';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -271,6 +272,10 @@ const flags: IFlags = {
     ),
     globalChangeRequestList: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_GLOBAL_CHANGE_REQUEST_LIST,
+        false,
+    ),
+    resizableColumns: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_RESIZABLE_COLUMNS,
         false,
     ),
 };

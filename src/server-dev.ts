@@ -55,6 +55,7 @@ process.nextTick(async () => {
                         lifecycleGraphs: true,
                         newStrategyModal: true,
                         globalChangeRequestList: true,
+                        resizableColumns: true,
                     },
                 },
                 authentication: {

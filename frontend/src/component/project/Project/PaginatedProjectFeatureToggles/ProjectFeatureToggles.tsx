@@ -33,6 +33,7 @@ import {
 import { ProjectOverviewFilters } from './ProjectOverviewFilters.tsx';
 import { ProjectLifecycleFilters } from './ProjectLifecycleFilters.tsx';
 import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility.ts';
+import { useColumnSizing } from './hooks/useColumnSizing.ts';
 import { TableEmptyState } from './TableEmptyState/TableEmptyState.tsx';
 import { useRowActions } from './hooks/useRowActions.tsx';
 import { useSelectedData } from './hooks/useSelectedData.ts';
@@ -56,6 +57,7 @@ import { UPDATE_FEATURE } from '@server/types/permissions';
 import { ImportModal } from '../Import/ImportModal.tsx';
 import { IMPORT_BUTTON } from 'utils/testIds';
 import { ProjectCleanupReminder } from './ProjectCleanupReminder/ProjectCleanupReminder.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 type ProjectFeatureTogglesProps = {
     environments: string[];
@@ -191,9 +193,8 @@ export const ProjectFeatureToggles = ({
                         onChange={row?.getToggleSelectedHandler()}
                     />
                 ),
-                meta: {
-                    width: '1%',
-                },
+                size: 50,
+                enableResizing: false,
                 enableHiding: false,
             }),
             columnHelper.accessor('favorite', {
@@ -215,32 +216,36 @@ export const ProjectFeatureToggles = ({
                     />
                 ),
                 enableSorting: false,
+                enableResizing: false,
                 enableHiding: false,
-                meta: {
-                    width: '1%',
-                },
+                size: 60,
             }),
             columnHelper.accessor('name', {
                 id: 'name',
                 header: 'Name',
                 cell: createFeatureOverviewCell(onTagClick, onFlagTypeClick),
                 enableHiding: false,
+                size: 300,
+                minSize: 150,
+                maxSize: 600,
             }),
             columnHelper.accessor('createdAt', {
                 id: 'createdAt',
                 header: 'Created',
                 cell: DateCell,
-                meta: {
-                    width: '1%',
-                },
+                size: 150,
+                minSize: 120,
+                maxSize: 200,
             }),
             columnHelper.accessor('createdBy', {
                 id: 'createdBy',
                 header: 'By',
                 cell: AvatarCell(onAvatarClick),
                 enableSorting: false,
+                size: 100,
+                minSize: 80,
+                maxSize: 150,
                 meta: {
-                    width: '1%',
                     align: 'center',
                 },
             }),
@@ -253,10 +258,11 @@ export const ProjectFeatureToggles = ({
                         data-loading
                     />
                 ),
-                size: 50,
+                size: 150,
+                minSize: 120,
+                maxSize: 200,
                 meta: {
                     align: 'center',
-                    width: '1%',
                 },
             }),
             columnHelper.accessor('lifecycle', {
@@ -277,10 +283,11 @@ export const ProjectFeatureToggles = ({
                     />
                 ),
                 enableSorting: false,
-                size: 50,
+                size: 150,
+                minSize: 120,
+                maxSize: 200,
                 meta: {
                     align: 'center',
-                    width: '1%',
                 },
             }),
             ...environments.map((name: string) => {
@@ -305,9 +312,11 @@ export const ProjectFeatureToggles = ({
                     {
                         id: formatEnvironmentColumnId(name),
                         header: name,
+                        size: 120,
+                        minSize: 90,
+                        maxSize: 200,
                         meta: {
                             align: 'center',
-                            width: 90,
                         },
                         cell: ({ getValue }) => {
                             const {
@@ -372,10 +381,11 @@ export const ProjectFeatureToggles = ({
                     ),
 
                 enableSorting: false,
+                enableResizing: false,
                 enableHiding: false,
+                size: 100,
                 meta: {
                     align: 'right',
-                    width: '1%',
                 },
             }),
         ],
@@ -440,15 +450,22 @@ export const ProjectFeatureToggles = ({
     );
 
     const defaultColumnVisibility = useDefaultColumnVisibility(allColumnIds);
+    const resizableColumnsEnabled = useUiFlag('resizableColumns');
+    const { columnSizing, onColumnSizingChange, resetColumnSizing } =
+        useColumnSizing(projectId, environments);
 
     const table = useReactTable(
         withTableState(tableState, setTableState, {
             columns,
             data,
             enableRowSelection: true,
+            enableColumnResizing: resizableColumnsEnabled,
+            columnResizeMode: resizableColumnsEnabled ? 'onChange' : undefined,
             state: {
                 columnVisibility: defaultColumnVisibility,
+                ...(resizableColumnsEnabled && { columnSizing }),
             },
+            ...(resizableColumnsEnabled && { onColumnSizingChange }),
             getRowId,
         }),
     );
@@ -559,6 +576,7 @@ export const ProjectFeatureToggles = ({
                                     })),
                                 ]}
                                 onToggle={onToggleColumnVisibility}
+                                onResetColumnSizing={resizableColumnsEnabled ? resetColumnSizing : undefined}
                             />
                         }
                     />

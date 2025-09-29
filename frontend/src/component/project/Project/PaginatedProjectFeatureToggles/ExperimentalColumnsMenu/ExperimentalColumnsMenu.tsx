@@ -1,4 +1,4 @@
-import { useState, type VFC } from 'react';
+import { useState, type FC } from 'react';
 import {
     IconButton,
     ListItemIcon,
@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import ColumnIcon from '@mui/icons-material/ViewWeek';
 import CloseIcon from '@mui/icons-material/Close';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import {
     StyledBoxContainer,
     StyledBoxMenuHeader,
@@ -27,11 +28,13 @@ interface IColumnsMenuProps {
         isVisible?: boolean;
     }[];
     onToggle?: (id: string) => void;
+    onResetColumnSizing?: () => void;
 }
 
-export const ExperimentalColumnsMenu: VFC<IColumnsMenuProps> = ({
+export const ExperimentalColumnsMenu: FC<IColumnsMenuProps> = ({
     columns,
     onToggle,
+    onResetColumnSizing,
 }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -93,6 +96,22 @@ export const ExperimentalColumnsMenu: VFC<IColumnsMenuProps> = ({
                         <CloseIcon />
                     </IconButton>
                 </StyledBoxMenuHeader>
+                {onResetColumnSizing && (
+                    <>
+                        <StyledMenuItem
+                            onClick={() => {
+                                onResetColumnSizing();
+                                handleClose();
+                            }}
+                        >
+                            <ListItemIcon>
+                                <RestartAltIcon fontSize='small' />
+                            </ListItemIcon>
+                            <ListItemText primary='Reset column widths' />
+                        </StyledMenuItem>
+                        <StyledDivider />
+                    </>
+                )}
                 <MenuList>
                     {columns.map((column) =>
                         column.id === 'divider' ? (

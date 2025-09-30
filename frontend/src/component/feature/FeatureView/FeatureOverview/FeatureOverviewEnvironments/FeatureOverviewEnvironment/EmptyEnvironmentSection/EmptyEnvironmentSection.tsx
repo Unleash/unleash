@@ -73,7 +73,6 @@ export const EmptyEnvironmentSection: FC<
     featureId,
     environmentId,
     children,
-    ...props
 }) => {
     const id = useId();
     const { environments } = useProjectEnvironments(projectId);

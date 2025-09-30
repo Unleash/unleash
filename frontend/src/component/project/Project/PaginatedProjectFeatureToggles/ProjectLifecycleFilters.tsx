@@ -50,10 +50,13 @@ export const ProjectLifecycleFilters: FC<ProjectLifecycleFiltersProps> = ({
         <Box
             sx={{
                 marginRight: 'auto',
-                margin:
-                    isSmallScreen && !flagsUiFilterRefactorEnabled
-                        ? theme.spacing(0, 2)
-                        : '0 auto 0 0',
+                ...(!flagsUiFilterRefactorEnabled
+                    ? {
+                          margin: isSmallScreen
+                              ? theme.spacing(0, 3)
+                              : `${theme.spacing(1.5)} auto 0 0`,
+                      }
+                    : {}),
             }}
         >
             <LifecycleFilters

@@ -1,4 +1,5 @@
 import { useId, useMemo } from 'react';
+import { Box } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
@@ -32,7 +33,6 @@ import {
     type ChangeRequestQuickFilter,
 } from './ChangeRequestFilters.js';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser.js';
-import { Box } from '@mui/material';
 
 const columnHelper = createColumnHelper<ChangeRequestSearchItemSchema>();
 

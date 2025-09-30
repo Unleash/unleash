@@ -11,7 +11,9 @@ import { useNavigate } from 'react-router-dom';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker.js';
 
 const StyledSuggestion = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0.25, 3),
+    padding: theme.spacing(0.5, 3),
+    display: 'flex',
+    alignItems: 'center',
     width: '100%',
     minHeight: theme.spacing(2),
     background: theme.palette.secondary.light,

@@ -253,7 +253,7 @@ const flags: IFlags = {
         false,
     ),
     envAddStrategySuggestion: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ADD_STRATEGY_SUGGESTION,
+        process.env.UNLEASH_EXPERIMENTAL_ENV_ADD_STRATEGY_SUGGESTION,
         false,
     ),
     streaming: {

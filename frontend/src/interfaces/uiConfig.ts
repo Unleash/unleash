@@ -89,6 +89,7 @@ export type UiFlags = {
     lifecycleGraphs?: boolean;
     newStrategyModal?: boolean;
     globalChangeRequestList?: boolean;
+    flagsUiFilterRefactor?: boolean;
 };
 
 export interface IVersionInfo {

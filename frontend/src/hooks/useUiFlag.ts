@@ -4,6 +4,9 @@ type flags = ReturnType<typeof useUiConfig>['uiConfig']['flags'];
 
 export const useUiFlag = <K extends keyof flags>(flag: K) => {
     const { uiConfig } = useUiConfig();
+    if (flag === 'flagsUiFilterRefactor') {
+        return true;
+    }
 
     return uiConfig?.flags?.[flag] || false;
 };

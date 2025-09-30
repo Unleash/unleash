@@ -4,11 +4,11 @@ import {
     UPDATE_PROJECT,
     CREATE_PROJECT_API_TOKEN,
 } from 'component/providers/AccessProvider/permissions';
-import { FlagCreationButton } from '../../project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader.tsx';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { SdkExample } from './SdkExample.tsx';
 import CloseIcon from '@mui/icons-material/Close';
+import { FlagCreationButton } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/FlagCreationButton/FlagCreationButton.tsx';
 
 interface IProjectOnboardingProps {
     projectId: string;

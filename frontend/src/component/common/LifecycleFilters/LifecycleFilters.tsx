@@ -37,7 +37,7 @@ interface ILifecycleFiltersBaseProps {
 const Wrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
-    minHeight: theme.spacing(7),
+    // minHeight: theme.spacing(7),
     gap: theme.spacing(2),
 }));
 

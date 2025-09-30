@@ -7,12 +7,17 @@ import {
 } from 'component/filter/Filters/Filters';
 import { useProjectFlagCreators } from 'hooks/api/getters/useProjectFlagCreators/useProjectFlagCreators';
 import { formatTag } from 'utils/format-tag';
+import { styled } from '@mui/material';
 
 type ProjectOverviewFiltersProps = {
     state: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
     project: string;
 };
+
+const StyledFilters = styled(Filters)({
+    padding: 0,
+});
 
 export const ProjectOverviewFilters: FC<ProjectOverviewFiltersProps> = ({
     state,
@@ -124,7 +129,7 @@ export const ProjectOverviewFilters: FC<ProjectOverviewFiltersProps> = ({
     }, [JSON.stringify(tags), JSON.stringify(flagCreators)]);
 
     return (
-        <Filters
+        <StyledFilters
             availableFilters={availableFilters}
             state={state}
             onChange={onChange}

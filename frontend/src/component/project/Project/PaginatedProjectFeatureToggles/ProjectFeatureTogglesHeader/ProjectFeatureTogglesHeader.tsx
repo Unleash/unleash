@@ -1,7 +1,6 @@
 import { type ReactNode, type FC, useState } from 'react';
 import {
     Box,
-    Button,
     IconButton,
     Tooltip,
     useMediaQuery,
@@ -11,13 +10,10 @@ import useLoading from 'hooks/useLoading';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import type { FeatureSchema } from 'openapi';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
-import { useFeedback } from 'component/feedbackNew/useFeedback';
 import IosShare from '@mui/icons-material/IosShare';
 import { FlagCreationButton } from './FlagCreationButton/FlagCreationButton.tsx';
 
@@ -48,10 +44,6 @@ export const ProjectFeatureTogglesHeader: FC<
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [showExportDialog, setShowExportDialog] = useState(false);
     const { trackEvent } = usePlausibleTracker();
-    const projectOverviewRefactorFeedback = useUiFlag(
-        'projectOverviewRefactorFeedback',
-    );
-    const { openFeedback } = useFeedback('newProjectOverview', 'automatic');
     const handleSearch = (query: string) => {
         onChangeSearchQuery?.(query);
         trackEvent('search-bar', {
@@ -59,16 +51,6 @@ export const ProjectFeatureTogglesHeader: FC<
                 screen: 'project',
                 length: query.length,
             },
-        });
-    };
-
-    const createFeedbackContext = () => {
-        openFeedback({
-            title: 'How easy was it to work with the project overview in Unleash?',
-            positiveLabel:
-                'What do you like most about the updated project overview?',
-            areasForImprovementsLabel:
-                'What improvements are needed in the project overview?',
         });
     };
 
@@ -131,24 +113,6 @@ export const ProjectFeatureTogglesHeader: FC<
                                     onClose={() => setShowExportDialog(false)}
                                     environments={environmentsToExport || []}
                                 />
-                            }
-                        />
-
-                        {/* FIXME: remove */}
-                        <ConditionallyRender
-                            condition={
-                                projectOverviewRefactorFeedback &&
-                                !isSmallScreen
-                            }
-                            show={
-                                <Button
-                                    startIcon={<ReviewsOutlined />}
-                                    onClick={createFeedbackContext}
-                                    variant='outlined'
-                                    data-loading
-                                >
-                                    Provide feedback
-                                </Button>
                             }
                         />
                         <FlagCreationButton isLoading={isLoading} />

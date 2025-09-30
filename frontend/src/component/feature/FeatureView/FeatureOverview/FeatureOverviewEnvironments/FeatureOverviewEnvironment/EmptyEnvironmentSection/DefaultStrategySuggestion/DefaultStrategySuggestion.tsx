@@ -18,7 +18,7 @@ const StyledSuggestion = styled('div')(({ theme }) => ({
     borderBottomLeftRadius: theme.shape.borderRadiusLarge,
     borderBottomRightRadius: theme.shape.borderRadiusLarge,
     color: theme.palette.primary.main,
-    fontSize: theme.fontSizes.smallBody,
+    fontSize: theme.fontSizes.smallerBody,
 }));
 
 const StyledSpan = styled('span')(({ theme }) => ({

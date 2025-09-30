@@ -587,6 +587,15 @@ export const ProjectFeatureToggles = ({
                                     state={filterState}
                                 />
                             </FilterRow>
+                            {isSmallScreen ? (
+                                <ProjectFlagsSearch
+                                    searchQuery={tableState.query || ''}
+                                    onChangeSearchQuery={(query) => {
+                                        setTableState({ query });
+                                    }}
+                                    isLoading={loading}
+                                />
+                            ) : null}
                         </FiltersContainer>
                     ) : (
                         <LegacyFilterRow>

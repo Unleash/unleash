@@ -11,7 +11,6 @@ import useLoading from 'hooks/useLoading';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import type { FeatureSchema } from 'openapi';
@@ -31,6 +30,9 @@ interface IProjectFeatureTogglesHeaderProps {
     actions?: ReactNode;
 }
 
+/**
+ * @deprecated remove with `flagsUiFilterRefactor` flag
+ */
 export const ProjectFeatureTogglesHeader: FC<
     IProjectFeatureTogglesHeaderProps
 > = ({
@@ -48,9 +50,7 @@ export const ProjectFeatureTogglesHeader: FC<
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [showExportDialog, setShowExportDialog] = useState(false);
     const { trackEvent } = usePlausibleTracker();
-    const projectOverviewRefactorFeedback = useUiFlag(
-        'projectOverviewRefactorFeedback',
-    );
+    const projectOverviewRefactorFeedback = false;
     const { openFeedback } = useFeedback('newProjectOverview', 'automatic');
     const handleSearch = (query: string) => {
         onChangeSearchQuery?.(query);

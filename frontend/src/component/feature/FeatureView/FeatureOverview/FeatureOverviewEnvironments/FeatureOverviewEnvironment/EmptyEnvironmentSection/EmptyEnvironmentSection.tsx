@@ -16,7 +16,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
 }));
 
 const StyledHeader = styled('div')(({ theme }) => ({
-    padding: theme.spacing(3, 2, 2, 2),
+    padding: theme.spacing(3, 8, 2, 2),
     display: 'flex',
     width: '100%',
 }));

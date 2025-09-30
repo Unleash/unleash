@@ -74,7 +74,6 @@ export const EmptyEnvironmentSection: FC<
     environmentId,
     children,
 }) => {
-    const id = useId();
     const { environments } = useProjectEnvironments(projectId);
     const defaultStrategy = environments.find(
         (env) => env.name === environmentId,

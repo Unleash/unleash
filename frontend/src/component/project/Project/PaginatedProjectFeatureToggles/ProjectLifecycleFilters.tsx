@@ -55,7 +55,7 @@ export const ProjectLifecycleFilters: FC<ProjectLifecycleFiltersProps> = ({
                     : {
                           margin: isSmallScreen
                               ? theme.spacing(0, 3)
-                              : `${theme.spacing(1.5)} auto 0 ${theme.spacing(3)}`,
+                              : `${theme.spacing(1.5)} auto ${theme.spacing(1.5)} ${theme.spacing(3)}`,
                       }),
             }}
         >

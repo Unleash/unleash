@@ -20,7 +20,7 @@ import {
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useFeatureToggleSwitch } from '../ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch.tsx';
 import useLoading from 'hooks/useLoading';
-import { ProjectFeatureTogglesHeader } from './ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader.tsx';
+import { ProjectFeatureTogglesHeader as LegacyProjectFeatureTogglesHeader } from './ProjectFeatureTogglesHeader/LegacyProjectFeatureTogglesHeader.tsx';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { withTableState } from 'utils/withTableState';
 import type { FeatureSearchResponseSchema } from 'openapi';
@@ -41,7 +41,7 @@ import {
     useProjectFeatureSearchActions,
 } from './useProjectFeatureSearch.ts';
 import { AvatarCell } from './AvatarCell.tsx';
-import { styled } from '@mui/material';
+import { styled, useMediaQuery, useTheme } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog.tsx';
 import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding.tsx';
@@ -57,6 +57,9 @@ import { IMPORT_BUTTON } from 'utils/testIds';
 import { ProjectCleanupReminder } from './ProjectCleanupReminder/ProjectCleanupReminder.tsx';
 import { formatEnvironmentColumnId } from './formatEnvironmentColumnId.ts';
 import { ProjectFeaturesColumnsMenu } from './ProjectFeaturesColumnsMenu/ProjectFeaturesColumnsMenu.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { ProjectFeatureTogglesHeader } from './ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader.tsx';
+import { ProjectFlagsSearch } from './ProjectFlagsSearch/ProjectFlagsSearch.tsx';
 
 type ProjectFeatureTogglesProps = {
     environments: string[];
@@ -71,11 +74,26 @@ const Container = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const FilterRow = styled('div')(({ theme }) => ({
+const LegacyFilterRow = styled('div')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'row wrap',
     justifyContent: 'space-between',
 }));
+
+const FiltersContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1),
+    padding: theme.spacing(2, 3, 2),
+    [theme.breakpoints.down('md')]: {
+        padding: theme.spacing(2, 2),
+    },
+}));
+
+const FilterRow = styled('div')({
+    display: 'flex',
+    alignItems: 'center',
+});
 
 const ButtonGroup = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -91,6 +109,9 @@ export const ProjectFeatureToggles = ({
     const { project } = useProjectOverview(projectId);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
+    const flagsUiFilterRefactorEnabled = useUiFlag('flagsUiFilterRefactor');
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const {
         features,
@@ -500,25 +521,32 @@ export const ProjectFeatureToggles = ({
             ) : null}
             <PageContent
                 disableLoading
-                disablePadding
                 header={
-                    <ProjectFeatureTogglesHeader
-                        isLoading={initialLoad}
-                        totalItems={total}
-                        searchQuery={tableState.query || ''}
-                        onChangeSearchQuery={(query) => {
-                            setTableState({ query });
-                        }}
-                        dataToExport={data}
-                        environmentsToExport={environments}
-                        actions={
-                            <ProjectFeaturesColumnsMenu
-                                columnVisibility={columnVisibility}
-                                environments={environments}
-                                onToggle={onToggleColumnVisibility}
-                            />
-                        }
-                    />
+                    flagsUiFilterRefactorEnabled ? (
+                        <ProjectFeatureTogglesHeader
+                            isLoading={initialLoad}
+                            totalItems={total}
+                            environmentsToExport={environments}
+                        />
+                    ) : (
+                        <LegacyProjectFeatureTogglesHeader
+                            isLoading={initialLoad}
+                            totalItems={total}
+                            searchQuery={tableState.query || ''}
+                            onChangeSearchQuery={(query) => {
+                                setTableState({ query });
+                            }}
+                            dataToExport={data}
+                            environmentsToExport={environments}
+                            actions={
+                                <ProjectFeaturesColumnsMenu
+                                    columnVisibility={columnVisibility}
+                                    environments={environments}
+                                    onToggle={onToggleColumnVisibility}
+                                />
+                            }
+                        />
+                    )
                 }
                 bodyClass='noop'
                 style={{ cursor: 'inherit' }}
@@ -528,31 +556,74 @@ export const ProjectFeatureToggles = ({
                     aria-busy={isPlaceholder}
                     aria-live='polite'
                 >
-                    <FilterRow>
-                        <ProjectOverviewFilters
-                            project={projectId}
-                            onChange={setTableState}
-                            state={filterState}
-                        />
-                        <ProjectLifecycleFilters
-                            projectId={projectId}
-                            state={filterState}
-                            onChange={setTableState}
-                            total={loading ? undefined : total}
-                        />
-                        <ButtonGroup>
-                            <PermissionIconButton
-                                permission={UPDATE_FEATURE}
+                    {flagsUiFilterRefactorEnabled ? (
+                        <FiltersContainer>
+                            <FilterRow>
+                                <ProjectLifecycleFilters
+                                    projectId={projectId}
+                                    state={filterState}
+                                    onChange={setTableState}
+                                    total={loading ? undefined : total}
+                                />
+                                {isSmallScreen ? null : (
+                                    <ProjectFlagsSearch
+                                        searchQuery={tableState.query || ''}
+                                        onChangeSearchQuery={(query) => {
+                                            setTableState({ query });
+                                        }}
+                                        isLoading={loading}
+                                    />
+                                )}
+                                <ProjectFeaturesColumnsMenu
+                                    columnVisibility={columnVisibility}
+                                    environments={environments}
+                                    onToggle={onToggleColumnVisibility}
+                                />
+                            </FilterRow>
+                            <FilterRow>
+                                <ProjectOverviewFilters
+                                    project={projectId}
+                                    onChange={setTableState}
+                                    state={filterState}
+                                />
+                            </FilterRow>
+                            {isSmallScreen ? (
+                                <ProjectFlagsSearch
+                                    searchQuery={tableState.query || ''}
+                                    onChangeSearchQuery={(query) => {
+                                        setTableState({ query });
+                                    }}
+                                    isLoading={loading}
+                                />
+                            ) : null}
+                        </FiltersContainer>
+                    ) : (
+                        <LegacyFilterRow>
+                            <ProjectOverviewFilters
+                                project={projectId}
+                                onChange={setTableState}
+                                state={filterState}
+                            />
+                            <ProjectLifecycleFilters
                                 projectId={projectId}
-                                onClick={() => setModalOpen(true)}
-                                tooltipProps={{ title: 'Import' }}
-                                data-testid={IMPORT_BUTTON}
-                                data-loading-project
-                            >
-                                <ImportSvg />
-                            </PermissionIconButton>
-                        </ButtonGroup>
-                    </FilterRow>
+                                state={filterState}
+                                onChange={setTableState}
+                                total={loading ? undefined : total}
+                            />
+                            <ButtonGroup>
+                                <PermissionIconButton
+                                    permission={UPDATE_FEATURE}
+                                    projectId={projectId}
+                                    onClick={() => setModalOpen(true)}
+                                    tooltipProps={{ title: 'Import' }}
+                                    data-testid={IMPORT_BUTTON}
+                                    data-loading-project
+                                >
+                                    <ImportSvg />
+                                </PermissionIconButton>
+                            </ButtonGroup>
+                        </LegacyFilterRow>
+                    )}
                     <SearchHighlightProvider value={tableState.query || ''}>
                         <PaginatedTable
                             tableInstance={table}

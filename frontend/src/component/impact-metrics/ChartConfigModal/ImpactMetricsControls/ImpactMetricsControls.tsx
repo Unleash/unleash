@@ -5,7 +5,7 @@ import { SeriesSelector } from './SeriesSelector/SeriesSelector.tsx';
 import { RangeSelector } from './RangeSelector/RangeSelector.tsx';
 import { ModeSelector } from './ModeSelector/ModeSelector.tsx';
 import type { ChartFormState } from '../../hooks/useChartFormState.ts';
-import { getMetricType } from '../../utils.ts';
+import { getMetricType } from '../../metricsFormatters.ts';
 
 export type ImpactMetricsControlsProps = {
     formData: ChartFormState['formData'];

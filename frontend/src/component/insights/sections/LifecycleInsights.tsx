@@ -4,10 +4,8 @@ import { FilterItemParam } from 'utils/serializeQueryParams';
 import { InsightsSection } from 'component/insights/sections/InsightsSection';
 import { LifecycleChart } from '../components/LifecycleChart/LifecycleChart.tsx';
 import { styled, useTheme } from '@mui/material';
-import {
-    prettifyLargeNumber,
-    PrettifyLargeNumber,
-} from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber.tsx';
+import { prettifyLargeNumber } from 'component/common/PrettifyLargeNumber/formatLargeNumber.js';
+import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber.tsx';
 import { FeatureLifecycleStageIcon } from 'component/common/FeatureLifecycle/FeatureLifecycleStageIcon.tsx';
 import { normalizeDays } from './normalize-days.ts';
 import useLoading from 'hooks/useLoading.ts';

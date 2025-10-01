@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useTheme } from '@mui/material';
 import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
-import { getSeriesLabel } from '../utils.ts';
+import { getSeriesLabel } from '../metricsFormatters.ts';
 
 const getColorStartingIndex = (modulo: number, series?: string): number => {
     if (!series || series.length === 0 || modulo <= 0) {

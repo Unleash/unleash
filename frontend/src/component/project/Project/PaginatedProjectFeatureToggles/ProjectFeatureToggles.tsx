@@ -9,7 +9,6 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { ActionsCell } from '../ProjectFeatureToggles/ActionsCell/ActionsCell.tsx';
-import { ExperimentalColumnsMenu as ColumnsMenu } from './ExperimentalColumnsMenu/ExperimentalColumnsMenu.tsx';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { MemoizedRowSelectCell } from '../ProjectFeatureToggles/RowSelectCell/RowSelectCell.tsx';
 import { BatchSelectionActionsBar } from 'component/common/BatchSelectionActionsBar/BatchSelectionActionsBar';
@@ -56,13 +55,12 @@ import { UPDATE_FEATURE } from '@server/types/permissions';
 import { ImportModal } from '../Import/ImportModal.tsx';
 import { IMPORT_BUTTON } from 'utils/testIds';
 import { ProjectCleanupReminder } from './ProjectCleanupReminder/ProjectCleanupReminder.tsx';
+import { formatEnvironmentColumnId } from './formatEnvironmentColumnId.ts';
+import { ProjectFeaturesColumnsMenu } from './ProjectFeaturesColumnsMenu/ProjectFeaturesColumnsMenu.tsx';
 
 type ProjectFeatureTogglesProps = {
     environments: string[];
 };
-
-const formatEnvironmentColumnId = (environment: string) =>
-    `environment:${environment}`;
 
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 const getRowId = (row: { name: string }) => row.name;
@@ -514,50 +512,9 @@ export const ProjectFeatureToggles = ({
                         dataToExport={data}
                         environmentsToExport={environments}
                         actions={
-                            <ColumnsMenu
-                                columns={[
-                                    {
-                                        header: 'Name',
-                                        id: 'name',
-                                        isVisible: columnVisibility.name,
-                                        isStatic: true,
-                                    },
-                                    {
-                                        header: 'Created',
-                                        id: 'createdAt',
-                                        isVisible: columnVisibility.createdAt,
-                                    },
-                                    {
-                                        header: 'By',
-                                        id: 'createdBy',
-                                        isVisible: columnVisibility.createdBy,
-                                    },
-                                    {
-                                        header: 'Last seen',
-                                        id: 'lastSeenAt',
-                                        isVisible: columnVisibility.lastSeenAt,
-                                    },
-                                    {
-                                        header: 'Lifecycle',
-                                        id: 'lifecycle',
-                                        isVisible: columnVisibility.lifecycle,
-                                    },
-                                    {
-                                        id: 'divider',
-                                    },
-                                    ...environments.map((environment) => ({
-                                        header: environment,
-                                        id: formatEnvironmentColumnId(
-                                            environment,
-                                        ),
-                                        isVisible:
-                                            columnVisibility[
-                                                formatEnvironmentColumnId(
-                                                    environment,
-                                                )
-                                            ],
-                                    })),
-                                ]}
+                            <ProjectFeaturesColumnsMenu
+                                columnVisibility={columnVisibility}
+                                environments={environments}
                                 onToggle={onToggleColumnVisibility}
                             />
                         }

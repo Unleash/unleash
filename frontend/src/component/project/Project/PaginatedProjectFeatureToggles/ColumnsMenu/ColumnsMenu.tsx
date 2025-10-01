@@ -1,4 +1,4 @@
-import { useState, type VFC } from 'react';
+import { useState, type FC } from 'react';
 import {
     IconButton,
     ListItemIcon,
@@ -17,7 +17,7 @@ import {
     StyledDivider,
     StyledIconButton,
     StyledMenuItem,
-} from './ExperimentalColumnsMenu.styles';
+} from './ColumnsMenu.styles';
 
 interface IColumnsMenuProps {
     columns: {
@@ -29,10 +29,7 @@ interface IColumnsMenuProps {
     onToggle?: (id: string) => void;
 }
 
-export const ExperimentalColumnsMenu: VFC<IColumnsMenuProps> = ({
-    columns,
-    onToggle,
-}) => {
+export const ColumnsMenu: FC<IColumnsMenuProps> = ({ columns, onToggle }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const onIconClick = (event: React.MouseEvent<HTMLButtonElement>) => {

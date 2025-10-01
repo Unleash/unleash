@@ -46,7 +46,6 @@ export type IFlagKey =
     | 'showUserDeviceCount'
     | 'memorizeStats'
     | 'streaming'
-    | 'etagVariant'
     | 'deltaApi'
     | 'uniqueSdkTracking'
     | 'consumptionModel'
@@ -220,11 +219,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_SHOW_USER_DEVICE_COUNT,
         false,
     ),
-    etagVariant: {
-        name: 'disabled',
-        feature_enabled: false,
-        enabled: false,
-    },
     deltaApi: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DELTA_API,
         false,

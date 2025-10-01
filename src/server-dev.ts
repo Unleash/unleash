@@ -56,6 +56,7 @@ process.nextTick(async () => {
                         newStrategyModal: true,
                         globalChangeRequestList: true,
                         newUiConfigService: true,
+                        flagsUiFilterRefactor: true,
                     },
                 },
                 authentication: {

@@ -54,11 +54,8 @@ export const getSeriesLabel = (metric: Record<string, string>): string => {
 };
 
 export const formatLargeNumbers = (value: number): string => {
-    // Use threshold of 1000 for chart axis to start abbreviating at 1k
-    // Use precision of 1 to avoid duplicate axis labels
     const formatter = prettifyLargeNumber(1000, 1);
     const result = formatter(value);
-    // Replace uppercase K with lowercase k for consistency
     return result.replace(/K/g, 'k');
 };
 

@@ -65,12 +65,13 @@ import {
     createFakeFeatureLinkService,
     createFeatureLinkService,
 } from '../feature-links/createFeatureLinkService.js';
+import { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
 
 export const createFeatureToggleService = (
     db: Db,
     config: IUnleashConfig,
 ): FeatureToggleService => {
-    const { getLogger, eventBus, flagResolver, resourceLimits } = config;
+    const { getLogger, eventBus, flagResolver } = config;
     const featureStrategiesStore = new FeatureStrategiesStore(
         db,
         eventBus,
@@ -138,6 +139,8 @@ export const createFeatureToggleService = (
 
     const featureLinkService = createFeatureLinkService(config)(db);
 
+    const resourceLimitsService = new ResourceLimitsService(config);
+
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -149,7 +152,7 @@ export const createFeatureToggleService = (
             contextFieldStore,
             strategyStore,
         },
-        { getLogger, flagResolver, eventBus, resourceLimits },
+        { getLogger, flagResolver, eventBus },
         {
             segmentService,
             accessService,
@@ -162,13 +165,14 @@ export const createFeatureToggleService = (
             featureCollaboratorsReadModel,
             featureLinksReadModel,
             featureLinkService,
+            resourceLimitsService,
         },
     );
     return featureToggleService;
 };
 
 export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
-    const { getLogger, flagResolver, resourceLimits } = config;
+    const { getLogger, flagResolver } = config;
     const eventStore = new FakeEventStore();
     const strategyStore = new FakeStrategiesStore();
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
@@ -206,6 +210,8 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
     const featureLinksReadModel = new FakeFeatureLinksReadModel();
     const { featureLinkService } = createFakeFeatureLinkService(config);
 
+    const resourceLimitsService = new ResourceLimitsService(config);
+
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -221,7 +227,6 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
             getLogger,
             flagResolver,
             eventBus: new EventEmitter(),
-            resourceLimits,
         },
         {
             segmentService,
@@ -235,6 +240,7 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
             featureCollaboratorsReadModel,
             featureLinksReadModel,
             featureLinkService,
+            resourceLimitsService,
         },
     );
     return {

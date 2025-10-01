@@ -67,10 +67,7 @@ import { calculateAverageTimeToProd } from '../feature-toggle/time-to-production
 import type { IProjectStatsStore } from '../../types/stores/project-stats-store-type.js';
 import { uniqueByKey } from '../../util/unique.js';
 import { BadDataError, PermissionError } from '../../error/index.js';
-import type {
-    ProjectDoraMetricsSchema,
-    ResourceLimitsSchema,
-} from '../../openapi/index.js';
+import type { ProjectDoraMetricsSchema } from '../../openapi/index.js';
 import { checkFeatureNamingData } from '../feature-naming-pattern/feature-naming-validation.js';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import type EventService from '../events/event-service.js';
@@ -89,6 +86,7 @@ import { canGrantProjectRole } from './can-grant-project-role.js';
 import { batchExecute } from '../../util/index.js';
 import metricsHelper from '../../util/metrics-helper.js';
 import { FUNCTION_TIME } from '../../metric-events.js';
+import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
 
 type Days = number;
 type Count = number;
@@ -148,7 +146,7 @@ export default class ProjectService {
 
     private isEnterprise: boolean;
 
-    private resourceLimits: ResourceLimitsSchema;
+    private resourceLimitsService: ResourceLimitsService;
 
     private eventBus: EventEmitter;
 
@@ -193,6 +191,7 @@ export default class ProjectService {
         eventService: EventService,
         privateProjectChecker: IPrivateProjectChecker,
         apiTokenService: ApiTokenService,
+        resourceLimitsService: ResourceLimitsService,
     ) {
         this.projectStore = projectStore;
         this.projectOwnersReadModel = projectOwnersReadModel;
@@ -213,7 +212,7 @@ export default class ProjectService {
         this.logger = config.getLogger('services/project-service.js');
         this.flagResolver = config.flagResolver;
         this.isEnterprise = config.isEnterprise;
-        this.resourceLimits = config.resourceLimits;
+        this.resourceLimitsService = resourceLimitsService;
         this.eventBus = config.eventBus;
         this.projectReadModel = projectReadModel;
         this.onboardingReadModel = onboardingReadModel;
@@ -318,7 +317,9 @@ export default class ProjectService {
     }
 
     async validateProjectLimit() {
-        const limit = Math.max(this.resourceLimits.projects, 1);
+        const { projects } =
+            await this.resourceLimitsService.getResourceLimits();
+        const limit = Math.max(projects, 1);
         const projectCount = await this.projectStore.count();
 
         if (projectCount >= limit) {

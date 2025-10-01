@@ -25,11 +25,9 @@ import type { IChangeRequestAccessReadModel } from '../change-request-access-ser
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import type EventService from '../events/event-service.js';
 import type { IChangeRequestSegmentUsageReadModel } from '../change-request-segment-usage-service/change-request-segment-usage-read-model.js';
-import type {
-    ResourceLimitsSchema,
-    UpsertSegmentSchema,
-} from '../../openapi/index.js';
+import type { UpsertSegmentSchema } from '../../openapi/index.js';
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error.js';
+import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
 
 export class SegmentService implements ISegmentService {
     private logger: Logger;
@@ -50,7 +48,7 @@ export class SegmentService implements ISegmentService {
 
     private privateProjectChecker: IPrivateProjectChecker;
 
-    private resourceLimits: ResourceLimitsSchema;
+    private resourceLimitsService: ResourceLimitsService;
 
     constructor(
         {
@@ -62,6 +60,7 @@ export class SegmentService implements ISegmentService {
         config: IUnleashConfig,
         eventService: EventService,
         privateProjectChecker: IPrivateProjectChecker,
+        resourceLimitsService: ResourceLimitsService,
     ) {
         this.segmentStore = segmentStore;
         this.featureStrategiesStore = featureStrategiesStore;
@@ -72,7 +71,7 @@ export class SegmentService implements ISegmentService {
         this.privateProjectChecker = privateProjectChecker;
         this.logger = config.getLogger('services/segment-service.ts');
         this.flagResolver = config.flagResolver;
-        this.resourceLimits = config.resourceLimits;
+        this.resourceLimitsService = resourceLimitsService;
         this.config = config;
     }
 
@@ -136,7 +135,8 @@ export class SegmentService implements ISegmentService {
     }
 
     async validateSegmentLimit() {
-        const limit = this.resourceLimits.segments;
+        const { segments: limit } =
+            await this.resourceLimitsService.getResourceLimits();
 
         const segmentCount = await this.segmentStore.count();
 

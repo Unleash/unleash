@@ -1,5 +1,5 @@
 import type { Db, IUnleashConfig } from '../../types/index.js';
-import { SegmentService } from '../../services/index.js';
+import { ResourceLimitsService, SegmentService } from '../../services/index.js';
 import type { ISegmentService } from './segment-service-interface.js';
 import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store.js';
 import SegmentStore from './segment-store.js';
@@ -51,6 +51,8 @@ export const createSegmentService = (
 
     const eventService = createEventsService(db, config);
 
+    const resourceLimitsService = new ResourceLimitsService(config);
+
     return new SegmentService(
         { segmentStore, featureStrategiesStore },
         changeRequestAccessReadModel,
@@ -58,6 +60,7 @@ export const createSegmentService = (
         config,
         eventService,
         privateProjectChecker,
+        resourceLimitsService,
     );
 };
 
@@ -74,6 +77,8 @@ export const createFakeSegmentService = (
 
     const eventService = createFakeEventsService(config);
 
+    const resourceLimitsService = new ResourceLimitsService(config);
+
     return new SegmentService(
         { segmentStore, featureStrategiesStore },
         changeRequestAccessReadModel,
@@ -81,5 +86,6 @@ export const createFakeSegmentService = (
         config,
         eventService,
         privateProjectChecker,
+        resourceLimitsService,
     );
 };

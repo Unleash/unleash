@@ -1,3 +1,5 @@
+import { prettifyLargeNumber } from '../common/PrettifyLargeNumber/formatLargeNumber.js';
+
 export const getTimeUnit = (timeRange: string) => {
     switch (timeRange) {
         case 'hour':
@@ -52,13 +54,12 @@ export const getSeriesLabel = (metric: Record<string, string>): string => {
 };
 
 export const formatLargeNumbers = (value: number): string => {
-    if (value >= 1000000) {
-        return `${(value / 1000000).toFixed(0)}M`;
-    }
-    if (value >= 1000) {
-        return `${(value / 1000).toFixed(0)}k`;
-    }
-    return value.toString();
+    // Use threshold of 1000 for chart axis to start abbreviating at 1k
+    // Use precision of 1 to avoid duplicate axis labels
+    const formatter = prettifyLargeNumber(1000, 1);
+    const result = formatter(value);
+    // Replace uppercase K with lowercase k for consistency
+    return result.replace(/K/g, 'k');
 };
 
 export const getMetricType = (seriesName: string) => {

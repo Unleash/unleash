@@ -114,9 +114,9 @@ import type { IFeatureLifecycleReadModel } from '../feature-lifecycle/feature-li
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error.js';
 import type { Collaborator } from './types/feature-collaborators-read-model-type.js';
 import { sortStrategies } from '../../util/sortStrategies.js';
-import type { ResourceLimitsSchema } from '../../openapi/index.js';
 import type FeatureLinkService from '../feature-links/feature-link-service.js';
 import type { IFeatureLink } from '../feature-links/feature-links-read-model-type.js';
+import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
 interface IFeatureContext {
     featureName: string;
     projectId: string;
@@ -161,7 +161,7 @@ export type Stores = Pick<
 
 export type Config = Pick<
     IUnleashConfig,
-    'getLogger' | 'flagResolver' | 'eventBus' | 'resourceLimits'
+    'getLogger' | 'flagResolver' | 'eventBus'
 >;
 
 export type ServicesAndReadModels = {
@@ -176,6 +176,7 @@ export type ServicesAndReadModels = {
     featureCollaboratorsReadModel: IFeatureCollaboratorsReadModel;
     featureLinkService: FeatureLinkService;
     featureLinksReadModel: IFeatureLinksReadModel;
+    resourceLimitsService: ResourceLimitsService;
 };
 
 export class FeatureToggleService {
@@ -223,7 +224,7 @@ export class FeatureToggleService {
 
     private eventBus: EventEmitter;
 
-    private resourceLimits: ResourceLimitsSchema;
+    private resourceLimitsService: ResourceLimitsService;
 
     constructor(
         {
@@ -236,7 +237,7 @@ export class FeatureToggleService {
             contextFieldStore,
             strategyStore,
         }: Stores,
-        { getLogger, flagResolver, eventBus, resourceLimits }: Config,
+        { getLogger, flagResolver, eventBus }: Config,
         {
             segmentService,
             accessService,
@@ -249,6 +250,7 @@ export class FeatureToggleService {
             featureCollaboratorsReadModel,
             featureLinksReadModel,
             featureLinkService,
+            resourceLimitsService,
         }: ServicesAndReadModels,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
@@ -273,7 +275,7 @@ export class FeatureToggleService {
         this.featureLinksReadModel = featureLinksReadModel;
         this.featureLinkService = featureLinkService;
         this.eventBus = eventBus;
-        this.resourceLimits = resourceLimits;
+        this.resourceLimitsService = resourceLimitsService;
     }
 
     async validateFeaturesContext(
@@ -396,7 +398,8 @@ export class FeatureToggleService {
         environment: string;
         featureName: string;
     }) {
-        const limit = this.resourceLimits.featureEnvironmentStrategies;
+        const { featureEnvironmentStrategies: limit } =
+            await this.resourceLimitsService.getResourceLimits();
         const existingCount = (
             await this.featureStrategiesStore.getStrategiesForFeatureEnv(
                 featureEnv.projectId,
@@ -412,14 +415,14 @@ export class FeatureToggleService {
         }
     }
 
-    private validateConstraintsLimit(constraints: {
+    private async validateConstraintsLimit(constraints: {
         updated: IConstraint[];
         existing: IConstraint[];
     }) {
         const {
             constraints: constraintsLimit,
             constraintValues: constraintValuesLimit,
-        } = this.resourceLimits;
+        } = await this.resourceLimitsService.getResourceLimits();
 
         if (
             constraints.updated.length > constraintsLimit &&
@@ -711,7 +714,7 @@ export class FeatureToggleService {
         const { name, title, disabled, sortOrder } = strategyConfig;
         let { constraints, parameters, variants } = strategyConfig;
         if (constraints && constraints.length > 0) {
-            this.validateConstraintsLimit({
+            await this.validateConstraintsLimit({
                 updated: constraints,
                 existing: existing?.constraints ?? [],
             });
@@ -1264,7 +1267,8 @@ export class FeatureToggleService {
 
     private async validateFeatureFlagLimit() {
         const currentFlagCount = await this.featureToggleStore.count();
-        const limit = this.resourceLimits.featureFlags;
+        const { featureFlags: limit } =
+            await this.resourceLimitsService.getResourceLimits();
         if (currentFlagCount >= limit) {
             throwExceedsLimitError(this.eventBus, {
                 resource: 'feature flag',

@@ -17,6 +17,7 @@ import {
     simpleAuthSettingsKey,
 } from '../types/settings/simple-auth-settings.js';
 import version from '../util/version.js';
+import type { ResourceLimitsService } from '../features/resource-limits/resource-limits-service.js';
 
 export class UiConfigService {
     private config: IUnleashConfig;
@@ -33,6 +34,8 @@ export class UiConfigService {
 
     private maintenanceService: MaintenanceService;
 
+    private resourceLimitsService: ResourceLimitsService;
+
     private flagResolver: IFlagResolver;
 
     constructor(
@@ -44,6 +47,7 @@ export class UiConfigService {
             frontendApiService,
             maintenanceService,
             sessionService,
+            resourceLimitsService,
         }: Pick<
             IUnleashServices,
             | 'versionService'
@@ -52,6 +56,7 @@ export class UiConfigService {
             | 'frontendApiService'
             | 'maintenanceService'
             | 'sessionService'
+            | 'resourceLimitsService'
         >,
     ) {
         this.config = config;
@@ -62,6 +67,7 @@ export class UiConfigService {
         this.frontendApiService = frontendApiService;
         this.maintenanceService = maintenanceService;
         this.sessionService = sessionService;
+        this.resourceLimitsService = resourceLimitsService;
     }
 
     async getMaxSessionsCount(): Promise<number> {
@@ -114,7 +120,8 @@ export class UiConfigService {
             frontendApiOrigins: frontendSettings.frontendApiOrigins,
             versionInfo: await this.versionService.getVersionInfo(),
             prometheusAPIAvailable: this.config.prometheusApi !== undefined,
-            resourceLimits: this.config.resourceLimits,
+            resourceLimits:
+                await this.resourceLimitsService.getResourceLimits(),
             disablePasswordAuth,
             maintenanceMode,
             feedbackUriPath: this.config.feedbackUriPath,

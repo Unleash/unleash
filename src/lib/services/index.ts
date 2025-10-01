@@ -171,6 +171,7 @@ import { UnknownFlagsService } from '../features/metrics/unknown-flags/unknown-f
 import type FeatureLinkService from '../features/feature-links/feature-link-service.js';
 import { createUserService } from '../features/users/createUserService.js';
 import { UiConfigService } from '../ui-config/ui-config-service.js';
+import { ResourceLimitsService } from '../features/resource-limits/resource-limits-service.js';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -204,6 +205,8 @@ export const createServices = (
         : createFakeLastSeenService(config);
 
     const unknownFlagsService = new UnknownFlagsService(stores, config);
+
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     // Initialize custom metrics service
     const customMetricsService = new CustomMetricsService(config);
@@ -283,6 +286,7 @@ export const createServices = (
         config,
         eventService,
         privateProjectChecker,
+        resourceLimitsService,
     );
 
     const clientInstanceService = new ClientInstanceService(
@@ -449,6 +453,7 @@ export const createServices = (
         frontendApiService,
         maintenanceService,
         sessionService,
+        resourceLimitsService,
     });
 
     return {
@@ -525,6 +530,7 @@ export const createServices = (
         featureLinkService,
         unknownFlagsService,
         uiConfigService,
+        resourceLimitsService,
     };
 };
 
@@ -581,6 +587,8 @@ export {
     UniqueConnectionService,
     FeatureLifecycleReadModel,
     UnknownFlagsService,
+    UiConfigService,
+    ResourceLimitsService,
 };
 
 export interface IUnleashServices {
@@ -657,4 +665,5 @@ export interface IUnleashServices {
     featureLinkService: FeatureLinkService;
     unknownFlagsService: UnknownFlagsService;
     uiConfigService: UiConfigService;
+    resourceLimitsService: ResourceLimitsService;
 }

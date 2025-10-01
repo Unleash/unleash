@@ -9,6 +9,7 @@ import {
 } from '../events/createEventsService.js';
 import FakeApiTokenStore from '../../../test/fixtures/fake-api-token-store.js';
 import { ApiTokenStore } from '../../db/api-token-store.js';
+import { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
 
 export const createApiTokenService = (
     db: Db,
@@ -23,11 +24,13 @@ export const createApiTokenService = (
     );
     const environmentStore = new EnvironmentStore(db, eventBus, config);
     const eventService = createEventsService(db, config);
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     return new ApiTokenService(
         { apiTokenStore, environmentStore },
         config,
         eventService,
+        resourceLimitsService,
     );
 };
 
@@ -36,23 +39,27 @@ export const createFakeApiTokenService = (
 ): {
     apiTokenService: ApiTokenService;
     eventService: EventService;
+    resourceLimitsService: ResourceLimitsService;
     apiTokenStore: FakeApiTokenStore;
     environmentStore: IEnvironmentStore;
 } => {
     const apiTokenStore = new FakeApiTokenStore();
     const environmentStore = new FakeEnvironmentStore();
     const eventService = createFakeEventsService(config);
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     const apiTokenService = new ApiTokenService(
         { apiTokenStore, environmentStore },
         config,
         eventService,
+        resourceLimitsService,
     );
 
     return {
         apiTokenService,
         apiTokenStore,
         eventService,
+        resourceLimitsService,
         environmentStore,
     };
 };

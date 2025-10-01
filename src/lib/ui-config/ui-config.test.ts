@@ -1,15 +1,15 @@
 import supertest, { type Test } from 'supertest';
-import { createTestConfig } from '../../../test/config/test-config.js';
+import { createTestConfig } from '../../test/config/test-config.js';
 
-import createStores from '../../../test/fixtures/store.js';
-import getApp from '../../app.js';
-import { createServices } from '../../services/index.js';
+import createStores from '../../test/fixtures/store.js';
+import getApp from '../app.js';
+import { createServices } from '../services/index.js';
 import {
     DEFAULT_SEGMENT_VALUES_LIMIT,
     DEFAULT_STRATEGY_SEGMENTS_LIMIT,
-} from '../../util/segments.js';
+} from '../util/segments.js';
 import type TestAgent from 'supertest/lib/agent.d.ts';
-import type { IUnleashStores } from '../../types/index.js';
+import type { IUnleashStores } from '../types/index.js';
 
 const uiConfig = {
     headerBackground: 'red',

@@ -1,37 +1,34 @@
 import type { Response } from 'express';
-import type { AuthedRequest } from '../../types/core.js';
-import type { IUnleashServices } from '../../services/index.js';
-import { IAuthType, type IUnleashConfig } from '../../types/option.js';
-import version from '../../util/version.js';
-import Controller from '../controller.js';
-import type VersionService from '../../services/version-service.js';
-import type SettingService from '../../services/setting-service.js';
+import type { AuthedRequest } from '../types/core.js';
+import type { IUnleashServices } from '../services/index.js';
+import { IAuthType, type IUnleashConfig } from '../types/option.js';
+import version from '../util/version.js';
+import Controller from '../routes/controller.js';
+import type VersionService from '../services/version-service.js';
+import type SettingService from '../services/setting-service.js';
 import {
     type SimpleAuthSettings,
     simpleAuthSettingsKey,
-} from '../../types/settings/simple-auth-settings.js';
-import { ADMIN, NONE, UPDATE_CORS } from '../../types/permissions.js';
-import { createResponseSchema } from '../../openapi/util/create-response-schema.js';
+} from '../types/settings/simple-auth-settings.js';
+import { ADMIN, NONE, UPDATE_CORS } from '../types/permissions.js';
+import { createResponseSchema } from '../openapi/util/create-response-schema.js';
 import {
     uiConfigSchema,
     type UiConfigSchema,
-} from '../../openapi/spec/ui-config-schema.js';
-import type { OpenApiService } from '../../services/openapi-service.js';
-import type { EmailService } from '../../services/email-service.js';
-import { emptyResponse } from '../../openapi/util/standard-responses.js';
-import type { IAuthRequest } from '../unleash-types.js';
-import NotFoundError from '../../error/notfound-error.js';
-import type { SetCorsSchema } from '../../openapi/spec/set-cors-schema.js';
-import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
-import type {
-    FrontendApiService,
-    SessionService,
-} from '../../services/index.js';
-import type MaintenanceService from '../../features/maintenance/maintenance-service.js';
-import type ClientInstanceService from '../../features/metrics/instance/instance-service.js';
-import type { IFlagResolver } from '../../types/index.js';
+} from '../openapi/spec/ui-config-schema.js';
+import type { OpenApiService } from '../services/openapi-service.js';
+import type { EmailService } from '../services/email-service.js';
+import { emptyResponse } from '../openapi/util/standard-responses.js';
+import type { IAuthRequest } from '../routes/unleash-types.js';
+import NotFoundError from '../error/notfound-error.js';
+import type { SetCorsSchema } from '../openapi/spec/set-cors-schema.js';
+import { createRequestSchema } from '../openapi/util/create-request-schema.js';
+import type { FrontendApiService, SessionService } from '../services/index.js';
+import type MaintenanceService from '../features/maintenance/maintenance-service.js';
+import type { IFlagResolver } from '../types/index.js';
+import type { UiConfigService } from './ui-config-service.js';
 
-class ConfigController extends Controller {
+class UiConfigController extends Controller {
     private versionService: VersionService;
 
     private settingService: SettingService;
@@ -40,13 +37,13 @@ class ConfigController extends Controller {
 
     private emailService: EmailService;
 
-    private clientInstanceService: ClientInstanceService;
-
     private sessionService: SessionService;
 
     private maintenanceService: MaintenanceService;
 
     private flagResolver: IFlagResolver;
+
+    private uiConfigService: UiConfigService;
 
     private readonly openApiService: OpenApiService;
 
@@ -59,8 +56,8 @@ class ConfigController extends Controller {
             openApiService,
             frontendApiService,
             maintenanceService,
-            clientInstanceService,
             sessionService,
+            uiConfigService,
         }: Pick<
             IUnleashServices,
             | 'versionService'
@@ -71,18 +68,20 @@ class ConfigController extends Controller {
             | 'maintenanceService'
             | 'clientInstanceService'
             | 'sessionService'
+            | 'uiConfigService'
         >,
     ) {
         super(config);
+        this.flagResolver = config.flagResolver;
+        this.openApiService = openApiService;
+        this.uiConfigService = uiConfigService;
         this.versionService = versionService;
         this.settingService = settingService;
         this.emailService = emailService;
-        this.openApiService = openApiService;
         this.frontendApiService = frontendApiService;
         this.maintenanceService = maintenanceService;
-        this.clientInstanceService = clientInstanceService;
         this.sessionService = sessionService;
-        this.flagResolver = config.flagResolver;
+
         this.route({
             method: 'get',
             path: '',
@@ -125,6 +124,17 @@ class ConfigController extends Controller {
         req: AuthedRequest,
         res: Response<UiConfigSchema>,
     ): Promise<void> {
+        if (this.flagResolver.isEnabled('newUiConfigService')) {
+            const uiConfig = await this.uiConfigService.getUiConfig(req.user);
+
+            return this.openApiService.respondWithValidation(
+                200,
+                res,
+                uiConfigSchema.$id,
+                uiConfig,
+            );
+        }
+
         const getMaxSessionsCount = async () => {
             if (this.flagResolver.isEnabled('showUserDeviceCount')) {
                 return this.sessionService.getMaxSessionsCount();
@@ -207,4 +217,4 @@ class ConfigController extends Controller {
     }
 }
 
-export default ConfigController;
+export default UiConfigController;

@@ -1,4 +1,4 @@
-import { type FC, useState } from 'react';
+import { type FC, type ReactNode, useState } from 'react';
 import { Box, IconButton, Tooltip } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -12,11 +12,19 @@ type ProjectFeatureTogglesHeaderProps = {
     isLoading?: boolean;
     totalItems?: number;
     environmentsToExport?: string[];
+    actions?: ReactNode;
+    title?: string;
 };
 
 export const ProjectFeatureTogglesHeader: FC<
     ProjectFeatureTogglesHeaderProps
-> = ({ isLoading, totalItems, environmentsToExport }) => {
+> = ({
+    isLoading,
+    totalItems,
+    environmentsToExport,
+    actions,
+    title = 'Feature flags',
+}) => {
     const projectId = useRequiredPathParam('projectId');
     const headerLoadingRef = useLoading(isLoading || false);
     const [showExportDialog, setShowExportDialog] = useState(false);
@@ -24,11 +32,12 @@ export const ProjectFeatureTogglesHeader: FC<
     return (
         <Box ref={headerLoadingRef} aria-busy={isLoading} aria-live='polite'>
             <PageHeader
-                titleElement={`Feature flags ${
+                titleElement={`${title} ${
                     totalItems !== undefined ? `(${totalItems})` : ''
                 }`}
                 actions={
                     <>
+                        {actions}
                         <Tooltip title='Export all project flags' arrow>
                             <IconButton
                                 data-loading

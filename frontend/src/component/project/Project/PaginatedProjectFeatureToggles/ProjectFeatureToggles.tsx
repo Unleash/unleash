@@ -41,7 +41,7 @@ import {
     useProjectFeatureSearchActions,
 } from './useProjectFeatureSearch.ts';
 import { AvatarCell } from './AvatarCell.tsx';
-import { styled, useMediaQuery, useTheme } from '@mui/material';
+import { Box, styled, useMediaQuery, useTheme } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog.tsx';
 import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding.tsx';
@@ -101,8 +101,25 @@ const ButtonGroup = styled('div')(({ theme }) => ({
     paddingInline: theme.spacing(1.5),
 }));
 
+const LinkToggle = styled('button')(({ theme }) => ({
+    background: 'none',
+    border: 'none',
+    padding: 0,
+    margin: theme.spacing(0, 1.5),
+    marginLeft: 'auto',
+    cursor: 'pointer',
+    color: theme.palette.primary.main,
+    textDecoration: 'underline',
+    font: 'inherit',
+    display: 'inline-flex',
+    alignItems: 'center',
+    '&:hover': {
+        textDecoration: 'none',
+    },
+}));
+
 export const ProjectFeatureToggles = ({
-    environments,
+    environments: passedEnvironments,
 }: ProjectFeatureTogglesProps) => {
     const { trackEvent } = usePlausibleTracker();
     const projectId = useRequiredPathParam('projectId');
@@ -191,6 +208,17 @@ export const ProjectFeatureToggles = ({
             });
         }
     };
+
+    const showCleanupReminder = !tableState.lastSeenAt && !tableState.lifecycle;
+    const showArchived = Boolean(tableState.archived);
+    const toggleArchived = () => {
+        if (showArchived) {
+            setTableState({ archived: undefined });
+        } else {
+            setTableState({ archived: { operator: 'IS', values: ['true'] } });
+        }
+    };
+    const environments = showArchived ? [] : passedEnvironments;
 
     const columns = useMemo(
         () => [
@@ -493,8 +521,6 @@ export const ProjectFeatureToggles = ({
 
     const selectedData = useSelectedData(features, rowSelection);
 
-    const showCleanupReminder = !tableState.lastSeenAt && !tableState.lifecycle;
-
     return (
         <Container>
             <ConditionallyRender
@@ -527,6 +553,24 @@ export const ProjectFeatureToggles = ({
                             isLoading={initialLoad}
                             totalItems={total}
                             environmentsToExport={environments}
+                            actions={
+                                flagsUiFilterRefactorEnabled ? (
+                                    <LinkToggle
+                                        type='button'
+                                        onClick={toggleArchived}
+                                        aria-pressed={showArchived}
+                                    >
+                                        {showArchived
+                                            ? 'View active flags'
+                                            : 'View archived flags'}
+                                    </LinkToggle>
+                                ) : null
+                            }
+                            title={
+                                showArchived
+                                    ? 'Archived feature flags'
+                                    : 'Feature flags'
+                            }
                         />
                     ) : (
                         <LegacyProjectFeatureTogglesHeader
@@ -559,12 +603,22 @@ export const ProjectFeatureToggles = ({
                     {flagsUiFilterRefactorEnabled ? (
                         <FiltersContainer>
                             <FilterRow>
-                                <ProjectLifecycleFilters
-                                    projectId={projectId}
-                                    state={filterState}
-                                    onChange={setTableState}
-                                    total={loading ? undefined : total}
-                                />
+                                {showArchived ? (
+                                    <Box sx={{ marginRight: 'auto' }}>
+                                        <ProjectOverviewFilters
+                                            project={projectId}
+                                            onChange={setTableState}
+                                            state={filterState}
+                                        />
+                                    </Box>
+                                ) : (
+                                    <ProjectLifecycleFilters
+                                        projectId={projectId}
+                                        state={filterState}
+                                        onChange={setTableState}
+                                        total={loading ? undefined : total}
+                                    />
+                                )}
                                 {isSmallScreen ? null : (
                                     <ProjectFlagsSearch
                                         searchQuery={tableState.query || ''}
@@ -580,13 +634,15 @@ export const ProjectFeatureToggles = ({
                                     onToggle={onToggleColumnVisibility}
                                 />
                             </FilterRow>
-                            <FilterRow>
-                                <ProjectOverviewFilters
-                                    project={projectId}
-                                    onChange={setTableState}
-                                    state={filterState}
-                                />
-                            </FilterRow>
+                            {showArchived ? null : (
+                                <FilterRow>
+                                    <ProjectOverviewFilters
+                                        project={projectId}
+                                        onChange={setTableState}
+                                        state={filterState}
+                                    />
+                                </FilterRow>
+                            )}
                             {isSmallScreen ? (
                                 <ProjectFlagsSearch
                                     searchQuery={tableState.query || ''}

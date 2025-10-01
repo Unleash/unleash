@@ -7,14 +7,14 @@ describe('formatLargeNumbers', () => {
     });
 
     it('formats thousands correctly', () => {
-        expect(formatLargeNumbers(1000)).toBe('1K');
-        expect(formatLargeNumbers(1200)).toBe('1.2K');
-        expect(formatLargeNumbers(1400)).toBe('1.4K');
-        expect(formatLargeNumbers(1600)).toBe('1.6K');
-        expect(formatLargeNumbers(5000)).toBe('5K');
-        expect(formatLargeNumbers(9500)).toBe('9.5K');
-        expect(formatLargeNumbers(10000)).toBe('10K');
-        expect(formatLargeNumbers(999000)).toBe('999K');
+        expect(formatLargeNumbers(1000)).toBe('1k');
+        expect(formatLargeNumbers(1200)).toBe('1.2k');
+        expect(formatLargeNumbers(1400)).toBe('1.4k');
+        expect(formatLargeNumbers(1600)).toBe('1.6k');
+        expect(formatLargeNumbers(5000)).toBe('5k');
+        expect(formatLargeNumbers(9500)).toBe('9.5k');
+        expect(formatLargeNumbers(10000)).toBe('10k');
+        expect(formatLargeNumbers(999000)).toBe('999k');
     });
 
     it('formats millions correctly', () => {

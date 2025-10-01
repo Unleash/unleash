@@ -74,7 +74,6 @@ export type UiFlags = {
     outdatedSdksBanner?: boolean;
     estimateTrafficDataCost?: boolean;
     disableShowContextFieldSelectionValues?: boolean;
-    projectOverviewRefactorFeedback?: boolean;
     featureLifecycle?: boolean;
     manyStrategiesPagination?: boolean;
     enableLegacyVariants?: boolean;
@@ -89,6 +88,7 @@ export type UiFlags = {
     lifecycleGraphs?: boolean;
     newStrategyModal?: boolean;
     globalChangeRequestList?: boolean;
+    flagsUiFilterRefactor?: boolean;
 };
 
 export interface IVersionInfo {

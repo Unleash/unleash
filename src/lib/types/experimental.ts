@@ -60,7 +60,8 @@ export type IFlagKey =
     | 'optimizeLifecycle'
     | 'newStrategyModal'
     | 'globalChangeRequestList'
-    | 'newUiConfigService';
+    | 'newUiConfigService'
+    | 'flagsUiFilterRefactor';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -276,6 +277,10 @@ const flags: IFlags = {
     ),
     newUiConfigService: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_UI_CONFIG_SERVICE,
+        false,
+    ),
+    flagsUiFilterRefactor: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FLAGS_UI_FILTER_REFACTOR,
         false,
     ),
 };

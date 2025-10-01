@@ -31,9 +31,9 @@ import type EventService from '../features/events/event-service.js';
 import { addMinutes, isPast } from 'date-fns';
 import metricsHelper from '../util/metrics-helper.js';
 import { FUNCTION_TIME } from '../metric-events.js';
-import type { ResourceLimitsSchema } from '../openapi/index.js';
 import { throwExceedsLimitError } from '../error/exceeds-limit-error.js';
 import type EventEmitter from 'events';
+import type { ResourceLimitsService } from '../features/resource-limits/resource-limits-service.js';
 
 const resolveTokenPermissions = (tokenType: string) => {
     if (tokenType === ApiTokenType.ADMIN) {
@@ -73,7 +73,7 @@ export class ApiTokenService {
 
     private timer: Function;
 
-    private resourceLimits: ResourceLimitsSchema;
+    private resourceLimitsService: ResourceLimitsService;
 
     private eventBus: EventEmitter;
 
@@ -84,20 +84,17 @@ export class ApiTokenService {
         }: Pick<IUnleashStores, 'apiTokenStore' | 'environmentStore'>,
         config: Pick<
             IUnleashConfig,
-            | 'getLogger'
-            | 'authentication'
-            | 'flagResolver'
-            | 'eventBus'
-            | 'resourceLimits'
+            'getLogger' | 'authentication' | 'flagResolver' | 'eventBus'
         >,
         eventService: EventService,
+        resourceLimitsService: ResourceLimitsService,
     ) {
         this.store = apiTokenStore;
         this.eventService = eventService;
+        this.resourceLimitsService = resourceLimitsService;
         this.environmentStore = environmentStore;
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('/services/api-token-service.ts');
-        this.resourceLimits = config.resourceLimits;
         if (!this.flagResolver.isEnabled('useMemoizedActiveTokens')) {
             // This is probably not needed because the scheduler will run it
             this.fetchActiveTokens();
@@ -321,7 +318,8 @@ export class ApiTokenService {
 
     private async validateApiTokenLimit() {
         const currentTokenCount = await this.store.count();
-        const limit = this.resourceLimits.apiTokens;
+        const { apiTokens: limit } =
+            await this.resourceLimitsService.getResourceLimits();
         if (currentTokenCount >= limit) {
             throwExceedsLimitError(this.eventBus, {
                 resource: 'api token',

@@ -9,6 +9,7 @@ import {
     FavoritesService,
     GroupService,
     ProjectService,
+    ResourceLimitsService,
 } from '../../services/index.js';
 import FakeGroupStore from '../../../test/fixtures/fake-group-store.js';
 import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
@@ -117,10 +118,13 @@ export const createProjectService = (
 
     const privateProjectChecker = createPrivateProjectChecker(db, config);
 
+    const resourceLimitsService = new ResourceLimitsService(config);
+
     const apiTokenService = new ApiTokenService(
         { apiTokenStore, environmentStore },
         config,
         eventService,
+        resourceLimitsService,
     );
 
     const projectReadModel = createProjectReadModel(
@@ -153,6 +157,7 @@ export const createProjectService = (
         eventService,
         privateProjectChecker,
         apiTokenService,
+        resourceLimitsService,
     );
 };
 
@@ -189,10 +194,13 @@ export const createFakeProjectService = (config: IUnleashConfig) => {
         eventService,
     );
 
+    const resourceLimitsService = new ResourceLimitsService(config);
+
     const apiTokenService = new ApiTokenService(
         { apiTokenStore, environmentStore },
         config,
         eventService,
+        resourceLimitsService,
     );
 
     const projectReadModel = createFakeProjectReadModel();
@@ -221,6 +229,7 @@ export const createFakeProjectService = (config: IUnleashConfig) => {
         eventService,
         privateProjectChecker,
         apiTokenService,
+        resourceLimitsService,
     );
     return {
         projectService,

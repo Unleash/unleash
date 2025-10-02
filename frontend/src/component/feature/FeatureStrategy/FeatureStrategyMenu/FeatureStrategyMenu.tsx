@@ -135,7 +135,7 @@ export const FeatureStrategyMenu = ({
         confirmed?: boolean,
     ) => {
         try {
-            if (!confirmed && activeReleasePlan) {
+            if (newStrategyModalEnabled && !confirmed && activeReleasePlan) {
                 setAddReleasePlanConfirmationOpen(true);
                 return;
             }

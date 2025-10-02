@@ -53,11 +53,7 @@ export const getSeriesLabel = (metric: Record<string, string>): string => {
     return `${__name__} (${labelParts})`;
 };
 
-export const formatLargeNumbers = (value: number): string => {
-    const formatter = prettifyLargeNumber(1000, 1);
-    const result = formatter(value);
-    return result.replace(/K/g, 'k');
-};
+export const formatLargeNumbers = prettifyLargeNumber(1000, 1);
 
 export const getMetricType = (seriesName: string) => {
     if (seriesName.startsWith('unleash_counter_')) return 'counter';

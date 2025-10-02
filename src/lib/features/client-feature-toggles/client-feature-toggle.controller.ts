@@ -357,14 +357,8 @@ export default class FeatureController extends Controller {
             );
 
         const queryHash = hashSum(query);
-        const etagVariant = this.flagResolver.getVariant('etagVariant');
-        if (etagVariant.feature_enabled && etagVariant.enabled) {
-            const etag = `"${queryHash}:${revisionId}:${etagVariant.name}"`;
-            return { revisionId, etag, queryHash };
-        } else {
-            const etag = `"${queryHash}:${revisionId}"`;
-            return { revisionId, etag, queryHash };
-        }
+        const etag = `"${queryHash}:${revisionId}:v1"`;
+        return { revisionId, etag, queryHash };
     }
 
     async getFeatureToggle(

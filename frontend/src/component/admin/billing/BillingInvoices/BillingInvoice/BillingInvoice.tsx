@@ -9,7 +9,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { formatCurrency } from './types.ts';
 import { Badge } from 'component/common/Badge/Badge.tsx';
 import type { FC, ReactNode } from 'react';
-import { BillingInvoiceRow } from './BillingInvoiceRow.tsx';
+import { BillingInvoiceRow } from './BillingInvoiceRow/BillingInvoiceRow.tsx';
 
 export type BillingInvoiceSectionItem = {
     description: string;

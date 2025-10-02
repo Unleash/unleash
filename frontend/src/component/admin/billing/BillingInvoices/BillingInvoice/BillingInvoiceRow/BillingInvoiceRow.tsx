@@ -1,7 +1,7 @@
 import { formatLargeNumbers } from 'component/impact-metrics/metricsFormatters.ts';
-import { formatCurrency } from './types.ts';
-import { ConsumptionIndicator } from './ConsumptionIndicator/ConsumptionIndicator.tsx';
-import type { BillingInvoiceSectionItem } from './BillingInvoice.tsx';
+import { formatCurrency } from '../types.ts';
+import { ConsumptionIndicator } from '../ConsumptionIndicator/ConsumptionIndicator.tsx';
+import type { BillingInvoiceSectionItem } from '../BillingInvoice.tsx';
 import { styled } from '@mui/material';
 
 const StyledCellWithIndicator = styled('div')(({ theme }) => ({

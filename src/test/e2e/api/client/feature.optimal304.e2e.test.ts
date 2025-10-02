@@ -186,10 +186,10 @@ describe('feature 304 api client', () => {
                 .expect(200);
 
             expect(res.headers.etag).toBe(
-                `"76d8bb0e:${expectedDevEventId}:v2"`,
+                `"76d8bb0e:${expectedDevEventId}:v1"`,
             );
             expect(res.body.meta.etag).toBe(
-                `"76d8bb0e:${expectedDevEventId}:v2"`,
+                `"76d8bb0e:${expectedDevEventId}:v1"`,
             );
         });
 
@@ -201,10 +201,10 @@ describe('feature 304 api client', () => {
                 .expect(200);
 
             expect(res.headers.etag).toBe(
-                `"76d8bb0e:${expectedDevEventId}:v2"`,
+                `"76d8bb0e:${expectedDevEventId}:v1"`,
             );
             expect(res.body.meta.etag).toBe(
-                `"76d8bb0e:${expectedDevEventId}:v2"`,
+                `"76d8bb0e:${expectedDevEventId}:v1"`,
             );
         });
 
@@ -215,12 +215,12 @@ describe('feature 304 api client', () => {
             await app.request
                 .get('/api/client/features')
                 .set('Authorization', devTokenSecret)
-                .set('if-none-match', `"76d8bb0e:${expectedDevEventId}:v2"`)
+                .set('if-none-match', `"76d8bb0e:${expectedDevEventId}:v1"`)
                 .expect(304);
         });
 
         test('a token with all envs should get the max id regardless of the environment', async () => {
-            const currentProdEtag = `"67e24428:15:v2"`;
+            const currentProdEtag = `"67e24428:15:v1"`;
             const { headers } = await app.request
                 .get('/api/client/features')
                 .set('if-none-match', currentProdEtag)
@@ -228,7 +228,7 @@ describe('feature 304 api client', () => {
                 .expect(200);
 
             // it's a different hash than prod, but gets the max id
-            expect(headers.etag).toEqual(`"ae443048:15:v2"`);
+            expect(headers.etag).toEqual(`"ae443048:15:v1"`);
         });
 
         test('production environment gets a different etag than development', async () => {
@@ -237,19 +237,19 @@ describe('feature 304 api client', () => {
                 .set('Authorization', prodTokenSecret)
                 .expect(200);
 
-            expect(prodHeaders.etag).toEqual(`"67e24428:15:v2"`);
+            expect(prodHeaders.etag).toEqual(`"67e24428:15:v1"`);
 
             const { headers: devHeaders } = await app.request
                 .get('/api/client/features')
                 .set('Authorization', devTokenSecret)
                 .expect(200);
 
-            expect(devHeaders.etag).toEqual(`"76d8bb0e:13:v2"`);
+            expect(devHeaders.etag).toEqual(`"76d8bb0e:13:v1"`);
         });
 
         test('modifying dev environment should only invalidate dev tokens', async () => {
-            const currentDevEtag = `"76d8bb0e:13:v2"`;
-            const currentProdEtag = `"67e24428:15:v2"`;
+            const currentDevEtag = `"76d8bb0e:13:v1"`;
+            const currentProdEtag = `"67e24428:15:v1"`;
             await app.request
                 .get('/api/client/features')
                 .set('if-none-match', currentProdEtag)
@@ -280,7 +280,7 @@ describe('feature 304 api client', () => {
             // Note: this test yields a different result if run in isolation
             // this is because the id 19 depends on a previous test adding a feature
             // otherwise the id will be 18
-            expect(devHeaders.etag).toEqual(`"76d8bb0e:19:v2"`);
+            expect(devHeaders.etag).toEqual(`"76d8bb0e:19:v1"`);
         });
     },
 );

@@ -357,7 +357,7 @@ export default class FeatureController extends Controller {
             );
 
         const queryHash = hashSum(query);
-        const etag = `"${queryHash}:${revisionId}:v2"`;
+        const etag = `"${queryHash}:${revisionId}:v1"`;
         return { revisionId, etag, queryHash };
     }
 

@@ -29,8 +29,8 @@ test('1.5 or more', () => {
 });
 
 test.each([
-    [10_000, '10K'],
-    [100_000, '100K'],
+    [10_000, '10k'],
+    [100_000, '100k'],
     [1_000_000, '1M'],
 ])('Big numbers: %s -> %s', (number, rendered) => {
     expect(normalizeDays(number)).toBe(`${rendered} days`);

@@ -6,5 +6,8 @@ export const prettifyLargeNumber =
         if (value < threshold) {
             return value.toLocaleString();
         }
-        return millify(value, { precision, units: ['', 'k', 'M', 'B', 'T'] });
+        return millify(value, {
+            precision,
+            units: ['', 'k', 'M', 'B', 'T', 'P', 'E'],
+        });
     };

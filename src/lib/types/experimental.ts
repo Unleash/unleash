@@ -60,7 +60,8 @@ export type IFlagKey =
     | 'newStrategyModal'
     | 'globalChangeRequestList'
     | 'newUiConfigService'
-    | 'flagsUiFilterRefactor';
+    | 'flagsUiFilterRefactor'
+    | 'milestoneProgression';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -275,6 +276,10 @@ const flags: IFlags = {
     ),
     flagsUiFilterRefactor: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FLAGS_UI_FILTER_REFACTOR,
+        false,
+    ),
+    milestoneProgression: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_MILESTONE_PROGRESSION,
         false,
     ),
 };

@@ -1,5 +1,6 @@
 import { Box, styled, Typography } from '@mui/material';
 import type { FC } from 'react';
+import { BillingInvoice } from './BillingInvoice/BillingInvoice.tsx';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -20,6 +21,7 @@ export const BillingInvoices: FC<BillingInvoicesProps> = () => {
     return (
         <StyledContainer>
             <StyledHeader>Usage and invoices</StyledHeader>
+            <BillingInvoice status='upcoming' title='October 15th' />
         </StyledContainer>
     );
 };

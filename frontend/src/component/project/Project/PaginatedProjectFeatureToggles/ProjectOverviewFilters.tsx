@@ -120,14 +120,18 @@ export const ProjectOverviewFilters: FC<ProjectOverviewFiltersProps> = ({
                 singularOperators: ['IS', 'IS_NOT'],
                 pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
             },
-            {
-                label: 'Show only archived',
-                icon: 'inventory',
-                options: [{ label: 'True', value: 'true' }],
-                filterKey: 'archived',
-                singularOperators: ['IS'],
-                pluralOperators: ['IS_ANY_OF'],
-            },
+            ...(!flagsUiFilterRefactorEnabled
+                ? [
+                      {
+                          label: 'Show only archived',
+                          icon: 'inventory',
+                          options: [{ label: 'True', value: 'true' }],
+                          filterKey: 'archived',
+                          singularOperators: ['IS'],
+                          pluralOperators: ['IS_ANY_OF'],
+                      } satisfies IFilterItem,
+                  ]
+                : []),
         ];
 
         setAvailableFilters(availableFilters);

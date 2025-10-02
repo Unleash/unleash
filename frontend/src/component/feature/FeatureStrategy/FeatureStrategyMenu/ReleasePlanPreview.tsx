@@ -1,5 +1,8 @@
-import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
-import { ReleasePlan } from './ReleasePlan.tsx';
+import type {
+    IReleasePlan,
+    IReleasePlanTemplate,
+} from 'interfaces/releasePlans';
+import { ReleasePlan } from '../../FeatureView/FeatureOverview/ReleasePlan/ReleasePlan.tsx';
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
 import {
     styled,
@@ -9,9 +12,8 @@ import {
     DialogActions,
     Button,
 } from '@mui/material';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature.ts';
 
 const StyledScrollableContent = styled(Box)(({ theme }) => ({
     width: theme.breakpoints.values.md,
@@ -38,6 +40,8 @@ interface IReleasePlanPreviewProps {
     projectId: string;
     featureName: string;
     environment: string;
+    environmentEnabled?: boolean;
+    activeReleasePlan?: IReleasePlan;
     crProtected?: boolean;
     onConfirm: () => void;
     onBack: () => void;
@@ -48,19 +52,12 @@ export const ReleasePlanPreview = ({
     projectId,
     featureName,
     environment,
+    activeReleasePlan,
     crProtected,
     onConfirm,
     onBack,
 }: IReleasePlanPreviewProps) => {
     const { feature } = useFeature(projectId, featureName);
-    const { releasePlans, loading } = useReleasePlans(
-        projectId,
-        featureName,
-        environment,
-    );
-
-    const activeReleasePlan = releasePlans[0];
-
     const environmentData = feature?.environments.find(
         ({ name }) => name === environment,
     );
@@ -71,8 +68,6 @@ export const ReleasePlanPreview = ({
         featureName,
         environment,
     );
-
-    if (loading) return null;
 
     return (
         <>
@@ -85,13 +80,17 @@ export const ReleasePlanPreview = ({
             <StyledScrollableContent>
                 {activeReleasePlan && (
                     <Box sx={{ px: 4, pb: 2 }}>
-                        <Alert severity='error'>
+                        <Alert severity='warning'>
                             This feature environment currently has{' '}
-                            <strong>{activeReleasePlan.name}</strong> -{' '}
+                            <strong>{activeReleasePlan.name}</strong> (
                             <strong>
-                                {activeReleasePlan.milestones[0].name}
+                                {activeReleasePlan.milestones.find(
+                                    ({ id }) =>
+                                        activeReleasePlan.activeMilestoneId ===
+                                        id,
+                                )?.name ?? activeReleasePlan.milestones[0].name}
                             </strong>
-                            {environmentEnabled ? ' running' : ' paused'}.
+                            ){environmentEnabled ? ' running' : ' paused'}.
                             Adding a new release plan will replace the existing
                             release plan.
                         </Alert>

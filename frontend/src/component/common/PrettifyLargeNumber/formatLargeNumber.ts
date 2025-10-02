@@ -8,6 +8,5 @@ export const prettifyLargeNumber =
         }
         return millify(value, {
             precision,
-            units: ['', 'k', 'M', 'B', 'T', 'P', 'E'],
         });
     };

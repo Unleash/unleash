@@ -558,7 +558,6 @@ export const ProjectFeatureToggles = ({
                                     <LinkToggle
                                         type='button'
                                         onClick={toggleArchived}
-                                        aria-pressed={showArchived}
                                     >
                                         {showArchived
                                             ? 'View active flags'

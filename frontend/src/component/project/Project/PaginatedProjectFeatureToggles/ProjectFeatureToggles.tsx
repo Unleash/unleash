@@ -119,7 +119,7 @@ const LinkToggle = styled('button')(({ theme }) => ({
 }));
 
 export const ProjectFeatureToggles = ({
-    environments: passedEnvironments,
+    environments: availableEnvironments,
 }: ProjectFeatureTogglesProps) => {
     const { trackEvent } = usePlausibleTracker();
     const projectId = useRequiredPathParam('projectId');
@@ -218,7 +218,7 @@ export const ProjectFeatureToggles = ({
             setTableState({ archived: { operator: 'IS', values: ['true'] } });
         }
     };
-    const environments = showArchived ? [] : passedEnvironments;
+    const environments = showArchived ? [] : availableEnvironments;
 
     const columns = useMemo(
         () => [

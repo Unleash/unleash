@@ -60,7 +60,8 @@ export type IFlagKey =
     | 'newStrategyModal'
     | 'globalChangeRequestList'
     | 'newUiConfigService'
-    | 'flagsUiFilterRefactor';
+    | 'flagsUiFilterRefactor'
+    | 'trafficBillingDisplay';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -275,6 +276,10 @@ const flags: IFlags = {
     ),
     flagsUiFilterRefactor: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FLAGS_UI_FILTER_REFACTOR,
+        false,
+    ),
+    trafficBillingDisplay: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_TRAFFIC_BILLING_DISPLAY,
         false,
     ),
 };

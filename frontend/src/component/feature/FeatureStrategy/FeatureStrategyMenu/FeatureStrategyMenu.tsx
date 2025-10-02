@@ -21,12 +21,13 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { LegacyReleasePlanReviewDialog } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/LegacyReleasePlanReviewDialog.tsx';
-import { ReleasePlanPreview } from '../../FeatureView/FeatureOverview/ReleasePlan/ReleasePlanPreview.tsx';
+import { ReleasePlanPreview } from './ReleasePlanPreview.tsx';
 import {
     FeatureStrategyMenuCards,
     type StrategyFilterValue,
 } from './FeatureStrategyMenuCards/FeatureStrategyMenuCards.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { ReleasePlanConfirmationDialog } from './ReleasePlanConfirmationDialog.tsx';
 
 interface IFeatureStrategyMenuProps {
     label: string;
@@ -78,6 +79,8 @@ export const FeatureStrategyMenu = ({
         useState<IReleasePlanTemplate>();
     const [addReleasePlanOpen, setAddReleasePlanOpen] = useState(false);
     const [releasePlanPreview, setReleasePlanPreview] = useState(false);
+    const [addReleasePlanConfirmationOpen, setAddReleasePlanConfirmationOpen] =
+        useState(false);
     const dialogId = isStrategyMenuDialogOpen
         ? 'FeatureStrategyMenuDialog'
         : undefined;
@@ -86,12 +89,18 @@ export const FeatureStrategyMenu = ({
     const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
-    const { refetch } = useReleasePlans(projectId, featureId, environmentId);
+    const { refetch, releasePlans } = useReleasePlans(
+        projectId,
+        featureId,
+        environmentId,
+    );
     const { addReleasePlanToFeature } = useReleasePlansApi();
     const { isEnterprise } = useUiConfig();
     const displayReleasePlanButton = isEnterprise();
     const crProtected = isChangeRequestConfigured(environmentId);
     const newStrategyModalEnabled = useUiFlag('newStrategyModal');
+
+    const activeReleasePlan = releasePlans[0];
 
     const onClose = () => {
         setIsStrategyMenuDialogOpen(false);
@@ -121,8 +130,15 @@ export const FeatureStrategyMenu = ({
         setIsStrategyMenuDialogOpen(true);
     };
 
-    const addReleasePlan = async (template: IReleasePlanTemplate) => {
+    const addReleasePlan = async (
+        template: IReleasePlanTemplate,
+        confirmed?: boolean,
+    ) => {
         try {
+            if (!confirmed && activeReleasePlan) {
+                setAddReleasePlanConfirmationOpen(true);
+                return;
+            }
             if (crProtected) {
                 await addChange(projectId, environmentId, {
                     feature: featureId,
@@ -153,18 +169,19 @@ export const FeatureStrategyMenu = ({
 
                 refetch();
             }
+
             trackEvent('release-management', {
                 props: {
                     eventType: 'add-plan',
                     plan: template.name,
                 },
             });
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        } finally {
+            setAddReleasePlanConfirmationOpen(false);
             setAddReleasePlanOpen(false);
             setSelectedTemplate(undefined);
             onClose();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
@@ -284,6 +301,7 @@ export const FeatureStrategyMenu = ({
                                 projectId={projectId}
                                 featureName={featureId}
                                 environment={environmentId}
+                                activeReleasePlan={activeReleasePlan}
                                 crProtected={crProtected}
                                 onBack={() => setReleasePlanPreview(false)}
                                 onConfirm={() => {
@@ -329,23 +347,34 @@ export const FeatureStrategyMenu = ({
                 )}
             </Dialog>
             {selectedTemplate && (
-                <LegacyReleasePlanReviewDialog
-                    open={addReleasePlanOpen}
-                    setOpen={(open) => {
-                        setAddReleasePlanOpen(open);
-                        if (!open) {
-                            setIsStrategyMenuDialogOpen(true);
-                        }
-                    }}
-                    onConfirm={() => {
-                        addReleasePlan(selectedTemplate);
-                    }}
-                    template={selectedTemplate}
-                    projectId={projectId}
-                    featureName={featureId}
-                    environment={environmentId}
-                    crProtected={crProtected}
-                />
+                <>
+                    <LegacyReleasePlanReviewDialog
+                        open={addReleasePlanOpen}
+                        setOpen={(open) => {
+                            setAddReleasePlanOpen(open);
+                            if (!open) {
+                                setIsStrategyMenuDialogOpen(true);
+                            }
+                        }}
+                        onConfirm={() => {
+                            addReleasePlan(selectedTemplate);
+                        }}
+                        template={selectedTemplate}
+                        projectId={projectId}
+                        featureName={featureId}
+                        environment={environmentId}
+                        crProtected={crProtected}
+                    />
+                    <ReleasePlanConfirmationDialog
+                        template={selectedTemplate}
+                        crProtected={crProtected}
+                        open={addReleasePlanConfirmationOpen}
+                        setOpen={setAddReleasePlanConfirmationOpen}
+                        onConfirm={() => {
+                            addReleasePlan(selectedTemplate, true);
+                        }}
+                    />
+                </>
             )}
         </StyledStrategyMenu>
     );

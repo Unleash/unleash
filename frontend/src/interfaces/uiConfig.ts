@@ -89,6 +89,7 @@ export type UiFlags = {
     newStrategyModal?: boolean;
     globalChangeRequestList?: boolean;
     flagsUiFilterRefactor?: boolean;
+    trafficBillingDisplay?: boolean;
     milestoneProgression?: boolean;
 };
 

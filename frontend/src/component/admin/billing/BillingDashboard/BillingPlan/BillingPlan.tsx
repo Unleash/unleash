@@ -1,4 +1,4 @@
-import { Alert, Grid, styled } from '@mui/material';
+import { Alert, Grid, Paper, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { InstancePlan, InstanceState } from 'interfaces/instance';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -8,6 +8,7 @@ import { GridCol } from 'component/common/GridCol/GridCol';
 import { Badge } from 'component/common/Badge/Badge';
 import { BillingDetails } from './BillingDetails.tsx';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 export const BILLING_PRO_BASE_PRICE = 80;
 export const BILLING_PRO_SEAT_PRICE = 15;
@@ -18,7 +19,10 @@ export const BILLING_PAYG_DEFAULT_MINIMUM_SEATS = 5;
 export const BILLING_PRO_DEFAULT_INCLUDED_SEATS = 5;
 export const BILLING_INCLUDED_REQUESTS = 53_000_000;
 
-const StyledPlanBox = styled('aside')(({ theme }) => ({
+/**
+ * @deprecated remove with `trafficBillingDisplay` flag
+ */
+const LegacyStyledPlanBox = styled('aside')(({ theme }) => ({
     padding: theme.spacing(2.5),
     height: '100%',
     borderRadius: theme.shape.borderRadiusLarge,
@@ -26,6 +30,13 @@ const StyledPlanBox = styled('aside')(({ theme }) => ({
     [theme.breakpoints.up('md')]: {
         padding: theme.spacing(6.5),
     },
+}));
+
+const StyledPlanBox = styled(Paper)(({ theme }) => ({
+    padding: theme.spacing(4),
+    height: '100%',
+    borderRadius: theme.shape.borderRadiusLarge,
+    backgroundColor: theme.palette.background.paper,
 }));
 
 const StyledPlanSpan = styled('span')(({ theme }) => ({
@@ -63,6 +74,7 @@ export const BillingPlan = () => {
     const {
         uiConfig: { billing },
     } = useUiConfig();
+    const trafficBillingDisplay = useUiFlag('trafficBillingDisplay');
     const { instanceStatus } = useInstanceStatus();
 
     const isPro =
@@ -70,10 +82,14 @@ export const BillingPlan = () => {
     const isPAYG = billing === 'pay-as-you-go';
     const isEnterpriseConsumption = billing === 'enterprise-consumption';
 
+    const StyledWrapper = trafficBillingDisplay
+        ? StyledPlanBox
+        : LegacyStyledPlanBox;
+
     if (!instanceStatus)
         return (
             <Grid item xs={12} md={7}>
-                <StyledPlanBox data-loading sx={{ flex: 1, height: '400px' }} />
+                <StyledWrapper data-loading sx={{ flex: 1, height: '400px' }} />
             </Grid>
         );
 
@@ -85,7 +101,7 @@ export const BillingPlan = () => {
 
     return (
         <Grid item xs={12} md={7}>
-            <StyledPlanBox>
+            <StyledWrapper>
                 <ConditionallyRender
                     condition={inactive}
                     show={
@@ -161,7 +177,7 @@ export const BillingPlan = () => {
                     isPAYG={isPAYG}
                     isEnterpriseConsumption={isEnterpriseConsumption}
                 />
-            </StyledPlanBox>
+            </StyledWrapper>
         </Grid>
     );
 };

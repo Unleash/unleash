@@ -20,7 +20,7 @@ export const impactMetricsSchema = {
         type: {
             description: 'Type of the metric',
             type: 'string',
-            enum: ['counter', 'gauge'],
+            enum: ['counter', 'gauge', 'histogram'],
             example: 'counter',
         },
         samples: {

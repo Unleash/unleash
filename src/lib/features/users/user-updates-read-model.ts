@@ -50,9 +50,18 @@ export class UserUpdatesReadModel {
         return result ? result.last_updated_at : null;
     }
 
+    /** @deprecated */
     async getUsersUpdatedAfter(
         date: Date,
         limit: number = 100,
+    ): Promise<UpdatedUser[]> {
+        return this.getUsersUpdatedAfterOrEqual(date, limit, 0);
+    }
+
+    async getUsersUpdatedAfterOrEqual(
+        date: Date,
+        limit: number = 100,
+        afterId: number = 0,
     ): Promise<UpdatedUser[]> {
         const result = await this.db(USERS_TABLE)
             .where({
@@ -60,8 +69,15 @@ export class UserUpdatesReadModel {
                 is_system: false,
                 is_service: false,
             })
-            .where('updated_at', '>', date)
+            .where((builder) => {
+                builder.where('updated_at', '>', date).orWhere((subBuilder) => {
+                    subBuilder
+                        .where('updated_at', '=', date)
+                        .where('id', '>', afterId);
+                });
+            })
             .orderBy('updated_at', 'asc')
+            .orderBy('id', 'asc')
             .select([
                 ...USER_COLUMNS_PUBLIC,
                 'created_at',

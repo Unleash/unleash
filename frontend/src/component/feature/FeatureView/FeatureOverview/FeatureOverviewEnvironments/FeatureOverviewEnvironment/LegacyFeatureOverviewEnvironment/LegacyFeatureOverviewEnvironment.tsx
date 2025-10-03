@@ -6,17 +6,17 @@ import type {
 import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
 import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { UpgradeChangeRequests } from './UpgradeChangeRequests/UpgradeChangeRequests.tsx';
+import { UpgradeChangeRequests } from '../UpgradeChangeRequests/UpgradeChangeRequests.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import {
     environmentAccordionSummaryClassName,
-    EnvironmentHeader,
-} from './EnvironmentHeader/EnvironmentHeader.tsx';
-import FeatureOverviewEnvironmentMetrics from './EnvironmentHeader/FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics.tsx';
-import { FeatureOverviewEnvironmentToggle } from './EnvironmentHeader/FeatureOverviewEnvironmentToggle/FeatureOverviewEnvironmentToggle.tsx';
+    LegacyEnvironmentHeader,
+} from '../EnvironmentHeader/LegacyEnvironmentHeader/LegacyEnvironmentHeader.tsx';
+import FeatureOverviewEnvironmentMetrics from '../EnvironmentHeader/FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics.tsx';
+import { FeatureOverviewEnvironmentToggle } from '../EnvironmentHeader/FeatureOverviewEnvironmentToggle/FeatureOverviewEnvironmentToggle.tsx';
 import { useState } from 'react';
 import type { IReleasePlan } from 'interfaces/releasePlans';
-import { EnvironmentAccordionBody } from './EnvironmentAccordionBody/EnvironmentAccordionBody.tsx';
+import { EnvironmentAccordionBody } from '../EnvironmentAccordionBody/EnvironmentAccordionBody.tsx';
 import { Box } from '@mui/material';
 import { ReleaseTemplatesFeedback } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/ReleaseTemplatesFeedback/ReleaseTemplatesFeedback';
 
@@ -29,8 +29,6 @@ const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     boxShadow: 'none',
     background: 'none',
-    borderRadius: theme.shape.borderRadiusLarge,
-
     [`&:has(.${environmentAccordionSummaryClassName}:focus-visible)`]: {
         background: theme.palette.table.headerHover,
     },
@@ -65,7 +63,7 @@ type FeatureOverviewEnvironmentProps = {
     onToggleEnvOpen?: (isOpen: boolean) => void;
 };
 
-export const FeatureOverviewEnvironment = ({
+export const LegacyFeatureOverviewEnvironment = ({
     environment,
     metrics = { yes: 0, no: 0 },
     otherEnvironments = [],
@@ -93,16 +91,13 @@ export const FeatureOverviewEnvironment = ({
                     setIsOpen(state);
                 }}
             >
-                <EnvironmentHeader
+                <LegacyEnvironmentHeader
                     environmentMetadata={{
                         strategyCount: environment.strategies?.length ?? 0,
                         releasePlanCount: environment.releasePlans?.length ?? 0,
                     }}
                     environmentId={environment.name}
-                    projectId={projectId}
-                    featureId={featureId}
                     expandable={hasActivations}
-                    hasActivations={hasActivations}
                 >
                     <FeatureOverviewEnvironmentToggle
                         environment={environment}
@@ -120,7 +115,7 @@ export const FeatureOverviewEnvironment = ({
                             environmentMetric={metrics}
                         />
                     )}
-                </EnvironmentHeader>
+                </LegacyEnvironmentHeader>
                 <NewStyledAccordionDetails>
                     <StyledEnvironmentAccordionContainer>
                         <EnvironmentAccordionBody

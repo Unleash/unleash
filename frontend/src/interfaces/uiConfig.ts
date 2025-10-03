@@ -90,6 +90,7 @@ export type UiFlags = {
     globalChangeRequestList?: boolean;
     flagsUiFilterRefactor?: boolean;
     trafficBillingDisplay?: boolean;
+    milestoneProgression?: boolean;
 };
 
 export interface IVersionInfo {

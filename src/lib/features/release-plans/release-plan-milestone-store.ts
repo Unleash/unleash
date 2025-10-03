@@ -45,4 +45,11 @@ export class ReleasePlanMilestoneStore extends CRUDStore<
             .where('release_plan_definition_id', templateId)
             .delete();
     }
+
+    async updateStartTime(milestoneId: string): Promise<void> {
+        await this.db.raw(
+            `UPDATE ${TABLE} SET started_at = NOW() WHERE id = ?`,
+            [milestoneId],
+        );
+    }
 }

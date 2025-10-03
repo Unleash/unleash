@@ -256,3 +256,40 @@ test('renders lifecycle quick filters', async () => {
     await screen.findByText(/Rollout production/);
     await screen.findByText(/Cleanup/);
 });
+
+test('clears lifecycle filter when switching to archived view', async () => {
+    setupApi();
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: {
+            flagCreator: true,
+            flagsUiFilterRefactor: true,
+        },
+    });
+
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={
+                    <ProjectFeatureToggles
+                        environments={['development', 'production']}
+                    />
+                }
+            />
+        </Routes>,
+        {
+            route: '/projects/default?lifecycle=IS%3Alive',
+        },
+    );
+
+    expect(window.location.href).toContain('lifecycle=IS%3Alive');
+
+    await screen.findByText('featureA');
+    const viewArchived = await screen.findByRole('button', {
+        name: /View archived flags/i,
+    });
+    fireEvent.click(viewArchived);
+
+    expect(window.location.href).not.toContain('lifecycle=IS%3Alive');
+    expect(window.location.href).toContain('archived=IS%3Atrue');
+});

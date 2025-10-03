@@ -1,15 +1,26 @@
-import { Alert, Divider, Grid, styled, Typography } from '@mui/material';
+import { Alert, Divider, Grid, Paper, styled, Typography } from '@mui/material';
 import { BillingInformationButton } from './BillingInformationButton/BillingInformationButton.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { InstanceState } from 'interfaces/instance';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
-const StyledInfoBox = styled('aside')(({ theme }) => ({
+/**
+ * @deprecated remove with `trafficBillingDisplay` flag
+ */
+const LegacyStyledInfoBox = styled('aside')(({ theme }) => ({
     padding: theme.spacing(4),
     height: '100%',
     borderRadius: theme.shape.borderRadiusLarge,
     backgroundColor: theme.palette.background.elevation2,
+}));
+
+const StyledInfoBox = styled(Paper)(({ theme }) => ({
+    padding: theme.spacing(4),
+    height: '100%',
+    borderRadius: theme.shape.borderRadiusLarge,
+    backgroundColor: theme.palette.background.paper,
 }));
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
@@ -36,11 +47,15 @@ export const BillingInformation = () => {
         uiConfig: { billing },
     } = useUiConfig();
     const isPAYG = billing === 'pay-as-you-go';
+    const trafficBillingDisplay = useUiFlag('trafficBillingDisplay');
+    const StyledWrapper = trafficBillingDisplay
+        ? StyledInfoBox
+        : LegacyStyledInfoBox;
 
     if (!instanceStatus)
         return (
             <Grid item xs={12} md={5}>
-                <StyledInfoBox data-loading sx={{ flex: 1, height: '400px' }} />
+                <StyledWrapper data-loading sx={{ flex: 1, height: '400px' }} />
             </Grid>
         );
 
@@ -50,7 +65,7 @@ export const BillingInformation = () => {
 
     return (
         <Grid item xs={12} md={5}>
-            <StyledInfoBox>
+            <StyledWrapper>
                 <StyledTitle variant='body1'>Billing information</StyledTitle>
                 <ConditionallyRender
                     condition={Boolean(isCustomBilling)}
@@ -89,7 +104,7 @@ export const BillingInformation = () => {
                     </a>{' '}
                     for any clarification
                 </StyledInfoLabel>
-            </StyledInfoBox>
+            </StyledWrapper>
         </Grid>
     );
 };

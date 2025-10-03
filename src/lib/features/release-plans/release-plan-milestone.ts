@@ -5,5 +5,6 @@ export interface ReleasePlanMilestone {
     name: string;
     sortOrder: number;
     releasePlanDefinitionId: string;
+    startedAt?: Date;
     strategies?: ReleasePlanMilestoneStrategy[];
 }

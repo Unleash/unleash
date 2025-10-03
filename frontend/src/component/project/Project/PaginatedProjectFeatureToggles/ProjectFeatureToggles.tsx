@@ -215,7 +215,10 @@ export const ProjectFeatureToggles = ({
         if (showArchived) {
             setTableState({ archived: undefined });
         } else {
-            setTableState({ archived: { operator: 'IS', values: ['true'] } });
+            setTableState({
+                archived: { operator: 'IS', values: ['true'] },
+                lifecycle: undefined,
+            });
         }
     };
     const environments = showArchived ? [] : availableEnvironments;

@@ -57,6 +57,8 @@ process.nextTick(async () => {
                         globalChangeRequestList: true,
                         newUiConfigService: true,
                         flagsUiFilterRefactor: true,
+                        trafficBillingDisplay: true,
+                        milestoneProgression: true,
                     },
                 },
                 authentication: {

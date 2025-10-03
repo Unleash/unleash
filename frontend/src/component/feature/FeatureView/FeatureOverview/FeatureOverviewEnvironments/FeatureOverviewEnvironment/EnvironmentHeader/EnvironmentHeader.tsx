@@ -137,7 +137,7 @@ const MetadataChip = ({
     return <StyledStrategyCount>{text}</StyledStrategyCount>;
 };
 
-const DEFAULT_STRATEGY: IFeatureStrategy = {
+const DEFAULT_STRATEGY: Omit<IFeatureStrategy, 'id'> = {
     id: '',
     name: 'flexibleRollout',
     disabled: false,

@@ -138,7 +138,6 @@ const MetadataChip = ({
 };
 
 const DEFAULT_STRATEGY: Omit<IFeatureStrategy, 'id'> = {
-    id: '',
     name: 'flexibleRollout',
     disabled: false,
     constraints: [],

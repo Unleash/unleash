@@ -12,7 +12,6 @@ const fromRow = (row: any): ReleasePlanMilestone => {
         name: row.name,
         sortOrder: row.sort_order,
         releasePlanDefinitionId: row.release_plan_definition_id,
-        startedAt: row.started_at ? new Date(row.started_at) : undefined,
         strategies: [],
     };
 };

@@ -38,16 +38,26 @@ export class UserUpdatesReadModel {
         this.logger = getLogger('user-updates-read-model.ts');
     }
 
-    async getLastUpdatedAt(): Promise<Date | null> {
+    async getLastUpdatedAt(): Promise<{
+        lastUpdatedAt: Date;
+        userId: number;
+    } | null> {
         const result = await this.db(USERS_TABLE)
+            .select('id', 'updated_at')
             .where({
                 // also consider deleted users (different than activeUsers query)
                 is_system: false,
                 is_service: false,
             })
-            .max('updated_at as last_updated_at')
+            .orderBy('updated_at', 'desc')
+            .orderBy('id', 'desc')
             .first();
-        return result ? result.last_updated_at : null;
+        return result
+            ? {
+                  lastUpdatedAt: result.updated_at,
+                  userId: result.id,
+              }
+            : null;
     }
 
     /** @deprecated */

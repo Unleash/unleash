@@ -62,4 +62,21 @@ test('returns the users in pages', async () => {
     );
     expect(usersPage3).toHaveLength(2);
     expect(usersPage3[1].username).toBe('test-user-9');
+
+    const usersPage4 = await userUpdatesReadModel.getUsersUpdatedAfterOrEqual(
+        INSERT_INSTANT,
+        pageSize,
+        usersPage3[usersPage3.length - 1].id,
+    );
+    expect(usersPage4).toHaveLength(0);
+});
+
+test('getLastUpdatedAt returns the latest updated_at timestamp with max id', async () => {
+    const userUpdatesReadModel = db.stores.userUpdatesReadModel;
+
+    const result = await userUpdatesReadModel.getLastUpdatedAt();
+    expect(result).not.toBeNull();
+    expect(result?.lastUpdatedAt).toEqual(INSERT_INSTANT);
+    expect(result?.userId).toBeDefined();
+    expect(result?.userId).toBe(10); // The last inserted user should have the highest ID
 });

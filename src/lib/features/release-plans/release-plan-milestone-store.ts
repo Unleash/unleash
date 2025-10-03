@@ -12,6 +12,7 @@ const fromRow = (row: any): ReleasePlanMilestone => {
         name: row.name,
         sortOrder: row.sort_order,
         releasePlanDefinitionId: row.release_plan_definition_id,
+        startedAt: row.started_at ? new Date(row.started_at) : undefined,
         strategies: [],
     };
 };
@@ -44,5 +45,12 @@ export class ReleasePlanMilestoneStore extends CRUDStore<
         await this.db(TABLE)
             .where('release_plan_definition_id', templateId)
             .delete();
+    }
+
+    async updateStartTime(milestoneId: string): Promise<void> {
+        await this.db.raw(
+            `UPDATE ${TABLE} SET started_at = NOW() WHERE id = ?`,
+            [milestoneId],
+        );
     }
 }

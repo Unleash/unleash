@@ -56,7 +56,6 @@ process.nextTick(async () => {
                         newStrategyModal: true,
                         globalChangeRequestList: true,
                         newUiConfigService: true,
-                        flagsUiFilterRefactor: true,
                         trafficBillingDisplay: true,
                         milestoneProgression: true,
                         envAddStrategySuggestion: true,

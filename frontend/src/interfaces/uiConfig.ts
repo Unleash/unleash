@@ -88,7 +88,6 @@ export type UiFlags = {
     lifecycleGraphs?: boolean;
     newStrategyModal?: boolean;
     globalChangeRequestList?: boolean;
-    flagsUiFilterRefactor?: boolean;
     trafficBillingDisplay?: boolean;
     milestoneProgression?: boolean;
     envAddStrategySuggestion?: boolean;

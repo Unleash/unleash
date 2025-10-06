@@ -63,6 +63,11 @@ export const handleErrors: (
 
     return res
         .status(finalError.statusCode)
-        .json({ name: finalError.name, message: finalError.message })
+        .json({
+            name: finalError.name,
+            message: finalError.message,
+            // @ts-expect-error - details might not be present on all UnleashErrors
+            details: finalError.details,
+        })
         .end();
 };

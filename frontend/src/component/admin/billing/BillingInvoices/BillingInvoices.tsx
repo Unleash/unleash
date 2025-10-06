@@ -25,7 +25,7 @@ export const BillingInvoices: FC<BillingInvoicesProps> = () => {
         <StyledContainer>
             <StyledHeader>Usage and invoices</StyledHeader>
             {invoices.map((invoice) => (
-                <BillingInvoice key={invoice.dueDate} {...invoice} />
+                <BillingInvoice key={invoice.invoiceDate} {...invoice} />
             ))}
         </StyledContainer>
     );

@@ -27,7 +27,6 @@ export const useDetailedInvoices = (options: SWRConfiguration = {}) => {
         invoices: [
             // TODO:MOCK
             {
-                id: '1',
                 status: 'paid',
                 dueDate: '2023-09-01',
                 invoiceDate: '2023-08-01',
@@ -36,19 +35,22 @@ export const useDetailedInvoices = (options: SWRConfiguration = {}) => {
                 totalAmount: 100,
                 lines: [
                     {
+                        currency: 'USD',
                         description: 'Service A',
+                        lookupKey: 'service-a',
                         quantity: 1,
                         totalAmount: 100,
                     },
                     {
+                        currency: 'USD',
                         description: 'Service B',
+                        lookupKey: 'service-b',
                         quantity: 2,
                         totalAmount: 200,
                     },
                 ],
             },
             {
-                id: '2',
                 status: 'unpaid',
                 dueDate: '2023-09-15',
                 invoiceDate: '2023-08-15',
@@ -57,7 +59,9 @@ export const useDetailedInvoices = (options: SWRConfiguration = {}) => {
                 totalAmount: 200,
                 lines: [
                     {
+                        currency: 'USD',
                         description: 'Service C',
+                        lookupKey: 'service-c',
                         quantity: 1,
                         totalAmount: 200,
                     },

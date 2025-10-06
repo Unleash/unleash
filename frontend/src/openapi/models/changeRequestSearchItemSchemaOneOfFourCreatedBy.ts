@@ -7,7 +7,7 @@
 /**
  * User who created the change request.
  */
-export type ChangeRequestSearchItemSchemaCreatedBy = {
+export type ChangeRequestSearchItemSchemaOneOfFourCreatedBy = {
     /** Unique identifier of the user. */
     id: number;
     /**

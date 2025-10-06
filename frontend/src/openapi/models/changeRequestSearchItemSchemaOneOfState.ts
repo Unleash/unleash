@@ -5,18 +5,17 @@
  */
 
 /**
- * Current state of the change request.
+ * The current state of the change request.
  */
-export type ChangeRequestSearchItemSchemaState =
-    (typeof ChangeRequestSearchItemSchemaState)[keyof typeof ChangeRequestSearchItemSchemaState];
+export type ChangeRequestSearchItemSchemaOneOfState =
+    (typeof ChangeRequestSearchItemSchemaOneOfState)[keyof typeof ChangeRequestSearchItemSchemaOneOfState];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const ChangeRequestSearchItemSchemaState = {
+export const ChangeRequestSearchItemSchemaOneOfState = {
     Draft: 'Draft',
     Approved: 'Approved',
     In_review: 'In review',
     Applied: 'Applied',
-    Scheduled: 'Scheduled',
     Rejected: 'Rejected',
     Cancelled: 'Cancelled',
 } as const;

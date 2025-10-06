@@ -17,11 +17,6 @@ export interface ImpactMetricsConfigSchema {
     aggregationMode: ImpactMetricsConfigSchemaAggregationMode;
     /** The human readable display name of the impact metric */
     displayName: string;
-    /**
-     * Optional feature name that this impact metric is associated with.
-     * @nullable
-     */
-    feature?: string | null;
     /** The unique ULID identifier for this impact metric configuration. Generated automatically if not provided. */
     id: string;
     /** The selected labels and their values for filtering the metric data. */

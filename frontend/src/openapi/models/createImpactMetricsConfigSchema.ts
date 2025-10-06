@@ -14,11 +14,6 @@ import type { CreateImpactMetricsConfigSchemaYAxisMin } from './createImpactMetr
 export interface CreateImpactMetricsConfigSchema {
     /** The aggregation mode for the metric data. */
     aggregationMode: CreateImpactMetricsConfigSchemaAggregationMode;
-    /**
-     * Optional feature name that this impact metric is associated with.
-     * @nullable
-     */
-    feature?: string | null;
     /** The unique ULID identifier for this impact metric configuration. Generated automatically if not provided. */
     id?: string;
     /** The selected labels and their values for filtering the metric data. */

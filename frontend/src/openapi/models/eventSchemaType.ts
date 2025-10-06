@@ -176,4 +176,7 @@ export const EventSchemaType = {
     'cdn-token-created': 'cdn-token-created',
     'change-request-requested-approvers-updated':
         'change-request-requested-approvers-updated',
+    'impact-metric-created': 'impact-metric-created',
+    'impact-metric-updated': 'impact-metric-updated',
+    'impact-metric-deleted': 'impact-metric-deleted',
 } as const;

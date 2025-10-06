@@ -7,36 +7,7 @@ import { StatsExplanation } from 'component/insights/InsightsCharts.styles';
 import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
 import type { InstanceInsightsSchema } from 'openapi';
 import { Link } from 'react-router-dom';
-import { calculateRatio } from 'component/insights/calculate-ratio/calculate-ratio';
-
-function getCurrentArchiveRatio(
-    groupedCreationArchiveData: GroupedDataByProject<
-        InstanceInsightsSchema['creationArchiveTrends']
-    >,
-) {
-    if (!groupedCreationArchiveData) {
-        return 0;
-    }
-
-    let totalArchived = 0;
-    let totalCreated = 0;
-
-    Object.values(groupedCreationArchiveData).forEach((projectData) => {
-        const latestData = projectData[0];
-        if (latestData) {
-            totalArchived += latestData.archivedFlags || 0;
-            const createdSum = latestData.createdFlags
-                ? Object.values(latestData.createdFlags).reduce(
-                      (sum: number, count: number) => sum + count,
-                      0,
-                  )
-                : 0;
-            totalCreated += createdSum;
-        }
-    });
-
-    return calculateRatio(totalArchived, totalCreated);
-}
+import { calculateArchiveRatio } from './calculateArchiveRatio.ts';
 
 const StyledRatioContainer = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation1,
@@ -83,20 +54,20 @@ export const CreationArchiveStats: FC<CreationArchiveStatsProps> = ({
     groupedCreationArchiveData,
     isLoading,
 }) => {
-    const currentRatio = getCurrentArchiveRatio(groupedCreationArchiveData);
+    const averageRatio = calculateArchiveRatio(groupedCreationArchiveData);
 
     return (
         <>
             <StyledRatioContainer>
                 <StyledPercentageRow>
                     <StyledRatioTypography>
-                        {isLoading ? '...' : currentRatio}
+                        {isLoading ? '...' : averageRatio}
                     </StyledRatioTypography>
-                    <HelpIcon tooltip='Ratio of archived flags to created flags'>
+                    <HelpIcon tooltip='Ratio of archived flags to created flags in the selected period'>
                         <StyledInfoIcon />
                     </HelpIcon>
                 </StyledPercentageRow>
-                <Typography variant='body2'>Current ratio</Typography>
+                <Typography variant='body2'>Average ratio</Typography>
             </StyledRatioContainer>
             <StatsExplanation>
                 <Lightbulb color='primary' />

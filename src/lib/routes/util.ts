@@ -61,13 +61,23 @@ export const handleErrors: (
         );
     }
 
+    // details property behaves weirdly. Trying to access it as finalError.details[0],
+    // hangs the execution of this method. Returning it as finalError.details doesn't
+    // work returning undefined. Printing out the finalError object using JSON.stringify
+    // shows that the details property is there and is an array.
+    // Running JSON.stringify(finalError.details) also hangs.
+    // As a workaround, we do a roundabout way of getting to the details property
+    // by doing JSON.parse(JSON.stringify(finalError))['details']
+    const details =
+        // @ts-expect-error - details might not be present on all UnleashErrors
+        // biome-ignore lint/complexity/useLiteralKeys: see above
+        finalError.details ?? JSON.parse(JSON.stringify(finalError))['details'];
     return res
         .status(finalError.statusCode)
         .json({
             name: finalError.name,
             message: finalError.message,
-            // @ts-expect-error - details might not be present on all UnleashErrors
-            details: finalError.details,
+            details,
         })
         .end();
 };

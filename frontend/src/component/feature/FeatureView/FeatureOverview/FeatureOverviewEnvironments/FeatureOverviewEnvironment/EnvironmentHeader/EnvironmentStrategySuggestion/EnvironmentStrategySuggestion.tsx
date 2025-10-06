@@ -13,7 +13,6 @@ const StyledSuggestion = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0.5, 3),
-    marginRight: theme.spacing(-6),
     background: theme.palette.secondary.light,
     borderBottomLeftRadius: theme.shape.borderRadiusLarge,
     borderBottomRightRadius: theme.shape.borderRadiusLarge,
@@ -68,7 +67,7 @@ export const EnvironmentStrategySuggestion = ({
     );
 
     const openStrategyCreationModal = () => {
-        trackEvent('strategy-add', {
+        trackEvent('suggestion-strategy-add', {
             props: {
                 buttonTitle: 'flexibleRollout',
             },

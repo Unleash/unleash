@@ -3,29 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestSearchItemSchemaCreatedBy } from './changeRequestSearchItemSchemaCreatedBy.js';
-import type { ChangeRequestSearchItemSchemaState } from './changeRequestSearchItemSchemaState.js';
+import type { ChangeRequestSearchItemSchemaOneOf } from './changeRequestSearchItemSchemaOneOf.js';
+import type { ChangeRequestSearchItemSchemaOneOfFour } from './changeRequestSearchItemSchemaOneOfFour.js';
 
 /**
  * A single change request item in search results.
  */
-export interface ChangeRequestSearchItemSchema {
-    /** Date and time when the change request was created. */
-    createdAt: string;
-    /** User who created the change request. */
-    createdBy: ChangeRequestSearchItemSchemaCreatedBy;
-    /** Environment where the change request applies. */
-    environment: string;
-    /** List of feature names affected by this change request. */
-    features: string[];
-    /** Unique identifier for the change request. */
-    id: number;
-    /** Project ID where the change request belongs. */
-    project: string;
-    /** List of segment names affected by this change request. */
-    segments: string[];
-    /** Current state of the change request. */
-    state: ChangeRequestSearchItemSchemaState;
-    /** Title of the change request. */
-    title: string;
-}
+export type ChangeRequestSearchItemSchema =
+    | ChangeRequestSearchItemSchemaOneOf
+    | ChangeRequestSearchItemSchemaOneOfFour;

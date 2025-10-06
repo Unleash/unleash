@@ -7,11 +7,11 @@
 /**
  * Type of the metric
  */
-export type ImpactMetricsSchemaType =
-    (typeof ImpactMetricsSchemaType)[keyof typeof ImpactMetricsSchemaType];
+export type ImpactMetricsSchemaOneOfType =
+    (typeof ImpactMetricsSchemaOneOfType)[keyof typeof ImpactMetricsSchemaOneOfType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const ImpactMetricsSchemaType = {
+export const ImpactMetricsSchemaOneOfType = {
     counter: 'counter',
     gauge: 'gauge',
 } as const;

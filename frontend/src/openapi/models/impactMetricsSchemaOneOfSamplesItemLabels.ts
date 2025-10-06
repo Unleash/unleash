@@ -7,4 +7,6 @@
 /**
  * Optional labels for the metric sample
  */
-export type ImpactMetricsSchemaSamplesItemLabels = { [key: string]: string };
+export type ImpactMetricsSchemaOneOfSamplesItemLabels = {
+    [key: string]: string | number;
+};

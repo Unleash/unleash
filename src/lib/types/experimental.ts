@@ -46,7 +46,6 @@ export type IFlagKey =
     | 'showUserDeviceCount'
     | 'memorizeStats'
     | 'streaming'
-    | 'etagVariant'
     | 'deltaApi'
     | 'uniqueSdkTracking'
     | 'consumptionModel'
@@ -62,6 +61,8 @@ export type IFlagKey =
     | 'globalChangeRequestList'
     | 'newUiConfigService'
     | 'flagsUiFilterRefactor'
+    | 'trafficBillingDisplay'
+    | 'milestoneProgression'
     | 'envAddStrategySuggestion';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -221,11 +222,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_SHOW_USER_DEVICE_COUNT,
         false,
     ),
-    etagVariant: {
-        name: 'disabled',
-        feature_enabled: false,
-        enabled: false,
-    },
     deltaApi: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DELTA_API,
         false,
@@ -282,6 +278,14 @@ const flags: IFlags = {
     ),
     flagsUiFilterRefactor: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FLAGS_UI_FILTER_REFACTOR,
+        false,
+    ),
+    trafficBillingDisplay: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_TRAFFIC_BILLING_DISPLAY,
+        false,
+    ),
+    milestoneProgression: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_MILESTONE_PROGRESSION,
         false,
     ),
     envAddStrategySuggestion: parseEnvVarBoolean(

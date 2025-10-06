@@ -1,4 +1,4 @@
-import { prettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
+import { prettifyLargeNumber } from 'component/common/PrettifyLargeNumber/formatLargeNumber.js';
 
 const prettifyNumber = prettifyLargeNumber(1000, 2);
 

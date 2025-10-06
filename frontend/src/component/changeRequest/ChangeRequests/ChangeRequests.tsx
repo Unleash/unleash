@@ -1,7 +1,8 @@
 import { useId, useMemo } from 'react';
+import { Box } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { PaginatedTable } from 'component/common/Table';
+import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { ChangeRequestStatusCell } from 'component/changeRequest/ProjectChangeRequests/ChangeRequestsTabs/ChangeRequestStatusCell';
@@ -205,6 +206,13 @@ const ChangeRequestsInner = () => {
                 ref={bodyLoadingRef}
             >
                 <PaginatedTable tableInstance={table} totalItems={total} />
+                {data.length === 0 && !loading ? (
+                    <Box sx={(theme) => ({ padding: theme.spacing(1, 3, 3) })}>
+                        <TablePlaceholder>
+                            No change requests found.
+                        </TablePlaceholder>
+                    </Box>
+                ) : null}
             </div>
         </PageContent>
     );

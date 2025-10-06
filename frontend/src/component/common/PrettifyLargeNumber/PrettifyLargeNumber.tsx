@@ -1,8 +1,8 @@
 import type { FC } from 'react';
-import millify from 'millify';
 import { Tooltip } from '@mui/material';
 import { LARGE_NUMBER_PRETTIFIED } from 'utils/testIds';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
+import { prettifyLargeNumber } from './formatLargeNumber.js';
 
 interface IPrettifyLargeNumberProps {
     /**
@@ -24,15 +24,6 @@ interface IPrettifyLargeNumberProps {
      */
     'data-loading'?: string;
 }
-
-export const prettifyLargeNumber =
-    (threshold: number = 1_000_000, precision: number = 2) =>
-    (value: number) => {
-        if (value < threshold) {
-            return value.toLocaleString();
-        }
-        return millify(value, { precision });
-    };
 
 export const PrettifyLargeNumber: FC<IPrettifyLargeNumberProps> = ({
     value,

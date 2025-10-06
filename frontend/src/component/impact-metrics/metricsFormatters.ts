@@ -1,3 +1,5 @@
+import { prettifyLargeNumber } from '../common/PrettifyLargeNumber/formatLargeNumber.js';
+
 export const getTimeUnit = (timeRange: string) => {
     switch (timeRange) {
         case 'hour':
@@ -51,15 +53,7 @@ export const getSeriesLabel = (metric: Record<string, string>): string => {
     return `${__name__} (${labelParts})`;
 };
 
-export const formatLargeNumbers = (value: number): string => {
-    if (value >= 1000000) {
-        return `${(value / 1000000).toFixed(0)}M`;
-    }
-    if (value >= 1000) {
-        return `${(value / 1000).toFixed(0)}k`;
-    }
-    return value.toString();
-};
+export const formatLargeNumbers = prettifyLargeNumber(1000, 1);
 
 export const getMetricType = (seriesName: string) => {
     if (seriesName.startsWith('unleash_counter_')) return 'counter';

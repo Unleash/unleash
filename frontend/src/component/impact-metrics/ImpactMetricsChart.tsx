@@ -7,7 +7,11 @@ import {
 } from '../insights/components/LineChart/LineChart.tsx';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import { usePlaceholderData } from '../insights/hooks/usePlaceholderData.js';
-import { getDisplayFormat, getTimeUnit, formatLargeNumbers } from './utils.ts';
+import {
+    getDisplayFormat,
+    getTimeUnit,
+    formatLargeNumbers,
+} from './metricsFormatters.js';
 import { fromUnixTime } from 'date-fns';
 import { useChartData } from './hooks/useChartData.ts';
 import type { AggregationMode } from './types.ts';

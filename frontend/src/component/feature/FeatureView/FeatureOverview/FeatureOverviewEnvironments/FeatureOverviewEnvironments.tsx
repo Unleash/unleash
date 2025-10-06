@@ -1,10 +1,12 @@
 import type { ComponentProps, FC } from 'react';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { LegacyFeatureOverviewEnvironment } from './FeatureOverviewEnvironment/LegacyFeatureOverviewEnvironment/LegacyFeatureOverviewEnvironment.tsx';
 import { FeatureOverviewEnvironment } from './FeatureOverviewEnvironment/FeatureOverviewEnvironment.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
 import { getFeatureMetrics } from 'utils/getFeatureMetrics';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 type FeatureOverviewEnvironmentsProps = {
     hiddenEnvironments?: string[];
@@ -12,7 +14,7 @@ type FeatureOverviewEnvironmentsProps = {
 };
 
 const FeatureOverviewWithReleasePlans: FC<
-    ComponentProps<typeof FeatureOverviewEnvironment>
+    ComponentProps<typeof LegacyFeatureOverviewEnvironment>
 > = ({ environment, ...props }) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -21,9 +23,20 @@ const FeatureOverviewWithReleasePlans: FC<
         featureId,
         environment?.name,
     );
+    const envAddStrategySuggestionEnabled = useUiFlag(
+        'envAddStrategySuggestion',
+    );
+    if (envAddStrategySuggestionEnabled) {
+        return (
+            <FeatureOverviewEnvironment
+                {...props}
+                environment={{ ...environment, releasePlans }}
+            />
+        );
+    }
 
     return (
-        <FeatureOverviewEnvironment
+        <LegacyFeatureOverviewEnvironment
             {...props}
             environment={{ ...environment, releasePlans }}
         />

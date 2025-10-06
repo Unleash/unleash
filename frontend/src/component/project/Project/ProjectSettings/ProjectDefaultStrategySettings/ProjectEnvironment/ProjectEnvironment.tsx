@@ -2,7 +2,7 @@ import { Accordion, AccordionDetails, styled } from '@mui/material';
 import { PROJECT_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import type { ProjectEnvironmentType } from '../../../../../../interfaces/environments.ts';
 import { ProjectEnvironmentDefaultStrategy } from './ProjectEnvironmentDefaultStrategy/ProjectEnvironmentDefaultStrategy.tsx';
-import { EnvironmentHeader } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentHeader/EnvironmentHeader';
+import { LegacyEnvironmentHeader } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentHeader/LegacyEnvironmentHeader/LegacyEnvironmentHeader';
 
 interface IProjectEnvironmentProps {
     environment: ProjectEnvironmentType;
@@ -35,7 +35,10 @@ export const ProjectEnvironment = ({
                 onChange={(e) => e.stopPropagation()}
                 data-testid={`${PROJECT_ENVIRONMENT_ACCORDION}_${name}`}
             >
-                <EnvironmentHeader environmentId={name} expandable={false} />
+                <LegacyEnvironmentHeader
+                    environmentId={name}
+                    expandable={false}
+                />
                 <StyledAccordionDetails>
                     <ProjectEnvironmentDefaultStrategy
                         environment={environment}

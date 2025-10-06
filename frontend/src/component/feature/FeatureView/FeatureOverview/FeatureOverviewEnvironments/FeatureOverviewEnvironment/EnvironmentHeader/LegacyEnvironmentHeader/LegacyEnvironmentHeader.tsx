@@ -1,4 +1,4 @@
-import { useMemo, type FC, type PropsWithChildren } from 'react';
+import type { FC, PropsWithChildren } from 'react';
 import {
     AccordionSummary,
     type AccordionSummaryProps,
@@ -7,16 +7,12 @@ import {
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import { useId } from 'hooks/useId';
-import { EnvironmentStrategySuggestion } from './EnvironmentStrategySuggestion/EnvironmentStrategySuggestion.js';
-import type { IFeatureStrategy } from 'interfaces/strategy';
-import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
 
 const StyledAccordionSummary = styled(AccordionSummary, {
-    shouldForwardProp: (prop) => prop !== 'expandable' && prop !== 'empty',
+    shouldForwardProp: (prop) => prop !== 'expandable',
 })<{
     expandable?: boolean;
-    empty?: boolean;
-}>(({ theme, expandable, empty }) => ({
+}>(({ theme, expandable }) => ({
     boxShadow: 'none',
     padding: theme.spacing(0.5, 3, 0.5, 2),
     display: 'flex',
@@ -31,26 +27,9 @@ const StyledAccordionSummary = styled(AccordionSummary, {
     ':focus-within': {
         background: 'none',
     },
-    ...(empty && {
-        padding: 0,
-        alignItems: 'normal',
-        '.MuiAccordionSummary-content': {
-            marginBottom: '0px',
-            paddingBottom: '0px',
-            flexDirection: 'column',
-        },
-
-        '.MuiAccordionSummary-expandIconWrapper': {
-            width: '0px',
-        },
-    }),
 }));
 
-const StyledHeader = styled('header', {
-    shouldForwardProp: (prop) => prop !== 'empty',
-})<{
-    empty?: boolean;
-}>(({ theme, empty }) => ({
+const StyledHeader = styled('header')(({ theme }) => ({
     display: 'flex',
     columnGap: theme.spacing(1),
     paddingRight: theme.spacing(1),
@@ -58,9 +37,6 @@ const StyledHeader = styled('header', {
     color: theme.palette.text.primary,
     alignItems: 'center',
     minHeight: theme.spacing(8),
-    ...(empty && {
-        padding: theme.spacing(0, 8, 0, 2),
-    }),
 }));
 
 const StyledHeaderTitle = styled('hgroup')(({ theme }) => ({
@@ -103,12 +79,9 @@ type EnvironmentMetadata = {
 };
 
 type EnvironmentHeaderProps = {
-    projectId: string;
-    featureId: string;
     environmentId: string;
     expandable?: boolean;
     environmentMetadata?: EnvironmentMetadata;
-    hasActivations?: boolean;
 } & AccordionSummaryProps;
 
 const MetadataChip = ({
@@ -137,53 +110,19 @@ const MetadataChip = ({
     return <StyledStrategyCount>{text}</StyledStrategyCount>;
 };
 
-const DEFAULT_STRATEGY: Omit<IFeatureStrategy, 'id'> = {
-    name: 'flexibleRollout',
-    disabled: false,
-    constraints: [],
-    title: '',
-    parameters: {
-        rollout: '100',
-        stickiness: 'default',
-        groupId: '',
-    },
-};
-
 export const environmentAccordionSummaryClassName =
     'environment-accordion-summary';
 
-export const EnvironmentHeader: FC<
+export const LegacyEnvironmentHeader: FC<
     PropsWithChildren<EnvironmentHeaderProps>
 > = ({
-    projectId,
-    featureId,
     environmentId,
     children,
     expandable = true,
     environmentMetadata,
-    hasActivations = false,
     ...props
 }) => {
     const id = useId();
-    const { environments } = useProjectEnvironments(projectId);
-    const defaultStrategy = environments.find(
-        (env) => env.name === environmentId,
-    )?.defaultStrategy;
-
-    const strategy: Omit<IFeatureStrategy, 'id'> = useMemo(() => {
-        const baseDefaultStrategy = {
-            ...DEFAULT_STRATEGY,
-            ...defaultStrategy,
-        };
-        return {
-            ...baseDefaultStrategy,
-            disabled: false,
-            constraints: baseDefaultStrategy.constraints ?? [],
-            title: baseDefaultStrategy.title ?? '',
-            parameters: baseDefaultStrategy.parameters ?? {},
-        };
-    }, [JSON.stringify(defaultStrategy)]);
-
     return (
         <StyledAccordionSummary
             {...props}
@@ -197,9 +136,8 @@ export const EnvironmentHeader: FC<
             expandable={expandable}
             tabIndex={expandable ? 0 : -1}
             className={environmentAccordionSummaryClassName}
-            empty={!hasActivations}
         >
-            <StyledHeader empty={!hasActivations} data-loading>
+            <StyledHeader data-loading>
                 <StyledHeaderTitle>
                     <StyledHeaderTitleLabel>Environment</StyledHeaderTitleLabel>
                     <StyledTruncator component='h2'>
@@ -211,14 +149,6 @@ export const EnvironmentHeader: FC<
                 </StyledHeaderTitle>
                 {children}
             </StyledHeader>
-            {!hasActivations && (
-                <EnvironmentStrategySuggestion
-                    projectId={projectId}
-                    featureId={featureId}
-                    environmentId={environmentId}
-                    strategy={strategy}
-                />
-            )}
         </StyledAccordionSummary>
     );
 };

@@ -59,6 +59,7 @@ process.nextTick(async () => {
                         flagsUiFilterRefactor: true,
                         trafficBillingDisplay: true,
                         milestoneProgression: true,
+                        envAddStrategySuggestion: true,
                     },
                 },
                 authentication: {

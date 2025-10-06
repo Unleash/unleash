@@ -62,7 +62,8 @@ export type IFlagKey =
     | 'newUiConfigService'
     | 'flagsUiFilterRefactor'
     | 'trafficBillingDisplay'
-    | 'milestoneProgression';
+    | 'milestoneProgression'
+    | 'envAddStrategySuggestion';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -285,6 +286,10 @@ const flags: IFlags = {
     ),
     milestoneProgression: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MILESTONE_PROGRESSION,
+        false,
+    ),
+    envAddStrategySuggestion: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ENV_ADD_STRATEGY_SUGGESTION,
         false,
     ),
 };

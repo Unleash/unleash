@@ -71,13 +71,6 @@ export const PerformanceInsights: FC = () => {
     const lastFlagTrend = flagTrends[flagTrends.length - 1];
     const flagsTotal = lastFlagTrend?.total ?? 0;
 
-    function getFlagsPerUser(flagsTotal: number, usersTotal: number) {
-        const flagsPerUserCalculation = flagsTotal / usersTotal;
-        return Number.isNaN(flagsPerUserCalculation)
-            ? 'N/A'
-            : flagsPerUserCalculation.toFixed(2);
-    }
-
     const isLifecycleGraphsEnabled = useUiFlag('lifecycleGraphs');
 
     return (

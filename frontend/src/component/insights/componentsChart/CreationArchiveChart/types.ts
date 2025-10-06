@@ -3,7 +3,7 @@ export type WeekData = {
     totalCreatedFlags: number;
     archivePercentage: number;
     week: string;
-    date?: string;
+    date: string;
 };
 
 export type RawWeekData = {
@@ -11,4 +11,8 @@ export type RawWeekData = {
     createdFlags: Record<string, number>;
     week: string;
     date: string;
+};
+
+export type BatchedWeekData = Omit<WeekData, 'week'> & {
+    endDate: string;
 };

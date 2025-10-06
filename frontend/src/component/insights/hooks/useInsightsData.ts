@@ -12,18 +12,9 @@ export const useInsightsData = (
     const allMetricsDatapoints = useAllDatapoints(
         instanceInsights.metricsSummaryTrends,
     );
+
     const projectsData = useFilteredTrends(
         instanceInsights.projectFlagTrends,
-        projects,
-    );
-
-    const lifecycleData = useFilteredTrends(
-        instanceInsights.lifecycleTrends,
-        projects,
-    );
-
-    const creationArchiveData = useFilteredTrends(
-        instanceInsights.creationArchiveTrends,
         projects,
     );
 
@@ -37,8 +28,16 @@ export const useInsightsData = (
 
     const summary = useFilteredFlagsSummary(projectsData);
 
+    const lifecycleData = useFilteredTrends(
+        instanceInsights.lifecycleTrends,
+        projects,
+    );
     const groupedLifecycleData = useGroupedProjectTrends(lifecycleData);
 
+    const creationArchiveData = useFilteredTrends(
+        instanceInsights.creationArchiveTrends,
+        projects,
+    );
     const groupedCreationArchiveData =
         useGroupedProjectTrends(creationArchiveData);
 

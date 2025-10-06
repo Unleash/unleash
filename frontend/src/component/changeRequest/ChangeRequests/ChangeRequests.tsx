@@ -148,7 +148,6 @@ const ChangeRequestsInner = () => {
                 header: 'Status',
                 meta: { width: '170px' },
                 cell: ({ getValue, row }) => (
-                    // @ts-expect-error (`globalChangeRequestList`) The schema (and query) needs to be updated
                     <ChangeRequestStatusCell value={getValue()} row={row} />
                 ),
             }),

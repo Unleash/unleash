@@ -61,5 +61,8 @@ export const handleErrors: (
         );
     }
 
-    return res.status(finalError.statusCode).json({ message: finalError.message }).end();
+    return res
+        .status(finalError.statusCode)
+        .json({ message: finalError.message })
+        .end();
 };

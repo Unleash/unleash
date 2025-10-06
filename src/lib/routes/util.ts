@@ -63,6 +63,6 @@ export const handleErrors: (
 
     return res
         .status(finalError.statusCode)
-        .json({ message: finalError.message })
+        .json({ name: finalError.name, message: finalError.message })
         .end();
 };

@@ -9,31 +9,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { formatCurrency } from './types.ts';
 import { Badge } from 'component/common/Badge/Badge.tsx';
 import type { FC, ReactNode } from 'react';
+import type { DetailedInvoicesResponseSchemaInvoicesItem } from 'openapi/index.ts';
 import { BillingInvoiceRow } from './BillingInvoiceRow/BillingInvoiceRow.tsx';
-
-export type BillingInvoiceSectionItem = {
-    description: string;
-    quantity?: number;
-    amount?: number;
-    quota?: number;
-};
-
-type BillingInvoiceSection = {
-    id: string;
-    title?: string;
-    items: BillingInvoiceSectionItem[];
-    summary?: {
-        subtotal: number;
-        taxExemptNote?: string;
-        total: number;
-    };
-};
-
-type BillingInvoiceProps = {
-    title: string;
-    status?: 'estimate' | 'upcoming' | 'invoiced';
-    sections?: BillingInvoiceSection[];
-};
 
 const CardLikeAccordion = styled(Accordion)(({ theme }) => ({
     background: theme.palette.background.paper,
@@ -118,7 +95,7 @@ export const StyledTableRow = styled('div')(({ theme }) => ({
     padding: theme.spacing(1, 0),
 }));
 
-const sectionsMock: BillingInvoiceSection[] = [
+const sectionsMock = [
     {
         id: 'seats',
         items: [
@@ -174,19 +151,20 @@ const sectionsMock: BillingInvoiceSection[] = [
 ];
 
 export const BillingInvoice = ({
-    title,
     status,
-    sections = sectionsMock,
-}: BillingInvoiceProps) => {
-    const total = sections.reduce(
-        (acc, section) =>
-            acc +
-            section.items.reduce(
-                (itemAcc, item) => itemAcc + (item.amount || 0),
-                0,
-            ),
-        0,
-    );
+    dueDate,
+    invoiceDate,
+    invoicePDF,
+    invoiceURL,
+    totalAmount,
+    lines,
+}: DetailedInvoicesResponseSchemaInvoicesItem) => {
+    const title = invoiceDate
+        ? new Date(invoiceDate).toLocaleDateString(undefined, {
+              month: 'long',
+              day: 'numeric',
+          })
+        : '';
 
     return (
         <CardLikeAccordion defaultExpanded>
@@ -214,7 +192,7 @@ export const BillingInvoice = ({
                         <Badge color='success'>Invoiced</Badge>
                     ) : null}
                     <Typography variant='body1' sx={{ fontWeight: 700 }}>
-                        {formatCurrency(total)}
+                        {formatCurrency(totalAmount)}
                     </Typography>
                 </HeaderRight>
             </HeaderRoot>
@@ -231,18 +209,24 @@ export const BillingInvoice = ({
                         <HeaderCell>Quantity</HeaderCell>
                         <HeaderCell>Amount</HeaderCell>
                     </StyledSubgrid>
-                    {sections.map((section) => (
-                        <TableBody key={section.id} title={section.title}>
-                            {section.title ? (
+                    {lines.map((line) => (
+                        <TableBody
+                            key={line.description}
+                            // title={line.description}
+                        >
+                            {/* {line.description ? (
                                 <StyledSectionTitle>
-                                    {section.title}
+                                    {line.description}
                                 </StyledSectionTitle>
-                            ) : null}
-                            {section.items.map((item) => (
-                                <StyledTableRow key={item.description}>
-                                    <BillingInvoiceRow item={item} />
-                                </StyledTableRow>
-                            ))}
+                            ) : null} */}
+                            <StyledTableRow key={line.description}>
+                                <BillingInvoiceRow
+                                    description={line.description}
+                                    // quota={line.quota}
+                                    quantity={line.quantity}
+                                    amount={line.totalAmount}
+                                />
+                            </StyledTableRow>
                         </TableBody>
                     ))}
                 </StyledInvoiceGrid>

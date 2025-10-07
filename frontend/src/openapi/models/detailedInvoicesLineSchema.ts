@@ -4,7 +4,9 @@
  * See `gen:api` script in package.json
  */
 
-export type DetailedInvoicesResponseSchemaInvoicesItemLinesItem = {
+export interface DetailedInvoicesLineSchema {
+    /** Optional consumption associated with the line item */
+    consumption?: number;
     /** Currency code */
     currency: string;
     /** Description of the line item */
@@ -17,5 +19,4 @@ export type DetailedInvoicesResponseSchemaInvoicesItemLinesItem = {
     quantity: number;
     /** Total amount for this line item in minor currency units */
     totalAmount: number;
-    [key: string]: unknown;
-};
+}

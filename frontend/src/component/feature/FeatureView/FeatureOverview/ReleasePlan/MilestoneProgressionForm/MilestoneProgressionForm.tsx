@@ -199,9 +199,7 @@ export const MilestoneProgressionForm = ({
         <StyledFormContainer onKeyDown={handleKeyDown}>
             <StyledTopRow>
                 <StyledIcon />
-                <StyledLabel>
-                    Proceed from to the next milestone after
-                </StyledLabel>
+                <StyledLabel>Proceed to the next milestone after</StyledLabel>
                 <StyledInputGroup>
                     <StyledTextField
                         type='text'

@@ -18,7 +18,7 @@ test('should have no users', async () => {
     const lastUpdate = await readModel.getLastUpdatedAt();
     expect(lastUpdate).toBeNull();
 
-    const users = await readModel.getUsersUpdatedAfterOrEqual(new Date(0));
+    const users = await readModel.getUsersUpdatedAfterOrEqual(new Date(0), 10);
     expect(users).toEqual([]);
 });
 
@@ -36,7 +36,7 @@ test('Adding a user should return that user', async () => {
         beforeInsert.getTime(),
     );
 
-    const users = await readModel.getUsersUpdatedAfterOrEqual(beforeInsert);
+    const users = await readModel.getUsersUpdatedAfterOrEqual(beforeInsert, 10);
     expect(users).toHaveLength(1);
     expect(users[0].email).toBe('test@example.com');
     expect(users[0].createdAt).toBeInstanceOf(Date);
@@ -57,7 +57,11 @@ test('Modifying a user should return that user', async () => {
     const lastUpdatedAt = lastUpdate!.lastUpdatedAt;
     expect(lastUpdatedAt).toBeInstanceOf(Date);
 
-    const users = await readModel.getUsersUpdatedAfterOrEqual(afterInsert);
+    const users = await readModel.getUsersUpdatedAfterOrEqual(
+        afterInsert,
+        10,
+        inserted.id,
+    );
     expect(users).toHaveLength(0);
 
     await userStore.update(inserted.id, { name: 'New Name' });
@@ -70,7 +74,11 @@ test('Modifying a user should return that user', async () => {
         lastUpdatedAt!.getTime(),
     );
 
-    const users2 = await readModel.getUsersUpdatedAfterOrEqual(afterInsert);
+    const users2 = await readModel.getUsersUpdatedAfterOrEqual(
+        afterInsert,
+        10,
+        inserted.id,
+    );
     expect(users2).toHaveLength(1);
     expect(users2[0].email).toBe('test@example.com');
     expect(users2[0].name).toBe('New Name');
@@ -92,7 +100,11 @@ test('Deleting a user should return that user', async () => {
     const lastUpdatedAt = lastUpdate!.lastUpdatedAt;
     expect(lastUpdatedAt).toBeInstanceOf(Date);
 
-    const users = await readModel.getUsersUpdatedAfterOrEqual(afterInsert);
+    const users = await readModel.getUsersUpdatedAfterOrEqual(
+        afterInsert,
+        10,
+        inserted.id,
+    );
     expect(users).toHaveLength(0);
 
     await userStore.delete(inserted.id);
@@ -105,7 +117,11 @@ test('Deleting a user should return that user', async () => {
         lastUpdatedAt!.getTime(),
     );
 
-    const users2 = await readModel.getUsersUpdatedAfterOrEqual(afterInsert);
+    const users2 = await readModel.getUsersUpdatedAfterOrEqual(
+        afterInsert,
+        10,
+        inserted.id,
+    );
     expect(users2).toHaveLength(1);
     expect(users2[0].email).toBeNull(); // currently we nullify the email but this might change in the future
     expect(users2[0].createdAt).toBeInstanceOf(Date);

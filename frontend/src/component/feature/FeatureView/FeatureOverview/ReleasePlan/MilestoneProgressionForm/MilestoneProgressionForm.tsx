@@ -52,7 +52,6 @@ const StyledIcon = styled(BoltIcon)(({ theme }) => ({
     color: theme.palette.primary.main,
     fontSize: 20,
     flexShrink: 0,
-
     backgroundColor: theme.palette.background.elevation1,
     borderRadius: '50%',
     border: `1px solid ${theme.palette.divider}`,

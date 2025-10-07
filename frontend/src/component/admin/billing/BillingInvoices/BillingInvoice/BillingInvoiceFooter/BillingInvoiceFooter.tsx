@@ -33,12 +33,8 @@ interface BillingInvoiceFooterProps {
     totalAmount: number;
 }
 
-const TaxRow: FC<{ value?: number | null }> = ({ value }) => {
+const TaxRow: FC<{ value?: number }> = ({ value }) => {
     if (value === undefined) {
-        return null;
-    }
-
-    if (value === null) {
         return (
             <StyledTableFooterCell colSpan={2}>
                 Customer tax is exempt
@@ -63,11 +59,11 @@ export const BillingInvoiceFooter = ({
 }: BillingInvoiceFooterProps) => {
     return (
         <StyledTableFooter>
-            {subTotal ? (
+            {subTotal || !taxAmount ? (
                 <StyledTableFooterRow>
                     <StyledTableFooterCell>Sub total</StyledTableFooterCell>
                     <StyledTableFooterCell>
-                        {formatCurrency(subTotal)}
+                        {formatCurrency(subTotal || totalAmount)}
                     </StyledTableFooterCell>
                 </StyledTableFooterRow>
             ) : null}

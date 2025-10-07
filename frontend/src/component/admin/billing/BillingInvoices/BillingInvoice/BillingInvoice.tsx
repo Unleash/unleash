@@ -84,69 +84,14 @@ const StyledTableRow = styled('div')(({ theme }) => ({
     padding: theme.spacing(1, 0),
 }));
 
-const sectionsMock = [
-    {
-        id: 'seats',
-        items: [
-            {
-                description: 'Unleash PAYG Seat',
-                quota: 50,
-                quantity: 41,
-                amount: 3_076,
-            },
-        ],
-    },
-    {
-        id: 'usage',
-        title: 'Usage: September',
-        items: [
-            {
-                description: 'Frontend traffic',
-                quota: 10_000_000,
-                quantity: 1_085_000_000,
-                amount: 5_425,
-            },
-            {
-                description: 'Service connections',
-                quota: 7,
-                quantity: 20,
-                amount: 0,
-            },
-            {
-                description: 'Release templates',
-                quota: 5,
-                quantity: 3,
-                amount: 0,
-            },
-            {
-                description: 'Edge Frontend Traffic',
-                quota: 10_000_000,
-                quantity: 2_000_000,
-                amount: 0,
-            },
-            {
-                description: 'Edge Service Connections',
-                quota: 5,
-                quantity: 5,
-                amount: 0,
-            },
-        ],
-        summary: {
-            subtotal: 8_500,
-            taxExemptNote: 'Customer tax is exempt',
-            total: 8_500,
-        },
-    },
-];
-
 export const BillingInvoice = ({
     status,
-    dueDate,
     invoiceDate,
     invoicePDF,
     invoiceURL,
     totalAmount,
-    lines,
+    mainLines,
+    usageLines,
 }: DetailedInvoicesResponseSchemaInvoicesItem) => {
     const title = invoiceDate
         ? new Date(invoiceDate).toLocaleDateString(undefined, {
@@ -198,17 +143,8 @@ export const BillingInvoice = ({
                         <HeaderCell>Quantity</HeaderCell>
                         <HeaderCell>Amount</HeaderCell>
                     </StyledSubgrid>
-                    {lines.map((line) => (
-                        <TableBody
-                            key={line.description}
-                            // TODO: split into "usage" category
-                            title={line.description}
-                        >
-                            {/* {line.description ? (
-                                <StyledSectionTitle>
-                                    {line.description}
-                                </StyledSectionTitle>
-                            ) : null} */}
+                    {mainLines?.map((line) => (
+                        <TableBody key={line.description}>
                             <StyledTableRow key={line.description}>
                                 <BillingInvoiceRow
                                     description={line.description}
@@ -219,6 +155,21 @@ export const BillingInvoice = ({
                             </StyledTableRow>
                         </TableBody>
                     ))}
+                    {usageLines ? (
+                        <TableBody key='usage' title='Usage'>
+                            <StyledSectionTitle>Usage</StyledSectionTitle>
+                            {usageLines.map((line) => (
+                                <StyledTableRow key={line.description}>
+                                    <BillingInvoiceRow
+                                        description={line.description}
+                                        quota={line.limit}
+                                        quantity={line.quantity}
+                                        amount={line.totalAmount}
+                                    />
+                                </StyledTableRow>
+                            ))}
+                        </TableBody>
+                    ) : null}
 
                     <BillingInvoiceFooter totalAmount={totalAmount} />
                 </StyledInvoiceGrid>

@@ -25,15 +25,24 @@ export const useDetailedInvoices = (options: SWRConfiguration = {}) => {
 
     return {
         invoices: [
-            // TODO:MOCK
+            // FIXME: MOCK
             {
                 status: 'paid',
                 dueDate: '2023-09-01',
                 invoiceDate: '2023-08-01',
                 invoicePDF: 'https://example.com/invoice/1.pdf',
                 invoiceURL: 'https://example.com/invoice/1',
-                totalAmount: 100,
-                lines: [
+                totalAmount: 400,
+                mainLines: [
+                    {
+                        currency: 'USD',
+                        description: 'Service C',
+                        lookupKey: 'service-c',
+                        quantity: 1,
+                        totalAmount: 200,
+                    },
+                ],
+                usageLines: [
                     {
                         currency: 'USD',
                         description: 'Service A',

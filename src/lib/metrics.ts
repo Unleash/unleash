@@ -318,9 +318,11 @@ export function registerPrometheusMetrics(
         name: 'feature_toggles_archived_total',
         help: 'Number of archived feature flags',
     });
-    const usersTotal = createGauge({
+    createGauge({
         name: 'users_total',
         help: 'Number of users',
+        fetchValue: () => stores.userStore.count(),
+        ttlMs: minutesToMilliseconds(15),
     });
     const trafficTotal = createGauge({
         name: 'traffic_total',
@@ -1165,9 +1167,6 @@ export function registerPrometheusMetrics(
                 featureTogglesArchivedTotal.set(
                     await instanceStatsService.getArchivedToggleCount(),
                 );
-
-                usersTotal.reset();
-                usersTotal.set(await instanceStatsService.getRegisteredUsers());
 
                 serviceAccounts.reset();
                 serviceAccounts.set(

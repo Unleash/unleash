@@ -11,7 +11,7 @@ import BoltIcon from '@mui/icons-material/Bolt';
 import {
     useMilestoneProgressionForm,
     type TimeUnit,
-} from '../hooks/useMilestoneProgressionForm';
+} from '../hooks/useMilestoneProgressionForm.js';
 import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';

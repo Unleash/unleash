@@ -4,7 +4,11 @@ import { parametersSchema } from './parameters-schema.js';
 import { featureStrategySchema } from './feature-strategy-schema.js';
 import { variantSchema } from './variant-schema.js';
 import { strategyVariantSchema } from './strategy-variant-schema.js';
-import { featureEnvironmentReleasePlanSchema } from './feature-environment-release-plan-schema.js';
+import { releasePlanSchema } from './release-plan-schema.js';
+import { releasePlanMilestoneSchema } from './release-plan-milestone-schema.js';
+import { releasePlanMilestoneStrategySchema } from './release-plan-milestone-strategy-schema.js';
+import { createFeatureStrategySchema } from './create-feature-strategy-schema.js';
+import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
 
 export const featureEnvironmentSchema = {
     $id: '#/components/schemas/featureEnvironmentSchema',
@@ -112,7 +116,7 @@ export const featureEnvironmentSchema = {
             description:
                 'Release plans for this feature environment (only available when milestoneProgression feature flag is enabled)',
             items: {
-                $ref: '#/components/schemas/featureEnvironmentReleasePlanSchema',
+                $ref: '#/components/schemas/releasePlanSchema',
             },
         },
     },
@@ -123,7 +127,11 @@ export const featureEnvironmentSchema = {
             featureStrategySchema,
             strategyVariantSchema,
             variantSchema,
-            featureEnvironmentReleasePlanSchema,
+            releasePlanSchema,
+            releasePlanMilestoneSchema,
+            releasePlanMilestoneStrategySchema,
+            createFeatureStrategySchema,
+            createStrategyVariantSchema,
         },
     },
 } as const;

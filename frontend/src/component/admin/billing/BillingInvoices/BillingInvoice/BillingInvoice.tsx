@@ -9,7 +9,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { formatCurrency } from './types.ts';
 import { Badge } from 'component/common/Badge/Badge.tsx';
 import type { FC, ReactNode } from 'react';
-import type { DetailedInvoicesResponseSchemaInvoicesItem } from 'openapi/index.ts';
+import type { DetailedInvoicesSchemaInvoicesItem } from 'openapi/index.ts';
 import { BillingInvoiceRow } from './BillingInvoiceRow/BillingInvoiceRow.tsx';
 import { BillingInvoiceFooter } from './BillingInvoiceFooter/BillingInvoiceFooter.tsx';
 import { StyledSubgrid } from './BillingInvoice.styles.tsx';
@@ -146,8 +146,8 @@ export const BillingInvoice = ({
     invoicePDF,
     invoiceURL,
     totalAmount,
-    lines,
-}: DetailedInvoicesResponseSchemaInvoicesItem) => {
+    mainLines,
+}: DetailedInvoicesSchemaInvoicesItem) => {
     const title = invoiceDate
         ? new Date(invoiceDate).toLocaleDateString(undefined, {
               month: 'long',
@@ -198,7 +198,7 @@ export const BillingInvoice = ({
                         <HeaderCell>Quantity</HeaderCell>
                         <HeaderCell>Amount</HeaderCell>
                     </StyledSubgrid>
-                    {lines.map((line) => (
+                    {mainLines.map((line) => (
                         <TableBody
                             key={line.description}
                             // TODO: split into "usage" category

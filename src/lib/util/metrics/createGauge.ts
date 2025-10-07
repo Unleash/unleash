@@ -11,6 +11,23 @@ export type Gauge<T extends string = string> = {
 };
 
 /**
+ * Additional options for createGauge that allow registering a lazy collect function
+ * which caches values for a given TTL.
+ */
+export type CreateGaugeOptions<T extends string> = GaugeConfiguration<T> & {
+    /**
+     * Time to live for cached values in milliseconds. Used together with `fetchValue`.
+     */
+    ttlMs?: number;
+    /**
+     * Optional fetcher used to populate the gauge value lazily on scrape.
+     * If provided together with `ttlMs`, a `collect` function will be installed that
+     * caches the value for the TTL. Return null to indicate unknown (we'll set NaN).
+     */
+    fetchValue?: () => Promise<number | null>;
+};
+
+/**
  * Creates a wrapped instance of prom-client's Gauge, overriding some of its methods for enhanced functionality and type-safety.
  *
  * @param options - The configuration options for the Gauge, as defined in prom-client's GaugeConfiguration.
@@ -18,12 +35,62 @@ export type Gauge<T extends string = string> = {
  * @returns An object containing the wrapped Gauge instance and custom methods.
  */
 export const createGauge = <T extends string>(
-    options: GaugeConfiguration<T>,
+    options: CreateGaugeOptions<T>,
 ): Gauge<T> => {
-    /**
-     * The underlying instance of prom-client's Gauge.
-     */
-    const gauge = new PromGauge(options);
+    const { ttlMs, fetchValue, ...gaugeOptions } =
+        options as CreateGaugeOptions<T>;
+
+    // If fetchValue is provided, attach a TTL-cached collect. We preserve any existing collect
+    // by calling it afterwards.
+    if (fetchValue && typeof fetchValue === 'function') {
+        const ttl =
+            typeof ttlMs === 'number' && Number.isFinite(ttlMs) ? ttlMs : 0;
+        const last: { ts: number; value: number | null } = {
+            ts: 0,
+            value: null,
+        };
+        const originalCollect = (gaugeOptions as GaugeConfiguration<T>).collect;
+
+        // Assign a custom collect that obeys TTL caching semantics
+        (gaugeOptions as GaugeConfiguration<T>).collect = async function (
+            this: PromGauge<T>,
+        ) {
+            const now = Date.now();
+            const fresh = ttl > 0 && now - last.ts < ttl && last.value !== null;
+
+            if (fresh) {
+                // Serve cached value
+                this.set(last.value as number);
+            } else {
+                try {
+                    const v = await fetchValue();
+                    last.ts = now;
+                    last.value = v;
+                    if (v === null) {
+                        // Indicate unknown; Prometheus won’t treat it as zero.
+                        this.set(Number.NaN);
+                    } else {
+                        this.set(v);
+                    }
+                } catch {
+                    last.ts = now;
+                    last.value = null;
+                    this.set(Number.NaN);
+                }
+            }
+
+            // Call any original collect afterwards, allowing additional instrumentation if present
+            if (typeof originalCollect === 'function') {
+                try {
+                    await originalCollect.call(this);
+                } catch {
+                    // ignore errors from original collect to avoid breaking the scrape
+                }
+            }
+        } as unknown as GaugeConfiguration<T>['collect'];
+    }
+
+    const gauge = new PromGauge(gaugeOptions as GaugeConfiguration<T>);
 
     /**
      * Applies given labels to the gauge. Labels are key-value pairs.

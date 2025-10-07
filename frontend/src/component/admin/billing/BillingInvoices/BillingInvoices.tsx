@@ -1,6 +1,7 @@
 import { Box, styled, Typography } from '@mui/material';
 import type { FC } from 'react';
 import { BillingInvoice } from './BillingInvoice/BillingInvoice.tsx';
+import { useDetailedInvoices } from 'hooks/api/getters/useDetailedInvoices/useDetailedInvoices.ts';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -15,13 +16,15 @@ const StyledHeader = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-type BillingInvoicesProps = {};
+export const BillingInvoices: FC = () => {
+    const { invoices } = useDetailedInvoices();
 
-export const BillingInvoices: FC<BillingInvoicesProps> = () => {
     return (
         <StyledContainer>
             <StyledHeader>Usage and invoices</StyledHeader>
-            <BillingInvoice status='upcoming' title='October 15th' />
+            {invoices.map((invoice) => (
+                <BillingInvoice key={invoice.invoiceDate} {...invoice} />
+            ))}
         </StyledContainer>
     );
 };

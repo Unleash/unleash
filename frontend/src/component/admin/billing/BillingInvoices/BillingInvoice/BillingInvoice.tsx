@@ -9,31 +9,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { formatCurrency } from './types.ts';
 import { Badge } from 'component/common/Badge/Badge.tsx';
 import type { FC, ReactNode } from 'react';
+import type { DetailedInvoicesSchemaInvoicesItem } from 'openapi/index.ts';
 import { BillingInvoiceRow } from './BillingInvoiceRow/BillingInvoiceRow.tsx';
-
-export type BillingInvoiceSectionItem = {
-    description: string;
-    quantity?: number;
-    amount?: number;
-    quota?: number;
-};
-
-type BillingInvoiceSection = {
-    id: string;
-    title?: string;
-    items: BillingInvoiceSectionItem[];
-    summary?: {
-        subtotal: number;
-        taxExemptNote?: string;
-        total: number;
-    };
-};
-
-type BillingInvoiceProps = {
-    title: string;
-    status?: 'estimate' | 'upcoming' | 'invoiced';
-    sections?: BillingInvoiceSection[];
-};
+import { BillingInvoiceFooter } from './BillingInvoiceFooter/BillingInvoiceFooter.tsx';
+import { StyledSubgrid } from './BillingInvoice.styles.tsx';
 
 const CardLikeAccordion = styled(Accordion)(({ theme }) => ({
     background: theme.palette.background.paper,
@@ -78,19 +57,6 @@ const StyledInvoiceGrid = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 2, 3),
 }));
 
-const StyledSubgrid = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'withBackground',
-})<{ withBackground?: boolean }>(({ theme, withBackground }) => ({
-    display: 'grid',
-    gridTemplateColumns: 'subgrid',
-    gridColumn: '1 / -1',
-    background: withBackground
-        ? theme.palette.background.elevation1
-        : 'transparent',
-    padding: theme.spacing(0.25, 2),
-    borderRadius: theme.shape.borderRadiusLarge,
-}));
-
 const HeaderCell = styled(Typography)(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     fontWeight: theme.typography.fontWeightMedium,
@@ -111,14 +77,14 @@ const StyledSectionTitle = styled(Typography)(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
 }));
 
-export const StyledTableRow = styled('div')(({ theme }) => ({
+const StyledTableRow = styled('div')(({ theme }) => ({
     display: 'grid',
     gridColumn: '1 / -1',
     gridTemplateColumns: 'subgrid',
     padding: theme.spacing(1, 0),
 }));
 
-const sectionsMock: BillingInvoiceSection[] = [
+const sectionsMock = [
     {
         id: 'seats',
         items: [
@@ -174,19 +140,20 @@ const sectionsMock: BillingInvoiceSection[] = [
 ];
 
 export const BillingInvoice = ({
-    title,
     status,
-    sections = sectionsMock,
-}: BillingInvoiceProps) => {
-    const total = sections.reduce(
-        (acc, section) =>
-            acc +
-            section.items.reduce(
-                (itemAcc, item) => itemAcc + (item.amount || 0),
-                0,
-            ),
-        0,
-    );
+    dueDate,
+    invoiceDate,
+    invoicePDF,
+    invoiceURL,
+    totalAmount,
+    mainLines,
+}: DetailedInvoicesSchemaInvoicesItem) => {
+    const title = invoiceDate
+        ? new Date(invoiceDate).toLocaleDateString(undefined, {
+              month: 'long',
+              day: 'numeric',
+          })
+        : '';
 
     return (
         <CardLikeAccordion defaultExpanded>
@@ -214,7 +181,7 @@ export const BillingInvoice = ({
                         <Badge color='success'>Invoiced</Badge>
                     ) : null}
                     <Typography variant='body1' sx={{ fontWeight: 700 }}>
-                        {formatCurrency(total)}
+                        {formatCurrency(totalAmount)}
                     </Typography>
                 </HeaderRight>
             </HeaderRoot>
@@ -231,20 +198,29 @@ export const BillingInvoice = ({
                         <HeaderCell>Quantity</HeaderCell>
                         <HeaderCell>Amount</HeaderCell>
                     </StyledSubgrid>
-                    {sections.map((section) => (
-                        <TableBody key={section.id} title={section.title}>
-                            {section.title ? (
+                    {mainLines.map((line) => (
+                        <TableBody
+                            key={line.description}
+                            // TODO: split into "usage" category
+                            title={line.description}
+                        >
+                            {/* {line.description ? (
                                 <StyledSectionTitle>
-                                    {section.title}
+                                    {line.description}
                                 </StyledSectionTitle>
-                            ) : null}
-                            {section.items.map((item) => (
-                                <StyledTableRow key={item.description}>
-                                    <BillingInvoiceRow item={item} />
-                                </StyledTableRow>
-                            ))}
+                            ) : null} */}
+                            <StyledTableRow key={line.description}>
+                                <BillingInvoiceRow
+                                    description={line.description}
+                                    quota={line.limit}
+                                    quantity={line.quantity}
+                                    amount={line.totalAmount}
+                                />
+                            </StyledTableRow>
                         </TableBody>
                     ))}
+
+                    <BillingInvoiceFooter totalAmount={totalAmount} />
                 </StyledInvoiceGrid>
             </AccordionDetails>
         </CardLikeAccordion>

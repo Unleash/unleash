@@ -1,5 +1,6 @@
 import Delete from '@mui/icons-material/Delete';
-import { styled } from '@mui/material';
+import Add from '@mui/icons-material/Add';
+import { styled, IconButton, Button } from '@mui/material';
 import { DELETE_FEATURE_STRATEGY } from '@server/types/permissions';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
@@ -22,6 +23,7 @@ import { RemoveReleasePlanChangeRequestDialog } from './ChangeRequest/RemoveRele
 import { StartMilestoneChangeRequestDialog } from './ChangeRequest/StartMilestoneChangeRequestDialog.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Truncator } from 'component/common/Truncator/Truncator';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -70,9 +72,44 @@ const StyledBody = styled('div')(({ theme }) => ({
 
 const StyledConnection = styled('div')(({ theme }) => ({
     width: 4,
+    height: theme.spacing(6),
+    backgroundColor: theme.palette.divider,
+    marginLeft: theme.spacing(3.25),
+}));
+
+const StyledConnectionSimple = styled('div')(({ theme }) => ({
+    width: 4,
     height: theme.spacing(2),
     backgroundColor: theme.palette.divider,
     marginLeft: theme.spacing(3.25),
+}));
+
+const StyledConnectionContainer = styled('div')(({ theme }) => ({
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+}));
+
+const StyledAddAutomationIconButton = styled(IconButton)(({ theme }) => ({
+    position: 'absolute',
+    left: theme.spacing(2),
+    top: '12px',
+    width: 24,
+    height: 24,
+    border: `1px solid ${theme.palette.primary.main}`,
+    backgroundColor: theme.palette.background.elevation2,
+    zIndex: 1,
+    '& svg': {
+        fontSize: 16,
+    },
+}));
+
+const StyledAddAutomationButton = styled(Button)(({ theme }) => ({
+    marginLeft: theme.spacing(3),
+    textTransform: 'none',
+    fontWeight: theme.typography.fontWeightBold,
+    padding: 0,
+    minWidth: 'auto',
 }));
 
 interface IReleasePlanProps {
@@ -118,6 +155,7 @@ export const ReleasePlan = ({
     const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
+    const milestoneProgressionsEnabled = useUiFlag('milestoneProgression');
 
     const onAddRemovePlanChangesConfirm = async () => {
         await addChange(projectId, environment, {
@@ -276,7 +314,23 @@ export const ReleasePlan = ({
                         />
                         <ConditionallyRender
                             condition={index < milestones.length - 1}
-                            show={<StyledConnection />}
+                            show={
+                                <ConditionallyRender
+                                    condition={milestoneProgressionsEnabled}
+                                    show={
+                                        <StyledConnectionContainer>
+                                            <StyledConnection />
+                                            <StyledAddAutomationIconButton color='primary'>
+                                                <Add />
+                                            </StyledAddAutomationIconButton>
+                                            <StyledAddAutomationButton color='primary'>
+                                                Add automation
+                                            </StyledAddAutomationButton>
+                                        </StyledConnectionContainer>
+                                    }
+                                    elseShow={<StyledConnectionSimple />}
+                                />
+                            }
                         />
                     </div>
                 ))}

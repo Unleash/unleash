@@ -47,7 +47,11 @@ describe('formatCurrency', () => {
         expect(formatCurrency(999999999, 'EUR')).toMatchInlineSnapshot(
             `"€ 999 999 999"`,
         );
-        expect(formatCurrency(10.999, 'USD')).toMatchInlineSnapshot(`"$10.999"`);
-        expect(formatCurrency(10.999, 'EUR')).toMatchInlineSnapshot(`"€ 10,999"`);
+        expect(formatCurrency(10.999, 'USD')).toMatchInlineSnapshot(
+            `"$10.999"`,
+        );
+        expect(formatCurrency(10.999, 'EUR')).toMatchInlineSnapshot(
+            `"€ 10,999"`,
+        );
     });
 });

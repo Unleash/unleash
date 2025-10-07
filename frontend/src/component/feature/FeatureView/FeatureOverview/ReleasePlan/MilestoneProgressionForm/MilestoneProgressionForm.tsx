@@ -24,7 +24,7 @@ const StyledFormContainer = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     borderRadius: theme.spacing(0.75),
     border: `1px solid ${theme.palette.divider}`,
-    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+    boxShadow: theme.boxShadows.elevated,
     position: 'relative',
     marginLeft: theme.spacing(3.25),
     marginTop: theme.spacing(1.5),
@@ -60,7 +60,7 @@ const StyledIcon = styled(BoltIcon)(({ theme }) => ({
 
 const StyledLabel = styled('span')(({ theme }) => ({
     color: theme.palette.text.primary,
-    fontSize: theme.fontSizes.smallBody,
+    fontSize: theme.typography.body2.fontSize,
     flexShrink: 0,
 }));
 
@@ -81,14 +81,14 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     '& input': {
         textAlign: 'center',
         padding: theme.spacing(0.75, 1),
-        fontSize: theme.fontSizes.smallBody,
+        fontSize: theme.typography.body2.fontSize,
         fontWeight: theme.typography.fontWeightMedium,
     },
 }));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
     width: '100px',
-    fontSize: theme.fontSizes.smallBody,
+    fontSize: theme.typography.body2.fontSize,
     borderRadius: theme.spacing(0.5),
     '& .MuiOutlinedInput-notchedOutline': {
         borderRadius: theme.spacing(0.5),
@@ -113,7 +113,7 @@ const StyledButtonGroup = styled('div')(({ theme }) => ({
 
 const StyledErrorMessage = styled('span')(({ theme }) => ({
     color: theme.palette.error.main,
-    fontSize: theme.fontSizes.smallBody,
+    fontSize: theme.typography.body2.fontSize,
     marginRight: 'auto',
 }));
 

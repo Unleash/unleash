@@ -5,7 +5,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { ResizablePaginatedTable } from './ResizablePaginatedTable/ResizablePaginatedTable.tsx';
+import { PaginatedTable } from 'component/common/Table/PaginatedTable/PaginatedTable.tsx';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { ActionsCell } from '../ProjectFeatureToggles/ActionsCell/ActionsCell.tsx';
@@ -576,7 +576,11 @@ export const ProjectFeatureToggles = ({
                                     })),
                                 ]}
                                 onToggle={onToggleColumnVisibility}
-                                onResetColumnSizing={resizableColumnsEnabled ? resetColumnSizing : undefined}
+                                onResetColumnSizing={
+                                    resizableColumnsEnabled
+                                        ? resetColumnSizing
+                                        : undefined
+                                }
                             />
                         }
                     />
@@ -615,7 +619,7 @@ export const ProjectFeatureToggles = ({
                         </ButtonGroup>
                     </FilterRow>
                     <SearchHighlightProvider value={tableState.query || ''}>
-                        <ResizablePaginatedTable
+                        <PaginatedTable
                             tableInstance={table}
                             totalItems={total}
                         />

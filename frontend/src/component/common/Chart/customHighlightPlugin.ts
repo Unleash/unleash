@@ -7,9 +7,10 @@ type CustomHighlightPluginOptions = {
 };
 
 const defaultCategoryPercentage = 0.8;
-export const categoryWidth = (chart: Chart) => {
+export const smartWidth = (chart: Chart) => {
+    const xAxisEntries = chart.data.datasets[0]?.data ?? chart.scales.x.ticks;
     return (
-        (chart.width / chart.scales.x.ticks.length) *
+        (chart.width / xAxisEntries.length) *
         (chart.options.datasets?.bar?.categoryPercentage ??
             defaultCategoryPercentage)
     );
@@ -22,7 +23,7 @@ export const customHighlightPlugin = (
     id: 'customLine',
     beforeDraw: (chart: Chart) => {
         const {
-            width = categoryWidth,
+            width = smartWidth,
             maxHighlightOpacity = 0.12,
             bottomOverflow = 0,
         } = options ?? {};

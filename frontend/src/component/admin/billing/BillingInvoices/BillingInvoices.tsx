@@ -1,7 +1,7 @@
 import { Box, styled, Typography } from '@mui/material';
 import type { FC } from 'react';
 import { BillingInvoice } from './BillingInvoice/BillingInvoice.tsx';
-import useDetailedInvoices from 'hooks/api/getters/useDetailedInvoices/useDetailedInvoices.ts';
+import { useDetailedInvoices } from 'hooks/api/getters/useDetailedInvoices/useDetailedInvoices.ts';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',

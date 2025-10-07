@@ -45,7 +45,8 @@ export const useDetailedInvoices = (options: SWRConfiguration = {}) => {
                         currency: 'USD',
                         description: 'Service B',
                         lookupKey: 'service-b',
-                        quantity: 2,
+                        quantity: 100,
+                        limit: 120,
                         totalAmount: 200,
                     },
                 ],
@@ -72,5 +73,3 @@ export const useDetailedInvoices = (options: SWRConfiguration = {}) => {
         loading: isLoading,
     };
 };
-
-export default useDetailedInvoices;

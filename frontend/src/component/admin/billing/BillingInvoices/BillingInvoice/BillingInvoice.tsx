@@ -11,6 +11,8 @@ import { Badge } from 'component/common/Badge/Badge.tsx';
 import type { FC, ReactNode } from 'react';
 import type { DetailedInvoicesResponseSchemaInvoicesItem } from 'openapi/index.ts';
 import { BillingInvoiceRow } from './BillingInvoiceRow/BillingInvoiceRow.tsx';
+import { BillingInvoiceFooter } from './BillingInvoiceFooter/BillingInvoiceFooter.tsx';
+import { StyledSubgrid } from './BillingInvoice.styles.tsx';
 
 const CardLikeAccordion = styled(Accordion)(({ theme }) => ({
     background: theme.palette.background.paper,
@@ -55,19 +57,6 @@ const StyledInvoiceGrid = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 2, 3),
 }));
 
-const StyledSubgrid = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'withBackground',
-})<{ withBackground?: boolean }>(({ theme, withBackground }) => ({
-    display: 'grid',
-    gridTemplateColumns: 'subgrid',
-    gridColumn: '1 / -1',
-    background: withBackground
-        ? theme.palette.background.elevation1
-        : 'transparent',
-    padding: theme.spacing(0.25, 2),
-    borderRadius: theme.shape.borderRadiusLarge,
-}));
-
 const HeaderCell = styled(Typography)(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     fontWeight: theme.typography.fontWeightMedium,
@@ -88,7 +77,7 @@ const StyledSectionTitle = styled(Typography)(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
 }));
 
-export const StyledTableRow = styled('div')(({ theme }) => ({
+const StyledTableRow = styled('div')(({ theme }) => ({
     display: 'grid',
     gridColumn: '1 / -1',
     gridTemplateColumns: 'subgrid',
@@ -212,7 +201,8 @@ export const BillingInvoice = ({
                     {lines.map((line) => (
                         <TableBody
                             key={line.description}
-                            // title={line.description}
+                            // TODO: split into "usage" category
+                            title={line.description}
                         >
                             {/* {line.description ? (
                                 <StyledSectionTitle>
@@ -222,13 +212,15 @@ export const BillingInvoice = ({
                             <StyledTableRow key={line.description}>
                                 <BillingInvoiceRow
                                     description={line.description}
-                                    // quota={line.quota}
+                                    quota={line.limit}
                                     quantity={line.quantity}
                                     amount={line.totalAmount}
                                 />
                             </StyledTableRow>
                         </TableBody>
                     ))}
+
+                    <BillingInvoiceFooter totalAmount={totalAmount} />
                 </StyledInvoiceGrid>
             </AccordionDetails>
         </CardLikeAccordion>

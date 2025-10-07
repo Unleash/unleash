@@ -24,6 +24,7 @@ import { StartMilestoneChangeRequestDialog } from './ChangeRequest/StartMileston
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { MilestoneProgressionForm } from './MilestoneProgressionForm/MilestoneProgressionForm.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -156,6 +157,9 @@ export const ReleasePlan = ({
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
     const milestoneProgressionsEnabled = useUiFlag('milestoneProgression');
+    const [progressionFormOpenIndex, setProgressionFormOpenIndex] = useState<
+        number | null
+    >(null);
 
     const onAddRemovePlanChangesConfirm = async () => {
         await addChange(projectId, environment, {
@@ -263,6 +267,15 @@ export const ReleasePlan = ({
         });
     };
 
+    const handleProgressionSave = async () => {
+        setProgressionFormOpenIndex(null);
+        await refetch();
+    };
+
+    const handleProgressionCancel = () => {
+        setProgressionFormOpenIndex(null);
+    };
+
     const activeIndex = milestones.findIndex(
         (milestone) => milestone.id === activeMilestoneId,
     );
@@ -318,15 +331,57 @@ export const ReleasePlan = ({
                                 <ConditionallyRender
                                     condition={milestoneProgressionsEnabled}
                                     show={
-                                        <StyledConnectionContainer>
-                                            <StyledConnection />
-                                            <StyledAddAutomationIconButton color='primary'>
-                                                <Add />
-                                            </StyledAddAutomationIconButton>
-                                            <StyledAddAutomationButton color='primary'>
-                                                Add automation
-                                            </StyledAddAutomationButton>
-                                        </StyledConnectionContainer>
+                                        <ConditionallyRender
+                                            condition={
+                                                progressionFormOpenIndex ===
+                                                    index &&
+                                                index < milestones.length - 1
+                                            }
+                                            show={
+                                                <MilestoneProgressionForm
+                                                    sourceMilestoneId={
+                                                        milestone.id
+                                                    }
+                                                    targetMilestoneId={
+                                                        milestones[index + 1]
+                                                            ?.id || ''
+                                                    }
+                                                    projectId={projectId}
+                                                    environment={environment}
+                                                    onSave={
+                                                        handleProgressionSave
+                                                    }
+                                                    onCancel={
+                                                        handleProgressionCancel
+                                                    }
+                                                />
+                                            }
+                                            elseShow={
+                                                <StyledConnectionContainer>
+                                                    <StyledConnection />
+                                                    <StyledAddAutomationIconButton
+                                                        onClick={() =>
+                                                            setProgressionFormOpenIndex(
+                                                                index,
+                                                            )
+                                                        }
+                                                        color='primary'
+                                                    >
+                                                        <Add />
+                                                    </StyledAddAutomationIconButton>
+                                                    <StyledAddAutomationButton
+                                                        onClick={() =>
+                                                            setProgressionFormOpenIndex(
+                                                                index,
+                                                            )
+                                                        }
+                                                        color='primary'
+                                                    >
+                                                        Add automation
+                                                    </StyledAddAutomationButton>
+                                                </StyledConnectionContainer>
+                                            }
+                                        />
                                     }
                                     elseShow={<StyledConnectionSimple />}
                                 />

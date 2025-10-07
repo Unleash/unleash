@@ -15,10 +15,11 @@ import {
     TimeScale,
     Chart as ChartJS,
     Filler,
+    type TooltipItem,
 } from 'chart.js';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
-import type { WeekData, RawWeekData } from './types.ts';
+import type { WeekData, RawWeekData, BatchedWeekData } from './types.ts';
 import { createTooltip } from 'component/insights/components/LineChart/createTooltip.ts';
 import { CreationArchiveRatioTooltip } from './CreationArchiveRatioTooltip.tsx';
 import { getDateFnsLocale } from '../../getDateFnsLocale.ts';
@@ -27,6 +28,8 @@ import { NotEnoughData } from 'component/insights/components/LineChart/LineChart
 import { placeholderData } from './placeholderData.ts';
 import { Bar } from 'react-chartjs-2';
 import { GraphCover } from 'component/insights/GraphCover.tsx';
+import { format, startOfWeek } from 'date-fns';
+import { batchWeekData } from './batchWeekData.ts';
 
 ChartJS.register(
     CategoryScale,
@@ -47,6 +50,8 @@ interface ICreationArchiveChartProps {
     isLoading?: boolean;
 }
 
+type DataResult = 'Not Enough Data' | 'Batched' | 'Weekly';
+
 export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     creationArchiveTrends,
     isLoading,
@@ -56,7 +61,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     const { locationSettings } = useLocationSettings();
     const [tooltip, setTooltip] = useState<null | TooltipState>(null);
 
-    const { notEnoughData, aggregateOrProjectData } = useMemo(() => {
+    const { dataResult, aggregateOrProjectData } = useMemo(() => {
         const labels: string[] = Array.from(
             new Set(
                 creationVsArchivedChart.datasets.flatMap((d) =>
@@ -65,19 +70,21 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
             ),
         );
 
-        const aggregateWeekData = (acc: WeekData, item: RawWeekData) => {
-            if (item) {
-                acc.archivedFlags += item.archivedFlags || 0;
+        const aggregateWeekData = (acc: WeekData, item?: RawWeekData) => {
+            if (!item) return acc;
 
-                if (item.createdFlags) {
-                    Object.entries(item.createdFlags).forEach(([_, count]) => {
-                        acc.totalCreatedFlags += count;
-                    });
-                }
+            acc.archivedFlags += item.archivedFlags || 0;
+
+            if (item.createdFlags) {
+                Object.entries(item.createdFlags).forEach(([_, count]) => {
+                    acc.totalCreatedFlags += count;
+                });
             }
+
             if (!acc.date) {
-                acc.date = item?.date;
+                acc.date = item.date;
             }
+
             return acc;
         };
 
@@ -86,6 +93,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
             totalCreatedFlags: 0,
             archivePercentage: 0,
             week: label,
+            date: '',
         });
 
         const weeks: WeekData[] = labels
@@ -103,13 +111,23 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
             }))
             .sort((a, b) => (a.week > b.week ? 1 : -1));
 
+        let dataResult: DataResult = 'Weekly';
+        let displayData: WeekData[] | BatchedWeekData[] = weeks;
+
+        if (weeks.length < 2) {
+            dataResult = 'Not Enough Data';
+        } else if (weeks.length >= 12) {
+            dataResult = 'Batched';
+            displayData = batchWeekData(weeks);
+        }
+
         return {
-            notEnoughData: weeks.length < 2,
+            dataResult,
             aggregateOrProjectData: {
                 datasets: [
                     {
                         label: 'Flags archived',
-                        data: weeks,
+                        data: displayData,
                         backgroundColor: theme.palette.charts.A2,
                         borderColor: theme.palette.charts.A2,
                         hoverBackgroundColor: theme.palette.charts.A2,
@@ -122,7 +140,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     },
                     {
                         label: 'Flags created',
-                        data: weeks,
+                        data: displayData,
                         backgroundColor: theme.palette.charts.A1,
                         borderColor: theme.palette.charts.A1,
                         hoverBackgroundColor: theme.palette.charts.A1,
@@ -138,9 +156,25 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
         };
     }, [creationVsArchivedChart, theme]);
 
-    const useGraphCover = notEnoughData || isLoading;
-    const showNotEnoughDataText = notEnoughData && !isLoading;
+    const useGraphCover = dataResult === 'Not Enough Data' || isLoading;
+    const showNotEnoughDataText =
+        dataResult === 'Not Enough Data' && !isLoading;
     const data = useGraphCover ? placeholderData : aggregateOrProjectData;
+
+    const locale = getDateFnsLocale(locationSettings.locale);
+    const batchedTooltipTitle = (datapoints: TooltipItem<any>[]) => {
+        const rawData = datapoints[0].raw as BatchedWeekData;
+        const startDate = format(
+            startOfWeek(new Date(rawData.date), {
+                locale,
+                weekStartsOn: 1,
+            }),
+            `PP`,
+            { locale },
+        );
+        const endDate = format(new Date(rawData.endDate), `PP`, { locale });
+        return `${startDate} – ${endDate}`;
+    };
 
     const options = useMemo(
         () => ({
@@ -172,6 +206,12 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     enabled: false,
                     position: 'average' as const,
                     external: createTooltip(setTooltip),
+                    callbacks: {
+                        title:
+                            dataResult === 'Batched'
+                                ? batchedTooltipTitle
+                                : undefined,
+                    },
                 },
             },
             locale: locationSettings.locale,
@@ -179,20 +219,26 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                 x: {
                     adapters: {
                         date: {
-                            locale: getDateFnsLocale(locationSettings.locale),
+                            locale,
                         },
                     },
                     type: 'time' as const,
                     display: true,
                     time: {
-                        unit: 'week' as const,
+                        unit:
+                            dataResult === 'Batched'
+                                ? ('month' as const)
+                                : ('week' as const),
                         tooltipFormat: 'P',
                     },
                     grid: {
                         display: false,
                     },
                     ticks: {
-                        source: 'data' as const,
+                        source:
+                            dataResult === 'Batched'
+                                ? ('auto' as const)
+                                : ('data' as const),
                         display: !useGraphCover,
                     },
                 },

@@ -44,6 +44,7 @@ interface CreationArchiveRatioTooltipProps {
 }
 
 const Timestamp = styled('span')(({ theme }) => ({
+    whiteSpace: 'nowrap',
     fontSize: theme.typography.body2.fontSize,
     color: theme.palette.text.secondary,
 }));

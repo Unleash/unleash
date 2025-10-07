@@ -16,9 +16,7 @@ const StyledHeader = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-type BillingInvoicesProps = {};
-
-export const BillingInvoices: FC<BillingInvoicesProps> = () => {
+export const BillingInvoices: FC = () => {
     const { invoices } = useDetailedInvoices();
 
     return (

@@ -2,7 +2,7 @@ import useSWR, { type SWRConfiguration } from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
-import type { DetailedInvoicesResponseSchema } from 'openapi';
+import type { DetailedInvoicesSchema } from 'openapi';
 
 const KEY = `api/admin/invoices/list`;
 const path = formatApiPath(KEY);
@@ -13,7 +13,7 @@ export const useDetailedInvoices = (options: SWRConfiguration = {}) => {
             .then(handleErrorResponses('Detailed invoices'))
             .then((res) => res.json());
 
-    const { data, error, isLoading } = useSWR<DetailedInvoicesResponseSchema>(
+    const { data, error, isLoading } = useSWR<DetailedInvoicesSchema>(
         KEY,
         fetcher,
         options,
@@ -67,7 +67,7 @@ export const useDetailedInvoices = (options: SWRConfiguration = {}) => {
                 invoicePDF: 'https://example.com/invoice/2.pdf',
                 invoiceURL: 'https://example.com/invoice/2',
                 totalAmount: 200,
-                lines: [
+                mainLines: [
                     {
                         currency: 'USD',
                         description: 'Service C',
@@ -76,8 +76,9 @@ export const useDetailedInvoices = (options: SWRConfiguration = {}) => {
                         totalAmount: 200,
                     },
                 ],
+                usageLines: [],
             },
-        ],
+        ] satisfies DetailedInvoicesSchema['invoices'],
         error,
         loading: isLoading,
     };

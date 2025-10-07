@@ -1,19 +1,9 @@
-import dbInit, { type ITestDb } from '../helpers/database-init.js';
-import type { IUnleashStores } from '../../../lib/types/index.js';
-import { beforeAll, test, expect } from 'vitest';
-let stores: IUnleashStores;
-let db: ITestDb;
-
-beforeAll(async () => {
-    db = await dbInit();
-    stores = db.stores;
-});
-
-beforeEach(async () => {
-    await stores.userStore.deleteAll();
-});
+import dbInit from '../helpers/database-init.js';
+import { test, expect } from 'vitest';
 
 test('should have no users', async () => {
+    const db = await dbInit();
+    const stores = db.stores;
     const readModel = stores.userUpdatesReadModel;
     const lastUpdate = await readModel.getLastUpdatedAt();
     expect(lastUpdate).toBeNull();
@@ -23,6 +13,8 @@ test('should have no users', async () => {
 });
 
 test('Adding a user should return that user', async () => {
+    const db = await dbInit();
+    const stores = db.stores;
     const readModel = stores.userUpdatesReadModel;
     const userStore = stores.userStore;
     const beforeInsert = new Date(Date.now() - 1000);
@@ -45,6 +37,8 @@ test('Adding a user should return that user', async () => {
 });
 
 test('Modifying a user should return that user', async () => {
+    const db = await dbInit();
+    const stores = db.stores;
     const readModel = stores.userUpdatesReadModel;
     const userStore = stores.userStore;
     const inserted = await userStore.upsert({
@@ -88,6 +82,8 @@ test('Modifying a user should return that user', async () => {
 });
 
 test('Deleting a user should return that user', async () => {
+    const db = await dbInit();
+    const stores = db.stores;
     const readModel = stores.userUpdatesReadModel;
     const userStore = stores.userStore;
     const inserted = await userStore.upsert({

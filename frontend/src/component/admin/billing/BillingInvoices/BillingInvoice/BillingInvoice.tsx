@@ -1,3 +1,4 @@
+import type { FC, ReactNode } from 'react';
 import {
     Typography,
     styled,
@@ -6,12 +7,12 @@ import {
     AccordionDetails,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { formatCurrency } from './types.ts';
+import { formatCurrency } from './formatCurrency.ts';
 import { Badge } from 'component/common/Badge/Badge.tsx';
-import type { FC, ReactNode } from 'react';
 import { BillingInvoiceRow } from './BillingInvoiceRow/BillingInvoiceRow.tsx';
 import { BillingInvoiceFooter } from './BillingInvoiceFooter/BillingInvoiceFooter.tsx';
-import { StyledSubgrid } from './BillingInvoice.styles.tsx';
+import { StyledAmountCell, StyledSubgrid } from './BillingInvoice.styles.tsx';
+import type { DetailedInvoicesSchemaInvoicesItem } from 'openapi';
 
 const CardLikeAccordion = styled(Accordion)(({ theme }) => ({
     background: theme.palette.background.paper,
@@ -72,7 +73,7 @@ const TableBody: FC<{ children: ReactNode; title?: string }> = ({
 
 const StyledSectionTitle = styled(Typography)(({ theme }) => ({
     gridColumn: '1 / -1',
-    padding: theme.spacing(2, 0),
+    padding: theme.spacing(2, 0, 1),
     fontWeight: theme.fontWeight.bold,
 }));
 
@@ -91,13 +92,15 @@ export const BillingInvoice = ({
     totalAmount,
     mainLines,
     usageLines,
-}: DetailedInvoicesResponseSchemaInvoicesItem) => {
+}: DetailedInvoicesSchemaInvoicesItem) => {
     const title = invoiceDate
         ? new Date(invoiceDate).toLocaleDateString(undefined, {
               month: 'long',
               day: 'numeric',
           })
         : '';
+
+    const currency = mainLines[0]?.currency || usageLines?.[0]?.currency;
 
     return (
         <CardLikeAccordion defaultExpanded>
@@ -125,7 +128,7 @@ export const BillingInvoice = ({
                         <Badge color='success'>Invoiced</Badge>
                     ) : null}
                     <Typography variant='body1' sx={{ fontWeight: 700 }}>
-                        {formatCurrency(totalAmount)}
+                        {formatCurrency(totalAmount, currency)}
                     </Typography>
                 </HeaderRight>
             </HeaderRoot>
@@ -140,46 +143,32 @@ export const BillingInvoice = ({
                         <HeaderCell>Description</HeaderCell>
                         <HeaderCell>Included</HeaderCell>
                         <HeaderCell>Quantity</HeaderCell>
-                        <HeaderCell>Amount</HeaderCell>
+                        <HeaderCell>
+                            <StyledAmountCell>Amount</StyledAmountCell>
+                        </HeaderCell>
                     </StyledSubgrid>
-                    {lines.map((line) => (
-                        <TableBody
-                            key={line.description}
-                            // TODO: split into "usage" category
-                            title={line.description}
-                        >
-                            {/* {line.description ? (
-                                <StyledSectionTitle>
-                                    {line.description}
-                                </StyledSectionTitle>
-                            ) : null} */}
+                    {mainLines.map((line) => (
+                        <TableBody key={line.description}>
                             <StyledTableRow key={line.description}>
-                                <BillingInvoiceRow
-                                    description={line.description}
-                                    quota={line.limit}
-                                    quantity={line.quantity}
-                                    amount={line.totalAmount}
-                                />
+                                <BillingInvoiceRow {...line} />
                             </StyledTableRow>
                         </TableBody>
                     ))}
-                    {usageLines ? (
+                    {usageLines.length ? (
                         <TableBody key='usage' title='Usage'>
                             <StyledSectionTitle>Usage</StyledSectionTitle>
                             {usageLines.map((line) => (
                                 <StyledTableRow key={line.description}>
-                                    <BillingInvoiceRow
-                                        description={line.description}
-                                        quota={line.limit}
-                                        quantity={line.quantity}
-                                        amount={line.totalAmount}
-                                    />
+                                    <BillingInvoiceRow {...line} />
                                 </StyledTableRow>
                             ))}
                         </TableBody>
                     ) : null}
 
-                    <BillingInvoiceFooter totalAmount={totalAmount} />
+                    <BillingInvoiceFooter
+                        totalAmount={totalAmount}
+                        currency={currency}
+                    />
                 </StyledInvoiceGrid>
             </AccordionDetails>
         </CardLikeAccordion>

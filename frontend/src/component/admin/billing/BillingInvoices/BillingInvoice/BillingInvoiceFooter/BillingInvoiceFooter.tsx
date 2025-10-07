@@ -1,11 +1,11 @@
 import type { FC } from 'react';
 import { styled } from '@mui/material';
-import { formatCurrency } from '../types.ts';
-import { StyledSubgrid } from '../BillingInvoice.styles.tsx';
+import { formatCurrency } from '../formatCurrency.ts';
+import { StyledAmountCell, StyledSubgrid } from '../BillingInvoice.styles.tsx';
 
 const StyledTableFooter = styled(StyledSubgrid)(({ theme }) => ({
     gridColumn: '3 / -1',
-    padding: theme.spacing(1, 0, 0),
+    padding: theme.spacing(1, 1, 0, 0),
 }));
 
 const StyledTableFooterRow = styled('div')<{ last?: boolean }>(
@@ -27,12 +27,6 @@ const StyledTableFooterCell = styled('div', {
     ...(colSpan ? { gridColumn: `span ${colSpan}` } : {}),
 }));
 
-interface BillingInvoiceFooterProps {
-    subTotal?: number;
-    taxAmount?: number;
-    totalAmount: number;
-}
-
 const TaxRow: FC<{ value?: number }> = ({ value }) => {
     if (value === undefined) {
         return (
@@ -46,16 +40,24 @@ const TaxRow: FC<{ value?: number }> = ({ value }) => {
         <>
             <StyledTableFooterCell>Tax</StyledTableFooterCell>
             <StyledTableFooterCell>
-                {formatCurrency(value)}
+                <StyledAmountCell>{formatCurrency(value)}</StyledAmountCell>
             </StyledTableFooterCell>
         </>
     );
+};
+
+type BillingInvoiceFooterProps = {
+    subTotal?: number;
+    taxAmount?: number;
+    totalAmount: number;
+    currency?: string;
 };
 
 export const BillingInvoiceFooter = ({
     subTotal,
     taxAmount,
     totalAmount,
+    currency,
 }: BillingInvoiceFooterProps) => {
     return (
         <StyledTableFooter>
@@ -63,7 +65,9 @@ export const BillingInvoiceFooter = ({
                 <StyledTableFooterRow>
                     <StyledTableFooterCell>Sub total</StyledTableFooterCell>
                     <StyledTableFooterCell>
-                        {formatCurrency(subTotal || totalAmount)}
+                        <StyledAmountCell>
+                            {formatCurrency(subTotal || totalAmount, currency)}
+                        </StyledAmountCell>
                     </StyledTableFooterCell>
                 </StyledTableFooterRow>
             ) : null}
@@ -73,7 +77,9 @@ export const BillingInvoiceFooter = ({
             <StyledTableFooterRow last>
                 <StyledTableFooterCell>Total</StyledTableFooterCell>
                 <StyledTableFooterCell>
-                    {formatCurrency(totalAmount)}
+                    <StyledAmountCell>
+                        {formatCurrency(totalAmount, currency)}
+                    </StyledAmountCell>
                 </StyledTableFooterCell>
             </StyledTableFooterRow>
         </StyledTableFooter>

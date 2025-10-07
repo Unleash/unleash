@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { DetailedInvoicesResponseSchemaInvoicesItemLinesItem } from './detailedInvoicesResponseSchemaInvoicesItemLinesItem.js';
+import type { DetailedInvoicesLineSchema } from './detailedInvoicesLineSchema.js';
 
-export type DetailedInvoicesResponseSchemaInvoicesItem = {
+export type DetailedInvoicesSchemaInvoicesItem = {
     /** When the invoice is due */
     dueDate?: string;
     /** When the invoice was created */
@@ -14,11 +14,12 @@ export type DetailedInvoicesResponseSchemaInvoicesItem = {
     invoicePDF?: string;
     /** A URL pointing to where the invoice can be found. */
     invoiceURL?: string;
-    /** Line items included in the invoice */
-    lines: DetailedInvoicesResponseSchemaInvoicesItemLinesItem[];
+    /** Primary line items (packages, seats, etc.) */
+    mainLines: DetailedInvoicesLineSchema[];
     /** The current status of the invoice */
     status: string;
     /** Total amount for the invoice in minor currency units */
     totalAmount: number;
-    [key: string]: unknown;
+    /** Usage line items (traffic, consumption usage, overages) */
+    usageLines: DetailedInvoicesLineSchema[];
 };

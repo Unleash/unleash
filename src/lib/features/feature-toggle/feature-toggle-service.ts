@@ -19,6 +19,7 @@ import {
     type IAuditUser,
     type IConstraint,
     type IDependency,
+    type IEnvironmentDetail,
     type IFeatureCollaboratorsReadModel,
     type IFeatureEnvironmentInfo,
     type IFeatureEnvironmentStore,
@@ -117,6 +118,8 @@ import { sortStrategies } from '../../util/sortStrategies.js';
 import type FeatureLinkService from '../feature-links/feature-link-service.js';
 import type { IFeatureLink } from '../feature-links/feature-links-read-model-type.js';
 import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
+import type { IReleasePlanReadModel } from '../release-plans/release-plan-read-model-type.js';
+import type { ReleasePlan } from '../release-plans/release-plan.js';
 interface IFeatureContext {
     featureName: string;
     projectId: string;
@@ -177,6 +180,7 @@ export type ServicesAndReadModels = {
     featureLinkService: FeatureLinkService;
     featureLinksReadModel: IFeatureLinksReadModel;
     resourceLimitsService: ResourceLimitsService;
+    releasePlanReadModel: IReleasePlanReadModel;
 };
 
 export class FeatureToggleService {
@@ -226,6 +230,8 @@ export class FeatureToggleService {
 
     private resourceLimitsService: ResourceLimitsService;
 
+    private releasePlanReadModel: IReleasePlanReadModel;
+
     constructor(
         {
             featureStrategiesStore,
@@ -251,6 +257,7 @@ export class FeatureToggleService {
             featureLinksReadModel,
             featureLinkService,
             resourceLimitsService,
+            releasePlanReadModel,
         }: ServicesAndReadModels,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
@@ -276,6 +283,7 @@ export class FeatureToggleService {
         this.featureLinkService = featureLinkService;
         this.eventBus = eventBus;
         this.resourceLimitsService = resourceLimitsService;
+        this.releasePlanReadModel = releasePlanReadModel;
     }
 
     async validateFeaturesContext(
@@ -1151,8 +1159,16 @@ export class FeatureToggleService {
                     userId,
                     archived,
                 );
+
+            const environmentsWithReleasePlans =
+                await this.addReleasePlansToEnvironments(
+                    featureName,
+                    result.environments,
+                );
+
             return {
                 ...result,
+                environments: environmentsWithReleasePlans,
                 dependencies,
                 children,
                 lifecycle,
@@ -1171,8 +1187,15 @@ export class FeatureToggleService {
                     archived,
                 );
 
+            const environmentsWithReleasePlans =
+                await this.addReleasePlansToEnvironments(
+                    featureName,
+                    result.environments,
+                );
+
             return {
                 ...result,
+                environments: environmentsWithReleasePlans,
                 dependencies,
                 children,
                 lifecycle,
@@ -1180,6 +1203,27 @@ export class FeatureToggleService {
                 collaborators: { users: collaborators },
             };
         }
+    }
+
+    private async addReleasePlansToEnvironments(
+        featureName: string,
+        environments: IEnvironmentDetail[],
+    ): Promise<(IEnvironmentDetail & { releasePlans?: ReleasePlan[] })[]> {
+        if (!this.flagResolver.isEnabled('milestoneProgression')) {
+            return environments;
+        }
+
+        const environmentNames = environments.map((env) => env.name);
+        const releasePlansByEnvironment =
+            await this.releasePlanReadModel.getReleasePlans(
+                featureName,
+                environmentNames,
+            );
+
+        return environments.map((env) => ({
+            ...env,
+            releasePlans: releasePlansByEnvironment[env.name] || [],
+        }));
     }
 
     async getVariantsForEnv(

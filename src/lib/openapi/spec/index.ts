@@ -79,6 +79,7 @@ export * from './export-query-schema.js';
 export * from './export-result-schema.js';
 export * from './feature-dependencies-schema.js';
 export * from './feature-environment-metrics-schema.js';
+export * from './feature-environment-release-plan-schema.js';
 export * from './feature-environment-schema.js';
 export * from './feature-events-schema.js';
 export * from './feature-lifecycle-completed-schema.js';

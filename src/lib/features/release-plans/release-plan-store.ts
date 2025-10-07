@@ -252,6 +252,10 @@ export class ReleasePlanStore extends CRUDStore<
         }
         return releasePlans[0];
     }
+
+    // should be deprecated soon in favor of IReleasePlanReadModel.getReleasePlans
+    // this will remove read model responsibility from the store
+    // also we're moving release plans to feature environments (DB join) instead of separate API calls (browser join)
     async getByFeatureFlagAndEnvironment(
         featureName: string,
         environment: string,

@@ -91,6 +91,7 @@ export type UiFlags = {
     flagsUiFilterRefactor?: boolean;
     trafficBillingDisplay?: boolean;
     milestoneProgression?: boolean;
+    featureReleasePlans?: boolean;
     envAddStrategySuggestion?: boolean;
 };
 

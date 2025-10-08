@@ -12,6 +12,10 @@ describe('formatCurrency', () => {
         );
         expect(formatCurrency(0, 'USD')).toMatchInlineSnapshot(`"$0"`);
         expect(formatCurrency(-500, 'USD')).toMatchInlineSnapshot(`"$-500"`);
+        expect(formatCurrency(1000, 'usd')).toMatchInlineSnapshot(`"$1,000"`);
+        expect(formatCurrency(1234.56, 'usd')).toMatchInlineSnapshot(
+            `"$1,234.56"`,
+        );
     });
 
     it('formats EUR currency', () => {
@@ -24,6 +28,10 @@ describe('formatCurrency', () => {
         );
         expect(formatCurrency(0, 'EUR')).toMatchInlineSnapshot(`"€ 0"`);
         expect(formatCurrency(-500, 'EUR')).toMatchInlineSnapshot(`"€ −500"`);
+        expect(formatCurrency(1000, 'eur')).toMatchInlineSnapshot(`"€ 1 000"`);
+        expect(formatCurrency(1234.56, 'eur')).toMatchInlineSnapshot(
+            `"€ 1 234,56"`,
+        );
     });
 
     it('formats other currencies', () => {

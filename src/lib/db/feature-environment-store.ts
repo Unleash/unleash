@@ -475,71 +475,81 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
     async cloneStrategies(
         sourceEnvironment: string,
         destinationEnvironment: string,
+        projects: string[],
     ): Promise<void> {
         const stopTimer = this.timer('cloneStrategies');
-        const sourceFeatureStrategies = await this.db(
-            'feature_strategies',
-        ).where({
-            environment: sourceEnvironment,
-        });
 
-        const clonedStrategyRows = sourceFeatureStrategies.map(
-            (featureStrategy) => {
-                return {
+        await this.db.transaction(async (trx) => {
+            const sourceFeatureStrategies = await trx(
+                'feature_strategies as fs',
+            )
+                .join('features as f', 'f.name', 'fs.feature_name')
+                .select('fs.*')
+                .where('fs.environment', sourceEnvironment)
+                .whereIn('f.project', projects);
+
+            if (sourceFeatureStrategies.length === 0) {
+                return;
+            }
+
+            const clonedStrategyRows = sourceFeatureStrategies.map(
+                (featureStrategy) => ({
+                    ...featureStrategy,
                     id: uuidv4(),
-                    feature_name: featureStrategy.feature_name,
-                    project_name: featureStrategy.project_name,
                     environment: destinationEnvironment,
-                    strategy_name: featureStrategy.strategy_name,
                     parameters: JSON.stringify(featureStrategy.parameters),
                     constraints: JSON.stringify(featureStrategy.constraints),
-                    sort_order: featureStrategy.sort_order,
                     variants: JSON.stringify(featureStrategy.variants),
-                };
-            },
-        );
-
-        if (clonedStrategyRows.length === 0) {
-            stopTimer();
-            return Promise.resolve();
-        }
-        await this.db('feature_strategies').insert(clonedStrategyRows);
-
-        const newStrategyMapping = new Map();
-        sourceFeatureStrategies.forEach((sourceStrategy, index) => {
-            newStrategyMapping.set(
-                sourceStrategy.id,
-                clonedStrategyRows[index].id,
+                }),
             );
+
+            await trx('feature_strategies').insert(clonedStrategyRows);
+
+            const newStrategyIdByOld = new Map<string, string>();
+            sourceFeatureStrategies.forEach((s, i) => {
+                newStrategyIdByOld.set(s.id, clonedStrategyRows[i].id);
+            });
+
+            const segmentsToClone = await trx('feature_strategy_segment as fss')
+                .join(
+                    'feature_strategies as fs',
+                    'fss.feature_strategy_id',
+                    'fs.id',
+                )
+                .join('features as f', 'f.name', 'fs.feature_name')
+                .select('fss.feature_strategy_id', 'fss.segment_id')
+                .where('fs.environment', sourceEnvironment)
+                .whereIn('f.project', projects);
+
+            if (segmentsToClone.length) {
+                const clonedSegmentRows = segmentsToClone
+                    .map((row) => {
+                        const mappedId = newStrategyIdByOld.get(
+                            row.feature_strategy_id,
+                        );
+                        if (!mappedId) return null;
+                        return {
+                            feature_strategy_id: mappedId,
+                            segment_id: row.segment_id,
+                        };
+                    })
+                    .filter(
+                        (
+                            r,
+                        ): r is {
+                            feature_strategy_id: string;
+                            segment_id: number;
+                        } => Boolean(r),
+                    );
+
+                if (clonedSegmentRows.length) {
+                    await trx('feature_strategy_segment').insert(
+                        clonedSegmentRows,
+                    );
+                }
+            }
         });
 
-        const segmentsToClone: ISegmentRow[] = await this.db(
-            'feature_strategy_segment as fss',
-        )
-            .select(['id', 'segment_id'])
-            .join(
-                'feature_strategies AS fs',
-                'fss.feature_strategy_id',
-                'fs.id',
-            )
-            .where('environment', sourceEnvironment);
-
-        const clonedSegmentIdRows = segmentsToClone.map(
-            (existingSegmentRow) => {
-                return {
-                    feature_strategy_id: newStrategyMapping.get(
-                        existingSegmentRow.id,
-                    ),
-                    segment_id: existingSegmentRow.segment_id,
-                };
-            },
-        );
-
-        if (clonedSegmentIdRows.length > 0) {
-            await this.db('feature_strategy_segment').insert(
-                clonedSegmentIdRows,
-            );
-        }
         stopTimer();
     }
 

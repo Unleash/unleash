@@ -1209,7 +1209,7 @@ export class FeatureToggleService {
         featureName: string,
         environments: IEnvironmentDetail[],
     ): Promise<(IEnvironmentDetail & { releasePlans?: ReleasePlan[] })[]> {
-        if (!this.flagResolver.isEnabled('milestoneProgression')) {
+        if (!this.flagResolver.isEnabled('featureReleasePlans')) {
             return environments;
         }
 

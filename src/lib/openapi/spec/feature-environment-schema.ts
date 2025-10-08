@@ -4,6 +4,11 @@ import { parametersSchema } from './parameters-schema.js';
 import { featureStrategySchema } from './feature-strategy-schema.js';
 import { variantSchema } from './variant-schema.js';
 import { strategyVariantSchema } from './strategy-variant-schema.js';
+import { releasePlanSchema } from './release-plan-schema.js';
+import { releasePlanMilestoneSchema } from './release-plan-milestone-schema.js';
+import { releasePlanMilestoneStrategySchema } from './release-plan-milestone-strategy-schema.js';
+import { createFeatureStrategySchema } from './create-feature-strategy-schema.js';
+import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
 
 export const featureEnvironmentSchema = {
     $id: '#/components/schemas/featureEnvironmentSchema',
@@ -106,6 +111,14 @@ export const featureEnvironmentSchema = {
             description:
                 'Whether the feature has any enabled strategies defined.',
         },
+        releasePlans: {
+            type: 'array',
+            description:
+                'Release plans for this feature environment (only available when milestoneProgression feature flag is enabled)',
+            items: {
+                $ref: '#/components/schemas/releasePlanSchema',
+            },
+        },
     },
     components: {
         schemas: {
@@ -114,6 +127,11 @@ export const featureEnvironmentSchema = {
             featureStrategySchema,
             strategyVariantSchema,
             variantSchema,
+            releasePlanSchema,
+            releasePlanMilestoneSchema,
+            releasePlanMilestoneStrategySchema,
+            createFeatureStrategySchema,
+            createStrategyVariantSchema,
         },
     },
 } as const;

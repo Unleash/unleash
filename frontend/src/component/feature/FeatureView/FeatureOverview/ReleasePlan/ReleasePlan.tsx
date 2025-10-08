@@ -309,86 +309,72 @@ export const ReleasePlan = ({
                 )}
             </StyledHeader>
             <StyledBody>
-                {milestones.map((milestone, index) => (
-                    <div key={milestone.id}>
-                        <ReleasePlanMilestone
-                            readonly={readonly}
-                            milestone={milestone}
-                            status={
-                                milestone.id === activeMilestoneId
-                                    ? environmentIsDisabled
-                                        ? 'paused'
-                                        : 'active'
-                                    : index < activeIndex
-                                      ? 'completed'
-                                      : 'not-started'
-                            }
-                            onStartMilestone={onStartMilestone}
-                        />
-                        <ConditionallyRender
-                            condition={index < milestones.length - 1}
-                            show={
-                                <ConditionallyRender
-                                    condition={milestoneProgressionsEnabled}
-                                    show={
-                                        <ConditionallyRender
-                                            condition={
-                                                progressionFormOpenIndex ===
-                                                    index &&
-                                                index < milestones.length - 1
-                                            }
-                                            show={
-                                                <MilestoneProgressionForm
-                                                    sourceMilestoneId={
-                                                        milestone.id
-                                                    }
-                                                    targetMilestoneId={
-                                                        milestones[index + 1]
-                                                            ?.id || ''
-                                                    }
-                                                    projectId={projectId}
-                                                    environment={environment}
-                                                    onSave={
-                                                        handleProgressionSave
-                                                    }
-                                                    onCancel={
-                                                        handleProgressionCancel
-                                                    }
-                                                />
-                                            }
-                                            elseShow={
-                                                <StyledConnectionContainer>
-                                                    <StyledConnection />
-                                                    <StyledAddAutomationIconButton
-                                                        onClick={() =>
-                                                            setProgressionFormOpenIndex(
-                                                                index,
-                                                            )
-                                                        }
-                                                        color='primary'
-                                                    >
-                                                        <Add />
-                                                    </StyledAddAutomationIconButton>
-                                                    <StyledAddAutomationButton
-                                                        onClick={() =>
-                                                            setProgressionFormOpenIndex(
-                                                                index,
-                                                            )
-                                                        }
-                                                        color='primary'
-                                                    >
-                                                        Add automation
-                                                    </StyledAddAutomationButton>
-                                                </StyledConnectionContainer>
-                                            }
-                                        />
-                                    }
-                                    elseShow={<StyledConnectionSimple />}
-                                />
-                            }
-                        />
-                    </div>
-                ))}
+                {milestones.map((milestone, index) => {
+                    const isNotLastMilestone = index < milestones.length - 1;
+                    const isProgressionFormOpen = progressionFormOpenIndex === index;
+                    const nextMilestoneId = milestones[index + 1]?.id || '';
+                    const handleOpenProgressionForm = () => setProgressionFormOpenIndex(index);
+
+                    return (
+                        <div key={milestone.id}>
+                            <ReleasePlanMilestone
+                                readonly={readonly}
+                                milestone={milestone}
+                                status={
+                                    milestone.id === activeMilestoneId
+                                        ? environmentIsDisabled
+                                            ? 'paused'
+                                            : 'active'
+                                        : index < activeIndex
+                                          ? 'completed'
+                                          : 'not-started'
+                                }
+                                onStartMilestone={onStartMilestone}
+                            />
+                            <ConditionallyRender
+                                condition={isNotLastMilestone}
+                                show={
+                                    <ConditionallyRender
+                                        condition={milestoneProgressionsEnabled}
+                                        show={
+                                            <ConditionallyRender
+                                                condition={isProgressionFormOpen}
+                                                show={
+                                                    <MilestoneProgressionForm
+                                                        sourceMilestoneId={milestone.id}
+                                                        targetMilestoneId={nextMilestoneId}
+                                                        projectId={projectId}
+                                                        environment={environment}
+                                                        onSave={handleProgressionSave}
+                                                        onCancel={handleProgressionCancel}
+                                                    />
+                                                }
+                                                elseShow={
+                                                    <StyledConnectionContainer>
+                                                        <StyledConnection />
+                                                        <StyledAddAutomationIconButton
+                                                            onClick={handleOpenProgressionForm}
+                                                            color='primary'
+                                                        >
+                                                            <Add />
+                                                        </StyledAddAutomationIconButton>
+                                                        <StyledAddAutomationButton
+                                                            onClick={handleOpenProgressionForm}
+                                                            color='primary'
+                                                        >
+                                                            Add automation
+                                                        </StyledAddAutomationButton>
+                                                    </StyledConnectionContainer>
+                                                }
+                                            />
+                                        }
+                                        elseShow={<StyledConnectionSimple />}
+                                    />
+                                }
+                            />
+                        </div>
+                    );
+                })}
             </StyledBody>
             <ReleasePlanRemoveDialog
                 plan={plan}

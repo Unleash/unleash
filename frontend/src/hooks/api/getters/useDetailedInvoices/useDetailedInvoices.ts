@@ -25,9 +25,9 @@ export const useDetailedInvoices = (options: SWRConfiguration = {}) => {
 
     return {
         invoices: [
-            // TODO:MOCK
+            // FIXME: MOCK
             {
-                status: 'paid',
+                status: 'upcoming',
                 dueDate: '2023-09-01',
                 invoiceDate: '2023-08-01',
                 invoicePDF: 'https://example.com/invoice/1.pdf',
@@ -38,7 +38,9 @@ export const useDetailedInvoices = (options: SWRConfiguration = {}) => {
                         currency: 'USD',
                         description: 'Service C',
                         lookupKey: 'service-c',
-                        quantity: 1,
+                        quantity: 0,
+                        consumption: 100,
+                        limit: 120,
                         totalAmount: 200,
                     },
                 ],
@@ -48,20 +50,31 @@ export const useDetailedInvoices = (options: SWRConfiguration = {}) => {
                         description: 'Service A',
                         lookupKey: 'service-a',
                         quantity: 1,
+                        consumption: 100,
                         totalAmount: 100,
                     },
                     {
                         currency: 'USD',
-                        description: 'Service B',
+                        description: 'Backend streaming connections',
                         lookupKey: 'service-b',
-                        quantity: 100,
-                        limit: 120,
+                        quantity: 324_000,
+                        limit: 3_000_000,
+                        consumption: 3_000_000,
                         totalAmount: 200,
+                    },
+                    {
+                        currency: 'USD',
+                        description: 'Frontend traffic bundle',
+                        lookupKey: 'frontend-traffic-bundle',
+                        quantity: 0,
+                        consumption: 2_345_239,
+                        limit: 5_000_000,
+                        totalAmount: 0,
                     },
                 ],
             },
             {
-                status: 'unpaid',
+                status: 'invoiced',
                 dueDate: '2023-09-15',
                 invoiceDate: '2023-08-15',
                 invoicePDF: 'https://example.com/invoice/2.pdf',
@@ -69,7 +82,7 @@ export const useDetailedInvoices = (options: SWRConfiguration = {}) => {
                 totalAmount: 200,
                 mainLines: [
                     {
-                        currency: 'USD',
+                        currency: 'EUR',
                         description: 'Service C',
                         lookupKey: 'service-c',
                         quantity: 1,

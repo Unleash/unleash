@@ -1,3 +1,4 @@
+import type { FC, ReactNode } from 'react';
 import {
     Typography,
     styled,
@@ -6,13 +7,12 @@ import {
     AccordionDetails,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { formatCurrency } from './types.ts';
+import { formatCurrency } from './formatCurrency.ts';
 import { Badge } from 'component/common/Badge/Badge.tsx';
-import type { FC, ReactNode } from 'react';
-import type { DetailedInvoicesSchemaInvoicesItem } from 'openapi/index.ts';
 import { BillingInvoiceRow } from './BillingInvoiceRow/BillingInvoiceRow.tsx';
 import { BillingInvoiceFooter } from './BillingInvoiceFooter/BillingInvoiceFooter.tsx';
-import { StyledSubgrid } from './BillingInvoice.styles.tsx';
+import { StyledAmountCell, StyledSubgrid } from './BillingInvoice.styles.tsx';
+import type { DetailedInvoicesSchemaInvoicesItem } from 'openapi';
 
 const CardLikeAccordion = styled(Accordion)(({ theme }) => ({
     background: theme.palette.background.paper,
@@ -73,7 +73,7 @@ const TableBody: FC<{ children: ReactNode; title?: string }> = ({
 
 const StyledSectionTitle = styled(Typography)(({ theme }) => ({
     gridColumn: '1 / -1',
-    padding: theme.spacing(2, 0),
+    padding: theme.spacing(2, 0, 1),
     fontWeight: theme.fontWeight.bold,
 }));
 
@@ -84,69 +84,14 @@ const StyledTableRow = styled('div')(({ theme }) => ({
     padding: theme.spacing(1, 0),
 }));
 
-const sectionsMock = [
-    {
-        id: 'seats',
-        items: [
-            {
-                description: 'Unleash PAYG Seat',
-                quota: 50,
-                quantity: 41,
-                amount: 3_076,
-            },
-        ],
-    },
-    {
-        id: 'usage',
-        title: 'Usage: September',
-        items: [
-            {
-                description: 'Frontend traffic',
-                quota: 10_000_000,
-                quantity: 1_085_000_000,
-                amount: 5_425,
-            },
-            {
-                description: 'Service connections',
-                quota: 7,
-                quantity: 20,
-                amount: 0,
-            },
-            {
-                description: 'Release templates',
-                quota: 5,
-                quantity: 3,
-                amount: 0,
-            },
-            {
-                description: 'Edge Frontend Traffic',
-                quota: 10_000_000,
-                quantity: 2_000_000,
-                amount: 0,
-            },
-            {
-                description: 'Edge Service Connections',
-                quota: 5,
-                quantity: 5,
-                amount: 0,
-            },
-        ],
-        summary: {
-            subtotal: 8_500,
-            taxExemptNote: 'Customer tax is exempt',
-            total: 8_500,
-        },
-    },
-];
-
 export const BillingInvoice = ({
     status,
-    dueDate,
     invoiceDate,
     invoicePDF,
     invoiceURL,
     totalAmount,
     mainLines,
+    usageLines,
 }: DetailedInvoicesSchemaInvoicesItem) => {
     const title = invoiceDate
         ? new Date(invoiceDate).toLocaleDateString(undefined, {
@@ -154,6 +99,8 @@ export const BillingInvoice = ({
               day: 'numeric',
           })
         : '';
+
+    const currency = mainLines[0]?.currency || usageLines?.[0]?.currency;
 
     return (
         <CardLikeAccordion defaultExpanded>
@@ -181,7 +128,7 @@ export const BillingInvoice = ({
                         <Badge color='success'>Invoiced</Badge>
                     ) : null}
                     <Typography variant='body1' sx={{ fontWeight: 700 }}>
-                        {formatCurrency(totalAmount)}
+                        {formatCurrency(totalAmount, currency)}
                     </Typography>
                 </HeaderRight>
             </HeaderRoot>
@@ -196,31 +143,32 @@ export const BillingInvoice = ({
                         <HeaderCell>Description</HeaderCell>
                         <HeaderCell>Included</HeaderCell>
                         <HeaderCell>Quantity</HeaderCell>
-                        <HeaderCell>Amount</HeaderCell>
+                        <HeaderCell>
+                            <StyledAmountCell>Amount</StyledAmountCell>
+                        </HeaderCell>
                     </StyledSubgrid>
                     {mainLines.map((line) => (
-                        <TableBody
-                            key={line.description}
-                            // TODO: split into "usage" category
-                            title={line.description}
-                        >
-                            {/* {line.description ? (
-                                <StyledSectionTitle>
-                                    {line.description}
-                                </StyledSectionTitle>
-                            ) : null} */}
+                        <TableBody key={line.description}>
                             <StyledTableRow key={line.description}>
-                                <BillingInvoiceRow
-                                    description={line.description}
-                                    quota={line.limit}
-                                    quantity={line.quantity}
-                                    amount={line.totalAmount}
-                                />
+                                <BillingInvoiceRow {...line} />
                             </StyledTableRow>
                         </TableBody>
                     ))}
+                    {usageLines.length ? (
+                        <TableBody key='usage' title='Usage'>
+                            <StyledSectionTitle>Usage</StyledSectionTitle>
+                            {usageLines.map((line) => (
+                                <StyledTableRow key={line.description}>
+                                    <BillingInvoiceRow {...line} />
+                                </StyledTableRow>
+                            ))}
+                        </TableBody>
+                    ) : null}
 
-                    <BillingInvoiceFooter totalAmount={totalAmount} />
+                    <BillingInvoiceFooter
+                        totalAmount={totalAmount}
+                        currency={currency}
+                    />
                 </StyledInvoiceGrid>
             </AccordionDetails>
         </CardLikeAccordion>

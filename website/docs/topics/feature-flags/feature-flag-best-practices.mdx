@@ -297,7 +297,7 @@ Set an expiration date and assign an owner when you create the flag. Track clean
 Organize flags into [projects and environments](/feature-flag-tutorials/use-cases/organize-feature-flags), enforce unique names, and keep payloads small by using [segments](/reference/segments) instead of large targeting lists. Apply [access control](/reference/rbac) and [change requests](/reference/change-requests) for your production environments and use [audit logs](/reference/events) for visibility. A management platform like Unleash provides these features out of the box, making it easier to scale.
 
 #### How do you mitigate the risk of introducing bugs or technical debt due to unused or stale feature flags?
-The key is to keep flags short-lived. Test both code paths while the flag is active, and remove the flag and old path once the rollout finishes. Archive stale flags for audit purposes. In Unleash, lifecycle states help you identify and clean up unused flags.
+The key is to keep flags short-lived. Test both code paths while the flag is active, and remove the flag and old path once the rollout finishes. Archive stale flags for audit purposes. In Unleash, lifecycle stages help you identify and clean up unused flags.
 
 #### What are the best feature flag management tools or libraries that support your tech stack?
 Unleash provides [extensive SDK support](/reference/sdks) across diverse tech stacks, including server-side languages like Node.js, Java, Go, PHP, Python, Ruby, Rust, .NET as well as frontend frameworks such as React, JavaScript, Vue, iOS, and Android.

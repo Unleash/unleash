@@ -1,10 +1,17 @@
-const batchSize = 4;
+const defaultBatchSize = 4;
+
+export type BatchDataOptions<T, TBatched> = {
+    merge: (accumulated: TBatched, next: T) => TBatched;
+    map: (item: T) => TBatched;
+    batchSize?: number;
+};
 
 export const batchData =
-    <T, TBatched>(
-        merge: (accumulated: TBatched, next: T) => TBatched,
-        from: (item: T) => TBatched,
-    ) =>
+    <T, TBatched>({
+        merge,
+        map,
+        batchSize = defaultBatchSize,
+    }: BatchDataOptions<T, TBatched>) =>
     (xs: T[]): TBatched[] =>
         xs.reduce((acc, curr, index) => {
             const currentAggregatedIndex = Math.floor(index / batchSize);
@@ -13,7 +20,7 @@ export const batchData =
             if (data) {
                 acc[currentAggregatedIndex] = merge(data, curr);
             } else {
-                acc[currentAggregatedIndex] = from(curr);
+                acc[currentAggregatedIndex] = map(curr);
             }
             return acc;
         }, [] as TBatched[]);

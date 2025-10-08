@@ -1,8 +1,8 @@
 import { batchData } from '../batchData.ts';
 import type { BatchedWeekData, WeekData } from './types.ts';
 
-export const batchCreationArchiveData = batchData(
-    (accumulated: BatchedWeekData, next: WeekData) => {
+export const batchCreationArchiveData = batchData({
+    merge: (accumulated: BatchedWeekData, next: WeekData) => {
         accumulated.totalCreatedFlags += next.totalCreatedFlags;
         accumulated.archivedFlags += next.archivedFlags;
 
@@ -15,7 +15,7 @@ export const batchCreationArchiveData = batchData(
         accumulated.endDate = next.date;
         return accumulated;
     },
-    (item: WeekData) => {
+    map: (item: WeekData) => {
         const { week: _, ...shared } = item;
 
         return {
@@ -23,4 +23,4 @@ export const batchCreationArchiveData = batchData(
             endDate: item.date,
         };
     },
-);
+});

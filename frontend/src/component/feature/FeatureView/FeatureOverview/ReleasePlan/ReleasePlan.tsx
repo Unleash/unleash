@@ -1,6 +1,5 @@
 import Delete from '@mui/icons-material/Delete';
-import Add from '@mui/icons-material/Add';
-import { styled, IconButton, Button } from '@mui/material';
+import { styled } from '@mui/material';
 import { DELETE_FEATURE_STRATEGY } from '@server/types/permissions';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
@@ -73,44 +72,9 @@ const StyledBody = styled('div')(({ theme }) => ({
 
 const StyledConnection = styled('div')(({ theme }) => ({
     width: 4,
-    height: theme.spacing(6),
-    backgroundColor: theme.palette.divider,
-    marginLeft: theme.spacing(3.25),
-}));
-
-const StyledConnectionSimple = styled('div')(({ theme }) => ({
-    width: 4,
     height: theme.spacing(2),
     backgroundColor: theme.palette.divider,
     marginLeft: theme.spacing(3.25),
-}));
-
-const StyledConnectionContainer = styled('div')(({ theme }) => ({
-    position: 'relative',
-    display: 'flex',
-    alignItems: 'center',
-}));
-
-const StyledAddAutomationIconButton = styled(IconButton)(({ theme }) => ({
-    position: 'absolute',
-    left: theme.spacing(2),
-    top: '12px',
-    width: 24,
-    height: 24,
-    border: `1px solid ${theme.palette.primary.main}`,
-    backgroundColor: theme.palette.background.elevation2,
-    zIndex: 1,
-    '& svg': {
-        fontSize: 16,
-    },
-}));
-
-const StyledAddAutomationButton = styled(Button)(({ theme }) => ({
-    marginLeft: theme.spacing(3),
-    textTransform: 'none',
-    fontWeight: theme.typography.fontWeightBold,
-    padding: 0,
-    minWidth: 'auto',
 }));
 
 interface IReleasePlanProps {
@@ -332,63 +296,27 @@ export const ReleasePlan = ({
                                           : 'not-started'
                                 }
                                 onStartMilestone={onStartMilestone}
+                                showAutomation={
+                                    milestoneProgressionsEnabled &&
+                                    isNotLastMilestone
+                                }
+                                onAddAutomation={handleOpenProgressionForm}
+                                automationForm={
+                                    isProgressionFormOpen ? (
+                                        <MilestoneProgressionForm
+                                            sourceMilestoneId={milestone.id}
+                                            targetMilestoneId={nextMilestoneId}
+                                            projectId={projectId}
+                                            environment={environment}
+                                            onSave={handleProgressionSave}
+                                            onCancel={handleProgressionCancel}
+                                        />
+                                    ) : undefined
+                                }
                             />
                             <ConditionallyRender
                                 condition={isNotLastMilestone}
-                                show={
-                                    <ConditionallyRender
-                                        condition={milestoneProgressionsEnabled}
-                                        show={
-                                            <ConditionallyRender
-                                                condition={
-                                                    isProgressionFormOpen
-                                                }
-                                                show={
-                                                    <MilestoneProgressionForm
-                                                        sourceMilestoneId={
-                                                            milestone.id
-                                                        }
-                                                        targetMilestoneId={
-                                                            nextMilestoneId
-                                                        }
-                                                        projectId={projectId}
-                                                        environment={
-                                                            environment
-                                                        }
-                                                        onSave={
-                                                            handleProgressionSave
-                                                        }
-                                                        onCancel={
-                                                            handleProgressionCancel
-                                                        }
-                                                    />
-                                                }
-                                                elseShow={
-                                                    <StyledConnectionContainer>
-                                                        <StyledConnection />
-                                                        <StyledAddAutomationIconButton
-                                                            onClick={
-                                                                handleOpenProgressionForm
-                                                            }
-                                                            color='primary'
-                                                        >
-                                                            <Add />
-                                                        </StyledAddAutomationIconButton>
-                                                        <StyledAddAutomationButton
-                                                            onClick={
-                                                                handleOpenProgressionForm
-                                                            }
-                                                            color='primary'
-                                                        >
-                                                            Add automation
-                                                        </StyledAddAutomationButton>
-                                                    </StyledConnectionContainer>
-                                                }
-                                            />
-                                        }
-                                        elseShow={<StyledConnectionSimple />}
-                                    />
-                                }
+                                show={<StyledConnection />}
                             />
                         </div>
                     );

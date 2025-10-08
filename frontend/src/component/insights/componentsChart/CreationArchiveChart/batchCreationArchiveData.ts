@@ -6,7 +6,7 @@ import type {
     BatchedWeekDataWithRatio,
 } from './types.ts';
 
-export const batchCreationArchiveData = batchData({
+const batchArgs = (batchSize?: number) => ({
     merge: (accumulated: BatchedWeekData, next: FinalizedWeekData) => {
         if (next.state === 'empty') {
             return {
@@ -53,4 +53,10 @@ export const batchCreationArchiveData = batchData({
             endDate: item.date,
         };
     },
+    batchSize,
 });
+
+export const batchCreationArchiveData = (
+    data: FinalizedWeekData[],
+    batchSize?: number,
+) => batchData(batchArgs(batchSize))(data);

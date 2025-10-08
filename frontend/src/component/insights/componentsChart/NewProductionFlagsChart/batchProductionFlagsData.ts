@@ -1,7 +1,7 @@
 import { batchData } from '../batchData.ts';
 import type { BatchedWeekData, WeekData } from './types.ts';
 
-export const batchProductionFlagsData = batchData({
+const batchArgs = (batchSize?: number) => ({
     merge: (accumulated: BatchedWeekData, next: WeekData) => {
         if (next.newProductionFlags)
             accumulated.newProductionFlags =
@@ -16,11 +16,15 @@ export const batchProductionFlagsData = batchData({
         return accumulated;
     },
     map: (item: WeekData) => {
-        const { week: _, ...shared } = item;
-
         return {
-            ...shared,
+            ...item,
             endDate: item.date,
         };
     },
+    batchSize,
 });
+
+export const batchProductionFlagsData = (
+    data: WeekData[],
+    batchSize?: number,
+) => batchData(batchArgs(batchSize))(data);

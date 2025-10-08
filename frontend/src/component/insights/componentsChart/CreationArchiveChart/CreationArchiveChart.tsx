@@ -30,6 +30,7 @@ import { GraphCover } from 'component/insights/GraphCover.tsx';
 import { batchCreationArchiveData } from './batchCreationArchiveData.ts';
 import { useBatchedTooltipDate } from '../useBatchedTooltipDate.ts';
 import { aggregateCreationArchiveData } from './aggregateCreationArchiveData.ts';
+import type { ChartDataState } from '../chartDataState.ts';
 
 ChartJS.register(
     CategoryScale,
@@ -51,6 +52,8 @@ interface ICreationArchiveChartProps {
     labels: { week: string; date: string }[];
 }
 
+const batchSize = 4;
+
 export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     creationArchiveTrends,
     isLoading,
@@ -67,15 +70,14 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
             creationVsArchivedChart.datasets,
         );
 
-        let dataResult: ChartDataResult = 'Weekly';
-        let displayData: FinalizedWeekData[] | (BatchedWeekData | null)[] =
-            weeklyData;
+        let dataResult: ChartDataState = { status: 'Weekly' };
+        let displayData: FinalizedWeekData[] | BatchedWeekData[] = weeklyData;
 
         if (weeklyData.length < 2) {
-            dataResult = 'Not Enough Data';
+            dataResult = { status: 'Not Enough Data' };
         } else if (weeklyData.length >= 12) {
-            dataResult = 'Batched';
-            displayData = batchCreationArchiveData(weeklyData);
+            dataResult = { status: 'Batched', batchSize };
+            displayData = batchCreationArchiveData(weeklyData, batchSize);
         }
 
         return {
@@ -113,9 +115,9 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
         };
     }, [creationVsArchivedChart, theme]);
 
-    const useGraphCover = dataResult === 'Not Enough Data' || isLoading;
+    const useGraphCover = dataResult.status === 'Not Enough Data' || isLoading;
     const showNotEnoughDataText =
-        dataResult === 'Not Enough Data' && !isLoading;
+        dataResult.status === 'Not Enough Data' && !isLoading;
     const data = useGraphCover ? placeholderData : aggregateOrProjectData;
 
     const locale = getDateFnsLocale(locationSettings.locale);
@@ -153,7 +155,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     external: createTooltip(setTooltip),
                     callbacks: {
                         title:
-                            dataResult === 'Batched'
+                            dataResult.status === 'Batched'
                                 ? batchedTooltipTitle
                                 : undefined,
                     },
@@ -171,7 +173,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     display: true,
                     time: {
                         unit:
-                            dataResult === 'Batched'
+                            dataResult.status === 'Batched'
                                 ? ('month' as const)
                                 : ('week' as const),
                         tooltipFormat: 'P',
@@ -181,7 +183,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     },
                     ticks: {
                         source:
-                            dataResult === 'Batched'
+                            dataResult.status === 'Batched'
                                 ? ('auto' as const)
                                 : ('data' as const),
                         display: !useGraphCover,

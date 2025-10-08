@@ -11,15 +11,16 @@ export const useFeatureReleasePlans = (
     const featureReleasePlansEnabled = useUiFlag('featureReleasePlans');
     const envName =
         typeof environment === 'string' ? environment : environment?.name;
-    const { releasePlans: releasePlansFromHook, refetch: refetchReleasePlans, ...rest } = useReleasePlans(
-        projectId,
-        featureId,
-        envName,
-    );
+    const {
+        releasePlans: releasePlansFromHook,
+        refetch: refetchReleasePlans,
+        ...rest
+    } = useReleasePlans(projectId, featureId, envName);
     const { refetchFeature } = useFeature(projectId, featureId);
 
     const releasePlans = featureReleasePlansEnabled
-        ? (typeof environment === 'object' ? environment?.releasePlans : []) || []
+        ? (typeof environment === 'object' ? environment?.releasePlans : []) ||
+          []
         : releasePlansFromHook;
 
     const refetch = featureReleasePlansEnabled

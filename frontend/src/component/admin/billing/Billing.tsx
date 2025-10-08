@@ -19,11 +19,10 @@ const StyledHeader = styled(Typography)(({ theme }) => ({
 
 const StyledPageGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: '1fr 300px',
+    gridTemplateColumns: '1fr 320px',
     gap: theme.spacing(2),
     [theme.breakpoints.down('md')]: {
         display: 'flex',
-        // reverse order
         flexDirection: 'column-reverse',
     },
 }));

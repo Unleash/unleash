@@ -23,7 +23,7 @@ const StyledTableFooterRow = styled('div')<{ last?: boolean }>(
 const StyledTableFooterCell = styled('div', {
     shouldForwardProp: (prop) => prop !== 'colSpan',
 })<{ colSpan?: number }>(({ theme, colSpan }) => ({
-    padding: theme.spacing(1, 0),
+    padding: theme.spacing(1, 0, 1, 0.5),
     ...(colSpan ? { gridColumn: `span ${colSpan}` } : {}),
 }));
 

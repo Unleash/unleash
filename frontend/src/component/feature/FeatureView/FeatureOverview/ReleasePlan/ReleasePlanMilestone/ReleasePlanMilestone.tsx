@@ -1,11 +1,9 @@
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import Add from '@mui/icons-material/Add';
 import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
     styled,
-    Button,
 } from '@mui/material';
 import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
 import {
@@ -18,6 +16,7 @@ import { StrategySeparator } from 'component/common/StrategySeparator/StrategySe
 import { StrategyItem } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyItem.tsx';
 import { StrategyList } from 'component/common/StrategyList/StrategyList';
 import { StrategyListItem } from 'component/common/StrategyList/StrategyListItem';
+import { MilestoneAutomationSection } from './MilestoneAutomationSection.tsx';
 
 const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'status' && prop !== 'hasAutomation',
@@ -72,50 +71,6 @@ const StyledMilestoneContainer = styled('div')({
     position: 'relative',
 });
 
-const StyledAutomationContainer = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'status',
-})<{ status?: MilestoneStatus }>(({ theme, status }) => ({
-    border: `1px solid ${status === 'active' ? theme.palette.success.border : theme.palette.divider}`,
-    borderTop: `1px solid ${theme.palette.divider}`,
-    borderRadius: `0 0 ${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px`,
-    padding: theme.spacing(1.5, 2),
-    backgroundColor: theme.palette.background.paper,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'stretch',
-    gap: theme.spacing(1),
-    '& > *': {
-        alignSelf: 'flex-start',
-    },
-}));
-
-const StyledAddAutomationButton = styled(Button)(({ theme }) => ({
-    textTransform: 'none',
-    fontWeight: theme.typography.fontWeightBold,
-    fontSize: theme.typography.body2.fontSize,
-    padding: 0,
-    minWidth: 'auto',
-    gap: theme.spacing(1),
-    '&:hover': {
-        backgroundColor: 'transparent',
-    },
-    '& .MuiButton-startIcon': {
-        margin: 0,
-        width: 20,
-        height: 20,
-        border: `1px solid ${theme.palette.primary.main}`,
-        backgroundColor: theme.palette.background.elevation2,
-        borderRadius: '50%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        '& svg': {
-            fontSize: 14,
-            color: theme.palette.primary.main,
-        },
-    },
-}));
-
 interface IReleasePlanMilestoneProps {
     milestone: IReleasePlanMilestone;
     status?: MilestoneStatus;
@@ -136,20 +91,6 @@ export const ReleasePlanMilestone = ({
     automationForm,
 }: IReleasePlanMilestoneProps) => {
     const [expanded, setExpanded] = useState(false);
-
-    const automationSection = showAutomation && (
-        <StyledAutomationContainer status={status}>
-            {automationForm || (
-                <StyledAddAutomationButton
-                    onClick={onAddAutomation}
-                    color='primary'
-                    startIcon={<Add />}
-                >
-                    Add automation
-                </StyledAddAutomationButton>
-            )}
-        </StyledAutomationContainer>
-    );
 
     if (!milestone.strategies.length) {
         return (
@@ -172,7 +113,12 @@ export const ReleasePlanMilestone = ({
                         </StyledSecondaryLabel>
                     </StyledAccordionSummary>
                 </StyledAccordion>
-                {automationSection}
+                <MilestoneAutomationSection
+                    showAutomation={showAutomation}
+                    status={status}
+                    onAddAutomation={onAddAutomation}
+                    automationForm={automationForm}
+                />
             </StyledMilestoneContainer>
         );
     }
@@ -223,7 +169,12 @@ export const ReleasePlanMilestone = ({
                     </StrategyList>
                 </StyledAccordionDetails>
             </StyledAccordion>
-            {automationSection}
+            <MilestoneAutomationSection
+                showAutomation={showAutomation}
+                status={status}
+                onAddAutomation={onAddAutomation}
+                automationForm={automationForm}
+            />
         </StyledMilestoneContainer>
     );
 };

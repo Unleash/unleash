@@ -6,6 +6,6 @@ export interface ReleasePlanMilestone {
     sortOrder: number;
     releasePlanDefinitionId: string;
     startedAt?: string;
-    transitionCondition?: { minutesInterval: number };
+    transitionCondition?: { intervalMinutes: number };
     strategies?: ReleasePlanMilestoneStrategy[];
 }

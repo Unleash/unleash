@@ -15,7 +15,6 @@ import {
     TimeScale,
     Chart as ChartJS,
     Filler,
-    type TooltipItem,
 } from 'chart.js';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
@@ -28,8 +27,8 @@ import { NotEnoughData } from 'component/insights/components/LineChart/LineChart
 import { placeholderData } from './placeholderData.ts';
 import { Bar } from 'react-chartjs-2';
 import { GraphCover } from 'component/insights/GraphCover.tsx';
-import { format, startOfWeek } from 'date-fns';
-import { batchWeekData } from './batchWeekData.ts';
+import { batchCreationArchiveData } from './batchCreationArchiveData.ts';
+import { useBatchedTooltipDate } from '../useBatchedTooltipDate.ts';
 
 ChartJS.register(
     CategoryScale,
@@ -49,8 +48,6 @@ interface ICreationArchiveChartProps {
     >;
     isLoading?: boolean;
 }
-
-type DataResult = 'Not Enough Data' | 'Batched' | 'Weekly';
 
 export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     creationArchiveTrends,
@@ -111,14 +108,14 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
             }))
             .sort((a, b) => (a.week > b.week ? 1 : -1));
 
-        let dataResult: DataResult = 'Weekly';
+        let dataResult: ChartDataResult = 'Weekly';
         let displayData: WeekData[] | BatchedWeekData[] = weeks;
 
         if (weeks.length < 2) {
             dataResult = 'Not Enough Data';
         } else if (weeks.length >= 12) {
             dataResult = 'Batched';
-            displayData = batchWeekData(weeks);
+            displayData = batchCreationArchiveData(weeks);
         }
 
         return {
@@ -162,19 +159,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     const data = useGraphCover ? placeholderData : aggregateOrProjectData;
 
     const locale = getDateFnsLocale(locationSettings.locale);
-    const batchedTooltipTitle = (datapoints: TooltipItem<any>[]) => {
-        const rawData = datapoints[0].raw as BatchedWeekData;
-        const startDate = format(
-            startOfWeek(new Date(rawData.date), {
-                locale,
-                weekStartsOn: 1,
-            }),
-            `PP`,
-            { locale },
-        );
-        const endDate = format(new Date(rawData.endDate), `PP`, { locale });
-        return `${startDate} – ${endDate}`;
-    };
+    const batchedTooltipTitle = useBatchedTooltipDate();
 
     const options = useMemo(
         () => ({

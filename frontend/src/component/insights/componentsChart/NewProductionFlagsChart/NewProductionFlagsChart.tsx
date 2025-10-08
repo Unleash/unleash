@@ -10,6 +10,9 @@ import {
 import { useTheme } from '@mui/material';
 import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
 import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
+import type { BatchedWeekData, WeekData } from './types.ts';
+import { batchProductionFlagsData } from './batchProductionFlagsData.ts';
+import { useBatchedTooltipDate } from '../useBatchedTooltipDate.ts';
 
 interface IProjectHealthChartProps {
     lifecycleTrends: GroupedDataByProject<
@@ -19,10 +22,43 @@ interface IProjectHealthChartProps {
     isLoading?: boolean;
 }
 
-type WeekData = {
-    newProductionFlags: number;
-    week: string;
-    date?: string;
+const useOverrideOptions = (chartDataResult: ChartDataResult) => {
+    const batchedTooltipTitle = useBatchedTooltipDate();
+    const sharedOptions = {
+        parsing: {
+            yAxisKey: 'newProductionFlags',
+            xAxisKey: 'date',
+        },
+    };
+    switch (chartDataResult) {
+        case 'Batched': {
+            return {
+                ...sharedOptions,
+                scales: {
+                    x: {
+                        time: {
+                            unit: 'month' as const,
+                            tooltipFormat: 'P',
+                        },
+                        ticks: {
+                            source: 'auto' as const,
+                        },
+                    },
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            title: batchedTooltipTitle,
+                        },
+                    },
+                },
+            };
+        }
+        case 'Weekly':
+            return sharedOptions;
+        case 'Not Enough Data':
+            return {};
+    }
 };
 
 export const NewProductionFlagsChart: FC<IProjectHealthChartProps> = ({
@@ -34,7 +70,7 @@ export const NewProductionFlagsChart: FC<IProjectHealthChartProps> = ({
     const theme = useTheme();
     const placeholderData = usePlaceholderData();
 
-    const aggregateHealthData = useMemo(() => {
+    const { aggregateHealthData, chartDataResult } = useMemo(() => {
         const labels: string[] = Array.from(
             new Set(
                 lifecycleData.datasets.flatMap((d) =>
@@ -65,46 +101,51 @@ export const NewProductionFlagsChart: FC<IProjectHealthChartProps> = ({
                     );
             })
             .sort((a, b) => (a.week > b.week ? 1 : -1));
+
+        let chartDataResult: ChartDataResult = 'Weekly';
+        let displayData: WeekData[] | BatchedWeekData[] = weeks;
+
+        if (
+            !isLoading &&
+            !lifecycleData.datasets.some((d) => d.data.length > 1)
+        ) {
+            chartDataResult = 'Not Enough Data';
+        } else if (weeks.length >= 12) {
+            chartDataResult = 'Batched';
+            displayData = batchProductionFlagsData(weeks);
+        }
+
         return {
-            datasets: [
-                {
-                    label: 'Number of new flags',
-                    data: weeks,
-                    borderColor: theme.palette.primary.light,
-                    backgroundColor: fillGradientPrimary,
-                    fill: true,
-                    order: 3,
-                },
-            ],
+            chartDataResult,
+            aggregateHealthData: {
+                datasets: [
+                    {
+                        label: 'Number of new flags',
+                        data: displayData,
+                        borderColor: theme.palette.primary.light,
+                        backgroundColor: fillGradientPrimary,
+                        fill: true,
+                        order: 3,
+                    },
+                ],
+            },
         };
-    }, [lifecycleData, theme]);
+    }, [lifecycleData, theme, isLoading]);
 
     const aggregateOrProjectData = isAggregate
         ? aggregateHealthData
         : lifecycleData;
-    const notEnoughData = useMemo(
-        () =>
-            !isLoading &&
-            !lifecycleData.datasets.some((d) => d.data.length > 1),
-        [lifecycleData, isLoading],
-    );
+    const notEnoughData = chartDataResult === 'Not Enough Data';
     const data =
         notEnoughData || isLoading ? placeholderData : aggregateOrProjectData;
+
+    const overrideOptions = useOverrideOptions(chartDataResult);
 
     return (
         <LineChart
             key={isAggregate ? 'aggregate' : 'project'}
             data={data}
-            overrideOptions={
-                notEnoughData
-                    ? {}
-                    : {
-                          parsing: {
-                              yAxisKey: 'newProductionFlags',
-                              xAxisKey: 'date',
-                          },
-                      }
-            }
+            overrideOptions={overrideOptions}
             cover={notEnoughData ? <NotEnoughData /> : isLoading}
         />
     );

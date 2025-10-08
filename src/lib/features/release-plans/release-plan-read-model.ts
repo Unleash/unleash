@@ -18,6 +18,8 @@ const selectColumns = [
     'mi.id AS milestoneId',
     'mi.name AS milestoneName',
     'mi.sort_order AS milestoneSortOrder',
+    'mi.started_at AS milestoneStartedAt',
+    'mp.transition_condition AS milestoneTransitionCondition',
     'ms.id AS strategyId',
     'ms.sort_order AS strategySortOrder',
     'ms.title AS strategyTitle',
@@ -46,6 +48,8 @@ const processReleasePlanRows = (templateRows): ReleasePlan[] =>
                 milestoneId,
                 milestoneName,
                 milestoneSortOrder,
+                milestoneStartedAt,
+                milestoneTransitionCondition,
                 strategyId,
                 strategySortOrder,
                 strategyTitle,
@@ -87,6 +91,8 @@ const processReleasePlanRows = (templateRows): ReleasePlan[] =>
                     id: milestoneId,
                     name: milestoneName,
                     sortOrder: milestoneSortOrder,
+                    startedAt: milestoneStartedAt,
+                    transitionCondition: milestoneTransitionCondition,
                     strategies: [],
                     releasePlanDefinitionId: planId,
                 };
@@ -151,6 +157,11 @@ export class ReleasePlanReadModel implements IReleasePlanReadModel {
                 'milestones AS mi',
                 'mi.release_plan_definition_id',
                 'rpd.id',
+            )
+            .leftJoin(
+                'milestone_progressions AS mp',
+                'mp.source_milestone',
+                'mi.id',
             )
             .leftJoin('milestone_strategies AS ms', 'ms.milestone_id', 'mi.id')
             .leftJoin(

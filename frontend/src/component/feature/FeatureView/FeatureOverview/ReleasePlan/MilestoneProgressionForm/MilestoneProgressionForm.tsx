@@ -20,41 +20,26 @@ const StyledFormContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1.5),
-    padding: theme.spacing(2),
-    backgroundColor: theme.palette.background.paper,
-    borderRadius: theme.spacing(0.75),
-    border: `1px solid ${theme.palette.divider}`,
-    boxShadow: theme.boxShadows.elevated,
+    padding: theme.spacing(1.5, 2),
+    backgroundColor: theme.palette.background.elevation1,
+    width: '100%',
+    borderRadius: `${theme.shape.borderRadiusLarge}px`,
     position: 'relative',
-    marginLeft: theme.spacing(3.25),
-    marginTop: theme.spacing(1.5),
-    marginBottom: theme.spacing(1.5),
-    animation: 'slideDown 0.5s ease-out',
-    '@keyframes slideDown': {
-        from: {
-            opacity: 0,
-            transform: 'translateY(-24px)',
-        },
-        to: {
-            opacity: 1,
-            transform: 'translateY(0)',
-        },
-    },
 }));
 
 const StyledTopRow = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    gap: theme.spacing(1.5),
+    gap: theme.spacing(1),
 }));
 
 const StyledIcon = styled(BoltIcon)(({ theme }) => ({
-    color: theme.palette.primary.main,
-    fontSize: 20,
+    color: theme.palette.common.white,
+    fontSize: 18,
     flexShrink: 0,
-    backgroundColor: theme.palette.background.elevation1,
+    backgroundColor: theme.palette.primary.main,
     borderRadius: '50%',
-    border: `1px solid ${theme.palette.divider}`,
+    padding: theme.spacing(0.25),
 }));
 
 const StyledLabel = styled('span')(({ theme }) => ({
@@ -105,8 +90,8 @@ const StyledButtonGroup = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     justifyContent: 'flex-end',
     alignItems: 'center',
-    paddingTop: theme.spacing(1.5),
-    marginTop: theme.spacing(1),
+    paddingTop: theme.spacing(1),
+    marginTop: theme.spacing(0.5),
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
 

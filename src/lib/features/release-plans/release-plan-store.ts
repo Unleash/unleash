@@ -370,4 +370,32 @@ export class ReleasePlanStore extends CRUDStore<
         endTimer();
         return present;
     }
+
+    async getByEnvironmentAndProjects(
+        environment: string,
+        projects: string[],
+    ): Promise<ReleasePlan[]> {
+        const endTimer = this.timer('getByEnvironmentAndProjects');
+        const rows = await this.db(`${this.tableName} AS rpd`)
+            .join('features AS f', 'f.name', 'rpd.feature_name')
+            .where('rpd.discriminator', 'plan')
+            .andWhere('rpd.environment', environment)
+            .whereIn('f.project', projects)
+            .leftJoin(
+                'milestones AS mi',
+                'mi.release_plan_definition_id',
+                'rpd.id',
+            )
+            .leftJoin('milestone_strategies AS ms', 'ms.milestone_id', 'mi.id')
+            .leftJoin(
+                'milestone_strategy_segments AS mss',
+                'mss.milestone_strategy_id',
+                'ms.id',
+            )
+            .orderBy('mi.sort_order', 'asc')
+            .orderBy('ms.sort_order', 'asc')
+            .select(selectColumns);
+        endTimer();
+        return processReleasePlanRows(rows);
+    }
 }

@@ -311,9 +311,11 @@ export const ReleasePlan = ({
             <StyledBody>
                 {milestones.map((milestone, index) => {
                     const isNotLastMilestone = index < milestones.length - 1;
-                    const isProgressionFormOpen = progressionFormOpenIndex === index;
+                    const isProgressionFormOpen =
+                        progressionFormOpenIndex === index;
                     const nextMilestoneId = milestones[index + 1]?.id || '';
-                    const handleOpenProgressionForm = () => setProgressionFormOpenIndex(index);
+                    const handleOpenProgressionForm = () =>
+                        setProgressionFormOpenIndex(index);
 
                     return (
                         <div key={milestone.id}>
@@ -338,28 +340,44 @@ export const ReleasePlan = ({
                                         condition={milestoneProgressionsEnabled}
                                         show={
                                             <ConditionallyRender
-                                                condition={isProgressionFormOpen}
+                                                condition={
+                                                    isProgressionFormOpen
+                                                }
                                                 show={
                                                     <MilestoneProgressionForm
-                                                        sourceMilestoneId={milestone.id}
-                                                        targetMilestoneId={nextMilestoneId}
+                                                        sourceMilestoneId={
+                                                            milestone.id
+                                                        }
+                                                        targetMilestoneId={
+                                                            nextMilestoneId
+                                                        }
                                                         projectId={projectId}
-                                                        environment={environment}
-                                                        onSave={handleProgressionSave}
-                                                        onCancel={handleProgressionCancel}
+                                                        environment={
+                                                            environment
+                                                        }
+                                                        onSave={
+                                                            handleProgressionSave
+                                                        }
+                                                        onCancel={
+                                                            handleProgressionCancel
+                                                        }
                                                     />
                                                 }
                                                 elseShow={
                                                     <StyledConnectionContainer>
                                                         <StyledConnection />
                                                         <StyledAddAutomationIconButton
-                                                            onClick={handleOpenProgressionForm}
+                                                            onClick={
+                                                                handleOpenProgressionForm
+                                                            }
                                                             color='primary'
                                                         >
                                                             <Add />
                                                         </StyledAddAutomationIconButton>
                                                         <StyledAddAutomationButton
-                                                            onClick={handleOpenProgressionForm}
+                                                            onClick={
+                                                                handleOpenProgressionForm
+                                                            }
                                                             color='primary'
                                                         >
                                                             Add automation

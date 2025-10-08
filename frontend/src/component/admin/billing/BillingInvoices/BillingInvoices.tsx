@@ -2,6 +2,7 @@ import { Box, styled } from '@mui/material';
 import type { FC } from 'react';
 import { BillingInvoice } from './BillingInvoice/BillingInvoice.tsx';
 import { useDetailedInvoices } from 'hooks/api/getters/useDetailedInvoices/useDetailedInvoices.ts';
+import { TablePlaceholder } from 'component/common/Table';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -10,13 +11,28 @@ const StyledContainer = styled(Box)(({ theme }) => ({
 }));
 
 export const BillingInvoices: FC = () => {
-    const { invoices } = useDetailedInvoices();
+    const { invoices, loading } = useDetailedInvoices();
+
+    if (loading) {
+        return null;
+    }
 
     return (
         <StyledContainer>
-            {invoices.map((invoice) => (
-                <BillingInvoice key={invoice.invoiceDate} {...invoice} />
-            ))}
+            {invoices.length > 0 ? (
+                <>
+                    {invoices.map((invoice) => (
+                        <BillingInvoice
+                            key={invoice.invoiceDate}
+                            {...invoice}
+                        />
+                    ))}
+                </>
+            ) : (
+                <TablePlaceholder>
+                    There are no invoices or estimates available right now.
+                </TablePlaceholder>
+            )}
         </StyledContainer>
     );
 };

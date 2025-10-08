@@ -5,7 +5,7 @@ import { FeatureOverviewEnvironment } from './FeatureOverviewEnvironment/Feature
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
 import { getFeatureMetrics } from 'utils/getFeatureMetrics';
-import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
+import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 type FeatureOverviewEnvironmentsProps = {
@@ -18,10 +18,10 @@ const FeatureOverviewWithReleasePlans: FC<
 > = ({ environment, ...props }) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const { releasePlans } = useReleasePlans(
+    const { releasePlans } = useFeatureReleasePlans(
         projectId,
         featureId,
-        environment?.name,
+        environment,
     );
     const envAddStrategySuggestionEnabled = useUiFlag(
         'envAddStrategySuggestion',

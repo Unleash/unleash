@@ -4,12 +4,29 @@ import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
-import { Alert, Box } from '@mui/material';
+import { Alert, Box, styled, Typography } from '@mui/material';
 import { BillingDashboard } from './BillingDashboard/BillingDashboard.tsx';
 import { BillingHistory } from './BillingHistory/BillingHistory.tsx';
 import useInvoices from 'hooks/api/getters/useInvoices/useInvoices';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { BillingInvoices } from './BillingInvoices/BillingInvoices.tsx';
+import { BillingInfo } from './BillingInfo/BillingInfo.tsx';
+
+const StyledHeader = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.mainHeader,
+    color: theme.palette.text.primary,
+}));
+
+const StyledPageGrid = styled(Box)(({ theme }) => ({
+    display: 'grid',
+    gridTemplateColumns: '1fr 300px',
+    gap: theme.spacing(2),
+    [theme.breakpoints.down('md')]: {
+        display: 'flex',
+        // reverse order
+        flexDirection: 'column-reverse',
+    },
+}));
 
 export const Billing = () => {
     const { isBilling, refetchInstanceStatus, refresh, loading } =
@@ -34,8 +51,13 @@ export const Billing = () => {
                     gap: theme.spacing(4),
                 })}
             >
-                <BillingDashboard />
-                <BillingInvoices />
+                <StyledHeader>Usage and invoices</StyledHeader>
+                <StyledPageGrid>
+                    <BillingInvoices />
+                    <div>
+                        <BillingInfo />
+                    </div>
+                </StyledPageGrid>
             </Box>
         );
     }

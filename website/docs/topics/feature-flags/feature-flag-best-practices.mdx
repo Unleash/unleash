@@ -302,15 +302,15 @@ The key is to keep flags short-lived. Test both code paths while the flag is act
 #### What are the best feature flag management tools or libraries that support your tech stack?
 Unleash provides [extensive SDK support](/reference/sdks) across diverse tech stacks, including server-side languages like Node.js, Java, Go, PHP, Python, Ruby, Rust, .NET as well as frontend frameworks such as React, JavaScript, Vue, iOS, and Android.
 
-In addition, the community maintains SDKs for other languages and frameworks, such as: Elixir, Clojure, Dart/Flutter, Haskell, Kotlin (server-side), Scala, ColdFusion, and more.
+In addition, the community maintains SDKs for other languages and frameworks, such as Elixir, Clojure, Dart/Flutter, Haskell, Kotlin, Scala, ColdFusion, and more.
 
-This broad support means you can use the same feature flagging system across backend services, frontend apps, and mobile clients. Other tools exist, but Unleash combines open source flexibility that you can scale from a small team to thousands of developers for any use case.
+This broad support means you can use the same feature flagging system across backend services, frontend apps, and mobile clients. Other tools exist, but Unleash comes with open-source flexibility and helps you scale from a small team to thousands of developers for any use case.
 
-#### What is the ideal way to add implementation switch or feature flags in code?
+#### What is the ideal way to add an implementation switch or feature flags in code?
 Evaluate feature flags at the highest level and once per request. Keep the branching or conditional logic simple. Use logging for visibility and remove the flag quickly once it's served its purpose. With Unleash SDKs, you also get local caching and server-side evaluation for performance and security.
 
 #### What are good feature flag tools/libraries that support Go?
-Unleash provides a robust [Go SDK](/reference/sdks/go) for implementing feature flags. Other notable open-source options include Go Feature Flag, which is written in Go, and Flagr, also a Go-based microservice for feature flagging.
+Unleash provides a robust [Go SDK](/reference/sdks/go) for implementing feature flags. Other notable open-source options include [Go Feature Flag](https://gofeatureflag.org/), which is written in Go, and [Flagr](https://openflagr.github.io/flagr/#/), also a Go-based microservice for feature flagging.
 
 #### How do you deal with the exponential complexity from multiple feature flags?
 Complexity comes from keeping too many flags active at once and spreading evaluations throughout the code. The best way to manage this is to keep flags short-lived with clear ownership and a planned end date, then remove them once the rollout is complete. Evaluate each flag once at the highest practical level and pass the result down, so behavior stays consistent. In a microservices setup, perform the evaluation at the edge and propagate the result through the request. Centralize flag names and use a wrapper service around the SDK to handle logging, defaults, and consistency. Finally, archive flags after removal to maintain history without adding clutter.

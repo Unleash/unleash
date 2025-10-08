@@ -16,7 +16,10 @@ const fromRow = (row: any): ReleasePlanMilestone => {
     };
 };
 
-export type ReleasePlanMilestoneWriteModel = Omit<ReleasePlanMilestone, 'id'>;
+export type ReleasePlanMilestoneWriteModel = Omit<
+    ReleasePlanMilestone,
+    'id' | 'startedAt' | 'transitionCondition'
+>;
 
 export class ReleasePlanMilestoneStore extends CRUDStore<
     ReleasePlanMilestone,

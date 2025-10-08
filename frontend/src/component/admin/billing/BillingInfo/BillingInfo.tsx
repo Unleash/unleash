@@ -105,6 +105,7 @@ export const BillingInfo: FC<BillingInfoProps> = () => {
             </StyledRow>
             <StyledRow>
                 <StyledItemTitle>Plan price</StyledItemTitle>{' '}
+                {/* FIXME: where to take data from? */}
                 <StyledItemValue>$450 / month</StyledItemValue>
             </StyledRow>
             <StyledDivider />

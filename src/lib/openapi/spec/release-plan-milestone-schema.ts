@@ -44,7 +44,8 @@ export const releasePlanMilestoneSchema = {
         },
         transitionCondition: {
             type: 'object',
-            description: 'The transition condition for this milestone.',
+            description:
+                'The transition condition for the next automated milestone progression.',
             additionalProperties: true,
             nullable: true,
         },

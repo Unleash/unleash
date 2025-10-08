@@ -1,8 +1,8 @@
 export const formatCurrency = (value: number, currency?: string) => {
-    if (currency === 'USD') {
+    if (currency && currency.toLocaleLowerCase() === 'usd') {
         return `$${value.toLocaleString('en-US')}`;
     }
-    if (currency === 'EUR') {
+    if (currency && currency.toLocaleLowerCase() === 'eur') {
         return `€\u2009${value.toLocaleString('no-NO')}`;
     }
 

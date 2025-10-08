@@ -21,18 +21,24 @@ import { StrategyListItem } from 'component/common/StrategyList/StrategyListItem
 
 const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'status' && prop !== 'hasAutomation',
-})<{ status: MilestoneStatus; hasAutomation?: boolean }>(({ theme, status, hasAutomation }) => ({
-    border: `1px solid ${status === 'active' ? theme.palette.success.border : theme.palette.divider}`,
-    borderBottom: hasAutomation ? 'none' : `1px solid ${status === 'active' ? theme.palette.success.border : theme.palette.divider}`,
-    overflow: 'hidden',
-    boxShadow: 'none',
-    margin: 0,
-    backgroundColor: theme.palette.background.paper,
-    borderRadius: hasAutomation ? `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0 !important` : `${theme.shape.borderRadiusLarge}px`,
-    '&:before': {
-        display: 'none',
-    },
-}));
+})<{ status: MilestoneStatus; hasAutomation?: boolean }>(
+    ({ theme, status, hasAutomation }) => ({
+        border: `1px solid ${status === 'active' ? theme.palette.success.border : theme.palette.divider}`,
+        borderBottom: hasAutomation
+            ? 'none'
+            : `1px solid ${status === 'active' ? theme.palette.success.border : theme.palette.divider}`,
+        overflow: 'hidden',
+        boxShadow: 'none',
+        margin: 0,
+        backgroundColor: theme.palette.background.paper,
+        borderRadius: hasAutomation
+            ? `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0 !important`
+            : `${theme.shape.borderRadiusLarge}px`,
+        '&:before': {
+            display: 'none',
+        },
+    }),
+);
 
 const StyledAccordionSummary = styled(AccordionSummary)({
     '& .MuiAccordionSummary-content': {
@@ -161,7 +167,9 @@ export const ReleasePlanMilestone = ({
                                 />
                             )}
                         </StyledTitleContainer>
-                        <StyledSecondaryLabel>No strategies</StyledSecondaryLabel>
+                        <StyledSecondaryLabel>
+                            No strategies
+                        </StyledSecondaryLabel>
                     </StyledAccordionSummary>
                 </StyledAccordion>
                 {automationSection}
@@ -182,7 +190,9 @@ export const ReleasePlanMilestone = ({
                         {!readonly && onStartMilestone && (
                             <ReleasePlanMilestoneStatus
                                 status={status}
-                                onStartMilestone={() => onStartMilestone(milestone)}
+                                onStartMilestone={() =>
+                                    onStartMilestone(milestone)
+                                }
                             />
                         )}
                     </StyledTitleContainer>

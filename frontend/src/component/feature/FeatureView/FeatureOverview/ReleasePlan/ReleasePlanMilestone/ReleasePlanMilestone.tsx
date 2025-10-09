@@ -118,6 +118,7 @@ export const ReleasePlanMilestone = ({
                     status={status}
                     onAddAutomation={onAddAutomation}
                     automationForm={automationForm}
+                    transitionCondition={milestone.transitionCondition}
                 />
             </StyledMilestoneContainer>
         );
@@ -174,6 +175,7 @@ export const ReleasePlanMilestone = ({
                 status={status}
                 onAddAutomation={onAddAutomation}
                 automationForm={automationForm}
+                transitionCondition={milestone.transitionCondition}
             />
         </StyledMilestoneContainer>
     );

@@ -21,7 +21,7 @@ const FeatureOverviewWithReleasePlans: FC<
     const { releasePlans } = useFeatureReleasePlans(
         projectId,
         featureId,
-        environment,
+        environment?.name,
     );
     const envAddStrategySuggestionEnabled = useUiFlag(
         'envAddStrategySuggestion',

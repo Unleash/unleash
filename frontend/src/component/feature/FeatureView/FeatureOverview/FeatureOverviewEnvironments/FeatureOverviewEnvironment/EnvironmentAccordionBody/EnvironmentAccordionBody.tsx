@@ -69,7 +69,7 @@ export const EnvironmentAccordionBody = ({
     const { releasePlans } = useFeatureReleasePlans(
         projectId,
         featureId,
-        featureEnvironment,
+        featureEnvironment?.name,
     );
     const { trackEvent } = usePlausibleTracker();
 

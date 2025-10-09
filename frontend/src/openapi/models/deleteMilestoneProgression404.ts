@@ -4,7 +4,7 @@
  * See `gen:api` script in package.json
  */
 
-export type CreateProgression401 = {
+export type DeleteMilestoneProgression404 = {
     /** The ID of the error instance */
     id?: string;
     /** A description of what went wrong. */

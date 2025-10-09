@@ -11,12 +11,16 @@ export interface DetailedInvoicesLineSchema {
     currency: string;
     /** Description of the line item */
     description: string;
+    /** Optional end date for the metered period */
+    endDate?: string;
     /** Optional limit associated with the line item */
     limit?: number;
     /** Lookup key identifying the product/pricing */
     lookupKey: string;
     /** Quantity of the item */
     quantity: number;
+    /** Optional start date for the metered period */
+    startDate?: string;
     /** Total amount for this line item in minor currency units */
     totalAmount: number;
 }

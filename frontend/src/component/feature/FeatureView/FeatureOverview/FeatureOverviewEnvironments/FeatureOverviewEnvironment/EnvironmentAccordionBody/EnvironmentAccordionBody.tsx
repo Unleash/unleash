@@ -18,7 +18,7 @@ import usePagination from 'hooks/usePagination';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
+import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
 import { ReleasePlan } from '../../../ReleasePlan/ReleasePlan.tsx';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { ProjectEnvironmentStrategyDraggableItem } from './StrategyDraggableItem/ProjectEnvironmentStrategyDraggableItem.tsx';
@@ -66,7 +66,7 @@ export const EnvironmentAccordionBody = ({
     const [strategies, setStrategies] = useState(
         featureEnvironment?.strategies || [],
     );
-    const { releasePlans } = useReleasePlans(
+    const { releasePlans } = useFeatureReleasePlans(
         projectId,
         featureId,
         featureEnvironment?.name,

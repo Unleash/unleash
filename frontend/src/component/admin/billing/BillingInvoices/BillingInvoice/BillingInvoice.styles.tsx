@@ -12,6 +12,7 @@ export const StyledSubgrid = styled('div', {
     margin: theme.spacing(0.25, 0),
     padding: withBackground ? theme.spacing(0, 2, 1) : theme.spacing(0, 2),
     borderRadius: theme.shape.borderRadiusLarge,
+    gap: theme.spacing(1),
 }));
 
 export const StyledAmountCell = styled('div')(({ theme }) => ({

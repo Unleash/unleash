@@ -1,10 +1,9 @@
 import Delete from '@mui/icons-material/Delete';
-import Add from '@mui/icons-material/Add';
-import { styled, IconButton, Button } from '@mui/material';
+import { styled } from '@mui/material';
 import { DELETE_FEATURE_STRATEGY } from '@server/types/permissions';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
-import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
+import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useToast from 'hooks/useToast';
 import type {
@@ -24,6 +23,7 @@ import { StartMilestoneChangeRequestDialog } from './ChangeRequest/StartMileston
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { MilestoneProgressionForm } from './MilestoneProgressionForm/MilestoneProgressionForm.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -72,44 +72,9 @@ const StyledBody = styled('div')(({ theme }) => ({
 
 const StyledConnection = styled('div')(({ theme }) => ({
     width: 4,
-    height: theme.spacing(6),
-    backgroundColor: theme.palette.divider,
-    marginLeft: theme.spacing(3.25),
-}));
-
-const StyledConnectionSimple = styled('div')(({ theme }) => ({
-    width: 4,
     height: theme.spacing(2),
     backgroundColor: theme.palette.divider,
     marginLeft: theme.spacing(3.25),
-}));
-
-const StyledConnectionContainer = styled('div')(({ theme }) => ({
-    position: 'relative',
-    display: 'flex',
-    alignItems: 'center',
-}));
-
-const StyledAddAutomationIconButton = styled(IconButton)(({ theme }) => ({
-    position: 'absolute',
-    left: theme.spacing(2),
-    top: '12px',
-    width: 24,
-    height: 24,
-    border: `1px solid ${theme.palette.primary.main}`,
-    backgroundColor: theme.palette.background.elevation2,
-    zIndex: 1,
-    '& svg': {
-        fontSize: 16,
-    },
-}));
-
-const StyledAddAutomationButton = styled(Button)(({ theme }) => ({
-    marginLeft: theme.spacing(3),
-    textTransform: 'none',
-    fontWeight: theme.typography.fontWeightBold,
-    padding: 0,
-    minWidth: 'auto',
 }));
 
 interface IReleasePlanProps {
@@ -134,7 +99,11 @@ export const ReleasePlan = ({
     } = plan;
 
     const projectId = useRequiredPathParam('projectId');
-    const { refetch } = useReleasePlans(projectId, featureName, environment);
+    const { refetch } = useFeatureReleasePlans(
+        projectId,
+        featureName,
+        environment,
+    );
     const { removeReleasePlanFromFeature, startReleasePlanMilestone } =
         useReleasePlansApi();
     const { setToastData, setToastApiError } = useToast();
@@ -156,6 +125,9 @@ export const ReleasePlan = ({
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
     const milestoneProgressionsEnabled = useUiFlag('milestoneProgression');
+    const [progressionFormOpenIndex, setProgressionFormOpenIndex] = useState<
+        number | null
+    >(null);
 
     const onAddRemovePlanChangesConfirm = async () => {
         await addChange(projectId, environment, {
@@ -263,6 +235,15 @@ export const ReleasePlan = ({
         });
     };
 
+    const handleProgressionSave = async () => {
+        setProgressionFormOpenIndex(null);
+        await refetch();
+    };
+
+    const handleProgressionCancel = () => {
+        setProgressionFormOpenIndex(null);
+    };
+
     const activeIndex = milestones.findIndex(
         (milestone) => milestone.id === activeMilestoneId,
     );
@@ -296,44 +277,54 @@ export const ReleasePlan = ({
                 )}
             </StyledHeader>
             <StyledBody>
-                {milestones.map((milestone, index) => (
-                    <div key={milestone.id}>
-                        <ReleasePlanMilestone
-                            readonly={readonly}
-                            milestone={milestone}
-                            status={
-                                milestone.id === activeMilestoneId
-                                    ? environmentIsDisabled
-                                        ? 'paused'
-                                        : 'active'
-                                    : index < activeIndex
-                                      ? 'completed'
-                                      : 'not-started'
-                            }
-                            onStartMilestone={onStartMilestone}
-                        />
-                        <ConditionallyRender
-                            condition={index < milestones.length - 1}
-                            show={
-                                <ConditionallyRender
-                                    condition={milestoneProgressionsEnabled}
-                                    show={
-                                        <StyledConnectionContainer>
-                                            <StyledConnection />
-                                            <StyledAddAutomationIconButton color='primary'>
-                                                <Add />
-                                            </StyledAddAutomationIconButton>
-                                            <StyledAddAutomationButton color='primary'>
-                                                Add automation
-                                            </StyledAddAutomationButton>
-                                        </StyledConnectionContainer>
-                                    }
-                                    elseShow={<StyledConnectionSimple />}
-                                />
-                            }
-                        />
-                    </div>
-                ))}
+                {milestones.map((milestone, index) => {
+                    const isNotLastMilestone = index < milestones.length - 1;
+                    const isProgressionFormOpen =
+                        progressionFormOpenIndex === index;
+                    const nextMilestoneId = milestones[index + 1]?.id || '';
+                    const handleOpenProgressionForm = () =>
+                        setProgressionFormOpenIndex(index);
+
+                    return (
+                        <div key={milestone.id}>
+                            <ReleasePlanMilestone
+                                readonly={readonly}
+                                milestone={milestone}
+                                status={
+                                    milestone.id === activeMilestoneId
+                                        ? environmentIsDisabled
+                                            ? 'paused'
+                                            : 'active'
+                                        : index < activeIndex
+                                          ? 'completed'
+                                          : 'not-started'
+                                }
+                                onStartMilestone={onStartMilestone}
+                                showAutomation={
+                                    milestoneProgressionsEnabled &&
+                                    isNotLastMilestone
+                                }
+                                onAddAutomation={handleOpenProgressionForm}
+                                automationForm={
+                                    isProgressionFormOpen ? (
+                                        <MilestoneProgressionForm
+                                            sourceMilestoneId={milestone.id}
+                                            targetMilestoneId={nextMilestoneId}
+                                            projectId={projectId}
+                                            environment={environment}
+                                            onSave={handleProgressionSave}
+                                            onCancel={handleProgressionCancel}
+                                        />
+                                    ) : undefined
+                                }
+                            />
+                            <ConditionallyRender
+                                condition={isNotLastMilestone}
+                                show={<StyledConnection />}
+                            />
+                        </div>
+                    );
+                })}
             </StyledBody>
             <ReleasePlanRemoveDialog
                 plan={plan}

@@ -68,6 +68,7 @@ export interface IFeatureEnvironmentStore
     cloneStrategies(
         sourceEnvironment: string,
         destinationEnvironment: string,
+        projects: string[],
     ): Promise<void>;
     addVariantsToFeatureEnvironment(
         featureName: string,

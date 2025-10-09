@@ -186,6 +186,8 @@ import { UPDATE_REVISION } from './features/feature-toggle/configuration-revisio
 import type { IFeatureUsageInfo } from './services/version-service.js';
 import { defineImpactMetrics } from './features/metrics/impact/define-impact-metrics.js';
 import type { IClientInstance } from './types/stores/client-instance-store.js';
+import EnvironmentStore from './features/project-environments/environment-store.js';
+import ProjectStore from './features/project/project-store.js';
 
 export async function initialServiceSetup(
     { authentication }: Pick<IUnleashConfig, 'authentication'>,
@@ -495,6 +497,8 @@ export {
     corsOriginMiddleware,
     ApiTokenType,
     impactRegister,
+    EnvironmentStore,
+    ProjectStore,
 };
 
 export type {

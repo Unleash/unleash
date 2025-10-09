@@ -2,7 +2,7 @@ import { Box, Paper, styled, Typography } from '@mui/material';
 import type { TooltipItem } from 'chart.js';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import type React from 'react';
-import type { FC, VFC } from 'react';
+import type { FC } from 'react';
 import { objectId } from 'utils/objectId';
 
 export type TooltipState = {
@@ -91,12 +91,12 @@ export const ChartTooltipContainer: FC<IChartTooltipProps> = ({
     </Box>
 );
 
-export const ChartTooltip: VFC<IChartTooltipProps> = ({ tooltip }) => (
+export const ChartTooltip: FC<IChartTooltipProps> = ({ tooltip }) => (
     <ChartTooltipContainer tooltip={tooltip}>
         <Paper
             elevation={3}
             sx={(theme) => ({
-                width: 220,
+                width: 'max-content',
                 padding: theme.spacing(1.5, 2),
             })}
         >

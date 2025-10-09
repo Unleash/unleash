@@ -4,7 +4,7 @@ import { ReleasePlan } from './ReleasePlan.tsx';
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
 import { styled, Typography, Alert } from '@mui/material';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
+import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
 
 const StyledReleasePlanContainer = styled('div')(({ theme }) => ({
     margin: theme.spacing(2, 0),
@@ -31,7 +31,7 @@ export const ReleasePlanAddDialog = ({
     crProtected,
 }: IReleasePlanAddDialogProps) => {
     const { feature } = useFeature(projectId, featureName);
-    const { releasePlans } = useReleasePlans(
+    const { releasePlans } = useFeatureReleasePlans(
         projectId,
         featureName,
         environment,

@@ -35,6 +35,20 @@ export const releasePlanMilestoneSchema = {
                 'The ID of the release plan/template that this milestone belongs to.',
             example: '01JB9GGTGQYEQ9D40R17T3YVW2',
         },
+        startedAt: {
+            type: 'string',
+            format: 'date-time',
+            description: 'The date and time when the milestone was started.',
+            example: '2024-01-01T00:00:00.000Z',
+            nullable: true,
+        },
+        transitionCondition: {
+            type: 'object',
+            description:
+                'The transition condition for the next automated milestone progression.',
+            additionalProperties: true,
+            nullable: true,
+        },
         strategies: {
             type: 'array',
             description:

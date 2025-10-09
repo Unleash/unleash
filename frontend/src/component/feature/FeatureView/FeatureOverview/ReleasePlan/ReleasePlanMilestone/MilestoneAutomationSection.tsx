@@ -1,6 +1,7 @@
 import Add from '@mui/icons-material/Add';
 import { Button, styled } from '@mui/material';
 import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
+import { MilestoneTransitionDisplay } from './MilestoneTransitionDisplay.tsx';
 
 const StyledAutomationContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'status',
@@ -51,6 +52,9 @@ interface IMilestoneAutomationSectionProps {
     status?: MilestoneStatus;
     onAddAutomation?: () => void;
     automationForm?: React.ReactNode;
+    transitionCondition?: {
+        intervalMinutes: number;
+    } | null;
 }
 
 export const MilestoneAutomationSection = ({
@@ -58,6 +62,7 @@ export const MilestoneAutomationSection = ({
     status,
     onAddAutomation,
     automationForm,
+    transitionCondition,
 }: IMilestoneAutomationSectionProps) => {
     if (!showAutomation) return null;
 
@@ -65,6 +70,10 @@ export const MilestoneAutomationSection = ({
         <StyledAutomationContainer status={status}>
             {automationForm ? (
                 automationForm
+            ) : transitionCondition ? (
+                <MilestoneTransitionDisplay
+                    intervalMinutes={transitionCondition.intervalMinutes}
+                />
             ) : (
                 <StyledAddAutomationButton
                     onClick={onAddAutomation}

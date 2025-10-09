@@ -1,5 +1,6 @@
 import BoltIcon from '@mui/icons-material/Bolt';
 import { styled } from '@mui/material';
+import { formatDuration, intervalToDuration } from 'date-fns';
 
 const StyledDisplayContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -28,23 +29,15 @@ interface IMilestoneTransitionDisplayProps {
 const formatInterval = (minutes: number): string => {
     if (minutes === 0) return '0 minutes';
 
-    const days = Math.floor(minutes / 1440);
-    const hours = Math.floor((minutes % 1440) / 60);
-    const mins = minutes % 60;
+    const duration = intervalToDuration({
+        start: 0,
+        end: minutes * 60 * 1000,
+    });
 
-    const parts: string[] = [];
-
-    if (days > 0) {
-        parts.push(`${days} ${days === 1 ? 'day' : 'days'}`);
-    }
-    if (hours > 0) {
-        parts.push(`${hours} ${hours === 1 ? 'hour' : 'hours'}`);
-    }
-    if (mins > 0) {
-        parts.push(`${mins} ${mins === 1 ? 'minute' : 'minutes'}`);
-    }
-
-    return parts.join(', ');
+    return formatDuration(duration, {
+        format: ['days', 'hours', 'minutes'],
+        delimiter: ', ',
+    });
 };
 
 export const MilestoneTransitionDisplay = ({

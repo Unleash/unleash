@@ -302,7 +302,8 @@ export const ReleasePlan = ({
                                 onStartMilestone={onStartMilestone}
                                 showAutomation={
                                     milestoneProgressionsEnabled &&
-                                    isNotLastMilestone
+                                    isNotLastMilestone &&
+                                    !readonly
                                 }
                                 onAddAutomation={handleOpenProgressionForm}
                                 automationForm={

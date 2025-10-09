@@ -7,7 +7,7 @@ import type {
     IChangeRequestStartMilestone,
 } from 'component/changeRequest/changeRequest.types';
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
-import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
+import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
 import { ReleasePlan } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlan';
@@ -241,7 +241,7 @@ export const ReleasePlanChange: FC<{
     projectId,
     changeRequestState,
 }) => {
-    const { releasePlans } = useReleasePlans(
+    const { releasePlans } = useFeatureReleasePlans(
         projectId,
         featureName,
         environmentName,

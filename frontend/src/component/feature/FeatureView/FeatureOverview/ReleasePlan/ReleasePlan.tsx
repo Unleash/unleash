@@ -3,7 +3,7 @@ import { styled } from '@mui/material';
 import { DELETE_FEATURE_STRATEGY } from '@server/types/permissions';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
-import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
+import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useToast from 'hooks/useToast';
 import type {
@@ -99,7 +99,11 @@ export const ReleasePlan = ({
     } = plan;
 
     const projectId = useRequiredPathParam('projectId');
-    const { refetch } = useReleasePlans(projectId, featureName, environment);
+    const { refetch } = useFeatureReleasePlans(
+        projectId,
+        featureName,
+        environment,
+    );
     const { removeReleasePlanFromFeature, startReleasePlanMilestone } =
         useReleasePlansApi();
     const { setToastData, setToastApiError } = useToast();

@@ -78,6 +78,7 @@ interface IReleasePlanMilestoneProps {
     readonly?: boolean;
     showAutomation?: boolean;
     onAddAutomation?: () => void;
+    onDeleteAutomation?: () => void;
     automationForm?: React.ReactNode;
 }
 
@@ -88,6 +89,7 @@ export const ReleasePlanMilestone = ({
     readonly,
     showAutomation,
     onAddAutomation,
+    onDeleteAutomation,
     automationForm,
 }: IReleasePlanMilestoneProps) => {
     const [expanded, setExpanded] = useState(false);
@@ -117,8 +119,10 @@ export const ReleasePlanMilestone = ({
                     showAutomation={showAutomation}
                     status={status}
                     onAddAutomation={onAddAutomation}
+                    onDeleteAutomation={onDeleteAutomation}
                     automationForm={automationForm}
                     transitionCondition={milestone.transitionCondition}
+                    milestoneName={milestone.name}
                 />
             </StyledMilestoneContainer>
         );
@@ -174,8 +178,10 @@ export const ReleasePlanMilestone = ({
                 showAutomation={showAutomation}
                 status={status}
                 onAddAutomation={onAddAutomation}
+                onDeleteAutomation={onDeleteAutomation}
                 automationForm={automationForm}
                 transitionCondition={milestone.transitionCondition}
+                milestoneName={milestone.name}
             />
         </StyledMilestoneContainer>
     );

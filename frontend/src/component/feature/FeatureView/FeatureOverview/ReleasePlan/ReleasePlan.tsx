@@ -24,6 +24,8 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { MilestoneProgressionForm } from './MilestoneProgressionForm/MilestoneProgressionForm.tsx';
+import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
+import { DeleteProgressionDialog } from './DeleteProgressionDialog.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -106,6 +108,7 @@ export const ReleasePlan = ({
     );
     const { removeReleasePlanFromFeature, startReleasePlanMilestone } =
         useReleasePlansApi();
+    const { deleteMilestoneProgression } = useMilestoneProgressionsApi();
     const { setToastData, setToastApiError } = useToast();
     const { trackEvent } = usePlausibleTracker();
 
@@ -128,6 +131,9 @@ export const ReleasePlan = ({
     const [progressionFormOpenIndex, setProgressionFormOpenIndex] = useState<
         number | null
     >(null);
+    const [milestoneToDeleteProgression, setMilestoneToDeleteProgression] =
+        useState<IReleasePlanMilestone | null>(null);
+    const [isDeletingProgression, setIsDeletingProgression] = useState(false);
 
     const onAddRemovePlanChangesConfirm = async () => {
         await addChange(projectId, environment, {
@@ -244,6 +250,40 @@ export const ReleasePlan = ({
         setProgressionFormOpenIndex(null);
     };
 
+    const handleDeleteProgression = (milestone: IReleasePlanMilestone) => {
+        setMilestoneToDeleteProgression(milestone);
+    };
+
+    const handleCloseDeleteDialog = () => {
+        if (!isDeletingProgression) {
+            setMilestoneToDeleteProgression(null);
+        }
+    };
+
+    const onDeleteProgressionConfirm = async () => {
+        if (!milestoneToDeleteProgression || isDeletingProgression) return;
+
+        setIsDeletingProgression(true);
+        try {
+            await deleteMilestoneProgression(
+                projectId,
+                environment,
+                milestoneToDeleteProgression.id,
+            );
+            await refetch();
+            setMilestoneToDeleteProgression(null);
+            setToastData({
+                type: 'success',
+                text: 'Automation removed successfully',
+            });
+        } catch (error: unknown) {
+            setMilestoneToDeleteProgression(null);
+            setToastApiError(formatUnknownError(error));
+        } finally {
+            setIsDeletingProgression(false);
+        }
+    };
+
     const activeIndex = milestones.findIndex(
         (milestone) => milestone.id === activeMilestoneId,
     );
@@ -306,6 +346,12 @@ export const ReleasePlan = ({
                                     !readonly
                                 }
                                 onAddAutomation={handleOpenProgressionForm}
+                                onDeleteAutomation={
+                                    milestone.transitionCondition
+                                        ? () =>
+                                              handleDeleteProgression(milestone)
+                                        : undefined
+                                }
                                 automationForm={
                                     isProgressionFormOpen ? (
                                         <MilestoneProgressionForm
@@ -355,6 +401,15 @@ export const ReleasePlan = ({
                 releasePlan={plan}
                 milestone={milestoneForChangeRequestDialog}
             />
+            {milestoneToDeleteProgression && (
+                <DeleteProgressionDialog
+                    open={milestoneToDeleteProgression !== null}
+                    onClose={handleCloseDeleteDialog}
+                    onConfirm={onDeleteProgressionConfirm}
+                    milestoneName={milestoneToDeleteProgression.name}
+                    isDeleting={isDeletingProgression}
+                />
+            )}
         </StyledContainer>
     );
 };

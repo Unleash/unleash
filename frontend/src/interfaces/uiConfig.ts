@@ -93,7 +93,6 @@ export type UiFlags = {
     milestoneProgression?: boolean;
     featureReleasePlans?: boolean;
     envAddStrategySuggestion?: boolean;
-    featureReleasePlans?: boolean;
 };
 
 export interface IVersionInfo {

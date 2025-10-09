@@ -19,8 +19,9 @@ export const useFeatureReleasePlans = (
     const { refetchFeature } = useFeature(projectId, featureId);
 
     const releasePlans = featureReleasePlansEnabled
-        ? (typeof environment === 'object' ? environment?.releasePlans : []) ||
-          []
+        ? typeof environment === 'object'
+            ? environment?.releasePlans || []
+            : []
         : releasePlansFromHook;
 
     const refetch = featureReleasePlansEnabled

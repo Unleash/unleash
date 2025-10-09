@@ -54,7 +54,8 @@ export const MilestoneTransitionDisplay = ({
         <StyledDisplayContainer>
             <StyledIcon />
             <StyledText>
-                Proceed to the next milestone after {formatInterval(intervalMinutes)}
+                Proceed to the next milestone after{' '}
+                {formatInterval(intervalMinutes)}
             </StyledText>
         </StyledDisplayContainer>
     );

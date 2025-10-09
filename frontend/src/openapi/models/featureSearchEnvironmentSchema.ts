@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { ReleasePlanSchema } from './releasePlanSchema.js';
 import type { FeatureStrategySchema } from './featureStrategySchema.js';
 import type { VariantSchema } from './variantSchema.js';
 
@@ -38,6 +39,8 @@ export interface FeatureSearchEnvironmentSchema {
      * @minimum 0
      */
     no?: number;
+    /** Release plans for this feature environment (only available when milestoneProgression feature flag is enabled) */
+    releasePlans?: ReleasePlanSchema[];
     /** The sort order of the feature environment in the feature environments list */
     sortOrder?: number;
     /** A list of activation strategies for the feature environment */

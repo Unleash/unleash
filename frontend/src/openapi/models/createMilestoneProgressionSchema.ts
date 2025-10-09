@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateMilestoneProgressionSchemaTransitionCondition } from './createMilestoneProgressionSchemaTransitionCondition.js';
+import type { TransitionConditionSchema } from './transitionConditionSchema.js';
 
 /**
  * Request body to create a milestone progression
@@ -14,5 +14,5 @@ export interface CreateMilestoneProgressionSchema {
     /** The ID of the target milestone */
     targetMilestone: string;
     /** The condition configuration for the transition */
-    transitionCondition: CreateMilestoneProgressionSchemaTransitionCondition;
+    transitionCondition: TransitionConditionSchema;
 }

@@ -16,6 +16,8 @@ export type DetailedInvoicesSchemaInvoicesItem = {
     invoiceURL?: string;
     /** Primary line items (packages, seats, etc.) */
     mainLines: DetailedInvoicesLineSchema[];
+    /** Human-readable month label for the invoice period */
+    monthText: string;
     /** The current status of the invoice */
     status: string;
     /** Total amount for the invoice in minor currency units */

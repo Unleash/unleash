@@ -1,8 +1,17 @@
 import BoltIcon from '@mui/icons-material/Bolt';
-import { styled } from '@mui/material';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { IconButton, styled } from '@mui/material';
 import { formatDuration, intervalToDuration } from 'date-fns';
 
 const StyledDisplayContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    justifyContent: 'space-between',
+    width: '100%',
+}));
+
+const StyledContentGroup = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
@@ -24,6 +33,8 @@ const StyledText = styled('span')(({ theme }) => ({
 
 interface IMilestoneTransitionDisplayProps {
     intervalMinutes: number;
+    onDelete: () => void;
+    milestoneName: string;
 }
 
 const formatInterval = (minutes: number): string => {
@@ -42,14 +53,26 @@ const formatInterval = (minutes: number): string => {
 
 export const MilestoneTransitionDisplay = ({
     intervalMinutes,
+    onDelete,
+    milestoneName,
 }: IMilestoneTransitionDisplayProps) => {
     return (
         <StyledDisplayContainer>
-            <StyledIcon />
-            <StyledText>
-                Proceed to the next milestone after{' '}
-                {formatInterval(intervalMinutes)}
-            </StyledText>
+            <StyledContentGroup>
+                <StyledIcon />
+                <StyledText>
+                    Proceed to the next milestone after{' '}
+                    {formatInterval(intervalMinutes)}
+                </StyledText>
+            </StyledContentGroup>
+            <IconButton
+                onClick={onDelete}
+                size='small'
+                aria-label={`Delete automation for ${milestoneName}`}
+                sx={{ padding: 0.5 }}
+            >
+                <DeleteOutlineIcon fontSize='small' />
+            </IconButton>
         </StyledDisplayContainer>
     );
 };

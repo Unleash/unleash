@@ -25,8 +25,27 @@ export const useMilestoneProgressionsApi = () => {
         await makeRequest(req.caller, req.id);
     };
 
+    const deleteMilestoneProgression = async (
+        projectId: string,
+        environment: string,
+        sourceMilestoneId: string,
+    ): Promise<void> => {
+        const requestId = 'deleteMilestoneProgression';
+        const path = `api/admin/projects/${projectId}/environments/${environment}/progressions/${sourceMilestoneId}`;
+        const req = createRequest(
+            path,
+            {
+                method: 'DELETE',
+            },
+            requestId,
+        );
+
+        await makeRequest(req.caller, req.id);
+    };
+
     return {
         createMilestoneProgression,
+        deleteMilestoneProgression,
         errors,
         loading,
     };

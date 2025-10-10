@@ -56,7 +56,7 @@ interface IMilestoneAutomationSectionProps {
     transitionCondition?: {
         intervalMinutes: number;
     } | null;
-    milestoneName?: string;
+    milestoneName: string;
 }
 
 export const MilestoneAutomationSection = ({

@@ -11,4 +11,8 @@ import type { DetailedInvoicesSchemaInvoicesItem } from './detailedInvoicesSchem
 export interface DetailedInvoicesSchema {
     /** List of invoices with their line items */
     invoices: DetailedInvoicesSchemaInvoicesItem[];
+    /** The currency code for the plan price */
+    planCurrency?: string;
+    /** The plan price in minor currency units */
+    planPrice?: number;
 }

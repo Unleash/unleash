@@ -5,6 +5,8 @@ import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstan
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { InstanceState } from 'interfaces/instance';
 import { formatApiPath } from 'utils/formatPath';
+import { useDetailedInvoices } from 'hooks/api/getters/useDetailedInvoices/useDetailedInvoices';
+import { formatCurrency } from '../BillingInvoices/BillingInvoice/formatCurrency.js';
 const PORTAL_URL = formatApiPath('api/admin/invoices');
 
 type BillingInfoProps = {};
@@ -63,6 +65,7 @@ export const BillingInfo: FC<BillingInfoProps> = () => {
     const {
         uiConfig: { billing },
     } = useUiConfig();
+    const { planPrice, planCurrency } = useDetailedInvoices();
 
     if (!instanceStatus) {
         return (
@@ -105,8 +108,13 @@ export const BillingInfo: FC<BillingInfoProps> = () => {
             </StyledRow>
             <StyledRow>
                 <StyledItemTitle>Plan price</StyledItemTitle>{' '}
-                {/* FIXME: where to take data from? */}
-                <StyledItemValue>$450 / month</StyledItemValue>
+                <StyledItemValue>
+                    {planPrice !== undefined
+                        ? `${formatCurrency(planPrice, planCurrency)} ${
+                              isPAYG ? 'per seat' : '/ month'
+                          }`
+                        : '-'}
+                </StyledItemValue>
             </StyledRow>
             <StyledDivider />
             <StyledButton

@@ -1,7 +1,7 @@
 import { formatLargeNumbers } from 'component/impact-metrics/metricsFormatters.ts';
 import { formatCurrency } from '../formatCurrency.ts';
 import { ConsumptionIndicator } from '../ConsumptionIndicator/ConsumptionIndicator.tsx';
-import { styled } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import type { DetailedInvoicesLineSchema } from 'openapi';
 import { StyledAmountCell } from '../BillingInvoice.styles.tsx';
 
@@ -19,6 +19,17 @@ type BillingInvoiceRowProps = {
     usage?: number;
 };
 
+const StyledDescriptionCell = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(0.5),
+}));
+
+const StyledSubText = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.body2.fontSize,
+}));
+
 export const BillingInvoiceRow = ({
     quantity,
     consumption,
@@ -26,15 +37,37 @@ export const BillingInvoiceRow = ({
     description,
     currency,
     totalAmount,
+    startDate,
+    endDate,
 }: DetailedInvoicesLineSchema) => {
     const percentage =
         limit && limit > 0
             ? Math.min(100, Math.round(((consumption || 0) / limit) * 100))
             : undefined;
 
+    const formattedStart = startDate
+        ? new Date(startDate).toLocaleDateString(undefined, {
+              month: 'short',
+              day: 'numeric',
+          })
+        : undefined;
+    const formattedEnd = endDate
+        ? new Date(endDate).toLocaleDateString(undefined, {
+              month: 'short',
+              day: 'numeric',
+          })
+        : undefined;
+
     return (
         <>
-            <div>{description}</div>
+            <StyledDescriptionCell>
+                <div>{description}</div>
+                {formattedStart || formattedEnd ? (
+                    <StyledSubText>
+                        {formattedStart} - {formattedEnd}
+                    </StyledSubText>
+                ) : null}
+            </StyledDescriptionCell>
             <StyledCellWithIndicator>
                 <ConsumptionIndicator percentage={percentage || 0} />
                 {limit !== undefined ? formatLargeNumbers(limit) : '–'}

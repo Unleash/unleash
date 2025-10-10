@@ -159,19 +159,21 @@ export const ReleasePlanMilestone = ({
                         </StyledSecondaryLabel>
                     </StyledAccordionSummary>
                 </StyledAccordion>
-                <MilestoneAutomationSection
-                    showAutomation={showAutomation}
-                    status={status}
-                    onAddAutomation={onAddAutomation}
-                    onDeleteAutomation={onDeleteAutomation}
-                    automationForm={automationForm}
-                    transitionCondition={milestone.transitionCondition}
-                    milestoneName={milestone.name}
-                    projectId={projectId!}
-                    environment={environment!}
-                    sourceMilestoneId={milestone.id}
-                    onUpdate={onUpdate!}
-                />
+                {showAutomation && projectId && environment && onUpdate && (
+                    <MilestoneAutomationSection
+                        showAutomation={showAutomation}
+                        status={status}
+                        onAddAutomation={onAddAutomation}
+                        onDeleteAutomation={onDeleteAutomation}
+                        automationForm={automationForm}
+                        transitionCondition={milestone.transitionCondition}
+                        milestoneName={milestone.name}
+                        projectId={projectId}
+                        environment={environment}
+                        sourceMilestoneId={milestone.id}
+                        onUpdate={onUpdate}
+                    />
+                )}
             </StyledMilestoneContainer>
         );
     }
@@ -235,19 +237,21 @@ export const ReleasePlanMilestone = ({
                     </StrategyList>
                 </StyledAccordionDetails>
             </StyledAccordion>
-            <MilestoneAutomationSection
-                showAutomation={showAutomation}
-                status={status}
-                onAddAutomation={onAddAutomation}
-                onDeleteAutomation={onDeleteAutomation}
-                automationForm={automationForm}
-                transitionCondition={milestone.transitionCondition}
-                milestoneName={milestone.name}
-                projectId={projectId!}
-                environment={environment!}
-                sourceMilestoneId={milestone.id}
-                onUpdate={onUpdate!}
-            />
+            {showAutomation && projectId && environment && onUpdate && (
+                <MilestoneAutomationSection
+                    showAutomation={showAutomation}
+                    status={status}
+                    onAddAutomation={onAddAutomation}
+                    onDeleteAutomation={onDeleteAutomation}
+                    automationForm={automationForm}
+                    transitionCondition={milestone.transitionCondition}
+                    milestoneName={milestone.name}
+                    projectId={projectId}
+                    environment={environment}
+                    sourceMilestoneId={milestone.id}
+                    onUpdate={onUpdate}
+                />
+            )}
         </StyledMilestoneContainer>
     );
 };

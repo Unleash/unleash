@@ -124,7 +124,6 @@ import {
 } from './internals.js';
 import SessionStore from './db/session-store.js';
 import metricsHelper from './util/metrics-helper.js';
-import type { ReleasePlanMilestoneWriteModel } from './features/release-plans/release-plan-milestone-store.js';
 import type { ReleasePlanMilestoneStrategyWriteModel } from './features/release-plans/release-plan-milestone-strategy-store.js';
 import type { IChangeRequestAccessReadModel } from './features/change-request-access-service/change-request-access-read-model.js';
 import { EventStore } from './db/event-store.js';
@@ -188,6 +187,7 @@ import { defineImpactMetrics } from './features/metrics/impact/define-impact-met
 import type { IClientInstance } from './types/stores/client-instance-store.js';
 import EnvironmentStore from './features/project-environments/environment-store.js';
 import ProjectStore from './features/project/project-store.js';
+import type { ReleasePlanMilestoneWriteModel } from './features/release-plans/release-plan-milestone.js';
 
 export async function initialServiceSetup(
     { authentication }: Pick<IUnleashConfig, 'authentication'>,

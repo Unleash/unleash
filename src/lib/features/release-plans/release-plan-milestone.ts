@@ -10,3 +10,8 @@ export interface ReleasePlanMilestone {
     strategies?: ReleasePlanMilestoneStrategy[];
     progressionExecutedAt?: string;
 }
+
+export type ReleasePlanMilestoneWriteModel = Omit<
+    ReleasePlanMilestone,
+    'id' | 'startedAt' | 'transitionCondition' | 'progressionExecutedAt'
+>;

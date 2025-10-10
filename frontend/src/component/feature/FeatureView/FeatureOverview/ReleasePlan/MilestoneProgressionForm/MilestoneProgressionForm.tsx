@@ -5,7 +5,7 @@ import { useMilestoneProgressionForm } from '../hooks/useMilestoneProgressionFor
 import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { MilestoneProgressionTimeInput } from './MilestoneProgressionTimeInput';
+import { MilestoneProgressionTimeInput } from './MilestoneProgressionTimeInput.tsx';
 
 const StyledFormContainer = styled('div')(({ theme }) => ({
     display: 'flex',

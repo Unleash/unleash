@@ -6,11 +6,11 @@ import { useState } from 'react';
 import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { MilestoneProgressionTimeInput } from '../MilestoneProgressionForm/MilestoneProgressionTimeInput';
+import { MilestoneProgressionTimeInput } from '../MilestoneProgressionForm/MilestoneProgressionTimeInput.tsx';
 import {
     useMilestoneProgressionForm,
     getTimeValueAndUnitFromMinutes,
-} from '../hooks/useMilestoneProgressionForm';
+} from '../hooks/useMilestoneProgressionForm.js';
 
 const StyledDisplayContainer = styled('div')(({ theme }) => ({
     display: 'flex',

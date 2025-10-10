@@ -1,5 +1,11 @@
-import { MenuItem, Select, styled, TextField, type SelectChangeEvent } from '@mui/material';
-import type { TimeUnit } from '../hooks/useMilestoneProgressionForm';
+import {
+    MenuItem,
+    Select,
+    styled,
+    TextField,
+    type SelectChangeEvent,
+} from '@mui/material';
+import type { TimeUnit } from '../hooks/useMilestoneProgressionForm.js';
 
 const StyledInputGroup = styled('div')(({ theme }) => ({
     display: 'flex',

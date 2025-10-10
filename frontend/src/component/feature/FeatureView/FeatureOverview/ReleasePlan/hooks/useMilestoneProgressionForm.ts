@@ -9,7 +9,9 @@ interface MilestoneProgressionFormDefaults {
     timeUnit?: TimeUnit;
 }
 
-export const getTimeValueAndUnitFromMinutes = (minutes: number): { value: number; unit: TimeUnit } => {
+export const getTimeValueAndUnitFromMinutes = (
+    minutes: number,
+): { value: number; unit: TimeUnit } => {
     if (minutes % 1440 === 0) {
         return { value: minutes / 1440, unit: 'days' };
     }
@@ -19,7 +21,10 @@ export const getTimeValueAndUnitFromMinutes = (minutes: number): { value: number
     return { value: minutes, unit: 'minutes' };
 };
 
-export const getIntervalMinutesFromValueAndUnit = (value: number, unit: TimeUnit): number => {
+export const getIntervalMinutesFromValueAndUnit = (
+    value: number,
+    unit: TimeUnit,
+): number => {
     switch (unit) {
         case 'minutes':
             return value;
@@ -78,7 +83,9 @@ export const useMilestoneProgressionForm = (
         setTimeUnit(event.target.value as TimeUnit);
     };
 
-    const handleTimeValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleTimeValueChange = (
+        event: React.ChangeEvent<HTMLInputElement>,
+    ) => {
         const inputValue = event.target.value;
         if (inputValue === '' || /^\d+$/.test(inputValue)) {
             const value = inputValue === '' ? 0 : Number.parseInt(inputValue);

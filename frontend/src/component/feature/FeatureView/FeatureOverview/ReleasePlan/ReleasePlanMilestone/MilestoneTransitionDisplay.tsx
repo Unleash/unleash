@@ -33,7 +33,7 @@ const StyledText = styled('span')(({ theme }) => ({
 
 interface IMilestoneTransitionDisplayProps {
     intervalMinutes: number;
-    onDelete?: () => void;
+    onDelete: () => void;
     milestoneName: string;
 }
 
@@ -65,16 +65,14 @@ export const MilestoneTransitionDisplay = ({
                     {formatInterval(intervalMinutes)}
                 </StyledText>
             </StyledContentGroup>
-            {onDelete && (
-                <IconButton
-                    onClick={onDelete}
-                    size='small'
-                    aria-label={`Delete automation for ${milestoneName}`}
-                    sx={{ padding: 0.5 }}
-                >
-                    <DeleteOutlineIcon fontSize='small' />
-                </IconButton>
-            )}
+            <IconButton
+                onClick={onDelete}
+                size='small'
+                aria-label={`Delete automation for ${milestoneName}`}
+                sx={{ padding: 0.5 }}
+            >
+                <DeleteOutlineIcon fontSize='small' />
+            </IconButton>
         </StyledDisplayContainer>
     );
 };

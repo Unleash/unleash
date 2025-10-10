@@ -346,11 +346,8 @@ export const ReleasePlan = ({
                                     !readonly
                                 }
                                 onAddAutomation={handleOpenProgressionForm}
-                                onDeleteAutomation={
-                                    milestone.transitionCondition
-                                        ? () =>
-                                              handleDeleteProgression(milestone)
-                                        : undefined
+                                onDeleteAutomation={() =>
+                                    handleDeleteProgression(milestone)
                                 }
                                 automationForm={
                                     isProgressionFormOpen ? (

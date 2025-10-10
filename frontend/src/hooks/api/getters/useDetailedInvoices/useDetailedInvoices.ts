@@ -20,6 +20,8 @@ export const useDetailedInvoices = (options: SWRConfiguration = {}) => {
     );
 
     const invoices = useMemo(() => data?.invoices ?? [], [data]);
+    const planPrice = data?.planPrice;
+    const planCurrency = data?.planCurrency;
 
-    return { invoices, error, loading: isLoading };
+    return { invoices, planPrice, planCurrency, error, loading: isLoading };
 };

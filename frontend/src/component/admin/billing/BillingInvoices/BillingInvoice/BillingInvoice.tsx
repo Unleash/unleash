@@ -5,7 +5,10 @@ import {
     Accordion,
     AccordionSummary,
     AccordionDetails,
+    Button,
 } from '@mui/material';
+import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
+import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { formatCurrency } from './formatCurrency.ts';
 import { Badge } from 'component/common/Badge/Badge.tsx';
@@ -84,6 +87,13 @@ const StyledTableRow = styled('div')(({ theme }) => ({
     padding: theme.spacing(1, 0),
 }));
 
+const CardActions = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-end',
+    gap: theme.spacing(1),
+    padding: theme.spacing(1.5, 2, 2),
+}));
+
 export const BillingInvoice = ({
     status,
     invoiceDate,
@@ -93,20 +103,20 @@ export const BillingInvoice = ({
     mainLines,
     usageLines,
 }: DetailedInvoicesSchemaInvoicesItem) => {
-    const title = invoiceDate
+    const currency = mainLines[0]?.currency || usageLines?.[0]?.currency;
+
+    const formattedTitle = invoiceDate
         ? new Date(invoiceDate).toLocaleDateString(undefined, {
               month: 'long',
               day: 'numeric',
           })
         : '';
 
-    const currency = mainLines[0]?.currency || usageLines?.[0]?.currency;
-
     return (
         <CardLikeAccordion defaultExpanded>
             <HeaderRoot
                 expandIcon={<ExpandMoreIcon />}
-                id={`billing-invoice-${title}-header`}
+                id={`billing-invoice-${formattedTitle}-header`}
             >
                 <HeaderLeft>
                     <Typography
@@ -114,7 +124,7 @@ export const BillingInvoice = ({
                         component='h3'
                         sx={{ fontWeight: 700 }}
                     >
-                        {title}
+                        {formattedTitle}
                     </Typography>
                 </HeaderLeft>
                 <HeaderRight>
@@ -170,6 +180,30 @@ export const BillingInvoice = ({
                         currency={currency}
                     />
                 </StyledInvoiceGrid>
+                <CardActions>
+                    {invoiceURL ? (
+                        <Button
+                            variant='outlined'
+                            href={invoiceURL}
+                            target='_blank'
+                            rel='noreferrer'
+                            startIcon={<ReceiptLongOutlinedIcon />}
+                        >
+                            View invoice
+                        </Button>
+                    ) : null}
+                    {invoicePDF ? (
+                        <Button
+                            variant='outlined'
+                            href={invoicePDF}
+                            target='_blank'
+                            rel='noreferrer'
+                            startIcon={<DownloadOutlinedIcon />}
+                        >
+                            Download PDF
+                        </Button>
+                    ) : null}
+                </CardActions>
             </AccordionDetails>
         </CardLikeAccordion>
     );

@@ -13,6 +13,7 @@ import { projectEnvironmentSchema } from './project-environment-schema.js';
 import { releasePlanSchema } from './release-plan-schema.js';
 import { releasePlanMilestoneSchema } from './release-plan-milestone-schema.js';
 import { releasePlanMilestoneStrategySchema } from './release-plan-milestone-strategy-schema.js';
+import { transitionConditionSchema } from './transition-condition-schema.js';
 import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
 import { strategyVariantSchema } from './strategy-variant-schema.js';
 import { createFeatureNamingPatternSchema } from './create-feature-naming-pattern-schema.js';
@@ -150,6 +151,7 @@ export const healthOverviewSchema = {
             releasePlanSchema,
             releasePlanMilestoneSchema,
             releasePlanMilestoneStrategySchema,
+            transitionConditionSchema,
             strategyVariantSchema,
             variantSchema,
             projectStatsSchema,

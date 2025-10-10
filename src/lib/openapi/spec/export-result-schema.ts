@@ -18,6 +18,7 @@ import { releasePlanMilestoneSchema } from './release-plan-milestone-schema.js';
 import { releasePlanMilestoneStrategySchema } from './release-plan-milestone-strategy-schema.js';
 import { createFeatureStrategySchema } from './create-feature-strategy-schema.js';
 import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
+import { transitionConditionSchema } from './transition-condition-schema.js';
 import { dependentFeatureSchema } from './dependent-feature-schema.js';
 import { tagSchema } from './tag-schema.js';
 import { featureLinksSchema } from './feature-links-schema.js';
@@ -217,6 +218,7 @@ export const exportResultSchema = {
             releasePlanMilestoneStrategySchema,
             createFeatureStrategySchema,
             createStrategyVariantSchema,
+            transitionConditionSchema,
         },
     },
 } as const;

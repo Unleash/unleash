@@ -205,6 +205,7 @@ export * from './telemetry-settings-schema.js';
 export * from './toggle-maintenance-schema.js';
 export * from './token-string-list-schema.js';
 export * from './token-user-schema.js';
+export * from './transition-condition-schema.js';
 export * from './ui-config-schema.js';
 export * from './unknown-flag-schema.js';
 export * from './unknown-flags-response-schema.js';

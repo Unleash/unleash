@@ -22,14 +22,14 @@ const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'status' && prop !== 'hasAutomation',
 })<{ status: MilestoneStatus; hasAutomation?: boolean }>(
     ({ theme, status, hasAutomation }) => ({
-        border: `1px solid ${status === 'active' ? theme.palette.success.border : theme.palette.divider}`,
+        border: `${status === 'active' ? '1.25px' : '1px'} solid ${status === 'active' ? theme.palette.success.border : theme.palette.divider}`,
         borderBottom: hasAutomation
             ? 'none'
-            : `1px solid ${status === 'active' ? theme.palette.success.border : theme.palette.divider}`,
+            : `${status === 'active' ? '1.25px' : '1px'} solid ${status === 'active' ? theme.palette.success.border : theme.palette.divider}`,
         overflow: 'hidden',
         boxShadow: 'none',
         margin: 0,
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: status === 'completed' ? theme.palette.background.default : theme.palette.background.paper,
         borderRadius: hasAutomation
             ? `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0 !important`
             : `${theme.shape.borderRadiusLarge}px`,
@@ -54,8 +54,11 @@ const StyledTitleContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(0.5),
 }));
 
-const StyledTitle = styled('span')(({ theme }) => ({
+const StyledTitle = styled('span', {
+    shouldForwardProp: (prop) => prop !== 'status',
+})<{ status?: MilestoneStatus }>(({ theme, status }) => ({
     fontWeight: theme.fontWeight.bold,
+    color: status === 'completed' ? theme.palette.text.secondary : theme.palette.text.primary,
 }));
 
 const StyledSecondaryLabel = styled('span')(({ theme }) => ({
@@ -100,7 +103,7 @@ export const ReleasePlanMilestone = ({
                 <StyledAccordion status={status} hasAutomation={showAutomation}>
                     <StyledAccordionSummary>
                         <StyledTitleContainer>
-                            <StyledTitle>{milestone.name}</StyledTitle>
+                            <StyledTitle status={status}>{milestone.name}</StyledTitle>
                             {!readonly && onStartMilestone && (
                                 <ReleasePlanMilestoneStatus
                                     status={status}
@@ -137,7 +140,7 @@ export const ReleasePlanMilestone = ({
             >
                 <StyledAccordionSummary expandIcon={<ExpandMore />}>
                     <StyledTitleContainer>
-                        <StyledTitle>{milestone.name}</StyledTitle>
+                        <StyledTitle status={status}>{milestone.name}</StyledTitle>
                         {!readonly && onStartMilestone && (
                             <ReleasePlanMilestoneStatus
                                 status={status}

@@ -8,4 +8,5 @@ export interface ReleasePlanMilestone {
     startedAt?: string;
     transitionCondition?: { intervalMinutes: number };
     strategies?: ReleasePlanMilestoneStrategy[];
+    progressionExecutedAt?: string;
 }

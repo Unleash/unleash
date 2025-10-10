@@ -20,6 +20,7 @@ const selectColumns = [
     'mi.sort_order AS milestoneSortOrder',
     'mi.started_at AS milestoneStartedAt',
     'mp.transition_condition AS milestoneTransitionCondition',
+    'mp.executed_at AS milestoneProgressionExecutedAt',
     'ms.id AS strategyId',
     'ms.sort_order AS strategySortOrder',
     'ms.title AS strategyTitle',
@@ -50,6 +51,7 @@ const processReleasePlanRows = (templateRows): ReleasePlan[] =>
                 milestoneSortOrder,
                 milestoneStartedAt,
                 milestoneTransitionCondition,
+                milestoneProgressionExecutedAt,
                 strategyId,
                 strategySortOrder,
                 strategyTitle,
@@ -93,6 +95,7 @@ const processReleasePlanRows = (templateRows): ReleasePlan[] =>
                     sortOrder: milestoneSortOrder,
                     startedAt: milestoneStartedAt,
                     transitionCondition: milestoneTransitionCondition,
+                    progressionExecutedAt: milestoneProgressionExecutedAt,
                     strategies: [],
                     releasePlanDefinitionId: planId,
                 };

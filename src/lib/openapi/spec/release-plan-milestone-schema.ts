@@ -49,6 +49,14 @@ export const releasePlanMilestoneSchema = {
             additionalProperties: true,
             nullable: true,
         },
+        progressionExecutedAt: {
+            type: 'string',
+            format: 'date-time',
+            description:
+                'The date and time when the milestone progression was executed.',
+            example: '2024-01-01T00:00:00.000Z',
+            nullable: true,
+        },
         strategies: {
             type: 'array',
             description:

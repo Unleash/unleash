@@ -24,7 +24,10 @@ const StyledIcon = styled(BoltIcon, {
     color: theme.palette.common.white,
     fontSize: 18,
     flexShrink: 0,
-    backgroundColor: status === 'completed' ? theme.palette.neutral.border : theme.palette.primary.main,
+    backgroundColor:
+        status === 'completed'
+            ? theme.palette.neutral.border
+            : theme.palette.primary.main,
     borderRadius: '50%',
     padding: theme.spacing(0.25),
 }));
@@ -32,7 +35,10 @@ const StyledIcon = styled(BoltIcon, {
 const StyledText = styled('span', {
     shouldForwardProp: (prop) => prop !== 'status',
 })<{ status?: MilestoneStatus }>(({ theme, status }) => ({
-    color: status === 'completed' ? theme.palette.text.secondary : theme.palette.text.primary,
+    color:
+        status === 'completed'
+            ? theme.palette.text.secondary
+            : theme.palette.text.primary,
     fontSize: theme.typography.body2.fontSize,
 }));
 

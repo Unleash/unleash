@@ -29,7 +29,10 @@ const StyledAccordion = styled(Accordion, {
         overflow: 'hidden',
         boxShadow: 'none',
         margin: 0,
-        backgroundColor: status === 'completed' ? theme.palette.background.default : theme.palette.background.paper,
+        backgroundColor:
+            status === 'completed'
+                ? theme.palette.background.default
+                : theme.palette.background.paper,
         borderRadius: hasAutomation
             ? `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0 !important`
             : `${theme.shape.borderRadiusLarge}px`,
@@ -58,7 +61,10 @@ const StyledTitle = styled('span', {
     shouldForwardProp: (prop) => prop !== 'status',
 })<{ status?: MilestoneStatus }>(({ theme, status }) => ({
     fontWeight: theme.fontWeight.bold,
-    color: status === 'completed' ? theme.palette.text.secondary : theme.palette.text.primary,
+    color:
+        status === 'completed'
+            ? theme.palette.text.secondary
+            : theme.palette.text.primary,
 }));
 
 const StyledSecondaryLabel = styled('span')(({ theme }) => ({
@@ -103,7 +109,9 @@ export const ReleasePlanMilestone = ({
                 <StyledAccordion status={status} hasAutomation={showAutomation}>
                     <StyledAccordionSummary>
                         <StyledTitleContainer>
-                            <StyledTitle status={status}>{milestone.name}</StyledTitle>
+                            <StyledTitle status={status}>
+                                {milestone.name}
+                            </StyledTitle>
                             {!readonly && onStartMilestone && (
                                 <ReleasePlanMilestoneStatus
                                     status={status}
@@ -140,7 +148,9 @@ export const ReleasePlanMilestone = ({
             >
                 <StyledAccordionSummary expandIcon={<ExpandMore />}>
                     <StyledTitleContainer>
-                        <StyledTitle status={status}>{milestone.name}</StyledTitle>
+                        <StyledTitle status={status}>
+                            {milestone.name}
+                        </StyledTitle>
                         {!readonly && onStartMilestone && (
                             <ReleasePlanMilestoneStatus
                                 status={status}

@@ -10,7 +10,10 @@ const StyledAutomationContainer = styled('div', {
     borderTop: `1px solid ${theme.palette.divider}`,
     borderRadius: `0 0 ${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px`,
     padding: theme.spacing(1.5, 2),
-    backgroundColor: status === 'completed' ? theme.palette.background.default : theme.palette.background.paper,
+    backgroundColor:
+        status === 'completed'
+            ? theme.palette.background.default
+            : theme.palette.background.paper,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'stretch',

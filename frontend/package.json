@@ -16,7 +16,7 @@
     "start": "vite",
     "start:prod": "vite build && vite preview",
     "start:sandbox": "UNLEASH_API=https://sandbox.getunleash.io/ VITE_TEST_REDIRECT=true UNLEASH_BASE_PATH=/pro/ yarn run start",
-    "start:sandbox:enterprise": "UNLEASH_API=https://sandbox.getunleash.io/ VITE_TEST_REDIRECT=true UNLEASH_BASE_PATH=/nuno/ yarn run start",
+    "start:sandbox:enterprise": "UNLEASH_API=https://sandbox.getunleash.io/ VITE_TEST_REDIRECT=true UNLEASH_BASE_PATH=/enterprise/ yarn run start",
     "start:demo2": "UNLEASH_API=https://sandbox.getunleash.io/ UNLEASH_BASE_PATH=/demo2/ yarn run start",
     "start:demo": "UNLEASH_BASE_PATH=/demo/ UNLEASH_API=https://app.unleash-hosted.com/ yarn run start",
     "test": "NODE_OPTIONS=\"${NODE_OPTIONS:-0} --no-experimental-fetch\" vitest run",
@@ -34,7 +34,7 @@
     "gen:api:demo": "UNLEASH_OPENAPI_URL=https://app.unleash-hosted.com/demo/docs/openapi.json yarn run gen:api",
     "gen:api:sandbox": "UNLEASH_OPENAPI_URL=https://sandbox.getunleash.io/demo2/docs/openapi.json yarn run gen:api",
     "gen:api:clean": "yarn gen:api && rm -rf src/openapi/apis && sed -i.bak '1q' src/openapi/index.ts && rm src/openapi/index.ts.bak"
-  },yarn
+  },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@codemirror/lang-json": "6.0.2",

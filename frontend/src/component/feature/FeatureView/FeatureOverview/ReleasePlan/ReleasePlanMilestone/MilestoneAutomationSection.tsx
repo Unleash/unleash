@@ -6,11 +6,14 @@ import { MilestoneTransitionDisplay } from './MilestoneTransitionDisplay.tsx';
 const StyledAutomationContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'status',
 })<{ status?: MilestoneStatus }>(({ theme, status }) => ({
-    border: `1px solid ${status === 'active' ? theme.palette.success.border : theme.palette.divider}`,
+    border: `${status === 'active' ? '1.25px' : '1px'} solid ${status === 'active' ? theme.palette.success.border : theme.palette.divider}`,
     borderTop: `1px solid ${theme.palette.divider}`,
     borderRadius: `0 0 ${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px`,
     padding: theme.spacing(1.5, 2),
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor:
+        status === 'completed'
+            ? theme.palette.background.default
+            : theme.palette.background.paper,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'stretch',
@@ -79,6 +82,7 @@ export const MilestoneAutomationSection = ({
                     intervalMinutes={transitionCondition.intervalMinutes}
                     onDelete={onDeleteAutomation!}
                     milestoneName={milestoneName}
+                    status={status}
                 />
             ) : (
                 <StyledAddAutomationButton

@@ -2,6 +2,7 @@ import BoltIcon from '@mui/icons-material/Bolt';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { IconButton, styled } from '@mui/material';
 import { formatDuration, intervalToDuration } from 'date-fns';
+import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
 
 const StyledDisplayContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -17,17 +18,27 @@ const StyledContentGroup = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const StyledIcon = styled(BoltIcon)(({ theme }) => ({
+const StyledIcon = styled(BoltIcon, {
+    shouldForwardProp: (prop) => prop !== 'status',
+})<{ status?: MilestoneStatus }>(({ theme, status }) => ({
     color: theme.palette.common.white,
     fontSize: 18,
     flexShrink: 0,
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor:
+        status === 'completed'
+            ? theme.palette.neutral.border
+            : theme.palette.primary.main,
     borderRadius: '50%',
     padding: theme.spacing(0.25),
 }));
 
-const StyledText = styled('span')(({ theme }) => ({
-    color: theme.palette.text.primary,
+const StyledText = styled('span', {
+    shouldForwardProp: (prop) => prop !== 'status',
+})<{ status?: MilestoneStatus }>(({ theme, status }) => ({
+    color:
+        status === 'completed'
+            ? theme.palette.text.secondary
+            : theme.palette.text.primary,
     fontSize: theme.typography.body2.fontSize,
 }));
 
@@ -35,6 +46,7 @@ interface IMilestoneTransitionDisplayProps {
     intervalMinutes: number;
     onDelete: () => void;
     milestoneName: string;
+    status?: MilestoneStatus;
 }
 
 const formatInterval = (minutes: number): string => {
@@ -55,12 +67,13 @@ export const MilestoneTransitionDisplay = ({
     intervalMinutes,
     onDelete,
     milestoneName,
+    status,
 }: IMilestoneTransitionDisplayProps) => {
     return (
         <StyledDisplayContainer>
             <StyledContentGroup>
-                <StyledIcon />
-                <StyledText>
+                <StyledIcon status={status} />
+                <StyledText status={status}>
                     Proceed to the next milestone after{' '}
                     {formatInterval(intervalMinutes)}
                 </StyledText>

@@ -72,10 +72,14 @@ const StyledBody = styled('div')(({ theme }) => ({
     flexDirection: 'column',
 }));
 
-const StyledConnection = styled('div')(({ theme }) => ({
-    width: 4,
+const StyledConnection = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'isCompleted',
+})<{ isCompleted: boolean }>(({ theme, isCompleted }) => ({
+    width: 2,
     height: theme.spacing(2),
-    backgroundColor: theme.palette.divider,
+    backgroundColor: isCompleted
+        ? theme.palette.divider
+        : theme.palette.primary.main,
     marginLeft: theme.spacing(3.25),
 }));
 
@@ -367,7 +371,11 @@ export const ReleasePlan = ({
                             />
                             <ConditionallyRender
                                 condition={isNotLastMilestone}
-                                show={<StyledConnection />}
+                                show={
+                                    <StyledConnection
+                                        isCompleted={index < activeIndex}
+                                    />
+                                }
                             />
                         </div>
                     );

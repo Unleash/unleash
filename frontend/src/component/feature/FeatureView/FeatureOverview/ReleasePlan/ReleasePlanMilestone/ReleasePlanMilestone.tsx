@@ -76,7 +76,7 @@ const StyledSecondaryLabel = styled('span')(({ theme }) => ({
 const StyledStartedAt = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontSize: theme.fontSizes.smallBody,
-    fontWeight: theme.fontWeight.normal,
+    fontWeight: theme.typography.fontWeightRegular,
 }));
 
 const StyledStatusRow = styled('div')(({ theme }) => ({
@@ -167,10 +167,10 @@ export const ReleasePlanMilestone = ({
                     automationForm={automationForm}
                     transitionCondition={milestone.transitionCondition}
                     milestoneName={milestone.name}
-                    projectId={projectId}
-                    environment={environment}
+                    projectId={projectId!}
+                    environment={environment!}
                     sourceMilestoneId={milestone.id}
-                    onUpdate={onUpdate}
+                    onUpdate={onUpdate!}
                 />
             </StyledMilestoneContainer>
         );
@@ -243,10 +243,10 @@ export const ReleasePlanMilestone = ({
                 automationForm={automationForm}
                 transitionCondition={milestone.transitionCondition}
                 milestoneName={milestone.name}
-                projectId={projectId}
-                environment={environment}
+                projectId={projectId!}
+                environment={environment!}
                 sourceMilestoneId={milestone.id}
-                onUpdate={onUpdate}
+                onUpdate={onUpdate!}
             />
         </StyledMilestoneContainer>
     );

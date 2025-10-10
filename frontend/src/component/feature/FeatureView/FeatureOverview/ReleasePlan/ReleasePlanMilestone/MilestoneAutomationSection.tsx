@@ -60,6 +60,10 @@ interface IMilestoneAutomationSectionProps {
         intervalMinutes: number;
     } | null;
     milestoneName: string;
+    projectId?: string;
+    environment?: string;
+    sourceMilestoneId?: string;
+    onUpdate?: () => void;
 }
 
 export const MilestoneAutomationSection = ({
@@ -70,6 +74,10 @@ export const MilestoneAutomationSection = ({
     automationForm,
     transitionCondition,
     milestoneName,
+    projectId,
+    environment,
+    sourceMilestoneId,
+    onUpdate,
 }: IMilestoneAutomationSectionProps) => {
     if (!showAutomation) return null;
 
@@ -77,12 +85,16 @@ export const MilestoneAutomationSection = ({
         <StyledAutomationContainer status={status}>
             {automationForm ? (
                 automationForm
-            ) : transitionCondition ? (
+            ) : transitionCondition && projectId && environment && sourceMilestoneId && onUpdate ? (
                 <MilestoneTransitionDisplay
                     intervalMinutes={transitionCondition.intervalMinutes}
                     onDelete={onDeleteAutomation!}
                     milestoneName={milestoneName}
                     status={status}
+                    projectId={projectId}
+                    environment={environment}
+                    sourceMilestoneId={sourceMilestoneId}
+                    onUpdate={onUpdate}
                 />
             ) : (
                 <StyledAddAutomationButton

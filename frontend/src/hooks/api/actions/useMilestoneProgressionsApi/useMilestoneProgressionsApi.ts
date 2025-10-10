@@ -1,5 +1,6 @@
 import useAPI from '../useApi/useApi.js';
 import type { CreateMilestoneProgressionSchema } from 'openapi/models/createMilestoneProgressionSchema';
+import type { UpdateMilestoneProgressionSchema } from 'openapi/models/updateMilestoneProgressionSchema';
 
 export const useMilestoneProgressionsApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
@@ -17,6 +18,26 @@ export const useMilestoneProgressionsApi = () => {
             path,
             {
                 method: 'POST',
+                body: JSON.stringify(body),
+            },
+            requestId,
+        );
+
+        await makeRequest(req.caller, req.id);
+    };
+
+    const updateMilestoneProgression = async (
+        projectId: string,
+        environment: string,
+        sourceMilestoneId: string,
+        body: UpdateMilestoneProgressionSchema,
+    ): Promise<void> => {
+        const requestId = 'updateMilestoneProgression';
+        const path = `api/admin/projects/${projectId}/environments/${environment}/progressions/${sourceMilestoneId}`;
+        const req = createRequest(
+            path,
+            {
+                method: 'PUT',
                 body: JSON.stringify(body),
             },
             requestId,
@@ -45,6 +66,7 @@ export const useMilestoneProgressionsApi = () => {
 
     return {
         createMilestoneProgression,
+        updateMilestoneProgression,
         deleteMilestoneProgression,
         errors,
         loading,

@@ -1,8 +1,16 @@
 import BoltIcon from '@mui/icons-material/Bolt';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import { IconButton, styled } from '@mui/material';
-import { formatDuration, intervalToDuration } from 'date-fns';
+import { Button, IconButton, styled } from '@mui/material';
 import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
+import { useState } from 'react';
+import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import { MilestoneProgressionTimeInput } from '../MilestoneProgressionForm/MilestoneProgressionTimeInput';
+import {
+    useMilestoneProgressionForm,
+    getTimeValueAndUnitFromMinutes,
+} from '../hooks/useMilestoneProgressionForm';
 
 const StyledDisplayContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -32,7 +40,7 @@ const StyledIcon = styled(BoltIcon, {
     padding: theme.spacing(0.25),
 }));
 
-const StyledText = styled('span', {
+const StyledLabel = styled('span', {
     shouldForwardProp: (prop) => prop !== 'status',
 })<{ status?: MilestoneStatus }>(({ theme, status }) => ({
     color:
@@ -40,6 +48,13 @@ const StyledText = styled('span', {
             ? theme.palette.text.secondary
             : theme.palette.text.primary,
     fontSize: theme.typography.body2.fontSize,
+    flexShrink: 0,
+}));
+
+const StyledButtonGroup = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+    alignItems: 'center',
 }));
 
 interface IMilestoneTransitionDisplayProps {
@@ -47,45 +62,119 @@ interface IMilestoneTransitionDisplayProps {
     onDelete: () => void;
     milestoneName: string;
     status?: MilestoneStatus;
+    projectId: string;
+    environment: string;
+    sourceMilestoneId: string;
+    onUpdate: () => void;
 }
-
-const formatInterval = (minutes: number): string => {
-    if (minutes === 0) return '0 minutes';
-
-    const duration = intervalToDuration({
-        start: 0,
-        end: minutes * 60 * 1000,
-    });
-
-    return formatDuration(duration, {
-        format: ['days', 'hours', 'minutes'],
-        delimiter: ', ',
-    });
-};
 
 export const MilestoneTransitionDisplay = ({
     intervalMinutes,
     onDelete,
     milestoneName,
     status,
+    projectId,
+    environment,
+    sourceMilestoneId,
+    onUpdate,
 }: IMilestoneTransitionDisplayProps) => {
+    const { updateMilestoneProgression } = useMilestoneProgressionsApi();
+    const { setToastData, setToastApiError } = useToast();
+
+    const initial = getTimeValueAndUnitFromMinutes(intervalMinutes);
+    const form = useMilestoneProgressionForm(
+        sourceMilestoneId,
+        sourceMilestoneId, // We don't need targetMilestone for edit, just reuse source
+        {
+            timeValue: initial.value,
+            timeUnit: initial.unit,
+        },
+    );
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const currentIntervalMinutes = form.getIntervalMinutes();
+    const hasChanged = currentIntervalMinutes !== intervalMinutes;
+
+    const handleSave = async () => {
+        if (isSubmitting || !hasChanged) return;
+
+        setIsSubmitting(true);
+        try {
+            await updateMilestoneProgression(
+                projectId,
+                environment,
+                sourceMilestoneId,
+                {
+                    transitionCondition: {
+                        intervalMinutes: currentIntervalMinutes,
+                    },
+                },
+            );
+            setToastData({
+                type: 'success',
+                text: 'Automation updated successfully',
+            });
+            onUpdate();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleReset = () => {
+        const initial = getTimeValueAndUnitFromMinutes(intervalMinutes);
+        form.setTimeValue(initial.value);
+        form.setTimeUnit(initial.unit);
+    };
+
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === 'Enter' && hasChanged) {
+            event.preventDefault();
+            handleSave();
+        } else if (event.key === 'Escape' && hasChanged) {
+            event.preventDefault();
+            handleReset();
+        }
+    };
+
     return (
-        <StyledDisplayContainer>
+        <StyledDisplayContainer onKeyDown={handleKeyDown}>
             <StyledContentGroup>
                 <StyledIcon status={status} />
-                <StyledText status={status}>
-                    Proceed to the next milestone after{' '}
-                    {formatInterval(intervalMinutes)}
-                </StyledText>
+                <StyledLabel status={status}>
+                    Proceed to the next milestone after
+                </StyledLabel>
+                <MilestoneProgressionTimeInput
+                    timeValue={form.timeValue}
+                    timeUnit={form.timeUnit}
+                    onTimeValueChange={form.handleTimeValueChange}
+                    onTimeUnitChange={form.handleTimeUnitChange}
+                    disabled={isSubmitting}
+                />
             </StyledContentGroup>
-            <IconButton
-                onClick={onDelete}
-                size='small'
-                aria-label={`Delete automation for ${milestoneName}`}
-                sx={{ padding: 0.5 }}
-            >
-                <DeleteOutlineIcon fontSize='small' />
-            </IconButton>
+            <StyledButtonGroup>
+                {hasChanged && (
+                    <Button
+                        variant='contained'
+                        color='primary'
+                        onClick={handleSave}
+                        size='small'
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? 'Saving...' : 'Save'}
+                    </Button>
+                )}
+                <IconButton
+                    onClick={onDelete}
+                    size='small'
+                    aria-label={`Delete automation for ${milestoneName}`}
+                    sx={{ padding: 0.5 }}
+                    disabled={isSubmitting}
+                >
+                    <DeleteOutlineIcon fontSize='small' />
+                </IconButton>
+            </StyledButtonGroup>
         </StyledDisplayContainer>
     );
 };

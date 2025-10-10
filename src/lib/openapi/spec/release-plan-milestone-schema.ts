@@ -4,6 +4,7 @@ import { createFeatureStrategySchema } from './create-feature-strategy-schema.js
 import { parametersSchema } from './parameters-schema.js';
 import { constraintSchema } from './constraint-schema.js';
 import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
+import { transitionConditionSchema } from './transition-condition-schema.js';
 
 export const releasePlanMilestoneSchema = {
     $id: '#/components/schemas/releasePlanMilestoneSchema',
@@ -43,11 +44,8 @@ export const releasePlanMilestoneSchema = {
             nullable: true,
         },
         transitionCondition: {
-            type: 'object',
-            description:
-                'The transition condition for the next automated milestone progression.',
-            additionalProperties: true,
-            nullable: true,
+            description: 'The condition configuration for the transition',
+            $ref: '#/components/schemas/transitionConditionSchema',
         },
         progressionExecutedAt: {
             type: 'string',
@@ -73,6 +71,7 @@ export const releasePlanMilestoneSchema = {
             parametersSchema,
             constraintSchema,
             createStrategyVariantSchema,
+            transitionConditionSchema,
         },
     },
 } as const;

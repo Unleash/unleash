@@ -18,6 +18,7 @@ import { projectLinkTemplateSchema } from './project-link-template-schema.js';
 import { releasePlanSchema } from './release-plan-schema.js';
 import { releasePlanMilestoneSchema } from './release-plan-milestone-schema.js';
 import { releasePlanMilestoneStrategySchema } from './release-plan-milestone-strategy-schema.js';
+import { transitionConditionSchema } from './transition-condition-schema.js';
 
 export const projectOverviewSchema = {
     $id: '#/components/schemas/projectOverviewSchema',
@@ -208,6 +209,7 @@ export const projectOverviewSchema = {
             releasePlanSchema,
             releasePlanMilestoneSchema,
             releasePlanMilestoneStrategySchema,
+            transitionConditionSchema,
             projectStatsSchema,
             createFeatureNamingPatternSchema,
             featureTypeCountSchema,

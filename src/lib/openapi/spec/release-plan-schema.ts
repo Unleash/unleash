@@ -6,6 +6,7 @@ import { constraintSchema } from './constraint-schema.js';
 import { createFeatureStrategySchema } from './create-feature-strategy-schema.js';
 import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
 import { parametersSchema } from './parameters-schema.js';
+import { transitionConditionSchema } from './transition-condition-schema.js';
 
 export const releasePlanSchema = {
     $id: '#/components/schemas/releasePlanSchema',
@@ -71,6 +72,7 @@ export const releasePlanSchema = {
             parametersSchema,
             constraintSchema,
             createStrategyVariantSchema,
+            transitionConditionSchema,
         },
     },
 } as const;

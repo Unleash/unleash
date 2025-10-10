@@ -51,7 +51,7 @@ interface IMilestoneAutomationSectionProps {
     showAutomation?: boolean;
     status?: MilestoneStatus;
     onAddAutomation?: () => void;
-    onDeleteAutomation: () => void;
+    onDeleteAutomation?: () => void;
     automationForm?: React.ReactNode;
     transitionCondition?: {
         intervalMinutes: number;
@@ -77,7 +77,7 @@ export const MilestoneAutomationSection = ({
             ) : transitionCondition ? (
                 <MilestoneTransitionDisplay
                     intervalMinutes={transitionCondition.intervalMinutes}
-                    onDelete={onDeleteAutomation}
+                    onDelete={onDeleteAutomation!}
                     milestoneName={milestoneName}
                 />
             ) : (

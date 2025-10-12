@@ -19,7 +19,6 @@ import ApiUser from '../../../types/api-user.js';
 import { ApiTokenType, type IApiToken } from '../../../types/model.js';
 import IncompatibleProjectError from '../../../error/incompatible-project-error.js';
 import { type IStrategyConfig, RoleName } from '../../../types/model.js';
-import { v4 as uuidv4 } from 'uuid';
 import type supertest from 'supertest';
 import { randomId } from '../../../util/random-id.js';
 import { DEFAULT_PROJECT, TEST_AUDIT_USER } from '../../../types/index.js';
@@ -202,8 +201,8 @@ test('Trying to add a strategy configuration to environment not connected to fla
 });
 
 test('should list dependencies and children', async () => {
-    const parent = uuidv4();
-    const child = uuidv4();
+    const parent = randomId();
+    const child = randomId();
     await app.createFeature(parent, 'default');
     await app.createFeature(child, 'default');
     await app.addDependency(child, parent);
@@ -228,8 +227,8 @@ test('should list dependencies and children', async () => {
 });
 
 test('should not allow to change project with dependencies', async () => {
-    const parent = uuidv4();
-    const child = uuidv4();
+    const parent = randomId();
+    const child = randomId();
     await app.createFeature(parent, 'default');
     await app.createFeature(child, 'default');
     await app.addDependency(child, parent);
@@ -259,8 +258,8 @@ test('should not allow to change project with dependencies', async () => {
 });
 
 test('Should not allow to archive/delete feature with children', async () => {
-    const parent = uuidv4();
-    const child = uuidv4();
+    const parent = randomId();
+    const child = randomId();
     await app.createFeature(parent, 'default');
     await app.createFeature(child, 'default');
     await app.addDependency(child, parent);
@@ -282,8 +281,8 @@ test('Should not allow to archive/delete feature with children', async () => {
 });
 
 test('Should allow to archive/delete feature with children if no orphans are left', async () => {
-    const parent = uuidv4();
-    const child = uuidv4();
+    const parent = randomId();
+    const child = randomId();
     await app.createFeature(parent, 'default');
     await app.createFeature(child, 'default');
     await app.addDependency(child, parent);
@@ -296,9 +295,9 @@ test('Should allow to archive/delete feature with children if no orphans are lef
 });
 
 test('Should not allow to archive/delete feature when orphans are left', async () => {
-    const parent = uuidv4();
-    const child = uuidv4();
-    const orphan = uuidv4();
+    const parent = randomId();
+    const child = randomId();
+    const orphan = randomId();
     await app.createFeature(parent, 'default');
     await app.createFeature(child, 'default');
     await app.createFeature(orphan, 'default');
@@ -317,9 +316,9 @@ test('Should not allow to archive/delete feature when orphans are left', async (
 });
 
 test('should clone feature with parent dependencies', async () => {
-    const parent = uuidv4();
-    const child = uuidv4();
-    const childClone = uuidv4();
+    const parent = randomId();
+    const child = randomId();
+    const childClone = randomId();
     await app.createFeature(parent, 'default');
     await app.createFeature(child, 'default');
     await app.addDependency(child, parent);
@@ -2419,7 +2418,7 @@ test('Can create flag with impression data on different project', async () => {
 });
 
 test('should handle strategy variants', async () => {
-    const feature = { name: uuidv4(), impressionData: false };
+    const feature = { name: randomId(), impressionData: false };
     await app.createFeature(feature.name);
 
     const strategyWithInvalidVariant = {
@@ -2494,14 +2493,14 @@ test('should handle strategy variants', async () => {
 
 test('should reject invalid constraint values for multi-valued constraints', async () => {
     const project = await db.stores.projectStore.create({
-        id: uuidv4(),
-        name: uuidv4(),
+        id: randomId(),
+        name: randomId(),
         description: '',
         mode: 'open',
     });
 
     const flag = await db.stores.featureToggleStore.create(project.id, {
-        name: uuidv4(),
+        name: randomId(),
         impressionData: true,
         createdByUserId: 9999,
     });
@@ -2542,14 +2541,14 @@ test('should reject invalid constraint values for multi-valued constraints', asy
 
 test('should add default constraint values for single-valued constraints', async () => {
     const project = await db.stores.projectStore.create({
-        id: uuidv4(),
-        name: uuidv4(),
+        id: randomId(),
+        name: randomId(),
         description: '',
         mode: 'open',
     });
 
     const flag = await db.stores.featureToggleStore.create(project.id, {
-        name: uuidv4(),
+        name: randomId(),
         impressionData: true,
         createdByUserId: 9999,
     });
@@ -2603,14 +2602,14 @@ test('should add default constraint values for single-valued constraints', async
 
 test('should allow long parameter values', async () => {
     const project = await db.stores.projectStore.create({
-        id: uuidv4(),
-        name: uuidv4(),
-        description: uuidv4(),
+        id: randomId(),
+        name: randomId(),
+        description: randomId(),
         mode: 'open',
     });
 
     const flag = await db.stores.featureToggleStore.create(project.id, {
-        name: uuidv4(),
+        name: randomId(),
         createdByUserId: 9999,
     });
 
@@ -2628,7 +2627,7 @@ test('should allow long parameter values', async () => {
 });
 
 test('should change strategy sort order when payload is valid', async () => {
-    const flag = { name: uuidv4(), impressionData: false };
+    const flag = { name: randomId(), impressionData: false };
     await app.request
         .post('/api/admin/projects/default/features')
         .send({
@@ -2696,7 +2695,7 @@ test('should change strategy sort order when payload is valid', async () => {
 });
 
 test('should reject set sort order request when payload is invalid', async () => {
-    const flag = { name: uuidv4(), impressionData: false };
+    const flag = { name: randomId(), impressionData: false };
 
     await app.request
         .post(
@@ -2714,7 +2713,7 @@ test('should reject set sort order request when payload is invalid', async () =>
 });
 
 test('should return strategies in correct order when new strategies are added', async () => {
-    const flag = { name: uuidv4(), impressionData: false };
+    const flag = { name: randomId(), impressionData: false };
     await app.request
         .post('/api/admin/projects/default/features')
         .send({
@@ -2835,7 +2834,7 @@ test('should return strategies in correct order when new strategies are added', 
 });
 
 test('should create a strategy with segments', async () => {
-    const feature = { name: uuidv4(), impressionData: false };
+    const feature = { name: randomId(), impressionData: false };
     await app.createFeature(feature.name);
     const segment = await createSegment('segmentOne');
     const { body: strategyOne } = await createStrategy(feature.name, {
@@ -2883,7 +2882,7 @@ test('should create a strategy with segments', async () => {
 });
 
 test('should add multiple segments to a strategy', async () => {
-    const feature = { name: uuidv4(), impressionData: false };
+    const feature = { name: randomId(), impressionData: false };
     await app.createFeature(feature.name);
     const segment = await createSegment('seg1');
     const segmentTwo = await createSegment('seg2');
@@ -3063,7 +3062,7 @@ test('Should batch stale features', async () => {
 });
 
 test('should return disabled strategies', async () => {
-    const flag = { name: uuidv4(), impressionData: false };
+    const flag = { name: randomId(), impressionData: false };
     await app.request
         .post('/api/admin/projects/default/features')
         .send({
@@ -3107,7 +3106,7 @@ test('should return disabled strategies', async () => {
 });
 
 test('should disable strategies in place', async () => {
-    const flag = { name: uuidv4(), impressionData: false };
+    const flag = { name: randomId(), impressionData: false };
     await app.request
         .post('/api/admin/projects/default/features')
         .send({
@@ -3458,7 +3457,7 @@ test('Updating feature strategy sort-order should trigger a an event', async () 
 });
 
 test('should not be allowed to create with invalid strategy type name', async () => {
-    const feature = { name: uuidv4(), impressionData: false };
+    const feature = { name: randomId(), impressionData: false };
     await app.createFeature(feature.name);
     await createStrategy(
         feature.name,
@@ -3473,7 +3472,7 @@ test('should not be allowed to create with invalid strategy type name', async ()
 });
 
 test('should not be allowed to update with invalid strategy type name', async () => {
-    const feature = { name: uuidv4(), impressionData: false };
+    const feature = { name: randomId(), impressionData: false };
     await app.createFeature(feature.name);
     const { body: strategyOne } = await createStrategy(feature.name, {
         name: 'default',

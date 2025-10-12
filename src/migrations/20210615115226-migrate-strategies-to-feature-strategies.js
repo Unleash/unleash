@@ -1,4 +1,4 @@
-const { v4: uuid } = require('uuid');
+const { randomUUID } = require('crypto');
 
 exports.up = function (db, cb) {
     db.runSql(
@@ -15,7 +15,7 @@ exports.up = function (db, cb) {
                         `INSERT INTO feature_strategies(id, feature_name, project_name, strategy_name, parameters, constraints)
                                 VALUES (?, ?, ?, ?, ?, ?)`,
                         [
-                            uuid(),
+                            randomUUID(),
                             feature.name,
                             feature.project,
                             strategy.name,

@@ -1,7 +1,6 @@
 import type { IConstraint, IConstraintWithId } from 'interfaces/strategy';
 import { useEffect, useState } from 'react';
 import { useSegmentValidation } from 'hooks/api/getters/useSegmentValidation/useSegmentValidation';
-import { v4 as uuidv4 } from 'uuid';
 import { constraintId } from 'constants/constraintId';
 
 export const useSegmentForm = (
@@ -14,7 +13,7 @@ export const useSegmentForm = (
     const [description, setDescription] = useState(initialDescription);
     const [project, setProject] = useState<string | undefined>(initialProject);
     const initialConstraintsWithId = initialConstraints.map((constraint) => ({
-        [constraintId]: uuidv4(),
+        [constraintId]: crypto.randomUUID(),
         ...constraint,
     }));
     const [constraints, setConstraints] = useState<IConstraintWithId[]>(

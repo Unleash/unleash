@@ -24,7 +24,6 @@ import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { FeatureStrategyForm } from '../../../../feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
-import { v4 as uuidv4 } from 'uuid';
 import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 
@@ -44,7 +43,7 @@ const addIdSymbolToConstraints = (
     if (!strategy) return;
 
     return strategy?.constraints.map((constraint) => {
-        return { ...constraint, [constraintId]: uuidv4() };
+        return { ...constraint, [constraintId]: crypto.randomUUID() };
     });
 };
 

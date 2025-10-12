@@ -5,7 +5,6 @@ import { type FC, useEffect, useState } from 'react';
 import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions.ts';
-import { v4 as uuidv4 } from 'uuid';
 import { WeightType } from '../../../constants/variantTypes.ts';
 import { Link, styled, Typography, useTheme } from '@mui/material';
 import type { IFeatureStrategy } from 'interfaces/strategy';
@@ -51,7 +50,7 @@ export const StrategyVariants: FC<{
                 ...variant,
                 new: editable || false,
                 isValid: true,
-                id: uuidv4(),
+                id: crypto.randomUUID(),
                 overrides: [],
             })),
         );
@@ -82,7 +81,7 @@ export const StrategyVariants: FC<{
     };
 
     const addVariant = () => {
-        const id = uuidv4();
+        const id = crypto.randomUUID();
         setVariantsEdit((variantsEdit) => [
             ...variantsEdit,
             {

@@ -8,9 +8,9 @@ import metricsHelper from '../util/metrics-helper.js';
 import { DB_TIME } from '../metric-events.js';
 import type { IFeatureEnvironment, IVariant } from '../types/model.js';
 import NotFoundError from '../error/notfound-error.js';
-import { v4 as uuidv4 } from 'uuid';
 import type { Db } from './db.js';
 import type { IUnleashConfig } from '../types/index.js';
+import {randomId} from "../util/index.js";
 
 const T = {
     featureEnvs: 'feature_environments',
@@ -495,7 +495,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
             const clonedStrategyRows = sourceFeatureStrategies.map(
                 (featureStrategy) => ({
                     ...featureStrategy,
-                    id: uuidv4(),
+                    id: randomId(),
                     environment: destinationEnvironment,
                     parameters: JSON.stringify(featureStrategy.parameters),
                     constraints: JSON.stringify(featureStrategy.constraints),

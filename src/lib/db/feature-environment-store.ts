@@ -10,7 +10,7 @@ import type { IFeatureEnvironment, IVariant } from '../types/model.js';
 import NotFoundError from '../error/notfound-error.js';
 import type { Db } from './db.js';
 import type { IUnleashConfig } from '../types/index.js';
-import {randomId} from "../util/index.js";
+import { randomId } from '../util/index.js';
 
 const T = {
     featureEnvs: 'feature_environments',

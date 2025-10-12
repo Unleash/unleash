@@ -22,7 +22,8 @@ import FeatureToggleStore from './feature-toggle-store.js';
 import {
     ensureStringValue,
     generateImageUrl,
-    mapValues, randomId,
+    mapValues,
+    randomId,
 } from '../../util/index.js';
 import type { IFeatureProjectUserParams } from './feature-toggle-controller.js';
 import type { Db } from '../../db/db.js';

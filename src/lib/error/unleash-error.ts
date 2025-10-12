@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import {randomId} from "../util/index.js";
+import { randomId } from '../util/index.js';
 
 export const UnleashApiErrorTypes = [
     'ContentTypeError',

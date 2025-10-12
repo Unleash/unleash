@@ -4,7 +4,7 @@ import {
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper.js';
 import getLogger from '../../../fixtures/no-logger.js';
-import {DEFAULT_ENV, randomId} from '../../../../lib/server-impl.js';
+import { DEFAULT_ENV, randomId } from '../../../../lib/server-impl.js';
 
 let db: ITestDb;
 let app: IUnleashTest;

@@ -12,7 +12,7 @@ import {
     FEATURE_DEPENDENCY_ADDED,
     FEATURE_DEPENDENCY_REMOVED,
 } from '../../events/index.js';
-import {DEFAULT_ENV, randomId} from '../../util/index.js';
+import { DEFAULT_ENV, randomId } from '../../util/index.js';
 import type { IEventStore } from '../../server-impl.js';
 
 let app: IUnleashTest;

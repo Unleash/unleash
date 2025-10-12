@@ -23,7 +23,7 @@ import type { IUnleashStores } from '../../../../lib/types/index.js';
 import { createHash, randomUUID } from 'crypto';
 import { createDb } from '../../../../lib/db/db-pool.js';
 import { migrateDb } from '../../../../migrator.js';
-import { createTestConfig } from '../../../config/test-config.js';\
+import { createTestConfig } from '../../../config/test-config.js';
 import { getDbConfig } from '../../../../lib/server-impl.js';
 
 let stores: IUnleashStores;

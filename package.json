@@ -123,7 +123,7 @@
     "sanitize-filename": "^1.6.3",
     "semver": "^7.6.3",
     "serve-favicon": "^2.5.0",
-    "slug": "^9.0.0",
+    "slug": "^11.0.0",
     "stoppable": "^1.1.0",
     "tldts": "7.0.6",
     "ts-toolbelt": "^9.6.0",

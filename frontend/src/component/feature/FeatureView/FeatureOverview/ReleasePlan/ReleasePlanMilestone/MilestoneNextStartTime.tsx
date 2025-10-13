@@ -52,13 +52,11 @@ export const MilestoneNextStartTime = ({
     );
     const currentIndex = allMilestones.findIndex((m) => m.id === milestone.id);
 
-    // Hide if this is the active milestone or if it's behind the active milestone
-    if (
-        milestone.id === activeMilestoneId ||
-        (activeIndex !== -1 &&
-            currentIndex !== -1 &&
-            currentIndex < activeIndex)
-    ) {
+    const isActiveMilestone = milestone.id === activeMilestoneId;
+    const isBehindActiveMilestone =
+        activeIndex !== -1 && currentIndex !== -1 && currentIndex < activeIndex;
+
+    if (isActiveMilestone || isBehindActiveMilestone) {
         return null;
     }
 

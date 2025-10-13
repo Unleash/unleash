@@ -11,6 +11,7 @@ import {
     type MilestoneStatus,
 } from './ReleasePlanMilestoneStatus.tsx';
 import { useState } from 'react';
+import { MilestoneNextStartTime } from './MilestoneNextStartTime.tsx';
 
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { StrategyItem } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyItem.tsx';
@@ -105,6 +106,8 @@ interface IReleasePlanMilestoneProps {
     projectId?: string;
     environment?: string;
     onUpdate?: () => void;
+    allMilestones: IReleasePlanMilestone[];
+    activeMilestoneId?: string;
 }
 
 export const ReleasePlanMilestone = ({
@@ -119,6 +122,8 @@ export const ReleasePlanMilestone = ({
     projectId,
     environment,
     onUpdate,
+    allMilestones,
+    activeMilestoneId,
 }: IReleasePlanMilestoneProps) => {
     const [expanded, setExpanded] = useState(false);
 
@@ -134,6 +139,13 @@ export const ReleasePlanMilestone = ({
                             {(!readonly && onStartMilestone) ||
                             (status === 'active' && milestone.startedAt) ? (
                                 <StyledStatusRow>
+                                    {!readonly && (
+                                        <MilestoneNextStartTime
+                                            milestone={milestone}
+                                            allMilestones={allMilestones}
+                                            activeMilestoneId={activeMilestoneId}
+                                        />
+                                    )}
                                     {!readonly && onStartMilestone && (
                                         <ReleasePlanMilestoneStatus
                                             status={status}
@@ -193,6 +205,13 @@ export const ReleasePlanMilestone = ({
                         {(!readonly && onStartMilestone) ||
                         (status === 'active' && milestone.startedAt) ? (
                             <StyledStatusRow>
+                                {!readonly && (
+                                    <MilestoneNextStartTime
+                                        milestone={milestone}
+                                        allMilestones={allMilestones}
+                                        activeMilestoneId={activeMilestoneId}
+                                    />
+                                )}
                                 {!readonly && onStartMilestone && (
                                     <ReleasePlanMilestoneStatus
                                         status={status}

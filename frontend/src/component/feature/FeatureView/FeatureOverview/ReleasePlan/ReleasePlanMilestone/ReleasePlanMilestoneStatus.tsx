@@ -2,6 +2,7 @@ import { styled } from '@mui/material';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import TripOriginIcon from '@mui/icons-material/TripOrigin';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export type MilestoneStatus = 'not-started' | 'active' | 'paused' | 'completed';
 
@@ -67,29 +68,48 @@ interface IReleasePlanMilestoneStatusProps {
     onStartMilestone: () => void;
 }
 
+const getStatusText = (
+    status: MilestoneStatus,
+    progressionsEnabled: boolean,
+): string => {
+    switch (status) {
+        case 'active':
+            return 'Running';
+        case 'paused':
+            return 'Paused (disabled in environment)';
+        case 'completed':
+            return progressionsEnabled ? 'Start now' : 'Restart';
+        case 'not-started':
+            return progressionsEnabled ? 'Start now' : 'Start';
+    }
+};
+
+const getStatusIcon = (status: MilestoneStatus) => {
+    switch (status) {
+        case 'active':
+            return <TripOriginIcon />;
+        case 'paused':
+            return <PauseCircleIcon />;
+        default:
+            return <PlayCircleIcon />;
+    }
+};
+
 export const ReleasePlanMilestoneStatus = ({
     status,
     onStartMilestone,
 }: IReleasePlanMilestoneStatusProps) => {
-    const statusText =
-        status === 'active'
-            ? 'Running'
-            : status === 'paused'
-              ? 'Paused (disabled in environment)'
-              : status === 'completed'
-                ? 'Restart'
-                : 'Start';
+    const milestoneProgressionsEnabled = useUiFlag('milestoneProgression');
 
-    const statusIcon =
-        status === 'active' ? (
-            <TripOriginIcon />
-        ) : status === 'paused' ? (
-            <PauseCircleIcon />
-        ) : (
-            <PlayCircleIcon />
-        );
-
+    const statusText = getStatusText(status, milestoneProgressionsEnabled);
+    const statusIcon = getStatusIcon(status);
     const disabled = status === 'active' || status === 'paused';
+
+    // Hide the play icon when progressions are enabled and milestone is not active/paused
+    const shouldShowIcon =
+        status === 'active' ||
+        status === 'paused' ||
+        !milestoneProgressionsEnabled;
 
     return (
         <StyledStatusButton
@@ -100,7 +120,7 @@ export const ReleasePlanMilestoneStatus = ({
             }}
             disabled={disabled}
         >
-            {statusIcon}
+            {shouldShowIcon && statusIcon}
             {statusText}
         </StyledStatusButton>
     );

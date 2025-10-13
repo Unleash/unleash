@@ -371,6 +371,8 @@ export const ReleasePlan = ({
                                 projectId={projectId}
                                 environment={environment}
                                 onUpdate={refetch}
+                                allMilestones={milestones}
+                                activeMilestoneId={activeMilestoneId}
                             />
                             <ConditionallyRender
                                 condition={isNotLastMilestone}

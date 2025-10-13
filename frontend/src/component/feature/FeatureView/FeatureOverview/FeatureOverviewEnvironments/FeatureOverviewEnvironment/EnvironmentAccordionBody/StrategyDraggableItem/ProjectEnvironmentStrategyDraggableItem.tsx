@@ -1,5 +1,5 @@
 import { type DragEventHandler, type RefObject, useRef } from 'react';
-import { useMediaQuery, useTheme } from '@mui/material';
+import { styled, useMediaQuery, useTheme } from '@mui/material';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -15,6 +15,12 @@ import MenuStrategyRemove from './StrategyItem/MenuStrategyRemove/MenuStrategyRe
 import { Link } from 'react-router-dom';
 import { UPDATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import { StrategyDraggableItem } from './StrategyDraggableItem.tsx';
+
+const StyledPermissionIconButton = styled(PermissionIconButton)(({ theme }) => ({
+    borderRadius: theme.spacing(0.5),
+    fontSize: theme.fontSizes.smallBody,
+    padding: theme.spacing(1),
+}));
 
 type ProjectEnvironmentStrategyDraggableItemProps = {
     strategy: IFeatureStrategy;
@@ -103,7 +109,7 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
                             strategy={strategy}
                         />
                     ) : null}
-                    <PermissionIconButton
+                    <StyledPermissionIconButton
                         permission={UPDATE_FEATURE_STRATEGY}
                         environmentId={environmentName}
                         projectId={projectId}
@@ -115,7 +121,8 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
                         data-testid={`STRATEGY_EDIT-${strategy.name}`}
                     >
                         <Edit />
-                    </PermissionIconButton>
+                        &nbsp;Edit strategy
+                    </StyledPermissionIconButton>
                     <MenuStrategyRemove
                         projectId={projectId}
                         featureId={featureId}

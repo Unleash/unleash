@@ -16,11 +16,13 @@ import { Link } from 'react-router-dom';
 import { UPDATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import { StrategyDraggableItem } from './StrategyDraggableItem.tsx';
 
-const StyledPermissionIconButton = styled(PermissionIconButton)(({ theme }) => ({
-    borderRadius: theme.spacing(0.5),
-    fontSize: theme.fontSizes.smallBody,
-    padding: theme.spacing(1),
-}));
+const StyledPermissionIconButton = styled(PermissionIconButton)(
+    ({ theme }) => ({
+        borderRadius: theme.spacing(0.5),
+        fontSize: theme.fontSizes.smallBody,
+        padding: theme.spacing(1),
+    }),
+);
 
 type ProjectEnvironmentStrategyDraggableItemProps = {
     strategy: IFeatureStrategy;

@@ -143,7 +143,7 @@ export const createFeatureToggleService = (
 
     const resourceLimitsService = new ResourceLimitsService(config);
 
-    const releasePlanReadModel = new ReleasePlanReadModel(db);
+    const releasePlanReadModel = new ReleasePlanReadModel(db, eventBus);
 
     const featureToggleService = new FeatureToggleService(
         {

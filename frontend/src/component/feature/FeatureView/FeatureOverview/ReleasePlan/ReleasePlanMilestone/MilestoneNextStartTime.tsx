@@ -55,7 +55,7 @@ export const MilestoneNextStartTime = ({
     }
 
     const activeIndex = allMilestones.findIndex(
-        (m) => m.id === activeMilestoneId,
+        (milestone) => milestone.id === activeMilestoneId,
     );
     const currentIndex = allMilestones.findIndex((m) => m.id === milestone.id);
 

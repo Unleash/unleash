@@ -13,6 +13,12 @@ import { parametersSchema } from './parameters-schema.js';
 import { legalValueSchema } from './legal-value-schema.js';
 import { tagTypeSchema } from './tag-type-schema.js';
 import { featureEnvironmentSchema } from './feature-environment-schema.js';
+import { releasePlanSchema } from './release-plan-schema.js';
+import { releasePlanMilestoneSchema } from './release-plan-milestone-schema.js';
+import { releasePlanMilestoneStrategySchema } from './release-plan-milestone-strategy-schema.js';
+import { createFeatureStrategySchema } from './create-feature-strategy-schema.js';
+import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
+import { transitionConditionSchema } from './transition-condition-schema.js';
 import { strategyVariantSchema } from './strategy-variant-schema.js';
 import { featureDependenciesSchema } from './feature-dependencies-schema.js';
 import { dependentFeatureSchema } from './dependent-feature-schema.js';
@@ -53,6 +59,12 @@ export const importTogglesSchema = {
             contextFieldSchema,
             featureTagSchema,
             segmentSchema,
+            releasePlanSchema,
+            releasePlanMilestoneSchema,
+            releasePlanMilestoneStrategySchema,
+            createFeatureStrategySchema,
+            createStrategyVariantSchema,
+            transitionConditionSchema,
             variantsSchema,
             variantSchema,
             overrideSchema,

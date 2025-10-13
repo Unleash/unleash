@@ -66,6 +66,8 @@ import {
     createFeatureLinkService,
 } from '../feature-links/createFeatureLinkService.js';
 import { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
+import { ReleasePlanReadModel } from '../release-plans/release-plan-read-model.js';
+import { FakeReleasePlanReadModel } from '../../../test/fixtures/fake/fake-release-plan-read-model.js';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -141,6 +143,8 @@ export const createFeatureToggleService = (
 
     const resourceLimitsService = new ResourceLimitsService(config);
 
+    const releasePlanReadModel = new ReleasePlanReadModel(db);
+
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -166,6 +170,7 @@ export const createFeatureToggleService = (
             featureLinksReadModel,
             featureLinkService,
             resourceLimitsService,
+            releasePlanReadModel,
         },
     );
     return featureToggleService;
@@ -211,6 +216,7 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
     const { featureLinkService } = createFakeFeatureLinkService(config);
 
     const resourceLimitsService = new ResourceLimitsService(config);
+    const releasePlanReadModel = new FakeReleasePlanReadModel();
 
     const featureToggleService = new FeatureToggleService(
         {
@@ -241,6 +247,7 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
             featureLinksReadModel,
             featureLinkService,
             resourceLimitsService,
+            releasePlanReadModel,
         },
     );
     return {

@@ -15,6 +15,10 @@ import { strategyVariantSchema } from './strategy-variant-schema.js';
 import { createFeatureNamingPatternSchema } from './create-feature-naming-pattern-schema.js';
 import { featureTypeCountSchema } from './feature-type-count-schema.js';
 import { projectLinkTemplateSchema } from './project-link-template-schema.js';
+import { releasePlanSchema } from './release-plan-schema.js';
+import { releasePlanMilestoneSchema } from './release-plan-milestone-schema.js';
+import { releasePlanMilestoneStrategySchema } from './release-plan-milestone-strategy-schema.js';
+import { transitionConditionSchema } from './transition-condition-schema.js';
 
 export const projectOverviewSchema = {
     $id: '#/components/schemas/projectOverviewSchema',
@@ -202,6 +206,10 @@ export const projectOverviewSchema = {
             featureStrategySchema,
             strategyVariantSchema,
             variantSchema,
+            releasePlanSchema,
+            releasePlanMilestoneSchema,
+            releasePlanMilestoneStrategySchema,
+            transitionConditionSchema,
             projectStatsSchema,
             createFeatureNamingPatternSchema,
             featureTypeCountSchema,

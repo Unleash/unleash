@@ -63,7 +63,7 @@ export type SearchFeaturesParams = {
      */
     favoritesFirst?: string;
     /**
-     * Whether to get results for archived feature flags or active feature flags. If `true`, Unleash will return only archived flags. If `false`, it will return only active flags.
+     * Whether to get results for archived feature flags or active feature flags. If `IS:true`, Unleash will return only archived flags. If `IS:false`, it will return only active flags.
      */
     archived?: string;
     /**

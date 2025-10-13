@@ -1,6 +1,8 @@
-import { Box, styled, Typography } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import type { FC } from 'react';
 import { BillingInvoice } from './BillingInvoice/BillingInvoice.tsx';
+import { useDetailedInvoices } from 'hooks/api/getters/useDetailedInvoices/useDetailedInvoices.ts';
+import { TablePlaceholder } from 'component/common/Table';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -8,20 +10,29 @@ const StyledContainer = styled(Box)(({ theme }) => ({
     gap: theme.spacing(3),
 }));
 
-const StyledHeader = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.mainHeader,
-    fontWeight: theme.fontWeight.semi,
-    color: theme.palette.text.primary,
-    marginBottom: theme.spacing(2),
-}));
+export const BillingInvoices: FC = () => {
+    const { invoices, loading } = useDetailedInvoices();
 
-type BillingInvoicesProps = {};
+    if (loading) {
+        return null;
+    }
 
-export const BillingInvoices: FC<BillingInvoicesProps> = () => {
     return (
         <StyledContainer>
-            <StyledHeader>Usage and invoices</StyledHeader>
-            <BillingInvoice status='upcoming' title='October 15th' />
+            {invoices.length > 0 ? (
+                <>
+                    {invoices.map((invoice) => (
+                        <BillingInvoice
+                            key={invoice.invoiceDate}
+                            {...invoice}
+                        />
+                    ))}
+                </>
+            ) : (
+                <TablePlaceholder>
+                    There are no invoices or estimates available right now.
+                </TablePlaceholder>
+            )}
         </StyledContainer>
     );
 };

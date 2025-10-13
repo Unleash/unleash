@@ -1,5 +1,8 @@
 import { ulid } from 'ulidx';
-import type { ReleasePlanMilestone } from './release-plan-milestone.js';
+import type {
+    ReleasePlanMilestone,
+    ReleasePlanMilestoneWriteModel,
+} from './release-plan-milestone.js';
 import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store.js';
 import type { Row } from '../../db/crud/row-type.js';
 import type { Db } from '../../db/db.js';
@@ -15,8 +18,6 @@ const fromRow = (row: any): ReleasePlanMilestone => {
         strategies: [],
     };
 };
-
-export type ReleasePlanMilestoneWriteModel = Omit<ReleasePlanMilestone, 'id'>;
 
 export class ReleasePlanMilestoneStore extends CRUDStore<
     ReleasePlanMilestone,

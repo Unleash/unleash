@@ -14,5 +14,6 @@ export type ImpactMetricsConfigSchemaType =
 export const ImpactMetricsConfigSchemaType = {
     counter: 'counter',
     gauge: 'gauge',
+    histogram: 'histogram',
     unknown: 'unknown',
 } as const;

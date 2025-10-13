@@ -5,6 +5,13 @@ export interface ReleasePlanMilestone {
     name: string;
     sortOrder: number;
     releasePlanDefinitionId: string;
-    startedAt?: Date;
+    startedAt?: string;
+    transitionCondition?: { intervalMinutes: number };
     strategies?: ReleasePlanMilestoneStrategy[];
+    progressionExecutedAt?: string;
 }
+
+export type ReleasePlanMilestoneWriteModel = Omit<
+    ReleasePlanMilestone,
+    'id' | 'startedAt' | 'transitionCondition' | 'progressionExecutedAt'
+>;

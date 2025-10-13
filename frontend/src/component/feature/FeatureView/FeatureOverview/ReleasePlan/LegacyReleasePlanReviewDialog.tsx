@@ -13,7 +13,7 @@ import {
     Button,
 } from '@mui/material';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
+import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -76,7 +76,7 @@ export const LegacyReleasePlanReviewDialog = ({
     crProtected,
 }: IReleasePlanAddDialogProps) => {
     const { feature } = useFeature(projectId, featureName);
-    const { releasePlans } = useReleasePlans(
+    const { releasePlans } = useFeatureReleasePlans(
         projectId,
         featureName,
         environment,

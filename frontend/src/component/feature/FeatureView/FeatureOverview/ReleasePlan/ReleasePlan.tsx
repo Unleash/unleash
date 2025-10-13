@@ -3,7 +3,7 @@ import { styled } from '@mui/material';
 import { DELETE_FEATURE_STRATEGY } from '@server/types/permissions';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
-import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
+import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useToast from 'hooks/useToast';
 import type {
@@ -22,6 +22,10 @@ import { RemoveReleasePlanChangeRequestDialog } from './ChangeRequest/RemoveRele
 import { StartMilestoneChangeRequestDialog } from './ChangeRequest/StartMilestoneChangeRequestDialog.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Truncator } from 'component/common/Truncator/Truncator';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { MilestoneProgressionForm } from './MilestoneProgressionForm/MilestoneProgressionForm.tsx';
+import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
+import { DeleteProgressionDialog } from './DeleteProgressionDialog.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -68,10 +72,14 @@ const StyledBody = styled('div')(({ theme }) => ({
     flexDirection: 'column',
 }));
 
-const StyledConnection = styled('div')(({ theme }) => ({
-    width: 4,
+const StyledConnection = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'isCompleted',
+})<{ isCompleted: boolean }>(({ theme, isCompleted }) => ({
+    width: 2,
     height: theme.spacing(2),
-    backgroundColor: theme.palette.divider,
+    backgroundColor: isCompleted
+        ? theme.palette.divider
+        : theme.palette.primary.main,
     marginLeft: theme.spacing(3.25),
 }));
 
@@ -97,9 +105,14 @@ export const ReleasePlan = ({
     } = plan;
 
     const projectId = useRequiredPathParam('projectId');
-    const { refetch } = useReleasePlans(projectId, featureName, environment);
+    const { refetch } = useFeatureReleasePlans(
+        projectId,
+        featureName,
+        environment,
+    );
     const { removeReleasePlanFromFeature, startReleasePlanMilestone } =
         useReleasePlansApi();
+    const { deleteMilestoneProgression } = useMilestoneProgressionsApi();
     const { setToastData, setToastApiError } = useToast();
     const { trackEvent } = usePlausibleTracker();
 
@@ -118,6 +131,13 @@ export const ReleasePlan = ({
     const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
+    const milestoneProgressionsEnabled = useUiFlag('milestoneProgression');
+    const [progressionFormOpenIndex, setProgressionFormOpenIndex] = useState<
+        number | null
+    >(null);
+    const [milestoneToDeleteProgression, setMilestoneToDeleteProgression] =
+        useState<IReleasePlanMilestone | null>(null);
+    const [isDeletingProgression, setIsDeletingProgression] = useState(false);
 
     const onAddRemovePlanChangesConfirm = async () => {
         await addChange(projectId, environment, {
@@ -225,6 +245,49 @@ export const ReleasePlan = ({
         });
     };
 
+    const handleProgressionSave = async () => {
+        setProgressionFormOpenIndex(null);
+        await refetch();
+    };
+
+    const handleProgressionCancel = () => {
+        setProgressionFormOpenIndex(null);
+    };
+
+    const handleDeleteProgression = (milestone: IReleasePlanMilestone) => {
+        setMilestoneToDeleteProgression(milestone);
+    };
+
+    const handleCloseDeleteDialog = () => {
+        if (!isDeletingProgression) {
+            setMilestoneToDeleteProgression(null);
+        }
+    };
+
+    const onDeleteProgressionConfirm = async () => {
+        if (!milestoneToDeleteProgression || isDeletingProgression) return;
+
+        setIsDeletingProgression(true);
+        try {
+            await deleteMilestoneProgression(
+                projectId,
+                environment,
+                milestoneToDeleteProgression.id,
+            );
+            await refetch();
+            setMilestoneToDeleteProgression(null);
+            setToastData({
+                type: 'success',
+                text: 'Automation removed successfully',
+            });
+        } catch (error: unknown) {
+            setMilestoneToDeleteProgression(null);
+            setToastApiError(formatUnknownError(error));
+        } finally {
+            setIsDeletingProgression(false);
+        }
+    };
+
     const activeIndex = milestones.findIndex(
         (milestone) => milestone.id === activeMilestoneId,
     );
@@ -258,28 +321,65 @@ export const ReleasePlan = ({
                 )}
             </StyledHeader>
             <StyledBody>
-                {milestones.map((milestone, index) => (
-                    <div key={milestone.id}>
-                        <ReleasePlanMilestone
-                            readonly={readonly}
-                            milestone={milestone}
-                            status={
-                                milestone.id === activeMilestoneId
-                                    ? environmentIsDisabled
-                                        ? 'paused'
-                                        : 'active'
-                                    : index < activeIndex
-                                      ? 'completed'
-                                      : 'not-started'
-                            }
-                            onStartMilestone={onStartMilestone}
-                        />
-                        <ConditionallyRender
-                            condition={index < milestones.length - 1}
-                            show={<StyledConnection />}
-                        />
-                    </div>
-                ))}
+                {milestones.map((milestone, index) => {
+                    const isNotLastMilestone = index < milestones.length - 1;
+                    const isProgressionFormOpen =
+                        progressionFormOpenIndex === index;
+                    const nextMilestoneId = milestones[index + 1]?.id || '';
+                    const handleOpenProgressionForm = () =>
+                        setProgressionFormOpenIndex(index);
+
+                    return (
+                        <div key={milestone.id}>
+                            <ReleasePlanMilestone
+                                readonly={readonly}
+                                milestone={milestone}
+                                status={
+                                    milestone.id === activeMilestoneId
+                                        ? environmentIsDisabled
+                                            ? 'paused'
+                                            : 'active'
+                                        : index < activeIndex
+                                          ? 'completed'
+                                          : 'not-started'
+                                }
+                                onStartMilestone={onStartMilestone}
+                                showAutomation={
+                                    milestoneProgressionsEnabled &&
+                                    isNotLastMilestone &&
+                                    !readonly
+                                }
+                                onAddAutomation={handleOpenProgressionForm}
+                                onDeleteAutomation={
+                                    milestone.transitionCondition
+                                        ? () =>
+                                              handleDeleteProgression(milestone)
+                                        : undefined
+                                }
+                                automationForm={
+                                    isProgressionFormOpen ? (
+                                        <MilestoneProgressionForm
+                                            sourceMilestoneId={milestone.id}
+                                            targetMilestoneId={nextMilestoneId}
+                                            projectId={projectId}
+                                            environment={environment}
+                                            onSave={handleProgressionSave}
+                                            onCancel={handleProgressionCancel}
+                                        />
+                                    ) : undefined
+                                }
+                            />
+                            <ConditionallyRender
+                                condition={isNotLastMilestone}
+                                show={
+                                    <StyledConnection
+                                        isCompleted={index < activeIndex}
+                                    />
+                                }
+                            />
+                        </div>
+                    );
+                })}
             </StyledBody>
             <ReleasePlanRemoveDialog
                 plan={plan}
@@ -309,6 +409,15 @@ export const ReleasePlan = ({
                 releasePlan={plan}
                 milestone={milestoneForChangeRequestDialog}
             />
+            {milestoneToDeleteProgression && (
+                <DeleteProgressionDialog
+                    open={milestoneToDeleteProgression !== null}
+                    onClose={handleCloseDeleteDialog}
+                    onConfirm={onDeleteProgressionConfirm}
+                    milestoneName={milestoneToDeleteProgression.name}
+                    isDeleting={isDeletingProgression}
+                />
+            )}
         </StyledContainer>
     );
 };

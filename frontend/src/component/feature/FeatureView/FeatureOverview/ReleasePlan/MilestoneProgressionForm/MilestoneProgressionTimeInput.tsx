@@ -52,6 +52,13 @@ interface IMilestoneProgressionTimeInputProps {
     disabled?: boolean;
 }
 
+const handleNumericPaste = (e: React.ClipboardEvent) => {
+    const pastedText = e.clipboardData.getData('text');
+    if (!/^\d+$/.test(pastedText)) {
+        e.preventDefault();
+    }
+};
+
 export const MilestoneProgressionTimeInput = ({
     timeValue,
     timeUnit,
@@ -66,12 +73,7 @@ export const MilestoneProgressionTimeInput = ({
                 inputMode='numeric'
                 value={timeValue}
                 onChange={onTimeValueChange}
-                onPaste={(e) => {
-                    const pastedText = e.clipboardData.getData('text');
-                    if (!/^\d+$/.test(pastedText)) {
-                        e.preventDefault();
-                    }
-                }}
+                onPaste={handleNumericPaste}
                 inputProps={{
                     pattern: '[0-9]*',
                     'aria-label': 'Time duration value',

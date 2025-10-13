@@ -68,19 +68,14 @@ export const MilestoneNextStartTime = ({
         activeMilestoneId,
     );
 
-    if (projectedStartTime) {
-        return (
-            <StyledTimeContainer>
-                <StyledIcon />
-                Starting {formatSmartDate(projectedStartTime)}
-            </StyledTimeContainer>
-        );
-    }
+    const text = projectedStartTime
+        ? `Starting ${formatSmartDate(projectedStartTime)}`
+        : 'Waiting to start';
 
     return (
         <StyledTimeContainer>
             <StyledIcon />
-            Waiting to start
+            {text}
         </StyledTimeContainer>
     );
 };

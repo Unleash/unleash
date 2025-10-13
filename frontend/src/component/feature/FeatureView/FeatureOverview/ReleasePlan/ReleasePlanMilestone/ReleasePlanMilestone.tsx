@@ -143,7 +143,9 @@ export const ReleasePlanMilestone = ({
                                         <MilestoneNextStartTime
                                             milestone={milestone}
                                             allMilestones={allMilestones}
-                                            activeMilestoneId={activeMilestoneId}
+                                            activeMilestoneId={
+                                                activeMilestoneId
+                                            }
                                         />
                                     )}
                                     {!readonly && onStartMilestone && (

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calculateMilestoneStartTime } from './calculateMilestoneStartTime';
+import { calculateMilestoneStartTime } from './calculateMilestoneStartTime.js';
 import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
 
 const createMilestone = (

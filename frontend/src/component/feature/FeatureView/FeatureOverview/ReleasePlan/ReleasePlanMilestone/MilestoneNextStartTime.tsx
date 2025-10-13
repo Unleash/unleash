@@ -55,7 +55,9 @@ export const MilestoneNextStartTime = ({
     // Hide if this is the active milestone or if it's behind the active milestone
     if (
         milestone.id === activeMilestoneId ||
-        (activeIndex !== -1 && currentIndex !== -1 && currentIndex < activeIndex)
+        (activeIndex !== -1 &&
+            currentIndex !== -1 &&
+            currentIndex < activeIndex)
     ) {
         return null;
     }

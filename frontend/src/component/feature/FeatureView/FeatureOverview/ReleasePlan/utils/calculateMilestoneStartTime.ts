@@ -16,7 +16,7 @@ const getIntervalMinutes = (
 ): number | null => {
     const intervalMinutes = milestone.transitionCondition?.intervalMinutes;
 
-    if (!intervalMinutes || intervalMinutes === 0) {
+    if (!intervalMinutes) {
         return null;
     }
     return intervalMinutes;

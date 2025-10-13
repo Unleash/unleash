@@ -68,12 +68,6 @@ const Container = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const LegacyFilterRow = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexFlow: 'row wrap',
-    justifyContent: 'space-between',
-}));
-
 const FiltersContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -88,12 +82,6 @@ const FilterRow = styled('div')({
     display: 'flex',
     alignItems: 'center',
 });
-
-const ButtonGroup = styled('div')(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(1),
-    paddingInline: theme.spacing(1.5),
-}));
 
 const LinkToggle = styled('button')(({ theme }) => ({
     background: 'none',

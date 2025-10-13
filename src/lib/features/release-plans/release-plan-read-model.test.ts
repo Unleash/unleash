@@ -1,4 +1,5 @@
 import { ulid } from 'ulidx';
+import { EventEmitter } from 'events';
 import dbInit, {
     type ITestDb,
 } from '../../../test/e2e/helpers/database-init.js';
@@ -16,10 +17,12 @@ let featureToggleStore: IFeatureToggleStore;
 let releasePlanStore: ReleasePlanStore;
 let releasePlanMilestoneStore: ReleasePlanMilestoneStore;
 let featureEnvironmentStore: IFeatureEnvironmentStore;
+let eventBus: EventEmitter;
 
 beforeAll(async () => {
     db = await dbInit('release_plan_read_model', getLogger);
-    releasePlanReadModel = new ReleasePlanReadModel(db.rawDatabase);
+    eventBus = new EventEmitter();
+    releasePlanReadModel = new ReleasePlanReadModel(db.rawDatabase, eventBus);
     featureToggleStore = db.stores.featureToggleStore;
     releasePlanStore = db.stores.releasePlanStore;
     releasePlanMilestoneStore = db.stores.releasePlanMilestoneStore;

@@ -1,12 +1,17 @@
 import { Box, styled } from '@mui/material';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { StrategyExecution } from '../../EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution.js';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.js';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker.js';
-import { formatCreateStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate.js';
 import { UPDATE_FEATURE } from '@server/types/permissions.js';
 import type { IFeatureStrategy } from 'interfaces/strategy.js';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled.js';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi.js';
+import useToast from 'hooks/useToast.js';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests.js';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature.js';
+import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi.js';
 
 const StyledSuggestion = styled('div')(({ theme }) => ({
     width: '100%',
@@ -56,23 +61,56 @@ export const EnvironmentStrategySuggestion = ({
     strategy,
 }: DefaultStrategySuggestionProps) => {
     const { trackEvent } = usePlausibleTracker();
-    const navigate = useNavigate();
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+    const { addChange } = useChangeRequestApi();
+    const { setToastData } = useToast();
     const editDefaultStrategyPath = `/projects/${projectId}/settings/default-strategy`;
-    const createStrategyPath = formatCreateStrategyPath(
-        projectId,
-        featureId,
-        environmentId,
-        'flexibleRollout',
-        true,
-    );
+    const { addStrategyToFeature } = useFeatureStrategyApi();
+    const { refetch: refetchChangeRequests } =
+        usePendingChangeRequests(projectId);
+    const { refetchFeature } = useFeature(projectId, featureId);
 
-    const openStrategyCreationModal = () => {
+    const openStrategyCreationModal = async () => {
         trackEvent('suggestion-strategy-add', {
             props: {
                 buttonTitle: 'flexibleRollout',
             },
         });
-        navigate(createStrategyPath);
+        const payload = {
+            name: strategy.name,
+            title: strategy.title ?? '',
+            constraints: strategy.constraints ?? [],
+            parameters: strategy.parameters ?? {},
+            variants: strategy.variants ?? [],
+            segments: strategy.segments ?? [],
+            disabled: strategy.disabled ?? false,
+        };
+        if (isChangeRequestConfigured(environmentId)) {
+            await addChange(projectId, environmentId, {
+                action: 'addStrategy',
+                feature: featureId,
+                payload,
+            });
+
+            setToastData({
+                text: 'Strategy added to draft',
+                type: 'success',
+            });
+            refetchChangeRequests();
+        } else {
+            await addStrategyToFeature(
+                projectId,
+                featureId,
+                environmentId,
+                payload,
+            );
+
+            setToastData({
+                text: 'Strategy applied',
+                type: 'success',
+            });
+        }
+        refetchFeature();
     };
 
     return (

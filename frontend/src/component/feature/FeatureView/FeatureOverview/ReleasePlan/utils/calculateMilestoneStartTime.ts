@@ -59,14 +59,13 @@ const findBaselineMilestone = (
 
 const calculateTimeFromBaseline = (
     milestones: IReleasePlanMilestone[],
-    baselineIndex: number,
+    baseline: { index: number; startTime: Date },
     targetIndex: number,
-    baselineTime: Date,
 ): Date | null => {
-    let currentTime = baselineTime;
+    let currentTime = baseline.startTime;
 
-    for (let i = baselineIndex + 1; i <= targetIndex; i++) {
-        const previousMilestone = milestones[i - 1];
+    for (let i = baseline.index; i < targetIndex; i++) {
+        const previousMilestone = milestones[i];
         const intervalMinutes = getIntervalMinutes(previousMilestone);
 
         if (!intervalMinutes) return null;
@@ -96,10 +95,5 @@ export const calculateMilestoneStartTime = (
         return baseline.startTime;
     }
 
-    return calculateTimeFromBaseline(
-        milestones,
-        baseline.index,
-        targetIndex,
-        baseline.startTime,
-    );
+    return calculateTimeFromBaseline(milestones, baseline, targetIndex);
 };

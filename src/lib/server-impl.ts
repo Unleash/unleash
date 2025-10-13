@@ -501,6 +501,7 @@ export {
     impactRegister,
     EnvironmentStore,
     ProjectStore,
+    type ReleasePlanReadModel,
 };
 
 export type {
@@ -543,7 +544,6 @@ export type {
     ReleasePlanMilestoneStrategyWriteModel,
     IChangeRequestAccessReadModel,
     IReleasePlanReadModel,
-    ReleasePlanReadModel,
     IRoleWithProject,
     ISchemaValidationErrors,
     IImportService,

@@ -8,7 +8,7 @@ export interface ReleasePlanMilestone {
     startedAt?: Date;
     transitionCondition?: { intervalMinutes: number };
     strategies?: ReleasePlanMilestoneStrategy[];
-    progressionExecutedAt?: string;
+    progressionExecutedAt?: Date;
 }
 
 export type ReleasePlanMilestoneWriteModel = Omit<

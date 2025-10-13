@@ -4,6 +4,7 @@ import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { isToday, isTomorrow, format } from 'date-fns';
 import { calculateMilestoneStartTime } from '../utils/calculateMilestoneStartTime.ts';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const formatSmartDate = (date: Date): string => {
     const timeString = format(date, 'HH:mm');
@@ -47,6 +48,12 @@ export const MilestoneNextStartTime = ({
     allMilestones,
     activeMilestoneId,
 }: IMilestoneNextStartTimeProps) => {
+    const milestoneProgressionEnabled = useUiFlag('milestoneProgression');
+
+    if (!milestoneProgressionEnabled) {
+        return null;
+    }
+
     const activeIndex = allMilestones.findIndex(
         (m) => m.id === activeMilestoneId,
     );

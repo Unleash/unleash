@@ -35,6 +35,7 @@ export interface IReleasePlanMilestone {
     name: string;
     releasePlanDefinitionId: string;
     strategies: IReleasePlanMilestoneStrategy[];
+    startedAt?: string | null;
     transitionCondition?: {
         intervalMinutes: number;
     } | null;

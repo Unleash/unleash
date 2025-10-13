@@ -9,6 +9,32 @@ interface MilestoneProgressionFormDefaults {
     timeUnit?: TimeUnit;
 }
 
+export const getTimeValueAndUnitFromMinutes = (
+    minutes: number,
+): { value: number; unit: TimeUnit } => {
+    if (minutes % 1440 === 0) {
+        return { value: minutes / 1440, unit: 'days' };
+    }
+    if (minutes % 60 === 0) {
+        return { value: minutes / 60, unit: 'hours' };
+    }
+    return { value: minutes, unit: 'minutes' };
+};
+
+export const getMinutesFromTimeValueAndUnit = (time: {
+    value: number;
+    unit: TimeUnit;
+}): number => {
+    switch (time.unit) {
+        case 'minutes':
+            return time.value;
+        case 'hours':
+            return time.value * 60;
+        case 'days':
+            return time.value * 1440;
+    }
+};
+
 export const useMilestoneProgressionForm = (
     sourceMilestoneId: string,
     targetMilestoneId: string,
@@ -22,14 +48,10 @@ export const useMilestoneProgressionForm = (
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     const getIntervalMinutes = () => {
-        switch (timeUnit) {
-            case 'minutes':
-                return timeValue;
-            case 'hours':
-                return timeValue * 60;
-            case 'days':
-                return timeValue * 1440;
-        }
+        return getMinutesFromTimeValueAndUnit({
+            value: timeValue,
+            unit: timeUnit,
+        });
     };
 
     const getProgressionPayload = () => {
@@ -60,6 +82,20 @@ export const useMilestoneProgressionForm = (
         return Object.keys(newErrors).length === 0;
     };
 
+    const handleTimeUnitChange = (event: { target: { value: unknown } }) => {
+        setTimeUnit(event.target.value as TimeUnit);
+    };
+
+    const handleTimeValueChange = (
+        event: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        const inputValue = event.target.value;
+        if (inputValue === '' || /^\d+$/.test(inputValue)) {
+            const value = inputValue === '' ? 0 : Number.parseInt(inputValue);
+            setTimeValue(value);
+        }
+    };
+
     return {
         timeUnit,
         setTimeUnit,
@@ -69,5 +105,7 @@ export const useMilestoneProgressionForm = (
         validate,
         getProgressionPayload,
         getIntervalMinutes,
+        handleTimeUnitChange,
+        handleTimeValueChange,
     };
 };

@@ -368,6 +368,9 @@ export const ReleasePlan = ({
                                         />
                                     ) : undefined
                                 }
+                                projectId={projectId}
+                                environment={environment}
+                                onUpdate={refetch}
                             />
                             <ConditionallyRender
                                 condition={isNotLastMilestone}

@@ -22,35 +22,39 @@ const getIntervalMinutes = (
     return intervalMinutes;
 };
 
-const findBaselineMilestone = (
+const findMostRecentStartedMilestone = (
     milestones: IReleasePlanMilestone[],
     targetIndex: number,
-    activeMilestoneId?: string,
 ): { index: number; startTime: Date } | null => {
-    // Try to use the active milestone if it's before or at the target
-    if (activeMilestoneId) {
-        const activeIndex = milestones.findIndex(
-            (m) => m.id === activeMilestoneId,
-        );
-        if (activeIndex !== -1 && activeIndex <= targetIndex) {
-            const activeStartTime = parseStartTime(
-                milestones[activeIndex].startedAt,
-            );
-            if (activeStartTime) {
-                return { index: activeIndex, startTime: activeStartTime };
-            }
-        }
-    }
-
-    // Fall back to the most recent started milestone before or at the target
     for (let i = targetIndex; i >= 0; i--) {
         const startTime = parseStartTime(milestones[i].startedAt);
         if (startTime) {
             return { index: i, startTime };
         }
     }
-
     return null;
+};
+
+const findBaselineMilestone = (
+    milestones: IReleasePlanMilestone[],
+    targetIndex: number,
+    activeMilestoneId?: string,
+): { index: number; startTime: Date } | null => {
+    if (!activeMilestoneId) {
+        return findMostRecentStartedMilestone(milestones, targetIndex);
+    }
+
+    const activeIndex = milestones.findIndex((m) => m.id === activeMilestoneId);
+    if (activeIndex === -1 || activeIndex > targetIndex) {
+        return findMostRecentStartedMilestone(milestones, targetIndex);
+    }
+
+    const activeStartTime = parseStartTime(milestones[activeIndex].startedAt);
+    if (activeStartTime) {
+        return { index: activeIndex, startTime: activeStartTime };
+    }
+
+    return findMostRecentStartedMilestone(milestones, targetIndex);
 };
 
 const calculateTimeFromBaseline = (

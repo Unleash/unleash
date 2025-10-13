@@ -8,7 +8,7 @@ export interface ReleasePlan {
     featureName: string;
     environment: string;
     createdByUserId: number;
-    createdAt: string;
+    createdAt: Date;
     activeMilestoneId?: string;
     milestones: ReleasePlanMilestone[];
     releasePlanTemplateId: string;

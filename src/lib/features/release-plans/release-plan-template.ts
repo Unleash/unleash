@@ -6,7 +6,7 @@ export interface ReleasePlanTemplate {
     name: string;
     description?: string | null;
     createdByUserId: number;
-    createdAt: string;
+    createdAt: Date;
     milestones?: ReleasePlanMilestone[];
-    archivedAt?: string;
+    archivedAt?: Date;
 }

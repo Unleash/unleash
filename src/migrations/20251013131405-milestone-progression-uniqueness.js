@@ -1,20 +1,14 @@
 exports.up = function(db, cb) {
     db.runSql(
-        `
-        ALTER TABLE milestone_progressions
-        ADD CONSTRAINT milestone_progressions_source_milestone_unique
-        UNIQUE (source_milestone);
-        `,
+        `DROP INDEX IF EXISTS milestone_progressions_source_milestone_idx;
+         CREATE UNIQUE INDEX milestone_progressions_source_milestone_idx ON milestone_progressions(source_milestone);`,
         cb,
     );
 };
 
 exports.down = function(db, cb) {
     db.runSql(
-        `
-        ALTER TABLE milestone_progressions
-        DROP CONSTRAINT IF EXISTS milestone_progressions_source_milestone_unique;
-        `,
+        `DROP INDEX IF EXISTS milestone_progressions_source_milestone_idx;`,
         cb,
     );
 };

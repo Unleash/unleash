@@ -21,17 +21,16 @@ export const getTimeValueAndUnitFromMinutes = (
     return { value: minutes, unit: 'minutes' };
 };
 
-export const getIntervalMinutesFromValueAndUnit = (
-    value: number,
-    unit: TimeUnit,
+export const getMinutesFromTimeValueAndUnit = (
+    time: { value: number; unit: TimeUnit },
 ): number => {
-    switch (unit) {
+    switch (time.unit) {
         case 'minutes':
-            return value;
+            return time.value;
         case 'hours':
-            return value * 60;
+            return time.value * 60;
         case 'days':
-            return value * 1440;
+            return time.value * 1440;
     }
 };
 
@@ -48,7 +47,7 @@ export const useMilestoneProgressionForm = (
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     const getIntervalMinutes = () => {
-        return getIntervalMinutesFromValueAndUnit(timeValue, timeUnit);
+        return getMinutesFromTimeValueAndUnit({ value: timeValue, unit: timeUnit });
     };
 
     const getProgressionPayload = () => {

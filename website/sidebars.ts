@@ -727,6 +727,11 @@ const sidebars: SidebarsConfig = {
                     label: 'Feature availability and versioning',
                 },
                 {
+                    type: 'doc',
+                    id: 'oss-comparison',
+                    label: 'Compare Unleash OSS and Unleash Enterprise',
+                },
+                {
                     label: 'Contribute to Unleash',
                     type: 'category',
                     collapsed: true,

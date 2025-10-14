@@ -101,7 +101,6 @@ export const BillingPlan = () => {
 
     return (
         <Grid item xs={12} md={7}>
-            {JSON.stringify({ isPAYG })}
             <StyledWrapper>
                 <ConditionallyRender
                     condition={inactive}

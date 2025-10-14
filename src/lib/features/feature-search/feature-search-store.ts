@@ -478,12 +478,10 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 'feature_release_plan.milestone_name',
                 'feature_release_plan.milestone_order',
                 'feature_release_plan.total_milestones',
+                this.db.raw(
+                    `EXISTS (SELECT 1 FROM release_plan_definitions WHERE release_plan_definitions.feature_name = ranked_features.feature_name AND release_plan_definitions.environment = ranked_features.environment AND release_plan_definitions.discriminator = 'plan') as has_release_plan`,
+                ),
             ]);
-        queryBuilder.select(
-            this.db.raw(
-                `EXISTS (SELECT 1 FROM release_plan_definitions WHERE release_plan_definitions.feature_name = ranked_features.feature_name AND release_plan_definitions.environment = ranked_features.environment AND release_plan_definitions.discriminator = 'plan') as has_release_plan`,
-            ),
-        );
     }
 
     private buildChangeRequestSql(queryBuilder: Knex.QueryBuilder) {

@@ -204,6 +204,13 @@ export const RELEASE_PLAN_TEMPLATE_DELETED =
 export const RELEASE_PLAN_TEMPLATE_ARCHIVED =
     'release-plan-template-archived' as const;
 
+export const MILESTONE_PROGRESSION_CREATED =
+    'milestone-progression-created' as const;
+export const MILESTONE_PROGRESSION_UPDATED =
+    'milestone-progression-updated' as const;
+export const MILESTONE_PROGRESSION_DELETED =
+    'milestone-progression-deleted' as const;
+
 export const RELEASE_PLAN_ADDED = 'release-plan-added' as const;
 export const RELEASE_PLAN_REMOVED = 'release-plan-removed' as const;
 export const RELEASE_PLAN_MILESTONE_STARTED =
@@ -374,6 +381,9 @@ export const IEventTypes = [
     RELEASE_PLAN_ADDED,
     RELEASE_PLAN_REMOVED,
     RELEASE_PLAN_MILESTONE_STARTED,
+    MILESTONE_PROGRESSION_CREATED,
+    MILESTONE_PROGRESSION_UPDATED,
+    MILESTONE_PROGRESSION_DELETED,
     USER_PREFERENCE_UPDATED,
     SCIM_USERS_DELETED,
     SCIM_GROUPS_DELETED,

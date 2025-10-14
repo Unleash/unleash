@@ -20,6 +20,7 @@ interface IProjectHealthChartProps {
     >;
     isAggregate?: boolean;
     isLoading?: boolean;
+    labels: { week: string; date: string }[];
 }
 
 const useOverrideOptions = (chartDataResult: ChartDataResult) => {
@@ -62,6 +63,7 @@ const useOverrideOptions = (chartDataResult: ChartDataResult) => {
 };
 
 export const NewProductionFlagsChart: FC<IProjectHealthChartProps> = ({
+    labels,
     lifecycleTrends,
     isAggregate,
     isLoading,
@@ -70,54 +72,38 @@ export const NewProductionFlagsChart: FC<IProjectHealthChartProps> = ({
     const theme = useTheme();
     const placeholderData = usePlaceholderData();
 
-    const { aggregateHealthData, chartDataResult } = useMemo(() => {
-        const labels: string[] = Array.from(
-            new Set(
-                lifecycleData.datasets.flatMap((d) =>
-                    d.data.map((item) => item.week),
-                ),
-            ),
-        );
+    const shouldBatchData = labels.length >= 12;
 
-        const weeks: WeekData[] = labels
-            .map((label) => {
-                return lifecycleData.datasets
-                    .map((d) => d.data.find((item) => item.week === label))
-                    .reduce(
-                        (acc: WeekData, item: WeekData) => {
-                            if (item) {
-                                acc.newProductionFlags +=
-                                    item.newProductionFlags;
-                            }
-                            if (!acc.date) {
-                                acc.date = item?.date;
-                            }
-                            return acc;
-                        },
-                        {
-                            newProductionFlags: 0,
-                            week: label,
-                        } as WeekData,
-                    );
-            })
-            .sort((a, b) => (a.week > b.week ? 1 : -1));
+    const { aggregateProductionFlagsData, chartDataResult } = useMemo(() => {
+        const weeks: WeekData[] = labels.map(({ week, date }) => {
+            return lifecycleData.datasets
+                .map((d) => d.data.find((item) => item.week === week))
+                .reduce(
+                    (acc: WeekData, item: WeekData) => {
+                        if (item) {
+                            acc.newProductionFlags =
+                                (acc.newProductionFlags ?? 0) +
+                                (item.newProductionFlags ?? 0);
+                        }
+                        return acc;
+                    },
+                    { date, week },
+                );
+        });
 
         let chartDataResult: ChartDataResult = 'Weekly';
-        let displayData: WeekData[] | BatchedWeekData[] = weeks;
+        let displayData: WeekData[] | (BatchedWeekData | null)[] = weeks;
 
-        if (
-            !isLoading &&
-            !lifecycleData.datasets.some((d) => d.data.length > 1)
-        ) {
+        if (!isLoading && labels.length < 2) {
             chartDataResult = 'Not Enough Data';
-        } else if (weeks.length >= 12) {
+        } else if (shouldBatchData) {
             chartDataResult = 'Batched';
             displayData = batchProductionFlagsData(weeks);
         }
 
         return {
             chartDataResult,
-            aggregateHealthData: {
+            aggregateProductionFlagsData: {
                 datasets: [
                     {
                         label: 'Number of new flags',
@@ -132,9 +118,40 @@ export const NewProductionFlagsChart: FC<IProjectHealthChartProps> = ({
         };
     }, [lifecycleData, theme, isLoading]);
 
+    const padProjectData = () => {
+        if (lifecycleData.datasets.length === 0) {
+            // fallback for when there's no data in the selected time period for the selected projects
+            return [
+                {
+                    label: 'No data',
+                    data: labels,
+                },
+            ];
+        }
+
+        const padData = (data: WeekData[]) => {
+            const padded = labels.map(
+                ({ date, week }) =>
+                    data.find((item) => item?.week === week) ?? {
+                        date,
+                        week,
+                    },
+            );
+            return shouldBatchData ? batchProductionFlagsData(padded) : padded;
+        };
+
+        return lifecycleData.datasets.map(({ data, ...dataset }) => ({
+            ...dataset,
+            data: padData(data),
+        }));
+    };
+
     const aggregateOrProjectData = isAggregate
-        ? aggregateHealthData
-        : lifecycleData;
+        ? aggregateProductionFlagsData
+        : {
+              datasets: padProjectData(),
+          };
+
     const notEnoughData = chartDataResult === 'Not Enough Data';
     const data =
         notEnoughData || isLoading ? placeholderData : aggregateOrProjectData;

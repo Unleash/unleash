@@ -1,5 +1,5 @@
 export type WeekData = {
-    newProductionFlags: number;
+    newProductionFlags?: number;
     week: string;
     date: string;
 };

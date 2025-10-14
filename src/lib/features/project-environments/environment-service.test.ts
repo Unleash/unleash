@@ -118,6 +118,7 @@ test('Can connect environment to project', async () => {
                 lastSeenAt: null,
                 hasStrategies: false,
                 hasEnabledStrategies: false,
+                hasReleasePlans: false,
             },
         ]);
     });
@@ -165,6 +166,7 @@ test('Can remove environment from project', async () => {
                 lastSeenAt: null,
                 hasStrategies: false,
                 hasEnabledStrategies: false,
+                hasReleasePlans: false,
             },
         ]);
     });

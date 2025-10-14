@@ -62,6 +62,7 @@ interface IMilestoneAutomationSectionProps {
     milestoneName: string;
     projectId: string;
     environment: string;
+    featureName: string;
     sourceMilestoneId: string;
     onUpdate: () => void;
 }
@@ -76,6 +77,7 @@ export const MilestoneAutomationSection = ({
     milestoneName,
     projectId,
     environment,
+    featureName,
     sourceMilestoneId,
     onUpdate,
 }: IMilestoneAutomationSectionProps) => {
@@ -93,6 +95,7 @@ export const MilestoneAutomationSection = ({
                     status={status}
                     projectId={projectId}
                     environment={environment}
+                    featureName={featureName}
                     sourceMilestoneId={sourceMilestoneId}
                     onUpdate={onUpdate}
                 />

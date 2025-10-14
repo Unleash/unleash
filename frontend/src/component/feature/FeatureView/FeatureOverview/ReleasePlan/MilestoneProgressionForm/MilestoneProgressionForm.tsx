@@ -60,6 +60,7 @@ interface IMilestoneProgressionFormProps {
     targetMilestoneId: string;
     projectId: string;
     environment: string;
+    featureName: string;
     onSave: () => void;
     onCancel: () => void;
 }
@@ -69,6 +70,7 @@ export const MilestoneProgressionForm = ({
     targetMilestoneId,
     projectId,
     environment,
+    featureName,
     onSave,
     onCancel,
 }: IMilestoneProgressionFormProps) => {
@@ -93,6 +95,7 @@ export const MilestoneProgressionForm = ({
             await createMilestoneProgression(
                 projectId,
                 environment,
+                featureName,
                 form.getProgressionPayload(),
             );
             setToastData({

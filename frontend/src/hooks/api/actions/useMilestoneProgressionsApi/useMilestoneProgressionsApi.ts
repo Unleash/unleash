@@ -10,10 +10,11 @@ export const useMilestoneProgressionsApi = () => {
     const createMilestoneProgression = async (
         projectId: string,
         environment: string,
+        featureName: string,
         body: CreateMilestoneProgressionSchema,
     ): Promise<void> => {
         const requestId = 'createMilestoneProgression';
-        const path = `api/admin/projects/${projectId}/environments/${environment}/progressions`;
+        const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/progressions`;
         const req = createRequest(
             path,
             {
@@ -29,11 +30,12 @@ export const useMilestoneProgressionsApi = () => {
     const updateMilestoneProgression = async (
         projectId: string,
         environment: string,
+        featureName: string,
         sourceMilestoneId: string,
         body: UpdateMilestoneProgressionSchema,
     ): Promise<void> => {
         const requestId = 'updateMilestoneProgression';
-        const path = `api/admin/projects/${projectId}/environments/${environment}/progressions/${sourceMilestoneId}`;
+        const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/progressions/${sourceMilestoneId}`;
         const req = createRequest(
             path,
             {
@@ -49,10 +51,11 @@ export const useMilestoneProgressionsApi = () => {
     const deleteMilestoneProgression = async (
         projectId: string,
         environment: string,
+        featureName: string,
         sourceMilestoneId: string,
     ): Promise<void> => {
         const requestId = 'deleteMilestoneProgression';
-        const path = `api/admin/projects/${projectId}/environments/${environment}/progressions/${sourceMilestoneId}`;
+        const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/progressions/${sourceMilestoneId}`;
         const req = createRequest(
             path,
             {

@@ -64,6 +64,7 @@ interface IMilestoneTransitionDisplayProps {
     status?: MilestoneStatus;
     projectId: string;
     environment: string;
+    featureName: string;
     sourceMilestoneId: string;
     onUpdate: () => void;
 }
@@ -75,6 +76,7 @@ export const MilestoneTransitionDisplay = ({
     status,
     projectId,
     environment,
+    featureName,
     sourceMilestoneId,
     onUpdate,
 }: IMilestoneTransitionDisplayProps) => {
@@ -103,6 +105,7 @@ export const MilestoneTransitionDisplay = ({
             await updateMilestoneProgression(
                 projectId,
                 environment,
+                featureName,
                 sourceMilestoneId,
                 {
                     transitionCondition: {

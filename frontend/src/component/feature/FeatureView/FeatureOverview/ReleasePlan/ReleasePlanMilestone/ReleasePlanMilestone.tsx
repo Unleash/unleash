@@ -105,6 +105,7 @@ interface IReleasePlanMilestoneProps {
     automationForm?: React.ReactNode;
     projectId?: string;
     environment?: string;
+    featureName?: string;
     onUpdate?: () => void;
     allMilestones: IReleasePlanMilestone[];
     activeMilestoneId?: string;
@@ -121,6 +122,7 @@ export const ReleasePlanMilestone = ({
     automationForm,
     projectId,
     environment,
+    featureName,
     onUpdate,
     allMilestones,
     activeMilestoneId,
@@ -173,21 +175,26 @@ export const ReleasePlanMilestone = ({
                         </StyledSecondaryLabel>
                     </StyledAccordionSummary>
                 </StyledAccordion>
-                {showAutomation && projectId && environment && onUpdate && (
-                    <MilestoneAutomationSection
-                        showAutomation={showAutomation}
-                        status={status}
-                        onAddAutomation={onAddAutomation}
-                        onDeleteAutomation={onDeleteAutomation}
-                        automationForm={automationForm}
-                        transitionCondition={milestone.transitionCondition}
-                        milestoneName={milestone.name}
-                        projectId={projectId}
-                        environment={environment}
-                        sourceMilestoneId={milestone.id}
-                        onUpdate={onUpdate}
-                    />
-                )}
+                {showAutomation &&
+                    projectId &&
+                    environment &&
+                    featureName &&
+                    onUpdate && (
+                        <MilestoneAutomationSection
+                            showAutomation={showAutomation}
+                            status={status}
+                            onAddAutomation={onAddAutomation}
+                            onDeleteAutomation={onDeleteAutomation}
+                            automationForm={automationForm}
+                            transitionCondition={milestone.transitionCondition}
+                            milestoneName={milestone.name}
+                            projectId={projectId}
+                            environment={environment}
+                            featureName={featureName}
+                            sourceMilestoneId={milestone.id}
+                            onUpdate={onUpdate}
+                        />
+                    )}
             </StyledMilestoneContainer>
         );
     }
@@ -258,21 +265,26 @@ export const ReleasePlanMilestone = ({
                     </StrategyList>
                 </StyledAccordionDetails>
             </StyledAccordion>
-            {showAutomation && projectId && environment && onUpdate && (
-                <MilestoneAutomationSection
-                    showAutomation={showAutomation}
-                    status={status}
-                    onAddAutomation={onAddAutomation}
-                    onDeleteAutomation={onDeleteAutomation}
-                    automationForm={automationForm}
-                    transitionCondition={milestone.transitionCondition}
-                    milestoneName={milestone.name}
-                    projectId={projectId}
-                    environment={environment}
-                    sourceMilestoneId={milestone.id}
-                    onUpdate={onUpdate}
-                />
-            )}
+            {showAutomation &&
+                projectId &&
+                environment &&
+                featureName &&
+                onUpdate && (
+                    <MilestoneAutomationSection
+                        showAutomation={showAutomation}
+                        status={status}
+                        onAddAutomation={onAddAutomation}
+                        onDeleteAutomation={onDeleteAutomation}
+                        automationForm={automationForm}
+                        transitionCondition={milestone.transitionCondition}
+                        milestoneName={milestone.name}
+                        projectId={projectId}
+                        environment={environment}
+                        featureName={featureName}
+                        sourceMilestoneId={milestone.id}
+                        onUpdate={onUpdate}
+                    />
+                )}
         </StyledMilestoneContainer>
     );
 };

@@ -272,6 +272,7 @@ export const ReleasePlan = ({
             await deleteMilestoneProgression(
                 projectId,
                 environment,
+                featureName,
                 milestoneToDeleteProgression.id,
             );
             await refetch();
@@ -363,6 +364,7 @@ export const ReleasePlan = ({
                                             targetMilestoneId={nextMilestoneId}
                                             projectId={projectId}
                                             environment={environment}
+                                            featureName={featureName}
                                             onSave={handleProgressionSave}
                                             onCancel={handleProgressionCancel}
                                         />
@@ -370,6 +372,7 @@ export const ReleasePlan = ({
                                 }
                                 projectId={projectId}
                                 environment={environment}
+                                featureName={featureName}
                                 onUpdate={refetch}
                                 allMilestones={milestones}
                                 activeMilestoneId={activeMilestoneId}

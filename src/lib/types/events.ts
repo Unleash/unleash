@@ -121,6 +121,9 @@ import {
     FEATURE_LINK_UPDATED,
     FEATURE_LINK_ADDED,
     APPLICATION_CREATED,
+    MILESTONE_PROGRESSION_CREATED,
+    MILESTONE_PROGRESSION_UPDATED,
+    MILESTONE_PROGRESSION_DELETED,
 } from '../events/index.js';
 import type { ITag } from '../tags/index.js';
 import type { IClientApplication } from './stores/client-applications-store.js';
@@ -1802,6 +1805,42 @@ export class GroupDeletedEvent extends BaseEvent {
         auditUser: IAuditUser;
     }) {
         super(GROUP_DELETED, eventData.auditUser);
+        this.preData = eventData.preData;
+    }
+}
+
+export class MilestoneProgressionCreatedEvent extends BaseEvent {
+    readonly data: any;
+    constructor(eventData: {
+        data: any;
+        auditUser: IAuditUser;
+    }) {
+        super(MILESTONE_PROGRESSION_CREATED, eventData.auditUser);
+        this.data = eventData.data;
+    }
+}
+
+export class MilestoneProgressionUpdatedEvent extends BaseEvent {
+    readonly preData: any;
+    readonly data: any;
+    constructor(eventData: {
+        data: any;
+        preData: any;
+        auditUser: IAuditUser;
+    }) {
+        super(MILESTONE_PROGRESSION_UPDATED, eventData.auditUser);
+        this.data = eventData.data;
+        this.preData = eventData.preData;
+    }
+}
+
+export class MilestoneProgressionDeltedEvent extends BaseEvent {
+    readonly preData: any;
+    constructor(eventData: {
+        preData: any;
+        auditUser: IAuditUser;
+    }) {
+        super(MILESTONE_PROGRESSION_DELETED, eventData.auditUser);
         this.preData = eventData.preData;
     }
 }

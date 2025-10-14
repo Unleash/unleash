@@ -133,7 +133,7 @@
     "uuid": "^11.0.0"
   },
   "devDependencies": {
-    "@apidevtools/swagger-parser": "10.1.1",
+    "@apidevtools/swagger-parser": "^12.1.0",
     "@babel/core": "7.26.10",
     "@biomejs/biome": "^1.9.4",
     "@cyclonedx/yarn-plugin-cyclonedx": "^2.0.0",
@@ -187,19 +187,20 @@
   },
   "resolutions": {
     "async": "^3.2.4",
-    "es5-ext": "0.10.64",
+    "es5-ext": "^0.10.64",
     "node-forge": "^1.0.0",
     "set-value": "^4.0.1",
     "ansi-regex": "^5.0.1",
     "ssh2": "^1.4.0",
     "json-schema": "^0.4.0",
     "ip": "^2.0.1",
-    "tar": "7.4.3",
+    "tar": "^7.4.3",
+    "validator": "^13.15.15",
     "semver": "^7.6.2",
-    "tough-cookie": "4.1.4",
-    "brace-expansion": "2.0.2",
-    "@wesleytodd/openapi/path-to-regexp": "6.3.0",
-    "router/path-to-regexp": "1.9.0",
+    "tough-cookie": "^4.1.4",
+    "brace-expansion": "^2.0.2",
+    "@wesleytodd/openapi/path-to-regexp": "^6.3.0",
+    "router/path-to-regexp": "^1.9.0",
     "prompt": "link:./node_modules/.cache/null"
   },
   "lint-staged": {

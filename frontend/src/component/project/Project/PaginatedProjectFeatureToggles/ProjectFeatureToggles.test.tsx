@@ -262,7 +262,6 @@ test('clears lifecycle filter when switching to archived view', async () => {
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
             flagCreator: true,
-            flagsUiFilterRefactor: true,
         },
     });
 

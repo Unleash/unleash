@@ -8,7 +8,6 @@ import {
 import { useProjectFlagCreators } from 'hooks/api/getters/useProjectFlagCreators/useProjectFlagCreators';
 import { formatTag } from 'utils/format-tag';
 import { styled } from '@mui/material';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 type ProjectOverviewFiltersProps = {
     state: FilterItemParamHolder;
@@ -28,10 +27,6 @@ export const ProjectOverviewFilters: FC<ProjectOverviewFiltersProps> = ({
     const { tags } = useAllTags();
     const { flagCreators } = useProjectFlagCreators(project);
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
-    const flagsUiFilterRefactorEnabled = useUiFlag('flagsUiFilterRefactor');
-    const FilterComponent = flagsUiFilterRefactorEnabled
-        ? StyledFilters
-        : Filters;
 
     useEffect(() => {
         const tagsOptions = (tags || []).map((tag) => {
@@ -120,25 +115,13 @@ export const ProjectOverviewFilters: FC<ProjectOverviewFiltersProps> = ({
                 singularOperators: ['IS', 'IS_NOT'],
                 pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
             },
-            ...(!flagsUiFilterRefactorEnabled
-                ? [
-                      {
-                          label: 'Show only archived',
-                          icon: 'inventory',
-                          options: [{ label: 'True', value: 'true' }],
-                          filterKey: 'archived',
-                          singularOperators: ['IS'],
-                          pluralOperators: ['IS_ANY_OF'],
-                      } satisfies IFilterItem,
-                  ]
-                : []),
         ];
 
         setAvailableFilters(availableFilters);
     }, [JSON.stringify(tags), JSON.stringify(flagCreators)]);
 
     return (
-        <FilterComponent
+        <StyledFilters
             availableFilters={availableFilters}
             state={state}
             onChange={onChange}

@@ -3,8 +3,7 @@ import { useEffect } from 'react';
 import type { FilterItemParamHolder } from '../../../filter/Filters/Filters.tsx';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import { LifecycleFilters } from 'component/common/LifecycleFilters/LifecycleFilters.tsx';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { Box, useTheme } from '@mui/material';
 
 type ProjectLifecycleFiltersProps = {
     projectId: string;
@@ -23,8 +22,6 @@ export const ProjectLifecycleFilters: FC<ProjectLifecycleFiltersProps> = ({
 }) => {
     const { data } = useProjectStatus(projectId);
     const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const flagsUiFilterRefactorEnabled = useUiFlag('flagsUiFilterRefactor');
     const lifecycleSummary = Object.entries(
         data?.lifecycleSummary || {},
     ).reduce(
@@ -47,18 +44,7 @@ export const ProjectLifecycleFilters: FC<ProjectLifecycleFiltersProps> = ({
     }
 
     return (
-        <Box
-            sx={{
-                marginRight: 'auto',
-                ...(flagsUiFilterRefactorEnabled
-                    ? {}
-                    : {
-                          margin: isSmallScreen
-                              ? theme.spacing(0, 3)
-                              : `${theme.spacing(1.5)} auto ${theme.spacing(1.5)} ${theme.spacing(3)}`,
-                      }),
-            }}
-        >
+        <Box sx={{ marginRight: 'auto' }}>
             <LifecycleFilters
                 state={state}
                 onChange={onChange}

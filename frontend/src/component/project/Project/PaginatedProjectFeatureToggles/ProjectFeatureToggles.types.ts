@@ -12,6 +12,7 @@ export type ListItemType = Pick<
             type: string;
             hasStrategies: boolean;
             hasEnabledStrategies: boolean;
+            hasReleasePlans: boolean;
         };
     };
     someEnabledEnvironmentHasVariants: boolean;

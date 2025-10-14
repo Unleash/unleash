@@ -14,12 +14,12 @@ const StyledContainer = styled('div')(({ theme }) => ({
 type FeatureOverviewEnvironmentToggleProps = {
     environment: Pick<
         IFeatureEnvironment,
-        'name' | 'type' | 'strategies' | 'enabled'
+        'name' | 'type' | 'strategies' | 'enabled' | 'releasePlans'
     >;
 };
 
 export const FeatureOverviewEnvironmentToggle = ({
-    environment: { name, type, strategies, enabled },
+    environment: { name, type, strategies, enabled, releasePlans },
 }: FeatureOverviewEnvironmentToggleProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -40,6 +40,7 @@ export const FeatureOverviewEnvironmentToggle = ({
             hasEnabledStrategies: strategies.some(
                 (strategy) => !strategy.disabled,
             ),
+            hasReleasePlans: Boolean(releasePlans?.length),
             isChangeRequestEnabled: isChangeRequestConfigured(name),
             onRollback,
             onSuccess: refetchFeature,

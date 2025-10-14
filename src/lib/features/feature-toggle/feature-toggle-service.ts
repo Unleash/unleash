@@ -1220,10 +1220,14 @@ export class FeatureToggleService {
                 environmentNames,
             );
 
-        return environments.map((env) => ({
-            ...env,
-            releasePlans: releasePlansByEnvironment[env.name] || [],
-        }));
+        return environments.map((env) => {
+            const releasePlans = releasePlansByEnvironment[env.name] || [];
+            return {
+                ...env,
+                releasePlans,
+                hasReleasePlans: releasePlans.length > 0,
+            };
+        });
     }
 
     async getVariantsForEnv(

@@ -550,6 +550,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             lastSeenAt: r.env_last_seen_at,
             hasStrategies: r.has_strategies,
             hasEnabledStrategies: r.has_enabled_strategies,
+            hasReleasePlans: r.has_release_plan,
         };
     }
 
@@ -673,6 +674,9 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             ),
             this.db.raw(
                 'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment AND (feature_strategies.disabled IS NULL OR feature_strategies.disabled = false)) as has_enabled_strategies',
+            ),
+            this.db.raw(
+                `EXISTS (SELECT 1 FROM release_plan_definitions WHERE release_plan_definitions.feature_name = features.name AND release_plan_definitions.environment = feature_environments.environment AND release_plan_definitions.discriminator = 'plan') as has_release_plan`,
             ),
         ];
 

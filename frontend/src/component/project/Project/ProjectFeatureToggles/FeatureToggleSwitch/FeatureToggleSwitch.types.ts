@@ -7,6 +7,7 @@ export type OnFeatureToggleSwitchArgs = {
     environmentType?: string;
     hasStrategies?: boolean;
     hasEnabledStrategies?: boolean;
+    hasReleasePlans?: boolean;
     isChangeRequestEnabled?: boolean;
     onRollback?: () => void;
     onSuccess?: () => void;

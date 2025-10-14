@@ -73,6 +73,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
             lastSeenAt: r.env_last_seen_at,
             hasStrategies: r.has_strategies,
             hasEnabledStrategies: r.has_enabled_strategies,
+            hasReleasePlans: r.has_release_plan,
             yes: Number(r.yes) || 0,
             no: Number(r.no) || 0,
             changeRequestIds: r.change_request_ids ?? [],
@@ -478,6 +479,11 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 'feature_release_plan.milestone_order',
                 'feature_release_plan.total_milestones',
             ]);
+        queryBuilder.select(
+            this.db.raw(
+                `EXISTS (SELECT 1 FROM release_plan_definitions WHERE release_plan_definitions.feature_name = ranked_features.feature_name AND release_plan_definitions.environment = ranked_features.environment AND release_plan_definitions.discriminator = 'plan') as has_release_plan`,
+            ),
+        );
     }
 
     private buildChangeRequestSql(queryBuilder: Knex.QueryBuilder) {

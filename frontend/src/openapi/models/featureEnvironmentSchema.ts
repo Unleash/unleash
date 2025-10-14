@@ -23,6 +23,8 @@ export interface FeatureEnvironmentSchema {
     hasEnabledStrategies?: boolean;
     /** Whether the feature has any strategies defined. */
     hasStrategies?: boolean;
+    /** Whether the feature has any release plans defined for this environment. */
+    hasReleasePlans?: boolean;
     /**
      * The date when metrics where last collected for the feature environment
      * @nullable

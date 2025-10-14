@@ -135,6 +135,7 @@ export interface FeatureToggleView extends FeatureToggleWithEnvironment {
 export interface IEnvironmentDetail extends IEnvironmentBase {
     strategies: IStrategyConfig[];
     variants: IVariant[];
+    hasReleasePlans?: boolean;
 }
 
 export interface ISortOrder {
@@ -271,6 +272,7 @@ export interface IEnvironmentOverview extends IEnvironmentBase {
     variantCount: number;
     hasStrategies?: boolean;
     hasEnabledStrategies?: boolean;
+    hasReleasePlans?: boolean;
     yes?: number;
     no?: number;
 }
@@ -304,6 +306,7 @@ export interface FeatureEnvironment {
     lastSeenAt?: Date;
     hasStrategies?: boolean;
     hasEnabledStrategies?: boolean;
+    hasReleasePlans?: boolean;
 }
 export interface FeatureSearchEnvironment extends FeatureEnvironment {
     yes: number;

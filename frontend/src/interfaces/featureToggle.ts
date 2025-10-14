@@ -25,6 +25,7 @@ export interface IEnvironments {
     type?: string;
     hasStrategies?: boolean;
     hasEnabledStrategies?: boolean;
+    hasReleasePlans?: boolean;
     yes?: number;
     no?: number;
 }
@@ -98,6 +99,7 @@ export interface IFeatureEnvironment {
     yes?: number;
     no?: number;
     releasePlans?: IReleasePlan[];
+    hasReleasePlans?: boolean;
 }
 
 export interface IFeatureEnvironmentWithCrEnabled extends IFeatureEnvironment {

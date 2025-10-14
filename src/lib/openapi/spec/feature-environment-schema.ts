@@ -112,6 +112,11 @@ export const featureEnvironmentSchema = {
             description:
                 'Whether the feature has any enabled strategies defined.',
         },
+        hasReleasePlans: {
+            type: 'boolean',
+            description:
+                'Whether the feature has any release plans defined for this environment.',
+        },
         releasePlans: {
             type: 'array',
             description:

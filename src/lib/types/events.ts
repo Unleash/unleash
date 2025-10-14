@@ -1810,37 +1810,64 @@ export class GroupDeletedEvent extends BaseEvent {
 }
 
 export class MilestoneProgressionCreatedEvent extends BaseEvent {
+    readonly project: string;
+    readonly environment: string;
+    readonly featureName: string;
     readonly data: any;
     constructor(eventData: {
+        project: string;
+        environment: string;
+        featureName: string;
         data: any;
         auditUser: IAuditUser;
     }) {
         super(MILESTONE_PROGRESSION_CREATED, eventData.auditUser);
+        this.project = eventData.project;
+        this.environment = eventData.environment;
+        this.featureName = eventData.featureName;
         this.data = eventData.data;
     }
 }
 
 export class MilestoneProgressionUpdatedEvent extends BaseEvent {
+    readonly project: string;
+    readonly environment: string;
+    readonly featureName: string;
     readonly preData: any;
     readonly data: any;
     constructor(eventData: {
+        project: string;
+        environment: string;
+        featureName: string;
         data: any;
         preData: any;
         auditUser: IAuditUser;
     }) {
         super(MILESTONE_PROGRESSION_UPDATED, eventData.auditUser);
+        this.project = eventData.project;
+        this.environment = eventData.environment;
+        this.featureName = eventData.featureName;
         this.data = eventData.data;
         this.preData = eventData.preData;
     }
 }
 
-export class MilestoneProgressionDeltedEvent extends BaseEvent {
+export class MilestoneProgressionDeletedEvent extends BaseEvent {
+    readonly project: string;
+    readonly environment: string;
+    readonly featureName: string;
     readonly preData: any;
     constructor(eventData: {
+        project: string;
+        environment: string;
+        featureName: string;
         preData: any;
         auditUser: IAuditUser;
     }) {
         super(MILESTONE_PROGRESSION_DELETED, eventData.auditUser);
+        this.project = eventData.project;
+        this.environment = eventData.environment;
+        this.featureName = eventData.featureName;
         this.preData = eventData.preData;
     }
 }

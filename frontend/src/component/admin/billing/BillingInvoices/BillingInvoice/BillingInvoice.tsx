@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { ComponentProps, FC, ReactNode } from 'react';
 import {
     Typography,
     styled,
@@ -17,7 +17,7 @@ import { BillingInvoiceFooter } from './BillingInvoiceFooter/BillingInvoiceFoote
 import { StyledAmountCell, StyledSubgrid } from './BillingInvoice.styles.tsx';
 import type { DetailedInvoicesSchemaInvoicesItem } from 'openapi';
 
-const CardLikeAccordion = styled(Accordion)(({ theme }) => ({
+const StyledAccordion = styled(Accordion)(({ theme }) => ({
     background: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadiusLarge,
     boxShadow: theme.boxShadows.card,
@@ -94,6 +94,9 @@ const CardActions = styled('div')(({ theme }) => ({
     padding: theme.spacing(1.5, 2, 2),
 }));
 
+type BillingInvoiceProps = DetailedInvoicesSchemaInvoicesItem &
+    Pick<ComponentProps<typeof Accordion>, 'defaultExpanded'>;
+
 export const BillingInvoice = ({
     status,
     invoiceDate,
@@ -102,8 +105,9 @@ export const BillingInvoice = ({
     totalAmount,
     mainLines,
     usageLines,
-}: DetailedInvoicesSchemaInvoicesItem) => {
-    const currency = mainLines[0]?.currency || usageLines?.[0]?.currency;
+    defaultExpanded,
+}: BillingInvoiceProps) => {
+    const currency = mainLines?.[0]?.currency || usageLines?.[0]?.currency;
 
     const formattedTitle = invoiceDate
         ? new Date(invoiceDate).toLocaleDateString(undefined, {
@@ -112,8 +116,12 @@ export const BillingInvoice = ({
           })
         : '';
 
+    const hasLimitsColumn =
+        mainLines?.some((line) => line.limit) ||
+        usageLines?.some((line) => line.limit);
+
     return (
-        <CardLikeAccordion defaultExpanded>
+        <StyledAccordion defaultExpanded={Boolean(defaultExpanded)}>
             <HeaderRoot
                 expandIcon={<ExpandMoreIcon />}
                 id={`billing-invoice-${formattedTitle}-header`}
@@ -151,7 +159,11 @@ export const BillingInvoice = ({
                 <StyledInvoiceGrid>
                     <StyledSubgrid>
                         <HeaderCell>Description</HeaderCell>
-                        <HeaderCell>Included</HeaderCell>
+                        {hasLimitsColumn ? (
+                            <HeaderCell>Included</HeaderCell>
+                        ) : (
+                            <HeaderCell />
+                        )}
                         <HeaderCell>Quantity</HeaderCell>
                         <HeaderCell>
                             <StyledAmountCell>Amount</StyledAmountCell>
@@ -160,7 +172,10 @@ export const BillingInvoice = ({
                     {mainLines.map((line) => (
                         <TableBody key={line.description}>
                             <StyledTableRow key={line.description}>
-                                <BillingInvoiceRow {...line} />
+                                <BillingInvoiceRow
+                                    {...line}
+                                    showLimits={hasLimitsColumn}
+                                />
                             </StyledTableRow>
                         </TableBody>
                     ))}
@@ -169,7 +184,10 @@ export const BillingInvoice = ({
                             <StyledSectionTitle>Usage</StyledSectionTitle>
                             {usageLines.map((line) => (
                                 <StyledTableRow key={line.description}>
-                                    <BillingInvoiceRow {...line} />
+                                    <BillingInvoiceRow
+                                        {...line}
+                                        showLimits={hasLimitsColumn}
+                                    />
                                 </StyledTableRow>
                             ))}
                         </TableBody>
@@ -205,6 +223,6 @@ export const BillingInvoice = ({
                     ) : null}
                 </CardActions>
             </AccordionDetails>
-        </CardLikeAccordion>
+        </StyledAccordion>
     );
 };

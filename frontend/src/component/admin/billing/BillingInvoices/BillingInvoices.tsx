@@ -14,16 +14,17 @@ export const BillingInvoices: FC = () => {
     const { invoices, loading } = useDetailedInvoices();
 
     if (loading) {
-        return null;
+        return <StyledContainer />;
     }
 
     return (
         <StyledContainer>
             {invoices.length > 0 ? (
                 <>
-                    {invoices.map((invoice) => (
+                    {invoices.map((invoice, index) => (
                         <BillingInvoice
                             key={invoice.invoiceDate}
+                            defaultExpanded={index === 0}
                             {...invoice}
                         />
                     ))}

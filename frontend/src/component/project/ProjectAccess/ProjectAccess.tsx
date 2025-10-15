@@ -37,7 +37,7 @@ export const ProjectAccess = () => {
             <PageContent header={<PageHeader title='User access' />}>
                 <Alert severity='error'>
                     You need project owner permissions or a custom role with
-                    view project user permission to access this section.
+                    "view project user permission" to access this section.
                 </Alert>
             </PageContent>
         );

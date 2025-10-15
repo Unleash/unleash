@@ -46,7 +46,7 @@ export const ChangeRequestConfiguration = () => {
             >
                 <Alert severity='error'>
                     You need project owner permissions or a custom role with
-                    view change request configuration to access this section.
+                    "view change request configuration" to access this section.
                 </Alert>
             </PageContent>
         );

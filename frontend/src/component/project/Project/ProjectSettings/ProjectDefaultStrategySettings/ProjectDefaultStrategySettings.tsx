@@ -45,8 +45,8 @@ export const ProjectDefaultStrategySettings = () => {
             >
                 <Alert severity='error'>
                     You need project owner permissions or a custom role with
-                    project default strategy configuration permission to access
-                    this section.
+                    "project default strategy configuration" permission to
+                    access this section.
                 </Alert>
             </PageContent>
         );

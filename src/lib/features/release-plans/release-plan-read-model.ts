@@ -1,6 +1,8 @@
 import type { Db } from '../../db/db.js';
 import type { IReleasePlanReadModel } from './release-plan-read-model-type.js';
 import type { ReleasePlan } from './release-plan.js';
+import metricsHelper from '../../util/metrics-helper.js';
+import type EventEmitter from 'events';
 
 const TABLE = 'release_plan_definitions';
 
@@ -140,15 +142,24 @@ const processReleasePlanRows = (templateRows): ReleasePlan[] =>
 export class ReleasePlanReadModel implements IReleasePlanReadModel {
     private db: Db;
 
-    constructor(db: Db) {
+    private timer: Function;
+
+    constructor(db: Db, eventBus: EventEmitter) {
         this.db = db;
+        this.timer = (action: string) =>
+            metricsHelper.wrapTimer(eventBus, 'db_time', {
+                store: 'release-plan-read-model',
+                action,
+            });
     }
 
     async getReleasePlans(
         featureName: string,
         environments: string[],
     ): Promise<Record<string, ReleasePlan[]>> {
+        const endTimer = this.timer('getReleasePlans');
         if (environments.length === 0) {
+            endTimer();
             return {};
         }
 
@@ -193,6 +204,7 @@ export class ReleasePlanReadModel implements IReleasePlanReadModel {
             }
         }
 
+        endTimer();
         return plansByEnvironment;
     }
 }

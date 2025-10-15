@@ -5,10 +5,10 @@ export interface ReleasePlanMilestone {
     name: string;
     sortOrder: number;
     releasePlanDefinitionId: string;
-    startedAt?: string;
+    startedAt?: Date;
     transitionCondition?: { intervalMinutes: number };
     strategies?: ReleasePlanMilestoneStrategy[];
-    progressionExecutedAt?: string;
+    progressionExecutedAt?: Date;
 }
 
 export type ReleasePlanMilestoneWriteModel = Omit<

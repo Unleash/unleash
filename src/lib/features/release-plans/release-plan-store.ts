@@ -253,36 +253,6 @@ export class ReleasePlanStore extends CRUDStore<
         return releasePlans[0];
     }
 
-    // should be deprecated soon in favor of IReleasePlanReadModel.getReleasePlans
-    // this will remove read model responsibility from the store
-    // also we're moving release plans to feature environments (DB join) instead of separate API calls (browser join)
-    async getByFeatureFlagAndEnvironment(
-        featureName: string,
-        environment: string,
-    ): Promise<ReleasePlan[]> {
-        const endTimer = this.timer('getByFeatureFlagAndEnvironment');
-        const planRows = await this.db(`${this.tableName} AS rpd`)
-            .where('rpd.discriminator', 'plan')
-            .andWhere('rpd.feature_name', featureName)
-            .andWhere('rpd.environment', environment)
-            .leftJoin(
-                'milestones AS mi',
-                'mi.release_plan_definition_id',
-                'rpd.id',
-            )
-            .leftJoin('milestone_strategies AS ms', 'ms.milestone_id', 'mi.id')
-            .leftJoin(
-                'milestone_strategy_segments AS mss',
-                'mss.milestone_strategy_id',
-                'ms.id',
-            )
-            .orderBy('mi.sort_order', 'asc')
-            .orderBy('ms.sort_order', 'asc')
-            .select(selectColumns);
-        endTimer();
-        return processReleasePlanRows(planRows);
-    }
-
     async activateStrategiesForMilestone(
         planId: string,
         auditUser: IAuditUser,

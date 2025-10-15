@@ -11,12 +11,14 @@ import {
     type MilestoneStatus,
 } from './ReleasePlanMilestoneStatus.tsx';
 import { useState } from 'react';
+import { MilestoneNextStartTime } from './MilestoneNextStartTime.tsx';
 
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { StrategyItem } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyItem.tsx';
 import { StrategyList } from 'component/common/StrategyList/StrategyList';
 import { StrategyListItem } from 'component/common/StrategyList/StrategyListItem';
 import { MilestoneAutomationSection } from './MilestoneAutomationSection.tsx';
+import { formatDateYMDHMS } from 'utils/formatDate';
 
 const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'status' && prop !== 'hasAutomation',
@@ -72,6 +74,18 @@ const StyledSecondaryLabel = styled('span')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
 
+const StyledStartedAt = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.fontSizes.smallBody,
+    fontWeight: theme.typography.fontWeightRegular,
+}));
+
+const StyledStatusRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+}));
+
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     padding: 0,
 }));
@@ -89,6 +103,11 @@ interface IReleasePlanMilestoneProps {
     onAddAutomation?: () => void;
     onDeleteAutomation?: () => void;
     automationForm?: React.ReactNode;
+    projectId?: string;
+    environment?: string;
+    onUpdate?: () => void;
+    allMilestones: IReleasePlanMilestone[];
+    activeMilestoneId?: string;
 }
 
 export const ReleasePlanMilestone = ({
@@ -100,6 +119,11 @@ export const ReleasePlanMilestone = ({
     onAddAutomation,
     onDeleteAutomation,
     automationForm,
+    projectId,
+    environment,
+    onUpdate,
+    allMilestones,
+    activeMilestoneId,
 }: IReleasePlanMilestoneProps) => {
     const [expanded, setExpanded] = useState(false);
 
@@ -112,29 +136,58 @@ export const ReleasePlanMilestone = ({
                             <StyledTitle status={status}>
                                 {milestone.name}
                             </StyledTitle>
-                            {!readonly && onStartMilestone && (
-                                <ReleasePlanMilestoneStatus
-                                    status={status}
-                                    onStartMilestone={() =>
-                                        onStartMilestone(milestone)
-                                    }
-                                />
-                            )}
+                            {(!readonly && onStartMilestone) ||
+                            (status === 'active' && milestone.startedAt) ? (
+                                <StyledStatusRow>
+                                    {!readonly && (
+                                        <MilestoneNextStartTime
+                                            milestone={milestone}
+                                            allMilestones={allMilestones}
+                                            activeMilestoneId={
+                                                activeMilestoneId
+                                            }
+                                        />
+                                    )}
+                                    {!readonly && onStartMilestone && (
+                                        <ReleasePlanMilestoneStatus
+                                            status={status}
+                                            onStartMilestone={() =>
+                                                onStartMilestone(milestone)
+                                            }
+                                        />
+                                    )}
+                                    {status === 'active' &&
+                                        milestone.startedAt && (
+                                            <StyledStartedAt>
+                                                Started{' '}
+                                                {formatDateYMDHMS(
+                                                    milestone.startedAt,
+                                                )}
+                                            </StyledStartedAt>
+                                        )}
+                                </StyledStatusRow>
+                            ) : null}
                         </StyledTitleContainer>
                         <StyledSecondaryLabel>
                             No strategies
                         </StyledSecondaryLabel>
                     </StyledAccordionSummary>
                 </StyledAccordion>
-                <MilestoneAutomationSection
-                    showAutomation={showAutomation}
-                    status={status}
-                    onAddAutomation={onAddAutomation}
-                    onDeleteAutomation={onDeleteAutomation}
-                    automationForm={automationForm}
-                    transitionCondition={milestone.transitionCondition}
-                    milestoneName={milestone.name}
-                />
+                {showAutomation && projectId && environment && onUpdate && (
+                    <MilestoneAutomationSection
+                        showAutomation={showAutomation}
+                        status={status}
+                        onAddAutomation={onAddAutomation}
+                        onDeleteAutomation={onDeleteAutomation}
+                        automationForm={automationForm}
+                        transitionCondition={milestone.transitionCondition}
+                        milestoneName={milestone.name}
+                        projectId={projectId}
+                        environment={environment}
+                        sourceMilestoneId={milestone.id}
+                        onUpdate={onUpdate}
+                    />
+                )}
             </StyledMilestoneContainer>
         );
     }
@@ -151,14 +204,32 @@ export const ReleasePlanMilestone = ({
                         <StyledTitle status={status}>
                             {milestone.name}
                         </StyledTitle>
-                        {!readonly && onStartMilestone && (
-                            <ReleasePlanMilestoneStatus
-                                status={status}
-                                onStartMilestone={() =>
-                                    onStartMilestone(milestone)
-                                }
-                            />
-                        )}
+                        {(!readonly && onStartMilestone) ||
+                        (status === 'active' && milestone.startedAt) ? (
+                            <StyledStatusRow>
+                                {!readonly && (
+                                    <MilestoneNextStartTime
+                                        milestone={milestone}
+                                        allMilestones={allMilestones}
+                                        activeMilestoneId={activeMilestoneId}
+                                    />
+                                )}
+                                {!readonly && onStartMilestone && (
+                                    <ReleasePlanMilestoneStatus
+                                        status={status}
+                                        onStartMilestone={() =>
+                                            onStartMilestone(milestone)
+                                        }
+                                    />
+                                )}
+                                {status === 'active' && milestone.startedAt && (
+                                    <StyledStartedAt>
+                                        Started{' '}
+                                        {formatDateYMDHMS(milestone.startedAt)}
+                                    </StyledStartedAt>
+                                )}
+                            </StyledStatusRow>
+                        ) : null}
                     </StyledTitleContainer>
                     <StyledSecondaryLabel>
                         {milestone.strategies.length === 1
@@ -187,15 +258,21 @@ export const ReleasePlanMilestone = ({
                     </StrategyList>
                 </StyledAccordionDetails>
             </StyledAccordion>
-            <MilestoneAutomationSection
-                showAutomation={showAutomation}
-                status={status}
-                onAddAutomation={onAddAutomation}
-                onDeleteAutomation={onDeleteAutomation}
-                automationForm={automationForm}
-                transitionCondition={milestone.transitionCondition}
-                milestoneName={milestone.name}
-            />
+            {showAutomation && projectId && environment && onUpdate && (
+                <MilestoneAutomationSection
+                    showAutomation={showAutomation}
+                    status={status}
+                    onAddAutomation={onAddAutomation}
+                    onDeleteAutomation={onDeleteAutomation}
+                    automationForm={automationForm}
+                    transitionCondition={milestone.transitionCondition}
+                    milestoneName={milestone.name}
+                    projectId={projectId}
+                    environment={environment}
+                    sourceMilestoneId={milestone.id}
+                    onUpdate={onUpdate}
+                />
+            )}
         </StyledMilestoneContainer>
     );
 };

@@ -8,7 +8,8 @@ export const transitionConditionSchema = {
     description: 'A transition condition for milestone progression',
     properties: {
         intervalMinutes: {
-            type: 'number',
+            type: 'integer',
+            minimum: 1,
             description: 'The interval in minutes before transitioning',
             example: 30,
         },

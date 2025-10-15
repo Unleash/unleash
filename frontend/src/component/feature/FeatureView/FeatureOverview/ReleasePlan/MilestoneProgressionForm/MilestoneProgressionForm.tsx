@@ -1,20 +1,11 @@
 import { useState } from 'react';
-import {
-    Button,
-    MenuItem,
-    Select,
-    styled,
-    TextField,
-    type SelectChangeEvent,
-} from '@mui/material';
+import { Button, styled } from '@mui/material';
 import BoltIcon from '@mui/icons-material/Bolt';
-import {
-    useMilestoneProgressionForm,
-    type TimeUnit,
-} from '../hooks/useMilestoneProgressionForm.js';
+import { useMilestoneProgressionForm } from '../hooks/useMilestoneProgressionForm.js';
 import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { MilestoneProgressionTimeInput } from './MilestoneProgressionTimeInput.tsx';
 
 const StyledFormContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -46,43 +37,6 @@ const StyledLabel = styled('span')(({ theme }) => ({
     color: theme.palette.text.primary,
     fontSize: theme.typography.body2.fontSize,
     flexShrink: 0,
-}));
-
-const StyledInputGroup = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-}));
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-    width: '60px',
-    '& .MuiOutlinedInput-root': {
-        borderRadius: theme.spacing(0.5),
-        '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: theme.palette.primary.main,
-        },
-    },
-    '& input': {
-        textAlign: 'center',
-        padding: theme.spacing(0.75, 1),
-        fontSize: theme.typography.body2.fontSize,
-        fontWeight: theme.typography.fontWeightMedium,
-    },
-}));
-
-const StyledSelect = styled(Select)(({ theme }) => ({
-    width: '100px',
-    fontSize: theme.typography.body2.fontSize,
-    borderRadius: theme.spacing(0.5),
-    '& .MuiOutlinedInput-notchedOutline': {
-        borderRadius: theme.spacing(0.5),
-    },
-    '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: theme.palette.primary.main,
-    },
-    '& .MuiSelect-select': {
-        padding: theme.spacing(0.75, 1.25),
-    },
 }));
 
 const StyledButtonGroup = styled('div')(({ theme }) => ({
@@ -127,22 +81,6 @@ export const MilestoneProgressionForm = ({
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleTimeUnitChange = (event: SelectChangeEvent<unknown>) => {
-        const newUnit = event.target.value as TimeUnit;
-        form.setTimeUnit(newUnit);
-    };
-
-    const handleTimeValueChange = (
-        event: React.ChangeEvent<HTMLInputElement>,
-    ) => {
-        const inputValue = event.target.value;
-        // Only allow digits
-        if (inputValue === '' || /^\d+$/.test(inputValue)) {
-            const value = inputValue === '' ? 0 : Number.parseInt(inputValue);
-            form.setTimeValue(value);
-        }
-    };
-
     const handleSubmit = async () => {
         if (isSubmitting) return;
 
@@ -184,37 +122,13 @@ export const MilestoneProgressionForm = ({
             <StyledTopRow>
                 <StyledIcon />
                 <StyledLabel>Proceed to the next milestone after</StyledLabel>
-                <StyledInputGroup>
-                    <StyledTextField
-                        type='text'
-                        inputMode='numeric'
-                        value={form.timeValue}
-                        onChange={handleTimeValueChange}
-                        onPaste={(e) => {
-                            const pastedText = e.clipboardData.getData('text');
-                            if (!/^\d+$/.test(pastedText)) {
-                                e.preventDefault();
-                            }
-                        }}
-                        inputProps={{
-                            pattern: '[0-9]*',
-                            'aria-label': 'Time duration value',
-                            'aria-describedby': 'time-unit-select',
-                        }}
-                        size='small'
-                    />
-                    <StyledSelect
-                        value={form.timeUnit}
-                        onChange={handleTimeUnitChange}
-                        size='small'
-                        aria-label='Time unit'
-                        id='time-unit-select'
-                    >
-                        <MenuItem value='minutes'>Minutes</MenuItem>
-                        <MenuItem value='hours'>Hours</MenuItem>
-                        <MenuItem value='days'>Days</MenuItem>
-                    </StyledSelect>
-                </StyledInputGroup>
+                <MilestoneProgressionTimeInput
+                    timeValue={form.timeValue}
+                    timeUnit={form.timeUnit}
+                    onTimeValueChange={form.handleTimeValueChange}
+                    onTimeUnitChange={form.handleTimeUnitChange}
+                    disabled={isSubmitting}
+                />
             </StyledTopRow>
             <StyledButtonGroup>
                 {form.errors.time && (

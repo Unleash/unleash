@@ -96,7 +96,12 @@ const StartMilestone: FC<{
                 </div>
             </ChangeItemWrapper>
             <TabPanel>
-                <ReleasePlanMilestone readonly milestone={newMilestone} />
+                <ReleasePlanMilestone
+                    readonly
+                    milestone={newMilestone}
+                    allMilestones={releasePlan.milestones}
+                    activeMilestoneId={releasePlan.activeMilestoneId}
+                />
             </TabPanel>
             <TabPanel variant='diff'>
                 <EventDiff

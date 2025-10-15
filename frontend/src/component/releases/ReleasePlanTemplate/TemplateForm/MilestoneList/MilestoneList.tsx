@@ -1,7 +1,6 @@
 import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
 import { styled, Button } from '@mui/material';
 import Add from '@mui/icons-material/Add';
-import { v4 as uuidv4 } from 'uuid';
 import { useCallback } from 'react';
 import type { OnMoveItem } from 'hooks/useDragItem';
 import { MilestoneCard } from './MilestoneCard/MilestoneCard.tsx';
@@ -103,14 +102,14 @@ export const MilestoneList = ({
                     setMilestones((prev) => [
                         ...prev,
                         {
-                            id: uuidv4(),
+                            id: crypto.randomUUID(),
                             name: `Milestone ${prev.length + 1}`,
                             sortOrder: prev.length,
                             strategies: prev[prev.length - 1].strategies?.map(
                                 (strat) => {
                                     return {
                                         ...strat,
-                                        id: uuidv4(),
+                                        id: crypto.randomUUID(),
                                     };
                                 },
                             ),

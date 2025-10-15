@@ -66,7 +66,6 @@
     "@types/react-table": "7.7.20",
     "@types/react-test-renderer": "18.3.1",
     "@types/semver": "7.7.0",
-    "@types/uuid": "^9.0.0",
     "@uiw/codemirror-theme-duotone": "4.23.13",
     "@uiw/react-codemirror": "4.23.13",
     "@unleash/proxy-client-react": "^5.0.0",

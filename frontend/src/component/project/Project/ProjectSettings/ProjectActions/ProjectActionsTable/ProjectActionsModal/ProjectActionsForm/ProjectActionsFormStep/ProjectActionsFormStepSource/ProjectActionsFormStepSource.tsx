@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Button, Divider, styled } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
 import { IN } from 'constants/operators';
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
@@ -53,7 +52,7 @@ export const ProjectActionsFormStepSource = ({
     const { signalEndpointSignals } = useSignalEndpointSignals(sourceId, 1);
 
     const addFilter = () => {
-        const id = uuidv4();
+        const id = crypto.randomUUID();
         setFilters((filters) => [
             ...filters,
             {

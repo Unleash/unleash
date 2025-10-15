@@ -28,7 +28,6 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
-import { v4 as uuidv4 } from 'uuid';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 import {
     getChangeRequestConflictCreatedData,
@@ -87,7 +86,7 @@ const addIdSymbolToConstraints = (strategy?: IFeatureStrategy) => {
     if (!strategy) return;
 
     return strategy?.constraints.map((constraint) => {
-        return { ...constraint, [constraintId]: uuidv4() };
+        return { ...constraint, [constraintId]: crypto.randomUUID() };
     });
 };
 

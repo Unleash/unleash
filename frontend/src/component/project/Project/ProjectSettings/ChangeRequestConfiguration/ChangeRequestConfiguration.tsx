@@ -45,7 +45,8 @@ export const ChangeRequestConfiguration = () => {
                 header={<PageHeader title='Change request configuration' />}
             >
                 <Alert severity='error'>
-                    You need project owner permissions to access this section.
+                    You need project owner permissions or a custom role with
+                    "view change request configuration" to access this section.
                 </Alert>
             </PageContent>
         );

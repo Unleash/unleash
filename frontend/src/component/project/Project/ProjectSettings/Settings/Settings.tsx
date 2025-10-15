@@ -36,7 +36,8 @@ export const Settings = () => {
         return (
             <PageContent header={<PageHeader title='General settings' />}>
                 <Alert severity='error'>
-                    You need project owner permissions to access this section.
+                    You need project owner permissions or a custom role with
+                    "project setting access permission" to access this section.
                 </Alert>
             </PageContent>
         );

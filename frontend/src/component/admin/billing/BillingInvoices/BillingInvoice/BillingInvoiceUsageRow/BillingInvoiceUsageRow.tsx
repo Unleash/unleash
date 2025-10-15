@@ -11,6 +11,10 @@ const StyledCellWithIndicator = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
+type BillingInvoiceRowProps = DetailedInvoicesLineSchema & {
+    showLimits: boolean;
+};
+
 export const BillingInvoiceUsageRow = ({
     quantity,
     consumption,
@@ -18,7 +22,8 @@ export const BillingInvoiceUsageRow = ({
     description,
     currency,
     totalAmount,
-}: DetailedInvoicesLineSchema) => {
+    showLimits,
+}: BillingInvoiceRowProps) => {
     const percentage =
         limit && limit > 0
             ? Math.min(100, Math.round(((consumption || 0) / limit) * 100))
@@ -27,18 +32,22 @@ export const BillingInvoiceUsageRow = ({
     return (
         <>
             <div>{description}</div>
-            <StyledCellWithIndicator>
-                <ConsumptionIndicator percentage={percentage || 0} />
-                <div>
-                    {consumption !== undefined && limit !== undefined
-                        ? `${formatLargeNumbers(consumption)}/${formatLargeNumbers(limit)}`
-                        : consumption !== undefined
-                          ? formatLargeNumbers(consumption)
-                          : limit !== undefined
-                            ? formatLargeNumbers(limit)
-                            : '–'}
-                </div>
-            </StyledCellWithIndicator>
+            {showLimits ? (
+                <StyledCellWithIndicator>
+                    <ConsumptionIndicator percentage={percentage || 0} />
+                    <div>
+                        {consumption !== undefined && limit !== undefined
+                            ? `${formatLargeNumbers(consumption)}/${formatLargeNumbers(limit)}`
+                            : consumption !== undefined
+                              ? formatLargeNumbers(consumption)
+                              : limit !== undefined
+                                ? formatLargeNumbers(limit)
+                                : '–'}
+                    </div>
+                </StyledCellWithIndicator>
+            ) : (
+                <StyledCellWithIndicator />
+            )}
             <div>{quantity ? formatLargeNumbers(quantity) : '–'}</div>
             <StyledAmountCell>
                 {formatCurrency(totalAmount || 0, currency)}

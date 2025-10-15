@@ -118,9 +118,7 @@ export const BillingInvoice = ({
           })
         : '';
 
-    const hasLimitsColumn =
-        mainLines?.some((line) => line.limit) ||
-        usageLines?.some((line) => line.limit);
+    const hasLimitsColumn = usageLines.some((line) => line.limit);
 
     return (
         <StyledAccordion defaultExpanded={Boolean(defaultExpanded)}>
@@ -178,7 +176,11 @@ export const BillingInvoice = ({
                         <TableBody key='usage' title='Usage'>
                             <StyledTableRow>
                                 <HeaderCell>Usage {monthText}</HeaderCell>
-                                <HeaderCell>Included</HeaderCell>
+                                {hasLimitsColumn ? (
+                                    <HeaderCell>Included</HeaderCell>
+                                ) : (
+                                    <HeaderCell />
+                                )}
                                 <HeaderCell>Overages</HeaderCell>
                                 <HeaderCell>
                                     <StyledAmountCell>Amount</StyledAmountCell>
@@ -186,7 +188,10 @@ export const BillingInvoice = ({
                             </StyledTableRow>
                             {usageLines.map((line) => (
                                 <StyledTableRow key={line.description}>
-                                    <BillingInvoiceUsageRow {...line} />
+                                    <BillingInvoiceUsageRow
+                                        {...line}
+                                        showLimits={hasLimitsColumn}
+                                    />
                                 </StyledTableRow>
                             ))}
                         </TableBody>

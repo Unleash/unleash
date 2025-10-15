@@ -11,14 +11,6 @@ const StyledCellWithIndicator = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-type BillingInvoiceRowProps = {
-    description: string;
-    quantity?: number;
-    amount?: number;
-    quota?: number;
-    usage?: number;
-};
-
 const StyledDescriptionCell = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -30,6 +22,10 @@ const StyledSubText = styled(Typography)(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
 }));
 
+type BillingInvoiceRowProps = DetailedInvoicesLineSchema & {
+    showLimits?: boolean;
+};
+
 export const BillingInvoiceRow = ({
     quantity,
     consumption,
@@ -39,7 +35,8 @@ export const BillingInvoiceRow = ({
     totalAmount,
     startDate,
     endDate,
-}: DetailedInvoicesLineSchema) => {
+    showLimits,
+}: BillingInvoiceRowProps) => {
     const percentage =
         limit && limit > 0
             ? Math.min(100, Math.round(((consumption || 0) / limit) * 100))
@@ -68,11 +65,15 @@ export const BillingInvoiceRow = ({
                     </StyledSubText>
                 ) : null}
             </StyledDescriptionCell>
-            <StyledCellWithIndicator>
-                <ConsumptionIndicator percentage={percentage || 0} />
-                {limit !== undefined ? formatLargeNumbers(limit) : '–'}
-                {percentage !== undefined ? ` (${percentage}%)` : ''}
-            </StyledCellWithIndicator>
+            {showLimits ? (
+                <StyledCellWithIndicator>
+                    <ConsumptionIndicator percentage={percentage || 0} />
+                    {limit !== undefined ? formatLargeNumbers(limit) : '–'}
+                    {percentage !== undefined ? ` (${percentage}%)` : ''}
+                </StyledCellWithIndicator>
+            ) : (
+                <StyledCellWithIndicator />
+            )}
             <div>{quantity ? formatLargeNumbers(quantity) : '–'}</div>
             <StyledAmountCell>
                 {formatCurrency(totalAmount || 0, currency)}

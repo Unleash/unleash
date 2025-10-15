@@ -59,6 +59,7 @@ const FeatureToggleCellComponent = ({
             environmentType: environment?.type,
             hasStrategies: environment?.hasStrategies,
             hasEnabledStrategies: environment?.hasEnabledStrategies,
+            hasReleasePlans: environment?.hasReleasePlans,
             isChangeRequestEnabled,
             onRollback,
             onSuccess: refetch,

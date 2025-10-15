@@ -102,7 +102,8 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                 if (
                     newState === false ||
                     !config.hasStrategies ||
-                    config.hasEnabledStrategies
+                    config.hasEnabledStrategies ||
+                    config.hasReleasePlans
                 ) {
                     return next();
                 }

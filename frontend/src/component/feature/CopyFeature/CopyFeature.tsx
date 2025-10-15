@@ -78,7 +78,7 @@ export const CopyFeatureToggle = () => {
     const navigate = useNavigate();
     const { isChangeRequestConfiguredInAnyEnv } =
         useChangeRequestsEnabled(projectId);
-    const hasReleasePlan = feature.environments.some((env) =>
+    const hasReleasePlan = feature.environments?.some((env) =>
         Boolean(env.releasePlans?.length),
     );
 

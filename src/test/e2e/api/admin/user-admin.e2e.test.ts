@@ -20,11 +20,10 @@ import { randomId } from '../../../../lib/util/random-id.js';
 import { omitKeys } from '../../../../lib/util/omit-keys.js';
 import type { ISessionStore } from '../../../../lib/types/stores/session-store.js';
 import type { IUnleashStores } from '../../../../lib/types/index.js';
-import { createHash } from 'crypto';
+import { createHash, randomUUID } from 'crypto';
 import { createDb } from '../../../../lib/db/db-pool.js';
 import { migrateDb } from '../../../../migrator.js';
 import { createTestConfig } from '../../../config/test-config.js';
-import { v4 as uuidv4 } from 'uuid';
 import { getDbConfig } from '../../../../lib/server-impl.js';
 
 let stores: IUnleashStores;
@@ -39,7 +38,7 @@ let editorRole: IRole;
 let adminRole: IRole;
 
 describe('Users created without an event are amended', () => {
-    const testDbName = `migration_test_${uuidv4().replace(/-/g, '')}`;
+    const testDbName = `migration_test_${randomUUID().replace(/-/g, '')}`;
     const dbConnConfig = getDbConfig();
     beforeAll(async () => {
         // create a new empty database for this test

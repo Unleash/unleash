@@ -46,6 +46,7 @@ import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding.ts
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { ProjectOnboarded } from 'component/onboarding/flow/ProjectOnboarded';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { ArchivedFeatureActionCell } from '../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureActionCell.tsx';
 import { ArchiveBatchActions } from '../../../archive/ArchiveTable/ArchiveBatchActions.tsx';
 import { ImportModal } from '../Import/ImportModal.tsx';
@@ -174,6 +175,11 @@ export const ProjectFeatureToggles = ({
     const [setupCompletedState, setSetupCompletedState] = useLocalStorageState<
         'hide-setup' | 'show-setup'
     >(`onboarding-state:v1-${projectId}`, 'hide-setup');
+    const resizeColumnsEnabled = useUiFlag('resizeProjectTableColumns');
+
+    const [columnSizing, setColumnSizing] = useLocalStorageState<
+        Record<string, number>
+    >(`project-feature-toggles-column-sizing:v1-${projectId}`, {});
 
     const isOnboarding =
         project.onboardingStatus.status !== 'onboarded' &&
@@ -222,6 +228,7 @@ export const ProjectFeatureToggles = ({
                         onChange={row?.getToggleSelectedHandler()}
                     />
                 ),
+                size: 50,
                 meta: {
                     width: '1%',
                 },
@@ -245,6 +252,7 @@ export const ProjectFeatureToggles = ({
                         onClick={() => onFavorite(feature)}
                     />
                 ),
+                size: 50,
                 enableSorting: false,
                 enableHiding: false,
                 meta: {
@@ -255,12 +263,18 @@ export const ProjectFeatureToggles = ({
                 id: 'name',
                 header: 'Name',
                 cell: createFeatureOverviewCell(onTagClick, onFlagTypeClick),
+                size: 200,
+                ...(resizeColumnsEnabled && {
+                    minSize: 100,
+                    maxSize: 500,
+                }),
                 enableHiding: false,
             }),
             columnHelper.accessor('createdAt', {
                 id: 'createdAt',
                 header: 'Created',
                 cell: DateCell,
+                size: 120,
                 meta: {
                     width: '1%',
                 },
@@ -269,6 +283,7 @@ export const ProjectFeatureToggles = ({
                 id: 'createdBy',
                 header: 'By',
                 cell: AvatarCell(onAvatarClick),
+                size: 80,
                 enableSorting: false,
                 meta: {
                     width: '1%',
@@ -284,10 +299,10 @@ export const ProjectFeatureToggles = ({
                         data-loading
                     />
                 ),
-                size: 50,
+                size: 120,
                 meta: {
-                    align: 'center',
                     width: '1%',
+                    align: 'center',
                 },
             }),
             columnHelper.accessor('lifecycle', {
@@ -307,11 +322,11 @@ export const ProjectFeatureToggles = ({
                         data-loading
                     />
                 ),
+                size: 150,
                 enableSorting: false,
-                size: 50,
                 meta: {
-                    align: 'center',
                     width: '1%',
+                    align: 'center',
                 },
             }),
             ...environments.map((name: string) => {
@@ -336,6 +351,7 @@ export const ProjectFeatureToggles = ({
                     {
                         id: formatEnvironmentColumnId(name),
                         header: name,
+                        size: 90,
                         meta: {
                             align: 'center',
                             width: 90,
@@ -401,7 +417,7 @@ export const ProjectFeatureToggles = ({
                             onOpenStaleDialog={setFeatureStaleDialogState}
                         />
                     ),
-
+                size: 100,
                 enableSorting: false,
                 enableHiding: false,
                 meta: {
@@ -472,17 +488,23 @@ export const ProjectFeatureToggles = ({
 
     const defaultColumnVisibility = useDefaultColumnVisibility(allColumnIds);
 
-    const table = useReactTable(
-        withTableState(tableState, setTableState, {
+    const table = useReactTable({
+        ...withTableState(tableState, setTableState, {
             columns,
             data,
             enableRowSelection: true,
             state: {
                 columnVisibility: defaultColumnVisibility,
+                ...(resizeColumnsEnabled && { columnSizing }),
             },
             getRowId,
         }),
-    );
+        ...(resizeColumnsEnabled && {
+            enableColumnResizing: true,
+            columnResizeMode: 'onChange' as const,
+            onColumnSizingChange: setColumnSizing,
+        }),
+    });
 
     const { columnVisibility, rowSelection } = table.getState();
     const onToggleColumnVisibility = useCallback(
@@ -502,6 +524,11 @@ export const ProjectFeatureToggles = ({
         },
         [columnVisibility, setTableState],
     );
+
+    const onResetColumnSizing = useCallback(() => {
+        setColumnSizing({});
+        table.resetColumnSizing();
+    }, [setColumnSizing, table]);
 
     const selectedData = useSelectedData(features, rowSelection);
 
@@ -589,6 +616,11 @@ export const ProjectFeatureToggles = ({
                                 columnVisibility={columnVisibility}
                                 environments={environments}
                                 onToggle={onToggleColumnVisibility}
+                                onResetColumnSizing={
+                                    resizeColumnsEnabled
+                                        ? onResetColumnSizing
+                                        : undefined
+                                }
                             />
                         </FilterRow>
                         {showArchived ? null : (
@@ -614,6 +646,7 @@ export const ProjectFeatureToggles = ({
                         <PaginatedTable
                             tableInstance={table}
                             totalItems={total}
+                            enableFixedLayout={resizeColumnsEnabled}
                         />
                     </SearchHighlightProvider>
                     <ConditionallyRender

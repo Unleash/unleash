@@ -7,11 +7,12 @@ type ProjectFeaturesColumnsMenuProps = {
     columnVisibility: Record<string, boolean>;
     environments: string[];
     onToggle: (id: string) => void;
+    onResetColumnSizing?: () => void;
 };
 
 export const ProjectFeaturesColumnsMenu: FC<
     ProjectFeaturesColumnsMenuProps
-> = ({ columnVisibility, environments, onToggle }) => {
+> = ({ columnVisibility, environments, onToggle, onResetColumnSizing }) => {
     return (
         <Box sx={(theme) => ({ marginLeft: theme.spacing(1) })}>
             <ColumnsMenu
@@ -55,6 +56,7 @@ export const ProjectFeaturesColumnsMenu: FC<
                     })),
                 ]}
                 onToggle={onToggle}
+                onResetColumnSizing={onResetColumnSizing}
             />
         </Box>
     );

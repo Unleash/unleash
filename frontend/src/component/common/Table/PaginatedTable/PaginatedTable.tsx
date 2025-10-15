@@ -12,13 +12,51 @@ import { StickyPaginationBar } from 'component/common/Table/StickyPaginationBar/
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled } from '@mui/material';
 
-const HeaderCell = <T extends object>(header: Header<T, unknown>) => {
+const ResizeHandle = styled('div')(({ theme }) => ({
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    height: '100%',
+    width: '8px',
+    cursor: 'col-resize',
+    userSelect: 'none',
+    touchAction: 'none',
+    zIndex: 1,
+    '&::after': {
+        content: '""',
+        position: 'absolute',
+        right: '3px',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        height: '60%',
+        width: '2px',
+        backgroundColor: 'transparent',
+    },
+    '&:hover::after': {
+        backgroundColor: theme.palette.primary.main,
+    },
+}));
+
+const HeaderCell = <T extends object>(
+    header: Header<T, unknown>,
+    enableFixedLayout: boolean,
+) => {
     const column = header.column;
     const isDesc = column.getIsSorted() === 'desc';
     const align = column.columnDef.meta?.align || undefined;
     const width = column.columnDef.meta?.width || undefined;
     const fixedWidth = width && typeof width === 'number' ? width : undefined;
     const content = column.columnDef.header;
+    const canResize = enableFixedLayout && column.getCanResize();
+
+    // Use column.getSize() for fixed layout, otherwise use meta.width
+    const columnSize = enableFixedLayout ? column.getSize() : width;
+
+    const handleResizeMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
+        e.stopPropagation();
+        const resizeHandler = header.getResizeHandler();
+        resizeHandler(e);
+    };
 
     return (
         <CellSortable
@@ -31,15 +69,22 @@ const HeaderCell = <T extends object>(header: Header<T, unknown>) => {
                 borderRadius: '0px',
                 paddingTop: 0,
                 paddingBottom: 0,
-                width,
-                maxWidth: fixedWidth,
-                minWidth: fixedWidth,
+                width: columnSize,
+                maxWidth: enableFixedLayout ? columnSize : fixedWidth,
+                minWidth: enableFixedLayout ? columnSize : fixedWidth,
+                position: canResize ? 'relative' : undefined,
             }}
             ariaTitle={typeof content === 'string' ? content : undefined}
         >
             {header.isPlaceholder
                 ? null
                 : flexRender(content, header.getContext())}
+            {canResize && (
+                <ResizeHandle
+                    onMouseDown={handleResizeMouseDown}
+                    onTouchStart={handleResizeMouseDown}
+                />
+            )}
         </CellSortable>
     );
 };
@@ -47,6 +92,7 @@ const HeaderCell = <T extends object>(header: Header<T, unknown>) => {
 const TableContainer = styled('div')(({ theme }) => ({
     overflowX: 'auto',
     isolation: 'isolate',
+    position: 'relative',
 }));
 
 /**
@@ -55,9 +101,11 @@ const TableContainer = styled('div')(({ theme }) => ({
 export const PaginatedTable = <T extends object>({
     totalItems,
     tableInstance,
+    enableFixedLayout = false,
 }: {
     tableInstance: TableType<T>;
     totalItems?: number;
+    enableFixedLayout?: boolean;
 }) => {
     const { pagination } = tableInstance.getState();
     const tableRef = useRef<HTMLDivElement>(null);
@@ -73,16 +121,31 @@ export const PaginatedTable = <T extends object>({
         }
     };
 
+    // Calculate total width for fixed table layout
+    const totalWidth = enableFixedLayout
+        ? tableInstance.getAllColumns().reduce((sum, column) => sum + column.getSize(), 0)
+        : undefined;
+
     return (
         <>
             <TableContainer ref={tableRef}>
-                <Table>
+                <Table
+                    sx={
+                        enableFixedLayout && totalWidth
+                            ? {
+                                  tableLayout: 'fixed',
+                                  width: '100%',
+                                  minWidth: `${totalWidth}px`,
+                              }
+                            : undefined
+                    }
+                >
                     <TableHead>
                         {tableInstance.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => (
-                                    <HeaderCell {...header} key={header.id} />
-                                ))}
+                                {headerGroup.headers.map((header) =>
+                                    HeaderCell(header, enableFixedLayout),
+                                )}
                             </TableRow>
                         ))}
                     </TableHead>
@@ -100,14 +163,29 @@ export const PaginatedTable = <T extends object>({
                     >
                         {tableInstance.getRowModel().rows.map((row) => (
                             <TableRow key={row.id}>
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>
-                                        {flexRender(
-                                            cell.column.columnDef.cell,
-                                            cell.getContext(),
-                                        )}
-                                    </TableCell>
-                                ))}
+                                {row.getVisibleCells().map((cell) => {
+                                    const cellWidth = enableFixedLayout
+                                        ? cell.column.getSize()
+                                        : undefined;
+                                    return (
+                                        <TableCell
+                                            key={cell.id}
+                                            style={
+                                                cellWidth
+                                                    ? {
+                                                          width: cellWidth,
+                                                          maxWidth: cellWidth,
+                                                      }
+                                                    : undefined
+                                            }
+                                        >
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext(),
+                                            )}
+                                        </TableCell>
+                                    );
+                                })}
                             </TableRow>
                         ))}
                     </TableBody>

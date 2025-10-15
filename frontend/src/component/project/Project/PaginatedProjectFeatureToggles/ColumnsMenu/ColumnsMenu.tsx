@@ -27,9 +27,14 @@ interface IColumnsMenuProps {
         isVisible?: boolean;
     }[];
     onToggle?: (id: string) => void;
+    onResetColumnSizing?: () => void;
 }
 
-export const ColumnsMenu: FC<IColumnsMenuProps> = ({ columns, onToggle }) => {
+export const ColumnsMenu: FC<IColumnsMenuProps> = ({
+    columns,
+    onToggle,
+    onResetColumnSizing,
+}) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const onIconClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -126,6 +131,20 @@ export const ColumnsMenu: FC<IColumnsMenuProps> = ({ columns, onToggle }) => {
                                 />
                             </StyledMenuItem>
                         ),
+                    )}
+                    {onResetColumnSizing && (
+                        <>
+                            <StyledDivider />
+                            <StyledMenuItem onClick={onResetColumnSizing}>
+                                <ListItemText
+                                    primary={
+                                        <Typography variant='body2'>
+                                            Reset column widths
+                                        </Typography>
+                                    }
+                                />
+                            </StyledMenuItem>
+                        </>
                     )}
                 </MenuList>
             </Popover>

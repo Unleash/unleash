@@ -46,18 +46,6 @@ const StyledLabelIcon = styled('span')(({ theme }) => ({
 
 const offset = 16;
 
-const getAlign = (align?: 'left' | 'right' | 'center') => {
-    if (align === 'left') {
-        return 'flex-start';
-    }
-
-    if (align === 'right') {
-        return 'flex-end';
-    }
-
-    return 'center';
-};
-
 const getLeftOffset = (caretX = 0, align?: 'left' | 'right' | 'center') => {
     if (align === 'left') {
         return caretX + offset;
@@ -73,23 +61,29 @@ const getLeftOffset = (caretX = 0, align?: 'left' | 'right' | 'center') => {
 export const ChartTooltipContainer: FC<IChartTooltipProps> = ({
     tooltip,
     children,
-}) => (
-    <Box
-        sx={(theme) => ({
-            top: (tooltip?.caretY || 0) + offset,
-            left: getLeftOffset(tooltip?.caretX, tooltip?.align),
-            width: '1px',
-            position: 'absolute',
-            display: tooltip ? 'flex' : 'none',
-            pointerEvents: 'none',
-            zIndex: theme.zIndex.tooltip,
-            flexDirection: 'column',
-            alignItems: getAlign(tooltip?.align),
-        })}
-    >
-        {children}
-    </Box>
-);
+}) => {
+    const top = tooltip?.caretY ?? 0 + offset;
+    const left = getLeftOffset(tooltip?.caretX, tooltip?.align);
+    return (
+        <Box
+            sx={(theme) => ({
+                top: 0,
+                left: 0,
+                transform: `translate(${left}px, ${top}px)`,
+                transition: 'transform 0.2s ease-in-out',
+                width: '1px',
+                position: 'absolute',
+                display: tooltip ? 'flex' : 'none',
+                pointerEvents: 'none',
+                zIndex: theme.zIndex.tooltip,
+                flexDirection: 'column',
+                alignItems: 'center',
+            })}
+        >
+            {children}
+        </Box>
+    );
+};
 
 export const ChartTooltip: FC<IChartTooltipProps> = ({ tooltip }) => (
     <ChartTooltipContainer tooltip={tooltip}>

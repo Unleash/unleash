@@ -13,6 +13,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useLicenseKeyApi from 'hooks/api/actions/useLicenseAPI/useLicenseApi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -43,6 +44,7 @@ export const License = () => {
     const { locationSettings } = useLocationSettings();
     const [token, setToken] = useState('');
     const { updateLicenseKey } = useLicenseKeyApi();
+    const enterpriseEdgeEnabled = useUiFlag('enterpriseEdge');
 
     const updateToken = (event: React.ChangeEvent<HTMLInputElement>) => {
         setToken(event.target.value.trim());
@@ -111,6 +113,16 @@ export const License = () => {
                                     {license.releaseTemplates}
                                 </StyledPropertyDetails>
                             </StyledDataCollectionPropertyRow>
+                            {enterpriseEdgeEnabled && (
+                                <StyledDataCollectionPropertyRow>
+                                    <StyledPropertyName>
+                                        Edge instances
+                                    </StyledPropertyName>
+                                    <StyledPropertyDetails>
+                                        {license.edgeInstances}
+                                    </StyledPropertyDetails>
+                                </StyledDataCollectionPropertyRow>
+                            )}
                             <StyledDataCollectionPropertyRow>
                                 <StyledPropertyName>
                                     Expire at

@@ -159,8 +159,8 @@ export const BillingInvoice = ({
                 <StyledInvoiceGrid>
                     <StyledSubgrid>
                         <HeaderCell>Description</HeaderCell>
-                        <HeaderCell>Included</HeaderCell>
                         <HeaderCell />
+                        <HeaderCell>Quantity</HeaderCell>
                         <HeaderCell>
                             <StyledAmountCell>Amount</StyledAmountCell>
                         </HeaderCell>

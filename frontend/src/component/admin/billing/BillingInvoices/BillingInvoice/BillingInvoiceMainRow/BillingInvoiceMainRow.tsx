@@ -46,8 +46,8 @@ export const BillingInvoiceMainRow = ({
                     </StyledSubText>
                 ) : null}
             </StyledDescriptionCell>
-            <div>{quantity ? formatLargeNumbers(quantity) : '–'}</div>
             <div />
+            <div>{quantity ? formatLargeNumbers(quantity) : '–'}</div>
             <StyledAmountCell>
                 {formatCurrency(totalAmount || 0, currency)}
             </StyledAmountCell>

@@ -12,7 +12,8 @@ import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { formatCurrency } from './formatCurrency.ts';
 import { Badge } from 'component/common/Badge/Badge.tsx';
-import { BillingInvoiceRow } from './BillingInvoiceRow/BillingInvoiceRow.tsx';
+import { BillingInvoiceMainRow } from './BillingInvoiceMainRow/BillingInvoiceMainRow.tsx';
+import { BillingInvoiceUsageRow } from './BillingInvoiceUsageRow/BillingInvoiceUsageRow.tsx';
 import { BillingInvoiceFooter } from './BillingInvoiceFooter/BillingInvoiceFooter.tsx';
 import { StyledAmountCell, StyledSubgrid } from './BillingInvoice.styles.tsx';
 import type { DetailedInvoicesSchemaInvoicesItem } from 'openapi';
@@ -105,6 +106,7 @@ export const BillingInvoice = ({
     totalAmount,
     mainLines,
     usageLines,
+    monthText,
     defaultExpanded,
 }: BillingInvoiceProps) => {
     const currency = mainLines?.[0]?.currency || usageLines?.[0]?.currency;
@@ -159,12 +161,8 @@ export const BillingInvoice = ({
                 <StyledInvoiceGrid>
                     <StyledSubgrid>
                         <HeaderCell>Description</HeaderCell>
-                        {hasLimitsColumn ? (
-                            <HeaderCell>Included</HeaderCell>
-                        ) : (
-                            <HeaderCell />
-                        )}
-                        <HeaderCell>Quantity</HeaderCell>
+                        <HeaderCell>Included</HeaderCell>
+                        <HeaderCell />
                         <HeaderCell>
                             <StyledAmountCell>Amount</StyledAmountCell>
                         </HeaderCell>
@@ -172,22 +170,23 @@ export const BillingInvoice = ({
                     {mainLines.map((line) => (
                         <TableBody key={line.description}>
                             <StyledTableRow key={line.description}>
-                                <BillingInvoiceRow
-                                    {...line}
-                                    showLimits={hasLimitsColumn}
-                                />
+                                <BillingInvoiceMainRow {...line} />
                             </StyledTableRow>
                         </TableBody>
                     ))}
                     {usageLines.length ? (
                         <TableBody key='usage' title='Usage'>
-                            <StyledSectionTitle>Usage</StyledSectionTitle>
+                            <StyledTableRow>
+                                <HeaderCell>Usage {monthText}</HeaderCell>
+                                <HeaderCell>Included</HeaderCell>
+                                <HeaderCell>Overages</HeaderCell>
+                                <HeaderCell>
+                                    <StyledAmountCell>Amount</StyledAmountCell>
+                                </HeaderCell>
+                            </StyledTableRow>
                             {usageLines.map((line) => (
                                 <StyledTableRow key={line.description}>
-                                    <BillingInvoiceRow
-                                        {...line}
-                                        showLimits={hasLimitsColumn}
-                                    />
+                                    <BillingInvoiceUsageRow {...line} />
                                 </StyledTableRow>
                             ))}
                         </TableBody>

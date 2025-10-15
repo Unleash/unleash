@@ -1,7 +1,7 @@
 import { formatLargeNumbers } from 'component/impact-metrics/metricsFormatters.ts';
 import { formatCurrency } from '../formatCurrency.ts';
 import { ConsumptionIndicator } from '../ConsumptionIndicator/ConsumptionIndicator.tsx';
-import { styled, Typography } from '@mui/material';
+import { styled } from '@mui/material';
 import type { DetailedInvoicesLineSchema } from 'openapi';
 import { StyledAmountCell } from '../BillingInvoice.styles.tsx';
 
@@ -11,30 +11,17 @@ const StyledCellWithIndicator = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const StyledDescriptionCell = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(0.5),
-}));
-
-const StyledSubText = styled(Typography)(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    fontSize: theme.typography.body2.fontSize,
-}));
-
 type BillingInvoiceRowProps = DetailedInvoicesLineSchema & {
-    showLimits?: boolean;
+    showLimits: boolean;
 };
 
-export const BillingInvoiceRow = ({
+export const BillingInvoiceUsageRow = ({
     quantity,
     consumption,
     limit,
     description,
     currency,
     totalAmount,
-    startDate,
-    endDate,
     showLimits,
 }: BillingInvoiceRowProps) => {
     const percentage =
@@ -42,34 +29,21 @@ export const BillingInvoiceRow = ({
             ? Math.min(100, Math.round(((consumption || 0) / limit) * 100))
             : undefined;
 
-    const formattedStart = startDate
-        ? new Date(startDate).toLocaleDateString(undefined, {
-              month: 'short',
-              day: 'numeric',
-          })
-        : undefined;
-    const formattedEnd = endDate
-        ? new Date(endDate).toLocaleDateString(undefined, {
-              month: 'short',
-              day: 'numeric',
-          })
-        : undefined;
-
     return (
         <>
-            <StyledDescriptionCell>
-                <div>{description}</div>
-                {formattedStart || formattedEnd ? (
-                    <StyledSubText>
-                        {formattedStart} - {formattedEnd}
-                    </StyledSubText>
-                ) : null}
-            </StyledDescriptionCell>
+            <div>{description}</div>
             {showLimits ? (
                 <StyledCellWithIndicator>
                     <ConsumptionIndicator percentage={percentage || 0} />
-                    {limit !== undefined ? formatLargeNumbers(limit) : '–'}
-                    {percentage !== undefined ? ` (${percentage}%)` : ''}
+                    <div>
+                        {consumption !== undefined && limit !== undefined
+                            ? `${formatLargeNumbers(consumption)}/${formatLargeNumbers(limit)}`
+                            : consumption !== undefined
+                              ? formatLargeNumbers(consumption)
+                              : limit !== undefined
+                                ? formatLargeNumbers(limit)
+                                : '–'}
+                    </div>
                 </StyledCellWithIndicator>
             ) : (
                 <StyledCellWithIndicator />

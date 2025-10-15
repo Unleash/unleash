@@ -239,6 +239,11 @@ const sidebars: SidebarsConfig = {
                             label: 'Gradual rollout',
                             id: 'feature-flag-tutorials/use-cases/gradual-rollout',
                         },
+                        {
+                            type: 'doc',
+                            label: 'Unleash Edge',
+                            id: 'how-to/unleash-edge-quickstart',
+                        },
                     ],
                 },
                 {

@@ -145,6 +145,9 @@ export const BillingInvoice = ({
                     {status === 'invoiced' ? (
                         <Badge color='success'>Invoiced</Badge>
                     ) : null}
+                    {status === 'paid' ? (
+                        <Badge color='success'>Paid</Badge>
+                    ) : null}
                     <Typography variant='body1' sx={{ fontWeight: 700 }}>
                         {formatCurrency(totalAmount, currency)}
                     </Typography>

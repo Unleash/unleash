@@ -278,6 +278,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             .select(COLUMNS)
             .from<IFeatureStrategiesTable>(T.featureStrategies)
             .whereIn('feature_name', features)
+            .andWhere('milestone_id', null)
             .orderBy('feature_name', 'asc');
         if (environment) {
             query.where('environment', environment);

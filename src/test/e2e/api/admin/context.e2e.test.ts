@@ -1,11 +1,10 @@
 import dbInit, { type ITestDb } from '../../helpers/database-init.js';
-import { v4 as uuidv4 } from 'uuid';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper.js';
 import getLogger from '../../../fixtures/no-logger.js';
-import { DEFAULT_ENV } from '../../../../lib/server-impl.js';
+import { DEFAULT_ENV, randomId } from '../../../../lib/server-impl.js';
 
 let db: ITestDb;
 let app: IUnleashTest;
@@ -183,7 +182,7 @@ test('should delete context field', async () => {
 
 test('should not delete a context field that is in use by active flags', async () => {
     const context = 'appName';
-    const feature = uuidv4();
+    const feature = randomId();
     await app.request
         .post('/api/admin/projects/default/features')
         .send({

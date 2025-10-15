@@ -13,7 +13,7 @@ import type {
 import postgresPkg from 'pg';
 const { Client } = postgresPkg;
 import type { Knex } from 'knex';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 
 // require('db-migrate-shared').log.silence(false);
 
@@ -39,7 +39,7 @@ export default async function init(
     getLogger: LogProvider = noLoggerProvider,
     configOverride: Partial<IUnleashOptions & DBTestOptions> = {},
 ): Promise<ITestDb> {
-    const testDbName = `${testDbPrefix}${uuidv4().replace(/-/g, '')}`;
+    const testDbName = `${testDbPrefix}${randomUUID().replace(/-/g, '')}`;
     const testDBTemplateName = process.env.TEST_DB_TEMPLATE_NAME;
     const config = createTestConfig({
         db: {

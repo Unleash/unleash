@@ -1,6 +1,5 @@
 import { Knex } from 'knex';
 import type EventEmitter from 'events';
-import { v4 as uuidv4 } from 'uuid';
 import metricsHelper from '../../util/metrics-helper.js';
 import { DB_TIME } from '../../metric-events.js';
 import type { Logger, LogProvider } from '../../logger.js';
@@ -24,6 +23,7 @@ import {
     ensureStringValue,
     generateImageUrl,
     mapValues,
+    randomId,
 } from '../../util/index.js';
 import type { IFeatureProjectUserParams } from './feature-toggle-controller.js';
 import type { Db } from '../../db/db.js';
@@ -238,7 +238,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 strategyConfig.environment,
             ));
         const strategyRow = mapInput({
-            id: uuidv4(),
+            id: randomId(),
             ...strategyConfig,
             sortOrder,
         });

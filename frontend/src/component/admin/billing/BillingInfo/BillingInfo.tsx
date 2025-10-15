@@ -79,7 +79,6 @@ export const BillingInfo: FC<BillingInfoProps> = () => {
     }
 
     const isPAYG = billing === 'pay-as-you-go';
-    const plan = `${instanceStatus.plan}${isPAYG ? ' Pay-as-You-Go' : ''}`;
     const isEnterpriseConsumption = billing === 'enterprise-consumption';
     const inactive = instanceStatus.state !== InstanceState.ACTIVE;
     const { isCustomBilling } = instanceStatus;
@@ -101,9 +100,9 @@ export const BillingInfo: FC<BillingInfoProps> = () => {
             <StyledRow>
                 <StyledItemTitle>Current plan</StyledItemTitle>{' '}
                 <StyledItemValue>
-                    {plan}
-                    {isPAYG || isEnterpriseConsumption ? ' Pay-as-You-Go' : ''}
-                    {isEnterpriseConsumption ? ' Consumption' : ''}
+                    {isPAYG && isEnterpriseConsumption
+                        ? 'Consumption'
+                        : 'Pay-as-You-Go'}
                 </StyledItemValue>
             </StyledRow>
             <StyledRow>

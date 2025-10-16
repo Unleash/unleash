@@ -19,18 +19,18 @@ describe('formatCurrency', () => {
     });
 
     it('formats EUR currency', () => {
-        expect(formatCurrency(1000, 'EUR')).toMatchInlineSnapshot(`"1 000€"`);
+        expect(formatCurrency(1000, 'EUR')).toMatchInlineSnapshot(`"€1 000"`);
         expect(formatCurrency(1234.56, 'EUR')).toMatchInlineSnapshot(
-            `"1 234,56€"`,
+            `"€1 234,56"`,
         );
         expect(formatCurrency(1000000, 'EUR')).toMatchInlineSnapshot(
-            `"1 000 000€"`,
+            `"€1 000 000"`,
         );
-        expect(formatCurrency(0, 'EUR')).toMatchInlineSnapshot(`"0€"`);
-        expect(formatCurrency(-500, 'EUR')).toMatchInlineSnapshot(`"−500€"`);
-        expect(formatCurrency(1000, 'eur')).toMatchInlineSnapshot(`"1 000€"`);
+        expect(formatCurrency(0, 'EUR')).toMatchInlineSnapshot(`"€0"`);
+        expect(formatCurrency(-500, 'EUR')).toMatchInlineSnapshot(`"€−500"`);
+        expect(formatCurrency(1000, 'eur')).toMatchInlineSnapshot(`"€1 000"`);
         expect(formatCurrency(1234.56, 'eur')).toMatchInlineSnapshot(
-            `"1 234,56€"`,
+            `"€1 234,56"`,
         );
     });
 
@@ -53,13 +53,13 @@ describe('formatCurrency', () => {
     it('handles edge cases', () => {
         expect(formatCurrency(0.01, 'USD')).toMatchInlineSnapshot(`"$0.01"`);
         expect(formatCurrency(999999999, 'EUR')).toMatchInlineSnapshot(
-            `"999 999 999€"`,
+            `"€999 999 999"`,
         );
         expect(formatCurrency(10.999, 'USD')).toMatchInlineSnapshot(
             `"$10.999"`,
         );
         expect(formatCurrency(10.999, 'EUR')).toMatchInlineSnapshot(
-            `"10,999€"`,
+            `"€10,999"`,
         );
     });
 });

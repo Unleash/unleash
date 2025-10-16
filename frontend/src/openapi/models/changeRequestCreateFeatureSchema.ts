@@ -15,6 +15,9 @@ import type { ChangeRequestCreateFeatureSchemaOneOfTwozero } from './changeReque
 import type { ChangeRequestCreateFeatureSchemaOneOfTwotwo } from './changeRequestCreateFeatureSchemaOneOfTwotwo.js';
 import type { ChangeRequestCreateFeatureSchemaOneOfTwofour } from './changeRequestCreateFeatureSchemaOneOfTwofour.js';
 import type { ChangeRequestCreateFeatureSchemaOneOfTwoseven } from './changeRequestCreateFeatureSchemaOneOfTwoseven.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfThreezero } from './changeRequestCreateFeatureSchemaOneOfThreezero.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfThreetwo } from './changeRequestCreateFeatureSchemaOneOfThreetwo.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfThreefive } from './changeRequestCreateFeatureSchemaOneOfThreefive.js';
 
 /**
  * Data used to create a [change request](https://docs.getunleash.io/reference/change-requests) for a single feature change.
@@ -31,4 +34,7 @@ export type ChangeRequestCreateFeatureSchema =
     | ChangeRequestCreateFeatureSchemaOneOfTwozero
     | ChangeRequestCreateFeatureSchemaOneOfTwotwo
     | ChangeRequestCreateFeatureSchemaOneOfTwofour
-    | ChangeRequestCreateFeatureSchemaOneOfTwoseven;
+    | ChangeRequestCreateFeatureSchemaOneOfTwoseven
+    | ChangeRequestCreateFeatureSchemaOneOfThreezero
+    | ChangeRequestCreateFeatureSchemaOneOfThreetwo
+    | ChangeRequestCreateFeatureSchemaOneOfThreefive;

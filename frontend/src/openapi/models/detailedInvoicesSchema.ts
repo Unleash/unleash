@@ -13,6 +13,6 @@ export interface DetailedInvoicesSchema {
     invoices: DetailedInvoicesSchemaInvoicesItem[];
     /** The currency code for the plan price */
     planCurrency?: string;
-    /** The plan price in minor currency units */
+    /** The plan price */
     planPrice?: number;
 }

@@ -116,7 +116,7 @@ export const ReleasePlanChangeRequestDialog = ({
 
             case 'updateMilestoneProgression': {
                 const milestone = releasePlan.milestones.find(
-                    (m) => m.id === action.sourceMilestoneId,
+                    (milestone) => milestone.id === action.sourceMilestoneId,
                 );
 
                 const { value, unit } = getTimeValueAndUnitFromMinutes(
@@ -128,8 +128,9 @@ export const ReleasePlanChangeRequestDialog = ({
                     <p>
                         Update automation for{' '}
                         <StyledBoldSpan>{milestone?.name}</StyledBoldSpan> to
-                        proceed after <StyledBoldSpan>{timeInterval}</StyledBoldSpan>{' '}
-                        in {environmentId}
+                        proceed after{' '}
+                        <StyledBoldSpan>{timeInterval}</StyledBoldSpan> in{' '}
+                        {environmentId}
                     </p>
                 );
             }

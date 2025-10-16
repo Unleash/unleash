@@ -2,6 +2,362 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.2.3] - 2025-10-16
+
+### Bug Fixes
+
+- Only load ga and gtm in production ([#10612](https://github.com/Unleash/unleash/issues/10612))
+
+- Limit reset when no pagination bar ([#10634](https://github.com/Unleash/unleash/issues/10634))
+
+- Quick project filters total calculation ([#10658](https://github.com/Unleash/unleash/issues/10658))
+
+- OSS export feature_env was always enabled for feature due to SQL join overwrite ([#10667](https://github.com/Unleash/unleash/issues/10667))
+
+- Encode application name ([#10671](https://github.com/Unleash/unleash/issues/10671))
+
+- SSO auto create with SCIM tend to override each other ([#10675](https://github.com/Unleash/unleash/issues/10675))
+
+- Don't call location hook conditionally in CR badge ([#10676](https://github.com/Unleash/unleash/issues/10676))
+
+- Cache eviction bug and the eternal loading screen ([#10689](https://github.com/Unleash/unleash/issues/10689))
+
+- Fall back to count === 0 if undefined / don't show "0 of undefined" ([#10687](https://github.com/Unleash/unleash/issues/10687))
+
+- Impact metrics formatting ([#10715](https://github.com/Unleash/unleash/issues/10715))
+
+- Constraints should not be null ([#10717](https://github.com/Unleash/unleash/issues/10717))
+
+- Clearing lifecycle filter when switching to archived view ([#10726](https://github.com/Unleash/unleash/issues/10726))
+
+- Show average ratio for the period of collected data ([#10735](https://github.com/Unleash/unleash/issues/10735))
+
+- Get users total right at startup ([#10750](https://github.com/Unleash/unleash/issues/10750))
+
+- Highlight is too wide when batching weeks in archived:created chart ([#10751](https://github.com/Unleash/unleash/issues/10751))
+
+- Flaky test when updated_at matches the time of query ([#10752](https://github.com/Unleash/unleash/issues/10752))
+
+- Information exposure through a stack trace ([#10737](https://github.com/Unleash/unleash/issues/10737))
+
+- Clone environments ([#10755](https://github.com/Unleash/unleash/issues/10755))
+
+- Transition condition type  ([#10760](https://github.com/Unleash/unleash/issues/10760))
+
+- Release plan write model ([#10772](https://github.com/Unleash/unleash/issues/10772))
+
+- Add transitive transition condition schema ([#10776](https://github.com/Unleash/unleash/issues/10776))
+
+- Knex returns timestamp dates ([#10780](https://github.com/Unleash/unleash/issues/10780))
+
+- Knex returns timestamp dates ([#10782](https://github.com/Unleash/unleash/issues/10782))
+
+- Hide enable strategy dialog when there are release plans ([#10796](https://github.com/Unleash/unleash/issues/10796))
+
+- Now showing either payg or consumption ([#10803](https://github.com/Unleash/unleash/issues/10803))
+
+- Update dependency slug to v11 ([#10194](https://github.com/Unleash/unleash/issues/10194))
+
+- Populate all weeks in charts ([#10800](https://github.com/Unleash/unleash/issues/10800))
+
+- Now showing either payg or consumption ([#10812](https://github.com/Unleash/unleash/issues/10812))
+
+
+### Documentation
+
+- 7.2 updates ([#10611](https://github.com/Unleash/unleash/issues/10611))
+
+- Update demo links in readme ([#10652](https://github.com/Unleash/unleash/issues/10652))
+
+- Add FAQs to 11 principles page ([#10701](https://github.com/Unleash/unleash/issues/10701))
+
+- Clarify `archived` query param syntax for `api/admin/search/features` ([#10538](https://github.com/Unleash/unleash/issues/10538))
+
+
+### Features
+
+- Delete flag impact metrics ([#10613](https://github.com/Unleash/unleash/issues/10613))
+
+- Edit impact metrics ([#10614](https://github.com/Unleash/unleash/issues/10614))
+
+- Flag impact metrics use update feature permission ([#10615](https://github.com/Unleash/unleash/issues/10615))
+
+- Rename impact metrics fields to match prometheus and grafana ([#10616](https://github.com/Unleash/unleash/issues/10616))
+
+- Grid layout for flag impact metrics ([#10619](https://github.com/Unleash/unleash/issues/10619))
+
+- Added new impact metrics events ([#10621](https://github.com/Unleash/unleash/issues/10621))
+
+- Split impact metrics label filter into sections ([#10623](https://github.com/Unleash/unleash/issues/10623))
+
+- Change flag impact metrics url structure ([#10624](https://github.com/Unleash/unleash/issues/10624))
+
+- Add borders and spacing to feature impact metrics ([#10625](https://github.com/Unleash/unleash/issues/10625))
+
+- Handle global impact metrics in frontend api hook ([#10626](https://github.com/Unleash/unleash/issues/10626))
+
+- Global change requests table ([#10650](https://github.com/Unleash/unleash/issues/10650))
+
+- Quick filters on project overview ([#10638](https://github.com/Unleash/unleash/issues/10638))
+
+- Batch histogram metric type ([#10672](https://github.com/Unleash/unleash/issues/10672))
+
+- Histogram impact metric ingestion ([#10674](https://github.com/Unleash/unleash/issues/10674))
+
+- Enforce email null when deleted is set ([#10680](https://github.com/Unleash/unleash/issues/10680))
+
+- Histogram impact metric UI ([#10684](https://github.com/Unleash/unleash/issues/10684))
+
+- Node sdk with histogram ([#10690](https://github.com/Unleash/unleash/issues/10690))
+
+- Using histogram metrics ([#10695](https://github.com/Unleash/unleash/issues/10695))
+
+- Add users updated read model ([#10693](https://github.com/Unleash/unleash/issues/10693))
+
+- Display aggregation mode automatically ([#10696](https://github.com/Unleash/unleash/issues/10696))
+
+- Add change request table filter buttons ([#10679](https://github.com/Unleash/unleash/issues/10679))
+
+- Improve flag filters on project page ([#10705](https://github.com/Unleash/unleash/issues/10705))
+
+- Add placeholder for empty change requests table ([#10706](https://github.com/Unleash/unleash/issues/10706))
+
+- Change "archived" flags filter placement on project flags list ([#10710](https://github.com/Unleash/unleash/issues/10710))
+
+- Flag traffic billing display feature ([#10718](https://github.com/Unleash/unleash/issues/10718))
+
+- New invoice billing page view ([#10721](https://github.com/Unleash/unleash/issues/10721))
+
+- Add histogram to impact metrics ([#10728](https://github.com/Unleash/unleash/issues/10728))
+
+- Milestones started at migration ([#10729](https://github.com/Unleash/unleash/issues/10729))
+
+- Milestone start time update ([#10730](https://github.com/Unleash/unleash/issues/10730))
+
+- Add a suggestion banner at the bottom of empty feature-environments ([#10725](https://github.com/Unleash/unleash/issues/10725))
+
+- Milestone progressions migration ([#10738](https://github.com/Unleash/unleash/issues/10738))
+
+- Allow test operation for patch ([#10736](https://github.com/Unleash/unleash/issues/10736))
+
+- Add milestone progression automation UI ([#10743](https://github.com/Unleash/unleash/issues/10743))
+
+- Update invoice billing components ([#10740](https://github.com/Unleash/unleash/issues/10740))
+
+- Batch week data if the shown time span is greater than 12 weeks. ([#10745](https://github.com/Unleash/unleash/issues/10745))
+
+- Invoice sections ([#10744](https://github.com/Unleash/unleash/issues/10744))
+
+- Move release plans to feature environments ([#10746](https://github.com/Unleash/unleash/issues/10746))
+
+- Implement milestone progression form  ([#10749](https://github.com/Unleash/unleash/issues/10749))
+
+- Milestone transition condition ([#10757](https://github.com/Unleash/unleash/issues/10757))
+
+- Improve milestone automation UI positioning and styling ([#10758](https://github.com/Unleash/unleash/issues/10758))
+
+- Add batching functionality to new flags in production ([#10756](https://github.com/Unleash/unleash/issues/10756))
+
+- Milestone executed at migration ([#10767](https://github.com/Unleash/unleash/issues/10767))
+
+- Add transition condition UI for release plan milestones ([#10768](https://github.com/Unleash/unleash/issues/10768))
+
+- Milestone progression executed at in read model ([#10771](https://github.com/Unleash/unleash/issues/10771))
+
+- Add delete functionality for milestone progressions ([#10770](https://github.com/Unleash/unleash/issues/10770))
+
+- Improved transition condition schema to be more explicit ([#10773](https://github.com/Unleash/unleash/issues/10773))
+
+- Improve milestone visual states in release plans ([#10775](https://github.com/Unleash/unleash/issues/10775))
+
+- Add new dates and plan price ([#10774](https://github.com/Unleash/unleash/issues/10774))
+
+- Disallow negative condition interval ([#10783](https://github.com/Unleash/unleash/issues/10783))
+
+- Add inline editing for milestone progressions ([#10777](https://github.com/Unleash/unleash/issues/10777))
+
+- Apply strategy suggestion directly when clicked ([#10779](https://github.com/Unleash/unleash/issues/10779))
+
+- Measure time in release plan read model ([#10788](https://github.com/Unleash/unleash/issues/10788))
+
+- Make milestone progressions for source milestone unique ([#10789](https://github.com/Unleash/unleash/issues/10789))
+
+- Add milestone progression UI with projected start times ([#10790](https://github.com/Unleash/unleash/issues/10790))
+
+- Changing milestone progression url ([#10795](https://github.com/Unleash/unleash/issues/10795))
+
+- Milestone progression events ([#10797](https://github.com/Unleash/unleash/issues/10797))
+
+- Milestone progression events more data ([#10798](https://github.com/Unleash/unleash/issues/10798))
+
+- Enhance billing invoice components ([#10799](https://github.com/Unleash/unleash/issues/10799))
+
+- Align billing page design with figma ([#10801](https://github.com/Unleash/unleash/issues/10801))
+
+- Improve permission messaging ([#10804](https://github.com/Unleash/unleash/issues/10804))
+
+- Add change request support for milestone progressions ([#10814](https://github.com/Unleash/unleash/issues/10814))
+
+- Invoices ui improvements ([#10813](https://github.com/Unleash/unleash/issues/10813))
+
+- Add change request support for updating milestone progressions ([#10819](https://github.com/Unleash/unleash/issues/10819))
+
+
+### Fix
+
+- Use locale string for change request time badge. ([#10651](https://github.com/Unleash/unleash/issues/10651))
+
+- Invoice page debugging ([#10791](https://github.com/Unleash/unleash/issues/10791))
+
+
+### Miscellaneous Tasks
+
+- Add IAM db auth support ([#10609](https://github.com/Unleash/unleash/issues/10609))
+
+- AWS IAM DB auth migrator, logs ([#10617](https://github.com/Unleash/unleash/issues/10617))
+
+- IAM auth username env var takes precedence ([#10618](https://github.com/Unleash/unleash/issues/10618))
+
+- AWS IAM DB auth migrator ([#10622](https://github.com/Unleash/unleash/issues/10622))
+
+- AddConfiguration flag cleanup ([#10628](https://github.com/Unleash/unleash/issues/10628))
+
+- Add newStrategyModal flag ([#10629](https://github.com/Unleash/unleash/issues/10629))
+
+- Update node sdk with fetch mode cleanup ([#10630](https://github.com/Unleash/unleash/issues/10630))
+
+- Switch to polling in node sdk ([#10632](https://github.com/Unleash/unleash/issues/10632))
+
+- New add strategy modal design ([#10633](https://github.com/Unleash/unleash/issues/10633))
+
+- Add verbose logs to AWS IAM auth logic, add DB access checker ([#10635](https://github.com/Unleash/unleash/issues/10635))
+
+- Correctly import pg client ([#10637](https://github.com/Unleash/unleash/issues/10637))
+
+- Remove DB access checker ([#10639](https://github.com/Unleash/unleash/issues/10639))
+
+- Add proxy-aware regional STS authentication for AWS IAM DB auth ([#10643](https://github.com/Unleash/unleash/issues/10643))
+
+- Add quick filters to add strategy modal ([#10641](https://github.com/Unleash/unleash/issues/10641))
+
+- Bump node sdk non beta version ([#10649](https://github.com/Unleash/unleash/issues/10649))
+
+- Update from "toggles" to "flags" ([#10647](https://github.com/Unleash/unleash/issues/10647))
+
+- Change from "change requests" to "open" in project change request tabs ([#10648](https://github.com/Unleash/unleash/issues/10648))
+
+- Small updates to the new add strategy modal design ([#10646](https://github.com/Unleash/unleash/issues/10646))
+
+- Update release templates empty states in new add strategy modal ([#10656](https://github.com/Unleash/unleash/issues/10656))
+
+- Scroll to the top of table when changing page ([#10657](https://github.com/Unleash/unleash/issues/10657))
+
+- Add orval schemas for change request search ([#10661](https://github.com/Unleash/unleash/issues/10661))
+
+- Update strategy cards in new add strategy modal ([#10659](https://github.com/Unleash/unleash/issues/10659))
+
+- Remove AWS IAM DB auth prototype code ([#10662](https://github.com/Unleash/unleash/issues/10662))
+
+- Bump version to 7.2.1
+
+- Persist strategy filter when going back from release template preview ([#10663](https://github.com/Unleash/unleash/issues/10663))
+
+- Add new strategy icons ([#10665](https://github.com/Unleash/unleash/issues/10665))
+
+- Update release template preview dialog ([#10673](https://github.com/Unleash/unleash/issues/10673))
+
+- Bump slack/web-api dependency ([#10678](https://github.com/Unleash/unleash/issues/10678))
+
+- Use paginated table for change request list ([#10660](https://github.com/Unleash/unleash/issues/10660))
+
+- Update strategy cards background color ([#10681](https://github.com/Unleash/unleash/issues/10681))
+
+- Adjust add strategy modal height ([#10677](https://github.com/Unleash/unleash/issues/10677))
+
+- Update view more templates button design ([#10685](https://github.com/Unleash/unleash/issues/10685))
+
+- Add quick filter for custom strategies ([#10686](https://github.com/Unleash/unleash/issues/10686))
+
+- Limit total custom strategies displayed ([#10688](https://github.com/Unleash/unleash/issues/10688))
+
+- Use params object for swr cache clearing functions ([#10692](https://github.com/Unleash/unleash/issues/10692))
+
+- Rename variable for clarity ([#10694](https://github.com/Unleash/unleash/issues/10694))
+
+- Address UX feedback for add strategy modal ([#10698](https://github.com/Unleash/unleash/issues/10698))
+
+- Extract UI config logic into its own service ([#10704](https://github.com/Unleash/unleash/issues/10704))
+
+- Resource limits service ([#10709](https://github.com/Unleash/unleash/issues/10709))
+
+- Add flags for UI filter refactor ([#10708](https://github.com/Unleash/unleash/issues/10708))
+
+- EtagVariant flag cleanup ([#10714](https://github.com/Unleash/unleash/issues/10714))
+
+- Milestone progression flag ([#10719](https://github.com/Unleash/unleash/issues/10719))
+
+- New confirmation dialog for replacing release plans ([#10720](https://github.com/Unleash/unleash/issues/10720))
+
+- New method that considers users updated at the same time ([#10723](https://github.com/Unleash/unleash/issues/10723))
+
+- Return user id alongside max updated_at ([#10732](https://github.com/Unleash/unleash/issues/10732))
+
+- Update openapi frontend types ([#10739](https://github.com/Unleash/unleash/issues/10739))
+
+- Update openapi ([#10747](https://github.com/Unleash/unleash/issues/10747))
+
+- Feature release plans flag ([#10762](https://github.com/Unleash/unleash/issues/10762))
+
+- Export environment and project stores ([#10766](https://github.com/Unleash/unleash/issues/10766))
+
+- Get release plans from features endpoint ([#10764](https://github.com/Unleash/unleash/issues/10764))
+
+- Add migration for tracking connected downstream edge nodes ([#10765](https://github.com/Unleash/unleash/issues/10765))
+
+- Update orval types ([#10769](https://github.com/Unleash/unleash/issues/10769))
+
+- Expose release plan read model ([#10784](https://github.com/Unleash/unleash/issues/10784))
+
+- Move read model to value space ([#10785](https://github.com/Unleash/unleash/issues/10785))
+
+- Remove type prefix ([#10786](https://github.com/Unleash/unleash/issues/10786))
+
+- Remove legacy flag UI ([#10781](https://github.com/Unleash/unleash/issues/10781))
+
+- Add alert about release plans when cloning flag ([#10802](https://github.com/Unleash/unleash/issues/10802))
+
+- Add warning about release plans in import-export ([#10805](https://github.com/Unleash/unleash/issues/10805))
+
+- Remove uuid from the backend ([#10807](https://github.com/Unleash/unleash/issues/10807))
+
+- Add todo note with flag to remember a refactor ([#10811](https://github.com/Unleash/unleash/issues/10811))
+
+- Fix search results page in our docs ([#10816](https://github.com/Unleash/unleash/issues/10816))
+
+- Expose fake change request access read model ([#10818](https://github.com/Unleash/unleash/issues/10818))
+
+- Generate orval ([#10820](https://github.com/Unleash/unleash/issues/10820))
+
+
+### Refactor
+
+- LabelFilterItem "select all" functionality ([#10610](https://github.com/Unleash/unleash/issues/10610))
+
+- New endpoint for global impact metrics saving ([#10631](https://github.com/Unleash/unleash/issues/10631))
+
+- Centralize pagination options ([#10636](https://github.com/Unleash/unleash/issues/10636))
+
+- Centralize number formatting ([#10716](https://github.com/Unleash/unleash/issues/10716))
+
+- Move release plan schemas to OSS ([#10748](https://github.com/Unleash/unleash/issues/10748))
+
+- Remove unused release plan store method ([#10787](https://github.com/Unleash/unleash/issues/10787))
+
+- Split the stat card widget into its own component ([#10815](https://github.com/Unleash/unleash/issues/10815))
+
+- Consolidate release plan change request dialogs ([#10817](https://github.com/Unleash/unleash/issues/10817))
+
+
 ## [7.2.1] - 2025-09-18
 
 ### Bug Fixes

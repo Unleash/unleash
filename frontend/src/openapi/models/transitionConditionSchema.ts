@@ -8,6 +8,9 @@
  * A transition condition for milestone progression
  */
 export interface TransitionConditionSchema {
-    /** The interval in minutes before transitioning */
+    /**
+     * The interval in minutes before transitioning
+     * @minimum 1
+     */
     intervalMinutes: number;
 }

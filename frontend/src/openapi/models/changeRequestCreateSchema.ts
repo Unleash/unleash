@@ -17,6 +17,9 @@ import type { ChangeRequestCreateSchemaOneOfTwofive } from './changeRequestCreat
 import type { ChangeRequestCreateSchemaOneOfTwoseven } from './changeRequestCreateSchemaOneOfTwoseven.js';
 import type { ChangeRequestCreateSchemaOneOfTwonine } from './changeRequestCreateSchemaOneOfTwonine.js';
 import type { ChangeRequestCreateSchemaOneOfThreetwo } from './changeRequestCreateSchemaOneOfThreetwo.js';
+import type { ChangeRequestCreateSchemaOneOfThreefive } from './changeRequestCreateSchemaOneOfThreefive.js';
+import type { ChangeRequestCreateSchemaOneOfThreeseven } from './changeRequestCreateSchemaOneOfThreeseven.js';
+import type { ChangeRequestCreateSchemaOneOfFourzero } from './changeRequestCreateSchemaOneOfFourzero.js';
 
 /**
  * Data used to create a [change request](https://docs.getunleash.io/reference/change-requests) for a single feature or segment change.
@@ -35,4 +38,7 @@ export type ChangeRequestCreateSchema =
     | ChangeRequestCreateSchemaOneOfTwofive
     | ChangeRequestCreateSchemaOneOfTwoseven
     | ChangeRequestCreateSchemaOneOfTwonine
-    | ChangeRequestCreateSchemaOneOfThreetwo;
+    | ChangeRequestCreateSchemaOneOfThreetwo
+    | ChangeRequestCreateSchemaOneOfThreefive
+    | ChangeRequestCreateSchemaOneOfThreeseven
+    | ChangeRequestCreateSchemaOneOfFourzero;

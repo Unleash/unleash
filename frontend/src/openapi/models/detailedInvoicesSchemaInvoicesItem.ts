@@ -6,6 +6,8 @@
 import type { DetailedInvoicesLineSchema } from './detailedInvoicesLineSchema.js';
 
 export type DetailedInvoicesSchemaInvoicesItem = {
+    /** The currency code for the invoice */
+    currency: string;
     /** When the invoice is due */
     dueDate?: string;
     /** When the invoice was created */
@@ -20,7 +22,11 @@ export type DetailedInvoicesSchemaInvoicesItem = {
     monthText: string;
     /** The current status of the invoice */
     status: string;
-    /** Total amount for the invoice in minor currency units */
+    /** Subtotal amount for the invoice */
+    subtotal: number;
+    /** Tax amount for the invoice */
+    taxAmount: number;
+    /** Total amount for the invoice */
     totalAmount: number;
     /** Usage line items (traffic, consumption usage, overages) */
     usageLines: DetailedInvoicesLineSchema[];

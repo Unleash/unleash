@@ -29,7 +29,10 @@ const StyledTableFooterCell = styled('div', {
     ...(colSpan ? { gridColumn: `span ${colSpan}` } : {}),
 }));
 
-const TaxRow: FC<{ value?: number }> = ({ value }) => {
+const TaxRow: FC<{ value?: number; currency?: string }> = ({
+    value,
+    currency,
+}) => {
     if (value === undefined) {
         return (
             <StyledTableFooterCell colSpan={2}>
@@ -42,7 +45,9 @@ const TaxRow: FC<{ value?: number }> = ({ value }) => {
         <>
             <StyledTableFooterCell>Tax</StyledTableFooterCell>
             <StyledTableFooterCell>
-                <StyledAmountCell>{formatCurrency(value)}</StyledAmountCell>
+                <StyledAmountCell>
+                    {formatCurrency(value, currency)}
+                </StyledAmountCell>
             </StyledTableFooterCell>
         </>
     );
@@ -63,18 +68,16 @@ export const BillingInvoiceFooter = ({
 }: BillingInvoiceFooterProps) => {
     return (
         <StyledTableFooter>
-            {subTotal || !taxAmount ? (
-                <StyledTableFooterRow>
-                    <StyledTableFooterCell>Sub total</StyledTableFooterCell>
-                    <StyledTableFooterCell>
-                        <StyledAmountCell>
-                            {formatCurrency(subTotal || totalAmount, currency)}
-                        </StyledAmountCell>
-                    </StyledTableFooterCell>
-                </StyledTableFooterRow>
-            ) : null}
             <StyledTableFooterRow>
-                <TaxRow value={taxAmount} />
+                <StyledTableFooterCell>Sub total</StyledTableFooterCell>
+                <StyledTableFooterCell>
+                    <StyledAmountCell>
+                        {formatCurrency(subTotal || 0, currency)}
+                    </StyledAmountCell>
+                </StyledTableFooterCell>
+            </StyledTableFooterRow>
+            <StyledTableFooterRow>
+                <TaxRow value={taxAmount} currency={currency} />
             </StyledTableFooterRow>
             <StyledTableFooterRow last>
                 <StyledTableFooterCell>Total</StyledTableFooterCell>

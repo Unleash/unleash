@@ -109,13 +109,14 @@ export const BillingInvoice = ({
     invoicePDF,
     invoiceURL,
     totalAmount,
+    subtotal,
+    taxAmount,
+    currency,
     mainLines,
     usageLines,
     monthText,
     defaultExpanded,
 }: BillingInvoiceProps) => {
-    const currency = mainLines?.[0]?.currency || usageLines?.[0]?.currency;
-
     const formattedTitle = invoiceDate
         ? new Date(invoiceDate).toLocaleDateString(undefined, {
               month: 'long',
@@ -181,7 +182,10 @@ export const BillingInvoice = ({
                         </StyledTableRow>
                         {mainLines.map((line) => (
                             <StyledTableRow key={line.description}>
-                                <BillingInvoiceMainRow {...line} />
+                                <BillingInvoiceMainRow
+                                    {...line}
+                                    invoiceCurrency={currency}
+                                />
                             </StyledTableRow>
                         ))}
                     </TableBody>
@@ -201,7 +205,10 @@ export const BillingInvoice = ({
                             </StyledTableRow>
                             {usageLines.map((line) => (
                                 <StyledTableRow key={line.description}>
-                                    <BillingInvoiceUsageRow {...line} />
+                                    <BillingInvoiceUsageRow
+                                        {...line}
+                                        invoiceCurrency={currency}
+                                    />
                                 </StyledTableRow>
                             ))}
                         </TableBody>
@@ -210,6 +217,8 @@ export const BillingInvoice = ({
                     )}
 
                     <BillingInvoiceFooter
+                        subTotal={subtotal}
+                        taxAmount={taxAmount}
                         totalAmount={totalAmount}
                         currency={currency}
                     />

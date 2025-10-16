@@ -9,6 +9,7 @@ const StyledCellWithIndicator = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
+    maxHeight: theme.spacing(2.5),
 }));
 
 const StyledDescriptionCell = styled('div', {
@@ -60,7 +61,7 @@ export const BillingInvoiceRow = ({
         <>
             <StyledDescriptionCell expand={!showLimits}>
                 <div>{description}</div>
-                {formattedStart || formattedEnd ? (
+                {!showLimits && (formattedStart || formattedEnd) ? (
                     <StyledSubText>
                         {formattedStart} - {formattedEnd}
                     </StyledSubText>

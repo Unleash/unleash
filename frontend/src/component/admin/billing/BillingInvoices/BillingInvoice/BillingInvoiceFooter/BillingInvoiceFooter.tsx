@@ -6,6 +6,7 @@ import { StyledAmountCell, StyledSubgrid } from '../BillingInvoice.styles.tsx';
 const StyledTableFooter = styled(StyledSubgrid)(({ theme }) => ({
     gridColumn: '3 / -1',
     padding: theme.spacing(1, 1, 0, 0),
+    gap: 0,
 }));
 
 const StyledTableFooterRow = styled('div')<{ last?: boolean }>(
@@ -17,13 +18,14 @@ const StyledTableFooterRow = styled('div')<{ last?: boolean }>(
         ...(last
             ? { fontWeight: theme.typography.fontWeightBold }
             : { borderBottom: `1px solid ${theme.palette.divider}` }),
+        padding: theme.spacing(1.25, 0),
     }),
 );
 
 const StyledTableFooterCell = styled('div', {
     shouldForwardProp: (prop) => prop !== 'colSpan',
 })<{ colSpan?: number }>(({ theme, colSpan }) => ({
-    padding: theme.spacing(1, 0, 1, 0.5),
+    padding: theme.spacing(0, 0, 0, 0.5),
     ...(colSpan ? { gridColumn: `span ${colSpan}` } : {}),
 }));
 

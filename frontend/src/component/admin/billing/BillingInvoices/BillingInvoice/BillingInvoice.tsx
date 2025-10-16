@@ -6,6 +6,7 @@ import {
     AccordionSummary,
     AccordionDetails,
     Button,
+    Divider,
 } from '@mui/material';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
@@ -36,6 +37,9 @@ const HeaderRoot = styled(AccordionSummary)(({ theme }) => ({
         display: 'flex',
         alignItems: 'center',
         gap: theme.spacing(1.5),
+        '&.Mui-expanded': {
+            margin: 0,
+        },
     },
 }));
 
@@ -56,8 +60,7 @@ const HeaderRight = styled('div')(({ theme }) => ({
 const StyledInvoiceGrid = styled('div')(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: '45% 20% 15% 20%',
-
-    padding: theme.spacing(0, 2, 3),
+    padding: theme.spacing(0, 2, 2),
 }));
 
 const HeaderCell = styled(Typography)(({ theme }) => ({
@@ -84,15 +87,16 @@ const StyledTableTitle = styled('span')(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,
 }));
 
-const StyledTableSubtitle = styled('span')(({ theme }) => ({
-    fontWeight: theme.typography.body2.fontWeight,
+const StyledDivider = styled(Divider)(({ theme }) => ({
+    gridColumn: '1 / -1',
+    margin: theme.spacing(0, 2),
 }));
 
 const CardActions = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     gap: theme.spacing(1),
-    padding: theme.spacing(1.5, 2, 2),
+    padding: theme.spacing(0, 2, 2),
 }));
 
 type BillingInvoiceProps = DetailedInvoicesSchemaInvoicesItem &
@@ -111,12 +115,17 @@ export const BillingInvoice = ({
 }: BillingInvoiceProps) => {
     const currency = mainLines?.[0]?.currency || usageLines?.[0]?.currency;
 
-    const formattedTitle = invoiceDate
+    let formattedTitle = invoiceDate
         ? new Date(invoiceDate).toLocaleDateString(undefined, {
               month: 'long',
               day: 'numeric',
           })
         : '';
+
+    // if year is not current, add year to formatted title
+    if (new Date(invoiceDate).getFullYear() !== new Date().getFullYear()) {
+        formattedTitle += `, ${new Date(invoiceDate).getFullYear()}`;
+    }
 
     const hasLimitsColumn = usageLines.some((line) => line.limit);
 
@@ -155,7 +164,7 @@ export const BillingInvoice = ({
             </HeaderRoot>
             <AccordionDetails
                 sx={(theme) => ({
-                    padding: theme.spacing(3, 0, 0),
+                    padding: theme.spacing(2, 0, 0),
                     borderTop: `1px solid ${theme.palette.divider}`,
                 })}
             >
@@ -205,37 +214,41 @@ export const BillingInvoice = ({
                                 </StyledTableRow>
                             ))}
                         </TableBody>
-                    ) : null}
+                    ) : (
+                        <StyledDivider />
+                    )}
 
                     <BillingInvoiceFooter
                         totalAmount={totalAmount}
                         currency={currency}
                     />
                 </StyledInvoiceGrid>
-                <CardActions>
-                    {invoiceURL ? (
-                        <Button
-                            variant='outlined'
-                            href={invoiceURL}
-                            target='_blank'
-                            rel='noreferrer'
-                            startIcon={<ReceiptLongOutlinedIcon />}
-                        >
-                            View invoice
-                        </Button>
-                    ) : null}
-                    {invoicePDF ? (
-                        <Button
-                            variant='outlined'
-                            href={invoicePDF}
-                            target='_blank'
-                            rel='noreferrer'
-                            startIcon={<DownloadOutlinedIcon />}
-                        >
-                            Download PDF
-                        </Button>
-                    ) : null}
-                </CardActions>
+                {invoiceURL || invoicePDF ? (
+                    <CardActions>
+                        {invoiceURL ? (
+                            <Button
+                                variant='outlined'
+                                href={invoiceURL}
+                                target='_blank'
+                                rel='noreferrer'
+                                startIcon={<ReceiptLongOutlinedIcon />}
+                            >
+                                View invoice
+                            </Button>
+                        ) : null}
+                        {invoicePDF ? (
+                            <Button
+                                variant='outlined'
+                                href={invoicePDF}
+                                target='_blank'
+                                rel='noreferrer'
+                                startIcon={<DownloadOutlinedIcon />}
+                            >
+                                Download PDF
+                            </Button>
+                        ) : null}
+                    </CardActions>
+                ) : null}
             </AccordionDetails>
         </StyledAccordion>
     );

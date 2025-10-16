@@ -1,5 +1,5 @@
 import type { ChartData } from 'chart.js';
-import type { WeekData } from './types.ts';
+import type { FinalizedWeekData } from './types.ts';
 
 const data = [
     {
@@ -39,7 +39,7 @@ const data = [
     },
 ];
 
-export const placeholderData: ChartData<any, WeekData[]> = {
+export const placeholderData: ChartData<any, FinalizedWeekData[]> = {
     datasets: [
         {
             label: 'Flags archived',

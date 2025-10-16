@@ -74,7 +74,8 @@ it('combines data from all data sets for a specified week', () => {
         },
     ]);
 });
-it('combines data from all data sets for a specified week', () => {
+
+it('handles scenarios with empty, combined, and single-project data', () => {
     const firstWeek = { week: '2025-11', date: '2025-03-05' };
     const secondWeek = { week: '2025-12', date: '2025-03-12' };
     const thirdWeek = { week: '2025-13', date: '2025-03-19' };

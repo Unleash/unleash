@@ -30,9 +30,8 @@ export const batchData =
                     acc[currentAggregatedIndex] = merge(data, curr);
                 } else if (!hasData && hasCurr) {
                     acc[currentAggregatedIndex] = map(curr);
-                } else if (hasData && !hasCurr) {
-                    // do nothing
                 }
+
                 return acc;
             },
             [] as (TBatched | null)[],

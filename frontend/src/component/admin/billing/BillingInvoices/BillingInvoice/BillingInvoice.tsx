@@ -12,11 +12,10 @@ import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { formatCurrency } from './formatCurrency.ts';
 import { Badge } from 'component/common/Badge/Badge.tsx';
-import { BillingInvoiceMainRow } from './BillingInvoiceMainRow/BillingInvoiceMainRow.tsx';
-import { BillingInvoiceUsageRow } from './BillingInvoiceUsageRow/BillingInvoiceUsageRow.tsx';
 import { BillingInvoiceFooter } from './BillingInvoiceFooter/BillingInvoiceFooter.tsx';
 import { StyledAmountCell, StyledSubgrid } from './BillingInvoice.styles.tsx';
 import type { DetailedInvoicesSchemaInvoicesItem } from 'openapi';
+import { BillingInvoiceRow } from './BillingInvoiceRow/BillingInvoiceRow.tsx';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     background: theme.palette.background.paper,
@@ -65,7 +64,6 @@ const HeaderCell = styled(Typography)(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     fontWeight: theme.typography.fontWeightMedium,
     color: theme.palette.text.secondary,
-    padding: theme.spacing(0, 0, 1),
 }));
 
 const TableBody: FC<{ children: ReactNode; title?: string }> = ({
@@ -75,17 +73,19 @@ const TableBody: FC<{ children: ReactNode; title?: string }> = ({
     return <StyledSubgrid withBackground={!!title}>{children}</StyledSubgrid>;
 };
 
-const StyledSectionTitle = styled(Typography)(({ theme }) => ({
-    gridColumn: '1 / -1',
-    padding: theme.spacing(2, 0, 1),
-    fontWeight: theme.fontWeight.bold,
-}));
-
 const StyledTableRow = styled('div')(({ theme }) => ({
     display: 'grid',
     gridColumn: '1 / -1',
     gridTemplateColumns: 'subgrid',
-    padding: theme.spacing(1, 0),
+}));
+
+const StyledTableTitle = styled('span')(({ theme }) => ({
+    color: theme.palette.text.primary,
+    fontSize: theme.typography.body1.fontSize,
+}));
+
+const StyledTableSubtitle = styled('span')(({ theme }) => ({
+    fontWeight: theme.typography.body2.fontWeight,
 }));
 
 const CardActions = styled('div')(({ theme }) => ({
@@ -160,25 +160,32 @@ export const BillingInvoice = ({
                 })}
             >
                 <StyledInvoiceGrid>
-                    <StyledSubgrid>
-                        <HeaderCell>Description</HeaderCell>
-                        <HeaderCell />
-                        <HeaderCell>Quantity</HeaderCell>
-                        <HeaderCell>
-                            <StyledAmountCell>Amount</StyledAmountCell>
-                        </HeaderCell>
-                    </StyledSubgrid>
-                    {mainLines.map((line) => (
-                        <TableBody key={line.description}>
+                    <TableBody>
+                        <StyledTableRow>
+                            <HeaderCell>Description</HeaderCell>
+                            <HeaderCell />
+                            <HeaderCell>Quantity</HeaderCell>
+                            <HeaderCell>
+                                <StyledAmountCell>Amount</StyledAmountCell>
+                            </HeaderCell>
+                        </StyledTableRow>
+                        {mainLines.map((line) => (
                             <StyledTableRow key={line.description}>
-                                <BillingInvoiceMainRow {...line} />
+                                <BillingInvoiceRow
+                                    {...line}
+                                    showLimits={false}
+                                />
                             </StyledTableRow>
-                        </TableBody>
-                    ))}
+                        ))}
+                    </TableBody>
                     {usageLines.length ? (
                         <TableBody key='usage' title='Usage'>
                             <StyledTableRow>
-                                <HeaderCell>Usage {monthText}</HeaderCell>
+                                <HeaderCell>
+                                    <StyledTableTitle>
+                                        Usage – {monthText}
+                                    </StyledTableTitle>
+                                </HeaderCell>
                                 {hasLimitsColumn ? (
                                     <HeaderCell>Included</HeaderCell>
                                 ) : (
@@ -191,7 +198,7 @@ export const BillingInvoice = ({
                             </StyledTableRow>
                             {usageLines.map((line) => (
                                 <StyledTableRow key={line.description}>
-                                    <BillingInvoiceUsageRow
+                                    <BillingInvoiceRow
                                         {...line}
                                         showLimits={hasLimitsColumn}
                                     />

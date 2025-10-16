@@ -18,7 +18,7 @@ import {
 } from 'chart.js';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
-import type { WeekData, RawWeekData, BatchedWeekData } from './types.ts';
+import type { BatchedWeekData, FinalizedWeekData } from './types.ts';
 import { createTooltip } from 'component/insights/components/LineChart/createTooltip.ts';
 import { CreationArchiveRatioTooltip } from './CreationArchiveRatioTooltip.tsx';
 import { getDateFnsLocale } from '../../getDateFnsLocale.ts';
@@ -29,6 +29,7 @@ import { Bar } from 'react-chartjs-2';
 import { GraphCover } from 'component/insights/GraphCover.tsx';
 import { batchCreationArchiveData } from './batchCreationArchiveData.ts';
 import { useBatchedTooltipDate } from '../useBatchedTooltipDate.ts';
+import { aggregateCreationArchiveData } from './aggregateCreationArchiveData.ts';
 
 ChartJS.register(
     CategoryScale,
@@ -47,11 +48,13 @@ interface ICreationArchiveChartProps {
         InstanceInsightsSchema['creationArchiveTrends']
     >;
     isLoading?: boolean;
+    labels: { week: string; date: string }[];
 }
 
 export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     creationArchiveTrends,
     isLoading,
+    labels,
 }) => {
     const creationVsArchivedChart = useProjectChartData(creationArchiveTrends);
     const theme = useTheme();
@@ -59,63 +62,20 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     const [tooltip, setTooltip] = useState<null | TooltipState>(null);
 
     const { dataResult, aggregateOrProjectData } = useMemo(() => {
-        const labels: string[] = Array.from(
-            new Set(
-                creationVsArchivedChart.datasets.flatMap((d) =>
-                    d.data.map((item) => item.week),
-                ),
-            ),
+        const weeklyData = aggregateCreationArchiveData(
+            labels,
+            creationVsArchivedChart.datasets,
         );
 
-        const aggregateWeekData = (acc: WeekData, item?: RawWeekData) => {
-            if (!item) return acc;
-
-            acc.archivedFlags += item.archivedFlags || 0;
-
-            if (item.createdFlags) {
-                Object.entries(item.createdFlags).forEach(([_, count]) => {
-                    acc.totalCreatedFlags += count;
-                });
-            }
-
-            if (!acc.date) {
-                acc.date = item.date;
-            }
-
-            return acc;
-        };
-
-        const createInitialWeekData = (label: string): WeekData => ({
-            archivedFlags: 0,
-            totalCreatedFlags: 0,
-            archivePercentage: 0,
-            week: label,
-            date: '',
-        });
-
-        const weeks: WeekData[] = labels
-            .map((label) => {
-                return creationVsArchivedChart.datasets
-                    .map((d) => d.data.find((item) => item.week === label))
-                    .reduce(aggregateWeekData, createInitialWeekData(label));
-            })
-            .map((week) => ({
-                ...week,
-                archivePercentage:
-                    week.totalCreatedFlags > 0
-                        ? (week.archivedFlags / week.totalCreatedFlags) * 100
-                        : 0,
-            }))
-            .sort((a, b) => (a.week > b.week ? 1 : -1));
-
         let dataResult: ChartDataResult = 'Weekly';
-        let displayData: WeekData[] | BatchedWeekData[] = weeks;
+        let displayData: FinalizedWeekData[] | (BatchedWeekData | null)[] =
+            weeklyData;
 
-        if (weeks.length < 2) {
+        if (weeklyData.length < 2) {
             dataResult = 'Not Enough Data';
-        } else if (weeks.length >= 12) {
+        } else if (weeklyData.length >= 12) {
             dataResult = 'Batched';
-            displayData = batchCreationArchiveData(weeks);
+            displayData = batchCreationArchiveData(weeklyData);
         }
 
         return {

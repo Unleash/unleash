@@ -1,21 +1,51 @@
 import { batchData } from '../batchData.ts';
-import type { BatchedWeekData, WeekData } from './types.ts';
+import type {
+    BatchedWeekData,
+    BatchedEmptyWeekData,
+    FinalizedWeekData,
+    BatchedWeekDataWithRatio,
+} from './types.ts';
 
 export const batchCreationArchiveData = batchData({
-    merge: (accumulated: BatchedWeekData, next: WeekData) => {
-        accumulated.totalCreatedFlags += next.totalCreatedFlags;
-        accumulated.archivedFlags += next.archivedFlags;
+    merge: (accumulated: BatchedWeekData, next: FinalizedWeekData) => {
+        if (next.state === 'empty') {
+            return {
+                ...accumulated,
+                endDate: next.date,
+            } as BatchedEmptyWeekData;
+        }
 
-        accumulated.archivePercentage =
-            accumulated.totalCreatedFlags > 0
-                ? (accumulated.archivedFlags / accumulated.totalCreatedFlags) *
-                  100
-                : 0;
+        switch (accumulated.state) {
+            case 'empty':
+                return {
+                    ...accumulated,
+                    state: 'withRatio',
+                    totalCreatedFlags: next.totalCreatedFlags,
+                    archivedFlags: next.archivedFlags,
+                    archivePercentage: next.archivePercentage,
+                    endDate: next.date,
+                } as BatchedWeekDataWithRatio;
 
-        accumulated.endDate = next.date;
-        return accumulated;
+            case 'withRatio': {
+                const totalCreatedFlags =
+                    accumulated.totalCreatedFlags + next.totalCreatedFlags;
+                const archivedFlags =
+                    accumulated.archivedFlags + next.archivedFlags;
+                const archivePercentage =
+                    totalCreatedFlags > 0
+                        ? (archivedFlags / totalCreatedFlags) * 100
+                        : 0;
+                return {
+                    ...accumulated,
+                    endDate: next.date,
+                    totalCreatedFlags,
+                    archivedFlags,
+                    archivePercentage,
+                } as BatchedWeekDataWithRatio;
+            }
+        }
     },
-    map: (item: WeekData) => {
+    map: (item: FinalizedWeekData) => {
         const { week: _, ...shared } = item;
 
         return {

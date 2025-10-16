@@ -95,6 +95,7 @@ export const PerformanceInsights: FC = () => {
                     </StyledWidgetStats>
                     <StyledChartContainer>
                         <NewProductionFlagsChart
+                            labels={insights.labels}
                             lifecycleTrends={groupedLifecycleData}
                             isAggregate={showAllProjects}
                             isLoading={loading}
@@ -116,6 +117,7 @@ export const PerformanceInsights: FC = () => {
                     </StyledWidgetStats>
                     <StyledChartContainer>
                         <CreationArchiveChart
+                            labels={insights.labels}
                             creationArchiveTrends={groupedCreationArchiveData}
                             isLoading={loading}
                         />

@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { Paper, Typography, styled } from '@mui/material';
 import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
 import { ChartTooltipContainer } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
-import type { WeekData } from './types.ts';
+import type { FinalizedWeekData } from './types.ts';
 import { calculateRatio } from 'component/insights/calculate-ratio/calculate-ratio.ts';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
@@ -56,11 +56,13 @@ export const CreationArchiveRatioTooltip: FC<
         return null;
     }
 
-    const rawData = tooltip.dataPoints[0].raw as WeekData;
-    const archivedCount = rawData.archivedFlags || 0;
-    const createdCount = rawData.totalCreatedFlags || 0;
+    const rawData = tooltip.dataPoints[0].raw as FinalizedWeekData;
+    const { archivedFlags, totalCreatedFlags } =
+        rawData.state === 'withRatio'
+            ? rawData
+            : { archivedFlags: 0, totalCreatedFlags: 0 };
 
-    const ratio = calculateRatio(archivedCount, createdCount);
+    const ratio = calculateRatio(archivedFlags, totalCreatedFlags);
 
     return (
         <ChartTooltipContainer tooltip={tooltip}>
@@ -72,11 +74,11 @@ export const CreationArchiveRatioTooltip: FC<
                 <DataList>
                     <DataRow dataType='archived'>
                         <dt>Flags archived</dt>
-                        <dd>{archivedCount}</dd>
+                        <dd>{archivedFlags}</dd>
                     </DataRow>
                     <DataRow dataType='created'>
                         <dt>Flags created</dt>
-                        <dd>{createdCount}</dd>
+                        <dd>{totalCreatedFlags}</dd>
                     </DataRow>
                 </DataList>
                 <Timestamp>{tooltip.title}</Timestamp>

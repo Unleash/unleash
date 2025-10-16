@@ -2,7 +2,10 @@ import type { IFeatureVariant } from 'interfaces/featureToggle';
 import type { ISegment } from 'interfaces/segment';
 import type { IFeatureStrategy } from '../../interfaces/strategy.js';
 import type { IUser } from '../../interfaces/user.js';
-import type { SetStrategySortOrderSchema } from 'openapi';
+import type {
+    SetStrategySortOrderSchema,
+    CreateMilestoneProgressionSchema,
+} from 'openapi';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 
 type BaseChangeRequest = {
@@ -131,7 +134,8 @@ type ChangeRequestPayload =
     | ChangeRequestAddDependency
     | ChangeRequestAddReleasePlan
     | ChangeRequestDeleteReleasePlan
-    | ChangeRequestStartMilestone;
+    | ChangeRequestStartMilestone
+    | ChangeRequestCreateMilestoneProgression;
 
 export interface IChangeRequestAddStrategy extends IChangeRequestChangeBase {
     action: 'addStrategy';
@@ -188,6 +192,12 @@ export interface IChangeRequestStartMilestone extends IChangeRequestChangeBase {
     payload: ChangeRequestStartMilestone;
 }
 
+export interface IChangeRequestCreateMilestoneProgression
+    extends IChangeRequestChangeBase {
+    action: 'createMilestoneProgression';
+    payload: ChangeRequestCreateMilestoneProgression;
+}
+
 export interface IChangeRequestReorderStrategy
     extends IChangeRequestChangeBase {
     action: 'reorderStrategy';
@@ -235,7 +245,8 @@ export type IFeatureChange =
     | IChangeRequestDeleteDependency
     | IChangeRequestAddReleasePlan
     | IChangeRequestDeleteReleasePlan
-    | IChangeRequestStartMilestone;
+    | IChangeRequestStartMilestone
+    | IChangeRequestCreateMilestoneProgression;
 
 export type ISegmentChange =
     | IChangeRequestUpdateSegment
@@ -267,6 +278,8 @@ type ChangeRequestStartMilestone = {
     milestoneId: string;
     snapshot?: IReleasePlan;
 };
+
+type ChangeRequestCreateMilestoneProgression = CreateMilestoneProgressionSchema;
 
 export type ChangeRequestAddStrategy = Pick<
     IFeatureStrategy,
@@ -305,4 +318,5 @@ export type ChangeRequestAction =
     | 'deleteDependency'
     | 'addReleasePlan'
     | 'deleteReleasePlan'
-    | 'startMilestone';
+    | 'startMilestone'
+    | 'createMilestoneProgression';

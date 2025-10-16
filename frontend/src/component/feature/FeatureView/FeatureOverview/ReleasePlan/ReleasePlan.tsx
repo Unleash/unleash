@@ -461,7 +461,6 @@ export const ReleasePlan = ({
             {progressionDataForCR && (
                 <CreateMilestoneProgressionChangeRequestDialog
                     environmentId={environment}
-                    featureId={featureName}
                     isOpen={changeRequestDialogCreateProgressionOpen}
                     onConfirm={onAddCreateProgressionChangesConfirm}
                     onClosing={() => {
@@ -469,16 +468,6 @@ export const ReleasePlan = ({
                         setProgressionDataForCR(null);
                     }}
                     releasePlan={plan}
-                    sourceMilestone={milestones.find(
-                        (milestone) =>
-                            milestone.id ===
-                            progressionDataForCR.sourceMilestone,
-                    )}
-                    targetMilestone={milestones.find(
-                        (milestone) =>
-                            milestone.id ===
-                            progressionDataForCR.targetMilestone,
-                    )}
                     payload={progressionDataForCR}
                 />
             )}

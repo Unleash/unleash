@@ -1,9 +1,6 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { styled, Button } from '@mui/material';
-import type {
-    IReleasePlan,
-    IReleasePlanMilestone,
-} from 'interfaces/releasePlans';
+import type { IReleasePlan } from 'interfaces/releasePlans';
 import type { CreateMilestoneProgressionSchema } from 'openapi';
 import { getTimeValueAndUnitFromMinutes } from '../hooks/useMilestoneProgressionForm.js';
 
@@ -12,11 +9,8 @@ const StyledBoldSpan = styled('span')(({ theme }) => ({
 }));
 
 interface ICreateMilestoneProgressionChangeRequestDialogProps {
-    featureId: string;
     environmentId: string;
-    releasePlan?: IReleasePlan | undefined;
-    sourceMilestone?: IReleasePlanMilestone | undefined;
-    targetMilestone?: IReleasePlanMilestone | undefined;
+    releasePlan: IReleasePlan;
     payload: CreateMilestoneProgressionSchema;
     isOpen: boolean;
     onConfirm: () => Promise<void>;
@@ -24,11 +18,8 @@ interface ICreateMilestoneProgressionChangeRequestDialogProps {
 }
 
 export const CreateMilestoneProgressionChangeRequestDialog = ({
-    featureId,
     environmentId,
     releasePlan,
-    sourceMilestone,
-    targetMilestone,
     payload,
     isOpen,
     onConfirm,
@@ -37,6 +28,13 @@ export const CreateMilestoneProgressionChangeRequestDialog = ({
     if (!payload) {
         return null;
     }
+
+    const sourceMilestone = releasePlan.milestones.find(
+        (milestone) => milestone.id === payload.sourceMilestone,
+    );
+    const targetMilestone = releasePlan.milestones.find(
+        (milestone) => milestone.id === payload.targetMilestone,
+    );
 
     const { value, unit } = getTimeValueAndUnitFromMinutes(
         payload.transitionCondition.intervalMinutes,

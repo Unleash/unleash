@@ -190,6 +190,7 @@ import ProjectStore from './features/project/project-store.js';
 import type { ReleasePlanMilestoneWriteModel } from './features/release-plans/release-plan-milestone.js';
 import type { IReleasePlanReadModel } from './features/release-plans/release-plan-read-model-type.js';
 import { ReleasePlanReadModel } from './features/release-plans/release-plan-read-model.js';
+import { FakeChangeRequestAccessReadModel } from './features/change-request-access-service/fake-change-request-access-read-model.js';
 
 export async function initialServiceSetup(
     { authentication }: Pick<IUnleashConfig, 'authentication'>,
@@ -460,6 +461,7 @@ export {
     UserSubscriptionsReadModel,
     FakeUserSubscriptionsReadModel,
     FakePrivateProjectChecker,
+    FakeChangeRequestAccessReadModel,
     createFakeProjectReadModel,
     createFakePrivateProjectChecker,
     createProjectReadModel,

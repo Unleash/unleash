@@ -11,6 +11,8 @@ import {
     useMilestoneProgressionForm,
     getTimeValueAndUnitFromMinutes,
 } from '../hooks/useMilestoneProgressionForm.js';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import type { UpdateMilestoneProgressionSchema } from 'openapi';
 
 const StyledDisplayContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -67,6 +69,10 @@ interface IMilestoneTransitionDisplayProps {
     featureName: string;
     sourceMilestoneId: string;
     onUpdate: () => void;
+    onChangeRequestSubmit?: (
+        sourceMilestoneId: string,
+        payload: UpdateMilestoneProgressionSchema,
+    ) => void;
 }
 
 export const MilestoneTransitionDisplay = ({
@@ -79,9 +85,11 @@ export const MilestoneTransitionDisplay = ({
     featureName,
     sourceMilestoneId,
     onUpdate,
+    onChangeRequestSubmit,
 }: IMilestoneTransitionDisplayProps) => {
     const { updateMilestoneProgression } = useMilestoneProgressionsApi();
     const { setToastData, setToastApiError } = useToast();
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
     const initial = getTimeValueAndUnitFromMinutes(intervalMinutes);
     const form = useMilestoneProgressionForm(
@@ -100,6 +108,19 @@ export const MilestoneTransitionDisplay = ({
     const handleSave = async () => {
         if (isSubmitting || !hasChanged) return;
 
+        const payload: UpdateMilestoneProgressionSchema = {
+            transitionCondition: {
+                intervalMinutes: currentIntervalMinutes,
+            },
+        };
+
+        // If change requests are enabled, use the change request flow
+        if (isChangeRequestConfigured(environment) && onChangeRequestSubmit) {
+            onChangeRequestSubmit(sourceMilestoneId, payload);
+            return;
+        }
+
+        // Otherwise, directly update via API
         setIsSubmitting(true);
         try {
             await updateMilestoneProgression(
@@ -107,11 +128,7 @@ export const MilestoneTransitionDisplay = ({
                 environment,
                 featureName,
                 sourceMilestoneId,
-                {
-                    transitionCondition: {
-                        intervalMinutes: currentIntervalMinutes,
-                    },
-                },
+                payload,
             );
             setToastData({
                 type: 'success',

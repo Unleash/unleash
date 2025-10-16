@@ -5,6 +5,7 @@ import type { IUser } from '../../interfaces/user.js';
 import type {
     SetStrategySortOrderSchema,
     CreateMilestoneProgressionSchema,
+    UpdateMilestoneProgressionSchema,
 } from 'openapi';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 
@@ -135,7 +136,8 @@ type ChangeRequestPayload =
     | ChangeRequestAddReleasePlan
     | ChangeRequestDeleteReleasePlan
     | ChangeRequestStartMilestone
-    | ChangeRequestCreateMilestoneProgression;
+    | ChangeRequestCreateMilestoneProgression
+    | ChangeRequestUpdateMilestoneProgression;
 
 export interface IChangeRequestAddStrategy extends IChangeRequestChangeBase {
     action: 'addStrategy';
@@ -198,6 +200,12 @@ export interface IChangeRequestCreateMilestoneProgression
     payload: ChangeRequestCreateMilestoneProgression;
 }
 
+export interface IChangeRequestUpdateMilestoneProgression
+    extends IChangeRequestChangeBase {
+    action: 'updateMilestoneProgression';
+    payload: ChangeRequestUpdateMilestoneProgression;
+}
+
 export interface IChangeRequestReorderStrategy
     extends IChangeRequestChangeBase {
     action: 'reorderStrategy';
@@ -246,7 +254,8 @@ export type IFeatureChange =
     | IChangeRequestAddReleasePlan
     | IChangeRequestDeleteReleasePlan
     | IChangeRequestStartMilestone
-    | IChangeRequestCreateMilestoneProgression;
+    | IChangeRequestCreateMilestoneProgression
+    | IChangeRequestUpdateMilestoneProgression;
 
 export type ISegmentChange =
     | IChangeRequestUpdateSegment
@@ -280,6 +289,11 @@ type ChangeRequestStartMilestone = {
 };
 
 type ChangeRequestCreateMilestoneProgression = CreateMilestoneProgressionSchema;
+
+type ChangeRequestUpdateMilestoneProgression =
+    UpdateMilestoneProgressionSchema & {
+        sourceMilestoneId: string;
+    };
 
 export type ChangeRequestAddStrategy = Pick<
     IFeatureStrategy,
@@ -319,4 +333,5 @@ export type ChangeRequestAction =
     | 'addReleasePlan'
     | 'deleteReleasePlan'
     | 'startMilestone'
-    | 'createMilestoneProgression';
+    | 'createMilestoneProgression'
+    | 'updateMilestoneProgression';

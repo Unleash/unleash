@@ -20,12 +20,14 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { RemoveReleasePlanChangeRequestDialog } from './ChangeRequest/RemoveReleasePlanChangeRequestDialog.tsx';
 import { StartMilestoneChangeRequestDialog } from './ChangeRequest/StartMilestoneChangeRequestDialog.tsx';
+import { CreateMilestoneProgressionChangeRequestDialog } from './ChangeRequest/CreateMilestoneProgressionChangeRequestDialog.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { MilestoneProgressionForm } from './MilestoneProgressionForm/MilestoneProgressionForm.tsx';
 import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
 import { DeleteProgressionDialog } from './DeleteProgressionDialog.tsx';
+import type { CreateMilestoneProgressionSchema } from 'openapi';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -124,9 +126,15 @@ export const ReleasePlan = ({
         setChangeRequestDialogStartMilestoneOpen,
     ] = useState(false);
     const [
+        changeRequestDialogCreateProgressionOpen,
+        setChangeRequestDialogCreateProgressionOpen,
+    ] = useState(false);
+    const [
         milestoneForChangeRequestDialog,
         setMilestoneForChangeRequestDialog,
     ] = useState<IReleasePlanMilestone>();
+    const [progressionDataForCR, setProgressionDataForCR] =
+        useState<CreateMilestoneProgressionSchema | null>(null);
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
@@ -176,6 +184,27 @@ export const ReleasePlan = ({
         });
 
         setChangeRequestDialogStartMilestoneOpen(false);
+    };
+
+    const onAddCreateProgressionChangesConfirm = async () => {
+        if (!progressionDataForCR) return;
+
+        await addChange(projectId, environment, {
+            feature: featureName,
+            action: 'createMilestoneProgression',
+            payload: progressionDataForCR,
+        });
+
+        await refetchChangeRequests();
+
+        setToastData({
+            type: 'success',
+            text: 'Added to draft',
+        });
+
+        setChangeRequestDialogCreateProgressionOpen(false);
+        setProgressionFormOpenIndex(null);
+        setProgressionDataForCR(null);
     };
 
     const confirmRemoveReleasePlan = () => {
@@ -252,6 +281,13 @@ export const ReleasePlan = ({
 
     const handleProgressionCancel = () => {
         setProgressionFormOpenIndex(null);
+    };
+
+    const handleProgressionChangeRequestSubmit = (
+        payload: CreateMilestoneProgressionSchema,
+    ) => {
+        setProgressionDataForCR(payload);
+        setChangeRequestDialogCreateProgressionOpen(true);
     };
 
     const handleDeleteProgression = (milestone: IReleasePlanMilestone) => {
@@ -367,6 +403,11 @@ export const ReleasePlan = ({
                                             featureName={featureName}
                                             onSave={handleProgressionSave}
                                             onCancel={handleProgressionCancel}
+                                            onChangeRequestSubmit={(payload) =>
+                                                handleProgressionChangeRequestSubmit(
+                                                    payload,
+                                                )
+                                            }
                                         />
                                     ) : undefined
                                 }
@@ -417,6 +458,30 @@ export const ReleasePlan = ({
                 releasePlan={plan}
                 milestone={milestoneForChangeRequestDialog}
             />
+            {progressionDataForCR && (
+                <CreateMilestoneProgressionChangeRequestDialog
+                    environmentId={environment}
+                    featureId={featureName}
+                    isOpen={changeRequestDialogCreateProgressionOpen}
+                    onConfirm={onAddCreateProgressionChangesConfirm}
+                    onClosing={() => {
+                        setChangeRequestDialogCreateProgressionOpen(false);
+                        setProgressionDataForCR(null);
+                    }}
+                    releasePlan={plan}
+                    sourceMilestone={milestones.find(
+                        (milestone) =>
+                            milestone.id ===
+                            progressionDataForCR.sourceMilestone,
+                    )}
+                    targetMilestone={milestones.find(
+                        (milestone) =>
+                            milestone.id ===
+                            progressionDataForCR.targetMilestone,
+                    )}
+                    payload={progressionDataForCR}
+                />
+            )}
             {milestoneToDeleteProgression && (
                 <DeleteProgressionDialog
                     open={milestoneToDeleteProgression !== null}

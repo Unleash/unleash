@@ -6,6 +6,8 @@ import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgr
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { MilestoneProgressionTimeInput } from './MilestoneProgressionTimeInput.tsx';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import type { CreateMilestoneProgressionSchema } from 'openapi';
 
 const StyledFormContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -63,6 +65,9 @@ interface IMilestoneProgressionFormProps {
     featureName: string;
     onSave: () => void;
     onCancel: () => void;
+    onChangeRequestSubmit?: (
+        progressionPayload: CreateMilestoneProgressionSchema,
+    ) => void;
 }
 
 export const MilestoneProgressionForm = ({
@@ -73,6 +78,7 @@ export const MilestoneProgressionForm = ({
     featureName,
     onSave,
     onCancel,
+    onChangeRequestSubmit,
 }: IMilestoneProgressionFormProps) => {
     const form = useMilestoneProgressionForm(
         sourceMilestoneId,
@@ -80,16 +86,16 @@ export const MilestoneProgressionForm = ({
     );
     const { createMilestoneProgression } = useMilestoneProgressionsApi();
     const { setToastData, setToastApiError } = useToast();
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = async () => {
-        if (isSubmitting) return;
+    const handleChangeRequestSubmit = () => {
+        const progressionPayload = form.getProgressionPayload();
+        onChangeRequestSubmit?.(progressionPayload);
+    };
 
-        if (!form.validate()) {
-            return;
-        }
-
+    const handleDirectSubmit = async () => {
         setIsSubmitting(true);
         try {
             await createMilestoneProgression(
@@ -107,6 +113,20 @@ export const MilestoneProgressionForm = ({
             setToastApiError(formatUnknownError(error));
         } finally {
             setIsSubmitting(false);
+        }
+    };
+
+    const handleSubmit = async () => {
+        if (isSubmitting) return;
+
+        if (!form.validate()) {
+            return;
+        }
+
+        if (isChangeRequestConfigured(environment) && onChangeRequestSubmit) {
+            handleChangeRequestSubmit();
+        } else {
+            await handleDirectSubmit();
         }
     };
 

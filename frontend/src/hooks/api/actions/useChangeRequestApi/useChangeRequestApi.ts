@@ -21,7 +21,8 @@ export interface IChangeSchema {
         | 'deleteDependency'
         | 'addReleasePlan'
         | 'deleteReleasePlan'
-        | 'startMilestone';
+        | 'startMilestone'
+        | 'createMilestoneProgression';
     payload: string | boolean | object | number | undefined;
 }
 

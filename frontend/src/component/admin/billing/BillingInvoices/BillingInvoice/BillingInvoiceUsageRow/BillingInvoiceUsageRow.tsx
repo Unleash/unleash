@@ -15,7 +15,7 @@ const StyledCellWithIndicator = styled('div')(({ theme }) => ({
     maxHeight: theme.spacing(2.5),
 }));
 
-export const BillingInvoiceRow = ({
+export const BillingInvoiceUsageRow = ({
     quantity,
     consumption,
     limit,

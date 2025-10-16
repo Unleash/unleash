@@ -16,7 +16,7 @@ import { Badge } from 'component/common/Badge/Badge.tsx';
 import { BillingInvoiceFooter } from './BillingInvoiceFooter/BillingInvoiceFooter.tsx';
 import { StyledAmountCell, StyledSubgrid } from './BillingInvoice.styles.tsx';
 import type { DetailedInvoicesSchemaInvoicesItem } from 'openapi';
-import { BillingInvoiceRow } from './BillingInvoiceRow/BillingInvoiceRow.tsx';
+import { BillingInvoiceUsageRow } from './BillingInvoiceUsageRow/BillingInvoiceUsageRow.tsx';
 import { BillingInvoiceMainRow } from './BillingInvoiceMainRow/BillingInvoiceMainRow.tsx';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
@@ -201,7 +201,7 @@ export const BillingInvoice = ({
                             </StyledTableRow>
                             {usageLines.map((line) => (
                                 <StyledTableRow key={line.description}>
-                                    <BillingInvoiceRow {...line} />
+                                    <BillingInvoiceUsageRow {...line} />
                                 </StyledTableRow>
                             ))}
                         </TableBody>

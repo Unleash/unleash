@@ -115,17 +115,18 @@ export const BillingInvoice = ({
 }: BillingInvoiceProps) => {
     const currency = mainLines?.[0]?.currency || usageLines?.[0]?.currency;
 
-    let formattedTitle = invoiceDate
+    const formattedTitle = invoiceDate
         ? new Date(invoiceDate).toLocaleDateString(undefined, {
               month: 'long',
               day: 'numeric',
           })
         : '';
 
-    // if year is not current, add year to formatted title
-    if (new Date(invoiceDate).getFullYear() !== new Date().getFullYear()) {
-        formattedTitle += `, ${new Date(invoiceDate).getFullYear()}`;
-    }
+    const isCurrentYear =
+        new Date(invoiceDate).getFullYear() === new Date().getFullYear();
+    const year = isCurrentYear
+        ? `, ${new Date(invoiceDate).getFullYear()}`
+        : '';
 
     const hasLimitsColumn = usageLines.some((line) => line.limit);
 
@@ -142,6 +143,7 @@ export const BillingInvoice = ({
                         sx={{ fontWeight: 700 }}
                     >
                         {formattedTitle}
+                        {year}
                     </Typography>
                 </HeaderLeft>
                 <HeaderRight>

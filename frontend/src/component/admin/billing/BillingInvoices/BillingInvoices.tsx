@@ -7,7 +7,7 @@ import { TablePlaceholder } from 'component/common/Table';
 const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(3),
+    gap: theme.spacing(2),
 }));
 
 export const BillingInvoices: FC = () => {

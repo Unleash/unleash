@@ -15,14 +15,15 @@ const StyledWrapper = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusLarge,
     boxShadow: theme.boxShadows.card,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1),
 }));
 
 const StyledRow = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
-    marginTop: theme.spacing(1),
     fontSize: theme.typography.body2.fontSize,
-    gap: theme.spacing(1),
 }));
 
 const StyledItemTitle = styled('span')(({ theme }) => ({
@@ -35,17 +36,16 @@ const StyledItemValue = styled('span')(({ theme }) => ({
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
-    margin: theme.spacing(0, 0, 2, 0),
+    margin: theme.spacing(0, 0, 1, 0),
 }));
 
 const StyledInfoLabel = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
-    marginBottom: theme.spacing(1),
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
-    margin: `${theme.spacing(2.5)} 0`,
+    margin: theme.spacing(1.5, 0),
     borderColor: theme.palette.divider,
 }));
 
@@ -70,6 +70,7 @@ export const BillingInfo: FC<BillingInfoProps> = () => {
     if (!instanceStatus) {
         return (
             <StyledWrapper>
+                <Typography variant='h3'>Billing details</Typography>
                 <StyledInfoLabel>
                     Your billing is managed by Unleash
                 </StyledInfoLabel>
@@ -86,6 +87,7 @@ export const BillingInfo: FC<BillingInfoProps> = () => {
     if (isCustomBilling) {
         return (
             <StyledWrapper>
+                <Typography variant='h3'>Billing details</Typography>
                 <StyledInfoLabel>
                     Your billing is managed by Unleash
                 </StyledInfoLabel>
@@ -123,11 +125,12 @@ export const BillingInfo: FC<BillingInfoProps> = () => {
             >
                 {!inactive ? 'Edit billing details' : 'Add billing details'}
             </StyledButton>
-            <StyledInfoLabel>
-                {inactive
-                    ? 'Once we have received your billing information we will upgrade your trial within 1 business day.'
-                    : 'Update your credit card and business information and change which email address we send invoices to.'}
-            </StyledInfoLabel>
+            {inactive ? (
+                <StyledInfoLabel>
+                    Once we have received your billing information we will
+                    upgrade your trial within 1 business day.
+                </StyledInfoLabel>
+            ) : null}
             <GetInTouch />
         </StyledWrapper>
     );

@@ -18,6 +18,7 @@ type InstanceInsightsWithLabels = InstanceInsightsSchema & {
     labels: { date: string; week: string }[];
 };
 
+// todo (lifecycleGraphs): consider moving this to the API instead.
 const generateWeekLabels = (
     start: string,
     end: string,

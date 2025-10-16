@@ -25,7 +25,10 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { MilestoneProgressionForm } from './MilestoneProgressionForm/MilestoneProgressionForm.tsx';
 import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
 import { DeleteProgressionDialog } from './DeleteProgressionDialog.tsx';
-import type { CreateMilestoneProgressionSchema } from 'openapi';
+import type {
+    CreateMilestoneProgressionSchema,
+    UpdateMilestoneProgressionSchema,
+} from 'openapi';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -124,6 +127,11 @@ export const ReleasePlan = ({
               type: 'createMilestoneProgression';
               payload: CreateMilestoneProgressionSchema;
           }
+        | {
+              type: 'updateMilestoneProgression';
+              sourceMilestoneId: string;
+              payload: UpdateMilestoneProgressionSchema;
+          }
         | null
     >(null);
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
@@ -170,6 +178,17 @@ export const ReleasePlan = ({
                     payload: changeRequestAction.payload,
                 });
                 setProgressionFormOpenIndex(null);
+                break;
+
+            case 'updateMilestoneProgression':
+                await addChange(projectId, environment, {
+                    feature: featureName,
+                    action: 'updateMilestoneProgression',
+                    payload: {
+                        sourceMilestone: changeRequestAction.sourceMilestoneId,
+                        ...changeRequestAction.payload,
+                    },
+                });
                 break;
         }
 
@@ -269,6 +288,17 @@ export const ReleasePlan = ({
     ) => {
         setChangeRequestAction({
             type: 'createMilestoneProgression',
+            payload,
+        });
+    };
+
+    const handleUpdateProgressionChangeRequestSubmit = (
+        sourceMilestoneId: string,
+        payload: UpdateMilestoneProgressionSchema,
+    ) => {
+        setChangeRequestAction({
+            type: 'updateMilestoneProgression',
+            sourceMilestoneId,
             payload,
         });
     };
@@ -398,6 +428,9 @@ export const ReleasePlan = ({
                                 environment={environment}
                                 featureName={featureName}
                                 onUpdate={refetch}
+                                onUpdateChangeRequestSubmit={
+                                    handleUpdateProgressionChangeRequestSubmit
+                                }
                                 allMilestones={milestones}
                                 activeMilestoneId={activeMilestoneId}
                             />

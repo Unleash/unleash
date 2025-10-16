@@ -19,6 +19,7 @@ import { StrategyList } from 'component/common/StrategyList/StrategyList';
 import { StrategyListItem } from 'component/common/StrategyList/StrategyListItem';
 import { MilestoneAutomationSection } from './MilestoneAutomationSection.tsx';
 import { formatDateYMDHMS } from 'utils/formatDate';
+import type { UpdateMilestoneProgressionSchema } from 'openapi';
 
 const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'status' && prop !== 'hasAutomation',
@@ -107,6 +108,10 @@ interface IReleasePlanMilestoneProps {
     environment?: string;
     featureName?: string;
     onUpdate?: () => void;
+    onUpdateChangeRequestSubmit?: (
+        sourceMilestoneId: string,
+        payload: UpdateMilestoneProgressionSchema,
+    ) => void;
     allMilestones: IReleasePlanMilestone[];
     activeMilestoneId?: string;
 }
@@ -124,6 +129,7 @@ export const ReleasePlanMilestone = ({
     environment,
     featureName,
     onUpdate,
+    onUpdateChangeRequestSubmit,
     allMilestones,
     activeMilestoneId,
 }: IReleasePlanMilestoneProps) => {
@@ -193,6 +199,9 @@ export const ReleasePlanMilestone = ({
                             featureName={featureName}
                             sourceMilestoneId={milestone.id}
                             onUpdate={onUpdate}
+                            onUpdateChangeRequestSubmit={
+                                onUpdateChangeRequestSubmit
+                            }
                         />
                     )}
             </StyledMilestoneContainer>
@@ -283,6 +292,9 @@ export const ReleasePlanMilestone = ({
                         featureName={featureName}
                         sourceMilestoneId={milestone.id}
                         onUpdate={onUpdate}
+                        onUpdateChangeRequestSubmit={
+                            onUpdateChangeRequestSubmit
+                        }
                     />
                 )}
         </StyledMilestoneContainer>

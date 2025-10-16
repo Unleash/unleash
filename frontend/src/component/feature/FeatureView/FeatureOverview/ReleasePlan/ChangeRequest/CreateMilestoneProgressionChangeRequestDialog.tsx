@@ -39,7 +39,7 @@ export const CreateMilestoneProgressionChangeRequestDialog = ({
     const { value, unit } = getTimeValueAndUnitFromMinutes(
         payload.transitionCondition.intervalMinutes,
     );
-    const progressionName = `${value} ${unit}`;
+    const timeInterval = `${value} ${unit}`;
 
     return (
         <Dialogue
@@ -62,7 +62,7 @@ export const CreateMilestoneProgressionChangeRequestDialog = ({
                 Create automation to proceed from{' '}
                 <StyledBoldSpan>{sourceMilestone?.name}</StyledBoldSpan> to{' '}
                 <StyledBoldSpan>{targetMilestone?.name}</StyledBoldSpan> after{' '}
-                <StyledBoldSpan>{progressionName}</StyledBoldSpan> in{' '}
+                <StyledBoldSpan>{timeInterval}</StyledBoldSpan> in{' '}
                 {environmentId}
             </p>
         </Dialogue>

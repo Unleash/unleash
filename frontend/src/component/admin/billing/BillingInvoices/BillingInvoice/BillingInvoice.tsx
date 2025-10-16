@@ -17,6 +17,7 @@ import { BillingInvoiceFooter } from './BillingInvoiceFooter/BillingInvoiceFoote
 import { StyledAmountCell, StyledSubgrid } from './BillingInvoice.styles.tsx';
 import type { DetailedInvoicesSchemaInvoicesItem } from 'openapi';
 import { BillingInvoiceRow } from './BillingInvoiceRow/BillingInvoiceRow.tsx';
+import { BillingInvoiceMainRow } from './BillingInvoiceMainRow/BillingInvoiceMainRow.tsx';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     background: theme.palette.background.paper,
@@ -128,8 +129,6 @@ export const BillingInvoice = ({
         ? `, ${new Date(invoiceDate).getFullYear()}`
         : '';
 
-    const hasLimitsColumn = usageLines.some((line) => line.limit);
-
     return (
         <StyledAccordion defaultExpanded={Boolean(defaultExpanded)}>
             <HeaderRoot
@@ -182,10 +181,7 @@ export const BillingInvoice = ({
                         </StyledTableRow>
                         {mainLines.map((line) => (
                             <StyledTableRow key={line.description}>
-                                <BillingInvoiceRow
-                                    {...line}
-                                    showLimits={false}
-                                />
+                                <BillingInvoiceMainRow {...line} />
                             </StyledTableRow>
                         ))}
                     </TableBody>
@@ -197,11 +193,7 @@ export const BillingInvoice = ({
                                         Usage – {monthText}
                                     </StyledTableTitle>
                                 </HeaderCell>
-                                {hasLimitsColumn ? (
-                                    <HeaderCell>Included</HeaderCell>
-                                ) : (
-                                    <HeaderCell />
-                                )}
+                                <HeaderCell>Included</HeaderCell>
                                 <HeaderCell>Overages</HeaderCell>
                                 <HeaderCell>
                                     <StyledAmountCell>Amount</StyledAmountCell>
@@ -209,10 +201,7 @@ export const BillingInvoice = ({
                             </StyledTableRow>
                             {usageLines.map((line) => (
                                 <StyledTableRow key={line.description}>
-                                    <BillingInvoiceRow
-                                        {...line}
-                                        showLimits={hasLimitsColumn}
-                                    />
+                                    <BillingInvoiceRow {...line} />
                                 </StyledTableRow>
                             ))}
                         </TableBody>

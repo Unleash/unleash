@@ -21,3 +21,11 @@ export const StyledAmountCell = styled('div')(({ theme }) => ({
     textAlign: 'right',
     paddingRight: theme.spacing(1.5),
 }));
+
+export const StyledDescriptionCell = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'expand',
+})<{ expand?: boolean }>(({ expand }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gridColumn: expand ? '1 / span 2' : undefined,
+}));

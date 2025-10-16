@@ -292,7 +292,9 @@ export const ReleasePlanMilestone = ({
                         featureName={featureName}
                         sourceMilestoneId={milestone.id}
                         onUpdate={onUpdate}
-                        onUpdateChangeRequestSubmit={onUpdateChangeRequestSubmit}
+                        onUpdateChangeRequestSubmit={
+                            onUpdateChangeRequestSubmit
+                        }
                     />
                 )}
         </StyledMilestoneContainer>

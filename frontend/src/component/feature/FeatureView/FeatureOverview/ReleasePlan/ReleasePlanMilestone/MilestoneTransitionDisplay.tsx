@@ -114,13 +114,11 @@ export const MilestoneTransitionDisplay = ({
             },
         };
 
-        // If change requests are enabled, use the change request flow
         if (isChangeRequestConfigured(environment) && onChangeRequestSubmit) {
             onChangeRequestSubmit(sourceMilestoneId, payload);
             return;
         }
 
-        // Otherwise, directly update via API
         setIsSubmitting(true);
         try {
             await updateMilestoneProgression(

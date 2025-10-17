@@ -274,5 +274,27 @@ describe('calculateEstimateTotals', () => {
                 totalAmount: 110,
             });
         });
+
+        it('rounds down overages to integers', () => {
+            const usageLines = [
+                createUsageLine(150.7, 100, 2),
+                createUsageLine(200.3, 150, 1.5),
+            ];
+            const result = calculateEstimateTotals(
+                'estimate',
+                0,
+                0,
+                0,
+                10,
+                [],
+                usageLines,
+            );
+
+            expect(result).toEqual({
+                subtotal: 175,
+                taxAmount: 17.5,
+                totalAmount: 192.5,
+            });
+        });
     });
 });

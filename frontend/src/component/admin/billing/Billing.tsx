@@ -11,7 +11,7 @@ import useInvoices from 'hooks/api/getters/useInvoices/useInvoices';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { BillingInvoices } from './BillingInvoices/BillingInvoices.tsx';
 import { BillingInfo } from './BillingInfo/BillingInfo.tsx';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig.ts';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 
 const StyledHeader = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,

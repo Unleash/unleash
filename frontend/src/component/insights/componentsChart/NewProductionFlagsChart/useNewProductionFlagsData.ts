@@ -7,9 +7,9 @@ import type { BatchedWeekData, WeekData } from './types.ts';
 import { useMemo } from 'react';
 import { batchProductionFlagsData } from './batchProductionFlagsData.ts';
 import { fillGradientPrimary } from 'component/insights/components/LineChart/LineChart';
-import type { ChartData } from 'chart.js';
 import { calculateMedian } from 'component/insights/componentsStat/NewProductionFlagsStats/calculateMedian.ts';
-import type { ChartDataState } from '../chartDataState.ts';
+import { hasRealData, type ChartData } from '../chartData.ts';
+import type { ChartData as ChartJsData } from 'chart.js';
 
 const batchSize = 4;
 
@@ -23,8 +23,7 @@ type UseProductionFlagsDataProps = {
 };
 
 type UseProductionFlagsDataResult = {
-    type: ChartDataState;
-    data: ChartData<'line', WeekData[] | number[]>;
+    chartData: ChartData<WeekData, number>;
     median: string | number;
 };
 
@@ -34,7 +33,7 @@ const padProjectData = ({
     shouldBatchData,
 }: {
     labels: UseProductionFlagsDataProps['labels'];
-    lifecycleData: ChartData<'line', WeekData[]>;
+    lifecycleData: ChartJsData<'line', WeekData[]>;
     shouldBatchData: boolean;
 }) => {
     if (lifecycleData.datasets.length === 0) {
@@ -66,31 +65,6 @@ const padProjectData = ({
     }));
 };
 
-type MemoResult =
-    | {
-          data: ChartData<'line', number[]>;
-          chartDataResult: Extract<
-              ChartDataState,
-              { status: 'Loading' | 'Not Enough Data' }
-          >;
-      }
-    | {
-          data: ChartData<'line', WeekData[]>;
-          chartDataResult: Extract<
-              ChartDataState,
-              { status: 'Weekly' | 'Batched' }
-          >;
-      };
-
-function hasWeekData(
-    result: MemoResult,
-): result is Extract<MemoResult, { data: ChartData<'line', WeekData[]> }> {
-    return (
-        result.chartDataResult.status === 'Weekly' ||
-        result.chartDataResult.status === 'Batched'
-    );
-}
-
 export const useProductionFlagsData = ({
     groupedLifecycleData,
     showAllProjects,
@@ -103,18 +77,21 @@ export const useProductionFlagsData = ({
 
     const shouldBatchData = labels.length >= 12;
 
-    const memoResult = useMemo((): MemoResult => {
+    const chartData = useMemo((): ChartData<
+        WeekData | BatchedWeekData,
+        number
+    > => {
         if (loading) {
             return {
-                chartDataResult: { status: 'Loading' as const },
-                data: placeholderData,
+                state: 'Loading',
+                value: placeholderData,
             };
         }
 
         if (labels.length < 2) {
             return {
-                chartDataResult: { status: 'Not Enough Data' as const },
-                data: placeholderData,
+                state: 'Not Enough Data',
+                value: placeholderData,
             };
         }
 
@@ -134,43 +111,44 @@ export const useProductionFlagsData = ({
                 );
         });
 
-        let chartDataResult: ChartDataState = { status: 'Weekly' };
-        let displayData: WeekData[] | BatchedWeekData[] = weeks;
+        const chartArgs = (data: WeekData[] | BatchedWeekData[]) => ({
+            datasets: [
+                {
+                    label: 'Number of new flags',
+                    data,
+                    borderColor: theme.palette.primary.light,
+                    backgroundColor: fillGradientPrimary,
+                    fill: true,
+                    order: 3,
+                },
+            ],
+        });
 
         if (shouldBatchData) {
-            chartDataResult = { status: 'Batched', batchSize };
-            displayData = batchProductionFlagsData(weeks, batchSize);
+            return {
+                state: 'Batched',
+                value: chartArgs(batchProductionFlagsData(weeks, batchSize)),
+                batchSize: batchSize,
+            };
         }
 
         return {
-            chartDataResult,
-            data: {
-                datasets: [
-                    {
-                        label: 'Number of new flags',
-                        data: displayData,
-                        borderColor: theme.palette.primary.light,
-                        backgroundColor: fillGradientPrimary,
-                        fill: true,
-                        order: 3,
-                    },
-                ],
-            },
+            state: 'Weekly',
+            value: chartArgs(weeks),
         };
     }, [lifecycleData, theme, loading]);
 
-    if (!hasWeekData(memoResult)) {
+    if (!hasRealData(chartData)) {
         return {
-            type: memoResult.chartDataResult,
-            data: memoResult.data,
+            chartData,
             median: 'N/A',
         };
     }
 
-    const { data, chartDataResult } = memoResult;
+    const { value: allProjectsData, ...metadata } = chartData;
 
-    const aggregateOrProjectData = showAllProjects
-        ? data
+    const value = showAllProjects
+        ? allProjectsData
         : {
               datasets: padProjectData({
                   labels,
@@ -179,11 +157,13 @@ export const useProductionFlagsData = ({
               }),
           };
 
-    const median = calculateMedian(data.datasets);
+    const median = calculateMedian(value.datasets);
 
     return {
-        type: chartDataResult,
-        data: aggregateOrProjectData,
+        chartData: {
+            ...metadata,
+            value,
+        },
         median,
     };
 };

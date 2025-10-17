@@ -36,7 +36,7 @@ const NewProductionFlagsWidget = ({
     showAllProjects,
     labels,
 }) => {
-    const { median, data, type } = useProductionFlagsData({
+    const { median, chartData } = useProductionFlagsData({
         groupedLifecycleData,
         labels,
         loading,
@@ -48,12 +48,12 @@ const NewProductionFlagsWidget = ({
             <StyledWidgetStats width={275}>
                 <WidgetTitle title='New flags in production' />
                 <NewProductionFlagsStats
-                    chartDataResult={type}
+                    chartData={chartData}
                     median={median}
                 />
             </StyledWidgetStats>
             <StyledChartContainer>
-                <NewProductionFlagsChart type={type} data={data} />
+                <NewProductionFlagsChart chartData={chartData} />
             </StyledChartContainer>
         </StyledWidget>
     );

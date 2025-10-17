@@ -27,4 +27,4 @@ const batchArgs = (batchSize?: number) => ({
 export const batchProductionFlagsData = (
     data: WeekData[],
     batchSize?: number,
-) => batchData(batchArgs(batchSize))(data);
+): BatchedWeekData[] => batchData(batchArgs(batchSize))(data);

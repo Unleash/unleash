@@ -1,22 +1,20 @@
 import type { FC } from 'react';
 import { StatCard } from '../shared/StatCard.tsx';
-import type { ChartDataState } from 'component/insights/componentsChart/chartDataState.ts';
+import type { ChartData } from 'component/insights/componentsChart/chartData.ts';
 
 interface NewProductionFlagsStatsProps {
     median: number | string;
-    isLoading?: boolean;
-    chartDataResult: ChartDataState;
+    chartData: ChartData<unknown, unknown>;
 }
 
 export const NewProductionFlagsStats: FC<NewProductionFlagsStatsProps> = ({
     median,
-    chartDataResult,
+    chartData,
 }) => {
     const label =
-        chartDataResult.status === 'Batched'
-            ? `Median per ${chartDataResult.batchSize} weeks`
+        chartData.state === 'Batched'
+            ? `Median per ${chartData.batchSize} weeks`
             : 'Median per week';
-    const isLoading = chartDataResult.status === 'Loading';
 
     return (
         <StatCard
@@ -24,7 +22,7 @@ export const NewProductionFlagsStats: FC<NewProductionFlagsStatsProps> = ({
             label={label}
             tooltip='The median number of flags that have entered production for the selected time range.'
             explanation='How often do flags go live in production?'
-            isLoading={isLoading}
+            isLoading={chartData.state === 'Loading'}
         />
     );
 };

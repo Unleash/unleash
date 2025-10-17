@@ -5,17 +5,14 @@ import {
     NotEnoughData,
 } from 'component/insights/components/LineChart/LineChart';
 import { useBatchedTooltipDate } from '../useBatchedTooltipDate.ts';
-import type { ChartData } from 'chart.js';
 import type { WeekData } from './types.ts';
-import type { ChartDataState } from '../chartDataState.ts';
+import type { ChartData } from '../chartData.ts';
 
 interface INewProductionFlagsChartProps {
-    isLoading?: boolean;
-    data: ChartData<'line', WeekData[] | number[]>;
-    type: ChartDataState;
+    chartData: ChartData<WeekData, number>;
 }
 
-const useOverrideOptions = (chartDataResult: ChartDataState) => {
+const useOverrideOptions = (chartData: ChartData<WeekData, number>) => {
     const batchedTooltipTitle = useBatchedTooltipDate();
     const sharedOptions = {
         parsing: {
@@ -23,7 +20,7 @@ const useOverrideOptions = (chartDataResult: ChartDataState) => {
             xAxisKey: 'date',
         },
     };
-    switch (chartDataResult.status) {
+    switch (chartData.state) {
         case 'Batched': {
             return {
                 ...sharedOptions,
@@ -56,23 +53,21 @@ const useOverrideOptions = (chartDataResult: ChartDataState) => {
 };
 
 export const NewProductionFlagsChart: FC<INewProductionFlagsChartProps> = ({
-    data,
-    type,
+    chartData,
 }) => {
     const key = useId();
-    const overrideOptions = useOverrideOptions(type);
-    const isLoading = type.status === 'Loading';
+    const overrideOptions = useOverrideOptions(chartData);
 
     return (
         <LineChart
             key={key}
-            data={data}
+            data={chartData.value}
             overrideOptions={overrideOptions}
             cover={
-                type.status === 'Not Enough Data' ? (
+                chartData.state === 'Not Enough Data' ? (
                     <NotEnoughData />
                 ) : (
-                    isLoading
+                    chartData.state === 'Loading'
                 )
             }
         />

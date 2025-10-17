@@ -10,7 +10,7 @@ This document helps you get started with [Unleash Edge](https://docs.getunleash.
 
 ## Why Unleash Edge
 
-Unleash Edge as a lightweight layer between your SDKs and your Unleash instance.
+Unleash Edge is a lightweight layer between your SDKs and your Unleash instance.
 
 It exposes the same HTTP interface while providing higher throughput.
 

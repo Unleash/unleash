@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Button, Divider, styled } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
 import { ProjectActionsActionItem } from './ProjectActionsActionItem.tsx';
 import type { ActionsActionState } from '../../useProjectActionsForm.ts';
 import { ProjectActionsFormStep } from '../ProjectActionsFormStep.tsx';
@@ -48,7 +47,7 @@ export const ProjectActionsFormStepActions = ({
     const { actionConfigurations } = useActionConfigurations(projectId);
 
     const addAction = (projectId: string) => {
-        const id = uuidv4();
+        const id = crypto.randomUUID();
         const action: ActionsActionState = {
             id,
             action: '',

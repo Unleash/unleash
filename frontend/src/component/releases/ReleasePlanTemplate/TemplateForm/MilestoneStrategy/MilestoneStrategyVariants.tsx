@@ -4,7 +4,6 @@ import { Box, styled, Typography, Button, Alert } from '@mui/material';
 import { HelpIcon } from '../../../../common/HelpIcon/HelpIcon.tsx';
 import { StrategyVariantsUpgradeAlert } from 'component/common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
 import { VariantForm } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm';
-import { v4 as uuidv4 } from 'uuid';
 import type { IFeatureVariantEdit } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal';
 import { updateWeightEdit } from 'component/common/util';
 import { WeightType } from 'constants/variantTypes';
@@ -39,7 +38,7 @@ export const MilestoneStrategyVariants = ({
         ...variant,
         new: true,
         isValid: true,
-        id: uuidv4(),
+        id: crypto.randomUUID(),
         overrides: [],
     }));
     const [variantsEdit, setVariantsEdit] =
@@ -87,7 +86,7 @@ export const MilestoneStrategyVariants = ({
     };
 
     const addVariant = () => {
-        const id = uuidv4();
+        const id = crypto.randomUUID();
         setVariantsEdit((variantsEdit) => [
             ...variantsEdit,
             {

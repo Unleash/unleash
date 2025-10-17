@@ -18,7 +18,6 @@ import { VariantForm } from './VariantForm/VariantForm.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from 'component/providers/AccessProvider/permissions';
 import { WeightType } from 'constants/variantTypes';
-import { v4 as uuidv4 } from 'uuid';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { updateWeightEdit } from 'component/common/util';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
@@ -170,7 +169,7 @@ export const EnvironmentVariantsModal = ({
                           ...oldVariant,
                           isValid: true,
                           new: false,
-                          id: uuidv4(),
+                          id: crypto.randomUUID(),
                       }))
                     : [
                           {
@@ -184,7 +183,7 @@ export const EnvironmentVariantsModal = ({
                                       : defaultStickiness,
                               new: true,
                               isValid: false,
-                              id: uuidv4(),
+                              id: crypto.randomUUID(),
                           },
                       ],
             );
@@ -203,7 +202,7 @@ export const EnvironmentVariantsModal = ({
     };
 
     const addVariant = () => {
-        const id = uuidv4();
+        const id = crypto.randomUUID();
         setVariantsEdit((variantsEdit) => [
             ...variantsEdit,
             {

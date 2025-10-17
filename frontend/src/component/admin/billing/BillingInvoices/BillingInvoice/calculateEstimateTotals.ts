@@ -25,7 +25,7 @@ export const calculateEstimateTotals = (
     const usageLinesTotal = usageLines.reduce((sum, line) => {
         const overage =
             line.consumption && line.limit
-                ? Math.max(0, line.consumption - line.limit)
+                ? Math.floor(Math.max(0, line.consumption - line.limit))
                 : 0;
         return sum + overage * (line.unitPrice || 0);
     }, 0);

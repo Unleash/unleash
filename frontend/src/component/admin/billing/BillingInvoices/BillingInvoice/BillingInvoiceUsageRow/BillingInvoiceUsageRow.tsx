@@ -14,7 +14,7 @@ const hasValidUsageData = (consumption?: number, limit?: number): boolean => {
 
 const calculateOverage = (consumption?: number, limit?: number): number => {
     return hasValidUsageData(consumption, limit)
-        ? Math.max(0, consumption! - limit!)
+        ? Math.floor(Math.max(0, consumption! - limit!))
         : 0;
 };
 

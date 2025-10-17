@@ -8,6 +8,25 @@ import {
     StyledDescriptionCell,
 } from '../BillingInvoice.styles.tsx';
 
+const hasValidUsageData = (consumption?: number, limit?: number): boolean => {
+    return Boolean(consumption && limit);
+};
+
+const calculateOverage = (consumption?: number, limit?: number): number => {
+    return hasValidUsageData(consumption, limit)
+        ? Math.max(0, consumption! - limit!)
+        : 0;
+};
+
+const calculateIncludedAmount = (
+    consumption?: number,
+    limit?: number,
+): number | undefined => {
+    return hasValidUsageData(consumption, limit)
+        ? Math.min(consumption!, limit!)
+        : consumption;
+};
+
 const StyledCellWithIndicator = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -36,17 +55,18 @@ export const BillingInvoiceUsageRow = ({
             : undefined;
 
     const isEstimate = invoiceStatus === 'estimate';
+    const hasValidData = hasValidUsageData(consumption, limit);
     const overage =
-        isEstimate && consumption && limit
-            ? Math.max(0, consumption - limit)
+        isEstimate && hasValidData
+            ? calculateOverage(consumption, limit)
             : quantity;
     const includedAmount =
-        isEstimate && consumption && limit
-            ? Math.min(consumption, limit)
+        isEstimate && hasValidData
+            ? calculateIncludedAmount(consumption, limit)
             : consumption;
     const calculatedAmount =
-        isEstimate && unitPrice && consumption && limit
-            ? Math.max(0, consumption - limit) * unitPrice
+        isEstimate && unitPrice && hasValidData
+            ? calculateOverage(consumption, limit) * unitPrice
             : totalAmount;
 
     const hasAmount = calculatedAmount && calculatedAmount > 0;

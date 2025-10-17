@@ -15,12 +15,10 @@ import { formatCurrency } from './formatCurrency.ts';
 import { Badge } from 'component/common/Badge/Badge.tsx';
 import { BillingInvoiceFooter } from './BillingInvoiceFooter/BillingInvoiceFooter.tsx';
 import { StyledAmountCell, StyledSubgrid } from './BillingInvoice.styles.tsx';
-import type {
-    DetailedInvoicesSchemaInvoicesItem,
-    DetailedInvoicesLineSchema,
-} from 'openapi';
+import type { DetailedInvoicesSchemaInvoicesItem } from 'openapi';
 import { BillingInvoiceUsageRow } from './BillingInvoiceUsageRow/BillingInvoiceUsageRow.tsx';
 import { BillingInvoiceMainRow } from './BillingInvoiceMainRow/BillingInvoiceMainRow.tsx';
+import { calculateEstimateTotals } from './calculateEstimateTotals.ts';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     background: theme.palette.background.paper,
@@ -102,49 +100,6 @@ const CardActions = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     padding: theme.spacing(0, 2, 2),
 }));
-
-const calculateEstimateTotals = (
-    status: string,
-    subtotal: number,
-    taxAmount: number,
-    totalAmount: number,
-    taxPercentage: number | undefined,
-    mainLines: DetailedInvoicesLineSchema[],
-    usageLines: DetailedInvoicesLineSchema[],
-) => {
-    if (status !== 'estimate') {
-        return {
-            subtotal: subtotal,
-            taxAmount: taxAmount,
-            totalAmount: totalAmount,
-        };
-    }
-
-    const mainLinesTotal = mainLines.reduce(
-        (sum, line) => sum + (line.totalAmount || 0),
-        0,
-    );
-
-    const usageLinesTotal = usageLines.reduce((sum, line) => {
-        const overage =
-            line.consumption && line.limit
-                ? Math.max(0, line.consumption - line.limit)
-                : 0;
-        return sum + overage * (line.unitPrice || 0);
-    }, 0);
-
-    const calculatedSubtotal = mainLinesTotal + usageLinesTotal;
-    const calculatedTaxAmount = taxPercentage
-        ? calculatedSubtotal * (taxPercentage / 100)
-        : 0;
-    const calculatedTotalAmount = calculatedSubtotal + calculatedTaxAmount;
-
-    return {
-        subtotal: calculatedSubtotal,
-        taxAmount: calculatedTaxAmount,
-        totalAmount: calculatedTotalAmount,
-    };
-};
 
 type BillingInvoiceProps = DetailedInvoicesSchemaInvoicesItem &
     Pick<ComponentProps<typeof Accordion>, 'defaultExpanded'>;

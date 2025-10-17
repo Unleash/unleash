@@ -15,7 +15,10 @@ import { formatCurrency } from './formatCurrency.ts';
 import { Badge } from 'component/common/Badge/Badge.tsx';
 import { BillingInvoiceFooter } from './BillingInvoiceFooter/BillingInvoiceFooter.tsx';
 import { StyledAmountCell, StyledSubgrid } from './BillingInvoice.styles.tsx';
-import type { DetailedInvoicesSchemaInvoicesItem } from 'openapi';
+import type {
+    DetailedInvoicesSchemaInvoicesItem,
+    DetailedInvoicesLineSchema,
+} from 'openapi';
 import { BillingInvoiceUsageRow } from './BillingInvoiceUsageRow/BillingInvoiceUsageRow.tsx';
 import { BillingInvoiceMainRow } from './BillingInvoiceMainRow/BillingInvoiceMainRow.tsx';
 
@@ -64,7 +67,7 @@ const StyledInvoiceGrid = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 2, 2),
 }));
 
-const HeaderCell = styled(Typography)(({ theme }) => ({
+const HeaderCell = styled('div')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     fontWeight: theme.typography.fontWeightMedium,
     color: theme.palette.text.secondary,
@@ -100,6 +103,49 @@ const CardActions = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 2, 2),
 }));
 
+const calculateEstimateTotals = (
+    status: string,
+    subtotal: number,
+    taxAmount: number,
+    totalAmount: number,
+    taxPercentage: number | undefined,
+    mainLines: DetailedInvoicesLineSchema[],
+    usageLines: DetailedInvoicesLineSchema[],
+) => {
+    if (status !== 'estimate') {
+        return {
+            subtotal: subtotal,
+            taxAmount: taxAmount,
+            totalAmount: totalAmount,
+        };
+    }
+
+    const mainLinesTotal = mainLines.reduce(
+        (sum, line) => sum + (line.totalAmount || 0),
+        0,
+    );
+
+    const usageLinesTotal = usageLines.reduce((sum, line) => {
+        const overage =
+            line.consumption && line.limit
+                ? Math.max(0, line.consumption - line.limit)
+                : 0;
+        return sum + overage * (line.unitPrice || 0);
+    }, 0);
+
+    const calculatedSubtotal = mainLinesTotal + usageLinesTotal;
+    const calculatedTaxAmount = taxPercentage
+        ? calculatedSubtotal * (taxPercentage / 100)
+        : 0;
+    const calculatedTotalAmount = calculatedSubtotal + calculatedTaxAmount;
+
+    return {
+        subtotal: calculatedSubtotal,
+        taxAmount: calculatedTaxAmount,
+        totalAmount: calculatedTotalAmount,
+    };
+};
+
 type BillingInvoiceProps = DetailedInvoicesSchemaInvoicesItem &
     Pick<ComponentProps<typeof Accordion>, 'defaultExpanded'>;
 
@@ -111,6 +157,7 @@ export const BillingInvoice = ({
     totalAmount,
     subtotal,
     taxAmount,
+    taxPercentage,
     currency,
     mainLines,
     usageLines,
@@ -129,6 +176,20 @@ export const BillingInvoice = ({
     const year = isCurrentYear
         ? `, ${new Date(invoiceDate).getFullYear()}`
         : '';
+
+    const {
+        subtotal: calculatedSubtotal,
+        taxAmount: calculatedTaxAmount,
+        totalAmount: calculatedTotalAmount,
+    } = calculateEstimateTotals(
+        status,
+        subtotal,
+        taxAmount,
+        totalAmount,
+        taxPercentage,
+        mainLines,
+        usageLines,
+    );
 
     return (
         <StyledAccordion defaultExpanded={Boolean(defaultExpanded)}>
@@ -160,7 +221,7 @@ export const BillingInvoice = ({
                         <Badge color='success'>Paid</Badge>
                     ) : null}
                     <Typography variant='body1' sx={{ fontWeight: 700 }}>
-                        {formatCurrency(totalAmount, currency)}
+                        {formatCurrency(calculatedTotalAmount, currency)}
                     </Typography>
                 </HeaderRight>
             </HeaderRoot>
@@ -208,6 +269,7 @@ export const BillingInvoice = ({
                                     <BillingInvoiceUsageRow
                                         {...line}
                                         invoiceCurrency={currency}
+                                        invoiceStatus={status}
                                     />
                                 </StyledTableRow>
                             ))}
@@ -217,10 +279,12 @@ export const BillingInvoice = ({
                     )}
 
                     <BillingInvoiceFooter
-                        subTotal={subtotal}
-                        taxAmount={taxAmount}
-                        totalAmount={totalAmount}
+                        subTotal={calculatedSubtotal}
+                        taxAmount={calculatedTaxAmount}
+                        taxPercentage={taxPercentage}
+                        totalAmount={calculatedTotalAmount}
                         currency={currency}
+                        status={status}
                     />
                 </StyledInvoiceGrid>
                 {invoiceURL || invoicePDF ? (

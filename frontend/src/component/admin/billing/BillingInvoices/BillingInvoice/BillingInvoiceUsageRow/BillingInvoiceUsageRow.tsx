@@ -17,6 +17,7 @@ const StyledCellWithIndicator = styled('div')(({ theme }) => ({
 
 type BillingInvoiceUsageRowProps = DetailedInvoicesLineSchema & {
     invoiceCurrency?: string;
+    invoiceStatus?: string;
 };
 
 export const BillingInvoiceUsageRow = ({
@@ -24,36 +25,56 @@ export const BillingInvoiceUsageRow = ({
     consumption,
     limit,
     description,
-    currency,
     totalAmount,
+    unitPrice,
     invoiceCurrency,
+    invoiceStatus,
 }: BillingInvoiceUsageRowProps) => {
     const percentage =
         limit && limit > 0
             ? Math.min(100, Math.round(((consumption || 0) / limit) * 100))
             : undefined;
 
-    const hasAmount = totalAmount && totalAmount > 0;
+    const isEstimate = invoiceStatus === 'estimate';
+    const overage =
+        isEstimate && consumption && limit
+            ? Math.max(0, consumption - limit)
+            : quantity;
+    const includedAmount =
+        isEstimate && consumption && limit
+            ? Math.min(consumption, limit)
+            : consumption;
+    const calculatedAmount =
+        isEstimate && unitPrice && consumption && limit
+            ? Math.max(0, consumption - limit) * unitPrice
+            : totalAmount;
+
+    const hasAmount = calculatedAmount && calculatedAmount > 0;
+
+    const formatIncludedDisplay = () => {
+        if (includedAmount !== undefined && limit !== undefined) {
+            return `${formatLargeNumbers(includedAmount)}/${formatLargeNumbers(limit)}`;
+        }
+        if (includedAmount !== undefined) {
+            return formatLargeNumbers(includedAmount);
+        }
+        if (limit !== undefined) {
+            return formatLargeNumbers(limit);
+        }
+        return '–';
+    };
 
     return (
         <>
             <StyledDescriptionCell>{description}</StyledDescriptionCell>
             <StyledCellWithIndicator>
                 <ConsumptionIndicator percentage={percentage || 0} />
-                <div>
-                    {consumption !== undefined && limit !== undefined
-                        ? `${formatLargeNumbers(consumption)}/${formatLargeNumbers(limit)}`
-                        : consumption !== undefined
-                          ? formatLargeNumbers(consumption)
-                          : limit !== undefined
-                            ? formatLargeNumbers(limit)
-                            : '–'}
-                </div>
+                <div>{formatIncludedDisplay()}</div>
             </StyledCellWithIndicator>
-            <div>{quantity ? formatLargeNumbers(quantity) : ''}</div>
+            <div>{overage ? formatLargeNumbers(overage) : ''}</div>
             {hasAmount ? (
                 <StyledAmountCell>
-                    {formatCurrency(totalAmount, invoiceCurrency)}
+                    {formatCurrency(calculatedAmount, invoiceCurrency)}
                 </StyledAmountCell>
             ) : (
                 <div />

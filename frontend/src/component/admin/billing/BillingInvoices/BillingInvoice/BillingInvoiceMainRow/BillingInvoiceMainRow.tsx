@@ -12,6 +12,10 @@ const StyledSubText = styled(Typography)(({ theme }) => ({
     fontSize: theme.typography.caption.fontSize,
 }));
 
+type BillingInvoiceMainRowProps = DetailedInvoicesLineSchema & {
+    invoiceCurrency?: string;
+};
+
 export const BillingInvoiceMainRow = ({
     quantity,
     description,
@@ -19,7 +23,8 @@ export const BillingInvoiceMainRow = ({
     totalAmount,
     startDate,
     endDate,
-}: DetailedInvoicesLineSchema) => {
+    invoiceCurrency,
+}: BillingInvoiceMainRowProps) => {
     const formattedStart = startDate
         ? new Date(startDate).toLocaleDateString(undefined, {
               month: 'short',
@@ -45,7 +50,7 @@ export const BillingInvoiceMainRow = ({
             </StyledDescriptionCell>
             <div>{quantity ? formatLargeNumbers(quantity) : '–'}</div>
             <StyledAmountCell>
-                {formatCurrency(totalAmount || 0, currency)}
+                {formatCurrency(totalAmount || 0, invoiceCurrency)}
             </StyledAmountCell>
         </>
     );

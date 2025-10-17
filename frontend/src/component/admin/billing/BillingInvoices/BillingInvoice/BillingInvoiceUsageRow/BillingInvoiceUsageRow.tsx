@@ -15,6 +15,10 @@ const StyledCellWithIndicator = styled('div')(({ theme }) => ({
     maxHeight: theme.spacing(2.5),
 }));
 
+type BillingInvoiceUsageRowProps = DetailedInvoicesLineSchema & {
+    invoiceCurrency?: string;
+};
+
 export const BillingInvoiceUsageRow = ({
     quantity,
     consumption,
@@ -22,11 +26,14 @@ export const BillingInvoiceUsageRow = ({
     description,
     currency,
     totalAmount,
-}: DetailedInvoicesLineSchema) => {
+    invoiceCurrency,
+}: BillingInvoiceUsageRowProps) => {
     const percentage =
         limit && limit > 0
             ? Math.min(100, Math.round(((consumption || 0) / limit) * 100))
             : undefined;
+
+    const hasAmount = totalAmount && totalAmount > 0;
 
     return (
         <>
@@ -43,10 +50,14 @@ export const BillingInvoiceUsageRow = ({
                             : '–'}
                 </div>
             </StyledCellWithIndicator>
-            <div>{quantity ? formatLargeNumbers(quantity) : '–'}</div>
-            <StyledAmountCell>
-                {formatCurrency(totalAmount || 0, currency)}
-            </StyledAmountCell>
+            <div>{quantity ? formatLargeNumbers(quantity) : ''}</div>
+            {hasAmount ? (
+                <StyledAmountCell>
+                    {formatCurrency(totalAmount, invoiceCurrency)}
+                </StyledAmountCell>
+            ) : (
+                <div />
+            )}
         </>
     );
 };

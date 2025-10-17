@@ -241,7 +241,7 @@ const sidebars: SidebarsConfig = {
                         },
                         {
                             type: 'doc',
-                            label: 'Unleash Edge',
+                            label: 'Unleash Edge quickstart',
                             id: 'how-to/unleash-edge-quickstart',
                         },
                     ],

@@ -13,7 +13,6 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useLicenseKeyApi from 'hooks/api/actions/useLicenseAPI/useLicenseApi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -44,7 +43,6 @@ export const License = () => {
     const { locationSettings } = useLocationSettings();
     const [token, setToken] = useState('');
     const { updateLicenseKey } = useLicenseKeyApi();
-    const enterpriseEdgeEnabled = useUiFlag('enterpriseEdge');
 
     const updateToken = (event: React.ChangeEvent<HTMLInputElement>) => {
         setToken(event.target.value.trim());
@@ -68,6 +66,12 @@ export const License = () => {
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
+    };
+
+    const resources = {
+        Seats: license.resources?.seats,
+        'Release templates': license.resources?.releaseTemplates,
+        'Edge instances': license.resources?.edgeInstances,
     };
 
     return (
@@ -99,35 +103,20 @@ export const License = () => {
                                     {license.plan}
                                 </StyledPropertyDetails>
                             </StyledDataCollectionPropertyRow>
-                            {license.resources?.seats && (
-                                <StyledDataCollectionPropertyRow>
-                                    <StyledPropertyName>
-                                        Seats
-                                    </StyledPropertyName>
-                                    <StyledPropertyDetails>
-                                        {license.resources.seats}
-                                    </StyledPropertyDetails>
-                                </StyledDataCollectionPropertyRow>
-                            )}
-                            {license.resources?.releaseTemplates && (
-                                <StyledDataCollectionPropertyRow>
-                                    <StyledPropertyName>
-                                        Release templates
-                                    </StyledPropertyName>
-                                    <StyledPropertyDetails>
-                                        {license.resources.releaseTemplates}
-                                    </StyledPropertyDetails>
-                                </StyledDataCollectionPropertyRow>
-                            )}
-                            {license.resources?.edgeInstances && (
-                                <StyledDataCollectionPropertyRow>
-                                    <StyledPropertyName>
-                                        Edge instances
-                                    </StyledPropertyName>
-                                    <StyledPropertyDetails>
-                                        {license.resources.edgeInstances}
-                                    </StyledPropertyDetails>
-                                </StyledDataCollectionPropertyRow>
+                            {Object.entries(resources).map(
+                                ([resourceName, resourceValue]) =>
+                                    resourceValue && (
+                                        <StyledDataCollectionPropertyRow
+                                            key={resourceName}
+                                        >
+                                            <StyledPropertyName>
+                                                {resourceName}
+                                            </StyledPropertyName>
+                                            <StyledPropertyDetails>
+                                                {resourceValue}
+                                            </StyledPropertyDetails>
+                                        </StyledDataCollectionPropertyRow>
+                                    ),
                             )}
                             <StyledDataCollectionPropertyRow>
                                 <StyledPropertyName>

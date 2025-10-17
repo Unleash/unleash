@@ -18,14 +18,19 @@ const fallback = {
     loading: false,
 };
 
+type LicenseResources = {
+    seats?: number;
+    releaseTemplates?: number;
+    edgeInstances?: number;
+};
+
 export interface License {
     license?: {
         token: string;
         customer: string;
         instanceName: string;
         plan: string;
-        seats: number;
-        releaseTemplates: number;
+        resources: LicenseResources;
         edgeInstances: number;
         expireAt: Date;
     };

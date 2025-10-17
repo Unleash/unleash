@@ -255,7 +255,7 @@ Let's break down the parameters you need to replace in the launch command.
           INIT_CLIENT_API_TOKENS: "default:development.unleash-insecure-api-token"
     ```
 
-    Unleash Edge is automatically configured with the same (backend) token.
+    Unleash Edge is automatically configured with the same backend token.
 
   </TabItem>
 

@@ -31,6 +31,10 @@ type ChangeRequestAction =
           type: 'updateMilestoneProgression';
           sourceMilestoneId: string;
           payload: UpdateMilestoneProgressionSchema;
+      }
+    | {
+          type: 'deleteMilestoneProgression';
+          sourceMilestoneId: string;
       };
 
 interface IReleasePlanChangeRequestDialogProps {
@@ -131,6 +135,22 @@ export const ReleasePlanChangeRequestDialog = ({
                         proceed after{' '}
                         <StyledBoldSpan>{timeInterval}</StyledBoldSpan> in{' '}
                         {environmentId}
+                    </p>
+                );
+            }
+
+            case 'deleteMilestoneProgression': {
+                const milestone = releasePlan.milestones.find(
+                    (milestone) => milestone.id === action.sourceMilestoneId,
+                );
+
+                return (
+                    <p>
+                        <StyledBoldSpan>Remove</StyledBoldSpan> automation that
+                        progresses from{' '}
+                        <StyledBoldSpan>{milestone?.name}</StyledBoldSpan> to
+                        the next milestone in{' '}
+                        <StyledBoldSpan>{environmentId}</StyledBoldSpan>
                     </p>
                 );
             }

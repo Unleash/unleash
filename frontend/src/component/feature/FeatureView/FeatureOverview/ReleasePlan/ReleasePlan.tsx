@@ -132,6 +132,10 @@ export const ReleasePlan = ({
               sourceMilestoneId: string;
               payload: UpdateMilestoneProgressionSchema;
           }
+        | {
+              type: 'deleteMilestoneProgression';
+              sourceMilestoneId: string;
+          }
         | null
     >(null);
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
@@ -187,6 +191,16 @@ export const ReleasePlan = ({
                     payload: {
                         sourceMilestone: changeRequestAction.sourceMilestoneId,
                         ...changeRequestAction.payload,
+                    },
+                });
+                break;
+
+            case 'deleteMilestoneProgression':
+                await addChange(projectId, environment, {
+                    feature: featureName,
+                    action: 'deleteMilestoneProgression',
+                    payload: {
+                        sourceMilestone: changeRequestAction.sourceMilestoneId,
                     },
                 });
                 break;
@@ -304,7 +318,14 @@ export const ReleasePlan = ({
     };
 
     const handleDeleteProgression = (milestone: IReleasePlanMilestone) => {
-        setMilestoneToDeleteProgression(milestone);
+        if (isChangeRequestConfigured(environment)) {
+            setChangeRequestAction({
+                type: 'deleteMilestoneProgression',
+                sourceMilestoneId: milestone.id,
+            });
+        } else {
+            setMilestoneToDeleteProgression(milestone);
+        }
     };
 
     const handleCloseDeleteDialog = () => {

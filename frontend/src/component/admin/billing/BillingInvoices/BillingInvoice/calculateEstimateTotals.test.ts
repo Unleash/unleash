@@ -82,15 +82,15 @@ describe('calculateEstimateTotals', () => {
 
             expect(result).toEqual({
                 subtotal: 1500,
-                taxAmount: 225, // 1500 * 0.15
-                totalAmount: 1725, // 1500 + 225
+                taxAmount: 225,
+                totalAmount: 1725,
             });
         });
 
         it('calculates totals correctly with usage lines only', () => {
             const usageLines = [
-                createUsageLine(100, 50, 2), // 50 overage * 2 = 100
-                createUsageLine(200, 150, 1.5), // 50 overage * 1.5 = 75
+                createUsageLine(100, 50, 2),
+                createUsageLine(200, 150, 1.5),
             ];
             const result = calculateEstimateTotals(
                 'estimate',
@@ -103,15 +103,15 @@ describe('calculateEstimateTotals', () => {
             );
 
             expect(result).toEqual({
-                subtotal: 175, // 100 + 75
-                taxAmount: 35, // 175 * 0.20
-                totalAmount: 210, // 175 + 35
+                subtotal: 175,
+                taxAmount: 35,
+                totalAmount: 210,
             });
         });
 
         it('calculates totals correctly with both main and usage lines', () => {
             const mainLines = [createMainLine(1000)];
-            const usageLines = [createUsageLine(100, 50, 2)]; // 50 overage * 2 = 100
+            const usageLines = [createUsageLine(100, 50, 2)];
             const result = calculateEstimateTotals(
                 'estimate',
                 0,
@@ -123,16 +123,16 @@ describe('calculateEstimateTotals', () => {
             );
 
             expect(result).toEqual({
-                subtotal: 1100, // 1000 + 100
-                taxAmount: 110, // 1100 * 0.10
-                totalAmount: 1210, // 1100 + 110
+                subtotal: 1100,
+                taxAmount: 110,
+                totalAmount: 1210,
             });
         });
 
         it('handles usage lines with no overage', () => {
             const usageLines = [
-                createUsageLine(30, 50, 2), // No overage
-                createUsageLine(100, 100, 1.5), // No overage
+                createUsageLine(30, 50, 2),
+                createUsageLine(100, 100, 1.5),
             ];
             const result = calculateEstimateTotals(
                 'estimate',
@@ -145,17 +145,17 @@ describe('calculateEstimateTotals', () => {
             );
 
             expect(result).toEqual({
-                subtotal: 0, // No overage charges
-                taxAmount: 0, // 0 * 0.15
-                totalAmount: 0, // 0 + 0
+                subtotal: 0,
+                taxAmount: 0,
+                totalAmount: 0,
             });
         });
 
         it('handles usage lines with missing consumption or limit', () => {
             const usageLines = [
-                createUsageLine(100, 50, 2), // Normal overage
-                { ...createUsageLine(0, 0, 0), consumption: undefined }, // No consumption
-                { ...createUsageLine(0, 0, 0), limit: undefined }, // No limit
+                createUsageLine(100, 50, 2),
+                { ...createUsageLine(0, 0, 0), consumption: undefined },
+                { ...createUsageLine(0, 0, 0), limit: undefined },
             ];
             const result = calculateEstimateTotals(
                 'estimate',
@@ -168,9 +168,9 @@ describe('calculateEstimateTotals', () => {
             );
 
             expect(result).toEqual({
-                subtotal: 100, // Only the first line contributes
-                taxAmount: 10, // 100 * 0.10
-                totalAmount: 110, // 100 + 10
+                subtotal: 100,
+                taxAmount: 10,
+                totalAmount: 110,
             });
         });
 
@@ -188,8 +188,8 @@ describe('calculateEstimateTotals', () => {
 
             expect(result).toEqual({
                 subtotal: 1000,
-                taxAmount: 0, // 0% tax
-                totalAmount: 1000, // 1000 + 0
+                taxAmount: 0,
+                totalAmount: 1000,
             });
         });
 
@@ -207,8 +207,8 @@ describe('calculateEstimateTotals', () => {
 
             expect(result).toEqual({
                 subtotal: 1000,
-                taxAmount: 0, // undefined tax percentage
-                totalAmount: 1000, // 1000 + 0
+                taxAmount: 0,
+                totalAmount: 1000,
             });
         });
 
@@ -247,16 +247,16 @@ describe('calculateEstimateTotals', () => {
             );
 
             expect(result).toEqual({
-                subtotal: 1500, // 1000 + 0 + 500
-                taxAmount: 150, // 1500 * 0.10
-                totalAmount: 1650, // 1500 + 150
+                subtotal: 1500,
+                taxAmount: 150,
+                totalAmount: 1650,
             });
         });
 
         it('handles usage lines with zero unitPrice', () => {
             const usageLines = [
-                createUsageLine(100, 50, 2), // Normal overage
-                createUsageLine(200, 100, 0), // Zero unit price
+                createUsageLine(100, 50, 2),
+                createUsageLine(200, 100, 0),
             ];
             const result = calculateEstimateTotals(
                 'estimate',
@@ -269,9 +269,9 @@ describe('calculateEstimateTotals', () => {
             );
 
             expect(result).toEqual({
-                subtotal: 100, // Only first line contributes (50 * 2)
-                taxAmount: 10, // 100 * 0.10
-                totalAmount: 110, // 100 + 10
+                subtotal: 100,
+                taxAmount: 10,
+                totalAmount: 110,
             });
         });
     });

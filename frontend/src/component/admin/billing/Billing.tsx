@@ -31,7 +31,7 @@ export const Billing = () => {
     const { isBilling, refetchInstanceStatus, refresh, loading } =
         useInstanceStatus();
     const { invoices } = useInvoices();
-    const trafficBillingDisplay = !useUiFlag('trafficBillingDisplay');
+    const trafficBillingDisplay = useUiFlag('trafficBillingDisplay');
 
     useEffect(() => {
         const hardRefresh = async () => {

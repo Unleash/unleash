@@ -7,6 +7,7 @@ import { InstanceState } from 'interfaces/instance';
 import { formatApiPath } from 'utils/formatPath';
 import { useDetailedInvoices } from 'hooks/api/getters/useDetailedInvoices/useDetailedInvoices';
 import { formatCurrency } from '../BillingInvoices/BillingInvoice/formatCurrency.js';
+import { BillingInfoSkeleton } from './BillingInfoSkeleton.tsx';
 const PORTAL_URL = formatApiPath('api/admin/invoices');
 
 type BillingInfoProps = {};
@@ -61,11 +62,20 @@ const GetInTouch: FC = () => (
 );
 
 export const BillingInfo: FC<BillingInfoProps> = () => {
-    const { instanceStatus } = useInstanceStatus();
+    const { instanceStatus, loading: instanceStatusLoading } =
+        useInstanceStatus();
     const {
         uiConfig: { billing },
     } = useUiConfig();
-    const { planPrice, planCurrency } = useDetailedInvoices();
+    const {
+        planPrice,
+        planCurrency,
+        loading: invoicesLoading,
+    } = useDetailedInvoices();
+
+    if (instanceStatusLoading || invoicesLoading) {
+        return <BillingInfoSkeleton />;
+    }
 
     if (!instanceStatus) {
         return (

@@ -1,8 +1,10 @@
 import { Box, styled } from '@mui/material';
 import type { FC } from 'react';
 import { BillingInvoice } from './BillingInvoice/BillingInvoice.tsx';
+import { BillingInvoiceSkeleton } from './BillingInvoice/BillingInvoiceSkeleton.tsx';
 import { useDetailedInvoices } from 'hooks/api/getters/useDetailedInvoices/useDetailedInvoices.ts';
 import { TablePlaceholder } from 'component/common/Table';
+import useLoading from 'hooks/useLoading';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -12,9 +14,16 @@ const StyledContainer = styled(Box)(({ theme }) => ({
 
 export const BillingInvoices: FC = () => {
     const { invoices, loading } = useDetailedInvoices();
+    const ref = useLoading(loading);
 
     if (loading) {
-        return <StyledContainer />;
+        return (
+            <StyledContainer ref={ref}>
+                {[1, 2, 3].map((index) => (
+                    <BillingInvoiceSkeleton key={index} />
+                ))}
+            </StyledContainer>
+        );
     }
 
     return (

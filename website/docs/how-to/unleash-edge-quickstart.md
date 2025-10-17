@@ -16,7 +16,7 @@ It exposes the same HTTP interface as the main [Unleash API](/api-overview) but 
 <Tabs>
 
   <TabItem value="performance" label="Performance & UX" default>
-    Unleash Edge helps you reduce latency for flag resolution by running closer to your users. For example, Unleash Edge could run on a global CDN (Content Delivery Network) or as part of your cloud/on-premises infrastructure.
+    Unleash Edge helps you reduce latency for flag resolution by running closer to your users. For example, Unleash Edge could run on a global content-delivery network (CDN) or as part of your cloud or on-premises infrastructure.
 
     Setting up one or more Edge nodes helps you distribute traffic and reduce the load on your Unleash instance. By default, Unleash Edge relies on in-memory caching, but you can configure it to use Redis or the local filesystem.
   </TabItem>

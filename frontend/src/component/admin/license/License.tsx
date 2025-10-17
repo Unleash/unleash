@@ -99,27 +99,33 @@ export const License = () => {
                                     {license.plan}
                                 </StyledPropertyDetails>
                             </StyledDataCollectionPropertyRow>
-                            <StyledDataCollectionPropertyRow>
-                                <StyledPropertyName>Seats</StyledPropertyName>
-                                <StyledPropertyDetails>
-                                    {license.seats}
-                                </StyledPropertyDetails>
-                            </StyledDataCollectionPropertyRow>
-                            <StyledDataCollectionPropertyRow>
-                                <StyledPropertyName>
-                                    Release templates
-                                </StyledPropertyName>
-                                <StyledPropertyDetails>
-                                    {license.releaseTemplates}
-                                </StyledPropertyDetails>
-                            </StyledDataCollectionPropertyRow>
-                            {enterpriseEdgeEnabled && (
+                            {license.resources?.seats && (
+                                <StyledDataCollectionPropertyRow>
+                                    <StyledPropertyName>
+                                        Seats
+                                    </StyledPropertyName>
+                                    <StyledPropertyDetails>
+                                        {license.resources.seats}
+                                    </StyledPropertyDetails>
+                                </StyledDataCollectionPropertyRow>
+                            )}
+                            {license.resources?.releaseTemplates && (
+                                <StyledDataCollectionPropertyRow>
+                                    <StyledPropertyName>
+                                        Release templates
+                                    </StyledPropertyName>
+                                    <StyledPropertyDetails>
+                                        {license.resources.releaseTemplates}
+                                    </StyledPropertyDetails>
+                                </StyledDataCollectionPropertyRow>
+                            )}
+                            {license.resources?.edgeInstances && (
                                 <StyledDataCollectionPropertyRow>
                                     <StyledPropertyName>
                                         Edge instances
                                     </StyledPropertyName>
                                     <StyledPropertyDetails>
-                                        {license.edgeInstances}
+                                        {license.resources.edgeInstances}
                                     </StyledPropertyDetails>
                                 </StyledDataCollectionPropertyRow>
                             )}

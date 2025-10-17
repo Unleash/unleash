@@ -1,5 +1,5 @@
 ---
-title: Unleash Edge Quickstart Guide
+title: Unleash Edge quickstart
 slug: /how-to/unleash-edge-quickstart
 ---
 

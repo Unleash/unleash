@@ -138,7 +138,7 @@ First, make sure your Unleash instance is running (locally or remotely) and gene
   </TabItem>
 </Tabs>
 
-#### Required parameters
+### Required parameters
 
 Let's break down the parameters you need to replace in the launch command.
 

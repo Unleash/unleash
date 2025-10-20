@@ -35,7 +35,8 @@ const DeleteReleasePlan: FC<{
     actions?: ReactNode;
 }> = ({ change, currentReleasePlan, changeRequestState, actions }) => {
     const releasePlan =
-        changeRequestState === 'Applied' && change.payload.snapshot
+        (changeRequestState === 'Applied' || !currentReleasePlan) &&
+        change.payload.snapshot
             ? change.payload.snapshot
             : currentReleasePlan;
 
@@ -62,7 +63,8 @@ const StartMilestone: FC<{
     actions?: ReactNode;
 }> = ({ change, currentReleasePlan, changeRequestState, actions }) => {
     const releasePlan =
-        changeRequestState === 'Applied' && change.payload.snapshot
+        (changeRequestState === 'Applied' || !currentReleasePlan) &&
+        change.payload.snapshot
             ? change.payload.snapshot
             : currentReleasePlan;
 

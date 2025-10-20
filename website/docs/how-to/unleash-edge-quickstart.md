@@ -45,7 +45,7 @@ Here's what you need before getting started:
 4. Your preferred Unleash SDK in a [sample app](https://github.com/Unleash/unleash-sdk-examples)
 
 
-## How to run Unleash Edge locally
+## Run Unleash Edge locally
 
 First, make sure your Unleash instance is running (locally or remotely) and generate a new backend API token.
 
@@ -142,7 +142,7 @@ First, make sure your Unleash instance is running (locally or remotely) and gene
 
 Let's break down the parameters you need to replace in the launch command.
 
-### `<your_unleash_instance>`
+#### `<your_unleash_instance>`
 
 
 <Tabs groupId="method">
@@ -214,7 +214,7 @@ Let's break down the parameters you need to replace in the launch command.
 
 ---
 
-### `<your_backend_token>`
+#### `<your_backend_token>`
 
 <Tabs groupId="method">
 
@@ -261,7 +261,7 @@ Let's break down the parameters you need to replace in the launch command.
 
 </Tabs>
 
-## How to update your application
+## Update your application code
 
 Before you continue, make sure Unleash Edge is running on port `3063`.
 
@@ -499,7 +499,7 @@ Then you can start updating your application:
 </Tabs>
 
 
-## How to verify your setup
+## Verify your setup
 
 If you run into issues while connecting your SDK to Unleash Edge, the following commands can help you identify the problem.
 

@@ -6,6 +6,7 @@ import { StyledAmountCell, StyledSubgrid } from '../BillingInvoice.styles.tsx';
 const StyledTableFooter = styled(StyledSubgrid)(({ theme }) => ({
     gridColumn: '3 / -1',
     padding: theme.spacing(1, 1, 0, 0),
+    gap: 0,
 }));
 
 const StyledTableFooterRow = styled('div')<{ last?: boolean }>(
@@ -17,17 +18,23 @@ const StyledTableFooterRow = styled('div')<{ last?: boolean }>(
         ...(last
             ? { fontWeight: theme.typography.fontWeightBold }
             : { borderBottom: `1px solid ${theme.palette.divider}` }),
+        padding: theme.spacing(1.25, 0),
     }),
 );
 
 const StyledTableFooterCell = styled('div', {
     shouldForwardProp: (prop) => prop !== 'colSpan',
 })<{ colSpan?: number }>(({ theme, colSpan }) => ({
-    padding: theme.spacing(1, 0, 1, 0.5),
+    padding: theme.spacing(0, 0, 0, 0.5),
     ...(colSpan ? { gridColumn: `span ${colSpan}` } : {}),
 }));
 
-const TaxRow: FC<{ value?: number }> = ({ value }) => {
+const TaxRow: FC<{
+    value?: number;
+    percentage?: number;
+    currency?: string;
+    status?: string;
+}> = ({ value, percentage, currency, status }) => {
     if (value === undefined) {
         return (
             <StyledTableFooterCell colSpan={2}>
@@ -36,11 +43,17 @@ const TaxRow: FC<{ value?: number }> = ({ value }) => {
         );
     }
 
+    const isEstimate = status === 'estimate';
+    const taxLabel =
+        isEstimate && percentage !== undefined ? `Tax (${percentage}%)` : 'Tax';
+
     return (
         <>
-            <StyledTableFooterCell>Tax</StyledTableFooterCell>
+            <StyledTableFooterCell>{taxLabel}</StyledTableFooterCell>
             <StyledTableFooterCell>
-                <StyledAmountCell>{formatCurrency(value)}</StyledAmountCell>
+                <StyledAmountCell>
+                    {formatCurrency(value, currency)}
+                </StyledAmountCell>
             </StyledTableFooterCell>
         </>
     );
@@ -49,30 +62,37 @@ const TaxRow: FC<{ value?: number }> = ({ value }) => {
 type BillingInvoiceFooterProps = {
     subTotal?: number;
     taxAmount?: number;
+    taxPercentage?: number;
     totalAmount: number;
     currency?: string;
+    status?: string;
 };
 
 export const BillingInvoiceFooter = ({
     subTotal,
     taxAmount,
+    taxPercentage,
     totalAmount,
     currency,
+    status,
 }: BillingInvoiceFooterProps) => {
     return (
         <StyledTableFooter>
-            {subTotal || !taxAmount ? (
-                <StyledTableFooterRow>
-                    <StyledTableFooterCell>Sub total</StyledTableFooterCell>
-                    <StyledTableFooterCell>
-                        <StyledAmountCell>
-                            {formatCurrency(subTotal || totalAmount, currency)}
-                        </StyledAmountCell>
-                    </StyledTableFooterCell>
-                </StyledTableFooterRow>
-            ) : null}
             <StyledTableFooterRow>
-                <TaxRow value={taxAmount} />
+                <StyledTableFooterCell>Sub total</StyledTableFooterCell>
+                <StyledTableFooterCell>
+                    <StyledAmountCell>
+                        {formatCurrency(subTotal || 0, currency)}
+                    </StyledAmountCell>
+                </StyledTableFooterCell>
+            </StyledTableFooterRow>
+            <StyledTableFooterRow>
+                <TaxRow
+                    value={taxAmount}
+                    percentage={taxPercentage}
+                    currency={currency}
+                    status={status}
+                />
             </StyledTableFooterRow>
             <StyledTableFooterRow last>
                 <StyledTableFooterCell>Total</StyledTableFooterCell>

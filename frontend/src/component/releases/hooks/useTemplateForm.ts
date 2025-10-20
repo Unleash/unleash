@@ -2,7 +2,6 @@ import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplat
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
 import { useEffect, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
 export interface IExtendedMilestonePayload
     extends IReleasePlanMilestonePayload {
@@ -13,7 +12,7 @@ export const useTemplateForm = (
     initialName = '',
     initialDescription = '',
     initialMilestones: IExtendedMilestonePayload[] = [
-        { id: uuidv4(), name: 'Milestone 1', sortOrder: 0 },
+        { id: crypto.randomUUID(), name: 'Milestone 1', sortOrder: 0 },
     ],
 ) => {
     const templateId = useOptionalPathParam('templateId');

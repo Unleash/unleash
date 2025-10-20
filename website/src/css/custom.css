@@ -689,3 +689,12 @@ html[data-theme="dark"] .footer-separator {
 }
 
 /* end welcome page */
+
+/* search results page */
+
+.search-page-wrapper main {
+    flex-direction: column;
+    background-color: transparent;
+}
+
+/* end search results page */

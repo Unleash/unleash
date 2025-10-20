@@ -2,6 +2,7 @@ import Add from '@mui/icons-material/Add';
 import { Button, styled } from '@mui/material';
 import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
 import { MilestoneTransitionDisplay } from './MilestoneTransitionDisplay.tsx';
+import type { UpdateMilestoneProgressionSchema } from 'openapi';
 
 const StyledAutomationContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'status',
@@ -65,6 +66,10 @@ interface IMilestoneAutomationSectionProps {
     featureName: string;
     sourceMilestoneId: string;
     onUpdate: () => void;
+    onUpdateChangeRequestSubmit?: (
+        sourceMilestoneId: string,
+        payload: UpdateMilestoneProgressionSchema,
+    ) => void;
 }
 
 export const MilestoneAutomationSection = ({
@@ -80,6 +85,7 @@ export const MilestoneAutomationSection = ({
     featureName,
     sourceMilestoneId,
     onUpdate,
+    onUpdateChangeRequestSubmit,
 }: IMilestoneAutomationSectionProps) => {
     if (!showAutomation) return null;
 
@@ -98,6 +104,7 @@ export const MilestoneAutomationSection = ({
                     featureName={featureName}
                     sourceMilestoneId={sourceMilestoneId}
                     onUpdate={onUpdate}
+                    onChangeRequestSubmit={onUpdateChangeRequestSubmit}
                 />
             ) : (
                 <StyledAddAutomationButton

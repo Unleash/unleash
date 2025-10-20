@@ -3,8 +3,15 @@ import type { BatchedWeekData, WeekData } from './types.ts';
 
 export const batchProductionFlagsData = batchData({
     merge: (accumulated: BatchedWeekData, next: WeekData) => {
-        accumulated.newProductionFlags += next.newProductionFlags;
-        accumulated.endDate = next.date;
+        if (next.newProductionFlags)
+            accumulated.newProductionFlags =
+                (accumulated.newProductionFlags ?? 0) + next.newProductionFlags;
+        if (next.date) {
+            if (!accumulated.date) {
+                accumulated.date = next.date;
+            }
+            accumulated.endDate = next.date;
+        }
 
         return accumulated;
     },

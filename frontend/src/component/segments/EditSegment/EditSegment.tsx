@@ -26,7 +26,6 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
 import type { ISegment } from 'interfaces/segment.ts';
 import { constraintId } from 'constants/constraintId.ts';
-import { v4 as uuidv4 } from 'uuid';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 
 interface IEditSegmentProps {
@@ -37,7 +36,7 @@ const addIdSymbolToConstraints = (segment?: ISegment): ISegment | undefined => {
     if (!segment) return;
 
     const constraints = segment.constraints.map((constraint) => {
-        return { ...constraint, [constraintId]: uuidv4() };
+        return { ...constraint, [constraintId]: crypto.randomUUID() };
     });
 
     return { ...segment, constraints };

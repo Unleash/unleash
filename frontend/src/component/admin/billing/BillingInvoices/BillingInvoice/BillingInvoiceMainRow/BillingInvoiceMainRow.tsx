@@ -2,18 +2,19 @@ import { formatLargeNumbers } from 'component/impact-metrics/metricsFormatters.t
 import { formatCurrency } from '../formatCurrency.ts';
 import { styled, Typography } from '@mui/material';
 import type { DetailedInvoicesLineSchema } from 'openapi';
-import { StyledAmountCell } from '../BillingInvoice.styles.tsx';
-
-const StyledDescriptionCell = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(0.5),
-}));
+import {
+    StyledAmountCell,
+    StyledDescriptionCell,
+} from '../BillingInvoice.styles.tsx';
 
 const StyledSubText = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
-    fontSize: theme.typography.body2.fontSize,
+    fontSize: theme.typography.caption.fontSize,
 }));
+
+type BillingInvoiceMainRowProps = DetailedInvoicesLineSchema & {
+    invoiceCurrency?: string;
+};
 
 export const BillingInvoiceMainRow = ({
     quantity,
@@ -22,7 +23,8 @@ export const BillingInvoiceMainRow = ({
     totalAmount,
     startDate,
     endDate,
-}: DetailedInvoicesLineSchema) => {
+    invoiceCurrency,
+}: BillingInvoiceMainRowProps) => {
     const formattedStart = startDate
         ? new Date(startDate).toLocaleDateString(undefined, {
               month: 'short',
@@ -38,7 +40,7 @@ export const BillingInvoiceMainRow = ({
 
     return (
         <>
-            <StyledDescriptionCell>
+            <StyledDescriptionCell expand>
                 <div>{description}</div>
                 {formattedStart || formattedEnd ? (
                     <StyledSubText>
@@ -46,10 +48,9 @@ export const BillingInvoiceMainRow = ({
                     </StyledSubText>
                 ) : null}
             </StyledDescriptionCell>
-            <div />
             <div>{quantity ? formatLargeNumbers(quantity) : '–'}</div>
             <StyledAmountCell>
-                {formatCurrency(totalAmount || 0, currency)}
+                {formatCurrency(totalAmount || 0, invoiceCurrency)}
             </StyledAmountCell>
         </>
     );

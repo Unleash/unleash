@@ -7,6 +7,7 @@ import { InstanceState } from 'interfaces/instance';
 import { formatApiPath } from 'utils/formatPath';
 import { useDetailedInvoices } from 'hooks/api/getters/useDetailedInvoices/useDetailedInvoices';
 import { formatCurrency } from '../BillingInvoices/BillingInvoice/formatCurrency.js';
+import { BillingInfoSkeleton } from './BillingInfoSkeleton.tsx';
 const PORTAL_URL = formatApiPath('api/admin/invoices');
 
 type BillingInfoProps = {};
@@ -15,14 +16,15 @@ const StyledWrapper = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusLarge,
     boxShadow: theme.boxShadows.card,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1),
 }));
 
 const StyledRow = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
-    marginTop: theme.spacing(1),
     fontSize: theme.typography.body2.fontSize,
-    gap: theme.spacing(1),
 }));
 
 const StyledItemTitle = styled('span')(({ theme }) => ({
@@ -35,17 +37,16 @@ const StyledItemValue = styled('span')(({ theme }) => ({
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
-    margin: theme.spacing(0, 0, 2, 0),
+    margin: theme.spacing(0, 0, 1, 0),
 }));
 
 const StyledInfoLabel = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
-    marginBottom: theme.spacing(1),
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
-    margin: `${theme.spacing(2.5)} 0`,
+    margin: theme.spacing(1.5, 0),
     borderColor: theme.palette.divider,
 }));
 
@@ -61,15 +62,25 @@ const GetInTouch: FC = () => (
 );
 
 export const BillingInfo: FC<BillingInfoProps> = () => {
-    const { instanceStatus } = useInstanceStatus();
+    const { instanceStatus, loading: instanceStatusLoading } =
+        useInstanceStatus();
     const {
         uiConfig: { billing },
     } = useUiConfig();
-    const { planPrice, planCurrency } = useDetailedInvoices();
+    const {
+        planPrice,
+        planCurrency,
+        loading: invoicesLoading,
+    } = useDetailedInvoices();
+
+    if (instanceStatusLoading || invoicesLoading) {
+        return <BillingInfoSkeleton />;
+    }
 
     if (!instanceStatus) {
         return (
             <StyledWrapper>
+                <Typography variant='h3'>Billing details</Typography>
                 <StyledInfoLabel>
                     Your billing is managed by Unleash
                 </StyledInfoLabel>
@@ -79,13 +90,13 @@ export const BillingInfo: FC<BillingInfoProps> = () => {
     }
 
     const isPAYG = billing === 'pay-as-you-go';
-    const isEnterpriseConsumption = billing === 'enterprise-consumption';
     const inactive = instanceStatus.state !== InstanceState.ACTIVE;
     const { isCustomBilling } = instanceStatus;
 
     if (isCustomBilling) {
         return (
             <StyledWrapper>
+                <Typography variant='h3'>Billing details</Typography>
                 <StyledInfoLabel>
                     Your billing is managed by Unleash
                 </StyledInfoLabel>
@@ -100,9 +111,7 @@ export const BillingInfo: FC<BillingInfoProps> = () => {
             <StyledRow>
                 <StyledItemTitle>Current plan</StyledItemTitle>{' '}
                 <StyledItemValue>
-                    {isPAYG && isEnterpriseConsumption
-                        ? 'Consumption'
-                        : 'Pay-as-You-Go'}
+                    {isPAYG ? 'Pay-as-You-Go' : 'Consumption'}
                 </StyledItemValue>
             </StyledRow>
             <StyledRow>
@@ -123,11 +132,12 @@ export const BillingInfo: FC<BillingInfoProps> = () => {
             >
                 {!inactive ? 'Edit billing details' : 'Add billing details'}
             </StyledButton>
-            <StyledInfoLabel>
-                {inactive
-                    ? 'Once we have received your billing information we will upgrade your trial within 1 business day.'
-                    : 'Update your credit card and business information and change which email address we send invoices to.'}
-            </StyledInfoLabel>
+            {inactive ? (
+                <StyledInfoLabel>
+                    Once we have received your billing information we will
+                    upgrade your trial within 1 business day.
+                </StyledInfoLabel>
+            ) : null}
             <GetInTouch />
         </StyledWrapper>
     );

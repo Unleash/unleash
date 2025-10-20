@@ -23,4 +23,6 @@ export interface DetailedInvoicesLineSchema {
     startDate?: string;
     /** Total amount for this line item in minor currency units */
     totalAmount: number;
+    /** Unit price for usage line items */
+    unitPrice?: number;
 }

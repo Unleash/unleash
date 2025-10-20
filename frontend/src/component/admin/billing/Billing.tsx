@@ -11,6 +11,7 @@ import useInvoices from 'hooks/api/getters/useInvoices/useInvoices';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { BillingInvoices } from './BillingInvoices/BillingInvoices.tsx';
 import { BillingInfo } from './BillingInfo/BillingInfo.tsx';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 
 const StyledHeader = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
@@ -32,6 +33,12 @@ export const Billing = () => {
         useInstanceStatus();
     const { invoices } = useInvoices();
     const trafficBillingDisplay = useUiFlag('trafficBillingDisplay');
+    const {
+        uiConfig: { billing },
+    } = useUiConfig();
+
+    const eligibleForDetailedBilling =
+        billing === 'pay-as-you-go' || billing === 'enterprise-consumption';
 
     useEffect(() => {
         const hardRefresh = async () => {
@@ -41,7 +48,7 @@ export const Billing = () => {
         hardRefresh();
     }, [refetchInstanceStatus, refresh]);
 
-    if (trafficBillingDisplay) {
+    if (trafficBillingDisplay && eligibleForDetailedBilling) {
         return (
             <Box
                 sx={(theme) => ({

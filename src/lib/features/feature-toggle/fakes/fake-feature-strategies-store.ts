@@ -335,7 +335,8 @@ export default class FakeFeatureStrategiesStore
             this.featureStrategies.filter(
                 (strategy) =>
                     features.includes(strategy.featureName) &&
-                    strategy.environment === environment,
+                    strategy.environment === environment &&
+                    !strategy.milestoneId,
             ),
         );
     }

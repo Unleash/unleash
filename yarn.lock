@@ -1706,13 +1706,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/uuid@npm:9.0.8":
-  version: 9.0.8
-  resolution: "@types/uuid@npm:9.0.8"
-  checksum: 10c0/b411b93054cb1d4361919579ef3508a1f12bf15b5fdd97337d3d351bece6c921b52b6daeef89b62340fd73fd60da407878432a1af777f40648cbe53a01723489
-  languageName: node
-  linkType: hard
-
 "@vitest/coverage-v8@npm:^3.1.3":
   version: 3.1.3
   resolution: "@vitest/coverage-v8@npm:3.1.3"
@@ -6800,12 +6793,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slug@npm:^9.0.0":
-  version: 9.1.0
-  resolution: "slug@npm:9.1.0"
+"slug@npm:^11.0.0":
+  version: 11.0.1
+  resolution: "slug@npm:11.0.1"
   bin:
     slug: cli.js
-  checksum: 10c0/edc3e957de63e2d78d3809e0bf217da34ccb6ca313a83e2c1598ede2bd001644978d15eb69650a7b238c84adacbbab7318c4601c082aa433a3a2fd5e39523c2d
+  checksum: 10c0/96e89626de676d069ffed91bde3400d2bf8e6c344e20be2f33cc192d0b90dc59b4b0b22d6a048a43c665518a5ffecc92fe8b954f9390c69c8adee8894f3782a8
   languageName: node
   linkType: hard
 
@@ -7594,7 +7587,6 @@ __metadata:
     "@types/stoppable": "npm:1.1.3"
     "@types/supertest": "npm:6.0.3"
     "@types/type-is": "npm:1.6.7"
-    "@types/uuid": "npm:9.0.8"
     "@vitest/coverage-v8": "npm:^3.1.3"
     "@vitest/ui": "npm:^3.1.3"
     "@wesleytodd/openapi": "npm:^1.1.0"
@@ -7662,7 +7654,7 @@ __metadata:
     sanitize-filename: "npm:^1.6.3"
     semver: "npm:^7.6.3"
     serve-favicon: "npm:^2.5.0"
-    slug: "npm:^9.0.0"
+    slug: "npm:^11.0.0"
     source-map-support: "npm:0.5.21"
     stoppable: "npm:^1.1.0"
     superagent: "npm:10.2.2"
@@ -7675,7 +7667,6 @@ __metadata:
     typescript: "npm:5.8.3"
     ulidx: "npm:^2.4.1"
     unleash-client: "npm:^6.8.0-beta.0"
-    uuid: "npm:^11.0.0"
     vite-node: "npm:^3.1.3"
     vitest: "npm:^3.1.3"
     wait-on: "npm:^8.0.0"
@@ -7728,15 +7719,6 @@ __metadata:
   version: 1.0.1
   resolution: "utils-merge@npm:1.0.1"
   checksum: 10c0/02ba649de1b7ca8854bfe20a82f1dfbdda3fb57a22ab4a8972a63a34553cf7aa51bc9081cf7e001b035b88186d23689d69e71b510e610a09a4c66f68aa95b672
-  languageName: node
-  linkType: hard
-
-"uuid@npm:^11.0.0":
-  version: 11.1.0
-  resolution: "uuid@npm:11.1.0"
-  bin:
-    uuid: dist/esm/bin/uuid
-  checksum: 10c0/34aa51b9874ae398c2b799c88a127701408cd581ee89ec3baa53509dd8728cbb25826f2a038f9465f8b7be446f0fbf11558862965b18d21c993684297628d4d3
   languageName: node
   linkType: hard
 

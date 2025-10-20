@@ -9,13 +9,23 @@ export const StyledSubgrid = styled('div', {
     background: withBackground
         ? theme.palette.background.elevation1
         : 'transparent',
-    margin: theme.spacing(0.25, 0),
-    padding: withBackground ? theme.spacing(0, 2, 1) : theme.spacing(0, 2),
+    margin: theme.spacing(0.5, 0),
+    padding: withBackground
+        ? theme.spacing(2, 2, 3)
+        : theme.spacing(0.5, 2, 1.5),
     borderRadius: theme.shape.borderRadiusLarge,
-    gap: theme.spacing(1),
+    gap: theme.spacing(2),
 }));
 
 export const StyledAmountCell = styled('div')(({ theme }) => ({
     textAlign: 'right',
     paddingRight: theme.spacing(1.5),
+}));
+
+export const StyledDescriptionCell = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'expand',
+})<{ expand?: boolean }>(({ expand }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gridColumn: expand ? '1 / span 2' : undefined,
 }));

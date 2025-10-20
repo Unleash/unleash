@@ -1,5 +1,5 @@
 import { type FC, type ReactNode, useState } from 'react';
-import { Box, IconButton, Tooltip } from '@mui/material';
+import { Box, IconButton, styled, Tooltip } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -7,6 +7,10 @@ import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import IosShare from '@mui/icons-material/IosShare';
 import { FlagCreationButton } from './FlagCreationButton/FlagCreationButton.tsx';
 import { ImportButton } from './ImportButton/ImportButton.tsx';
+
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+    padding: theme.spacing(1.5),
+}));
 
 type ProjectFeatureTogglesHeaderProps = {
     isLoading?: boolean;
@@ -39,12 +43,12 @@ export const ProjectFeatureTogglesHeader: FC<
                     <>
                         {actions}
                         <Tooltip title='Export all project flags' arrow>
-                            <IconButton
+                            <StyledIconButton
                                 data-loading
                                 onClick={() => setShowExportDialog(true)}
                             >
                                 <IosShare />
-                            </IconButton>
+                            </StyledIconButton>
                         </Tooltip>
                         <ImportButton />
 

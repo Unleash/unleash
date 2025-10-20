@@ -69,9 +69,9 @@ export const License = () => {
     };
 
     const resources = {
-        Seats: license.resources?.seats,
-        'Release templates': license.resources?.releaseTemplates,
-        'Edge instances': license.resources?.edgeInstances,
+        Seats: license.resources.seats,
+        'Release templates': license.resources.releaseTemplates,
+        'Edge instances': license.resources.edgeInstances,
     };
 
     return (

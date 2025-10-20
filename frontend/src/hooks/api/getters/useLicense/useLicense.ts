@@ -63,7 +63,7 @@ export const useLicense = (): License => {
     );
 
     return {
-        license: { ...data },
+        license: data,
         loading: !error && !data,
         refetchLicense: () => mutate(),
         error,

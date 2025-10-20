@@ -22,13 +22,42 @@ import {
     StyledWidget,
     StyledWidgetContent,
     StyledWidgetStats,
-    StatsExplanation,
 } from '../InsightsCharts.styles';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { NewProductionFlagsChart } from '../componentsChart/NewProductionFlagsChart/NewProductionFlagsChart.tsx';
-import Lightbulb from '@mui/icons-material/LightbulbOutlined';
 import { CreationArchiveChart } from '../componentsChart/CreationArchiveChart/CreationArchiveChart.tsx';
 import { CreationArchiveStats } from '../componentsStat/CreationArchiveStats/CreationArchiveStats.tsx';
+import { NewProductionFlagsStats } from '../componentsStat/NewProductionFlagsStats/NewProductionFlagsStats.tsx';
+import { useProductionFlagsData } from '../componentsChart/NewProductionFlagsChart/useNewProductionFlagsData.ts';
+
+const NewProductionFlagsWidget = ({
+    groupedLifecycleData,
+    loading,
+    showAllProjects,
+    labels,
+}) => {
+    const { median, chartData } = useProductionFlagsData({
+        groupedLifecycleData,
+        labels,
+        loading,
+        showAllProjects,
+    });
+
+    return (
+        <StyledWidget>
+            <StyledWidgetStats width={275}>
+                <WidgetTitle title='New flags in production' />
+                <NewProductionFlagsStats
+                    chartData={chartData}
+                    median={median}
+                />
+            </StyledWidgetStats>
+            <StyledChartContainer>
+                <NewProductionFlagsChart chartData={chartData} />
+            </StyledChartContainer>
+        </StyledWidget>
+    );
+};
 
 export const PerformanceInsights: FC = () => {
     const statePrefix = 'performance-';
@@ -85,23 +114,12 @@ export const PerformanceInsights: FC = () => {
             }
         >
             {isLifecycleGraphsEnabled && isEnterprise() ? (
-                <StyledWidget>
-                    <StyledWidgetStats width={275}>
-                        <WidgetTitle title='New flags in production' />
-                        <StatsExplanation>
-                            <Lightbulb color='primary' />
-                            How often do flags go live in production?
-                        </StatsExplanation>
-                    </StyledWidgetStats>
-                    <StyledChartContainer>
-                        <NewProductionFlagsChart
-                            labels={insights.labels}
-                            lifecycleTrends={groupedLifecycleData}
-                            isAggregate={showAllProjects}
-                            isLoading={loading}
-                        />
-                    </StyledChartContainer>
-                </StyledWidget>
+                <NewProductionFlagsWidget
+                    groupedLifecycleData={groupedLifecycleData}
+                    loading={loading}
+                    showAllProjects={showAllProjects}
+                    labels={insights.labels}
+                />
             ) : null}
 
             {isLifecycleGraphsEnabled && isEnterprise() ? (

@@ -30,6 +30,8 @@ import { GraphCover } from 'component/insights/GraphCover.tsx';
 import { batchCreationArchiveData } from './batchCreationArchiveData.ts';
 import { useBatchedTooltipDate } from '../useBatchedTooltipDate.ts';
 import { aggregateCreationArchiveData } from './aggregateCreationArchiveData.ts';
+import type { Theme } from '@mui/material/styles/createTheme';
+import type { ChartData } from '../chartData.ts';
 
 ChartJS.register(
     CategoryScale,
@@ -51,6 +53,42 @@ interface ICreationArchiveChartProps {
     labels: { week: string; date: string }[];
 }
 
+const batchSize = 4;
+
+const sharedDatasetOptions = (lineColor: string) => ({
+    backgroundColor: lineColor,
+    borderColor: lineColor,
+    hoverBackgroundColor: lineColor,
+    hoverBorderColor: lineColor,
+});
+const makeChartData = (
+    data: FinalizedWeekData[] | BatchedWeekData[],
+    theme: Theme,
+) => ({
+    datasets: [
+        {
+            label: 'Flags archived',
+            data: data,
+            order: 1,
+            parsing: {
+                yAxisKey: 'archivedFlags',
+                xAxisKey: 'date',
+            },
+            ...sharedDatasetOptions(theme.palette.charts.A2),
+        },
+        {
+            label: 'Flags created',
+            data: data,
+            order: 2,
+            parsing: {
+                yAxisKey: 'totalCreatedFlags',
+                xAxisKey: 'date',
+            },
+            ...sharedDatasetOptions(theme.palette.charts.A1),
+        },
+    ],
+});
+
 export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     creationArchiveTrends,
     isLoading,
@@ -61,62 +99,42 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     const { locationSettings } = useLocationSettings();
     const [tooltip, setTooltip] = useState<null | TooltipState>(null);
 
-    const { dataResult, aggregateOrProjectData } = useMemo(() => {
-        const weeklyData = aggregateCreationArchiveData(
-            labels,
-            creationVsArchivedChart.datasets,
-        );
+    const chartData: ChartData<FinalizedWeekData | BatchedWeekData> =
+        useMemo(() => {
+            if (isLoading) {
+                return { state: 'Loading', value: placeholderData };
+            }
 
-        let dataResult: ChartDataResult = 'Weekly';
-        let displayData: FinalizedWeekData[] | (BatchedWeekData | null)[] =
-            weeklyData;
+            const weeklyData = aggregateCreationArchiveData(
+                labels,
+                creationVsArchivedChart.datasets,
+            );
 
-        if (weeklyData.length < 2) {
-            dataResult = 'Not Enough Data';
-        } else if (weeklyData.length >= 12) {
-            dataResult = 'Batched';
-            displayData = batchCreationArchiveData(weeklyData);
-        }
+            if (weeklyData.length < 2) {
+                return { state: 'Not Enough Data', value: placeholderData };
+            }
 
-        return {
-            dataResult,
-            aggregateOrProjectData: {
-                datasets: [
-                    {
-                        label: 'Flags archived',
-                        data: displayData,
-                        backgroundColor: theme.palette.charts.A2,
-                        borderColor: theme.palette.charts.A2,
-                        hoverBackgroundColor: theme.palette.charts.A2,
-                        hoverBorderColor: theme.palette.charts.A2,
-                        parsing: {
-                            yAxisKey: 'archivedFlags',
-                            xAxisKey: 'date',
-                        },
-                        order: 1,
-                    },
-                    {
-                        label: 'Flags created',
-                        data: displayData,
-                        backgroundColor: theme.palette.charts.A1,
-                        borderColor: theme.palette.charts.A1,
-                        hoverBackgroundColor: theme.palette.charts.A1,
-                        hoverBorderColor: theme.palette.charts.A1,
-                        parsing: {
-                            yAxisKey: 'totalCreatedFlags',
-                            xAxisKey: 'date',
-                        },
-                        order: 2,
-                    },
-                ],
-            },
-        };
-    }, [creationVsArchivedChart, theme]);
+            if (weeklyData.length >= 12) {
+                return {
+                    state: 'Batched',
+                    batchSize,
+                    value: makeChartData(
+                        batchCreationArchiveData(weeklyData, batchSize),
+                        theme,
+                    ),
+                };
+            }
 
-    const useGraphCover = dataResult === 'Not Enough Data' || isLoading;
-    const showNotEnoughDataText =
-        dataResult === 'Not Enough Data' && !isLoading;
-    const data = useGraphCover ? placeholderData : aggregateOrProjectData;
+            return {
+                state: 'Weekly',
+                value: makeChartData(weeklyData, theme),
+            };
+        }, [creationVsArchivedChart, theme]);
+
+    const useGraphCover = ['Loading', 'Not Enough Data'].includes(
+        chartData.state,
+    );
+    const showNotEnoughDataText = chartData.state === 'Not Enough Data';
 
     const locale = getDateFnsLocale(locationSettings.locale);
     const batchedTooltipTitle = useBatchedTooltipDate();
@@ -153,7 +171,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     external: createTooltip(setTooltip),
                     callbacks: {
                         title:
-                            dataResult === 'Batched'
+                            chartData.state === 'Batched'
                                 ? batchedTooltipTitle
                                 : undefined,
                     },
@@ -171,7 +189,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     display: true,
                     time: {
                         unit:
-                            dataResult === 'Batched'
+                            chartData.state === 'Batched'
                                 ? ('month' as const)
                                 : ('week' as const),
                         tooltipFormat: 'P',
@@ -181,7 +199,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
                     },
                     ticks: {
                         source:
-                            dataResult === 'Batched'
+                            chartData.state === 'Batched'
                                 ? ('auto' as const)
                                 : ('data' as const),
                         display: !useGraphCover,
@@ -208,7 +226,7 @@ export const CreationArchiveChart: FC<ICreationArchiveChartProps> = ({
     return (
         <>
             <Bar
-                data={data}
+                data={chartData.value}
                 options={options}
                 height={100}
                 width={250}

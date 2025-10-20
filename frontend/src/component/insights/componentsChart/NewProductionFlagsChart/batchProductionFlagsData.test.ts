@@ -11,6 +11,7 @@ it('handles a single data point', () => {
             newProductionFlags: 5,
             date: input.date,
             endDate: input.date,
+            week: '50',
         },
     ]);
 });
@@ -33,6 +34,7 @@ it('adds data in the expected way', () => {
             newProductionFlags: 11,
             date: '2022-01-01',
             endDate: '2022-02-01',
+            week: '50',
         },
     ]);
 });

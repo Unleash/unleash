@@ -4,6 +4,6 @@ export type WeekData = {
     date: string;
 };
 
-export type BatchedWeekData = Omit<WeekData, 'week'> & {
+export type BatchedWeekData = WeekData & {
     endDate: string;
 };

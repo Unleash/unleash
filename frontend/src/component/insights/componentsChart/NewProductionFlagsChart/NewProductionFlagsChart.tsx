@@ -1,5 +1,5 @@
 import 'chartjs-adapter-date-fns';
-import { type FC, useId } from 'react';
+import type { FC } from 'react';
 import {
     LineChart,
     NotEnoughData,
@@ -55,12 +55,10 @@ const useOverrideOptions = (chartData: ChartData<WeekData, number>) => {
 export const NewProductionFlagsChart: FC<INewProductionFlagsChartProps> = ({
     chartData,
 }) => {
-    const key = useId();
     const overrideOptions = useOverrideOptions(chartData);
 
     return (
         <LineChart
-            key={key}
             data={chartData.value}
             overrideOptions={overrideOptions}
             cover={

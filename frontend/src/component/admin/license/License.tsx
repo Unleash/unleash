@@ -68,6 +68,12 @@ export const License = () => {
         }
     };
 
+    const resources = {
+        Seats: license.resources.seats,
+        'Release templates': license.resources.releaseTemplates,
+        'Edge instances': license.resources.edgeInstances,
+    };
+
     return (
         <PageContent header={<PageHeader title='Unleash Enterprise License' />}>
             <StyledBox>
@@ -97,20 +103,21 @@ export const License = () => {
                                     {license.plan}
                                 </StyledPropertyDetails>
                             </StyledDataCollectionPropertyRow>
-                            <StyledDataCollectionPropertyRow>
-                                <StyledPropertyName>Seats</StyledPropertyName>
-                                <StyledPropertyDetails>
-                                    {license.seats}
-                                </StyledPropertyDetails>
-                            </StyledDataCollectionPropertyRow>
-                            <StyledDataCollectionPropertyRow>
-                                <StyledPropertyName>
-                                    Release templates
-                                </StyledPropertyName>
-                                <StyledPropertyDetails>
-                                    {license.releaseTemplates}
-                                </StyledPropertyDetails>
-                            </StyledDataCollectionPropertyRow>
+                            {Object.entries(resources).map(
+                                ([resourceName, resourceValue]) =>
+                                    resourceValue && (
+                                        <StyledDataCollectionPropertyRow
+                                            key={resourceName}
+                                        >
+                                            <StyledPropertyName>
+                                                {resourceName}
+                                            </StyledPropertyName>
+                                            <StyledPropertyDetails>
+                                                {resourceValue}
+                                            </StyledPropertyDetails>
+                                        </StyledDataCollectionPropertyRow>
+                                    ),
+                            )}
                             <StyledDataCollectionPropertyRow>
                                 <StyledPropertyName>
                                     Expire at

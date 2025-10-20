@@ -18,14 +18,19 @@ const fallback = {
     loading: false,
 };
 
+type LicenseResources = {
+    seats?: number;
+    releaseTemplates?: number;
+    edgeInstances?: number;
+};
+
 export interface License {
     license?: {
         token: string;
         customer: string;
         instanceName: string;
         plan: string;
-        seats: number;
-        releaseTemplates: number;
+        resources: LicenseResources;
         expireAt: Date;
     };
     loading: boolean;
@@ -58,7 +63,7 @@ export const useLicense = (): License => {
     );
 
     return {
-        license: { ...data },
+        license: data,
         loading: !error && !data,
         refetchLicense: () => mutate(),
         error,

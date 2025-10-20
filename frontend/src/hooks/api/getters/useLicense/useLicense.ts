@@ -31,7 +31,6 @@ export interface License {
         instanceName: string;
         plan: string;
         resources: LicenseResources;
-        edgeInstances: number;
         expireAt: Date;
     };
     loading: boolean;

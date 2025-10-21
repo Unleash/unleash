@@ -50,6 +50,10 @@ import {
 } from './getLicensedUsers.js';
 import { ReleasePlanStore } from '../release-plans/release-plan-store.js';
 import { ReleasePlanTemplateStore } from '../release-plans/release-plan-template-store.js';
+import {
+    createFakeGetEdgeInstances,
+    createGetEdgeInstances,
+} from './getEdgeInstances.js';
 
 export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
     const { eventBus, getLogger, flagResolver } = config;
@@ -134,6 +138,7 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
     const getActiveUsers = createGetActiveUsers(db);
     const getProductionChanges = createGetProductionChanges(db);
     const getLicencedUsers = createGetLicensedUsers(db);
+    const getEdgeInstances = createGetEdgeInstances(db);
     const versionService = new VersionService(versionServiceStores, config);
 
     const instanceStatsService = new InstanceStatsService(
@@ -143,6 +148,7 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         getActiveUsers,
         getProductionChanges,
         getLicencedUsers,
+        getEdgeInstances,
     );
 
     return instanceStatsService;
@@ -199,6 +205,7 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
     const getActiveUsers = createFakeGetActiveUsers();
     const getLicensedUsers = createFakeGetLicensedUsers();
     const getProductionChanges = createFakeGetProductionChanges();
+    const getEdgeInstances = createFakeGetEdgeInstances();
     const versionService = new VersionService(versionServiceStores, config);
 
     const instanceStatsService = new InstanceStatsService(
@@ -208,6 +215,7 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
         getActiveUsers,
         getProductionChanges,
         getLicensedUsers,
+        getEdgeInstances,
     );
 
     return instanceStatsService;

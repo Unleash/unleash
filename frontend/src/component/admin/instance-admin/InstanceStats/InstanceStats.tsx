@@ -65,6 +65,7 @@ export const InstanceStats: FC = () => {
         },
         { title: 'Release templates', value: stats?.releaseTemplates },
         { title: 'Release plans', value: stats?.releasePlans },
+        { title: 'Edge instances', value: stats?.edgeInstances },
     ];
 
     if (stats?.versionEnterprise) {

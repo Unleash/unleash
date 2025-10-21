@@ -54,6 +54,9 @@ export interface IFeatureUsageInfo {
     hostedBy: string;
     releaseTemplates: number;
     releasePlans: number;
+    edgeInstances30?: number;
+    edgeInstances60?: number;
+    edgeInstances90?: number;
 }
 
 export default class VersionService {

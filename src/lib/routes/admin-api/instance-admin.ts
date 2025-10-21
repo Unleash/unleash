@@ -133,6 +133,11 @@ class InstanceAdminController extends Controller {
             maxConstraintValues: 123,
             releaseTemplates: 3,
             releasePlans: 5,
+            edgeInstances: {
+                last30: 10,
+                last60: 15,
+                last90: 20,
+            },
         };
     }
 

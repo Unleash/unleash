@@ -284,6 +284,34 @@ export const instanceAdminStatsSchema = {
             example: 1,
             description: 'The number of release plans in this instance',
         },
+        edgeInstances: {
+            type: 'object',
+            description:
+                'The billable number of edge instances in the last 30, 60 and 90 days',
+            properties: {
+                last30: {
+                    type: 'integer',
+                    description:
+                        'The billable number of edge instances in the last 30 days',
+                    example: 10,
+                    minimum: 0,
+                },
+                last60: {
+                    type: 'integer',
+                    description:
+                        'The billable number of edge instances in the last 60 days',
+                    example: 12,
+                    minimum: 0,
+                },
+                last90: {
+                    type: 'integer',
+                    description:
+                        'The billable number of edge instances in the last 90 days',
+                    example: 15,
+                    minimum: 0,
+                },
+            },
+        },
         sum: {
             type: 'string',
             description:

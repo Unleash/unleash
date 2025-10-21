@@ -45,6 +45,9 @@ const fakeTelemetryData = {
     hostedBy: 'self-hosted',
     releaseTemplates: 2,
     releasePlans: 4,
+    edgeInstances30: 0,
+    edgeInstances60: 0,
+    edgeInstances90: 0,
 };
 
 test('yields current versions', async () => {

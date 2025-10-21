@@ -49,7 +49,6 @@ Here's what you need before getting started:
 
 First, make sure your Unleash instance is running (locally or remotely) and generate a new backend API token.
 
-
 <Tabs groupId="method">
 
   <TabItem value="github-release" label="GitHub Release installer" default>
@@ -274,7 +273,6 @@ Then you can start updating your application:
 3. Make sure the SDK configuration includes a valid API token.
 4. Restart your app and test it.
 
-
 <Tabs>
   <TabItem value=".net" label=".NET" default>
     For example, if you're using the [.NET example](https://github.com/Unleash/unleash-sdk-examples/tree/main/.NET), update the API URL and token in your `.env` file:
@@ -367,7 +365,6 @@ Then you can start updating your application:
     });
     ```
   </TabItem>
-
 
   <TabItem value="next.js" label="Next.js">
     For example, if you're using the [Next.js example](https://github.com/Unleash/unleash-sdk-examples/tree/main/Next.js), update the API URL and token in your `.env` file:

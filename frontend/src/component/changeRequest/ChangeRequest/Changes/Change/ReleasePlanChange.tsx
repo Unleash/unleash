@@ -29,21 +29,14 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import useToast from 'hooks/useToast';
 import type { UpdateMilestoneProgressionSchema } from 'openapi';
-import { MilestoneAutomationSection } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/MilestoneAutomationSection.tsx';
-import { MilestoneTransitionDisplay } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/MilestoneTransitionDisplay.tsx';
-import type { MilestoneStatus } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
+import { MilestoneListRenderer } from './MilestoneListRenderer.tsx';
+import { useModifiedReleasePlan } from './useModifiedReleasePlan.ts';
+import { ProgressionChange } from './ProgressionChange.tsx';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     display: 'flex',
     flexFlow: 'column',
     gap: theme.spacing(1),
-}));
-
-const StyledConnection = styled('div')(({ theme }) => ({
-    width: 2,
-    height: theme.spacing(2),
-    backgroundColor: theme.palette.divider,
-    marginLeft: theme.spacing(3.25),
 }));
 
 const DeleteReleasePlan: FC<{
@@ -246,289 +239,6 @@ const AddReleasePlan: FC<{
     );
 };
 
-const CreateMilestoneProgression: FC<{
-    change: IChangeRequestCreateMilestoneProgression;
-    currentReleasePlan?: IReleasePlan;
-    actions?: ReactNode;
-    changeRequestState: ChangeRequestState;
-    onUpdateChangeRequestSubmit?: (
-        sourceMilestoneId: string,
-        payload: UpdateMilestoneProgressionSchema,
-    ) => void;
-    onDeleteChangeRequestSubmit?: (sourceMilestoneId: string) => void;
-}> = ({
-    change,
-    currentReleasePlan,
-    actions,
-    changeRequestState,
-    onUpdateChangeRequestSubmit,
-    onDeleteChangeRequestSubmit,
-}) => {
-    // Use snapshot if available (for Applied state) or if the change has a snapshot
-    const basePlan = change.payload.snapshot || currentReleasePlan;
-    if (!basePlan) return null;
-
-    // Create a modified release plan with the progression added
-    const modifiedPlan: IReleasePlan = {
-        ...basePlan,
-        milestones: basePlan.milestones.map((milestone) => {
-            if (milestone.id === change.payload.sourceMilestone) {
-                return {
-                    ...milestone,
-                    transitionCondition: change.payload.transitionCondition,
-                };
-            }
-            return milestone;
-        }),
-    };
-
-    const sourceMilestone = basePlan.milestones.find(
-        (milestone) => milestone.id === change.payload.sourceMilestone,
-    );
-
-    const sourceMilestoneName =
-        sourceMilestone?.name || change.payload.sourceMilestone;
-
-    const targetMilestoneName =
-        basePlan.milestones.find(
-            (milestone) => milestone.id === change.payload.targetMilestone,
-        )?.name || change.payload.targetMilestone;
-
-    // Get the milestone before and after for diff
-    const previousMilestone = sourceMilestone;
-    const newMilestone = modifiedPlan.milestones.find(
-        (milestone) => milestone.id === change.payload.sourceMilestone,
-    );
-
-    return (
-        <StyledTabs>
-            <ChangeItemWrapper>
-                <ChangeItemInfo>
-                    <Added>Adding automation to release plan</Added>
-                    <Typography component='span'>
-                        {sourceMilestoneName} → {targetMilestoneName}
-                    </Typography>
-                </ChangeItemInfo>
-                <div>
-                    <TabList>
-                        <Tab>View change</Tab>
-                        <Tab>View diff</Tab>
-                    </TabList>
-                    {actions}
-                </div>
-            </ChangeItemWrapper>
-            <TabPanel>
-                {modifiedPlan.milestones.map((milestone, index) => {
-                    const isNotLastMilestone =
-                        index < modifiedPlan.milestones.length - 1;
-                    const isTargetMilestone =
-                        milestone.id === change.payload.sourceMilestone;
-                    const hasProgression = Boolean(
-                        milestone.transitionCondition,
-                    );
-                    const showAutomation =
-                        isTargetMilestone &&
-                        isNotLastMilestone &&
-                        hasProgression;
-
-                    const readonly =
-                        changeRequestState === 'Applied' ||
-                        changeRequestState === 'Cancelled';
-                    const status: MilestoneStatus = 'not-started'; // In change request view, always not-started
-
-                    // Build automation section for this milestone
-                    const automationSection =
-                        showAutomation && milestone.transitionCondition ? (
-                            <MilestoneAutomationSection status={status}>
-                                <MilestoneTransitionDisplay
-                                    intervalMinutes={
-                                        milestone.transitionCondition
-                                            .intervalMinutes
-                                    }
-                                    onSave={async (payload) => {
-                                        onUpdateChangeRequestSubmit?.(
-                                            milestone.id,
-                                            payload,
-                                        );
-                                        return { shouldReset: true };
-                                    }}
-                                    onDelete={() =>
-                                        onDeleteChangeRequestSubmit?.(
-                                            milestone.id,
-                                        )
-                                    }
-                                    milestoneName={milestone.name}
-                                    status={status}
-                                    hasPendingUpdate={false}
-                                    hasPendingDelete={false}
-                                />
-                            </MilestoneAutomationSection>
-                        ) : undefined;
-
-                    return (
-                        <div key={milestone.id}>
-                            <ReleasePlanMilestone
-                                readonly={readonly}
-                                milestone={milestone}
-                                automationSection={automationSection}
-                                allMilestones={modifiedPlan.milestones}
-                                activeMilestoneId={
-                                    modifiedPlan.activeMilestoneId
-                                }
-                            />
-                            {isNotLastMilestone && <StyledConnection />}
-                        </div>
-                    );
-                })}
-            </TabPanel>
-            <TabPanel variant='diff'>
-                <EventDiff
-                    entry={{
-                        preData: previousMilestone,
-                        data: newMilestone,
-                    }}
-                />
-            </TabPanel>
-        </StyledTabs>
-    );
-};
-
-const UpdateMilestoneProgression: FC<{
-    change: IChangeRequestUpdateMilestoneProgression;
-    currentReleasePlan?: IReleasePlan;
-    actions?: ReactNode;
-    changeRequestState: ChangeRequestState;
-    onUpdateChangeRequestSubmit?: (
-        sourceMilestoneId: string,
-        payload: UpdateMilestoneProgressionSchema,
-    ) => void;
-    onDeleteChangeRequestSubmit?: (sourceMilestoneId: string) => void;
-}> = ({
-    change,
-    currentReleasePlan,
-    actions,
-    changeRequestState,
-    onUpdateChangeRequestSubmit,
-    onDeleteChangeRequestSubmit,
-}) => {
-    // Use snapshot if available (for Applied state) or if the change has a snapshot
-    const basePlan = change.payload.snapshot || currentReleasePlan;
-    if (!basePlan) return null;
-
-    const sourceId =
-        change.payload.sourceMilestoneId || change.payload.sourceMilestone;
-    const sourceMilestone = basePlan.milestones.find(
-        (milestone) => milestone.id === sourceId,
-    );
-    const sourceMilestoneName = sourceMilestone?.name || sourceId;
-
-    // Create a modified release plan with the updated progression
-    const modifiedPlan: IReleasePlan = {
-        ...basePlan,
-        milestones: basePlan.milestones.map((milestone) => {
-            if (milestone.id === sourceId) {
-                return {
-                    ...milestone,
-                    transitionCondition: change.payload.transitionCondition,
-                };
-            }
-            return milestone;
-        }),
-    };
-
-    // Get the milestone before and after for diff
-    const previousMilestone = sourceMilestone;
-    const newMilestone = modifiedPlan.milestones.find(
-        (milestone) => milestone.id === change.payload.sourceMilestoneId,
-    );
-
-    return (
-        <StyledTabs>
-            <ChangeItemWrapper>
-                <ChangeItemInfo>
-                    <Action>Updating automation in release plan</Action>
-                    <Typography component='span'>
-                        {sourceMilestoneName}
-                    </Typography>
-                </ChangeItemInfo>
-                <div>
-                    <TabList>
-                        <Tab>View change</Tab>
-                        <Tab>View diff</Tab>
-                    </TabList>
-                    {actions}
-                </div>
-            </ChangeItemWrapper>
-            <TabPanel>
-                {modifiedPlan.milestones.map((milestone, index) => {
-                    const isNotLastMilestone =
-                        index < modifiedPlan.milestones.length - 1;
-                    const showAutomation =
-                        milestone.id === sourceId &&
-                        isNotLastMilestone &&
-                        Boolean(milestone.transitionCondition);
-
-                    const readonly =
-                        changeRequestState === 'Applied' ||
-                        changeRequestState === 'Cancelled';
-                    const status: MilestoneStatus = 'not-started';
-
-                    // Build automation section for this milestone
-                    const automationSection =
-                        showAutomation && milestone.transitionCondition ? (
-                            <MilestoneAutomationSection status={status}>
-                                <MilestoneTransitionDisplay
-                                    intervalMinutes={
-                                        milestone.transitionCondition
-                                            .intervalMinutes
-                                    }
-                                    onSave={async (payload) => {
-                                        onUpdateChangeRequestSubmit?.(
-                                            milestone.id,
-                                            payload,
-                                        );
-                                        return { shouldReset: true };
-                                    }}
-                                    onDelete={() =>
-                                        onDeleteChangeRequestSubmit?.(
-                                            milestone.id,
-                                        )
-                                    }
-                                    milestoneName={milestone.name}
-                                    status={status}
-                                    hasPendingUpdate={false}
-                                    hasPendingDelete={false}
-                                />
-                            </MilestoneAutomationSection>
-                        ) : undefined;
-
-                    return (
-                        <div key={milestone.id}>
-                            <ReleasePlanMilestone
-                                readonly={readonly}
-                                milestone={milestone}
-                                automationSection={automationSection}
-                                allMilestones={modifiedPlan.milestones}
-                                activeMilestoneId={
-                                    modifiedPlan.activeMilestoneId
-                                }
-                            />
-                            {isNotLastMilestone && <StyledConnection />}
-                        </div>
-                    );
-                })}
-            </TabPanel>
-            <TabPanel variant='diff'>
-                <EventDiff
-                    entry={{
-                        preData: previousMilestone,
-                        data: newMilestone,
-                    }}
-                />
-            </TabPanel>
-        </StyledTabs>
-    );
-};
 
 const ConsolidatedProgressionChanges: FC<{
     feature: IChangeRequestFeature;
@@ -562,7 +272,6 @@ const ConsolidatedProgressionChanges: FC<{
     if (progressionChanges.length === 0) return null;
 
     // Use snapshot from first change if available, otherwise use current release plan
-    // Prioritize create/update changes over delete changes for snapshot selection
     const firstChangeWithSnapshot =
         progressionChanges.find(
             (change) =>
@@ -589,61 +298,36 @@ const ConsolidatedProgressionChanges: FC<{
         );
     }
 
-    // Apply all progression changes to the release plan
-    const modifiedPlan: IReleasePlan = {
-        ...basePlan,
-        milestones: basePlan.milestones.map((milestone) => {
-            // Find if there's a progression change for this milestone
-            const createChange = progressionChanges.find(
-                (change): change is IChangeRequestCreateMilestoneProgression =>
-                    change.action === 'createMilestoneProgression' &&
-                    change.payload.sourceMilestone === milestone.id,
-            );
-            const updateChange = progressionChanges.find(
-                (change): change is IChangeRequestUpdateMilestoneProgression =>
-                    change.action === 'updateMilestoneProgression' &&
-                    (change.payload.sourceMilestoneId === milestone.id ||
-                        change.payload.sourceMilestone === milestone.id),
-            );
-            const deleteChange = progressionChanges.find(
-                (change): change is IChangeRequestDeleteMilestoneProgression =>
-                    change.action === 'deleteMilestoneProgression' &&
-                    (change.payload.sourceMilestoneId === milestone.id ||
-                        change.payload.sourceMilestone === milestone.id),
-            );
+    // Apply all progression changes using our hook
+    const modifiedPlan = useModifiedReleasePlan(basePlan, progressionChanges);
 
-            // Check for conflicting changes (delete + create/update for same milestone)
-            if (deleteChange && (createChange || updateChange)) {
-                console.warn(
-                    '[ConsolidatedProgressionChanges] Conflicting changes detected for milestone:',
-                    {
-                        milestone: milestone.name,
-                        hasCreate: !!createChange,
-                        hasUpdate: !!updateChange,
-                        hasDelete: !!deleteChange,
-                    },
-                );
-            }
+    // Collect milestone IDs with automation (modified or original)
+    const milestonesWithAutomation = new Set(
+        progressionChanges
+            .filter(
+                (change) =>
+                    change.action === 'createMilestoneProgression' ||
+                    change.action === 'updateMilestoneProgression',
+            )
+            .map((change) =>
+                change.action === 'createMilestoneProgression'
+                    ? change.payload.sourceMilestone
+                    : change.payload.sourceMilestoneId ||
+                      change.payload.sourceMilestone,
+            )
+            .filter((id): id is string => Boolean(id)),
+    );
 
-            // If there's a delete change, remove the transition condition
-            // Delete takes precedence over create/update
-            if (deleteChange) {
-                return {
-                    ...milestone,
-                    transitionCondition: null,
-                };
-            }
-
-            const change = updateChange || createChange;
-            if (change) {
-                return {
-                    ...milestone,
-                    transitionCondition: change.payload.transitionCondition,
-                };
-            }
-            return milestone;
-        }),
-    };
+    const milestonesWithDeletedAutomation = new Set(
+        progressionChanges
+            .filter((change) => change.action === 'deleteMilestoneProgression')
+            .map(
+                (change) =>
+                    change.payload.sourceMilestoneId ||
+                    change.payload.sourceMilestone,
+            )
+            .filter((id): id is string => Boolean(id)),
+    );
 
     const changeDescriptions = progressionChanges.map((change) => {
         const sourceId =
@@ -662,6 +346,18 @@ const ConsolidatedProgressionChanges: FC<{
                   : 'Updating';
         return `${action} automation for ${sourceName}`;
     });
+
+    // For diff view, we need to use basePlan with deleted automations shown
+    const basePlanWithDeletedAutomations: IReleasePlan = {
+        ...basePlan,
+        milestones: basePlan.milestones.map((milestone) => {
+            // If this milestone is being deleted, ensure it has its transition condition
+            if (milestonesWithDeletedAutomation.has(milestone.id)) {
+                return milestone;
+            }
+            return milestone;
+        }),
+    };
 
     return (
         <StyledTabs>
@@ -687,93 +383,20 @@ const ConsolidatedProgressionChanges: FC<{
                 </div>
             </ChangeItemWrapper>
             <TabPanel>
-                {modifiedPlan.milestones.map((milestone, index) => {
-                    const isNotLastMilestone =
-                        index < modifiedPlan.milestones.length - 1;
-
-                    // Check if there's a delete change for this milestone
-                    const deleteChange = progressionChanges.find(
-                        (
-                            change,
-                        ): change is IChangeRequestDeleteMilestoneProgression =>
-                            change.action === 'deleteMilestoneProgression' &&
-                            (change.payload.sourceMilestoneId ===
-                                milestone.id ||
-                                change.payload.sourceMilestone ===
-                                    milestone.id),
-                    );
-
-                    // If there's a delete change, use the original milestone from basePlan
-                    const originalMilestone = deleteChange
-                        ? basePlan.milestones.find(
-                              (baseMilestone) =>
-                                  baseMilestone.id === milestone.id,
-                          )
-                        : null;
-
-                    const displayMilestone =
-                        deleteChange && originalMilestone
-                            ? originalMilestone
-                            : milestone;
-
-                    // Show automation section for any milestone that has a transition condition
-                    // or if there's a delete change (to show what's being deleted)
-                    const shouldShowAutomationSection =
-                        Boolean(displayMilestone.transitionCondition) ||
-                        Boolean(deleteChange);
-                    const showAutomation =
-                        isNotLastMilestone && shouldShowAutomationSection;
-
-                    const readonly =
-                        changeRequestState === 'Applied' ||
-                        changeRequestState === 'Cancelled';
-                    const status: MilestoneStatus = 'not-started';
-
-                    // Build automation section for this milestone
-                    const automationSection =
-                        showAutomation &&
-                        displayMilestone.transitionCondition ? (
-                            <MilestoneAutomationSection status={status}>
-                                <MilestoneTransitionDisplay
-                                    intervalMinutes={
-                                        displayMilestone.transitionCondition
-                                            .intervalMinutes
-                                    }
-                                    onSave={async (payload) => {
-                                        onUpdateChangeRequestSubmit?.(
-                                            displayMilestone.id,
-                                            payload,
-                                        );
-                                        return { shouldReset: true };
-                                    }}
-                                    onDelete={() =>
-                                        onDeleteChangeRequestSubmit?.(
-                                            displayMilestone.id,
-                                        )
-                                    }
-                                    milestoneName={displayMilestone.name}
-                                    status={status}
-                                    hasPendingUpdate={false}
-                                    hasPendingDelete={Boolean(deleteChange)}
-                                />
-                            </MilestoneAutomationSection>
-                        ) : undefined;
-
-                    return (
-                        <div key={milestone.id}>
-                            <ReleasePlanMilestone
-                                readonly={readonly}
-                                milestone={displayMilestone}
-                                automationSection={automationSection}
-                                allMilestones={modifiedPlan.milestones}
-                                activeMilestoneId={
-                                    modifiedPlan.activeMilestoneId
-                                }
-                            />
-                            {isNotLastMilestone && <StyledConnection />}
-                        </div>
-                    );
-                })}
+                <MilestoneListRenderer
+                    plan={
+                        milestonesWithDeletedAutomation.size > 0
+                            ? basePlanWithDeletedAutomations
+                            : modifiedPlan
+                    }
+                    changeRequestState={changeRequestState}
+                    milestonesWithAutomation={milestonesWithAutomation}
+                    milestonesWithDeletedAutomation={
+                        milestonesWithDeletedAutomation
+                    }
+                    onUpdateAutomation={onUpdateChangeRequestSubmit}
+                    onDeleteAutomation={onDeleteChangeRequestSubmit}
+                />
             </TabPanel>
             <TabPanel variant='diff'>
                 <EventDiff
@@ -930,22 +553,9 @@ export const ReleasePlanChange: FC<{
                     actions={actions}
                 />
             )}
-            {change.action === 'createMilestoneProgression' && (
-                <CreateMilestoneProgression
-                    change={change}
-                    currentReleasePlan={currentReleasePlan}
-                    actions={actions}
-                    changeRequestState={changeRequestState}
-                    onUpdateChangeRequestSubmit={
-                        handleUpdateChangeRequestSubmit
-                    }
-                    onDeleteChangeRequestSubmit={
-                        handleDeleteChangeRequestSubmit
-                    }
-                />
-            )}
-            {change.action === 'updateMilestoneProgression' && (
-                <UpdateMilestoneProgression
+            {(change.action === 'createMilestoneProgression' ||
+                change.action === 'updateMilestoneProgression') && (
+                <ProgressionChange
                     change={change}
                     currentReleasePlan={currentReleasePlan}
                     actions={actions}

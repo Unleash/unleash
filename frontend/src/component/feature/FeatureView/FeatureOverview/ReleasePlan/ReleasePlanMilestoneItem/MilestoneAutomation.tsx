@@ -10,7 +10,7 @@ import { MilestoneAutomationSection } from '../ReleasePlanMilestone/MilestoneAut
 import { MilestoneTransitionDisplay } from '../ReleasePlanMilestone/MilestoneTransitionDisplay.tsx';
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 import { MilestoneProgressionForm } from '../MilestoneProgressionForm/MilestoneProgressionForm.tsx';
-import type { PendingProgressionChange } from './ReleasePlanMilestoneItem';
+import type { PendingProgressionChange } from './ReleasePlanMilestoneItem.tsx';
 
 const StyledAddAutomationButton = styled(Button)(({ theme }) => ({
     textTransform: 'none',

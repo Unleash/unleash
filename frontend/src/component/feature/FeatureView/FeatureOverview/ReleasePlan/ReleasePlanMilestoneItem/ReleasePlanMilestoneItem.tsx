@@ -1,21 +1,18 @@
-import Add from '@mui/icons-material/Add';
-import { Button, styled } from '@mui/material';
-import { Badge } from 'component/common/Badge/Badge';
+import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
 import type {
     CreateMilestoneProgressionSchema,
     UpdateMilestoneProgressionSchema,
 } from 'openapi';
-import { MilestoneAutomationSection } from '../ReleasePlanMilestone/MilestoneAutomationSection.tsx';
-import { MilestoneTransitionDisplay } from '../ReleasePlanMilestone/MilestoneTransitionDisplay.tsx';
 import { ReleasePlanMilestone } from '../ReleasePlanMilestone/ReleasePlanMilestone.tsx';
-import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
-import { MilestoneProgressionForm } from '../MilestoneProgressionForm/MilestoneProgressionForm.tsx';
 import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { calculateMilestoneStatus } from './milestoneStatusUtils';
+import { usePendingProgressionChanges } from './usePendingProgressionChanges';
+import { MilestoneAutomation } from './MilestoneAutomation';
 
 const StyledConnection = styled('div', {
     shouldForwardProp: (prop) => prop !== 'isCompleted',
@@ -28,46 +25,13 @@ const StyledConnection = styled('div', {
     marginLeft: theme.spacing(3.25),
 }));
 
-const StyledAddAutomationButton = styled(Button)(({ theme }) => ({
-    textTransform: 'none',
-    fontWeight: theme.typography.fontWeightBold,
-    fontSize: theme.typography.body2.fontSize,
-    padding: 0,
-    minWidth: 'auto',
-    gap: theme.spacing(1),
-    '&:hover': {
-        backgroundColor: 'transparent',
-    },
-    '& .MuiButton-startIcon': {
-        margin: 0,
-        width: 20,
-        height: 20,
-        border: `1px solid ${theme.palette.primary.main}`,
-        backgroundColor: theme.palette.background.elevation2,
-        borderRadius: '50%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        '& svg': {
-            fontSize: 14,
-            color: theme.palette.primary.main,
-        },
-    },
-}));
-
-const StyledAddAutomationContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-}));
-
-interface PendingProgressionChange {
+export interface PendingProgressionChange {
     action: string;
     payload: any;
     changeRequestId: number;
 }
 
-interface IReleasePlanMilestoneItemProps {
+export interface IReleasePlanMilestoneItemProps {
     milestone: IReleasePlanMilestone;
     index: number;
     milestones: IReleasePlanMilestone[];
@@ -196,75 +160,41 @@ export const ReleasePlanMilestoneItem = ({
         }
     };
 
-    const status: MilestoneStatus =
-        milestone.id === activeMilestoneId
-            ? environmentIsDisabled
-                ? 'paused'
-                : 'active'
-            : index < activeIndex
-              ? 'completed'
-              : 'not-started';
+    const status = calculateMilestoneStatus(
+        milestone,
+        activeMilestoneId,
+        index,
+        activeIndex,
+        environmentIsDisabled,
+    );
 
-    // Calculate pending progression change for this milestone
-    const pendingProgressionChange = getPendingProgressionChange(milestone.id);
-    const hasPendingCreate =
-        pendingProgressionChange?.action === 'createMilestoneProgression';
-    const hasPendingUpdate =
-        pendingProgressionChange?.action === 'updateMilestoneProgression';
-    const hasPendingDelete =
-        pendingProgressionChange?.action === 'deleteMilestoneProgression';
+    const {
+        hasPendingCreate,
+        hasPendingUpdate,
+        hasPendingDelete,
+        effectiveTransitionCondition,
+    } = usePendingProgressionChanges(milestone, getPendingProgressionChange);
 
-    // Determine effective transition condition (use pending create if exists)
-    let effectiveTransitionCondition = milestone.transitionCondition;
-    if (
-        pendingProgressionChange?.action === 'createMilestoneProgression' &&
-        'transitionCondition' in pendingProgressionChange.payload &&
-        pendingProgressionChange.payload.transitionCondition
-    ) {
-        effectiveTransitionCondition =
-            pendingProgressionChange.payload.transitionCondition;
-    }
-
-    // Build automation section
-    const showAutomation =
-        milestoneProgressionsEnabled && isNotLastMilestone && !readonly;
-    const automationSection = showAutomation ? (
-        <MilestoneAutomationSection status={status}>
-            {isProgressionFormOpen ? (
-                <MilestoneProgressionForm
-                    sourceMilestoneId={milestone.id}
-                    targetMilestoneId={nextMilestoneId}
-                    onSubmit={handleCreateProgression}
-                    onCancel={handleCloseProgressionForm}
-                />
-            ) : effectiveTransitionCondition ? (
-                <MilestoneTransitionDisplay
-                    intervalMinutes={
-                        effectiveTransitionCondition.intervalMinutes
-                    }
-                    onSave={handleUpdateProgression}
-                    onDelete={() => onDeleteProgression(milestone)}
-                    milestoneName={milestone.name}
-                    status={status}
-                    hasPendingUpdate={hasPendingUpdate}
-                    hasPendingDelete={hasPendingDelete}
-                />
-            ) : (
-                <StyledAddAutomationContainer>
-                    <StyledAddAutomationButton
-                        onClick={handleOpenProgressionForm}
-                        color='primary'
-                        startIcon={<Add />}
-                    >
-                        Add automation
-                    </StyledAddAutomationButton>
-                    {hasPendingCreate && (
-                        <Badge color='warning'>Modified in draft</Badge>
-                    )}
-                </StyledAddAutomationContainer>
-            )}
-        </MilestoneAutomationSection>
-    ) : undefined;
+    const automationSection = (
+        <MilestoneAutomation
+            milestone={milestone}
+            status={status}
+            isNotLastMilestone={isNotLastMilestone}
+            nextMilestoneId={nextMilestoneId}
+            milestoneProgressionsEnabled={milestoneProgressionsEnabled}
+            readonly={readonly}
+            isProgressionFormOpen={isProgressionFormOpen}
+            effectiveTransitionCondition={effectiveTransitionCondition}
+            hasPendingCreate={hasPendingCreate}
+            hasPendingUpdate={hasPendingUpdate}
+            hasPendingDelete={hasPendingDelete}
+            onOpenProgressionForm={handleOpenProgressionForm}
+            onCloseProgressionForm={handleCloseProgressionForm}
+            onCreateProgression={handleCreateProgression}
+            onUpdateProgression={handleUpdateProgression}
+            onDeleteProgression={onDeleteProgression}
+        />
+    );
 
     return (
         <div key={milestone.id}>

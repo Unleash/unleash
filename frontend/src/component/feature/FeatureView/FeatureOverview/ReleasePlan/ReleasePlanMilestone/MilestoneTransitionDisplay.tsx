@@ -146,7 +146,9 @@ export const MilestoneTransitionDisplay = ({
                 )}
                 {showDraftBadge && (
                     <Badge color={hasPendingDelete ? 'error' : 'warning'}>
-                        {hasPendingDelete ? 'Deleted in draft' : 'Modified in draft'}
+                        {hasPendingDelete
+                            ? 'Deleted in draft'
+                            : 'Modified in draft'}
                     </Badge>
                 )}
                 <IconButton

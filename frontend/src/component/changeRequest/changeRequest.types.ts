@@ -296,9 +296,10 @@ type ChangeRequestStartMilestone = {
     snapshot?: IReleasePlan;
 };
 
-type ChangeRequestCreateMilestoneProgression = CreateMilestoneProgressionSchema & {
-    snapshot?: IReleasePlan;
-};
+type ChangeRequestCreateMilestoneProgression =
+    CreateMilestoneProgressionSchema & {
+        snapshot?: IReleasePlan;
+    };
 
 type ChangeRequestUpdateMilestoneProgression =
     UpdateMilestoneProgressionSchema & {

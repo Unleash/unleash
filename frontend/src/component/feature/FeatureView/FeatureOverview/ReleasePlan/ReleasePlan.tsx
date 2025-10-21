@@ -381,33 +381,33 @@ export const ReleasePlan = ({
 
     return (
         <StyledContainer>
-                <StyledHeader>
-                    <StyledHeaderGroup>
-                        <StyledHeaderTitleLabel>
-                            Release plan:{' '}
-                        </StyledHeaderTitleLabel>
-                        <StyledHeaderTitle>{name}</StyledHeaderTitle>
-                        <StyledHeaderDescription>
-                            <Truncator lines={2} title={description}>
-                                {description}
-                            </Truncator>
-                        </StyledHeaderDescription>
-                    </StyledHeaderGroup>
-                    {!readonly && (
-                        <PermissionIconButton
-                            onClick={confirmRemoveReleasePlan}
-                            permission={DELETE_FEATURE_STRATEGY}
-                            environmentId={environment}
-                            projectId={projectId}
-                            tooltipProps={{
-                                title: 'Remove release plan',
-                            }}
-                        >
-                            <Delete />
-                        </PermissionIconButton>
-                    )}
-                </StyledHeader>
-                <StyledBody>
+            <StyledHeader>
+                <StyledHeaderGroup>
+                    <StyledHeaderTitleLabel>
+                        Release plan:{' '}
+                    </StyledHeaderTitleLabel>
+                    <StyledHeaderTitle>{name}</StyledHeaderTitle>
+                    <StyledHeaderDescription>
+                        <Truncator lines={2} title={description}>
+                            {description}
+                        </Truncator>
+                    </StyledHeaderDescription>
+                </StyledHeaderGroup>
+                {!readonly && (
+                    <PermissionIconButton
+                        onClick={confirmRemoveReleasePlan}
+                        permission={DELETE_FEATURE_STRATEGY}
+                        environmentId={environment}
+                        projectId={projectId}
+                        tooltipProps={{
+                            title: 'Remove release plan',
+                        }}
+                    >
+                        <Delete />
+                    </PermissionIconButton>
+                )}
+            </StyledHeader>
+            <StyledBody>
                 {milestones.map((milestone, index) => (
                     <ReleasePlanMilestoneItem
                         key={milestone.id}
@@ -418,15 +418,25 @@ export const ReleasePlan = ({
                         activeIndex={activeIndex}
                         environmentIsDisabled={environmentIsDisabled}
                         readonly={readonly}
-                        milestoneProgressionsEnabled={milestoneProgressionsEnabled}
+                        milestoneProgressionsEnabled={
+                            milestoneProgressionsEnabled
+                        }
                         progressionFormOpenIndex={progressionFormOpenIndex}
-                        onSetProgressionFormOpenIndex={setProgressionFormOpenIndex}
+                        onSetProgressionFormOpenIndex={
+                            setProgressionFormOpenIndex
+                        }
                         onStartMilestone={onStartMilestone}
                         onDeleteProgression={handleDeleteProgression}
                         onProgressionSave={handleProgressionSave}
-                        onProgressionChangeRequestSubmit={handleProgressionChangeRequestSubmit}
-                        onUpdateProgressionChangeRequestSubmit={handleUpdateProgressionChangeRequestSubmit}
-                        getPendingProgressionChange={getPendingProgressionChange}
+                        onProgressionChangeRequestSubmit={
+                            handleProgressionChangeRequestSubmit
+                        }
+                        onUpdateProgressionChangeRequestSubmit={
+                            handleUpdateProgressionChangeRequestSubmit
+                        }
+                        getPendingProgressionChange={
+                            getPendingProgressionChange
+                        }
                         projectId={projectId}
                         environment={environment}
                         featureName={featureName}

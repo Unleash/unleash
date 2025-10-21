@@ -104,11 +104,7 @@ export const MilestoneProgressionForm = ({
                 {form.errors.time && (
                     <StyledErrorMessage>{form.errors.time}</StyledErrorMessage>
                 )}
-                <Button
-                    variant='outlined'
-                    onClick={onCancel}
-                    size='small'
-                >
+                <Button variant='outlined' onClick={onCancel} size='small'>
                     Cancel
                 </Button>
                 <Button

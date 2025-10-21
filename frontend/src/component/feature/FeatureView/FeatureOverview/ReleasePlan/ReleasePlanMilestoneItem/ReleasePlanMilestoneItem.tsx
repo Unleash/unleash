@@ -136,8 +136,10 @@ export const ReleasePlanMilestoneItem = ({
     const isNotLastMilestone = index < milestones.length - 1;
     const isProgressionFormOpen = progressionFormOpenIndex === index;
     const nextMilestoneId = milestones[index + 1]?.id || '';
-    const handleOpenProgressionForm = () => onSetProgressionFormOpenIndex(index);
-    const handleCloseProgressionForm = () => onSetProgressionFormOpenIndex(null);
+    const handleOpenProgressionForm = () =>
+        onSetProgressionFormOpenIndex(index);
+    const handleCloseProgressionForm = () =>
+        onSetProgressionFormOpenIndex(null);
 
     // Unified handler for creating progression
     const handleCreateProgression = async (
@@ -236,7 +238,9 @@ export const ReleasePlanMilestoneItem = ({
                 />
             ) : effectiveTransitionCondition ? (
                 <MilestoneTransitionDisplay
-                    intervalMinutes={effectiveTransitionCondition.intervalMinutes}
+                    intervalMinutes={
+                        effectiveTransitionCondition.intervalMinutes
+                    }
                     onSave={handleUpdateProgression}
                     onDelete={() => onDeleteProgression(milestone)}
                     milestoneName={milestone.name}

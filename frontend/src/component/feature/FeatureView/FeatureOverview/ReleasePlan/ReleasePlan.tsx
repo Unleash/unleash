@@ -26,7 +26,6 @@ import type {
     CreateMilestoneProgressionSchema,
     UpdateMilestoneProgressionSchema,
 } from 'openapi';
-import { ReleasePlanProvider } from './ReleasePlanContext.tsx';
 import { ReleasePlanMilestoneItem } from './ReleasePlanMilestoneItem/ReleasePlanMilestoneItem.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -381,10 +380,7 @@ export const ReleasePlan = ({
     );
 
     return (
-        <ReleasePlanProvider
-            getPendingProgressionChange={getPendingProgressionChange}
-        >
-            <StyledContainer>
+        <StyledContainer>
                 <StyledHeader>
                     <StyledHeaderGroup>
                         <StyledHeaderTitleLabel>
@@ -464,6 +460,5 @@ export const ReleasePlan = ({
                 />
             )}
         </StyledContainer>
-        </ReleasePlanProvider>
     );
 };

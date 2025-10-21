@@ -29,40 +29,9 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import useToast from 'hooks/useToast';
 import type { UpdateMilestoneProgressionSchema } from 'openapi';
-import { ReleasePlanProvider } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanContext.tsx';
 import { MilestoneAutomationSection } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/MilestoneAutomationSection.tsx';
 import { MilestoneTransitionDisplay } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/MilestoneTransitionDisplay.tsx';
 import type { MilestoneStatus } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
-
-// Indicates that a change is in draft and not yet part of a change request
-const PENDING_CHANGE_REQUEST_ID = -1;
-
-// Helper function to create getPendingProgressionChange for context
-const createGetPendingProgressionChange = (
-    progressionChanges: (IChangeRequestCreateMilestoneProgression | IChangeRequestUpdateMilestoneProgression | IChangeRequestDeleteMilestoneProgression)[]
-) => {
-    return (sourceMilestoneId: string) => {
-        const change = progressionChanges.find(
-            (progressionChange) =>
-                (progressionChange.action === 'updateMilestoneProgression' &&
-                    (progressionChange.payload.sourceMilestoneId === sourceMilestoneId ||
-                        progressionChange.payload.sourceMilestone === sourceMilestoneId)) ||
-                (progressionChange.action === 'deleteMilestoneProgression' &&
-                    (progressionChange.payload.sourceMilestoneId === sourceMilestoneId ||
-                        progressionChange.payload.sourceMilestone === sourceMilestoneId)) ||
-                (progressionChange.action === 'createMilestoneProgression' &&
-                    progressionChange.payload.sourceMilestone === sourceMilestoneId),
-        );
-
-        if (!change) return null;
-
-        return {
-            action: change.action,
-            payload: change.payload,
-            changeRequestId: PENDING_CHANGE_REQUEST_ID,
-        };
-    };
-};
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     display: 'flex',
@@ -339,20 +308,7 @@ const CreateMilestoneProgression: FC<{
         (milestone) => milestone.id === change.payload.sourceMilestone,
     );
 
-    // Create a function to get this specific change for the context
-    const getPendingProgressionChange = (sourceMilestoneId: string) => {
-        if (sourceMilestoneId === change.payload.sourceMilestone) {
-            return {
-                action: change.action,
-                payload: change.payload,
-                changeRequestId: -1,
-            };
-        }
-        return null;
-    };
-
     return (
-        <ReleasePlanProvider getPendingProgressionChange={getPendingProgressionChange}>
         <StyledTabs>
             <ChangeItemWrapper>
                 <ChangeItemInfo>
@@ -422,7 +378,6 @@ const CreateMilestoneProgression: FC<{
                 />
             </TabPanel>
         </StyledTabs>
-        </ReleasePlanProvider>
     );
 };
 
@@ -482,20 +437,7 @@ const UpdateMilestoneProgression: FC<{
         (milestone) => milestone.id === change.payload.sourceMilestoneId,
     );
 
-    // Create a function to get this specific change for the context
-    const getPendingProgressionChange = (sourceMilestoneId: string) => {
-        if (sourceMilestoneId === sourceId) {
-            return {
-                action: change.action,
-                payload: change.payload,
-                changeRequestId: -1,
-            };
-        }
-        return null;
-    };
-
     return (
-        <ReleasePlanProvider getPendingProgressionChange={getPendingProgressionChange}>
         <StyledTabs>
             <ChangeItemWrapper>
                 <ChangeItemInfo>
@@ -563,7 +505,6 @@ const UpdateMilestoneProgression: FC<{
                 />
             </TabPanel>
         </StyledTabs>
-        </ReleasePlanProvider>
     );
 };
 
@@ -689,11 +630,7 @@ const ConsolidatedProgressionChanges: FC<{
         return `${action} automation for ${sourceName}`;
     });
 
-    // Create a function to get pending progression changes for the context
-    const getPendingProgressionChange = createGetPendingProgressionChange(progressionChanges);
-
     return (
-        <ReleasePlanProvider getPendingProgressionChange={getPendingProgressionChange}>
         <StyledTabs>
             <ChangeItemWrapper>
                 <ChangeItemInfo>
@@ -783,7 +720,6 @@ const ConsolidatedProgressionChanges: FC<{
                 />
             </TabPanel>
         </StyledTabs>
-        </ReleasePlanProvider>
     );
 };
 

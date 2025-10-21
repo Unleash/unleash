@@ -1,7 +1,6 @@
 import type { Db } from '../../types/index.js';
 
 const TABLE = 'edge_node_presence';
-const GRACE_PERCENTAGE = 0.05;
 
 export type GetEdgeInstances = () => Promise<{
     last30: number;
@@ -26,16 +25,13 @@ export const createGetEdgeInstances =
             .from('buckets')
             .select({
                 last30: db.raw(
-                    `COALESCE(CEIL(AVG(active_nodes) FILTER (WHERE bucket_ts >= NOW() - INTERVAL '30 days') * ?)::int, 0)`,
-                    [1 + GRACE_PERCENTAGE],
+                    `COALESCE(CEIL(AVG(active_nodes) FILTER (WHERE bucket_ts >= NOW() - INTERVAL '30 days'))::int, 0)`,
                 ),
                 last60: db.raw(
-                    `COALESCE(CEIL(AVG(active_nodes) FILTER (WHERE bucket_ts >= NOW() - INTERVAL '60 days') * ?)::int, 0)`,
-                    [1 + GRACE_PERCENTAGE],
+                    `COALESCE(CEIL(AVG(active_nodes) FILTER (WHERE bucket_ts >= NOW() - INTERVAL '60 days'))::int, 0)`,
                 ),
                 last90: db.raw(
-                    `COALESCE(CEIL(AVG(active_nodes) FILTER (WHERE bucket_ts >= NOW() - INTERVAL '90 days') * ?)::int, 0)`,
-                    [1 + GRACE_PERCENTAGE],
+                    `COALESCE(CEIL(AVG(active_nodes) FILTER (WHERE bucket_ts >= NOW() - INTERVAL '90 days'))::int, 0)`,
                 ),
             })
             .first();

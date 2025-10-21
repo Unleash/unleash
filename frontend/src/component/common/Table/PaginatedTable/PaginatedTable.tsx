@@ -53,9 +53,11 @@ const TableContainer = styled('div')(({ theme }) => ({
  * Use with react-table v8
  */
 export const PaginatedTable = <T extends object>({
+    className,
     totalItems,
     tableInstance,
 }: {
+    className?: string;
     tableInstance: TableType<T>;
     totalItems?: number;
 }) => {
@@ -76,7 +78,7 @@ export const PaginatedTable = <T extends object>({
     return (
         <>
             <TableContainer ref={tableRef}>
-                <Table>
+                <Table className={className}>
                     <TableHead>
                         {tableInstance.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>

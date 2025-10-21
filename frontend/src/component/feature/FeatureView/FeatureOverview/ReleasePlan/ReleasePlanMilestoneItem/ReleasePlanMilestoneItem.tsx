@@ -75,13 +75,9 @@ interface IReleasePlanMilestoneItemProps {
     activeIndex: number;
     environmentIsDisabled?: boolean;
     readonly?: boolean;
-
-    // Automation-related
     milestoneProgressionsEnabled: boolean;
     progressionFormOpenIndex: number | null;
     onSetProgressionFormOpenIndex: (index: number | null) => void;
-
-    // API callbacks
     onStartMilestone?: (milestone: IReleasePlanMilestone) => void;
     onDeleteProgression: (milestone: IReleasePlanMilestone) => void;
     onAddToChangeRequest: (
@@ -96,17 +92,12 @@ interface IReleasePlanMilestoneItemProps {
                   payload: UpdateMilestoneProgressionSchema;
               },
     ) => void;
-
-    // Context
     getPendingProgressionChange: (
         sourceMilestoneId: string,
     ) => PendingProgressionChange | null;
-
-    // IDs
     projectId: string;
     environment: string;
     featureName: string;
-
     onUpdate: () => void | Promise<void>;
 }
 
@@ -143,7 +134,6 @@ export const ReleasePlanMilestoneItem = ({
     const handleCloseProgressionForm = () =>
         onSetProgressionFormOpenIndex(null);
 
-    // Unified handler for creating progression
     const handleCreateProgression = async (
         payload: CreateMilestoneProgressionSchema,
     ) => {
@@ -174,7 +164,6 @@ export const ReleasePlanMilestoneItem = ({
         }
     };
 
-    // Unified handler for updating progression
     const handleUpdateProgression = async (
         payload: UpdateMilestoneProgressionSchema,
     ): Promise<{ shouldReset?: boolean }> => {
@@ -184,7 +173,6 @@ export const ReleasePlanMilestoneItem = ({
                 sourceMilestoneId: milestone.id,
                 payload,
             });
-            // Return shouldReset=true for change requests so form resets to current value
             return { shouldReset: true };
         }
 
@@ -201,7 +189,6 @@ export const ReleasePlanMilestoneItem = ({
                 text: 'Automation updated successfully',
             });
             await onUpdate();
-            // Return empty object for direct updates - form will sync via useEffect
             return {};
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

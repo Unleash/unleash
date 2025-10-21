@@ -14,7 +14,6 @@ import {
 } from '../hooks/useMilestoneProgressionForm.js';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import type { UpdateMilestoneProgressionSchema } from 'openapi';
-import { useReleasePlanContext } from '../ReleasePlanContext.tsx';
 
 const StyledDisplayContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -75,6 +74,8 @@ interface IMilestoneTransitionDisplayProps {
         sourceMilestoneId: string,
         payload: UpdateMilestoneProgressionSchema,
     ) => void;
+    hasPendingUpdate?: boolean;
+    hasPendingDelete?: boolean;
 }
 
 export const MilestoneTransitionDisplay = ({
@@ -88,12 +89,12 @@ export const MilestoneTransitionDisplay = ({
     sourceMilestoneId,
     onUpdate,
     onChangeRequestSubmit,
+    hasPendingUpdate = false,
+    hasPendingDelete = false,
 }: IMilestoneTransitionDisplayProps) => {
     const { updateMilestoneProgression } = useMilestoneProgressionsApi();
     const { setToastData, setToastApiError } = useToast();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
-    const { getPendingProgressionChange } = useReleasePlanContext();
-    const pendingProgressionChange = getPendingProgressionChange(sourceMilestoneId);
 
     const initial = getTimeValueAndUnitFromMinutes(intervalMinutes);
     const form = useMilestoneProgressionForm(
@@ -109,11 +110,6 @@ export const MilestoneTransitionDisplay = ({
     const currentIntervalMinutes = form.getIntervalMinutes();
     const hasChanged = currentIntervalMinutes !== intervalMinutes;
 
-    // Check if there's a pending change request for this progression
-    const hasPendingUpdate =
-        pendingProgressionChange?.action === 'updateMilestoneProgression';
-    const hasPendingDelete =
-        pendingProgressionChange?.action === 'deleteMilestoneProgression';
     const showDraftBadge = hasPendingUpdate || hasPendingDelete;
 
     const handleSave = async () => {

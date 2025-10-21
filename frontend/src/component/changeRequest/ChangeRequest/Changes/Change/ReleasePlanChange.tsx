@@ -30,6 +30,9 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import useToast from 'hooks/useToast';
 import type { UpdateMilestoneProgressionSchema } from 'openapi';
 import { ReleasePlanProvider } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanContext.tsx';
+import { MilestoneAutomationSection } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/MilestoneAutomationSection.tsx';
+import { MilestoneTransitionDisplay } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/MilestoneTransitionDisplay.tsx';
+import type { MilestoneStatus } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 
 // Indicates that a change is in draft and not yet part of a change request
 const PENDING_CHANGE_REQUEST_ID = -1;
@@ -373,33 +376,35 @@ const CreateMilestoneProgression: FC<{
                     const hasProgression = Boolean(milestone.transitionCondition);
                     const showAutomation = isTargetMilestone && isNotLastMilestone && hasProgression;
 
-                    console.log('[CreateProgression] Milestone:', milestone.name, {
-                        isTargetMilestone,
-                        isNotLastMilestone,
-                        hasProgression,
-                        showAutomation,
-                        transitionCondition: milestone.transitionCondition,
-                        projectId,
-                        environment: environmentName,
-                        featureName,
-                    });
+                    const readonly = changeRequestState === 'Applied' || changeRequestState === 'Cancelled';
+                    const status: MilestoneStatus = 'not-started'; // In change request view, always not-started
+
+                    // Build automation section for this milestone
+                    const automationSection = showAutomation && milestone.transitionCondition ? (
+                        <MilestoneAutomationSection status={status}>
+                            <MilestoneTransitionDisplay
+                                intervalMinutes={milestone.transitionCondition.intervalMinutes}
+                                onDelete={() => onDeleteChangeRequestSubmit?.(milestone.id)}
+                                milestoneName={milestone.name}
+                                status={status}
+                                projectId={projectId}
+                                environment={environmentName}
+                                featureName={featureName}
+                                sourceMilestoneId={milestone.id}
+                                onUpdate={onUpdate || (() => {})}
+                                onChangeRequestSubmit={onUpdateChangeRequestSubmit}
+                                hasPendingUpdate={false}
+                                hasPendingDelete={false}
+                            />
+                        </MilestoneAutomationSection>
+                    ) : undefined;
 
                     return (
                         <div key={milestone.id}>
                             <ReleasePlanMilestone
-                                readonly={changeRequestState === 'Applied' || changeRequestState === 'Cancelled'}
+                                readonly={readonly}
                                 milestone={milestone}
-                                showAutomation={showAutomation}
-                                projectId={projectId}
-                                environment={environmentName}
-                                featureName={featureName}
-                                onUpdate={onUpdate}
-                                onUpdateChangeRequestSubmit={onUpdateChangeRequestSubmit}
-                                onDeleteAutomation={
-                                    showAutomation && onDeleteChangeRequestSubmit
-                                        ? () => onDeleteChangeRequestSubmit(milestone.id)
-                                        : undefined
-                                }
+                                automationSection={automationSection}
                                 allMilestones={modifiedPlan.milestones}
                                 activeMilestoneId={modifiedPlan.activeMilestoneId}
                             />
@@ -512,22 +517,35 @@ const UpdateMilestoneProgression: FC<{
                     const isNotLastMilestone = index < modifiedPlan.milestones.length - 1;
                     const showAutomation = milestone.id === sourceId && isNotLastMilestone && Boolean(milestone.transitionCondition);
 
-                    return (
-                        <div key={milestone.id}>
-                            <ReleasePlanMilestone
-                                readonly={changeRequestState === 'Applied' || changeRequestState === 'Cancelled'}
-                                milestone={milestone}
-                                showAutomation={showAutomation}
+                    const readonly = changeRequestState === 'Applied' || changeRequestState === 'Cancelled';
+                    const status: MilestoneStatus = 'not-started';
+
+                    // Build automation section for this milestone
+                    const automationSection = showAutomation && milestone.transitionCondition ? (
+                        <MilestoneAutomationSection status={status}>
+                            <MilestoneTransitionDisplay
+                                intervalMinutes={milestone.transitionCondition.intervalMinutes}
+                                onDelete={() => onDeleteChangeRequestSubmit?.(milestone.id)}
+                                milestoneName={milestone.name}
+                                status={status}
                                 projectId={projectId}
                                 environment={environmentName}
                                 featureName={featureName}
-                                onUpdate={onUpdate}
-                                onUpdateChangeRequestSubmit={onUpdateChangeRequestSubmit}
-                                onDeleteAutomation={
-                                    showAutomation && onDeleteChangeRequestSubmit
-                                        ? () => onDeleteChangeRequestSubmit(milestone.id)
-                                        : undefined
-                                }
+                                sourceMilestoneId={milestone.id}
+                                onUpdate={onUpdate || (() => {})}
+                                onChangeRequestSubmit={onUpdateChangeRequestSubmit}
+                                hasPendingUpdate={false}
+                                hasPendingDelete={false}
+                            />
+                        </MilestoneAutomationSection>
+                    ) : undefined;
+
+                    return (
+                        <div key={milestone.id}>
+                            <ReleasePlanMilestone
+                                readonly={readonly}
+                                milestone={milestone}
+                                automationSection={automationSection}
                                 allMilestones={modifiedPlan.milestones}
                                 activeMilestoneId={modifiedPlan.activeMilestoneId}
                             />
@@ -712,15 +730,6 @@ const ConsolidatedProgressionChanges: FC<{
                         ? basePlan.milestones.find(baseMilestone => baseMilestone.id === milestone.id)
                         : null;
 
-                    // Warn if we can't find the original milestone for a delete change
-                    if (deleteChange && !originalMilestone) {
-                        console.error('[ConsolidatedProgressionChanges] Cannot find original milestone for delete', {
-                            milestoneId: milestone.id,
-                            milestoneName: milestone.name,
-                            basePlanMilestones: basePlan.milestones.map(baseMilestone => ({ id: baseMilestone.id, name: baseMilestone.name }))
-                        });
-                    }
-
                     const displayMilestone = deleteChange && originalMilestone ? originalMilestone : milestone;
 
                     // Show automation section for any milestone that has a transition condition
@@ -728,22 +737,35 @@ const ConsolidatedProgressionChanges: FC<{
                     const shouldShowAutomationSection = Boolean(displayMilestone.transitionCondition) || Boolean(deleteChange);
                     const showAutomation = isNotLastMilestone && shouldShowAutomationSection;
 
-                    return (
-                        <div key={milestone.id}>
-                            <ReleasePlanMilestone
-                                readonly={changeRequestState === 'Applied' || changeRequestState === 'Cancelled'}
-                                milestone={displayMilestone}
-                                showAutomation={showAutomation}
+                    const readonly = changeRequestState === 'Applied' || changeRequestState === 'Cancelled';
+                    const status: MilestoneStatus = 'not-started';
+
+                    // Build automation section for this milestone
+                    const automationSection = showAutomation && displayMilestone.transitionCondition ? (
+                        <MilestoneAutomationSection status={status}>
+                            <MilestoneTransitionDisplay
+                                intervalMinutes={displayMilestone.transitionCondition.intervalMinutes}
+                                onDelete={() => onDeleteChangeRequestSubmit?.(displayMilestone.id)}
+                                milestoneName={displayMilestone.name}
+                                status={status}
                                 projectId={projectId}
                                 environment={environmentName}
                                 featureName={featureName}
-                                onUpdate={onUpdate}
-                                onUpdateChangeRequestSubmit={onUpdateChangeRequestSubmit}
-                                onDeleteAutomation={
-                                    showAutomation && onDeleteChangeRequestSubmit
-                                        ? () => onDeleteChangeRequestSubmit(displayMilestone.id)
-                                        : undefined
-                                }
+                                sourceMilestoneId={displayMilestone.id}
+                                onUpdate={onUpdate || (() => {})}
+                                onChangeRequestSubmit={onUpdateChangeRequestSubmit}
+                                hasPendingUpdate={false}
+                                hasPendingDelete={Boolean(deleteChange)}
+                            />
+                        </MilestoneAutomationSection>
+                    ) : undefined;
+
+                    return (
+                        <div key={milestone.id}>
+                            <ReleasePlanMilestone
+                                readonly={readonly}
+                                milestone={displayMilestone}
+                                automationSection={automationSection}
                                 allMilestones={modifiedPlan.milestones}
                                 activeMilestoneId={modifiedPlan.activeMilestoneId}
                             />

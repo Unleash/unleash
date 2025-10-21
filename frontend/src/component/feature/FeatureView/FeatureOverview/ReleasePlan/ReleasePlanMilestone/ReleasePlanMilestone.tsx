@@ -17,9 +17,7 @@ import { StrategySeparator } from 'component/common/StrategySeparator/StrategySe
 import { StrategyItem } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyItem.tsx';
 import { StrategyList } from 'component/common/StrategyList/StrategyList';
 import { StrategyListItem } from 'component/common/StrategyList/StrategyListItem';
-import { MilestoneAutomationSection } from './MilestoneAutomationSection.tsx';
 import { formatDateYMDHMS } from 'utils/formatDate';
-import type { UpdateMilestoneProgressionSchema } from 'openapi';
 
 const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'status' && prop !== 'hasAutomation',
@@ -100,18 +98,7 @@ interface IReleasePlanMilestoneProps {
     status?: MilestoneStatus;
     onStartMilestone?: (milestone: IReleasePlanMilestone) => void;
     readonly?: boolean;
-    showAutomation?: boolean;
-    onAddAutomation?: () => void;
-    onDeleteAutomation?: () => void;
-    automationForm?: React.ReactNode;
-    projectId?: string;
-    environment?: string;
-    featureName?: string;
-    onUpdate?: () => void;
-    onUpdateChangeRequestSubmit?: (
-        sourceMilestoneId: string,
-        payload: UpdateMilestoneProgressionSchema,
-    ) => void;
+    automationSection?: React.ReactNode;
     allMilestones: IReleasePlanMilestone[];
     activeMilestoneId?: string;
 }
@@ -121,24 +108,17 @@ export const ReleasePlanMilestone = ({
     status = 'not-started',
     onStartMilestone,
     readonly,
-    showAutomation,
-    onAddAutomation,
-    onDeleteAutomation,
-    automationForm,
-    projectId,
-    environment,
-    featureName,
-    onUpdate,
-    onUpdateChangeRequestSubmit,
+    automationSection,
     allMilestones,
     activeMilestoneId,
 }: IReleasePlanMilestoneProps) => {
     const [expanded, setExpanded] = useState(false);
+    const hasAutomation = Boolean(automationSection);
 
     if (!milestone.strategies.length) {
         return (
             <StyledMilestoneContainer>
-                <StyledAccordion status={status} hasAutomation={showAutomation}>
+                <StyledAccordion status={status} hasAutomation={hasAutomation}>
                     <StyledAccordionSummary>
                         <StyledTitleContainer>
                             <StyledTitle status={status}>
@@ -181,29 +161,7 @@ export const ReleasePlanMilestone = ({
                         </StyledSecondaryLabel>
                     </StyledAccordionSummary>
                 </StyledAccordion>
-                {showAutomation &&
-                    projectId &&
-                    environment &&
-                    featureName &&
-                    onUpdate && (
-                        <MilestoneAutomationSection
-                            showAutomation={showAutomation}
-                            status={status}
-                            onAddAutomation={onAddAutomation}
-                            onDeleteAutomation={onDeleteAutomation}
-                            automationForm={automationForm}
-                            transitionCondition={milestone.transitionCondition}
-                            milestoneName={milestone.name}
-                            projectId={projectId}
-                            environment={environment}
-                            featureName={featureName}
-                            sourceMilestoneId={milestone.id}
-                            onUpdate={onUpdate}
-                            onUpdateChangeRequestSubmit={
-                                onUpdateChangeRequestSubmit
-                            }
-                        />
-                    )}
+                {automationSection}
             </StyledMilestoneContainer>
         );
     }
@@ -212,7 +170,7 @@ export const ReleasePlanMilestone = ({
         <StyledMilestoneContainer>
             <StyledAccordion
                 status={status}
-                hasAutomation={showAutomation}
+                hasAutomation={hasAutomation}
                 onChange={(evt, expanded) => setExpanded(expanded)}
             >
                 <StyledAccordionSummary expandIcon={<ExpandMore />}>
@@ -274,29 +232,7 @@ export const ReleasePlanMilestone = ({
                     </StrategyList>
                 </StyledAccordionDetails>
             </StyledAccordion>
-            {showAutomation &&
-                projectId &&
-                environment &&
-                featureName &&
-                onUpdate && (
-                    <MilestoneAutomationSection
-                        showAutomation={showAutomation}
-                        status={status}
-                        onAddAutomation={onAddAutomation}
-                        onDeleteAutomation={onDeleteAutomation}
-                        automationForm={automationForm}
-                        transitionCondition={milestone.transitionCondition}
-                        milestoneName={milestone.name}
-                        projectId={projectId}
-                        environment={environment}
-                        featureName={featureName}
-                        sourceMilestoneId={milestone.id}
-                        onUpdate={onUpdate}
-                        onUpdateChangeRequestSubmit={
-                            onUpdateChangeRequestSubmit
-                        }
-                    />
-                )}
+            {automationSection}
         </StyledMilestoneContainer>
     );
 };

@@ -1,10 +1,5 @@
-import Add from '@mui/icons-material/Add';
-import { Button, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
-import { MilestoneTransitionDisplay } from './MilestoneTransitionDisplay.tsx';
-import type { UpdateMilestoneProgressionSchema } from 'openapi';
-import { Badge } from 'component/common/Badge/Badge';
-import { useReleasePlanContext } from '../ReleasePlanContext.tsx';
 
 const StyledAutomationContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'status',
@@ -26,120 +21,18 @@ const StyledAutomationContainer = styled('div', {
     },
 }));
 
-const StyledAddAutomationButton = styled(Button)(({ theme }) => ({
-    textTransform: 'none',
-    fontWeight: theme.typography.fontWeightBold,
-    fontSize: theme.typography.body2.fontSize,
-    padding: 0,
-    minWidth: 'auto',
-    gap: theme.spacing(1),
-    '&:hover': {
-        backgroundColor: 'transparent',
-    },
-    '& .MuiButton-startIcon': {
-        margin: 0,
-        width: 20,
-        height: 20,
-        border: `1px solid ${theme.palette.primary.main}`,
-        backgroundColor: theme.palette.background.elevation2,
-        borderRadius: '50%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        '& svg': {
-            fontSize: 14,
-            color: theme.palette.primary.main,
-        },
-    },
-}));
-
-const StyledAddAutomationContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-}));
-
 interface IMilestoneAutomationSectionProps {
-    showAutomation?: boolean;
     status?: MilestoneStatus;
-    onAddAutomation?: () => void;
-    onDeleteAutomation?: () => void;
-    automationForm?: React.ReactNode;
-    transitionCondition?: {
-        intervalMinutes: number;
-    } | null;
-    milestoneName: string;
-    projectId: string;
-    environment: string;
-    featureName: string;
-    sourceMilestoneId: string;
-    onUpdate: () => void;
-    onUpdateChangeRequestSubmit?: (
-        sourceMilestoneId: string,
-        payload: UpdateMilestoneProgressionSchema,
-    ) => void;
+    children: React.ReactNode;
 }
 
 export const MilestoneAutomationSection = ({
-    showAutomation,
     status,
-    onAddAutomation,
-    onDeleteAutomation,
-    automationForm,
-    transitionCondition,
-    milestoneName,
-    projectId,
-    environment,
-    featureName,
-    sourceMilestoneId,
-    onUpdate,
-    onUpdateChangeRequestSubmit,
+    children,
 }: IMilestoneAutomationSectionProps) => {
-    const { getPendingProgressionChange } = useReleasePlanContext();
-    const pendingProgressionChange = getPendingProgressionChange(sourceMilestoneId);
-
-    const hasPendingCreate = pendingProgressionChange?.action === 'createMilestoneProgression';
-
-    // For pending create changes, use the transition condition from the pending change
-    const effectiveTransitionCondition = hasPendingCreate && pendingProgressionChange?.payload?.transitionCondition
-        ? pendingProgressionChange.payload.transitionCondition
-        : transitionCondition;
-
-    if (!showAutomation) return null;
-
     return (
         <StyledAutomationContainer status={status}>
-            {automationForm ? (
-                automationForm
-            ) : effectiveTransitionCondition ? (
-                <MilestoneTransitionDisplay
-                    intervalMinutes={effectiveTransitionCondition.intervalMinutes}
-                    onDelete={onDeleteAutomation!}
-                    milestoneName={milestoneName}
-                    status={status}
-                    projectId={projectId}
-                    environment={environment}
-                    featureName={featureName}
-                    sourceMilestoneId={sourceMilestoneId}
-                    onUpdate={onUpdate}
-                    onChangeRequestSubmit={onUpdateChangeRequestSubmit}
-                />
-            ) : (
-                <StyledAddAutomationContainer>
-                    <StyledAddAutomationButton
-                        onClick={onAddAutomation}
-                        color='primary'
-                        startIcon={<Add />}
-                    >
-                        Add automation
-                    </StyledAddAutomationButton>
-                    {hasPendingCreate && (
-                        <Badge color='warning'>
-                            Modified in draft
-                        </Badge>
-                    )}
-                </StyledAddAutomationContainer>
-            )}
+            {children}
         </StyledAutomationContainer>
     );
 };

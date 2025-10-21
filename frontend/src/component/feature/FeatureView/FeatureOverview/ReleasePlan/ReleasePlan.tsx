@@ -13,8 +13,6 @@ import type {
 import { useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ReleasePlanRemoveDialog } from './ReleasePlanRemoveDialog.tsx';
-import { ReleasePlanMilestone } from './ReleasePlanMilestone/ReleasePlanMilestone.tsx';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
@@ -22,7 +20,6 @@ import { ReleasePlanChangeRequestDialog } from './ChangeRequest/ReleasePlanChang
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { MilestoneProgressionForm } from './MilestoneProgressionForm/MilestoneProgressionForm.tsx';
 import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
 import { DeleteProgressionDialog } from './DeleteProgressionDialog.tsx';
 import type {
@@ -30,6 +27,7 @@ import type {
     UpdateMilestoneProgressionSchema,
 } from 'openapi';
 import { ReleasePlanProvider } from './ReleasePlanContext.tsx';
+import { ReleasePlanMilestoneItem } from './ReleasePlanMilestoneItem/ReleasePlanMilestoneItem.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -74,17 +72,6 @@ const StyledHeaderDescription = styled('p')(({ theme }) => ({
 const StyledBody = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-}));
-
-const StyledConnection = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'isCompleted',
-})<{ isCompleted: boolean }>(({ theme, isCompleted }) => ({
-    width: 2,
-    height: theme.spacing(2),
-    backgroundColor: isCompleted
-        ? theme.palette.divider
-        : theme.palette.primary.main,
-    marginLeft: theme.spacing(3.25),
 }));
 
 interface IReleasePlanProps {
@@ -327,10 +314,6 @@ export const ReleasePlan = ({
         await refetch();
     };
 
-    const handleProgressionCancel = () => {
-        setProgressionFormOpenIndex(null);
-    };
-
     const handleProgressionChangeRequestSubmit = (
         payload: CreateMilestoneProgressionSchema,
     ) => {
@@ -429,80 +412,31 @@ export const ReleasePlan = ({
                     )}
                 </StyledHeader>
                 <StyledBody>
-                {milestones.map((milestone, index) => {
-                    const isNotLastMilestone = index < milestones.length - 1;
-                    const isProgressionFormOpen =
-                        progressionFormOpenIndex === index;
-                    const nextMilestoneId = milestones[index + 1]?.id || '';
-                    const handleOpenProgressionForm = () =>
-                        setProgressionFormOpenIndex(index);
-
-                    return (
-                        <div key={milestone.id}>
-                            <ReleasePlanMilestone
-                                readonly={readonly}
-                                milestone={milestone}
-                                status={
-                                    milestone.id === activeMilestoneId
-                                        ? environmentIsDisabled
-                                            ? 'paused'
-                                            : 'active'
-                                        : index < activeIndex
-                                          ? 'completed'
-                                          : 'not-started'
-                                }
-                                onStartMilestone={onStartMilestone}
-                                showAutomation={
-                                    milestoneProgressionsEnabled &&
-                                    isNotLastMilestone &&
-                                    !readonly
-                                }
-                                onAddAutomation={handleOpenProgressionForm}
-                                onDeleteAutomation={
-                                    milestone.transitionCondition
-                                        ? () =>
-                                              handleDeleteProgression(milestone)
-                                        : undefined
-                                }
-                                automationForm={
-                                    isProgressionFormOpen ? (
-                                        <MilestoneProgressionForm
-                                            sourceMilestoneId={milestone.id}
-                                            targetMilestoneId={nextMilestoneId}
-                                            projectId={projectId}
-                                            environment={environment}
-                                            featureName={featureName}
-                                            onSave={handleProgressionSave}
-                                            onCancel={handleProgressionCancel}
-                                            onChangeRequestSubmit={(payload) =>
-                                                handleProgressionChangeRequestSubmit(
-                                                    payload,
-                                                )
-                                            }
-                                        />
-                                    ) : undefined
-                                }
-                                projectId={projectId}
-                                environment={environment}
-                                featureName={featureName}
-                                onUpdate={refetch}
-                                onUpdateChangeRequestSubmit={
-                                    handleUpdateProgressionChangeRequestSubmit
-                                }
-                                allMilestones={milestones}
-                                activeMilestoneId={activeMilestoneId}
-                            />
-                            <ConditionallyRender
-                                condition={isNotLastMilestone}
-                                show={
-                                    <StyledConnection
-                                        isCompleted={index < activeIndex}
-                                    />
-                                }
-                            />
-                        </div>
-                    );
-                })}
+                {milestones.map((milestone, index) => (
+                    <ReleasePlanMilestoneItem
+                        key={milestone.id}
+                        milestone={milestone}
+                        index={index}
+                        milestones={milestones}
+                        activeMilestoneId={activeMilestoneId}
+                        activeIndex={activeIndex}
+                        environmentIsDisabled={environmentIsDisabled}
+                        readonly={readonly}
+                        milestoneProgressionsEnabled={milestoneProgressionsEnabled}
+                        progressionFormOpenIndex={progressionFormOpenIndex}
+                        onSetProgressionFormOpenIndex={setProgressionFormOpenIndex}
+                        onStartMilestone={onStartMilestone}
+                        onDeleteProgression={handleDeleteProgression}
+                        onProgressionSave={handleProgressionSave}
+                        onProgressionChangeRequestSubmit={handleProgressionChangeRequestSubmit}
+                        onUpdateProgressionChangeRequestSubmit={handleUpdateProgressionChangeRequestSubmit}
+                        getPendingProgressionChange={getPendingProgressionChange}
+                        projectId={projectId}
+                        environment={environment}
+                        featureName={featureName}
+                        onUpdate={refetch}
+                    />
+                ))}
             </StyledBody>
             <ReleasePlanRemoveDialog
                 plan={plan}

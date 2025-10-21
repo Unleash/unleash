@@ -314,29 +314,19 @@ export const ReleasePlan = ({
         });
     };
 
-    const handleProgressionSave = async () => {
-        setProgressionFormOpenIndex(null);
-        await refetch();
-    };
-
-    const handleProgressionChangeRequestSubmit = (
-        payload: CreateMilestoneProgressionSchema,
+    const handleAddToChangeRequest = (
+        action:
+            | {
+                  type: 'createMilestoneProgression';
+                  payload: CreateMilestoneProgressionSchema;
+              }
+            | {
+                  type: 'updateMilestoneProgression';
+                  sourceMilestoneId: string;
+                  payload: UpdateMilestoneProgressionSchema;
+              },
     ) => {
-        setChangeRequestAction({
-            type: 'createMilestoneProgression',
-            payload,
-        });
-    };
-
-    const handleUpdateProgressionChangeRequestSubmit = (
-        sourceMilestoneId: string,
-        payload: UpdateMilestoneProgressionSchema,
-    ) => {
-        setChangeRequestAction({
-            type: 'updateMilestoneProgression',
-            sourceMilestoneId,
-            payload,
-        });
+        setChangeRequestAction(action);
     };
 
     const handleDeleteProgression = (milestone: IReleasePlanMilestone) => {
@@ -433,13 +423,7 @@ export const ReleasePlan = ({
                         }
                         onStartMilestone={onStartMilestone}
                         onDeleteProgression={handleDeleteProgression}
-                        onProgressionSave={handleProgressionSave}
-                        onProgressionChangeRequestSubmit={
-                            handleProgressionChangeRequestSubmit
-                        }
-                        onUpdateProgressionChangeRequestSubmit={
-                            handleUpdateProgressionChangeRequestSubmit
-                        }
+                        onAddToChangeRequest={handleAddToChangeRequest}
                         getPendingProgressionChange={
                             getPendingProgressionChange
                         }

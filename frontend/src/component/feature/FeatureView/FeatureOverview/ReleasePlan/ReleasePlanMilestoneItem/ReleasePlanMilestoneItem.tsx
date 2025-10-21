@@ -84,13 +84,17 @@ interface IReleasePlanMilestoneItemProps {
     // API callbacks
     onStartMilestone?: (milestone: IReleasePlanMilestone) => void;
     onDeleteProgression: (milestone: IReleasePlanMilestone) => void;
-    onProgressionSave: () => Promise<void>;
-    onProgressionChangeRequestSubmit: (
-        payload: CreateMilestoneProgressionSchema,
-    ) => void;
-    onUpdateProgressionChangeRequestSubmit: (
-        sourceMilestoneId: string,
-        payload: UpdateMilestoneProgressionSchema,
+    onAddToChangeRequest: (
+        action:
+            | {
+                  type: 'createMilestoneProgression';
+                  payload: CreateMilestoneProgressionSchema;
+              }
+            | {
+                  type: 'updateMilestoneProgression';
+                  sourceMilestoneId: string;
+                  payload: UpdateMilestoneProgressionSchema;
+              },
     ) => void;
 
     // Context
@@ -103,7 +107,7 @@ interface IReleasePlanMilestoneItemProps {
     environment: string;
     featureName: string;
 
-    onUpdate: () => void;
+    onUpdate: () => void | Promise<void>;
 }
 
 export const ReleasePlanMilestoneItem = ({
@@ -119,9 +123,7 @@ export const ReleasePlanMilestoneItem = ({
     onSetProgressionFormOpenIndex,
     onStartMilestone,
     onDeleteProgression,
-    onProgressionSave,
-    onProgressionChangeRequestSubmit,
-    onUpdateProgressionChangeRequestSubmit,
+    onAddToChangeRequest,
     getPendingProgressionChange,
     projectId,
     environment,
@@ -146,7 +148,10 @@ export const ReleasePlanMilestoneItem = ({
         payload: CreateMilestoneProgressionSchema,
     ) => {
         if (isChangeRequestConfigured(environment)) {
-            onProgressionChangeRequestSubmit(payload);
+            onAddToChangeRequest({
+                type: 'createMilestoneProgression',
+                payload,
+            });
             handleCloseProgressionForm();
             return;
         }
@@ -162,7 +167,8 @@ export const ReleasePlanMilestoneItem = ({
                 type: 'success',
                 text: 'Automation configured successfully',
             });
-            await onProgressionSave();
+            handleCloseProgressionForm();
+            await onUpdate();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -171,10 +177,15 @@ export const ReleasePlanMilestoneItem = ({
     // Unified handler for updating progression
     const handleUpdateProgression = async (
         payload: UpdateMilestoneProgressionSchema,
-    ) => {
+    ): Promise<{ shouldReset?: boolean }> => {
         if (isChangeRequestConfigured(environment)) {
-            onUpdateProgressionChangeRequestSubmit(milestone.id, payload);
-            return;
+            onAddToChangeRequest({
+                type: 'updateMilestoneProgression',
+                sourceMilestoneId: milestone.id,
+                payload,
+            });
+            // Return shouldReset=true for change requests so form resets to current value
+            return { shouldReset: true };
         }
 
         try {
@@ -190,8 +201,11 @@ export const ReleasePlanMilestoneItem = ({
                 text: 'Automation updated successfully',
             });
             await onUpdate();
+            // Return empty object for direct updates - form will sync via useEffect
+            return {};
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
+            return {};
         }
     };
 

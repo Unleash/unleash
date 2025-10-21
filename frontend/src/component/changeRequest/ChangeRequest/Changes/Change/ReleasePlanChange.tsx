@@ -250,11 +250,7 @@ const CreateMilestoneProgression: FC<{
     change: IChangeRequestCreateMilestoneProgression;
     currentReleasePlan?: IReleasePlan;
     actions?: ReactNode;
-    projectId: string;
-    environmentName: string;
-    featureName: string;
     changeRequestState: ChangeRequestState;
-    onUpdate?: () => void;
     onUpdateChangeRequestSubmit?: (
         sourceMilestoneId: string,
         payload: UpdateMilestoneProgressionSchema,
@@ -264,11 +260,7 @@ const CreateMilestoneProgression: FC<{
     change,
     currentReleasePlan,
     actions,
-    projectId,
-    environmentName,
-    featureName,
     changeRequestState,
-    onUpdate,
     onUpdateChangeRequestSubmit,
     onDeleteChangeRequestSubmit,
 }) => {
@@ -358,6 +350,7 @@ const CreateMilestoneProgression: FC<{
                                             milestone.id,
                                             payload,
                                         );
+                                        return { shouldReset: true };
                                     }}
                                     onDelete={() =>
                                         onDeleteChangeRequestSubmit?.(
@@ -404,11 +397,7 @@ const UpdateMilestoneProgression: FC<{
     change: IChangeRequestUpdateMilestoneProgression;
     currentReleasePlan?: IReleasePlan;
     actions?: ReactNode;
-    projectId: string;
-    environmentName: string;
-    featureName: string;
     changeRequestState: ChangeRequestState;
-    onUpdate?: () => void;
     onUpdateChangeRequestSubmit?: (
         sourceMilestoneId: string,
         payload: UpdateMilestoneProgressionSchema,
@@ -418,11 +407,7 @@ const UpdateMilestoneProgression: FC<{
     change,
     currentReleasePlan,
     actions,
-    projectId,
-    environmentName,
-    featureName,
     changeRequestState,
-    onUpdate,
     onUpdateChangeRequestSubmit,
     onDeleteChangeRequestSubmit,
 }) => {
@@ -502,6 +487,7 @@ const UpdateMilestoneProgression: FC<{
                                             milestone.id,
                                             payload,
                                         );
+                                        return { shouldReset: true };
                                     }}
                                     onDelete={() =>
                                         onDeleteChangeRequestSubmit?.(
@@ -547,11 +533,7 @@ const UpdateMilestoneProgression: FC<{
 const ConsolidatedProgressionChanges: FC<{
     feature: IChangeRequestFeature;
     currentReleasePlan?: IReleasePlan;
-    projectId: string;
-    environmentName: string;
-    featureName: string;
     changeRequestState: ChangeRequestState;
-    onUpdate?: () => void;
     onUpdateChangeRequestSubmit?: (
         sourceMilestoneId: string,
         payload: UpdateMilestoneProgressionSchema,
@@ -560,11 +542,7 @@ const ConsolidatedProgressionChanges: FC<{
 }> = ({
     feature,
     currentReleasePlan,
-    projectId,
-    environmentName,
-    featureName,
     changeRequestState,
-    onUpdate,
     onUpdateChangeRequestSubmit,
     onDeleteChangeRequestSubmit,
 }) => {
@@ -766,6 +744,7 @@ const ConsolidatedProgressionChanges: FC<{
                                             displayMilestone.id,
                                             payload,
                                         );
+                                        return { shouldReset: true };
                                     }}
                                     onDelete={() =>
                                         onDeleteChangeRequestSubmit?.(
@@ -844,13 +823,6 @@ export const ReleasePlanChange: FC<{
         usePendingChangeRequests(projectId);
     const { setToastData } = useToast();
 
-    const handleUpdate = async () => {
-        await refetch();
-        if (onRefetch) {
-            await onRefetch();
-        }
-    };
-
     const handleUpdateChangeRequestSubmit = async (
         sourceMilestoneId: string,
         payload: UpdateMilestoneProgressionSchema,
@@ -924,11 +896,7 @@ export const ReleasePlanChange: FC<{
             <ConsolidatedProgressionChanges
                 feature={feature}
                 currentReleasePlan={currentReleasePlan}
-                projectId={projectId}
-                environmentName={environmentName}
-                featureName={featureName}
                 changeRequestState={changeRequestState}
-                onUpdate={handleUpdate}
                 onUpdateChangeRequestSubmit={handleUpdateChangeRequestSubmit}
                 onDeleteChangeRequestSubmit={handleDeleteChangeRequestSubmit}
             />
@@ -967,11 +935,7 @@ export const ReleasePlanChange: FC<{
                     change={change}
                     currentReleasePlan={currentReleasePlan}
                     actions={actions}
-                    projectId={projectId}
-                    environmentName={environmentName}
-                    featureName={featureName}
                     changeRequestState={changeRequestState}
-                    onUpdate={handleUpdate}
                     onUpdateChangeRequestSubmit={
                         handleUpdateChangeRequestSubmit
                     }
@@ -985,11 +949,7 @@ export const ReleasePlanChange: FC<{
                     change={change}
                     currentReleasePlan={currentReleasePlan}
                     actions={actions}
-                    projectId={projectId}
-                    environmentName={environmentName}
-                    featureName={featureName}
                     changeRequestState={changeRequestState}
-                    onUpdate={handleUpdate}
                     onUpdateChangeRequestSubmit={
                         handleUpdateChangeRequestSubmit
                     }

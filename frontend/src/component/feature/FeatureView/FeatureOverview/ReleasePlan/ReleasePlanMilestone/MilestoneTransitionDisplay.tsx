@@ -9,6 +9,7 @@ import {
     getTimeValueAndUnitFromMinutes,
 } from '../hooks/useMilestoneProgressionForm.js';
 import type { UpdateMilestoneProgressionSchema } from 'openapi';
+import { useEffect } from 'react';
 
 const StyledDisplayContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -57,7 +58,9 @@ const StyledButtonGroup = styled('div')(({ theme }) => ({
 
 interface IMilestoneTransitionDisplayProps {
     intervalMinutes: number;
-    onSave: (payload: UpdateMilestoneProgressionSchema) => Promise<void>;
+    onSave: (
+        payload: UpdateMilestoneProgressionSchema,
+    ) => Promise<{ shouldReset?: boolean }>;
     onDelete: () => void;
     milestoneName: string;
     status?: MilestoneStatus;
@@ -89,6 +92,13 @@ export const MilestoneTransitionDisplay = ({
 
     const showDraftBadge = hasPendingUpdate || hasPendingDelete;
 
+    // Sync form when intervalMinutes prop changes (e.g., after refetch)
+    useEffect(() => {
+        const newInitial = getTimeValueAndUnitFromMinutes(intervalMinutes);
+        form.setTimeValue(newInitial.value);
+        form.setTimeUnit(newInitial.unit);
+    }, [intervalMinutes]);
+
     const handleSave = async () => {
         if (!hasChanged) return;
 
@@ -98,9 +108,13 @@ export const MilestoneTransitionDisplay = ({
             },
         };
 
-        await onSave(payload);
-        // Reset the form after save
-        handleReset();
+        const result = await onSave(payload);
+
+        // If change request, reset to current saved value
+        // Otherwise, form will automatically sync when intervalMinutes prop updates after refetch
+        if (result?.shouldReset) {
+            handleReset();
+        }
     };
 
     const handleReset = () => {

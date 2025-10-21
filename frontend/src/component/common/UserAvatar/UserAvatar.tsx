@@ -37,10 +37,12 @@ const StyledTooltipContent = styled(Box)({
     justifyContent: 'center',
 });
 
+export type AvatarUser = Partial<
+    Pick<IUser, 'id' | 'name' | 'email' | 'username' | 'imageUrl'>
+>;
+
 export interface IUserAvatarProps extends AvatarProps {
-    user?: Partial<
-        Pick<IUser, 'id' | 'name' | 'email' | 'username' | 'imageUrl'>
-    >;
+    user?: AvatarUser;
     src?: string;
     className?: string;
     sx?: SxProps<Theme>;

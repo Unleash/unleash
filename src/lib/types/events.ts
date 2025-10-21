@@ -124,6 +124,7 @@ import {
     MILESTONE_PROGRESSION_CREATED,
     MILESTONE_PROGRESSION_UPDATED,
     MILESTONE_PROGRESSION_DELETED,
+    MILESTONE_PROGRESSION_CHANGED,
 } from '../events/index.js';
 import type { ITag } from '../tags/index.js';
 import type { IClientApplication } from './stores/client-applications-store.js';
@@ -1868,6 +1869,29 @@ export class MilestoneProgressionDeletedEvent extends BaseEvent {
         this.project = eventData.project;
         this.environment = eventData.environment;
         this.featureName = eventData.featureName;
+        this.preData = eventData.preData;
+    }
+}
+
+export class MilestoneProgressionChangedEvent extends BaseEvent {
+    readonly project: string;
+    readonly environment: string;
+    readonly featureName: string;
+    readonly preData: any;
+    readonly data: any;
+    constructor(eventData: {
+        project: string;
+        environment: string;
+        featureName: string;
+        data: any;
+        preData?: any;
+        auditUser: IAuditUser;
+    }) {
+        super(MILESTONE_PROGRESSION_CHANGED, eventData.auditUser);
+        this.project = eventData.project;
+        this.environment = eventData.environment;
+        this.featureName = eventData.featureName;
+        this.data = eventData.data;
         this.preData = eventData.preData;
     }
 }

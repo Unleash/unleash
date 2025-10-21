@@ -210,6 +210,8 @@ export const MILESTONE_PROGRESSION_UPDATED =
     'milestone-progression-updated' as const;
 export const MILESTONE_PROGRESSION_DELETED =
     'milestone-progression-deleted' as const;
+export const MILESTONE_PROGRESSION_CHANGED =
+    'milestone-progression-changed' as const;
 
 export const RELEASE_PLAN_ADDED = 'release-plan-added' as const;
 export const RELEASE_PLAN_REMOVED = 'release-plan-removed' as const;
@@ -384,6 +386,7 @@ export const IEventTypes = [
     MILESTONE_PROGRESSION_CREATED,
     MILESTONE_PROGRESSION_UPDATED,
     MILESTONE_PROGRESSION_DELETED,
+    MILESTONE_PROGRESSION_CHANGED,
     USER_PREFERENCE_UPDATED,
     SCIM_USERS_DELETED,
     SCIM_GROUPS_DELETED,

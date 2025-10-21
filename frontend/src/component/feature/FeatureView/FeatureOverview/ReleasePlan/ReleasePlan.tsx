@@ -29,6 +29,7 @@ import type {
     CreateMilestoneProgressionSchema,
     UpdateMilestoneProgressionSchema,
 } from 'openapi';
+import { ReleasePlanProvider } from './ReleasePlanContext.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -140,8 +141,41 @@ export const ReleasePlan = ({
     >(null);
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { addChange } = useChangeRequestApi();
-    const { refetch: refetchChangeRequests } =
+    const { data: pendingChangeRequests, refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
+
+    // Find progression changes for this feature in pending change requests
+    const getPendingProgressionChange = (sourceMilestoneId: string) => {
+        if (!pendingChangeRequests) return null;
+
+        for (const cr of pendingChangeRequests) {
+            if (cr.environment !== environment) continue;
+
+            const feature = cr.features.find((f) => f.name === featureName);
+            if (!feature) continue;
+
+            // Look for update or delete progression changes
+            const change = feature.changes.find(
+                (c: any) =>
+                    (c.action === 'updateMilestoneProgression' &&
+                        (c.payload.sourceMilestoneId === sourceMilestoneId ||
+                            c.payload.sourceMilestone === sourceMilestoneId)) ||
+                    (c.action === 'deleteMilestoneProgression' &&
+                        (c.payload.sourceMilestoneId === sourceMilestoneId ||
+                            c.payload.sourceMilestone === sourceMilestoneId)),
+            );
+
+            if (change) {
+                return {
+                    action: change.action,
+                    payload: change.payload,
+                    changeRequestId: cr.id,
+                };
+            }
+        }
+
+        return null;
+    };
     const milestoneProgressionsEnabled = useUiFlag('milestoneProgression');
     const [progressionFormOpenIndex, setProgressionFormOpenIndex] = useState<
         number | null
@@ -181,7 +215,6 @@ export const ReleasePlan = ({
                     action: 'createMilestoneProgression',
                     payload: changeRequestAction.payload,
                 });
-                setProgressionFormOpenIndex(null);
                 break;
 
             case 'updateMilestoneProgression':
@@ -214,6 +247,7 @@ export const ReleasePlan = ({
         });
 
         setChangeRequestAction(null);
+        setProgressionFormOpenIndex(null);
     };
 
     const confirmRemoveReleasePlan = () => {
@@ -364,34 +398,37 @@ export const ReleasePlan = ({
     );
 
     return (
-        <StyledContainer>
-            <StyledHeader>
-                <StyledHeaderGroup>
-                    <StyledHeaderTitleLabel>
-                        Release plan:{' '}
-                    </StyledHeaderTitleLabel>
-                    <StyledHeaderTitle>{name}</StyledHeaderTitle>
-                    <StyledHeaderDescription>
-                        <Truncator lines={2} title={description}>
-                            {description}
-                        </Truncator>
-                    </StyledHeaderDescription>
-                </StyledHeaderGroup>
-                {!readonly && (
-                    <PermissionIconButton
-                        onClick={confirmRemoveReleasePlan}
-                        permission={DELETE_FEATURE_STRATEGY}
-                        environmentId={environment}
-                        projectId={projectId}
-                        tooltipProps={{
-                            title: 'Remove release plan',
-                        }}
-                    >
-                        <Delete />
-                    </PermissionIconButton>
-                )}
-            </StyledHeader>
-            <StyledBody>
+        <ReleasePlanProvider
+            getPendingProgressionChange={getPendingProgressionChange}
+        >
+            <StyledContainer>
+                <StyledHeader>
+                    <StyledHeaderGroup>
+                        <StyledHeaderTitleLabel>
+                            Release plan:{' '}
+                        </StyledHeaderTitleLabel>
+                        <StyledHeaderTitle>{name}</StyledHeaderTitle>
+                        <StyledHeaderDescription>
+                            <Truncator lines={2} title={description}>
+                                {description}
+                            </Truncator>
+                        </StyledHeaderDescription>
+                    </StyledHeaderGroup>
+                    {!readonly && (
+                        <PermissionIconButton
+                            onClick={confirmRemoveReleasePlan}
+                            permission={DELETE_FEATURE_STRATEGY}
+                            environmentId={environment}
+                            projectId={projectId}
+                            tooltipProps={{
+                                title: 'Remove release plan',
+                            }}
+                        >
+                            <Delete />
+                        </PermissionIconButton>
+                    )}
+                </StyledHeader>
+                <StyledBody>
                 {milestones.map((milestone, index) => {
                     const isNotLastMilestone = index < milestones.length - 1;
                     const isProgressionFormOpen =
@@ -493,5 +530,6 @@ export const ReleasePlan = ({
                 />
             )}
         </StyledContainer>
+        </ReleasePlanProvider>
     );
 };

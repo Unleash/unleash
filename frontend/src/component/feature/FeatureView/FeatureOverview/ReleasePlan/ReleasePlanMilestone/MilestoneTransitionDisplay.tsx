@@ -1,6 +1,7 @@
 import BoltIcon from '@mui/icons-material/Bolt';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { Button, IconButton, styled } from '@mui/material';
+import { Badge } from 'component/common/Badge/Badge';
 import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
 import { useState } from 'react';
 import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
@@ -13,6 +14,7 @@ import {
 } from '../hooks/useMilestoneProgressionForm.js';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import type { UpdateMilestoneProgressionSchema } from 'openapi';
+import { useReleasePlanContext } from '../ReleasePlanContext.tsx';
 
 const StyledDisplayContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -90,6 +92,8 @@ export const MilestoneTransitionDisplay = ({
     const { updateMilestoneProgression } = useMilestoneProgressionsApi();
     const { setToastData, setToastApiError } = useToast();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+    const { getPendingProgressionChange } = useReleasePlanContext();
+    const pendingProgressionChange = getPendingProgressionChange(sourceMilestoneId);
 
     const initial = getTimeValueAndUnitFromMinutes(intervalMinutes);
     const form = useMilestoneProgressionForm(
@@ -105,6 +109,13 @@ export const MilestoneTransitionDisplay = ({
     const currentIntervalMinutes = form.getIntervalMinutes();
     const hasChanged = currentIntervalMinutes !== intervalMinutes;
 
+    // Check if there's a pending change request for this progression
+    const hasPendingUpdate =
+        pendingProgressionChange?.action === 'updateMilestoneProgression';
+    const hasPendingDelete =
+        pendingProgressionChange?.action === 'deleteMilestoneProgression';
+    const showDraftBadge = hasPendingUpdate || hasPendingDelete;
+
     const handleSave = async () => {
         if (isSubmitting || !hasChanged) return;
 
@@ -116,6 +127,8 @@ export const MilestoneTransitionDisplay = ({
 
         if (isChangeRequestConfigured(environment) && onChangeRequestSubmit) {
             onChangeRequestSubmit(sourceMilestoneId, payload);
+            // Reset the form after submitting to change request
+            handleReset();
             return;
         }
 
@@ -182,6 +195,11 @@ export const MilestoneTransitionDisplay = ({
                     >
                         {isSubmitting ? 'Saving...' : 'Save'}
                     </Button>
+                )}
+                {showDraftBadge && (
+                    <Badge color={hasPendingDelete ? 'error' : 'warning'}>
+                        {hasPendingDelete ? 'Deleted in draft' : 'Modified in draft'}
+                    </Badge>
                 )}
                 <IconButton
                     onClick={onDelete}

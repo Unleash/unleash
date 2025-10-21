@@ -3,6 +3,8 @@ import { Button, styled } from '@mui/material';
 import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
 import { MilestoneTransitionDisplay } from './MilestoneTransitionDisplay.tsx';
 import type { UpdateMilestoneProgressionSchema } from 'openapi';
+import { Badge } from 'component/common/Badge/Badge';
+import { useReleasePlanContext } from '../ReleasePlanContext.tsx';
 
 const StyledAutomationContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'status',
@@ -51,6 +53,12 @@ const StyledAddAutomationButton = styled(Button)(({ theme }) => ({
     },
 }));
 
+const StyledAddAutomationContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+}));
+
 interface IMilestoneAutomationSectionProps {
     showAutomation?: boolean;
     status?: MilestoneStatus;
@@ -87,15 +95,25 @@ export const MilestoneAutomationSection = ({
     onUpdate,
     onUpdateChangeRequestSubmit,
 }: IMilestoneAutomationSectionProps) => {
+    const { getPendingProgressionChange } = useReleasePlanContext();
+    const pendingProgressionChange = getPendingProgressionChange(sourceMilestoneId);
+
+    const hasPendingCreate = pendingProgressionChange?.action === 'createMilestoneProgression';
+
+    // For pending create changes, use the transition condition from the pending change
+    const effectiveTransitionCondition = hasPendingCreate && pendingProgressionChange?.payload?.transitionCondition
+        ? pendingProgressionChange.payload.transitionCondition
+        : transitionCondition;
+
     if (!showAutomation) return null;
 
     return (
         <StyledAutomationContainer status={status}>
             {automationForm ? (
                 automationForm
-            ) : transitionCondition ? (
+            ) : effectiveTransitionCondition ? (
                 <MilestoneTransitionDisplay
-                    intervalMinutes={transitionCondition.intervalMinutes}
+                    intervalMinutes={effectiveTransitionCondition.intervalMinutes}
                     onDelete={onDeleteAutomation!}
                     milestoneName={milestoneName}
                     status={status}
@@ -107,13 +125,20 @@ export const MilestoneAutomationSection = ({
                     onChangeRequestSubmit={onUpdateChangeRequestSubmit}
                 />
             ) : (
-                <StyledAddAutomationButton
-                    onClick={onAddAutomation}
-                    color='primary'
-                    startIcon={<Add />}
-                >
-                    Add automation
-                </StyledAddAutomationButton>
+                <StyledAddAutomationContainer>
+                    <StyledAddAutomationButton
+                        onClick={onAddAutomation}
+                        color='primary'
+                        startIcon={<Add />}
+                    >
+                        Add automation
+                    </StyledAddAutomationButton>
+                    {hasPendingCreate && (
+                        <Badge color='warning'>
+                            Modified in draft
+                        </Badge>
+                    )}
+                </StyledAddAutomationContainer>
             )}
         </StyledAutomationContainer>
     );

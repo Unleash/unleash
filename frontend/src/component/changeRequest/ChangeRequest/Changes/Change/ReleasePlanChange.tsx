@@ -340,15 +340,12 @@ const CreateMilestoneProgression: FC<{
                         <MilestoneAutomationSection status={status}>
                             <MilestoneTransitionDisplay
                                 intervalMinutes={milestone.transitionCondition.intervalMinutes}
+                                onSave={async (payload) => {
+                                    onUpdateChangeRequestSubmit?.(milestone.id, payload);
+                                }}
                                 onDelete={() => onDeleteChangeRequestSubmit?.(milestone.id)}
                                 milestoneName={milestone.name}
                                 status={status}
-                                projectId={projectId}
-                                environment={environmentName}
-                                featureName={featureName}
-                                sourceMilestoneId={milestone.id}
-                                onUpdate={onUpdate || (() => {})}
-                                onChangeRequestSubmit={onUpdateChangeRequestSubmit}
                                 hasPendingUpdate={false}
                                 hasPendingDelete={false}
                             />
@@ -467,15 +464,12 @@ const UpdateMilestoneProgression: FC<{
                         <MilestoneAutomationSection status={status}>
                             <MilestoneTransitionDisplay
                                 intervalMinutes={milestone.transitionCondition.intervalMinutes}
+                                onSave={async (payload) => {
+                                    onUpdateChangeRequestSubmit?.(milestone.id, payload);
+                                }}
                                 onDelete={() => onDeleteChangeRequestSubmit?.(milestone.id)}
                                 milestoneName={milestone.name}
                                 status={status}
-                                projectId={projectId}
-                                environment={environmentName}
-                                featureName={featureName}
-                                sourceMilestoneId={milestone.id}
-                                onUpdate={onUpdate || (() => {})}
-                                onChangeRequestSubmit={onUpdateChangeRequestSubmit}
                                 hasPendingUpdate={false}
                                 hasPendingDelete={false}
                             />
@@ -682,15 +676,12 @@ const ConsolidatedProgressionChanges: FC<{
                         <MilestoneAutomationSection status={status}>
                             <MilestoneTransitionDisplay
                                 intervalMinutes={displayMilestone.transitionCondition.intervalMinutes}
+                                onSave={async (payload) => {
+                                    onUpdateChangeRequestSubmit?.(displayMilestone.id, payload);
+                                }}
                                 onDelete={() => onDeleteChangeRequestSubmit?.(displayMilestone.id)}
                                 milestoneName={displayMilestone.name}
                                 status={status}
-                                projectId={projectId}
-                                environment={environmentName}
-                                featureName={featureName}
-                                sourceMilestoneId={displayMilestone.id}
-                                onUpdate={onUpdate || (() => {})}
-                                onChangeRequestSubmit={onUpdateChangeRequestSubmit}
                                 hasPendingUpdate={false}
                                 hasPendingDelete={Boolean(deleteChange)}
                             />

@@ -12,6 +12,10 @@ import { MilestoneTransitionDisplay } from '../ReleasePlanMilestone/MilestoneTra
 import { ReleasePlanMilestone } from '../ReleasePlanMilestone/ReleasePlanMilestone.tsx';
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 import { MilestoneProgressionForm } from '../MilestoneProgressionForm/MilestoneProgressionForm.tsx';
+import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const StyledConnection = styled('div', {
     shouldForwardProp: (prop) => prop !== 'isCompleted',
@@ -124,11 +128,70 @@ export const ReleasePlanMilestoneItem = ({
     featureName,
     onUpdate,
 }: IReleasePlanMilestoneItemProps) => {
+    const { createMilestoneProgression, updateMilestoneProgression } =
+        useMilestoneProgressionsApi();
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+    const { setToastData, setToastApiError } = useToast();
+
     const isNotLastMilestone = index < milestones.length - 1;
     const isProgressionFormOpen = progressionFormOpenIndex === index;
     const nextMilestoneId = milestones[index + 1]?.id || '';
     const handleOpenProgressionForm = () => onSetProgressionFormOpenIndex(index);
     const handleCloseProgressionForm = () => onSetProgressionFormOpenIndex(null);
+
+    // Unified handler for creating progression
+    const handleCreateProgression = async (
+        payload: CreateMilestoneProgressionSchema,
+    ) => {
+        if (isChangeRequestConfigured(environment)) {
+            onProgressionChangeRequestSubmit(payload);
+            handleCloseProgressionForm();
+            return;
+        }
+
+        try {
+            await createMilestoneProgression(
+                projectId,
+                environment,
+                featureName,
+                payload,
+            );
+            setToastData({
+                type: 'success',
+                text: 'Automation configured successfully',
+            });
+            await onProgressionSave();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    // Unified handler for updating progression
+    const handleUpdateProgression = async (
+        payload: UpdateMilestoneProgressionSchema,
+    ) => {
+        if (isChangeRequestConfigured(environment)) {
+            onUpdateProgressionChangeRequestSubmit(milestone.id, payload);
+            return;
+        }
+
+        try {
+            await updateMilestoneProgression(
+                projectId,
+                environment,
+                featureName,
+                milestone.id,
+                payload,
+            );
+            setToastData({
+                type: 'success',
+                text: 'Automation updated successfully',
+            });
+            await onUpdate();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
 
     const status: MilestoneStatus =
         milestone.id === activeMilestoneId
@@ -168,27 +231,16 @@ export const ReleasePlanMilestoneItem = ({
                 <MilestoneProgressionForm
                     sourceMilestoneId={milestone.id}
                     targetMilestoneId={nextMilestoneId}
-                    projectId={projectId}
-                    environment={environment}
-                    featureName={featureName}
-                    onSave={onProgressionSave}
+                    onSubmit={handleCreateProgression}
                     onCancel={handleCloseProgressionForm}
-                    onChangeRequestSubmit={(payload) =>
-                        onProgressionChangeRequestSubmit(payload)
-                    }
                 />
             ) : effectiveTransitionCondition ? (
                 <MilestoneTransitionDisplay
                     intervalMinutes={effectiveTransitionCondition.intervalMinutes}
+                    onSave={handleUpdateProgression}
                     onDelete={() => onDeleteProgression(milestone)}
                     milestoneName={milestone.name}
                     status={status}
-                    projectId={projectId}
-                    environment={environment}
-                    featureName={featureName}
-                    sourceMilestoneId={milestone.id}
-                    onUpdate={onUpdate}
-                    onChangeRequestSubmit={onUpdateProgressionChangeRequestSubmit}
                     hasPendingUpdate={hasPendingUpdate}
                     hasPendingDelete={hasPendingDelete}
                 />

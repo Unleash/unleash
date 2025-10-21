@@ -3,16 +3,11 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { Button, IconButton, styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
-import { useState } from 'react';
-import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
-import useToast from 'hooks/useToast';
-import { formatUnknownError } from 'utils/formatUnknownError';
 import { MilestoneProgressionTimeInput } from '../MilestoneProgressionForm/MilestoneProgressionTimeInput.tsx';
 import {
     useMilestoneProgressionForm,
     getTimeValueAndUnitFromMinutes,
 } from '../hooks/useMilestoneProgressionForm.js';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import type { UpdateMilestoneProgressionSchema } from 'openapi';
 
 const StyledDisplayContainer = styled('div')(({ theme }) => ({
@@ -62,50 +57,32 @@ const StyledButtonGroup = styled('div')(({ theme }) => ({
 
 interface IMilestoneTransitionDisplayProps {
     intervalMinutes: number;
+    onSave: (payload: UpdateMilestoneProgressionSchema) => Promise<void>;
     onDelete: () => void;
     milestoneName: string;
     status?: MilestoneStatus;
-    projectId: string;
-    environment: string;
-    featureName: string;
-    sourceMilestoneId: string;
-    onUpdate: () => void;
-    onChangeRequestSubmit?: (
-        sourceMilestoneId: string,
-        payload: UpdateMilestoneProgressionSchema,
-    ) => void;
     hasPendingUpdate?: boolean;
     hasPendingDelete?: boolean;
 }
 
 export const MilestoneTransitionDisplay = ({
     intervalMinutes,
+    onSave,
     onDelete,
     milestoneName,
     status,
-    projectId,
-    environment,
-    featureName,
-    sourceMilestoneId,
-    onUpdate,
-    onChangeRequestSubmit,
     hasPendingUpdate = false,
     hasPendingDelete = false,
 }: IMilestoneTransitionDisplayProps) => {
-    const { updateMilestoneProgression } = useMilestoneProgressionsApi();
-    const { setToastData, setToastApiError } = useToast();
-    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
-
     const initial = getTimeValueAndUnitFromMinutes(intervalMinutes);
     const form = useMilestoneProgressionForm(
-        sourceMilestoneId,
-        sourceMilestoneId, // We don't need targetMilestone for edit, just reuse source
+        '', // sourceMilestoneId not needed for display
+        '', // targetMilestoneId not needed for display
         {
             timeValue: initial.value,
             timeUnit: initial.unit,
         },
     );
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const currentIntervalMinutes = form.getIntervalMinutes();
     const hasChanged = currentIntervalMinutes !== intervalMinutes;
@@ -113,7 +90,7 @@ export const MilestoneTransitionDisplay = ({
     const showDraftBadge = hasPendingUpdate || hasPendingDelete;
 
     const handleSave = async () => {
-        if (isSubmitting || !hasChanged) return;
+        if (!hasChanged) return;
 
         const payload: UpdateMilestoneProgressionSchema = {
             transitionCondition: {
@@ -121,32 +98,9 @@ export const MilestoneTransitionDisplay = ({
             },
         };
 
-        if (isChangeRequestConfigured(environment) && onChangeRequestSubmit) {
-            onChangeRequestSubmit(sourceMilestoneId, payload);
-            // Reset the form after submitting to change request
-            handleReset();
-            return;
-        }
-
-        setIsSubmitting(true);
-        try {
-            await updateMilestoneProgression(
-                projectId,
-                environment,
-                featureName,
-                sourceMilestoneId,
-                payload,
-            );
-            setToastData({
-                type: 'success',
-                text: 'Automation updated successfully',
-            });
-            onUpdate();
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        } finally {
-            setIsSubmitting(false);
-        }
+        await onSave(payload);
+        // Reset the form after save
+        handleReset();
     };
 
     const handleReset = () => {
@@ -177,7 +131,6 @@ export const MilestoneTransitionDisplay = ({
                     timeUnit={form.timeUnit}
                     onTimeValueChange={form.handleTimeValueChange}
                     onTimeUnitChange={form.handleTimeUnitChange}
-                    disabled={isSubmitting}
                 />
             </StyledContentGroup>
             <StyledButtonGroup>
@@ -187,9 +140,8 @@ export const MilestoneTransitionDisplay = ({
                         color='primary'
                         onClick={handleSave}
                         size='small'
-                        disabled={isSubmitting}
                     >
-                        {isSubmitting ? 'Saving...' : 'Save'}
+                        Save
                     </Button>
                 )}
                 {showDraftBadge && (
@@ -202,7 +154,6 @@ export const MilestoneTransitionDisplay = ({
                     size='small'
                     aria-label={`Delete automation for ${milestoneName}`}
                     sx={{ padding: 0.5 }}
-                    disabled={isSubmitting}
                 >
                     <DeleteOutlineIcon fontSize='small' />
                 </IconButton>

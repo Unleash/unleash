@@ -134,28 +134,34 @@ export const ReleasePlan = ({
     const getPendingProgressionChange = (sourceMilestoneId: string) => {
         if (!pendingChangeRequests) return null;
 
-        for (const cr of pendingChangeRequests) {
-            if (cr.environment !== environment) continue;
+        for (const changeRequest of pendingChangeRequests) {
+            if (changeRequest.environment !== environment) continue;
 
-            const feature = cr.features.find((f) => f.name === featureName);
-            if (!feature) continue;
+            const featureInChangeRequest = changeRequest.features.find(
+                (featureItem) => featureItem.name === featureName,
+            );
+            if (!featureInChangeRequest) continue;
 
             // Look for update or delete progression changes
-            const change = feature.changes.find(
-                (c: any) =>
-                    (c.action === 'updateMilestoneProgression' &&
-                        (c.payload.sourceMilestoneId === sourceMilestoneId ||
-                            c.payload.sourceMilestone === sourceMilestoneId)) ||
-                    (c.action === 'deleteMilestoneProgression' &&
-                        (c.payload.sourceMilestoneId === sourceMilestoneId ||
-                            c.payload.sourceMilestone === sourceMilestoneId)),
+            const progressionChange = featureInChangeRequest.changes.find(
+                (change: any) =>
+                    (change.action === 'updateMilestoneProgression' &&
+                        (change.payload.sourceMilestoneId ===
+                            sourceMilestoneId ||
+                            change.payload.sourceMilestone ===
+                                sourceMilestoneId)) ||
+                    (change.action === 'deleteMilestoneProgression' &&
+                        (change.payload.sourceMilestoneId ===
+                            sourceMilestoneId ||
+                            change.payload.sourceMilestone ===
+                                sourceMilestoneId)),
             );
 
-            if (change) {
+            if (progressionChange) {
                 return {
-                    action: change.action,
-                    payload: change.payload,
-                    changeRequestId: cr.id,
+                    action: progressionChange.action,
+                    payload: progressionChange.payload,
+                    changeRequestId: changeRequest.id,
                 };
             }
         }

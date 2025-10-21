@@ -1,5 +1,5 @@
 import { useId, useMemo } from 'react';
-import { Box } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
@@ -35,6 +35,14 @@ import {
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser.js';
 
 const columnHelper = createColumnHelper<ChangeRequestSearchItemSchema>();
+
+const StyledPaginatedTable = styled(
+    PaginatedTable<ChangeRequestSearchItemSchema>,
+)(() => ({
+    td: {
+        verticalAlign: 'top',
+    },
+}));
 
 const ChangeRequestsInner = () => {
     const { user } = useAuthUser();
@@ -204,7 +212,10 @@ const ChangeRequestsInner = () => {
                 className={themeStyles.fullwidth}
                 ref={bodyLoadingRef}
             >
-                <PaginatedTable tableInstance={table} totalItems={total} />
+                <StyledPaginatedTable
+                    tableInstance={table}
+                    totalItems={total}
+                />
                 {data.length === 0 && !loading ? (
                     <Box sx={(theme) => ({ padding: theme.spacing(1, 3, 3) })}>
                         <TablePlaceholder>

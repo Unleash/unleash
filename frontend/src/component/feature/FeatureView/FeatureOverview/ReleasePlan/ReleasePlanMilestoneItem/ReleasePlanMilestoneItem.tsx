@@ -168,12 +168,8 @@ export const ReleasePlanMilestoneItem = ({
         environmentIsDisabled,
     );
 
-    const {
-        hasPendingCreate,
-        hasPendingUpdate,
-        hasPendingDelete,
-        effectiveTransitionCondition,
-    } = usePendingProgressionChanges(milestone, getPendingProgressionChange);
+    const { pendingProgressionChange, effectiveTransitionCondition } =
+        usePendingProgressionChanges(milestone, getPendingProgressionChange);
 
     const automationSection = (
         <MilestoneAutomation
@@ -185,9 +181,7 @@ export const ReleasePlanMilestoneItem = ({
             readonly={readonly}
             isProgressionFormOpen={isProgressionFormOpen}
             effectiveTransitionCondition={effectiveTransitionCondition}
-            hasPendingCreate={hasPendingCreate}
-            hasPendingUpdate={hasPendingUpdate}
-            hasPendingDelete={hasPendingDelete}
+            pendingProgressionChange={pendingProgressionChange}
             onOpenProgressionForm={handleOpenProgressionForm}
             onCloseProgressionForm={handleCloseProgressionForm}
             onCreateProgression={handleCreateProgression}

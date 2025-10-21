@@ -1,10 +1,11 @@
 import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
-import type { IReleasePlanMilestoneItemProps } from './ReleasePlanMilestoneItem';
+import type {
+    IReleasePlanMilestoneItemProps,
+    PendingProgressionChange,
+} from './ReleasePlanMilestoneItem';
 
 interface PendingProgressionChangeResult {
-    hasPendingCreate: boolean;
-    hasPendingUpdate: boolean;
-    hasPendingDelete: boolean;
+    pendingProgressionChange: PendingProgressionChange | null;
     effectiveTransitionCondition: IReleasePlanMilestone['transitionCondition'];
 }
 
@@ -13,13 +14,6 @@ export const usePendingProgressionChanges = (
     getPendingProgressionChange: IReleasePlanMilestoneItemProps['getPendingProgressionChange'],
 ): PendingProgressionChangeResult => {
     const pendingProgressionChange = getPendingProgressionChange(milestone.id);
-
-    const hasPendingCreate =
-        pendingProgressionChange?.action === 'createMilestoneProgression';
-    const hasPendingUpdate =
-        pendingProgressionChange?.action === 'updateMilestoneProgression';
-    const hasPendingDelete =
-        pendingProgressionChange?.action === 'deleteMilestoneProgression';
 
     // Determine effective transition condition (use pending create if exists)
     let effectiveTransitionCondition = milestone.transitionCondition;
@@ -33,9 +27,7 @@ export const usePendingProgressionChanges = (
     }
 
     return {
-        hasPendingCreate,
-        hasPendingUpdate,
-        hasPendingDelete,
+        pendingProgressionChange,
         effectiveTransitionCondition,
     };
 };

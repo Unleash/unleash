@@ -10,6 +10,7 @@ import { MilestoneAutomationSection } from '../ReleasePlanMilestone/MilestoneAut
 import { MilestoneTransitionDisplay } from '../ReleasePlanMilestone/MilestoneTransitionDisplay.tsx';
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 import { MilestoneProgressionForm } from '../MilestoneProgressionForm/MilestoneProgressionForm.tsx';
+import type { PendingProgressionChange } from './ReleasePlanMilestoneItem';
 
 const StyledAddAutomationButton = styled(Button)(({ theme }) => ({
     textTransform: 'none',
@@ -53,9 +54,7 @@ interface MilestoneAutomationProps {
     readonly: boolean | undefined;
     isProgressionFormOpen: boolean;
     effectiveTransitionCondition: IReleasePlanMilestone['transitionCondition'];
-    hasPendingCreate: boolean;
-    hasPendingUpdate: boolean;
-    hasPendingDelete: boolean;
+    pendingProgressionChange: PendingProgressionChange | null;
     onOpenProgressionForm: () => void;
     onCloseProgressionForm: () => void;
     onCreateProgression: (
@@ -76,9 +75,7 @@ export const MilestoneAutomation = ({
     readonly,
     isProgressionFormOpen,
     effectiveTransitionCondition,
-    hasPendingCreate,
-    hasPendingUpdate,
-    hasPendingDelete,
+    pendingProgressionChange,
     onOpenProgressionForm,
     onCloseProgressionForm,
     onCreateProgression,
@@ -91,6 +88,13 @@ export const MilestoneAutomation = ({
     if (!showAutomation) {
         return null;
     }
+
+    const hasPendingCreate =
+        pendingProgressionChange?.action === 'createMilestoneProgression';
+    const hasPendingUpdate =
+        pendingProgressionChange?.action === 'updateMilestoneProgression';
+    const hasPendingDelete =
+        pendingProgressionChange?.action === 'deleteMilestoneProgression';
 
     return (
         <MilestoneAutomationSection status={status}>

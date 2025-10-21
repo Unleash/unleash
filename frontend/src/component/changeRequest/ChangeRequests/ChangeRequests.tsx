@@ -39,6 +39,10 @@ const columnHelper = createColumnHelper<ChangeRequestSearchItemSchema>();
 const StyledPaginatedTable = styled(
     PaginatedTable<ChangeRequestSearchItemSchema>,
 )(() => ({
+    th: {
+        whiteSpace: 'nowrap',
+    },
+
     td: {
         verticalAlign: 'top',
     },
@@ -98,17 +102,14 @@ const ChangeRequestsInner = () => {
 
     const columns = useMemo(
         () => [
-            columnHelper.accessor('title', {
+            {
                 id: 'Title',
                 header: 'Title',
                 meta: { width: '300px' },
-                cell: ({ getValue, row }) => (
-                    <GlobalChangeRequestTitleCell
-                        value={getValue()}
-                        row={row}
-                    />
+                cell: ({ row }) => (
+                    <GlobalChangeRequestTitleCell {...row.original} />
                 ),
-            }),
+            },
             columnHelper.accessor('features', {
                 id: 'Updated feature flags',
                 header: 'Updated feature flags',
@@ -149,7 +150,9 @@ const ChangeRequestsInner = () => {
                 id: 'Environment',
                 header: 'Environment',
                 meta: { width: '100px' },
-                cell: ({ getValue }) => <HighlightCell value={getValue()} />,
+                cell: ({ getValue }) => (
+                    <HighlightCell maxTitleLines={1} value={getValue()} />
+                ),
             }),
             columnHelper.accessor('state', {
                 id: 'Status',

@@ -12,6 +12,7 @@ interface IHighlightCellProps {
     subtitle?: string;
     afterTitle?: React.ReactNode;
     subtitleTooltip?: boolean;
+    maxTitleLines?: number;
 }
 
 const StyledContainer = styled(Box)(({ theme }) => ({
@@ -40,6 +41,7 @@ export const HighlightCell: FC<IHighlightCellProps> = ({
     subtitle,
     afterTitle,
     subtitleTooltip,
+    maxTitleLines,
 }) => {
     const { searchQuery } = useSearchHighlightContext();
 
@@ -68,7 +70,7 @@ export const HighlightCell: FC<IHighlightCellProps> = ({
     return (
         <StyledContainer>
             <Truncator
-                lines={subtitle ? 1 : 2}
+                lines={maxTitleLines ?? (subtitle ? 1 : 2)}
                 title={value}
                 arrow
                 data-loading

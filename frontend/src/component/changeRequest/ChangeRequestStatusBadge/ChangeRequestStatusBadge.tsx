@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Badge } from 'component/common/Badge/Badge';
+import { Badge as MuiBadge } from 'component/common/Badge/Badge';
 import AccessTime from '@mui/icons-material/AccessTime';
 import Check from '@mui/icons-material/Check';
 import CircleOutlined from '@mui/icons-material/CircleOutlined';
@@ -12,6 +12,11 @@ import type {
     ScheduledChangeRequest,
     UnscheduledChangeRequest,
 } from '../changeRequest.types';
+import { styled } from '@mui/material';
+
+const Badge = styled(MuiBadge)({
+    whiteSpace: 'nowrap',
+});
 
 export interface IChangeRequestStatusBadgeProps {
     changeRequest:

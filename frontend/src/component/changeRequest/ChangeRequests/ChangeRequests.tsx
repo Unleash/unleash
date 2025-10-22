@@ -45,6 +45,7 @@ const StyledPaginatedTable = styled(
 
     td: {
         verticalAlign: 'top',
+        maxWidth: '250px',
     },
 }));
 
@@ -105,7 +106,7 @@ const ChangeRequestsInner = () => {
             columnHelper.accessor('id', {
                 id: 'Title',
                 header: 'Title',
-                meta: { width: '300px' },
+                meta: { width: '35%' },
                 cell: GlobalChangeRequestTitleCell,
             }),
             columnHelper.accessor('features', {
@@ -134,20 +135,20 @@ const ChangeRequestsInner = () => {
             columnHelper.accessor('createdBy', {
                 id: 'By',
                 header: 'By',
-                meta: { width: '180px', align: 'left' },
+                meta: { width: '10%' },
                 enableSorting: false,
                 cell: ({ getValue }) => <AvatarCell value={getValue()} />,
             }),
             columnHelper.accessor('createdAt', {
                 id: 'Submitted',
                 header: 'Submitted',
-                meta: { width: '100px' },
+                meta: { width: '5%' },
                 cell: ({ getValue }) => <TimeAgoCell value={getValue()} />,
             }),
             columnHelper.accessor('environment', {
                 id: 'Environment',
                 header: 'Environment',
-                meta: { width: '100px' },
+                meta: { width: '10%' },
                 cell: ({ getValue }) => (
                     <HighlightCell maxTitleLines={1} value={getValue()} />
                 ),
@@ -155,7 +156,7 @@ const ChangeRequestsInner = () => {
             columnHelper.accessor('state', {
                 id: 'Status',
                 header: 'Status',
-                meta: { width: '170px' },
+                meta: { width: '10%' },
                 cell: ({ getValue, row }) => (
                     <ChangeRequestStatusCell value={getValue()} row={row} />
                 ),

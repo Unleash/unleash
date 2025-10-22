@@ -239,7 +239,6 @@ const AddReleasePlan: FC<{
     );
 };
 
-
 const ConsolidatedProgressionChanges: FC<{
     feature: IChangeRequestFeature;
     currentReleasePlan?: IReleasePlan;
@@ -312,8 +311,7 @@ const ConsolidatedProgressionChanges: FC<{
             .map((change) =>
                 change.action === 'createMilestoneProgression'
                     ? change.payload.sourceMilestone
-                    : change.payload.sourceMilestoneId ||
-                      change.payload.sourceMilestone,
+                    : change.payload.sourceMilestoneId,
             )
             .filter((id): id is string => Boolean(id)),
     );
@@ -321,11 +319,7 @@ const ConsolidatedProgressionChanges: FC<{
     const milestonesWithDeletedAutomation = new Set(
         progressionChanges
             .filter((change) => change.action === 'deleteMilestoneProgression')
-            .map(
-                (change) =>
-                    change.payload.sourceMilestoneId ||
-                    change.payload.sourceMilestone,
-            )
+            .map((change) => change.payload.sourceMilestoneId)
             .filter((id): id is string => Boolean(id)),
     );
 
@@ -333,8 +327,7 @@ const ConsolidatedProgressionChanges: FC<{
         const sourceId =
             change.action === 'createMilestoneProgression'
                 ? change.payload.sourceMilestone
-                : change.payload.sourceMilestoneId ||
-                  change.payload.sourceMilestone;
+                : change.payload.sourceMilestoneId;
         const sourceName =
             basePlan.milestones.find((milestone) => milestone.id === sourceId)
                 ?.name || sourceId;

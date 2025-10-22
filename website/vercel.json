@@ -138,7 +138,7 @@
     },
     {
       "source": "/how-to/",
-      "destination": "/what-is-a-feature-flag",
+      "destination": "/get-started/what-is-a-feature-flag",
       "permanent": true
     },
     {
@@ -518,22 +518,22 @@
     },
     {
       "source": "/user_guide/quickstart",
-      "destination": "/quickstart",
+      "destination": "/get-started/quickstart",
       "permanent": true
     },
     {
       "source": "/docs/getting_started",
-      "destination": "/quickstart",
+      "destination": "/get-started/quickstart",
       "permanent": true
     },
     {
       "source": "/tutorials/quickstart",
-      "destination": "/quickstart",
+      "destination": "/get-started/quickstart",
       "permanent": true
     },
     {
       "source": "/tutorials/getting-started",
-      "destination": "/quickstart",
+      "destination": "/get-started/quickstart",
       "permanent": true
     },
     {
@@ -723,12 +723,12 @@
     },
     {
       "source": "/tutorials/unleash-overview",
-      "destination": "/understanding-unleash/unleash-overview",
+      "destination": "/get-started/unleash-overview",
       "permanent": true
     },
     {
       "source": "/user_guide/unleash_overview",
-      "destination": "/understanding-unleash/unleash-overview",
+      "destination": "/get-started/unleash-overview",
       "permanent": true
     },
     {
@@ -753,17 +753,17 @@
     },
     {
       "source": "/tutorials/the-anatomy-of-unleash",
-      "destination": "/understanding-unleash/the-anatomy-of-unleash",
+      "destination": "/reference/core-concepts",
       "permanent": true
     },
     {
       "source": "/topics/the-anatomy-of-unleash",
-      "destination": "/understanding-unleash/the-anatomy-of-unleash",
+      "destination": "/reference/core-concepts",
       "permanent": true
     },
     {
       "source": "/understanding-unleash",
-      "destination": "/understanding-unleash/unleash-overview",
+      "destination": "/get-started/unleash-overview",
       "permanent": true
     },
     {
@@ -1079,6 +1079,26 @@
     {
       "source": "/deploy/environment-import-export",
       "destination": "/how-to/how-to-environment-import-export",
+      "permanent": true
+    },
+        {
+      "source": "/quickstart",
+      "destination": "/get-started/quickstart",
+      "permanent": true
+    },
+    {
+      "source": "/what-is-a-feature-flag",
+      "destination": "/get-started/what-is-a-feature-flag",
+      "permanent": true
+    },
+    {
+      "source": "/understanding-unleash/unleash-overview",
+      "destination": "/get-started/unleash-overview",
+      "permanent": true
+    },
+    {
+      "source": "/understanding-unleash/the-anatomy-of-unleash",
+      "destination": "/reference/core-concepts",
       "permanent": true
     }
   ]

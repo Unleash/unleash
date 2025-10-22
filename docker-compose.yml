@@ -2,7 +2,7 @@
 # - the Unleash server instance + the necessary backing Postgres database
 #
 # To learn more about all the parts of Unleash, visit
-# https://docs.getunleash.io/understanding-unleash/unleash-overview
+# https://docs.getunleash.io/get-started/unleash-overview
 #
 # NOTE: please do not use this configuration for production setups.
 # Unleash does not take responsibility for any data leaks or other

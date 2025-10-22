@@ -464,6 +464,7 @@ export * from './createImpactMetricsConfigSchemaLabelSelectors.js';
 export * from './createImpactMetricsConfigSchemaTimeRange.js';
 export * from './createImpactMetricsConfigSchemaYAxisMin.js';
 export * from './createInvitedUserSchema.js';
+export * from './changeMilestoneProgressionSchema.js';
 export * from './createMilestoneProgression401.js';
 export * from './createMilestoneProgression403.js';
 export * from './createMilestoneProgressionSchema.js';

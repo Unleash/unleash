@@ -1,10 +1,7 @@
 import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
-import type {
-    CreateMilestoneProgressionSchema,
-    UpdateMilestoneProgressionSchema,
-} from 'openapi';
+import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { ReleasePlanMilestone } from '../ReleasePlanMilestone/ReleasePlanMilestone.tsx';
 import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
@@ -44,18 +41,11 @@ export interface IReleasePlanMilestoneItemProps {
     onSetProgressionFormOpenIndex: (index: number | null) => void;
     onStartMilestone?: (milestone: IReleasePlanMilestone) => void;
     onDeleteProgression: (milestone: IReleasePlanMilestone) => void;
-    onAddToChangeRequest: (
-        action:
-            | {
-                  type: 'createMilestoneProgression';
-                  payload: CreateMilestoneProgressionSchema;
-              }
-            | {
-                  type: 'updateMilestoneProgression';
-                  sourceMilestoneId: string;
-                  payload: UpdateMilestoneProgressionSchema;
-              },
-    ) => void;
+    onAddToChangeRequest: (action: {
+        type: 'changeMilestoneProgression';
+        sourceMilestoneId: string;
+        payload: ChangeMilestoneProgressionSchema;
+    }) => void;
     getPendingProgressionChange: (
         sourceMilestoneId: string,
     ) => PendingProgressionChange | null;
@@ -85,8 +75,7 @@ export const ReleasePlanMilestoneItem = ({
     featureName,
     onUpdate,
 }: IReleasePlanMilestoneItemProps) => {
-    const { createMilestoneProgression, updateMilestoneProgression } =
-        useMilestoneProgressionsApi();
+    const { changeMilestoneProgression } = useMilestoneProgressionsApi();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { setToastData, setToastApiError } = useToast();
 
@@ -98,42 +87,12 @@ export const ReleasePlanMilestoneItem = ({
     const handleCloseProgressionForm = () =>
         onSetProgressionFormOpenIndex(null);
 
-    const handleCreateProgression = async (
-        payload: CreateMilestoneProgressionSchema,
-    ) => {
-        if (isChangeRequestConfigured(environment)) {
-            onAddToChangeRequest({
-                type: 'createMilestoneProgression',
-                payload,
-            });
-            handleCloseProgressionForm();
-            return;
-        }
-
-        try {
-            await createMilestoneProgression(
-                projectId,
-                environment,
-                featureName,
-                payload,
-            );
-            setToastData({
-                type: 'success',
-                text: 'Automation configured successfully',
-            });
-            handleCloseProgressionForm();
-            await onUpdate();
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
-
-    const handleUpdateProgression = async (
-        payload: UpdateMilestoneProgressionSchema,
+    const handleChangeProgression = async (
+        payload: ChangeMilestoneProgressionSchema,
     ): Promise<{ shouldReset?: boolean }> => {
         if (isChangeRequestConfigured(environment)) {
             onAddToChangeRequest({
-                type: 'updateMilestoneProgression',
+                type: 'changeMilestoneProgression',
                 sourceMilestoneId: milestone.id,
                 payload,
             });
@@ -141,7 +100,7 @@ export const ReleasePlanMilestoneItem = ({
         }
 
         try {
-            await updateMilestoneProgression(
+            await changeMilestoneProgression(
                 projectId,
                 environment,
                 featureName,
@@ -150,8 +109,9 @@ export const ReleasePlanMilestoneItem = ({
             );
             setToastData({
                 type: 'success',
-                text: 'Automation updated successfully',
+                text: 'Automation configured successfully',
             });
+            handleCloseProgressionForm();
             await onUpdate();
             return {};
         } catch (error: unknown) {
@@ -187,8 +147,7 @@ export const ReleasePlanMilestoneItem = ({
             pendingProgressionChange={pendingProgressionChange}
             onOpenProgressionForm={handleOpenProgressionForm}
             onCloseProgressionForm={handleCloseProgressionForm}
-            onCreateProgression={handleCreateProgression}
-            onUpdateProgression={handleUpdateProgression}
+            onChangeProgression={handleChangeProgression}
             onDeleteProgression={onDeleteProgression}
         />
     ) : undefined;

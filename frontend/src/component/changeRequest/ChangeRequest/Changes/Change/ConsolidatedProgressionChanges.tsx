@@ -2,8 +2,7 @@ import type { FC } from 'react';
 import { styled } from '@mui/material';
 import type {
     ChangeRequestState,
-    IChangeRequestCreateMilestoneProgression,
-    IChangeRequestUpdateMilestoneProgression,
+    IChangeRequestChangeMilestoneProgression,
     IChangeRequestDeleteMilestoneProgression,
     IChangeRequestFeature,
 } from 'component/changeRequest/changeRequest.types';
@@ -15,7 +14,7 @@ import {
     ChangeItemWrapper,
     Deleted,
 } from './Change.styles.tsx';
-import type { UpdateMilestoneProgressionSchema } from 'openapi';
+import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { MilestoneListRenderer } from './MilestoneListRenderer.tsx';
 import { applyProgressionChanges } from './applyProgressionChanges.js';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
@@ -27,8 +26,7 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
 }));
 
 type ProgressionChange =
-    | IChangeRequestCreateMilestoneProgression
-    | IChangeRequestUpdateMilestoneProgression
+    | IChangeRequestChangeMilestoneProgression
     | IChangeRequestDeleteMilestoneProgression;
 
 const getFirstChangeWithSnapshot = (
@@ -38,8 +36,7 @@ const getFirstChangeWithSnapshot = (
         progressionChanges.find(
             (change) =>
                 change.payload?.snapshot &&
-                (change.action === 'createMilestoneProgression' ||
-                    change.action === 'updateMilestoneProgression'),
+                change.action === 'changeMilestoneProgression',
         ) || progressionChanges.find((change) => change.payload?.snapshot)
     );
 };
@@ -49,12 +46,8 @@ const getMilestonesWithAutomation = (
 ): Set<string> => {
     return new Set(
         progressionChanges
-            .filter(
-                (change) =>
-                    change.action === 'createMilestoneProgression' ||
-                    change.action === 'updateMilestoneProgression',
-            )
-            .map((change) => change.payload.sourceMilestone)
+            .filter((change) => change.action === 'changeMilestoneProgression')
+            .map((change) => change.payload.sourceMilestoneId)
             .filter((id): id is string => Boolean(id)),
     );
 };
@@ -65,7 +58,11 @@ const getMilestonesWithDeletedAutomation = (
     return new Set(
         progressionChanges
             .filter((change) => change.action === 'deleteMilestoneProgression')
-            .map((change) => change.payload.sourceMilestone)
+            .map(
+                (change) =>
+                    change.payload.sourceMilestoneId ||
+                    change.payload.sourceMilestone,
+            )
             .filter((id): id is string => Boolean(id)),
     );
 };
@@ -75,16 +72,18 @@ const getChangeDescriptions = (
     basePlan: IReleasePlan,
 ): string[] => {
     return progressionChanges.map((change) => {
-        const sourceId = change.payload.sourceMilestone;
+        const sourceId =
+            change.action === 'changeMilestoneProgression'
+                ? change.payload.sourceMilestoneId
+                : change.payload.sourceMilestoneId ||
+                  change.payload.sourceMilestone;
         const sourceName =
             basePlan.milestones.find((milestone) => milestone.id === sourceId)
                 ?.name || sourceId;
         const action =
-            change.action === 'createMilestoneProgression'
-                ? 'Adding'
-                : change.action === 'deleteMilestoneProgression'
-                  ? 'Deleting'
-                  : 'Updating';
+            change.action === 'changeMilestoneProgression'
+                ? 'Changing'
+                : 'Deleting';
         return `${action} automation for ${sourceName}`;
     });
 };
@@ -95,7 +94,7 @@ export const ConsolidatedProgressionChanges: FC<{
     changeRequestState: ChangeRequestState;
     onUpdateChangeRequestSubmit?: (
         sourceMilestoneId: string,
-        payload: UpdateMilestoneProgressionSchema,
+        payload: ChangeMilestoneProgressionSchema,
     ) => Promise<void>;
     onDeleteChangeRequestSubmit?: (sourceMilestoneId: string) => Promise<void>;
 }> = ({
@@ -110,11 +109,9 @@ export const ConsolidatedProgressionChanges: FC<{
         (
             change,
         ): change is
-            | IChangeRequestCreateMilestoneProgression
-            | IChangeRequestUpdateMilestoneProgression
+            | IChangeRequestChangeMilestoneProgression
             | IChangeRequestDeleteMilestoneProgression =>
-            change.action === 'createMilestoneProgression' ||
-            change.action === 'updateMilestoneProgression' ||
+            change.action === 'changeMilestoneProgression' ||
             change.action === 'deleteMilestoneProgression',
     );
 

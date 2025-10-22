@@ -1,13 +1,11 @@
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import type {
-    IChangeRequestCreateMilestoneProgression,
-    IChangeRequestUpdateMilestoneProgression,
+    IChangeRequestChangeMilestoneProgression,
     IChangeRequestDeleteMilestoneProgression,
 } from 'component/changeRequest/changeRequest.types';
 
 type ProgressionChange =
-    | IChangeRequestCreateMilestoneProgression
-    | IChangeRequestUpdateMilestoneProgression
+    | IChangeRequestChangeMilestoneProgression
     | IChangeRequestDeleteMilestoneProgression;
 
 export const applyProgressionChanges = (
@@ -17,20 +15,16 @@ export const applyProgressionChanges = (
     return {
         ...basePlan,
         milestones: basePlan.milestones.map((milestone) => {
-            const createChange = progressionChanges.find(
-                (change): change is IChangeRequestCreateMilestoneProgression =>
-                    change.action === 'createMilestoneProgression' &&
-                    change.payload.sourceMilestone === milestone.id,
-            );
-            const updateChange = progressionChanges.find(
-                (change): change is IChangeRequestUpdateMilestoneProgression =>
-                    change.action === 'updateMilestoneProgression' &&
-                    change.payload.sourceMilestone === milestone.id,
+            const changeProgression = progressionChanges.find(
+                (change): change is IChangeRequestChangeMilestoneProgression =>
+                    change.action === 'changeMilestoneProgression' &&
+                    change.payload.sourceMilestoneId === milestone.id,
             );
             const deleteChange = progressionChanges.find(
                 (change): change is IChangeRequestDeleteMilestoneProgression =>
                     change.action === 'deleteMilestoneProgression' &&
-                    change.payload.sourceMilestone === milestone.id,
+                    (change.payload.sourceMilestoneId === milestone.id ||
+                        change.payload.sourceMilestone === milestone.id),
             );
 
             if (deleteChange) {
@@ -40,11 +34,11 @@ export const applyProgressionChanges = (
                 };
             }
 
-            const change = updateChange || createChange;
-            if (change) {
+            if (changeProgression) {
                 return {
                     ...milestone,
-                    transitionCondition: change.payload.transitionCondition,
+                    transitionCondition:
+                        changeProgression.payload.transitionCondition,
                 };
             }
             return milestone;

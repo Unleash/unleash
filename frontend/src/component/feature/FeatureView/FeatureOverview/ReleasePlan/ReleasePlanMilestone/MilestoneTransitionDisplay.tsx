@@ -7,7 +7,7 @@ import {
     useMilestoneProgressionForm,
     getTimeValueAndUnitFromMinutes,
 } from '../hooks/useMilestoneProgressionForm.js';
-import type { UpdateMilestoneProgressionSchema } from 'openapi';
+import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
 
@@ -58,8 +58,9 @@ const StyledButtonGroup = styled('div')(({ theme }) => ({
 
 interface IMilestoneTransitionDisplayProps {
     intervalMinutes: number;
+    targetMilestoneId: string;
     onSave: (
-        payload: UpdateMilestoneProgressionSchema,
+        payload: ChangeMilestoneProgressionSchema,
     ) => Promise<{ shouldReset?: boolean }>;
     onDelete: () => void;
     milestoneName: string;
@@ -69,6 +70,7 @@ interface IMilestoneTransitionDisplayProps {
 
 export const MilestoneTransitionDisplay = ({
     intervalMinutes,
+    targetMilestoneId,
     onSave,
     onDelete,
     milestoneName,
@@ -97,7 +99,8 @@ export const MilestoneTransitionDisplay = ({
     const handleSave = async () => {
         if (!hasChanged) return;
 
-        const payload: UpdateMilestoneProgressionSchema = {
+        const payload: ChangeMilestoneProgressionSchema = {
+            targetMilestone: targetMilestoneId,
             transitionCondition: {
                 intervalMinutes: currentIntervalMinutes,
             },

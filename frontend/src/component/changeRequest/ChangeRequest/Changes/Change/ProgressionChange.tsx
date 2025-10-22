@@ -2,11 +2,10 @@ import type { FC, ReactNode } from 'react';
 import { Typography } from '@mui/material';
 import type {
     ChangeRequestState,
-    IChangeRequestCreateMilestoneProgression,
-    IChangeRequestUpdateMilestoneProgression,
+    IChangeRequestChangeMilestoneProgression,
 } from 'component/changeRequest/changeRequest.types';
 import type { IReleasePlan } from 'interfaces/releasePlans';
-import type { UpdateMilestoneProgressionSchema } from 'openapi';
+import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
 import {
@@ -26,15 +25,13 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
 }));
 
 interface ProgressionChangeProps {
-    change:
-        | IChangeRequestCreateMilestoneProgression
-        | IChangeRequestUpdateMilestoneProgression;
+    change: IChangeRequestChangeMilestoneProgression;
     currentReleasePlan?: IReleasePlan;
     actions?: ReactNode;
     changeRequestState: ChangeRequestState;
     onUpdateChangeRequestSubmit?: (
         sourceMilestoneId: string,
-        payload: UpdateMilestoneProgressionSchema,
+        payload: ChangeMilestoneProgressionSchema,
     ) => Promise<void>;
     onDeleteChangeRequestSubmit?: (sourceMilestoneId: string) => void;
 }
@@ -50,9 +47,7 @@ export const ProgressionChange: FC<ProgressionChangeProps> = ({
     const basePlan = change.payload.snapshot || currentReleasePlan;
     if (!basePlan) return null;
 
-    const isCreate = change.action === 'createMilestoneProgression';
-    const sourceId = change.payload.sourceMilestone;
-
+    const sourceId = change.payload.sourceMilestoneId;
     if (!sourceId) return null;
 
     const sourceMilestone = basePlan.milestones.find(
@@ -60,11 +55,9 @@ export const ProgressionChange: FC<ProgressionChangeProps> = ({
     );
     const sourceMilestoneName = sourceMilestone?.name || sourceId;
 
-    const targetMilestoneName = isCreate
-        ? basePlan.milestones.find(
-              (milestone) => milestone.id === change.payload.targetMilestone,
-          )?.name || change.payload.targetMilestone
-        : undefined;
+    const targetMilestoneName = basePlan.milestones.find(
+        (milestone) => milestone.id === change.payload.targetMilestone,
+    )?.name || change.payload.targetMilestone;
 
     const modifiedPlan = applyProgressionChanges(basePlan, [change]);
 
@@ -77,21 +70,10 @@ export const ProgressionChange: FC<ProgressionChangeProps> = ({
         <StyledTabs>
             <ChangeItemWrapper>
                 <ChangeItemInfo>
-                    {isCreate ? (
-                        <>
-                            <Added>Adding automation to release plan</Added>
-                            <Typography component='span'>
-                                {sourceMilestoneName} → {targetMilestoneName}
-                            </Typography>
-                        </>
-                    ) : (
-                        <>
-                            <Action>Updating automation in release plan</Action>
-                            <Typography component='span'>
-                                {sourceMilestoneName}
-                            </Typography>
-                        </>
-                    )}
+                    <Action>Changing automation in release plan</Action>
+                    <Typography component='span'>
+                        {sourceMilestoneName} → {targetMilestoneName}
+                    </Typography>
                 </ChangeItemInfo>
                 <div>
                     <TabList>

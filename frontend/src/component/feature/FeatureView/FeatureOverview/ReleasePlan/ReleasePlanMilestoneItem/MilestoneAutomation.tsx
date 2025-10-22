@@ -2,10 +2,7 @@ import Add from '@mui/icons-material/Add';
 import { Button, styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
-import type {
-    CreateMilestoneProgressionSchema,
-    UpdateMilestoneProgressionSchema,
-} from 'openapi';
+import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { MilestoneAutomationSection } from '../ReleasePlanMilestone/MilestoneAutomationSection.tsx';
 import { MilestoneTransitionDisplay } from '../ReleasePlanMilestone/MilestoneTransitionDisplay.tsx';
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
@@ -57,11 +54,8 @@ interface MilestoneAutomationProps {
     pendingProgressionChange: PendingProgressionChange | null;
     onOpenProgressionForm: () => void;
     onCloseProgressionForm: () => void;
-    onCreateProgression: (
-        payload: CreateMilestoneProgressionSchema,
-    ) => Promise<void>;
-    onUpdateProgression: (
-        payload: UpdateMilestoneProgressionSchema,
+    onChangeProgression: (
+        payload: ChangeMilestoneProgressionSchema,
     ) => Promise<{ shouldReset?: boolean }>;
     onDeleteProgression: (milestone: IReleasePlanMilestone) => void;
 }
@@ -78,8 +72,7 @@ export const MilestoneAutomation = ({
     pendingProgressionChange,
     onOpenProgressionForm,
     onCloseProgressionForm,
-    onCreateProgression,
-    onUpdateProgression,
+    onChangeProgression,
     onDeleteProgression,
 }: MilestoneAutomationProps) => {
     const showAutomation =
@@ -108,7 +101,7 @@ export const MilestoneAutomation = ({
                 <MilestoneProgressionForm
                     sourceMilestoneId={milestone.id}
                     targetMilestoneId={nextMilestoneId}
-                    onSubmit={onCreateProgression}
+                    onSubmit={onChangeProgression}
                     onCancel={onCloseProgressionForm}
                 />
             ) : effectiveTransitionCondition ? (
@@ -116,7 +109,8 @@ export const MilestoneAutomation = ({
                     intervalMinutes={
                         effectiveTransitionCondition.intervalMinutes
                     }
-                    onSave={onUpdateProgression}
+                    targetMilestoneId={nextMilestoneId}
+                    onSave={onChangeProgression}
                     onDelete={() => onDeleteProgression(milestone)}
                     milestoneName={milestone.name}
                     status={status}

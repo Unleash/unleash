@@ -14,12 +14,6 @@ const Component = () => {
                     <li>Valuable certification</li>
                 </ul>
                 <div className='small-logo' />
-                <a
-                    href='https://docs.google.com/forms/d/1iPUk2I0k5xMzicn9aLMcPF3b9ub3ZwdVjRxCxWxV7js/viewform'
-                    className='unleash-action-button'
-                >
-                    Get certified
-                </a>
             </div>
             <div className='big-logo' />
         </div>

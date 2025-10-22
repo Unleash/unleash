@@ -17,7 +17,7 @@ import {
 } from './Change.styles.tsx';
 import { styled } from '@mui/material';
 import { MilestoneListRenderer } from './MilestoneListRenderer.tsx';
-import { useModifiedReleasePlan } from './useModifiedReleasePlan.ts';
+import { applyProgressionChanges } from './applyProgressionChanges';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     display: 'flex',
@@ -69,7 +69,7 @@ export const ProgressionChange: FC<ProgressionChangeProps> = ({
           )?.name || change.payload.targetMilestone
         : undefined;
 
-    const modifiedPlan = useModifiedReleasePlan(basePlan, [change]);
+    const modifiedPlan = applyProgressionChanges(basePlan, [change]);
 
     const previousMilestone = sourceMilestone;
     const newMilestone = modifiedPlan.milestones.find(

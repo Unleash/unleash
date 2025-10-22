@@ -137,7 +137,8 @@ type ChangeRequestPayload =
     | ChangeRequestDeleteReleasePlan
     | ChangeRequestStartMilestone
     | ChangeRequestCreateMilestoneProgression
-    | ChangeRequestUpdateMilestoneProgression;
+    | ChangeRequestUpdateMilestoneProgression
+    | ChangeRequestDeleteMilestoneProgression;
 
 export interface IChangeRequestAddStrategy extends IChangeRequestChangeBase {
     action: 'addStrategy';
@@ -206,6 +207,12 @@ export interface IChangeRequestUpdateMilestoneProgression
     payload: ChangeRequestUpdateMilestoneProgression;
 }
 
+export interface IChangeRequestDeleteMilestoneProgression
+    extends IChangeRequestChangeBase {
+    action: 'deleteMilestoneProgression';
+    payload: ChangeRequestDeleteMilestoneProgression;
+}
+
 export interface IChangeRequestReorderStrategy
     extends IChangeRequestChangeBase {
     action: 'reorderStrategy';
@@ -255,7 +262,8 @@ export type IFeatureChange =
     | IChangeRequestDeleteReleasePlan
     | IChangeRequestStartMilestone
     | IChangeRequestCreateMilestoneProgression
-    | IChangeRequestUpdateMilestoneProgression;
+    | IChangeRequestUpdateMilestoneProgression
+    | IChangeRequestDeleteMilestoneProgression;
 
 export type ISegmentChange =
     | IChangeRequestUpdateSegment
@@ -288,12 +296,23 @@ type ChangeRequestStartMilestone = {
     snapshot?: IReleasePlan;
 };
 
-type ChangeRequestCreateMilestoneProgression = CreateMilestoneProgressionSchema;
+type ChangeRequestCreateMilestoneProgression =
+    CreateMilestoneProgressionSchema & {
+        snapshot?: IReleasePlan;
+    };
 
 type ChangeRequestUpdateMilestoneProgression =
     UpdateMilestoneProgressionSchema & {
-        sourceMilestoneId: string;
+        sourceMilestoneId?: string;
+        sourceMilestone?: string; // Backward compatibility for existing change requests
+        snapshot?: IReleasePlan;
     };
+
+type ChangeRequestDeleteMilestoneProgression = {
+    sourceMilestoneId?: string;
+    sourceMilestone?: string; // Backward compatibility for existing change requests
+    snapshot?: IReleasePlan;
+};
 
 export type ChangeRequestAddStrategy = Pick<
     IFeatureStrategy,
@@ -334,4 +353,5 @@ export type ChangeRequestAction =
     | 'deleteReleasePlan'
     | 'startMilestone'
     | 'createMilestoneProgression'
-    | 'updateMilestoneProgression';
+    | 'updateMilestoneProgression'
+    | 'deleteMilestoneProgression';

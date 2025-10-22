@@ -1,12 +1,7 @@
-import { useState } from 'react';
 import { Button, styled } from '@mui/material';
 import BoltIcon from '@mui/icons-material/Bolt';
 import { useMilestoneProgressionForm } from '../hooks/useMilestoneProgressionForm.js';
-import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
-import useToast from 'hooks/useToast';
-import { formatUnknownError } from 'utils/formatUnknownError';
 import { MilestoneProgressionTimeInput } from './MilestoneProgressionTimeInput.tsx';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import type { CreateMilestoneProgressionSchema } from 'openapi';
 
 const StyledFormContainer = styled('div')(({ theme }) => ({
@@ -60,74 +55,27 @@ const StyledErrorMessage = styled('span')(({ theme }) => ({
 interface IMilestoneProgressionFormProps {
     sourceMilestoneId: string;
     targetMilestoneId: string;
-    projectId: string;
-    environment: string;
-    featureName: string;
-    onSave: () => void;
+    onSubmit: (payload: CreateMilestoneProgressionSchema) => Promise<void>;
     onCancel: () => void;
-    onChangeRequestSubmit?: (
-        progressionPayload: CreateMilestoneProgressionSchema,
-    ) => void;
 }
 
 export const MilestoneProgressionForm = ({
     sourceMilestoneId,
     targetMilestoneId,
-    projectId,
-    environment,
-    featureName,
-    onSave,
+    onSubmit,
     onCancel,
-    onChangeRequestSubmit,
 }: IMilestoneProgressionFormProps) => {
     const form = useMilestoneProgressionForm(
         sourceMilestoneId,
         targetMilestoneId,
     );
-    const { createMilestoneProgression } = useMilestoneProgressionsApi();
-    const { setToastData, setToastApiError } = useToast();
-    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
-
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
-    const handleChangeRequestSubmit = () => {
-        const progressionPayload = form.getProgressionPayload();
-        onChangeRequestSubmit?.(progressionPayload);
-    };
-
-    const handleDirectSubmit = async () => {
-        setIsSubmitting(true);
-        try {
-            await createMilestoneProgression(
-                projectId,
-                environment,
-                featureName,
-                form.getProgressionPayload(),
-            );
-            setToastData({
-                type: 'success',
-                text: 'Automation configured successfully',
-            });
-            onSave();
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
 
     const handleSubmit = async () => {
-        if (isSubmitting) return;
-
         if (!form.validate()) {
             return;
         }
 
-        if (isChangeRequestConfigured(environment) && onChangeRequestSubmit) {
-            handleChangeRequestSubmit();
-        } else {
-            await handleDirectSubmit();
-        }
+        await onSubmit(form.getProgressionPayload());
     };
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -150,19 +98,13 @@ export const MilestoneProgressionForm = ({
                     timeUnit={form.timeUnit}
                     onTimeValueChange={form.handleTimeValueChange}
                     onTimeUnitChange={form.handleTimeUnitChange}
-                    disabled={isSubmitting}
                 />
             </StyledTopRow>
             <StyledButtonGroup>
                 {form.errors.time && (
                     <StyledErrorMessage>{form.errors.time}</StyledErrorMessage>
                 )}
-                <Button
-                    variant='outlined'
-                    onClick={onCancel}
-                    size='small'
-                    disabled={isSubmitting}
-                >
+                <Button variant='outlined' onClick={onCancel} size='small'>
                     Cancel
                 </Button>
                 <Button
@@ -170,9 +112,8 @@ export const MilestoneProgressionForm = ({
                     color='primary'
                     onClick={handleSubmit}
                     size='small'
-                    disabled={isSubmitting}
                 >
-                    {isSubmitting ? 'Saving...' : 'Save'}
+                    Save
                 </Button>
             </StyledButtonGroup>
         </StyledFormContainer>

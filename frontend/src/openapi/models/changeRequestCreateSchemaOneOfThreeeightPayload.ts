@@ -4,7 +4,7 @@
  * See `gen:api` script in package.json
  */
 
-export type ChangeRequestOneOrManyCreateSchemaOneOfFourzeroPayload = {
+export type ChangeRequestCreateSchemaOneOfThreeeightPayload = {
     /** The ID of the source milestone with progression to delete. */
     sourceMilestone: string;
 };

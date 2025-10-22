@@ -7,10 +7,10 @@
 /**
  * The name of this action.
  */
-export type ChangeRequestCreateSchemaOneOfFourzeroAction =
-    (typeof ChangeRequestCreateSchemaOneOfFourzeroAction)[keyof typeof ChangeRequestCreateSchemaOneOfFourzeroAction];
+export type ChangeRequestCreateSchemaOneOfThreeeightAction =
+    (typeof ChangeRequestCreateSchemaOneOfThreeeightAction)[keyof typeof ChangeRequestCreateSchemaOneOfThreeeightAction];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const ChangeRequestCreateSchemaOneOfFourzeroAction = {
+export const ChangeRequestCreateSchemaOneOfThreeeightAction = {
     deleteMilestoneProgression: 'deleteMilestoneProgression',
 } as const;

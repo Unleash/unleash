@@ -4,7 +4,7 @@
  * See `gen:api` script in package.json
  */
 
-export type UpdateMilestoneProgression404 = {
+export type EdgeInstanceHeartbeat400 = {
     /** The ID of the error instance */
     id?: string;
     /** A description of what went wrong. */

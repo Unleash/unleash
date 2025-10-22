@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { LicenseReadSchemaResources } from './licenseReadSchemaResources.js';
 
 /**
  * A model representing a license response.
@@ -22,10 +23,8 @@ export interface LicenseReadSchema {
     isValid: boolean;
     /** Name of plan that the license is for. */
     plan?: string;
-    /** Number of release templates in the license. */
-    releaseTemplates?: number;
-    /** Number of seats in the license. */
-    seats?: number;
+    /** The resources available in the license. */
+    resources?: LicenseReadSchemaResources;
     /** The actual license token. */
     token?: string;
     /** Type of license. */

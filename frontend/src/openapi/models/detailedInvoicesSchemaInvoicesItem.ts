@@ -27,7 +27,7 @@ export type DetailedInvoicesSchemaInvoicesItem = {
     /** Tax amount for the invoice */
     taxAmount: number;
     /** Tax percentage for the invoice */
-    taxPercentage?: number;
+    taxPercentage: number;
     /** Total amount for the invoice */
     totalAmount: number;
     /** Usage line items (traffic, consumption usage, overages) */

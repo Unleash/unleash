@@ -2,11 +2,7 @@ import type { IFeatureVariant } from 'interfaces/featureToggle';
 import type { ISegment } from 'interfaces/segment';
 import type { IFeatureStrategy } from '../../interfaces/strategy.js';
 import type { IUser } from '../../interfaces/user.js';
-import type {
-    SetStrategySortOrderSchema,
-    CreateMilestoneProgressionSchema,
-    UpdateMilestoneProgressionSchema,
-} from 'openapi';
+import type { SetStrategySortOrderSchema } from 'openapi';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 
 type BaseChangeRequest = {
@@ -136,8 +132,7 @@ type ChangeRequestPayload =
     | ChangeRequestAddReleasePlan
     | ChangeRequestDeleteReleasePlan
     | ChangeRequestStartMilestone
-    | ChangeRequestCreateMilestoneProgression
-    | ChangeRequestUpdateMilestoneProgression
+    | ChangeRequestChangeMilestoneProgression
     | ChangeRequestDeleteMilestoneProgression;
 
 export interface IChangeRequestAddStrategy extends IChangeRequestChangeBase {
@@ -195,16 +190,10 @@ export interface IChangeRequestStartMilestone extends IChangeRequestChangeBase {
     payload: ChangeRequestStartMilestone;
 }
 
-export interface IChangeRequestCreateMilestoneProgression
+export interface IChangeRequestChangeMilestoneProgression
     extends IChangeRequestChangeBase {
-    action: 'createMilestoneProgression';
-    payload: ChangeRequestCreateMilestoneProgression;
-}
-
-export interface IChangeRequestUpdateMilestoneProgression
-    extends IChangeRequestChangeBase {
-    action: 'updateMilestoneProgression';
-    payload: ChangeRequestUpdateMilestoneProgression;
+    action: 'changeMilestoneProgression';
+    payload: ChangeRequestChangeMilestoneProgression;
 }
 
 export interface IChangeRequestDeleteMilestoneProgression
@@ -261,8 +250,7 @@ export type IFeatureChange =
     | IChangeRequestAddReleasePlan
     | IChangeRequestDeleteReleasePlan
     | IChangeRequestStartMilestone
-    | IChangeRequestCreateMilestoneProgression
-    | IChangeRequestUpdateMilestoneProgression
+    | IChangeRequestChangeMilestoneProgression
     | IChangeRequestDeleteMilestoneProgression;
 
 export type ISegmentChange =
@@ -296,22 +284,14 @@ type ChangeRequestStartMilestone = {
     snapshot?: IReleasePlan;
 };
 
-type ChangeRequestCreateMilestoneProgression =
-    CreateMilestoneProgressionSchema & {
-        snapshot?: IReleasePlan;
-    };
-
-type ChangeRequestUpdateMilestoneProgression =
-    UpdateMilestoneProgressionSchema & {
-        sourceMilestoneId?: string;
-        sourceMilestone?: string; // Backward compatibility for existing change requests
-        snapshot?: IReleasePlan;
-    };
+type ChangeRequestChangeMilestoneProgression = {
+    sourceMilestone: string;
+    targetMilestone: string;
+    transitionCondition: { intervalMinutes: number };
+};
 
 type ChangeRequestDeleteMilestoneProgression = {
-    sourceMilestoneId?: string;
-    sourceMilestone?: string; // Backward compatibility for existing change requests
-    snapshot?: IReleasePlan;
+    sourceMilestone: string;
 };
 
 export type ChangeRequestAddStrategy = Pick<
@@ -352,6 +332,5 @@ export type ChangeRequestAction =
     | 'addReleasePlan'
     | 'deleteReleasePlan'
     | 'startMilestone'
-    | 'createMilestoneProgression'
-    | 'updateMilestoneProgression'
+    | 'changeMilestoneProgression'
     | 'deleteMilestoneProgression';

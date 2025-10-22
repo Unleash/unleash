@@ -6,13 +6,12 @@
 import type { TransitionConditionSchema } from './transitionConditionSchema.js';
 
 /**
- * Request body to create a milestone progression
+ * Request body to create or update a milestone progression
  */
-export interface CreateMilestoneProgressionSchema {
-    /** The ID of the source milestone */
-    sourceMilestone: string;
+export interface ChangeMilestoneProgressionSchema {
     /** The ID of the target milestone */
     targetMilestone: string;
     /** The condition configuration for the transition */
     transitionCondition: TransitionConditionSchema;
+    [key: string]: unknown;
 }

@@ -5,9 +5,11 @@
  */
 import type { TransitionConditionSchema } from './transitionConditionSchema.js';
 
-export type ChangeRequestOneOrManyCreateSchemaOneOfThreesevenPayload = {
-    /** The ID of the source milestone with progression to update. */
+export type ChangeRequestCreateFeatureSchemaOneOfThreezeroPayload = {
+    /** The ID of the source milestone */
     sourceMilestone: string;
+    /** The ID of the target milestone */
+    targetMilestone: string;
     /** The condition configuration for the transition */
     transitionCondition: TransitionConditionSchema;
 };

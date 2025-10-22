@@ -22,7 +22,7 @@ export interface DetailedInvoicesLineSchema {
     /** Optional start date for the metered period */
     startDate?: string;
     /** Total amount for this line item in minor currency units */
-    totalAmount: number;
-    /** Unit price for usage line items */
+    totalAmount?: number;
+    /** Unit price for the line item */
     unitPrice?: number;
 }

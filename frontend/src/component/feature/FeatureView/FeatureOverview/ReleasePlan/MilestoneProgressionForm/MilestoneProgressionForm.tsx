@@ -2,7 +2,7 @@ import { Button, styled } from '@mui/material';
 import BoltIcon from '@mui/icons-material/Bolt';
 import { useMilestoneProgressionForm } from '../hooks/useMilestoneProgressionForm.js';
 import { MilestoneProgressionTimeInput } from './MilestoneProgressionTimeInput.tsx';
-import type { CreateMilestoneProgressionSchema } from 'openapi';
+import type { ChangeMilestoneProgressionSchema } from 'openapi';
 
 const StyledFormContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -55,7 +55,9 @@ const StyledErrorMessage = styled('span')(({ theme }) => ({
 interface IMilestoneProgressionFormProps {
     sourceMilestoneId: string;
     targetMilestoneId: string;
-    onSubmit: (payload: CreateMilestoneProgressionSchema) => Promise<void>;
+    onSubmit: (
+        payload: ChangeMilestoneProgressionSchema,
+    ) => Promise<{ shouldReset?: boolean }>;
     onCancel: () => void;
 }
 

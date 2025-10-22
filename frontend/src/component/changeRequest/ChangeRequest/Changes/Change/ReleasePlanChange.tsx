@@ -5,8 +5,7 @@ import type {
     IChangeRequestAddReleasePlan,
     IChangeRequestDeleteReleasePlan,
     IChangeRequestStartMilestone,
-    IChangeRequestCreateMilestoneProgression,
-    IChangeRequestUpdateMilestoneProgression,
+    IChangeRequestChangeMilestoneProgression,
     IChangeRequestDeleteMilestoneProgression,
 } from 'component/changeRequest/changeRequest.types';
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
@@ -27,7 +26,7 @@ import {
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import useToast from 'hooks/useToast';
-import type { UpdateMilestoneProgressionSchema } from 'openapi';
+import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { ProgressionChange } from './ProgressionChange.tsx';
 import { ConsolidatedProgressionChanges } from './ConsolidatedProgressionChanges.tsx';
 
@@ -245,8 +244,7 @@ export const ReleasePlanChange: FC<{
         | IChangeRequestAddReleasePlan
         | IChangeRequestDeleteReleasePlan
         | IChangeRequestStartMilestone
-        | IChangeRequestCreateMilestoneProgression
-        | IChangeRequestUpdateMilestoneProgression
+        | IChangeRequestChangeMilestoneProgression
         | IChangeRequestDeleteMilestoneProgression;
     environmentName: string;
     featureName: string;
@@ -277,11 +275,11 @@ export const ReleasePlanChange: FC<{
 
     const handleUpdateChangeRequestSubmit = async (
         sourceMilestoneId: string,
-        payload: UpdateMilestoneProgressionSchema,
+        payload: ChangeMilestoneProgressionSchema,
     ) => {
         await addChange(projectId, environmentName, {
             feature: featureName,
-            action: 'updateMilestoneProgression',
+            action: 'changeMilestoneProgression',
             payload: {
                 sourceMilestone: sourceMilestoneId,
                 ...payload,
@@ -321,19 +319,16 @@ export const ReleasePlanChange: FC<{
     // check if we should consolidate with other progression changes
     if (
         feature &&
-        (change.action === 'createMilestoneProgression' ||
-            change.action === 'updateMilestoneProgression' ||
+        (change.action === 'changeMilestoneProgression' ||
             change.action === 'deleteMilestoneProgression')
     ) {
         const progressionChanges = feature.changes.filter(
             (
                 change,
             ): change is
-                | IChangeRequestCreateMilestoneProgression
-                | IChangeRequestUpdateMilestoneProgression
+                | IChangeRequestChangeMilestoneProgression
                 | IChangeRequestDeleteMilestoneProgression =>
-                change.action === 'createMilestoneProgression' ||
-                change.action === 'updateMilestoneProgression' ||
+                change.action === 'changeMilestoneProgression' ||
                 change.action === 'deleteMilestoneProgression',
         );
 
@@ -383,8 +378,7 @@ export const ReleasePlanChange: FC<{
                     actions={actions}
                 />
             )}
-            {(change.action === 'createMilestoneProgression' ||
-                change.action === 'updateMilestoneProgression') && (
+            {change.action === 'changeMilestoneProgression' && (
                 <ProgressionChange
                     change={change}
                     currentReleasePlan={currentReleasePlan}

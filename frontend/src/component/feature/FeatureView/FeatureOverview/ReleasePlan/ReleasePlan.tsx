@@ -22,10 +22,7 @@ import { Truncator } from 'component/common/Truncator/Truncator';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
 import { DeleteProgressionDialog } from './DeleteProgressionDialog.tsx';
-import type {
-    CreateMilestoneProgressionSchema,
-    UpdateMilestoneProgressionSchema,
-} from 'openapi';
+import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { ReleasePlanMilestoneItem } from './ReleasePlanMilestoneItem/ReleasePlanMilestoneItem.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -111,13 +108,8 @@ export const ReleasePlan = ({
         | { type: 'removeReleasePlan'; environmentActive: boolean }
         | { type: 'startMilestone'; milestone: IReleasePlanMilestone }
         | {
-              type: 'createMilestoneProgression';
-              payload: CreateMilestoneProgressionSchema;
-          }
-        | {
-              type: 'updateMilestoneProgression';
-              sourceMilestoneId: string;
-              payload: UpdateMilestoneProgressionSchema;
+              type: 'changeMilestoneProgression';
+              payload: ChangeMilestoneProgressionSchema;
           }
         | {
               type: 'deleteMilestoneProgression';
@@ -201,22 +193,11 @@ export const ReleasePlan = ({
                 });
                 break;
 
-            case 'createMilestoneProgression':
+            case 'changeMilestoneProgression':
                 await addChange(projectId, environment, {
                     feature: featureName,
-                    action: 'createMilestoneProgression',
+                    action: 'changeMilestoneProgression',
                     payload: changeRequestAction.payload,
-                });
-                break;
-
-            case 'updateMilestoneProgression':
-                await addChange(projectId, environment, {
-                    feature: featureName,
-                    action: 'updateMilestoneProgression',
-                    payload: {
-                        sourceMilestone: changeRequestAction.sourceMilestoneId,
-                        ...changeRequestAction.payload,
-                    },
                 });
                 break;
 
@@ -314,18 +295,10 @@ export const ReleasePlan = ({
         });
     };
 
-    const handleAddToChangeRequest = (
-        action:
-            | {
-                  type: 'createMilestoneProgression';
-                  payload: CreateMilestoneProgressionSchema;
-              }
-            | {
-                  type: 'updateMilestoneProgression';
-                  sourceMilestoneId: string;
-                  payload: UpdateMilestoneProgressionSchema;
-              },
-    ) => {
+    const handleAddToChangeRequest = (action: {
+        type: 'changeMilestoneProgression';
+        payload: ChangeMilestoneProgressionSchema;
+    }) => {
         setChangeRequestAction(action);
     };
 

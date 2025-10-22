@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import type { IReleasePlan } from 'interfaces/releasePlans';
-import type { UpdateMilestoneProgressionSchema } from 'openapi';
+import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import type { ChangeRequestState } from 'component/changeRequest/changeRequest.types';
 import { ReleasePlanMilestone } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/ReleasePlanMilestone';
 import { MilestoneAutomationSection } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/MilestoneAutomationSection.tsx';
@@ -22,7 +22,7 @@ interface MilestoneListRendererProps {
     milestonesWithDeletedAutomation?: Set<string>;
     onUpdateAutomation?: (
         sourceMilestoneId: string,
-        payload: UpdateMilestoneProgressionSchema,
+        payload: ChangeMilestoneProgressionSchema,
     ) => Promise<void>;
     onDeleteAutomation?: (sourceMilestoneId: string) => void;
 }
@@ -44,6 +44,7 @@ export const MilestoneListRenderer = ({
         <>
             {plan.milestones.map((milestone, index) => {
                 const isNotLastMilestone = index < plan.milestones.length - 1;
+                const nextMilestoneId = plan.milestones[index + 1]?.id || '';
                 const shouldShowAutomation =
                     milestonesWithAutomation.has(milestone.id) ||
                     milestonesWithDeletedAutomation.has(milestone.id);
@@ -67,6 +68,7 @@ export const MilestoneListRenderer = ({
                                     milestone.transitionCondition
                                         .intervalMinutes
                                 }
+                                targetMilestoneId={nextMilestoneId}
                                 onSave={async (payload) => {
                                     await onUpdateAutomation?.(
                                         milestone.id,

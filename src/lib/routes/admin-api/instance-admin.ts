@@ -134,9 +134,8 @@ class InstanceAdminController extends Controller {
             releaseTemplates: 3,
             releasePlans: 5,
             edgeInstances: {
-                last30: 10,
-                last60: 15,
-                last90: 20,
+                lastMonth: 10,
+                monthBeforeLast: 15,
             },
         };
     }

@@ -287,27 +287,20 @@ export const instanceAdminStatsSchema = {
         edgeInstances: {
             type: 'object',
             description:
-                'The billable number of edge instances in the last 30, 60 and 90 days',
+                'The rounded up average number of edge instances in the last month and month before last',
             properties: {
-                last30: {
+                lastMonth: {
                     type: 'integer',
                     description:
-                        'The billable number of edge instances in the last 30 days',
+                        'The rounded up average number of edge instances in the last month',
                     example: 10,
                     minimum: 0,
                 },
-                last60: {
+                monthBeforeLast: {
                     type: 'integer',
                     description:
-                        'The billable number of edge instances in the last 60 days',
+                        'The rounded up average number of edge instances in the month before last',
                     example: 12,
-                    minimum: 0,
-                },
-                last90: {
-                    type: 'integer',
-                    description:
-                        'The billable number of edge instances in the last 90 days',
-                    example: 15,
                     minimum: 0,
                 },
             },

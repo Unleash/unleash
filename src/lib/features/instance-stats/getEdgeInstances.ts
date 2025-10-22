@@ -3,9 +3,8 @@ import type { Db } from '../../types/index.js';
 const TABLE = 'edge_node_presence';
 
 export type GetEdgeInstances = () => Promise<{
-    last30: number;
-    last60: number;
-    last90: number;
+    lastMonth: number;
+    monthBeforeLast: number;
 }>;
 
 export const createGetEdgeInstances =
@@ -15,7 +14,9 @@ export const createGetEdgeInstances =
             .with('buckets', (qb) =>
                 qb
                     .from(TABLE)
-                    .whereRaw("bucket_ts >= NOW() - INTERVAL '90 days'")
+                    .whereRaw(
+                        "bucket_ts >= date_trunc('month', NOW()) - INTERVAL '2 months'",
+                    )
                     .groupBy('bucket_ts')
                     .select(
                         db.raw('bucket_ts'),
@@ -24,31 +25,44 @@ export const createGetEdgeInstances =
             )
             .from('buckets')
             .select({
-                last30: db.raw(
-                    `COALESCE(CEIL(AVG(active_nodes) FILTER (WHERE bucket_ts >= NOW() - INTERVAL '30 days'))::int, 0)`,
-                ),
-                last60: db.raw(
-                    `COALESCE(CEIL(AVG(active_nodes) FILTER (WHERE bucket_ts >= NOW() - INTERVAL '60 days'))::int, 0)`,
-                ),
-                last90: db.raw(
-                    `COALESCE(CEIL(AVG(active_nodes) FILTER (WHERE bucket_ts >= NOW() - INTERVAL '90 days'))::int, 0)`,
-                ),
+                lastMonth: db.raw(`
+                    COALESCE(
+                        CEIL(
+                            AVG(active_nodes)
+                            FILTER (
+                                WHERE bucket_ts >= date_trunc('month', NOW()) - INTERVAL '1 month'
+                                  AND bucket_ts < date_trunc('month', NOW())
+                            )
+                        )::int,
+                        0
+                    )
+                `),
+                monthBeforeLast: db.raw(`
+                    COALESCE(
+                        CEIL(
+                            AVG(active_nodes)
+                            FILTER (
+                                WHERE bucket_ts >= date_trunc('month', NOW()) - INTERVAL '2 months'
+                                  AND bucket_ts < date_trunc('month', NOW()) - INTERVAL '1 month'
+                            )
+                        )::int,
+                        0
+                    )
+                `),
             })
             .first();
 
         return {
-            last30: Number(result?.last30 ?? 0),
-            last60: Number(result?.last60 ?? 0),
-            last90: Number(result?.last90 ?? 0),
+            lastMonth: Number(result?.lastMonth ?? 0),
+            monthBeforeLast: Number(result?.monthBeforeLast ?? 0),
         };
     };
 
 export const createFakeGetEdgeInstances =
     (
         edgeInstances: Awaited<ReturnType<GetEdgeInstances>> = {
-            last30: 0,
-            last60: 0,
-            last90: 0,
+            lastMonth: 0,
+            monthBeforeLast: 0,
         },
     ): GetEdgeInstances =>
     () =>

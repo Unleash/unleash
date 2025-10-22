@@ -545,9 +545,8 @@ export class InstanceStatsService {
             hostedBy,
             releaseTemplates,
             releasePlans,
-            edgeInstances30: edgeInstances.last30,
-            edgeInstances60: edgeInstances.last60,
-            edgeInstances90: edgeInstances.last90,
+            edgeInstancesLastMonth: edgeInstances.lastMonth,
+            edgeInstancesMonthBeforeLast: edgeInstances.monthBeforeLast,
         };
         return featureInfo;
     }

@@ -17,7 +17,7 @@ import {
 } from './Change.styles.tsx';
 import { styled } from '@mui/material';
 import { MilestoneListRenderer } from './MilestoneListRenderer.tsx';
-import { applyProgressionChanges } from './applyProgressionChanges';
+import { applyProgressionChanges } from './applyProgressionChanges.ts';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     display: 'flex',

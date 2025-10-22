@@ -171,7 +171,9 @@ export const ReleasePlanMilestoneItem = ({
     const { pendingProgressionChange, effectiveTransitionCondition } =
         usePendingProgressionChanges(milestone, getPendingProgressionChange);
 
-    const automationSection = (
+    const shouldShowAutomation = isNotLastMilestone && milestoneProgressionsEnabled;
+
+    const automationSection = shouldShowAutomation ? (
         <MilestoneAutomation
             milestone={milestone}
             status={status}
@@ -188,7 +190,7 @@ export const ReleasePlanMilestoneItem = ({
             onUpdateProgression={handleUpdateProgression}
             onDeleteProgression={onDeleteProgression}
         />
-    );
+    ) : undefined;
 
     return (
         <div key={milestone.id}>

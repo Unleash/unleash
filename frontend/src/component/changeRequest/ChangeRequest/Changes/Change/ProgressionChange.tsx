@@ -54,7 +54,7 @@ export const ProgressionChange: FC<ProgressionChangeProps> = ({
 
     const sourceId = isCreate
         ? change.payload.sourceMilestone
-        : change.payload.sourceMilestoneId;
+        : change.payload.sourceMilestoneId || change.payload.sourceMilestone;
 
     if (!sourceId) return null;
 

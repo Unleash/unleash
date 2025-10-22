@@ -10,7 +10,7 @@ type ProgressionChange =
     | IChangeRequestUpdateMilestoneProgression
     | IChangeRequestDeleteMilestoneProgression;
 
-export const useModifiedReleasePlan = (
+export const applyProgressionChanges = (
     basePlan: IReleasePlan,
     progressionChanges: ProgressionChange[],
 ): IReleasePlan => {
@@ -25,14 +25,12 @@ export const useModifiedReleasePlan = (
             const updateChange = progressionChanges.find(
                 (change): change is IChangeRequestUpdateMilestoneProgression =>
                     change.action === 'updateMilestoneProgression' &&
-                    (change.payload.sourceMilestoneId === milestone.id ||
-                        change.payload.sourceMilestone === milestone.id),
+                    change.payload.sourceMilestoneId === milestone.id,
             );
             const deleteChange = progressionChanges.find(
                 (change): change is IChangeRequestDeleteMilestoneProgression =>
                     change.action === 'deleteMilestoneProgression' &&
-                    (change.payload.sourceMilestoneId === milestone.id ||
-                        change.payload.sourceMilestone === milestone.id),
+                    change.payload.sourceMilestoneId === milestone.id,
             );
 
             if (deleteChange) {

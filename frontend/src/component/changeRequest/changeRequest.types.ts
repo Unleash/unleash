@@ -304,11 +304,13 @@ type ChangeRequestCreateMilestoneProgression =
 type ChangeRequestUpdateMilestoneProgression =
     UpdateMilestoneProgressionSchema & {
         sourceMilestoneId?: string;
+        sourceMilestone?: string; // Backward compatibility for existing change requests
         snapshot?: IReleasePlan;
     };
 
 type ChangeRequestDeleteMilestoneProgression = {
     sourceMilestoneId?: string;
+    sourceMilestone?: string; // Backward compatibility for existing change requests
     snapshot?: IReleasePlan;
 };
 

@@ -146,10 +146,15 @@ export const ReleasePlan = ({
             const progressionChange = featureInChangeRequest.changes.find(
                 (change: any) =>
                     (change.action === 'updateMilestoneProgression' &&
-                        change.payload.sourceMilestoneId ===
-                            sourceMilestoneId) ||
+                        (change.payload.sourceMilestoneId ===
+                            sourceMilestoneId ||
+                            change.payload.sourceMilestone ===
+                                sourceMilestoneId)) ||
                     (change.action === 'deleteMilestoneProgression' &&
-                        change.payload.sourceMilestoneId === sourceMilestoneId),
+                        (change.payload.sourceMilestoneId ===
+                            sourceMilestoneId ||
+                            change.payload.sourceMilestone ===
+                                sourceMilestoneId)),
             );
 
             if (progressionChange) {
